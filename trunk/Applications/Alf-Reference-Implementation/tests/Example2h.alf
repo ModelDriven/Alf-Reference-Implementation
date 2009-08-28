@@ -1,0 +1,16 @@
+namespace Ordering::Order;
+private import Shipping::Shipment;
+/**
+From Executable UML, Figure B.3, entry behavior for Being Packed and Shipped
+*/
+activity packAndShip()
+{
+  // Notify the customer that the charge was approved 
+  // and the order will be shipped
+  customer = this.'is placed by';
+  EE_OnlineCustomer.ChargeApproved(customerEmail => customer.email);
+
+  // Create a shipment to send the order to the customer
+  shipment = new Shipment();
+  shipment.RequestShipment(order => this);
+}

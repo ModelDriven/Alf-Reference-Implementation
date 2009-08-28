@@ -1,0 +1,17 @@
+class Destructors specializes C {
+  public destroy ProductSelection();
+  
+  private destroy unregister() {
+    Repository::get().unregister(this);
+    super.destroy();
+  }
+  
+  public destroy D() {
+    super.destroy();
+  }
+
+  public destroy D (in reason: String) {
+    WriteLine(reason);
+    this.destroy();
+  }
+}

@@ -1,0 +1,5 @@
+assoc Selection {
+  public cart:             ShoppingCart[0..*]; // Association end definitions
+  public selectedProduct:  Product[1..*];
+  public selectionInfo:    ProductSelection;
+}

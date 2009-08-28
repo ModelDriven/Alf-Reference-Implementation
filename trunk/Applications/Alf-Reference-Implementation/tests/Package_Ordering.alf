@@ -1,0 +1,14 @@
+package Ordering                                 // Base unit
+{
+  public assoc Selects                     // Nested namespace
+  {
+    public cart:             ShoppingCart[0..*];
+    public selectedProducts: Product[1..*];
+    public selectionInfo:    ProductSelection;
+  }
+
+  public active class ShoppingCart;              // Stub declaration
+  public abstract active class Order;
+  public class ProductSelection;
+}
+

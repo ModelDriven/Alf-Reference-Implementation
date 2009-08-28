@@ -1,0 +1,11 @@
+active class ProcessQueueImpl             // Concrete active subclass
+  specializes ProcessQueue {
+
+  private waitingProcesses: Process[*] ordered;
+
+  private enqueue(in process: Process);   // Concrete operation redefinitions
+  private dequeue(): Process;
+  private processesWaiting(): Boolean;
+
+}                                         // No additional behavior
+

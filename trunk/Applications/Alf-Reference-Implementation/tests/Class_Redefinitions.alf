@@ -1,0 +1,5 @@
+class Redefinitions {
+  p(in x: Integer) redefines A::p, B::p;
+  renamed1(in x: Integer) redefines A::p, B::p;
+  renamed2(in x: Integer) redefines A::p;
+}

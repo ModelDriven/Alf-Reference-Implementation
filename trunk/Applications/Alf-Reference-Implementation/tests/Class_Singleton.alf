@@ -1,0 +1,12 @@
+class Singleton {
+  private create Singleton() {}
+
+  public activity getSingleton(): Singleton {
+    instance = Singleton.allinstances();
+    if (instance -> isEmpty()) {
+      instance = new Singleton();
+    }
+    return instance[1];
+  }
+
+}

@@ -1,0 +1,122 @@
+activity ExpressionStatements() {
+  currentOffer = this.offers[1];
+  monitor.SignalAlarm(sensorId);
+  this.interest = this.principal * this.rate * period;
+  
+  poleValue.im;
+  this.node;
+  members.name;
+  jack.house;
+  
+  Owns -> select house (owner => jack);
+  collection -> collect x (x.name);
+  Assoc -> select name (other => expr);
+  collection -> collect x (x.name);
+
+  A(1, true);
+  A(x=>1, y=>true);
+  A(y=>true, x=>1);
+  A(x=>1);
+  A(1, null);
+  ComputeInterest(amount);
+  Start(monitor => systemMonitor);
+  
+  super.run();
+  super.initialize(startValue);
+  super.Person::setName(name);
+  
+  new Employee(id, name);
+  new Employee::transferred(employeeInfo);
+  
+  employee.destroy();
+  sensor.destroy(recoveryLog);
+  
+  #'+'(subtotals);
+  ##MatMult(rotationMatrices);
+  #'+'(Integer[]{1, 2, 3});
+  ##MatMult(Matrix[]{A, B, C});
+  
+  String[]{"apple","orange","strawberry"};
+  Integer[]{1..6+4};
+  Integer[]{1, Integer[]{2,3}, 4};
+  Integer[]{1, 2, 3, 4};
+  Integer[]{1..6+4};
+  Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  
+  @parallel { 
+    i = Expr1;
+    last = Expr2;
+    collection = Integer[]{};
+    while (i <= last) { collection -> add(i++); }
+  }
+  
+  ;
+  
+  this.getTypes()[1];
+  a = Integer[]{10, 20, 30, 40};
+
+  selectedCustomers->notEmpty();
+  memberList->includes(possibleMember);
+  memberList->including(newMember);
+  products->removeAll(rejects);
+  
+  Owns->add(owner=>jack, house=>newHouse);
+  Owns->add(owner=>jack, house[1]=>newHouse);
+  Owns->remove(owner=>jack, house=>newHouse);
+  Owns->clear();
+  Owns->includes(owner=>jack, house=>newHouse);
+  Owns->excludes(owner=>jack, house=>newHouse);
+
+  c->select x (x>1);
+  Customer->select c (c.name == customerName);
+  Customer.allInstances()->select c (c.name == customerName);
+
+  employees->select e (e.age>50);
+  employees->reject e (e.isMarried);
+  Roster->select player (team=>t, season=>y);
+  employees->collect e (e.birthDate);
+  processSteps->iterate step (step.execute());
+  employees->forAll e (e.age<=65);
+  employees->exists e (e.firstName=="Jack");
+  employees->one e (e.title=="President");
+  employees->isUnique e (e.employeeIdentificationNumber);
+
+  count++;
+  size--;
+  total[i]++;
+
+  ++count;
+  --numberWaiting[queueIndex];
+
+  !isActive;
+  !this.running;
+
+  +1234;
+  -42;
+  +(a*b);
+  -absoluteValue;
+  
+  $this.monitor.getActiveSensor().getReading();
+  
+  (fUML::Syntax::Activity)this.getTypes();
+  (Person)invoice.payingParty;
+  (any)this;
+  (Integer)any[]{1,"banana",2};
+
+  amount * interestRate;
+  duration / timeStep;
+  length % unit;
+
+  index > 0 && value[index] < limit;
+  index = 0 || value[index] >= limit;
+  isNormalOps? readPrimarySensor(): readBackupSensor();
+  
+  customer = new Customer();                // Local name assignment
+  reply = this.createReply(request,result); // Output parameter assignment
+  customer.email = checkout.customerEmail;  // Attribute assignment
+  customer.address[i] = newAddress;         // Indexed attribute assignment
+  x += 4;                                   // Compound assignment
+  filename += ".doc";                       // Compound assignment
+  WriteLine(a = 3);
+
+}

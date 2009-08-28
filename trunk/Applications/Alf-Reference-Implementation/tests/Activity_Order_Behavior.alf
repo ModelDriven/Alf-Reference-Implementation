@@ -1,0 +1,23 @@
+activity Order_Behavior() {
+  accept (checkout: Checkout);
+  this.establishCustomer(checkout);
+
+  do {
+
+    accept (chargeSubmission: SubmitCharge);
+    this.processCharge(chargeSubmission);
+
+    accept (PaymentDeclined) {
+      declined = true;
+      this.declineCharge();
+
+    } or accept (PaymentApproved) {
+      declined = false;
+    }
+
+  } while (declined);
+
+  this.packAndShip();
+  accept(OrderDelivery);
+  this.notifyOfDelivery();
+}

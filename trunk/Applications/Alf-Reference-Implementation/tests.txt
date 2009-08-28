@@ -1,0 +1,3874 @@
+Alf 0.05 Parser
+Reading from file tests\Example1a.alf...
+Parsed successfully.
+UnitDefinition
+/** 
+  Run the given node activations and then (concurrently) send an offer to
+  all activations for nodes with no incoming edges within the given set.
+*/
+ QualifiedName ::fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup
+ ActivityDefinition name:run visibility:
+  ActivityDeclaration name:run isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ForStatement
+    ForVariableDefinition variable:activation
+     NameExpression
+      QualifiedName activations
+    Block
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:run
+        NameExpression
+         QualifiedName activation
+       PositionalTuple
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName enabledActivations
+     CollectionValueExpression
+      TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+       QualifiedName ActivityNodeActivation
+   ForStatement
+    ForVariableDefinition variable:activation
+     NameExpression
+      QualifiedName activations
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName isEnabled
+       ConditionalBinaryExpression operator:||
+        ConditionalBinaryExpression operator:||
+         ConditionalBinaryExpression operator:&&
+          ClassificationExpression operator:instanceof
+           NameExpression
+            QualifiedName activation
+           QualifiedName ActionActivation
+          BinaryExpression operator:!=
+           CollectionOperationExpression operation:size
+            FeatureReference name:input
+             CastExpression
+              QualifiedName Action
+              FeatureReference name:node
+               NameExpression
+                QualifiedName activation
+            PositionalTuple
+           NaturalLiteral image:0
+         ClassificationExpression operator:instanceof
+          NameExpression
+           QualifiedName activation
+          QualifiedName ControlNodeActivation
+        ClassificationExpression operator:instanceof
+         NameExpression
+          QualifiedName activation
+         QualifiedName ActivityParameterNodeActivation
+     ForStatement
+      ForVariableDefinition variable:incomingEdge
+       FeatureReference name:incomingEdges
+        NameExpression
+         QualifiedName activation
+      NameExpression
+       QualifiedName isEnabled
+      Block
+       ForStatement
+        ForVariableDefinition variable:otherActivation
+         NameExpression
+          QualifiedName Activations
+        NameExpression
+         QualifiedName isEnabled
+        Block
+         IfStatement
+          ConcurrentClauses
+           NonFinalClause
+            FeatureInvocationExpression
+             FeatureReference name:isSourceFor
+              NameExpression
+               QualifiedName otherActivation
+             PositionalTuple
+              NameExpression
+               QualifiedName incomingEdge
+            Block
+             ExpressionStatement
+              AssignmentExpression operator:=
+               NameLeftHandSide
+                QualifiedName isEnabled
+               NameExpression
+                QualifiedName false
+     IfStatement
+      ConcurrentClauses
+       NonFinalClause
+        NameExpression
+         QualifiedName isEnabled
+        Block
+         ExpressionStatement
+          CollectionOperationExpression operation:add
+           NameExpression
+            QualifiedName enabledActivations
+           PositionalTuple
+            NameExpression
+             QualifiedName activation
+   ForStatement
+    Annotation identifier:parallel
+    ForVariableDefinition variable:enabledActivation
+     NameExpression
+      QualifiedName enabledActivations
+    Block
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:receiveOffer
+        NameExpression
+         QualifiedName enabledActivation
+       PositionalTuple
+Alf 0.05 Parser
+Reading from file tests\Example1b.alf...
+Parsed successfully.
+UnitDefinition
+/** 
+  Run the given node activations and then (concurrently) send an offer to
+  all activations for nodes with no incoming edges within the given set.
+*/
+ QualifiedName ::fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup
+ ActivityDefinition name:run visibility:
+  ActivityDeclaration name:run isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    CollectionExpansionExpression operation:iterate variable:activation
+     NameExpression
+      QualifiedName activations
+     PositionalTuple
+      FeatureInvocationExpression
+       FeatureReference name:run
+        NameExpression
+         QualifiedName activation
+       PositionalTuple
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName enabledActivations
+     CollectionExpansionExpression operation:select variable:activation
+      NameExpression
+       QualifiedName activations
+      PositionalTuple
+       ConditionalBinaryExpression operator:&&
+        ConditionalBinaryExpression operator:||
+         ConditionalBinaryExpression operator:||
+          ConditionalBinaryExpression operator:&&
+           ClassificationExpression operator:instanceof
+            NameExpression
+             QualifiedName activation
+            QualifiedName ActionActivation
+           CollectionOperationExpression operation:notEmpty
+            FeatureReference name:input
+             CastExpression
+              QualifiedName Action
+              FeatureReference name:node
+               NameExpression
+                QualifiedName activation
+            PositionalTuple
+          ClassificationExpression operator:instanceof
+           NameExpression
+            QualifiedName activation
+           QualifiedName ControlNodeActivation
+         ClassificationExpression operator:instanceof
+          NameExpression
+           QualifiedName activation
+          QualifiedName ActivityParameterNodeActivation
+        UnaryExpression operator:!
+         CollectionExpansionExpression operation:exists variable:incomingEdge
+          FeatureReference name:incomingEdges
+           NameExpression
+            QualifiedName activation
+          PositionalTuple
+           CollectionExpansionExpression operation:exists variable:otherActivation
+            NameExpression
+             QualifiedName activations
+            PositionalTuple
+             FeatureInvocationExpression
+              FeatureReference name:isSourceFor
+               NameExpression
+                QualifiedName otherActivation
+              PositionalTuple
+               NameExpression
+                QualifiedName incomingEdge
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:receiveOffer
+      NameExpression
+       QualifiedName enabledActivations
+     PositionalTuple
+Alf 0.05 Parser
+Reading from file tests\Example2a.alf...
+Parsed successfully.
+UnitDefinition
+/**
+Based on Executable UML, Appendix B, Ordering Subsystem.
+See Figure B.3 for original state machine diagram.
+*/
+ QualifiedName Ordering::Order
+ ActivityDefinition name:Order_Behavior visibility:
+  ActivityDeclaration name:Order_Behavior isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   AcceptStatement
+   /** 1. Establishing Customer and Verifying Payment */
+    AcceptBlock name:checkout
+     QualifiedNameList
+      QualifiedName Checkout
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:establishCustomer
+      ThisExpression
+     PositionalTuple
+      NameExpression
+       QualifiedName checkout
+   DoStatement
+    Block
+     AcceptStatement
+     /** 2. Submitting Charge */
+      AcceptBlock name:chargeSubmission
+       QualifiedNameList
+        QualifiedName SubmitCharge
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:processCharge
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName chargeSubmission
+     AcceptStatement
+      AcceptBlock name:null
+       QualifiedNameList
+        QualifiedName PaymentDeclined
+       Block
+        ExpressionStatement
+         AssignmentExpression operator:=
+          NameLeftHandSide
+           QualifiedName declined
+          NameExpression
+           QualifiedName true
+        ExpressionStatement
+        /** 3. Payment Not Approved */
+         FeatureInvocationExpression
+          FeatureReference name:declineCharge
+           ThisExpression
+          PositionalTuple
+      AcceptBlock name:null
+       QualifiedNameList
+        QualifiedName PaymentApproved
+       Block
+        ExpressionStatement
+         AssignmentExpression operator:=
+          NameLeftHandSide
+           QualifiedName declined
+          NameExpression
+           QualifiedName false
+    NameExpression
+     QualifiedName declined
+   ExpressionStatement
+   /** 4. Being Packed and Shipped */
+    FeatureInvocationExpression
+     FeatureReference name:packAndShip
+      ThisExpression
+     PositionalTuple
+   AcceptStatement
+   /** 5. Delivered to Customer} */
+    AcceptBlock name:null
+     QualifiedNameList
+      QualifiedName OrderDelivery
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:notifyOfDelivery
+      ThisExpression
+     PositionalTuple
+Alf 0.05 Parser
+Reading from file tests\Example2b.alf...
+Parsed successfully.
+UnitDefinition
+/**
+Based on Executable UML, Appendix B, Ordering Subsystem.
+See Figure B.2 for class diagram.
+*/
+ ImportReference alias: packageImport:false
+  QualifiedName EE_OnlineCustomer
+ ImportReference alias: packageImport:false
+  QualifiedName ProductSpecification::Product
+ ImportReference alias: packageImport:true
+  QualifiedName DomainDataTypes
+ PackageDefinition name:Ordering visibility:
+  ClassifierStubDeclaration name:ShoppingCart visibility:public
+   ActiveClassDeclaration name:ShoppingCart isAbstract:false
+  ClassifierStubDeclaration name:Order visibility:public
+   ActiveClassDeclaration name:Order isAbstract:false
+  ClassifierStubDeclaration name:CreditCardCharge visibility:public
+   ActiveClassDeclaration name:CreditCardCharge isAbstract:false
+  ClassifierStubDeclaration name:Customer visibility:public
+   ActiveClassDeclaration name:Customer isAbstract:false
+  ClassifierStubDeclaration name:ProductSelection visibility:public
+   ActiveClassDeclaration name:ProductSelection isAbstract:false
+  AssociationDefinition name:R4 visibility:public
+  /** Note: fUML does not allow association classes. */
+   PropertyDefinition name:'selections are added to' visibility:public
+    PropertyDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false collection: name:'selections are added to' isComposite:false
+     QualifiedName ShoppingCart
+   PropertyDefinition name:'includes selections of' visibility:public
+    PropertyDeclaration lowerBound:1 upperBound:* isOrdered:false isNonunique:false collection: name:'includes selections of' isComposite:false
+     QualifiedName Product
+   PropertyDefinition name:'product selection is' visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:'product selection is' isComposite:false
+     QualifiedName ProductSelection
+   AssociationDeclaration name:R4 isAbstract:false
+  AssociationDefinition name:R5 visibility:public
+   PropertyDefinition name:places visibility:public
+    PropertyDeclaration lowerBound:1 upperBound:* isOrdered:false isNonunique:false collection: name:places isComposite:false
+     QualifiedName Order
+   PropertyDefinition name:'is placed by' visibility:public
+    PropertyDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false collection: name:'is placed by' isComposite:false
+     QualifiedName Customer
+   AssociationDeclaration name:R5 isAbstract:false
+  AssociationDefinition name:R7 visibility:public
+   PropertyDefinition name:'payment is attempted by' visibility:public
+    PropertyDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false collection: name:'payment is attempted by' isComposite:false
+     QualifiedName CreditCardCharge
+   PropertyDefinition name:'is an attempt to pay for' visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:'is an attempt to pay for' isComposite:false
+     QualifiedName Order
+   AssociationDeclaration name:R7 isAbstract:false
+  AssociationDefinition name:R8 visibility:public
+   PropertyDefinition name:'pays for' visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:'pays for' isComposite:false
+     QualifiedName Order
+   PropertyDefinition name:'is paidfor by' visibility:public
+    PropertyDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false collection: name:'is paidfor by' isComposite:false
+     QualifiedName CreditCardCharge
+   AssociationDeclaration name:R8 isAbstract:false
+  AssociationDefinition name:R10 visibility:public
+   PropertyDefinition name:'selections are purchased in' visibility:public
+    PropertyDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false collection: name:'selections are purchased in' isComposite:false
+     QualifiedName Order
+   PropertyDefinition name:'is a purchase of selections in' visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:'is a purchase of selections in' isComposite:false
+     QualifiedName ShoppingCart
+   AssociationDeclaration name:R10 isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Example2c.alf...
+Parsed successfully.
+UnitDefinition
+/**
+From Executable UML, Figure B.2, with statechart from Figure B.3
+*/
+ QualifiedName Ordering
+ ActiveClassDefinition name:Order visibility: behaviorName:
+  PropertyDefinition name:orderID visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:orderID isComposite:false
+    QualifiedName arbitrary_id
+  PropertyDefinition name:dateOrderPlaced visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:dateOrderPlaced isComposite:false
+    QualifiedName date
+  PropertyDefinition name:totalValue visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:totalValue isComposite:false
+    QualifiedName Money
+  PropertyDefinition name:recipient visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:recipient isComposite:false
+    QualifiedName PersonalName
+  PropertyDefinition name:deliveryAddress visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:deliveryAddress isComposite:false
+    QualifiedName MailingAddress
+  PropertyDefinition name:contactPhone visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:contactPhone isComposite:false
+    QualifiedName TelephoneNumber
+  SignalReceptionDefinition name:Checkout visibility:public
+   PropertyDefinition name:cart visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cart isComposite:false
+     QualifiedName ShoppingCart
+   PropertyDefinition name:accountNumber visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:accountNumber isComposite:false
+     QualifiedName BankCardAccountNumber
+   PropertyDefinition name:billingAddress visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:billingAddress isComposite:false
+     QualifiedName MailingAddress
+   PropertyDefinition name:cardExpirationDate visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cardExpirationDate isComposite:false
+     QualifiedName MonthYear
+   PropertyDefinition name:cardholderName visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cardholderName isComposite:false
+     QualifiedName PersonalName
+   PropertyDefinition name:customerEmail visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:customerEmail isComposite:false
+     QualifiedName InternetEmailAddress
+   PropertyDefinition name:customerName visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:customerName isComposite:false
+     QualifiedName PersonalName
+   PropertyDefinition name:customerPhone visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:customerPhone isComposite:false
+     QualifiedName TelephoneNumber
+   PropertyDefinition name:shippingAddress visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:shippingAddress isComposite:false
+     QualifiedName MailingAddress
+   SignalDeclaration name:Checkout isAbstract:false
+  SignalReceptionDefinition name:SubmitCharge visibility:public
+   PropertyDefinition name:accountNumber visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:accountNumber isComposite:false
+     QualifiedName BankCardAccountNumber
+   PropertyDefinition name:billingAddress visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:billingAddress isComposite:false
+     QualifiedName MailingAddress
+   PropertyDefinition name:cardExpirationDate visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cardExpirationDate isComposite:false
+     QualifiedName MonthYear
+   PropertyDefinition name:cardholderName visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cardholderName isComposite:false
+     QualifiedName PersonalName
+   SignalDeclaration name:SubmitCharge isAbstract:false
+  SignalReceptionDefinition name:PaymentDeclined visibility:public
+   SignalDeclaration name:PaymentDeclined isAbstract:false
+  SignalReceptionDefinition name:PaymentApproved visibility:public
+   SignalDeclaration name:PaymentApproved isAbstract:false
+  SignalReceptionDefinition name:OrderDelivered visibility:public
+   SignalDeclaration name:OrderDelivered isAbstract:false
+  OperationStubDeclaration name:establishCustomer visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:establishCustomer isAbstract:false
+  OperationStubDeclaration name:processCharge visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:processCharge isAbstract:false
+  OperationStubDeclaration name:declineCharge visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:declineCharge isAbstract:false
+  OperationStubDeclaration name:packAndShip visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:packAndShip isAbstract:false
+  OperationStubDeclaration name:notifyOfDelivery visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:notifyOfDelivery isAbstract:false
+  ActiveClassDeclaration name:Order isAbstract:false
+  Block
+   AcceptStatement
+   /** 1. Establishing Customer and Verifying Payment */
+    AcceptBlock name:checkout
+     QualifiedNameList
+      QualifiedName Checkout
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:EstablishCustomer
+      ThisExpression
+     PositionalTuple
+      NameExpression
+       QualifiedName checkout
+   DoStatement
+    Block
+     AcceptStatement
+     /** 2. Submitting Charge */
+      AcceptBlock name:chargeSubmission
+       QualifiedNameList
+        QualifiedName SubmitCharge
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:ProcessCharge
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName chargeSubmission
+     AcceptStatement
+      AcceptBlock name:null
+       QualifiedNameList
+        QualifiedName PaymentDeclined
+       Block
+        ExpressionStatement
+         AssignmentExpression operator:=
+          NameLeftHandSide
+           QualifiedName declined
+          NameExpression
+           QualifiedName true
+        ExpressionStatement
+        /** 3. Payment Not Approved */
+         FeatureInvocationExpression
+          FeatureReference name:DeclineCharge
+           ThisExpression
+          PositionalTuple
+      AcceptBlock name:null
+       QualifiedNameList
+        QualifiedName PaymentApproved
+       Block
+        ExpressionStatement
+         AssignmentExpression operator:=
+          NameLeftHandSide
+           QualifiedName declined
+          NameExpression
+           QualifiedName false
+    NameExpression
+     QualifiedName declined
+   ExpressionStatement
+   /** 4. Being Packed and Shipped */
+    FeatureInvocationExpression
+     FeatureReference name:PackAndShip
+      ThisExpression
+     PositionalTuple
+   AcceptStatement
+   /** 5. Delivered to Customer */
+    AcceptBlock name:null
+     QualifiedNameList
+      QualifiedName OrderDelivery
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:NotifyOfDelivery
+      ThisExpression
+     PositionalTuple
+Alf 0.05 Parser
+Reading from file tests\Example2d.alf...
+Parsed successfully.
+UnitDefinition
+/**
+From Executable UML, Figure B.3, entry behavior for
+Establishing Customer and Verifying Payment
+*/
+ QualifiedName Ordering::Order
+ ImportReference alias: packageImport:false
+  QualifiedName ::TIM
+ ActivityDefinition name:establishCustomer visibility:
+  ActivityDeclaration name:establishCustomer isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    CollectionOperationExpression operation:add
+     NameExpression
+      QualifiedName R10
+     NamedTuple
+      NamedExpression name:'selections are purchased in'
+       ThisExpression
+      NamedExpression name:'is a purchase of selections in'
+       FeatureReference name:cart
+        NameExpression
+         QualifiedName rcvd_evt
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName matchingCustomers
+     CollectionExpansionExpression operation:select variable:c
+      NameExpression
+       QualifiedName Customer
+      PositionalTuple
+       BinaryExpression operator:==
+        FeatureReference name:email
+         NameExpression
+          QualifiedName c
+        FeatureReference name:customerEmail
+         NameExpression
+          QualifiedName rcvd_evt
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       NameExpression
+        QualifiedName matchingCustomers
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName customer
+         InstanceCreationExpression
+          QualifiedName Customer
+          PositionalTuple
+       ExpressionStatement
+        AssignmentExpression operator:=
+         FeatureLeftHandSide
+          FeatureReference name:email
+           NameExpression
+            QualifiedName customer
+         FeatureReference name:customerEmail
+          NameExpression
+           QualifiedName rcvd_evt
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName customer
+       CollectionAccessExpression
+        NameExpression
+         QualifiedName matchingCustomers
+        NaturalLiteral image:1
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:name
+       NameExpression
+        QualifiedName customer
+     FeatureReference name:customerName
+      NameExpression
+       QualifiedName rcvd_evt
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:shippingAddress
+       NameExpression
+        QualifiedName customer
+     FeatureReference name:shippingAddress
+      NameExpression
+       QualifiedName rcvd_evt
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:phone
+       NameExpression
+        QualifiedName customer
+     FeatureReference name:customerPhone
+      NameExpression
+       QualifiedName rcvd_evt
+   ExpressionStatement
+    CollectionOperationExpression operation:add
+     NameExpression
+      QualifiedName R5
+     NamedTuple
+      NamedExpression name:places
+       ThisExpression
+      NamedExpression name:'is placed by'
+       NameExpression
+        QualifiedName customer
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:dateOrderPlaced
+       ThisExpression
+     NameExpression
+      QualifiedName TIM::current_date
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:SubmitCharge
+      ThisExpression
+     NamedTuple
+      NamedExpression name:accountNumber
+       FeatureReference name:accountNumber
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:billingAddress
+       FeatureReference name:billingAddress
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:cardExpirationDate
+       FeatureReference name:cardExpirationDate
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:cardholderName
+       FeatureReference name:cardholderName
+        NameExpression
+         QualifiedName rcvd_evt
+Alf 0.05 Parser
+Reading from file tests\Example2e.alf...
+Parsed successfully.
+UnitDefinition
+/**
+From Executable UML, Figure B.3, entry behavior for
+Establishing Customer and Verifying Payment
+*/
+ QualifiedName Ordering::Order
+ ImportReference alias: packageImport:false
+  QualifiedName ::TIM
+ ActivityDefinition name:establishCustomer visibility:
+  ActivityDeclaration name:establishCustomer isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    CollectionOperationExpression operation:add
+     NameExpression
+      QualifiedName R10
+     NamedTuple
+      NamedExpression name:'selections are purchased in'
+       ThisExpression
+      NamedExpression name:'is a purchase of selections in'
+       FeatureReference name:cart
+        NameExpression
+         QualifiedName rcvd_evt
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName matchingCustomers
+     CollectionExpansionExpression operation:select variable:c
+      NameExpression
+       QualifiedName Customer
+      PositionalTuple
+       BinaryExpression operator:==
+        FeatureReference name:email
+         NameExpression
+          QualifiedName c
+        FeatureReference name:customerEmail
+         NameExpression
+          QualifiedName rcvd_evt
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       NameExpression
+        QualifiedName matchingCustomers
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName customer
+         InstanceCreationExpression
+          QualifiedName Customer
+          PositionalTuple
+       ExpressionStatement
+        AssignmentExpression operator:=
+         FeatureLeftHandSide
+          FeatureReference name:email
+           NameExpression
+            QualifiedName customer
+         FeatureReference name:customerEmail
+          NameExpression
+           QualifiedName rcvd_evt
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName customer
+       CollectionAccessExpression
+        NameExpression
+         QualifiedName matchingCustomers
+        NaturalLiteral image:1
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:name
+       NameExpression
+        QualifiedName customer
+     FeatureReference name:customerName
+      NameExpression
+       QualifiedName rcvd_evt
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:shippingAddress
+       NameExpression
+        QualifiedName customer
+     FeatureReference name:shippingAddress
+      NameExpression
+       QualifiedName rcvd_evt
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:phone
+       NameExpression
+        QualifiedName customer
+     FeatureReference name:customerPhone
+      NameExpression
+       QualifiedName rcvd_evt
+   ExpressionStatement
+    CollectionOperationExpression operation:add
+     NameExpression
+      QualifiedName R5
+     NamedTuple
+      NamedExpression name:places
+       ThisExpression
+      NamedExpression name:'is placed by'
+       NameExpression
+        QualifiedName customer
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:dateOrderPlaced
+       ThisExpression
+     NameExpression
+      QualifiedName TIM::current_date
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:SubmitCharge
+      ThisExpression
+     NamedTuple
+      NamedExpression name:accountNumber
+       FeatureReference name:accountNumber
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:billingAddress
+       FeatureReference name:billingAddress
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:cardExpirationDate
+       FeatureReference name:cardExpirationDate
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:cardholderName
+       FeatureReference name:cardholderName
+        NameExpression
+         QualifiedName rcvd_evt
+Alf 0.05 Parser
+Reading from file tests\Example2f.alf...
+Parsed successfully.
+UnitDefinition
+/**
+From Executable UML, Figure B.3, entry behavior for Submitting Charge
+*/
+ QualifiedName Ordering::Order
+ ActivityDefinition name:processCharge visibility:
+  ActivityDeclaration name:processCharge isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName creditCardCharge
+     InstanceCreationExpression
+      QualifiedName CreditCardCharge
+      PositionalTuple
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:MakeCharge
+      NameExpression
+       QualifiedName creditCardCharge
+     NamedTuple
+      NamedExpression name:accountNumber
+       FeatureReference name:accountNumber
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:billingAddress
+       FeatureReference name:billingAddress
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:cardExpirationDate
+       FeatureReference name:cardExpirationDate
+        NameExpression
+         QualifiedName rcvd_evt
+      NamedExpression name:chargeAmount
+       FeatureReference name:totalValue
+        NameExpression
+         QualifiedName self
+      NamedExpression name:order
+       NameExpression
+        QualifiedName self
+Alf 0.05 Parser
+Reading from file tests\Example2g.alf...
+Parsed successfully.
+UnitDefinition
+/**
+From Executable UML, Figure B.3, entry behavior for Payment Not Approved
+*/
+ QualifiedName Ordering::Order
+ ActivityDefinition name:declineCharge visibility:
+  ActivityDeclaration name:declineCharge isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName customer
+     FeatureReference name:'is placed by'
+      ThisExpression
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:ChargeDeclined
+      NameExpression
+       QualifiedName EE_OnlineCustomer
+     NamedTuple
+      NamedExpression name:customerEmail
+       FeatureReference name:email
+        NameExpression
+         QualifiedName customer
+Alf 0.05 Parser
+Reading from file tests\Example2h.alf...
+Parsed successfully.
+UnitDefinition
+/**
+From Executable UML, Figure B.3, entry behavior for Being Packed and Shipped
+*/
+ QualifiedName Ordering::Order
+ ImportReference alias: packageImport:false
+  QualifiedName Shipping::Shipment
+ ActivityDefinition name:packAndShip visibility:
+  ActivityDeclaration name:packAndShip isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName customer
+     FeatureReference name:'is placed by'
+      ThisExpression
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:ChargeApproved
+      NameExpression
+       QualifiedName EE_OnlineCustomer
+     NamedTuple
+      NamedExpression name:customerEmail
+       FeatureReference name:email
+        NameExpression
+         QualifiedName customer
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName shipment
+     InstanceCreationExpression
+      QualifiedName Shipment
+      PositionalTuple
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:RequestShipment
+      NameExpression
+       QualifiedName shipment
+     NamedTuple
+      NamedExpression name:order
+       ThisExpression
+Alf 0.05 Parser
+Reading from file tests\Example2i.alf...
+Parsed successfully.
+UnitDefinition
+/**
+From Executable UML, Figure B.3, entry behavior for Delivered to Customer
+*/
+ QualifiedName Ordering::Order
+ ActivityDefinition name:notifyOfDelivery visibility:
+  ActivityDeclaration name:notifyOfDelivery isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName customer
+     FeatureReference name:'is placed by'
+      ThisExpression
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:OrderReportedDelivered
+      NameExpression
+       QualifiedName EE_OnlineCustomer
+     NamedTuple
+      NamedExpression name:customerEmail
+       FeatureReference name:email
+        NameExpression
+         QualifiedName customer
+Alf 0.05 Parser
+Reading from file tests\Example3a.alf...
+Parsed successfully.
+UnitDefinition
+/** Create a new property with a given identifier and name */
+ QualifiedName 'Property Management'::'Data Model'::Properties::Property
+ ImportReference alias: packageImport:false
+  QualifiedName 'Identifiers'::'Identifier Factory'
+ ActivityDefinition name:'create property' visibility:
+  ActivityDeclaration name:'create property' isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:identifier
+       ThisExpression
+     NameExpression
+      QualifiedName identifier
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:name
+       ThisExpression
+     NameExpression
+      QualifiedName name
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:'update status'
+      ThisExpression
+     PositionalTuple
+Alf 0.05 Parser
+Reading from file tests\Example3b.alf...
+Parsed successfully.
+UnitDefinition
+/** Update the status of a property consistent with whether it has been 
+    acquired or disposed.
+*/
+ QualifiedName 'Property Management'::'Data Model'::Properties::Property
+ ActivityDefinition name:'update status' visibility:
+  ActivityDeclaration name:'update status' isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       FeatureReference name:'acquisition data'
+        ThisExpression
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         FeatureLeftHandSide
+          FeatureReference name:status
+           ThisExpression
+         NameExpression
+          QualifiedName 'Property Status'::pending
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       FeatureReference name:'disposition data'
+        ThisExpression
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         FeatureLeftHandSide
+          FeatureReference name:status
+           ThisExpression
+         NameExpression
+          QualifiedName 'Property Status'::acquired
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       FeatureLeftHandSide
+        FeatureReference name:status
+         ThisExpression
+       NameExpression
+        QualifiedName 'Property Status'::disposed
+Alf 0.05 Parser
+Reading from file tests\Example3c.alf...
+Parsed successfully.
+UnitDefinition
+/** Generate a unique identifier from the next sequential integer. */
+ QualifiedName Identifiers::'Identifier Factory'
+ ActivityDefinition name:'get next identifier' visibility:
+  ActivityDeclaration name:'get next identifier' isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+    QualifiedName String
+  Block
+   ReturnStatement
+    FeatureInvocationExpression
+     FeatureReference name:toString
+      PostfixExpression operator:++
+       FeatureReference name:'next identifier'
+        ThisExpression
+     PositionalTuple
+Alf 0.05 Parser
+Reading from file tests\Example3d.alf...
+Parsed successfully.
+UnitDefinition
+/** Create a reply message for a given message ID and property object */
+ QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Data Model'::Properties
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Message Model'
+ ActivityDefinition name:'create reply' visibility:
+  ActivityDeclaration name:'create reply' isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+    QualifiedName 'Property Management Success Reply'
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName propertyData
+     InstanceCreationExpression
+      QualifiedName 'Property Data'
+      NamedTuple
+       NamedExpression name:'property identifier'
+        FeatureReference name:identifier
+         NameExpression
+          QualifiedName property
+       NamedExpression name:'property name'
+        FeatureReference name:name
+         NameExpression
+          QualifiedName property
+       NamedExpression name:'property status'
+        FeatureReference name:status
+         NameExpression
+          QualifiedName property
+       NamedExpression name:'property acquisition data'
+        FeatureReference name:'acquisition data'
+         NameExpression
+          QualifiedName property
+       NamedExpression name:'property disposition data'
+        FeatureReference name:'disposition data'
+         NameExpression
+          QualifiedName property
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:notEmpty
+       FeatureReference name:location
+        NameExpression
+         QualifiedName property
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         FeatureLeftHandSide
+          FeatureReference name:'property location'
+           NameExpression
+            QualifiedName propertyData
+         InstanceCreationExpression
+          QualifiedName 'Location Data'
+          NamedTuple
+           NamedExpression name:'location identifier'
+            FeatureReference name:identifier
+             FeatureReference name:location
+              NameExpression
+               QualifiedName property
+           NamedExpression name:'location address'
+            FeatureReference name:address
+             FeatureReference name:location
+              NameExpression
+               QualifiedName property
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      ClassificationExpression operator:instanceof
+       NameExpression
+        QualifiedName property
+       QualifiedName 'Personal Property'
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         FeatureLeftHandSide
+          FeatureReference name:'property serial number'
+           NameExpression
+            QualifiedName propertyData
+         FeatureReference name:'serial number'
+          CastExpression
+           QualifiedName 'Personal Property'
+           NameExpression
+            QualifiedName property
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       FeatureLeftHandSide
+        FeatureReference name:'property size'
+         NameExpression
+          QualifiedName propertyData
+       FeatureReference name:size
+        CastExpression
+         QualifiedName 'Real Property'
+         NameExpression
+          QualifiedName property
+   ReturnStatement
+    InstanceCreationExpression
+     QualifiedName 'Property Management Success Reply'
+     NamedTuple
+      NamedExpression name:identifier
+       BinaryExpression operator:+
+        NameExpression
+         QualifiedName requestId
+        StringLiteral image:"/reply"
+      NamedExpression name:'request identifier'
+       NameExpression
+        QualifiedName requestId
+      NamedExpression name:property
+       NameExpression
+        QualifiedName propertyData
+Alf 0.05 Parser
+Reading from file tests\Example3e.alf...
+Parsed successfully.
+UnitDefinition
+/** Establish a new property record. */
+ QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Data Model'::Properties
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Message Model'
+ ActivityDefinition name:establish visibility:
+  ActivityDeclaration name:establish isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName identifier
+     FeatureInvocationExpression
+      FeatureReference name:'get next identifier'
+       FeatureReference name:'property identifier factory'
+        ThisExpression
+      PositionalTuple
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      BinaryExpression operator:==
+       FeatureReference name:'property type'
+        NameExpression
+         QualifiedName request
+       NameExpression
+        QualifiedName 'Property Type'::personal
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName property
+         InstanceCreationExpression
+          QualifiedName 'Personal Property'::'create property'
+          PositionalTuple
+           NameExpression
+            QualifiedName identifier
+           NameExpression
+            QualifiedName identifier
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName property
+       InstanceCreationExpression
+        QualifiedName 'Real Property'::'create property'
+        PositionalTuple
+         NameExpression
+          QualifiedName identifier
+         NameExpression
+          QualifiedName identifier
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName reply
+     FeatureInvocationExpression
+      FeatureReference name:'create reply'
+       ThisExpression
+      PositionalTuple
+       FeatureReference name:identifier
+        NameExpression
+         QualifiedName request
+       FeatureReference name:identifier
+        NameExpression
+         QualifiedName request
+Alf 0.05 Parser
+Reading from file tests\Example3f.alf...
+Parsed successfully.
+UnitDefinition
+/** Update the acquisition information for an existing property. */
+ QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Data Model'::Properties
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Message Model'
+ ActivityDefinition name:acquire visibility:
+  ActivityDeclaration name:acquire isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName property
+     CollectionExpansionExpression operation:select variable:p
+      NameExpression
+       QualifiedName Property
+      PositionalTuple
+       BinaryExpression operator:==
+        FeatureReference name:identifier
+         NameExpression
+          QualifiedName p
+        FeatureReference name:'property identifier'
+         NameExpression
+          QualifiedName request
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       NameExpression
+        QualifiedName property
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PAN-001"
+           NamedExpression name:'error message'
+            StringLiteral image:"Property not found."
+    ConcurrentClauses
+     NonFinalClause
+      AssignmentExpression operator:=
+       FeatureLeftHandSide
+        FeatureReference name:status
+         NameExpression
+          QualifiedName property
+       NameExpression
+        QualifiedName 'Property Type'::disposed
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PAN-002"
+           NamedExpression name:'error message'
+            StringLiteral image:"Property already disposed."
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       FeatureLeftHandSide
+        FeatureReference name:'acquisition data'
+         NameExpression
+          QualifiedName property
+       FeatureReference name:'property acquisition data'
+        NameExpression
+         QualifiedName request
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:'update status'
+        NameExpression
+         QualifiedName property
+       PositionalTuple
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName reply
+       FeatureInvocationExpression
+        FeatureReference name:'create reply'
+         ThisExpression
+        PositionalTuple
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+Alf 0.05 Parser
+Reading from file tests\Example3g.alf...
+Parsed successfully.
+UnitDefinition
+/** Update the attribute data of a property (other than acquisition or
+    disposition data). Only non-empty values in the update message cause
+    corresponding attribute updates. Note that none of these updates can
+    result in a property status change.
+*/
+ QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Data Model'::Properties
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Message Model'
+ ActivityDefinition name:update visibility:
+  ActivityDeclaration name:update isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName property
+     CollectionExpansionExpression operation:select variable:p
+      NameExpression
+       QualifiedName Property
+      PositionalTuple
+       BinaryExpression operator:==
+        FeatureReference name:identifier
+         NameExpression
+          QualifiedName p
+        FeatureReference name:'property identifier'
+         NameExpression
+          QualifiedName request
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       NameExpression
+        QualifiedName property
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PRU-001"
+           NamedExpression name:'error message'
+            StringLiteral image:"Property not found."
+    ConcurrentClauses
+     NonFinalClause
+      AssignmentExpression operator:=
+       FeatureLeftHandSide
+        FeatureReference name:status
+         NameExpression
+          QualifiedName property
+       NameExpression
+        QualifiedName 'Property Type'::disposed
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PRU-002"
+           NamedExpression name:'error message'
+            StringLiteral image:"Property already disposed."
+    ConcurrentClauses
+     NonFinalClause
+      ConditionalBinaryExpression operator:||
+       ConditionalBinaryExpression operator:&&
+        CollectionOperationExpression operation:notEmpty
+         FeatureReference name:'serial number'
+          NameExpression
+           QualifiedName request
+         PositionalTuple
+        ClassificationExpression operator:instanceof
+         NameExpression
+          QualifiedName property
+         QualifiedName 'Real Property'
+       ConditionalBinaryExpression operator:&&
+        CollectionOperationExpression operation:notEmpty
+         FeatureReference name:'size'
+          NameExpression
+           QualifiedName request
+         PositionalTuple
+        ClassificationExpression operator:instanceof
+         NameExpression
+          QualifiedName property
+         QualifiedName 'Personal Property'
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PRU-002"
+           NamedExpression name:'error message'
+            StringLiteral image:"Wrong property type."
+    ConcurrentClauses
+     NonFinalClause
+      ConditionalBinaryExpression operator:&&
+       CollectionOperationExpression operation:notEmpty
+        FeatureReference name:'property location'
+         NameExpression
+          QualifiedName request
+        PositionalTuple
+       UnaryExpression operator:!
+        CollectionExpansionExpression operation:exists variable:loc
+         NameExpression
+          QualifiedName Location
+         PositionalTuple
+          BinaryExpression operator:==
+           FeatureReference name:identifier
+            NameExpression
+             QualifiedName loc
+           FeatureReference name:'property location'
+            NameExpression
+             QualifiedName request
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PRU-003"
+           NamedExpression name:'error message'
+            StringLiteral image:"Location not found."
+    Block
+     IfStatement
+      ConcurrentClauses
+       NonFinalClause
+        CollectionOperationExpression operation:notEmpty
+         FeatureReference name:'property location'
+          NameExpression
+           QualifiedName request
+         PositionalTuple
+        Block
+         ExpressionStatement
+          AssignmentExpression operator:=
+           NameLeftHandSide
+            QualifiedName location
+           CollectionExpansionExpression operation:select variable:loc
+            NameExpression
+             QualifiedName Location
+            PositionalTuple
+             BinaryExpression operator:==
+              FeatureReference name:identifier
+               NameExpression
+                QualifiedName loc
+              FeatureReference name:'property location'
+               NameExpression
+                QualifiedName request
+         ExpressionStatement
+          CollectionOperationExpression operation:add
+           NameExpression
+            QualifiedName 'Property Location'
+           PositionalTuple
+            NameExpression
+             QualifiedName property
+            NameExpression
+             QualifiedName property
+     IfStatement
+      ConcurrentClauses
+       NonFinalClause
+        CollectionOperationExpression operation:notEmpty
+         FeatureReference name:'property name'
+          NameExpression
+           QualifiedName request
+         PositionalTuple
+        Block
+         ExpressionStatement
+          AssignmentExpression operator:=
+           FeatureLeftHandSide
+            FeatureReference name:name
+             NameExpression
+              QualifiedName property
+           FeatureReference name:'property name'
+            NameExpression
+             QualifiedName request
+     IfStatement
+      ConcurrentClauses
+       NonFinalClause
+        CollectionOperationExpression operation:notEmpty
+         FeatureReference name:'property value'
+          NameExpression
+           QualifiedName request
+         PositionalTuple
+        Block
+         ExpressionStatement
+          AssignmentExpression operator:=
+           FeatureLeftHandSide
+            FeatureReference name:value
+             NameExpression
+              QualifiedName property
+           FeatureReference name:'property value'
+            NameExpression
+             QualifiedName request
+     IfStatement
+      ConcurrentClauses
+       NonFinalClause
+        CollectionOperationExpression operation:notEmpty
+         FeatureReference name:'property serial number'
+          NameExpression
+           QualifiedName request
+         PositionalTuple
+        Block
+         ExpressionStatement
+          AssignmentExpression operator:=
+           FeatureLeftHandSide
+            FeatureReference name:'serial number'
+             CastExpression
+              QualifiedName 'Personal Property'
+              NameExpression
+               QualifiedName property
+           FeatureReference name:'property serial number'
+            NameExpression
+             QualifiedName request
+     IfStatement
+      ConcurrentClauses
+       NonFinalClause
+        CollectionOperationExpression operation:notEmpty
+         FeatureReference name:'property size'
+          NameExpression
+           QualifiedName request
+         PositionalTuple
+        Block
+         ExpressionStatement
+          AssignmentExpression operator:=
+           FeatureLeftHandSide
+            FeatureReference name:size
+             CastExpression
+              QualifiedName 'Real Property'
+              NameExpression
+               QualifiedName property
+           FeatureReference name:'property size'
+            NameExpression
+             QualifiedName request
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName reply
+       FeatureInvocationExpression
+        FeatureReference name:'create reply'
+         ThisExpression
+        PositionalTuple
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+Alf 0.05 Parser
+Reading from file tests\Example3h.alf...
+Parsed successfully.
+UnitDefinition
+/** Update the disposition data for an existing property. */
+ QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Data Model'::Properties
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Message Model'
+ ActivityDefinition name:dispose visibility:
+  ActivityDeclaration name:dispose isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName property
+     CollectionExpansionExpression operation:select variable:p
+      NameExpression
+       QualifiedName Property
+      PositionalTuple
+       BinaryExpression operator:==
+        FeatureReference name:identifier
+         NameExpression
+          QualifiedName p
+        FeatureReference name:'property identifier'
+         NameExpression
+          QualifiedName request
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       NameExpression
+        QualifiedName property
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PDN-001"
+           NamedExpression name:'error message'
+            StringLiteral image:"Property not found."
+    ConcurrentClauses
+     NonFinalClause
+      AssignmentExpression operator:=
+       FeatureLeftHandSide
+        FeatureReference name:status
+         NameExpression
+          QualifiedName property
+       NameExpression
+        QualifiedName 'Property Type'::pending
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PDN-002"
+           NamedExpression name:'error message'
+            StringLiteral image:"Property not yet acquired."
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       FeatureLeftHandSide
+        FeatureReference name:'disposition data'
+         NameExpression
+          QualifiedName property
+       FeatureReference name:'property disposition data'
+        NameExpression
+         QualifiedName request
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:'update status'
+        NameExpression
+         QualifiedName property
+       PositionalTuple
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName reply
+       FeatureInvocationExpression
+        FeatureReference name:'create reply'
+         ThisExpression
+        PositionalTuple
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+Alf 0.05 Parser
+Reading from file tests\Example3i.alf...
+Parsed successfully.
+UnitDefinition
+/** Delete an existing property, destroying the record of it. */
+ QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Data Model'::Properties
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Message Model'
+ ActivityDefinition name:delete visibility:
+  ActivityDeclaration name:delete isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName property
+     CollectionExpansionExpression operation:select variable:p
+      NameExpression
+       QualifiedName Property
+      PositionalTuple
+       BinaryExpression operator:==
+        FeatureReference name:identifier
+         NameExpression
+          QualifiedName p
+        FeatureReference name:'property identifier'
+         NameExpression
+          QualifiedName request
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       NameExpression
+        QualifiedName property
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PRD-001"
+           NamedExpression name:'error message'
+            StringLiteral image:"Property not found."
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName reply
+       FeatureInvocationExpression
+        FeatureReference name:'create reply'
+         ThisExpression
+        PositionalTuple
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+     ExpressionStatement
+      InstanceDestructionExpression
+       NameExpression
+        QualifiedName property
+       PositionalTuple
+Alf 0.05 Parser
+Reading from file tests\Example3j.alf...
+Parsed successfully.
+UnitDefinition
+/** Retrieve data on an existing property record. */
+ QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Data Model'::Properties
+ ImportReference alias: packageImport:true
+  QualifiedName 'Property Management'::'Message Model'
+ ActivityDefinition name:retrieve visibility:
+  ActivityDeclaration name:retrieve isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName property
+     CollectionExpansionExpression operation:select variable:p
+      NameExpression
+       QualifiedName Property
+      PositionalTuple
+       BinaryExpression operator:==
+        FeatureReference name:identifier
+         NameExpression
+          QualifiedName p
+        FeatureReference name:'property identifier'
+         NameExpression
+          QualifiedName request
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      CollectionOperationExpression operation:isEmpty
+       NameExpression
+        QualifiedName property
+       PositionalTuple
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName error
+         InstanceCreationExpression
+          QualifiedName 'Error Reply'
+          NamedTuple
+           NamedExpression name:identifier
+            BinaryExpression operator:+
+             FeatureReference name:identifier
+              NameExpression
+               QualifiedName request
+             StringLiteral image:"/error"
+           NamedExpression name:'request identifier'
+            FeatureReference name:identifier
+             NameExpression
+              QualifiedName request
+           NamedExpression name:'error code'
+            StringLiteral image:"PRR-001"
+           NamedExpression name:'error message'
+            StringLiteral image:"Property not found."
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName reply
+       FeatureInvocationExpression
+        FeatureReference name:'create reply'
+         ThisExpression
+        PositionalTuple
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+         FeatureReference name:identifier
+          NameExpression
+           QualifiedName request
+Alf 0.05 Parser
+Reading from file tests\ActiveClass_Order.alf...
+Parsed successfully.
+UnitDefinition
+ ActiveClassDefinition name:Order visibility: behaviorName:Order_Behavior
+  PropertyDefinition name:dateOrderPlaced visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:dateOrderPlaced isComposite:false
+    QualifiedName Date
+  PropertyDefinition name:totalValue visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:totalValue isComposite:false
+    QualifiedName Money
+  PropertyDefinition name:deliveryAddress visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:deliveryAddress isComposite:false
+    QualifiedName MailingAddress
+  PropertyDefinition name:contactPhone visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:contactPhone isComposite:false
+    QualifiedName TelephoneNumber
+  ReceptionDefinition name:CheckOut visibility:public
+   QualifiedName CheckOut
+  ReceptionDefinition name:SubmitCharge visibility:public
+   QualifiedName SubmitCharge
+  ReceptionDefinition name:PaymentDeclined visibility:public
+   QualifiedName PaymentDeclined
+  ReceptionDefinition name:PaymentApproved visibility:public
+   QualifiedName PaymentApproved
+  ReceptionDefinition name:OrderDelivered visibility:public
+   QualifiedName OrderDelivered
+  ActiveClassDeclaration name:Order isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\ActiveClass_ProcessQueue.alf...
+Parsed successfully.
+UnitDefinition
+ ActiveClassDefinition name:ProcessQueue visibility: behaviorName:
+  PropertyDefinition name:busy visibility:private
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:busy isComposite:false
+    QualifiedName Boolean
+   NameExpression
+    QualifiedName false
+  SignalReceptionDefinition name:Wait visibility:public
+   PropertyDefinition name:process visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:process isComposite:false
+     QualifiedName Process
+   SignalDeclaration name:Wait isAbstract:false
+  SignalReceptionDefinition name:Release visibility:public
+   SignalDeclaration name:Release isAbstract:false
+  OperationStubDeclaration name:enqueue visibility:protected
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:enqueue isAbstract:true
+  OperationStubDeclaration name:dequeue visibility:protected
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:dequeue isAbstract:true
+    QualifiedName Process
+  OperationStubDeclaration name:processesWaiting visibility:protected
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:processesWaiting isAbstract:true
+    QualifiedName Boolean
+  ActiveClassDeclaration name:ProcessQueue isAbstract:true
+  Block
+   WhileStatement
+    NameExpression
+     QualifiedName true
+    Block
+     AcceptStatement
+      AcceptBlock name:sig
+       QualifiedNameList
+        QualifiedName Wait
+       Block
+        IfStatement
+         ConcurrentClauses
+          NonFinalClause
+           FeatureReference name:busy
+            ThisExpression
+           Block
+            ExpressionStatement
+             FeatureInvocationExpression
+              FeatureReference name:enqueue
+               ThisExpression
+              PositionalTuple
+               FeatureReference name:process
+                NameExpression
+                 QualifiedName sig
+         Block
+          ExpressionStatement
+           FeatureInvocationExpression
+            FeatureReference name:resume
+             FeatureReference name:process
+              NameExpression
+               QualifiedName sig
+            PositionalTuple
+      AcceptBlock name:null
+       QualifiedNameList
+        QualifiedName Release
+       Block
+        IfStatement
+         ConcurrentClauses
+          NonFinalClause
+           FeatureInvocationExpression
+            FeatureReference name:processesWaiting
+             ThisExpression
+            PositionalTuple
+           Block
+            ExpressionStatement
+             FeatureInvocationExpression
+              FeatureReference name:resume
+               FeatureInvocationExpression
+                FeatureReference name:dequeue
+                 ThisExpression
+                PositionalTuple
+              PositionalTuple
+         Block
+          ExpressionStatement
+           AssignmentExpression operator:=
+            FeatureLeftHandSide
+             FeatureReference name:busy
+              ThisExpression
+            NameExpression
+             QualifiedName false
+Alf 0.05 Parser
+Reading from file tests\ActiveClass_ProcessQueueImpl.alf...
+Parsed successfully.
+UnitDefinition
+ ActiveClassDefinition name:ProcessQueueImpl visibility: behaviorName:
+  PropertyDefinition name:waitingProcesses visibility:private
+   PropertyDeclaration lowerBound: upperBound:* isOrdered:true isNonunique:false collection: name:waitingProcesses isComposite:false
+    QualifiedName Process
+  OperationStubDeclaration name:enqueue visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:enqueue isAbstract:false
+  OperationStubDeclaration name:dequeue visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:dequeue isAbstract:false
+    QualifiedName Process
+  OperationStubDeclaration name:processesWaiting visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:processesWaiting isAbstract:false
+    QualifiedName Boolean
+  ActiveClassDeclaration name:ProcessQueueImpl isAbstract:false
+   QualifiedNameList
+    QualifiedName ProcessQueue
+Alf 0.05 Parser
+Reading from file tests\ActiveClass_Receptions.alf...
+Parsed successfully.
+UnitDefinition
+ ActiveClassDefinition name:Receptions visibility: behaviorName:
+  ReceptionDefinition name:Checkout visibility:public
+   QualifiedName Checkout
+  SignalReceptionDefinition name:SubmitCharge visibility:public
+   PropertyDefinition name:accountNumber visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:accountNumber isComposite:false
+     QualifiedName BankCardAccountNumber
+   PropertyDefinition name:billingAddress visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:billingAddress isComposite:false
+     QualifiedName MailingAddress
+   PropertyDefinition name:cardExpirationDate visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cardExpirationDate isComposite:false
+     QualifiedName MonthYear
+   PropertyDefinition name:cardholderName visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cardholderName isComposite:false
+     QualifiedName PersonalName
+   SignalDeclaration name:SubmitCharge isAbstract:false
+  ActiveClassDeclaration name:Receptions isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Activity_execute.alf...
+Parsed successfully.
+UnitDefinition
+ ActivityDefinition name:execute visibility:
+  ActivityDeclaration name:execute isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   BlockStatement
+    Annotation identifier:parallel
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName 'activity'
+       CastExpression
+        QualifiedName Activity
+        CollectionAccessExpression
+         FeatureReference name:types
+          ThisExpression
+         NaturalLiteral image:1
+     BlockStatement
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName group
+         InstanceCreationExpression
+          QualifiedName ActivityNodeActivationGroup
+          PositionalTuple
+       ExpressionStatement
+        AssignmentExpression operator:=
+         FeatureLeftHandSide
+          FeatureReference name:activityExecution
+           NameExpression
+            QualifiedName group
+         ThisExpression
+     BlockStatement
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         FeatureLeftHandSide
+          FeatureReference name:activationGroup
+           ThisExpression
+         NameExpression
+          QualifiedName group
+       ExpressionStatement
+        FeatureInvocationExpression
+         FeatureReference name:activate
+          NameExpression
+           QualifiedName group
+         PositionalTuple
+          FeatureReference name:node
+           NameExpression
+            QualifiedName 'activity'
+          FeatureReference name:node
+           NameExpression
+            QualifiedName 'activity'
+Alf 0.05 Parser
+Reading from file tests\Activity_Expressions.alf...
+Parsed successfully.
+UnitDefinition
+ ActivityDefinition name:ExpressionStatements visibility:
+  ActivityDeclaration name:ExpressionStatements isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName currentOffer
+     CollectionAccessExpression
+      FeatureReference name:offers
+       ThisExpression
+      NaturalLiteral image:1
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:SignalAlarm
+      NameExpression
+       QualifiedName monitor
+     PositionalTuple
+      NameExpression
+       QualifiedName sensorId
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:interest
+       ThisExpression
+     BinaryExpression operator:*
+      BinaryExpression operator:*
+       FeatureReference name:principal
+        ThisExpression
+       FeatureReference name:rate
+        ThisExpression
+      NameExpression
+       QualifiedName period
+   ExpressionStatement
+    FeatureReference name:im
+     NameExpression
+      QualifiedName poleValue
+   ExpressionStatement
+    FeatureReference name:node
+     ThisExpression
+   ExpressionStatement
+    FeatureReference name:name
+     NameExpression
+      QualifiedName members
+   ExpressionStatement
+    FeatureReference name:house
+     NameExpression
+      QualifiedName jack
+   ExpressionStatement
+    CollectionExpansionExpression operation:select variable:house
+     NameExpression
+      QualifiedName Owns
+     NamedTuple
+      NamedExpression name:owner
+       NameExpression
+        QualifiedName jack
+   ExpressionStatement
+    CollectionExpansionExpression operation:collect variable:x
+     NameExpression
+      QualifiedName collection
+     PositionalTuple
+      FeatureReference name:name
+       NameExpression
+        QualifiedName x
+   ExpressionStatement
+    CollectionExpansionExpression operation:select variable:name
+     NameExpression
+      QualifiedName Assoc
+     NamedTuple
+      NamedExpression name:other
+       NameExpression
+        QualifiedName expr
+   ExpressionStatement
+    CollectionExpansionExpression operation:collect variable:x
+     NameExpression
+      QualifiedName collection
+     PositionalTuple
+      FeatureReference name:name
+       NameExpression
+        QualifiedName x
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName A
+     PositionalTuple
+      NaturalLiteral image:1
+      NaturalLiteral image:1
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName A
+     NamedTuple
+      NamedExpression name:x
+       NaturalLiteral image:1
+      NamedExpression name:y
+       NameExpression
+        QualifiedName true
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName A
+     NamedTuple
+      NamedExpression name:y
+       NameExpression
+        QualifiedName true
+      NamedExpression name:x
+       NaturalLiteral image:1
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName A
+     NamedTuple
+      NamedExpression name:x
+       NaturalLiteral image:1
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName A
+     PositionalTuple
+      NaturalLiteral image:1
+      NaturalLiteral image:1
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName ComputeInterest
+     PositionalTuple
+      NameExpression
+       QualifiedName amount
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName Start
+     NamedTuple
+      NamedExpression name:monitor
+       NameExpression
+        QualifiedName systemMonitor
+   ExpressionStatement
+    SuperInvocationExpression
+     QualifiedName run
+     PositionalTuple
+   ExpressionStatement
+    SuperInvocationExpression
+     QualifiedName initialize
+     PositionalTuple
+      NameExpression
+       QualifiedName startValue
+   ExpressionStatement
+    SuperInvocationExpression
+     QualifiedName Person::setName
+     PositionalTuple
+      NameExpression
+       QualifiedName name
+   ExpressionStatement
+    InstanceCreationExpression
+     QualifiedName Employee
+     PositionalTuple
+      NameExpression
+       QualifiedName id
+      NameExpression
+       QualifiedName id
+   ExpressionStatement
+    InstanceCreationExpression
+     QualifiedName Employee::transferred
+     PositionalTuple
+      NameExpression
+       QualifiedName employeeInfo
+   ExpressionStatement
+    InstanceDestructionExpression
+     NameExpression
+      QualifiedName employee
+     PositionalTuple
+   ExpressionStatement
+    InstanceDestructionExpression
+     NameExpression
+      QualifiedName sensor
+     PositionalTuple
+      NameExpression
+       QualifiedName recoveryLog
+   ExpressionStatement
+    ReductionExpression operator:#
+     QualifiedName '+'
+     NameExpression
+      QualifiedName subtotals
+   ExpressionStatement
+    ReductionExpression operator:##
+     QualifiedName MatMult
+     NameExpression
+      QualifiedName rotationMatrices
+   ExpressionStatement
+    ReductionExpression operator:#
+     QualifiedName '+'
+     CollectionValueExpression
+      TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+       QualifiedName Integer
+      ExpressionList
+       NaturalLiteral image:1
+       NaturalLiteral image:2
+       NaturalLiteral image:3
+   ExpressionStatement
+    ReductionExpression operator:##
+     QualifiedName MatMult
+     CollectionValueExpression
+      TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+       QualifiedName Matrix
+      ExpressionList
+       NameExpression
+        QualifiedName A
+       NameExpression
+        QualifiedName B
+       NameExpression
+        QualifiedName C
+   ExpressionStatement
+    CollectionValueExpression
+     TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      QualifiedName String
+     ExpressionList
+      StringLiteral image:"apple"
+      StringLiteral image:"orange"
+      StringLiteral image:"strawberry"
+   ExpressionStatement
+    CollectionValueExpression
+     TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      QualifiedName Integer
+     CollectionRange
+      NaturalLiteral image:1
+      BinaryExpression operator:+
+       NaturalLiteral image:6
+       NaturalLiteral image:4
+   ExpressionStatement
+    CollectionValueExpression
+     TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      QualifiedName Integer
+     ExpressionList
+      NaturalLiteral image:1
+      CollectionValueExpression
+       TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+        QualifiedName Integer
+       ExpressionList
+        NaturalLiteral image:2
+        NaturalLiteral image:3
+      NaturalLiteral image:4
+   ExpressionStatement
+    CollectionValueExpression
+     TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      QualifiedName Integer
+     ExpressionList
+      NaturalLiteral image:1
+      NaturalLiteral image:2
+      NaturalLiteral image:3
+      NaturalLiteral image:4
+   ExpressionStatement
+    CollectionValueExpression
+     TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      QualifiedName Integer
+     CollectionRange
+      NaturalLiteral image:1
+      BinaryExpression operator:+
+       NaturalLiteral image:6
+       NaturalLiteral image:4
+   ExpressionStatement
+    CollectionValueExpression
+     TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      QualifiedName Integer
+     ExpressionList
+      NaturalLiteral image:1
+      NaturalLiteral image:2
+      NaturalLiteral image:3
+      NaturalLiteral image:4
+      NaturalLiteral image:5
+      NaturalLiteral image:6
+      NaturalLiteral image:7
+      NaturalLiteral image:8
+      NaturalLiteral image:9
+      NaturalLiteral image:10
+   BlockStatement
+    Annotation identifier:parallel
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName i
+       NameExpression
+        QualifiedName Expr1
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName last
+       NameExpression
+        QualifiedName Expr2
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName collection
+       CollectionValueExpression
+        TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+         QualifiedName Integer
+     WhileStatement
+      BinaryExpression operator:<=
+       NameExpression
+        QualifiedName i
+       NameExpression
+        QualifiedName last
+      Block
+       ExpressionStatement
+        CollectionOperationExpression operation:add
+         NameExpression
+          QualifiedName collection
+         PositionalTuple
+          PostfixExpression operator:++
+           NameExpression
+            QualifiedName i
+   EmptyStatement
+   ExpressionStatement
+    CollectionAccessExpression
+     FeatureInvocationExpression
+      FeatureReference name:getTypes
+       ThisExpression
+      PositionalTuple
+     NaturalLiteral image:1
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName a
+     CollectionValueExpression
+      TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+       QualifiedName Integer
+      ExpressionList
+       NaturalLiteral image:10
+       NaturalLiteral image:20
+       NaturalLiteral image:30
+       NaturalLiteral image:40
+   ExpressionStatement
+    CollectionOperationExpression operation:notEmpty
+     NameExpression
+      QualifiedName selectedCustomers
+     PositionalTuple
+   ExpressionStatement
+    CollectionOperationExpression operation:includes
+     NameExpression
+      QualifiedName memberList
+     PositionalTuple
+      NameExpression
+       QualifiedName possibleMember
+   ExpressionStatement
+    CollectionOperationExpression operation:including
+     NameExpression
+      QualifiedName memberList
+     PositionalTuple
+      NameExpression
+       QualifiedName newMember
+   ExpressionStatement
+    CollectionOperationExpression operation:removeAll
+     NameExpression
+      QualifiedName products
+     PositionalTuple
+      NameExpression
+       QualifiedName rejects
+   ExpressionStatement
+    CollectionOperationExpression operation:add
+     NameExpression
+      QualifiedName Owns
+     NamedTuple
+      NamedExpression name:owner
+       NameExpression
+        QualifiedName jack
+      NamedExpression name:house
+       NameExpression
+        QualifiedName newHouse
+   ExpressionStatement
+    CollectionOperationExpression operation:add
+     NameExpression
+      QualifiedName Owns
+     NamedTuple
+      NamedExpression name:owner
+       NameExpression
+        QualifiedName jack
+      NamedExpression name:house
+       NameExpression
+        QualifiedName newHouse
+   ExpressionStatement
+    CollectionOperationExpression operation:remove
+     NameExpression
+      QualifiedName Owns
+     NamedTuple
+      NamedExpression name:owner
+       NameExpression
+        QualifiedName jack
+      NamedExpression name:house
+       NameExpression
+        QualifiedName newHouse
+   ExpressionStatement
+    CollectionOperationExpression operation:clear
+     NameExpression
+      QualifiedName Owns
+     PositionalTuple
+   ExpressionStatement
+    CollectionOperationExpression operation:includes
+     NameExpression
+      QualifiedName Owns
+     NamedTuple
+      NamedExpression name:owner
+       NameExpression
+        QualifiedName jack
+      NamedExpression name:house
+       NameExpression
+        QualifiedName newHouse
+   ExpressionStatement
+    CollectionOperationExpression operation:excludes
+     NameExpression
+      QualifiedName Owns
+     NamedTuple
+      NamedExpression name:owner
+       NameExpression
+        QualifiedName jack
+      NamedExpression name:house
+       NameExpression
+        QualifiedName newHouse
+   ExpressionStatement
+    CollectionExpansionExpression operation:select variable:x
+     NameExpression
+      QualifiedName c
+     PositionalTuple
+      BinaryExpression operator:>
+       NameExpression
+        QualifiedName x
+       NaturalLiteral image:1
+   ExpressionStatement
+    CollectionExpansionExpression operation:select variable:c
+     NameExpression
+      QualifiedName Customer
+     PositionalTuple
+      BinaryExpression operator:==
+       FeatureReference name:name
+        NameExpression
+         QualifiedName c
+       NameExpression
+        QualifiedName customerName
+   ExpressionStatement
+    CollectionExpansionExpression operation:select variable:c
+     ClassExtentExpression
+      QualifiedName Customer
+     PositionalTuple
+      BinaryExpression operator:==
+       FeatureReference name:name
+        NameExpression
+         QualifiedName c
+       NameExpression
+        QualifiedName customerName
+   ExpressionStatement
+    CollectionExpansionExpression operation:select variable:e
+     NameExpression
+      QualifiedName employees
+     PositionalTuple
+      BinaryExpression operator:>
+       FeatureReference name:age
+        NameExpression
+         QualifiedName e
+       NaturalLiteral image:50
+   ExpressionStatement
+    CollectionExpansionExpression operation:reject variable:e
+     NameExpression
+      QualifiedName employees
+     PositionalTuple
+      FeatureReference name:isMarried
+       NameExpression
+        QualifiedName e
+   ExpressionStatement
+    CollectionExpansionExpression operation:select variable:player
+     NameExpression
+      QualifiedName Roster
+     NamedTuple
+      NamedExpression name:team
+       NameExpression
+        QualifiedName t
+      NamedExpression name:season
+       NameExpression
+        QualifiedName y
+   ExpressionStatement
+    CollectionExpansionExpression operation:collect variable:e
+     NameExpression
+      QualifiedName employees
+     PositionalTuple
+      FeatureReference name:birthDate
+       NameExpression
+        QualifiedName e
+   ExpressionStatement
+    CollectionExpansionExpression operation:iterate variable:step
+     NameExpression
+      QualifiedName processSteps
+     PositionalTuple
+      FeatureInvocationExpression
+       FeatureReference name:execute
+        NameExpression
+         QualifiedName step
+       PositionalTuple
+   ExpressionStatement
+    CollectionExpansionExpression operation:forAll variable:e
+     NameExpression
+      QualifiedName employees
+     PositionalTuple
+      BinaryExpression operator:<=
+       FeatureReference name:age
+        NameExpression
+         QualifiedName e
+       NaturalLiteral image:65
+   ExpressionStatement
+    CollectionExpansionExpression operation:exists variable:e
+     NameExpression
+      QualifiedName employees
+     PositionalTuple
+      BinaryExpression operator:==
+       FeatureReference name:firstName
+        NameExpression
+         QualifiedName e
+       StringLiteral image:"Jack"
+   ExpressionStatement
+    CollectionExpansionExpression operation:one variable:e
+     NameExpression
+      QualifiedName employees
+     PositionalTuple
+      BinaryExpression operator:==
+       FeatureReference name:title
+        NameExpression
+         QualifiedName e
+       StringLiteral image:"President"
+   ExpressionStatement
+    CollectionExpansionExpression operation:isUnique variable:e
+     NameExpression
+      QualifiedName employees
+     PositionalTuple
+      FeatureReference name:employeeIdentificationNumber
+       NameExpression
+        QualifiedName e
+   ExpressionStatement
+    PostfixExpression operator:++
+     NameExpression
+      QualifiedName count
+   ExpressionStatement
+    PostfixExpression operator:--
+     NameExpression
+      QualifiedName size
+   ExpressionStatement
+    PostfixExpression operator:++
+     CollectionAccessExpression
+      NameExpression
+       QualifiedName total
+      NameExpression
+       QualifiedName i
+   ExpressionStatement
+    PrefixExpression operator:++
+     NameExpression
+      QualifiedName count
+   ExpressionStatement
+    PrefixExpression operator:--
+     CollectionAccessExpression
+      NameExpression
+       QualifiedName numberWaiting
+      NameExpression
+       QualifiedName queueIndex
+   ExpressionStatement
+    UnaryExpression operator:!
+     NameExpression
+      QualifiedName isActive
+   ExpressionStatement
+    UnaryExpression operator:!
+     FeatureReference name:running
+      ThisExpression
+   ExpressionStatement
+    UnaryExpression operator:+
+     NaturalLiteral image:1234
+   ExpressionStatement
+    UnaryExpression operator:-
+     NaturalLiteral image:42
+   ExpressionStatement
+    UnaryExpression operator:+
+     BinaryExpression operator:*
+      NameExpression
+       QualifiedName a
+      NameExpression
+       QualifiedName b
+   ExpressionStatement
+    UnaryExpression operator:-
+     NameExpression
+      QualifiedName absoluteValue
+   ExpressionStatement
+    UnaryExpression operator:$
+     FeatureInvocationExpression
+      FeatureReference name:getReading
+       FeatureInvocationExpression
+        FeatureReference name:getActiveSensor
+         FeatureReference name:monitor
+          ThisExpression
+        PositionalTuple
+      PositionalTuple
+   ExpressionStatement
+    CastExpression
+     QualifiedName fUML::Syntax::Activity
+     FeatureInvocationExpression
+      FeatureReference name:getTypes
+       ThisExpression
+      PositionalTuple
+   ExpressionStatement
+    CastExpression
+     QualifiedName Person
+     FeatureReference name:payingParty
+      NameExpression
+       QualifiedName invoice
+   ExpressionStatement
+    CastExpression
+     ThisExpression
+   ExpressionStatement
+    CastExpression
+     QualifiedName Integer
+     CollectionValueExpression
+      TypedDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      ExpressionList
+       NaturalLiteral image:1
+       StringLiteral image:"banana"
+       NaturalLiteral image:2
+   ExpressionStatement
+    BinaryExpression operator:*
+     NameExpression
+      QualifiedName amount
+     NameExpression
+      QualifiedName interestRate
+   ExpressionStatement
+    BinaryExpression operator:/
+     NameExpression
+      QualifiedName duration
+     NameExpression
+      QualifiedName timeStep
+   ExpressionStatement
+    BinaryExpression operator:%
+     NameExpression
+      QualifiedName length
+     NameExpression
+      QualifiedName unit
+   ExpressionStatement
+    ConditionalBinaryExpression operator:&&
+     BinaryExpression operator:>
+      NameExpression
+       QualifiedName index
+      NaturalLiteral image:0
+     BinaryExpression operator:<
+      CollectionAccessExpression
+       NameExpression
+        QualifiedName value
+       NameExpression
+        QualifiedName index
+      NameExpression
+       QualifiedName limit
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName index
+     ConditionalBinaryExpression operator:||
+      NaturalLiteral image:0
+      BinaryExpression operator:>=
+       CollectionAccessExpression
+        NameExpression
+         QualifiedName value
+        NameExpression
+         QualifiedName index
+       NameExpression
+        QualifiedName limit
+   ExpressionStatement
+    ConditionalExpression
+     NameExpression
+      QualifiedName isNormalOps
+     BehaviorInvocationExpression
+      QualifiedName readPrimarySensor
+      PositionalTuple
+     BehaviorInvocationExpression
+      QualifiedName readBackupSensor
+      PositionalTuple
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName customer
+     InstanceCreationExpression
+      QualifiedName Customer
+      PositionalTuple
+   ExpressionStatement
+    AssignmentExpression operator:=
+     NameLeftHandSide
+      QualifiedName reply
+     FeatureInvocationExpression
+      FeatureReference name:createReply
+       ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName request
+       NameExpression
+        QualifiedName request
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:email
+       NameExpression
+        QualifiedName customer
+     FeatureReference name:customerEmail
+      NameExpression
+       QualifiedName checkout
+   ExpressionStatement
+    AssignmentExpression operator:=
+     FeatureLeftHandSide
+      FeatureReference name:address
+       NameExpression
+        QualifiedName customer
+      NameExpression
+       QualifiedName i
+     NameExpression
+      QualifiedName newAddress
+   ExpressionStatement
+    AssignmentExpression operator:+=
+     NameLeftHandSide
+      QualifiedName x
+     NaturalLiteral image:4
+   ExpressionStatement
+    AssignmentExpression operator:+=
+     NameLeftHandSide
+      QualifiedName filename
+     StringLiteral image:".doc"
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName WriteLine
+     PositionalTuple
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName a
+       NaturalLiteral image:3
+Alf 0.05 Parser
+Reading from file tests\Activity_getNodeActivations.alf...
+Parsed successfully.
+UnitDefinition
+ ActivityDefinition name:getNodeActivations visibility:
+  ActivityDeclaration name:getNodeActivations isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound:* isOrdered:false isNonunique:false collection: name:
+    QualifiedName ActivityNodeActivation
+  Block
+   ReturnStatement
+    CollectionExpansionExpression operation:select variable:a
+     FeatureReference name:activations
+      ThisExpression
+     PositionalTuple
+      BinaryExpression operator:==
+       FeatureReference name:node
+        NameExpression
+         QualifiedName a
+       NameExpression
+        QualifiedName node
+Alf 0.05 Parser
+Reading from file tests\Activity_Order_Behavior.alf...
+Parsed successfully.
+UnitDefinition
+ ActivityDefinition name:Order_Behavior visibility:
+  ActivityDeclaration name:Order_Behavior isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   AcceptStatement
+    AcceptBlock name:checkout
+     QualifiedNameList
+      QualifiedName Checkout
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:establishCustomer
+      ThisExpression
+     PositionalTuple
+      NameExpression
+       QualifiedName checkout
+   DoStatement
+    Block
+     AcceptStatement
+      AcceptBlock name:chargeSubmission
+       QualifiedNameList
+        QualifiedName SubmitCharge
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:processCharge
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName chargeSubmission
+     AcceptStatement
+      AcceptBlock name:null
+       QualifiedNameList
+        QualifiedName PaymentDeclined
+       Block
+        ExpressionStatement
+         AssignmentExpression operator:=
+          NameLeftHandSide
+           QualifiedName declined
+          NameExpression
+           QualifiedName true
+        ExpressionStatement
+         FeatureInvocationExpression
+          FeatureReference name:declineCharge
+           ThisExpression
+          PositionalTuple
+      AcceptBlock name:null
+       QualifiedNameList
+        QualifiedName PaymentApproved
+       Block
+        ExpressionStatement
+         AssignmentExpression operator:=
+          NameLeftHandSide
+           QualifiedName declined
+          NameExpression
+           QualifiedName false
+    NameExpression
+     QualifiedName declined
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:packAndShip
+      ThisExpression
+     PositionalTuple
+   AcceptStatement
+    AcceptBlock name:null
+     QualifiedNameList
+      QualifiedName OrderDelivery
+   ExpressionStatement
+    FeatureInvocationExpression
+     FeatureReference name:notifyOfDelivery
+      ThisExpression
+     PositionalTuple
+Alf 0.05 Parser
+Reading from file tests\Activity_Statements.alf...
+Parsed successfully.
+UnitDefinition
+ ActivityDefinition name:Statements visibility:
+  ActivityDeclaration name:Statements isAbstract:false
+   ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+  Block
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      BinaryExpression operator:>
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName threshold
+      Block
+       ExpressionStatement
+        FeatureInvocationExpression
+         FeatureReference name:raiseAlarm
+          NameExpression
+           QualifiedName monitor
+         PositionalTuple
+          NameExpression
+           QualifiedName sensorId
+   IfStatement
+    Annotation identifier:assured
+    Annotation identifier:determined
+    ConcurrentClauses
+     NonFinalClause
+      BinaryExpression operator:<=
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName safeLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName normal
+     NonFinalClause
+      ConditionalBinaryExpression operator:&&
+       BinaryExpression operator:>
+        NameExpression
+         QualifiedName reading
+        NameExpression
+         QualifiedName safeLimit
+       BinaryExpression operator:<=
+        NameExpression
+         QualifiedName reading
+        NameExpression
+         QualifiedName criticalLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName alert
+     NonFinalClause
+      BinaryExpression operator:>
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName criticalLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName critical
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      BinaryExpression operator:>
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName threshold
+      Block
+       ExpressionStatement
+        FeatureInvocationExpression
+         FeatureReference name:raiseAlarm
+          NameExpression
+           QualifiedName monitor
+         PositionalTuple
+          NameExpression
+           QualifiedName sensorId
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      BinaryExpression operator:<=
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName safeLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName normal
+    ConcurrentClauses
+     NonFinalClause
+      BinaryExpression operator:<=
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName criticalLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName alert
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName condition
+       NameExpression
+        QualifiedName critical
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      BinaryExpression operator:<=
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName safeLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName normal
+     NonFinalClause
+      ConditionalBinaryExpression operator:&&
+       BinaryExpression operator:>
+        NameExpression
+         QualifiedName reading
+        NameExpression
+         QualifiedName safeLimit
+       BinaryExpression operator:<=
+        NameExpression
+         QualifiedName reading
+        NameExpression
+         QualifiedName criticalLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName alert
+     NonFinalClause
+      BinaryExpression operator:>
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName criticalLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName critical
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      BinaryExpression operator:<=
+       NameExpression
+        QualifiedName reading
+       NameExpression
+        QualifiedName safeLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName normal
+    ConcurrentClauses
+     NonFinalClause
+      ConditionalBinaryExpression operator:&&
+       BinaryExpression operator:>
+        NameExpression
+         QualifiedName reading
+        NameExpression
+         QualifiedName safeLimit
+       BinaryExpression operator:<=
+        NameExpression
+         QualifiedName reading
+        NameExpression
+         QualifiedName criticalLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName alert
+     NonFinalClause
+      ConditionalBinaryExpression operator:&&
+       BinaryExpression operator:>
+        NameExpression
+         QualifiedName reading
+        NameExpression
+         QualifiedName criticalLimit
+       BinaryExpression operator:<
+        NameExpression
+         QualifiedName reading
+        NameExpression
+         QualifiedName errorLimit
+      Block
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName condition
+         NameExpression
+          QualifiedName critical
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName condition
+       NameExpression
+        QualifiedName error
+   SwitchStatement
+    NameExpression
+     QualifiedName month
+    SwitchClause
+     NaturalLiteral image:1
+     NaturalLiteral image:3
+     NaturalLiteral image:5
+     NaturalLiteral image:7
+     NaturalLiteral image:8
+     NaturalLiteral image:10
+     NaturalLiteral image:12
+     Block
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName numDays
+        NaturalLiteral image:31
+    SwitchClause
+     NaturalLiteral image:4
+     NaturalLiteral image:6
+     NaturalLiteral image:9
+     NaturalLiteral image:11
+     Block
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName numDays
+        NaturalLiteral image:30
+    SwitchClause
+     NaturalLiteral image:2
+     Block
+      IfStatement
+       ConcurrentClauses
+        NonFinalClause
+         ConditionalBinaryExpression operator:||
+          ConditionalBinaryExpression operator:&&
+           BinaryExpression operator:==
+            BinaryExpression operator:%
+             NameExpression
+              QualifiedName year
+             NaturalLiteral image:4
+            NaturalLiteral image:0
+           UnaryExpression operator:!
+            BinaryExpression operator:==
+             BinaryExpression operator:%
+              NameExpression
+               QualifiedName year
+              NaturalLiteral image:100
+             NaturalLiteral image:0
+          BinaryExpression operator:==
+           BinaryExpression operator:%
+            NameExpression
+             QualifiedName year
+            NaturalLiteral image:400
+           NaturalLiteral image:0
+         Block
+          ExpressionStatement
+           AssignmentExpression operator:=
+            NameLeftHandSide
+             QualifiedName numDays
+            NaturalLiteral image:29
+       Block
+        ExpressionStatement
+         AssignmentExpression operator:=
+          NameLeftHandSide
+           QualifiedName numDays
+          NaturalLiteral image:28
+    Block
+     ExpressionStatement
+      BehaviorInvocationExpression
+       QualifiedName WriteLine
+       PositionalTuple
+        StringLiteral image:"Invalid month."
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName numDays
+       NaturalLiteral image:0
+   WhileStatement
+    BinaryExpression operator:>
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName last
+      CollectionOperationExpression operation:size
+       FeatureReference name:list
+        ThisExpression
+       PositionalTuple
+     NaturalLiteral image:0
+    Block
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:cleanUp
+        CollectionAccessExpression
+         FeatureReference name:list
+          ThisExpression
+         NameExpression
+          QualifiedName last
+       PositionalTuple
+     ExpressionStatement
+      CollectionOperationExpression operation:remove
+       FeatureReference name:list
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName last
+   WhileStatement
+    FeatureInvocationExpression
+     FeatureReference name:hasMore
+      NameExpression
+       QualifiedName file
+     PositionalTuple
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName nextRecord
+       FeatureInvocationExpression
+        FeatureReference name:readNext
+         NameExpression
+          QualifiedName file
+        PositionalTuple
+     IfStatement
+      ConcurrentClauses
+       NonFinalClause
+        UnaryExpression operator:!
+         CollectionOperationExpression operation:isEmpty
+          NameExpression
+           QualifiedName nextRecord
+          PositionalTuple
+        Block
+         ExpressionStatement
+          AssignmentExpression operator:=
+           NameLeftHandSide
+            QualifiedName checksum
+           BehaviorInvocationExpression
+            QualifiedName ComputeChecksum
+            PositionalTuple
+             NameExpression
+              QualifiedName checksum
+             NameExpression
+              QualifiedName checksum
+   DoStatement
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName line
+       FeatureInvocationExpression
+        FeatureReference name:readNext
+         NameExpression
+          QualifiedName file
+        PositionalTuple
+     ExpressionStatement
+      BehaviorInvocationExpression
+       QualifiedName WriteLine
+       PositionalTuple
+        NameExpression
+         QualifiedName line
+    BinaryExpression operator:!=
+     NameExpression
+      QualifiedName line
+     NameExpression
+      QualifiedName endMarker
+   DoStatement
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName reading
+       FeatureInvocationExpression
+        FeatureReference name:getNextReading
+         NameExpression
+          QualifiedName sensor
+        PositionalTuple
+     ExpressionStatement
+      BehaviorInvocationExpression
+       QualifiedName Record
+       PositionalTuple
+        NameExpression
+         QualifiedName reading
+    UnaryExpression operator:!
+     FeatureInvocationExpression
+      FeatureReference name:isFinal
+       NameExpression
+        QualifiedName reading
+      PositionalTuple
+   ForStatement
+    ForVariableDefinition variable:member
+     NameExpression
+      QualifiedName memberList
+    Block
+     ExpressionStatement
+      CollectionOperationExpression operation:add
+       NameExpression
+        QualifiedName names
+       PositionalTuple
+        FeatureReference name:name
+         NameExpression
+          QualifiedName member
+     ExpressionStatement
+      CollectionOperationExpression operation:add
+       NameExpression
+        QualifiedName addresses
+       PositionalTuple
+        FeatureReference name:address
+         NameExpression
+          QualifiedName member
+   ForStatement
+    ForVariableDefinition variable:sensor
+     NameExpression
+      QualifiedName sensors
+    CollectionOperationExpression operation:notEmpty
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName reading
+      FeatureInvocationExpression
+       FeatureReference name:reading
+        NameExpression
+         QualifiedName sensor
+       PositionalTuple
+     PositionalTuple
+    Block
+     IfStatement
+      ConcurrentClauses
+       NonFinalClause
+        BinaryExpression operator:>
+         NameExpression
+          QualifiedName reading
+         NameExpression
+          QualifiedName noiseLimit
+        Block
+         ExpressionStatement
+          CollectionOperationExpression operation:add
+           NameExpression
+            QualifiedName readings
+           PositionalTuple
+            NameExpression
+             QualifiedName reading
+   ForStatement
+    Annotation identifier:parallel
+    ForVariableDefinition variable:outgoingEdge
+     FeatureReference name:outgoingEdges
+      ThisExpression
+    Block
+     ExpressionStatement
+      FeatureInvocationExpression
+       FeatureReference name:sendOffer
+        NameExpression
+         QualifiedName outgoingEdge
+       PositionalTuple
+        NameExpression
+         QualifiedName tokens
+   ForStatement
+    Annotation identifier:parallel
+     NameList SnEven SnOdd
+    ForVariableDefinition variable:lower
+     NameExpression
+      QualifiedName SLower
+    ForVariableDefinition variable:lower
+     NameExpression
+      QualifiedName SLower
+    ForVariableDefinition variable:lower
+     NameExpression
+      QualifiedName SLower
+    Block
+     BlockStatement
+      Annotation identifier:parallel
+      Block
+       ExpressionStatement
+        CollectionOperationExpression operation:add
+         NameExpression
+          QualifiedName SnEven
+         PositionalTuple
+          BinaryExpression operator:+
+           NameExpression
+            QualifiedName lower
+           NameExpression
+            QualifiedName upper
+       ExpressionStatement
+        CollectionOperationExpression operation:add
+         NameExpression
+          QualifiedName SnOdd
+         PositionalTuple
+          BinaryExpression operator:*
+           BinaryExpression operator:-
+            NameExpression
+             QualifiedName lower
+            NameExpression
+             QualifiedName upper
+           NameExpression
+            QualifiedName root
+   ReturnStatement
+    NameExpression
+     QualifiedName item
+   ReturnStatement
+    CollectionAccessExpression
+     NameExpression
+      QualifiedName list
+     NameExpression
+      QualifiedName index
+   ReturnStatement
+    BinaryExpression operator:*
+     NameExpression
+      QualifiedName x
+     BehaviorInvocationExpression
+      QualifiedName factorial
+      PositionalTuple
+       BinaryExpression operator:-
+        NameExpression
+         QualifiedName x
+        NaturalLiteral image:1
+   AcceptStatement
+    AcceptBlock name:sig
+     QualifiedNameList
+      QualifiedName SignalNewArrival
+      QualifiedName SignalTermination
+   AcceptStatement
+    AcceptBlock name:arrival
+     QualifiedNameList
+      QualifiedName SignalNewArrival
+     Block
+      ExpressionStatement
+       BehaviorInvocationExpression
+        QualifiedName WriteLine
+        PositionalTuple
+         FeatureReference name:name
+          NameExpression
+           QualifiedName arrival
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName terminate
+        NameExpression
+         QualifiedName false
+    AcceptBlock name:null
+     QualifiedNameList
+      QualifiedName SignalTermination
+     Block
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName terminate
+        NameExpression
+         QualifiedName true
+   AcceptStatement
+    AcceptBlock name:null
+     QualifiedNameList
+      QualifiedName SignalNewArrival
+   AcceptStatement
+    AcceptBlock name:arrival
+     QualifiedNameList
+      QualifiedName SignalNewArrival
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName WriteLine
+     PositionalTuple
+      FeatureReference name:name
+       NameExpression
+        QualifiedName arrival
+   AcceptStatement
+    AcceptBlock name:sig
+     QualifiedNameList
+      QualifiedName SignalNewArrival
+      QualifiedName SignalTermination
+   IfStatement
+    ConcurrentClauses
+     NonFinalClause
+      ClassificationExpression operator:instanceof
+       NameExpression
+        QualifiedName sign
+       QualifiedName SignalNewArrival
+      Block
+       ExpressionStatement
+        BehaviorInvocationExpression
+         QualifiedName WriteLine
+         PositionalTuple
+          FeatureReference name:name
+           CastExpression
+            QualifiedName SignalNewArrival
+            NameExpression
+             QualifiedName sig
+       ExpressionStatement
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName terminate
+         NameExpression
+          QualifiedName false
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName terminate
+       NameExpression
+        QualifiedName true
+   AcceptStatement
+    AcceptBlock name:arrival
+     QualifiedNameList
+      QualifiedName SignalNewArrival
+     Block
+      ExpressionStatement
+       BehaviorInvocationExpression
+        QualifiedName WriteLine
+        PositionalTuple
+         FeatureReference name:name
+          NameExpression
+           QualifiedName arrival
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName terminate
+        NameExpression
+         QualifiedName false
+    AcceptBlock name:null
+     QualifiedNameList
+      QualifiedName SignalTermination
+     Block
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName terminate
+        NameExpression
+         QualifiedName true
+   ClassifyStatement
+    QualifiedNameList
+    QualifiedNameList
+     QualifiedName Administrator
+   ClassifyStatement
+    QualifiedNameList
+     QualifiedName Administrator
+   ClassifyStatement
+    QualifiedNameList
+     QualifiedName InActiveMonitor
+    QualifiedNameList
+     QualifiedName InActiveMonitor
+   ClassifyStatement
+    QualifiedNameList
+     QualifiedName Pending
+     QualifiedName Overdue
+    QualifiedNameList
+     QualifiedName Pending
+     QualifiedName Overdue
+Alf 0.05 Parser
+Reading from file tests\Assoc_Selection.alf...
+Parsed successfully.
+UnitDefinition
+ AssociationDefinition name:Selection visibility:
+  PropertyDefinition name:cart visibility:public
+   PropertyDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false collection: name:cart isComposite:false
+    QualifiedName ShoppingCart
+  PropertyDefinition name:selectedProduct visibility:public
+   PropertyDeclaration lowerBound:1 upperBound:* isOrdered:false isNonunique:false collection: name:selectedProduct isComposite:false
+    QualifiedName Product
+  PropertyDefinition name:selectionInfo visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:selectionInfo isComposite:false
+    QualifiedName ProductSelection
+  AssociationDeclaration name:Selection isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Class_Constructors.alf...
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:Constructors visibility:
+  ConstructorStubDeclaration name:Table visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:Table isAbstract:false
+  ConstructorStubDeclaration name:ProductSelection visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:ProductSelection isAbstract:false
+  ConstructorDefinition name:registered visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:registered isAbstract:false
+  ClassDeclaration name:Constructors isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Class_Destructors.alf...
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:Destructors visibility:
+  DestructorStubDeclaration name:ProductSelection visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:ProductSelection isAbstract:false
+  DestructorDefinition name:unregister visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:unregister isAbstract:false
+  DestructorDefinition name:D visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:D isAbstract:false
+  DestructorDefinition name:D visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:D isAbstract:false
+  ClassDeclaration name:Destructors isAbstract:false
+   QualifiedNameList
+    QualifiedName C
+Alf 0.05 Parser
+Reading from file tests\Class_Initialization.alf...
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:Initialization visibility:
+  PropertyDefinition name:a visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:a isComposite:false
+    QualifiedName Integer
+   CollectionOperationExpression operation:size
+    FeatureReference name:b
+     ThisExpression
+    PositionalTuple
+  PropertyDefinition name:b visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:b isComposite:false
+    QualifiedName Integer
+   NaturalLiteral image:1
+  ClassDeclaration name:Initialization isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Class_Operations.alf...
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:Operations visibility:
+  OperationStubDeclaration name:select visibility:null
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:select isAbstract:true
+  OperationDefinition name:select visibility:null
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:select isAbstract:false
+  OperationStubDeclaration name:unitPrice visibility:null
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:unitPrice isAbstract:false
+    QualifiedName Money
+    QualifiedNameList
+     QualifiedName Selection::getUnitPriceOfSelection
+  ClassDeclaration name:Operations isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Class_Properties.alf...
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:Properties visibility:
+  PropertyDefinition name:amount visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:amount isComposite:false
+    QualifiedName Money
+   NaturalLiteral image:0
+  PropertyDefinition name:products visibility:public
+   PropertyDeclaration lowerBound:1 upperBound:* isOrdered:true isNonunique:false collection: name:products isComposite:false
+    QualifiedName Product
+  PropertyDefinition name:wheels visibility:public
+   PropertyDeclaration lowerBound:2 upperBound:4 isOrdered:false isNonunique:false collection: name:wheels isComposite:true
+    QualifiedName Wheel
+  PropertyDefinition name:items visibility:public
+   PropertyDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection: name:items isComposite:false
+    QualifiedName Item
+  PropertyDefinition name:items visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:true isNonunique:true collection: name:items isComposite:false
+    QualifiedName Item
+  PropertyDefinition name:items visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:Sequence name:items isComposite:false
+    QualifiedName Item
+  PropertyDefinition name:a visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:a isComposite:false
+    QualifiedName A
+   InstanceCreationExpression
+    QualifiedName A
+    PositionalTuple
+  PropertyDefinition name:b visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:b isComposite:true
+    QualifiedName B
+   InstanceCreationExpression
+    QualifiedName B
+    PositionalTuple
+  ClassDeclaration name:Properties isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Class_Redefinitions.alf...
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:Redefinitions visibility:
+  OperationStubDeclaration name:p visibility:null
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:p isAbstract:false
+    QualifiedNameList
+     QualifiedName A::p
+     QualifiedName B::p
+  OperationStubDeclaration name:renamed1 visibility:null
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:renamed1 isAbstract:false
+    QualifiedNameList
+     QualifiedName A::p
+     QualifiedName B::p
+  OperationStubDeclaration name:renamed2 visibility:null
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:renamed2 isAbstract:false
+    QualifiedNameList
+     QualifiedName A::p
+  ClassDeclaration name:Redefinitions isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Class_Singleton.alf...
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:Singleton visibility:
+  ConstructorDefinition name:Singleton visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:Singleton isAbstract:false
+  ActivityDefinition name:getSingleton visibility:public
+   ActivityDeclaration name:getSingleton isAbstract:false
+    ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
+     QualifiedName Singleton
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName instance
+      FeatureInvocationExpression
+       FeatureReference name:allinstances
+        NameExpression
+         QualifiedName Singleton
+       PositionalTuple
+    IfStatement
+     ConcurrentClauses
+      NonFinalClause
+       CollectionOperationExpression operation:isEmpty
+        NameExpression
+         QualifiedName instance
+        PositionalTuple
+       Block
+        ExpressionStatement
+         AssignmentExpression operator:=
+          NameLeftHandSide
+           QualifiedName instance
+          InstanceCreationExpression
+           QualifiedName Singleton
+           PositionalTuple
+    ReturnStatement
+     CollectionAccessExpression
+      NameExpression
+       QualifiedName instance
+      NaturalLiteral image:1
+  ClassDeclaration name:Singleton isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Class_SuperConstructors.alf...
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:SuperConstructors visibility:
+  ConstructorDefinition name:B visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:B isAbstract:false
+  ConstructorDefinition name:B visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:B isAbstract:false
+  ConstructorDefinition name:B1 visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:B1 isAbstract:false
+  ConstructorDefinition name:B2 visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:B2 isAbstract:false
+  ClassDeclaration name:SuperConstructors isAbstract:false
+   QualifiedNameList
+    QualifiedName A
+Alf 0.05 Parser
+Reading from file tests\Datatype_Complex.alf...
+Parsed successfully.
+UnitDefinition
+ DataTypeDefinition name:Complex visibility:
+  PropertyDefinition name:re visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:re isComposite:false
+    QualifiedName Real
+  PropertyDefinition name:im visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:im isComposite:false
+    QualifiedName Real
+  DataTypeDeclaration name:Complex isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Enum_TrafficLightColor.alf...
+Parsed successfully.
+UnitDefinition
+ EnumerationDefinition name:TrafficLightColor visibility:
+  EnumerationLiteralName name:RED visibility:
+  EnumerationLiteralName name:YELLOW visibility:
+  EnumerationLiteralName name:GREEN visibility:
+  EnumerationDeclaration name:TrafficLightColor isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Package_Ordering.alf...
+Parsed successfully.
+UnitDefinition
+ PackageDefinition name:Ordering visibility:
+  AssociationDefinition name:Selects visibility:public
+   PropertyDefinition name:cart visibility:public
+    PropertyDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false collection: name:cart isComposite:false
+     QualifiedName ShoppingCart
+   PropertyDefinition name:selectedProducts visibility:public
+    PropertyDeclaration lowerBound:1 upperBound:* isOrdered:false isNonunique:false collection: name:selectedProducts isComposite:false
+     QualifiedName Product
+   PropertyDefinition name:selectionInfo visibility:public
+    PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:selectionInfo isComposite:false
+     QualifiedName ProductSelection
+   AssociationDeclaration name:Selects isAbstract:false
+  ClassifierStubDeclaration name:ShoppingCart visibility:public
+   ActiveClassDeclaration name:ShoppingCart isAbstract:false
+  ClassifierStubDeclaration name:Order visibility:public
+   ActiveClassDeclaration name:Order isAbstract:true
+  ClassifierStubDeclaration name:ProductSelection visibility:public
+   ClassDeclaration name:ProductSelection isAbstract:false
+Alf 0.05 Parser
+Reading from file tests\Signal_SubmitCharge.alf...
+Parsed successfully.
+UnitDefinition
+ SignalDefinition name:SubmitCharge visibility:
+  PropertyDefinition name:accountNumber visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:accountNumber isComposite:false
+    QualifiedName BankCardAccountNumber
+  PropertyDefinition name:billingAddress visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:billingAddress isComposite:false
+    QualifiedName MailingAddress
+  PropertyDefinition name:cardExpirationDate visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cardExpirationDate isComposite:false
+    QualifiedName MonthYear
+  PropertyDefinition name:cardholderName visibility:public
+   PropertyDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:cardholderName isComposite:false
+    QualifiedName PersonalName
+  SignalDeclaration name:SubmitCharge isAbstract:false
