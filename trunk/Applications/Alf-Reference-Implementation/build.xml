@@ -8,7 +8,7 @@
         	platformTemplateBinding="/${source.project}/transform/binding/template.xml" 
         	platformModelResource="platform:/resource/${source.project}/model/${source.model}" 
         	platformVelocityDirectory="/${source.project}/transform/velocity" 
-        	platformTargetWorkspace="/${source.project}/gen~" 
+        	platformTargetWorkspace="/${source.project}/gen" 
         	paramMap="target.project.name=${target.project.name}" 
         />
         <exec executable="cmd" dir="src">
