@@ -1,0 +1,180 @@
+
+
+
+#macro( javaDoc $element )
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of <b>${element.name}</b>.
+ #javaDocContent( ${element} )
+ * <!-- end-user-doc -->
+ * @generated
+ */
+#end
+
+#macro( javaDocContent $element )
+	#foreach ( $annotation in ${element.annotations} )
+		* source: ${annotation.source}
+		#foreach ( $detail in ${annotation.details} )
+			* key: ${detail.key}
+			* ocl: ${detail.ocl}
+			* escapedValue: ${detail.escapedValue}
+		#end
+	#end
+	#foreach ( $annotation in ${element.genAnnotations} )
+		* source: ${annotation.source}
+		* documentation: ${annotation.documentation}
+		* copyright: ${annotation.copyright}
+		#foreach ( $detail in ${annotation.details} )
+			* key: ${detail.key}
+			* ocl: ${detail.ocl}
+			* escapedValue: ${detail.escapedValue}
+		#end
+	#end
+#end
+
+#macro( featureJavaDoc $comment $feature )
+  /**
+   * ${comment}
+   * <!-- begin-user-doc -->
+   #javaDocContent( ${feature} )
+   * <!-- end-user-doc -->
+   * @generated
+   */
+#end
+
+#macro( classJavaDoc $class )
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>${class.qualifiedName}</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * <ul>
+ 	#foreach ( $feature in ${class.ownedOperations} )
+ *   <li>{@link ${name}#${feature.name} <em>${feature.name}</em>}</li>
+	#end
+ 	#foreach ( $feature in ${class.ownedAttributes} )
+ *   <li>{@link ${name}#${feature.name} <em>${feature.name}</em>}</li>
+	#end
+ * </ul>
+ * </p>
+ *
+ * @generated
+ */
+#end
+
+#macro( imports)
+${commonImports}
+#foreach ( $classifier in ${genClasses} )
+import ${classifier.rawInstanceClassName};
+#end
+#foreach ( $classifier in ${genDataTypes} )
+#if ( !(${classifier.isPrimitiveType}) )
+import ${classifier.rawInstanceClassName};
+#end
+#end
+#foreach ( $classifier in ${genEnums} )
+import ${definitionPackage}.${classifier.classifierAccessorName};
+#end
+#end
+
+
+#macro( visibility $element )${element.visibility}#end
+#macro( abstract $element ) #if ( ${element.isAbstract()})abstract#end#end 
+#macro( static $element ) #if ( ${element.isStatic()} )static#end#end 
+#macro( name $name )#if (${name}=="Class")Class_#else${name}#end#end
+#macro( qualifiedName $element )#qualifiedPackageName(${element.owner}).#name(${element.name})#end
+#macro( qualifiedPackageName $element )${element.qualifiedName.replace("::",".")}#end
+#macro( primitiveName $primitive )#if(${primitive.name}=="Boolean")boolean#elseif(${primitive.name}=="Integer")int#else#name(${primitive.name})#end#end
+
+
+#macro( defaultValue $feature)
+#if(${feature.default})#if(${feature.type.eClass().name}=="Enumeration")#type(${feature}).#end${feature.default}##
+#else #createValue($feature)
+#end
+#end
+
+#macro( createValue $element )
+#if(${element.upper}!=1)new #type(${element})()##
+#elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="Boolean")false##
+#elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="Integer")0##
+#elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="String")""##
+#else null##
+#end
+#end
+
+#macro( listablePrimitiveName $primitive )#name(${primitive.name})#end
+#macro( basicName $element )#if(${element.eClass().name}=="PrimitiveType")#primitiveName(${element})#else#name(${element.name})#end#end
+#macro( basicType $element )#if(${element.type.eClass().name}=="PrimitiveType")#primitiveName(${element.type})#else#name(${element.type.name})#end#end
+#macro( basicQualifiedType $element )#if(${element.type.eClass().name}=="PrimitiveType")#qualifiedPackageName(${element.type.owner}).#end#basicType(${element})#end
+#macro( listable $type )#if(${type.eClass().name}=="PrimitiveType")#listablePrimitiveName(${type})#else#qualifiedName(${type})#end#end
+#macro( listableType $element )#listable(${element.type})#end
+#macro( type $element )#if(${element})#if(${element.upper}!=1)ArrayList<#basicType(${element})>#else#basicType(${element})#end#else#**#void#end#end
+
+#macro( operationParameters $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else#type(${parameter}) #name(${parameter.name})#if($velocityCount+1<${operation.ownedParameters.size()}||($velocityCount+1==${operation.ownedParameters.size()}&&${operation.ownedParameters.get($velocityCount).direction.toString()}!="return")), #end#end#end#end
+#macro( operationParameterNames $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else, #name(${parameter.name})#end#end#end
+
+#macro( operationType $element $operation $class)#if(${operation.name}==${class.name})#else#type(${element})#end#end
+
+#macro( throws $operation) #end 
+ 
+#macro( body $operation $class)#if(${operation.isAbstract()});#else {
+#bodycontent(${operation} ${class})	  } // ${operation.name}
+
+#end  
+#end
+
+#macro( bodycontent $operation $class)
+#if ( ${operation.eClass().name}=="Operation" )
+	#set( $foundBody = false )
+	#foreach ( $method in ${operation.methods} )
+	  	#if ( ${method.eClass().name}=="OpaqueBehavior" || ${method.eClass().name} == "FunctionBehavior" )
+	    	#foreach ( $language in ${method.languages} )
+	      		#if ( $language=="Java" )
+	      			#set( $i = $velocityCount - 1 )
+	        		$method.bodies.get($i)##
+	        		#set( $foundBody = true )
+	      		#end
+	    	#end
+		#end
+	#end
+	#if ( !${foundBody} )
+	    #if ( ${operation.name.startsWith("set")} )
+	        #if ( ${operation.ownedParameters.size()} == 0 )
+	         	this.i${operation.name.substring(4)} = true;
+	        #else
+	        	this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)} = ${operation.ownedParameters.get(0).name};
+	        #end
+	    #elseif ( ${operation.name.startsWith("add")} )
+	    	#set ( $p = ${operation.ownedParameters.get(0)} )
+	    	#set ( $opt = ${p.lower}==0 )
+	    	#if ($opt) if (${p.name} != null ) { #end
+	        #if ( ${operation.name.length()} == 3 )
+	        	this.list.add(${operation.ownedParameters.get(0).name});
+         	#else
+         		this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)}s.add(${operation.ownedParameters.get(0).name});
+         	#end
+	        #if ($opt) } #end
+	    #elseif ( ${operation.name.startsWith("get")} )
+         	return this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)};
+	    #elseif ( ${operation.name.startsWith("is")} )
+        	return this.${operation.name};
+	  	#else
+	  		// TODO
+	  		#if ( ${operation.name} != ${class.name} && ${operation.returnResult} )
+				return #createValue(${operation.returnResult});
+			#end
+		#end
+	#end
+#else
+	#foreach ( $comment in ${operation.ownedComments} )
+		#foreach ( $stereotype in ${comment.appliedStereotypes} )
+			#if ( ${stereotype.name}=="java" )
+				${comment.body}##
+			#end
+		#end
+	#end
+#end	    
+#end
+	
+  

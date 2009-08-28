@@ -1,0 +1,2966 @@
+/*
+   Parser for the 
+   Action Language for Foundational UML (Alf)
+   Version 0.05
+
+   with construction of the Abstract Syntax Tree
+   
+   Written by
+   Ed Seidewitz / Model Driven Solutions
+   
+   Copyright (c) 2009 Data Access Technologies, Inc.
+*/
+
+options {
+  DEBUG_PARSER=false;
+  DEBUG_LOOKAHEAD=false;
+  OUTPUT_DIRECTORY="alf/parser";
+}
+
+PARSER_BEGIN(AlfParser)
+
+package alf.parser;
+
+import alf.syntax.behavioral.*;
+import alf.syntax.expressions.*;
+import alf.syntax.namespaces.*;
+import alf.syntax.structural.*;
+
+public class AlfParser {
+
+  public static void main(String args[]) {
+    AlfParser parser;
+    System.out.println("Alf 0.05 Parser");
+    if (args.length == 0) {
+      System.out.println("Reading from standard input...");
+      parser = new AlfParser(System.in);
+    } else if (args.length == 1) {
+      System.out.println("Reading from file " + args[0] + "...");
+      try {
+        parser = new AlfParser(new java.io.FileInputStream(args[0]));
+      } catch (java.io.FileNotFoundException e) {
+        System.out.println("File " + args[0] + " not found.");
+        return;
+      }
+    } else {
+      System.out.println("Usage is one of:");
+      System.out.println("         java AlfParser < inputfile");
+      System.out.println("OR");
+      System.out.println("         java AlfParser inputfile");
+      return;
+    }
+    try {
+      UnitDefinition tree = parser.UnitDefinition();
+      System.out.println("Parsed successfully.");
+      tree.print();
+    } catch (ParseException e) {
+      System.out.println(e.getMessage());
+      System.out.println("Encountered errors during parse.");
+    }
+  }
+
+}
+
+PARSER_END(AlfParser)
+
+/*********************
+ * LEXICAL STRUCTURE *
+ *********************/
+
+/* WHITE SPACE */
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+/* COMMENTS */
+
+MORE:
+{
+  "//": IN_END_OF_LINE_COMMENT
+|
+  < "/**" ~["/"] > { input_stream.backup(1); }: IN_DOCUMENTATION_COMMENT
+|
+  < "/*" >: IN_IN_LINE_COMMENT
+}
+
+<IN_END_OF_LINE_COMMENT>
+SKIP:
+{
+  < END_OF_LINE_COMMENT: "\n" | "\r" | "\r\n" >: DEFAULT
+}
+
+<IN_END_OF_LINE_COMMENT>
+MORE:
+{
+  < ~[] >
+}
+
+<IN_IN_LINE_COMMENT>
+MORE:
+{
+  < ~["*"]>
+|
+  "*": IN_IN_LINE_COMMENT_STAR
+}
+
+<IN_IN_LINE_COMMENT_STAR>
+MORE:
+{
+  < ~["/"] >: IN_IN_LINE_COMMENT
+}
+
+<IN_IN_LINE_COMMENT_STAR>
+SKIP:
+{
+  < IN_LINE_COMMENT: "/" > : DEFAULT
+}
+
+<IN_DOCUMENTATION_COMMENT>
+MORE:
+{
+  < ~["*"]>
+|
+  "*": IN_DOCUMENTATION_COMMENT_STAR
+}
+
+<IN_DOCUMENTATION_COMMENT_STAR>
+TOKEN:
+{
+  < DOCUMENTATION_COMMENT: "/" >: DEFAULT
+}
+
+<IN_DOCUMENTATION_COMMENT_STAR>
+MORE:
+{
+  < ~["/"] >: IN_DOCUMENTATION_COMMENT
+}
+
+/* RESERVED WORDS */
+
+TOKEN:
+{
+  < ABSTRACT: "abstract" > 
+| < ACCEPT: "accept" >
+| < ACTIVE: "active" >
+| < ACTIVITY: "activity" >
+| < ALL_INSTANCES: "allInstances" >
+| < ANY: "any" >
+| < AS: "as" >
+| < ASSOC: "assoc" >
+| < BREAK: "break" >
+| < CASE: "case" >
+| < CLASS: "class" >
+| < CLASSIFY: "classify" >
+| < COMPOSE: "compose" >
+| < CREATE: "create"  >
+| < DATATYPE: "datatype" >
+| < DEFAULT_: "default" >
+| < DESTROY: "destroy" >
+| < DO: "do">
+| < ELSE: "else">
+| < ENUM: "enum">
+| < FOR: "for" >
+| < FROM: "from" >
+| < HASTYPE: "hastype">
+| < IF: "if" >
+| < IMPORT: "import" >
+| < IN: "in">
+| < INOUT: "inout" >
+| < INSTANCEOF: "instanceof" >
+| < NAMESPACE: "namespace" >
+| < NEW: "new" >
+| < NONUNIQUE: "nonunique" >
+| < NULL: "null" >
+| < OR: "or" >
+| < ORDERED: "ordered" >
+| < OUT: "out" >
+| < PACKAGE: "package" >
+| < PRIVATE: "private" >
+| < PROTECTED: "protected" >
+| < PUBLIC: "public" >
+| < RECEIVE: "receive" >
+| < REDEFINES: "redefines" >
+| < RETURN: "return" >
+| < SPECIALIZES: "specializes" >
+| < SUPER: "super" >
+| < SIGNAL: "signal" >
+| < SWITCH: "switch" >
+| < THIS: "this" >
+| < TO: "to" >
+| < WHILE: "while" >
+| < COLLECTION_NAME: "Set" | "OrderedSet" | "Bag" | "Sequence" | "Option" >
+}
+
+/* NAMES */
+
+TOKEN:
+{
+  < IDENTIFIER: <IDENTIFIER_LETTER> ( <IDENTIFIER_LETTER_OR_DIGIT> ) * >
+|
+  < #IDENTIFIER_LETTER_OR_DIGIT: <IDENTIFIER_LETTER> | <DIGIT> >
+|
+  < #IDENTIFIER_LETTER: [ "a"-"z", "A"-"Z", "_" ] >
+|
+  < #DIGIT: [ "0"-"9" ] >
+|
+  < UNRESTRICTED_NAME: "'" ( <NAME_CHARACTER> )+ "'" >
+|
+  < #NAME_CHARACTER: ~[ "'", "\\" ] | <ESCAPE_CHARACTER> >
+|
+  < #ESCAPE_CHARACTER: "\\" <ESCAPED_CHARACTER> >
+|
+  < #ESCAPED_CHARACTER: [ "'", "\"", "b", "f", "n", "\\" ] >
+}
+
+/* PRIMITIVE LITERALS */
+
+TOKEN:
+{
+  < BOOLEAN_LITERAL: "true" | "false" >
+|
+  < NATURAL_LITERAL: ( <DIGIT> )+ >
+|
+  < STRING_LITERAL: "\"" ( <STRING_CHARACTER> )* "\"" >
+|
+  < #STRING_CHARACTER: ~["\"", "\\"] >
+}
+
+/* SEPARATORS */
+
+TOKEN :
+{
+  < LPAREN: "(" >
+| < RPAREN: ")" >
+| < LBRACE: "{" >
+| < RBRACE: "}" >
+| < LBRACKET: "[" >
+| < RBRACKET: "]" >
+| < SEMICOLON: ";" >
+| < COMMA: "," >
+| < DOT: "." >
+| < DOUBLE_DOT: ".." >
+| < COLON: ":" >
+| < DOUBLE_COLON: "::" >
+| < ARROW: "->" >
+| < THICK_ARROW: "=>" >
+}
+
+/* OPERATORS */
+
+TOKEN :
+{
+  < ASSIGN: "=" >
+| < GT: ">" >
+| < LT: "<" >
+| < BANG: "!" >
+| < HOOK: "?" >
+| < AT: "@" >
+| < DOLLAR: "$" >
+| < EQ: "==" >
+| < LE: "<=" >
+| < GE: ">=" >
+| < NE: "!=" >
+| < SC_OR: "||" >
+| < SC_AND: "&&" >
+| < INCR: "++" >
+| < DECR: "--" >
+| < PLUS: "+" >
+| < MINUS: "-" >
+| < STAR: "*" >
+| < SLASH: "/" >
+| < LOGICAL_AND: "&" >
+| < LOGICAL_OR: "|" >
+| < XOR: "^" >
+| < REM: "%" >
+| < LSHIFT: "<<" >
+| < PLUSASSIGN: "+=" >
+| < MINUSASSIGN: "-=" >
+| < STARASSIGN: "*=" >
+| < SLASHASSIGN: "/=" >
+| < ANDASSIGN: "&=" >
+| < ORASSIGN: "|=" >
+| < XORASSIGN: "^=" >
+| < REMASSIGN: "%=" >
+| < HASH: "#" >
+| < DOUBLE_HASH: "##" >
+}
+
+/************************
+ * NAMES AND NAMESPACES *
+ ************************/
+
+/* QUALIFIED NAMES */
+
+String Name():
+{
+  Token t;
+}
+{
+  (  
+    t = <IDENTIFIER>
+  | t = <UNRESTRICTED_NAME> 
+  )
+
+  { return t.image; }
+}
+
+QualifiedName QualifiedName():
+{
+  String n;
+  QualifiedName q = new QualifiedName();
+}
+{
+/* ORIGINAL
+  [ NamespaceQualification() ] Name()
+*/
+
+  [ <DOUBLE_COLON> { q.setIsAbsolute(); }] 
+  n = Name() { q.addName(n); } ( LOOKAHEAD(2) <DOUBLE_COLON> n = Name() { q.addName(n); } )*
+  { return q; }
+}
+
+/* ORIGINAL
+void NamespaceQualification():
+{}
+{
+  AbsoluteQualification()
+| RelativeQualification()
+}
+
+void AbsoluteQualification():
+{}
+{
+  <DOUBLE_COLON> RelativeQualification()
+}
+
+void RelativeQualification():
+{}
+{
+  Name() ( LOOKAHEAD(2) <DOUBLE_COLON> Name() )*
+}
+*/
+
+/* NAMESPACES */
+
+NamespaceDefinition NamespaceDefinition():
+{
+  NamespaceDefinition d;
+}
+{
+  (
+    d = PackageDefinition()
+  | d = ClassifierDefinition()
+  )
+  
+  { return d; }
+}
+
+/* VISIBILITY */
+
+String VisibilityIndicator():
+{
+  String v;
+  Token t;
+}
+{
+  (
+    v = ImportVisibilityIndicator()
+  | t = <PROTECTED> { v = t.image; }
+  )
+  
+  { return v; }
+}
+
+String ImportVisibilityIndicator():
+{
+  Token t;
+}
+{
+  (
+    t = <PUBLIC>
+  | t = <PRIVATE>
+  )
+  
+  { return t.image; }
+}
+
+/* UNITS */
+
+UnitDefinition UnitDefinition():
+{
+  QualifiedName n;
+  ImportReference i;
+  Token t;
+  NamespaceDefinition d;
+  UnitDefinition u = new UnitDefinition();
+}
+{
+  [ n = NamespaceDeclaration() { u.setNamespace(n); } ] 
+  ( i = ImportDeclaration() { u.addImport(i); } )*
+  [ t = <DOCUMENTATION_COMMENT> { u.addDocumentation(t.image); } ] 
+  d = NamespaceDefinition() { u.setDefinition(d); }
+  <EOF>
+  { return u; }
+}
+
+QualifiedName NamespaceDeclaration():
+{
+  QualifiedName n;
+}
+{
+  <NAMESPACE> n = QualifiedName() <SEMICOLON>
+  { return n; }
+}
+
+ImportReference ImportDeclaration():
+{
+  String v;
+  ImportReference i;
+}
+{
+  v = ImportVisibilityIndicator() <IMPORT> i = ImportReference() <SEMICOLON>
+  { i.setVisibility(v); 
+    return i; }
+}
+
+ImportReference ImportReference():
+{
+  QualifiedName n;
+  String a;
+  ImportReference i;
+}
+{
+/* ORIGINAL
+  ElementImportReference()
+| PackageImportReference()
+*/
+
+  n = QualifiedName() { i = new ImportReference(n); }
+  [ PackageImport() { i.setIsPackageImport(); } 
+  | a = AliasDefinition() { i.setAlias(a); } ]
+  { return i; }
+}
+
+/* ORIGINAL
+void ElementImportReference():
+{}
+{
+  QualifiedName() [ AliasDefinition() ]
+}
+*/
+
+String AliasDefinition():
+{
+  String n;
+}
+{
+  <AS> n = Name()
+  { return n; }
+}
+
+/* ORIGINAL
+void PackageImportReference():
+{}
+{
+  QualifiedName() <DOUBLE_COLON> <STAR>
+}
+*/
+
+/* ADDED */
+void PackageImport():
+{}
+{
+  <DOUBLE_COLON> <STAR>
+}
+
+/***********************
+ * STRUCTURAL MODELING *
+ ***********************/
+
+/* PACKAGES */
+
+String PackageDeclaration():
+{
+  String n;
+}
+{
+  <PACKAGE> n = Name()
+  { return n; }
+}
+
+PackageDefinition PackageDefinition():
+{
+  String n;
+  Member m;
+  PackageDefinition d;
+}
+{
+  n = PackageDeclaration() { d = new PackageDefinition(n); }
+  <LBRACE> ( m = PackagedElement() { d.addMember(m); } )* <RBRACE>
+  { return d; }
+}
+
+Member PackagedElement():
+{
+  Token t;
+  String c = null;
+  String v;
+  Member m;
+}
+{
+  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] v = ImportVisibilityIndicator() 
+  m = PackagedElementDefinition()
+  { m.addDocumentation(c);
+    m.setVisibility(v);
+    return m;
+  }
+}
+
+Member PackagedElementDefinition():
+{
+  Member m;
+}
+{
+  (
+    LOOKAHEAD(NamespaceStubDeclaration()) 
+    m = NamespaceStubDeclaration()
+  | m = NamespaceDefinition()
+  )
+  
+  { return m; }
+}
+
+Member NamespaceStubDeclaration():
+{
+  Member m;
+}
+{
+  (
+    m = PackageStubDeclaration()
+  | m = ClassifierStubDeclaration()
+  )
+  
+  { return m; }
+}
+
+PackageStubDeclaration PackageStubDeclaration():
+{
+  String n;
+}
+{
+  n = PackageDeclaration() <SEMICOLON>
+  { return new PackageStubDeclaration(n); }
+}
+
+/***************
+ * CLASSIFIERS *
+ ***************/
+
+ClassifierDefinition ClassifierDefinition():
+{
+  ClassifierDefinition d;
+}
+{
+  (
+    LOOKAHEAD(2) d = ClassDefinition()
+  | LOOKAHEAD(2) d = ActiveClassDefinition()
+  | LOOKAHEAD(2) d = DataTypeDefinition()
+  |              d = EnumerationDefinition()
+  | LOOKAHEAD(2) d = AssociationDefinition()
+  | LOOKAHEAD(2) d = SignalDefinition()
+  |              d = ActivityDefinition()
+  )
+  
+  { return d; }
+}
+
+ClassifierDeclaration ClassifierDeclaration():
+{
+  ClassifierDeclaration d;
+}
+{
+  (
+    LOOKAHEAD(2) d = ClassDeclaration()
+  | LOOKAHEAD(2) d = ActiveClassDeclaration()
+  | LOOKAHEAD(2) d = DataTypeDeclaration()
+  |              d = EnumerationDeclaration()
+  | LOOKAHEAD(2) d = AssociationDeclaration()
+  | LOOKAHEAD(2) d = SignalDeclaration()
+  |              d = ActivityDeclaration()
+  )
+  
+  { return d; }
+}
+
+ClassifierStubDeclaration ClassifierStubDeclaration():
+{
+  ClassifierDeclaration d;
+}
+{
+  d = ClassifierDeclaration() <SEMICOLON>
+  { return new ClassifierStubDeclaration(d); }
+}
+
+/* CLASSES */
+
+ClassDeclaration ClassDeclaration():
+{
+  ClassDeclaration d = new ClassDeclaration();
+  String n;
+  QualifiedNameList nl;
+}
+{
+  [ <ABSTRACT> { d.setIsAbstract(); } ] 
+  <CLASS> n = Name() { d.setName(n); }
+  [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
+  { return d; }
+}
+
+QualifiedNameList SpecializationClause():
+{
+  QualifiedNameList nl;
+}
+{
+  <SPECIALIZES> nl = QualifiedNameList()
+  { return nl; }
+}
+
+QualifiedNameList QualifiedNameList():
+{
+  QualifiedNameList nl = new QualifiedNameList();
+  QualifiedName n;
+}
+{
+  n = QualifiedName() { nl.add(n); }
+  ( <COMMA> n = QualifiedName() { nl.add(n); } )*
+  { return nl; }
+}
+
+ClassDefinition ClassDefinition():
+{
+  ClassDefinition d;
+  ClassDeclaration c;
+  Member m;
+  
+}
+{
+  c = ClassDeclaration() { d = new ClassDefinition(c); }
+  <LBRACE> ( m = ClassMember() { d.addMember(m); } )* <RBRACE>
+  { return d; }
+}
+
+Member ClassMember():
+{
+  Token t;
+  String c = null;
+  String v = null;
+  Member m;
+}
+{
+  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] [ v = VisibilityIndicator() ] 
+  m = ClassMemberDefinition()
+  { m.addDocumentation(c);
+    m.setVisibility(v);
+    return m;
+  }
+}
+
+Member ClassMemberDefinition():
+{
+  Member m;
+}
+{
+  (
+    LOOKAHEAD(ClassifierStubDeclaration()) m = ClassifierStubDeclaration()
+  | LOOKAHEAD(2)                           m = ClassifierDefinition()
+  | LOOKAHEAD(FeatureStubDeclaration())    m = FeatureStubDeclaration()
+  |                                        m = FeatureDefinition()
+  )
+  
+  { return m; }
+}
+
+/* ACTIVE CLASSES */
+
+ActiveClassDeclaration ActiveClassDeclaration():
+{
+  ActiveClassDeclaration d = new ActiveClassDeclaration();
+  String n;
+  QualifiedNameList nl;
+}
+{
+  [ <ABSTRACT> { d.setIsAbstract(); } ] 
+  <ACTIVE> <CLASS> n = Name() { d.setName(n); }
+  [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
+  { return d; }
+}
+
+ActiveClassDefinition ActiveClassDefinition():
+{
+  ActiveClassDefinition d;
+  ActiveClassDeclaration c;
+  Member m;
+  
+}
+{
+  c = ActiveClassDeclaration() { d = new ActiveClassDefinition(c); }
+  <LBRACE> ( m = ActiveClassMember() { d.addMember(m); } )* <RBRACE>
+  [ <DO> BehaviorClause(d) ]
+  
+  { return d; }
+}
+
+void BehaviorClause(ActiveClassDefinition d):
+{
+  Block b;
+  String n;
+}
+{
+  b = Block() { d.setBehaviorBlock(b); }
+| n = Name() { d.setBehaviorName(n); }
+}
+
+Member ActiveClassMember():
+{
+  Token t;
+  String c = null;
+  String v = null;
+  Member m;
+}
+{
+  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] [ v = VisibilityIndicator() ] 
+  m = ActiveClassMemberDefinition()
+  { m.addDocumentation(c);
+    m.setVisibility(v);
+    return m;
+  }
+}
+
+Member ActiveClassMemberDefinition():
+{
+  Member m;
+}
+{
+  (
+                 m = ClassMemberDefinition()
+  | LOOKAHEAD(3) m = ActiveFeatureDefinition()
+  |              m = ActiveFeatureStubDeclaration()
+  )
+  
+  { return m; }
+}
+
+/* DATA TYPES */
+
+DataTypeDeclaration DataTypeDeclaration():
+{
+  DataTypeDeclaration d = new DataTypeDeclaration();
+  String n;
+  QualifiedNameList nl;
+}
+{
+  [ <ABSTRACT>  { d.setIsAbstract(); } ] 
+  <DATATYPE> n = Name() { d.setName(n); } 
+  [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
+  { return d; }
+}
+
+DataTypeDefinition DataTypeDefinition():
+{
+  DataTypeDefinition d;
+  DataTypeDeclaration t;
+}
+{
+  t = DataTypeDeclaration() { d = new DataTypeDefinition(t); } 
+  StructuredBody(d)
+  { return d; }
+}
+
+void StructuredBody(ClassifierDefinition d):
+{
+  Member m;
+}
+{
+  <LBRACE> ( m = StructuredMember() { d.addMember(m); } )* <RBRACE>
+}
+
+Member StructuredMember():
+{
+  Token t;
+  String c = null;
+  String v = null;
+  Member m;
+}
+{
+  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] [ t = <PUBLIC> { v = t.image; }] 
+  m = PropertyDefinition()
+  { m.addDocumentation(c);
+    m.setVisibility(v);
+    return m;
+  }
+}
+
+/* ASSOCIATIONS */
+
+AssociationDeclaration AssociationDeclaration():
+{
+  AssociationDeclaration d = new AssociationDeclaration();
+  String n;
+  QualifiedNameList nl;
+}
+{
+  [ <ABSTRACT> { d.setIsAbstract(); } ] 
+  <ASSOC> n = Name() { d.setName(n); }
+  [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
+  { return d; }
+}
+
+AssociationDefinition AssociationDefinition():
+{
+  AssociationDefinition d;
+  AssociationDeclaration a;
+}
+{
+  a = AssociationDeclaration() { d = new AssociationDefinition(a); }
+  StructuredBody(d)
+  { return d; }
+}
+
+/* ENUMERATIONS */
+
+EnumerationDeclaration EnumerationDeclaration():
+{
+  EnumerationDeclaration d = new EnumerationDeclaration();
+  String n;
+  QualifiedNameList nl;
+}
+{
+  <ENUM> n = Name() { d.setName(n); } 
+  [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
+  { return d; }
+}
+
+EnumerationDefinition EnumerationDefinition():
+{
+  EnumerationDefinition d;
+  EnumerationDeclaration e;
+  Member m;
+}
+{
+  e = EnumerationDeclaration() { d = new EnumerationDefinition(e); }
+  <LBRACE> m = EnumerationLiteralName() { d.addMember(m); }
+  ( <COMMA> m = EnumerationLiteralName() { d.addMember(m); } )* <RBRACE>
+  { return d; }
+}
+
+EnumerationLiteralName EnumerationLiteralName():
+{
+  Token t;
+  String c = null;
+  String n;
+}
+{
+  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ]  n = Name()
+  { return new EnumerationLiteralName(n, c); }
+}
+
+/* SIGNALS */
+
+SignalDeclaration SignalDeclaration():
+{
+  SignalDeclaration d = new SignalDeclaration();
+  String n;
+  QualifiedNameList nl;
+}
+{
+  [ <ABSTRACT> { d.setIsAbstract(); } ] 
+  <SIGNAL> n = Name() { d.setName(n); } 
+  [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
+  { return d; }
+}
+
+SignalDefinition SignalDefinition():
+{
+  SignalDefinition d;
+  SignalDeclaration s;
+}
+{
+  s = SignalDeclaration() { d = new SignalDefinition(s); }
+  StructuredBody(d)
+  { return d; }
+}
+
+/* FEATURES */
+
+Member FeatureDefinition():
+{
+  Member m;
+}
+{
+  (
+    LOOKAHEAD(2) 
+    m = AttributeDefinition()
+  | m = OperationDefinition()
+  | m = ConstructorDefinition()
+  | m = DestructorDefinition()
+  )
+  
+  { return m; }
+}
+
+Member FeatureStubDeclaration():
+{
+  Member m;
+  }
+{
+  (
+    m = OperationStubDeclaration()
+  | m = ConstructorStubDeclaration()
+  | m = DestructorStubDeclaration()
+  )
+  
+  { return m; }
+}
+
+Member ActiveFeatureDefinition():
+{
+  Member m;
+}
+{
+  (
+    LOOKAHEAD(2) 
+    m = ReceptionDefinition()
+  | m = SignalReceptionDefinition()
+  )
+  
+  { return m; }
+}
+
+Member ActiveFeatureStubDeclaration():
+{
+  Member m;
+}
+{
+  m = SignalReceptionStubDeclaration()
+  { return m; }
+}
+
+/* PROPERTIES */
+
+PropertyDefinition PropertyDefinition():
+{
+  PropertyDeclaration p;
+}
+{
+  p = PropertyDeclaration() <SEMICOLON>
+  { return new PropertyDefinition(p); }
+}
+
+PropertyDefinition AttributeDefinition():
+{
+  PropertyDeclaration p;
+  PropertyDefinition d;
+  Expression e;
+}
+{
+  p = PropertyDeclaration() { d = new PropertyDefinition(p); }
+  [ e = AttributeInitializer() { d.setInitializer(e); } ] <SEMICOLON>
+  { return d; }
+}
+
+
+Expression AttributeInitializer(): 
+{
+  Expression e;
+}
+{
+  <ASSIGN> e = Expression()
+  { return e; }
+}
+
+PropertyDeclaration PropertyDeclaration():
+{
+  PropertyDeclaration d;
+  String n;
+}
+{
+  n = Name() { d = new PropertyDeclaration(n); } 
+  <COLON> [ <COMPOSE> { d.setIsComposite(); } ] TypePart(d)
+  { return d; }
+}
+
+void TypePart(TypedDeclaration d):
+{
+  QualifiedName t;
+  Token tc;
+}
+{
+  t = TypeName() { d.setType(t); } [ Multiplicity(d) ]
+| tc = <COLLECTION_NAME> { d.setCollection(tc.image); }
+  [ <LT> t = TypeName() { d.setType(t); } <GT> ]
+}
+
+QualifiedName TypeName():
+{
+  QualifiedName n = null;
+}
+{
+  (
+    n = QualifiedName()
+  | <ANY>
+  )
+  
+  { return n; }
+}
+
+void Multiplicity(TypedDeclaration d):
+{}
+{
+  <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET> 
+  [ <ORDERED> { d.setIsOrdered(); } ] [ <NONUNIQUE> { d.setIsNonunique(); } ]
+}
+
+void MultiplicityRange(TypedDeclaration d):
+{
+  Token t;
+  String n;
+}
+{
+  [ LOOKAHEAD(2) t = <NATURAL_LITERAL> <DOUBLE_DOT> { d.setLowerBound(t.image); } ] 
+  n = UnlimitedNaturalLiteral() { d.setUpperBound(n); }
+}
+
+String UnlimitedNaturalLiteral():
+{
+  Token t;
+}
+{
+  (
+    t = <NATURAL_LITERAL>
+  | t = <STAR>
+  )
+  
+  { return t.image; }
+}
+
+/* OPERATIONS */
+
+OperationDeclaration OperationDeclaration():
+{
+  OperationDeclaration d = new OperationDeclaration();
+  String n;
+  QualifiedNameList nl;
+}
+{
+  [ <ABSTRACT> { d.setIsAbstract(); } ] n = Name() { d.setName(n); }
+  FormalParameters(d) [<COLON> TypePart(d) ] 
+  [ nl = RedefinitionClause() { d.setRedefinition(nl); } ]
+  { return d; }
+}
+
+OperationDefinition OperationDefinition():
+{
+  OperationDeclaration o;
+  Block b;
+}
+{
+  o = OperationDeclaration() b = Block()
+  { return new OperationDefinition(o, b); }
+}
+
+OperationStubDeclaration OperationStubDeclaration():
+{
+  OperationDeclaration o;
+}
+{
+  o = OperationDeclaration() <SEMICOLON>
+  { return new OperationStubDeclaration(o); }
+}
+
+void FormalParameters(ParameterSetDeclaration d):
+{}
+{
+  <LPAREN> [ FormalParameterList(d) ] <RPAREN>
+}
+
+void FormalParameterList(ParameterSetDeclaration d):
+{
+  FormalParameter p;
+}
+{
+  p = FormalParameter() { d.addParameter(p); }
+  ( <COMMA> FormalParameter() { d.addParameter(p); } )*
+}
+
+FormalParameter FormalParameter():
+{
+  Token t;
+  String c = null;
+  String d;
+  String n;
+  FormalParameter p;
+}
+{
+  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] d = ParameterDirection() 
+  n = Name() { p = new FormalParameter(n, d, c); } <COLON> TypePart(p)
+  { return p; }
+}
+
+String ParameterDirection():
+{
+  Token t;
+}
+{
+  (
+    t = <IN> 
+  | t = <OUT> 
+  | t = <INOUT>
+  )
+  
+  { return t.image; }
+}
+
+QualifiedNameList RedefinitionClause():
+{
+  QualifiedNameList nl;
+}
+{
+  <REDEFINES> nl = QualifiedNameList()
+  { return nl; }
+}
+
+/* CONSTRUCTORS */
+
+OperationDeclaration ConstructorDeclaration():
+{
+  OperationDeclaration d = new OperationDeclaration();
+  String n;
+}
+{
+  <CREATE> n = Name() { d.setName(n); }
+  FormalParameters(d)
+  { return d; }
+}
+
+ConstructorDefinition ConstructorDefinition():
+{
+  OperationDeclaration o;
+  Block b;
+}
+{
+  o = ConstructorDeclaration() b = ConstructorBody()
+  { return new ConstructorDefinition(o, b); }
+}
+
+ConstructorStubDeclaration ConstructorStubDeclaration():
+{
+  OperationDeclaration o;
+}
+{
+  o = ConstructorDeclaration() <SEMICOLON>
+  { return new ConstructorStubDeclaration(o); }
+}
+
+Block ConstructorBody():
+{
+  Statement s;
+  Block b;
+}
+{
+  (
+    LOOKAHEAD(<LBRACE> (<THIS> | <SUPER>))
+    <LBRACE> b = ExplicitConstructorInvocations() 
+             ( s = Statement() { b.addStatement(s); } )* <RBRACE>
+  | b = Block()
+  )
+  
+  { return b; }
+}
+
+Block ExplicitConstructorInvocations():
+{
+  Block b = new Block();
+  Statement s;
+}
+{
+  (
+    s = AlternativeConstructorInvocation() { b.addStatement(s); }
+  | ( LOOKAHEAD(2) s = SuperclassConstructorInvocation() { b.addStatement(s); } )+
+  )
+  
+  { return b; }
+}
+
+AlternativeConstructorInvocation AlternativeConstructorInvocation():
+{
+  String n = null;
+  Tuple t;
+}
+{
+  <THIS> [ <DOT> n = Name() ] t = Tuple() <SEMICOLON>
+  { return new AlternativeConstructorInvocation(n, t); }
+}
+
+SuperclassConstructorInvocation SuperclassConstructorInvocation():
+{
+  QualifiedName n = null;
+  Tuple t;
+}
+{
+  <SUPER> [ <DOT> n = QualifiedName() ] t = Tuple() <SEMICOLON>
+  { return new SuperclassConstructorInvocation(n, t); }
+}
+
+/* DESTRUCTORS */
+
+OperationDeclaration DestructorDeclaration():
+{
+  OperationDeclaration d = new OperationDeclaration();
+  String n;
+}
+{
+  <DESTROY> n = Name() { d.setName(n); }
+  FormalParameters(d)
+  { return d; }
+}
+
+DestructorDefinition DestructorDefinition():
+{
+  OperationDeclaration o;
+  Block b;
+}
+{
+  o = DestructorDeclaration() b = Block()
+  { return new DestructorDefinition(o, b); }
+}
+
+DestructorStubDeclaration DestructorStubDeclaration():
+{
+  OperationDeclaration o;
+}
+{
+  o = DestructorDeclaration() <SEMICOLON>
+  { return new DestructorStubDeclaration(o); }
+}
+
+/* RECEPTIONS */
+
+ReceptionDefinition ReceptionDefinition():
+{
+  QualifiedName n;
+}
+{ 
+  <RECEIVE> n = QualifiedName() <SEMICOLON>
+  { return new ReceptionDefinition(n); }
+}
+
+SignalDeclaration SignalReceptionDeclaration():
+{
+  SignalDeclaration d = new SignalDeclaration();
+  String n;
+  QualifiedNameList nl;
+}
+{
+  <RECEIVE> <SIGNAL> n = Name() { d.setName(n); }
+  [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
+  { return d; }
+}
+
+SignalReceptionDefinition SignalReceptionDefinition():
+{
+  SignalReceptionDefinition d;
+  SignalDeclaration s;
+}
+{
+  s = SignalReceptionDeclaration() { d = new SignalReceptionDefinition(s); } 
+  StructuredBody(d)
+  { return d; }
+}
+
+SignalReceptionStubDeclaration SignalReceptionStubDeclaration():
+{
+  SignalDeclaration s;
+}
+{
+  s = SignalReceptionDeclaration() <SEMICOLON>
+  { return new SignalReceptionStubDeclaration(s); }
+}
+
+/***********************
+ * BEHAVIORAL MODELING *
+ ***********************/
+
+/* ACTIVITIES */
+
+ActivityDeclaration ActivityDeclaration():
+{
+  ParameterSetDeclaration d = new ParameterSetDeclaration();
+  String n;
+}
+{ 
+  <ACTIVITY> n = Name() FormalParameters(d) [ <COLON> TypePart(d) ]
+  { return new ActivityDeclaration(n,d); }
+}
+
+ActivityDefinition ActivityDefinition():
+{
+  ActivityDeclaration a;
+  Block b;
+}
+{
+  a = ActivityDeclaration() b = Block()
+  { return new ActivityDefinition(a, b); }
+}
+
+/* BLOCK */
+
+Block Block():
+{
+  Block b = new Block();
+  Statement s;
+}
+{
+  <LBRACE> ( s = DocumentedStatement() { b.addStatement(s); } )* <RBRACE>
+  { return b; }
+}
+
+Statement DocumentedStatement():
+{
+  Token t;
+  String c = null;
+  Statement s;
+}
+{
+  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] s = Statement()
+  { s.addDocumentation(c);
+    return s;
+  }
+}
+
+/* STATEMENTS */
+Statement Statement():
+{
+  Statement s;
+}
+{
+  (
+    s = AnnotatedStatement()
+  | s = BlockStatement()
+  | s = EmptyStatement()
+  | s = ExpressionStatement()
+  | s = IfStatement()
+  | s = SwitchStatement()
+  | s = WhileStatement()
+  | s = ForStatement()
+  | s = DoStatement()
+  | s = BreakStatement()
+  | s = ReturnStatement()
+  | s = AcceptStatement()
+  | s = ClassifyStatement()
+  )
+  
+  { return s; }
+}
+
+/* ANNOTATED STATEMENTS */
+
+Statement AnnotatedStatement():
+{
+  Annotation a;
+  Statement s;
+}
+{ 
+  a = Annotation() s = Statement()
+  { s.addAnnotation(a);
+    return s;
+  }
+}
+
+Annotation Annotation():
+{
+  Token t;
+  NameList nl = null;
+}
+{
+  <AT> t = <IDENTIFIER> [ <LT> nl = NameList() <GT> ]
+  { return new Annotation(t.image, nl); }
+}
+
+NameList NameList():
+{
+  NameList nl = new NameList();
+  String n;
+}
+{ 
+  n = Name() { nl.add(n); } ( <COMMA> n = Name() { nl.add(n); } )*
+  { return nl; }
+}
+
+/* BLOCK STATEMENTS */
+
+BlockStatement BlockStatement():
+{
+  Block b;
+}
+{
+  b = Block()
+  { return new BlockStatement(b); }
+}
+
+/* EMPTY STATEMENTS */
+
+EmptyStatement EmptyStatement():
+{}
+{
+  <SEMICOLON>
+  { return new EmptyStatement(); }
+}
+
+/* EXPRESSION STATEMENTS */
+
+ExpressionStatement ExpressionStatement():
+{
+  Expression e;
+}
+{
+  e = Expression() <SEMICOLON>
+  { return new ExpressionStatement(e); }
+}
+
+/* IF STATEMENTS */
+
+IfStatement IfStatement():
+{
+  IfStatement s = new IfStatement();
+  Block b;
+}
+{
+  <IF> SequentialClauses(s) [ b = FinalClause() { s.setFinalClause(b); } ]
+  { return s; }
+}
+
+void SequentialClauses(IfStatement s):
+{
+  ConcurrentClauses cs;
+}
+{
+  cs = ConcurrentClauses() { s.addNonFinalClauses(cs); }
+  ( LOOKAHEAD(2) <ELSE> <IF> cs = ConcurrentClauses() { s.addNonFinalClauses(cs); } )*
+}
+
+ConcurrentClauses ConcurrentClauses():
+{
+  ConcurrentClauses cs = new ConcurrentClauses();
+  NonFinalClause c;
+}
+{
+  c = NonFinalClause() { cs.addClause(c); } 
+  ( <OR> <IF> c = NonFinalClause() { cs.addClause(c); } )*
+  { return cs; }
+}
+
+NonFinalClause NonFinalClause():
+{
+  Expression e;
+  Block b;
+}
+{
+  <LPAREN> e = Expression() <RPAREN> b = Block()
+  { return new NonFinalClause(e, b); }
+}
+
+Block FinalClause():
+{
+  Block b;
+}
+{
+  <ELSE> b = Block()
+  { return b; }
+}
+
+/* SWITCH STATEMENTS */
+
+SwitchStatement SwitchStatement():
+{
+  SwitchStatement s;
+  Expression e;
+  SwitchClause c;
+  Block b;
+}
+{
+  <SWITCH> <LPAREN> e = Expression() <RPAREN> { s = new SwitchStatement(e); }
+  <LBRACE> ( c = SwitchClause() { s.addNonDefaultClause(c); } )* 
+  [ b = SwitchDefaultClause() { s.setDefaultClause(b); } ] <RBRACE>
+  { return s; }
+}
+
+SwitchClause SwitchClause():
+{
+  SwitchClause c = new SwitchClause();
+  Expression e;
+  Block b;
+}
+{
+  e = SwitchCase() { c.addCase(e); } ( e = SwitchCase() { c.addCase(e); } )* 
+  b = Block() { c.setBlock(b); }
+  { return c; }
+}
+
+Expression SwitchCase():
+{
+  Expression e;
+}
+{
+  <CASE> e = Expression() <COLON>
+  { return e; }
+}
+
+Block SwitchDefaultClause():
+{
+  Block b;
+}
+{
+  <DEFAULT_> <COLON> b = Block()
+  { return b; }
+}
+
+/* WHILE STATEMENTS */
+
+WhileStatement WhileStatement():
+{
+  Expression e;
+  Block b;
+}
+{
+  <WHILE> <LPAREN> e = Expression() <RPAREN> b = Block()
+  { return new WhileStatement(e, b); }
+}
+
+/* DO STATEMENTS */
+
+DoStatement DoStatement():
+{
+  Block b;
+  Expression e;
+}
+{
+  <DO> b = Block() <WHILE> <LPAREN> e = Expression() <RPAREN> <SEMICOLON>
+  { return new DoStatement(b, e); }
+}
+
+/* FOR STATEMENTS */
+
+ForStatement ForStatement():
+{
+  ForStatement s = new ForStatement();
+  Block b;
+}
+{
+  <FOR> <LPAREN> ForControl(s) <RPAREN> b = Block()
+  { s.setBody(b);
+    return s;
+  }
+}
+
+void ForControl(ForStatement s):
+{
+  ForVariableDefinition d;
+  Expression e;
+}
+{
+  d = ForVariableDefinition() { s.addVariableDefinition(d); }
+  ( <COMMA> ForVariableDefinition() { s.addVariableDefinition(d); } )*
+  [ <WHILE> e = Expression() { s.setCondition(e); } ]
+}
+
+ForVariableDefinition ForVariableDefinition(): 
+{
+  String n;
+  Expression e;
+}
+{
+  n = Name() <IN> e = Expression()
+  { return new ForVariableDefinition(n, e); }
+}
+
+/* BREAK STATEMENTS */
+
+BreakStatement BreakStatement():
+{}
+{
+  <BREAK> <SEMICOLON>
+  { return new BreakStatement(); }
+}
+
+/* RETURN STATEMENTS */
+
+ReturnStatement ReturnStatement():
+{
+  Expression e;
+}
+{
+  <RETURN> e = Expression() <SEMICOLON>
+  { return new ReturnStatement(e); }
+}
+
+/* ACCEPT STATEMENTS */
+
+AcceptStatement AcceptStatement():
+{
+  AcceptStatement s;
+  AcceptBlock c;
+}
+{
+/* ORIGINAL
+  LOOKAHEAD(SimpleAcceptStatement()) SimpleAcceptStatement()
+| CompoundAcceptStatement()
+*/
+
+  c = AcceptClause() 
+  ( s = SimpleAcceptStatementCompletion(c) 
+  | s = CompoundAcceptStatementCompletion(c) )
+  { return s; }
+}
+
+/* ORIGINAL
+void SimpleAcceptStatement():
+{}
+{
+  AcceptClause() <SEMICOLON>
+}
+*/
+
+/* ADDED */
+AcceptStatement SimpleAcceptStatementCompletion(AcceptBlock b):
+{
+  AcceptStatement s = new AcceptStatement();
+}
+{
+  <SEMICOLON>
+  { s.addAcceptBlock(b);
+    return s; }
+}
+
+/* ORIGINAL
+void CompoundAcceptStatement():
+{}
+{
+  AcceptBlock() ( <OR> AcceptBlock() )*
+}
+*/
+
+/* ADDED */
+AcceptStatement CompoundAcceptStatementCompletion(AcceptBlock a1):
+{
+  AcceptStatement s = new AcceptStatement();
+  Block b;
+  AcceptBlock a;
+}
+{ 
+  b = Block() { a1.setBlock(b); s.addAcceptBlock(a1); }
+  ( <OR> a = AcceptBlock() { s.addAcceptBlock(a); } )* 
+  { return s; }
+}
+
+AcceptBlock AcceptBlock():
+{
+  AcceptBlock a;
+  Block b;
+}
+{ 
+  a = AcceptClause() b = Block()
+  { a.setBlock(b);
+    return a;
+  }
+}
+
+AcceptBlock AcceptClause(): 
+{
+  String n = null;
+  QualifiedNameList nl;
+}
+{
+  <ACCEPT> <LPAREN> [ LOOKAHEAD(2) n = Name() <COLON> ] nl = QualifiedNameList() <RPAREN>
+  { return new AcceptBlock(n, nl); }
+}
+
+/* CLASSIFY STATEMENTS */
+
+ClassifyStatement ClassifyStatement():
+{
+  ClassifyStatement s;
+  Expression e;
+}
+{
+  <CLASSIFY> e = Expression() { s = new ClassifyStatement(e); }
+  ClassificationClause(s) <SEMICOLON>
+  { return s; }
+}
+
+void ClassificationClause(ClassifyStatement s):
+{
+  QualifiedNameList nl;
+}
+{
+  LOOKAHEAD(2) 
+  nl = ClassificationFromClause() { s.setFromList(nl); }
+  [ ClassificationToClause() { s.setToList(nl); } ]
+| [ ReclassifyAllClause() { s.setFromList(new QualifiedNameList()); }] 
+  nl = ClassificationToClause() { s.setToList(nl); }
+}
+
+QualifiedNameList ClassificationFromClause():
+{
+  QualifiedNameList nl;
+}
+{
+  <FROM> nl = QualifiedNameList()
+  { return nl; }
+}
+
+QualifiedNameList ClassificationToClause(): 
+{
+  QualifiedNameList nl;
+}
+{
+  <TO> nl = QualifiedNameList()
+  { return nl; }
+}
+
+void ReclassifyAllClause():
+{}
+{
+  <FROM> <STAR>
+}
+
+/***************
+ * EXPRESSIONS *
+ ***************/
+
+Expression Expression():
+{
+  QualifiedName n;
+  Expression e1;
+  Expression e2;
+}
+{
+/* ORIGINAL
+  AssignmentExpression()
+| ConditionalExpression()
+*/
+
+  (
+    LOOKAHEAD(QualifiedName() AssignmentOperator()) 
+    n = QualifiedName() e2 = Assignment(new NameLeftHandSide(n))
+  | LOOKAHEAD(CastLookahead() | AffixOperator() | NumericUnaryOperator() 
+             | <BANG> | <DOLLAR> )
+    e1 = NonPostfixUnaryExpression() e2 = ConditionalExpressionCompletion(e1)
+  | e1 = BaseCollectionExpression() e2 = ExpressionCompletion(e1)
+  )
+  
+  { return e2; }
+}
+
+/* ADDED */
+Expression ExpressionCompletion(Expression c) :
+{
+  Expression i;
+  Expression e;
+}
+{
+  (
+    i = Index() e = ExpressionCompletion(new CollectionAccessExpression(c, i))
+  | e = NonIndexExpressionCompletion(c)
+  )
+  
+  { return e; }
+}
+
+/* ADDED */
+Expression FeatureExpressionCompletion(FeatureReference f):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  (
+    LOOKAHEAD(AssignmentOperator()) 
+    e2 = Assignment(new FeatureLeftHandSide(f, null))
+  | e1 = Index() e2 = IndexFeatureExpressionCompletion(f, e1)
+  | e1 = FeatureInvocation(f) e2 = ExpressionCompletion(e1)
+  | e2 = NonIndexExpressionCompletion(f)
+  )
+  
+  { return e2; }
+}
+
+/* ADDED */
+Expression IndexFeatureExpressionCompletion(FeatureReference f, Expression i):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  (
+    LOOKAHEAD(AssignmentOperator()) 
+    e2 = Assignment(new FeatureLeftHandSide(f, i))
+  | e1 = Index() e2 = ExpressionCompletion(new CollectionAccessExpression(new CollectionAccessExpression(f, i), e1))
+  | e2 = NonIndexExpressionCompletion(new CollectionAccessExpression(f, i))
+  )
+  
+  { return e2; }
+}  
+
+/* ADDED */
+Expression NonIndexExpressionCompletion(Expression c):
+{
+  Expression e1;
+  FeatureReference f;
+  Expression e2;
+}
+{
+  (
+    LOOKAHEAD(2) 
+    f = Feature(c) e2 = FeatureExpressionCompletion(f)
+  | e1 = DestroyInvocation(c) e2 = ExpressionCompletion(e1)
+  | LOOKAHEAD(<ARROW> <IDENTIFIER> <LPAREN>) 
+    e1 = CollectionOperation(c) e2 = ExpressionCompletion(e1)
+  | e1 = CollectionExpansion(c) e2 = ExpressionCompletion(e1)
+  | e1 = PostfixOperation(c) e2 = ConditionalExpressionCompletion(e1)
+  )
+  
+  { return e2; }
+}
+
+/* PRIMARY EXPRESSIONS */
+
+/* ORIGINAL
+void PrimaryExpression():
+{}
+{
+  LiteralExpression()
+| NameExpression()
+| ThisExpression()
+| ParenthesizedExpression()
+| PropertyAccessExpression()
+| InvocationExpression()
+| InstanceCreationExpression()
+| InstanceDestructionExpression()
+| ReductionExpression()
+}
+*/
+
+/* ADDED */
+Expression BaseExpression():
+{
+  Expression e;
+  QualifiedName n;
+}
+{
+  (
+    e = LiteralExpression()
+  | LOOKAHEAD(QualifiedName() <LPAREN>)
+    n = QualifiedName() e = BehaviorInvocation(n)
+  | e = NameExpression()
+  | e = ThisExpression()
+  | e = ParenthesizedExpression()
+  | <SUPER> ( LOOKAHEAD(<DOT> <DESTROY>) e = SuperDestroyInvocation() 
+            |                            e = SuperInvocation() )
+  | e = InstanceCreationExpression()
+  | e = ReductionExpression()
+  )
+
+  { return e; }
+}
+
+/* LITERAL EXPRESSIONS */
+
+Expression LiteralExpression():
+{
+  Token t;
+  Expression e;
+}
+{
+  (
+    t = <BOOLEAN_LITERAL> { e = new BooleanLiteral(t.image); }
+  | t = <NATURAL_LITERAL> { e = new NaturalLiteral(t.image); }
+  | t = <STRING_LITERAL>  { e = new StringLiteral(t.image); }
+  | t = <STAR>            { e = new UnboundedLiteral(); }
+  )
+  
+  { return e; }
+}
+
+/* NAME EXPRESSIONS */
+
+Expression NameExpression():
+{
+  QualifiedName n;
+}
+{
+  n = QualifiedName()
+  { return new NameExpression(n); }
+}
+
+/* THIS EXPRESSIONS */
+
+Expression ThisExpression():
+{}
+{
+  <THIS>
+  { return new ThisExpression(); }
+}
+
+/* PARENTHESIZED EXPRESSIONS */
+
+Expression ParenthesizedExpression():
+{
+  Expression e;
+}
+{
+  <LPAREN> e = Expression() <RPAREN>
+  { return e; }
+}
+
+/* PROPERTY ACCESS EXPRESSIONS */
+
+/* ORIGINAL
+void PropertyAccessExpression():
+{}
+{ 
+  FeatureReference()
+}
+
+void FeatureReference():
+{}
+{
+  CollectionExpression() <DOT> Name()
+}
+*/
+
+/* ADDED */
+FeatureReference Feature(Expression c):
+{
+  String n;
+}
+{
+  <DOT> n = Name()
+  { return new FeatureReference(c, n); }
+}
+
+/* INVOCATION EXPRESSIONS */
+
+/* ORIGINAL
+void InvocationExpression():
+{}
+{
+  InvocationTarget() Tuple()
+}
+
+void InvocationTarget():
+{}
+{
+  LOOKAHEAD(QualifiedName() <LPAREN>) 
+  BehaviorInvocationTarget()
+| LOOKAHEAD(SuperInvocationTarget() <LPAREN>) 
+  SuperInvocationTarget()
+| FeatureInvocationTarget()
+}
+*/
+
+Tuple Tuple():
+{
+  Tuple t;
+}
+{
+  (
+    LOOKAHEAD(<LPAREN> Name() <THICK_ARROW>) 
+    t = NamedTuple()
+  | t = PositionalTuple()
+  )
+  
+  { return t; }
+}
+
+Tuple PositionalTuple():
+{
+  ExpressionList el = new ExpressionList();
+}
+{
+  <LPAREN> [ ExpressionList(el) ] <RPAREN>
+  { return new PositionalTuple(el.getList()); }
+}
+
+void ExpressionList(ExpressionList el):
+{
+  Expression e;
+}
+{
+  e = Expression() { el.add(e); }
+  ( <COMMA> Expression() { el.add(e); } )*
+}
+
+Tuple NamedTuple():
+{
+  NamedTuple t = new NamedTuple();
+  NamedExpression n;
+}
+{
+  <LPAREN> n = NamedExpression() { t.addExpression(n); }
+  ( <COMMA> n = NamedExpression() { t.addExpression(n); } )* <RPAREN>
+  { return t; }
+}
+
+NamedExpression NamedExpression():
+{
+  String n;
+  Expression e;
+}
+{
+  n = Name() <THICK_ARROW> e = Expression()
+  { return new NamedExpression(n, e); }
+}
+
+/* ORIGINAL
+void BehaviorInvocationTarget():
+{}
+{
+  QualifiedName()
+}
+*/
+
+/* ADDED */
+Expression BehaviorInvocation(QualifiedName n):
+{
+  Tuple t;
+}
+{
+  t = Tuple() 
+  { return new BehaviorInvocationExpression(n, t); }
+}
+
+/* ORIGINAL
+void FeatureInvocationTarget():
+{}
+{
+  FeatureReference()
+}
+*/
+
+/* ADDED */
+Expression FeatureInvocation(FeatureReference f):
+{
+  Tuple t;
+}
+{
+  t = Tuple()
+  { return new FeatureInvocationExpression(f, t); }
+}
+
+/* ORIGINAL
+void SuperInvocationTarget():
+{}
+{
+  <SUPER> <DOT> QualifiedName()
+}
+*/
+
+/* ADDED */
+Expression SuperInvocation():
+{
+  QualifiedName n;
+  Tuple t;
+}
+{
+  <DOT> n = QualifiedName() t = Tuple() 
+  { return new SuperInvocationExpression(n, t); }
+}
+
+
+/* INSTANCE CREATION EXPRESSIONS */
+
+Expression InstanceCreationExpression():
+{
+  QualifiedName n;
+  Tuple t;
+}
+{
+  <NEW> n = QualifiedName() t = Tuple()
+  { return new InstanceCreationExpression(n, t); }
+}
+
+/* INSTANCE DESTRUCTION EXPRESSIONS */
+
+/* ORIGINAL
+void InstanceDestructionExpression():
+{}
+{
+  CollectionExpression() <DOT> <DESTROY> Tuple()
+| <SUPER> <DOT> <DESTROY> Tuple()
+}
+*/
+
+/* ADDED */
+Expression DestroyInvocation(Expression c):
+{
+  Tuple t;
+}
+{
+  <DOT> <DESTROY> t = Tuple()
+  { return new InstanceDestructionExpression(c, t); }
+}
+
+/* ADDED */
+Expression SuperDestroyInvocation():
+{
+  Tuple t;
+}
+{
+  <DOT> <DESTROY> t = Tuple()
+  { return new SuperDestructionExpression(t); }
+}
+
+/* REDUCTION EXPRESSIONS */
+
+Expression ReductionExpression():
+{
+  String op;
+  QualifiedName n;
+  Expression e;
+}
+{
+  op = ReductionOperator() n = QualifiedName() <LPAREN> e = Expression() <RPAREN>
+  { return new ReductionExpression(op, n, e); }
+}
+
+String ReductionOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <HASH>
+  | t = <DOUBLE_HASH>
+  )
+  
+  { return t.image; }
+}
+
+/* COLLECTION EXPRESSIONS */
+
+Expression CollectionExpression():
+{
+  Expression e;
+}
+{
+/* ORIGINAL
+  PrimaryExpression()
+| ClassExtentExpression()
+| CollectionValueExpression()
+| CollectionAccessExpression()
+| CollectionOperationExpression()
+| CollectionExpansionExpression()
+*/
+
+  e = BaseCollectionExpression() 
+  ( LOOKAHEAD(2) e = CollectionModifier(e) )*
+  { return e; }
+}
+
+/* ADDED */
+Expression BaseCollectionExpression():
+{
+  Expression e;
+}
+{
+  (
+    LOOKAHEAD(QualifiedName() <DOT> <ALL_INSTANCES>) 
+    e = ClassExtentExpression()
+  | LOOKAHEAD( TypeName() <LBRACKET> [ MultiplicityRange() ] <RBRACKET> <LBRACE>
+             | <NULL> ) 
+    e = CollectionValueExpression()
+  | e = BaseExpression()
+  )
+  
+  { return e; }
+}
+
+/* ADDED */
+Expression CollectionModifier(Expression c):
+{
+  Expression i;
+  Expression e;
+}
+{
+  (
+    LOOKAHEAD(<DOT> <DESTROY>)
+    e = DestroyInvocation(c) 
+  | e = Feature(c) [ LOOKAHEAD(2) e = FeatureInvocation((FeatureReference)e) ]
+  | LOOKAHEAD(<ARROW> <IDENTIFIER> <LPAREN>) 
+    e = CollectionOperation(c)
+  | e = CollectionExpansion(c) 
+  | i = Index() { e = new CollectionAccessExpression(c, i); }
+  )
+  
+  { return e; }
+}
+
+/* CLASS EXTENT EXPRESSIONS */
+
+Expression ClassExtentExpression():
+{
+  QualifiedName n;
+}
+{
+  n = QualifiedName() <DOT> <ALL_INSTANCES> <LPAREN> <RPAREN>
+  { return new ClassExtentExpression(n); }
+}
+
+/* COLLECTION VALUE EXPRESSIONS */
+
+Expression CollectionValueExpression():
+{
+  QualifiedName t;
+  TypedDeclaration d = new TypedDeclaration();
+  CollectionElements c = null;
+}
+{
+  (
+    t = TypeName() { d.setType(t); }
+    <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET>
+    <LBRACE> [ c = CollectionElements() ] <RBRACE>
+  | <NULL>
+  )
+  { return new CollectionValueExpression(d, c); }
+}
+
+CollectionElements CollectionElements():
+{
+  CollectionElements c;
+  Expression e1;
+  Expression e2;
+}
+{
+/* ORIGINAL
+  ExpressionList()
+| CollectionRange()
+*/
+  e1 = Expression() 
+  ( <DOUBLE_DOT> e2 = Expression() { c = new CollectionRange(e1, e2); }
+  | { c = new ExpressionList(); ((ExpressionList)c).add(e1);} 
+    ( <COMMA> e2 = Expression() { ((ExpressionList)c).add(e2); } )*  )
+  { return c; }
+}
+
+/*
+void CollectionRange():
+{}
+{
+  Expression() <DOUBLE_DOT> Expression()
+}
+*/
+
+/* COLLECTION ACCESS EXPRESSIONS */
+
+/* ORIGINAL
+void CollectionAccessExpression():
+{}
+{
+  CollectionExpression() Index()
+}
+*/
+
+Expression Index(): 
+{
+  Expression e;
+}
+{
+  <LBRACKET> e = Expression() <RBRACKET>
+  { return e; }
+}
+
+/* COLLECTION OPERATION EXPRESSIONS */
+
+/* ORIGINAL
+void CollectionOperationExpression():
+{}
+{
+  CollectionExpression() <ARROW> <IDENTIFIER> CollectionOperationTuple()
+}
+*/
+
+/* ADDED */
+Expression CollectionOperation(Expression c):
+{
+  Token op;
+  Tuple t;
+}
+{
+  <ARROW> op = <IDENTIFIER> t = CollectionOperationTuple()
+  { return new CollectionOperationExpression(c, op.image, t); }
+}
+
+Tuple CollectionOperationTuple():
+{
+  Tuple t;
+}
+{
+  (
+    LOOKAHEAD(<LPAREN> Name() [ Index() ] <THICK_ARROW> ) 
+    t = IndexedNamedTuple()
+  | t = PositionalTuple()
+  )
+  
+  { return t; }
+}
+
+NamedTuple IndexedNamedTuple():
+{
+  NamedTuple t = new NamedTuple();
+  NamedExpression e;
+}
+{
+  <LPAREN> e = IndexedNamedExpression() { t.addExpression(e); }
+  ( <COMMA> e = IndexedNamedExpression() { t.addExpression(e); } )* <RPAREN>
+  { return t; }
+}
+
+NamedExpression IndexedNamedExpression():
+{
+  String n;
+  Expression i = null;
+  Expression e;
+}
+{
+  n = Name() [ i = Index() ] <THICK_ARROW> e = Expression()
+  { return new NamedExpression(n, i, e); }
+}
+
+/* COLLECTION EXPANSION EXPRESSIONS */
+
+/* ORIGINAL
+void CollectionExpansionExpression():
+{}
+{
+  CollectionExpression() <ARROW> <IDENTIFIER> Name() Tuple()
+}
+*/
+
+/* ADDED */
+Expression CollectionExpansion(Expression c):
+{
+  Token op;
+  String n;
+  Tuple t;  
+}
+{
+  <ARROW> op = <IDENTIFIER> n = Name() t = Tuple()
+  { return new CollectionExpansionExpression(c, op.image, n, t); }
+}
+
+/* POSTFIX EXPRESSIONS */
+
+Expression PostfixExpression():
+{
+  Expression c;
+  Expression e;
+}
+{
+/* ORIGINAL
+  CollectionExpression()
+| PostfixedExpression()
+*/
+
+  c = CollectionExpression() e = PostfixOperation(c)
+  { return e; }
+}
+
+Expression PostfixOperation(Expression c):
+{
+  Expression e = c;
+  String op;
+}
+{
+  ( op = AffixOperator() { e = new PostfixExpression(op, e); } )*
+  { return e; }
+}
+
+/* ORIGINAL
+void PostfixedExpression():
+{}
+{
+  PostfixExpression() AffixOperator()
+}
+*/
+
+String AffixOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <INCR>
+  | t = <DECR>
+  )
+  
+  { return t.image; }
+}
+
+/* UNARY EXPRESSIONS */
+
+Expression UnaryExpression():
+{
+  Expression e;
+}
+{
+  (
+    e = PrefixedExpression()
+  | e = NumericUnaryExpression()
+  | e = NonNumericUnaryExpression()
+  )
+  
+  { return e; }
+}
+
+Expression NonNumericUnaryExpression():
+{
+  Expression e;
+}
+{
+  (
+    LOOKAHEAD(CastLookahead()) 
+    e = CastExpression()
+  | e = PostfixExpression() 
+  | e = BooleanNegationExpression()
+  | e = IsolationExpression()
+  )
+  
+  { return e; }
+}
+
+/* ADDED */
+void CastLookahead():
+{}
+{
+  <LPAREN> TypeName() <RPAREN> 
+  ( <BANG> | <DOLLAR> | <LPAREN> | <NEW> 
+  | TypeName() | LiteralExpression() | ThisExpression() | ReductionOperator() )
+}
+
+/* ADDED */
+Expression NonPostfixUnaryExpression():
+{
+  Expression e;
+}
+{
+  (
+    e = PrefixedExpression()
+  | e = NumericUnaryExpression()
+  | e = CastExpression()
+  | e = BooleanNegationExpression()
+  | e = IsolationExpression()
+  )
+  
+  { return e; }
+}
+
+PrefixExpression PrefixedExpression():
+{
+  String op;
+  Expression e;
+}
+{
+  op = AffixOperator() e = UnaryExpression()
+  { return new PrefixExpression(op, e); }
+}
+
+Expression BooleanNegationExpression():
+{
+  Expression e;
+}
+{
+  <BANG> e = UnaryExpression()
+  { return new UnaryExpression("!", e); }
+}
+
+Expression NumericUnaryExpression():
+{
+  String op;
+  Expression e;
+}
+{
+  op = NumericUnaryOperator() e = UnaryExpression()
+  { return new UnaryExpression(op, e); }
+}
+
+String NumericUnaryOperator():
+{
+  Token t;
+}
+{
+	(
+	  t = <PLUS>
+	| t = <MINUS>
+	)
+	
+	{ return t.image; }
+}
+
+Expression IsolationExpression():
+{
+  Expression e;
+}
+{
+  <DOLLAR> e = UnaryExpression()
+  { return new UnaryExpression("$", e); }
+}
+
+Expression CastExpression():
+{
+  QualifiedName t;
+  Expression e;
+}
+{
+  <LPAREN> t = TypeName() <RPAREN> e = NonNumericUnaryExpression()
+  { return new CastExpression(t, e); }
+}
+
+/* MULTIPLICATIVE OPERATORS */
+
+Expression MultiplicativeExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  [ MultiplicativeExpression() MultiplicativeOperator() ] UnaryExpression()
+*/
+
+  u = UnaryExpression() e = MultiplicativeExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression MultiplicativeExpressionCompletion(Expression u):
+{
+  Expression e1 = u;
+  String op;
+  Expression e2;
+}
+{
+  ( op = MultiplicativeOperator() e2 = UnaryExpression() 
+    { e1 = new BinaryExpression(e1, op, e2); } )*
+  { return e1; }
+}
+
+String MultiplicativeOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <STAR>
+  | t = <SLASH>
+  | t = <REM>
+  )
+  
+  { return t.image; }
+}
+
+/* ADDITIVE OPERATORS */
+
+Expression AdditiveExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  [ AdditiveExpression() AdditiveOperator() ] MultiplicativeExpression()
+*/
+
+  u = UnaryExpression() e = AdditiveExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression AdditiveExpressionCompletion(Expression u):
+{
+  Expression e1;
+  String op;
+  Expression e2;
+}
+{
+  e1 = MultiplicativeExpressionCompletion(u) 
+  ( op = AdditiveOperator() e2 = MultiplicativeExpression() 
+    { e1 = new BinaryExpression(e1, op, e2); } )*
+  { return e1; }
+}  
+
+String AdditiveOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <PLUS>
+  | t = <MINUS>
+  )
+  
+  { return t.image; }
+}
+
+/* RELATIONAL OPERATORS */
+
+Expression RelationalExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  [ RelationalExpression() RelationalOperator() ] AdditiveExpression()
+*/
+
+  u = UnaryExpression() e = RelationalExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression RelationalExpressionCompletion(Expression u):
+{
+  Expression e1;
+  String op;
+  Expression e2;
+}
+{
+  e1 = AdditiveExpressionCompletion(u) 
+  ( op = RelationalOperator() e2 = AdditiveExpression() 
+    { e1 = new BinaryExpression(e1, op, e2); } )*
+  { return e1; }
+}
+
+String RelationalOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <LT>
+  | t = <GT>
+  | t = <LE>
+  | t = <GE>
+  )
+  
+  { return t.image; }
+}
+
+Expression ClassificationExpression():
+{
+  Expression u;
+  Expression e;
+}
+{ 
+/* ORIGINAL
+  RelationalExpression() [ ClassificationOperator() QualifiedName() ]
+*/
+
+  u = UnaryExpression() e = ClassificationExpressionCompletion(u)
+  { return e; }
+}
+
+Expression ClassificationExpressionCompletion(Expression u):
+{
+  Expression e;
+  String op;
+  QualifiedName n;
+}
+{ 
+  e = RelationalExpressionCompletion(u) 
+  [ op = ClassificationOperator() n = QualifiedName()
+    { e = new ClassificationExpression(e, op, n); } ]
+  { return e; }
+}
+
+String ClassificationOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <INSTANCEOF>
+  | t = <HASTYPE>
+  )
+
+  { return t.image; }
+}
+
+/* EQUALITY OPERATORS */
+
+Expression EqualityExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  [ EqualityExpression EqualityOperator ] RelationalExpression
+*/
+
+  u = UnaryExpression() e = ClassificationExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression EqualityExpressionCompletion(Expression u):
+{
+  Expression e1;
+  String op;
+  Expression e2;
+}
+{
+  e1 = ClassificationExpressionCompletion(u) 
+  ( op = EqualityOperator() e2 = ClassificationExpression() 
+    { e1 = new BinaryExpression(e1, op, e2); } )*
+  { return e1; }
+}
+
+String EqualityOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <EQ>
+  | t = <NE>
+  )
+
+  { return t.image; }
+}
+
+/* LOGICAL OPERATORS */
+
+Expression AndExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  [ AndExpression() <LOGICAL_AND> ] UnaryExpression() EqualityExpression()
+*/
+
+  u = UnaryExpression() e = AndExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression AndExpressionCompletion(Expression u):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  e1 = EqualityExpressionCompletion(u) 
+  ( <LOGICAL_AND> e2 = EqualityExpression() 
+    { e1 = new BinaryExpression(e1, "&", e2); } )*
+  { return e1; }
+}
+
+Expression ExclusiveOrExpression():
+{
+  Expression u;
+  Expression e;
+}
+{ 
+/* ORIGINAL
+  [ ExclusiveOrExpression() <XOR> ] AndExpression()
+*/
+
+  u = UnaryExpression() e = ExclusiveOrExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression ExclusiveOrExpressionCompletion(Expression u):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  e1 = AndExpressionCompletion(u) 
+  ( <XOR> e2 = AndExpression() 
+    { e1 = new BinaryExpression(e1, "^", e2); } )*
+  { return e1; }
+}
+
+Expression InclusiveOrExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  [ InclusiveOrExpression() <LOGICAL_OR> ] ExclusiveOrExpression()
+*/
+
+  u = UnaryExpression() e = InclusiveOrExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression InclusiveOrExpressionCompletion(Expression u):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  e1 = ExclusiveOrExpressionCompletion(u) 
+  ( <LOGICAL_OR> e2 = ExclusiveOrExpression() 
+    { e1 = new BinaryExpression(e1, "|", e2); } )*
+  { return e1; }
+}
+
+/* CONDITIONAL-AND OPERATOR */
+
+Expression ConditionalAndExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  [ ConditionalAndExpression() <SC_AND> ]  InclusiveOrExpression()
+*/
+
+  u = UnaryExpression() e = ConditionalAndExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression ConditionalAndExpressionCompletion(Expression u):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  e1 = InclusiveOrExpressionCompletion(u) 
+  ( <SC_AND> e2 = InclusiveOrExpression() 
+    { e1 = new ConditionalBinaryExpression(e1, "&&", e2); } )*
+  { return e1; }
+}
+
+/* CONDITIONAL-OR OPERATOR */
+
+Expression ConditionalOrExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  [ ConditionalOrExpression() <SC_OR> ] ConditionalAndExpression()
+*/
+
+  u = UnaryExpression() e = ConditionalOrExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression ConditionalOrExpressionCompletion(Expression u):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  e1 = ConditionalAndExpressionCompletion(u) 
+  ( <SC_OR> e2 = ConditionalAndExpression() 
+    { e1 = new ConditionalBinaryExpression(e1, "||", e2); } )*
+  { return e1; }
+}
+
+/* CONDITIONAL-TEST OPERATOR */
+
+Expression ConditionalExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+/* ORIGINAL
+  ConditionalOrExpression() [ <HOOK> Expression() <COLON> ConditionalExpression() ]
+*/
+
+  u = UnaryExpression() e = ConditionalExpressionCompletion(u)
+  { return e; }
+}
+
+/* ADDED */
+Expression ConditionalExpressionCompletion(Expression u):
+{
+  Expression e1;
+  Expression e2;
+  Expression e3;
+}
+{
+  e1 = ConditionalOrExpressionCompletion(u) 
+  [ <HOOK> e2 = Expression() <COLON> e3 = ConditionalExpression() 
+    { e1 = new ConditionalExpression(e1, e2, e3); } ]
+  { return e1; }
+}
+
+/* ASSIGNMENT OPERATORS */
+
+/* ORIGINAL
+void AssignmentExpression():
+{}
+{
+  LeftHandSide() AssignmentOperator() Expression()
+}
+
+void LeftHandSide():
+{}
+{
+  QualifiedName()
+| FeatureReference() [ Index() ]
+}
+*/
+
+/* ADDED */
+Expression Assignment(LeftHandSide lhs):
+{
+  String op;
+  Expression e;
+}
+{
+  op = AssignmentOperator() e = Expression() 
+  { return new AssignmentExpression(lhs, op, e); }
+}
+
+String AssignmentOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <ASSIGN>
+  | t = <PLUSASSIGN>
+  | t = <MINUSASSIGN>
+  | t = <STARASSIGN>
+  | t = <SLASHASSIGN>
+  | t = <REMASSIGN>
+  | t = <ANDASSIGN>
+  | t = <ORASSIGN>
+  | t = <XORASSIGN>
+  )
+
+  { return t.image; }
+}
+

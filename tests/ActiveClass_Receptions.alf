@@ -1,0 +1,10 @@
+active class Receptions {
+  public receive Checkout;
+  
+  public receive signal SubmitCharge {
+    public accountNumber:      BankCardAccountNumber;
+    public billingAddress:     MailingAddress;
+    public cardExpirationDate: MonthYear;
+    public cardholderName:     PersonalName;
+  }
+}

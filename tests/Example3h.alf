@@ -1,0 +1,36 @@
+namespace 'Property Management'::'Service Model'::
+                           'Property Management Service Implementation';
+
+private import 'Property Management'::'Data Model'::Properties::*;
+private import 'Property Management'::'Message Model'::*;
+
+/** Update the disposition data for an existing property. */
+activity dispose (
+  in request: 'Property Disposal Notification',
+  out reply: 'Property Management Success Reply' [0..1],
+  out error: 'Error Reply' [0..1] ) {
+
+  property = Property -> select p 
+               (p.identifier == request.'property identifier');
+
+  if (property -> isEmpty()) {
+    error = new 'Error Reply' (
+      identifier           => request.identifier + "/error",
+      'request identifier' => request.identifier,
+      'error code'         => "PDN-001",
+      'error message'      => "Property not found." );
+
+  } else if (property.status = 'Property Type'::pending) {
+    error = new 'Error Reply' (
+      identifier           => request.identifier + "/error",
+      'request identifier' => request.identifier,
+      'error code'         => "PDN-002",
+      'error message'      => "Property not yet acquired." );
+
+  } else {
+    property.'disposition data' = request.'property disposition data';
+    property.'update status'();
+
+    reply = this.'create reply'(request.identifier, property);
+  }
+}

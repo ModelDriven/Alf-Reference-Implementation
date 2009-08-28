@@ -1,0 +1,4 @@
+datatype Complex {
+  public re: Real;
+  public im: Real;
+}

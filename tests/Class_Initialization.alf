@@ -1,0 +1,4 @@
+class Initialization {
+  public a: Integer = this.b -> size();
+  public b: Integer = 1;
+}

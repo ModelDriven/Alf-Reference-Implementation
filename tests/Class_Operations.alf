@@ -1,0 +1,14 @@
+class Operations {
+  // Abstract operation
+  abstract select(in cart: Cart, in product: Product, in quantity: Count);
+  
+  // In-line definition
+  select(in cart: Cart, in product: Product, in quantity: Count) {
+    Selects -> add(cart, product, this);
+    this.quantity = quantity;
+    this.unitPriceOfSelection = produce.getUnitPrice();
+  }
+  
+  // Stub declaration
+  unitPrice(): Money redefines Selection::getUnitPriceOfSelection; 
+}
