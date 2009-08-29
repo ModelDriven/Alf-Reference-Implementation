@@ -20,20 +20,27 @@ import java.util.ArrayList;
 public class ForVariableDefinition extends Node {
 
 	private String variable = "";
-	private Expression expression = null;
+	private Expression expression1 = null;
+	private Expression expression2 = null;
 
-	public ForVariableDefinition(String variable, Expression expression) {
+	public ForVariableDefinition(String variable, Expression expression1,
+			Expression expression2) {
 		this.variable = variable;
-		this.expression = expression;
+		this.expression1 = expression1;
+		this.expression2 = expression2;
 	} // ForVariableDefinition
 
 	public String getVariable() {
 		return this.variable;
 	} // getVariable
 
-	public Expression getExpression() {
-		return this.expression;
-	} // getExpression
+	public Expression getExpression1() {
+		return this.expression1;
+	} // getExpression1
+
+	public Expression getExpression2() {
+		return this.expression2;
+	} // getExpression2
 
 	public String toString() {
 		return super.toString() + " variable:" + this.getVariable();
@@ -41,7 +48,10 @@ public class ForVariableDefinition extends Node {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		this.getExpression().printChild(prefix);
+		this.getExpression1().printChild(prefix);
+		if (this.getExpression2() != null) {
+			this.getExpression2().printChild(prefix);
+		}
 	} // print
 
 } // ForVariableDefinition

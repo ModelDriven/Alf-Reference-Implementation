@@ -87,6 +87,7 @@ activity Statements() {
     reading = sensor.getNextReading();
     Record(reading);
   } while (!reading.isFinal());
+  
   for (member in memberList) {
     names->add(member.name);
     addresses->add(member.address);
@@ -96,6 +97,10 @@ activity Statements() {
     if (reading > noiseLimit) {
       readings->add(reading);
     }
+  }
+  
+  for (i in 1..recordCount) {
+    processRecord(i);
   }
   
   @parallel for (outgoingEdge in this.outgoingEdges) {

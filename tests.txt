@@ -3419,6 +3419,18 @@ UnitDefinition
             NameExpression
              QualifiedName reading
    ForStatement
+    ForVariableDefinition variable:i
+     NaturalLiteral image:1
+     NameExpression
+      QualifiedName recordCount
+    Block
+     ExpressionStatement
+      BehaviorInvocationExpression
+       QualifiedName processRecord
+       PositionalTuple
+        NameExpression
+         QualifiedName i
+   ForStatement
     Annotation identifier:parallel
     ForVariableDefinition variable:outgoingEdge
      FeatureReference name:outgoingEdges
@@ -3647,6 +3659,15 @@ UnitDefinition
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:ProductSelection isAbstract:false
   ConstructorDefinition name:registered visibility:private
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:registered isAbstract:false
+   Block
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference name:register
+       BehaviorInvocationExpression
+        QualifiedName Repository::get
+        PositionalTuple
+      PositionalTuple
+       ThisExpression
   ClassDeclaration name:Constructors isAbstract:false
 Alf 0.05 Parser
 Reading from file tests\Class_Destructors.alf...
@@ -3657,10 +3678,37 @@ UnitDefinition
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:ProductSelection isAbstract:false
   DestructorDefinition name:unregister visibility:private
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:unregister isAbstract:false
+   Block
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference name:unregister
+       BehaviorInvocationExpression
+        QualifiedName Repository::get
+        PositionalTuple
+      PositionalTuple
+       ThisExpression
+    ExpressionStatement
+     SuperDestructionExpression
+      PositionalTuple
   DestructorDefinition name:D visibility:public
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:D isAbstract:false
+   Block
+    ExpressionStatement
+     SuperDestructionExpression
+      PositionalTuple
   DestructorDefinition name:D visibility:public
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:D isAbstract:false
+   Block
+    ExpressionStatement
+     BehaviorInvocationExpression
+      QualifiedName WriteLine
+      PositionalTuple
+       NameExpression
+        QualifiedName reason
+    ExpressionStatement
+     InstanceDestructionExpression
+      ThisExpression
+      PositionalTuple
   ClassDeclaration name:Destructors isAbstract:false
    QualifiedNameList
     QualifiedName C
@@ -3690,6 +3738,35 @@ UnitDefinition
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:select isAbstract:true
   OperationDefinition name:select visibility:null
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:select isAbstract:false
+   Block
+    ExpressionStatement
+     CollectionOperationExpression operation:add
+      NameExpression
+       QualifiedName Selects
+      PositionalTuple
+       NameExpression
+        QualifiedName cart
+       NameExpression
+        QualifiedName cart
+       NameExpression
+        QualifiedName cart
+    ExpressionStatement
+     AssignmentExpression operator:=
+      FeatureLeftHandSide
+       FeatureReference name:quantity
+        ThisExpression
+      NameExpression
+       QualifiedName quantity
+    ExpressionStatement
+     AssignmentExpression operator:=
+      FeatureLeftHandSide
+       FeatureReference name:unitPriceOfSelection
+        ThisExpression
+      FeatureInvocationExpression
+       FeatureReference name:getUnitPrice
+        NameExpression
+         QualifiedName produce
+       PositionalTuple
   OperationStubDeclaration name:unitPrice visibility:null
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:unitPrice isAbstract:false
     QualifiedName Money
@@ -3760,6 +3837,7 @@ UnitDefinition
  ClassDefinition name:Singleton visibility:
   ConstructorDefinition name:Singleton visibility:private
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:Singleton isAbstract:false
+   Block
   ActivityDefinition name:getSingleton visibility:public
    ActivityDeclaration name:getSingleton isAbstract:false
     ParameterSetDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:
@@ -3802,12 +3880,27 @@ UnitDefinition
  ClassDefinition name:SuperConstructors visibility:
   ConstructorDefinition name:B visibility:public
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:B isAbstract:false
+   Block
+    SuperclassConstructorInvocation
+     QualifiedName A
   ConstructorDefinition name:B visibility:public
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:B isAbstract:false
+   Block
+    AlternativeConstructorInvocation constructor:B
+     PositionalTuple
+      NameExpression
+       QualifiedName x
   ConstructorDefinition name:B1 visibility:public
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:B1 isAbstract:false
+   Block
+    SuperclassConstructorInvocation
   ConstructorDefinition name:B2 visibility:public
    OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:B2 isAbstract:false
+   Block
+    AlternativeConstructorInvocation constructor:null
+     PositionalTuple
+      NameExpression
+       QualifiedName x
   ClassDeclaration name:SuperConstructors isAbstract:false
    QualifiedNameList
     QualifiedName A
