@@ -1603,11 +1603,12 @@ void ForControl(ForStatement s):
 ForVariableDefinition ForVariableDefinition(): 
 {
   String n;
-  Expression e;
+  Expression e1;
+  Expression e2 = null;
 }
 {
-  n = Name() <IN> e = Expression()
-  { return new ForVariableDefinition(n, e); }
+  n = Name() <IN> e1 = Expression() [ <DOUBLE_DOT> e2 = Expression() ]
+  { return new ForVariableDefinition(n, e1, e2); }
 }
 
 /* BREAK STATEMENTS */
