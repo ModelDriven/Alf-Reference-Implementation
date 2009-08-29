@@ -22,9 +22,11 @@ public class AlternativeConstructorInvocation extends Statement {
 	private String constructor = "";
 	private Tuple tuple = null;
 
-	public AlternativeConstructorInvocation(String constructor, Tuple tuple) {
+	public AlternativeConstructorInvocation(String constructor, Tuple tuple,
+			String documentation) {
 		this.constructor = constructor;
 		this.tuple = tuple;
+		this.addDocumentation(documentation);
 	} // AlternativeConstructorInvocation
 
 	public String getConstructor() {

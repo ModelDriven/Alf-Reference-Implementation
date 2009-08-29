@@ -1,0 +1,329 @@
+Alf 0.05 Parser
+Reading from file ..\tests\Class_Constructors.alf...
+Call:   UnitDefinition
+  Call:   NamespaceDefinition
+    Call:   ClassifierDefinition
+      Call:   ClassDefinition
+        Call:   ClassDeclaration
+          Consumed token: <"class" at line 1 column 1>
+          Call:   Name
+            Consumed token: <<IDENTIFIER>: "Constructors" at line 1 column 7>
+          Return: Name
+        Return: ClassDeclaration
+        Consumed token: <"{" at line 1 column 20>
+        Call:   ClassMember
+          Call:   VisibilityIndicator
+            Call:   ImportVisibilityIndicator
+              Consumed token: <"public" at line 2 column 3>
+            Return: ImportVisibilityIndicator
+          Return: VisibilityIndicator
+          Call:   ClassMemberDefinition
+            Call:   FeatureStubDeclaration
+              Call:   ConstructorStubDeclaration
+                Call:   ConstructorDeclaration
+                  Consumed token: <"create" at line 2 column 10>
+                  Call:   Name
+                    Consumed token: <<IDENTIFIER>: "Table" at line 2 column 17>
+                  Return: Name
+                  Call:   FormalParameters
+                    Consumed token: <"(" at line 2 column 22>
+                    Call:   FormalParameterList
+                      Call:   FormalParameter
+                        Call:   ParameterDirection
+                          Consumed token: <"in" at line 2 column 23>
+                        Return: ParameterDirection
+                        Call:   Name
+                          Consumed token: <<IDENTIFIER>: "rows" at line 2 column 26>
+                        Return: Name
+                        Consumed token: <":" at line 2 column 30>
+                        Call:   TypePart
+                          Call:   TypeName
+                            Call:   QualifiedName
+                              Call:   Name
+                                Consumed token: <<IDENTIFIER>: "Integer" at line 2 column 32>
+                              Return: Name
+                            Return: QualifiedName
+                          Return: TypeName
+                        Return: TypePart
+                      Return: FormalParameter
+                      Consumed token: <"," at line 2 column 39>
+                      Call:   FormalParameter
+                        Call:   ParameterDirection
+                          Consumed token: <"in" at line 2 column 41>
+                        Return: ParameterDirection
+                        Call:   Name
+                          Consumed token: <<IDENTIFIER>: "columns" at line 2 column 44>
+                        Return: Name
+                        Consumed token: <":" at line 2 column 51>
+                        Call:   TypePart
+                          Call:   TypeName
+                            Call:   QualifiedName
+                              Call:   Name
+                                Consumed token: <<IDENTIFIER>: "Integer" at line 2 column 53>
+                              Return: Name
+                            Return: QualifiedName
+                          Return: TypeName
+                        Return: TypePart
+                      Return: FormalParameter
+                    Return: FormalParameterList
+                    Consumed token: <")" at line 2 column 60>
+                  Return: FormalParameters
+                Return: ConstructorDeclaration
+                Consumed token: <";" at line 2 column 61>
+              Return: ConstructorStubDeclaration
+            Return: FeatureStubDeclaration
+          Return: ClassMemberDefinition
+        Return: ClassMember
+        Call:   ClassMember
+          Call:   VisibilityIndicator
+            Call:   ImportVisibilityIndicator
+              Consumed token: <"public" at line 3 column 3>
+            Return: ImportVisibilityIndicator
+          Return: VisibilityIndicator
+          Call:   ClassMemberDefinition
+            Call:   FeatureStubDeclaration
+              Call:   ConstructorStubDeclaration
+                Call:   ConstructorDeclaration
+                  Consumed token: <"create" at line 3 column 10>
+                  Call:   Name
+                    Consumed token: <<IDENTIFIER>: "ProductSelection" at line 3 column 17>
+                  Return: Name
+                  Call:   FormalParameters
+                    Consumed token: <"(" at line 4 column 5>
+                    Call:   FormalParameterList
+                      Call:   FormalParameter
+                        Call:   ParameterDirection
+                          Consumed token: <"in" at line 4 column 6>
+                        Return: ParameterDirection
+                        Call:   Name
+                          Consumed token: <<IDENTIFIER>: "cart" at line 4 column 9>
+                        Return: Name
+                        Consumed token: <":" at line 4 column 13>
+                        Call:   TypePart
+                          Call:   TypeName
+                            Call:   QualifiedName
+                              Call:   Name
+                                Consumed token: <<IDENTIFIER>: "Cart" at line 4 column 15>
+                              Return: Name
+                            Return: QualifiedName
+                          Return: TypeName
+                        Return: TypePart
+                      Return: FormalParameter
+                      Consumed token: <"," at line 4 column 19>
+                      Call:   FormalParameter
+                        Call:   ParameterDirection
+                          Consumed token: <"in" at line 4 column 21>
+                        Return: ParameterDirection
+                        Call:   Name
+                          Consumed token: <<IDENTIFIER>: "product" at line 4 column 24>
+                        Return: Name
+                        Consumed token: <":" at line 4 column 31>
+                        Call:   TypePart
+                          Call:   TypeName
+                            Call:   QualifiedName
+                              Call:   Name
+                                Consumed token: <<IDENTIFIER>: "Product" at line 4 column 33>
+                              Return: Name
+                            Return: QualifiedName
+                          Return: TypeName
+                        Return: TypePart
+                      Return: FormalParameter
+                      Consumed token: <"," at line 4 column 40>
+                      Call:   FormalParameter
+                        Call:   ParameterDirection
+                          Consumed token: <"in" at line 4 column 42>
+                        Return: ParameterDirection
+                        Call:   Name
+                          Consumed token: <<IDENTIFIER>: "quantity" at line 4 column 45>
+                        Return: Name
+                        Consumed token: <":" at line 4 column 53>
+                        Call:   TypePart
+                          Call:   TypeName
+                            Call:   QualifiedName
+                              Call:   Name
+                                Consumed token: <<IDENTIFIER>: "Count" at line 4 column 55>
+                              Return: Name
+                            Return: QualifiedName
+                          Return: TypeName
+                        Return: TypePart
+                      Return: FormalParameter
+                    Return: FormalParameterList
+                    Consumed token: <")" at line 4 column 60>
+                  Return: FormalParameters
+                Return: ConstructorDeclaration
+                Consumed token: <";" at line 4 column 61>
+              Return: ConstructorStubDeclaration
+            Return: FeatureStubDeclaration
+          Return: ClassMemberDefinition
+        Return: ClassMember
+        Call:   ClassMember
+          Call:   VisibilityIndicator
+            Call:   ImportVisibilityIndicator
+              Consumed token: <"private" at line 5 column 3>
+            Return: ImportVisibilityIndicator
+          Return: VisibilityIndicator
+          Call:   ClassMemberDefinition
+            Call:   FeatureDefinition
+              Call:   ConstructorDefinition
+                Call:   ConstructorDeclaration
+                  Consumed token: <"create" at line 5 column 11>
+                  Call:   Name
+                    Consumed token: <<IDENTIFIER>: "registered" at line 5 column 18>
+                  Return: Name
+                  Call:   FormalParameters
+                    Consumed token: <"(" at line 5 column 28>
+                    Consumed token: <")" at line 5 column 29>
+                  Return: FormalParameters
+                Return: ConstructorDeclaration
+                Call:   ConstructorBody
+                  Consumed token: <"{" at line 5 column 31>
+                  Call:   BlockCompletion
+                    Call:   DocumentedStatement
+                      Call:   Statement
+                        Call:   ExpressionStatement
+                          Call:   Expression
+                            Call:   BaseCollectionExpression
+                              Call:   BaseExpression
+                                Call:   QualifiedName
+                                  Call:   Name
+                                    Consumed token: <<IDENTIFIER>: "Repository" at line 6 column 5>
+                                  Return: Name
+                                  Consumed token: <"::" at line 6 column 15>
+                                  Call:   Name
+                                    Consumed token: <<IDENTIFIER>: "get" at line 6 column 17>
+                                  Return: Name
+                                Return: QualifiedName
+                                Call:   BehaviorInvocation
+                                  Call:   Tuple
+                                    Call:   PositionalTuple
+                                      Consumed token: <"(" at line 6 column 20>
+                                      Consumed token: <")" at line 6 column 21>
+                                    Return: PositionalTuple
+                                  Return: Tuple
+                                Return: BehaviorInvocation
+                              Return: BaseExpression
+                            Return: BaseCollectionExpression
+                            Call:   ExpressionCompletion
+                              Call:   NonIndexExpressionCompletion
+                                Call:   Feature
+                                  Consumed token: <"." at line 6 column 22>
+                                  Call:   Name
+                                    Consumed token: <<IDENTIFIER>: "register" at line 6 column 23>
+                                  Return: Name
+                                Return: Feature
+                                Call:   FeatureExpressionCompletion
+                                  Call:   FeatureInvocation
+                                    Call:   Tuple
+                                      Call:   PositionalTuple
+                                        Consumed token: <"(" at line 6 column 31>
+                                        Call:   ExpressionList
+                                          Call:   Expression
+                                            Call:   BaseCollectionExpression
+                                              Call:   BaseExpression
+                                                Call:   ThisExpression
+                                                  Consumed token: <"this" at line 6 column 32>
+                                                Return: ThisExpression
+                                              Return: BaseExpression
+                                            Return: BaseCollectionExpression
+                                            Call:   ExpressionCompletion
+                                              Call:   NonIndexExpressionCompletion
+                                                Call:   PostfixOperation
+                                                Return: PostfixOperation
+                                                Call:   ConditionalExpressionCompletion
+                                                  Call:   ConditionalOrExpressionCompletion
+                                                    Call:   ConditionalAndExpressionCompletion
+                                                      Call:   InclusiveOrExpressionCompletion
+                                                        Call:   ExclusiveOrExpressionCompletion
+                                                          Call:   AndExpressionCompletion
+                                                            Call:   EqualityExpressionCompletion
+                                                              Call:   ClassificationExpressionCompletion
+                                                                Call:   RelationalExpressionCompletion
+                                                                  Call:   AdditiveExpressionCompletion
+                                                                    Call:   MultiplicativeExpressionCompletion
+                                                                    Return: MultiplicativeExpressionCompletion
+                                                                  Return: AdditiveExpressionCompletion
+                                                                Return: RelationalExpressionCompletion
+                                                              Return: ClassificationExpressionCompletion
+                                                            Return: EqualityExpressionCompletion
+                                                          Return: AndExpressionCompletion
+                                                        Return: ExclusiveOrExpressionCompletion
+                                                      Return: InclusiveOrExpressionCompletion
+                                                    Return: ConditionalAndExpressionCompletion
+                                                  Return: ConditionalOrExpressionCompletion
+                                                Return: ConditionalExpressionCompletion
+                                              Return: NonIndexExpressionCompletion
+                                            Return: ExpressionCompletion
+                                          Return: Expression
+                                        Return: ExpressionList
+                                        Consumed token: <")" at line 6 column 36>
+                                      Return: PositionalTuple
+                                    Return: Tuple
+                                  Return: FeatureInvocation
+                                  Call:   ExpressionCompletion
+                                    Call:   NonIndexExpressionCompletion
+                                      Call:   PostfixOperation
+                                      Return: PostfixOperation
+                                      Call:   ConditionalExpressionCompletion
+                                        Call:   ConditionalOrExpressionCompletion
+                                          Call:   ConditionalAndExpressionCompletion
+                                            Call:   InclusiveOrExpressionCompletion
+                                              Call:   ExclusiveOrExpressionCompletion
+                                                Call:   AndExpressionCompletion
+                                                  Call:   EqualityExpressionCompletion
+                                                    Call:   ClassificationExpressionCompletion
+                                                      Call:   RelationalExpressionCompletion
+                                                        Call:   AdditiveExpressionCompletion
+                                                          Call:   MultiplicativeExpressionCompletion
+                                                          Return: MultiplicativeExpressionCompletion
+                                                        Return: AdditiveExpressionCompletion
+                                                      Return: RelationalExpressionCompletion
+                                                    Return: ClassificationExpressionCompletion
+                                                  Return: EqualityExpressionCompletion
+                                                Return: AndExpressionCompletion
+                                              Return: ExclusiveOrExpressionCompletion
+                                            Return: InclusiveOrExpressionCompletion
+                                          Return: ConditionalAndExpressionCompletion
+                                        Return: ConditionalOrExpressionCompletion
+                                      Return: ConditionalExpressionCompletion
+                                    Return: NonIndexExpressionCompletion
+                                  Return: ExpressionCompletion
+                                Return: FeatureExpressionCompletion
+                              Return: NonIndexExpressionCompletion
+                            Return: ExpressionCompletion
+                          Return: Expression
+                          Consumed token: <";" at line 6 column 37>
+                        Return: ExpressionStatement
+                      Return: Statement
+                    Return: DocumentedStatement
+                    Consumed token: <"}" at line 7 column 3>
+                  Return: BlockCompletion
+                Return: ConstructorBody
+              Return: ConstructorDefinition
+            Return: FeatureDefinition
+          Return: ClassMemberDefinition
+        Return: ClassMember
+        Consumed token: <"}" at line 8 column 1>
+      Return: ClassDefinition
+    Return: ClassifierDefinition
+  Return: NamespaceDefinition
+  Consumed token: <<EOF> at line 8 column 1>
+Return: UnitDefinition
+Parsed successfully.
+UnitDefinition
+ ClassDefinition name:Constructors visibility:
+  ConstructorStubDeclaration name:Table visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:Table isAbstract:false
+  ConstructorStubDeclaration name:ProductSelection visibility:public
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:ProductSelection isAbstract:false
+  ConstructorDefinition name:registered visibility:private
+   OperationDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection: name:registered isAbstract:false
+   Block
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference name:register
+       BehaviorInvocationExpression
+        QualifiedName Repository::get
+        PositionalTuple
+      PositionalTuple
+       ThisExpression
+  ClassDeclaration name:Constructors isAbstract:false
