@@ -1170,51 +1170,60 @@ ConstructorStubDeclaration ConstructorStubDeclaration():
 Block ConstructorBody():
 {
   Statement s;
-  Block b;
+  Block b = new Block();
 }
 {
+/* ORIGINAL
   (
-    LOOKAHEAD(<LBRACE> (<THIS> | <SUPER>))
-    <LBRACE> b = ExplicitConstructorInvocations() 
-             ( s = Statement() { b.addStatement(s); } )* <RBRACE>
-  | b = Block()
+    Block()
+  | ExplicitConstructorInvocations()( DocumentedStatement() )* <RBRACE>
   )
-  
+*/
+
+  <LBRACE> 
+  [ LOOKAHEAD([<DOCUMENTATION_COMMENT>] (<THIS> | <SUPER>))
+    ExplicitConstructorInvocations(b) ]
+  BlockCompletion(b)
+      
   { return b; }
 }
 
-Block ExplicitConstructorInvocations():
+void ExplicitConstructorInvocations(Block b):
 {
-  Block b = new Block();
   Statement s;
 }
 {
-  (
+  ( 
+    LOOKAHEAD(2)
     s = AlternativeConstructorInvocation() { b.addStatement(s); }
-  | ( LOOKAHEAD(2) s = SuperclassConstructorInvocation() { b.addStatement(s); } )+
+  | ( LOOKAHEAD(<SUPER>) s = SuperclassConstructorInvocation() { b.addStatement(s); } )+
   )
-  
-  { return b; }
 }
 
 AlternativeConstructorInvocation AlternativeConstructorInvocation():
 {
+  Token d;
+  String c = null;
   String n = null;
   Tuple t;
 }
 {
+  [ d = <DOCUMENTATION_COMMENT> { c = d.image; } ]
   <THIS> [ <DOT> n = Name() ] t = Tuple() <SEMICOLON>
-  { return new AlternativeConstructorInvocation(n, t); }
+  { return new AlternativeConstructorInvocation(n, t, c); }
 }
 
 SuperclassConstructorInvocation SuperclassConstructorInvocation():
 {
+  Token d;
+  String c = null;
   QualifiedName n = null;
   Tuple t;
 }
 {
+  [ d = <DOCUMENTATION_COMMENT> { c = d.image; } ]
   <SUPER> [ <DOT> n = QualifiedName() ] t = Tuple() <SEMICOLON>
-  { return new SuperclassConstructorInvocation(n, t); }
+  { return new SuperclassConstructorInvocation(n, t, c); }
 }
 
 /* DESTRUCTORS */
@@ -1323,11 +1332,23 @@ ActivityDefinition ActivityDefinition():
 Block Block():
 {
   Block b = new Block();
+}
+{
+/* ORIGINAL
+  <LBRACE> ( s = DocumentedStatement() { b.addStatement(s); } )* <RBRACE>
+*/
+
+  <LBRACE> BlockCompletion(b)
+  { return b; }
+}
+
+/* ADDED */
+void BlockCompletion(Block b):
+{
   Statement s;
 }
 {
-  <LBRACE> ( s = DocumentedStatement() { b.addStatement(s); } )* <RBRACE>
-  { return b; }
+  ( s = DocumentedStatement() { b.addStatement(s); } )* <RBRACE>
 }
 
 Statement DocumentedStatement():

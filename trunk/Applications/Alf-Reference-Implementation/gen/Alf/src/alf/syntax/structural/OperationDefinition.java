@@ -39,6 +39,7 @@ public class OperationDefinition extends Member {
 	public void print(String prefix) {
 		super.print(prefix);
 		this.getDeclaration().printChild(prefix);
+		this.getBody().printChild(prefix);
 	} // print
 
 } // OperationDefinition

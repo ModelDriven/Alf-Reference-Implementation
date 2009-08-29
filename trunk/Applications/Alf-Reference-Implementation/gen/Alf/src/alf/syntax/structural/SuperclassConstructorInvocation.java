@@ -23,9 +23,10 @@ public class SuperclassConstructorInvocation extends Statement {
 	private QualifiedName constructor = null;
 
 	public SuperclassConstructorInvocation(QualifiedName constructor,
-			Tuple tuple) {
+			Tuple tuple, String documentation) {
 		this.constructor = constructor;
 		this.tuple = tuple;
+		this.addDocumentation(documentation);
 	} // SuperclassConstructorInvocation
 
 	public QualifiedName getConstructor() {
