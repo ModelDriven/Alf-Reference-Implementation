@@ -21,6 +21,7 @@ public abstract class Member extends DocumentedElement {
 
 	private String name = "";
 	private String visibility = "";
+	private NamespaceDefinition namespace = null;
 
 	public void setName(String name) {
 		this.name = name;
@@ -38,9 +39,40 @@ public abstract class Member extends DocumentedElement {
 		return this.visibility;
 	} // getVisibility
 
+	public void setNamespace(NamespaceDefinition namespace) {
+		this.namespace = namespace;
+	} // setNamespace
+
+	public NamespaceDefinition getNamespace() {
+		return this.namespace;
+	} // getNamespace
+
 	public String toString() {
 		return super.toString() + " name:" + this.getName() + " visibility:"
 				+ this.getVisibility();
 	} // toString
+
+	public QualifiedName getQualifiedName() {
+		QualifiedName qualifiedName;
+
+		if (this.getNamespace() == null) {
+			qualifiedName = new QualifiedName();
+		} else {
+			qualifiedName = this.getNamespace().getQualifiedName().copy();
+		}
+
+		qualifiedName.addName(this.getName());
+		return qualifiedName;
+	} // getQualifiedName
+
+	public ArrayList<Member> getAllMembers() {
+		return new ArrayList<Member>();
+	} // getAllMembers
+
+	public ArrayList<Member> resolve(String name) {
+		ArrayList<Member> error = new ArrayList<Member>();
+		error.add(new ErrorMember(this, "Not a namespace"));
+		return error;
+	} // resolve
 
 } // Member

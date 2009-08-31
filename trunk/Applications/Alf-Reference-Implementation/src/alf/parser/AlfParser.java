@@ -6,6 +6,8 @@ import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
 import alf.syntax.structural.*;
 
+import java.util.ArrayList;
+
 public class AlfParser implements AlfParserConstants {
 
   public static void main(String args[]) {
@@ -32,7 +34,16 @@ public class AlfParser implements AlfParserConstants {
     try {
       UnitDefinition tree = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
-      tree.print();
+      // tree.print();
+      ArrayList<Member> members = tree.getAllMembers();
+      System.out.println(tree.toString());
+      for (Member member: members) {
+        if (member.isError()) {
+          member.printChild("");
+        } else {
+          System.out.println(member.toString(" "));
+        }
+      }
     } catch (ParseException e) {
       System.out.println(e.getMessage());
       System.out.println("Encountered errors during parse.");
@@ -4459,11 +4470,6 @@ void LeftHandSide():
     finally { jj_save(41, xla); }
   }
 
-  static private boolean jj_3_16() {
-    if (jj_3R_49()) return true;
-    return false;
-  }
-
   static private boolean jj_3R_261() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_115()) return true;
@@ -6630,6 +6636,11 @@ void LeftHandSide():
     if (jj_3R_34()) return true;
     xsp = jj_scanpos;
     if (jj_3R_138()) jj_scanpos = xsp;
+    return false;
+  }
+
+  static private boolean jj_3_16() {
+    if (jj_3R_49()) return true;
     return false;
   }
 

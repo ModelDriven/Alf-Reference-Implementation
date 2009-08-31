@@ -4,6 +4,7 @@ import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
 import alf.syntax.structural.*;
+import java.util.ArrayList;
 
 /** Token Manager. */
 public class AlfParserTokenManager implements AlfParserConstants
