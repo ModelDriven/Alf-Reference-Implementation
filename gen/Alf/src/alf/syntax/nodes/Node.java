@@ -45,4 +45,8 @@ public abstract class Node {
 		this.print("");
 	} // print
 
+	public boolean isError() {
+		return false;
+	} // isError
+
 } // Node

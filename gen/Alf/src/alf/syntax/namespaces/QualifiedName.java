@@ -39,7 +39,7 @@ public class QualifiedName extends Node {
 	} // getNames
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString() + " ");
+		StringBuffer s = new StringBuffer();
 
 		if (this.isAbsolute()) {
 			s.append("::");
@@ -56,5 +56,74 @@ public class QualifiedName extends Node {
 
 		return s.toString();
 	} // toString
+
+	public void print(String prefix) {
+		System.out.println(prefix + super.toString() + " " + this.toString());
+	} // print
+
+	public ArrayList<Member> resolve(NamespaceDefinition namespace) {
+		if (namespace == null) {
+			if (this.isAbsolute()) {
+				namespace = this.getRootNamespace();
+			} else {
+				namespace = this.getModelContext();
+			}
+		}
+
+		ArrayList<String> names = this.getNames();
+		for (int i = 0; i < this.getNames().size() - 1; i++) {
+			ArrayList<Member> members = namespace.resolve(names.get(i));
+			if (members.size() == 1 && members.get(0).isError()) {
+				ArrayList<Member> error = new ArrayList<Member>();
+				error.add(new ErrorMember(this, (ErrorMember) members.get(0)));
+				return error;
+			}
+			for (Object m : members.toArray()) {
+				if (!(m instanceof NamespaceDefinition)) {
+					members.remove(m);
+				}
+			}
+			if (members.size() == 0) {
+				ArrayList<Member> error = new ArrayList<Member>();
+				error.add(new ErrorMember(this, "Cannot find namespace: "
+						+ names.get(i)));
+				return error;
+			} else if (members.size() > 1) {
+				ArrayList<Member> error = new ArrayList<Member>();
+				error.add(new ErrorMember(this, "Ambiguous namespace: "
+						+ names.get(i)));
+				return error;
+			} else {
+				namespace = (NamespaceDefinition) members.get(0);
+			}
+		}
+
+		ArrayList<Member> members = namespace.resolve(names
+				.get(names.size() - 1));
+
+		if (members.size() == 1 && members.get(0).isError()) {
+			members.add(new ErrorMember(this, (ErrorMember) members.remove(0)));
+		}
+
+		return members;
+	} // resolve
+
+	public NamespaceDefinition getRootNamespace() {
+		return new PackageDefinition("");
+	} // getRootNamespace
+
+	public NamespaceDefinition getModelContext() {
+		return this.getRootNamespace();
+	} // getModelContext
+
+	public QualifiedName copy() {
+		QualifiedName copy = new QualifiedName();
+
+		for (String name : this.getNames()) {
+			copy.addName(name);
+		}
+
+		return copy;
+	} // copy
 
 } // QualifiedName

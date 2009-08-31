@@ -33,6 +33,7 @@ public class UnitDefinition extends DocumentedElement {
 
 	public void setDefinition(NamespaceDefinition definition) {
 		this.definition = definition;
+		definition.setUnit(this);
 	} // setDefinition
 
 	public NamespaceDefinition getDefinition() {
@@ -47,6 +48,10 @@ public class UnitDefinition extends DocumentedElement {
 		return this.imports;
 	} // getImports
 
+	public String toString() {
+		return super.toString() + " name:" + this.getDefinition().getName();
+	} // toString
+
 	public void print(String prefix) {
 		super.print(prefix);
 
@@ -60,5 +65,37 @@ public class UnitDefinition extends DocumentedElement {
 
 		this.getDefinition().printChild(prefix);
 	} // print
+
+	public ArrayList<Member> getAllMembers() {
+		return this.getDefinition().getAllMembers();
+	} // getAllMembers
+
+	public ArrayList<Member> getImportedMembers() {
+		ArrayList<Member> importedMembers = new ArrayList<Member>();
+
+		for (ImportReference importRef : this.getImports()) {
+			importedMembers.addAll(importRef.getMembers());
+		}
+
+		return importedMembers;
+	} // getImportedMembers
+
+	public ArrayList<Member> resolveImports(String name) {
+		ArrayList<Member> members = new ArrayList<Member>();
+
+		for (ImportReference importRef : this.getImports()) {
+			ArrayList<Member> imports = importRef.resolve(name);
+			if (imports.size() == 1 && imports.get(0).isError()) {
+				return imports;
+			}
+			members.addAll(imports);
+		}
+
+		return members;
+	} // resolveImports
+
+	public ArrayList<Member> resolve(String name) {
+		return this.getDefinition().resolve(name);
+	} // resolve
 
 } // UnitDefinition

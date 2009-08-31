@@ -23,6 +23,7 @@ public class ImportReference extends Node {
 	private QualifiedName reference = null;
 	private String alias = "";
 	private boolean packageImport = false;
+	private Member referent = null;
 
 	public ImportReference(QualifiedName reference) {
 		this.reference = reference;
@@ -65,5 +66,55 @@ public class ImportReference extends Node {
 		super.print(prefix);
 		this.getReference().printChild(prefix);
 	} // print
+
+	public ArrayList<Member> getMembers() {
+		if (this.isPackageImport()) {
+			return this.getReferent().getAllMembers();
+		} else {
+			ArrayList<Member> members = new ArrayList<Member>();
+			members.add(this.getReferent());
+			return members;
+		}
+	} // getMembers
+
+	public ArrayList<Member> resolve(String name) {
+		Member referent = this.getReferent();
+		ArrayList<Member> members = new ArrayList<Member>();
+
+		if (referent.isError() || alias != null && name.equals(alias)
+				|| !this.isPackageImport() && referent.getName().equals(name)) {
+			members.add(referent);
+		} else if (this.isPackageImport()) {
+			members = referent.resolve(name);
+		}
+
+		return members;
+
+	} // resolve
+
+	public Member getReferent() {
+		if (this.referent == null) {
+			ArrayList<Member> members = this.getReference().resolve(null);
+			if (members.size() == 1) {
+				Member member = members.get(0);
+				if (member.isError()) {
+					this.referent = new ErrorMember(this, (ErrorMember) member);
+				} else if (this.isPackageImport()
+						&& !(member instanceof PackageDefinition)) {
+					this.referent = new ErrorMember(this, "Not a package: "
+							+ this.getReference());
+				} else {
+					this.referent = member;
+				}
+			} else if (members.size() == 0) {
+				this.referent = new ErrorMember(this, "Cannot find: "
+						+ this.getReference());
+			} else
+				this.referent = new ErrorMember(this, "Ambiguous reference: "
+						+ this.getReference());
+		}
+
+		return this.referent;
+	} // getReferent
 
 } // ImportReference
