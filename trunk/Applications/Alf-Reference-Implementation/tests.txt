@@ -27,10 +27,8 @@ UnitDefinition name:Ordering
  ErrorNode message:Cannot find: EE_OnlineCustomer
   ImportReference alias: packageImport:false
    QualifiedName EE_OnlineCustomer
- ErrorNode message:Cannot find namespace: ProductSpecification
+ ErrorNode message:Cannot find: ProductSpecification::Product
   ImportReference alias: packageImport:false
-   QualifiedName ProductSpecification::Product
-  ErrorNode message:Cannot find namespace: ProductSpecification
    QualifiedName ProductSpecification::Product
  ErrorNode message:Cannot find: DomainDataTypes
   ImportReference alias: packageImport:true
@@ -81,10 +79,8 @@ Alf 0.05 Parser
 Reading from file tests\Example2h.alf...
 Parsed successfully.
 UnitDefinition name:packAndShip
- ErrorNode message:Cannot find namespace: Shipping
+ ErrorNode message:Cannot find: Shipping::Shipment
   ImportReference alias: packageImport:false
-   QualifiedName Shipping::Shipment
-  ErrorNode message:Cannot find namespace: Shipping
    QualifiedName Shipping::Shipment
 Alf 0.05 Parser
 Reading from file tests\Example2i.alf...
@@ -94,10 +90,8 @@ Alf 0.05 Parser
 Reading from file tests\Example3a.alf...
 Parsed successfully.
 UnitDefinition name:'create property'
- ErrorNode message:Cannot find namespace: 'Identifiers'
+ ErrorNode message:Cannot find: 'Identifiers'::'Identifier Factory'
   ImportReference alias: packageImport:false
-   QualifiedName 'Identifiers'::'Identifier Factory'
-  ErrorNode message:Cannot find namespace: 'Identifiers'
    QualifiedName 'Identifiers'::'Identifier Factory'
 Alf 0.05 Parser
 Reading from file tests\Example3b.alf...
@@ -111,99 +105,85 @@ Alf 0.05 Parser
 Reading from file tests\Example3d.alf...
 Parsed successfully.
 UnitDefinition name:'create reply'
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
-  ErrorNode message:Cannot find namespace: 'Property Management'
+  ErrorNode message:Cannot find namespace: 'Data Model'
    QualifiedName 'Property Management'::'Data Model'::Properties
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find: 'Property Management'::'Message Model'
   ImportReference alias: packageImport:true
-   QualifiedName 'Property Management'::'Message Model'
-  ErrorNode message:Cannot find namespace: 'Property Management'
    QualifiedName 'Property Management'::'Message Model'
 Alf 0.05 Parser
 Reading from file tests\Example3e.alf...
 Parsed successfully.
 UnitDefinition name:establish
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
-  ErrorNode message:Cannot find namespace: 'Property Management'
+  ErrorNode message:Cannot find namespace: 'Data Model'
    QualifiedName 'Property Management'::'Data Model'::Properties
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find: 'Property Management'::'Message Model'
   ImportReference alias: packageImport:true
-   QualifiedName 'Property Management'::'Message Model'
-  ErrorNode message:Cannot find namespace: 'Property Management'
    QualifiedName 'Property Management'::'Message Model'
 Alf 0.05 Parser
 Reading from file tests\Example3f.alf...
 Parsed successfully.
 UnitDefinition name:acquire
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
-  ErrorNode message:Cannot find namespace: 'Property Management'
+  ErrorNode message:Cannot find namespace: 'Data Model'
    QualifiedName 'Property Management'::'Data Model'::Properties
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find: 'Property Management'::'Message Model'
   ImportReference alias: packageImport:true
-   QualifiedName 'Property Management'::'Message Model'
-  ErrorNode message:Cannot find namespace: 'Property Management'
    QualifiedName 'Property Management'::'Message Model'
 Alf 0.05 Parser
 Reading from file tests\Example3g.alf...
 Parsed successfully.
 UnitDefinition name:update
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
-  ErrorNode message:Cannot find namespace: 'Property Management'
+  ErrorNode message:Cannot find namespace: 'Data Model'
    QualifiedName 'Property Management'::'Data Model'::Properties
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find: 'Property Management'::'Message Model'
   ImportReference alias: packageImport:true
-   QualifiedName 'Property Management'::'Message Model'
-  ErrorNode message:Cannot find namespace: 'Property Management'
    QualifiedName 'Property Management'::'Message Model'
 Alf 0.05 Parser
 Reading from file tests\Example3h.alf...
 Parsed successfully.
 UnitDefinition name:dispose
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
-  ErrorNode message:Cannot find namespace: 'Property Management'
+  ErrorNode message:Cannot find namespace: 'Data Model'
    QualifiedName 'Property Management'::'Data Model'::Properties
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find: 'Property Management'::'Message Model'
   ImportReference alias: packageImport:true
-   QualifiedName 'Property Management'::'Message Model'
-  ErrorNode message:Cannot find namespace: 'Property Management'
    QualifiedName 'Property Management'::'Message Model'
 Alf 0.05 Parser
 Reading from file tests\Example3i.alf...
 Parsed successfully.
 UnitDefinition name:delete
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
-  ErrorNode message:Cannot find namespace: 'Property Management'
+  ErrorNode message:Cannot find namespace: 'Data Model'
    QualifiedName 'Property Management'::'Data Model'::Properties
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find: 'Property Management'::'Message Model'
   ImportReference alias: packageImport:true
-   QualifiedName 'Property Management'::'Message Model'
-  ErrorNode message:Cannot find namespace: 'Property Management'
    QualifiedName 'Property Management'::'Message Model'
 Alf 0.05 Parser
 Reading from file tests\Example3j.alf...
 Parsed successfully.
 UnitDefinition name:retrieve
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
-  ErrorNode message:Cannot find namespace: 'Property Management'
+  ErrorNode message:Cannot find namespace: 'Data Model'
    QualifiedName 'Property Management'::'Data Model'::Properties
- ErrorNode message:Cannot find namespace: 'Property Management'
+ ErrorNode message:Cannot find: 'Property Management'::'Message Model'
   ImportReference alias: packageImport:true
-   QualifiedName 'Property Management'::'Message Model'
-  ErrorNode message:Cannot find namespace: 'Property Management'
    QualifiedName 'Property Management'::'Message Model'
 Alf 0.05 Parser
 Reading from file tests\ActiveClass_Order.alf...
