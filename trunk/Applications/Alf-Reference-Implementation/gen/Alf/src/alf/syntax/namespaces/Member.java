@@ -75,4 +75,24 @@ public abstract class Member extends DocumentedElement {
 		return error;
 	} // resolve
 
+	public boolean isPublic() {
+		String visibility = this.getVisibility();
+		return visibility != null && visibility.equals("public");
+	} // isPublic
+
+	public boolean isPrivate() {
+		String visibility = this.getVisibility();
+		return visibility != null && visibility.equals("private");
+	} // isPrivate
+
+	public boolean isProtected() {
+		String visibility = this.getVisibility();
+		return visibility != null && visibility.equals("protected");
+	} // isProtected
+
+	public boolean isPackageOnly() {
+		String visibility = this.getVisibility();
+		return visibility == null || visibility.equals("");
+	} // isPackageOnly
+
 } // Member
