@@ -71,35 +71,40 @@ public class QualifiedName extends Node {
 		}
 
 		ArrayList<String> names = this.getNames();
-		for (int i = 0; i < this.getNames().size() - 1; i++) {
-			ArrayList<Member> members = namespace.resolve(names.get(i));
+		ArrayList<Member> members = namespace.resolve(names.get(0));
+
+		Boolean allowPackageOnly = true;
+		int n = names.size();
+
+		for (int i = 1; i < n; i++) {
+			members = namespace.resolvePublic(names.get(i), allowPackageOnly);
 			if (members.size() == 1 && members.get(0).isError()) {
 				ArrayList<Member> error = new ArrayList<Member>();
 				error.add(new ErrorMember(this, (ErrorMember) members.get(0)));
 				return error;
 			}
-			for (Object m : members.toArray()) {
-				if (!(m instanceof NamespaceDefinition)) {
-					members.remove(m);
+			if (i < n - 1) {
+				for (Object m : members.toArray()) {
+					if (!(m instanceof NamespaceDefinition)) {
+						members.remove(m);
+					}
+				}
+				if (members.size() == 0) {
+					ArrayList<Member> error = new ArrayList<Member>();
+					error.add(new ErrorMember(this, "Cannot find namespace: "
+							+ names.get(i)));
+					return error;
+				} else if (members.size() > 1) {
+					ArrayList<Member> error = new ArrayList<Member>();
+					error.add(new ErrorMember(this, "Ambiguous namespace: "
+							+ names.get(i)));
+					return error;
+				} else {
+					namespace = (NamespaceDefinition) members.get(0);
+					allowPackageOnly = !(namespace instanceof PackageDefinition);
 				}
 			}
-			if (members.size() == 0) {
-				ArrayList<Member> error = new ArrayList<Member>();
-				error.add(new ErrorMember(this, "Cannot find namespace: "
-						+ names.get(i)));
-				return error;
-			} else if (members.size() > 1) {
-				ArrayList<Member> error = new ArrayList<Member>();
-				error.add(new ErrorMember(this, "Ambiguous namespace: "
-						+ names.get(i)));
-				return error;
-			} else {
-				namespace = (NamespaceDefinition) members.get(0);
-			}
 		}
-
-		ArrayList<Member> members = namespace.resolve(names
-				.get(names.size() - 1));
 
 		if (members.size() == 1 && members.get(0).isError()) {
 			members.add(new ErrorMember(this, (ErrorMember) members.remove(0)));

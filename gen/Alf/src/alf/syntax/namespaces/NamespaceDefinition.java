@@ -22,6 +22,37 @@ public abstract class NamespaceDefinition extends Member {
 	private ArrayList<Member> members = new ArrayList<Member>();
 	private UnitDefinition unit = null;
 
+	public NamespaceDefinition getNamespace() {
+		UnitDefinition unit = this.getUnit();
+
+		if (super.getNamespace() == null && unit != null
+				&& unit.getNamespace() != null) {
+			QualifiedName namespace = unit.getNamespace();
+			ArrayList<Member> resolvents = namespace.resolve(null);
+			if (resolvents.size() == 1 && resolvents.get(0).isError()) {
+				this.setNamespace(new ErrorNamespace(this,
+						(ErrorMember) resolvents.get(0)));
+			} else {
+				for (Object m : resolvents.toArray()) {
+					if (!(m instanceof NamespaceDefinition)) {
+						resolvents.remove(m);
+					}
+				}
+				if (resolvents.size() == 1) {
+					this.setNamespace((NamespaceDefinition) resolvents.get(0));
+				} else if (resolvents.size() > 0) {
+					this.setNamespace(new ErrorNamespace(unit,
+							"Not a namespace: " + namespace));
+				} else {
+					this.setNamespace(new ErrorNamespace(unit,
+							"Ambiguous namespace: " + namespace));
+				}
+			}
+		}
+
+		return super.getNamespace();
+	} // getNamespace
+
 	public void addMember(Member member) {
 		this.members.add(member);
 		member.setNamespace(this);
@@ -93,6 +124,23 @@ public abstract class NamespaceDefinition extends Member {
 
 		return members;
 	} // resolve
+
+	public ArrayList<Member> resolvePublic(String name, boolean allowPackageOnly) {
+		ArrayList<Member> publicMembers = new ArrayList<Member>();
+
+		for (Member member : this.getMembers()) {
+			if (member.isPublic() || allowPackageOnly && member.isPackageOnly()) {
+				publicMembers.add(member);
+			}
+		}
+
+		UnitDefinition unit = this.getUnit();
+		if (unit != null) {
+			publicMembers.addAll(unit.resolvePublicImports(name));
+		}
+
+		return publicMembers;
+	} // resolvePublic
 
 	public ArrayList<Member> resolve(QualifiedName qualifiedName) {
 		return qualifiedName.resolve(this);

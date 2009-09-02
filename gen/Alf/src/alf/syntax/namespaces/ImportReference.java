@@ -41,9 +41,9 @@ public class ImportReference extends Node {
 		this.visibility = visibility;
 	} // setVisibility
 
-	public String getVisibiity() {
+	public String getVisibility() {
 		return this.visibility;
-	} // getVisibiity
+	} // getVisibility
 
 	public String getAlias() {
 		return this.alias;
@@ -56,6 +56,11 @@ public class ImportReference extends Node {
 	public boolean isPackageImport() {
 		return this.packageImport;
 	} // isPackageImport
+
+	public boolean isPublic() {
+		String visibility = this.getVisibility();
+		return visibility != null && visibility.equals("public");
+	} // isPublic
 
 	public String toString() {
 		return super.toString() + " alias:" + this.getAlias()

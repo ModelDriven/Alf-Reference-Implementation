@@ -94,6 +94,22 @@ public class UnitDefinition extends DocumentedElement {
 		return members;
 	} // resolveImports
 
+	public ArrayList<Member> resolvePublicImports(String name) {
+		ArrayList<Member> members = new ArrayList<Member>();
+
+		for (ImportReference importRef : this.getImports()) {
+			if (importRef.isPublic()) {
+				ArrayList<Member> imports = importRef.resolve(name);
+				if (imports.size() == 1 && imports.get(0).isError()) {
+					return imports;
+				}
+				members.addAll(imports);
+			}
+		}
+
+		return members;
+	} // resolvePublicImports
+
 	public ArrayList<Member> resolve(String name) {
 		return this.getDefinition().resolve(name);
 	} // resolve
