@@ -166,15 +166,26 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 			#end
 		#end
 	#end
-#else
-	#foreach ( $comment in ${operation.ownedComments} )
-		#foreach ( $stereotype in ${comment.appliedStereotypes} )
-			#if ( ${stereotype.name}=="java" )
-				${comment.body}##
-			#end
+#end
+#end
+
+#macro( comments $element)
+#foreach ( $comment in ${element.ownedComments} )
+	#set ( $isJava = false )
+	#foreach ( $stereotype in ${comment.appliedStereotypes} )
+		#if ( ${stereotype.name}=="Java" )
+			#set ( $isJava = true )
 		#end
 	#end
-#end	    
+	#if ( $isJava )
+		${comment.body}##
+	#else
+/**
+${comment.body}
+**/
+	#end
 #end
+#end
+
 	
   

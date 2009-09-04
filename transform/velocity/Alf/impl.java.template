@@ -7,7 +7,7 @@
 ${copyrightBoilerPlate}
 ${packageDeclaration}
 #imports()
-#bodycontent(${object} ${object})
+#comments(${object})
 
 #macro( class $object)
 ## #classJavaDoc(${object}) 

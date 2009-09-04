@@ -560,22 +560,25 @@ Member NamespaceStubDeclaration():
   { return m; }
 }
 
-PackageStubDeclaration PackageStubDeclaration():
+PackageDefinition PackageStubDeclaration():
 {
   String n;
+  PackageDefinition p;
 }
 {
   n = PackageDeclaration() <SEMICOLON>
-  { return new PackageStubDeclaration(n); }
+  { p = new PackageDefinition(n);
+    p.setIsStub();
+    return p; }
 }
 
 /***************
  * CLASSIFIERS *
  ***************/
 
-ClassifierDefinition ClassifierDefinition():
+NamespaceDefinition ClassifierDefinition():
 {
-  ClassifierDefinition d;
+  NamespaceDefinition d;
 }
 {
   (
@@ -591,9 +594,9 @@ ClassifierDefinition ClassifierDefinition():
   { return d; }
 }
 
-ClassifierDeclaration ClassifierDeclaration():
+NamespaceDefinition ClassifierDeclaration():
 {
-  ClassifierDeclaration d;
+  NamespaceDefinition d;
 }
 {
   (
@@ -609,20 +612,21 @@ ClassifierDeclaration ClassifierDeclaration():
   { return d; }
 }
 
-ClassifierStubDeclaration ClassifierStubDeclaration():
+NamespaceDefinition ClassifierStubDeclaration():
 {
-  ClassifierDeclaration d;
+  NamespaceDefinition d;
 }
 {
   d = ClassifierDeclaration() <SEMICOLON>
-  { return new ClassifierStubDeclaration(d); }
+  { d.setIsStub();
+    return d; }
 }
 
 /* CLASSES */
 
-ClassDeclaration ClassDeclaration():
+ClassDefinition ClassDeclaration():
 {
-  ClassDeclaration d = new ClassDeclaration();
+  ClassDefinition d = new ClassDefinition();
   String n;
   QualifiedNameList nl;
 }
@@ -656,12 +660,11 @@ QualifiedNameList QualifiedNameList():
 ClassDefinition ClassDefinition():
 {
   ClassDefinition d;
-  ClassDeclaration c;
   Member m;
   
 }
 {
-  c = ClassDeclaration() { d = new ClassDefinition(c); }
+  d = ClassDeclaration()
   <LBRACE> ( m = ClassMember() { d.addMember(m); } )* <RBRACE>
   { return d; }
 }
@@ -699,9 +702,9 @@ Member ClassMemberDefinition():
 
 /* ACTIVE CLASSES */
 
-ActiveClassDeclaration ActiveClassDeclaration():
+ActiveClassDefinition ActiveClassDeclaration():
 {
-  ActiveClassDeclaration d = new ActiveClassDeclaration();
+  ActiveClassDefinition d = new ActiveClassDefinition();
   String n;
   QualifiedNameList nl;
 }
@@ -715,12 +718,11 @@ ActiveClassDeclaration ActiveClassDeclaration():
 ActiveClassDefinition ActiveClassDefinition():
 {
   ActiveClassDefinition d;
-  ActiveClassDeclaration c;
   Member m;
   
 }
 {
-  c = ActiveClassDeclaration() { d = new ActiveClassDefinition(c); }
+  d = ActiveClassDeclaration()
   <LBRACE> ( m = ActiveClassMember() { d.addMember(m); } )* <RBRACE>
   [ <DO> BehaviorClause(d) ]
   
@@ -769,9 +771,9 @@ Member ActiveClassMemberDefinition():
 
 /* DATA TYPES */
 
-DataTypeDeclaration DataTypeDeclaration():
+DataTypeDefinition DataTypeDeclaration():
 {
-  DataTypeDeclaration d = new DataTypeDeclaration();
+  DataTypeDefinition d = new DataTypeDefinition();
   String n;
   QualifiedNameList nl;
 }
@@ -785,11 +787,9 @@ DataTypeDeclaration DataTypeDeclaration():
 DataTypeDefinition DataTypeDefinition():
 {
   DataTypeDefinition d;
-  DataTypeDeclaration t;
 }
 {
-  t = DataTypeDeclaration() { d = new DataTypeDefinition(t); } 
-  StructuredBody(d)
+  d = DataTypeDeclaration() StructuredBody(d)
   { return d; }
 }
 
@@ -819,9 +819,9 @@ Member StructuredMember():
 
 /* ASSOCIATIONS */
 
-AssociationDeclaration AssociationDeclaration():
+AssociationDefinition AssociationDeclaration():
 {
-  AssociationDeclaration d = new AssociationDeclaration();
+  AssociationDefinition d = new AssociationDefinition();
   String n;
   QualifiedNameList nl;
 }
@@ -835,19 +835,17 @@ AssociationDeclaration AssociationDeclaration():
 AssociationDefinition AssociationDefinition():
 {
   AssociationDefinition d;
-  AssociationDeclaration a;
 }
 {
-  a = AssociationDeclaration() { d = new AssociationDefinition(a); }
-  StructuredBody(d)
+  d = AssociationDeclaration() StructuredBody(d)
   { return d; }
 }
 
 /* ENUMERATIONS */
 
-EnumerationDeclaration EnumerationDeclaration():
+EnumerationDefinition EnumerationDeclaration():
 {
-  EnumerationDeclaration d = new EnumerationDeclaration();
+  EnumerationDefinition d = new EnumerationDefinition();
   String n;
   QualifiedNameList nl;
 }
@@ -860,11 +858,10 @@ EnumerationDeclaration EnumerationDeclaration():
 EnumerationDefinition EnumerationDefinition():
 {
   EnumerationDefinition d;
-  EnumerationDeclaration e;
   Member m;
 }
 {
-  e = EnumerationDeclaration() { d = new EnumerationDefinition(e); }
+  d = EnumerationDeclaration()
   <LBRACE> m = EnumerationLiteralName() { d.addMember(m); }
   ( <COMMA> m = EnumerationLiteralName() { d.addMember(m); } )* <RBRACE>
   { return d; }
@@ -883,9 +880,9 @@ EnumerationLiteralName EnumerationLiteralName():
 
 /* SIGNALS */
 
-SignalDeclaration SignalDeclaration():
+SignalDefinition SignalDeclaration():
 {
-  SignalDeclaration d = new SignalDeclaration();
+  SignalDefinition d = new SignalDefinition();
   String n;
   QualifiedNameList nl;
 }
@@ -899,11 +896,9 @@ SignalDeclaration SignalDeclaration():
 SignalDefinition SignalDefinition():
 {
   SignalDefinition d;
-  SignalDeclaration s;
 }
 {
-  s = SignalDeclaration() { d = new SignalDefinition(s); }
-  StructuredBody(d)
+  d = SignalDeclaration() StructuredBody(d)
   { return d; }
 }
 
@@ -936,7 +931,8 @@ Member FeatureStubDeclaration():
   | m = DestructorStubDeclaration()
   )
   
-  { return m; }
+  { m.setIsStub();
+    return m; }
 }
 
 Member ActiveFeatureDefinition():
@@ -966,21 +962,20 @@ Member ActiveFeatureStubDeclaration():
 
 PropertyDefinition PropertyDefinition():
 {
-  PropertyDeclaration p;
+    PropertyDefinition d;
 }
 {
-  p = PropertyDeclaration() <SEMICOLON>
-  { return new PropertyDefinition(p); }
+  d = PropertyDeclaration() <SEMICOLON>
+  { return d; }
 }
 
 PropertyDefinition AttributeDefinition():
 {
-  PropertyDeclaration p;
   PropertyDefinition d;
   Expression e;
 }
 {
-  p = PropertyDeclaration() { d = new PropertyDefinition(p); }
+  d = PropertyDeclaration()
   [ e = AttributeInitializer() { d.setInitializer(e); } ] <SEMICOLON>
   { return d; }
 }
@@ -995,18 +990,19 @@ Expression AttributeInitializer():
   { return e; }
 }
 
-PropertyDeclaration PropertyDeclaration():
+PropertyDefinition PropertyDeclaration():
 {
-  PropertyDeclaration d;
+  TypedElementDeclaration t = new TypedElementDeclaration();
+  PropertyDefinition d = new PropertyDefinition(t);
   String n;
 }
 {
-  n = Name() { d = new PropertyDeclaration(n); } 
-  <COLON> [ <COMPOSE> { d.setIsComposite(); } ] TypePart(d)
+  n = Name() { d.setName(n); } 
+  <COLON> [ <COMPOSE> { d.setIsComposite(); } ] TypePart(t)
   { return d; }
 }
 
-void TypePart(TypedDeclaration d):
+void TypePart(TypedElementDeclaration d):
 {
   QualifiedName t;
   Token tc;
@@ -1030,14 +1026,14 @@ QualifiedName TypeName():
   { return n; }
 }
 
-void Multiplicity(TypedDeclaration d):
+void Multiplicity(TypedElementDeclaration d):
 {}
 {
   <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET> 
   [ <ORDERED> { d.setIsOrdered(); } ] [ <NONUNIQUE> { d.setIsNonunique(); } ]
 }
 
-void MultiplicityRange(TypedDeclaration d):
+void MultiplicityRange(TypedElementDeclaration d):
 {
   Token t;
   String n;
@@ -1062,51 +1058,55 @@ String UnlimitedNaturalLiteral():
 
 /* OPERATIONS */
 
-OperationDeclaration OperationDeclaration():
+OperationDefinition OperationDeclaration():
 {
-  OperationDeclaration d = new OperationDeclaration();
+  TypedElementDeclaration t = new TypedElementDeclaration();
+  FormalParameter p = new FormalParameter(t);
+  OperationDefinition d = new OperationDefinition();
   String n;
   QualifiedNameList nl;
 }
 {
   [ <ABSTRACT> { d.setIsAbstract(); } ] n = Name() { d.setName(n); }
-  FormalParameters(d) [<COLON> TypePart(d) ] 
+  FormalParameters(d) [<COLON> TypePart(t) { p.setDirection("return"); d.addMember(p); } ] 
   [ nl = RedefinitionClause() { d.setRedefinition(nl); } ]
   { return d; }
 }
 
 OperationDefinition OperationDefinition():
 {
-  OperationDeclaration o;
+  OperationDefinition o;
   Block b;
 }
 {
   o = OperationDeclaration() b = Block()
-  { return new OperationDefinition(o, b); }
+  { o.setBody(b);
+    return o; }
 }
 
-OperationStubDeclaration OperationStubDeclaration():
+OperationDefinition OperationStubDeclaration():
 {
-  OperationDeclaration o;
+  OperationDefinition d;
 }
 {
-  o = OperationDeclaration() <SEMICOLON>
-  { return new OperationStubDeclaration(o); }
+  d = OperationDeclaration() <SEMICOLON>
+  { d.setIsStub();
+    return d; }
 }
 
-void FormalParameters(ParameterSetDeclaration d):
+void FormalParameters(NamespaceDefinition d):
 {}
 {
   <LPAREN> [ FormalParameterList(d) ] <RPAREN>
 }
 
-void FormalParameterList(ParameterSetDeclaration d):
+void FormalParameterList(NamespaceDefinition d):
 {
   FormalParameter p;
 }
 {
-  p = FormalParameter() { d.addParameter(p); }
-  ( <COMMA> FormalParameter() { d.addParameter(p); } )*
+  p = FormalParameter() { d.addMember(p); }
+  ( <COMMA> FormalParameter() { d.addMember(p); } )*
 }
 
 FormalParameter FormalParameter():
@@ -1115,11 +1115,13 @@ FormalParameter FormalParameter():
   String c = null;
   String d;
   String n;
-  FormalParameter p;
+  TypedElementDeclaration e = new TypedElementDeclaration();
+  FormalParameter p = new FormalParameter(e);
 }
 {
-  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] d = ParameterDirection() 
-  n = Name() { p = new FormalParameter(n, d, c); } <COLON> TypePart(p)
+  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] 
+  d = ParameterDirection() { p.setDirection(d); }
+  n = Name() { p.setName(n); } <COLON> TypePart(e)
   { return p; }
 }
 
@@ -1148,9 +1150,9 @@ QualifiedNameList RedefinitionClause():
 
 /* CONSTRUCTORS */
 
-OperationDeclaration ConstructorDeclaration():
+ConstructorDefinition ConstructorDeclaration():
 {
-  OperationDeclaration d = new OperationDeclaration();
+  ConstructorDefinition d = new ConstructorDefinition();
   String n;
 }
 {
@@ -1161,21 +1163,23 @@ OperationDeclaration ConstructorDeclaration():
 
 ConstructorDefinition ConstructorDefinition():
 {
-  OperationDeclaration o;
+  ConstructorDefinition d;
   Block b;
 }
 {
-  o = ConstructorDeclaration() b = ConstructorBody()
-  { return new ConstructorDefinition(o, b); }
+  d = ConstructorDeclaration() b = ConstructorBody()
+  { d.setBody(b);
+    return d; }
 }
 
-ConstructorStubDeclaration ConstructorStubDeclaration():
+ConstructorDefinition ConstructorStubDeclaration():
 {
-  OperationDeclaration o;
+  ConstructorDefinition d;
 }
 {
-  o = ConstructorDeclaration() <SEMICOLON>
-  { return new ConstructorStubDeclaration(o); }
+  d = ConstructorDeclaration() <SEMICOLON>
+  { d.setIsStub();
+    return d; }
 }
 
 Block ConstructorBody():
@@ -1239,9 +1243,9 @@ SuperclassConstructorInvocation SuperclassConstructorInvocation():
 
 /* DESTRUCTORS */
 
-OperationDeclaration DestructorDeclaration():
+DestructorDefinition DestructorDeclaration():
 {
-  OperationDeclaration d = new OperationDeclaration();
+  DestructorDefinition d = new DestructorDefinition();
   String n;
 }
 {
@@ -1252,21 +1256,23 @@ OperationDeclaration DestructorDeclaration():
 
 DestructorDefinition DestructorDefinition():
 {
-  OperationDeclaration o;
+  DestructorDefinition d;
   Block b;
 }
 {
-  o = DestructorDeclaration() b = Block()
-  { return new DestructorDefinition(o, b); }
+  d = DestructorDeclaration() b = Block()
+  { d.setBody(b);
+    return d; }
 }
 
-DestructorStubDeclaration DestructorStubDeclaration():
+DestructorDefinition DestructorStubDeclaration():
 {
-  OperationDeclaration o;
+  DestructorDefinition d;
 }
 {
-  o = DestructorDeclaration() <SEMICOLON>
-  { return new DestructorStubDeclaration(o); }
+  d = DestructorDeclaration() <SEMICOLON>
+  { d.setIsStub();
+    return d; }
 }
 
 /* RECEPTIONS */
@@ -1280,9 +1286,9 @@ ReceptionDefinition ReceptionDefinition():
   { return new ReceptionDefinition(n); }
 }
 
-SignalDeclaration SignalReceptionDeclaration():
+SignalReceptionDefinition SignalReceptionDeclaration():
 {
-  SignalDeclaration d = new SignalDeclaration();
+  SignalReceptionDefinition d = new SignalReceptionDefinition();
   String n;
   QualifiedNameList nl;
 }
@@ -1295,21 +1301,20 @@ SignalDeclaration SignalReceptionDeclaration():
 SignalReceptionDefinition SignalReceptionDefinition():
 {
   SignalReceptionDefinition d;
-  SignalDeclaration s;
 }
 {
-  s = SignalReceptionDeclaration() { d = new SignalReceptionDefinition(s); } 
-  StructuredBody(d)
+  d = SignalReceptionDeclaration() StructuredBody(d)
   { return d; }
 }
 
-SignalReceptionStubDeclaration SignalReceptionStubDeclaration():
+SignalReceptionDefinition SignalReceptionStubDeclaration():
 {
-  SignalDeclaration s;
+  SignalReceptionDefinition d;
 }
 {
-  s = SignalReceptionDeclaration() <SEMICOLON>
-  { return new SignalReceptionStubDeclaration(s); }
+  d = SignalReceptionDeclaration() <SEMICOLON>
+  { d.setIsStub();
+    return d; }
 }
 
 /***********************
@@ -1318,24 +1323,28 @@ SignalReceptionStubDeclaration SignalReceptionStubDeclaration():
 
 /* ACTIVITIES */
 
-ActivityDeclaration ActivityDeclaration():
+ActivityDefinition ActivityDeclaration():
 {
-  ParameterSetDeclaration d = new ParameterSetDeclaration();
+  TypedElementDeclaration t = new TypedElementDeclaration();
+  FormalParameter p = new FormalParameter(t);
+  ActivityDefinition d = new ActivityDefinition();
   String n;
 }
 { 
-  <ACTIVITY> n = Name() FormalParameters(d) [ <COLON> TypePart(d) ]
-  { return new ActivityDeclaration(n,d); }
+  <ACTIVITY> n = Name() { d.setName(n); } FormalParameters(d) 
+  [ <COLON> TypePart(t) { p.setDirection("return"); d.addMember(p); } ]
+  { return d; }
 }
 
 ActivityDefinition ActivityDefinition():
 {
-  ActivityDeclaration a;
+  ActivityDefinition a;
   Block b;
 }
 {
   a = ActivityDeclaration() b = Block()
-  { return new ActivityDefinition(a, b); }
+  { a.setBody(b);
+    return a; }
 }
 
 /* BLOCK */
@@ -2260,7 +2269,7 @@ Expression ClassExtentExpression():
 Expression CollectionValueExpression():
 {
   QualifiedName t;
-  TypedDeclaration d = new TypedDeclaration();
+  TypedElementDeclaration d = new TypedElementDeclaration();
   CollectionElements c = null;
 }
 {

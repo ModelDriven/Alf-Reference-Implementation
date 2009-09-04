@@ -2,28 +2,86 @@ Alf 0.05 Parser
 Reading from file tests\Example1a.alf...
 Parsed successfully.
 UnitDefinition name:run
+ FormalParameter name:activations visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example1b.alf...
 Parsed successfully.
 UnitDefinition name:run
+ FormalParameter name:activations visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example2a.alf...
 Parsed successfully.
 UnitDefinition name:Order_Behavior
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example2b.alf...
 Parsed successfully.
 UnitDefinition name:Ordering
- ClassifierStubDeclaration name:ShoppingCart visibility:public
- ClassifierStubDeclaration name:Order visibility:public
- ClassifierStubDeclaration name:CreditCardCharge visibility:public
- ClassifierStubDeclaration name:Customer visibility:public
- ClassifierStubDeclaration name:ProductSelection visibility:public
- AssociationDefinition name:R4 visibility:public
- AssociationDefinition name:R5 visibility:public
- AssociationDefinition name:R7 visibility:public
- AssociationDefinition name:R8 visibility:public
- AssociationDefinition name:R10 visibility:public
+ ActiveClassDefinition name:ShoppingCart visibility:public isStub:true isAbstract: false behaviorName:
+ ActiveClassDefinition name:Order visibility:public isStub:true isAbstract: false behaviorName:
+ ActiveClassDefinition name:CreditCardCharge visibility:public isStub:true isAbstract: false behaviorName:
+ ActiveClassDefinition name:Customer visibility:public isStub:true isAbstract: false behaviorName:
+ ActiveClassDefinition name:ProductSelection visibility:public isStub:true isAbstract: false behaviorName:
+ AssociationDefinition name:R4 visibility:public isStub:false isAbstract: false
+ AssociationDefinition name:R5 visibility:public isStub:false isAbstract: false
+ AssociationDefinition name:R7 visibility:public isStub:false isAbstract: false
+ AssociationDefinition name:R8 visibility:public isStub:false isAbstract: false
+ AssociationDefinition name:R10 visibility:public isStub:false isAbstract: false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find: EE_OnlineCustomer
   ImportReference alias: packageImport:false
    QualifiedName EE_OnlineCustomer
@@ -37,26 +95,55 @@ Alf 0.05 Parser
 Reading from file tests\Example2c.alf...
 Parsed successfully.
 UnitDefinition name:Order
- PropertyDefinition name:orderID visibility:public
- PropertyDefinition name:dateOrderPlaced visibility:public
- PropertyDefinition name:totalValue visibility:public
- PropertyDefinition name:recipient visibility:public
- PropertyDefinition name:deliveryAddress visibility:public
- PropertyDefinition name:contactPhone visibility:public
- SignalReceptionDefinition name:Checkout visibility:public
- SignalReceptionDefinition name:SubmitCharge visibility:public
- SignalReceptionDefinition name:PaymentDeclined visibility:public
- SignalReceptionDefinition name:PaymentApproved visibility:public
- SignalReceptionDefinition name:OrderDelivered visibility:public
- OperationStubDeclaration name:establishCustomer visibility:private
- OperationStubDeclaration name:processCharge visibility:private
- OperationStubDeclaration name:declineCharge visibility:private
- OperationStubDeclaration name:packAndShip visibility:private
- OperationStubDeclaration name:notifyOfDelivery visibility:private
+ PropertyDefinition name:orderID visibility:public isStub:false isComposite:false
+ PropertyDefinition name:dateOrderPlaced visibility:public isStub:false isComposite:false
+ PropertyDefinition name:totalValue visibility:public isStub:false isComposite:false
+ PropertyDefinition name:recipient visibility:public isStub:false isComposite:false
+ PropertyDefinition name:deliveryAddress visibility:public isStub:false isComposite:false
+ PropertyDefinition name:contactPhone visibility:public isStub:false isComposite:false
+ SignalReceptionDefinition name:Checkout visibility:public isStub:false isAbstract: false
+ SignalReceptionDefinition name:SubmitCharge visibility:public isStub:false isAbstract: false
+ SignalReceptionDefinition name:PaymentDeclined visibility:public isStub:false isAbstract: false
+ SignalReceptionDefinition name:PaymentApproved visibility:public isStub:false isAbstract: false
+ SignalReceptionDefinition name:OrderDelivered visibility:public isStub:false isAbstract: false
+ OperationDefinition name:establishCustomer visibility:private isStub:true isAbstract:false
+ OperationDefinition name:processCharge visibility:private isStub:true isAbstract:false
+ OperationDefinition name:declineCharge visibility:private isStub:true isAbstract:false
+ OperationDefinition name:packAndShip visibility:private isStub:true isAbstract:false
+ OperationDefinition name:notifyOfDelivery visibility:private isStub:true isAbstract:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example2d.alf...
 Parsed successfully.
 UnitDefinition name:establishCustomer
+ FormalParameter name:rcvd_evt visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find: ::TIM
   ImportReference alias: packageImport:false
    QualifiedName ::TIM
@@ -64,6 +151,21 @@ Alf 0.05 Parser
 Reading from file tests\Example2e.alf...
 Parsed successfully.
 UnitDefinition name:establishCustomer
+ FormalParameter name:rcvd_evt visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find: ::TIM
   ImportReference alias: packageImport:false
    QualifiedName ::TIM
@@ -71,14 +173,57 @@ Alf 0.05 Parser
 Reading from file tests\Example2f.alf...
 Parsed successfully.
 UnitDefinition name:processCharge
+ FormalParameter name:rcvd_evt visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example2g.alf...
 Parsed successfully.
 UnitDefinition name:declineCharge
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example2h.alf...
 Parsed successfully.
 UnitDefinition name:packAndShip
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find: Shipping::Shipment
   ImportReference alias: packageImport:false
    QualifiedName Shipping::Shipment
@@ -86,10 +231,40 @@ Alf 0.05 Parser
 Reading from file tests\Example2i.alf...
 Parsed successfully.
 UnitDefinition name:notifyOfDelivery
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example3a.alf...
 Parsed successfully.
 UnitDefinition name:'create property'
+ FormalParameter name:identifier visibility: isStub:false direction:in
+ FormalParameter name:identifier visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find: 'Identifiers'::'Identifier Factory'
   ImportReference alias: packageImport:false
    QualifiedName 'Identifiers'::'Identifier Factory'
@@ -97,14 +272,60 @@ Alf 0.05 Parser
 Reading from file tests\Example3b.alf...
 Parsed successfully.
 UnitDefinition name:'update status'
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example3c.alf...
 Parsed successfully.
 UnitDefinition name:'get next identifier'
+ FormalParameter name: visibility: isStub:false direction:return
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Example3d.alf...
 Parsed successfully.
 UnitDefinition name:'create reply'
+ FormalParameter name:requestId visibility: isStub:false direction:in
+ FormalParameter name:requestId visibility: isStub:false direction:in
+ FormalParameter name: visibility: isStub:false direction:return
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
@@ -117,6 +338,23 @@ Alf 0.05 Parser
 Reading from file tests\Example3e.alf...
 Parsed successfully.
 UnitDefinition name:establish
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
@@ -129,6 +367,23 @@ Alf 0.05 Parser
 Reading from file tests\Example3f.alf...
 Parsed successfully.
 UnitDefinition name:acquire
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
@@ -141,6 +396,23 @@ Alf 0.05 Parser
 Reading from file tests\Example3g.alf...
 Parsed successfully.
 UnitDefinition name:update
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
@@ -153,6 +425,23 @@ Alf 0.05 Parser
 Reading from file tests\Example3h.alf...
 Parsed successfully.
 UnitDefinition name:dispose
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
@@ -165,6 +454,23 @@ Alf 0.05 Parser
 Reading from file tests\Example3i.alf...
 Parsed successfully.
 UnitDefinition name:delete
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
@@ -177,6 +483,23 @@ Alf 0.05 Parser
 Reading from file tests\Example3j.alf...
 Parsed successfully.
 UnitDefinition name:retrieve
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ FormalParameter name:request visibility: isStub:false direction:in
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
  ErrorNode message:Cannot find namespace: 'Data Model'
   ImportReference alias: packageImport:true
    QualifiedName 'Property Management'::'Data Model'::Properties
@@ -189,153 +512,463 @@ Alf 0.05 Parser
 Reading from file tests\ActiveClass_Order.alf...
 Parsed successfully.
 UnitDefinition name:Order
- PropertyDefinition name:dateOrderPlaced visibility:public
- PropertyDefinition name:totalValue visibility:public
- PropertyDefinition name:deliveryAddress visibility:public
- PropertyDefinition name:contactPhone visibility:public
- ReceptionDefinition name:CheckOut visibility:public
- ReceptionDefinition name:SubmitCharge visibility:public
- ReceptionDefinition name:PaymentDeclined visibility:public
- ReceptionDefinition name:PaymentApproved visibility:public
- ReceptionDefinition name:OrderDelivered visibility:public
+ PropertyDefinition name:dateOrderPlaced visibility:public isStub:false isComposite:false
+ PropertyDefinition name:totalValue visibility:public isStub:false isComposite:false
+ PropertyDefinition name:deliveryAddress visibility:public isStub:false isComposite:false
+ PropertyDefinition name:contactPhone visibility:public isStub:false isComposite:false
+ ReceptionDefinition name:CheckOut visibility:public isStub:false
+ ReceptionDefinition name:SubmitCharge visibility:public isStub:false
+ ReceptionDefinition name:PaymentDeclined visibility:public isStub:false
+ ReceptionDefinition name:PaymentApproved visibility:public isStub:false
+ ReceptionDefinition name:OrderDelivered visibility:public isStub:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\ActiveClass_ProcessQueue.alf...
 Parsed successfully.
 UnitDefinition name:ProcessQueue
- PropertyDefinition name:busy visibility:private
- SignalReceptionDefinition name:Wait visibility:public
- SignalReceptionDefinition name:Release visibility:public
- OperationStubDeclaration name:enqueue visibility:protected
- OperationStubDeclaration name:dequeue visibility:protected
- OperationStubDeclaration name:processesWaiting visibility:protected
+ PropertyDefinition name:busy visibility:private isStub:false isComposite:false
+ SignalReceptionDefinition name:Wait visibility:public isStub:false isAbstract: false
+ SignalReceptionDefinition name:Release visibility:public isStub:false isAbstract: false
+ OperationDefinition name:enqueue visibility:protected isStub:true isAbstract:true
+ OperationDefinition name:dequeue visibility:protected isStub:true isAbstract:true
+ OperationDefinition name:processesWaiting visibility:protected isStub:true isAbstract:true
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\ActiveClass_ProcessQueueImpl.alf...
 Parsed successfully.
 UnitDefinition name:ProcessQueueImpl
- PropertyDefinition name:waitingProcesses visibility:private
- OperationStubDeclaration name:enqueue visibility:private
- OperationStubDeclaration name:dequeue visibility:private
- OperationStubDeclaration name:processesWaiting visibility:private
+ PropertyDefinition name:waitingProcesses visibility:private isStub:false isComposite:false
+ OperationDefinition name:enqueue visibility:private isStub:true isAbstract:false
+ OperationDefinition name:dequeue visibility:private isStub:true isAbstract:false
+ OperationDefinition name:processesWaiting visibility:private isStub:true isAbstract:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\ActiveClass_Receptions.alf...
 Parsed successfully.
 UnitDefinition name:Receptions
- ReceptionDefinition name:Checkout visibility:public
- SignalReceptionDefinition name:SubmitCharge visibility:public
+ ReceptionDefinition name:Checkout visibility:public isStub:false
+ SignalReceptionDefinition name:SubmitCharge visibility:public isStub:false isAbstract: false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Activity_execute.alf...
 Parsed successfully.
 UnitDefinition name:execute
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Activity_Expressions.alf...
 Parsed successfully.
 UnitDefinition name:ExpressionStatements
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Activity_getNodeActivations.alf...
 Parsed successfully.
 UnitDefinition name:getNodeActivations
+ FormalParameter name:node visibility: isStub:false direction:in
+ FormalParameter name: visibility: isStub:false direction:return
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Activity_Order_Behavior.alf...
 Parsed successfully.
 UnitDefinition name:Order_Behavior
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Activity_Statements.alf...
 Parsed successfully.
 UnitDefinition name:Statements
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Assoc_Selection.alf...
 Parsed successfully.
 UnitDefinition name:Selection
- PropertyDefinition name:cart visibility:public
- PropertyDefinition name:selectedProduct visibility:public
- PropertyDefinition name:selectionInfo visibility:public
+ PropertyDefinition name:cart visibility:public isStub:false isComposite:false
+ PropertyDefinition name:selectedProduct visibility:public isStub:false isComposite:false
+ PropertyDefinition name:selectionInfo visibility:public isStub:false isComposite:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Class_Constructors.alf...
 Parsed successfully.
 UnitDefinition name:Constructors
- ConstructorStubDeclaration name:Table visibility:public
- ConstructorStubDeclaration name:ProductSelection visibility:public
- ConstructorDefinition name:registered visibility:private
+ ConstructorDefinition name:Table visibility:public isStub:true isAbstract:false
+ ConstructorDefinition name:ProductSelection visibility:public isStub:true isAbstract:false
+ ConstructorDefinition name:registered visibility:private isStub:false isAbstract:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Class_Destructors.alf...
 Parsed successfully.
 UnitDefinition name:Destructors
- DestructorStubDeclaration name:ProductSelection visibility:public
- DestructorDefinition name:unregister visibility:private
- DestructorDefinition name:D visibility:public
- DestructorDefinition name:D visibility:public
+ DestructorDefinition name:ProductSelection visibility:public isStub:true isAbstract:false
+ DestructorDefinition name:unregister visibility:private isStub:false isAbstract:false
+ DestructorDefinition name:D visibility:public isStub:false isAbstract:false
+ DestructorDefinition name:D visibility:public isStub:false isAbstract:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Class_Initialization.alf...
 Parsed successfully.
 UnitDefinition name:Initialization
- PropertyDefinition name:a visibility:public
- PropertyDefinition name:b visibility:public
+ PropertyDefinition name:a visibility:public isStub:false isComposite:false
+ PropertyDefinition name:b visibility:public isStub:false isComposite:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Class_Operations.alf...
 Parsed successfully.
 UnitDefinition name:Operations
- OperationStubDeclaration name:select visibility:null
- OperationDefinition name:select visibility:null
- OperationStubDeclaration name:unitPrice visibility:null
+ OperationDefinition name:select visibility:null isStub:true isAbstract:true
+ OperationDefinition name:select visibility:null isStub:false isAbstract:false
+ OperationDefinition name:unitPrice visibility:null isStub:true isAbstract:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Class_Properties.alf...
 Parsed successfully.
 UnitDefinition name:Properties
- PropertyDefinition name:amount visibility:public
- PropertyDefinition name:products visibility:public
- PropertyDefinition name:wheels visibility:public
- PropertyDefinition name:items visibility:public
- PropertyDefinition name:items visibility:public
- PropertyDefinition name:items visibility:public
- PropertyDefinition name:a visibility:public
- PropertyDefinition name:b visibility:public
+ PropertyDefinition name:amount visibility:public isStub:false isComposite:false
+ PropertyDefinition name:products visibility:public isStub:false isComposite:false
+ PropertyDefinition name:wheels visibility:public isStub:false isComposite:true
+ PropertyDefinition name:items visibility:public isStub:false isComposite:false
+ PropertyDefinition name:items visibility:public isStub:false isComposite:false
+ PropertyDefinition name:items visibility:public isStub:false isComposite:false
+ PropertyDefinition name:a visibility:public isStub:false isComposite:false
+ PropertyDefinition name:b visibility:public isStub:false isComposite:true
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Class_Redefinitions.alf...
 Parsed successfully.
 UnitDefinition name:Redefinitions
- OperationStubDeclaration name:p visibility:null
- OperationStubDeclaration name:renamed1 visibility:null
- OperationStubDeclaration name:renamed2 visibility:null
+ OperationDefinition name:p visibility:null isStub:true isAbstract:false
+ OperationDefinition name:renamed1 visibility:null isStub:true isAbstract:false
+ OperationDefinition name:renamed2 visibility:null isStub:true isAbstract:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Class_Singleton.alf...
 Parsed successfully.
 UnitDefinition name:Singleton
- ConstructorDefinition name:Singleton visibility:private
- ActivityDefinition name:getSingleton visibility:public
+ ConstructorDefinition name:Singleton visibility:private isStub:false isAbstract:false
+ ActivityDefinition name:getSingleton visibility:public isStub:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Class_SuperConstructors.alf...
 Parsed successfully.
 UnitDefinition name:SuperConstructors
- ConstructorDefinition name:B visibility:public
- ConstructorDefinition name:B visibility:public
- ConstructorDefinition name:B1 visibility:public
- ConstructorDefinition name:B2 visibility:public
+ ConstructorDefinition name:B visibility:public isStub:false isAbstract:false
+ ConstructorDefinition name:B visibility:public isStub:false isAbstract:false
+ ConstructorDefinition name:B1 visibility:public isStub:false isAbstract:false
+ ConstructorDefinition name:B2 visibility:public isStub:false isAbstract:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Datatype_Complex.alf...
 Parsed successfully.
 UnitDefinition name:Complex
- PropertyDefinition name:re visibility:public
- PropertyDefinition name:im visibility:public
+ PropertyDefinition name:re visibility:public isStub:false isComposite:false
+ PropertyDefinition name:im visibility:public isStub:false isComposite:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Enum_TrafficLightColor.alf...
 Parsed successfully.
 UnitDefinition name:TrafficLightColor
- EnumerationLiteralName name:RED visibility:
- EnumerationLiteralName name:YELLOW visibility:
- EnumerationLiteralName name:GREEN visibility:
+ EnumerationLiteralName name:RED visibility: isStub:false
+ EnumerationLiteralName name:YELLOW visibility: isStub:false
+ EnumerationLiteralName name:GREEN visibility: isStub:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Package_Ordering.alf...
 Parsed successfully.
 UnitDefinition name:Ordering
- AssociationDefinition name:Selects visibility:public
- ClassifierStubDeclaration name:ShoppingCart visibility:public
- ClassifierStubDeclaration name:Order visibility:public
- ClassifierStubDeclaration name:ProductSelection visibility:public
+ AssociationDefinition name:Selects visibility:public isStub:false isAbstract: false
+ ActiveClassDefinition name:ShoppingCart visibility:public isStub:true isAbstract: false behaviorName:
+ ActiveClassDefinition name:Order visibility:public isStub:true isAbstract: true behaviorName:
+ ClassDefinition name:ProductSelection visibility:public isStub:true isAbstract: false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
 Alf 0.05 Parser
 Reading from file tests\Signal_SubmitCharge.alf...
 Parsed successfully.
 UnitDefinition name:SubmitCharge
- PropertyDefinition name:accountNumber visibility:public
- PropertyDefinition name:billingAddress visibility:public
- PropertyDefinition name:cardExpirationDate visibility:public
- PropertyDefinition name:cardholderName visibility:public
+ PropertyDefinition name:accountNumber visibility:public isStub:false isComposite:false
+ PropertyDefinition name:billingAddress visibility:public isStub:false isComposite:false
+ PropertyDefinition name:cardExpirationDate visibility:public isStub:false isComposite:false
+ PropertyDefinition name:cardholderName visibility:public isStub:false isComposite:false
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::PrimitiveBehaviors
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::PrimitiveBehaviors
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::Common
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::Common
+ ErrorNode message:Cannot find: ::FoundationalModelLibrary::BasicInputOutput
+  ImportReference alias: packageImport:true
+   QualifiedName ::FoundationalModelLibrary::BasicInputOutput
+ ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+  ImportReference alias: packageImport:true
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
+  ErrorNode message:Cannot find namespace: AuxiliaryConstructs
+   QualifiedName ::UML::AuxiliaryConstructs::PrimitiveTypes
