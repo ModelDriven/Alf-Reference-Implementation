@@ -103,23 +103,35 @@ public abstract class NamespaceDefinition extends Member {
 	public ArrayList<Member> resolve(String name) {
 		ArrayList<Member> members = new ArrayList<Member>();
 
-		for (Member member : this.getMembers()) {
-			if (member.getName().equals(name)) {
-				members.add(member);
-			}
-		}
+		Member completion = this.completeStub();
 
-		if (this.getNamespace() != null) {
-			ArrayList<Member> outerMembers = this.getNamespace().resolve(name);
-			members.addAll(outerMembers);
-		}
-
-		if (this.getUnit() != null) {
-			ArrayList<Member> imports = this.getUnit().resolveImports(name);
-			if (imports.size() == 1 && imports.get(0).isError()) {
-				return imports;
+		if (completion != null && completion.isError()) {
+			members.add(completion);
+		} else {
+			for (Member member : this.getMembers()) {
+				if (member.getName().equals(name)) {
+					members.add(member);
+				}
 			}
-			members.addAll(imports);
+
+			NamespaceDefinition namespace = this.getNamespace();
+
+			if (namespace != null) {
+				ArrayList<Member> outerMembers = namespace.resolve(name);
+				if (outerMembers.size() == 1 && outerMembers.get(0).isError()) {
+					return outerMembers;
+				}
+				members.addAll(outerMembers);
+			}
+
+			UnitDefinition unit = this.getUnit();
+			if (unit != null) {
+				ArrayList<Member> imports = unit.resolveImports(name);
+				if (imports.size() == 1 && imports.get(0).isError()) {
+					return imports;
+				}
+				members.addAll(imports);
+			}
 		}
 
 		return members;
@@ -128,15 +140,26 @@ public abstract class NamespaceDefinition extends Member {
 	public ArrayList<Member> resolvePublic(String name, boolean allowPackageOnly) {
 		ArrayList<Member> publicMembers = new ArrayList<Member>();
 
-		for (Member member : this.getMembers()) {
-			if (member.isPublic() || allowPackageOnly && member.isPackageOnly()) {
-				publicMembers.add(member);
-			}
-		}
+		Member completion = this.completeStub();
 
-		UnitDefinition unit = this.getUnit();
-		if (unit != null) {
-			publicMembers.addAll(unit.resolvePublicImports(name));
+		if (completion != null && completion.isError()) {
+			publicMembers.add(completion);
+		} else {
+			for (Member member : this.getMembers()) {
+				if (member.isPublic() || allowPackageOnly
+						&& member.isPackageOnly()) {
+					publicMembers.add(member);
+				}
+			}
+
+			UnitDefinition unit = this.getUnit();
+			if (unit != null) {
+				ArrayList<Member> imports = unit.resolvePublicImports(name);
+				if (imports.size() == 1 && imports.get(0).isError()) {
+					return imports;
+				}
+				publicMembers.addAll(imports);
+			}
 		}
 
 		return publicMembers;
@@ -145,5 +168,27 @@ public abstract class NamespaceDefinition extends Member {
 	public ArrayList<Member> resolve(QualifiedName qualifiedName) {
 		return qualifiedName.resolve(this);
 	} // resolve
+
+	public void replace(Member original, Member replacement) {
+		this.members.remove(original);
+		original.setNamespace(null);
+
+		this.addMember(replacement);
+	} // replace
+
+	public Member completeStub() {
+		Member completion = super.completeStub();
+
+		if (completion != null && !completion.isError()
+				&& completion instanceof NamespaceDefinition) {
+			for (Member member : ((NamespaceDefinition) completion)
+					.getMembers()) {
+				this.addMember(member);
+			}
+			this.setUnit(((NamespaceDefinition) completion).getUnit());
+		}
+
+		return completion;
+	} // completeStub
 
 } // NamespaceDefinition

@@ -37,4 +37,43 @@ public class QualifiedNameList extends Node {
 		}
 	} // print
 
+	public QualifiedNameList copy() {
+		QualifiedNameList copy = new QualifiedNameList();
+
+		for (QualifiedName name : this.getList()) {
+			copy.add(name);
+		}
+
+		return copy;
+	} // copy
+
+	public boolean equals(QualifiedNameList other, NamespaceDefinition context) {
+		if (other == null) {
+			return false;
+		} else {
+			ArrayList<QualifiedName> list = (ArrayList<QualifiedName>) this
+					.getList().clone();
+			ArrayList<QualifiedName> otherList = other.getList();
+
+			Boolean found;
+			for (QualifiedName otherName : otherList) {
+				found = false;
+
+				for (QualifiedName name : list) {
+					if (otherName.isEquivalentTo(name, context)) {
+						list.remove(name);
+						found = true;
+						break;
+					}
+				}
+
+				if (!found) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+	} // equals
+
 } // QualifiedNameList

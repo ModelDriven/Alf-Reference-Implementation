@@ -17,29 +17,41 @@ import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
-public class OperationDefinition extends Member {
+public class OperationDefinition extends BehaviorDefinition {
 
-	private OperationDeclaration declaration = null;
-	private Block body = null;
+	private QualifiedNameList redefinition = null;
+	private boolean isAbstract = false;
 
-	public OperationDefinition(OperationDeclaration declaration, Block body) {
-		this.declaration = declaration;
-		this.setName(declaration.getName());
-		this.body = body;
-	} // OperationDefinition
+	public void setRedefinition(QualifiedNameList redefinition) {
+		this.redefinition = redefinition;
+	} // setRedefinition
 
-	public OperationDeclaration getDeclaration() {
-		return this.declaration;
-	} // getDeclaration
+	public QualifiedNameList getRedefinition() {
+		return this.redefinition;
+	} // getRedefinition
 
-	public Block getBody() {
-		return this.body;
-	} // getBody
+	public void setIsAbstract() {
+		this.isAbstract = true;
+	} // setIsAbstract
+
+	public boolean isAbstract() {
+		return this.isAbstract;
+	} // isAbstract
+
+	public String toString() {
+		return super.toString() + " isAbstract:" + this.isAbstract();
+	} // toString
 
 	public void print(String prefix) {
 		super.print(prefix);
-		this.getDeclaration().printChild(prefix);
-		this.getBody().printChild(prefix);
+
+		if (this.getRedefinition() != null) {
+			this.getRedefinition().printChild(prefix);
+		}
+
+		if (this.getBody() != null) {
+			this.getBody().printChild(prefix);
+		}
 	} // print
 
 } // OperationDefinition

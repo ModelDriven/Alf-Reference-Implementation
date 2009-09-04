@@ -20,15 +20,15 @@ import java.util.ArrayList;
 public class CollectionValueExpression extends Expression {
 
 	private CollectionElements elements = null;
-	private TypedDeclaration declaration = null;
+	private TypedElementDeclaration declaration = null;
 
-	public CollectionValueExpression(TypedDeclaration declaration,
+	public CollectionValueExpression(TypedElementDeclaration declaration,
 			CollectionElements elements) {
 		this.declaration = declaration;
 		this.elements = elements;
 	} // CollectionValueExpression
 
-	public TypedDeclaration getDeclaration() {
+	public TypedElementDeclaration getDeclaration() {
 		return this.declaration;
 	} // getDeclaration
 

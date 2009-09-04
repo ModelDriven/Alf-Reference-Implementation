@@ -19,8 +19,4 @@ import java.util.ArrayList;
 
 public class ConstructorDefinition extends OperationDefinition {
 
-	public ConstructorDefinition(OperationDeclaration declaration, Block body) {
-		super(declaration, body);
-	} // ConstructorDefinition
-
 } // ConstructorDefinition

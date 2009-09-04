@@ -19,8 +19,9 @@ import java.util.ArrayList;
 
 public class DataTypeDefinition extends ClassifierDefinition {
 
-	public DataTypeDefinition(DataTypeDeclaration declaration) {
-		this.setDeclaration(declaration);
-	} // DataTypeDefinition
+	public boolean isCompletedBy(Member member) {
+		return member instanceof DataTypeDefinition
+				&& super.isCompletedBy(member);
+	} // isCompletedBy
 
 } // DataTypeDefinition

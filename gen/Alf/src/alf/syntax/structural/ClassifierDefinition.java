@@ -19,20 +19,52 @@ import java.util.ArrayList;
 
 public abstract class ClassifierDefinition extends NamespaceDefinition {
 
-	private ClassifierDeclaration declaration = null;
+	private boolean isAbstract = false;
+	private QualifiedNameList specialization = null;
 
-	public void setDeclaration(ClassifierDeclaration declaration) {
-		this.declaration = declaration;
-		this.setName(declaration.getName());
-	} // setDeclaration
+	public void setIsAbstract() {
+		this.isAbstract = true;
+	} // setIsAbstract
 
-	public ClassifierDeclaration getDeclaration() {
-		return this.declaration;
-	} // getDeclaration
+	public boolean isAbstract() {
+		return this.isAbstract;
+	} // isAbstract
+
+	public void setSpecialization(QualifiedNameList specialization) {
+		this.specialization = specialization;
+	} // setSpecialization
+
+	public QualifiedNameList getSpecialization() {
+		return this.specialization;
+	} // getSpecialization
+
+	public String toString() {
+		return super.toString() + " isAbstract: " + this.isAbstract();
+	} // toString
 
 	public void print(String prefix) {
 		super.print(prefix);
-		this.getDeclaration().printChild(prefix);
+
+		QualifiedNameList specialization = this.getSpecialization();
+		if (specialization != null) {
+			this.getSpecialization().printChild(prefix);
+		}
 	} // print
+
+	public boolean isCompletedBy(Member member) {
+		if (!(member instanceof ClassifierDefinition)) {
+			return false;
+		} else {
+			ClassDefinition classDef = (ClassDefinition) member;
+			NamespaceDefinition namespace = this.getNamespace();
+
+			return classDef.isAbstract() == this.isAbstract()
+					&& (classDef.getSpecialization() == null
+							&& this.getSpecialization() == null || classDef
+							.getSpecialization().equals(
+									this.getSpecialization(),
+									this.getNamespace()));
+		}
+	} // isCompletedBy
 
 } // ClassifierDefinition

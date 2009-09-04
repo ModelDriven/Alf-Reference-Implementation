@@ -19,8 +19,8 @@ import java.util.ArrayList;
 
 public class ClassDefinition extends ClassifierDefinition {
 
-	public ClassDefinition(ClassDeclaration declaration) {
-		this.setDeclaration(declaration);
-	} // ClassDefinition
+	public boolean isCompletedBy(Member member) {
+		return member instanceof ClassDefinition && super.isCompletedBy(member);
+	} // isCompletedBy
 
 } // ClassDefinition

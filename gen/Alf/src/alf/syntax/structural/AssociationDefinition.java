@@ -19,8 +19,9 @@ import java.util.ArrayList;
 
 public class AssociationDefinition extends ClassifierDefinition {
 
-	public AssociationDefinition(AssociationDeclaration declaration) {
-		this.setDeclaration(declaration);
-	} // AssociationDefinition
+	public boolean isCompletedBy(Member member) {
+		return member instanceof AssociationDefinition
+				&& super.isCompletedBy(member);
+	} // isCompletedBy
 
 } // AssociationDefinition
