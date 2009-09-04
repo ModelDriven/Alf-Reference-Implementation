@@ -19,8 +19,4 @@ import java.util.ArrayList;
 
 public class SignalReceptionDefinition extends SignalDefinition {
 
-	public SignalReceptionDefinition(SignalDeclaration declaration) {
-		super(declaration);
-	} // SignalReceptionDefinition
-
 } // SignalReceptionDefinition

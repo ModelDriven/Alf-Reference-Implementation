@@ -17,22 +17,11 @@ import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
-public class ActivityDefinition extends ClassifierDefinition {
-
-	private Block body = null;
-
-	public ActivityDefinition(ActivityDeclaration declaration, Block body) {
-		this.setDeclaration(declaration);
-		this.body = body;
-	} // ActivityDefinition
-
-	public Block getBody() {
-		return this.body;
-	} // getBody
+public class ActivityDefinition extends BehaviorDefinition {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		this.body.printChild(prefix);
+		this.getBody().printChild(prefix);
 	} // print
 
 } // ActivityDefinition

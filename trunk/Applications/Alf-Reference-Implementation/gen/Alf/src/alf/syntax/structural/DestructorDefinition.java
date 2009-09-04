@@ -19,8 +19,4 @@ import java.util.ArrayList;
 
 public class DestructorDefinition extends OperationDefinition {
 
-	public DestructorDefinition(OperationDeclaration declaration, Block body) {
-		super(declaration, body);
-	} // DestructorDefinition
-
 } // DestructorDefinition

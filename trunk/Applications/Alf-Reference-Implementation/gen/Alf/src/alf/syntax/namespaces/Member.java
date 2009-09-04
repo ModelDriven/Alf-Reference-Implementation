@@ -22,6 +22,7 @@ public abstract class Member extends DocumentedElement {
 	private String name = "";
 	private String visibility = "";
 	private NamespaceDefinition namespace = null;
+	private boolean isStub = false;
 
 	public void setName(String name) {
 		this.name = name;
@@ -39,6 +40,14 @@ public abstract class Member extends DocumentedElement {
 		return this.visibility;
 	} // getVisibility
 
+	public void setIsStub() {
+		this.isStub = true;
+	} // setIsStub
+
+	public boolean isStub() {
+		return this.isStub;
+	} // isStub
+
 	public void setNamespace(NamespaceDefinition namespace) {
 		this.namespace = namespace;
 	} // setNamespace
@@ -49,7 +58,7 @@ public abstract class Member extends DocumentedElement {
 
 	public String toString() {
 		return super.toString() + " name:" + this.getName() + " visibility:"
-				+ this.getVisibility();
+				+ this.getVisibility() + " isStub:" + this.isStub();
 	} // toString
 
 	public QualifiedName getQualifiedName() {
@@ -94,5 +103,32 @@ public abstract class Member extends DocumentedElement {
 		String visibility = this.getVisibility();
 		return visibility == null || visibility.equals("");
 	} // isPackageOnly
+
+	public Member completeStub() {
+		Member completion = null;
+
+		if (this.isStub()) {
+			completion = this.getCompletion();
+			this.isStub = !completion.isError();
+		}
+
+		return completion;
+	} // completeStub
+
+	public Member getCompletion() {
+		QualifiedName qualifiedName = this.getQualifiedName();
+		Member completion = qualifiedName.resolveSubunit();
+
+		if (!completion.isError() && !this.isCompletedBy(completion)) {
+			completion = new ErrorMember(this, "Invalid subunit for: "
+					+ qualifiedName);
+		}
+
+		return completion;
+	} // getCompletion
+
+	public boolean isCompletedBy(Member member) {
+		return false;
+	} // isCompletedBy
 
 } // Member

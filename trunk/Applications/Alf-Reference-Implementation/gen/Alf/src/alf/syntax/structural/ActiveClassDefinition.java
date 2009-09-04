@@ -22,10 +22,6 @@ public class ActiveClassDefinition extends ClassDefinition {
 	private String behaviorName = "";
 	private Block behaviorBlock = null;
 
-	public ActiveClassDefinition(ActiveClassDeclaration declaration) {
-		super(declaration);
-	} // ActiveClassDefinition
-
 	public void setBehaviorName(String behaviorName) {
 		this.behaviorName = behaviorName;
 	} // setBehaviorName
@@ -54,5 +50,55 @@ public class ActiveClassDefinition extends ClassDefinition {
 			behavior.printChild(prefix);
 		}
 	} // print
+
+	public Member completeStub() {
+		Member completion;
+
+		if (this.getBehaviorName() != null && this.getBehaviorBlock() == null) {
+			QualifiedName qualifiedName = this.getQualifiedName();
+			qualifiedName.addName(this.getBehaviorName());
+
+			completion = qualifiedName.resolveSubunit();
+
+			if (completion.isError()) {
+				completion = new ErrorMember(this, "Cannot resolve: "
+						+ qualifiedName, (ErrorMember) completion);
+			} else if (!(completion instanceof ActivityDefinition)
+					|| ((ActivityDefinition) completion).getMembers().size() > 0) {
+				completion = new ErrorMember(this,
+						"Invalid classifier behavior: " + qualifiedName,
+						(ErrorMember) completion);
+			} else {
+				this.setBehaviorBlock(((ActivityDefinition) completion)
+						.getBody());
+			}
+		} else {
+			completion = super.completeStub();
+
+			if (completion != null && !completion.isError()) {
+				completion = ((ActiveClassDefinition) completion)
+						.completeStub();
+				if (!completion.isError()) {
+					String behaviorName = ((ActiveClassDefinition) completion)
+							.getBehaviorName();
+					if (behaviorName != null) {
+						this.setBehaviorName(behaviorName);
+					}
+					Block behaviorBlock = ((ActiveClassDefinition) completion)
+							.getBehaviorBlock();
+					if (behaviorBlock != null) {
+						this.setBehaviorBlock(behaviorBlock);
+					}
+				}
+			}
+		}
+
+		return completion;
+	} // completeStub
+
+	public boolean isCompletedBy(Member member) {
+		return member instanceof ActiveClassDefinition
+				&& super.isCompletedBy(member);
+	} // isCompletedBy
 
 } // ActiveClassDefinition

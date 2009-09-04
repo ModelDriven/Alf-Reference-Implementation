@@ -17,32 +17,31 @@ import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
-public class FormalParameter extends TypedElementDeclaration {
+public class FormalParameter extends TypedElementDefinition {
 
 	private String direction = "";
-	private String documentation = "";
 
-	public FormalParameter(String name, String direction, String documentation) {
-		this.setName(name);
-		this.direction = direction;
-		this.documentation = documentation;
+	public FormalParameter(TypedElementDeclaration declaration) {
+		super(declaration);
 	} // FormalParameter
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	} // setDirection
 
 	public String getDirection() {
 		return this.direction;
 	} // getDirection
 
-	public String getDocumentation() {
-		return this.documentation;
-	} // getDocumentation
-
 	public String toString() {
-		return super.toString() + " direction:" + this.getDirection()
-				+ " documentation: " + this.getDocumentation();
+		return super.toString() + " direction:" + this.getDirection();
 	} // toString
 
-	public void print(String prefix) {
-		// TODO
-	} // print
+	public boolean equals(FormalParameter other) {
+		return this.getDirection().equals(other.getDirection())
+				&& this.getName().equals(other.getName())
+				&& this.getDeclaration().equals(other.getDeclaration(),
+						this.getNamespace());
+	} // equals
 
 } // FormalParameter

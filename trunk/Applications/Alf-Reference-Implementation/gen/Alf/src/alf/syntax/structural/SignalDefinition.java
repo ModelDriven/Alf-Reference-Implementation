@@ -19,8 +19,9 @@ import java.util.ArrayList;
 
 public class SignalDefinition extends ClassifierDefinition {
 
-	public SignalDefinition(SignalDeclaration declaration) {
-		this.setDeclaration(declaration);
-	} // SignalDefinition
+	public boolean isCompletedBy(Member member) {
+		return member instanceof SignalDefinition
+				&& super.isCompletedBy(member);
+	} // isCompletedBy
 
 } // SignalDefinition

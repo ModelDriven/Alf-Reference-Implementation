@@ -23,4 +23,8 @@ public class PackageDefinition extends NamespaceDefinition {
 		this.setName(name);
 	} // PackageDefinition
 
+	public boolean isCompletedBy(Member member) {
+		return member instanceof PackageDefinition;
+	} // isCompletedBy
+
 } // PackageDefinition

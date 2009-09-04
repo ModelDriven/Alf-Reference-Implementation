@@ -23,4 +23,8 @@ public class PackageStubDeclaration extends Member {
 		// TODO
 	} // PackageStubDeclaration
 
+	public boolean isCompletedBy(Member member) {
+		return member instanceof PackageDefinition;
+	} // isCompletedBy
+
 } // PackageStubDeclaration

@@ -19,8 +19,9 @@ import java.util.ArrayList;
 
 public class EnumerationDefinition extends ClassifierDefinition {
 
-	public EnumerationDefinition(EnumerationDeclaration declaration) {
-		this.setDeclaration(declaration);
-	} // EnumerationDefinition
+	public boolean isCompletedBy(Member member) {
+		return member instanceof EnumerationDefinition
+				&& super.isCompletedBy(member);
+	} // isCompletedBy
 
 } // EnumerationDefinition

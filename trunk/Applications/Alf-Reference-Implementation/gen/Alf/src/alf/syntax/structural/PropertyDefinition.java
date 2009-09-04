@@ -17,19 +17,22 @@ import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
-public class PropertyDefinition extends Member {
+public class PropertyDefinition extends TypedElementDefinition {
 
-	private PropertyDeclaration declaration = null;
+	private boolean isComposite = false;
 	private Expression initializer = null;
 
-	public PropertyDefinition(PropertyDeclaration declaration) {
-		this.declaration = declaration;
-		this.setName(declaration.getName());
+	public PropertyDefinition(TypedElementDeclaration declaration) {
+		super(declaration);
 	} // PropertyDefinition
 
-	public PropertyDeclaration getDeclaration() {
-		return this.declaration;
-	} // getDeclaration
+	public void setIsComposite() {
+		this.isComposite = true;
+	} // setIsComposite
+
+	public boolean isComposite() {
+		return this.isComposite;
+	} // isComposite
 
 	public void setInitializer(Expression initializer) {
 		this.initializer = initializer;
@@ -39,9 +42,12 @@ public class PropertyDefinition extends Member {
 		return this.initializer;
 	} // getInitializer
 
+	public String toString() {
+		return super.toString() + " isComposite:" + this.isComposite();
+	} // toString
+
 	public void print(String prefix) {
 		super.print(prefix);
-		this.getDeclaration().printChild(prefix);
 
 		Expression initializer = this.getInitializer();
 		if (initializer != null) {

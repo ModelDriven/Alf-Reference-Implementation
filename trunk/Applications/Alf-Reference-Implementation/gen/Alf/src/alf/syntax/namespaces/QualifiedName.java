@@ -17,6 +17,9 @@ import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
+import alf.parser.AlfParser;
+import alf.parser.ParseException;
+
 public class QualifiedName extends Node {
 
 	private boolean isAbsolute = false;
@@ -71,12 +74,12 @@ public class QualifiedName extends Node {
 		}
 
 		ArrayList<String> names = this.getNames();
-		ArrayList<Member> members = namespace.resolve(names.get(0));
+		ArrayList<Member> members = new ArrayList<Member>();
 
 		Boolean allowPackageOnly = true;
 		int n = names.size();
 
-		for (int i = 1; i < n; i++) {
+		for (int i = 0; i < n; i++) {
 			members = namespace.resolvePublic(names.get(i), allowPackageOnly);
 			if (members.size() == 1 && members.get(0).isError()) {
 				ArrayList<Member> error = new ArrayList<Member>();
@@ -106,15 +109,48 @@ public class QualifiedName extends Node {
 			}
 		}
 
-		if (members.size() == 1 && members.get(0).isError()) {
-			members.add(new ErrorMember(this, (ErrorMember) members.remove(0)));
-		}
-
 		return members;
 	} // resolve
 
+	public Member resolveSubunit() {
+		StringBuffer path = new StringBuffer("../Root");
+
+		for (String name : this.getNames()) {
+			path.append("/" + name);
+		}
+
+		AlfParser parser;
+
+		try {
+			parser = new AlfParser(new java.io.FileInputStream(path + ".alf"));
+		} catch (java.io.FileNotFoundException e) {
+			return new ErrorMember(this, "Subunit not found: " + this);
+		}
+
+		try {
+			UnitDefinition subunit = parser.UnitDefinition();
+			NamespaceDefinition subunitDefinition = subunit.getDefinition();
+			if (subunitDefinition.getQualifiedName().equals(this)) {
+				return subunitDefinition;
+			} else {
+				return new ErrorMember(this, "Incorrect subunit: " + this);
+			}
+		} catch (ParseException e) {
+			return new ErrorMember(this, "Cannot parse subunit: " + this + "\n"
+					+ e.getMessage());
+		}
+	} // resolveSubunit
+
 	public NamespaceDefinition getRootNamespace() {
-		return new PackageDefinition("");
+		QualifiedName root = new QualifiedName();
+		root.setIsAbsolute();
+		Member member = root.resolveSubunit();
+
+		if (member instanceof NamespaceDefinition) {
+			return (NamespaceDefinition) member;
+		} else {
+			return new PackageDefinition("Root");
+		}
 	} // getRootNamespace
 
 	public NamespaceDefinition getModelContext() {
@@ -124,11 +160,51 @@ public class QualifiedName extends Node {
 	public QualifiedName copy() {
 		QualifiedName copy = new QualifiedName();
 
+		if (this.isAbsolute()) {
+			copy.setIsAbsolute();
+		}
+
 		for (String name : this.getNames()) {
 			copy.addName(name);
 		}
 
 		return copy;
 	} // copy
+
+	public boolean equals(QualifiedName other) {
+		ArrayList<String> names = this.getNames();
+		ArrayList<String> otherNames = other.getNames();
+
+		int n = names.size();
+
+		if (n != otherNames.size()) {
+			return false;
+		} else {
+			for (int i = 0; i < n; i++) {
+				if (!names.get(i).equals(otherNames.get(i))) {
+					return false;
+				}
+			}
+			return true;
+		}
+	} // equals
+
+	public boolean isEquivalentTo(QualifiedName other,
+			NamespaceDefinition context) {
+		ArrayList<Member> resolvents = this.resolve(context);
+		ArrayList<Member> otherResolvents = other.resolve(context);
+
+		if (resolvents.size() != 1 || otherResolvents.size() != 1) {
+			return false;
+		} else {
+			Member resolvent = resolvents.get(0);
+			Member otherResolvent = otherResolvents.get(0);
+
+			return !resolvent.isError()
+					&& !otherResolvent.isError()
+					&& resolvent.getQualifiedName().equals(
+							otherResolvent.getQualifiedName());
+		}
+	} // isEquivalentTo
 
 } // QualifiedName
