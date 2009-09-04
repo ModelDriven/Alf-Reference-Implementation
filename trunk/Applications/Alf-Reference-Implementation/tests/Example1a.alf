@@ -22,7 +22,7 @@ activity run(in activations: Set<ActivityNodeActivation>){ // See Note 3
       activation instanceof ActivityParameterNodeActivation;
 
     for (incomingEdge in activation.incomingEdges while isEnabled) {
-                 // See Note 9
+                                                           // See Note 9
       for (otherActivation in Activations while isEnabled) {
         if (otherActivation.isSourceFor(incomingEdge)) {
           isEnabled = false;                               // See Note 10
