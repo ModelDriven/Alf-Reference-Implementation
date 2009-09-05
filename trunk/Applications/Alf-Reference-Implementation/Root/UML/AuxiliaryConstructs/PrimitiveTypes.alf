@@ -1,0 +1,10 @@
+namespace ::UML::AuxiliaryConstructs;
+
+package PrimitiveTypes {
+
+  public datatype Boolean {}
+  public datatype Integer {}
+  public datatype String {}
+  public datatype UnlimitedNatural {}
+  
+}

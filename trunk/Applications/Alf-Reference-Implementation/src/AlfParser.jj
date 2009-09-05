@@ -15,6 +15,7 @@ options {
   DEBUG_PARSER=false;
   DEBUG_LOOKAHEAD=false;
   OUTPUT_DIRECTORY="alf/parser";
+  STATIC=false;
 }
 
 PARSER_BEGIN(AlfParser)
@@ -54,7 +55,7 @@ public class AlfParser {
     try {
       UnitDefinition tree = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
-      // tree.print();
+      tree.print();
       ArrayList<Member> members = tree.getAllMembers();
       System.out.println(tree.toString());
       for (Member member: members) {

@@ -1,0 +1,7 @@
+namespace ::UML;
+
+package AuxiliaryConstructs {
+
+  public package PrimitiveTypes;
+  
+}
