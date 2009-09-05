@@ -66,11 +66,20 @@ public class QualifiedName extends Node {
 
 	public ArrayList<Member> resolve(NamespaceDefinition namespace) {
 		if (namespace == null) {
+			Member root;
 			if (this.isAbsolute()) {
-				namespace = this.getRootNamespace();
+				root = this.getRootNamespace();
 			} else {
-				namespace = this.getModelContext();
+				root = this.getModelContext();
 			}
+
+			if (root.isError()) {
+				ArrayList<Member> error = new ArrayList<Member>();
+				error.add(new ErrorMember(this, (ErrorMember) root));
+				return error;
+			}
+
+			namespace = (NamespaceDefinition) root;
 		}
 
 		ArrayList<String> names = this.getNames();
@@ -113,15 +122,18 @@ public class QualifiedName extends Node {
 	} // resolve
 
 	public Member resolveSubunit() {
-		StringBuffer path = new StringBuffer("../Root");
+		StringBuffer path = new StringBuffer("Root");
 
-		for (String name : this.getNames()) {
+		ArrayList<String> names = this.getNames();
+
+		for (String name : names) {
 			path.append("/" + name);
 		}
 
 		AlfParser parser;
 
 		try {
+			System.out.println("Parsing " + path + ".alf...");
 			parser = new AlfParser(new java.io.FileInputStream(path + ".alf"));
 		} catch (java.io.FileNotFoundException e) {
 			return new ErrorMember(this, "Subunit not found: " + this);
@@ -130,7 +142,8 @@ public class QualifiedName extends Node {
 		try {
 			UnitDefinition subunit = parser.UnitDefinition();
 			NamespaceDefinition subunitDefinition = subunit.getDefinition();
-			if (subunitDefinition.getQualifiedName().equals(this)) {
+			if (this.isAbsolute() && names.size() == 0
+					|| subunitDefinition.getQualifiedName().equals(this)) {
 				return subunitDefinition;
 			} else {
 				return new ErrorMember(this, "Incorrect subunit: " + this);
@@ -141,19 +154,22 @@ public class QualifiedName extends Node {
 		}
 	} // resolveSubunit
 
-	public NamespaceDefinition getRootNamespace() {
+	public Member getRootNamespace() {
 		QualifiedName root = new QualifiedName();
 		root.setIsAbsolute();
 		Member member = root.resolveSubunit();
 
-		if (member instanceof NamespaceDefinition) {
+		if (member.isError()) {
+			return member;
+		} else if (member instanceof NamespaceDefinition) {
+			member.setName("");
 			return (NamespaceDefinition) member;
 		} else {
-			return new PackageDefinition("Root");
+			return new ErrorMember(this, "Invalid root namespace");
 		}
 	} // getRootNamespace
 
-	public NamespaceDefinition getModelContext() {
+	public Member getModelContext() {
 		return this.getRootNamespace();
 	} // getModelContext
 

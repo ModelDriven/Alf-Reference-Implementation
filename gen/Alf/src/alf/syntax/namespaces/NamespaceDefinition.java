@@ -80,13 +80,19 @@ public abstract class NamespaceDefinition extends Member {
 	} // print
 
 	public QualifiedName getQualifiedName() {
-		UnitDefinition unit = this.getUnit();
-		if (unit == null || unit.getNamespace() == null) {
-			return super.getQualifiedName();
+		if (this.getName().equals("")) {
+			QualifiedName root = new QualifiedName();
+			root.setIsAbsolute();
+			return root;
 		} else {
-			QualifiedName qualifiedName = unit.getNamespace().copy();
-			qualifiedName.addName(this.getName());
-			return qualifiedName;
+			UnitDefinition unit = this.getUnit();
+			if (unit == null || unit.getNamespace() == null) {
+				return super.getQualifiedName();
+			} else {
+				QualifiedName qualifiedName = unit.getNamespace().copy();
+				qualifiedName.addName(this.getName());
+				return qualifiedName;
+			}
 		}
 	} // getQualifiedName
 
@@ -138,6 +144,8 @@ public abstract class NamespaceDefinition extends Member {
 	} // resolve
 
 	public ArrayList<Member> resolvePublic(String name, boolean allowPackageOnly) {
+		System.out.println("resolvePublic: " + this.getQualifiedName() + "...");
+
 		ArrayList<Member> publicMembers = new ArrayList<Member>();
 
 		Member completion = this.completeStub();
@@ -146,9 +154,11 @@ public abstract class NamespaceDefinition extends Member {
 			publicMembers.add(completion);
 		} else {
 			for (Member member : this.getMembers()) {
-				if (member.isPublic() || allowPackageOnly
-						&& member.isPackageOnly()) {
+				if (member.getName().equals(name)
+						&& (member.isPublic() || allowPackageOnly
+								&& member.isPackageOnly())) {
 					publicMembers.add(member);
+					System.out.println("Public member: " + member.getName());
 				}
 			}
 
@@ -157,6 +167,9 @@ public abstract class NamespaceDefinition extends Member {
 				ArrayList<Member> imports = unit.resolvePublicImports(name);
 				if (imports.size() == 1 && imports.get(0).isError()) {
 					return imports;
+				}
+				for (Member member : imports) {
+					System.out.println("Public import: " + member.getName());
 				}
 				publicMembers.addAll(imports);
 			}

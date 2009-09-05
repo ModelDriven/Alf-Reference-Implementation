@@ -34,7 +34,7 @@ public class AlfParser implements AlfParserConstants {
     try {
       UnitDefinition tree = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
-      // tree.print();
+      tree.print();
       ArrayList<Member> members = tree.getAllMembers();
       System.out.println(tree.toString());
       for (Member member: members) {
@@ -55,7 +55,7 @@ public class AlfParser implements AlfParserConstants {
  ************************/
 
 /* QUALIFIED NAMES */
-  static final public String Name() throws ParseException {
+  final public String Name() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
@@ -73,7 +73,7 @@ public class AlfParser implements AlfParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public QualifiedName QualifiedName() throws ParseException {
+  final public QualifiedName QualifiedName() throws ParseException {
   String n;
   QualifiedName q = new QualifiedName();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -124,7 +124,7 @@ void RelativeQualification():
 */
 
 /* NAMESPACES */
-  static final public NamespaceDefinition NamespaceDefinition() throws ParseException {
+  final public NamespaceDefinition NamespaceDefinition() throws ParseException {
   NamespaceDefinition d;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PACKAGE:
@@ -150,7 +150,7 @@ void RelativeQualification():
   }
 
 /* VISIBILITY */
-  static final public String VisibilityIndicator() throws ParseException {
+  final public String VisibilityIndicator() throws ParseException {
   String v;
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -171,7 +171,7 @@ void RelativeQualification():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String ImportVisibilityIndicator() throws ParseException {
+  final public String ImportVisibilityIndicator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PUBLIC:
@@ -190,7 +190,7 @@ void RelativeQualification():
   }
 
 /* UNITS */
-  static final public UnitDefinition UnitDefinition() throws ParseException {
+  final public UnitDefinition UnitDefinition() throws ParseException {
   QualifiedName n;
   ImportReference i;
   Token t;
@@ -235,7 +235,7 @@ void RelativeQualification():
     throw new Error("Missing return statement in function");
   }
 
-  static final public QualifiedName NamespaceDeclaration() throws ParseException {
+  final public QualifiedName NamespaceDeclaration() throws ParseException {
   QualifiedName n;
     jj_consume_token(NAMESPACE);
     n = QualifiedName();
@@ -244,7 +244,7 @@ void RelativeQualification():
     throw new Error("Missing return statement in function");
   }
 
-  static final public ImportReference ImportDeclaration() throws ParseException {
+  final public ImportReference ImportDeclaration() throws ParseException {
   String v;
   ImportReference i;
     v = ImportVisibilityIndicator();
@@ -256,7 +256,7 @@ void RelativeQualification():
     throw new Error("Missing return statement in function");
   }
 
-  static final public ImportReference ImportReference() throws ParseException {
+  final public ImportReference ImportReference() throws ParseException {
   QualifiedName n;
   String a;
   ImportReference i;
@@ -300,7 +300,7 @@ void ElementImportReference():
   QualifiedName() [ AliasDefinition() ]
 }
 */
-  static final public String AliasDefinition() throws ParseException {
+  final public String AliasDefinition() throws ParseException {
   String n;
     jj_consume_token(AS);
     n = Name();
@@ -317,7 +317,7 @@ void PackageImportReference():
 */
 
 /* ADDED */
-  static final public void PackageImport() throws ParseException {
+  final public void PackageImport() throws ParseException {
     jj_consume_token(DOUBLE_COLON);
     jj_consume_token(STAR);
   }
@@ -327,7 +327,7 @@ void PackageImportReference():
  ***********************/
 
 /* PACKAGES */
-  static final public String PackageDeclaration() throws ParseException {
+  final public String PackageDeclaration() throws ParseException {
   String n;
     jj_consume_token(PACKAGE);
     n = Name();
@@ -335,7 +335,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public PackageDefinition PackageDefinition() throws ParseException {
+  final public PackageDefinition PackageDefinition() throws ParseException {
   String n;
   Member m;
   PackageDefinition d;
@@ -362,7 +362,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member PackagedElement() throws ParseException {
+  final public Member PackagedElement() throws ParseException {
   Token t;
   String c = null;
   String v;
@@ -384,7 +384,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member PackagedElementDefinition() throws ParseException {
+  final public Member PackagedElementDefinition() throws ParseException {
   Member m;
     if (jj_2_2(2147483647)) {
       m = NamespaceStubDeclaration();
@@ -411,7 +411,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member NamespaceStubDeclaration() throws ParseException {
+  final public Member NamespaceStubDeclaration() throws ParseException {
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PACKAGE:
@@ -436,7 +436,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public PackageDefinition PackageStubDeclaration() throws ParseException {
+  final public PackageDefinition PackageStubDeclaration() throws ParseException {
   String n;
   PackageDefinition p;
     n = PackageDeclaration();
@@ -450,7 +450,7 @@ void PackageImportReference():
 /***************
  * CLASSIFIERS *
  ***************/
-  static final public NamespaceDefinition ClassifierDefinition() throws ParseException {
+  final public NamespaceDefinition ClassifierDefinition() throws ParseException {
   NamespaceDefinition d;
     if (jj_2_3(2)) {
       d = ClassDefinition();
@@ -486,7 +486,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public NamespaceDefinition ClassifierDeclaration() throws ParseException {
+  final public NamespaceDefinition ClassifierDeclaration() throws ParseException {
   NamespaceDefinition d;
     if (jj_2_8(2)) {
       d = ClassDeclaration();
@@ -522,7 +522,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public NamespaceDefinition ClassifierStubDeclaration() throws ParseException {
+  final public NamespaceDefinition ClassifierStubDeclaration() throws ParseException {
   NamespaceDefinition d;
     d = ClassifierDeclaration();
     jj_consume_token(SEMICOLON);
@@ -532,7 +532,7 @@ void PackageImportReference():
   }
 
 /* CLASSES */
-  static final public ClassDefinition ClassDeclaration() throws ParseException {
+  final public ClassDefinition ClassDeclaration() throws ParseException {
   ClassDefinition d = new ClassDefinition();
   String n;
   QualifiedNameList nl;
@@ -561,7 +561,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public QualifiedNameList SpecializationClause() throws ParseException {
+  final public QualifiedNameList SpecializationClause() throws ParseException {
   QualifiedNameList nl;
     jj_consume_token(SPECIALIZES);
     nl = QualifiedNameList();
@@ -569,7 +569,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public QualifiedNameList QualifiedNameList() throws ParseException {
+  final public QualifiedNameList QualifiedNameList() throws ParseException {
   QualifiedNameList nl = new QualifiedNameList();
   QualifiedName n;
     n = QualifiedName();
@@ -592,7 +592,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public ClassDefinition ClassDefinition() throws ParseException {
+  final public ClassDefinition ClassDefinition() throws ParseException {
   ClassDefinition d;
   Member m;
     d = ClassDeclaration();
@@ -630,7 +630,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member ClassMember() throws ParseException {
+  final public Member ClassMember() throws ParseException {
   Token t;
   String c = null;
   String v = null;
@@ -661,7 +661,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member ClassMemberDefinition() throws ParseException {
+  final public Member ClassMemberDefinition() throws ParseException {
   Member m;
     if (jj_2_13(2147483647)) {
       m = ClassifierStubDeclaration();
@@ -689,7 +689,7 @@ void PackageImportReference():
   }
 
 /* ACTIVE CLASSES */
-  static final public ActiveClassDefinition ActiveClassDeclaration() throws ParseException {
+  final public ActiveClassDefinition ActiveClassDeclaration() throws ParseException {
   ActiveClassDefinition d = new ActiveClassDefinition();
   String n;
   QualifiedNameList nl;
@@ -719,7 +719,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public ActiveClassDefinition ActiveClassDefinition() throws ParseException {
+  final public ActiveClassDefinition ActiveClassDefinition() throws ParseException {
   ActiveClassDefinition d;
   Member m;
     d = ActiveClassDeclaration();
@@ -767,7 +767,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void BehaviorClause(ActiveClassDefinition d) throws ParseException {
+  final public void BehaviorClause(ActiveClassDefinition d) throws ParseException {
   Block b;
   String n;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -787,7 +787,7 @@ void PackageImportReference():
     }
   }
 
-  static final public Member ActiveClassMember() throws ParseException {
+  final public Member ActiveClassMember() throws ParseException {
   Token t;
   String c = null;
   String v = null;
@@ -818,7 +818,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member ActiveClassMemberDefinition() throws ParseException {
+  final public Member ActiveClassMemberDefinition() throws ParseException {
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
@@ -856,7 +856,7 @@ void PackageImportReference():
   }
 
 /* DATA TYPES */
-  static final public DataTypeDefinition DataTypeDeclaration() throws ParseException {
+  final public DataTypeDefinition DataTypeDeclaration() throws ParseException {
   DataTypeDefinition d = new DataTypeDefinition();
   String n;
   QualifiedNameList nl;
@@ -885,7 +885,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public DataTypeDefinition DataTypeDefinition() throws ParseException {
+  final public DataTypeDefinition DataTypeDefinition() throws ParseException {
   DataTypeDefinition d;
     d = DataTypeDeclaration();
     StructuredBody(d);
@@ -893,7 +893,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void StructuredBody(ClassifierDefinition d) throws ParseException {
+  final public void StructuredBody(ClassifierDefinition d) throws ParseException {
   Member m;
     jj_consume_token(LBRACE);
     label_7:
@@ -915,7 +915,7 @@ void PackageImportReference():
     jj_consume_token(RBRACE);
   }
 
-  static final public Member StructuredMember() throws ParseException {
+  final public Member StructuredMember() throws ParseException {
   Token t;
   String c = null;
   String v = null;
@@ -946,7 +946,7 @@ void PackageImportReference():
   }
 
 /* ASSOCIATIONS */
-  static final public AssociationDefinition AssociationDeclaration() throws ParseException {
+  final public AssociationDefinition AssociationDeclaration() throws ParseException {
   AssociationDefinition d = new AssociationDefinition();
   String n;
   QualifiedNameList nl;
@@ -975,7 +975,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public AssociationDefinition AssociationDefinition() throws ParseException {
+  final public AssociationDefinition AssociationDefinition() throws ParseException {
   AssociationDefinition d;
     d = AssociationDeclaration();
     StructuredBody(d);
@@ -984,7 +984,7 @@ void PackageImportReference():
   }
 
 /* ENUMERATIONS */
-  static final public EnumerationDefinition EnumerationDeclaration() throws ParseException {
+  final public EnumerationDefinition EnumerationDeclaration() throws ParseException {
   EnumerationDefinition d = new EnumerationDefinition();
   String n;
   QualifiedNameList nl;
@@ -1004,7 +1004,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public EnumerationDefinition EnumerationDefinition() throws ParseException {
+  final public EnumerationDefinition EnumerationDefinition() throws ParseException {
   EnumerationDefinition d;
   Member m;
     d = EnumerationDeclaration();
@@ -1030,7 +1030,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public EnumerationLiteralName EnumerationLiteralName() throws ParseException {
+  final public EnumerationLiteralName EnumerationLiteralName() throws ParseException {
   Token t;
   String c = null;
   String n;
@@ -1049,7 +1049,7 @@ void PackageImportReference():
   }
 
 /* SIGNALS */
-  static final public SignalDefinition SignalDeclaration() throws ParseException {
+  final public SignalDefinition SignalDeclaration() throws ParseException {
   SignalDefinition d = new SignalDefinition();
   String n;
   QualifiedNameList nl;
@@ -1078,7 +1078,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public SignalDefinition SignalDefinition() throws ParseException {
+  final public SignalDefinition SignalDefinition() throws ParseException {
   SignalDefinition d;
     d = SignalDeclaration();
     StructuredBody(d);
@@ -1087,7 +1087,7 @@ void PackageImportReference():
   }
 
 /* FEATURES */
-  static final public Member FeatureDefinition() throws ParseException {
+  final public Member FeatureDefinition() throws ParseException {
   Member m;
     if (jj_2_17(2)) {
       m = AttributeDefinition();
@@ -1114,7 +1114,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member FeatureStubDeclaration() throws ParseException {
+  final public Member FeatureStubDeclaration() throws ParseException {
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
@@ -1138,7 +1138,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member ActiveFeatureDefinition() throws ParseException {
+  final public Member ActiveFeatureDefinition() throws ParseException {
   Member m;
     if (jj_2_18(2)) {
       m = ReceptionDefinition();
@@ -1157,7 +1157,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Member ActiveFeatureStubDeclaration() throws ParseException {
+  final public Member ActiveFeatureStubDeclaration() throws ParseException {
   Member m;
     m = SignalReceptionStubDeclaration();
     {if (true) return m;}
@@ -1165,7 +1165,7 @@ void PackageImportReference():
   }
 
 /* PROPERTIES */
-  static final public PropertyDefinition PropertyDefinition() throws ParseException {
+  final public PropertyDefinition PropertyDefinition() throws ParseException {
     PropertyDefinition d;
     d = PropertyDeclaration();
     jj_consume_token(SEMICOLON);
@@ -1173,7 +1173,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public PropertyDefinition AttributeDefinition() throws ParseException {
+  final public PropertyDefinition AttributeDefinition() throws ParseException {
   PropertyDefinition d;
   Expression e;
     d = PropertyDeclaration();
@@ -1191,7 +1191,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression AttributeInitializer() throws ParseException {
+  final public Expression AttributeInitializer() throws ParseException {
   Expression e;
     jj_consume_token(ASSIGN);
     e = Expression();
@@ -1199,7 +1199,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public PropertyDefinition PropertyDeclaration() throws ParseException {
+  final public PropertyDefinition PropertyDeclaration() throws ParseException {
   TypedElementDeclaration t = new TypedElementDeclaration();
   PropertyDefinition d = new PropertyDefinition(t);
   String n;
@@ -1220,7 +1220,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void TypePart(TypedElementDeclaration d) throws ParseException {
+  final public void TypePart(TypedElementDeclaration d) throws ParseException {
   QualifiedName t;
   Token tc;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -1261,7 +1261,7 @@ void PackageImportReference():
     }
   }
 
-  static final public QualifiedName TypeName() throws ParseException {
+  final public QualifiedName TypeName() throws ParseException {
   QualifiedName n = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
@@ -1281,7 +1281,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void Multiplicity(TypedElementDeclaration d) throws ParseException {
+  final public void Multiplicity(TypedElementDeclaration d) throws ParseException {
     jj_consume_token(LBRACKET);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NATURAL_LITERAL:
@@ -1313,7 +1313,7 @@ void PackageImportReference():
     }
   }
 
-  static final public void MultiplicityRange(TypedElementDeclaration d) throws ParseException {
+  final public void MultiplicityRange(TypedElementDeclaration d) throws ParseException {
   Token t;
   String n;
     if (jj_2_19(2)) {
@@ -1327,7 +1327,7 @@ void PackageImportReference():
                                   d.setUpperBound(n);
   }
 
-  static final public String UnlimitedNaturalLiteral() throws ParseException {
+  final public String UnlimitedNaturalLiteral() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NATURAL_LITERAL:
@@ -1346,7 +1346,7 @@ void PackageImportReference():
   }
 
 /* OPERATIONS */
-  static final public OperationDefinition OperationDeclaration() throws ParseException {
+  final public OperationDefinition OperationDeclaration() throws ParseException {
   TypedElementDeclaration t = new TypedElementDeclaration();
   FormalParameter p = new FormalParameter(t);
   OperationDefinition d = new OperationDefinition();
@@ -1387,7 +1387,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public OperationDefinition OperationDefinition() throws ParseException {
+  final public OperationDefinition OperationDefinition() throws ParseException {
   OperationDefinition o;
   Block b;
     o = OperationDeclaration();
@@ -1397,7 +1397,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public OperationDefinition OperationStubDeclaration() throws ParseException {
+  final public OperationDefinition OperationStubDeclaration() throws ParseException {
   OperationDefinition d;
     d = OperationDeclaration();
     jj_consume_token(SEMICOLON);
@@ -1406,7 +1406,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void FormalParameters(NamespaceDefinition d) throws ParseException {
+  final public void FormalParameters(NamespaceDefinition d) throws ParseException {
     jj_consume_token(LPAREN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOCUMENTATION_COMMENT:
@@ -1422,7 +1422,7 @@ void PackageImportReference():
     jj_consume_token(RPAREN);
   }
 
-  static final public void FormalParameterList(NamespaceDefinition d) throws ParseException {
+  final public void FormalParameterList(NamespaceDefinition d) throws ParseException {
   FormalParameter p;
     p = FormalParameter();
                           d.addMember(p);
@@ -1442,7 +1442,7 @@ void PackageImportReference():
     }
   }
 
-  static final public FormalParameter FormalParameter() throws ParseException {
+  final public FormalParameter FormalParameter() throws ParseException {
   Token t;
   String c = null;
   String d;
@@ -1468,7 +1468,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String ParameterDirection() throws ParseException {
+  final public String ParameterDirection() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IN:
@@ -1489,7 +1489,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public QualifiedNameList RedefinitionClause() throws ParseException {
+  final public QualifiedNameList RedefinitionClause() throws ParseException {
   QualifiedNameList nl;
     jj_consume_token(REDEFINES);
     nl = QualifiedNameList();
@@ -1498,7 +1498,7 @@ void PackageImportReference():
   }
 
 /* CONSTRUCTORS */
-  static final public ConstructorDefinition ConstructorDeclaration() throws ParseException {
+  final public ConstructorDefinition ConstructorDeclaration() throws ParseException {
   ConstructorDefinition d = new ConstructorDefinition();
   String n;
     jj_consume_token(CREATE);
@@ -1509,7 +1509,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public ConstructorDefinition ConstructorDefinition() throws ParseException {
+  final public ConstructorDefinition ConstructorDefinition() throws ParseException {
   ConstructorDefinition d;
   Block b;
     d = ConstructorDeclaration();
@@ -1519,7 +1519,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public ConstructorDefinition ConstructorStubDeclaration() throws ParseException {
+  final public ConstructorDefinition ConstructorStubDeclaration() throws ParseException {
   ConstructorDefinition d;
     d = ConstructorDeclaration();
     jj_consume_token(SEMICOLON);
@@ -1528,7 +1528,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Block ConstructorBody() throws ParseException {
+  final public Block ConstructorBody() throws ParseException {
   Statement s;
   Block b = new Block();
     jj_consume_token(LBRACE);
@@ -1542,7 +1542,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void ExplicitConstructorInvocations(Block b) throws ParseException {
+  final public void ExplicitConstructorInvocations(Block b) throws ParseException {
   Statement s;
     if (jj_2_22(2)) {
       s = AlternativeConstructorInvocation();
@@ -1570,7 +1570,7 @@ void PackageImportReference():
     }
   }
 
-  static final public AlternativeConstructorInvocation AlternativeConstructorInvocation() throws ParseException {
+  final public AlternativeConstructorInvocation AlternativeConstructorInvocation() throws ParseException {
   Token d;
   String c = null;
   String n = null;
@@ -1600,7 +1600,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public SuperclassConstructorInvocation SuperclassConstructorInvocation() throws ParseException {
+  final public SuperclassConstructorInvocation SuperclassConstructorInvocation() throws ParseException {
   Token d;
   String c = null;
   QualifiedName n = null;
@@ -1631,7 +1631,7 @@ void PackageImportReference():
   }
 
 /* DESTRUCTORS */
-  static final public DestructorDefinition DestructorDeclaration() throws ParseException {
+  final public DestructorDefinition DestructorDeclaration() throws ParseException {
   DestructorDefinition d = new DestructorDefinition();
   String n;
     jj_consume_token(DESTROY);
@@ -1642,7 +1642,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public DestructorDefinition DestructorDefinition() throws ParseException {
+  final public DestructorDefinition DestructorDefinition() throws ParseException {
   DestructorDefinition d;
   Block b;
     d = DestructorDeclaration();
@@ -1652,7 +1652,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public DestructorDefinition DestructorStubDeclaration() throws ParseException {
+  final public DestructorDefinition DestructorStubDeclaration() throws ParseException {
   DestructorDefinition d;
     d = DestructorDeclaration();
     jj_consume_token(SEMICOLON);
@@ -1662,7 +1662,7 @@ void PackageImportReference():
   }
 
 /* RECEPTIONS */
-  static final public ReceptionDefinition ReceptionDefinition() throws ParseException {
+  final public ReceptionDefinition ReceptionDefinition() throws ParseException {
   QualifiedName n;
     jj_consume_token(RECEIVE);
     n = QualifiedName();
@@ -1671,7 +1671,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public SignalReceptionDefinition SignalReceptionDeclaration() throws ParseException {
+  final public SignalReceptionDefinition SignalReceptionDeclaration() throws ParseException {
   SignalReceptionDefinition d = new SignalReceptionDefinition();
   String n;
   QualifiedNameList nl;
@@ -1692,7 +1692,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public SignalReceptionDefinition SignalReceptionDefinition() throws ParseException {
+  final public SignalReceptionDefinition SignalReceptionDefinition() throws ParseException {
   SignalReceptionDefinition d;
     d = SignalReceptionDeclaration();
     StructuredBody(d);
@@ -1700,7 +1700,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public SignalReceptionDefinition SignalReceptionStubDeclaration() throws ParseException {
+  final public SignalReceptionDefinition SignalReceptionStubDeclaration() throws ParseException {
   SignalReceptionDefinition d;
     d = SignalReceptionDeclaration();
     jj_consume_token(SEMICOLON);
@@ -1714,7 +1714,7 @@ void PackageImportReference():
  ***********************/
 
 /* ACTIVITIES */
-  static final public ActivityDefinition ActivityDeclaration() throws ParseException {
+  final public ActivityDefinition ActivityDeclaration() throws ParseException {
   TypedElementDeclaration t = new TypedElementDeclaration();
   FormalParameter p = new FormalParameter(t);
   ActivityDefinition d = new ActivityDefinition();
@@ -1737,7 +1737,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public ActivityDefinition ActivityDefinition() throws ParseException {
+  final public ActivityDefinition ActivityDefinition() throws ParseException {
   ActivityDefinition a;
   Block b;
     a = ActivityDeclaration();
@@ -1748,7 +1748,7 @@ void PackageImportReference():
   }
 
 /* BLOCK */
-  static final public Block Block() throws ParseException {
+  final public Block Block() throws ParseException {
   Block b = new Block();
     jj_consume_token(LBRACE);
     BlockCompletion(b);
@@ -1757,7 +1757,7 @@ void PackageImportReference():
   }
 
 /* ADDED */
-  static final public void BlockCompletion(Block b) throws ParseException {
+  final public void BlockCompletion(Block b) throws ParseException {
   Statement s;
     label_11:
     while (true) {
@@ -1808,7 +1808,7 @@ void PackageImportReference():
     jj_consume_token(RBRACE);
   }
 
-  static final public Statement DocumentedStatement() throws ParseException {
+  final public Statement DocumentedStatement() throws ParseException {
   Token t;
   String c = null;
   Statement s;
@@ -1828,7 +1828,7 @@ void PackageImportReference():
   }
 
 /* STATEMENTS */
-  static final public Statement Statement() throws ParseException {
+  final public Statement Statement() throws ParseException {
   Statement s;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case AT:
@@ -1900,7 +1900,7 @@ void PackageImportReference():
   }
 
 /* ANNOTATED STATEMENTS */
-  static final public Statement AnnotatedStatement() throws ParseException {
+  final public Statement AnnotatedStatement() throws ParseException {
   Annotation a;
   Statement s;
     a = Annotation();
@@ -1910,7 +1910,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Annotation Annotation() throws ParseException {
+  final public Annotation Annotation() throws ParseException {
   Token t;
   NameList nl = null;
     jj_consume_token(AT);
@@ -1929,7 +1929,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public NameList NameList() throws ParseException {
+  final public NameList NameList() throws ParseException {
   NameList nl = new NameList();
   String n;
     n = Name();
@@ -1953,7 +1953,7 @@ void PackageImportReference():
   }
 
 /* BLOCK STATEMENTS */
-  static final public BlockStatement BlockStatement() throws ParseException {
+  final public BlockStatement BlockStatement() throws ParseException {
   Block b;
     b = Block();
     {if (true) return new BlockStatement(b);}
@@ -1961,14 +1961,14 @@ void PackageImportReference():
   }
 
 /* EMPTY STATEMENTS */
-  static final public EmptyStatement EmptyStatement() throws ParseException {
+  final public EmptyStatement EmptyStatement() throws ParseException {
     jj_consume_token(SEMICOLON);
     {if (true) return new EmptyStatement();}
     throw new Error("Missing return statement in function");
   }
 
 /* EXPRESSION STATEMENTS */
-  static final public ExpressionStatement ExpressionStatement() throws ParseException {
+  final public ExpressionStatement ExpressionStatement() throws ParseException {
   Expression e;
     e = Expression();
     jj_consume_token(SEMICOLON);
@@ -1977,7 +1977,7 @@ void PackageImportReference():
   }
 
 /* IF STATEMENTS */
-  static final public IfStatement IfStatement() throws ParseException {
+  final public IfStatement IfStatement() throws ParseException {
   IfStatement s = new IfStatement();
   Block b;
     jj_consume_token(IF);
@@ -1995,7 +1995,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void SequentialClauses(IfStatement s) throws ParseException {
+  final public void SequentialClauses(IfStatement s) throws ParseException {
   ConcurrentClauses cs;
     cs = ConcurrentClauses();
                              s.addNonFinalClauses(cs);
@@ -2013,7 +2013,7 @@ void PackageImportReference():
     }
   }
 
-  static final public ConcurrentClauses ConcurrentClauses() throws ParseException {
+  final public ConcurrentClauses ConcurrentClauses() throws ParseException {
   ConcurrentClauses cs = new ConcurrentClauses();
   NonFinalClause c;
     c = NonFinalClause();
@@ -2037,7 +2037,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public NonFinalClause NonFinalClause() throws ParseException {
+  final public NonFinalClause NonFinalClause() throws ParseException {
   Expression e;
   Block b;
     jj_consume_token(LPAREN);
@@ -2048,7 +2048,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Block FinalClause() throws ParseException {
+  final public Block FinalClause() throws ParseException {
   Block b;
     jj_consume_token(ELSE);
     b = Block();
@@ -2057,7 +2057,7 @@ void PackageImportReference():
   }
 
 /* SWITCH STATEMENTS */
-  static final public SwitchStatement SwitchStatement() throws ParseException {
+  final public SwitchStatement SwitchStatement() throws ParseException {
   SwitchStatement s;
   Expression e;
   SwitchClause c;
@@ -2095,7 +2095,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public SwitchClause SwitchClause() throws ParseException {
+  final public SwitchClause SwitchClause() throws ParseException {
   SwitchClause c = new SwitchClause();
   Expression e;
   Block b;
@@ -2120,7 +2120,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression SwitchCase() throws ParseException {
+  final public Expression SwitchCase() throws ParseException {
   Expression e;
     jj_consume_token(CASE);
     e = Expression();
@@ -2129,7 +2129,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Block SwitchDefaultClause() throws ParseException {
+  final public Block SwitchDefaultClause() throws ParseException {
   Block b;
     jj_consume_token(DEFAULT_);
     jj_consume_token(COLON);
@@ -2139,7 +2139,7 @@ void PackageImportReference():
   }
 
 /* WHILE STATEMENTS */
-  static final public WhileStatement WhileStatement() throws ParseException {
+  final public WhileStatement WhileStatement() throws ParseException {
   Expression e;
   Block b;
     jj_consume_token(WHILE);
@@ -2152,7 +2152,7 @@ void PackageImportReference():
   }
 
 /* DO STATEMENTS */
-  static final public DoStatement DoStatement() throws ParseException {
+  final public DoStatement DoStatement() throws ParseException {
   Block b;
   Expression e;
     jj_consume_token(DO);
@@ -2167,7 +2167,7 @@ void PackageImportReference():
   }
 
 /* FOR STATEMENTS */
-  static final public ForStatement ForStatement() throws ParseException {
+  final public ForStatement ForStatement() throws ParseException {
   ForStatement s = new ForStatement();
   Block b;
     jj_consume_token(FOR);
@@ -2180,7 +2180,7 @@ void PackageImportReference():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void ForControl(ForStatement s) throws ParseException {
+  final public void ForControl(ForStatement s) throws ParseException {
   ForVariableDefinition d;
   Expression e;
     d = ForVariableDefinition();
@@ -2211,7 +2211,7 @@ void PackageImportReference():
     }
   }
 
-  static final public ForVariableDefinition ForVariableDefinition() throws ParseException {
+  final public ForVariableDefinition ForVariableDefinition() throws ParseException {
   String n;
   Expression e1;
   Expression e2 = null;
@@ -2232,7 +2232,7 @@ void PackageImportReference():
   }
 
 /* BREAK STATEMENTS */
-  static final public BreakStatement BreakStatement() throws ParseException {
+  final public BreakStatement BreakStatement() throws ParseException {
     jj_consume_token(BREAK);
     jj_consume_token(SEMICOLON);
     {if (true) return new BreakStatement();}
@@ -2240,7 +2240,7 @@ void PackageImportReference():
   }
 
 /* RETURN STATEMENTS */
-  static final public ReturnStatement ReturnStatement() throws ParseException {
+  final public ReturnStatement ReturnStatement() throws ParseException {
   Expression e;
     jj_consume_token(RETURN);
     e = Expression();
@@ -2250,7 +2250,7 @@ void PackageImportReference():
   }
 
 /* ACCEPT STATEMENTS */
-  static final public AcceptStatement AcceptStatement() throws ParseException {
+  final public AcceptStatement AcceptStatement() throws ParseException {
   AcceptStatement s;
   AcceptBlock c;
     /* ORIGINAL
@@ -2284,7 +2284,7 @@ void SimpleAcceptStatement():
 */
 
 /* ADDED */
-  static final public AcceptStatement SimpleAcceptStatementCompletion(AcceptBlock b) throws ParseException {
+  final public AcceptStatement SimpleAcceptStatementCompletion(AcceptBlock b) throws ParseException {
   AcceptStatement s = new AcceptStatement();
     jj_consume_token(SEMICOLON);
     s.addAcceptBlock(b);
@@ -2301,7 +2301,7 @@ void CompoundAcceptStatement():
 */
 
 /* ADDED */
-  static final public AcceptStatement CompoundAcceptStatementCompletion(AcceptBlock a1) throws ParseException {
+  final public AcceptStatement CompoundAcceptStatementCompletion(AcceptBlock a1) throws ParseException {
   AcceptStatement s = new AcceptStatement();
   Block b;
   AcceptBlock a;
@@ -2325,7 +2325,7 @@ void CompoundAcceptStatement():
     throw new Error("Missing return statement in function");
   }
 
-  static final public AcceptBlock AcceptBlock() throws ParseException {
+  final public AcceptBlock AcceptBlock() throws ParseException {
   AcceptBlock a;
   Block b;
     a = AcceptClause();
@@ -2335,7 +2335,7 @@ void CompoundAcceptStatement():
     throw new Error("Missing return statement in function");
   }
 
-  static final public AcceptBlock AcceptClause() throws ParseException {
+  final public AcceptBlock AcceptClause() throws ParseException {
   String n = null;
   QualifiedNameList nl;
     jj_consume_token(ACCEPT);
@@ -2353,7 +2353,7 @@ void CompoundAcceptStatement():
   }
 
 /* CLASSIFY STATEMENTS */
-  static final public ClassifyStatement ClassifyStatement() throws ParseException {
+  final public ClassifyStatement ClassifyStatement() throws ParseException {
   ClassifyStatement s;
   Expression e;
     jj_consume_token(CLASSIFY);
@@ -2365,7 +2365,7 @@ void CompoundAcceptStatement():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void ClassificationClause(ClassifyStatement s) throws ParseException {
+  final public void ClassificationClause(ClassifyStatement s) throws ParseException {
   QualifiedNameList nl;
     if (jj_2_25(2)) {
       nl = ClassificationFromClause();
@@ -2403,7 +2403,7 @@ void CompoundAcceptStatement():
     }
   }
 
-  static final public QualifiedNameList ClassificationFromClause() throws ParseException {
+  final public QualifiedNameList ClassificationFromClause() throws ParseException {
   QualifiedNameList nl;
     jj_consume_token(FROM);
     nl = QualifiedNameList();
@@ -2411,7 +2411,7 @@ void CompoundAcceptStatement():
     throw new Error("Missing return statement in function");
   }
 
-  static final public QualifiedNameList ClassificationToClause() throws ParseException {
+  final public QualifiedNameList ClassificationToClause() throws ParseException {
   QualifiedNameList nl;
     jj_consume_token(TO);
     nl = QualifiedNameList();
@@ -2419,7 +2419,7 @@ void CompoundAcceptStatement():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void ReclassifyAllClause() throws ParseException {
+  final public void ReclassifyAllClause() throws ParseException {
     jj_consume_token(FROM);
     jj_consume_token(STAR);
   }
@@ -2427,7 +2427,7 @@ void CompoundAcceptStatement():
 /***************
  * EXPRESSIONS *
  ***************/
-  static final public Expression Expression() throws ParseException {
+  final public Expression Expression() throws ParseException {
   QualifiedName n;
   Expression e1;
   Expression e2;
@@ -2468,7 +2468,7 @@ void CompoundAcceptStatement():
   }
 
 /* ADDED */
-  static final public Expression ExpressionCompletion(Expression c) throws ParseException {
+  final public Expression ExpressionCompletion(Expression c) throws ParseException {
   Expression i;
   Expression e;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2485,7 +2485,7 @@ void CompoundAcceptStatement():
   }
 
 /* ADDED */
-  static final public Expression FeatureExpressionCompletion(FeatureReference f) throws ParseException {
+  final public Expression FeatureExpressionCompletion(FeatureReference f) throws ParseException {
   Expression e1;
   Expression e2;
     if (jj_2_28(2147483647)) {
@@ -2510,7 +2510,7 @@ void CompoundAcceptStatement():
   }
 
 /* ADDED */
-  static final public Expression IndexFeatureExpressionCompletion(FeatureReference f, Expression i) throws ParseException {
+  final public Expression IndexFeatureExpressionCompletion(FeatureReference f, Expression i) throws ParseException {
   Expression e1;
   Expression e2;
     if (jj_2_29(2147483647)) {
@@ -2531,7 +2531,7 @@ void CompoundAcceptStatement():
   }
 
 /* ADDED */
-  static final public Expression NonIndexExpressionCompletion(Expression c) throws ParseException {
+  final public Expression NonIndexExpressionCompletion(Expression c) throws ParseException {
   Expression e1;
   FeatureReference f;
   Expression e2;
@@ -2586,7 +2586,7 @@ void PrimaryExpression():
 */
 
 /* ADDED */
-  static final public Expression BaseExpression() throws ParseException {
+  final public Expression BaseExpression() throws ParseException {
   Expression e;
   QualifiedName n;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2649,7 +2649,7 @@ void PrimaryExpression():
   }
 
 /* LITERAL EXPRESSIONS */
-  static final public Expression LiteralExpression() throws ParseException {
+  final public Expression LiteralExpression() throws ParseException {
   Token t;
   Expression e;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2679,7 +2679,7 @@ void PrimaryExpression():
   }
 
 /* NAME EXPRESSIONS */
-  static final public Expression NameExpression() throws ParseException {
+  final public Expression NameExpression() throws ParseException {
   QualifiedName n;
     n = QualifiedName();
     {if (true) return new NameExpression(n);}
@@ -2687,14 +2687,14 @@ void PrimaryExpression():
   }
 
 /* THIS EXPRESSIONS */
-  static final public Expression ThisExpression() throws ParseException {
+  final public Expression ThisExpression() throws ParseException {
     jj_consume_token(THIS);
     {if (true) return new ThisExpression();}
     throw new Error("Missing return statement in function");
   }
 
 /* PARENTHESIZED EXPRESSIONS */
-  static final public Expression ParenthesizedExpression() throws ParseException {
+  final public Expression ParenthesizedExpression() throws ParseException {
   Expression e;
     jj_consume_token(LPAREN);
     e = Expression();
@@ -2720,7 +2720,7 @@ void FeatureReference():
 */
 
 /* ADDED */
-  static final public FeatureReference Feature(Expression c) throws ParseException {
+  final public FeatureReference Feature(Expression c) throws ParseException {
   String n;
     jj_consume_token(DOT);
     n = Name();
@@ -2747,7 +2747,7 @@ void InvocationTarget():
 | FeatureInvocationTarget()
 }
 */
-  static final public Tuple Tuple() throws ParseException {
+  final public Tuple Tuple() throws ParseException {
   Tuple t;
     if (jj_2_34(2147483647)) {
       t = NamedTuple();
@@ -2766,7 +2766,7 @@ void InvocationTarget():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Tuple PositionalTuple() throws ParseException {
+  final public Tuple PositionalTuple() throws ParseException {
   ExpressionList el = new ExpressionList();
     jj_consume_token(LPAREN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2802,7 +2802,7 @@ void InvocationTarget():
     throw new Error("Missing return statement in function");
   }
 
-  static final public void ExpressionList(ExpressionList el) throws ParseException {
+  final public void ExpressionList(ExpressionList el) throws ParseException {
   Expression e;
     e = Expression();
                      el.add(e);
@@ -2822,7 +2822,7 @@ void InvocationTarget():
     }
   }
 
-  static final public Tuple NamedTuple() throws ParseException {
+  final public Tuple NamedTuple() throws ParseException {
   NamedTuple t = new NamedTuple();
   NamedExpression n;
     jj_consume_token(LPAREN);
@@ -2847,7 +2847,7 @@ void InvocationTarget():
     throw new Error("Missing return statement in function");
   }
 
-  static final public NamedExpression NamedExpression() throws ParseException {
+  final public NamedExpression NamedExpression() throws ParseException {
   String n;
   Expression e;
     n = Name();
@@ -2866,7 +2866,7 @@ void BehaviorInvocationTarget():
 */
 
 /* ADDED */
-  static final public Expression BehaviorInvocation(QualifiedName n) throws ParseException {
+  final public Expression BehaviorInvocation(QualifiedName n) throws ParseException {
   Tuple t;
     t = Tuple();
     {if (true) return new BehaviorInvocationExpression(n, t);}
@@ -2882,7 +2882,7 @@ void FeatureInvocationTarget():
 */
 
 /* ADDED */
-  static final public Expression FeatureInvocation(FeatureReference f) throws ParseException {
+  final public Expression FeatureInvocation(FeatureReference f) throws ParseException {
   Tuple t;
     t = Tuple();
     {if (true) return new FeatureInvocationExpression(f, t);}
@@ -2898,7 +2898,7 @@ void SuperInvocationTarget():
 */
 
 /* ADDED */
-  static final public Expression SuperInvocation() throws ParseException {
+  final public Expression SuperInvocation() throws ParseException {
   QualifiedName n;
   Tuple t;
     jj_consume_token(DOT);
@@ -2909,7 +2909,7 @@ void SuperInvocationTarget():
   }
 
 /* INSTANCE CREATION EXPRESSIONS */
-  static final public Expression InstanceCreationExpression() throws ParseException {
+  final public Expression InstanceCreationExpression() throws ParseException {
   QualifiedName n;
   Tuple t;
     jj_consume_token(NEW);
@@ -2931,7 +2931,7 @@ void InstanceDestructionExpression():
 */
 
 /* ADDED */
-  static final public Expression DestroyInvocation(Expression c) throws ParseException {
+  final public Expression DestroyInvocation(Expression c) throws ParseException {
   Tuple t;
     jj_consume_token(DOT);
     jj_consume_token(DESTROY);
@@ -2941,7 +2941,7 @@ void InstanceDestructionExpression():
   }
 
 /* ADDED */
-  static final public Expression SuperDestroyInvocation() throws ParseException {
+  final public Expression SuperDestroyInvocation() throws ParseException {
   Tuple t;
     jj_consume_token(DOT);
     jj_consume_token(DESTROY);
@@ -2951,7 +2951,7 @@ void InstanceDestructionExpression():
   }
 
 /* REDUCTION EXPRESSIONS */
-  static final public Expression ReductionExpression() throws ParseException {
+  final public Expression ReductionExpression() throws ParseException {
   String op;
   QualifiedName n;
   Expression e;
@@ -2964,7 +2964,7 @@ void InstanceDestructionExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String ReductionOperator() throws ParseException {
+  final public String ReductionOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case HASH:
@@ -2983,7 +2983,7 @@ void InstanceDestructionExpression():
   }
 
 /* COLLECTION EXPRESSIONS */
-  static final public Expression CollectionExpression() throws ParseException {
+  final public Expression CollectionExpression() throws ParseException {
   Expression e;
     /* ORIGINAL
       PrimaryExpression()
@@ -3009,7 +3009,7 @@ void InstanceDestructionExpression():
   }
 
 /* ADDED */
-  static final public Expression BaseCollectionExpression() throws ParseException {
+  final public Expression BaseCollectionExpression() throws ParseException {
   Expression e;
     if (jj_2_36(2147483647)) {
       e = ClassExtentExpression();
@@ -3043,7 +3043,7 @@ void InstanceDestructionExpression():
   }
 
 /* ADDED */
-  static final public Expression CollectionModifier(Expression c) throws ParseException {
+  final public Expression CollectionModifier(Expression c) throws ParseException {
   Expression i;
   Expression e;
     if (jj_2_39(2147483647)) {
@@ -3084,7 +3084,7 @@ void InstanceDestructionExpression():
   }
 
 /* CLASS EXTENT EXPRESSIONS */
-  static final public Expression ClassExtentExpression() throws ParseException {
+  final public Expression ClassExtentExpression() throws ParseException {
   QualifiedName n;
     n = QualifiedName();
     jj_consume_token(DOT);
@@ -3096,7 +3096,7 @@ void InstanceDestructionExpression():
   }
 
 /* COLLECTION VALUE EXPRESSIONS */
-  static final public Expression CollectionValueExpression() throws ParseException {
+  final public Expression CollectionValueExpression() throws ParseException {
   QualifiedName t;
   TypedElementDeclaration d = new TypedElementDeclaration();
   CollectionElements c = null;
@@ -3161,7 +3161,7 @@ void InstanceDestructionExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public CollectionElements CollectionElements() throws ParseException {
+  final public CollectionElements CollectionElements() throws ParseException {
   CollectionElements c;
   Expression e1;
   Expression e2;
@@ -3215,7 +3215,7 @@ void CollectionAccessExpression():
   CollectionExpression() Index()
 }
 */
-  static final public Expression Index() throws ParseException {
+  final public Expression Index() throws ParseException {
   Expression e;
     jj_consume_token(LBRACKET);
     e = Expression();
@@ -3235,7 +3235,7 @@ void CollectionOperationExpression():
 */
 
 /* ADDED */
-  static final public Expression CollectionOperation(Expression c) throws ParseException {
+  final public Expression CollectionOperation(Expression c) throws ParseException {
   Token op;
   Tuple t;
     jj_consume_token(ARROW);
@@ -3245,7 +3245,7 @@ void CollectionOperationExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Tuple CollectionOperationTuple() throws ParseException {
+  final public Tuple CollectionOperationTuple() throws ParseException {
   Tuple t;
     if (jj_2_41(2147483647)) {
       t = IndexedNamedTuple();
@@ -3264,7 +3264,7 @@ void CollectionOperationExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public NamedTuple IndexedNamedTuple() throws ParseException {
+  final public NamedTuple IndexedNamedTuple() throws ParseException {
   NamedTuple t = new NamedTuple();
   NamedExpression e;
     jj_consume_token(LPAREN);
@@ -3289,7 +3289,7 @@ void CollectionOperationExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public NamedExpression IndexedNamedExpression() throws ParseException {
+  final public NamedExpression IndexedNamedExpression() throws ParseException {
   String n;
   Expression i = null;
   Expression e;
@@ -3319,7 +3319,7 @@ void CollectionExpansionExpression():
 */
 
 /* ADDED */
-  static final public Expression CollectionExpansion(Expression c) throws ParseException {
+  final public Expression CollectionExpansion(Expression c) throws ParseException {
   Token op;
   String n;
   Tuple t;
@@ -3332,7 +3332,7 @@ void CollectionExpansionExpression():
   }
 
 /* POSTFIX EXPRESSIONS */
-  static final public Expression PostfixExpression() throws ParseException {
+  final public Expression PostfixExpression() throws ParseException {
   Expression c;
   Expression e;
     /* ORIGINAL
@@ -3346,7 +3346,7 @@ void CollectionExpansionExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression PostfixOperation(Expression c) throws ParseException {
+  final public Expression PostfixOperation(Expression c) throws ParseException {
   Expression e = c;
   String op;
     label_24:
@@ -3374,7 +3374,7 @@ void PostfixedExpression():
   PostfixExpression() AffixOperator()
 }
 */
-  static final public String AffixOperator() throws ParseException {
+  final public String AffixOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INCR:
@@ -3393,7 +3393,7 @@ void PostfixedExpression():
   }
 
 /* UNARY EXPRESSIONS */
-  static final public Expression UnaryExpression() throws ParseException {
+  final public Expression UnaryExpression() throws ParseException {
   Expression e;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INCR:
@@ -3432,7 +3432,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression NonNumericUnaryExpression() throws ParseException {
+  final public Expression NonNumericUnaryExpression() throws ParseException {
   Expression e;
     if (jj_2_42(2147483647)) {
       e = CastExpression();
@@ -3472,7 +3472,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public void CastLookahead() throws ParseException {
+  final public void CastLookahead() throws ParseException {
     jj_consume_token(LPAREN);
     TypeName();
     jj_consume_token(RPAREN);
@@ -3516,7 +3516,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression NonPostfixUnaryExpression() throws ParseException {
+  final public Expression NonPostfixUnaryExpression() throws ParseException {
   Expression e;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INCR:
@@ -3545,7 +3545,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public PrefixExpression PrefixedExpression() throws ParseException {
+  final public PrefixExpression PrefixedExpression() throws ParseException {
   String op;
   Expression e;
     op = AffixOperator();
@@ -3554,7 +3554,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression BooleanNegationExpression() throws ParseException {
+  final public Expression BooleanNegationExpression() throws ParseException {
   Expression e;
     jj_consume_token(BANG);
     e = UnaryExpression();
@@ -3562,7 +3562,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression NumericUnaryExpression() throws ParseException {
+  final public Expression NumericUnaryExpression() throws ParseException {
   String op;
   Expression e;
     op = NumericUnaryOperator();
@@ -3571,7 +3571,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String NumericUnaryOperator() throws ParseException {
+  final public String NumericUnaryOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PLUS:
@@ -3589,7 +3589,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression IsolationExpression() throws ParseException {
+  final public Expression IsolationExpression() throws ParseException {
   Expression e;
     jj_consume_token(DOLLAR);
     e = UnaryExpression();
@@ -3597,7 +3597,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression CastExpression() throws ParseException {
+  final public Expression CastExpression() throws ParseException {
   QualifiedName t;
   Expression e;
     jj_consume_token(LPAREN);
@@ -3609,7 +3609,7 @@ void PostfixedExpression():
   }
 
 /* MULTIPLICATIVE OPERATORS */
-  static final public Expression MultiplicativeExpression() throws ParseException {
+  final public Expression MultiplicativeExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -3623,7 +3623,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression MultiplicativeExpressionCompletion(Expression u) throws ParseException {
+  final public Expression MultiplicativeExpressionCompletion(Expression u) throws ParseException {
   Expression e1 = u;
   String op;
   Expression e2;
@@ -3647,7 +3647,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String MultiplicativeOperator() throws ParseException {
+  final public String MultiplicativeOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STAR:
@@ -3669,7 +3669,7 @@ void PostfixedExpression():
   }
 
 /* ADDITIVE OPERATORS */
-  static final public Expression AdditiveExpression() throws ParseException {
+  final public Expression AdditiveExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -3683,7 +3683,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression AdditiveExpressionCompletion(Expression u) throws ParseException {
+  final public Expression AdditiveExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   String op;
   Expression e2;
@@ -3707,7 +3707,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String AdditiveOperator() throws ParseException {
+  final public String AdditiveOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PLUS:
@@ -3726,7 +3726,7 @@ void PostfixedExpression():
   }
 
 /* RELATIONAL OPERATORS */
-  static final public Expression RelationalExpression() throws ParseException {
+  final public Expression RelationalExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -3740,7 +3740,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression RelationalExpressionCompletion(Expression u) throws ParseException {
+  final public Expression RelationalExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   String op;
   Expression e2;
@@ -3766,7 +3766,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String RelationalOperator() throws ParseException {
+  final public String RelationalOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LT:
@@ -3790,7 +3790,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression ClassificationExpression() throws ParseException {
+  final public Expression ClassificationExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -3803,7 +3803,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression ClassificationExpressionCompletion(Expression u) throws ParseException {
+  final public Expression ClassificationExpressionCompletion(Expression u) throws ParseException {
   Expression e;
   String op;
   QualifiedName n;
@@ -3823,7 +3823,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String ClassificationOperator() throws ParseException {
+  final public String ClassificationOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INSTANCEOF:
@@ -3842,7 +3842,7 @@ void PostfixedExpression():
   }
 
 /* EQUALITY OPERATORS */
-  static final public Expression EqualityExpression() throws ParseException {
+  final public Expression EqualityExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -3856,7 +3856,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression EqualityExpressionCompletion(Expression u) throws ParseException {
+  final public Expression EqualityExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   String op;
   Expression e2;
@@ -3880,7 +3880,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String EqualityOperator() throws ParseException {
+  final public String EqualityOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case EQ:
@@ -3899,7 +3899,7 @@ void PostfixedExpression():
   }
 
 /* LOGICAL OPERATORS */
-  static final public Expression AndExpression() throws ParseException {
+  final public Expression AndExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -3913,7 +3913,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression AndExpressionCompletion(Expression u) throws ParseException {
+  final public Expression AndExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   Expression e2;
     e1 = EqualityExpressionCompletion(u);
@@ -3935,7 +3935,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression ExclusiveOrExpression() throws ParseException {
+  final public Expression ExclusiveOrExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -3949,7 +3949,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression ExclusiveOrExpressionCompletion(Expression u) throws ParseException {
+  final public Expression ExclusiveOrExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   Expression e2;
     e1 = AndExpressionCompletion(u);
@@ -3971,7 +3971,7 @@ void PostfixedExpression():
     throw new Error("Missing return statement in function");
   }
 
-  static final public Expression InclusiveOrExpression() throws ParseException {
+  final public Expression InclusiveOrExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -3985,7 +3985,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression InclusiveOrExpressionCompletion(Expression u) throws ParseException {
+  final public Expression InclusiveOrExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   Expression e2;
     e1 = ExclusiveOrExpressionCompletion(u);
@@ -4008,7 +4008,7 @@ void PostfixedExpression():
   }
 
 /* CONDITIONAL-AND OPERATOR */
-  static final public Expression ConditionalAndExpression() throws ParseException {
+  final public Expression ConditionalAndExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -4022,7 +4022,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression ConditionalAndExpressionCompletion(Expression u) throws ParseException {
+  final public Expression ConditionalAndExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   Expression e2;
     e1 = InclusiveOrExpressionCompletion(u);
@@ -4045,7 +4045,7 @@ void PostfixedExpression():
   }
 
 /* CONDITIONAL-OR OPERATOR */
-  static final public Expression ConditionalOrExpression() throws ParseException {
+  final public Expression ConditionalOrExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -4059,7 +4059,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression ConditionalOrExpressionCompletion(Expression u) throws ParseException {
+  final public Expression ConditionalOrExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   Expression e2;
     e1 = ConditionalAndExpressionCompletion(u);
@@ -4082,7 +4082,7 @@ void PostfixedExpression():
   }
 
 /* CONDITIONAL-TEST OPERATOR */
-  static final public Expression ConditionalExpression() throws ParseException {
+  final public Expression ConditionalExpression() throws ParseException {
   Expression u;
   Expression e;
     /* ORIGINAL
@@ -4096,7 +4096,7 @@ void PostfixedExpression():
   }
 
 /* ADDED */
-  static final public Expression ConditionalExpressionCompletion(Expression u) throws ParseException {
+  final public Expression ConditionalExpressionCompletion(Expression u) throws ParseException {
   Expression e1;
   Expression e2;
   Expression e3;
@@ -4135,7 +4135,7 @@ void LeftHandSide():
 */
 
 /* ADDED */
-  static final public Expression Assignment(LeftHandSide lhs) throws ParseException {
+  final public Expression Assignment(LeftHandSide lhs) throws ParseException {
   String op;
   Expression e;
     op = AssignmentOperator();
@@ -4144,7 +4144,7 @@ void LeftHandSide():
     throw new Error("Missing return statement in function");
   }
 
-  static final public String AssignmentOperator() throws ParseException {
+  final public String AssignmentOperator() throws ParseException {
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ASSIGN:
@@ -4183,301 +4183,301 @@ void LeftHandSide():
     throw new Error("Missing return statement in function");
   }
 
-  static private boolean jj_2_1(int xla) {
+  private boolean jj_2_1(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_1(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(0, xla); }
   }
 
-  static private boolean jj_2_2(int xla) {
+  private boolean jj_2_2(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_2(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(1, xla); }
   }
 
-  static private boolean jj_2_3(int xla) {
+  private boolean jj_2_3(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_3(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(2, xla); }
   }
 
-  static private boolean jj_2_4(int xla) {
+  private boolean jj_2_4(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_4(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(3, xla); }
   }
 
-  static private boolean jj_2_5(int xla) {
+  private boolean jj_2_5(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_5(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(4, xla); }
   }
 
-  static private boolean jj_2_6(int xla) {
+  private boolean jj_2_6(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_6(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(5, xla); }
   }
 
-  static private boolean jj_2_7(int xla) {
+  private boolean jj_2_7(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_7(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(6, xla); }
   }
 
-  static private boolean jj_2_8(int xla) {
+  private boolean jj_2_8(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_8(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(7, xla); }
   }
 
-  static private boolean jj_2_9(int xla) {
+  private boolean jj_2_9(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_9(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(8, xla); }
   }
 
-  static private boolean jj_2_10(int xla) {
+  private boolean jj_2_10(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_10(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(9, xla); }
   }
 
-  static private boolean jj_2_11(int xla) {
+  private boolean jj_2_11(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_11(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(10, xla); }
   }
 
-  static private boolean jj_2_12(int xla) {
+  private boolean jj_2_12(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_12(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(11, xla); }
   }
 
-  static private boolean jj_2_13(int xla) {
+  private boolean jj_2_13(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_13(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(12, xla); }
   }
 
-  static private boolean jj_2_14(int xla) {
+  private boolean jj_2_14(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_14(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(13, xla); }
   }
 
-  static private boolean jj_2_15(int xla) {
+  private boolean jj_2_15(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_15(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(14, xla); }
   }
 
-  static private boolean jj_2_16(int xla) {
+  private boolean jj_2_16(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_16(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(15, xla); }
   }
 
-  static private boolean jj_2_17(int xla) {
+  private boolean jj_2_17(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_17(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(16, xla); }
   }
 
-  static private boolean jj_2_18(int xla) {
+  private boolean jj_2_18(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_18(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(17, xla); }
   }
 
-  static private boolean jj_2_19(int xla) {
+  private boolean jj_2_19(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_19(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(18, xla); }
   }
 
-  static private boolean jj_2_20(int xla) {
+  private boolean jj_2_20(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_20(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(19, xla); }
   }
 
-  static private boolean jj_2_21(int xla) {
+  private boolean jj_2_21(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_21(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(20, xla); }
   }
 
-  static private boolean jj_2_22(int xla) {
+  private boolean jj_2_22(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_22(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(21, xla); }
   }
 
-  static private boolean jj_2_23(int xla) {
+  private boolean jj_2_23(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_23(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(22, xla); }
   }
 
-  static private boolean jj_2_24(int xla) {
+  private boolean jj_2_24(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_24(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(23, xla); }
   }
 
-  static private boolean jj_2_25(int xla) {
+  private boolean jj_2_25(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_25(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(24, xla); }
   }
 
-  static private boolean jj_2_26(int xla) {
+  private boolean jj_2_26(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_26(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(25, xla); }
   }
 
-  static private boolean jj_2_27(int xla) {
+  private boolean jj_2_27(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_27(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(26, xla); }
   }
 
-  static private boolean jj_2_28(int xla) {
+  private boolean jj_2_28(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_28(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(27, xla); }
   }
 
-  static private boolean jj_2_29(int xla) {
+  private boolean jj_2_29(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_29(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(28, xla); }
   }
 
-  static private boolean jj_2_30(int xla) {
+  private boolean jj_2_30(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_30(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(29, xla); }
   }
 
-  static private boolean jj_2_31(int xla) {
+  private boolean jj_2_31(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_31(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(30, xla); }
   }
 
-  static private boolean jj_2_32(int xla) {
+  private boolean jj_2_32(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_32(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(31, xla); }
   }
 
-  static private boolean jj_2_33(int xla) {
+  private boolean jj_2_33(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_33(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(32, xla); }
   }
 
-  static private boolean jj_2_34(int xla) {
+  private boolean jj_2_34(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_34(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(33, xla); }
   }
 
-  static private boolean jj_2_35(int xla) {
+  private boolean jj_2_35(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_35(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(34, xla); }
   }
 
-  static private boolean jj_2_36(int xla) {
+  private boolean jj_2_36(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_36(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(35, xla); }
   }
 
-  static private boolean jj_2_37(int xla) {
+  private boolean jj_2_37(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_37(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(36, xla); }
   }
 
-  static private boolean jj_2_38(int xla) {
+  private boolean jj_2_38(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_38(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(37, xla); }
   }
 
-  static private boolean jj_2_39(int xla) {
+  private boolean jj_2_39(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_39(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(38, xla); }
   }
 
-  static private boolean jj_2_40(int xla) {
+  private boolean jj_2_40(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_40(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(39, xla); }
   }
 
-  static private boolean jj_2_41(int xla) {
+  private boolean jj_2_41(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_41(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(40, xla); }
   }
 
-  static private boolean jj_2_42(int xla) {
+  private boolean jj_2_42(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_42(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(41, xla); }
   }
 
-  static private boolean jj_3R_240() {
+  private boolean jj_3R_240() {
     if (jj_3R_115()) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -4488,17 +4488,17 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_222() {
+  private boolean jj_3R_222() {
     if (jj_3R_114()) return true;
     return false;
   }
 
-  static private boolean jj_3R_223() {
+  private boolean jj_3R_223() {
     if (jj_3R_240()) return true;
     return false;
   }
 
-  static private boolean jj_3R_196() {
+  private boolean jj_3R_196() {
     if (jj_3R_92()) return true;
     if (jj_scan_token(LBRACKET)) return true;
     Token xsp;
@@ -4512,7 +4512,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_183() {
+  private boolean jj_3R_183() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_196()) {
@@ -4522,23 +4522,23 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_38() {
+  private boolean jj_3_38() {
     if (jj_3R_62()) return true;
     return false;
   }
 
-  static private boolean jj_3_23() {
+  private boolean jj_3_23() {
     if (jj_scan_token(ELSE)) return true;
     if (jj_scan_token(IF)) return true;
     return false;
   }
 
-  static private boolean jj_3R_93() {
+  private boolean jj_3R_93() {
     if (jj_3R_114()) return true;
     return false;
   }
 
-  static private boolean jj_3R_182() {
+  private boolean jj_3R_182() {
     if (jj_3R_54()) return true;
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(ALL_INSTANCES)) return true;
@@ -4547,50 +4547,50 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_37() {
+  private boolean jj_3R_37() {
     if (jj_3R_42()) return true;
     return false;
   }
 
-  static private boolean jj_3_40() {
+  private boolean jj_3_40() {
     if (jj_scan_token(ARROW)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(LPAREN)) return true;
     return false;
   }
 
-  static private boolean jj_3_39() {
+  private boolean jj_3_39() {
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(DESTROY)) return true;
     return false;
   }
 
-  static private boolean jj_3R_91() {
+  private boolean jj_3R_91() {
     if (jj_3R_94()) return true;
     return false;
   }
 
-  static private boolean jj_3R_90() {
+  private boolean jj_3R_90() {
     if (jj_3R_112()) return true;
     return false;
   }
 
-  static private boolean jj_3R_137() {
+  private boolean jj_3R_137() {
     if (jj_3R_154()) return true;
     return false;
   }
 
-  static private boolean jj_3R_89() {
+  private boolean jj_3R_89() {
     if (jj_3R_111()) return true;
     return false;
   }
 
-  static private boolean jj_3R_68() {
+  private boolean jj_3R_68() {
     if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_88() {
+  private boolean jj_3R_88() {
     if (jj_3R_59()) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -4598,7 +4598,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_42() {
+  private boolean jj_3R_42() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_68()) jj_scanpos = xsp;
@@ -4610,12 +4610,12 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_87() {
+  private boolean jj_3R_87() {
     if (jj_3R_110()) return true;
     return false;
   }
 
-  static private boolean jj_3R_60() {
+  private boolean jj_3R_60() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_87()) {
@@ -4634,17 +4634,17 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_15() {
+  private boolean jj_3_15() {
     if (jj_3R_48()) return true;
     return false;
   }
 
-  static private boolean jj_3_13() {
+  private boolean jj_3_13() {
     if (jj_3R_46()) return true;
     return false;
   }
 
-  static private boolean jj_3_37() {
+  private boolean jj_3_37() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_61()) {
@@ -4654,7 +4654,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_61() {
+  private boolean jj_3R_61() {
     if (jj_3R_92()) return true;
     if (jj_scan_token(LBRACKET)) return true;
     Token xsp;
@@ -4665,34 +4665,34 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_36() {
+  private boolean jj_3_36() {
     if (jj_3R_54()) return true;
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(ALL_INSTANCES)) return true;
     return false;
   }
 
-  static private boolean jj_3R_168() {
+  private boolean jj_3R_168() {
     if (jj_3R_184()) return true;
     return false;
   }
 
-  static private boolean jj_3_14() {
+  private boolean jj_3_14() {
     if (jj_3R_47()) return true;
     return false;
   }
 
-  static private boolean jj_3R_167() {
+  private boolean jj_3R_167() {
     if (jj_3R_183()) return true;
     return false;
   }
 
-  static private boolean jj_3R_166() {
+  private boolean jj_3R_166() {
     if (jj_3R_182()) return true;
     return false;
   }
 
-  static private boolean jj_3R_55() {
+  private boolean jj_3R_55() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(95)) {
@@ -4723,7 +4723,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_152() {
+  private boolean jj_3R_152() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_166()) {
@@ -4736,18 +4736,18 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_149() {
+  private boolean jj_3R_149() {
     if (jj_3R_55()) return true;
     if (jj_3R_115()) return true;
     return false;
   }
 
-  static private boolean jj_3_35() {
+  private boolean jj_3_35() {
     if (jj_3R_60()) return true;
     return false;
   }
 
-  static private boolean jj_3R_249() {
+  private boolean jj_3R_249() {
     if (jj_3R_152()) return true;
     Token xsp;
     while (true) {
@@ -4757,18 +4757,18 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_36() {
+  private boolean jj_3R_36() {
     if (jj_3R_41()) return true;
     return false;
   }
 
-  static private boolean jj_3R_186() {
+  private boolean jj_3R_186() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_54()) return true;
     return false;
   }
 
-  static private boolean jj_3R_165() {
+  private boolean jj_3R_165() {
     if (jj_scan_token(HOOK)) return true;
     if (jj_3R_115()) return true;
     if (jj_scan_token(COLON)) return true;
@@ -4776,7 +4776,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_83() {
+  private boolean jj_3R_83() {
     if (jj_3R_54()) return true;
     Token xsp;
     while (true) {
@@ -4786,7 +4786,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_118() {
+  private boolean jj_3R_118() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(127)) {
@@ -4796,7 +4796,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_151() {
+  private boolean jj_3R_151() {
     if (jj_3R_164()) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -4804,7 +4804,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_230() {
+  private boolean jj_3R_230() {
     if (jj_3R_118()) return true;
     if (jj_3R_54()) return true;
     if (jj_scan_token(LPAREN)) return true;
@@ -4813,29 +4813,29 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_154() {
+  private boolean jj_3R_154() {
     if (jj_scan_token(SPECIALIZES)) return true;
     if (jj_3R_83()) return true;
     return false;
   }
 
-  static private boolean jj_3R_181() {
+  private boolean jj_3R_181() {
     if (jj_3R_191()) return true;
     if (jj_3R_151()) return true;
     return false;
   }
 
-  static private boolean jj_3R_136() {
+  private boolean jj_3R_136() {
     if (jj_3R_154()) return true;
     return false;
   }
 
-  static private boolean jj_3R_67() {
+  private boolean jj_3R_67() {
     if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_41() {
+  private boolean jj_3R_41() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_67()) jj_scanpos = xsp;
@@ -4846,25 +4846,25 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_241() {
+  private boolean jj_3R_241() {
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(DESTROY)) return true;
     if (jj_3R_82()) return true;
     return false;
   }
 
-  static private boolean jj_3R_180() {
+  private boolean jj_3R_180() {
     if (jj_scan_token(SC_OR)) return true;
     if (jj_3R_195()) return true;
     return false;
   }
 
-  static private boolean jj_3R_101() {
+  private boolean jj_3R_101() {
     if (jj_3R_121()) return true;
     return false;
   }
 
-  static private boolean jj_3R_164() {
+  private boolean jj_3R_164() {
     if (jj_3R_179()) return true;
     Token xsp;
     while (true) {
@@ -4874,60 +4874,60 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_110() {
+  private boolean jj_3R_110() {
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(DESTROY)) return true;
     if (jj_3R_82()) return true;
     return false;
   }
 
-  static private boolean jj_3R_100() {
+  private boolean jj_3R_100() {
     if (jj_3R_120()) return true;
     return false;
   }
 
-  static private boolean jj_3R_46() {
+  private boolean jj_3R_46() {
     if (jj_3R_72()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3_12() {
+  private boolean jj_3_12() {
     if (jj_3R_45()) return true;
     return false;
   }
 
-  static private boolean jj_3_11() {
+  private boolean jj_3_11() {
     if (jj_3R_44()) return true;
     return false;
   }
 
-  static private boolean jj_3_10() {
+  private boolean jj_3_10() {
     if (jj_3R_43()) return true;
     return false;
   }
 
-  static private boolean jj_3R_74() {
+  private boolean jj_3R_74() {
     if (jj_3R_103()) return true;
     return false;
   }
 
-  static private boolean jj_3_9() {
+  private boolean jj_3_9() {
     if (jj_3R_42()) return true;
     return false;
   }
 
-  static private boolean jj_3_8() {
+  private boolean jj_3_8() {
     if (jj_3R_41()) return true;
     return false;
   }
 
-  static private boolean jj_3R_73() {
+  private boolean jj_3R_73() {
     if (jj_3R_102()) return true;
     return false;
   }
 
-  static private boolean jj_3R_72() {
+  private boolean jj_3R_72() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_8()) {
@@ -4952,20 +4952,20 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_229() {
+  private boolean jj_3R_229() {
     if (jj_scan_token(NEW)) return true;
     if (jj_3R_54()) return true;
     if (jj_3R_82()) return true;
     return false;
   }
 
-  static private boolean jj_3R_194() {
+  private boolean jj_3R_194() {
     if (jj_scan_token(SC_AND)) return true;
     if (jj_3R_221()) return true;
     return false;
   }
 
-  static private boolean jj_3R_179() {
+  private boolean jj_3R_179() {
     if (jj_3R_193()) return true;
     Token xsp;
     while (true) {
@@ -4975,39 +4975,39 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_7() {
+  private boolean jj_3_7() {
     if (jj_3R_40()) return true;
     return false;
   }
 
-  static private boolean jj_3_6() {
+  private boolean jj_3_6() {
     if (jj_3R_39()) return true;
     return false;
   }
 
-  static private boolean jj_3_5() {
+  private boolean jj_3_5() {
     if (jj_3R_38()) return true;
     return false;
   }
 
-  static private boolean jj_3R_242() {
+  private boolean jj_3R_242() {
     if (jj_scan_token(DOT)) return true;
     if (jj_3R_54()) return true;
     if (jj_3R_82()) return true;
     return false;
   }
 
-  static private boolean jj_3_4() {
+  private boolean jj_3_4() {
     if (jj_3R_37()) return true;
     return false;
   }
 
-  static private boolean jj_3_3() {
+  private boolean jj_3_3() {
     if (jj_3R_36()) return true;
     return false;
   }
 
-  static private boolean jj_3R_47() {
+  private boolean jj_3R_47() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_3()) {
@@ -5032,41 +5032,41 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_195() {
+  private boolean jj_3R_195() {
     if (jj_3R_191()) return true;
     if (jj_3R_179()) return true;
     return false;
   }
 
-  static private boolean jj_3R_103() {
+  private boolean jj_3R_103() {
     if (jj_3R_121()) return true;
     return false;
   }
 
-  static private boolean jj_3R_143() {
+  private boolean jj_3R_143() {
     if (jj_scan_token(COLON)) return true;
     if (jj_3R_156()) return true;
     return false;
   }
 
-  static private boolean jj_3R_62() {
+  private boolean jj_3R_62() {
     if (jj_3R_82()) return true;
     return false;
   }
 
-  static private boolean jj_3R_99() {
+  private boolean jj_3R_99() {
     if (jj_3R_119()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_220() {
+  private boolean jj_3R_220() {
     if (jj_scan_token(LOGICAL_OR)) return true;
     if (jj_3R_239()) return true;
     return false;
   }
 
-  static private boolean jj_3R_121() {
+  private boolean jj_3R_121() {
     if (jj_scan_token(ACTIVITY)) return true;
     if (jj_3R_34()) return true;
     if (jj_3R_142()) return true;
@@ -5076,7 +5076,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_193() {
+  private boolean jj_3R_193() {
     if (jj_3R_219()) return true;
     Token xsp;
     while (true) {
@@ -5086,17 +5086,17 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_66() {
+  private boolean jj_3R_66() {
     if (jj_3R_46()) return true;
     return false;
   }
 
-  static private boolean jj_3R_65() {
+  private boolean jj_3R_65() {
     if (jj_3R_99()) return true;
     return false;
   }
 
-  static private boolean jj_3R_35() {
+  private boolean jj_3R_35() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_65()) {
@@ -5106,34 +5106,34 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_221() {
+  private boolean jj_3R_221() {
     if (jj_3R_191()) return true;
     if (jj_3R_193()) return true;
     return false;
   }
 
-  static private boolean jj_3_2() {
+  private boolean jj_3_2() {
     if (jj_3R_35()) return true;
     return false;
   }
 
-  static private boolean jj_3R_224() {
+  private boolean jj_3R_224() {
     if (jj_3R_82()) return true;
     return false;
   }
 
-  static private boolean jj_3R_238() {
+  private boolean jj_3R_238() {
     if (jj_scan_token(XOR)) return true;
     if (jj_3R_252()) return true;
     return false;
   }
 
-  static private boolean jj_3R_107() {
+  private boolean jj_3R_107() {
     if (jj_3R_125()) return true;
     return false;
   }
 
-  static private boolean jj_3R_219() {
+  private boolean jj_3R_219() {
     if (jj_3R_237()) return true;
     Token xsp;
     while (true) {
@@ -5143,33 +5143,33 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_147() {
+  private boolean jj_3R_147() {
     if (jj_3R_34()) return true;
     if (jj_scan_token(THICK_ARROW)) return true;
     if (jj_3R_115()) return true;
     return false;
   }
 
-  static private boolean jj_3R_125() {
+  private boolean jj_3R_125() {
     if (jj_scan_token(RECEIVE)) return true;
     if (jj_scan_token(SIGNAL)) return true;
     if (jj_3R_34()) return true;
     return false;
   }
 
-  static private boolean jj_3R_239() {
+  private boolean jj_3R_239() {
     if (jj_3R_191()) return true;
     if (jj_3R_219()) return true;
     return false;
   }
 
-  static private boolean jj_3R_270() {
+  private boolean jj_3R_270() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_147()) return true;
     return false;
   }
 
-  static private boolean jj_3R_126() {
+  private boolean jj_3R_126() {
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_147()) return true;
     Token xsp;
@@ -5181,31 +5181,31 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_51() {
+  private boolean jj_3R_51() {
     if (jj_scan_token(RECEIVE)) return true;
     if (jj_3R_54()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_281() {
+  private boolean jj_3R_281() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_115()) return true;
     return false;
   }
 
-  static private boolean jj_3R_148() {
+  private boolean jj_3R_148() {
     if (jj_3R_158()) return true;
     return false;
   }
 
-  static private boolean jj_3R_251() {
+  private boolean jj_3R_251() {
     if (jj_scan_token(LOGICAL_AND)) return true;
     if (jj_3R_260()) return true;
     return false;
   }
 
-  static private boolean jj_3R_158() {
+  private boolean jj_3R_158() {
     if (jj_3R_115()) return true;
     Token xsp;
     while (true) {
@@ -5215,7 +5215,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_237() {
+  private boolean jj_3R_237() {
     if (jj_3R_250()) return true;
     Token xsp;
     while (true) {
@@ -5225,19 +5225,19 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_106() {
+  private boolean jj_3R_106() {
     if (jj_3R_124()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_119() {
+  private boolean jj_3R_119() {
     if (jj_scan_token(PACKAGE)) return true;
     if (jj_3R_34()) return true;
     return false;
   }
 
-  static private boolean jj_3R_127() {
+  private boolean jj_3R_127() {
     if (jj_scan_token(LPAREN)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -5246,30 +5246,30 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_34() {
+  private boolean jj_3_34() {
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_34()) return true;
     if (jj_scan_token(THICK_ARROW)) return true;
     return false;
   }
 
-  static private boolean jj_3R_252() {
+  private boolean jj_3R_252() {
     if (jj_3R_191()) return true;
     if (jj_3R_237()) return true;
     return false;
   }
 
-  static private boolean jj_3R_109() {
+  private boolean jj_3R_109() {
     if (jj_3R_127()) return true;
     return false;
   }
 
-  static private boolean jj_3R_108() {
+  private boolean jj_3R_108() {
     if (jj_3R_126()) return true;
     return false;
   }
 
-  static private boolean jj_3R_82() {
+  private boolean jj_3R_82() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_108()) {
@@ -5279,14 +5279,14 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_124() {
+  private boolean jj_3R_124() {
     if (jj_scan_token(DESTROY)) return true;
     if (jj_3R_34()) return true;
     if (jj_3R_142()) return true;
     return false;
   }
 
-  static private boolean jj_3R_268() {
+  private boolean jj_3R_268() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(102)) {
@@ -5296,13 +5296,13 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_259() {
+  private boolean jj_3R_259() {
     if (jj_3R_268()) return true;
     if (jj_3R_269()) return true;
     return false;
   }
 
-  static private boolean jj_3R_250() {
+  private boolean jj_3R_250() {
     if (jj_3R_258()) return true;
     Token xsp;
     while (true) {
@@ -5312,28 +5312,28 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_81() {
+  private boolean jj_3R_81() {
     if (jj_scan_token(DOT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_80() {
+  private boolean jj_3R_80() {
     if (jj_scan_token(DOCUMENTATION_COMMENT)) return true;
     return false;
   }
 
-  static private boolean jj_3_21() {
+  private boolean jj_3_21() {
     if (jj_scan_token(SUPER)) return true;
     return false;
   }
 
-  static private boolean jj_3R_59() {
+  private boolean jj_3R_59() {
     if (jj_scan_token(DOT)) return true;
     if (jj_3R_34()) return true;
     return false;
   }
 
-  static private boolean jj_3R_52() {
+  private boolean jj_3R_52() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_80()) jj_scanpos = xsp;
@@ -5344,18 +5344,18 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_260() {
+  private boolean jj_3R_260() {
     if (jj_3R_191()) return true;
     if (jj_3R_258()) return true;
     return false;
   }
 
-  static private boolean jj_3_22() {
+  private boolean jj_3_22() {
     if (jj_3R_52()) return true;
     return false;
   }
 
-  static private boolean jj_3_20() {
+  private boolean jj_3_20() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(17)) jj_scanpos = xsp;
@@ -5367,7 +5367,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_275() {
+  private boolean jj_3R_275() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(46)) {
@@ -5377,20 +5377,20 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_226() {
+  private boolean jj_3R_226() {
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_115()) return true;
     if (jj_scan_token(RPAREN)) return true;
     return false;
   }
 
-  static private boolean jj_3R_267() {
+  private boolean jj_3R_267() {
     if (jj_3R_275()) return true;
     if (jj_3R_54()) return true;
     return false;
   }
 
-  static private boolean jj_3R_258() {
+  private boolean jj_3R_258() {
     if (jj_3R_266()) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -5398,60 +5398,60 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_117() {
+  private boolean jj_3R_117() {
     if (jj_scan_token(THIS)) return true;
     return false;
   }
 
-  static private boolean jj_3R_228() {
+  private boolean jj_3R_228() {
     if (jj_3R_242()) return true;
     return false;
   }
 
-  static private boolean jj_3R_269() {
+  private boolean jj_3R_269() {
     if (jj_3R_191()) return true;
     if (jj_3R_258()) return true;
     return false;
   }
 
-  static private boolean jj_3R_225() {
+  private boolean jj_3R_225() {
     if (jj_3R_54()) return true;
     return false;
   }
 
-  static private boolean jj_3R_105() {
+  private boolean jj_3R_105() {
     if (jj_3R_123()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_135() {
+  private boolean jj_3R_135() {
     if (jj_scan_token(STAR)) return true;
     return false;
   }
 
-  static private boolean jj_3_32() {
+  private boolean jj_3_32() {
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(DESTROY)) return true;
     return false;
   }
 
-  static private boolean jj_3R_134() {
+  private boolean jj_3R_134() {
     if (jj_scan_token(STRING_LITERAL)) return true;
     return false;
   }
 
-  static private boolean jj_3R_133() {
+  private boolean jj_3R_133() {
     if (jj_scan_token(NATURAL_LITERAL)) return true;
     return false;
   }
 
-  static private boolean jj_3R_132() {
+  private boolean jj_3R_132() {
     if (jj_scan_token(BOOLEAN_LITERAL)) return true;
     return false;
   }
 
-  static private boolean jj_3R_116() {
+  private boolean jj_3R_116() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_132()) {
@@ -5467,7 +5467,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_279() {
+  private boolean jj_3R_279() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(97)) {
@@ -5483,36 +5483,36 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_227() {
+  private boolean jj_3R_227() {
     if (jj_3R_241()) return true;
     return false;
   }
 
-  static private boolean jj_3R_123() {
+  private boolean jj_3R_123() {
     if (jj_scan_token(CREATE)) return true;
     if (jj_3R_34()) return true;
     if (jj_3R_142()) return true;
     return false;
   }
 
-  static private boolean jj_3R_274() {
+  private boolean jj_3R_274() {
     if (jj_3R_279()) return true;
     if (jj_3R_280()) return true;
     return false;
   }
 
-  static private boolean jj_3_33() {
+  private boolean jj_3_33() {
     if (jj_3R_54()) return true;
     if (jj_scan_token(LPAREN)) return true;
     return false;
   }
 
-  static private boolean jj_3R_204() {
+  private boolean jj_3R_204() {
     if (jj_3R_230()) return true;
     return false;
   }
 
-  static private boolean jj_3R_266() {
+  private boolean jj_3R_266() {
     if (jj_3R_273()) return true;
     Token xsp;
     while (true) {
@@ -5522,12 +5522,12 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_203() {
+  private boolean jj_3R_203() {
     if (jj_3R_229()) return true;
     return false;
   }
 
-  static private boolean jj_3R_202() {
+  private boolean jj_3R_202() {
     if (jj_scan_token(SUPER)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -5538,39 +5538,39 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_201() {
+  private boolean jj_3R_201() {
     if (jj_3R_226()) return true;
     return false;
   }
 
-  static private boolean jj_3R_200() {
+  private boolean jj_3R_200() {
     if (jj_3R_117()) return true;
     return false;
   }
 
-  static private boolean jj_3R_157() {
+  private boolean jj_3R_157() {
     if (jj_scan_token(REDEFINES)) return true;
     if (jj_3R_83()) return true;
     return false;
   }
 
-  static private boolean jj_3R_199() {
+  private boolean jj_3R_199() {
     if (jj_3R_225()) return true;
     return false;
   }
 
-  static private boolean jj_3R_198() {
+  private boolean jj_3R_198() {
     if (jj_3R_54()) return true;
     if (jj_3R_224()) return true;
     return false;
   }
 
-  static private boolean jj_3R_197() {
+  private boolean jj_3R_197() {
     if (jj_3R_116()) return true;
     return false;
   }
 
-  static private boolean jj_3R_184() {
+  private boolean jj_3R_184() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_197()) {
@@ -5598,13 +5598,13 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_1() {
+  private boolean jj_3_1() {
     if (jj_scan_token(DOUBLE_COLON)) return true;
     if (jj_3R_34()) return true;
     return false;
   }
 
-  static private boolean jj_3R_210() {
+  private boolean jj_3R_210() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(44)) {
@@ -5617,12 +5617,12 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_209() {
+  private boolean jj_3R_209() {
     if (jj_scan_token(DOCUMENTATION_COMMENT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_187() {
+  private boolean jj_3R_187() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_209()) jj_scanpos = xsp;
@@ -5633,7 +5633,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_283() {
+  private boolean jj_3R_283() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(110)) {
@@ -5643,43 +5643,43 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_31() {
+  private boolean jj_3_31() {
     if (jj_scan_token(ARROW)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(LPAREN)) return true;
     return false;
   }
 
-  static private boolean jj_3R_278() {
+  private boolean jj_3R_278() {
     if (jj_3R_283()) return true;
     if (jj_3R_284()) return true;
     return false;
   }
 
-  static private boolean jj_3R_208() {
+  private boolean jj_3R_208() {
     if (jj_3R_232()) return true;
     if (jj_3R_151()) return true;
     return false;
   }
 
-  static private boolean jj_3R_155() {
+  private boolean jj_3R_155() {
     if (jj_3R_171()) return true;
     return false;
   }
 
-  static private boolean jj_3R_188() {
+  private boolean jj_3R_188() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_187()) return true;
     return false;
   }
 
-  static private boolean jj_3R_207() {
+  private boolean jj_3R_207() {
     if (jj_3R_112()) return true;
     if (jj_3R_153()) return true;
     return false;
   }
 
-  static private boolean jj_3R_273() {
+  private boolean jj_3R_273() {
     if (jj_3R_277()) return true;
     Token xsp;
     while (true) {
@@ -5689,13 +5689,13 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_206() {
+  private boolean jj_3R_206() {
     if (jj_3R_111()) return true;
     if (jj_3R_153()) return true;
     return false;
   }
 
-  static private boolean jj_3R_171() {
+  private boolean jj_3R_171() {
     if (jj_3R_187()) return true;
     Token xsp;
     while (true) {
@@ -5705,24 +5705,24 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_205() {
+  private boolean jj_3R_205() {
     if (jj_3R_110()) return true;
     if (jj_3R_153()) return true;
     return false;
   }
 
-  static private boolean jj_3_30() {
+  private boolean jj_3_30() {
     if (jj_3R_59()) return true;
     if (jj_3R_231()) return true;
     return false;
   }
 
-  static private boolean jj_3R_84() {
+  private boolean jj_3R_84() {
     if (jj_scan_token(DOUBLE_COLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_185() {
+  private boolean jj_3R_185() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_30()) {
@@ -5741,7 +5741,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_54() {
+  private boolean jj_3R_54() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_84()) jj_scanpos = xsp;
@@ -5753,7 +5753,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_142() {
+  private boolean jj_3R_142() {
     if (jj_scan_token(LPAREN)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -5762,46 +5762,46 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_29() {
+  private boolean jj_3_29() {
     if (jj_3R_55()) return true;
     return false;
   }
 
-  static private boolean jj_3R_280() {
+  private boolean jj_3R_280() {
     if (jj_3R_191()) return true;
     if (jj_3R_273()) return true;
     return false;
   }
 
-  static private boolean jj_3R_104() {
+  private boolean jj_3R_104() {
     if (jj_3R_122()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_145() {
+  private boolean jj_3R_145() {
     if (jj_scan_token(COLON)) return true;
     if (jj_3R_156()) return true;
     return false;
   }
 
-  static private boolean jj_3R_264() {
+  private boolean jj_3R_264() {
     if (jj_3R_185()) return true;
     return false;
   }
 
-  static private boolean jj_3R_263() {
+  private boolean jj_3R_263() {
     if (jj_3R_94()) return true;
     if (jj_3R_153()) return true;
     return false;
   }
 
-  static private boolean jj_3R_262() {
+  private boolean jj_3R_262() {
     if (jj_3R_149()) return true;
     return false;
   }
 
-  static private boolean jj_3R_255() {
+  private boolean jj_3R_255() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_262()) {
@@ -5814,12 +5814,12 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_58() {
+  private boolean jj_3R_58() {
     if (jj_3R_86()) return true;
     return false;
   }
 
-  static private boolean jj_3R_34() {
+  private boolean jj_3R_34() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(69)) {
@@ -5829,12 +5829,12 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_28() {
+  private boolean jj_3_28() {
     if (jj_3R_55()) return true;
     return false;
   }
 
-  static private boolean jj_3R_285() {
+  private boolean jj_3R_285() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(112)) {
@@ -5847,39 +5847,39 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_146() {
+  private boolean jj_3R_146() {
     if (jj_3R_157()) return true;
     return false;
   }
 
-  static private boolean jj_3R_246() {
+  private boolean jj_3R_246() {
     if (jj_3R_185()) return true;
     return false;
   }
 
-  static private boolean jj_3R_245() {
+  private boolean jj_3R_245() {
     if (jj_3R_62()) return true;
     if (jj_3R_153()) return true;
     return false;
   }
 
-  static private boolean jj_3R_144() {
+  private boolean jj_3R_144() {
     if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_244() {
+  private boolean jj_3R_244() {
     if (jj_3R_94()) return true;
     if (jj_3R_255()) return true;
     return false;
   }
 
-  static private boolean jj_3R_235() {
+  private boolean jj_3R_235() {
     if (jj_scan_token(NONUNIQUE)) return true;
     return false;
   }
 
-  static private boolean jj_3R_122() {
+  private boolean jj_3R_122() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_144()) jj_scanpos = xsp;
@@ -5892,18 +5892,18 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_243() {
+  private boolean jj_3R_243() {
     if (jj_3R_149()) return true;
     return false;
   }
 
-  static private boolean jj_3R_282() {
+  private boolean jj_3R_282() {
     if (jj_3R_285()) return true;
     if (jj_3R_191()) return true;
     return false;
   }
 
-  static private boolean jj_3R_231() {
+  private boolean jj_3R_231() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_243()) {
@@ -5919,7 +5919,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_277() {
+  private boolean jj_3R_277() {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -5928,29 +5928,29 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_57() {
+  private boolean jj_3R_57() {
     if (jj_3R_85()) return true;
     return false;
   }
 
-  static private boolean jj_3R_170() {
+  private boolean jj_3R_170() {
     if (jj_3R_185()) return true;
     return false;
   }
 
-  static private boolean jj_3R_169() {
+  private boolean jj_3R_169() {
     if (jj_3R_94()) return true;
     if (jj_3R_153()) return true;
     return false;
   }
 
-  static private boolean jj_3R_284() {
+  private boolean jj_3R_284() {
     if (jj_3R_191()) return true;
     if (jj_3R_277()) return true;
     return false;
   }
 
-  static private boolean jj_3R_153() {
+  private boolean jj_3R_153() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_169()) {
@@ -5960,7 +5960,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_128() {
+  private boolean jj_3R_128() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(78)) {
@@ -5970,7 +5970,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_27() {
+  private boolean jj_3_27() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_56()) {
@@ -5989,34 +5989,34 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_56() {
+  private boolean jj_3R_56() {
     if (jj_3R_64()) return true;
     return false;
   }
 
-  static private boolean jj_3R_189() {
+  private boolean jj_3R_189() {
     if (jj_3R_211()) return true;
     return false;
   }
 
-  static private boolean jj_3_26() {
+  private boolean jj_3_26() {
     if (jj_3R_54()) return true;
     if (jj_3R_55()) return true;
     return false;
   }
 
-  static private boolean jj_3R_233() {
+  private boolean jj_3R_233() {
     if (jj_3R_114()) return true;
     return false;
   }
 
-  static private boolean jj_3_19() {
+  private boolean jj_3_19() {
     if (jj_scan_token(NATURAL_LITERAL)) return true;
     if (jj_scan_token(DOUBLE_DOT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_114() {
+  private boolean jj_3R_114() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_19()) jj_scanpos = xsp;
@@ -6024,19 +6024,19 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_131() {
+  private boolean jj_3R_131() {
     if (jj_3R_152()) return true;
     if (jj_3R_153()) return true;
     return false;
   }
 
-  static private boolean jj_3R_130() {
+  private boolean jj_3R_130() {
     if (jj_3R_150()) return true;
     if (jj_3R_151()) return true;
     return false;
   }
 
-  static private boolean jj_3R_176() {
+  private boolean jj_3R_176() {
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_92()) return true;
     if (jj_scan_token(RPAREN)) return true;
@@ -6044,18 +6044,18 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_129() {
+  private boolean jj_3R_129() {
     if (jj_3R_54()) return true;
     if (jj_3R_149()) return true;
     return false;
   }
 
-  static private boolean jj_3R_234() {
+  private boolean jj_3R_234() {
     if (jj_scan_token(ORDERED)) return true;
     return false;
   }
 
-  static private boolean jj_3R_115() {
+  private boolean jj_3R_115() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_129()) {
@@ -6068,7 +6068,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_211() {
+  private boolean jj_3R_211() {
     if (jj_scan_token(LBRACKET)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -6081,18 +6081,18 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_178() {
+  private boolean jj_3R_178() {
     if (jj_scan_token(DOLLAR)) return true;
     if (jj_3R_191()) return true;
     return false;
   }
 
-  static private boolean jj_3R_113() {
+  private boolean jj_3R_113() {
     if (jj_3R_54()) return true;
     return false;
   }
 
-  static private boolean jj_3R_92() {
+  private boolean jj_3R_92() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_113()) {
@@ -6102,7 +6102,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_86() {
+  private boolean jj_3R_86() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(110)) {
@@ -6112,19 +6112,19 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_98() {
+  private boolean jj_3R_98() {
     if (jj_3R_118()) return true;
     return false;
   }
 
-  static private boolean jj_3R_190() {
+  private boolean jj_3R_190() {
     if (jj_scan_token(LT)) return true;
     if (jj_3R_92()) return true;
     if (jj_scan_token(GT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_173() {
+  private boolean jj_3R_173() {
     if (jj_scan_token(COLLECTION_NAME)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -6132,7 +6132,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_156() {
+  private boolean jj_3R_156() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_172()) {
@@ -6142,7 +6142,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_172() {
+  private boolean jj_3R_172() {
     if (jj_3R_92()) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -6150,88 +6150,88 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_175() {
+  private boolean jj_3R_175() {
     if (jj_3R_86()) return true;
     if (jj_3R_191()) return true;
     return false;
   }
 
-  static private boolean jj_3R_79() {
+  private boolean jj_3R_79() {
     if (jj_3R_34()) return true;
     if (jj_scan_token(COLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_53() {
+  private boolean jj_3R_53() {
     if (jj_scan_token(FROM)) return true;
     if (jj_3R_83()) return true;
     return false;
   }
 
-  static private boolean jj_3R_97() {
+  private boolean jj_3R_97() {
     if (jj_3R_117()) return true;
     return false;
   }
 
-  static private boolean jj_3R_177() {
+  private boolean jj_3R_177() {
     if (jj_scan_token(BANG)) return true;
     if (jj_3R_191()) return true;
     return false;
   }
 
-  static private boolean jj_3R_174() {
+  private boolean jj_3R_174() {
     if (jj_3R_85()) return true;
     if (jj_3R_191()) return true;
     return false;
   }
 
-  static private boolean jj_3_25() {
+  private boolean jj_3_25() {
     if (jj_3R_53()) return true;
     return false;
   }
 
-  static private boolean jj_3_24() {
+  private boolean jj_3_24() {
     if (jj_3R_34()) return true;
     if (jj_scan_token(COLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_50() {
+  private boolean jj_3R_50() {
     if (jj_3R_79()) return true;
     return false;
   }
 
-  static private boolean jj_3R_163() {
+  private boolean jj_3R_163() {
     if (jj_3R_178()) return true;
     return false;
   }
 
-  static private boolean jj_3R_96() {
+  private boolean jj_3R_96() {
     if (jj_3R_116()) return true;
     return false;
   }
 
-  static private boolean jj_3R_162() {
+  private boolean jj_3R_162() {
     if (jj_3R_177()) return true;
     return false;
   }
 
-  static private boolean jj_3R_161() {
+  private boolean jj_3R_161() {
     if (jj_3R_176()) return true;
     return false;
   }
 
-  static private boolean jj_3R_160() {
+  private boolean jj_3R_160() {
     if (jj_3R_175()) return true;
     return false;
   }
 
-  static private boolean jj_3R_159() {
+  private boolean jj_3R_159() {
     if (jj_3R_174()) return true;
     return false;
   }
 
-  static private boolean jj_3R_150() {
+  private boolean jj_3R_150() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_159()) {
@@ -6250,12 +6250,12 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_95() {
+  private boolean jj_3R_95() {
     if (jj_3R_92()) return true;
     return false;
   }
 
-  static private boolean jj_3R_64() {
+  private boolean jj_3R_64() {
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_92()) return true;
     if (jj_scan_token(RPAREN)) return true;
@@ -6286,42 +6286,42 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_42() {
+  private boolean jj_3_42() {
     if (jj_3R_64()) return true;
     return false;
   }
 
-  static private boolean jj_3R_218() {
+  private boolean jj_3R_218() {
     if (jj_3R_178()) return true;
     return false;
   }
 
-  static private boolean jj_3R_217() {
+  private boolean jj_3R_217() {
     if (jj_3R_177()) return true;
     return false;
   }
 
-  static private boolean jj_3R_216() {
+  private boolean jj_3R_216() {
     if (jj_3R_236()) return true;
     return false;
   }
 
-  static private boolean jj_3R_78() {
+  private boolean jj_3R_78() {
     if (jj_3R_107()) return true;
     return false;
   }
 
-  static private boolean jj_3R_215() {
+  private boolean jj_3R_215() {
     if (jj_3R_176()) return true;
     return false;
   }
 
-  static private boolean jj_3_18() {
+  private boolean jj_3_18() {
     if (jj_3R_51()) return true;
     return false;
   }
 
-  static private boolean jj_3R_192() {
+  private boolean jj_3R_192() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_215()) {
@@ -6337,7 +6337,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_49() {
+  private boolean jj_3R_49() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_18()) {
@@ -6347,37 +6347,37 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_214() {
+  private boolean jj_3R_214() {
     if (jj_3R_192()) return true;
     return false;
   }
 
-  static private boolean jj_3R_213() {
+  private boolean jj_3R_213() {
     if (jj_3R_175()) return true;
     return false;
   }
 
-  static private boolean jj_3R_77() {
+  private boolean jj_3R_77() {
     if (jj_3R_106()) return true;
     return false;
   }
 
-  static private boolean jj_3R_212() {
+  private boolean jj_3R_212() {
     if (jj_3R_174()) return true;
     return false;
   }
 
-  static private boolean jj_3R_76() {
+  private boolean jj_3R_76() {
     if (jj_3R_105()) return true;
     return false;
   }
 
-  static private boolean jj_3R_75() {
+  private boolean jj_3R_75() {
     if (jj_3R_104()) return true;
     return false;
   }
 
-  static private boolean jj_3R_191() {
+  private boolean jj_3R_191() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_212()) {
@@ -6390,7 +6390,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_48() {
+  private boolean jj_3R_48() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_75()) {
@@ -6403,12 +6403,12 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_17() {
+  private boolean jj_3_17() {
     if (jj_3R_50()) return true;
     return false;
   }
 
-  static private boolean jj_3R_85() {
+  private boolean jj_3R_85() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(108)) {
@@ -6418,17 +6418,17 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_40() {
+  private boolean jj_3R_40() {
     if (jj_3R_45()) return true;
     return false;
   }
 
-  static private boolean jj_3R_248() {
+  private boolean jj_3R_248() {
     if (jj_3R_85()) return true;
     return false;
   }
 
-  static private boolean jj_3R_232() {
+  private boolean jj_3R_232() {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -6437,17 +6437,17 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_141() {
+  private boolean jj_3R_141() {
     if (jj_3R_154()) return true;
     return false;
   }
 
-  static private boolean jj_3R_71() {
+  private boolean jj_3R_71() {
     if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_45() {
+  private boolean jj_3R_45() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_71()) jj_scanpos = xsp;
@@ -6458,13 +6458,13 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_236() {
+  private boolean jj_3R_236() {
     if (jj_3R_249()) return true;
     if (jj_3R_232()) return true;
     return false;
   }
 
-  static private boolean jj_3R_112() {
+  private boolean jj_3R_112() {
     if (jj_scan_token(ARROW)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_3R_34()) return true;
@@ -6472,22 +6472,22 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_102() {
+  private boolean jj_3R_102() {
     if (jj_3R_120()) return true;
     return false;
   }
 
-  static private boolean jj_3R_276() {
+  private boolean jj_3R_276() {
     if (jj_3R_94()) return true;
     return false;
   }
 
-  static private boolean jj_3R_139() {
+  private boolean jj_3R_139() {
     if (jj_3R_154()) return true;
     return false;
   }
 
-  static private boolean jj_3R_120() {
+  private boolean jj_3R_120() {
     if (jj_scan_token(ENUM)) return true;
     if (jj_3R_34()) return true;
     Token xsp;
@@ -6496,12 +6496,12 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_63() {
+  private boolean jj_3R_63() {
     if (jj_3R_94()) return true;
     return false;
   }
 
-  static private boolean jj_3R_271() {
+  private boolean jj_3R_271() {
     if (jj_3R_34()) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -6511,18 +6511,18 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_272() {
+  private boolean jj_3R_272() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_271()) return true;
     return false;
   }
 
-  static private boolean jj_3R_39() {
+  private boolean jj_3R_39() {
     if (jj_3R_44()) return true;
     return false;
   }
 
-  static private boolean jj_3R_265() {
+  private boolean jj_3R_265() {
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_271()) return true;
     Token xsp;
@@ -6534,7 +6534,7 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3_41() {
+  private boolean jj_3_41() {
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_34()) return true;
     Token xsp;
@@ -6544,17 +6544,17 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_140() {
+  private boolean jj_3R_140() {
     if (jj_3R_154()) return true;
     return false;
   }
 
-  static private boolean jj_3R_70() {
+  private boolean jj_3R_70() {
     if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_44() {
+  private boolean jj_3R_44() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_70()) jj_scanpos = xsp;
@@ -6565,17 +6565,17 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_257() {
+  private boolean jj_3R_257() {
     if (jj_3R_127()) return true;
     return false;
   }
 
-  static private boolean jj_3R_256() {
+  private boolean jj_3R_256() {
     if (jj_3R_265()) return true;
     return false;
   }
 
-  static private boolean jj_3R_247() {
+  private boolean jj_3R_247() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_256()) {
@@ -6585,36 +6585,36 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_111() {
+  private boolean jj_3R_111() {
     if (jj_scan_token(ARROW)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_3R_247()) return true;
     return false;
   }
 
-  static private boolean jj_3R_38() {
+  private boolean jj_3R_38() {
     if (jj_3R_43()) return true;
     return false;
   }
 
-  static private boolean jj_3R_94() {
+  private boolean jj_3R_94() {
     if (jj_scan_token(LBRACKET)) return true;
     if (jj_3R_115()) return true;
     if (jj_scan_token(RBRACKET)) return true;
     return false;
   }
 
-  static private boolean jj_3R_138() {
+  private boolean jj_3R_138() {
     if (jj_3R_154()) return true;
     return false;
   }
 
-  static private boolean jj_3R_69() {
+  private boolean jj_3R_69() {
     if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_43() {
+  private boolean jj_3R_43() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_69()) jj_scanpos = xsp;
@@ -6625,18 +6625,18 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_261() {
+  private boolean jj_3R_261() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_115()) return true;
     return false;
   }
 
-  static private boolean jj_3_16() {
+  private boolean jj_3_16() {
     if (jj_3R_49()) return true;
     return false;
   }
 
-  static private boolean jj_3R_254() {
+  private boolean jj_3R_254() {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -6645,25 +6645,24 @@ void LeftHandSide():
     return false;
   }
 
-  static private boolean jj_3R_253() {
+  private boolean jj_3R_253() {
     if (jj_scan_token(DOUBLE_DOT)) return true;
     if (jj_3R_115()) return true;
     return false;
   }
 
-  static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
-  static public AlfParserTokenManager token_source;
-  static SimpleCharStream jj_input_stream;
+  public AlfParserTokenManager token_source;
+  SimpleCharStream jj_input_stream;
   /** Current token. */
-  static public Token token;
+  public Token token;
   /** Next token. */
-  static public Token jj_nt;
-  static private int jj_ntk;
-  static private Token jj_scanpos, jj_lastpos;
-  static private int jj_la;
-  static private int jj_gen;
-  static final private int[] jj_la1 = new int[141];
+  public Token jj_nt;
+  private int jj_ntk;
+  private Token jj_scanpos, jj_lastpos;
+  private int jj_la;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[141];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -6691,9 +6690,9 @@ void LeftHandSide():
    private static void jj_la1_init_4() {
       jj_la1_4 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x0,0x0,0x1,0x0,0x0,0x1,0x1,0x0,0x0,0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
-  static final private JJCalls[] jj_2_rtns = new JJCalls[42];
-  static private boolean jj_rescan = false;
-  static private int jj_gc = 0;
+  final private JJCalls[] jj_2_rtns = new JJCalls[42];
+  private boolean jj_rescan = false;
+  private int jj_gc = 0;
 
   /** Constructor with InputStream. */
   public AlfParser(java.io.InputStream stream) {
@@ -6701,13 +6700,6 @@ void LeftHandSide():
   }
   /** Constructor with InputStream and supplied encoding */
   public AlfParser(java.io.InputStream stream, String encoding) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser.  ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new AlfParserTokenManager(jj_input_stream);
     token = new Token();
@@ -6718,11 +6710,11 @@ void LeftHandSide():
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream) {
+  public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream, String encoding) {
+  public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -6734,13 +6726,6 @@ void LeftHandSide():
 
   /** Constructor. */
   public AlfParser(java.io.Reader stream) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser. ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new AlfParserTokenManager(jj_input_stream);
     token = new Token();
@@ -6751,7 +6736,7 @@ void LeftHandSide():
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.Reader stream) {
+  public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -6763,13 +6748,6 @@ void LeftHandSide():
 
   /** Constructor with generated Token Manager. */
   public AlfParser(AlfParserTokenManager tm) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser. ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
@@ -6788,7 +6766,7 @@ void LeftHandSide():
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  static private Token jj_consume_token(int kind) throws ParseException {
+  private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -6813,8 +6791,8 @@ void LeftHandSide():
   }
 
   static private final class LookaheadSuccess extends java.lang.Error { }
-  static final private LookaheadSuccess jj_ls = new LookaheadSuccess();
-  static private boolean jj_scan_token(int kind) {
+  final private LookaheadSuccess jj_ls = new LookaheadSuccess();
+  private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {
       jj_la--;
       if (jj_scanpos.next == null) {
@@ -6837,7 +6815,7 @@ void LeftHandSide():
 
 
 /** Get the next Token. */
-  static final public Token getNextToken() {
+  final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
@@ -6846,7 +6824,7 @@ void LeftHandSide():
   }
 
 /** Get the specific Token. */
-  static final public Token getToken(int index) {
+  final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
@@ -6855,20 +6833,20 @@ void LeftHandSide():
     return t;
   }
 
-  static private int jj_ntk() {
+  private int jj_ntk() {
     if ((jj_nt=token.next) == null)
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List jj_expentries = new java.util.ArrayList();
-  static private int[] jj_expentry;
-  static private int jj_kind = -1;
-  static private int[] jj_lasttokens = new int[100];
-  static private int jj_endpos;
+  private java.util.List jj_expentries = new java.util.ArrayList();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
+  private int[] jj_lasttokens = new int[100];
+  private int jj_endpos;
 
-  static private void jj_add_error_token(int kind, int pos) {
+  private void jj_add_error_token(int kind, int pos) {
     if (pos >= 100) return;
     if (pos == jj_endpos + 1) {
       jj_lasttokens[jj_endpos++] = kind;
@@ -6894,7 +6872,7 @@ void LeftHandSide():
   }
 
   /** Generate ParseException. */
-  static public ParseException generateParseException() {
+  public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[129];
     if (jj_kind >= 0) {
@@ -6940,14 +6918,14 @@ void LeftHandSide():
   }
 
   /** Enable tracing. */
-  static final public void enable_tracing() {
+  final public void enable_tracing() {
   }
 
   /** Disable tracing. */
-  static final public void disable_tracing() {
+  final public void disable_tracing() {
   }
 
-  static private void jj_rescan_token() {
+  private void jj_rescan_token() {
     jj_rescan = true;
     for (int i = 0; i < 42; i++) {
     try {
@@ -7007,7 +6985,7 @@ void LeftHandSide():
     jj_rescan = false;
   }
 
-  static private void jj_save(int index, int xla) {
+  private void jj_save(int index, int xla) {
     JJCalls p = jj_2_rtns[index];
     while (p.gen > jj_gen) {
       if (p.next == null) { p = p.next = new JJCalls(); break; }

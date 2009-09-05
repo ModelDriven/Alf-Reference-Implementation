@@ -1,0 +1,5 @@
+package UML {
+
+  public package AuxiliaryConstructs;
+  
+}

@@ -1,0 +1,11 @@
+namespace ::FoundationalModelLibrary;
+
+package PrimitiveBehaviors {
+
+  public package BooleanFunctions;
+  public package IntegerFunctions;
+  public package StringFunctions;
+  public package UnlimitedNaturalFunctions;
+  public package ListFunctions;
+
+}
