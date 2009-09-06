@@ -97,14 +97,42 @@ public abstract class NamespaceDefinition extends Member {
 	} // getQualifiedName
 
 	public ArrayList<Member> getAllMembers() {
-		ArrayList<Member> members = this.getMembers();
+		Member completion = this.completeStub();
 
-		if (this.getUnit() != null) {
-			members.addAll(this.getUnit().getImportedMembers());
+		if (completion != null && completion.isError()) {
+			return completion.getAllMembers();
+		} else {
+			ArrayList<Member> members = this.getMembers();
+
+			if (this.getUnit() != null) {
+				members.addAll(this.getUnit().getImportedMembers());
+			}
+
+			return members;
 		}
-
-		return members;
 	} // getAllMembers
+
+	public ArrayList<Member> getPublicMembers() {
+		Member completion = this.completeStub();
+
+		if (completion != null && completion.isError()) {
+			return completion.getAllMembers();
+		} else {
+			ArrayList<Member> members = this.getMembers();
+
+			for (Object member : members.toArray()) {
+				if (!((Member) member).isPublic()) {
+					members.remove(member);
+				}
+			}
+
+			if (this.getUnit() != null) {
+				members.addAll(this.getUnit().getImportedPublicMembers());
+			}
+
+			return members;
+		}
+	} // getPublicMembers
 
 	public ArrayList<Member> resolve(String name) {
 		ArrayList<Member> members = new ArrayList<Member>();
@@ -144,7 +172,8 @@ public abstract class NamespaceDefinition extends Member {
 	} // resolve
 
 	public ArrayList<Member> resolvePublic(String name, boolean allowPackageOnly) {
-		System.out.println("resolvePublic: " + this.getQualifiedName() + "...");
+		// System.out.println("resolvePublic: " + this.getQualifiedName() +
+		// "...");
 
 		ArrayList<Member> publicMembers = new ArrayList<Member>();
 
@@ -158,7 +187,6 @@ public abstract class NamespaceDefinition extends Member {
 						&& (member.isPublic() || allowPackageOnly
 								&& member.isPackageOnly())) {
 					publicMembers.add(member);
-					System.out.println("Public member: " + member.getName());
 				}
 			}
 
@@ -167,9 +195,6 @@ public abstract class NamespaceDefinition extends Member {
 				ArrayList<Member> imports = unit.resolvePublicImports(name);
 				if (imports.size() == 1 && imports.get(0).isError()) {
 					return imports;
-				}
-				for (Member member : imports) {
-					System.out.println("Public import: " + member.getName());
 				}
 				publicMembers.addAll(imports);
 			}

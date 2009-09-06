@@ -66,20 +66,18 @@ public class QualifiedName extends Node {
 
 	public ArrayList<Member> resolve(NamespaceDefinition namespace) {
 		if (namespace == null) {
-			Member root;
 			if (this.isAbsolute()) {
-				root = this.getRootNamespace();
+				namespace = this.getRootNamespace();
 			} else {
-				root = this.getModelContext();
+				namespace = this.getModelScope();
 			}
 
-			if (root.isError()) {
+			if (namespace.isError()) {
 				ArrayList<Member> error = new ArrayList<Member>();
-				error.add(new ErrorMember(this, (ErrorMember) root));
+				error.add(new ErrorMember(this, ((ErrorNamespace) namespace)
+						.getError()));
 				return error;
 			}
-
-			namespace = (NamespaceDefinition) root;
 		}
 
 		ArrayList<String> names = this.getNames();
@@ -124,54 +122,70 @@ public class QualifiedName extends Node {
 	public Member resolveSubunit() {
 		StringBuffer path = new StringBuffer("Root");
 
-		ArrayList<String> names = this.getNames();
-
-		for (String name : names) {
-			path.append("/" + name);
+		if (!this.isAbsolute()) {
+			path.append("/Model");
 		}
+
+		ArrayList<String> names = this.getNames();
+		for (String name : names) {
+			path.append("/" + this.processName(name));
+		}
+
+		path.append(".alf");
 
 		AlfParser parser;
 
 		try {
-			System.out.println("Parsing " + path + ".alf...");
-			parser = new AlfParser(new java.io.FileInputStream(path + ".alf"));
+			System.out.println("Parsing " + path + "...");
+			parser = new AlfParser(new java.io.FileInputStream(path.toString()));
 		} catch (java.io.FileNotFoundException e) {
 			return new ErrorMember(this, "Subunit not found: " + this);
 		}
 
 		try {
 			UnitDefinition subunit = parser.UnitDefinition();
+			System.out.println("Parsed successfully.");
 			NamespaceDefinition subunitDefinition = subunit.getDefinition();
-			if (this.isAbsolute() && names.size() == 0
-					|| subunitDefinition.getQualifiedName().equals(this)) {
+			// System.out.println("Subunit " + subunitDefinition.getName());
+			// for (Member member: subunitDefinition.getMembers()) {
+			// System.out.println(member.toString(" "));
+			// }
+			if (this.isAbsolute() && names.size() == 0) {
+				// Root namespace
+				subunitDefinition.setName("");
+				subunit.setNamespace(this);
+				return subunitDefinition;
+			} else if (subunitDefinition.getQualifiedName().equals(this)) {
+				subunit.addImplicitImports();
 				return subunitDefinition;
 			} else {
 				return new ErrorMember(this, "Incorrect subunit: " + this);
 			}
 		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Encountered errors during parse.");
 			return new ErrorMember(this, "Cannot parse subunit: " + this + "\n"
 					+ e.getMessage());
 		}
 	} // resolveSubunit
 
-	public Member getRootNamespace() {
+	public NamespaceDefinition getRootNamespace() {
 		QualifiedName root = new QualifiedName();
 		root.setIsAbsolute();
 		Member member = root.resolveSubunit();
 
 		if (member.isError()) {
-			return member;
+			return new ErrorNamespace(this, (ErrorMember) member);
 		} else if (member instanceof NamespaceDefinition) {
-			member.setName("");
 			return (NamespaceDefinition) member;
 		} else {
-			return new ErrorMember(this, "Invalid root namespace");
+			return new ErrorNamespace(this, "Invalid root namespace");
 		}
 	} // getRootNamespace
 
-	public Member getModelContext() {
-		return this.getRootNamespace();
-	} // getModelContext
+	public NamespaceDefinition getModelScope() {
+		return new ModelScopeNamespace();
+	} // getModelScope
 
 	public QualifiedName copy() {
 		QualifiedName copy = new QualifiedName();

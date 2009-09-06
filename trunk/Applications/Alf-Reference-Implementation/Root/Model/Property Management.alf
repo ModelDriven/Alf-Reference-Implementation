@@ -1,0 +1,8 @@
+package 'Property Management' {
+
+  public package 'Basic Types';
+  public package 'Data Model';
+  public package 'Message Model';
+  public package 'Service Model';
+
+}

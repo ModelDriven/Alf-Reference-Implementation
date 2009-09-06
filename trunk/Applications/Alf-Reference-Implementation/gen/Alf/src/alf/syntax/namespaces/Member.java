@@ -78,11 +78,19 @@ public abstract class Member extends DocumentedElement {
 		return new ArrayList<Member>();
 	} // getAllMembers
 
+	public ArrayList<Member> getPublicMembers() {
+		return this.getAllMembers();
+	} // getPublicMembers
+
 	public ArrayList<Member> resolve(String name) {
 		ArrayList<Member> error = new ArrayList<Member>();
 		error.add(new ErrorMember(this, "Not a namespace"));
 		return error;
 	} // resolve
+
+	public ArrayList<Member> resolvePublic(String name, boolean allowPackageOnly) {
+		return this.resolve(name);
+	} // resolvePublic
 
 	public boolean isPublic() {
 		String visibility = this.getVisibility();

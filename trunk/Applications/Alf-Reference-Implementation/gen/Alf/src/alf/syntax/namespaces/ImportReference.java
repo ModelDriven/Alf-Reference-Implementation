@@ -63,8 +63,9 @@ public class ImportReference extends Node {
 	} // isPublic
 
 	public String toString() {
-		return super.toString() + " alias:" + this.getAlias()
-				+ " packageImport:" + this.isPackageImport();
+		return super.toString() + "visibility:" + this.getVisibility()
+				+ " alias:" + this.getAlias() + " packageImport:"
+				+ this.isPackageImport();
 	} // toString
 
 	public void print(String prefix) {
@@ -74,7 +75,7 @@ public class ImportReference extends Node {
 
 	public ArrayList<Member> getMembers() {
 		if (this.isPackageImport()) {
-			return this.getReferent().getAllMembers();
+			return this.getReferent().getPublicMembers();
 		} else {
 			ArrayList<Member> members = new ArrayList<Member>();
 			members.add(this.getReferent());
@@ -90,7 +91,7 @@ public class ImportReference extends Node {
 				|| !this.isPackageImport() && referent.getName().equals(name)) {
 			members.add(referent);
 		} else if (this.isPackageImport()) {
-			members = referent.resolve(name);
+			members = referent.resolvePublic(name, false);
 		}
 
 		return members;

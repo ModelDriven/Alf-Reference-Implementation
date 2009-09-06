@@ -1,0 +1,14 @@
+namespace 'Property Management'::'Service Model';
+
+private import 'Property Management'::'Message Model'::*;
+
+abstract class 'Property Management Service' {
+
+  public abstract establish(in request: 'Property Record Establishment', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1];
+  public abstract acquire(in request: 'Property Acquisition Notification', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1];
+  public abstract update(in request: 'Property Record Update', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1];
+  public abstract dispose(in request: 'Property Disposition Notification', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1];
+  public abstract delete(in request: 'Property Record Deletion', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1];
+  public abstract retrieve(in request: 'Property Record Retrieval', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1];
+
+}

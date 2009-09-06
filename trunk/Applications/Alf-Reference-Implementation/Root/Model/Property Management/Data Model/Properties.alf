@@ -1,0 +1,31 @@
+namespace 'Property Management'::'Data Model';
+
+private import 'Property Management'::'Basic Types';
+
+package Properties {
+
+  public abstract class Property;
+  
+  public class 'Personal Property' specializes Property {
+    public 'serial number': String[0..1];
+  }
+  
+  public class 'Real Property' specializes Property {
+    public 'size': Area[0..1];
+  }
+  
+  public datatype 'Property Acquisition Data' {
+    public 'acquisition date': Date;
+    public 'acquisition cost': 'Currency Amount';
+  }
+  
+  public datatype 'Property Disposition Data' {
+    public 'disposition date': Data;
+    public 'disposition revenue': 'Currency Amount';
+    public 'disposition type': 'Property Disposition Type';
+  }
+  
+  public enum 'Property Status' {pending, acquired, disposed}
+  public enum 'Property Disposition Type' {transferred, sold, destroyed}
+
+}

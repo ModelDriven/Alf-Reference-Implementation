@@ -1,0 +1,10 @@
+namespace Ordering::Order;
+/**
+From Executable UML, Figure B.3, entry behavior for Payment Not Approved
+*/
+activity declineCharge()
+{
+  // Notify the customer that the charge was rejected
+  customer = this.'is placed by';
+  EE_OnlineCustomer.ChargeDeclined(customerEmail => customer.email);
+}
