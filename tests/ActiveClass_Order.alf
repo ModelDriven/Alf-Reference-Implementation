@@ -1,3 +1,4 @@
+namespace Ordering;
 active class Order {                      // An active class
 
   public dateOrderPlaced: Date;           // Attribute definitions

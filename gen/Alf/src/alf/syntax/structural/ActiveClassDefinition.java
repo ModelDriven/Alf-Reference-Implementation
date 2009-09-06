@@ -54,9 +54,12 @@ public class ActiveClassDefinition extends ClassDefinition {
 	public Member completeStub() {
 		Member completion;
 
-		if (this.getBehaviorName() != null && this.getBehaviorBlock() == null) {
+		String behaviorName = this.getBehaviorName();
+
+		if (behaviorName != null && !behaviorName.equals("")
+				&& this.getBehaviorBlock() == null) {
 			QualifiedName qualifiedName = this.getQualifiedName();
-			qualifiedName.addName(this.getBehaviorName());
+			qualifiedName.addName(behaviorName);
 
 			completion = qualifiedName.resolveSubunit();
 
@@ -79,7 +82,7 @@ public class ActiveClassDefinition extends ClassDefinition {
 				completion = ((ActiveClassDefinition) completion)
 						.completeStub();
 				if (!completion.isError()) {
-					String behaviorName = ((ActiveClassDefinition) completion)
+					behaviorName = ((ActiveClassDefinition) completion)
 							.getBehaviorName();
 					if (behaviorName != null) {
 						this.setBehaviorName(behaviorName);
