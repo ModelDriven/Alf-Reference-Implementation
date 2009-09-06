@@ -1,0 +1,39 @@
+namespace Ordering::Order;                               // See Note 1
+
+/**
+Based on Executable UML, Appendix B, Ordering Subsystem.
+See Figure B.3 for original state machine diagram.
+*/                                                       // See Note 2
+activity Order_Behavior() 
+{
+
+  /** 1. Establishing Customer and Verifying Payment */  // See Note 3
+  accept (checkout: Checkout);                           // See Note 4
+  this.establishCustomer(checkout);                      // See Note 5
+
+  do {                                                   // See Note 6
+
+    /** 2. Submitting Charge */
+    accept (chargeSubmission: SubmitCharge);
+    this.processCharge(chargeSubmission);
+
+    accept (PaymentDeclined) {
+      declined = true;                                   // See Note 7
+
+      /** 3. Payment Not Approved */
+      this.declineCharge();
+
+    } or accept (PaymentApproved) {                      // See Note 8
+      declined = false;
+    }
+
+  } while (declined);
+
+  /** 4. Being Packed and Shipped */
+  this.packAndShip();
+  
+  /** 5. Delivered to Customer} */
+  accept (OrderDelivery);
+  this.notifyOfDelivery();
+
+}

@@ -49,4 +49,43 @@ public abstract class Node {
 		return false;
 	} // isError
 
+	public String processName(String name) {
+		if (name.charAt(0) == '\'') {
+			return this.replaceEscapes(name.substring(1, name.length() - 1));
+		} else {
+			return name;
+		}
+	} // processName
+
+	public String replaceEscapes(String original) {
+		String s = new String(original);
+
+		int i = s.indexOf("\\");
+
+		while (i > -1 && i < s.length() - 1) {
+
+			char escape = s.charAt(i + 1);
+			String replacement;
+
+			if (escape == 'b') {
+				replacement = "\b";
+			} else if (escape == 'f') {
+				replacement = "\f";
+			} else if (escape == 'n') {
+				replacement = "\n";
+			} else if (escape == 't') {
+				replacement = "\t";
+			} else {
+				replacement = Character.toString(escape);
+			}
+
+			s = s.substring(0, i) + replacement
+					+ s.substring(i + 1, s.length());
+			i = s.indexOf("\\", i + 1);
+
+		}
+
+		return s;
+	} // replaceEscapes
+
 } // Node

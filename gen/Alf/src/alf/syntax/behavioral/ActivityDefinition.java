@@ -21,7 +21,11 @@ public class ActivityDefinition extends BehaviorDefinition {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		this.getBody().printChild(prefix);
+
+		Block body = this.getBody();
+		if (body != null) {
+			body.printChild(prefix);
+		}
 	} // print
 
 } // ActivityDefinition

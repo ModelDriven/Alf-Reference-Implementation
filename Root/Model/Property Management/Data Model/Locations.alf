@@ -1,0 +1,10 @@
+namespace 'Property Management'::'Data Model';
+
+package Locations {
+
+  public class Location {
+    public identifer: String;
+    public address: String;
+  }
+
+}

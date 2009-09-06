@@ -32,11 +32,12 @@ public class AlfParser implements AlfParserConstants {
       return;
     }
     try {
-      UnitDefinition tree = parser.UnitDefinition();
+      UnitDefinition unit = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
-      tree.print();
-      ArrayList<Member> members = tree.getAllMembers();
-      System.out.println(tree.toString());
+      unit.addImplicitImports();
+      unit.print();
+      ArrayList<Member> members = unit.getAllMembers();
+      System.out.println(unit.toString());
       for (Member member: members) {
         if (member.isError()) {
           member.printChild("");
@@ -1437,8 +1438,8 @@ void PackageImportReference():
         break label_9;
       }
       jj_consume_token(COMMA);
-      FormalParameter();
-                                d.addMember(p);
+      p = FormalParameter();
+                                    d.addMember(p);
     }
   }
 
@@ -4477,17 +4478,6 @@ void LeftHandSide():
     finally { jj_save(41, xla); }
   }
 
-  private boolean jj_3R_240() {
-    if (jj_3R_115()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_253()) {
-    jj_scanpos = xsp;
-    if (jj_3R_254()) return true;
-    }
-    return false;
-  }
-
   private boolean jj_3R_222() {
     if (jj_3R_114()) return true;
     return false;
@@ -6648,6 +6638,17 @@ void LeftHandSide():
   private boolean jj_3R_253() {
     if (jj_scan_token(DOUBLE_DOT)) return true;
     if (jj_3R_115()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_240() {
+    if (jj_3R_115()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_253()) {
+    jj_scanpos = xsp;
+    if (jj_3R_254()) return true;
+    }
     return false;
   }
 

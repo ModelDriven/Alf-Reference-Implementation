@@ -53,11 +53,12 @@ public class AlfParser {
       return;
     }
     try {
-      UnitDefinition tree = parser.UnitDefinition();
+      UnitDefinition unit = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
-      tree.print();
-      ArrayList<Member> members = tree.getAllMembers();
-      System.out.println(tree.toString());
+      unit.addImplicitImports();
+      unit.print();
+      ArrayList<Member> members = unit.getAllMembers();
+      System.out.println(unit.toString());
       for (Member member: members) {
         if (member.isError()) {
           member.printChild("");
@@ -1107,7 +1108,7 @@ void FormalParameterList(NamespaceDefinition d):
 }
 {
   p = FormalParameter() { d.addMember(p); }
-  ( <COMMA> FormalParameter() { d.addMember(p); } )*
+  ( <COMMA> p = FormalParameter() { d.addMember(p); } )*
 }
 
 FormalParameter FormalParameter():
