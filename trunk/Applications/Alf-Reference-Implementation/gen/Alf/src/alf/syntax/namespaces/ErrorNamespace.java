@@ -53,4 +53,14 @@ public class ErrorNamespace extends NamespaceDefinition {
 		return true;
 	} // isError
 
+	public ArrayList<Member> getAllMembers() {
+		ArrayList<Member> error = new ArrayList<Member>();
+		error.add(this);
+		return error;
+	} // getAllMembers
+
+	public ArrayList<Member> getPublicMembers() {
+		return this.getAllMembers();
+	} // getPublicMembers
+
 } // ErrorNamespace

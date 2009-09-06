@@ -51,7 +51,7 @@ public class UnitDefinition extends DocumentedElement {
 	public void addImplicitImports() {
 		QualifiedName namespce = this.getNamespace();
 
-		if (namespace != null && !namespace.isAbsolute()) {
+		if (namespace == null || !namespace.isAbsolute()) {
 			QualifiedName fumlLibrary = new QualifiedName();
 			fumlLibrary.setIsAbsolute();
 			fumlLibrary.addName("FoundationalModelLibrary");

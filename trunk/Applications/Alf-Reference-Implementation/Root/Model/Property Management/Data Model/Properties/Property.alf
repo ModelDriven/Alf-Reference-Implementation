@@ -5,9 +5,9 @@ abstract class Property {
   public identifier: String;
   public name: String;
   public value: 'Currency Amount'[0..1];
-  public status: 'Property Status'
+  public status: 'Property Status';
   
-  public create 'create property'(identifier: String, name: String);
+  public create 'create property'(in identifier: String, in name: String);
   public 'update status'();
   
 }

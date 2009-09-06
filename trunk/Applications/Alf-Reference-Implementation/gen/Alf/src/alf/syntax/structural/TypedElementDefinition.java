@@ -22,7 +22,7 @@ public abstract class TypedElementDefinition extends Member {
 	private TypedElementDeclaration declaration = null;
 
 	public TypedElementDefinition(TypedElementDeclaration declaration) {
-		// TODO
+		this.declaration = declaration;
 	} // TypedElementDefinition
 
 	public TypedElementDeclaration getDeclaration() {
