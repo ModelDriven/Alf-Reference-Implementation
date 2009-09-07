@@ -56,12 +56,12 @@ public class ErrorNode extends Node {
 	} // getNestedError
 
 	public String toString() {
-		return super.toString() + " message:" + message;
+		return super.toString() + " message:" + this.getMessage() + " context:"
+				+ this.getContext();
 	} // toString
 
 	public void print(String prefix) {
 		super.print(prefix);
-		this.getContext().printChild(prefix);
 
 		if (this.getNestedError() != null) {
 			this.getNestedError().printChild(prefix);

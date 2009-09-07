@@ -24,6 +24,7 @@ public class ImportReference extends Node {
 	private String alias = "";
 	private boolean packageImport = false;
 	private Member referent = null;
+	private UnitDefinition unit = null;
 
 	public ImportReference(QualifiedName reference) {
 		this.reference = reference;
@@ -37,6 +38,10 @@ public class ImportReference extends Node {
 		this.alias = alias;
 	} // setAlias
 
+	public String getAlias() {
+		return this.alias;
+	} // getAlias
+
 	public void setVisibility(String visibility) {
 		this.visibility = visibility;
 	} // setVisibility
@@ -44,10 +49,6 @@ public class ImportReference extends Node {
 	public String getVisibility() {
 		return this.visibility;
 	} // getVisibility
-
-	public String getAlias() {
-		return this.alias;
-	} // getAlias
 
 	public void setIsPackageImport() {
 		this.packageImport = true;
@@ -57,13 +58,21 @@ public class ImportReference extends Node {
 		return this.packageImport;
 	} // isPackageImport
 
+	public void setUnit(UnitDefinition unit) {
+		this.unit = unit;
+	} // setUnit
+
+	public UnitDefinition getUnit() {
+		return this.unit;
+	} // getUnit
+
 	public boolean isPublic() {
 		String visibility = this.getVisibility();
 		return visibility != null && visibility.equals("public");
 	} // isPublic
 
 	public String toString() {
-		return super.toString() + "visibility:" + this.getVisibility()
+		return super.toString() + " visibility:" + this.getVisibility()
 				+ " alias:" + this.getAlias() + " packageImport:"
 				+ this.isPackageImport();
 	} // toString
@@ -100,7 +109,8 @@ public class ImportReference extends Node {
 
 	public Member getReferent() {
 		if (this.referent == null) {
-			ArrayList<Member> members = this.getReference().resolve(null);
+			ArrayList<Member> members = this.getReference().resolve(
+					this.getUnit().getModelNamespace());
 			if (members.size() == 1) {
 				Member member = members.get(0);
 				if (member.isError()) {
