@@ -42,6 +42,7 @@ public class UnitDefinition extends DocumentedElement {
 
 	public void addImport(ImportReference importRef) {
 		this.imports.add(importRef);
+		importRef.setUnit(this);
 	} // addImport
 
 	public ArrayList<ImportReference> getImports() {
@@ -49,47 +50,45 @@ public class UnitDefinition extends DocumentedElement {
 	} // getImports
 
 	public void addImplicitImports() {
-		QualifiedName namespce = this.getNamespace();
+		// System.out.println("addImplicitImports: " +
+		// this.getDefinition().getQualifiedName());
+		QualifiedName fumlLibrary = new QualifiedName();
+		fumlLibrary.setIsAbsolute();
+		fumlLibrary.addName("FoundationalModelLibrary");
 
-		if (namespace == null || !namespace.isAbsolute()) {
-			QualifiedName fumlLibrary = new QualifiedName();
-			fumlLibrary.setIsAbsolute();
-			fumlLibrary.addName("FoundationalModelLibrary");
+		QualifiedName primitiveBehaviors = fumlLibrary.copy();
+		primitiveBehaviors.addName("PrimitiveBehaviors");
+		ImportReference primitiveBehaviorsImport = new ImportReference(
+				primitiveBehaviors);
+		primitiveBehaviorsImport.setVisibility("private");
+		primitiveBehaviorsImport.setIsPackageImport();
+		this.addImport(primitiveBehaviorsImport);
 
-			QualifiedName primitiveBehaviors = fumlLibrary.copy();
-			primitiveBehaviors.addName("PrimitiveBehaviors");
-			ImportReference primitiveBehaviorsImport = new ImportReference(
-					primitiveBehaviors);
-			primitiveBehaviorsImport.setVisibility("private");
-			primitiveBehaviorsImport.setIsPackageImport();
-			this.addImport(primitiveBehaviorsImport);
+		QualifiedName common = fumlLibrary.copy();
+		common.addName("Common");
+		ImportReference commonImport = new ImportReference(common);
+		commonImport.setVisibility("private");
+		commonImport.setIsPackageImport();
+		this.addImport(commonImport);
 
-			QualifiedName common = fumlLibrary.copy();
-			common.addName("Common");
-			ImportReference commonImport = new ImportReference(common);
-			commonImport.setVisibility("private");
-			commonImport.setIsPackageImport();
-			this.addImport(commonImport);
+		QualifiedName basicInputOutput = fumlLibrary.copy();
+		basicInputOutput.addName("BasicInputOutput");
+		ImportReference basicInputOutputImport = new ImportReference(
+				basicInputOutput);
+		basicInputOutputImport.setVisibility("private");
+		basicInputOutputImport.setIsPackageImport();
+		this.addImport(basicInputOutputImport);
 
-			QualifiedName basicInputOutput = fumlLibrary.copy();
-			basicInputOutput.addName("BasicInputOutput");
-			ImportReference basicInputOutputImport = new ImportReference(
-					basicInputOutput);
-			basicInputOutputImport.setVisibility("private");
-			basicInputOutputImport.setIsPackageImport();
-			this.addImport(basicInputOutputImport);
-
-			QualifiedName primitiveTypes = new QualifiedName();
-			primitiveTypes.setIsAbsolute();
-			primitiveTypes.addName("UML");
-			primitiveTypes.addName("AuxiliaryConstructs");
-			primitiveTypes.addName("PrimitiveTypes");
-			ImportReference primitiveTypesImport = new ImportReference(
-					primitiveTypes);
-			primitiveTypesImport.setVisibility("private");
-			primitiveTypesImport.setIsPackageImport();
-			this.addImport(primitiveTypesImport);
-		}
+		QualifiedName primitiveTypes = new QualifiedName();
+		primitiveTypes.setIsAbsolute();
+		primitiveTypes.addName("UML");
+		primitiveTypes.addName("AuxiliaryConstructs");
+		primitiveTypes.addName("PrimitiveTypes");
+		ImportReference primitiveTypesImport = new ImportReference(
+				primitiveTypes);
+		primitiveTypesImport.setVisibility("private");
+		primitiveTypesImport.setIsPackageImport();
+		this.addImport(primitiveTypesImport);
 	} // addImplicitImports
 
 	public String toString() {
@@ -169,5 +168,14 @@ public class UnitDefinition extends DocumentedElement {
 	public ArrayList<Member> resolve(String name) {
 		return this.getDefinition().resolve(name);
 	} // resolve
+
+	public NamespaceDefinition getRootNamespace() {
+		return this.getDefinition().getRootNamespace();
+	} // getRootNamespace
+
+	public NamespaceDefinition getModelNamespace() {
+		return ((NamespaceDefinition) this.getRootNamespace().resolve("Model")
+				.get(0));
+	} // getModelNamespace
 
 } // UnitDefinition

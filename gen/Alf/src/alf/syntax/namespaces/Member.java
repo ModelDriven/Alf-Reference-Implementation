@@ -117,7 +117,7 @@ public abstract class Member extends DocumentedElement {
 
 		if (this.isStub()) {
 			completion = this.getCompletion();
-			this.isStub = !completion.isError();
+			this.isStub = completion.isError();
 		}
 
 		return completion;

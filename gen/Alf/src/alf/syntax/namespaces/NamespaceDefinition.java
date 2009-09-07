@@ -24,33 +24,46 @@ public abstract class NamespaceDefinition extends Member {
 
 	public NamespaceDefinition getNamespace() {
 		UnitDefinition unit = this.getUnit();
+		NamespaceDefinition namespace = super.getNamespace();
 
-		if (super.getNamespace() == null && unit != null
-				&& unit.getNamespace() != null) {
-			QualifiedName namespace = unit.getNamespace();
-			ArrayList<Member> resolvents = namespace.resolve(null);
-			if (resolvents.size() == 1 && resolvents.get(0).isError()) {
-				this.setNamespace(new ErrorNamespace(this,
-						(ErrorMember) resolvents.get(0)));
+		if (namespace == null && unit != null) {
+			QualifiedName namespaceName = unit.getNamespace();
+			if (namespaceName == null) {
+				namespace = new ModelNamespace();
+				namespace.addMember(this);
 			} else {
-				for (Object m : resolvents.toArray()) {
-					if (!(m instanceof NamespaceDefinition)) {
-						resolvents.remove(m);
-					}
-				}
-				if (resolvents.size() == 1) {
-					this.setNamespace((NamespaceDefinition) resolvents.get(0));
-				} else if (resolvents.size() > 0) {
-					this.setNamespace(new ErrorNamespace(unit,
-							"Not a namespace: " + namespace));
+				ArrayList<Member> resolvents = namespaceName
+						.resolve(new ModelNamespace());
+				if (resolvents.size() == 1 && resolvents.get(0).isError()) {
+					namespace = new ErrorNamespace(unit,
+							(ErrorMember) resolvents.get(0));
 				} else {
-					this.setNamespace(new ErrorNamespace(unit,
-							"Ambiguous namespace: " + namespace));
+					for (Object m : resolvents.toArray()) {
+						if (!(m instanceof NamespaceDefinition)) {
+							resolvents.remove(m);
+						}
+					}
+					if (resolvents.size() == 1) {
+						namespace = (NamespaceDefinition) resolvents.get(0);
+						Member completion = namespace.completeStub();
+						if (completion != null && completion.isError()) {
+							namespace = new ErrorNamespace(unit,
+									(ErrorMember) completion);
+						} else {
+							namespace.replaceStub(this);
+						}
+					} else if (resolvents.size() > 0) {
+						namespace = new ErrorNamespace(unit,
+								"Not a namespace: " + namespaceName);
+					} else {
+						namespace = new ErrorNamespace(unit,
+								"Ambiguous namespace: " + namespaceName);
+					}
 				}
 			}
 		}
 
-		return super.getNamespace();
+		return namespace;
 	} // getNamespace
 
 	public void addMember(Member member) {
@@ -80,20 +93,23 @@ public abstract class NamespaceDefinition extends Member {
 	} // print
 
 	public QualifiedName getQualifiedName() {
-		if (this.getName().equals("")) {
-			QualifiedName root = new QualifiedName();
-			root.setIsAbsolute();
-			return root;
+		UnitDefinition unit = this.getUnit();
+
+		if (unit == null || super.getNamespace() != null) {
+			return super.getQualifiedName();
 		} else {
-			UnitDefinition unit = this.getUnit();
-			if (unit == null || unit.getNamespace() == null) {
-				return super.getQualifiedName();
+			QualifiedName qualifiedName = unit.getNamespace();
+
+			if (qualifiedName == null) {
+				qualifiedName = new QualifiedName(); // Model scope
 			} else {
-				QualifiedName qualifiedName = unit.getNamespace().copy();
-				qualifiedName.addName(this.getName());
-				return qualifiedName;
+				qualifiedName = qualifiedName.copy();
 			}
+
+			qualifiedName.addName(this.getName());
+			return qualifiedName;
 		}
+
 	} // getQualifiedName
 
 	public ArrayList<Member> getAllMembers() {
@@ -207,12 +223,19 @@ public abstract class NamespaceDefinition extends Member {
 		return qualifiedName.resolve(this);
 	} // resolve
 
-	public void replace(Member original, Member replacement) {
-		this.members.remove(original);
-		original.setNamespace(null);
+	public void replaceStub(Member completion) {
+		ArrayList<Member> members = this.getMembers();
 
-		this.addMember(replacement);
-	} // replace
+		for (Member member : members) {
+			if (member.getName().equals(completion.getName())
+					&& member.isStub()) {
+				members.remove(member);
+				member.setNamespace(null);
+				this.addMember(completion);
+				return;
+			}
+		}
+	} // replaceStub
 
 	public Member completeStub() {
 		Member completion = super.completeStub();
@@ -228,5 +251,9 @@ public abstract class NamespaceDefinition extends Member {
 
 		return completion;
 	} // completeStub
+
+	public NamespaceDefinition getRootNamespace() {
+		return this.getNamespace().getRootNamespace();
+	} // getRootNamespace
 
 } // NamespaceDefinition
