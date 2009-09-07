@@ -34,8 +34,10 @@ public class AlfParser implements AlfParserConstants {
     try {
       UnitDefinition unit = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
+      // unit.print();
       unit.addImplicitImports();
-      unit.print();
+      unit.getRootNamespace().print();
+      /*
       ArrayList<Member> members = unit.getAllMembers();
       System.out.println(unit.toString());
       for (Member member: members) {
@@ -45,6 +47,7 @@ public class AlfParser implements AlfParserConstants {
           System.out.println(member.toString(" "));
         }
       }
+      */
     } catch (ParseException e) {
       System.out.println(e.getMessage());
       System.out.println("Encountered errors during parse.");
@@ -4478,11 +4481,6 @@ void LeftHandSide():
     finally { jj_save(41, xla); }
   }
 
-  private boolean jj_3R_222() {
-    if (jj_3R_114()) return true;
-    return false;
-  }
-
   private boolean jj_3R_223() {
     if (jj_3R_240()) return true;
     return false;
@@ -6649,6 +6647,11 @@ void LeftHandSide():
     jj_scanpos = xsp;
     if (jj_3R_254()) return true;
     }
+    return false;
+  }
+
+  private boolean jj_3R_222() {
+    if (jj_3R_114()) return true;
     return false;
   }
 

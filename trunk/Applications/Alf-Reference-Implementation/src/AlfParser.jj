@@ -55,8 +55,10 @@ public class AlfParser {
     try {
       UnitDefinition unit = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
+      // unit.print();
       unit.addImplicitImports();
-      unit.print();
+      unit.getRootNamespace().print();
+      /*
       ArrayList<Member> members = unit.getAllMembers();
       System.out.println(unit.toString());
       for (Member member: members) {
@@ -66,6 +68,7 @@ public class AlfParser {
           System.out.println(member.toString(" "));
         }
       }
+      */
     } catch (ParseException e) {
       System.out.println(e.getMessage());
       System.out.println("Encountered errors during parse.");
