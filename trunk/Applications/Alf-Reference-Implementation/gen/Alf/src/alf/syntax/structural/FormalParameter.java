@@ -41,7 +41,7 @@ public class FormalParameter extends TypedElementDefinition {
 		return this.getDirection().equals(other.getDirection())
 				&& this.getName().equals(other.getName())
 				&& this.getDeclaration().equals(other.getDeclaration(),
-						this.getNamespace());
+						this.getNamespace().getNamespace());
 	} // equals
 
 } // FormalParameter

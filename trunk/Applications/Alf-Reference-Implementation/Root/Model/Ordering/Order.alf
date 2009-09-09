@@ -12,7 +12,7 @@ active class Order
   public deliveryAddress: MailingAddress;
   public contactPhone:    TelephoneNumber;
 
-  public receive signal Checkout                           // See Note 1
+  public receive signal CheckOut                           // See Note 1
   {
     public cart:               ShoppingCart;
     public accountNumber:      BankCardAccountNumber;
@@ -48,8 +48,8 @@ do                                                         // See Note 3
 {
 
   /** 1. Establishing Customer and Verifying Payment */
-  accept (checkout: Checkout);
-  this.EstablishCustomer(checkout);
+  accept (checkOut: CheckOut);
+  this.EstablishCustomer(checkOut);
 
   do {
 

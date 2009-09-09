@@ -50,7 +50,11 @@ public abstract class NamespaceDefinition extends Member {
 							namespace = new ErrorNamespace(unit,
 									(ErrorMember) completion);
 						} else {
-							namespace.replaceStub(this);
+							completion = namespace.replaceStub(this);
+							if (completion.isError()) {
+								namespace = new ErrorNamespace(unit,
+										(ErrorMember) completion);
+							}
 						}
 					} else if (resolvents.size() > 0) {
 						namespace = new ErrorNamespace(unit,
@@ -59,6 +63,7 @@ public abstract class NamespaceDefinition extends Member {
 						namespace = new ErrorNamespace(unit,
 								"Ambiguous namespace: " + namespaceName);
 					}
+					this.setNamespace(namespace);
 				}
 			}
 		}
@@ -223,30 +228,33 @@ public abstract class NamespaceDefinition extends Member {
 		return qualifiedName.resolve(this);
 	} // resolve
 
-	public void replaceStub(Member completion) {
+	public Member replaceStub(Member completion) {
 		ArrayList<Member> members = this.getMembers();
 
 		for (Member member : members) {
 			if (member.getName().equals(completion.getName())
-					&& member.isStub()) {
-				members.remove(member);
-				member.setNamespace(null);
-				this.addMember(completion);
-				return;
+					&& member.isStub() && member.isCompletedBy(completion)) {
+				return member.completeStub(completion);
 			}
 		}
+
+		return new ErrorMember(completion, "Invalid subunit: "
+				+ completion.getQualifiedName());
 	} // replaceStub
 
-	public Member completeStub() {
-		Member completion = super.completeStub();
+	public Member completeStub(Member completion) {
+		completion = super.completeStub(completion);
 
-		if (completion != null && !completion.isError()
-				&& completion instanceof NamespaceDefinition) {
+		if (!completion.isError() && completion instanceof NamespaceDefinition) {
 			for (Member member : ((NamespaceDefinition) completion)
 					.getMembers()) {
 				this.addMember(member);
 			}
-			this.setUnit(((NamespaceDefinition) completion).getUnit());
+
+			UnitDefinition unit = ((NamespaceDefinition) completion).getUnit();
+			if (unit != null) {
+				this.setUnit(unit);
+			}
 		}
 
 		return completion;

@@ -21,8 +21,8 @@ public abstract class Member extends DocumentedElement {
 
 	private String name = "";
 	private String visibility = "";
-	private NamespaceDefinition namespace = null;
 	private boolean isStub = false;
+	private NamespaceDefinition namespace = null;
 
 	public void setName(String name) {
 		this.name = name;
@@ -116,10 +116,14 @@ public abstract class Member extends DocumentedElement {
 		Member completion = null;
 
 		if (this.isStub()) {
-			completion = this.getCompletion();
-			this.isStub = completion.isError();
+			completion = this.completeStub(this.getCompletion());
 		}
 
+		return completion;
+	} // completeStub
+
+	public Member completeStub(Member completion) {
+		this.isStub = completion.isError();
 		return completion;
 	} // completeStub
 

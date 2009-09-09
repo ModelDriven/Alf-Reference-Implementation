@@ -77,21 +77,29 @@ public class ActiveClassDefinition extends ClassDefinition {
 			}
 		} else {
 			completion = super.completeStub();
+		}
 
-			if (completion != null && !completion.isError()) {
-				completion = ((ActiveClassDefinition) completion)
-						.completeStub();
-				if (!completion.isError()) {
-					behaviorName = ((ActiveClassDefinition) completion)
-							.getBehaviorName();
-					if (behaviorName != null) {
-						this.setBehaviorName(behaviorName);
-					}
-					Block behaviorBlock = ((ActiveClassDefinition) completion)
-							.getBehaviorBlock();
-					if (behaviorBlock != null) {
-						this.setBehaviorBlock(behaviorBlock);
-					}
+		return completion;
+	} // completeStub
+
+	public Member completeStub(Member completion) {
+		completion = super.completeStub(completion);
+
+		if (!completion.isError()) {
+			Member furtherCompletion = ((ActiveClassDefinition) completion)
+					.completeStub();
+			if (furtherCompletion != null && completion.isError()) {
+				completion = furtherCompletion;
+			} else {
+				behaviorName = ((ActiveClassDefinition) completion)
+						.getBehaviorName();
+				if (behaviorName != null) {
+					this.setBehaviorName(behaviorName);
+				}
+				Block behaviorBlock = ((ActiveClassDefinition) completion)
+						.getBehaviorBlock();
+				if (behaviorBlock != null) {
+					this.setBehaviorBlock(behaviorBlock);
 				}
 			}
 		}

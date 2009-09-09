@@ -29,24 +29,19 @@ public abstract class BehaviorDefinition extends NamespaceDefinition {
 		return this.body;
 	} // getBody
 
-	public Member completeStub() {
-		Member completion = null;
+	public Member completeStub(Member completion) {
+		this.getMembers().clear();
+		completion = super.completeStub(completion);
 
-		if (this.isStub()) {
-			this.getMembers().clear();
-			completion = super.completeStub();
-
-			if (completion != null && !completion.isError()) {
-				this.setBody(((ActivityDefinition) completion).getBody());
-			}
+		if (!completion.isError()) {
+			this.setBody(((ActivityDefinition) completion).getBody());
 		}
 
 		return completion;
 	} // completeStub
 
 	public boolean isCompletedBy(Member member) {
-		if (!(member instanceof ActivityDefinition)
-				|| !super.isCompletedBy(member)) {
+		if (!(member instanceof ActivityDefinition)) {
 			return false;
 		} else {
 			ActivityDefinition activity = (ActivityDefinition) member;

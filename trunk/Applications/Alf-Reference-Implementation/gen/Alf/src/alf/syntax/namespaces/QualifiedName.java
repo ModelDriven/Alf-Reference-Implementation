@@ -174,24 +174,6 @@ public class QualifiedName extends Node {
 		}
 	} // resolveSubunit
 
-	public NamespaceDefinition getRootNamespace1() {
-		QualifiedName root = new QualifiedName();
-		root.setIsAbsolute();
-		Member member = root.resolveSubunit();
-
-		if (member.isError()) {
-			return new ErrorNamespace(this, (ErrorMember) member);
-		} else if (member instanceof NamespaceDefinition) {
-			return (NamespaceDefinition) member;
-		} else {
-			return new ErrorNamespace(this, "Invalid root namespace");
-		}
-	} // getRootNamespace1
-
-	public NamespaceDefinition getModelScope1() {
-		return new ModelScopeNamespace();
-	} // getModelScope1
-
 	public QualifiedName copy() {
 		QualifiedName copy = new QualifiedName();
 
@@ -224,22 +206,28 @@ public class QualifiedName extends Node {
 		}
 	} // equals
 
-	public boolean isEquivalentTo(QualifiedName other,
-			NamespaceDefinition context) {
-		ArrayList<Member> resolvents = this.resolve(context);
-		ArrayList<Member> otherResolvents = other.resolve(context);
+	public Member getClassifier(NamespaceDefinition context) {
 
-		if (resolvents.size() != 1 || otherResolvents.size() != 1) {
-			return false;
+		ArrayList<Member> members = this.resolve(context);
+
+		if (members.size() == 1 && members.get(0).isError()) {
+			return new ErrorMember(this, (ErrorMember) (members.get(0)));
 		} else {
-			Member resolvent = resolvents.get(0);
-			Member otherResolvent = otherResolvents.get(0);
+			for (Object member : members.toArray()) {
+				if (!(member instanceof ClassifierDefinition)) {
+					members.remove(member);
+				}
+			}
 
-			return !resolvent.isError()
-					&& !otherResolvent.isError()
-					&& resolvent.getQualifiedName().equals(
-							otherResolvent.getQualifiedName());
+			if (members.size() == 1) {
+				return members.get(0);
+			} else if (members.size() == 0) {
+				return new ErrorMember(this, "Type not found: " + this);
+			} else {
+				return new ErrorMember(this, "Ambiguous type reference: "
+						+ this);
+			}
 		}
-	} // isEquivalentTo
+	} // getClassifier
 
 } // QualifiedName
