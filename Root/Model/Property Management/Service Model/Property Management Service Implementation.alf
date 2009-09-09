@@ -10,5 +10,7 @@ class 'Property Management Service Implementation' specializes 'Property Managem
   public dispose(in request: 'Property Disposition Notification', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1]);
   public delete(in request: 'Property Record Deletion', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1]);
   public retrieve(in request: 'Property Record Retrieval', out reply: 'Property Management Service Reply'[0..1], out error: 'Error Reply'[0..1]);
+  
+  private 'create reply'(in requestId: String, in property: Property): 'Property Management Success Reply'
 
 }

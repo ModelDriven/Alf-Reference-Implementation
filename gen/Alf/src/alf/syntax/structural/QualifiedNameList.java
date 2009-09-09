@@ -59,8 +59,19 @@ public class QualifiedNameList extends Node {
 			for (QualifiedName otherName : otherList) {
 				found = false;
 
+				Member otherClassifier = otherName.getClassifier(context);
+				if (otherClassifier.isError()) {
+					return false;
+				}
+
 				for (QualifiedName name : list) {
-					if (otherName.isEquivalentTo(name, context)) {
+
+					Member classifier = name.getClassifier(context);
+					if (classifier.isError()) {
+						return false;
+					}
+
+					if (classifier == otherClassifier) {
 						list.remove(name);
 						found = true;
 						break;

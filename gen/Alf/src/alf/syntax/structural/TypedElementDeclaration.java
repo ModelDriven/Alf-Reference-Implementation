@@ -91,8 +91,13 @@ public class TypedElementDeclaration extends Node {
 
 	public boolean equals(TypedElementDeclaration other,
 			NamespaceDefinition context) {
-		return (this.getType() == null && other.getType() == null || this
-				.getType().isEquivalentTo(other.getType(), context))
+		Member thisClassifier = this.getClassifier(context);
+		Member otherClassifier = other.getClassifier(context);
+
+		// System.out.println("thisClassifier = " + thisClassifier);
+		// System.out.println("otherClassifier = " + otherClassifier);
+
+		return thisClassifier == otherClassifier
 				&& (this.getCollection() == null
 						&& other.getCollection() == null
 						&& this.getLower() == other.getLower()
@@ -128,5 +133,19 @@ public class TypedElementDeclaration extends Node {
 			return Integer.valueOf(upper);
 		}
 	} // getUpper
+
+	public Member getClassifier(NamespaceDefinition context) {
+		QualifiedName type = this.getType();
+
+		if (type == null) {
+			return null;
+		} else {
+			Member classifier = type.getClassifier(context);
+			if (classifier.isError()) {
+				classifier = new ErrorMember(this, (ErrorMember) classifier);
+			}
+			return classifier;
+		}
+	} // getClassifier
 
 } // TypedElementDeclaration
