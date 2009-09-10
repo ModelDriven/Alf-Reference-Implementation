@@ -27,4 +27,10 @@ public class PackageDefinition extends NamespaceDefinition {
 		return member instanceof PackageDefinition;
 	} // isCompletedBy
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof PackageDefinition)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
+
 } // PackageDefinition

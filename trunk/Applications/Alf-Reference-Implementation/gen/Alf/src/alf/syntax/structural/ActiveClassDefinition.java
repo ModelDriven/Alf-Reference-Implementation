@@ -19,89 +19,30 @@ import java.util.ArrayList;
 
 public class ActiveClassDefinition extends ClassDefinition {
 
-	private String behaviorName = "";
-	private Block behaviorBlock = null;
+	private ActivityDefinition classifierBehavior = null;
 
-	public void setBehaviorName(String behaviorName) {
-		this.behaviorName = behaviorName;
-	} // setBehaviorName
+	public void setClassifierBehavior(ActivityDefinition activity) {
+		this.addMember(activity);
+		this.classifierBehavior = activity;
+	} // setClassifierBehavior
 
-	public String getBehaviorName() {
-		return this.behaviorName;
-	} // getBehaviorName
-
-	public void setBehaviorBlock(Block behavior) {
-		this.behaviorBlock = behavior;
-	} // setBehaviorBlock
-
-	public Block getBehaviorBlock() {
-		return this.behaviorBlock;
-	} // getBehaviorBlock
+	public ActivityDefinition getClassifierBehavior() {
+		return this.classifierBehavior;
+	} // getClassifierBehavior
 
 	public String toString() {
-		return super.toString() + " behaviorName:" + this.getBehaviorName();
+		return super.toString() + " classifierBehavior:"
+				+ this.getClassifierBehavior();
 	} // toString
-
-	public void print(String prefix) {
-		super.print(prefix);
-
-		Block behavior = this.getBehaviorBlock();
-		if (behavior != null) {
-			behavior.printChild(prefix);
-		}
-	} // print
-
-	public Member completeStub() {
-		Member completion;
-
-		String behaviorName = this.getBehaviorName();
-
-		if (behaviorName != null && !behaviorName.equals("")
-				&& this.getBehaviorBlock() == null) {
-			QualifiedName qualifiedName = this.getQualifiedName();
-			qualifiedName.addName(behaviorName);
-
-			completion = qualifiedName.resolveSubunit();
-
-			if (completion.isError()) {
-				completion = new ErrorMember(this, "Cannot resolve: "
-						+ qualifiedName, (ErrorMember) completion);
-			} else if (!(completion instanceof ActivityDefinition)
-					|| ((ActivityDefinition) completion).getMembers().size() > 0) {
-				completion = new ErrorMember(this,
-						"Invalid classifier behavior: " + qualifiedName,
-						(ErrorMember) completion);
-			} else {
-				this.setBehaviorBlock(((ActivityDefinition) completion)
-						.getBody());
-			}
-		} else {
-			completion = super.completeStub();
-		}
-
-		return completion;
-	} // completeStub
 
 	public Member completeStub(Member completion) {
 		completion = super.completeStub(completion);
 
 		if (!completion.isError()) {
-			Member furtherCompletion = ((ActiveClassDefinition) completion)
-					.completeStub();
-			if (furtherCompletion != null && completion.isError()) {
-				completion = furtherCompletion;
-			} else {
-				behaviorName = ((ActiveClassDefinition) completion)
-						.getBehaviorName();
-				if (behaviorName != null) {
-					this.setBehaviorName(behaviorName);
-				}
-				Block behaviorBlock = ((ActiveClassDefinition) completion)
-						.getBehaviorBlock();
-				if (behaviorBlock != null) {
-					this.setBehaviorBlock(behaviorBlock);
-				}
-			}
+			// super.completeStub will already have added the classifier
+			// behavior as a member.
+			this.classifierBehavior = ((ActiveClassDefinition) completion)
+					.getClassifierBehavior();
 		}
 
 		return completion;
@@ -110,6 +51,7 @@ public class ActiveClassDefinition extends ClassDefinition {
 	public boolean isCompletedBy(Member member) {
 		return member instanceof ActiveClassDefinition
 				&& super.isCompletedBy(member);
+
 	} // isCompletedBy
 
 } // ActiveClassDefinition

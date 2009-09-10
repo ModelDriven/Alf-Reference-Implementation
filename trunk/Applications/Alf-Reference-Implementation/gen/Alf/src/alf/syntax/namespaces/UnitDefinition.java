@@ -120,7 +120,7 @@ public class UnitDefinition extends DocumentedElement {
 			importedMembers.addAll(importRef.getMembers());
 		}
 
-		return importedMembers;
+		return this.removeConflicts(importedMembers);
 	} // getImportedMembers
 
 	public ArrayList<Member> getImportedPublicMembers() {
@@ -132,8 +132,26 @@ public class UnitDefinition extends DocumentedElement {
 			}
 		}
 
-		return importedMembers;
+		return this.removeConflicts(importedMembers);
 	} // getImportedPublicMembers
+
+	public ArrayList<Member> removeConflicts(ArrayList<Member> members) {
+		NamespaceDefinition namespace = this.getDefinition();
+		ArrayList<Member> ownedMembers = namespace.getMembers();
+		ArrayList<Member> otherMembers = (ArrayList<Member>) members.clone();
+		int i = 0;
+		while (otherMembers.size() > 0) {
+			Member member = otherMembers.remove(0);
+			if (member.isDistinguishableFromAll(otherMembers, namespace)
+					&& member.isDistinguishableFromAll(ownedMembers, namespace)) {
+				i++;
+			} else {
+				members.remove(i);
+			}
+		}
+
+		return members;
+	} // removeConflicts
 
 	public ArrayList<Member> resolveImports(String name) {
 		ArrayList<Member> members = new ArrayList<Member>();
@@ -174,8 +192,33 @@ public class UnitDefinition extends DocumentedElement {
 	} // getRootNamespace
 
 	public NamespaceDefinition getModelNamespace() {
-		return ((NamespaceDefinition) this.getRootNamespace().resolve("Model")
-				.get(0));
+		return this.getDefinition().getModelNamespace();
 	} // getModelNamespace
+
+	public ArrayList<String> getImportedNamesOfMember(Member member) {
+		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<ImportReference> imports = this.getImports();
+
+		for (ImportReference importRef : imports) {
+			if (!importRef.isPackageImport()
+					&& importRef.getReferent() == member) {
+				names.add(importRef.getName());
+			}
+		}
+
+		if (names.size() == 0) {
+			for (ImportReference importRef : imports) {
+				if (importRef.isPackageImport()) {
+					NamespaceDefinition referent = (NamespaceDefinition) importRef
+							.getReferent();
+					if (referent.getPublicMembers().contains(member)) {
+						names.addAll(referent.getNamesOfMember(member));
+					}
+				}
+			}
+		}
+
+		return names;
+	} // getImportedNamesOfMember
 
 } // UnitDefinition

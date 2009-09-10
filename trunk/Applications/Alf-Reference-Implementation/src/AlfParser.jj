@@ -38,11 +38,11 @@ public class AlfParser {
       System.out.println("Reading from standard input...");
       parser = new AlfParser(System.in);
     } else if (args.length == 1) {
-      System.out.println("Reading from file " + args[0] + "...");
+      System.out.println("Parsing " + args[0] + "...");
       try {
         parser = new AlfParser(new java.io.FileInputStream(args[0]));
       } catch (java.io.FileNotFoundException e) {
-        System.out.println("File " + args[0] + " not found.");
+        System.out.println("File not found: " + args[0]);
         return;
       }
     } else {
@@ -724,24 +724,31 @@ ActiveClassDefinition ActiveClassDefinition():
 {
   ActiveClassDefinition d;
   Member m;
+  ActivityDefinition a;
   
 }
 {
   d = ActiveClassDeclaration()
   <LBRACE> ( m = ActiveClassMember() { d.addMember(m); } )* <RBRACE>
-  [ <DO> BehaviorClause(d) ]
+  [ <DO> a = BehaviorClause() { d.setClassifierBehavior(a); } ]
   
   { return d; }
 }
 
-void BehaviorClause(ActiveClassDefinition d):
+ActivityDefinition BehaviorClause():
 {
+  ActivityDefinition a = new ActivityDefinition();
   Block b;
   String n;
 }
 {
-  b = Block() { d.setBehaviorBlock(b); }
-| n = Name() { d.setBehaviorName(n); }
+	(
+	  b = Block() { a.setBody(b); }
+	| n = Name() { a.setName(n); a.setIsStub(); }
+	)
+	
+	{ a.setVisibility("private");
+	  return a; }
 }
 
 Member ActiveClassMember():

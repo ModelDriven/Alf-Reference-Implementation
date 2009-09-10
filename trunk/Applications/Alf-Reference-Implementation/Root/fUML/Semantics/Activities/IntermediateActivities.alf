@@ -1,0 +1,18 @@
+namespace ::fUML::Semantics::Activities;
+
+package IntermediateActivities {
+
+  public class ActivityNodeActivation { 
+  
+    public run();
+    public receiveOffer();
+    
+  }
+
+  public class ActivityNodeActivationGroup {
+  
+    public run(in activations: ActivityNodeActivation[*]);
+    
+  }
+  
+}

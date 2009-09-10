@@ -24,4 +24,10 @@ public class AssociationDefinition extends ClassifierDefinition {
 				&& super.isCompletedBy(member);
 	} // isCompletedBy
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof AssociationDefinition)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
+
 } // AssociationDefinition

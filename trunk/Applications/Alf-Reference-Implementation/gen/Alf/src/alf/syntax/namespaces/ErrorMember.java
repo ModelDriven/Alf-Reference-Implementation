@@ -71,4 +71,9 @@ public class ErrorMember extends Member {
 		return error;
 	} // getAllMembers
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return true;
+	} // isDistinguishableFrom
+
 } // ErrorMember

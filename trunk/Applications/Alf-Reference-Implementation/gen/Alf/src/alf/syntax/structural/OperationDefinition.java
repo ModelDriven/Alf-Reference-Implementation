@@ -54,4 +54,46 @@ public class OperationDefinition extends BehaviorDefinition {
 		}
 	} // print
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		if (!(other instanceof ReceptionDefinition
+				|| other instanceof SignalReceptionDefinition || other instanceof OperationDefinition)
+				|| super.isDistinguishableFrom(other, namespace)) {
+			return true;
+		} else {
+			Member member;
+			if (other instanceof ReceptionDefinition) {
+				member = ((ReceptionDefinition) other).resolveSignal();
+			} else {
+				member = other;
+			}
+
+			if (member.isError()) {
+				return true;
+			} else {
+				// Signal definition or operation definition
+				NamespaceDefinition otherDefinition = (NamespaceDefinition) member;
+
+				// Must be typed element definitions
+				ArrayList<Member> otherMembers = otherDefinition.getMembers();
+
+				// Must be formal parameters
+				ArrayList<Member> parameters = this.getMembers();
+
+				if (parameters.size() != otherMembers.size()) {
+					return true;
+				} else {
+					for (int i = 0; i < parameters.size(); i++) {
+						if (((TypedElementDefinition) parameters.get(i))
+								.getType() != ((TypedElementDefinition) otherMembers
+								.get(i)).getType()) {
+							return true;
+						}
+					}
+					return false;
+				}
+			}
+		}
+	} // isDistinguishableFrom
+
 } // OperationDefinition

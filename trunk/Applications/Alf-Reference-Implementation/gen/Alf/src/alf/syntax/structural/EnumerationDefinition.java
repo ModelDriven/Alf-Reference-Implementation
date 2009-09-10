@@ -24,4 +24,10 @@ public class EnumerationDefinition extends ClassifierDefinition {
 				&& super.isCompletedBy(member);
 	} // isCompletedBy
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof EnumerationDefinition)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
+
 } // EnumerationDefinition

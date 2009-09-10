@@ -83,14 +83,27 @@ public class QualifiedName extends Node {
 		Boolean allowPackageOnly = true;
 		int n = names.size();
 
-		for (int i = 0; i < n; i++) {
-			members = namespace.resolvePublic(names.get(i), allowPackageOnly);
-			if (members.size() == 1 && members.get(0).isError()) {
-				ArrayList<Member> error = new ArrayList<Member>();
-				error.add(new ErrorMember(this, (ErrorMember) members.get(0)));
-				return error;
+		if (n > 0) {
+			String name = names.get(0);
+			members = namespace.resolve(name);
+
+			if (members.size() == 0
+					&& (namespace instanceof ModelNamespace || namespace instanceof RootNamespace)) {
+				QualifiedName qualifiedName = namespace.getQualifiedName();
+				qualifiedName.addName(name);
+				Member member = qualifiedName.resolveSubunit();
+				member.setName(name); // (Ensures an error member is named)
+				namespace.addMember(member);
+				members.add(member);
 			}
-			if (i < n - 1) {
+
+			for (int i = 1; i < n; i++) {
+				if (members.size() == 1 && members.get(0).isError()) {
+					ArrayList<Member> error = new ArrayList<Member>();
+					error.add(new ErrorMember(this, (ErrorMember) members
+							.get(0)));
+					return error;
+				}
 				for (Object m : members.toArray()) {
 					if (!(m instanceof NamespaceDefinition)) {
 						members.remove(m);
@@ -109,6 +122,8 @@ public class QualifiedName extends Node {
 				} else {
 					namespace = (NamespaceDefinition) members.get(0);
 					allowPackageOnly = !(namespace instanceof PackageDefinition);
+					members = namespace.resolvePublic(names.get(i),
+							allowPackageOnly);
 				}
 			}
 		}
@@ -207,7 +222,6 @@ public class QualifiedName extends Node {
 	} // equals
 
 	public Member getClassifier(NamespaceDefinition context) {
-
 		ArrayList<Member> members = this.resolve(context);
 
 		if (members.size() == 1 && members.get(0).isError()) {

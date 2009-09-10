@@ -143,4 +143,40 @@ public abstract class Member extends DocumentedElement {
 		return false;
 	} // isCompletedBy
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		// System.out.println("isDistinguishableFrom: this = " + this +
+		// ", other = " + other);
+
+		ArrayList<String> names = namespace.getNamesOfMember(this);
+		ArrayList<String> otherNames = namespace.getNamesOfMember(other);
+
+		for (String name : names) {
+			// System.out.println("  name = " + name);
+			for (String otherName : otherNames) {
+				// System.out.println("    otherName = " + otherName);
+				if (otherName.equals(name)) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	} // isDistinguishableFrom
+
+	public boolean isDistinguishableFromAll(ArrayList<Member> others,
+			NamespaceDefinition namespace) {
+		// System.out.println("isDistinguishableFromAll: this = " + this +
+		// "...");
+		for (Member other : others) {
+			// System.out.println("  other = " + other + "...");
+			if (!this.isDistinguishableFrom(other, namespace)) {
+				// System.out.println("Failed!");
+				return false;
+			}
+		}
+
+		return true;
+	} // isDistinguishableFromAll
+
 } // Member

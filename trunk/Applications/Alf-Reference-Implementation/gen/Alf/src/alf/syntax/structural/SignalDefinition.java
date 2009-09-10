@@ -24,4 +24,17 @@ public class SignalDefinition extends ClassifierDefinition {
 				&& super.isCompletedBy(member);
 	} // isCompletedBy
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		if (other instanceof ReceptionDefinition
+				|| other instanceof OperationDefinition) {
+			return other.isDistinguishableFrom(this, namespace); // In case this
+																	// is a
+																	// SignalReeptionDefinition
+		} else {
+			return !(other instanceof SignalDefinition)
+					|| super.isDistinguishableFrom(other, namespace);
+		}
+	} // isDistinguishableFrom
+
 } // SignalDefinition

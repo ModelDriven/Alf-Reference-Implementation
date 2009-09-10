@@ -23,4 +23,10 @@ public class ClassDefinition extends ClassifierDefinition {
 		return member instanceof ClassDefinition && super.isCompletedBy(member);
 	} // isCompletedBy
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof ClassDefinition)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
+
 } // ClassDefinition

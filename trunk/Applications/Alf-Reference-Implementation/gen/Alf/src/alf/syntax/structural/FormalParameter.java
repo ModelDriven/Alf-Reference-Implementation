@@ -38,10 +38,20 @@ public class FormalParameter extends TypedElementDefinition {
 	} // toString
 
 	public boolean equals(FormalParameter other) {
+		// System.out.println("Checking: ");
+		// this.print("  ");
+		// other.print("  ");
+
 		return this.getDirection().equals(other.getDirection())
 				&& this.getName().equals(other.getName())
 				&& this.getDeclaration().equals(other.getDeclaration(),
 						this.getNamespace().getNamespace());
 	} // equals
+
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof FormalParameter)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
 
 } // FormalParameter

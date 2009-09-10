@@ -19,27 +19,6 @@ import java.util.ArrayList;
 
 public class RootNamespace extends NamespaceDefinition {
 
-	public ArrayList<Member> resolve(String name) {
-		ArrayList<Member> members = super.resolve(name);
-
-		if (members.size() == 0) {
-			Member member;
-			if (name.equals("Model")) {
-				member = new ModelNamespace(this);
-			} else {
-				QualifiedName qualifiedName = this.getQualifiedName();
-				qualifiedName.addName(name);
-
-				member = qualifiedName.resolveSubunit();
-				member.setName(name); // (Ensures an error member is named)
-				this.addMember(member);
-			}
-			members.add(member);
-		}
-
-		return members;
-	} // resolve
-
 	public ArrayList<Member> resolvePublic(String name, boolean allowPackageOnly) {
 		return this.resolve(name);
 	} // resolvePublic
@@ -47,6 +26,16 @@ public class RootNamespace extends NamespaceDefinition {
 	public NamespaceDefinition getRootNamespace() {
 		return this;
 	} // getRootNamespace
+
+	public NamespaceDefinition getModelNamespace() {
+		ArrayList<Member> members = this.resolve("Model");
+
+		if (members.size() > 0) {
+			return (ModelNamespace) members.get(0);
+		} else {
+			return new ModelNamespace(this);
+		}
+	} // getModelNamespace
 
 	public QualifiedName getQualifiedName() {
 		QualifiedName qualifiedName = new QualifiedName();

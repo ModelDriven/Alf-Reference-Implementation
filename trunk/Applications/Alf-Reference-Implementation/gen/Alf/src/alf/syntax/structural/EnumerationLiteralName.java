@@ -24,4 +24,10 @@ public class EnumerationLiteralName extends Member {
 		this.addDocumentation(documentation);
 	} // EnumerationLiteralName
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof EnumerationLiteralName)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
+
 } // EnumerationLiteralName

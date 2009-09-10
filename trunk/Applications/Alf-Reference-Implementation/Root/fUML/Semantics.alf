@@ -1,0 +1,7 @@
+namespace ::fUML;
+
+package Semantics {
+
+  public package Activities;
+  
+}

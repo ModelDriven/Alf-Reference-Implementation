@@ -1,0 +1,5 @@
+package Shipping {
+
+  public class Shipment { }
+
+}
