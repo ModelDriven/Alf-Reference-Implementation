@@ -1,5 +1,5 @@
 namespace Ordering::Order;
-private import ::TIM;
+private import TIM;
 /**
 From Executable UML, Figure B.3, entry behavior for
 Establishing Customer and Verifying Payment

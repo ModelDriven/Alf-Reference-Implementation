@@ -24,4 +24,10 @@ public class DataTypeDefinition extends ClassifierDefinition {
 				&& super.isCompletedBy(member);
 	} // isCompletedBy
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof DataTypeDefinition)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
+
 } // DataTypeDefinition

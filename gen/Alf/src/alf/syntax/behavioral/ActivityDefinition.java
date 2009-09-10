@@ -28,4 +28,10 @@ public class ActivityDefinition extends BehaviorDefinition {
 		}
 	} // print
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof ActivityDefinition)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
+
 } // ActivityDefinition

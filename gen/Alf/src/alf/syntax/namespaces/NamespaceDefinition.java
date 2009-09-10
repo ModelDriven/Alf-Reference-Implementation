@@ -169,16 +169,6 @@ public abstract class NamespaceDefinition extends Member {
 				}
 			}
 
-			NamespaceDefinition namespace = this.getNamespace();
-
-			if (namespace != null) {
-				ArrayList<Member> outerMembers = namespace.resolve(name);
-				if (outerMembers.size() == 1 && outerMembers.get(0).isError()) {
-					return outerMembers;
-				}
-				members.addAll(outerMembers);
-			}
-
 			UnitDefinition unit = this.getUnit();
 			if (unit != null) {
 				ArrayList<Member> imports = unit.resolveImports(name);
@@ -187,6 +177,21 @@ public abstract class NamespaceDefinition extends Member {
 				}
 				members.addAll(imports);
 			}
+
+			NamespaceDefinition namespace = this.getNamespace();
+
+			if (namespace != null) {
+				ArrayList<Member> outerMembers = namespace.resolve(name);
+				if (outerMembers.size() == 1 && outerMembers.get(0).isError()) {
+					return outerMembers;
+				}
+				for (Member outerMember : outerMembers) {
+					if (outerMember.isDistinguishableFromAll(members, this)) {
+						members.add(outerMember);
+					}
+				}
+			}
+
 		}
 
 		return members;
@@ -253,7 +258,7 @@ public abstract class NamespaceDefinition extends Member {
 
 			UnitDefinition unit = ((NamespaceDefinition) completion).getUnit();
 			if (unit != null) {
-				this.setUnit(unit);
+				unit.setDefinition(this);
 			}
 		}
 
@@ -263,5 +268,21 @@ public abstract class NamespaceDefinition extends Member {
 	public NamespaceDefinition getRootNamespace() {
 		return this.getNamespace().getRootNamespace();
 	} // getRootNamespace
+
+	public NamespaceDefinition getModelNamespace() {
+		return this.getNamespace().getModelNamespace();
+	} // getModelNamespace
+
+	public ArrayList<String> getNamesOfMember(Member member) {
+		ArrayList<String> names = new ArrayList<String>();
+
+		if (this.getMembers().contains(member)) {
+			names.add(member.getName());
+		} else if (this.getUnit() != null) {
+			names = this.getUnit().getImportedNamesOfMember(member);
+		}
+
+		return names;
+	} // getNamesOfMember
 
 } // NamespaceDefinition

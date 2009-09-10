@@ -1,0 +1,7 @@
+import DomainDataTypes::*;
+
+class TIM {
+
+  public current_date: date;
+  
+}

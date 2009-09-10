@@ -26,18 +26,6 @@ public class TypedElementDeclaration extends Node {
 	private boolean isNonunique = false;
 	private String collection = "";
 
-	public void setType(QualifiedName type) {
-		this.type = type;
-	} // setType
-
-	public QualifiedName getType() {
-		return this.type;
-	} // getType
-
-	public void setIsOrdered() {
-		this.isOrdered = true;
-	} // setIsOrdered
-
 	public void setLowerBound(String lowerBound) {
 		this.lowerBound = lowerBound;
 	} // setLowerBound
@@ -54,6 +42,10 @@ public class TypedElementDeclaration extends Node {
 		return this.upperBound;
 	} // getUpperBound
 
+	public void setIsOrdered() {
+		this.isOrdered = true;
+	} // setIsOrdered
+
 	public boolean isOrdered() {
 		return this.isOrdered;
 	} // isOrdered
@@ -65,6 +57,14 @@ public class TypedElementDeclaration extends Node {
 	public boolean isNonunique() {
 		return this.isNonunique;
 	} // isNonunique
+
+	public void setType(QualifiedName type) {
+		this.type = type;
+	} // setType
+
+	public QualifiedName getType() {
+		return this.type;
+	} // getType
 
 	public void setCollection(String collection) {
 		this.collection = collection;
@@ -98,34 +98,34 @@ public class TypedElementDeclaration extends Node {
 		// System.out.println("otherClassifier = " + otherClassifier);
 
 		return thisClassifier == otherClassifier
-				&& (this.getCollection() == null
-						&& other.getCollection() == null
-						&& this.getLower() == other.getLower()
-						&& this.getUpper() == other.getUpper()
-						&& this.isOrdered() == other.isOrdered()
-						&& this.isNonunique() == other.isNonunique() || this
-						.getCollection().equals(other.getCollection()));
+				&& this.getLower() == other.getLower()
+				&& this.getUpper() == other.getUpper()
+				&& this.getOrdering() == other.getOrdering()
+				&& this.getNonuniqueness() == other.getNonuniqueness();
 	} // equals
 
 	public int getLower() {
 		String lower = this.getLowerBound();
+		String collection = this.getCollection();
 
-		if (lower != null && !lower.equals("")) {
+		if (collection != null && !collection.equals("")) {
+			return 0;
+		} else if (lower != null && !lower.equals("")) {
 			return Integer.valueOf(lower);
 		} else {
 			int upper = this.getUpper();
-			if (upper == -1) {
-				return 0;
-			} else {
-				return upper;
-			}
+			return (upper == -1) ? 0 : upper;
 		}
+
 	} // getLower
 
 	public int getUpper() {
 		String upper = this.getUpperBound();
+		String collection = this.getCollection();
 
-		if (upper == null || upper.equals("")) {
+		if (collection != null && !collection.equals("")) {
+			return collection.equals("Option") ? 1 : -1;
+		} else if (upper == null || upper.equals("")) {
 			return 1;
 		} else if (upper.equals("*")) {
 			return -1;
@@ -134,7 +134,31 @@ public class TypedElementDeclaration extends Node {
 		}
 	} // getUpper
 
+	public boolean getOrdering() {
+		String collection = this.getCollection();
+
+		if (collection == null || collection.equals("")) {
+			return this.isOrdered();
+		} else {
+			return collection.equals("OrderedSet")
+					|| collection.equals("Sequence");
+		}
+	} // getOrdering
+
+	public boolean getNonuniqueness() {
+		String collection = this.getCollection();
+
+		if (collection == null || collection.equals("")) {
+			return this.isNonunique();
+		} else {
+			return collection.equals("Bag") || collection.equals("Sequence");
+		}
+	} // getNonuniqueness
+
 	public Member getClassifier(NamespaceDefinition context) {
+		// System.out.println("getClassifier: this = " + this + " context = " +
+		// context);
+
 		QualifiedName type = this.getType();
 
 		if (type == null) {
@@ -144,6 +168,9 @@ public class TypedElementDeclaration extends Node {
 			if (classifier.isError()) {
 				classifier = new ErrorMember(this, (ErrorMember) classifier);
 			}
+
+			// classifier.print("  ");
+
 			return classifier;
 		}
 	} // getClassifier

@@ -63,10 +63,6 @@ public class ErrorNamespace extends NamespaceDefinition {
 		return this.getAllMembers();
 	} // getPublicMembers
 
-	public NamespaceDefinition getRootNamespace() {
-		return this;
-	} // getRootNamespace
-
 	public ArrayList<Member> resolve(String name) {
 		return this.getAllMembers();
 	} // resolve
@@ -74,5 +70,18 @@ public class ErrorNamespace extends NamespaceDefinition {
 	public ArrayList<Member> resolvePublic(String name, boolean allowPackageOnly) {
 		return this.resolve(name);
 	} // resolvePublic
+
+	public NamespaceDefinition getRootNamespace() {
+		return this;
+	} // getRootNamespace
+
+	public NamespaceDefinition getModelNamespace() {
+		return this;
+	} // getModelNamespace
+
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return true;
+	} // isDistinguishableFrom
 
 } // ErrorNamespace

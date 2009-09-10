@@ -55,4 +55,10 @@ public class PropertyDefinition extends TypedElementDefinition {
 		}
 	} // print
 
+	public boolean isDistinguishableFrom(Member other,
+			NamespaceDefinition namespace) {
+		return !(other instanceof PropertyDefinition)
+				|| super.isDistinguishableFrom(other, namespace);
+	} // isDistinguishableFrom
+
 } // PropertyDefinition

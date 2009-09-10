@@ -133,4 +133,14 @@ public class ImportReference extends Node {
 		return this.referent;
 	} // getReferent
 
+	public String getName() {
+		String alias = this.getAlias();
+
+		if (alias != null && !alias.equals("")) {
+			return alias;
+		} else {
+			return this.getReferent().getName();
+		}
+	} // getName
+
 } // ImportReference

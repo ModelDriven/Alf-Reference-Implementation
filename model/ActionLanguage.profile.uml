@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Profile xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.0.0/UML" xmi:id="_16_5_2_1a900482_1251866854062_915728_1258" name="ActionLanguage" metamodelReference="_0metamodelReferenceActionLanguage">
-  <eAnnotations xmi:id="_otjj_pvtEd67dpU-g_F03Q" source="http://www.eclipse.org/uml2/2.0.0/UML">
-    <contents xmi:type="ecore:EPackage" xmi:id="_otjj_5vtEd67dpU-g_F03Q" name="ActionLanguage" nsURI="http:///schemas/ActionLanguage/_oh7eYpvtEd67dpU-g_F03Q/0" nsPrefix="ActionLanguage">
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_otjkAJvtEd67dpU-g_F03Q" name="Java">
-        <eAnnotations xmi:id="_otjkAZvtEd67dpU-g_F03Q" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5_2_1a900482_1251866914093_534198_1259"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_otjkApvtEd67dpU-g_F03Q" name="base_Comment" ordered="false" lowerBound="1">
+  <eAnnotations xmi:id="_UDlGWJ4xEd6n_spFy5sTdg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_UDlGWZ4xEd6n_spFy5sTdg" name="ActionLanguage" nsURI="http:///schemas/ActionLanguage/_T5J9AJ4xEd6n_spFy5sTdg/0" nsPrefix="ActionLanguage">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_UDlGWp4xEd6n_spFy5sTdg" name="Java">
+        <eAnnotations xmi:id="_UDlGW54xEd6n_spFy5sTdg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5_2_1a900482_1251866914093_534198_1259"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_UDlGXJ4xEd6n_spFy5sTdg" name="base_Comment" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Comment"/>
         </eStructuralFeatures>
       </eClassifiers>
@@ -24,7 +24,7 @@
       <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Comment"/>
     </ownedAttribute>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_16_5_2_1a900482_1251866914093_846136_1260" name="" memberEnd="_16_5_2_1a900482_1251866914093_2776_1262 _16_5_2_1a900482_1251866914093_665782_1261">
+  <packagedElement xmi:type="uml:Extension" xmi:id="_16_5_2_1a900482_1251866914093_846136_1260" name="" memberEnd="_16_5_2_1a900482_1251866914093_665782_1261 _16_5_2_1a900482_1251866914093_2776_1262">
     <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_16_5_2_1a900482_1251866914093_2776_1262" name="extension_" visibility="private" type="_16_5_2_1a900482_1251866914093_534198_1259" aggregation="composite" association="_16_5_2_1a900482_1251866914093_846136_1260">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_16_5_2_1a900482_1251866914093_839995_1264" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_16_5_2_1a900482_1251866914093_538202_1263" name=""/>

@@ -6,7 +6,7 @@ private import 'Property Management'::'Message Model'::*;
 
 /** Update the disposition data for an existing property. */
 activity dispose (
-  in request: 'Property Disposal Notification',
+  in request: 'Property Disposition Notification',
   out reply: 'Property Management Success Reply' [0..1],
   out error: 'Error Reply' [0..1] ) {
 

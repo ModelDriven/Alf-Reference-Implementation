@@ -37,22 +37,16 @@ public class ModelNamespace extends NamespaceDefinition {
 			}
 		}
 
-		if (members.size() == 0) {
-			QualifiedName qualifiedName = this.getQualifiedName();
-			qualifiedName.addName(name);
-
-			Member member = qualifiedName.resolveSubunit();
-			member.setName(name); // (Ensures an error member is named)
-			this.addMember(member);
-			members.add(member);
-		}
-
 		return members;
 	} // resolve
 
 	public ArrayList<Member> resolvePublic(String name, boolean allowPackageOnly) {
 		return this.resolve(name);
 	} // resolvePublic
+
+	public NamespaceDefinition getModelNamespace() {
+		return this;
+	} // getModelNamespace
 
 	public QualifiedName getQualifiedName() {
 		return new QualifiedName();

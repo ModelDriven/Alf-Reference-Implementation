@@ -1,0 +1,5 @@
+package DomainDataTypes {
+
+  public datatype date { }
+
+}

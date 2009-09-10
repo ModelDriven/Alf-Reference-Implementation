@@ -36,6 +36,10 @@ package 'Message Model' {
     public 'property disposition data': compose 'Property Disposition Data';
   }
   
+  public datatype 'Property Record Deletion' specializes Request {
+    public 'property identifier': String;
+  }
+  
   public datatype 'Property Record Retrieval' specializes Request {
     public 'property identifier': String;
   }

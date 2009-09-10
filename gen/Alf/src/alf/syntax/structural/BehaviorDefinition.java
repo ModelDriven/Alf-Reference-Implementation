@@ -41,6 +41,11 @@ public abstract class BehaviorDefinition extends NamespaceDefinition {
 	} // completeStub
 
 	public boolean isCompletedBy(Member member) {
+		/*
+		 * System.out.println("isCompletedBy: "); System.out.println("  this = "
+		 * + this); System.out.println("  member = " + member);
+		 */
+
 		if (!(member instanceof ActivityDefinition)) {
 			return false;
 		} else {
@@ -56,6 +61,7 @@ public abstract class BehaviorDefinition extends NamespaceDefinition {
 				for (int i = 0; i < n; i++) {
 					if (!((FormalParameter) parameters.get(i))
 							.equals((FormalParameter) otherParameters.get(i))) {
+						// System.out.println("Failed!");
 						return false;
 					}
 				}
