@@ -1,6 +1,6 @@
 #**
 *Impl.java template for uml project
-@projectPath /src/${qualifiedName.replace("::","/")}.java 
+@projectPath /src/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/${object.name}.java 
 @artifactContext GenClass 
 *#
 #parse( "uml.fragment" )
@@ -17,18 +17,18 @@ ${packageDeclaration}
     extends #name(${superclass.name}) 
 #end    
     {
-#foreach ( $behavior in ${object.ownedBehaviors} )
-#if(${behavior.eClass().name}=="Activity")
-#class(${behavior})
-#end
-#end
+## #foreach ( $behavior in ${object.ownedBehaviors} )
+## #if(${behavior.eClass().name}=="Activity")
+## #class(${behavior})
+## #end
+## #end
     
 #foreach ( $feature in ${object.ownedAttributes} )
   #visibility(${feature}) #static(${feature}) #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
 #end
     
 #foreach ( $operation in ${object.ownedOperations} )
-## #featureJavaDoc("operation ${operation.name}" ${operation})
+  ## #featureJavaDoc("operation ${operation.name}" ${operation})
   #visibility(${operation}) #abstract(${operation}) #static(${operation}) #operationType(${operation.returnResult} ${operation} ${object}) #name(${operation.name})(#operationParameters(${operation})) #throws(${operation})#body(${operation} ${object})
 #end
 } //${object.name}

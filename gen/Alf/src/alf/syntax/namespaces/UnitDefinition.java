@@ -9,15 +9,16 @@
 
 package alf.syntax.namespaces;
 
+import alf.nodes.*;
+import alf.syntax.SyntaxNode;
 import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
-import alf.syntax.nodes.*;
 import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
-public class UnitDefinition extends DocumentedElement {
+public class UnitDefinition extends DocumentedNode {
 
 	private QualifiedName namespace = null;
 	private NamespaceDefinition definition = null;

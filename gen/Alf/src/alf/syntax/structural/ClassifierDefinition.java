@@ -9,10 +9,11 @@
 
 package alf.syntax.structural;
 
+import alf.nodes.*;
+import alf.syntax.SyntaxNode;
 import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
-import alf.syntax.nodes.*;
 import alf.syntax.structural.*;
 
 import java.util.ArrayList;
@@ -67,4 +68,43 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 		}
 	} // isCompletedBy
 
+	public ArrayList<Member> getGeneralizations() {
+		ArrayList<Member> generalizations = new ArrayList<Member>();
+		ArrayList<QualifiedName> qualifiedNames = this.getSpecialization()
+				.getList();
+		NamespaceDefinition namespace = this.getNamespace();
+
+		for (QualifiedName qualifiedName : qualifiedNames) {
+			ArrayList<Member> members = qualifiedName.resolve(namespace);
+			Member member;
+			if (members.size() == 0) {
+				member = new ErrorMember(this,
+						"Cannot resolve generalization: " + qualifiedName);
+			} else if (members.size() == 1 && members.get(0).isError()) {
+				member = members.get(0);
+			} else {
+				for (Object m : members.toArray()) {
+					if (!this.canSpecialize((Member) m)) {
+						members.remove(m);
+					}
+				}
+				if (members.size() == 0) {
+					member = new ErrorMember(this, "Cannot specialize: "
+							+ qualifiedName);
+				} else if (members.size() > 1) {
+					member = new ErrorMember(this,
+							"Ambiguous generalization reference: "
+									+ qualifiedName);
+				} else {
+					member = members.get(0);
+				}
+			}
+			generalizations.add(member);
+		}
+
+		return generalizations;
+
+	} // getGeneralizations
+
+	public abstract boolean canSpecialize(Member member);
 } // ClassifierDefinition

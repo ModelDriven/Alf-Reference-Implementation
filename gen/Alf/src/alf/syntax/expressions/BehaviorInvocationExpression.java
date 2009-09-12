@@ -9,10 +9,11 @@
 
 package alf.syntax.expressions;
 
+import alf.nodes.*;
+import alf.syntax.SyntaxNode;
 import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
-import alf.syntax.nodes.*;
 import alf.syntax.structural.*;
 
 import java.util.ArrayList;
@@ -33,5 +34,35 @@ public class BehaviorInvocationExpression extends InvocationExpression {
 	public void printTarget(String prefix) {
 		this.getTarget().printChild(prefix);
 	} // printTarget
+
+	public Member getBehavior(NamespaceDefinition context) {
+		QualifiedName target = this.getTarget();
+		ArrayList<Member> members = target.resolve(context);
+		Member member;
+
+		if (members.size() == 0) {
+			member = new ErrorMember(this, "Cannot resolve behavior: " + target);
+		} else if (members.size() == 1 && members.get(0).isError()) {
+			member = new ErrorMember(this, ((ErrorMember) members.get(0))
+					.getError());
+		} else {
+			for (Object m : members.toArray()) {
+				if (!(m instanceof ActivityDefinition)) {
+					members.remove(m);
+				}
+			}
+
+			if (members.size() == 0) {
+				member = new ErrorMember(this, "Must be a behavior: " + target);
+			} else if (members.size() > 1) {
+				member = new ErrorMember(this, "Ambiguous behavior reference: "
+						+ target);
+			} else {
+				member = members.get(0);
+			}
+		}
+
+		return member;
+	} // getBehavior
 
 } // BehaviorInvocationExpression
