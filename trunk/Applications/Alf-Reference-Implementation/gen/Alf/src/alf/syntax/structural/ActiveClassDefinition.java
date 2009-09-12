@@ -9,10 +9,11 @@
 
 package alf.syntax.structural;
 
+import alf.nodes.*;
+import alf.syntax.SyntaxNode;
 import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
-import alf.syntax.nodes.*;
 import alf.syntax.structural.*;
 
 import java.util.ArrayList;
@@ -53,5 +54,9 @@ public class ActiveClassDefinition extends ClassDefinition {
 				&& super.isCompletedBy(member);
 
 	} // isCompletedBy
+
+	public boolean canSpecialize(Member member) {
+		return member instanceof ClassDefinition;
+	} // canSpecialize
 
 } // ActiveClassDefinition

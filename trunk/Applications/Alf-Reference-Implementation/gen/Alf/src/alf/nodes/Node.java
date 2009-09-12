@@ -7,17 +7,37 @@
  *
  */
 
-package alf.syntax.nodes;
+package alf.nodes;
 
+import alf.nodes.*;
+import alf.syntax.SyntaxNode;
 import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
-import alf.syntax.nodes.*;
 import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
 public abstract class Node {
+
+	private Node target = null;
+	private Node source = null;
+
+	public void setTarget(Node target) {
+		this.target = target;
+	} // setTarget
+
+	public Node getTarget() {
+		return this.target;
+	} // getTarget
+
+	public void setSource(Node source) {
+		this.source = source;
+	} // setSource
+
+	public Node getSource() {
+		return this.source;
+	} // getSource
 
 	public String toString() {
 		String className = this.getClass().getName();

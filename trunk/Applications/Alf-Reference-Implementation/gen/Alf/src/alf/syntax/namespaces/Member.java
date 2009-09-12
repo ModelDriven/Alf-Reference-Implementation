@@ -9,15 +9,16 @@
 
 package alf.syntax.namespaces;
 
+import alf.nodes.*;
+import alf.syntax.SyntaxNode;
 import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
-import alf.syntax.nodes.*;
 import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
-public abstract class Member extends DocumentedElement {
+public abstract class Member extends DocumentedNode {
 
 	private String name = "";
 	private String visibility = "";

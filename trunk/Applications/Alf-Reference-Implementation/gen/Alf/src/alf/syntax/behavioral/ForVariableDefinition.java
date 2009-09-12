@@ -9,15 +9,16 @@
 
 package alf.syntax.behavioral;
 
+import alf.nodes.*;
+import alf.syntax.SyntaxNode;
 import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
-import alf.syntax.nodes.*;
 import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
-public class ForVariableDefinition extends Node {
+public class ForVariableDefinition extends SyntaxNode {
 
 	private String variable = "";
 	private Expression expression1 = null;

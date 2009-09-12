@@ -7,12 +7,13 @@
  *
  */
 
-package alf.syntax.nodes;
+package alf.nodes;
 
+import alf.nodes.*;
+import alf.syntax.SyntaxNode;
 import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
-import alf.syntax.nodes.*;
 import alf.syntax.structural.*;
 
 import java.util.ArrayList;

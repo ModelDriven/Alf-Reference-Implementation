@@ -84,7 +84,7 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 #macro( static $element ) #if ( ${element.isStatic()} )static#end#end 
 #macro( name $name )#if (${name}=="Class")Class_#else${name}#end#end
 #macro( qualifiedName $element )#qualifiedPackageName(${element.owner}).#name(${element.name})#end
-#macro( qualifiedPackageName $element )${element.qualifiedName.replace("::",".")}#end
+#macro( qualifiedPackageName $element )${element.qualifiedName.toLowerCase().replace("::",".")}#end
 #macro( primitiveName $primitive )#if(${primitive.name}=="Boolean")boolean#elseif(${primitive.name}=="Integer")int#else#name(${primitive.name})#end#end
 
 
