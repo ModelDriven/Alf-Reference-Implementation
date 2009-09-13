@@ -124,13 +124,14 @@ public abstract class NamespaceDefinition extends Member {
 		if (completion != null && completion.isError()) {
 			return completion.getAllMembers();
 		} else {
-			ArrayList<Member> members = this.getMembers();
+			ArrayList<Member> allMembers = (ArrayList<Member>) this
+					.getMembers().clone();
 
 			if (this.getUnit() != null) {
-				members.addAll(this.getUnit().getImportedMembers());
+				allMembers.addAll(this.getUnit().getImportedMembers());
 			}
 
-			return members;
+			return allMembers;
 		}
 	} // getAllMembers
 
@@ -140,19 +141,19 @@ public abstract class NamespaceDefinition extends Member {
 		if (completion != null && completion.isError()) {
 			return completion.getAllMembers();
 		} else {
-			ArrayList<Member> members = this.getMembers();
+			ArrayList<Member> publicMembers = new ArrayList<Member>();
 
-			for (Object member : members.toArray()) {
-				if (!((Member) member).isPublic()) {
-					members.remove(member);
+			for (Member member : this.getMembers()) {
+				if (((Member) member).isPublic()) {
+					publicMembers.add(member);
 				}
 			}
 
 			if (this.getUnit() != null) {
-				members.addAll(this.getUnit().getImportedPublicMembers());
+				publicMembers.addAll(this.getUnit().getImportedPublicMembers());
 			}
 
-			return members;
+			return publicMembers;
 		}
 	} // getPublicMembers
 

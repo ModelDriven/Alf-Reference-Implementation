@@ -19,6 +19,7 @@ import alf.syntax.structural.*;
 import java.util.ArrayList;
 
 import alf.mapping.namespaces.*;
+import alf.mapping.structural.*;
 
 import fUML.Syntax.Classes.Kernel.*;
 import fUML.Syntax.Activities.IntermediateActivities.*;
@@ -58,7 +59,39 @@ public class ActivityDefinitionMapping extends NamespaceDefinitionMapping {
 			this.setError(new ErrorNode(this.getSource(),
 					"Member that is not a parameter."));
 		} else {
-			((Activity) namespace).addOwnedParameter((Parameter) element);
+			Activity activity = (Activity) namespace;
+			Parameter parameter = (Parameter) element;
+			activity.addOwnedParameter(parameter);
+
+			ActivityParameterNode node = new ActivityParameterNode();
+			node.setParameter(parameter);
+			activity.addNode(node);
+
+			if (parameter.direction == ParameterDirectionKind.in
+					|| parameter.direction == ParameterDirectionKind.out) {
+				node.setName("Input(" + parameter.name + ")");
+
+				ForkNode fork = new ForkNode();
+				fork.setName(parameter.name);
+				activity.addNode(fork);
+
+				ObjectFlow flow = new ObjectFlow();
+				flow.setSource(node);
+				flow.setTarget(fork);
+				activity.addEdge(flow);
+
+				if (parameter.direction == ParameterDirectionKind.out) {
+					node = new ActivityParameterNode();
+					node.setParameter(parameter);
+					activity.addNode(node);
+				}
+			}
+
+			if (parameter.direction == ParameterDirectionKind.inout
+					|| parameter.direction == ParameterDirectionKind.out
+					|| parameter.direction == ParameterDirectionKind.return_) {
+				node.setName("Output(" + parameter.name + ")");
+			}
 		}
 
 	} // addMemberTo
@@ -81,5 +114,16 @@ public class ActivityDefinitionMapping extends NamespaceDefinitionMapping {
 		elements.add(this.getActivity());
 		return elements;
 	} // getModelElements
+
+	public ActivityParameterNode getParameterNode(Parameter parameter) {
+		for (ActivityNode node : this.getActivity().node) {
+			if (node instanceof ActivityParameterNode
+					&& ((ActivityParameterNode) node).parameter == parameter) {
+				return (ActivityParameterNode) node;
+			}
+		}
+
+		return null;
+	} // getParameterNode
 
 } // ActivityDefinitionMapping

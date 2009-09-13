@@ -36,4 +36,9 @@ public class StringLiteralMapping extends LiteralMapping {
 		return (StringLiteral) this.getSource();
 	} // getStringLiteral
 
+	public String getTypeName() {
+		return "String";
+
+	} // getTypeName
+
 } // StringLiteralMapping

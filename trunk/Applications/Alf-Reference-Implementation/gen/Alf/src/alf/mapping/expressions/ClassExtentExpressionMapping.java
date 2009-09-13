@@ -32,29 +32,17 @@ public class ClassExtentExpressionMapping extends ExpressionMapping {
 	public void mapTo(ReadExtentAction action) {
 		super.mapTo(action);
 
-		Member type = this.getClassExtentExpression().getClass(
-				this.getContext());
+		Class_ class_ = (Class_) this.getType();
+		if (class_ != null) {
+			action.setName("ReadExtent(" + class_.name + ")");
+			action.setClassifier(class_);
 
-		if (type.isError()) {
-			this.setError(((ErrorMember) type).getError());
-		} else {
-			ClassDefinitionMapping mapping = (ClassDefinitionMapping) this
-					.map(type);
-			Class_ class_ = (Class_) mapping.getClassifier();
-
-			if (mapping.isError()) {
-				this.setError(mapping.getError());
-			} else {
-				action.setName("ReadExtent(" + class_.name + ")");
-				action.setClassifier(class_);
-
-				OutputPin result = new OutputPin();
-				result.setName(action.name + ".result");
-				result.setType(class_);
-				result.setLower(0);
-				result.setUpper(-1);
-				action.setResult(result);
-			}
+			OutputPin result = new OutputPin();
+			result.setName(action.name + ".result");
+			result.setType(class_);
+			result.setLower(0);
+			result.setUpper(-1);
+			action.setResult(result);
 		}
 	} // mapTo
 
@@ -63,7 +51,7 @@ public class ClassExtentExpressionMapping extends ExpressionMapping {
 	} // getResultSource
 
 	public ReadExtentAction getAction() {
-		if (this.action == null) {
+		if (this.action == null && !this.isError()) {
 			this.action = new ReadExtentAction();
 			this.mapTo(this.action);
 		}
@@ -77,8 +65,34 @@ public class ClassExtentExpressionMapping extends ExpressionMapping {
 
 	public ArrayList<Element> getModelElements() {
 		ArrayList<Element> elements = new ArrayList<Element>();
-		elements.add(this.getAction());
+
+		ReadExtentAction action = this.getAction();
+		if (action != null) {
+			elements.add(action);
+		}
+
 		return elements;
 	} // getModelElements
+
+	public Classifier getType() {
+		Member type = this.getClassExtentExpression().getClass(
+				this.getContext());
+
+		if (type.isError()) {
+			this.setError(((ErrorMember) type).getError());
+		} else {
+			ClassDefinitionMapping mapping = (ClassDefinitionMapping) this
+					.map(type);
+			Classifier classifier = mapping.getClassifier();
+
+			if (mapping.isError()) {
+				this.setError(mapping.getError());
+			} else {
+				return classifier;
+			}
+		}
+
+		return null;
+	} // getType
 
 } // ClassExtentExpressionMapping

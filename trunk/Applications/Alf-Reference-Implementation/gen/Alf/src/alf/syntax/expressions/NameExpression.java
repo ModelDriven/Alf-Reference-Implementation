@@ -35,4 +35,37 @@ public class NameExpression extends Expression {
 		this.getName().printChild(prefix);
 	} // print
 
+	public Member getParameter(NamespaceDefinition context) {
+		QualifiedName name = this.getName();
+		ArrayList<Member> members = name.resolve(context);
+		Member member;
+
+		if (members.size() == 1 && members.get(0).isError()) {
+			member = new ErrorMember(this, ((ErrorMember) members.get(0))
+					.getError());
+		} else {
+			for (Object m : members.toArray()) {
+				if (!(m instanceof FormalParameter)) {
+					members.remove(m);
+				}
+			}
+
+			if (members.size() == 0) {
+				if (name.getNames().size() == 1) {
+					member = null;
+				} else {
+					member = new ErrorMember(this, "Must be a parameter: "
+							+ name);
+				}
+			} else if (members.size() > 1) {
+				member = new ErrorMember(this,
+						"Ambiguous parameter reference: " + name);
+			} else {
+				member = members.get(0);
+			}
+		}
+
+		return member;
+	} // getParameter
+
 } // NameExpression

@@ -31,33 +31,57 @@ import java.util.ArrayList;
 
 public class AlfParser {
 
+  private static void completeSubunits(NamespaceDefinition namespace) {
+    for (Member member: namespace.getMembers()) {
+      if (member instanceof NamespaceDefinition) {
+        member.completeStub();
+        completeSubunits((NamespaceDefinition)member);
+      }
+    }
+  }
+  
   public static void main(String args[]) {
     AlfParser parser;
+    Boolean resolve;
+    
     System.out.println("Alf 0.05 Parser");
-    if (args.length == 0) {
+    if (args.length == 0 || args.length == 1 && args[0].equals("-complete")) {
       System.out.println("Reading from standard input...");
       parser = new AlfParser(System.in);
-    } else if (args.length == 1) {
-      System.out.println("Parsing " + args[0] + "...");
+      resolve = args.length == 1;
+    } else if (args.length == 1 || args.length == 2 && args[0].equals("-complete")) {
+      String fileName = args[args.length-1];
+      System.out.println("Parsing " + fileName + "...");
       try {
-        parser = new AlfParser(new java.io.FileInputStream(args[0]));
+        parser = new AlfParser(new java.io.FileInputStream(fileName));
       } catch (java.io.FileNotFoundException e) {
-        System.out.println("File not found: " + args[0]);
+        System.out.println("File not found: " + fileName);
         return;
       }
+      resolve = args.length == 2;
     } else {
-      System.out.println("Usage is one of:");
-      System.out.println("         java AlfParser < inputfile");
+      System.out.println("Usage is");
+      System.out.println("         java AlfParser [ -complete ] < inputfile");
       System.out.println("OR");
-      System.out.println("         java AlfParser inputfile");
+      System.out.println("         java AlfParser [ -complete ] inputfile");
       return;
     }
     try {
       UnitDefinition unit = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
-      // unit.print();
-      unit.addImplicitImports();
-      unit.getRootNamespace().print();
+      if (!resolve) {
+        unit.print();
+      } else {
+        unit.addImplicitImports();
+        
+        // Ensure all imports are resolved.
+        unit.getDefinition().getAllMembers();
+        
+        // Recursively complete subunits.
+        completeSubunits(unit.getDefinition());
+        
+        unit.getRootNamespace().print();
+      }
       /*
       ArrayList<Member> members = unit.getAllMembers();
       System.out.println(unit.toString());
@@ -2057,7 +2081,7 @@ void ExpressionList(ExpressionList el):
 }
 {
   e = Expression() { el.add(e); }
-  ( <COMMA> Expression() { el.add(e); } )*
+  ( <COMMA> e = Expression() { el.add(e); } )*
 }
 
 Tuple NamedTuple():

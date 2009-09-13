@@ -18,6 +18,9 @@ import alf.syntax.structural.*;
 
 import java.util.ArrayList;
 
+import alf.mapping.*;
+import alf.mapping.structural.*;
+
 import fUML.Syntax.Classes.Kernel.*;
 import fUML.Syntax.Activities.IntermediateActivities.*;
 import fUML.Syntax.Actions.BasicActions.*;
@@ -45,17 +48,54 @@ public abstract class LiteralMapping extends ExpressionMapping {
 	public abstract ValueSpecification mapValueSpecification();
 
 	public ActivityNode getResultSource() {
-		return this.getAction().result;
+		ValueSpecificationAction action = this.getAction();
+		if (action == null) {
+			return null;
+		} else {
+			return action.result;
+		}
+
 	} // getResultSource
 
 	public ValueSpecificationAction getAction() {
+		if (this.action == null && !this.isError()) {
+			this.action = new ValueSpecificationAction();
+			this.mapTo(action);
+		}
+
 		return this.action;
 	} // getAction
 
 	public ArrayList<Element> getModelElements() {
 		ArrayList<Element> elements = new ArrayList<Element>();
-		elements.add(this.getAction());
+
+		ValueSpecificationAction action = this.getAction();
+		if (action != null) {
+			elements.add(action);
+		}
+
 		return elements;
 	} // getModelElements
 
+	public Classifier getType() {
+		QualifiedName qualifiedName = new QualifiedName();
+		qualifiedName.setIsAbsolute();
+		qualifiedName.addName("UML");
+		qualifiedName.addName("AuxiliaryConstructs");
+		qualifiedName.addName("PrimitiveTypes");
+		qualifiedName.addName(this.getTypeName());
+
+		ArrayList<Member> members = qualifiedName.resolve(this.getContext());
+
+		if (members.size() == 1 && !members.get(0).isError()) {
+			MappingNode mapping = this.map(members.get(0));
+			if (mapping instanceof PrimitiveTypeMapping) {
+				return ((PrimitiveTypeMapping) mapping).getPrimitiveType();
+			}
+		}
+
+		return null;
+	} // getType
+
+	public abstract String getTypeName();
 } // LiteralMapping
