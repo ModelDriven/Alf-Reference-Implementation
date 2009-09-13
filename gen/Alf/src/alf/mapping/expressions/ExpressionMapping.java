@@ -35,5 +35,17 @@ public abstract class ExpressionMapping extends MappingNode {
 		return this.context;
 	} // getContext
 
+	public MappingNode map(SyntaxNode syntaxNode) {
+		MappingNode mapping = super.map(syntaxNode);
+
+		if (mapping instanceof ExpressionMapping) {
+			((ExpressionMapping) mapping).setContext(this.getContext());
+		}
+
+		return mapping;
+	} // map
+
 	public abstract ActivityNode getResultSource();
+
+	public abstract Classifier getType();
 } // ExpressionMapping

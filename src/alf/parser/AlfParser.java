@@ -10,33 +10,57 @@ import java.util.ArrayList;
 
 public class AlfParser implements AlfParserConstants {
 
+  private static void completeSubunits(NamespaceDefinition namespace) {
+    for (Member member: namespace.getMembers()) {
+      if (member instanceof NamespaceDefinition) {
+        member.completeStub();
+        completeSubunits((NamespaceDefinition)member);
+      }
+    }
+  }
+
   public static void main(String args[]) {
     AlfParser parser;
+    Boolean resolve;
+
     System.out.println("Alf 0.05 Parser");
-    if (args.length == 0) {
+    if (args.length == 0 || args.length == 1 && args[0].equals("-complete")) {
       System.out.println("Reading from standard input...");
       parser = new AlfParser(System.in);
-    } else if (args.length == 1) {
-      System.out.println("Parsing " + args[0] + "...");
+      resolve = args.length == 1;
+    } else if (args.length == 1 || args.length == 2 && args[0].equals("-complete")) {
+      String fileName = args[args.length-1];
+      System.out.println("Parsing " + fileName + "...");
       try {
-        parser = new AlfParser(new java.io.FileInputStream(args[0]));
+        parser = new AlfParser(new java.io.FileInputStream(fileName));
       } catch (java.io.FileNotFoundException e) {
-        System.out.println("File not found: " + args[0]);
+        System.out.println("File not found: " + fileName);
         return;
       }
+      resolve = args.length == 2;
     } else {
-      System.out.println("Usage is one of:");
-      System.out.println("         java AlfParser < inputfile");
+      System.out.println("Usage is");
+      System.out.println("         java AlfParser [ -complete ] < inputfile");
       System.out.println("OR");
-      System.out.println("         java AlfParser inputfile");
+      System.out.println("         java AlfParser [ -complete ] inputfile");
       return;
     }
     try {
       UnitDefinition unit = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
-      // unit.print();
-      unit.addImplicitImports();
-      unit.getRootNamespace().print();
+      if (!resolve) {
+        unit.print();
+      } else {
+        unit.addImplicitImports();
+
+        // Ensure all imports are resolved.
+        unit.getDefinition().getAllMembers();
+
+        // Recursively complete subunits.
+        completeSubunits(unit.getDefinition());
+
+        unit.getRootNamespace().print();
+      }
       /*
       ArrayList<Member> members = unit.getAllMembers();
       System.out.println(unit.toString());
@@ -2827,8 +2851,8 @@ void InvocationTarget():
         break label_19;
       }
       jj_consume_token(COMMA);
-      Expression();
-                           el.add(e);
+      e = Expression();
+                               el.add(e);
     }
   }
 
@@ -4485,55 +4509,6 @@ void LeftHandSide():
     try { return !jj_3_42(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(41, xla); }
-  }
-
-  private boolean jj_3R_196() {
-    if (jj_3R_92()) return true;
-    if (jj_scan_token(LBRACKET)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_222()) jj_scanpos = xsp;
-    if (jj_scan_token(RBRACKET)) return true;
-    if (jj_scan_token(LBRACE)) return true;
-    xsp = jj_scanpos;
-    if (jj_3R_223()) jj_scanpos = xsp;
-    if (jj_scan_token(RBRACE)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_183() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_196()) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(50)) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3_38() {
-    if (jj_3R_62()) return true;
-    return false;
-  }
-
-  private boolean jj_3_23() {
-    if (jj_scan_token(ELSE)) return true;
-    if (jj_scan_token(IF)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_93() {
-    if (jj_3R_114()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_182() {
-    if (jj_3R_54()) return true;
-    if (jj_scan_token(DOT)) return true;
-    if (jj_scan_token(ALL_INSTANCES)) return true;
-    if (jj_scan_token(LPAREN)) return true;
-    if (jj_scan_token(RPAREN)) return true;
-    return false;
   }
 
   private boolean jj_3_40() {
@@ -6658,6 +6633,55 @@ void LeftHandSide():
 
   private boolean jj_3R_223() {
     if (jj_3R_240()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_196() {
+    if (jj_3R_92()) return true;
+    if (jj_scan_token(LBRACKET)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_222()) jj_scanpos = xsp;
+    if (jj_scan_token(RBRACKET)) return true;
+    if (jj_scan_token(LBRACE)) return true;
+    xsp = jj_scanpos;
+    if (jj_3R_223()) jj_scanpos = xsp;
+    if (jj_scan_token(RBRACE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_183() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_196()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(50)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_38() {
+    if (jj_3R_62()) return true;
+    return false;
+  }
+
+  private boolean jj_3_23() {
+    if (jj_scan_token(ELSE)) return true;
+    if (jj_scan_token(IF)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_93() {
+    if (jj_3R_114()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_182() {
+    if (jj_3R_54()) return true;
+    if (jj_scan_token(DOT)) return true;
+    if (jj_scan_token(ALL_INSTANCES)) return true;
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_scan_token(RPAREN)) return true;
     return false;
   }
 
