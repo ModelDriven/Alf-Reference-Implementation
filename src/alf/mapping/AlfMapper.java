@@ -29,15 +29,15 @@ public class AlfMapper {
 
         UnitDefinition unit;
         
-        if (args.length == 0 || args.length == 1 && args[0].equals("-complete")) {
+        if (args.length == 0) {
             unit = AlfParser.parse(null);
-          } else if (args.length == 1 || args.length == 2 && args[0].equals("-complete")) {
-            unit = AlfParser.parse(args[args.length-1]);
+          } else if (args.length == 1) {
+            unit = AlfParser.parse(args[0]);
           } else {
             System.out.println("Usage is");
-            System.out.println("         java AlfMapper [ -complete ] < inputfile");
+            System.out.println("         java AlfMapper < inputfile");
             System.out.println("OR");
-            System.out.println("         java AlfMapper [ -complete ] inputfile");
+            System.out.println("         java AlfMapper inputfile");
             return;
           }
         

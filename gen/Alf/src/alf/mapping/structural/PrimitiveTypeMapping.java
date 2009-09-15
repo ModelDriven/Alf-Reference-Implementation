@@ -21,40 +21,35 @@ import java.util.ArrayList;
 import alf.mapping.namespaces.*;
 import alf.execution.*;
 
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.PrimitiveType;
+import fUML.Syntax.Classes.Kernel.*;
 
-public class PrimitiveTypeMapping extends MemberMapping {
+public class PrimitiveTypeMapping extends ClassifierDefinitionMapping {
 
-	private PrimitiveType primitiveType = null;
 	private Environment environment = null;
 
 	public PrimitiveTypeMapping(Environment environment) {
 		this.environment = environment;
 	} // PrimitiveTypeMapping
 
+	public void mapTo(Classifier classifier) {
+		super.mapTo(classifier);
+		this.getEnvironment().addBuiltInType((PrimitiveType) classifier);
+	} // mapTo
+
+	public Classifier mapClassifier() {
+		return new PrimitiveType();
+	} // mapClassifier
+
 	public Environment getEnvironment() {
 		return this.environment;
 	} // getEnvironment
 
 	public PrimitiveType getPrimitiveType() {
-		if (this.primitiveType == null) {
-			this.primitiveType = new PrimitiveType();
-			this.mapTo(this.primitiveType);
-			this.getEnvironment().addBuiltInType(this.primitiveType);
-		}
-
-		return this.primitiveType;
+		return (PrimitiveType) this.getClassifier();
 	} // getPrimitiveType
 
-	public DataTypeDefinition getDataTypeDefinition() {
-		return (DataTypeDefinition) this.getSourceNode();
-	} // getDataTypeDefinition
-
-	public ArrayList<Element> getModelElements() {
-		ArrayList<Element> elements = new ArrayList<Element>();
-		elements.add(this.getPrimitiveType());
-		return elements;
-	} // getModelElements
+	public void addMemberTo(Element element, NamedElement namespace) {
+		return;
+	} // addMemberTo
 
 } // PrimitiveTypeMapping
