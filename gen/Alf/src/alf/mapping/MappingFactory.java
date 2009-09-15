@@ -21,13 +21,16 @@ import java.util.ArrayList;
 public class MappingFactory {
 
 	public MappingNode getMapping(SyntaxNode syntaxNode) {
-		Node target = syntaxNode.getTarget();
+		Node target = syntaxNode.getTargetNode();
 
 		if (target == null) {
 			target = this.instantiateMapping(syntaxNode);
-			target.setSource(syntaxNode);
+			target.setSourceNode(syntaxNode);
 			((MappingNode) target).setFactory(this);
 		}
+
+		// System.out.println("getMapping: target = " + target + "(" +
+		// target.getClass().getName() + ")");
 
 		if (target instanceof MappingNode) {
 			return (MappingNode) target;
@@ -37,8 +40,8 @@ public class MappingFactory {
 	} // getMapping
 
 	public MappingNode instantiateMapping(SyntaxNode syntaxNode) {
-		String className = syntaxNode.getClass().getName().replace(".Syntax",
-				".Mapping")
+		String className = syntaxNode.getClass().getName().replace(".syntax",
+				".mapping")
 				+ "Mapping";
 
 		try {

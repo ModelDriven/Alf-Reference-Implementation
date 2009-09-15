@@ -1,6 +1,7 @@
 namespace ::FoundationalModelLibrary;
 
 private import ::FoundationalModelLibrary::Common::Status;
+private import ::UML::AuxiliaryConstructs::PrimitiveTypes::String;
 
 package BasicInputOutput {
 
@@ -21,7 +22,7 @@ package BasicInputOutput {
   }
   
   public activity WriteLine(in value: String, out errorStatus: Status[0..1]) {
-    StandardOutputChannel.allInstances().writeLine(result, errorStatus);
+    StandardOutputChannel.allInstances().writeLine(value, errorStatus);
   }
   
 }

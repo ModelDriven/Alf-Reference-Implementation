@@ -44,7 +44,7 @@ public class PrimitiveBehaviorMapping extends NamespaceDefinitionMapping {
 
 	public void addMemberTo(Element element, NamedElement namespace) {
 		if (!(element instanceof Parameter)) {
-			this.setError(new ErrorNode(this.getSource(),
+			this.setError(new ErrorNode(this.getSourceNode(),
 					"Member that is not a parameter."));
 		} else {
 			((OpaqueBehavior) namespace).addOwnedParameter((Parameter) element);
@@ -62,7 +62,7 @@ public class PrimitiveBehaviorMapping extends NamespaceDefinitionMapping {
 	} // getPrimitiveBehavior
 
 	public ActivityDefinition getActivityDefinition() {
-		return (ActivityDefinition) this.getSource();
+		return (ActivityDefinition) this.getSourceNode();
 	} // getActivityDefinition
 
 	public ArrayList<Element> getModelElements() {

@@ -51,7 +51,7 @@ public abstract class StatementMapping extends DocumentedNodeMapping {
 	} // getNode
 
 	public Statement getStatement() {
-		return (Statement) this.getSource();
+		return (Statement) this.getSourceNode();
 	} // getStatement
 
 	public ArrayList<Element> getModelElements() {

@@ -34,16 +34,16 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
 		} else if (element instanceof Operation) {
 			class_.addOwnedOperation((Operation) element);
 		} else if (element instanceof Classifier) {
-			this.setError(new ErrorNode(this.getSource(),
+			this.setError(new ErrorNode(this.getSourceNode(),
 					"Nested classifiers not supported."));
 		} else {
-			this.setError(new ErrorNode(this.getSource(),
+			this.setError(new ErrorNode(this.getSourceNode(),
 					"Member not legal for a class."));
 		}
 	} // addMemberTo
 
 	public ClassDefinition getClassDefinition() {
-		return (ClassDefinition) this.getSource();
+		return (ClassDefinition) this.getSourceNode();
 	} // getClassDefinition
 
 } // ClassDefinitionMapping

@@ -56,7 +56,7 @@ public class ActivityDefinitionMapping extends NamespaceDefinitionMapping {
 
 	public void addMemberTo(Element element, NamedElement namespace) {
 		if (!(element instanceof Parameter)) {
-			this.setError(new ErrorNode(this.getSource(),
+			this.setError(new ErrorNode(this.getSourceNode(),
 					"Member that is not a parameter."));
 		} else {
 			Activity activity = (Activity) namespace;
@@ -106,7 +106,7 @@ public class ActivityDefinitionMapping extends NamespaceDefinitionMapping {
 	} // getActivity
 
 	public ActivityDefinition getActivityDefinition() {
-		return (ActivityDefinition) this.getSource();
+		return (ActivityDefinition) this.getSourceNode();
 	} // getActivityDefinition
 
 	public ArrayList<Element> getModelElements() {

@@ -31,7 +31,7 @@ public class SignalDefinitionMapping extends ClassifierDefinitionMapping {
 		if (element instanceof Property) {
 			((Signal) namespace).addOwnedAttribute((Property) element);
 		} else {
-			this.setError(new ErrorNode(this.getSource(),
+			this.setError(new ErrorNode(this.getSourceNode(),
 					"Member not allowed for a data type."));
 		}
 	} // addMemberTo

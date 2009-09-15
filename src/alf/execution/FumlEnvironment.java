@@ -9,8 +9,9 @@ import fUML.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 
 import fUML.Syntax.Classes.Kernel.PrimitiveType;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
+import fUML.Syntax.CommonBehaviors.BasicBehaviors.OpaqueBehavior;
 
-public class FumlEnvironment {
+public class FumlEnvironment extends Environment {
     
     private fUML.Semantics.Loci.Locus locus = null;
     
@@ -30,6 +31,10 @@ public class FumlEnvironment {
     
     public void addBuiltInType(PrimitiveType type) {
         this.locus.factory.addBuiltInType(type);
+    }
+    
+    public void addPrimitiveBehavior(OpaqueBehavior behavior) {
+        
     }
     
     public void addPrimitiveBehaviorPrototype(OpaqueBehaviorExecution execution) {

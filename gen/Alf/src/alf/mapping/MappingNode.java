@@ -36,6 +36,7 @@ public abstract class MappingNode extends Node {
 
 	public void setError(ErrorNode error) {
 		this.error = error;
+		error.print();
 	} // setError
 
 	public ErrorNode getError() {
@@ -43,7 +44,7 @@ public abstract class MappingNode extends Node {
 	} // getError
 
 	public SyntaxNode getSyntaxNode() {
-		return (SyntaxNode) this.getSource();
+		return (SyntaxNode) this.getSourceNode();
 	} // getSyntaxNode
 
 	public abstract ArrayList<Element> getModelElements();
@@ -53,7 +54,7 @@ public abstract class MappingNode extends Node {
 	} // map
 
 	public void mapTo(Element element) {
-		System.out.print("Mapping " + this);
+		System.out.print(this);
 
 		if (element == null) {
 			System.out.println("");
@@ -64,16 +65,17 @@ public abstract class MappingNode extends Node {
 	} // mapTo
 
 	public String toString() {
-		return super.toString() + " source: " + this.getSource();
+		return super.toString() + " source: " + this.getSourceNode();
 	} // toString
 
 	public void print(String prefix) {
-		super.print(prefix);
-		ErrorNode error = this.getError();
-		if (error != null) {
-			error.printChild(prefix);
-		}
 		ArrayList<Element> elements = this.getModelElements();
+
+		System.out.println("Mapping complete.");
+		super.print(prefix);
+		if (this.isError()) {
+			this.getError().printChild(prefix);
+		}
 		for (Element element : elements) {
 			System.out.println(element.getClass().getName());
 		}

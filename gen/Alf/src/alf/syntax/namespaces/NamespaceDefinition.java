@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public abstract class NamespaceDefinition extends Member {
 
-	private ArrayList<Member> members = new ArrayList<Member>();
+	private ArrayList<Member> ownedMembers = new ArrayList<Member>();
 	private UnitDefinition unit = null;
 
 	public NamespaceDefinition getNamespace() {
@@ -31,7 +31,7 @@ public abstract class NamespaceDefinition extends Member {
 			QualifiedName namespaceName = unit.getNamespace();
 			if (namespaceName == null) {
 				namespace = new ModelNamespace();
-				namespace.addMember(this);
+				namespace.addOwnedMember(this);
 			} else {
 				ArrayList<Member> resolvents = namespaceName
 						.resolve(new ModelNamespace());
@@ -72,51 +72,19 @@ public abstract class NamespaceDefinition extends Member {
 		return namespace;
 	} // getNamespace
 
-	public void addMember(Member member) {
-		this.members.add(member);
+	public void addOwnedMember(Member member) {
+		this.ownedMembers.add(member);
 		member.setNamespace(this);
 
-	} // addMember
+	} // addOwnedMember
+
+	public ArrayList<Member> getOwnedMembers() {
+		return this.ownedMembers;
+	} // getOwnedMembers
 
 	public ArrayList<Member> getMembers() {
-		return this.members;
+		return this.getOwnedMembers();
 	} // getMembers
-
-	public void setUnit(UnitDefinition unit) {
-		this.unit = unit;
-	} // setUnit
-
-	public UnitDefinition getUnit() {
-		return this.unit;
-	} // getUnit
-
-	public void print(String prefix) {
-		super.print(prefix);
-
-		for (Member member : this.getMembers()) {
-			member.printChild(prefix);
-		}
-	} // print
-
-	public QualifiedName getQualifiedName() {
-		UnitDefinition unit = this.getUnit();
-
-		if (unit == null || super.getNamespace() != null) {
-			return super.getQualifiedName();
-		} else {
-			QualifiedName qualifiedName = unit.getNamespace();
-
-			if (qualifiedName == null) {
-				qualifiedName = new QualifiedName(); // Model scope
-			} else {
-				qualifiedName = qualifiedName.copy();
-			}
-
-			qualifiedName.addName(this.getName());
-			return qualifiedName;
-		}
-
-	} // getQualifiedName
 
 	public ArrayList<Member> getAllMembers() {
 		Member completion = this.completeStub();
@@ -156,6 +124,42 @@ public abstract class NamespaceDefinition extends Member {
 			return publicMembers;
 		}
 	} // getPublicMembers
+
+	public void setUnit(UnitDefinition unit) {
+		this.unit = unit;
+	} // setUnit
+
+	public UnitDefinition getUnit() {
+		return this.unit;
+	} // getUnit
+
+	public void print(String prefix) {
+		super.print(prefix);
+
+		for (Member member : this.getMembers()) {
+			member.printChild(prefix);
+		}
+	} // print
+
+	public QualifiedName getQualifiedName() {
+		UnitDefinition unit = this.getUnit();
+
+		if (unit == null || super.getNamespace() != null) {
+			return super.getQualifiedName();
+		} else {
+			QualifiedName qualifiedName = unit.getNamespace();
+
+			if (qualifiedName == null) {
+				qualifiedName = new QualifiedName(); // Model scope
+			} else {
+				qualifiedName = qualifiedName.copy();
+			}
+
+			qualifiedName.addName(this.getName());
+			return qualifiedName;
+		}
+
+	} // getQualifiedName
 
 	public ArrayList<Member> resolve(String name) {
 		ArrayList<Member> members = new ArrayList<Member>();
@@ -254,8 +258,8 @@ public abstract class NamespaceDefinition extends Member {
 
 		if (!completion.isError() && completion instanceof NamespaceDefinition) {
 			for (Member member : ((NamespaceDefinition) completion)
-					.getMembers()) {
-				this.addMember(member);
+					.getOwnedMembers()) {
+				this.addOwnedMember(member);
 			}
 
 			UnitDefinition unit = ((NamespaceDefinition) completion).getUnit();
@@ -278,7 +282,7 @@ public abstract class NamespaceDefinition extends Member {
 	public ArrayList<String> getNamesOfMember(Member member) {
 		ArrayList<String> names = new ArrayList<String>();
 
-		if (this.getMembers().contains(member)) {
+		if (this.getOwnedMembers().contains(member)) {
 			names.add(member.getName());
 		} else if (this.getUnit() != null) {
 			names = this.getUnit().getImportedNamesOfMember(member);

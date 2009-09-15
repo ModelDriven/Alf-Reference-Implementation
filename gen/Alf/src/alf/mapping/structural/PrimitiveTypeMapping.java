@@ -48,7 +48,7 @@ public class PrimitiveTypeMapping extends MemberMapping {
 	} // getPrimitiveType
 
 	public DataTypeDefinition getDataTypeDefinition() {
-		return (DataTypeDefinition) this.getSource();
+		return (DataTypeDefinition) this.getSourceNode();
 	} // getDataTypeDefinition
 
 	public ArrayList<Element> getModelElements() {

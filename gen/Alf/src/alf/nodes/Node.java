@@ -20,24 +20,25 @@ import java.util.ArrayList;
 
 public abstract class Node {
 
-	private Node target = null;
-	private Node source = null;
+	private Node targetNode = null;
+	private Node sourceNode = null;
 
-	public void setTarget(Node target) {
-		this.target = target;
-	} // setTarget
+	public void setTargetNode(Node target) {
+		this.targetNode = target;
+	} // setTargetNode
 
-	public Node getTarget() {
-		return this.target;
-	} // getTarget
+	public Node getTargetNode() {
+		return this.targetNode;
+	} // getTargetNode
 
-	public void setSource(Node source) {
-		this.source = source;
-	} // setSource
+	public void setSourceNode(Node source) {
+		this.sourceNode = source;
+		source.setTargetNode(this);
+	} // setSourceNode
 
-	public Node getSource() {
-		return this.source;
-	} // getSource
+	public Node getSourceNode() {
+		return this.sourceNode;
+	} // getSourceNode
 
 	public String toString() {
 		String className = this.getClass().getName();

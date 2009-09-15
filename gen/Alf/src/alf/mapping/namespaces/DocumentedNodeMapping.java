@@ -37,7 +37,7 @@ public abstract class DocumentedNodeMapping extends MappingNode {
 	} // mapTo
 
 	public DocumentedNode getDocumentedNode() {
-		return (DocumentedNode) this.getSource();
+		return (DocumentedNode) this.getSourceNode();
 	} // getDocumentedNode
 
 } // DocumentedNodeMapping

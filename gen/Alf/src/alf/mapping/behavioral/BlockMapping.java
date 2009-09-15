@@ -75,7 +75,7 @@ public class BlockMapping extends MappingNode {
 	} // mapTo
 
 	public Block getBlock() {
-		return (Block) this.getSource();
+		return (Block) this.getSourceNode();
 	} // getBlock
 
 	public ArrayList<Element> getModelElements() {

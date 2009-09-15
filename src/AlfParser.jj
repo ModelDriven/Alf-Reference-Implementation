@@ -27,9 +27,13 @@ import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
 import alf.syntax.structural.*;
 
+import alf.mapping.*;
+
 import java.util.ArrayList;
 
 public class AlfParser {
+
+  public static final String version = "0.05";
 
   private static void completeSubunits(NamespaceDefinition namespace) {
     for (Member member: namespace.getMembers()) {
@@ -40,25 +44,44 @@ public class AlfParser {
     }
   }
   
-  public static void main(String args[]) {
+  public static UnitDefinition parse(String fileName) {
     AlfParser parser;
-    Boolean resolve;
     
-    System.out.println("Alf 0.05 Parser");
-    if (args.length == 0 || args.length == 1 && args[0].equals("-complete")) {
+    if (fileName == null) {
       System.out.println("Reading from standard input...");
       parser = new AlfParser(System.in);
-      resolve = args.length == 1;
-    } else if (args.length == 1 || args.length == 2 && args[0].equals("-complete")) {
-      String fileName = args[args.length-1];
+    } else {
       System.out.println("Parsing " + fileName + "...");
       try {
         parser = new AlfParser(new java.io.FileInputStream(fileName));
       } catch (java.io.FileNotFoundException e) {
         System.out.println("File not found: " + fileName);
-        return;
+        return null;
       }
-      resolve = args.length == 2;
+    }
+    try {
+      UnitDefinition unit = parser.UnitDefinition();
+      System.out.println("Parsed successfully.");
+      return unit;
+    } catch (ParseException e) {
+      System.out.println(e.getMessage());
+      System.out.println("Encountered errors during parse.");
+      return null;
+    }
+  }
+  
+  public static void main(String args[]) {
+    UnitDefinition unit;
+    Boolean complete;
+    
+    System.out.println("Alf " + version + " Parser");
+
+    if (args.length == 0 || args.length == 1 && args[0].equals("-complete")) {
+      unit = parse(null);
+      complete = args.length == 1;
+    } else if (args.length == 1 || args.length == 2 && args[0].equals("-complete")) {
+      unit = parse(args[args.length-1]);
+      complete = args.length == 2;
     } else {
       System.out.println("Usage is");
       System.out.println("         java AlfParser [ -complete ] < inputfile");
@@ -66,39 +89,33 @@ public class AlfParser {
       System.out.println("         java AlfParser [ -complete ] inputfile");
       return;
     }
-    try {
-      UnitDefinition unit = parser.UnitDefinition();
-      System.out.println("Parsed successfully.");
-      if (!resolve) {
-        unit.print();
-      } else {
-        unit.addImplicitImports();
-        
-        // Ensure all imports are resolved.
-        unit.getDefinition().getAllMembers();
-        
-        // Recursively complete subunits.
-        completeSubunits(unit.getDefinition());
-        
-        unit.getRootNamespace().print();
-      }
-      /*
-      ArrayList<Member> members = unit.getAllMembers();
-      System.out.println(unit.toString());
-      for (Member member: members) {
-        if (member.isError()) {
-          member.printChild("");
-        } else {
-          System.out.println(member.toString(" "));
-        }
-      }
-      */
-    } catch (ParseException e) {
-      System.out.println(e.getMessage());
-      System.out.println("Encountered errors during parse.");
-    }
-  }
 
+    if (!complete) {
+      unit.print();
+    } else {
+      unit.addImplicitImports();
+        
+      // Ensure all imports are resolved.
+      unit.getDefinition().getAllMembers();
+        
+      // Recursively complete subunits.
+      completeSubunits(unit.getDefinition());
+        
+      unit.getRootNamespace().print();
+    }
+      
+    /*
+    ArrayList<Member> members = unit.getAllMembers();
+    System.out.println(unit.toString());
+    for (Member member: members) {
+      if (member.isError()) {
+        member.printChild("");
+      } else {
+        System.out.println(member.toString(" "));
+      }
+    }
+    */
+  }
 }
 
 PARSER_END(AlfParser)
@@ -542,7 +559,7 @@ PackageDefinition PackageDefinition():
 }
 {
   n = PackageDeclaration() { d = new PackageDefinition(n); }
-  <LBRACE> ( m = PackagedElement() { d.addMember(m); } )* <RBRACE>
+  <LBRACE> ( m = PackagedElement() { d.addOwnedMember(m); } )* <RBRACE>
   { return d; }
 }
 
@@ -694,7 +711,7 @@ ClassDefinition ClassDefinition():
 }
 {
   d = ClassDeclaration()
-  <LBRACE> ( m = ClassMember() { d.addMember(m); } )* <RBRACE>
+  <LBRACE> ( m = ClassMember() { d.addOwnedMember(m); } )* <RBRACE>
   { return d; }
 }
 
@@ -753,7 +770,7 @@ ActiveClassDefinition ActiveClassDefinition():
 }
 {
   d = ActiveClassDeclaration()
-  <LBRACE> ( m = ActiveClassMember() { d.addMember(m); } )* <RBRACE>
+  <LBRACE> ( m = ActiveClassMember() { d.addOwnedMember(m); } )* <RBRACE>
   [ <DO> a = BehaviorClause() { d.setClassifierBehavior(a); } ]
   
   { return d; }
@@ -834,7 +851,7 @@ void StructuredBody(ClassifierDefinition d):
   Member m;
 }
 {
-  <LBRACE> ( m = StructuredMember() { d.addMember(m); } )* <RBRACE>
+  <LBRACE> ( m = StructuredMember() { d.addOwnedMember(m); } )* <RBRACE>
 }
 
 Member StructuredMember():
@@ -898,8 +915,8 @@ EnumerationDefinition EnumerationDefinition():
 }
 {
   d = EnumerationDeclaration()
-  <LBRACE> m = EnumerationLiteralName() { d.addMember(m); }
-  ( <COMMA> m = EnumerationLiteralName() { d.addMember(m); } )* <RBRACE>
+  <LBRACE> m = EnumerationLiteralName() { d.addOwnedMember(m); }
+  ( <COMMA> m = EnumerationLiteralName() { d.addOwnedMember(m); } )* <RBRACE>
   { return d; }
 }
 
@@ -967,8 +984,7 @@ Member FeatureStubDeclaration():
   | m = DestructorStubDeclaration()
   )
   
-  { m.setIsStub();
-    return m; }
+  { return m; }
 }
 
 Member ActiveFeatureDefinition():
@@ -1104,7 +1120,7 @@ OperationDefinition OperationDeclaration():
 }
 {
   [ <ABSTRACT> { d.setIsAbstract(); } ] n = Name() { d.setName(n); }
-  FormalParameters(d) [<COLON> TypePart(t) { p.setDirection("return"); d.addMember(p); } ] 
+  FormalParameters(d) [<COLON> TypePart(t) { p.setDirection("return"); d.addOwnedMember(p); } ] 
   [ nl = RedefinitionClause() { d.setRedefinition(nl); } ]
   { return d; }
 }
@@ -1126,8 +1142,11 @@ OperationDefinition OperationStubDeclaration():
 }
 {
   d = OperationDeclaration() <SEMICOLON>
-  { d.setIsStub();
-    return d; }
+  { if (!d.isAbstract()) {
+      d.setIsStub();
+    }
+    return d; 
+  }
 }
 
 void FormalParameters(NamespaceDefinition d):
@@ -1141,8 +1160,8 @@ void FormalParameterList(NamespaceDefinition d):
   FormalParameter p;
 }
 {
-  p = FormalParameter() { d.addMember(p); }
-  ( <COMMA> p = FormalParameter() { d.addMember(p); } )*
+  p = FormalParameter() { d.addOwnedMember(p); }
+  ( <COMMA> p = FormalParameter() { d.addOwnedMember(p); } )*
 }
 
 FormalParameter FormalParameter():
@@ -1368,7 +1387,7 @@ ActivityDefinition ActivityDeclaration():
 }
 { 
   <ACTIVITY> n = Name() { d.setName(n); } FormalParameters(d) 
-  [ <COLON> TypePart(t) { p.setDirection("return"); d.addMember(p); } ]
+  [ <COLON> TypePart(t) { p.setDirection("return"); d.addOwnedMember(p); } ]
   { return d; }
 }
 

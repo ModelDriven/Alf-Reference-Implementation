@@ -30,7 +30,7 @@ public abstract class MemberMapping extends DocumentedNodeMapping {
 	} // mapTo
 
 	public Member getMember() {
-		return (Member) this.getSource();
+		return (Member) this.getSourceNode();
 	} // getMember
 
 } // MemberMapping
