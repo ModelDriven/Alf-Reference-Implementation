@@ -33,7 +33,7 @@ public class StringLiteralMapping extends LiteralMapping {
 	} // mapValueSpecification
 
 	public StringLiteral getStringLiteral() {
-		return (StringLiteral) this.getSource();
+		return (StringLiteral) this.getSourceNode();
 	} // getStringLiteral
 
 	public String getTypeName() {

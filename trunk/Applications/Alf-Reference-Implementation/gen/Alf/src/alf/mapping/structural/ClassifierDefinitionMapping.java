@@ -38,7 +38,7 @@ public abstract class ClassifierDefinitionMapping extends
 		for (Member generalDefinition : generalDefinitions) {
 			if (generalDefinition.isError()) {
 				this.setError(((ErrorMember) generalDefinition).getError());
-				break;
+				return;
 			} else {
 				ClassifierDefinitionMapping mapping = (ClassifierDefinitionMapping) this
 						.map(generalDefinition);
@@ -46,7 +46,7 @@ public abstract class ClassifierDefinitionMapping extends
 
 				if (mapping.isError()) {
 					this.setError(mapping.getError());
-					break;
+					return;
 				} else {
 					Generalization generalization = new Generalization();
 					generalization.setGeneral(general);
@@ -55,6 +55,11 @@ public abstract class ClassifierDefinitionMapping extends
 			}
 		}
 
+		/*
+		 * System.out.println("mapTo: " + classifier.name + " members:"); for
+		 * (int i = 0; i < classifier.member.size(); i++) {
+		 * System.out.println(classifier.member.getValue(i).name); }
+		 */
 	} // mapTo
 
 	public abstract Classifier mapClassifier();
@@ -71,7 +76,7 @@ public abstract class ClassifierDefinitionMapping extends
 	} // getClassifier
 
 	public ClassifierDefinition getClassifierDefinition() {
-		return (ClassifierDefinition) this.getSource();
+		return (ClassifierDefinition) this.getSourceNode();
 	} // getClassifierDefinition
 
 	public ArrayList<Element> getModelElements() {

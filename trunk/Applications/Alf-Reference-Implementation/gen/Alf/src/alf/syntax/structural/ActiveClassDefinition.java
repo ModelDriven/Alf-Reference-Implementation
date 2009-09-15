@@ -23,7 +23,7 @@ public class ActiveClassDefinition extends ClassDefinition {
 	private ActivityDefinition classifierBehavior = null;
 
 	public void setClassifierBehavior(ActivityDefinition activity) {
-		this.addMember(activity);
+		this.addOwnedMember(activity);
 		this.classifierBehavior = activity;
 	} // setClassifierBehavior
 

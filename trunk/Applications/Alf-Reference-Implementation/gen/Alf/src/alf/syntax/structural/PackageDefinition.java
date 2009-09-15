@@ -20,6 +20,10 @@ import java.util.ArrayList;
 
 public class PackageDefinition extends NamespaceDefinition {
 
+	public PackageDefinition() {
+		super();
+	} // PackageDefinition
+
 	public PackageDefinition(String name) {
 		this.setName(name);
 	} // PackageDefinition

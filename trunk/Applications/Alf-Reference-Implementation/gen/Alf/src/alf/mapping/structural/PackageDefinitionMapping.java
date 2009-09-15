@@ -37,7 +37,7 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 	} // getPackage
 
 	public PackageDefinition getPackageDefinition() {
-		return (PackageDefinition) this.getSource();
+		return (PackageDefinition) this.getSourceNode();
 	} // getPackageDefinition
 
 	public ArrayList<Element> getModelElements() {
@@ -48,7 +48,7 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 
 	public void addMemberTo(Element element, NamedElement namespace) {
 		if (!(element instanceof PackageableElement)) {
-			this.setError(new ErrorNode(this.getSource(),
+			this.setError(new ErrorNode(this.getSourceNode(),
 					"Member is not packageable."));
 		} else {
 			((Package) namespace)

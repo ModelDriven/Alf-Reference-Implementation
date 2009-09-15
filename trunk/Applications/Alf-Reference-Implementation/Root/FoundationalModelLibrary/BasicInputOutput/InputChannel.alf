@@ -1,0 +1,12 @@
+namespace ::FoundationalModelLibrary::BasicInputOutput;
+
+private import ::FoundationalModelLibrary::Common::*;
+private import ::UML::AuxiliaryConstructs::PrimitiveTypes::*;
+
+abstract class InputChannel specializes Channel {
+
+  public abstract hasMore(): Boolean { }
+  public abstract read(out value: any, out errorStatus: Status[0..1]) { }
+  public abstract peek(out value: any, out errorStatus: Status[0..1]) { }
+  
+}

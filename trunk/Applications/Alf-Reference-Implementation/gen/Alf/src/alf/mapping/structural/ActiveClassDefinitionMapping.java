@@ -62,7 +62,7 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
 	} // addMemberTo
 
 	public ActiveClassDefinition getActiveClassDefinition() {
-		return (ActiveClassDefinition) this.getSource();
+		return (ActiveClassDefinition) this.getSourceNode();
 	} // getActiveClassDefinition
 
 } // ActiveClassDefinitionMapping

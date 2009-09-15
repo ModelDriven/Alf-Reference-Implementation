@@ -66,7 +66,7 @@ public class BehaviorInvocationExpressionMapping extends
 	} // mapAction
 
 	public BehaviorInvocationExpression getBehaviorInvocationExpression() {
-		return (BehaviorInvocationExpression) this.getSource();
+		return (BehaviorInvocationExpression) this.getSourceNode();
 	} // getBehaviorInvocationExpression
 
 } // BehaviorInvocationExpressionMapping

@@ -4,6 +4,7 @@ import alf.syntax.behavioral.*;
 import alf.syntax.expressions.*;
 import alf.syntax.namespaces.*;
 import alf.syntax.structural.*;
+import alf.mapping.*;
 import java.util.ArrayList;
 
 /** Token Manager. */

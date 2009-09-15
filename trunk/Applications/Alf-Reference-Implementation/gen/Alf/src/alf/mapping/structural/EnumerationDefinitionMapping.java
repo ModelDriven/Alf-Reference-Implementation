@@ -31,7 +31,7 @@ public class EnumerationDefinitionMapping extends ClassifierDefinitionMapping {
 			((Enumeration) namespace)
 					.addOwnedLiteral((EnumerationLiteral) element);
 		} else {
-			this.setError(new ErrorNode(this.getSource(),
+			this.setError(new ErrorNode(this.getSourceNode(),
 					"Only enumeration literals allowed."));
 		}
 	} // addMemberTo

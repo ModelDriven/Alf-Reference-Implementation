@@ -36,6 +36,9 @@ public abstract class TypedElementDefinition extends Member {
 	} // print
 
 	public Member getType() {
+		// System.out.println("getType: name = " + this.getName() +
+		// ", namespace = " + this.getNamespace());
+
 		return this.getDeclaration().getClassifier(this.getNamespace());
 	} // getType
 

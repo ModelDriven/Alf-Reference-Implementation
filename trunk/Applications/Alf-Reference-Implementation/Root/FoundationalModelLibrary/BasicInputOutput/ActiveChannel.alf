@@ -1,0 +1,10 @@
+namespace ::FoundationalModelLibrary::BasicInputOutput;
+
+private import ::FoundationalModelLibrary::Common::*;
+
+abstract active class ActiveChannel specializes Channel {
+
+  public register(in listener: Listener) { }
+  public unregister(in listener: Listener) { }
+  
+}

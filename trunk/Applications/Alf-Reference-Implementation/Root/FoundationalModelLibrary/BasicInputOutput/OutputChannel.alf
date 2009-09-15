@@ -1,0 +1,11 @@
+namespace ::FoundationalModelLibrary::BasicInputOutput;
+
+private import ::FoundationalModelLibrary::Common::*;
+private import ::UML::AuxiliaryConstructs::PrimitiveTypes::*;
+
+abstract class OutputChannel specializes Channel {
+
+  public abstract write(in value: any, out errorStatus: Status[0..1]);
+  public abstract isFull(): Boolean;
+
+}

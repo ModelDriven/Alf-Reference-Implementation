@@ -31,41 +31,52 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 	public void mapTo(Operation operation) {
 		super.mapTo(operation);
 
-		OperationDefinition definition = this.getOperationDefinition();
+		if (!this.isError()) {
 
-		BlockMapping bodyMapping = (BlockMapping) this
-				.map(definition.getBody());
-		bodyMapping.setContext(definition);
-		ArrayList<Element> elements = bodyMapping.getModelElements();
+			OperationDefinition definition = this.getOperationDefinition();
 
-		if (bodyMapping.isError()) {
-			this.setError(bodyMapping.getError());
-		} else {
-			Activity activity = new Activity();
-			operation.addMethod(activity);
+			if (definition.isAbstract()) {
+				operation.setIsAbstract(true);
+			} else {
 
-			ParameterList parameters = operation.ownedParameter;
-			for (int i = 0; i < parameters.size(); i++) {
-				Parameter parameter = parameters.get(i);
-				Parameter copy = new Parameter();
-				copy.setName(parameter.name);
-				copy.setDirection(parameter.direction);
-				copy.setLower(parameter.multiplicityElement.lower);
-				copy.setUpper(parameter.multiplicityElement.upper.naturalValue);
-				copy.setType(parameter.type);
-				copy.setIsOrdered(parameter.multiplicityElement.isOrdered);
-				copy.setIsUnique(parameter.multiplicityElement.isUnique);
-				activity.addOwnedParameter(copy);
-			}
+				BlockMapping bodyMapping = (BlockMapping) this.map(definition
+						.getBody());
+				bodyMapping.setContext(definition);
+				ArrayList<Element> elements = bodyMapping.getModelElements();
 
-			for (Element element : elements) {
-				if (element instanceof ActivityNode) {
-					activity.addNode((ActivityNode) element);
-				} else if (element instanceof ActivityEdge) {
-					activity.addEdge((ActivityEdge) element);
+				if (bodyMapping.isError()) {
+					this.setError(bodyMapping.getError());
 				} else {
-					this.setError(new ErrorNode(definition.getBody(),
-							"Element not an activity node."));
+					Activity activity = new Activity();
+					operation.addMethod(activity);
+
+					ParameterList parameters = operation.ownedParameter;
+					for (int i = 0; i < parameters.size(); i++) {
+						Parameter parameter = parameters.get(i);
+						Parameter copy = new Parameter();
+						copy.setName(parameter.name);
+						copy.setDirection(parameter.direction);
+						copy.setLower(parameter.multiplicityElement.lower);
+						copy
+								.setUpper(parameter.multiplicityElement.upper.naturalValue);
+						copy.setType(parameter.type);
+						copy
+								.setIsOrdered(parameter.multiplicityElement.isOrdered);
+						copy
+								.setIsUnique(parameter.multiplicityElement.isUnique);
+						activity.addOwnedParameter(copy);
+					}
+
+					for (Element element : elements) {
+						if (element instanceof ActivityNode) {
+							activity.addNode((ActivityNode) element);
+						} else if (element instanceof ActivityEdge) {
+							activity.addEdge((ActivityEdge) element);
+						} else {
+							this.setError(new ErrorNode(definition.getBody(),
+									"Element not an activity node."));
+						}
+					}
 				}
 			}
 		}
@@ -73,7 +84,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
 	public void addMemberTo(Element element, NamedElement namespace) {
 		if (!(element instanceof Parameter)) {
-			this.setError(new ErrorNode(this.getSource(),
+			this.setError(new ErrorNode(this.getSourceNode(),
 					"Member that is not a parameter."));
 		} else {
 			// Note: An operation is a namespace in full UML, but not in fUML,
@@ -94,7 +105,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 	} // getOperation
 
 	public OperationDefinition getOperationDefinition() {
-		return (OperationDefinition) this.getSource();
+		return (OperationDefinition) this.getSourceNode();
 	} // getOperationDefinition
 
 	public ArrayList<Element> getModelElements() {

@@ -32,6 +32,7 @@ public class ExpressionStatementMapping extends StatementMapping {
 		ExpressionStatement statement = this.getExpressionStatement();
 		ExpressionMapping mapping = (ExpressionMapping) this.map(statement
 				.getExpression());
+		mapping.setContext(this.getContext());
 		ArrayList<Element> elements = mapping.getModelElements();
 
 		if (mapping.isError()) {
@@ -48,7 +49,7 @@ public class ExpressionStatementMapping extends StatementMapping {
 	} // mapTo
 
 	public ExpressionStatement getExpressionStatement() {
-		return (ExpressionStatement) this.getSource();
+		return (ExpressionStatement) this.getSourceNode();
 	} // getExpressionStatement
 
 } // ExpressionStatementMapping

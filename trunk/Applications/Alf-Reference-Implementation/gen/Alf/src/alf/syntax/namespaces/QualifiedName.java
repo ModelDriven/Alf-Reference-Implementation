@@ -94,7 +94,7 @@ public class QualifiedName extends SyntaxNode {
 				qualifiedName.addName(name);
 				Member member = qualifiedName.resolveSubunit();
 				member.setName(name); // (Ensures an error member is named)
-				namespace.addMember(member);
+				namespace.addOwnedMember(member);
 				members.add(member);
 			}
 

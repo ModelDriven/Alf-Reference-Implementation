@@ -37,6 +37,7 @@ public class NameExpression extends Expression {
 
 	public Member getParameter(NamespaceDefinition context) {
 		QualifiedName name = this.getName();
+
 		ArrayList<Member> members = name.resolve(context);
 		Member member;
 

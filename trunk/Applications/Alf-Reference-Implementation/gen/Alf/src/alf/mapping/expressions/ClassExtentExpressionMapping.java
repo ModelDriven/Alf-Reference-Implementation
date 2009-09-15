@@ -60,7 +60,7 @@ public class ClassExtentExpressionMapping extends ExpressionMapping {
 	} // getAction
 
 	public ClassExtentExpression getClassExtentExpression() {
-		return (ClassExtentExpression) this.getSource();
+		return (ClassExtentExpression) this.getSourceNode();
 	} // getClassExtentExpression
 
 	public ArrayList<Element> getModelElements() {
