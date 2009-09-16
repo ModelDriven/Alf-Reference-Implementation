@@ -1,7 +1,0 @@
-package Root {
-
-  public package UML;
-  public package FoundationalModelLibrary;
-  public package Alf;
-  
-}

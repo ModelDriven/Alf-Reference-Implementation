@@ -27,7 +27,7 @@ public class StringLiteralMapping extends LiteralMapping {
 
 		LiteralString literal = new LiteralString();
 		literal.setName("Value(" + image + ")");
-		literal.setValue(image.substring(2, image.length()));
+		literal.setValue(image.substring(1, image.length() - 1));
 
 		return literal;
 	} // mapValueSpecification

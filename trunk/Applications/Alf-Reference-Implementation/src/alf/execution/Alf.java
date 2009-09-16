@@ -32,7 +32,6 @@ public class Alf {
         new AlfMapper(this.unit).getModelElements();
 
         this.addBasicInputOutput();
-
     }
 
     private void addPrimitiveBehaviorMappings() throws AlfExecutionError {
@@ -64,7 +63,6 @@ public class Alf {
                 }              
             }
         }
-
     }
 
     private void addBasicInputOutput() throws AlfExecutionError {
@@ -115,6 +113,8 @@ public class Alf {
     }
 
     public void execute(ActivityDefinition definition) {
+        System.out.println();
+        System.out.println("Executing " + definition.getQualifiedName() + "...");
         Activity activity = ((ActivityDefinitionMapping) (definition.getTargetNode()))
                 .getActivity();
         this.environment.execute(activity, new ParameterValueList());

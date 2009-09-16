@@ -60,7 +60,7 @@ public class BlockMapping extends MappingNode {
 				this.setError(mapping.getError());
 				break;
 			} else {
-				elements.add(node);
+				elements.addAll(mapping.getModelElements());
 
 				if (!isParallel && previousNode != null) {
 					ControlFlow flow = new ControlFlow();

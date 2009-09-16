@@ -28,6 +28,7 @@ public abstract class StatementMapping extends DocumentedNodeMapping {
 
 	private StructuredActivityNode node = null;
 	private NamespaceDefinition context = null;
+	private ArrayList<Element> modelElements = new ArrayList<Element>();
 
 	public void setContext(NamespaceDefinition context) {
 		this.context = context;
@@ -39,6 +40,11 @@ public abstract class StatementMapping extends DocumentedNodeMapping {
 
 	public void mapTo(StructuredActivityNode node) {
 		super.mapTo(node);
+
+		Statement statement = this.getStatement();
+		String s = statement.getClass().getName();
+		node.setName(s.substring(s.lastIndexOf(".") + 1) + "@"
+				+ Integer.toHexString(statement.hashCode()));
 	} // mapTo
 
 	public StructuredActivityNode getNode() {
@@ -54,9 +60,14 @@ public abstract class StatementMapping extends DocumentedNodeMapping {
 		return (Statement) this.getSourceNode();
 	} // getStatement
 
+	public void addModelElement(Element element) {
+		this.modelElements.add(element);
+	} // addModelElement
+
 	public ArrayList<Element> getModelElements() {
 		ArrayList<Element> elements = new ArrayList<Element>();
 		elements.add(this.getNode());
+		elements.addAll(this.modelElements);
 		return elements;
 	} // getModelElements
 
