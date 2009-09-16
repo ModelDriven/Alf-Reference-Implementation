@@ -1983,15 +1983,15 @@ UnitDefinition name:ProcessQueue
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
      QualifiedName Process
   SignalReceptionDefinition name:Release visibility:public isStub:false isAbstract: false
-  OperationDefinition name:enqueue visibility:protected isStub:true isAbstract:true
+  OperationDefinition name:enqueue visibility:protected isStub:false isAbstract:true
    FormalParameter name:process visibility: isStub:false direction:in
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
      QualifiedName Process
-  OperationDefinition name:dequeue visibility:protected isStub:true isAbstract:true
+  OperationDefinition name:dequeue visibility:protected isStub:false isAbstract:true
    FormalParameter name: visibility: isStub:false direction:return
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
      QualifiedName Process
-  OperationDefinition name:processesWaiting visibility:protected isStub:true isAbstract:true
+  OperationDefinition name:processesWaiting visibility:protected isStub:false isAbstract:true
    FormalParameter name: visibility: isStub:false direction:return
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
      QualifiedName Boolean
@@ -2061,21 +2061,10 @@ Parsing tests\ActiveClass_ProcessQueueImpl.alf...
 Parsed successfully.
 UnitDefinition name:ProcessQueueImpl
  ActiveClassDefinition name:ProcessQueueImpl visibility: isStub:false isAbstract: false classifierBehavior:null
-  PropertyDefinition name:waitingProcesses visibility:private isStub:false isComposite:false
-   TypedElementDeclaration lowerBound: upperBound:* isOrdered:true isNonunique:false collection:
-    QualifiedName Process
-  OperationDefinition name:enqueue visibility:private isStub:true isAbstract:false
-   FormalParameter name:process visibility: isStub:false direction:in
-    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-     QualifiedName Process
-  OperationDefinition name:dequeue visibility:private isStub:true isAbstract:false
-   FormalParameter name: visibility: isStub:false direction:return
-    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-     QualifiedName Process
-  OperationDefinition name:processesWaiting visibility:private isStub:true isAbstract:false
-   FormalParameter name: visibility: isStub:false direction:return
-    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-     QualifiedName Boolean
+Resolving subunit ProcessQueue
+Parsing Root/Model/ProcessQueue.alf...
+Unit not found.
+  ErrorNode message:Unit not found: ProcessQueue context:ProcessQueue
   QualifiedNameList
    QualifiedName ProcessQueue
 Alf 0.05 Parser
@@ -3714,40 +3703,10 @@ Parsing tests\Class_Destructors.alf...
 Parsed successfully.
 UnitDefinition name:Destructors
  ClassDefinition name:Destructors visibility: isStub:false isAbstract: false
-  DestructorDefinition name:ProductSelection visibility:public isStub:true isAbstract:false
-  DestructorDefinition name:unregister visibility:private isStub:false isAbstract:false
-   Block
-    ExpressionStatement
-     FeatureInvocationExpression
-      FeatureReference name:unregister
-       BehaviorInvocationExpression
-        QualifiedName Repository::get
-        PositionalTuple
-      PositionalTuple
-       ThisExpression
-    ExpressionStatement
-     SuperDestructionExpression
-      PositionalTuple
-  DestructorDefinition name:D visibility:public isStub:false isAbstract:false
-   Block
-    ExpressionStatement
-     SuperDestructionExpression
-      PositionalTuple
-  DestructorDefinition name:D visibility:public isStub:false isAbstract:false
-   FormalParameter name:reason visibility: isStub:false direction:in
-    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-     QualifiedName String
-   Block
-    ExpressionStatement
-     BehaviorInvocationExpression
-      QualifiedName WriteLine
-      PositionalTuple
-       NameExpression
-        QualifiedName reason
-    ExpressionStatement
-     InstanceDestructionExpression
-      ThisExpression
-      PositionalTuple
+Resolving subunit C
+Parsing Root/Model/C.alf...
+Unit not found.
+  ErrorNode message:Unit not found: C context:C
   QualifiedNameList
    QualifiedName C
 Alf 0.05 Parser
@@ -3771,7 +3730,7 @@ Parsing tests\Class_Operations.alf...
 Parsed successfully.
 UnitDefinition name:Operations
  ClassDefinition name:Operations visibility: isStub:false isAbstract: false
-  OperationDefinition name:select visibility:null isStub:true isAbstract:true
+  OperationDefinition name:select visibility:null isStub:false isAbstract:true
    FormalParameter name:cart visibility: isStub:false direction:in
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
      QualifiedName Cart
@@ -3932,31 +3891,10 @@ Parsing tests\Class_SuperConstructors.alf...
 Parsed successfully.
 UnitDefinition name:SuperConstructors
  ClassDefinition name:SuperConstructors visibility: isStub:false isAbstract: false
-  ConstructorDefinition name:B visibility:public isStub:false isAbstract:false
-   FormalParameter name:x visibility: isStub:false direction:in
-    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-     QualifiedName Integer
-   Block
-    SuperclassConstructorInvocation
-     QualifiedName A
-  ConstructorDefinition name:B visibility:public isStub:false isAbstract:false
-   Block
-    AlternativeConstructorInvocation constructor:B
-     PositionalTuple
-      NameExpression
-       QualifiedName x
-  ConstructorDefinition name:B1 visibility:public isStub:false isAbstract:false
-   FormalParameter name:x visibility: isStub:false direction:in
-    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-     QualifiedName Integer
-   Block
-    SuperclassConstructorInvocation
-  ConstructorDefinition name:B2 visibility:public isStub:false isAbstract:false
-   Block
-    AlternativeConstructorInvocation constructor:null
-     PositionalTuple
-      NameExpression
-       QualifiedName x
+Resolving subunit A
+Parsing Root/Model/A.alf...
+Unit not found.
+  ErrorNode message:Unit not found: A context:A
   QualifiedNameList
    QualifiedName A
 Alf 0.05 Parser

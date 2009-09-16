@@ -23,6 +23,7 @@ import alf.mapping.expressions.*;
 import fUML.Syntax.Classes.Kernel.*;
 import fUML.Syntax.Activities.IntermediateActivities.*;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
+import fUML.Syntax.Actions.BasicActions.*;
 
 public class ExpressionStatementMapping extends StatementMapping {
 
@@ -41,8 +42,17 @@ public class ExpressionStatementMapping extends StatementMapping {
 			for (Element element : elements) {
 				if (element instanceof ActivityNode) {
 					node.addNode((ActivityNode) element);
-				} else if (element instanceof ActivityEdge) {
+				} else if (element instanceof ControlFlow) {
 					node.addEdge((ActivityEdge) element);
+				} else if (element instanceof ObjectFlow) {
+					ActivityEdge edge = (ActivityEdge) element;
+
+					if (edge.source.activity != null
+							|| edge.target.activity != null) {
+						this.addModelElement(edge);
+					} else {
+						node.addEdge(edge);
+					}
 				}
 			}
 		}

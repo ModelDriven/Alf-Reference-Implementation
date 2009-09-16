@@ -44,6 +44,7 @@ public class BehaviorInvocationExpressionMapping extends
 			if (mapping.isError()) {
 				this.setError(mapping.getError());
 			} else {
+				action.setName("CallBehavior(" + activity.qualifiedName + ")");
 				((CallBehaviorAction) action).setBehavior(activity);
 			}
 		}

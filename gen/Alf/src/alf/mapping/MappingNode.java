@@ -54,14 +54,12 @@ public abstract class MappingNode extends Node {
 	} // map
 
 	public void mapTo(Element element) {
-		System.out.print(this);
-
-		if (element == null) {
-			System.out.println("");
-		} else {
-			System.out.println(" to: " + element.getClass().getName());
-		}
-
+		/*
+		 * System.out.print(this);
+		 * 
+		 * if (element == null) { System.out.println(""); } else {
+		 * System.out.println(" to: " + element.getClass().getName()); }
+		 */
 	} // mapTo
 
 	public String toString() {
