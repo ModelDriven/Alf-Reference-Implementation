@@ -1,4 +1,4 @@
-namespace ::fUML::Semantics::Activities::IntermediateActivities::
+namespace fUML::Semantics::Activities::IntermediateActivities::
           ActivityNodeActivationGroup;
 
 /** 

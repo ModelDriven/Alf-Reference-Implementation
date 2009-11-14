@@ -1,10 +1,27 @@
 activity Statements() {
 
+  /*@inline('C++')  // Native code
+    data* = this;
+    controller->initiate();
+  */
+
+  //@parallel 
+  { 
+    i = Expr1;
+    last = Expr2;
+    collection = Integer[]{};
+    while (i <= last) { collection -> add(i++); }
+  }
+  
+  ;
+  
+  let currentOffer : Commodity::Transaction::Offer = this.offers[1];
+  
   if (reading > threshold) {
      monitor.raiseAlarm(sensorId); 
   }
   
-  @determined @assured
+  //@determined @assured
   if (reading <= safeLimit) {
     condition = normal; }
   or if (reading > safeLimit && reading <= criticalLimit) {
@@ -103,12 +120,15 @@ activity Statements() {
     processRecord(i);
   }
   
-  @parallel for (outgoingEdge in this.outgoingEdges) {
+  //@parallel 
+  for (outgoingEdge in this.outgoingEdges) {
     outgoingEdge.sendOffer(tokens);
   }
   
-  @parallel<SnEven,SnOdd> for (lower in SLower, upper in SUpper, root in V) {
-    @parallel {
+  //@parallel(SnEven,SnOdd)
+  for (lower in SLower, upper in SUpper, root in V) {
+    //@parallel 
+    {
       SnEven -> add(lower+upper);
       SnOdd  -> add((lower-upper)*root);
     }

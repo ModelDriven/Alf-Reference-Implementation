@@ -52,7 +52,7 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 					"Member is not packageable."));
 		} else {
 			((Package) namespace)
-					.addPackageElement((PackageableElement) element);
+					.addPackagedElement((PackageableElement) element);
 		}
 	} // addMemberTo
 

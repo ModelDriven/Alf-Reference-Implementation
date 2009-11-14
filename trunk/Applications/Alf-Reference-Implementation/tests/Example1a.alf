@@ -1,4 +1,4 @@
-namespace ::fUML::Semantics::Activities::IntermediateActivities::
+namespace fUML::Semantics::Activities::IntermediateActivities::
           ActivityNodeActivationGroup;                     // See Note 1
 
 /** 
@@ -36,7 +36,7 @@ activity run(in activations: Set<ActivityNodeActivation>){ // See Note 3
   }
 
   // *** Send offers to all enabled nodes concurrently. ***
-  @parallel                                                // See Note 12
+  //@parallel                                              // See Note 12
   for (enabledActivation in enabledActivations)  { 
     enabledActivation.receiveOffer();
   }

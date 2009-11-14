@@ -1,7 +1,7 @@
 /*
    Parser for the 
    Action Language for Foundational UML (Alf)
-   Version 0.05
+   Version 0.06
 
    with construction of the Abstract Syntax Tree
    
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 public class AlfParser {
 
-  public static final String version = "0.05";
+  public static final String version = "0.06";
 
   private static void completeSubunits(NamespaceDefinition namespace) {
     for (Member member: namespace.getMembers()) {
@@ -63,7 +63,7 @@ public class AlfParser {
       UnitDefinition unit = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
       return unit;
-    } catch (ParseException e) {
+    } catch (Throwable e) {
       System.out.println(e.getMessage());
       System.out.println("Encountered errors during parse.");
       return null;
@@ -90,18 +90,20 @@ public class AlfParser {
       return;
     }
 
-    if (!complete) {
-      unit.print();
-    } else {
-      unit.addImplicitImports();
+    if (unit != null) {
+      if (!complete) {
+        unit.print();
+      } else {
+        unit.addImplicitImports();
         
-      // Ensure all imports are resolved.
-      unit.getDefinition().getAllMembers();
+        // Ensure all imports are resolved.
+        unit.getDefinition().getAllMembers();
         
-      // Recursively complete subunits.
-      completeSubunits(unit.getDefinition());
+        // Recursively complete subunits.
+        completeSubunits(unit.getDefinition());
         
-      unit.getRootNamespace().print();
+        unit.getRootNamespace().print();
+      }
     }
       
     /*
@@ -126,30 +128,60 @@ PARSER_END(AlfParser)
 
 /* WHITE SPACE */
 
+<DEFAULT, IN_STATEMENT_ANNOTATION, IN_IN_LINE_ANNOTATION>
 SKIP :
 {
   " "
 | "\t"
-| "\n"
-| "\r"
 | "\f"
 }
 
+SKIP:
+{
+  "\n"
+| "\r"
+}
+
+/* STATEMENT ANNOTATIONS */
+
+TOKEN:
+{
+  < SLASH_SLASH_AT: "//@" >: IN_STATEMENT_ANNOTATION
+|
+  < SLASH_STAR_AT: "/*@" >: IN_IN_LINE_ANNOTATION
+}
+
+<IN_STATEMENT_ANNOTATION>
+TOKEN:
+{
+  < EOL: ( "//" ( ~["\n","\r"] )* )? ( "\n" | "\r" ("\n")? ) >: DEFAULT
+}
+
+<IN_IN_LINE_ANNOTATION>
+SKIP:
+{
+  < ( "//" ( ~["\n","\r"] )* )? ( "\n" | "\r" ("\n")? ) >: IN_DOCUMENTATION_COMMENT
+}
+
 /* COMMENTS */
+
+SKIP:
+{
+  < "/**" ~["/"] > { input_stream.backup(1); }: IN_DOCUMENTATION_COMMENT
+}
 
 MORE:
 {
   "//": IN_END_OF_LINE_COMMENT
 |
-  < "/**" ~["/"] > { input_stream.backup(1); }: IN_DOCUMENTATION_COMMENT
-|
   < "/*" >: IN_IN_LINE_COMMENT
 }
+
 
 <IN_END_OF_LINE_COMMENT>
 SKIP:
 {
-  < END_OF_LINE_COMMENT: "\n" | "\r" | "\r\n" >: DEFAULT
+  < END_OF_LINE_COMMENT: "\n" | "\r" ("\n")? >: DEFAULT
 }
 
 <IN_END_OF_LINE_COMMENT>
@@ -175,7 +207,7 @@ MORE:
 <IN_IN_LINE_COMMENT_STAR>
 SKIP:
 {
-  < IN_LINE_COMMENT: "/" > : DEFAULT
+  < IN_LINE_COMMENT: "/" >: DEFAULT
 }
 
 <IN_DOCUMENTATION_COMMENT>
@@ -189,7 +221,7 @@ MORE:
 <IN_DOCUMENTATION_COMMENT_STAR>
 TOKEN:
 {
-  < DOCUMENTATION_COMMENT: "/" >: DEFAULT
+  < DOCUMENTATION_COMMENT: "/" > { String t = matchedToken.image; matchedToken.image = t.substring(0, t.length()-2); }: DEFAULT
 }
 
 <IN_DOCUMENTATION_COMMENT_STAR>
@@ -200,6 +232,7 @@ MORE:
 
 /* RESERVED WORDS */
 
+<DEFAULT, IN_STATEMENT_ANNOTATION, IN_IN_LINE_ANNOTATION>
 TOKEN:
 {
   < ABSTRACT: "abstract" > 
@@ -230,6 +263,7 @@ TOKEN:
 | < IN: "in">
 | < INOUT: "inout" >
 | < INSTANCEOF: "instanceof" >
+| < LET: "let" >
 | < NAMESPACE: "namespace" >
 | < NEW: "new" >
 | < NONUNIQUE: "nonunique" >
@@ -256,6 +290,7 @@ TOKEN:
 
 /* NAMES */
 
+<DEFAULT, IN_STATEMENT_ANNOTATION, IN_IN_LINE_ANNOTATION>
 TOKEN:
 {
   < IDENTIFIER: <IDENTIFIER_LETTER> ( <IDENTIFIER_LETTER_OR_DIGIT> ) * >
@@ -277,6 +312,7 @@ TOKEN:
 
 /* PRIMITIVE LITERALS */
 
+<DEFAULT, IN_STATEMENT_ANNOTATION, IN_IN_LINE_ANNOTATION>
 TOKEN:
 {
   < BOOLEAN_LITERAL: "true" | "false" >
@@ -290,6 +326,7 @@ TOKEN:
 
 /* SEPARATORS */
 
+<DEFAULT, IN_STATEMENT_ANNOTATION, IN_IN_LINE_ANNOTATION>
 TOKEN :
 {
   < LPAREN: "(" >
@@ -310,7 +347,8 @@ TOKEN :
 
 /* OPERATORS */
 
-TOKEN :
+<DEFAULT, IN_STATEMENT_ANNOTATION, IN_IN_LINE_ANNOTATION>
+TOKEN:
 {
   < ASSIGN: "=" >
 | < GT: ">" >
@@ -373,35 +411,34 @@ QualifiedName QualifiedName():
   QualifiedName q = new QualifiedName();
 }
 {
-/* ORIGINAL
-  [ NamespaceQualification() ] Name()
+  ( LOOKAHEAD(3)
+    ColonQualifiedName(q)
+/*
+  |
+    LOOKAHEAD(3)
+    DotQualifiedName(q)
 */
-
-  [ <DOUBLE_COLON> { q.setIsAbsolute(); }] 
-  n = Name() { q.addName(n); } ( LOOKAHEAD(2) <DOUBLE_COLON> n = Name() { q.addName(n); } )*
+  |
+    n = Name() { q.addName(n); }
+  )
   { return q; }
 }
 
-/* ORIGINAL
-void NamespaceQualification():
-{}
+void ColonQualifiedName(QualifiedName q):
 {
-  AbsoluteQualification()
-| RelativeQualification()
+  String n;
+}
+{
+  n = Name() { q.addName(n); } ( LOOKAHEAD(2) <DOUBLE_COLON> n = Name() { q.addName(n); } )+ 
 }
 
-void AbsoluteQualification():
-{}
+void DotQualifiedName(QualifiedName q):
 {
-  <DOUBLE_COLON> RelativeQualification()
+  String n;
 }
-
-void RelativeQualification():
-{}
 {
-  Name() ( LOOKAHEAD(2) <DOUBLE_COLON> Name() )*
+  n = Name() { q.addName(n); } ( LOOKAHEAD(2) <DOT> n = Name() { q.addName(n); } )+ 
 }
-*/
 
 /* NAMESPACES */
 
@@ -488,29 +525,27 @@ ImportReference ImportDeclaration():
 
 ImportReference ImportReference():
 {
-  QualifiedName n;
+  String n;
+  QualifiedName q = new QualifiedName();
   String a;
   ImportReference i;
 }
 {
-/* ORIGINAL
-  ElementImportReference()
-| PackageImportReference()
-*/
-
-  n = QualifiedName() { i = new ImportReference(n); }
-  [ PackageImport() { i.setIsPackageImport(); } 
-  | a = AliasDefinition() { i.setAlias(a); } ]
+  ( LOOKAHEAD(3)
+    ColonQualifiedName(q) { i = new ImportReference(q); }
+    [ <DOUBLE_COLON> <STAR> { i.setIsPackageImport(); } 
+    | a = AliasDefinition() { i.setAlias(a); } ]
+  | LOOKAHEAD(3)
+    DotQualifiedName(q) { i = new ImportReference(q); }
+    [ <DOT> <STAR> { i.setIsPackageImport(); } 
+    | a = AliasDefinition() { i.setAlias(a); } ]
+  |
+    n = Name() { q.addName(n); i = new ImportReference(q); }
+    [ ( <DOUBLE_COLON> | <DOT> ) <STAR> { i.setIsPackageImport(); }
+    | a = AliasDefinition() { i.setAlias(a); } ]    
+  )
   { return i; }
 }
-
-/* ORIGINAL
-void ElementImportReference():
-{}
-{
-  QualifiedName() [ AliasDefinition() ]
-}
-*/
 
 String AliasDefinition():
 {
@@ -519,21 +554,6 @@ String AliasDefinition():
 {
   <AS> n = Name()
   { return n; }
-}
-
-/* ORIGINAL
-void PackageImportReference():
-{}
-{
-  QualifiedName() <DOUBLE_COLON> <STAR>
-}
-*/
-
-/* ADDED */
-void PackageImport():
-{}
-{
-  <DOUBLE_COLON> <STAR>
 }
 
 /***********************
@@ -1447,8 +1467,10 @@ Statement Statement():
 {
   (
     s = AnnotatedStatement()
+  | s = InLineStatement()
   | s = BlockStatement()
   | s = EmptyStatement()
+  | s = LocalNameDeclarationStatement()
   | s = ExpressionStatement()
   | s = IfStatement()
   | s = SwitchStatement()
@@ -1468,14 +1490,28 @@ Statement Statement():
 
 Statement AnnotatedStatement():
 {
-  Annotation a;
+  ArrayList<Annotation> al;
   Statement s;
 }
 { 
-  a = Annotation() s = Statement()
-  { s.addAnnotation(a);
+  <SLASH_SLASH_AT> al = Annotations() <EOL>
+  s = Statement()
+  { 
+    for (Annotation an: al) {
+      s.addAnnotation(an);
+    }
     return s;
   }
+}
+
+ArrayList<Annotation> Annotations():
+{
+  Annotation a;
+  ArrayList<Annotation> al = new ArrayList<Annotation>();
+}
+{
+   a = Annotation() { al.add(a); } ( <AT> a = Annotation() { al.add(a); } )*
+   { return al; }
 }
 
 Annotation Annotation():
@@ -1484,7 +1520,7 @@ Annotation Annotation():
   NameList nl = null;
 }
 {
-  <AT> t = <IDENTIFIER> [ <LT> nl = NameList() <GT> ]
+  t = <IDENTIFIER> [ <LPAREN> nl = NameList() <RPAREN> ]
   { return new Annotation(t.image, nl); }
 }
 
@@ -1496,6 +1532,21 @@ NameList NameList():
 { 
   n = Name() { nl.add(n); } ( <COMMA> n = Name() { nl.add(n); } )*
   { return nl; }
+}
+
+/* IN-LINE STATEMENTS */
+
+InLineStatement InLineStatement():
+{ 
+  Token t;
+  String n;
+  Token d;
+  InLineStatement s;
+}
+{
+  <SLASH_STAR_AT> t = <IDENTIFIER> <LPAREN> n = Name() <RPAREN>
+  d = <DOCUMENTATION_COMMENT>
+  { return new InLineStatement(n, d.image); }
 }
 
 /* BLOCK STATEMENTS */
@@ -1516,6 +1567,36 @@ EmptyStatement EmptyStatement():
 {
   <SEMICOLON>
   { return new EmptyStatement(); }
+}
+
+/* LOCAL NAME DECLARATION STATEMENTS */
+LocalNameDeclarationStatement LocalNameDeclarationStatement():
+{
+  LocalNameDeclarationStatement s = new LocalNameDeclarationStatement();
+  Expression e;
+}
+{
+  NameDeclaration(s) <ASSIGN>  e = Expression() <SEMICOLON>
+  { s.setExpression(e);
+    return s;
+  }
+}
+
+void NameDeclaration(LocalNameDeclarationStatement s):
+{
+  String n;
+  QualifiedName t;
+}
+{
+  ( 
+    <LET> n = Name() <COLON> t = TypeName()
+/*
+  | t = TypeName() n = Name()
+*/
+  )
+  { s.setName(n);
+    s.setTypeName(t);
+  }
 }
 
 /* EXPRESSION STATEMENTS */
@@ -1847,11 +1928,6 @@ Expression Expression():
   Expression e2;
 }
 {
-/* ORIGINAL
-  AssignmentExpression()
-| ConditionalExpression()
-*/
-
   (
     LOOKAHEAD(QualifiedName() AssignmentOperator()) 
     n = QualifiedName() e2 = Assignment(new NameLeftHandSide(n))
@@ -1864,7 +1940,6 @@ Expression Expression():
   { return e2; }
 }
 
-/* ADDED */
 Expression ExpressionCompletion(Expression c) :
 {
   Expression i;
@@ -1879,7 +1954,6 @@ Expression ExpressionCompletion(Expression c) :
   { return e; }
 }
 
-/* ADDED */
 Expression FeatureExpressionCompletion(FeatureReference f):
 {
   Expression e1;
@@ -1897,7 +1971,6 @@ Expression FeatureExpressionCompletion(FeatureReference f):
   { return e2; }
 }
 
-/* ADDED */
 Expression IndexFeatureExpressionCompletion(FeatureReference f, Expression i):
 {
   Expression e1;
@@ -1914,7 +1987,6 @@ Expression IndexFeatureExpressionCompletion(FeatureReference f, Expression i):
   { return e2; }
 }  
 
-/* ADDED */
 Expression NonIndexExpressionCompletion(Expression c):
 {
   Expression e1;
@@ -1936,22 +2008,6 @@ Expression NonIndexExpressionCompletion(Expression c):
 }
 
 /* PRIMARY EXPRESSIONS */
-
-/* ORIGINAL
-void PrimaryExpression():
-{}
-{
-  LiteralExpression()
-| NameExpression()
-| ThisExpression()
-| ParenthesizedExpression()
-| PropertyAccessExpression()
-| InvocationExpression()
-| InstanceCreationExpression()
-| InstanceDestructionExpression()
-| ReductionExpression()
-}
-*/
 
 /* ADDED */
 Expression BaseExpression():
@@ -2279,7 +2335,7 @@ Expression BaseCollectionExpression():
   (
     LOOKAHEAD(QualifiedName() <DOT> <ALL_INSTANCES>) 
     e = ClassExtentExpression()
-  | LOOKAHEAD( TypeName() <LBRACKET> [ MultiplicityRange() ] <RBRACKET> <LBRACE>
+  | LOOKAHEAD( [ <NEW> ] TypeName() <LBRACKET> [ MultiplicityRange() ] <RBRACKET> <LBRACE>
              | <NULL> ) 
     e = CollectionValueExpression()
   | e = BaseExpression()
@@ -2329,7 +2385,7 @@ Expression CollectionValueExpression():
 }
 {
   (
-    t = TypeName() { d.setType(t); }
+    [ <NEW> ] t = TypeName() { d.setType(t); }
     <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET>
     <LBRACE> [ c = CollectionElements() ] <RBRACE>
   | <NULL>
