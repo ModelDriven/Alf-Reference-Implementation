@@ -1,12 +1,12 @@
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example1a.alf...
 Parsed successfully.
 UnitDefinition name:run
-/** 
+ 
   Run the given node activations and then (concurrently) send an offer to
   all activations for nodes with no incoming edges within the given set.
-*/
- QualifiedName ::fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup
+
+ QualifiedName fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup
  ActivityDefinition name:run visibility: isStub:false
   FormalParameter name:activations visibility: isStub:false direction:in
    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:Set
@@ -121,15 +121,15 @@ UnitDefinition name:run
         NameExpression
          QualifiedName enabledActivation
        PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example1b.alf...
 Parsed successfully.
 UnitDefinition name:run
-/** 
+ 
   Run the given node activations and then (concurrently) send an offer to
   all activations for nodes with no incoming edges within the given set.
-*/
- QualifiedName ::fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup
+
+ QualifiedName fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup
  ActivityDefinition name:run visibility: isStub:false
   FormalParameter name:activations visibility: isStub:false direction:in
    TypedElementDeclaration lowerBound: upperBound:* isOrdered:false isNonunique:false collection:
@@ -200,19 +200,19 @@ UnitDefinition name:run
       NameExpression
        QualifiedName enabledActivations
      PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2a.alf...
 Parsed successfully.
 UnitDefinition name:Order_Behavior
-/**
+
 Based on Executable UML, Appendix B, Ordering Subsystem.
 See Figure B.3 for original state machine diagram.
-*/
+
  QualifiedName Ordering1::Order1
  ActivityDefinition name:Order_Behavior visibility: isStub:false
   Block
    AcceptStatement
-   /** 1. Establishing Customer and Verifying Payment */
+    1. Establishing Customer and Verifying Payment 
     AcceptBlock name:checkout
      QualifiedNameList
       QualifiedName Checkout
@@ -226,7 +226,7 @@ See Figure B.3 for original state machine diagram.
    DoStatement
     Block
      AcceptStatement
-     /** 2. Submitting Charge */
+      2. Submitting Charge 
       AcceptBlock name:chargeSubmission
        QualifiedNameList
         QualifiedName SubmitCharge
@@ -249,7 +249,7 @@ See Figure B.3 for original state machine diagram.
           NameExpression
            QualifiedName true
         ExpressionStatement
-        /** 3. Payment Not Approved */
+         3. Payment Not Approved 
          FeatureInvocationExpression
           FeatureReference name:declineCharge
            ThisExpression
@@ -267,13 +267,13 @@ See Figure B.3 for original state machine diagram.
     NameExpression
      QualifiedName declined
    ExpressionStatement
-   /** 4. Being Packed and Shipped */
+    4. Being Packed and Shipped 
     FeatureInvocationExpression
      FeatureReference name:packAndShip
       ThisExpression
      PositionalTuple
    AcceptStatement
-   /** 5. Delivered to Customer} */
+    5. Delivered to Customer} 
     AcceptBlock name:null
      QualifiedNameList
       QualifiedName OrderDelivery
@@ -282,14 +282,14 @@ See Figure B.3 for original state machine diagram.
      FeatureReference name:notifyOfDelivery
       ThisExpression
      PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2b.alf...
 Parsed successfully.
 UnitDefinition name:Ordering
-/**
+
 Based on Executable UML, Appendix B, Ordering Subsystem.
 See Figure B.2 for class diagram.
-*/
+
  ImportReference visibility:private alias: packageImport:false
   QualifiedName EE_OnlineCustomer
  ImportReference visibility:private alias: packageImport:false
@@ -303,7 +303,7 @@ See Figure B.2 for class diagram.
   ActiveClassDefinition name:Customer visibility:public isStub:true isAbstract: false classifierBehavior:null
   ActiveClassDefinition name:ProductSelection visibility:public isStub:true isAbstract: false classifierBehavior:null
   AssociationDefinition name:R4 visibility:public isStub:false isAbstract: false
-  /** Note: fUML does not allow association classes. */
+   Note: fUML does not allow association classes. 
    PropertyDefinition name:'selections are added to' visibility:public isStub:false isComposite:false
     TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false collection:
      QualifiedName ShoppingCart
@@ -341,13 +341,13 @@ See Figure B.2 for class diagram.
    PropertyDefinition name:'is a purchase of selections in' visibility:public isStub:false isComposite:false
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
      QualifiedName ShoppingCart
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2c.alf...
 Parsed successfully.
 UnitDefinition name:Order
-/**
+
 From Executable UML, Figure B.2, with statechart from Figure B.3
-*/
+
  QualifiedName Ordering
  ActiveClassDefinition name:Order visibility: isStub:false isAbstract: false classifierBehavior:ActivityDefinition name: visibility:private isStub:false
   PropertyDefinition name:orderID visibility:public isStub:false isComposite:false
@@ -426,7 +426,7 @@ From Executable UML, Figure B.2, with statechart from Figure B.3
   ActivityDefinition name: visibility:private isStub:false
    Block
     AcceptStatement
-    /** 1. Establishing Customer and Verifying Payment */
+     1. Establishing Customer and Verifying Payment 
      AcceptBlock name:checkout
       QualifiedNameList
        QualifiedName Checkout
@@ -440,7 +440,7 @@ From Executable UML, Figure B.2, with statechart from Figure B.3
     DoStatement
      Block
       AcceptStatement
-      /** 2. Submitting Charge */
+       2. Submitting Charge 
        AcceptBlock name:chargeSubmission
         QualifiedNameList
          QualifiedName SubmitCharge
@@ -463,7 +463,7 @@ From Executable UML, Figure B.2, with statechart from Figure B.3
            NameExpression
             QualifiedName true
          ExpressionStatement
-         /** 3. Payment Not Approved */
+          3. Payment Not Approved 
           FeatureInvocationExpression
            FeatureReference name:DeclineCharge
             ThisExpression
@@ -481,13 +481,13 @@ From Executable UML, Figure B.2, with statechart from Figure B.3
      NameExpression
       QualifiedName declined
     ExpressionStatement
-    /** 4. Being Packed and Shipped */
+     4. Being Packed and Shipped 
      FeatureInvocationExpression
       FeatureReference name:PackAndShip
        ThisExpression
       PositionalTuple
     AcceptStatement
-    /** 5. Delivered to Customer */
+     5. Delivered to Customer 
      AcceptBlock name:null
       QualifiedNameList
        QualifiedName OrderDelivery
@@ -496,14 +496,14 @@ From Executable UML, Figure B.2, with statechart from Figure B.3
       FeatureReference name:NotifyOfDelivery
        ThisExpression
       PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2d.alf...
 Parsed successfully.
 UnitDefinition name:establishCustomer
-/**
+
 From Executable UML, Figure B.3, entry behavior for
 Establishing Customer and Verifying Payment
-*/
+
  QualifiedName Ordering::Order
  ImportReference visibility:private alias: packageImport:false
   QualifiedName TIM
@@ -636,14 +636,14 @@ Establishing Customer and Verifying Payment
        FeatureReference name:cardholderName
         NameExpression
          QualifiedName rcvd_evt
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2e.alf...
 Parsed successfully.
 UnitDefinition name:establishCustomer
-/**
+
 From Executable UML, Figure B.3, entry behavior for
 Establishing Customer and Verifying Payment
-*/
+
  QualifiedName Ordering::Order
  ImportReference visibility:private alias: packageImport:false
   QualifiedName TIM
@@ -776,13 +776,13 @@ Establishing Customer and Verifying Payment
        FeatureReference name:cardholderName
         NameExpression
          QualifiedName rcvd_evt
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2f.alf...
 Parsed successfully.
 UnitDefinition name:processCharge
-/**
+
 From Executable UML, Figure B.3, entry behavior for Submitting Charge
-*/
+
  QualifiedName Ordering::Order
  ActivityDefinition name:processCharge visibility: isStub:false
   FormalParameter name:rcvd_evt visibility: isStub:false direction:in
@@ -821,13 +821,13 @@ From Executable UML, Figure B.3, entry behavior for Submitting Charge
       NamedExpression name:order
        NameExpression
         QualifiedName self
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2g.alf...
 Parsed successfully.
 UnitDefinition name:declineCharge
-/**
+
 From Executable UML, Figure B.3, entry behavior for Payment Not Approved
-*/
+
  QualifiedName Ordering::Order
  ActivityDefinition name:declineCharge visibility: isStub:false
   Block
@@ -847,13 +847,13 @@ From Executable UML, Figure B.3, entry behavior for Payment Not Approved
        FeatureReference name:email
         NameExpression
          QualifiedName customer
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2h.alf...
 Parsed successfully.
 UnitDefinition name:packAndShip
-/**
+
 From Executable UML, Figure B.3, entry behavior for Being Packed and Shipped
-*/
+
  QualifiedName Ordering::Order
  ImportReference visibility:private alias: packageImport:false
   QualifiedName Shipping::Shipment
@@ -890,13 +890,13 @@ From Executable UML, Figure B.3, entry behavior for Being Packed and Shipped
      NamedTuple
       NamedExpression name:order
        ThisExpression
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example2i.alf...
 Parsed successfully.
 UnitDefinition name:notifyOfDelivery
-/**
+
 From Executable UML, Figure B.3, entry behavior for Delivered to Customer
-*/
+
  QualifiedName Ordering::Order
  ActivityDefinition name:notifyOfDelivery visibility: isStub:false
   Block
@@ -916,11 +916,11 @@ From Executable UML, Figure B.3, entry behavior for Delivered to Customer
        FeatureReference name:email
         NameExpression
          QualifiedName customer
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3a.alf...
 Parsed successfully.
 UnitDefinition name:'create property'
-/** Create a new property with a given identifier and name */
+ Create a new property with a given identifier and name 
  QualifiedName 'Property Management'::'Data Model'::Properties::Property
  ImportReference visibility:private alias: packageImport:false
   QualifiedName 'Identifiers'::'Identifier Factory'
@@ -951,13 +951,13 @@ UnitDefinition name:'create property'
      FeatureReference name:'update status'
       ThisExpression
      PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3b.alf...
 Parsed successfully.
 UnitDefinition name:'update status'
-/** Update the status of a property consistent with whether it has been 
+ Update the status of a property consistent with whether it has been 
     acquired or disposed.
-*/
+
  QualifiedName 'Property Management'::'Data Model'::Properties::Property
  ActivityDefinition name:'update status' visibility: isStub:false
   Block
@@ -998,11 +998,11 @@ UnitDefinition name:'update status'
          ThisExpression
        NameExpression
         QualifiedName 'Property Status'::disposed
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3c.alf...
 Parsed successfully.
 UnitDefinition name:'get next identifier'
-/** Generate a unique identifier from the next sequential integer. */
+ Generate a unique identifier from the next sequential integer. 
  QualifiedName Identifiers::'Identifier Factory'
  ActivityDefinition name:'get next identifier' visibility: isStub:false
   FormalParameter name: visibility: isStub:false direction:return
@@ -1016,11 +1016,11 @@ UnitDefinition name:'get next identifier'
        FeatureReference name:'next identifier'
         ThisExpression
      PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3d.alf...
 Parsed successfully.
 UnitDefinition name:'create reply'
-/** Create a reply message for a given message ID and property object */
+ Create a reply message for a given message ID and property object 
  QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
  ImportReference visibility:private alias: packageImport:true
   QualifiedName 'Property Management'::'Data Model'::Properties
@@ -1138,11 +1138,11 @@ UnitDefinition name:'create reply'
       NamedExpression name:property
        NameExpression
         QualifiedName propertyData
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3e.alf...
 Parsed successfully.
 UnitDefinition name:establish
-/** Establish a new property record. */
+ Establish a new property record. 
  QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
  ImportReference visibility:private alias: packageImport:true
   QualifiedName 'Property Management'::'Data Model'::Properties
@@ -1216,11 +1216,11 @@ UnitDefinition name:establish
          QualifiedName request
        NameExpression
         QualifiedName property
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3f.alf...
 Parsed successfully.
 UnitDefinition name:acquire
-/** Update the acquisition information for an existing property. */
+ Update the acquisition information for an existing property. 
  QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
  ImportReference visibility:private alias: packageImport:true
   QualifiedName 'Property Management'::'Data Model'::Properties
@@ -1341,15 +1341,15 @@ UnitDefinition name:acquire
            QualifiedName request
          NameExpression
           QualifiedName property
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3g.alf...
 Parsed successfully.
 UnitDefinition name:update
-/** Update the attribute data of a property (other than acquisition or
+ Update the attribute data of a property (other than acquisition or
     disposition data). Only non-empty values in the update message cause
     corresponding attribute updates. Note that none of these updates can
     result in a property status change.
-*/
+
  QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
  ImportReference visibility:private alias: packageImport:true
   QualifiedName 'Property Management'::'Data Model'::Properties
@@ -1651,11 +1651,11 @@ UnitDefinition name:update
            QualifiedName request
          NameExpression
           QualifiedName property
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3h.alf...
 Parsed successfully.
 UnitDefinition name:dispose
-/** Update the disposition data for an existing property. */
+ Update the disposition data for an existing property. 
  QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
  ImportReference visibility:private alias: packageImport:true
   QualifiedName 'Property Management'::'Data Model'::Properties
@@ -1776,11 +1776,11 @@ UnitDefinition name:dispose
            QualifiedName request
          NameExpression
           QualifiedName property
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3i.alf...
 Parsed successfully.
 UnitDefinition name:delete
-/** Delete an existing property, destroying the record of it. */
+ Delete an existing property, destroying the record of it. 
  QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
  ImportReference visibility:private alias: packageImport:true
   QualifiedName 'Property Management'::'Data Model'::Properties
@@ -1860,11 +1860,11 @@ UnitDefinition name:delete
        NameExpression
         QualifiedName property
        PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Example3j.alf...
 Parsed successfully.
 UnitDefinition name:retrieve
-/** Retrieve data on an existing property record. */
+ Retrieve data on an existing property record. 
  QualifiedName 'Property Management'::'Service Model'::'Property Management Service Implementation'
  ImportReference visibility:private alias: packageImport:true
   QualifiedName 'Property Management'::'Data Model'::Properties
@@ -1939,7 +1939,7 @@ UnitDefinition name:retrieve
            QualifiedName request
          NameExpression
           QualifiedName property
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\ActiveClass_Order.alf...
 Parsed successfully.
 UnitDefinition name:Order
@@ -1968,7 +1968,7 @@ UnitDefinition name:Order
   ReceptionDefinition name:OrderDelivered visibility:public isStub:false
    QualifiedName OrderDelivered
   ActivityDefinition name:Order_Behavior visibility:private isStub:true
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\ActiveClass_ProcessQueue.alf...
 Parsed successfully.
 UnitDefinition name:ProcessQueue
@@ -2056,7 +2056,7 @@ UnitDefinition name:ProcessQueue
                ThisExpression
              NameExpression
               QualifiedName false
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\ActiveClass_ProcessQueueImpl.alf...
 Parsed successfully.
 UnitDefinition name:ProcessQueueImpl
@@ -2067,7 +2067,7 @@ Unit not found.
   ErrorNode message:Unit not found: ProcessQueue context:ProcessQueue
   QualifiedNameList
    QualifiedName ProcessQueue
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\ActiveClass_Receptions.alf...
 Parsed successfully.
 UnitDefinition name:Receptions
@@ -2087,7 +2087,7 @@ UnitDefinition name:Receptions
    PropertyDefinition name:cardholderName visibility:public isStub:false isComposite:false
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
      QualifiedName PersonalName
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Activity_execute.alf...
 Parsed successfully.
 UnitDefinition name:execute
@@ -2143,7 +2143,7 @@ UnitDefinition name:execute
           FeatureReference name:edge
            NameExpression
             QualifiedName 'activity'
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Activity_Expressions.alf...
 Parsed successfully.
 UnitDefinition name:ExpressionStatements
@@ -2414,44 +2414,6 @@ UnitDefinition name:ExpressionStatements
       NaturalLiteral image:8
       NaturalLiteral image:9
       NaturalLiteral image:10
-   BlockStatement
-    Annotation identifier:parallel
-    Block
-     ExpressionStatement
-      AssignmentExpression operator:=
-       NameLeftHandSide
-        QualifiedName i
-       NameExpression
-        QualifiedName Expr1
-     ExpressionStatement
-      AssignmentExpression operator:=
-       NameLeftHandSide
-        QualifiedName last
-       NameExpression
-        QualifiedName Expr2
-     ExpressionStatement
-      AssignmentExpression operator:=
-       NameLeftHandSide
-        QualifiedName collection
-       CollectionValueExpression
-        TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-         QualifiedName Integer
-     WhileStatement
-      BinaryExpression operator:<=
-       NameExpression
-        QualifiedName i
-       NameExpression
-        QualifiedName last
-      Block
-       ExpressionStatement
-        CollectionOperationExpression operation:add
-         NameExpression
-          QualifiedName collection
-         PositionalTuple
-          PostfixExpression operator:++
-           NameExpression
-            QualifiedName i
-   EmptyStatement
    ExpressionStatement
     CollectionAccessExpression
      FeatureInvocationExpression
@@ -2871,7 +2833,7 @@ UnitDefinition name:ExpressionStatements
        NameLeftHandSide
         QualifiedName a
        NaturalLiteral image:3
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Activity_getNodeActivations.alf...
 Parsed successfully.
 UnitDefinition name:getNodeActivations
@@ -2894,7 +2856,7 @@ UnitDefinition name:getNodeActivations
          QualifiedName a
        NameExpression
         QualifiedName node
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Activity_Order_Behavior.alf...
 Parsed successfully.
 UnitDefinition name:Order_Behavior
@@ -2966,12 +2928,59 @@ UnitDefinition name:Order_Behavior
      FeatureReference name:notifyOfDelivery
       ThisExpression
      PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Activity_Statements.alf...
 Parsed successfully.
 UnitDefinition name:Statements
  ActivityDefinition name:Statements visibility: isStub:false
   Block
+   InLineStatement language:'C++'
+    data* = this;
+    controller->initiate();
+  
+   BlockStatement
+    Annotation identifier:parallel
+    Block
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName i
+       NameExpression
+        QualifiedName Expr1
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName last
+       NameExpression
+        QualifiedName Expr2
+     ExpressionStatement
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName collection
+       CollectionValueExpression
+        TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+         QualifiedName Integer
+     WhileStatement
+      BinaryExpression operator:<=
+       NameExpression
+        QualifiedName i
+       NameExpression
+        QualifiedName last
+      Block
+       ExpressionStatement
+        CollectionOperationExpression operation:add
+         NameExpression
+          QualifiedName collection
+         PositionalTuple
+          PostfixExpression operator:++
+           NameExpression
+            QualifiedName i
+   EmptyStatement
+   LocalNameDeclarationStatement name:currentOffer typeName:Commodity::Transaction::Offer
+    CollectionAccessExpression
+     FeatureReference name:offers
+      ThisExpression
+     NaturalLiteral image:1
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -2990,8 +2999,8 @@ UnitDefinition name:Statements
           NameExpression
            QualifiedName sensorId
    IfStatement
-    Annotation identifier:assured
     Annotation identifier:determined
+    Annotation identifier:assured
     ConcurrentClauses
      NonFinalClause
       BinaryExpression operator:<=
@@ -3652,7 +3661,7 @@ UnitDefinition name:Statements
     QualifiedNameList
      QualifiedName Pending
      QualifiedName Overdue
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Assoc_Selection.alf...
 Parsed successfully.
 UnitDefinition name:Selection
@@ -3666,7 +3675,7 @@ UnitDefinition name:Selection
   PropertyDefinition name:selectionInfo visibility:public isStub:false isComposite:false
    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
     QualifiedName ProductSelection
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Class_Constructors.alf...
 Parsed successfully.
 UnitDefinition name:Constructors
@@ -3698,7 +3707,7 @@ UnitDefinition name:Constructors
         PositionalTuple
       PositionalTuple
        ThisExpression
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Class_Destructors.alf...
 Parsed successfully.
 UnitDefinition name:Destructors
@@ -3709,7 +3718,7 @@ Unit not found.
   ErrorNode message:Unit not found: C context:C
   QualifiedNameList
    QualifiedName C
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Class_Initialization.alf...
 Parsed successfully.
 UnitDefinition name:Initialization
@@ -3725,7 +3734,7 @@ UnitDefinition name:Initialization
    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
     QualifiedName Integer
    NaturalLiteral image:1
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Class_Operations.alf...
 Parsed successfully.
 UnitDefinition name:Operations
@@ -3784,7 +3793,7 @@ UnitDefinition name:Operations
      QualifiedName Money
    QualifiedNameList
     QualifiedName Selection::getUnitPriceOfSelection
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Class_Properties.alf...
 Parsed successfully.
 UnitDefinition name:Properties
@@ -3820,7 +3829,7 @@ UnitDefinition name:Properties
    InstanceCreationExpression
     QualifiedName B
     PositionalTuple
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Class_Redefinitions.alf...
 Parsed successfully.
 UnitDefinition name:Redefinitions
@@ -3845,7 +3854,7 @@ UnitDefinition name:Redefinitions
      QualifiedName Integer
    QualifiedNameList
     QualifiedName A::p
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Class_Singleton.alf...
 Parsed successfully.
 UnitDefinition name:Singleton
@@ -3886,7 +3895,7 @@ UnitDefinition name:Singleton
       NameExpression
        QualifiedName instance
       NaturalLiteral image:1
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Class_SuperConstructors.alf...
 Parsed successfully.
 UnitDefinition name:SuperConstructors
@@ -3897,7 +3906,7 @@ Unit not found.
   ErrorNode message:Unit not found: A context:A
   QualifiedNameList
    QualifiedName A
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Datatype_Complex.alf...
 Parsed successfully.
 UnitDefinition name:Complex
@@ -3908,7 +3917,7 @@ UnitDefinition name:Complex
   PropertyDefinition name:im visibility:public isStub:false isComposite:false
    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
     QualifiedName Real
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Enum_TrafficLightColor.alf...
 Parsed successfully.
 UnitDefinition name:TrafficLightColor
@@ -3916,7 +3925,7 @@ UnitDefinition name:TrafficLightColor
   EnumerationLiteralName name:RED visibility: isStub:false
   EnumerationLiteralName name:YELLOW visibility: isStub:false
   EnumerationLiteralName name:GREEN visibility: isStub:false
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Package_Ordering.alf...
 Parsed successfully.
 UnitDefinition name:Ordering
@@ -3934,7 +3943,7 @@ UnitDefinition name:Ordering
   ActiveClassDefinition name:ShoppingCart visibility:public isStub:true isAbstract: false classifierBehavior:null
   ActiveClassDefinition name:Order visibility:public isStub:true isAbstract: true classifierBehavior:null
   ClassDefinition name:ProductSelection visibility:public isStub:true isAbstract: false
-Alf 0.05 Parser
+Alf 0.06 Parser
 Parsing tests\Signal_SubmitCharge.alf...
 Parsed successfully.
 UnitDefinition name:SubmitCharge

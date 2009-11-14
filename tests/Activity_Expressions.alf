@@ -43,15 +43,6 @@ activity ExpressionStatements() {
   Integer[]{1..6+4};
   Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   
-  @parallel { 
-    i = Expr1;
-    last = Expr2;
-    collection = Integer[]{};
-    while (i <= last) { collection -> add(i++); }
-  }
-  
-  ;
-  
   this.getTypes()[1];
   a = Integer[]{10, 20, 30, 40};
 

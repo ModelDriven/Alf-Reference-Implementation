@@ -1,6 +1,7 @@
 activity execute()
 { 
-  @parallel {  
+  //@parallel 
+  {  
     'activity' = (Activity)(this.types[1]); 
     {
       group = new ActivityNodeActivationGroup();
