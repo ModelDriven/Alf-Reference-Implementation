@@ -1263,13 +1263,6 @@ Block ConstructorBody():
   Block b = new Block();
 }
 {
-/* ORIGINAL
-  (
-    Block()
-  | ExplicitConstructorInvocations()( DocumentedStatement() )* <RBRACE>
-  )
-*/
-
   <LBRACE> 
   [ LOOKAHEAD([<DOCUMENTATION_COMMENT>] (<THIS> | <SUPER>))
     ExplicitConstructorInvocations(b) ]
@@ -1429,10 +1422,6 @@ Block Block():
   Block b = new Block();
 }
 {
-/* ORIGINAL
-  <LBRACE> ( s = DocumentedStatement() { b.addStatement(s); } )* <RBRACE>
-*/
-
   <LBRACE> BlockCompletion(b)
   { return b; }
 }
@@ -1460,6 +1449,7 @@ Statement DocumentedStatement():
 }
 
 /* STATEMENTS */
+
 Statement Statement():
 {
   Statement s;
@@ -1470,8 +1460,8 @@ Statement Statement():
   | s = InLineStatement()
   | s = BlockStatement()
   | s = EmptyStatement()
+  | s = LocalNameDeclarationOrExpressionStatement()
   | s = LocalNameDeclarationStatement()
-  | s = ExpressionStatement()
   | s = IfStatement()
   | s = SwitchStatement()
   | s = WhileStatement()
@@ -1569,45 +1559,45 @@ EmptyStatement EmptyStatement():
   { return new EmptyStatement(); }
 }
 
-/* LOCAL NAME DECLARATION STATEMENTS */
-LocalNameDeclarationStatement LocalNameDeclarationStatement():
+/* LOCAL NAME DECLARATION AND EXPRESSION STATEMENTS */
+
+Statement LocalNameDeclarationOrExpressionStatement():
 {
-  LocalNameDeclarationStatement s = new LocalNameDeclarationStatement();
+  QualifiedName q;
+  String n;
   Expression e;
+  Statement s;
 }
 {
-  NameDeclaration(s) <ASSIGN>  e = Expression() <SEMICOLON>
-  { s.setExpression(e);
-    return s;
-  }
+  ( LOOKAHEAD(Name())
+    q = QualifiedName()
+    ( n = Name() s = LocalNameDeclarationStatementCompletion(n,q) 
+    | e = QualifiedNameExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
+  | 
+    e = Expression() <SEMICOLON> { s = new ExpressionStatement(e); }
+  )
+  
+  { return s; }
 }
 
-void NameDeclaration(LocalNameDeclarationStatement s):
+LocalNameDeclarationStatement LocalNameDeclarationStatement():
 {
   String n;
   QualifiedName t;
 }
 {
-  ( 
-    <LET> n = Name() <COLON> t = TypeName()
-/*
-  | t = TypeName() n = Name()
-*/
-  )
-  { s.setName(n);
-    s.setTypeName(t);
-  }
+  <LET> n = Name() <COLON> t = TypeName()
+  { return LocalNameDeclarationStatementCompletion(n,t); }
 }
 
-/* EXPRESSION STATEMENTS */
-
-ExpressionStatement ExpressionStatement():
+LocalNameDeclarationStatement LocalNameDeclarationStatementCompletion(String n, QualifiedName t):
 {
   Expression e;
 }
 {
-  e = Expression() <SEMICOLON>
-  { return new ExpressionStatement(e); }
+  <ASSIGN>  e = Expression() <SEMICOLON>
+  { return new LocalNameDeclarationStatement(n, t, e); }
+
 }
 
 /* IF STATEMENTS */
@@ -1795,26 +1785,12 @@ AcceptStatement AcceptStatement():
   AcceptBlock c;
 }
 {
-/* ORIGINAL
-  LOOKAHEAD(SimpleAcceptStatement()) SimpleAcceptStatement()
-| CompoundAcceptStatement()
-*/
-
   c = AcceptClause() 
   ( s = SimpleAcceptStatementCompletion(c) 
   | s = CompoundAcceptStatementCompletion(c) )
   { return s; }
 }
 
-/* ORIGINAL
-void SimpleAcceptStatement():
-{}
-{
-  AcceptClause() <SEMICOLON>
-}
-*/
-
-/* ADDED */
 AcceptStatement SimpleAcceptStatementCompletion(AcceptBlock b):
 {
   AcceptStatement s = new AcceptStatement();
@@ -1825,15 +1801,6 @@ AcceptStatement SimpleAcceptStatementCompletion(AcceptBlock b):
     return s; }
 }
 
-/* ORIGINAL
-void CompoundAcceptStatement():
-{}
-{
-  AcceptBlock() ( <OR> AcceptBlock() )*
-}
-*/
-
-/* ADDED */
 AcceptStatement CompoundAcceptStatementCompletion(AcceptBlock a1):
 {
   AcceptStatement s = new AcceptStatement();
@@ -1929,15 +1896,28 @@ Expression Expression():
 }
 {
   (
-    LOOKAHEAD(QualifiedName() AssignmentOperator()) 
-    n = QualifiedName() e2 = Assignment(new NameLeftHandSide(n))
+    n = QualifiedName() e2 = QualifiedNameExpressionCompletion(n)
   | LOOKAHEAD(CastLookahead() | AffixOperator() | NumericUnaryOperator() 
              | <BANG> | <DOLLAR> )
     e1 = NonPostfixUnaryExpression() e2 = ConditionalExpressionCompletion(e1)
-  | e1 = BaseCollectionExpression() e2 = ExpressionCompletion(e1)
+  | e1 = BaseExpression() e2 = ExpressionCompletion(e1)
   )
   
   { return e2; }
+}
+
+Expression QualifiedNameExpressionCompletion(QualifiedName n):
+{
+  Expression e;
+}
+{
+  ( 
+    e = Assignment(new NameLeftHandSide(n))
+  | LOOKAHEAD(4) e = CollectionExpressionCompletion(n) e = ExpressionCompletion(e)
+  | e = ExpressionCompletion(new NameExpression(n))
+  )
+  
+  { return e; }
 }
 
 Expression ExpressionCompletion(Expression c) :
@@ -2009,24 +1989,20 @@ Expression NonIndexExpressionCompletion(Expression c):
 
 /* PRIMARY EXPRESSIONS */
 
-/* ADDED */
 Expression BaseExpression():
 {
   Expression e;
   QualifiedName n;
 }
 {
-  (
+  ( 
     e = LiteralExpression()
-  | LOOKAHEAD(QualifiedName() <LPAREN>)
-    n = QualifiedName() e = BehaviorInvocation(n)
-  | e = NameExpression()
   | e = ThisExpression()
   | e = ParenthesizedExpression()
-  | <SUPER> ( LOOKAHEAD(<DOT> <DESTROY>) e = SuperDestroyInvocation() 
-            |                            e = SuperInvocation() )
-  | e = InstanceCreationExpression()
+  | e = SuperInvocationOrDestroyExpression()
+  | e = InstanceCreationOrCollectionValueExpression()
   | e = ReductionExpression()
+  | e = CollectionAnyExpression()
   )
 
   { return e; }
@@ -2052,13 +2028,15 @@ Expression LiteralExpression():
 
 /* NAME EXPRESSIONS */
 
-Expression NameExpression():
+Expression NameOrCollectionExpression():
 {
   QualifiedName n;
+  Expression e;
 }
 {
-  n = QualifiedName()
-  { return new NameExpression(n); }
+  n = QualifiedName() { e = new NameExpression(n); }
+  [ LOOKAHEAD(2) e = CollectionExpressionCompletion(n) ]
+  { return e; }
 }
 
 /* THIS EXPRESSIONS */
@@ -2083,21 +2061,6 @@ Expression ParenthesizedExpression():
 
 /* PROPERTY ACCESS EXPRESSIONS */
 
-/* ORIGINAL
-void PropertyAccessExpression():
-{}
-{ 
-  FeatureReference()
-}
-
-void FeatureReference():
-{}
-{
-  CollectionExpression() <DOT> Name()
-}
-*/
-
-/* ADDED */
 FeatureReference Feature(Expression c):
 {
   String n;
@@ -2108,24 +2071,6 @@ FeatureReference Feature(Expression c):
 }
 
 /* INVOCATION EXPRESSIONS */
-
-/* ORIGINAL
-void InvocationExpression():
-{}
-{
-  InvocationTarget() Tuple()
-}
-
-void InvocationTarget():
-{}
-{
-  LOOKAHEAD(QualifiedName() <LPAREN>) 
-  BehaviorInvocationTarget()
-| LOOKAHEAD(SuperInvocationTarget() <LPAREN>) 
-  SuperInvocationTarget()
-| FeatureInvocationTarget()
-}
-*/
 
 Tuple Tuple():
 {
@@ -2180,15 +2125,6 @@ NamedExpression NamedExpression():
   { return new NamedExpression(n, e); }
 }
 
-/* ORIGINAL
-void BehaviorInvocationTarget():
-{}
-{
-  QualifiedName()
-}
-*/
-
-/* ADDED */
 Expression BehaviorInvocation(QualifiedName n):
 {
   Tuple t;
@@ -2198,15 +2134,6 @@ Expression BehaviorInvocation(QualifiedName n):
   { return new BehaviorInvocationExpression(n, t); }
 }
 
-/* ORIGINAL
-void FeatureInvocationTarget():
-{}
-{
-  FeatureReference()
-}
-*/
-
-/* ADDED */
 Expression FeatureInvocation(FeatureReference f):
 {
   Tuple t;
@@ -2216,50 +2143,45 @@ Expression FeatureInvocation(FeatureReference f):
   { return new FeatureInvocationExpression(f, t); }
 }
 
-/* ORIGINAL
-void SuperInvocationTarget():
-{}
+Expression SuperInvocationOrDestroyExpression():
 {
-  <SUPER> <DOT> QualifiedName()
+  Expression e;
 }
-*/
+{
+  <SUPER> <DOT> 
+  ( e = SuperInvocation()
+  | e = SuperDestroyInvocation() )
+  
+  { return e; }
+}
 
-/* ADDED */
 Expression SuperInvocation():
 {
   QualifiedName n;
   Tuple t;
 }
 {
-  <DOT> n = QualifiedName() t = Tuple() 
+  n = QualifiedName() t = Tuple() 
   { return new SuperInvocationExpression(n, t); }
 }
 
-
 /* INSTANCE CREATION EXPRESSIONS */
 
-Expression InstanceCreationExpression():
+Expression InstanceCreationOrCollectionValueExpression():
 {
   QualifiedName n;
   Tuple t;
+  Expression e;
 }
 {
-  <NEW> n = QualifiedName() t = Tuple()
-  { return new InstanceCreationExpression(n, t); }
+  <NEW> n = QualifiedName() 
+  ( e = CollectionValueExpressionCompletion(n)
+  | t = Tuple() { e = new InstanceCreationExpression(n, t); } )
+  { return e; }
 }
 
 /* INSTANCE DESTRUCTION EXPRESSIONS */
 
-/* ORIGINAL
-void InstanceDestructionExpression():
-{}
-{
-  CollectionExpression() <DOT> <DESTROY> Tuple()
-| <SUPER> <DOT> <DESTROY> Tuple()
-}
-*/
-
-/* ADDED */
 Expression DestroyInvocation(Expression c):
 {
   Tuple t;
@@ -2269,13 +2191,12 @@ Expression DestroyInvocation(Expression c):
   { return new InstanceDestructionExpression(c, t); }
 }
 
-/* ADDED */
 Expression SuperDestroyInvocation():
 {
   Tuple t;
 }
 {
-  <DOT> <DESTROY> t = Tuple()
+  <DESTROY> t = Tuple()
   { return new SuperDestructionExpression(t); }
 }
 
@@ -2312,39 +2233,38 @@ Expression CollectionExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  PrimaryExpression()
-| ClassExtentExpression()
-| CollectionValueExpression()
-| CollectionAccessExpression()
-| CollectionOperationExpression()
-| CollectionExpansionExpression()
-*/
-
   e = BaseCollectionExpression() 
   ( LOOKAHEAD(2) e = CollectionModifier(e) )*
   { return e; }
 }
 
-/* ADDED */
 Expression BaseCollectionExpression():
 {
   Expression e;
 }
 {
   (
-    LOOKAHEAD(QualifiedName() <DOT> <ALL_INSTANCES>) 
-    e = ClassExtentExpression()
-  | LOOKAHEAD( [ <NEW> ] TypeName() <LBRACKET> [ MultiplicityRange() ] <RBRACKET> <LBRACE>
-             | <NULL> ) 
-    e = CollectionValueExpression()
+    e = NameOrCollectionExpression()
   | e = BaseExpression()
   )
   
   { return e; }
 }
 
-/* ADDED */
+Expression CollectionExpressionCompletion(QualifiedName n):
+{
+  Expression e;
+}
+{
+  (
+    e = ClassExtentExpressionCompletion(n)
+  | e = CollectionValueExpressionCompletion(n)
+  | e = BehaviorInvocation(n)
+  )
+  
+  { return e; }
+}
+
 Expression CollectionModifier(Expression c):
 {
   Expression i;
@@ -2366,31 +2286,38 @@ Expression CollectionModifier(Expression c):
 
 /* CLASS EXTENT EXPRESSIONS */
 
-Expression ClassExtentExpression():
+Expression ClassExtentExpressionCompletion(QualifiedName n):
+{}
 {
-  QualifiedName n;
-}
-{
-  n = QualifiedName() <DOT> <ALL_INSTANCES> <LPAREN> <RPAREN>
+  <DOT> <ALL_INSTANCES> <LPAREN> <RPAREN>
   { return new ClassExtentExpression(n); }
 }
 
 /* COLLECTION VALUE EXPRESSIONS */
 
-Expression CollectionValueExpression():
+Expression CollectionAnyExpression():
 {
-  QualifiedName t;
+  Expression e;
+}
+{
+  (
+    <ANY> e = CollectionValueExpressionCompletion(null)
+  | <NULL> { e = new CollectionValueExpression(new TypedElementDeclaration(), null); }
+  )
+  
+  { return e; }
+}
+
+Expression CollectionValueExpressionCompletion(QualifiedName t):
+{
   TypedElementDeclaration d = new TypedElementDeclaration();
   CollectionElements c = null;
 }
 {
-  (
-    [ <NEW> ] t = TypeName() { d.setType(t); }
-    <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET>
-    <LBRACE> [ c = CollectionElements() ] <RBRACE>
-  | <NULL>
-  )
-  { return new CollectionValueExpression(d, c); }
+  <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET>
+  <LBRACE> [ c = CollectionElements() ] <RBRACE>
+  { d.setType(t);
+    return new CollectionValueExpression(d, c); }
 }
 
 CollectionElements CollectionElements():
@@ -2400,10 +2327,6 @@ CollectionElements CollectionElements():
   Expression e2;
 }
 {
-/* ORIGINAL
-  ExpressionList()
-| CollectionRange()
-*/
   e1 = Expression() 
   ( <DOUBLE_DOT> e2 = Expression() { c = new CollectionRange(e1, e2); }
   | { c = new ExpressionList(); ((ExpressionList)c).add(e1);} 
@@ -2411,23 +2334,7 @@ CollectionElements CollectionElements():
   { return c; }
 }
 
-/*
-void CollectionRange():
-{}
-{
-  Expression() <DOUBLE_DOT> Expression()
-}
-*/
-
 /* COLLECTION ACCESS EXPRESSIONS */
-
-/* ORIGINAL
-void CollectionAccessExpression():
-{}
-{
-  CollectionExpression() Index()
-}
-*/
 
 Expression Index(): 
 {
@@ -2440,15 +2347,6 @@ Expression Index():
 
 /* COLLECTION OPERATION EXPRESSIONS */
 
-/* ORIGINAL
-void CollectionOperationExpression():
-{}
-{
-  CollectionExpression() <ARROW> <IDENTIFIER> CollectionOperationTuple()
-}
-*/
-
-/* ADDED */
 Expression CollectionOperation(Expression c):
 {
   Token op;
@@ -2497,15 +2395,6 @@ NamedExpression IndexedNamedExpression():
 
 /* COLLECTION EXPANSION EXPRESSIONS */
 
-/* ORIGINAL
-void CollectionExpansionExpression():
-{}
-{
-  CollectionExpression() <ARROW> <IDENTIFIER> Name() Tuple()
-}
-*/
-
-/* ADDED */
 Expression CollectionExpansion(Expression c):
 {
   Token op;
@@ -2525,11 +2414,6 @@ Expression PostfixExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  CollectionExpression()
-| PostfixedExpression()
-*/
-
   c = CollectionExpression() e = PostfixOperation(c)
   { return e; }
 }
@@ -2543,14 +2427,6 @@ Expression PostfixOperation(Expression c):
   ( op = AffixOperator() { e = new PostfixExpression(op, e); } )*
   { return e; }
 }
-
-/* ORIGINAL
-void PostfixedExpression():
-{}
-{
-  PostfixExpression() AffixOperator()
-}
-*/
 
 String AffixOperator():
 {
@@ -2597,7 +2473,6 @@ Expression NonNumericUnaryExpression():
   { return e; }
 }
 
-/* ADDED */
 void CastLookahead():
 {}
 {
@@ -2606,7 +2481,6 @@ void CastLookahead():
   | TypeName() | LiteralExpression() | ThisExpression() | ReductionOperator() )
 }
 
-/* ADDED */
 Expression NonPostfixUnaryExpression():
 {
   Expression e;
@@ -2692,10 +2566,6 @@ Expression MultiplicativeExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  [ MultiplicativeExpression() MultiplicativeOperator() ] UnaryExpression()
-*/
-
   u = UnaryExpression() e = MultiplicativeExpressionCompletion(u)
   { return e; }
 }
@@ -2735,15 +2605,10 @@ Expression AdditiveExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  [ AdditiveExpression() AdditiveOperator() ] MultiplicativeExpression()
-*/
-
   u = UnaryExpression() e = AdditiveExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression AdditiveExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -2778,15 +2643,10 @@ Expression RelationalExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  [ RelationalExpression() RelationalOperator() ] AdditiveExpression()
-*/
-
   u = UnaryExpression() e = RelationalExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression RelationalExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -2821,10 +2681,6 @@ Expression ClassificationExpression():
   Expression e;
 }
 { 
-/* ORIGINAL
-  RelationalExpression() [ ClassificationOperator() QualifiedName() ]
-*/
-
   u = UnaryExpression() e = ClassificationExpressionCompletion(u)
   { return e; }
 }
@@ -2863,15 +2719,10 @@ Expression EqualityExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  [ EqualityExpression EqualityOperator ] RelationalExpression
-*/
-
   u = UnaryExpression() e = ClassificationExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression EqualityExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -2906,15 +2757,10 @@ Expression AndExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  [ AndExpression() <LOGICAL_AND> ] UnaryExpression() EqualityExpression()
-*/
-
   u = UnaryExpression() e = AndExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression AndExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -2933,15 +2779,10 @@ Expression ExclusiveOrExpression():
   Expression e;
 }
 { 
-/* ORIGINAL
-  [ ExclusiveOrExpression() <XOR> ] AndExpression()
-*/
-
   u = UnaryExpression() e = ExclusiveOrExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression ExclusiveOrExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -2960,15 +2801,10 @@ Expression InclusiveOrExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  [ InclusiveOrExpression() <LOGICAL_OR> ] ExclusiveOrExpression()
-*/
-
   u = UnaryExpression() e = InclusiveOrExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression InclusiveOrExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -2989,15 +2825,10 @@ Expression ConditionalAndExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  [ ConditionalAndExpression() <SC_AND> ]  InclusiveOrExpression()
-*/
-
   u = UnaryExpression() e = ConditionalAndExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression ConditionalAndExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -3018,15 +2849,10 @@ Expression ConditionalOrExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  [ ConditionalOrExpression() <SC_OR> ] ConditionalAndExpression()
-*/
-
   u = UnaryExpression() e = ConditionalOrExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression ConditionalOrExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -3047,15 +2873,10 @@ Expression ConditionalExpression():
   Expression e;
 }
 {
-/* ORIGINAL
-  ConditionalOrExpression() [ <HOOK> Expression() <COLON> ConditionalExpression() ]
-*/
-
   u = UnaryExpression() e = ConditionalExpressionCompletion(u)
   { return e; }
 }
 
-/* ADDED */
 Expression ConditionalExpressionCompletion(Expression u):
 {
   Expression e1;
@@ -3071,22 +2892,6 @@ Expression ConditionalExpressionCompletion(Expression u):
 
 /* ASSIGNMENT OPERATORS */
 
-/* ORIGINAL
-void AssignmentExpression():
-{}
-{
-  LeftHandSide() AssignmentOperator() Expression()
-}
-
-void LeftHandSide():
-{}
-{
-  QualifiedName()
-| FeatureReference() [ Index() ]
-}
-*/
-
-/* ADDED */
 Expression Assignment(LeftHandSide lhs):
 {
   String op;

@@ -20,9 +20,9 @@ import java.util.ArrayList;
 
 public class SwitchStatement extends Statement {
 
-	private Block defaultClause = null;
 	private ArrayList<SwitchClause> nonDefaultClauses = new ArrayList<SwitchClause>();
 	private Expression expression = null;
+	private Block defaultClause = null;
 
 	public SwitchStatement(Expression expression) {
 		this.expression = expression;
