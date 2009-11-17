@@ -81,6 +81,7 @@ activity ExpressionStatements() {
 
   !isActive;
   !this.running;
+  !member.isActive;
 
   +1234;
   -42;

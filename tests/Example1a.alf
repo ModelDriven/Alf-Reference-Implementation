@@ -1,4 +1,4 @@
-namespace fUML::Semantics::Activities::IntermediateActivities::
+namespace fUML.Semantics.Activities.IntermediateActivities.
           ActivityNodeActivationGroup;                     // See Note 1
 
 /** 
@@ -11,11 +11,11 @@ activity run(in activations: Set<ActivityNodeActivation>){ // See Note 3
     activation.run();                                      // See Note 5
   }
 
-  enabledActivations = ActivityNodeActivation[]{};         // See Note 6
+  ActivityNodeActivation[] enabledActivations = null;      // See Note 6
 
   for (activation in activations) {
 
-    isEnabled =                                            // See Note 7
+    Boolean isEnabled =                                    // See Note 7
       activation instanceof ActionActivation &&            // See Note 8
         ((Action)activation.node).input -> size() != 0 ||
       activation instanceof ControlNodeActivation ||

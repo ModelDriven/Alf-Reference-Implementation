@@ -38,7 +38,7 @@ public class Alf {
         NamespaceDefinition definition = this.unit.getDefinition();
         
         QualifiedName packageName = new QualifiedName();
-        packageName.setIsAbsolute();
+        // packageName.setIsAbsolute();
         packageName.addName("UML");
         packageName.addName("AuxiliaryConstructs");
         packageName.addName("PrimitiveTypes");
@@ -69,7 +69,7 @@ public class Alf {
         NamespaceDefinition definition = this.unit.getDefinition();
         
         QualifiedName packageName = new QualifiedName();
-        packageName.setIsAbsolute();
+        // packageName.setIsAbsolute();
         packageName.addName("FoundationalModelLibrary");
         packageName.addName("BasicInputOutput");
         

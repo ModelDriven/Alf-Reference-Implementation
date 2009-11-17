@@ -15,7 +15,10 @@ activity Statements() {
   
   ;
   
-  let currentOffer : Commodity::Transaction::Offer = this.offers[1];
+  let currentOffer : Offer = this.offers[1];
+  DomainTypes.CurrencyAmount interest = this.principal * this.rate * period;
+  let inactiveMembers : Member[] = members -> select member (!member.isActive);
+  RealProperty[] realProperties = (RealProperty)assets;
   
   if (reading > threshold) {
      monitor.raiseAlarm(sensorId); 
