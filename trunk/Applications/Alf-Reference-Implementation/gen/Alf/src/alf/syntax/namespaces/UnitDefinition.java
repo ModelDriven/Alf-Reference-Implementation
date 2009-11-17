@@ -54,7 +54,7 @@ public class UnitDefinition extends DocumentedNode {
 		// System.out.println("addImplicitImports: " +
 		// this.getDefinition().getQualifiedName());
 		QualifiedName fumlLibrary = new QualifiedName();
-		fumlLibrary.setIsAbsolute();
+		// fumlLibrary.setIsAbsolute();
 		fumlLibrary.addName("FoundationalModelLibrary");
 
 		QualifiedName primitiveBehaviors = fumlLibrary.copy();
@@ -81,7 +81,7 @@ public class UnitDefinition extends DocumentedNode {
 		this.addImport(basicInputOutputImport);
 
 		QualifiedName primitiveTypes = new QualifiedName();
-		primitiveTypes.setIsAbsolute();
+		// primitiveTypes.setIsAbsolute();
 		primitiveTypes.addName("UML");
 		primitiveTypes.addName("AuxiliaryConstructs");
 		primitiveTypes.addName("PrimitiveTypes");

@@ -23,16 +23,8 @@ import alf.parser.ParseException;
 
 public class QualifiedName extends SyntaxNode {
 
-	private boolean isAbsolute = false;
 	private ArrayList<String> names = new ArrayList<String>();
-
-	public void setIsAbsolute() {
-		this.isAbsolute = true;
-	} // setIsAbsolute
-
-	public boolean isAbsolute() {
-		return this.isAbsolute;
-	} // isAbsolute
+	private boolean isAmbiguous = false;
 
 	public void addName(String name) {
 		this.names.add(name);
@@ -42,12 +34,16 @@ public class QualifiedName extends SyntaxNode {
 		return this.names;
 	} // getNames
 
+	public void setIsAmbiguous() {
+		this.isAmbiguous = true;
+	} // setIsAmbiguous
+
+	public boolean isAmbiguous() {
+		return this.isAmbiguous;
+	} // isAmbiguous
+
 	public String toString() {
 		StringBuffer s = new StringBuffer();
-
-		if (this.isAbsolute()) {
-			s.append("::");
-		}
 
 		ArrayList<String> nameList = this.getNames();
 
@@ -58,6 +54,10 @@ public class QualifiedName extends SyntaxNode {
 			}
 		}
 
+		if (this.isAmbiguous()) {
+			s.append("(?)");
+		}
+
 		return s.toString();
 	} // toString
 
@@ -66,9 +66,9 @@ public class QualifiedName extends SyntaxNode {
 	} // print
 
 	public ArrayList<Member> resolve(NamespaceDefinition namespace) {
-		if (this.isAbsolute()) {
-			namespace = namespace.getRootNamespace();
-		}
+		/*
+		 * if (this.isAbsolute()) { namespace = namespace.getRootNamespace(); }
+		 */
 
 		if (namespace.isError()) {
 			ArrayList<Member> error = new ArrayList<Member>();
@@ -137,9 +137,9 @@ public class QualifiedName extends SyntaxNode {
 
 		StringBuffer path = new StringBuffer("Root");
 
-		if (!this.isAbsolute()) {
-			path.append("/Model");
-		}
+		// if (!this.isAbsolute()) {
+		path.append("/Model");
+		// }
 
 		ArrayList<String> names = this.getNames();
 		for (String name : names) {
@@ -170,14 +170,15 @@ public class QualifiedName extends SyntaxNode {
 
 			QualifiedName qualifiedName = subunitDefinition.getQualifiedName();
 
-			if (qualifiedName.getNames().size() == 1 && this.isAbsolute()) {
-				qualifiedName.setIsAbsolute();
-			}
+			/*
+			 * if (qualifiedName.getNames().size() == 1 && this.isAbsolute()) {
+			 * qualifiedName.setIsAbsolute(); }
+			 */
 
 			if (qualifiedName.equals(this)) {
-				if (!this.isAbsolute()) {
-					subunit.addImplicitImports();
-				}
+				/*
+				 * if (!this.isAbsolute()) { subunit.addImplicitImports(); }
+				 */
 				return subunitDefinition;
 			} else {
 				return new ErrorMember(this, "Incorrect subunit: " + this);
@@ -193,8 +194,12 @@ public class QualifiedName extends SyntaxNode {
 	public QualifiedName copy() {
 		QualifiedName copy = new QualifiedName();
 
-		if (this.isAbsolute()) {
-			copy.setIsAbsolute();
+		/*
+		 * if (this.isAbsolute()) { copy.setIsAbsolute(); }
+		 */
+
+		if (this.isAmbiguous()) {
+			copy.setIsAmbiguous();
 		}
 
 		for (String name : this.getNames()) {

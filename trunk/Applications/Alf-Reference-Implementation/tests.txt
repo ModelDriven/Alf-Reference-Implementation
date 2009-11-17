@@ -18,57 +18,50 @@ UnitDefinition name:run
       QualifiedName activations
     Block
      ExpressionStatement
-      FeatureInvocationExpression
-       FeatureReference name:run
-        NameExpression
-         QualifiedName activation
+      BehaviorInvocationExpression
+       QualifiedName activation::run(?)
        PositionalTuple
-   ExpressionStatement
-    AssignmentExpression operator:=
-     NameLeftHandSide
-      QualifiedName enabledActivations
-     CollectionValueExpression
-      TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-       QualifiedName ActivityNodeActivation
+   LocalNameDeclarationStatement name:enabledActivations
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
+     QualifiedName ActivityNodeActivation
+    CollectionValueExpression
+     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
    ForStatement
     ForVariableDefinition variable:activation
      NameExpression
       QualifiedName activations
     Block
-     ExpressionStatement
-      AssignmentExpression operator:=
-       NameLeftHandSide
-        QualifiedName isEnabled
+     LocalNameDeclarationStatement name:isEnabled
+      TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:true isNonunique:true collection:
+       QualifiedName Boolean
+      ConditionalBinaryExpression operator:||
        ConditionalBinaryExpression operator:||
-        ConditionalBinaryExpression operator:||
-         ConditionalBinaryExpression operator:&&
-          ClassificationExpression operator:instanceof
-           NameExpression
-            QualifiedName activation
-           QualifiedName ActionActivation
-          BinaryExpression operator:!=
-           CollectionOperationExpression operation:size
-            FeatureReference name:input
-             CastExpression
-              QualifiedName Action
-              FeatureReference name:node
-               NameExpression
-                QualifiedName activation
-            PositionalTuple
-           NaturalLiteral image:0
+        ConditionalBinaryExpression operator:&&
          ClassificationExpression operator:instanceof
           NameExpression
            QualifiedName activation
-          QualifiedName ControlNodeActivation
+          QualifiedName ActionActivation
+         BinaryExpression operator:!=
+          CollectionOperationExpression operation:size
+           FeatureReference name:input
+            CastExpression
+             QualifiedName Action
+             NameExpression
+              QualifiedName activation::node(?)
+           PositionalTuple
+          NaturalLiteral image:0
         ClassificationExpression operator:instanceof
          NameExpression
           QualifiedName activation
-         QualifiedName ActivityParameterNodeActivation
-     ForStatement
-      ForVariableDefinition variable:incomingEdge
-       FeatureReference name:incomingEdges
+         QualifiedName ControlNodeActivation
+       ClassificationExpression operator:instanceof
         NameExpression
          QualifiedName activation
+        QualifiedName ActivityParameterNodeActivation
+     ForStatement
+      ForVariableDefinition variable:incomingEdge
+       NameExpression
+        QualifiedName activation::incomingEdges(?)
       NameExpression
        QualifiedName isEnabled
       Block
@@ -82,10 +75,8 @@ UnitDefinition name:run
          IfStatement
           ConcurrentClauses
            NonFinalClause
-            FeatureInvocationExpression
-             FeatureReference name:isSourceFor
-              NameExpression
-               QualifiedName otherActivation
+            BehaviorInvocationExpression
+             QualifiedName otherActivation::isSourceFor(?)
              PositionalTuple
               NameExpression
                QualifiedName incomingEdge
@@ -116,10 +107,8 @@ UnitDefinition name:run
       QualifiedName enabledActivations
     Block
      ExpressionStatement
-      FeatureInvocationExpression
-       FeatureReference name:receiveOffer
-        NameExpression
-         QualifiedName enabledActivation
+      BehaviorInvocationExpression
+       QualifiedName enabledActivation::receiveOffer(?)
        PositionalTuple
 Alf 0.06 Parser
 Parsing tests\Example1b.alf...
@@ -140,10 +129,8 @@ UnitDefinition name:run
      NameExpression
       QualifiedName activations
      PositionalTuple
-      FeatureInvocationExpression
-       FeatureReference name:run
-        NameExpression
-         QualifiedName activation
+      BehaviorInvocationExpression
+       QualifiedName activation::run(?)
        PositionalTuple
    ExpressionStatement
     AssignmentExpression operator:=
@@ -165,9 +152,8 @@ UnitDefinition name:run
             FeatureReference name:input
              CastExpression
               QualifiedName Action
-              FeatureReference name:node
-               NameExpression
-                QualifiedName activation
+              NameExpression
+               QualifiedName activation::node(?)
             PositionalTuple
           ClassificationExpression operator:instanceof
            NameExpression
@@ -179,26 +165,21 @@ UnitDefinition name:run
           QualifiedName ActivityParameterNodeActivation
         UnaryExpression operator:!
          CollectionExpansionExpression operation:exists variable:incomingEdge
-          FeatureReference name:incomingEdges
-           NameExpression
-            QualifiedName activation
+          NameExpression
+           QualifiedName activation::incomingEdges(?)
           PositionalTuple
            CollectionExpansionExpression operation:exists variable:otherActivation
             NameExpression
              QualifiedName activations
             PositionalTuple
-             FeatureInvocationExpression
-              FeatureReference name:isSourceFor
-               NameExpression
-                QualifiedName otherActivation
+             BehaviorInvocationExpression
+              QualifiedName otherActivation::isSourceFor(?)
               PositionalTuple
                NameExpression
                 QualifiedName incomingEdge
    ExpressionStatement
-    FeatureInvocationExpression
-     FeatureReference name:receiveOffer
-      NameExpression
-       QualifiedName enabledActivations
+    BehaviorInvocationExpression
+     QualifiedName enabledActivations::receiveOffer(?)
      PositionalTuple
 Alf 0.06 Parser
 Parsing tests\Example2a.alf...
@@ -520,9 +501,8 @@ Establishing Customer and Verifying Payment
       NamedExpression name:'selections are purchased in'
        ThisExpression
       NamedExpression name:'is a purchase of selections in'
-       FeatureReference name:cart
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::cart(?)
    ExpressionStatement
     AssignmentExpression operator:=
      NameLeftHandSide
@@ -532,12 +512,10 @@ Establishing Customer and Verifying Payment
        QualifiedName Customer
       PositionalTuple
        BinaryExpression operator:==
-        FeatureReference name:email
-         NameExpression
-          QualifiedName c
-        FeatureReference name:customerEmail
-         NameExpression
-          QualifiedName rcvd_evt
+        NameExpression
+         QualifiedName c::email(?)
+        NameExpression
+         QualifiedName rcvd_evt::customerEmail(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -555,13 +533,10 @@ Establishing Customer and Verifying Payment
           PositionalTuple
        ExpressionStatement
         AssignmentExpression operator:=
-         FeatureLeftHandSide
-          FeatureReference name:email
-           NameExpression
-            QualifiedName customer
-         FeatureReference name:customerEmail
-          NameExpression
-           QualifiedName rcvd_evt
+         NameLeftHandSide
+          QualifiedName customer::email(?)
+         NameExpression
+          QualifiedName rcvd_evt::customerEmail(?)
     Block
      ExpressionStatement
       AssignmentExpression operator:=
@@ -573,31 +548,22 @@ Establishing Customer and Verifying Payment
         NaturalLiteral image:1
    ExpressionStatement
     AssignmentExpression operator:=
-     FeatureLeftHandSide
-      FeatureReference name:name
-       NameExpression
-        QualifiedName customer
-     FeatureReference name:customerName
-      NameExpression
-       QualifiedName rcvd_evt
+     NameLeftHandSide
+      QualifiedName customer::name(?)
+     NameExpression
+      QualifiedName rcvd_evt::customerName(?)
    ExpressionStatement
     AssignmentExpression operator:=
-     FeatureLeftHandSide
-      FeatureReference name:shippingAddress
-       NameExpression
-        QualifiedName customer
-     FeatureReference name:shippingAddress
-      NameExpression
-       QualifiedName rcvd_evt
+     NameLeftHandSide
+      QualifiedName customer::shippingAddress(?)
+     NameExpression
+      QualifiedName rcvd_evt::shippingAddress(?)
    ExpressionStatement
     AssignmentExpression operator:=
-     FeatureLeftHandSide
-      FeatureReference name:phone
-       NameExpression
-        QualifiedName customer
-     FeatureReference name:customerPhone
-      NameExpression
-       QualifiedName rcvd_evt
+     NameLeftHandSide
+      QualifiedName customer::phone(?)
+     NameExpression
+      QualifiedName rcvd_evt::customerPhone(?)
    ExpressionStatement
     CollectionOperationExpression operation:add
      NameExpression
@@ -621,21 +587,17 @@ Establishing Customer and Verifying Payment
       ThisExpression
      NamedTuple
       NamedExpression name:accountNumber
-       FeatureReference name:accountNumber
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::accountNumber(?)
       NamedExpression name:billingAddress
-       FeatureReference name:billingAddress
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::billingAddress(?)
       NamedExpression name:cardExpirationDate
-       FeatureReference name:cardExpirationDate
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::cardExpirationDate(?)
       NamedExpression name:cardholderName
-       FeatureReference name:cardholderName
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::cardholderName(?)
 Alf 0.06 Parser
 Parsing tests\Example2e.alf...
 Parsed successfully.
@@ -660,9 +622,8 @@ Establishing Customer and Verifying Payment
       NamedExpression name:'selections are purchased in'
        ThisExpression
       NamedExpression name:'is a purchase of selections in'
-       FeatureReference name:cart
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::cart(?)
    ExpressionStatement
     AssignmentExpression operator:=
      NameLeftHandSide
@@ -672,12 +633,10 @@ Establishing Customer and Verifying Payment
        QualifiedName Customer
       PositionalTuple
        BinaryExpression operator:==
-        FeatureReference name:email
-         NameExpression
-          QualifiedName c
-        FeatureReference name:customerEmail
-         NameExpression
-          QualifiedName rcvd_evt
+        NameExpression
+         QualifiedName c::email(?)
+        NameExpression
+         QualifiedName rcvd_evt::customerEmail(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -695,13 +654,10 @@ Establishing Customer and Verifying Payment
           PositionalTuple
        ExpressionStatement
         AssignmentExpression operator:=
-         FeatureLeftHandSide
-          FeatureReference name:email
-           NameExpression
-            QualifiedName customer
-         FeatureReference name:customerEmail
-          NameExpression
-           QualifiedName rcvd_evt
+         NameLeftHandSide
+          QualifiedName customer::email(?)
+         NameExpression
+          QualifiedName rcvd_evt::customerEmail(?)
     Block
      ExpressionStatement
       AssignmentExpression operator:=
@@ -713,31 +669,22 @@ Establishing Customer and Verifying Payment
         NaturalLiteral image:1
    ExpressionStatement
     AssignmentExpression operator:=
-     FeatureLeftHandSide
-      FeatureReference name:name
-       NameExpression
-        QualifiedName customer
-     FeatureReference name:customerName
-      NameExpression
-       QualifiedName rcvd_evt
+     NameLeftHandSide
+      QualifiedName customer::name(?)
+     NameExpression
+      QualifiedName rcvd_evt::customerName(?)
    ExpressionStatement
     AssignmentExpression operator:=
-     FeatureLeftHandSide
-      FeatureReference name:shippingAddress
-       NameExpression
-        QualifiedName customer
-     FeatureReference name:shippingAddress
-      NameExpression
-       QualifiedName rcvd_evt
+     NameLeftHandSide
+      QualifiedName customer::shippingAddress(?)
+     NameExpression
+      QualifiedName rcvd_evt::shippingAddress(?)
    ExpressionStatement
     AssignmentExpression operator:=
-     FeatureLeftHandSide
-      FeatureReference name:phone
-       NameExpression
-        QualifiedName customer
-     FeatureReference name:customerPhone
-      NameExpression
-       QualifiedName rcvd_evt
+     NameLeftHandSide
+      QualifiedName customer::phone(?)
+     NameExpression
+      QualifiedName rcvd_evt::customerPhone(?)
    ExpressionStatement
     CollectionOperationExpression operation:add
      NameExpression
@@ -761,21 +708,17 @@ Establishing Customer and Verifying Payment
       ThisExpression
      NamedTuple
       NamedExpression name:accountNumber
-       FeatureReference name:accountNumber
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::accountNumber(?)
       NamedExpression name:billingAddress
-       FeatureReference name:billingAddress
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::billingAddress(?)
       NamedExpression name:cardExpirationDate
-       FeatureReference name:cardExpirationDate
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::cardExpirationDate(?)
       NamedExpression name:cardholderName
-       FeatureReference name:cardholderName
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::cardholderName(?)
 Alf 0.06 Parser
 Parsing tests\Example2f.alf...
 Parsed successfully.
@@ -797,27 +740,21 @@ From Executable UML, Figure B.3, entry behavior for Submitting Charge
       QualifiedName CreditCardCharge
       PositionalTuple
    ExpressionStatement
-    FeatureInvocationExpression
-     FeatureReference name:MakeCharge
-      NameExpression
-       QualifiedName creditCardCharge
+    BehaviorInvocationExpression
+     QualifiedName creditCardCharge::MakeCharge(?)
      NamedTuple
       NamedExpression name:accountNumber
-       FeatureReference name:accountNumber
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::accountNumber(?)
       NamedExpression name:billingAddress
-       FeatureReference name:billingAddress
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::billingAddress(?)
       NamedExpression name:cardExpirationDate
-       FeatureReference name:cardExpirationDate
-        NameExpression
-         QualifiedName rcvd_evt
+       NameExpression
+        QualifiedName rcvd_evt::cardExpirationDate(?)
       NamedExpression name:chargeAmount
-       FeatureReference name:totalValue
-        NameExpression
-         QualifiedName self
+       NameExpression
+        QualifiedName self::totalValue(?)
       NamedExpression name:order
        NameExpression
         QualifiedName self
@@ -838,15 +775,12 @@ From Executable UML, Figure B.3, entry behavior for Payment Not Approved
      FeatureReference name:'is placed by'
       ThisExpression
    ExpressionStatement
-    FeatureInvocationExpression
-     FeatureReference name:ChargeDeclined
-      NameExpression
-       QualifiedName EE_OnlineCustomer
+    BehaviorInvocationExpression
+     QualifiedName EE_OnlineCustomer::ChargeDeclined(?)
      NamedTuple
       NamedExpression name:customerEmail
-       FeatureReference name:email
-        NameExpression
-         QualifiedName customer
+       NameExpression
+        QualifiedName customer::email(?)
 Alf 0.06 Parser
 Parsing tests\Example2h.alf...
 Parsed successfully.
@@ -866,15 +800,12 @@ From Executable UML, Figure B.3, entry behavior for Being Packed and Shipped
      FeatureReference name:'is placed by'
       ThisExpression
    ExpressionStatement
-    FeatureInvocationExpression
-     FeatureReference name:ChargeApproved
-      NameExpression
-       QualifiedName EE_OnlineCustomer
+    BehaviorInvocationExpression
+     QualifiedName EE_OnlineCustomer::ChargeApproved(?)
      NamedTuple
       NamedExpression name:customerEmail
-       FeatureReference name:email
-        NameExpression
-         QualifiedName customer
+       NameExpression
+        QualifiedName customer::email(?)
    ExpressionStatement
     AssignmentExpression operator:=
      NameLeftHandSide
@@ -883,10 +814,8 @@ From Executable UML, Figure B.3, entry behavior for Being Packed and Shipped
       QualifiedName Shipment
       PositionalTuple
    ExpressionStatement
-    FeatureInvocationExpression
-     FeatureReference name:RequestShipment
-      NameExpression
-       QualifiedName shipment
+    BehaviorInvocationExpression
+     QualifiedName shipment::RequestShipment(?)
      NamedTuple
       NamedExpression name:order
        ThisExpression
@@ -907,15 +836,12 @@ From Executable UML, Figure B.3, entry behavior for Delivered to Customer
      FeatureReference name:'is placed by'
       ThisExpression
    ExpressionStatement
-    FeatureInvocationExpression
-     FeatureReference name:OrderReportedDelivered
-      NameExpression
-       QualifiedName EE_OnlineCustomer
+    BehaviorInvocationExpression
+     QualifiedName EE_OnlineCustomer::OrderReportedDelivered(?)
      NamedTuple
       NamedExpression name:customerEmail
-       FeatureReference name:email
-        NameExpression
-         QualifiedName customer
+       NameExpression
+        QualifiedName customer::email(?)
 Alf 0.06 Parser
 Parsing tests\Example3a.alf...
 Parsed successfully.
@@ -1045,53 +971,41 @@ UnitDefinition name:'create reply'
       QualifiedName 'Property Data'
       NamedTuple
        NamedExpression name:'property identifier'
-        FeatureReference name:identifier
-         NameExpression
-          QualifiedName property
+        NameExpression
+         QualifiedName property::identifier(?)
        NamedExpression name:'property name'
-        FeatureReference name:name
-         NameExpression
-          QualifiedName property
+        NameExpression
+         QualifiedName property::name(?)
        NamedExpression name:'property status'
-        FeatureReference name:status
-         NameExpression
-          QualifiedName property
+        NameExpression
+         QualifiedName property::status(?)
        NamedExpression name:'property acquisition data'
-        FeatureReference name:'acquisition data'
-         NameExpression
-          QualifiedName property
+        NameExpression
+         QualifiedName property::'acquisition data'(?)
        NamedExpression name:'property disposition data'
-        FeatureReference name:'disposition data'
-         NameExpression
-          QualifiedName property
+        NameExpression
+         QualifiedName property::'disposition data'(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
       CollectionOperationExpression operation:notEmpty
-       FeatureReference name:location
-        NameExpression
-         QualifiedName property
+       NameExpression
+        QualifiedName property::location(?)
        PositionalTuple
       Block
        ExpressionStatement
         AssignmentExpression operator:=
-         FeatureLeftHandSide
-          FeatureReference name:'property location'
-           NameExpression
-            QualifiedName propertyData
+         NameLeftHandSide
+          QualifiedName propertyData::'property location'(?)
          InstanceCreationExpression
           QualifiedName 'Location Data'
           NamedTuple
            NamedExpression name:'location identifier'
-            FeatureReference name:identifier
-             FeatureReference name:location
-              NameExpression
-               QualifiedName property
+            NameExpression
+             QualifiedName property::location::identifier(?)
            NamedExpression name:'location address'
-            FeatureReference name:address
-             FeatureReference name:location
-              NameExpression
-               QualifiedName property
+            NameExpression
+             QualifiedName property::location::address(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -1102,10 +1016,8 @@ UnitDefinition name:'create reply'
       Block
        ExpressionStatement
         AssignmentExpression operator:=
-         FeatureLeftHandSide
-          FeatureReference name:'property serial number'
-           NameExpression
-            QualifiedName propertyData
+         NameLeftHandSide
+          QualifiedName propertyData::'property serial number'(?)
          FeatureReference name:'serial number'
           CastExpression
            QualifiedName 'Personal Property'
@@ -1114,10 +1026,8 @@ UnitDefinition name:'create reply'
     Block
      ExpressionStatement
       AssignmentExpression operator:=
-       FeatureLeftHandSide
-        FeatureReference name:'property size'
-         NameExpression
-          QualifiedName propertyData
+       NameLeftHandSide
+        QualifiedName propertyData::'property size'(?)
        FeatureReference name:size
         CastExpression
          QualifiedName 'Real Property'
@@ -1172,9 +1082,8 @@ UnitDefinition name:establish
     ConcurrentClauses
      NonFinalClause
       BinaryExpression operator:==
-       FeatureReference name:'property type'
-        NameExpression
-         QualifiedName request
+       NameExpression
+        QualifiedName request::'property type'(?)
        NameExpression
         QualifiedName 'Property Type'::personal
       Block
@@ -1187,9 +1096,8 @@ UnitDefinition name:establish
           PositionalTuple
            NameExpression
             QualifiedName identifier
-           FeatureReference name:name
-            NameExpression
-             QualifiedName request
+           NameExpression
+            QualifiedName request::name(?)
     Block
      ExpressionStatement
       AssignmentExpression operator:=
@@ -1200,9 +1108,8 @@ UnitDefinition name:establish
         PositionalTuple
          NameExpression
           QualifiedName identifier
-         FeatureReference name:name
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::name(?)
    ExpressionStatement
     AssignmentExpression operator:=
      NameLeftHandSide
@@ -1211,9 +1118,8 @@ UnitDefinition name:establish
       FeatureReference name:'create reply'
        ThisExpression
       PositionalTuple
-       FeatureReference name:identifier
-        NameExpression
-         QualifiedName request
+       NameExpression
+        QualifiedName request::identifier(?)
        NameExpression
         QualifiedName property
 Alf 0.06 Parser
@@ -1246,12 +1152,10 @@ UnitDefinition name:acquire
        QualifiedName Property
       PositionalTuple
        BinaryExpression operator:==
-        FeatureReference name:identifier
-         NameExpression
-          QualifiedName p
-        FeatureReference name:'property identifier'
-         NameExpression
-          QualifiedName request
+        NameExpression
+         QualifiedName p::identifier(?)
+        NameExpression
+         QualifiedName request::'property identifier'(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -1269,14 +1173,12 @@ UnitDefinition name:acquire
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PAN-001"
            NamedExpression name:'error message'
@@ -1284,10 +1186,8 @@ UnitDefinition name:acquire
     ConcurrentClauses
      NonFinalClause
       AssignmentExpression operator:=
-       FeatureLeftHandSide
-        FeatureReference name:status
-         NameExpression
-          QualifiedName property
+       NameLeftHandSide
+        QualifiedName property::status(?)
        NameExpression
         QualifiedName 'Property Type'::disposed
       Block
@@ -1300,14 +1200,12 @@ UnitDefinition name:acquire
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PAN-002"
            NamedExpression name:'error message'
@@ -1315,18 +1213,13 @@ UnitDefinition name:acquire
     Block
      ExpressionStatement
       AssignmentExpression operator:=
-       FeatureLeftHandSide
-        FeatureReference name:'acquisition data'
-         NameExpression
-          QualifiedName property
-       FeatureReference name:'property acquisition data'
-        NameExpression
-         QualifiedName request
+       NameLeftHandSide
+        QualifiedName property::'acquisition data'(?)
+       NameExpression
+        QualifiedName request::'property acquisition data'(?)
      ExpressionStatement
-      FeatureInvocationExpression
-       FeatureReference name:'update status'
-        NameExpression
-         QualifiedName property
+      BehaviorInvocationExpression
+       QualifiedName property::'update status'(?)
        PositionalTuple
      ExpressionStatement
       AssignmentExpression operator:=
@@ -1336,9 +1229,8 @@ UnitDefinition name:acquire
         FeatureReference name:'create reply'
          ThisExpression
         PositionalTuple
-         FeatureReference name:identifier
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
 Alf 0.06 Parser
@@ -1375,12 +1267,10 @@ UnitDefinition name:update
        QualifiedName Property
       PositionalTuple
        BinaryExpression operator:==
-        FeatureReference name:identifier
-         NameExpression
-          QualifiedName p
-        FeatureReference name:'property identifier'
-         NameExpression
-          QualifiedName request
+        NameExpression
+         QualifiedName p::identifier(?)
+        NameExpression
+         QualifiedName request::'property identifier'(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -1398,14 +1288,12 @@ UnitDefinition name:update
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PRU-001"
            NamedExpression name:'error message'
@@ -1413,10 +1301,8 @@ UnitDefinition name:update
     ConcurrentClauses
      NonFinalClause
       AssignmentExpression operator:=
-       FeatureLeftHandSide
-        FeatureReference name:status
-         NameExpression
-          QualifiedName property
+       NameLeftHandSide
+        QualifiedName property::status(?)
        NameExpression
         QualifiedName 'Property Type'::disposed
       Block
@@ -1429,14 +1315,12 @@ UnitDefinition name:update
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PRU-002"
            NamedExpression name:'error message'
@@ -1446,9 +1330,8 @@ UnitDefinition name:update
       ConditionalBinaryExpression operator:||
        ConditionalBinaryExpression operator:&&
         CollectionOperationExpression operation:notEmpty
-         FeatureReference name:'serial number'
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::'serial number'(?)
          PositionalTuple
         ClassificationExpression operator:instanceof
          NameExpression
@@ -1456,9 +1339,8 @@ UnitDefinition name:update
          QualifiedName 'Real Property'
        ConditionalBinaryExpression operator:&&
         CollectionOperationExpression operation:notEmpty
-         FeatureReference name:'size'
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::'size'(?)
          PositionalTuple
         ClassificationExpression operator:instanceof
          NameExpression
@@ -1474,14 +1356,12 @@ UnitDefinition name:update
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PRU-002"
            NamedExpression name:'error message'
@@ -1490,9 +1370,8 @@ UnitDefinition name:update
      NonFinalClause
       ConditionalBinaryExpression operator:&&
        CollectionOperationExpression operation:notEmpty
-        FeatureReference name:'property location'
-         NameExpression
-          QualifiedName request
+        NameExpression
+         QualifiedName request::'property location'(?)
         PositionalTuple
        UnaryExpression operator:!
         CollectionExpansionExpression operation:exists variable:loc
@@ -1500,12 +1379,10 @@ UnitDefinition name:update
           QualifiedName Location
          PositionalTuple
           BinaryExpression operator:==
-           FeatureReference name:identifier
-            NameExpression
-             QualifiedName loc
-           FeatureReference name:'property location'
-            NameExpression
-             QualifiedName request
+           NameExpression
+            QualifiedName loc::identifier(?)
+           NameExpression
+            QualifiedName request::'property location'(?)
       Block
        ExpressionStatement
         AssignmentExpression operator:=
@@ -1516,14 +1393,12 @@ UnitDefinition name:update
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PRU-003"
            NamedExpression name:'error message'
@@ -1533,9 +1408,8 @@ UnitDefinition name:update
       ConcurrentClauses
        NonFinalClause
         CollectionOperationExpression operation:notEmpty
-         FeatureReference name:'property location'
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::'property location'(?)
          PositionalTuple
         Block
          ExpressionStatement
@@ -1547,12 +1421,10 @@ UnitDefinition name:update
              QualifiedName Location
             PositionalTuple
              BinaryExpression operator:==
-              FeatureReference name:identifier
-               NameExpression
-                QualifiedName loc
-              FeatureReference name:'property location'
-               NameExpression
-                QualifiedName request
+              NameExpression
+               QualifiedName loc::identifier(?)
+              NameExpression
+               QualifiedName request::'property location'(?)
          ExpressionStatement
           CollectionOperationExpression operation:add
            NameExpression
@@ -1566,45 +1438,36 @@ UnitDefinition name:update
       ConcurrentClauses
        NonFinalClause
         CollectionOperationExpression operation:notEmpty
-         FeatureReference name:'property name'
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::'property name'(?)
          PositionalTuple
         Block
          ExpressionStatement
           AssignmentExpression operator:=
-           FeatureLeftHandSide
-            FeatureReference name:name
-             NameExpression
-              QualifiedName property
-           FeatureReference name:'property name'
-            NameExpression
-             QualifiedName request
+           NameLeftHandSide
+            QualifiedName property::name(?)
+           NameExpression
+            QualifiedName request::'property name'(?)
      IfStatement
       ConcurrentClauses
        NonFinalClause
         CollectionOperationExpression operation:notEmpty
-         FeatureReference name:'property value'
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::'property value'(?)
          PositionalTuple
         Block
          ExpressionStatement
           AssignmentExpression operator:=
-           FeatureLeftHandSide
-            FeatureReference name:value
-             NameExpression
-              QualifiedName property
-           FeatureReference name:'property value'
-            NameExpression
-             QualifiedName request
+           NameLeftHandSide
+            QualifiedName property::value(?)
+           NameExpression
+            QualifiedName request::'property value'(?)
      IfStatement
       ConcurrentClauses
        NonFinalClause
         CollectionOperationExpression operation:notEmpty
-         FeatureReference name:'property serial number'
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::'property serial number'(?)
          PositionalTuple
         Block
          ExpressionStatement
@@ -1615,16 +1478,14 @@ UnitDefinition name:update
               QualifiedName 'Personal Property'
               NameExpression
                QualifiedName property
-           FeatureReference name:'property serial number'
-            NameExpression
-             QualifiedName request
+           NameExpression
+            QualifiedName request::'property serial number'(?)
      IfStatement
       ConcurrentClauses
        NonFinalClause
         CollectionOperationExpression operation:notEmpty
-         FeatureReference name:'property size'
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::'property size'(?)
          PositionalTuple
         Block
          ExpressionStatement
@@ -1635,9 +1496,8 @@ UnitDefinition name:update
               QualifiedName 'Real Property'
               NameExpression
                QualifiedName property
-           FeatureReference name:'property size'
-            NameExpression
-             QualifiedName request
+           NameExpression
+            QualifiedName request::'property size'(?)
      ExpressionStatement
       AssignmentExpression operator:=
        NameLeftHandSide
@@ -1646,9 +1506,8 @@ UnitDefinition name:update
         FeatureReference name:'create reply'
          ThisExpression
         PositionalTuple
-         FeatureReference name:identifier
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
 Alf 0.06 Parser
@@ -1681,12 +1540,10 @@ UnitDefinition name:dispose
        QualifiedName Property
       PositionalTuple
        BinaryExpression operator:==
-        FeatureReference name:identifier
-         NameExpression
-          QualifiedName p
-        FeatureReference name:'property identifier'
-         NameExpression
-          QualifiedName request
+        NameExpression
+         QualifiedName p::identifier(?)
+        NameExpression
+         QualifiedName request::'property identifier'(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -1704,14 +1561,12 @@ UnitDefinition name:dispose
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PDN-001"
            NamedExpression name:'error message'
@@ -1719,10 +1574,8 @@ UnitDefinition name:dispose
     ConcurrentClauses
      NonFinalClause
       AssignmentExpression operator:=
-       FeatureLeftHandSide
-        FeatureReference name:status
-         NameExpression
-          QualifiedName property
+       NameLeftHandSide
+        QualifiedName property::status(?)
        NameExpression
         QualifiedName 'Property Type'::pending
       Block
@@ -1735,14 +1588,12 @@ UnitDefinition name:dispose
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PDN-002"
            NamedExpression name:'error message'
@@ -1750,18 +1601,13 @@ UnitDefinition name:dispose
     Block
      ExpressionStatement
       AssignmentExpression operator:=
-       FeatureLeftHandSide
-        FeatureReference name:'disposition data'
-         NameExpression
-          QualifiedName property
-       FeatureReference name:'property disposition data'
-        NameExpression
-         QualifiedName request
+       NameLeftHandSide
+        QualifiedName property::'disposition data'(?)
+       NameExpression
+        QualifiedName request::'property disposition data'(?)
      ExpressionStatement
-      FeatureInvocationExpression
-       FeatureReference name:'update status'
-        NameExpression
-         QualifiedName property
+      BehaviorInvocationExpression
+       QualifiedName property::'update status'(?)
        PositionalTuple
      ExpressionStatement
       AssignmentExpression operator:=
@@ -1771,9 +1617,8 @@ UnitDefinition name:dispose
         FeatureReference name:'create reply'
          ThisExpression
         PositionalTuple
-         FeatureReference name:identifier
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
 Alf 0.06 Parser
@@ -1806,12 +1651,10 @@ UnitDefinition name:delete
        QualifiedName Property
       PositionalTuple
        BinaryExpression operator:==
-        FeatureReference name:identifier
-         NameExpression
-          QualifiedName p
-        FeatureReference name:'property identifier'
-         NameExpression
-          QualifiedName request
+        NameExpression
+         QualifiedName p::identifier(?)
+        NameExpression
+         QualifiedName request::'property identifier'(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -1829,14 +1672,12 @@ UnitDefinition name:delete
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PRD-001"
            NamedExpression name:'error message'
@@ -1850,9 +1691,8 @@ UnitDefinition name:delete
         FeatureReference name:'create reply'
          ThisExpression
         PositionalTuple
-         FeatureReference name:identifier
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
      ExpressionStatement
@@ -1890,12 +1730,10 @@ UnitDefinition name:retrieve
        QualifiedName Property
       PositionalTuple
        BinaryExpression operator:==
-        FeatureReference name:identifier
-         NameExpression
-          QualifiedName p
-        FeatureReference name:'property identifier'
-         NameExpression
-          QualifiedName request
+        NameExpression
+         QualifiedName p::identifier(?)
+        NameExpression
+         QualifiedName request::'property identifier'(?)
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -1913,14 +1751,12 @@ UnitDefinition name:retrieve
           NamedTuple
            NamedExpression name:identifier
             BinaryExpression operator:+
-             FeatureReference name:identifier
-              NameExpression
-               QualifiedName request
+             NameExpression
+              QualifiedName request::identifier(?)
              StringLiteral image:"/error"
            NamedExpression name:'request identifier'
-            FeatureReference name:identifier
-             NameExpression
-              QualifiedName request
+            NameExpression
+             QualifiedName request::identifier(?)
            NamedExpression name:'error code'
             StringLiteral image:"PRR-001"
            NamedExpression name:'error message'
@@ -1934,9 +1770,8 @@ UnitDefinition name:retrieve
         FeatureReference name:'create reply'
          ThisExpression
         PositionalTuple
-         FeatureReference name:identifier
-          NameExpression
-           QualifiedName request
+         NameExpression
+          QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
 Alf 0.06 Parser
@@ -2017,16 +1852,12 @@ UnitDefinition name:ProcessQueue
                FeatureReference name:enqueue
                 ThisExpression
                PositionalTuple
-                FeatureReference name:process
-                 NameExpression
-                  QualifiedName sig
+                NameExpression
+                 QualifiedName sig::process(?)
           Block
            ExpressionStatement
-            FeatureInvocationExpression
-             FeatureReference name:resume
-              FeatureReference name:process
-               NameExpression
-                QualifiedName sig
+            BehaviorInvocationExpression
+             QualifiedName sig::process::resume(?)
              PositionalTuple
        AcceptBlock name:null
         QualifiedNameList
@@ -2117,10 +1948,8 @@ UnitDefinition name:execute
           PositionalTuple
        ExpressionStatement
         AssignmentExpression operator:=
-         FeatureLeftHandSide
-          FeatureReference name:activityExecution
-           NameExpression
-            QualifiedName group
+         NameLeftHandSide
+          QualifiedName group::activityExecution(?)
          ThisExpression
      BlockStatement
       Block
@@ -2132,17 +1961,13 @@ UnitDefinition name:execute
          NameExpression
           QualifiedName group
        ExpressionStatement
-        FeatureInvocationExpression
-         FeatureReference name:activate
-          NameExpression
-           QualifiedName group
+        BehaviorInvocationExpression
+         QualifiedName group::activate(?)
          PositionalTuple
-          FeatureReference name:node
-           NameExpression
-            QualifiedName 'activity'
-          FeatureReference name:edge
-           NameExpression
-            QualifiedName 'activity'
+          NameExpression
+           QualifiedName 'activity'::node(?)
+          NameExpression
+           QualifiedName 'activity'::edge(?)
 Alf 0.06 Parser
 Parsing tests\Activity_Expressions.alf...
 Parsed successfully.
@@ -2158,10 +1983,8 @@ UnitDefinition name:ExpressionStatements
        ThisExpression
       NaturalLiteral image:1
    ExpressionStatement
-    FeatureInvocationExpression
-     FeatureReference name:SignalAlarm
-      NameExpression
-       QualifiedName monitor
+    BehaviorInvocationExpression
+     QualifiedName monitor::SignalAlarm(?)
      PositionalTuple
       NameExpression
        QualifiedName sensorId
@@ -2179,20 +2002,17 @@ UnitDefinition name:ExpressionStatements
       NameExpression
        QualifiedName period
    ExpressionStatement
-    FeatureReference name:im
-     NameExpression
-      QualifiedName poleValue
+    NameExpression
+     QualifiedName poleValue::im(?)
    ExpressionStatement
     FeatureReference name:node
      ThisExpression
    ExpressionStatement
-    FeatureReference name:name
-     NameExpression
-      QualifiedName members
+    NameExpression
+     QualifiedName members::name(?)
    ExpressionStatement
-    FeatureReference name:house
-     NameExpression
-      QualifiedName jack
+    NameExpression
+     QualifiedName jack::house(?)
    ExpressionStatement
     CollectionExpansionExpression operation:select variable:house
      NameExpression
@@ -2206,9 +2026,8 @@ UnitDefinition name:ExpressionStatements
      NameExpression
       QualifiedName collection
      PositionalTuple
-      FeatureReference name:name
-       NameExpression
-        QualifiedName x
+      NameExpression
+       QualifiedName x::name(?)
    ExpressionStatement
     CollectionExpansionExpression operation:select variable:name
      NameExpression
@@ -2222,9 +2041,8 @@ UnitDefinition name:ExpressionStatements
      NameExpression
       QualifiedName collection
      PositionalTuple
-      FeatureReference name:name
-       NameExpression
-        QualifiedName x
+      NameExpression
+       QualifiedName x::name(?)
    ExpressionStatement
     BehaviorInvocationExpression
      QualifiedName A
@@ -2332,7 +2150,7 @@ UnitDefinition name:ExpressionStatements
     ReductionExpression operator:#
      QualifiedName '+'
      CollectionValueExpression
-      TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
        QualifiedName Integer
       ExpressionList
        NaturalLiteral image:1
@@ -2342,7 +2160,7 @@ UnitDefinition name:ExpressionStatements
     ReductionExpression operator:##
      QualifiedName MatMult
      CollectionValueExpression
-      TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
        QualifiedName Matrix
       ExpressionList
        NameExpression
@@ -2353,7 +2171,7 @@ UnitDefinition name:ExpressionStatements
         QualifiedName C
    ExpressionStatement
     CollectionValueExpression
-     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
       QualifiedName String
      ExpressionList
       StringLiteral image:"apple"
@@ -2361,7 +2179,7 @@ UnitDefinition name:ExpressionStatements
       StringLiteral image:"strawberry"
    ExpressionStatement
     CollectionValueExpression
-     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
       QualifiedName Integer
      CollectionRange
       NaturalLiteral image:1
@@ -2370,12 +2188,12 @@ UnitDefinition name:ExpressionStatements
        NaturalLiteral image:4
    ExpressionStatement
     CollectionValueExpression
-     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
       QualifiedName Integer
      ExpressionList
       NaturalLiteral image:1
       CollectionValueExpression
-       TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+       TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
         QualifiedName Integer
        ExpressionList
         NaturalLiteral image:2
@@ -2383,7 +2201,7 @@ UnitDefinition name:ExpressionStatements
       NaturalLiteral image:4
    ExpressionStatement
     CollectionValueExpression
-     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
       QualifiedName Integer
      ExpressionList
       NaturalLiteral image:1
@@ -2392,7 +2210,7 @@ UnitDefinition name:ExpressionStatements
       NaturalLiteral image:4
    ExpressionStatement
     CollectionValueExpression
-     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
       QualifiedName Integer
      CollectionRange
       NaturalLiteral image:1
@@ -2401,7 +2219,7 @@ UnitDefinition name:ExpressionStatements
        NaturalLiteral image:4
    ExpressionStatement
     CollectionValueExpression
-     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
       QualifiedName Integer
      ExpressionList
       NaturalLiteral image:1
@@ -2426,7 +2244,7 @@ UnitDefinition name:ExpressionStatements
      NameLeftHandSide
       QualifiedName a
      CollectionValueExpression
-      TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
        QualifiedName Integer
       ExpressionList
        NaturalLiteral image:10
@@ -2534,9 +2352,8 @@ UnitDefinition name:ExpressionStatements
       QualifiedName Customer
      PositionalTuple
       BinaryExpression operator:==
-       FeatureReference name:name
-        NameExpression
-         QualifiedName c
+       NameExpression
+        QualifiedName c::name(?)
        NameExpression
         QualifiedName customerName
    ExpressionStatement
@@ -2545,9 +2362,8 @@ UnitDefinition name:ExpressionStatements
       QualifiedName Customer
      PositionalTuple
       BinaryExpression operator:==
-       FeatureReference name:name
-        NameExpression
-         QualifiedName c
+       NameExpression
+        QualifiedName c::name(?)
        NameExpression
         QualifiedName customerName
    ExpressionStatement
@@ -2556,18 +2372,16 @@ UnitDefinition name:ExpressionStatements
       QualifiedName employees
      PositionalTuple
       BinaryExpression operator:>
-       FeatureReference name:age
-        NameExpression
-         QualifiedName e
+       NameExpression
+        QualifiedName e::age(?)
        NaturalLiteral image:50
    ExpressionStatement
     CollectionExpansionExpression operation:reject variable:e
      NameExpression
       QualifiedName employees
      PositionalTuple
-      FeatureReference name:isMarried
-       NameExpression
-        QualifiedName e
+      NameExpression
+       QualifiedName e::isMarried(?)
    ExpressionStatement
     CollectionExpansionExpression operation:select variable:player
      NameExpression
@@ -2584,18 +2398,15 @@ UnitDefinition name:ExpressionStatements
      NameExpression
       QualifiedName employees
      PositionalTuple
-      FeatureReference name:birthDate
-       NameExpression
-        QualifiedName e
+      NameExpression
+       QualifiedName e::birthDate(?)
    ExpressionStatement
     CollectionExpansionExpression operation:iterate variable:step
      NameExpression
       QualifiedName processSteps
      PositionalTuple
-      FeatureInvocationExpression
-       FeatureReference name:execute
-        NameExpression
-         QualifiedName step
+      BehaviorInvocationExpression
+       QualifiedName step::execute(?)
        PositionalTuple
    ExpressionStatement
     CollectionExpansionExpression operation:forAll variable:e
@@ -2603,9 +2414,8 @@ UnitDefinition name:ExpressionStatements
       QualifiedName employees
      PositionalTuple
       BinaryExpression operator:<=
-       FeatureReference name:age
-        NameExpression
-         QualifiedName e
+       NameExpression
+        QualifiedName e::age(?)
        NaturalLiteral image:65
    ExpressionStatement
     CollectionExpansionExpression operation:exists variable:e
@@ -2613,9 +2423,8 @@ UnitDefinition name:ExpressionStatements
       QualifiedName employees
      PositionalTuple
       BinaryExpression operator:==
-       FeatureReference name:firstName
-        NameExpression
-         QualifiedName e
+       NameExpression
+        QualifiedName e::firstName(?)
        StringLiteral image:"Jack"
    ExpressionStatement
     CollectionExpansionExpression operation:one variable:e
@@ -2623,18 +2432,16 @@ UnitDefinition name:ExpressionStatements
       QualifiedName employees
      PositionalTuple
       BinaryExpression operator:==
-       FeatureReference name:title
-        NameExpression
-         QualifiedName e
+       NameExpression
+        QualifiedName e::title(?)
        StringLiteral image:"President"
    ExpressionStatement
     CollectionExpansionExpression operation:isUnique variable:e
      NameExpression
       QualifiedName employees
      PositionalTuple
-      FeatureReference name:employeeIdentificationNumber
-       NameExpression
-        QualifiedName e
+      NameExpression
+       QualifiedName e::employeeIdentificationNumber(?)
    ExpressionStatement
     PostfixExpression operator:++
      NameExpression
@@ -2669,6 +2476,10 @@ UnitDefinition name:ExpressionStatements
     UnaryExpression operator:!
      FeatureReference name:running
       ThisExpression
+   ExpressionStatement
+    UnaryExpression operator:!
+     NameExpression
+      QualifiedName member::isActive(?)
    ExpressionStatement
     UnaryExpression operator:+
      NaturalLiteral image:1234
@@ -2706,9 +2517,8 @@ UnitDefinition name:ExpressionStatements
    ExpressionStatement
     CastExpression
      QualifiedName Person
-     FeatureReference name:payingParty
-      NameExpression
-       QualifiedName invoice
+     NameExpression
+      QualifiedName invoice::payingParty(?)
    ExpressionStatement
     CastExpression
      ThisExpression
@@ -2716,7 +2526,7 @@ UnitDefinition name:ExpressionStatements
     CastExpression
      QualifiedName Integer
      CollectionValueExpression
-      TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+      TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
       ExpressionList
        NaturalLiteral image:1
        StringLiteral image:"banana"
@@ -2798,19 +2608,16 @@ UnitDefinition name:ExpressionStatements
         QualifiedName result
    ExpressionStatement
     AssignmentExpression operator:=
-     FeatureLeftHandSide
-      FeatureReference name:email
-       NameExpression
-        QualifiedName customer
-     FeatureReference name:customerEmail
-      NameExpression
-       QualifiedName checkout
+     NameLeftHandSide
+      QualifiedName customer::email(?)
+     NameExpression
+      QualifiedName checkout::customerEmail(?)
    ExpressionStatement
     AssignmentExpression operator:=
      FeatureLeftHandSide
       FeatureReference name:address
        NameExpression
-        QualifiedName customer
+        QualifiedName customer(?)
       NameExpression
        QualifiedName i
      NameExpression
@@ -2851,9 +2658,8 @@ UnitDefinition name:getNodeActivations
       ThisExpression
      PositionalTuple
       BinaryExpression operator:==
-       FeatureReference name:node
-        NameExpression
-         QualifiedName a
+       NameExpression
+        QualifiedName a::node(?)
        NameExpression
         QualifiedName node
 Alf 0.06 Parser
@@ -2958,7 +2764,7 @@ UnitDefinition name:Statements
        NameLeftHandSide
         QualifiedName collection
        CollectionValueExpression
-        TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+        TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
          QualifiedName Integer
      WhileStatement
       BinaryExpression operator:<=
@@ -2976,11 +2782,41 @@ UnitDefinition name:Statements
            NameExpression
             QualifiedName i
    EmptyStatement
-   LocalNameDeclarationStatement name:currentOffer typeName:Commodity::Transaction::Offer
+   LocalNameDeclarationStatement name:currentOffer
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:true isNonunique:true collection:
+     QualifiedName Offer
     CollectionAccessExpression
      FeatureReference name:offers
       ThisExpression
      NaturalLiteral image:1
+   LocalNameDeclarationStatement name:interest
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:true isNonunique:true collection:
+     QualifiedName DomainTypes::CurrencyAmount
+    BinaryExpression operator:*
+     BinaryExpression operator:*
+      FeatureReference name:principal
+       ThisExpression
+      FeatureReference name:rate
+       ThisExpression
+     NameExpression
+      QualifiedName period
+   LocalNameDeclarationStatement name:inactiveMembers
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
+     QualifiedName Member
+    CollectionExpansionExpression operation:select variable:member
+     NameExpression
+      QualifiedName members
+     PositionalTuple
+      UnaryExpression operator:!
+       NameExpression
+        QualifiedName member::isActive(?)
+   LocalNameDeclarationStatement name:realProperties
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true collection:
+     QualifiedName RealProperty
+    CastExpression
+     QualifiedName RealProperty
+     NameExpression
+      QualifiedName assets
    IfStatement
     ConcurrentClauses
      NonFinalClause
@@ -2991,10 +2827,8 @@ UnitDefinition name:Statements
         QualifiedName threshold
       Block
        ExpressionStatement
-        FeatureInvocationExpression
-         FeatureReference name:raiseAlarm
-          NameExpression
-           QualifiedName monitor
+        BehaviorInvocationExpression
+         QualifiedName monitor::raiseAlarm(?)
          PositionalTuple
           NameExpression
            QualifiedName sensorId
@@ -3057,10 +2891,8 @@ UnitDefinition name:Statements
         QualifiedName threshold
       Block
        ExpressionStatement
-        FeatureInvocationExpression
-         FeatureReference name:raiseAlarm
-          NameExpression
-           QualifiedName monitor
+        BehaviorInvocationExpression
+         QualifiedName monitor::raiseAlarm(?)
          PositionalTuple
           NameExpression
            QualifiedName sensorId
@@ -3314,20 +3146,16 @@ UnitDefinition name:Statements
         NameExpression
          QualifiedName last
    WhileStatement
-    FeatureInvocationExpression
-     FeatureReference name:hasMore
-      NameExpression
-       QualifiedName file
+    BehaviorInvocationExpression
+     QualifiedName file::hasMore(?)
      PositionalTuple
     Block
      ExpressionStatement
       AssignmentExpression operator:=
        NameLeftHandSide
         QualifiedName nextRecord
-       FeatureInvocationExpression
-        FeatureReference name:readNext
-         NameExpression
-          QualifiedName file
+       BehaviorInvocationExpression
+        QualifiedName file::readNext(?)
         PositionalTuple
      IfStatement
       ConcurrentClauses
@@ -3355,10 +3183,8 @@ UnitDefinition name:Statements
       AssignmentExpression operator:=
        NameLeftHandSide
         QualifiedName line
-       FeatureInvocationExpression
-        FeatureReference name:readNext
-         NameExpression
-          QualifiedName file
+       BehaviorInvocationExpression
+        QualifiedName file::readNext(?)
         PositionalTuple
      ExpressionStatement
       BehaviorInvocationExpression
@@ -3377,10 +3203,8 @@ UnitDefinition name:Statements
       AssignmentExpression operator:=
        NameLeftHandSide
         QualifiedName reading
-       FeatureInvocationExpression
-        FeatureReference name:getNextReading
-         NameExpression
-          QualifiedName sensor
+       BehaviorInvocationExpression
+        QualifiedName sensor::getNextReading(?)
         PositionalTuple
      ExpressionStatement
       BehaviorInvocationExpression
@@ -3389,10 +3213,8 @@ UnitDefinition name:Statements
         NameExpression
          QualifiedName reading
     UnaryExpression operator:!
-     FeatureInvocationExpression
-      FeatureReference name:isFinal
-       NameExpression
-        QualifiedName reading
+     BehaviorInvocationExpression
+      QualifiedName reading::isFinal(?)
       PositionalTuple
    ForStatement
     ForVariableDefinition variable:member
@@ -3404,17 +3226,15 @@ UnitDefinition name:Statements
        NameExpression
         QualifiedName names
        PositionalTuple
-        FeatureReference name:name
-         NameExpression
-          QualifiedName member
+        NameExpression
+         QualifiedName member::name(?)
      ExpressionStatement
       CollectionOperationExpression operation:add
        NameExpression
         QualifiedName addresses
        PositionalTuple
-        FeatureReference name:address
-         NameExpression
-          QualifiedName member
+        NameExpression
+         QualifiedName member::address(?)
    ForStatement
     ForVariableDefinition variable:sensor
      NameExpression
@@ -3423,10 +3243,8 @@ UnitDefinition name:Statements
      AssignmentExpression operator:=
       NameLeftHandSide
        QualifiedName reading
-      FeatureInvocationExpression
-       FeatureReference name:reading
-        NameExpression
-         QualifiedName sensor
+      BehaviorInvocationExpression
+       QualifiedName sensor::reading(?)
        PositionalTuple
      PositionalTuple
     Block
@@ -3465,10 +3283,8 @@ UnitDefinition name:Statements
       ThisExpression
     Block
      ExpressionStatement
-      FeatureInvocationExpression
-       FeatureReference name:sendOffer
-        NameExpression
-         QualifiedName outgoingEdge
+      BehaviorInvocationExpression
+       QualifiedName outgoingEdge::sendOffer(?)
        PositionalTuple
         NameExpression
          QualifiedName tokens
@@ -3545,9 +3361,8 @@ UnitDefinition name:Statements
        BehaviorInvocationExpression
         QualifiedName WriteLine
         PositionalTuple
-         FeatureReference name:name
-          NameExpression
-           QualifiedName arrival
+         NameExpression
+          QualifiedName arrival::name(?)
       ExpressionStatement
        AssignmentExpression operator:=
         NameLeftHandSide
@@ -3576,9 +3391,8 @@ UnitDefinition name:Statements
     BehaviorInvocationExpression
      QualifiedName WriteLine
      PositionalTuple
-      FeatureReference name:name
-       NameExpression
-        QualifiedName arrival
+      NameExpression
+       QualifiedName arrival::name(?)
    AcceptStatement
     AcceptBlock name:sig
      QualifiedNameList
@@ -3623,9 +3437,8 @@ UnitDefinition name:Statements
        BehaviorInvocationExpression
         QualifiedName WriteLine
         PositionalTuple
-         FeatureReference name:name
-          NameExpression
-           QualifiedName arrival
+         NameExpression
+          QualifiedName arrival::name(?)
       ExpressionStatement
        AssignmentExpression operator:=
         NameLeftHandSide
@@ -3782,10 +3595,8 @@ UnitDefinition name:Operations
       FeatureLeftHandSide
        FeatureReference name:unitPriceOfSelection
         ThisExpression
-      FeatureInvocationExpression
-       FeatureReference name:getUnitPrice
-        NameExpression
-         QualifiedName produce
+      BehaviorInvocationExpression
+       QualifiedName produce::getUnitPrice(?)
        PositionalTuple
   OperationDefinition name:unitPrice visibility:null isStub:true isAbstract:false
    FormalParameter name: visibility: isStub:false direction:return
@@ -3870,10 +3681,8 @@ UnitDefinition name:Singleton
      AssignmentExpression operator:=
       NameLeftHandSide
        QualifiedName instance
-      FeatureInvocationExpression
-       FeatureReference name:allinstances
-        NameExpression
-         QualifiedName Singleton
+      BehaviorInvocationExpression
+       QualifiedName Singleton::allinstances(?)
        PositionalTuple
     IfStatement
      ConcurrentClauses

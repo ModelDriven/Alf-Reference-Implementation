@@ -79,7 +79,7 @@ public abstract class LiteralMapping extends ExpressionMapping {
 
 	public Classifier getType() {
 		QualifiedName qualifiedName = new QualifiedName();
-		qualifiedName.setIsAbsolute();
+		// qualifiedName.setIsAbsolute();
 		qualifiedName.addName("UML");
 		qualifiedName.addName("AuxiliaryConstructs");
 		qualifiedName.addName("PrimitiveTypes");

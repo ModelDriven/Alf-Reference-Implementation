@@ -408,36 +408,51 @@ String Name():
 QualifiedName QualifiedName():
 {
   String n;
-  QualifiedName q = new QualifiedName();
+  QualifiedName q;
 }
 {
   ( LOOKAHEAD(3)
-    ColonQualifiedName(q)
-/*
+    q = ColonQualifiedName()
   |
     LOOKAHEAD(3)
-    DotQualifiedName(q)
-*/
+    q = DotQualifiedName()
   |
-    n = Name() { q.addName(n); }
+    n = Name() { q = new QualifiedName(); q.addName(n); }
   )
   { return q; }
 }
 
-void ColonQualifiedName(QualifiedName q):
+QualifiedName NameOrColonQualifiedName():
 {
+  String n;
+  QualifiedName q;
+}
+{
+  ( LOOKAHEAD(3)
+    q = ColonQualifiedName()
+  | n = Name() { q = new QualifiedName(); q.addName(n); }
+  )
+  { return q; }
+}
+
+QualifiedName ColonQualifiedName():
+{
+  QualifiedName q = new QualifiedName();
   String n;
 }
 {
   n = Name() { q.addName(n); } ( LOOKAHEAD(2) <DOUBLE_COLON> n = Name() { q.addName(n); } )+ 
+  { return q; }
 }
 
-void DotQualifiedName(QualifiedName q):
+QualifiedName DotQualifiedName():
 {
+  QualifiedName q = new QualifiedName();
   String n;
 }
 {
   n = Name() { q.addName(n); } ( LOOKAHEAD(2) <DOT> n = Name() { q.addName(n); } )+ 
+  { return q; }
 }
 
 /* NAMESPACES */
@@ -526,21 +541,21 @@ ImportReference ImportDeclaration():
 ImportReference ImportReference():
 {
   String n;
-  QualifiedName q = new QualifiedName();
+  QualifiedName q;
   String a;
   ImportReference i;
 }
 {
   ( LOOKAHEAD(3)
-    ColonQualifiedName(q) { i = new ImportReference(q); }
+    q = ColonQualifiedName() { i = new ImportReference(q); }
     [ <DOUBLE_COLON> <STAR> { i.setIsPackageImport(); } 
     | a = AliasDefinition() { i.setAlias(a); } ]
   | LOOKAHEAD(3)
-    DotQualifiedName(q) { i = new ImportReference(q); }
+    q = DotQualifiedName() { i = new ImportReference(q); }
     [ <DOT> <STAR> { i.setIsPackageImport(); } 
     | a = AliasDefinition() { i.setAlias(a); } ]
   |
-    n = Name() { q.addName(n); i = new ImportReference(q); }
+    n = Name() { q = new QualifiedName(); q.addName(n); i = new ImportReference(q); }
     [ ( <DOUBLE_COLON> | <DOT> ) <STAR> { i.setIsPackageImport(); }
     | a = AliasDefinition() { i.setAlias(a); } ]    
   )
@@ -1426,7 +1441,6 @@ Block Block():
   { return b; }
 }
 
-/* ADDED */
 void BlockCompletion(Block b):
 {
   Statement s;
@@ -1563,40 +1577,64 @@ EmptyStatement EmptyStatement():
 
 Statement LocalNameDeclarationOrExpressionStatement():
 {
+  TypedElementDeclaration d = new TypedElementDeclaration();
   QualifiedName q;
   String n;
   Expression e;
   Statement s;
 }
 {
-  ( LOOKAHEAD(Name())
-    q = QualifiedName()
-    ( n = Name() s = LocalNameDeclarationStatementCompletion(n,q) 
-    | e = QualifiedNameExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
+  { d.setLowerBound("0"); d.setUpperBound("1"); d.setIsOrdered(); d.setIsNonunique(); }
+  (
+    LOOKAHEAD(2)  
+    q = ColonQualifiedName() { d.setType(q); }
+    ( LOOKAHEAD(3) [ MultiplicityIndicator(d) ] n = Name() s = LocalNameDeclarationStatementCompletion(n,d) 
+    | e = UnambiguousQualifiedNameExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
+  | LOOKAHEAD(3)
+    q = DotQualifiedName() { d.setType(q); }
+    ( LOOKAHEAD(3) [ MultiplicityIndicator(d) ] n = Name() s = LocalNameDeclarationStatementCompletion(n,d) 
+    | e = AmbiguousQualifiedNameExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
   | 
-    e = Expression() <SEMICOLON> { s = new ExpressionStatement(e); }
+    n = Name() { q = new QualifiedName(); q.addName(n); d.setType(q); }
+    ( LOOKAHEAD(3) [ MultiplicityIndicator(d) ] n = Name() s = LocalNameDeclarationStatementCompletion(n,d) 
+    | e = NameExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
+  | 
+    e = NonNameExpression() <SEMICOLON> { s = new ExpressionStatement(e); }
   )
   
   { return s; }
+}
+
+void MultiplicityIndicator(TypedElementDeclaration d):
+{}
+{
+  <LBRACKET> <RBRACKET>
+  { d.setLowerBound("0");
+    d.setUpperBound("*");
+  }
 }
 
 LocalNameDeclarationStatement LocalNameDeclarationStatement():
 {
   String n;
   QualifiedName t;
+  TypedElementDeclaration d = new TypedElementDeclaration();
+  LocalNameDeclarationStatement s;
 }
 {
-  <LET> n = Name() <COLON> t = TypeName()
-  { return LocalNameDeclarationStatementCompletion(n,t); }
+  { d.setLowerBound("0"); d.setUpperBound("1"); d.setIsOrdered(); d.setIsNonunique(); }
+  <LET> n = Name() <COLON> t = TypeName() { d.setType(t); } [ MultiplicityIndicator(d) ] 
+  s = LocalNameDeclarationStatementCompletion(n,d)
+  { return s; }
 }
 
-LocalNameDeclarationStatement LocalNameDeclarationStatementCompletion(String n, QualifiedName t):
+LocalNameDeclarationStatement LocalNameDeclarationStatementCompletion(String n, TypedElementDeclaration d):
 {
   Expression e;
 }
 {
   <ASSIGN>  e = Expression() <SEMICOLON>
-  { return new LocalNameDeclarationStatement(n, t, e); }
+  { return new LocalNameDeclarationStatement(n, d, e); }
 
 }
 
@@ -1890,34 +1928,35 @@ void ReclassifyAllClause():
 
 Expression Expression():
 {
-  QualifiedName n;
+  QualifiedName q;
+  String n;
+  Expression e;
+}
+{
+  ( 
+    LOOKAHEAD(2) q = ColonQualifiedName() e = UnambiguousQualifiedNameExpressionCompletion(q)
+  | LOOKAHEAD(3) q = DotQualifiedName() e = AmbiguousQualifiedNameExpressionCompletion(q)
+  | n = Name() { q = new QualifiedName(); q.addName(n); } e = NameExpressionCompletion(q)
+  | e = NonNameExpression()
+  )
+  
+  { return e; }
+}
+
+Expression NonNameExpression():
+{
   Expression e1;
   Expression e2;
 }
 {
   (
-    n = QualifiedName() e2 = QualifiedNameExpressionCompletion(n)
-  | LOOKAHEAD(CastLookahead() | AffixOperator() | NumericUnaryOperator() 
+    LOOKAHEAD(CastLookahead() | AffixOperator() | NumericUnaryOperator() 
              | <BANG> | <DOLLAR> )
     e1 = NonPostfixUnaryExpression() e2 = ConditionalExpressionCompletion(e1)
   | e1 = BaseExpression() e2 = ExpressionCompletion(e1)
   )
   
   { return e2; }
-}
-
-Expression QualifiedNameExpressionCompletion(QualifiedName n):
-{
-  Expression e;
-}
-{
-  ( 
-    e = Assignment(new NameLeftHandSide(n))
-  | LOOKAHEAD(4) e = CollectionExpressionCompletion(n) e = ExpressionCompletion(e)
-  | e = ExpressionCompletion(new NameExpression(n))
-  )
-  
-  { return e; }
 }
 
 Expression ExpressionCompletion(Expression c) :
@@ -1929,6 +1968,86 @@ Expression ExpressionCompletion(Expression c) :
   (
     i = Index() e = ExpressionCompletion(new CollectionAccessExpression(c, i))
   | e = NonIndexExpressionCompletion(c)
+  )
+  
+  { return e; }
+}
+
+Expression NonIndexExpressionCompletion(Expression c):
+{
+  Expression e;
+  FeatureReference f;
+}
+{
+  (
+    LOOKAHEAD(2) 
+    f = Feature(c) e = FeatureExpressionCompletion(f)
+  | e = NonFeatureExpressionCompletion(c)
+  )
+  
+  { return e; }
+}
+
+Expression NonFeatureExpressionCompletion(Expression c):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  (
+    e1 = DestroyInvocation(c) e2 = ExpressionCompletion(e1)
+  | LOOKAHEAD(<ARROW> <IDENTIFIER> <LPAREN>) 
+    e1 = CollectionOperation(c) e2 = ExpressionCompletion(e1)
+  | e1 = CollectionExpansion(c) e2 = ExpressionCompletion(e1)
+  | e1 = PostfixOperation(c) e2 = ConditionalExpressionCompletion(e1)
+  )
+  
+  { return e2; }
+}
+
+Expression UnambiguousQualifiedNameExpressionCompletion(QualifiedName q):
+{
+  Expression e;
+}
+{
+  ( 
+    e = Assignment(new NameLeftHandSide(q))
+  | LOOKAHEAD(4) e = CollectionExpressionCompletion(q) e = ExpressionCompletion(e)
+  | e = ExpressionCompletion(new NameExpression(q))
+  )
+  
+  { return e; }
+}
+
+Expression AmbiguousQualifiedNameExpressionCompletion(QualifiedName q):
+{
+  Expression i;
+  Expression e;
+}
+{
+  { q.setIsAmbiguous(); }
+  
+  ( 
+    e = Assignment(new NameLeftHandSide(q))
+  | LOOKAHEAD(4) e = CollectionExpressionCompletion(q) e = ExpressionCompletion(e)
+  | i = Index() e = IndexFeatureExpressionCompletion(new NameExpression(q), i)
+  | e = NonIndexExpressionCompletion(new NameExpression(q))
+  )
+  
+  { return e; }
+}
+
+Expression NameExpressionCompletion(QualifiedName q):
+{
+  Expression i;
+  Expression e;
+}
+{
+  ( 
+    e = Assignment(new NameLeftHandSide(q))
+  | LOOKAHEAD(4) e = CollectionExpressionCompletion(q) e = ExpressionCompletion(e)
+  | i = Index() e = ExpressionCompletion(new CollectionAccessExpression(new NameExpression(q), i))
+  | e = NonFeatureExpressionCompletion(new NameExpression(q))
   )
   
   { return e; }
@@ -1951,7 +2070,7 @@ Expression FeatureExpressionCompletion(FeatureReference f):
   { return e2; }
 }
 
-Expression IndexFeatureExpressionCompletion(FeatureReference f, Expression i):
+Expression IndexFeatureExpressionCompletion(Expression f, Expression i):
 {
   Expression e1;
   Expression e2;
@@ -1959,33 +2078,21 @@ Expression IndexFeatureExpressionCompletion(FeatureReference f, Expression i):
 {
   (
     LOOKAHEAD(AssignmentOperator()) 
-    e2 = Assignment(new FeatureLeftHandSide(f, i))
+    { if (f instanceof NameExpression) {
+        NameExpression e = (NameExpression) f;
+        QualifiedName q = e.getName();
+        ArrayList<String> nl = q.getNames();
+        String n = nl.remove(nl.size()-1);
+        f = new FeatureReference(e, n);
+      }
+    }
+    e2 = Assignment(new FeatureLeftHandSide((FeatureReference)f, i))
   | e1 = Index() e2 = ExpressionCompletion(new CollectionAccessExpression(new CollectionAccessExpression(f, i), e1))
   | e2 = NonIndexExpressionCompletion(new CollectionAccessExpression(f, i))
   )
   
   { return e2; }
 }  
-
-Expression NonIndexExpressionCompletion(Expression c):
-{
-  Expression e1;
-  FeatureReference f;
-  Expression e2;
-}
-{
-  (
-    LOOKAHEAD(2) 
-    f = Feature(c) e2 = FeatureExpressionCompletion(f)
-  | e1 = DestroyInvocation(c) e2 = ExpressionCompletion(e1)
-  | LOOKAHEAD(<ARROW> <IDENTIFIER> <LPAREN>) 
-    e1 = CollectionOperation(c) e2 = ExpressionCompletion(e1)
-  | e1 = CollectionExpansion(c) e2 = ExpressionCompletion(e1)
-  | e1 = PostfixOperation(c) e2 = ConditionalExpressionCompletion(e1)
-  )
-  
-  { return e2; }
-}
 
 /* PRIMARY EXPRESSIONS */
 
@@ -2030,12 +2137,17 @@ Expression LiteralExpression():
 
 Expression NameOrCollectionExpression():
 {
-  QualifiedName n;
+  QualifiedName q;
+  String n;
   Expression e;
 }
 {
-  n = QualifiedName() { e = new NameExpression(n); }
-  [ LOOKAHEAD(2) e = CollectionExpressionCompletion(n) ]
+  ( LOOKAHEAD(2) q = ColonQualifiedName() 
+  | LOOKAHEAD(2) q = DotQualifiedName() { q.setIsAmbiguous(); }
+  | n = Name() {q = new QualifiedName(); q.addName(n); }
+  )
+  { e = new NameExpression(q); }
+  [ LOOKAHEAD(2) e = CollectionExpressionCompletion(q) ]
   { return e; }
 }
 
@@ -2314,9 +2426,11 @@ Expression CollectionValueExpressionCompletion(QualifiedName t):
   CollectionElements c = null;
 }
 {
-  <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET>
+  MultiplicityIndicator(d)
   <LBRACE> [ c = CollectionElements() ] <RBRACE>
-  { d.setType(t);
+  { d.setType(t); 
+    d.setIsOrdered(); 
+    d.setIsNonunique(); 
     return new CollectionValueExpression(d, c); }
 }
 
