@@ -1,6 +1,6 @@
 #**
 *Impl.java template for uml project
-@projectPath /src/${qualifiedName.replace("::","/")}.java 
+@projectPath /src/org/modeldriven/${qualifiedName.replace("::","/")}.java 
 @artifactContext Enumeration 
 *#
 #parse( "uml.fragment" )
@@ -11,7 +11,7 @@ ${packageDeclaration}
 #classJavaDoc(${object}) 
 
 #visibility(${object}) #abstract(${object}) enum #name(${name}){
- 	#foreach ( $enumerationLiteral in ${object.ownedLiterals} )
-		#name(${enumerationLiteral.name}),
-	#end
+  #foreach ( $enumerationLiteral in ${object.ownedLiterals} )
+    #name(${enumerationLiteral.name}),
+  #end
 } //${name}

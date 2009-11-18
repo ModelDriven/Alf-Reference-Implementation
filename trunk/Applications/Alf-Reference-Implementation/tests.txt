@@ -601,127 +601,6 @@ Establishing Customer and Verifying Payment
 Alf 0.06 Parser
 Parsing tests\Example2e.alf...
 Parsed successfully.
-UnitDefinition name:establishCustomer
-
-From Executable UML, Figure B.3, entry behavior for
-Establishing Customer and Verifying Payment
-
- QualifiedName Ordering::Order
- ImportReference visibility:private alias: packageImport:false
-  QualifiedName TIM
- ActivityDefinition name:establishCustomer visibility: isStub:false
-  FormalParameter name:rcvd_evt visibility: isStub:false direction:in
-   TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
-    QualifiedName CheckOut
-  Block
-   ExpressionStatement
-    CollectionOperationExpression operation:add
-     NameExpression
-      QualifiedName R10
-     NamedTuple
-      NamedExpression name:'selections are purchased in'
-       ThisExpression
-      NamedExpression name:'is a purchase of selections in'
-       NameExpression
-        QualifiedName rcvd_evt::cart(?)
-   ExpressionStatement
-    AssignmentExpression operator:=
-     NameLeftHandSide
-      QualifiedName matchingCustomers
-     CollectionExpansionExpression operation:select variable:c
-      NameExpression
-       QualifiedName Customer
-      PositionalTuple
-       BinaryExpression operator:==
-        NameExpression
-         QualifiedName c::email(?)
-        NameExpression
-         QualifiedName rcvd_evt::customerEmail(?)
-   IfStatement
-    ConcurrentClauses
-     NonFinalClause
-      CollectionOperationExpression operation:isEmpty
-       NameExpression
-        QualifiedName matchingCustomers
-       PositionalTuple
-      Block
-       ExpressionStatement
-        AssignmentExpression operator:=
-         NameLeftHandSide
-          QualifiedName customer
-         InstanceCreationExpression
-          QualifiedName Customer
-          PositionalTuple
-       ExpressionStatement
-        AssignmentExpression operator:=
-         NameLeftHandSide
-          QualifiedName customer::email(?)
-         NameExpression
-          QualifiedName rcvd_evt::customerEmail(?)
-    Block
-     ExpressionStatement
-      AssignmentExpression operator:=
-       NameLeftHandSide
-        QualifiedName customer
-       CollectionAccessExpression
-        NameExpression
-         QualifiedName matchingCustomers
-        NaturalLiteral image:1
-   ExpressionStatement
-    AssignmentExpression operator:=
-     NameLeftHandSide
-      QualifiedName customer::name(?)
-     NameExpression
-      QualifiedName rcvd_evt::customerName(?)
-   ExpressionStatement
-    AssignmentExpression operator:=
-     NameLeftHandSide
-      QualifiedName customer::shippingAddress(?)
-     NameExpression
-      QualifiedName rcvd_evt::shippingAddress(?)
-   ExpressionStatement
-    AssignmentExpression operator:=
-     NameLeftHandSide
-      QualifiedName customer::phone(?)
-     NameExpression
-      QualifiedName rcvd_evt::customerPhone(?)
-   ExpressionStatement
-    CollectionOperationExpression operation:add
-     NameExpression
-      QualifiedName R5
-     NamedTuple
-      NamedExpression name:places
-       ThisExpression
-      NamedExpression name:'is placed by'
-       NameExpression
-        QualifiedName customer
-   ExpressionStatement
-    AssignmentExpression operator:=
-     FeatureLeftHandSide
-      FeatureReference name:dateOrderPlaced
-       ThisExpression
-     NameExpression
-      QualifiedName TIM::current_date
-   ExpressionStatement
-    FeatureInvocationExpression
-     FeatureReference name:SubmitCharge
-      ThisExpression
-     NamedTuple
-      NamedExpression name:accountNumber
-       NameExpression
-        QualifiedName rcvd_evt::accountNumber(?)
-      NamedExpression name:billingAddress
-       NameExpression
-        QualifiedName rcvd_evt::billingAddress(?)
-      NamedExpression name:cardExpirationDate
-       NameExpression
-        QualifiedName rcvd_evt::cardExpirationDate(?)
-      NamedExpression name:cardholderName
-       NameExpression
-        QualifiedName rcvd_evt::cardholderName(?)
-Alf 0.06 Parser
-Parsing tests\Example2f.alf...
-Parsed successfully.
 UnitDefinition name:processCharge
 
 From Executable UML, Figure B.3, entry behavior for Submitting Charge
@@ -759,7 +638,7 @@ From Executable UML, Figure B.3, entry behavior for Submitting Charge
        NameExpression
         QualifiedName self
 Alf 0.06 Parser
-Parsing tests\Example2g.alf...
+Parsing tests\Example2f.alf...
 Parsed successfully.
 UnitDefinition name:declineCharge
 
@@ -782,7 +661,7 @@ From Executable UML, Figure B.3, entry behavior for Payment Not Approved
        NameExpression
         QualifiedName customer::email(?)
 Alf 0.06 Parser
-Parsing tests\Example2h.alf...
+Parsing tests\Example2g.alf...
 Parsed successfully.
 UnitDefinition name:packAndShip
 
@@ -820,7 +699,7 @@ From Executable UML, Figure B.3, entry behavior for Being Packed and Shipped
       NamedExpression name:order
        ThisExpression
 Alf 0.06 Parser
-Parsing tests\Example2i.alf...
+Parsing tests\Example2h.alf...
 Parsed successfully.
 UnitDefinition name:notifyOfDelivery
 
@@ -2740,8 +2619,8 @@ Parsed successfully.
 UnitDefinition name:Statements
  ActivityDefinition name:Statements visibility: isStub:false
   Block
-   InLineStatement language:'C++'
-    data* = this;
+   InLineStatement identifier:inline language:'C++'
+    *data = this;
     controller->initiate();
   
    BlockStatement
