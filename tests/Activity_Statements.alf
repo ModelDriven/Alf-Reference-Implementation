@@ -1,7 +1,7 @@
 activity Statements() {
 
   /*@inline('C++')  // Native code
-    data* = this;
+    *data = this;
     controller->initiate();
   */
 
