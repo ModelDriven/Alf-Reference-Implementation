@@ -1,48 +1,17 @@
 namespace Ordering::Order;
-private import TIM;
 /**
-From Executable UML, Figure B.3, entry behavior for
-Establishing Customer and Verifying Payment
+From Executable UML, Figure B.3, entry behavior for Submitting Charge
 */
-activity establishCustomer(in rcvd_evt: CheckOut)
+activity processCharge(in rcvd_evt: SubmitCharge)
 {
-  R10 -> add (                                             // See Note 1
-    'selections are purchased in'    => this, 
-    'is a purchase of selections in' => rcvd_evt.cart
-  );
-
-  // Create a Customer if one does not already exist
-  // with the given email address
-  matchingCustomers = Customer -> select c                 // See Note 2
-                        (c.email == rcvd_evt.customerEmail);
-
-  if (matchingCustomers->isEmpty()) {
-    customer = new Customer();                             // See Note 3
-    customer.email = rcvd_evt.customerEmail;
-  } else {
-    customer = matchingCustomers[1];                       // See Note 4
-  } 
-  
-  // Use the name, address, etc. to update Customer
-  // whether new or existing
-  customer.name = rcvd_evt.customerName;
-  customer.shippingAddress = rcvd_evt.shippingAddress;
-  customer.phone = rcvd_evt.customerPhone;
-
-  // Link the order to the customer
-  R5 -> add (
-    places          => this,
-    'is placed by'  => customer
-  );
-
-  // Set the date order placed to today
-  this.dateOrderPlaced = TIM::current_date;
-
-  // Create a credit card charge and submit it
+  // Create a Credit Card Charge and submit it
   // to the credit card company
-  this.SubmitCharge(                                       // See Note 5
-    accountNumber      => rcvd_evt.accountNumber,          // See Note 6
+  creditCardCharge = new CreditCardCharge();
+  creditCardCharge.MakeCharge(
+    accountNumber      => rcvd_evt.accountNumber,
     billingAddress     => rcvd_evt.billingAddress,
     cardExpirationDate => rcvd_evt.cardExpirationDate,
-    cardholderName     => rcvd_evt.cardholderName);
+    chargeAmount       => self.totalValue,
+    order              => self
+  );
 }

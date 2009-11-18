@@ -1,6 +1,6 @@
 #**
 *Impl.java template for uml project
-@projectPath /src/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/${object.name}.java 
+@projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/${object.name}.java 
 @artifactContext GenClass 
 *#
 #parse( "uml.fragment" )
