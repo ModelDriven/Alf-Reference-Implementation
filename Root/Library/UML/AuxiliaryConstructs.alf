@@ -1,4 +1,4 @@
-namespace ::UML;
+namespace UML;
 
 package AuxiliaryConstructs {
 

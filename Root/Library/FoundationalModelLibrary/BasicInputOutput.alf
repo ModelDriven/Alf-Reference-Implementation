@@ -1,7 +1,7 @@
-namespace ::FoundationalModelLibrary;
+namespace FoundationalModelLibrary;
 
-private import ::FoundationalModelLibrary::Common::Status;
-private import ::UML::AuxiliaryConstructs::PrimitiveTypes::String;
+private import FoundationalModelLibrary::Common::Status;
+private import UML::AuxiliaryConstructs::PrimitiveTypes::String;
 
 package BasicInputOutput {
 

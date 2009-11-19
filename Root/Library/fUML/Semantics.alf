@@ -1,4 +1,4 @@
-namespace ::fUML;
+namespace fUML;
 
 package Semantics {
 

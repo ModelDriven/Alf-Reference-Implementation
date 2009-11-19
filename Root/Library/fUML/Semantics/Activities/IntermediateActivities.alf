@@ -1,4 +1,4 @@
-namespace ::fUML::Semantics::Activities;
+namespace fUML::Semantics::Activities;
 
 package IntermediateActivities {
 
