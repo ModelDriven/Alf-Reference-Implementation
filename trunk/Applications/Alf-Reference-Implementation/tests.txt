@@ -1772,7 +1772,8 @@ Parsed successfully.
 UnitDefinition name:ProcessQueueImpl
  ActiveClassDefinition name:ProcessQueueImpl visibility: isStub:false isAbstract: false classifierBehavior:null
 Resolving subunit ProcessQueue
-Parsing Root/Model/ProcessQueue.alf...
+Looking for Model/ProcessQueue.alf...
+Looking for Library/ProcessQueue.alf...
 Unit not found.
   ErrorNode message:Unit not found: ProcessQueue context:ProcessQueue
   QualifiedNameList
@@ -3405,7 +3406,8 @@ Parsed successfully.
 UnitDefinition name:Destructors
  ClassDefinition name:Destructors visibility: isStub:false isAbstract: false
 Resolving subunit C
-Parsing Root/Model/C.alf...
+Looking for Model/C.alf...
+Looking for Library/C.alf...
 Unit not found.
   ErrorNode message:Unit not found: C context:C
   QualifiedNameList
@@ -3589,7 +3591,8 @@ Parsed successfully.
 UnitDefinition name:SuperConstructors
  ClassDefinition name:SuperConstructors visibility: isStub:false isAbstract: false
 Resolving subunit A
-Parsing Root/Model/A.alf...
+Looking for Model/A.alf...
+Looking for Library/A.alf...
 Unit not found.
   ErrorNode message:Unit not found: A context:A
   QualifiedNameList
