@@ -1,4 +1,4 @@
-namespace ::UML::AuxiliaryConstructs;
+namespace UML::AuxiliaryConstructs;
 
 package PrimitiveTypes {
 

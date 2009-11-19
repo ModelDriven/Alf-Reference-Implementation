@@ -18,7 +18,7 @@ public class AlfMapper {
     public AlfMapper(UnitDefinition unit) {
         System.out.println();
         System.out.println("Mapping " + unit.getDefinition().getQualifiedName() + "...");
-        mapping = factory.getMapping(unit.getRootNamespace());
+        mapping = factory.getMapping(unit.getModelNamespace());
     }
 
     public ArrayList<Element> getModelElements() {

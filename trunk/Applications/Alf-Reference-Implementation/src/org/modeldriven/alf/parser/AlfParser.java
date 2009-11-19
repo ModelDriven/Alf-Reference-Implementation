@@ -79,7 +79,7 @@ public class AlfParser implements AlfParserConstants {
         // Recursively complete subunits.
         completeSubunits(unit.getDefinition());
 
-        unit.getRootNamespace().print();
+        unit.getModelNamespace().print();
       }
     }
 

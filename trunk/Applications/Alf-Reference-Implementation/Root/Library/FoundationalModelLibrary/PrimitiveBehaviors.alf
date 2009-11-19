@@ -1,4 +1,4 @@
-namespace ::FoundationalModelLibrary;
+namespace FoundationalModelLibrary;
 
 package PrimitiveBehaviors {
 

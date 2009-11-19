@@ -1,4 +1,4 @@
-namespace ::FoundationalModelLibrary::PrimitiveBehaviors;
+namespace FoundationalModelLibrary::PrimitiveBehaviors;
 
 package IntegerFunctions {
 

@@ -1,6 +1,6 @@
-namespace ::FoundationalModelLibrary::BasicInputOutput;
+namespace FoundationalModelLibrary::BasicInputOutput;
 
-private import ::FoundationalModelLibrary::Common::*;
+private import FoundationalModelLibrary::Common::*;
 
 abstract active class ActiveChannel specializes Channel {
 

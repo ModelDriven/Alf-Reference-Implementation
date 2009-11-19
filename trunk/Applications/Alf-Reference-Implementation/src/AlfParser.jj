@@ -100,7 +100,7 @@ public class AlfParser {
         // Recursively complete subunits.
         completeSubunits(unit.getDefinition());
         
-        unit.getRootNamespace().print();
+        unit.getModelNamespace().print();
       }
     }
       
