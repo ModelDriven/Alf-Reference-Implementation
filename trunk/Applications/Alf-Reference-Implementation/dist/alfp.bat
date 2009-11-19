@@ -1,4 +1,4 @@
 @echo off
-java org.modeldriven.alf.parser.AlfParser %1 %2
+java -jar alf-parser.jar %1 %2
 echo on
 
