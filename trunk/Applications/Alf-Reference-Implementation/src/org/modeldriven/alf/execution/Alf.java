@@ -5,9 +5,9 @@ import org.modeldriven.alf.mapping.structural.ClassDefinitionMapping;
 import org.modeldriven.alf.mapping.structural.PrimitiveTypeMapping;
 import org.modeldriven.alf.mapping.AlfMapper;
 import org.modeldriven.alf.parser.AlfParser;
-import org.modeldriven.alf.syntax.namespaces.*;
-import org.modeldriven.alf.syntax.structural.*;
-import org.modeldriven.alf.syntax.behavioral.*;
+import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.syntax.statements.*;
+import org.modeldriven.alf.syntax.expressions.*;
 
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 import fUML.Syntax.Activities.IntermediateActivities.Activity;
