@@ -2,7 +2,7 @@ package org.modeldriven.alf.mapping;
 
 import org.modeldriven.alf.mapping.MappingFactory;
 import org.modeldriven.alf.mapping.MappingNode;
-import org.modeldriven.alf.syntax.namespaces.UnitDefinition;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 import fUML.Syntax.Classes.Kernel.Element;
 
