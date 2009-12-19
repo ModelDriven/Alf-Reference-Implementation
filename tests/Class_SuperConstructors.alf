@@ -1,16 +1,16 @@
-class SuperConstructors specializes A {
-  public create B(in x: Integer) {
+class SuperConstructors specializes FoundationalModelLibrary::BasicInputOutput::Channel {
+  @create public B(in x: Integer) {
     super.A(x);
   }
 
-  public create B() {
+  @create public B() {
     this.B(x);
   }
-  public create B1(in x: Integer) {
+  @create public B1(in x: Integer) {
     super(x);
   }
 
-  public create B2() {
+  @create public B2() {
     this(x);
   }
 }

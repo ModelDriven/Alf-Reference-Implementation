@@ -40,14 +40,6 @@ public class UnitDefinition extends DocumentedNode {
 		return this.definition;
 	} // getDefinition
 
-	public void setAnnotations(StereotypeAnnotationList annotations) {
-		this.getDefinition().setAnnotations(annotations);
-	} // setAnnotations
-
-	public StereotypeAnnotationList getAnnotations() {
-		return this.getDefinition().getAnnotations();
-	} // getAnnotations
-
 	public void addImport(ImportReference importRef) {
 		this.imports.add(importRef);
 		importRef.setUnit(this);

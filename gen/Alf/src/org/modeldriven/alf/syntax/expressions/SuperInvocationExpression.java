@@ -31,7 +31,11 @@ public class SuperInvocationExpression extends InvocationExpression {
 	} // getTarget
 
 	public void printTarget(String prefix) {
-		this.getTarget().printChild(prefix);
+		QualifiedName target = this.getTarget();
+		if (target != null) {
+			this.getTarget().printChild(prefix);
+		}
+
 	} // printTarget
 
 } // SuperInvocationExpression

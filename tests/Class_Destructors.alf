@@ -1,16 +1,16 @@
-class Destructors specializes C {
-  public destroy ProductSelection();
+class Destructors specializes FoundationalModelLibrary::BasicInputOutput::Channel {
+  @destroy public destroy();
   
-  private destroy unregister() {
+  @destroy private unregister() {
     Repository::get().unregister(this);
     super.destroy();
   }
   
-  public destroy D() {
+  @destroy public D() {
     super.destroy();
   }
 
-  public destroy D (in reason: String) {
+  @destroy public D (in reason: String) {
     WriteLine(reason);
     this.destroy();
   }

@@ -1,5 +1,5 @@
 class Singleton {
-  private create Singleton() {}
+  @create private Singleton() {}
 
   public activity getSingleton(): Singleton {
     instance = Singleton.allinstances();

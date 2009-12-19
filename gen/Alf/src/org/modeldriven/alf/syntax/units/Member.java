@@ -72,7 +72,11 @@ public abstract class Member extends DocumentedNode {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		this.getAnnotations().print(prefix);
+
+		StereotypeAnnotationList annotations = this.getAnnotations();
+		if (annotations != null) {
+			this.getAnnotations().print(prefix);
+		}
 	} // print
 
 	public QualifiedName getQualifiedName() {
