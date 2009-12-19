@@ -52,7 +52,23 @@ public class StereotypeAnnotation extends SyntaxNode {
 	} // toString
 
 	public void print(String prefix) {
-		// TODO
+		super.print(prefix);
+
+		if (prefix == null || prefix.equals("")) {
+			prefix = " ";
+		} else {
+			prefix = prefix.charAt(0) + prefix;
+		}
+
+		QualifiedNameList names = this.getNames();
+		if (names != null) {
+			names.print(prefix);
+		}
+
+		TaggedValueList taggedValues = this.getTaggedValues();
+		if (taggedValues != null) {
+			taggedValues.print(prefix);
+		}
 	} // print
 
 } // StereotypeAnnotation

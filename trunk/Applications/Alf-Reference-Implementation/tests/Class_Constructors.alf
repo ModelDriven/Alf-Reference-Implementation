@@ -1,8 +1,8 @@
 class Constructors {
-  public create Table(in rows: Integer, in columns: Integer);
-  public create ProductSelection
+  @create public Table(in rows: Integer, in columns: Integer);
+  @create public ProductSelection
     (in cart: Cart, in product: Product, in quantity: Count);
-  private create registered() {
+  @create private registered() {
     Repository::get().register(this);
   }
 }

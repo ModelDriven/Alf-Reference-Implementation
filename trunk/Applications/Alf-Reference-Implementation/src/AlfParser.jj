@@ -60,11 +60,16 @@ public class AlfParser {
       UnitDefinition unit = parser.UnitDefinition();
       System.out.println("Parsed successfully.");
       return unit;
+
     } catch (Throwable e) {
       System.out.println(e.getMessage());
+      if (e.getMessage()==null) {
+        e.printStackTrace();
+      }
       System.out.println("Encountered errors during parse.");
       return null;
     }
+
   }
   
   public static void main(String args[]) {
@@ -2052,10 +2057,13 @@ UnitDefinition UnitDefinition():
   [ n = NamespaceDeclaration() { u.setNamespace(n); } ] 
   ( i = ImportDeclaration() { u.addImport(i); } )*
   [ t = <DOCUMENTATION_COMMENT> { u.addDocumentation(t.image); } ] 
-  sl = StereotypeAnnotations() { u.setAnnotations(sl); }
-  d = NamespaceDefinition() { u.setDefinition(d); }
+  sl = StereotypeAnnotations()
+  d = NamespaceDefinition()
   <EOF>
-  { return u; }
+  { d.setAnnotations(sl);
+    u.setDefinition(d);
+    return u; 
+  }
 }
 
 StereotypeAnnotationList StereotypeAnnotations():
