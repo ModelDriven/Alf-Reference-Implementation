@@ -1770,11 +1770,21 @@ Parsing tests\ActiveClass_ProcessQueueImpl.alf...
 Parsed successfully.
 UnitDefinition name:ProcessQueueImpl
  ActiveClassDefinition name:ProcessQueueImpl visibility: isStub:false isAbstract: false classifierBehavior:null
-Resolving subunit ProcessQueue
-Looking for Model/ProcessQueue.alf...
-Looking for Library/ProcessQueue.alf...
-Unit not found.
-  ErrorNode message:Unit not found: ProcessQueue context:ProcessQueue
+  PropertyDefinition name:waitingProcesses visibility:private isStub:false isComposite:false
+   TypedElementDeclaration lowerBound: upperBound:* isOrdered:true isNonunique:false collection:
+    QualifiedName Process
+  OperationDefinition name:enqueue visibility:private isStub:true isAbstract:false
+   FormalParameter name:process visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     QualifiedName Process
+  OperationDefinition name:dequeue visibility:private isStub:true isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     QualifiedName Process
+  OperationDefinition name:processesWaiting visibility:private isStub:true isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
+     QualifiedName Boolean
   QualifiedNameList
    QualifiedName ProcessQueue
 Alf 0.07 Parser
@@ -1892,6 +1902,12 @@ UnitDefinition name:ExpressionStatements
    ExpressionStatement
     NameExpression
      QualifiedName jack::house(?)
+   ExpressionStatement
+    NameExpression
+     QualifiedName something
+   ExpressionStatement
+    FeatureReference name:node
+     ThisExpression
    ExpressionStatement
     CollectionExpansionExpression operation:select variable:house
      NameExpression
@@ -2174,6 +2190,7 @@ UnitDefinition name:ExpressionStatements
        NameExpression
         QualifiedName jack
       NamedExpression name:house
+       NaturalLiteral image:1
        NameExpression
         QualifiedName newHouse
    ExpressionStatement
@@ -3405,14 +3422,6 @@ Parsing tests\Class_Destructors.alf...
 Parsed successfully.
 UnitDefinition name:Destructors
  ClassDefinition name:Destructors visibility: isStub:false isAbstract: false
-Resolving subunit FoundationalModelLibrary
-Looking for Model/FoundationalModelLibrary.alf...
-Looking for Library/FoundationalModelLibrary.alf...
-Parsed successfully.
-Resolving subunit FoundationalModelLibrary::BasicInputOutput
-Looking for Model/FoundationalModelLibrary/BasicInputOutput.alf...
-Looking for Library/FoundationalModelLibrary/BasicInputOutput.alf...
-Parsed successfully.
   OperationDefinition name:destroy visibility:public isStub:true isAbstract:false
   @destroy
   OperationDefinition name:unregister visibility:private isStub:false isAbstract:false
@@ -3635,14 +3644,6 @@ Parsing tests\Class_SuperConstructors.alf...
 Parsed successfully.
 UnitDefinition name:SuperConstructors
  ClassDefinition name:SuperConstructors visibility: isStub:false isAbstract: false
-Resolving subunit FoundationalModelLibrary
-Looking for Model/FoundationalModelLibrary.alf...
-Looking for Library/FoundationalModelLibrary.alf...
-Parsed successfully.
-Resolving subunit FoundationalModelLibrary::BasicInputOutput
-Looking for Model/FoundationalModelLibrary/BasicInputOutput.alf...
-Looking for Library/FoundationalModelLibrary/BasicInputOutput.alf...
-Parsed successfully.
   OperationDefinition name:B visibility:public isStub:false isAbstract:false
   @create
    FormalParameter name:x visibility: isStub:false direction:in

@@ -135,7 +135,7 @@ public abstract class NamespaceDefinition extends Member {
 	public void print(String prefix) {
 		super.print(prefix);
 
-		for (Member member : this.getMembers()) {
+		for (Member member : this.getOwnedMembers()) {
 			member.printChild(prefix);
 		}
 	} // print
