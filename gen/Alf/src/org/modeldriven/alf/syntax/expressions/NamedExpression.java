@@ -37,6 +37,10 @@ public class NamedExpression extends SyntaxNode {
 		return this.name;
 	} // getName
 
+	public Expression getIndex() {
+		return this.index;
+	} // getIndex
+
 	public Expression getExpression() {
 		return this.expression;
 	} // getExpression
@@ -47,6 +51,12 @@ public class NamedExpression extends SyntaxNode {
 
 	public void print(String prefix) {
 		super.print(prefix);
+
+		Expression index = this.getIndex();
+		if (index != null) {
+			index.printChild(prefix);
+		}
+
 		this.getExpression().printChild(prefix);
 	} // print
 

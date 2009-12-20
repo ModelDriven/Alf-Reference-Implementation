@@ -8,6 +8,9 @@ activity ExpressionStatements() {
   members.name;
   jack.house;
   
+  (something);
+  (this.node);
+  
   Owns -> select house (owner => jack);
   collection -> collect x (x.name);
   Assoc -> select name (other => expr);
@@ -73,7 +76,7 @@ activity ExpressionStatements() {
   employees->isUnique e (e.employeeIdentificationNumber);
 
   count++;
-  size--;
+  (size)--;
   total[i]++;
 
   ++count;
