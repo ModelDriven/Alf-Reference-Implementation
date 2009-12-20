@@ -13,7 +13,7 @@ UnitDefinition name:run
     QualifiedName ActivityNodeActivation
   Block
    ForStatement
-    ForVariableDefinition variable:activation
+    LoopVariableDefinition variable:activation type:null
      NameExpression
       QualifiedName activations
     Block
@@ -27,7 +27,7 @@ UnitDefinition name:run
     CollectionValueExpression
      TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false collection:
    ForStatement
-    ForVariableDefinition variable:activation
+    LoopVariableDefinition variable:activation type:null
      NameExpression
       QualifiedName activations
     Block
@@ -59,14 +59,14 @@ UnitDefinition name:run
          QualifiedName activation
         QualifiedName ActivityParameterNodeActivation
      ForStatement
-      ForVariableDefinition variable:incomingEdge
+      LoopVariableDefinition variable:incomingEdge type:null
        NameExpression
         QualifiedName activation::incomingEdges(?)
       NameExpression
        QualifiedName isEnabled
       Block
        ForStatement
-        ForVariableDefinition variable:otherActivation
+        LoopVariableDefinition variable:otherActivation type:null
          NameExpression
           QualifiedName Activations
         NameExpression
@@ -102,7 +102,7 @@ UnitDefinition name:run
              QualifiedName activation
    ForStatement
     Annotation identifier:parallel
-    ForVariableDefinition variable:enabledActivation
+    LoopVariableDefinition variable:enabledActivation type:null
      NameExpression
       QualifiedName enabledActivations
     Block
@@ -3111,7 +3111,7 @@ UnitDefinition name:Statements
       QualifiedName reading::isFinal(?)
       PositionalTuple
    ForStatement
-    ForVariableDefinition variable:member
+    LoopVariableDefinition variable:member type:null
      NameExpression
       QualifiedName memberList
     Block
@@ -3130,7 +3130,7 @@ UnitDefinition name:Statements
         NameExpression
          QualifiedName member::address(?)
    ForStatement
-    ForVariableDefinition variable:sensor
+    LoopVariableDefinition variable:sensor type:null
      NameExpression
       QualifiedName sensors
     CollectionOperationExpression operation:notEmpty
@@ -3159,7 +3159,7 @@ UnitDefinition name:Statements
             NameExpression
              QualifiedName reading
    ForStatement
-    ForVariableDefinition variable:i
+    LoopVariableDefinition variable:i type:null
      NaturalLiteral image:1
      NameExpression
       QualifiedName recordCount
@@ -3171,8 +3171,19 @@ UnitDefinition name:Statements
         NameExpression
          QualifiedName i
    ForStatement
+    LoopVariableDefinition variable:outgoingEdge type:ActivityEdgeInstance
+     FeatureReference name:outgoingEdges
+      ThisExpression
+    Block
+     ExpressionStatement
+      BehaviorInvocationExpression
+       QualifiedName outgoingEdge::sendOffer(?)
+       PositionalTuple
+        NameExpression
+         QualifiedName tokens
+   ForStatement
     Annotation identifier:parallel
-    ForVariableDefinition variable:outgoingEdge
+    LoopVariableDefinition variable:outgoingEdge type:null
      FeatureReference name:outgoingEdges
       ThisExpression
     Block
@@ -3185,13 +3196,13 @@ UnitDefinition name:Statements
    ForStatement
     Annotation identifier:parallel
      NameList SnEven SnOdd
-    ForVariableDefinition variable:lower
+    LoopVariableDefinition variable:lower type:null
      NameExpression
       QualifiedName SLower
-    ForVariableDefinition variable:lower
+    LoopVariableDefinition variable:lower type:null
      NameExpression
       QualifiedName SLower
-    ForVariableDefinition variable:lower
+    LoopVariableDefinition variable:lower type:null
      NameExpression
       QualifiedName SLower
     Block

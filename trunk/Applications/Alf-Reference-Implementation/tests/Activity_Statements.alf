@@ -123,6 +123,10 @@ activity Statements() {
     processRecord(i);
   }
   
+  for (ActivityEdgeInstance outgoingEdge: this.outgoingEdges) {
+    outgoingEdge.sendOffer(tokens);
+  }
+  
   //@parallel 
   for (outgoingEdge in this.outgoingEdges) {
     outgoingEdge.sendOffer(tokens);
