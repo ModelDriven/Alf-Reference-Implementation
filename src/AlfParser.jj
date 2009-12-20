@@ -324,7 +324,7 @@ TOKEN:
   < #STRING_CHARACTER: ~["\"", "\\"] >
 }
 
-/* SEPARATORS */
+/* PUNCTUATION */
 
 <DEFAULT, IN_STATEMENT_ANNOTATION, IN_IN_LINE_ANNOTATION>
 TOKEN :
@@ -416,19 +416,6 @@ QualifiedName QualifiedName():
     q = DotQualifiedName()
   |
     n = Name() { q = new QualifiedName(); q.addName(n); }
-  )
-  { return q; }
-}
-
-QualifiedName NameOrColonQualifiedName():
-{
-  String n;
-  QualifiedName q;
-}
-{
-  ( LOOKAHEAD(3)
-    q = ColonQualifiedName()
-  | n = Name() { q = new QualifiedName(); q.addName(n); }
   )
   { return q; }
 }
@@ -1926,24 +1913,29 @@ ForStatement ForStatement():
 
 void ForControl(ForStatement s):
 {
-  ForVariableDefinition d;
+  LoopVariableDefinition d;
   Expression e;
 }
 {
-  d = ForVariableDefinition() { s.addVariableDefinition(d); }
-  ( <COMMA> ForVariableDefinition() { s.addVariableDefinition(d); } )*
+  d = LoopVariableDefinition() { s.addVariableDefinition(d); }
+  ( <COMMA> LoopVariableDefinition() { s.addVariableDefinition(d); } )*
   [ <WHILE> e = Expression() { s.setCondition(e); } ]
 }
 
-ForVariableDefinition ForVariableDefinition(): 
+LoopVariableDefinition LoopVariableDefinition(): 
 {
   String n;
+  QualifiedName q = null;
   Expression e1;
   Expression e2 = null;
 }
 {
-  n = Name() <IN> e1 = Expression() [ <DOUBLE_DOT> e2 = Expression() ]
-  { return new ForVariableDefinition(n, e1, e2); }
+  ( LOOKAHEAD(2)
+    n = Name() <IN> e1 = Expression() [ <DOUBLE_DOT> e2 = Expression() ]
+  | q = QualifiedName() n = Name() <COLON> e1 = Expression()
+  )
+  
+  { return new LoopVariableDefinition(q, n, e1, e2); }
 }
 
 /* BREAK STATEMENTS */

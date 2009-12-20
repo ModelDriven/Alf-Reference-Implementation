@@ -20,14 +20,14 @@ import java.util.ArrayList;
 public class ForStatement extends Statement {
 
 	private Block body = null;
-	private ArrayList<ForVariableDefinition> variableDefinitions = new ArrayList<ForVariableDefinition>();
+	private ArrayList<LoopVariableDefinition> variableDefinitions = new ArrayList<LoopVariableDefinition>();
 	private Expression condition = null;
 
-	public void addVariableDefinition(ForVariableDefinition definition) {
+	public void addVariableDefinition(LoopVariableDefinition definition) {
 		this.variableDefinitions.add(definition);
 	} // addVariableDefinition
 
-	public ArrayList<ForVariableDefinition> getVariableDefinitions() {
+	public ArrayList<LoopVariableDefinition> getVariableDefinitions() {
 		return this.variableDefinitions;
 	} // getVariableDefinitions
 
@@ -50,7 +50,7 @@ public class ForStatement extends Statement {
 	public void print(String prefix) {
 		super.print(prefix);
 
-		for (ForVariableDefinition variable : this.getVariableDefinitions()) {
+		for (LoopVariableDefinition variable : this.getVariableDefinitions()) {
 			variable.printChild(prefix);
 		}
 
