@@ -2,7 +2,8 @@ package org.modeldriven.alf.execution;
 
 import org.modeldriven.alf.execution.Environment;
 
-import fUML.Semantics.Loci.*;
+import fUML.Semantics.Loci.LociL1.*;
+import fUML.Semantics.Loci.LociL3.*;
 import fUML.Semantics.Classes.Kernel.ExtensionalValue;
 import fUML.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
@@ -15,11 +16,11 @@ import fUML.Syntax.CommonBehaviors.BasicBehaviors.OpaqueBehavior;
 
 public class FumlEnvironment extends Environment {
     
-    private fUML.Semantics.Loci.Locus locus = null;
+    private fUML.Semantics.Loci.LociL1.Locus locus = null;
     
     public FumlEnvironment() {
         this.locus = new Locus();
-        this.locus.setFactory(new ExecutionFactory());
+        this.locus.setFactory(new ExecutionFactoryL3());
         this.locus.setExecutor(new Executor());
     
         this.locus.factory.setStrategy(new RedefinitionBasedDispatchStrategy());
