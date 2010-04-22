@@ -1,16 +1,16 @@
 class Destructors specializes FoundationalModelLibrary::BasicInputOutput::Channel {
-  @destroy public destroy();
+  @Destroy public destroy();
   
-  @destroy private unregister() {
+  @Destroy private unregister() {
     Repository::get().unregister(this);
     super.destroy();
   }
   
-  @destroy public D() {
+  @Destroy public D() {
     super.destroy();
   }
 
-  @destroy public D (in reason: String) {
+  @Destroy public D (in reason: String) {
     WriteLine(reason);
     this.destroy();
   }

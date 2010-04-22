@@ -1,0 +1,43 @@
+namespace fUML.Semantics.Activities.IntermediateActivities.
+          ActivityNodeActivationGroup;                     // See Note 1
+
+/** 
+  Run the given node activations and then (concurrently) send an offer to
+  all activations for nodes with no incoming edges within the given set.
+*/                                                         // See Note 2
+activity run(in activations: Set<ActivityNodeActivation>){ // See Note 3
+
+  for (activation in activations) {                        // See Note 4
+    activation.run();                                      // See Note 5
+  }
+
+  ActivityNodeActivation[] enabledActivations = null;      // See Note 6
+
+  for (activation in activations) {
+
+    Boolean isEnabled =                                    // See Note 7
+      activation instanceof ActionActivation &&            // See Note 8
+        ((Action)activation.node).input -> size() != 0 ||
+      activation instanceof ControlNodeActivation ||
+      activation instanceof ActivityParameterNodeActivation;
+
+    for (incomingEdge in activation.incomingEdges while isEnabled) {
+                                                           // See Note 9
+      for (otherActivation in Activations while isEnabled) {
+        if (otherActivation.isSourceFor(incomingEdge)) {
+          isEnabled = false;                               // See Note 10
+        }
+      }
+    }
+
+    if (isEnabled) {
+      enabledActivations -> add(activation);               // See Note 11
+    }
+  }
+
+  // *** Send offers to all enabled nodes concurrently. ***
+  //@parallel                                              // See Note 12
+  for (enabledActivation in enabledActivations)  { 
+    enabledActivation.receiveOffer();
+  }
+}

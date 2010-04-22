@@ -1,29 +1,30 @@
-namespace fUML::Semantics::Activities::IntermediateActivities::
-          ActivityNodeActivationGroup;
-
-/** 
-  Run the given node activations and then (concurrently) send an offer to
-  all activations for nodes with no incoming edges within the given set.
-*/
-activity run(in activations: ActivityNodeActivation[*])    // See Note 1
+activity QuicksortInPlace                                  // See Note 1
+  (inout list: Integer[0..*] ordered, in low: Integer, in high: Integer) 
 {
+  if (low < high) {
+    l = low;                                               // See Note 2
+    h = high;
+    p = list[high];
 
-  activations->iterate activation (activation.run());      // See Note 2
+    do {                                                   // See Note 3
+      while ((l < h) && (list[l] <= p)) {                  // See Note 4
+        l = l+1;
+      }
+      while ((h > l) && (list[h] >= p)) {
+        h = h-1;
+      }
+      if (l < h) {
+        t = list[l];
+        list[l] = list[h];
+        list[h] = t;
+      }
+    } while (l < h);
 
-  enabledActivations = activations -> select activation (  // See Note 3
+    t = list[l];
+    list[l] = list[high];
+    list[high] = t;
 
-    (activation instanceof ActionActivation &&
-       ((Action)activation.node).input -> notEmpty() ||
-     activation instanceof ControlNodeActivation || 
-     activation instanceof ActivityParameterNodeActivation) &&
-
-    !activation.incomingEdges -> exists incomingEdge (
-       activations -> exists otherActivation (
-         otherActivation.isSourceFor(incomingEdge) 
-       )
-     )
-  );
-
-  // *** Send offers to all enabled nodes concurrently. ***
-  enabledActivations.receiveOffer();                       // See Note 4
+    QuicksortInPlace(list, low, l-1);
+    QuicksortInPlace(list, l+1, high);
+  }
 }
