@@ -11,10 +11,11 @@ activity ExpressionStatements() {
   (something);
   (this.node);
   
-  Owns -> select house (owner => jack);
+  Owns::house(owner => jack);
   collection -> collect x (x.name);
-  Assoc -> select name (other => expr);
-  collection -> collect x (x.name);
+  Roster::player(team=>t, season=>y);
+  Roster.player(t,y);
+  Owns::house(jack);
 
   A(1, true);
   A(x=>1, y=>true);
@@ -34,17 +35,20 @@ activity ExpressionStatements() {
   employee.destroy();
   sensor.destroy(recoveryLog);
   
-  #'+'(subtotals);
-  ##MatMult(rotationMatrices);
-  #'+'(Integer[]{1, 2, 3});
-  ##MatMult(Matrix[]{A, B, C});
+  Owns.createLink(jack, newHouse);
+  Owns.createLink(owner=>jack, house=>newHouse);
+  Owns.createLink(owner=>jack, house[1]=>newHouse);
+  Owns.destroyLink(owner=>jack, house=>newHouse);
+  Owns.clearAssoc(jack);
   
   String[]{"apple","orange","strawberry"};
+  new String[]{"apple","orange","strawberry"};
   Integer[]{1..6+4};
   Integer[]{1, Integer[]{2,3}, 4};
   Integer[]{1, 2, 3, 4};
   Integer[]{1..6+4};
   Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  null;
   
   this.getTypes()[1];
   a = Integer[]{10, 20, 30, 40};
@@ -53,13 +57,22 @@ activity ExpressionStatements() {
   memberList->includes(possibleMember);
   memberList->including(newMember);
   products->removeAll(rejects);
+  a->including(x);
+  including(a,x);
   
-  Owns->add(owner=>jack, house=>newHouse);
-  Owns->add(owner=>jack, house[1]=>newHouse);
-  Owns->remove(owner=>jack, house=>newHouse);
-  Owns->clear();
-  Owns->includes(owner=>jack, house=>newHouse);
-  Owns->excludes(owner=>jack, house=>newHouse);
+  Customer->size();
+  Customer.allInstances()->size();
+  size(Customer.allInstances());
+  
+  subtotals->reduce '+'
+  rotationMatrices->reduce ordered MatMult
+  Integer[]{1, 2, 3} -> reduce '+'
+  Matrix[]{A, B, C} -> reduce ordered MatMult
+  
+  subtotals->reduce '+'
+  rotationMatrices->reduce ordered MatMult
+  Integer[]{1, 2, 3} -> reduce '+'
+  Matrix[]{A, B, C} -> reduce ordered MatMult
 
   c->select x (x>1);
   Customer->select c (c.name == customerName);
@@ -67,7 +80,6 @@ activity ExpressionStatements() {
 
   employees->select e (e.age>50);
   employees->reject e (e.isMarried);
-  Roster->select player (team=>t, season=>y);
   employees->collect e (e.birthDate);
   processSteps->iterate step (step.execute());
   employees->forAll e (e.age<=65);
@@ -76,7 +88,7 @@ activity ExpressionStatements() {
   employees->isUnique e (e.employeeIdentificationNumber);
 
   count++;
-  (size)--;
+  size--;
   total[i]++;
 
   ++count;
@@ -101,6 +113,20 @@ activity ExpressionStatements() {
   amount * interestRate;
   duration / timeStep;
   length % unit;
+  initialPosition + positionChange
+  basePrice - discount
+  sensorReading > threshold
+  count <= limit
+  3 < * 
+  (UnlimitedNatural)(+3) < *
+  action instanceof ActionActivation;
+  'signal' hastype SignalArrival;
+  errorCount==0;
+  nextRecord!=endRecord;
+  list.next==null;
+  sensorOff | sensorError;
+  i > min & i < max | unlimited;
+  bit[i]^mask[i];
 
   index > 0 && value[index] < limit;
   index = 0 || value[index] >= limit;
