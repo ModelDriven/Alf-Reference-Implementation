@@ -17,7 +17,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
-public class ExpressionList extends CollectionElements {
+public class ExpressionList extends SequenceElements {
 
 	private ArrayList<Expression> list = new ArrayList<Expression>();
 

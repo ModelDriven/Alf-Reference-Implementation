@@ -19,4 +19,14 @@ import java.util.ArrayList;
 
 public abstract class LeftHandSide extends SyntaxNode {
 
+	private Expression index = null;
+
+	public LeftHandSide(Expression index) {
+		this.index = index;
+	} // LeftHandSide
+
+	public Expression getIndex() {
+		return this.index;
+	} // getIndex
+
 } // LeftHandSide

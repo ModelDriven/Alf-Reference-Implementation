@@ -2,6 +2,12 @@
 <project name="RunTests" default="run" basedir=".">
 	<target name="run">
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt">
+			<arg value="tests\Example0a.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example0b.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\Example1a.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
