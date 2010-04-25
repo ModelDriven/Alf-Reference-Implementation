@@ -5,7 +5,7 @@ namespace fUML.Semantics.Activities.IntermediateActivities.
   Run the given node activations and then (concurrently) send an offer to
   all activations for nodes with no incoming edges within the given set.
 */                                                         // See Note 2
-activity run(in activations: Set<ActivityNodeActivation>){ // See Note 3
+activity run(in activations: ActivityNodeActivation[]){    // See Note 3
 
   for (activation in activations) {                        // See Note 4
     activation.run();                                      // See Note 5

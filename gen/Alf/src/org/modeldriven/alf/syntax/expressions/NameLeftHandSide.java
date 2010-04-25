@@ -21,7 +21,8 @@ public class NameLeftHandSide extends LeftHandSide {
 
 	private QualifiedName target = null;
 
-	public NameLeftHandSide(QualifiedName target) {
+	public NameLeftHandSide(QualifiedName target, Expression index) {
+		super(index);
 		this.target = target;
 	} // NameLeftHandSide
 
@@ -32,6 +33,10 @@ public class NameLeftHandSide extends LeftHandSide {
 	public void print(String prefix) {
 		super.print(prefix);
 		this.getTarget().printChild(prefix);
+
+		if (this.getIndex() != null) {
+			this.getIndex().printChild(prefix);
+		}
 	} // print
 
 } // NameLeftHandSide

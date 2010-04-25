@@ -7,6 +7,6 @@ activity Quicksort(in list: Integer[0..*] ordered):        // See Note 1
     x = list[1];                                           // See Notes 6 & 7
     return QuickSort(list->select a (a < x))->             // See Note 8
            including(x)->
-           union(QuickSort(list->select b (b >= x));
+           union(QuickSort(list->select b (b >= x)));
   }
 }

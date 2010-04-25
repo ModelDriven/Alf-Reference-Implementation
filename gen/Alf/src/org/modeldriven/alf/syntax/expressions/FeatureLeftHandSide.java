@@ -19,21 +19,16 @@ import java.util.ArrayList;
 
 public class FeatureLeftHandSide extends LeftHandSide {
 
-	private Expression index = null;
 	private FeatureReference feature = null;
 
 	public FeatureLeftHandSide(FeatureReference feature, Expression index) {
+		super(index);
 		this.feature = feature;
-		this.index = index;
 	} // FeatureLeftHandSide
 
 	public FeatureReference getFeature() {
 		return this.feature;
 	} // getFeature
-
-	public Expression getIndex() {
-		return this.index;
-	} // getIndex
 
 	public void print(String prefix) {
 		super.print(prefix);

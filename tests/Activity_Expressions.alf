@@ -64,15 +64,10 @@ activity ExpressionStatements() {
   Customer.allInstances()->size();
   size(Customer.allInstances());
   
-  subtotals->reduce '+'
-  rotationMatrices->reduce ordered MatMult
-  Integer[]{1, 2, 3} -> reduce '+'
-  Matrix[]{A, B, C} -> reduce ordered MatMult
-  
-  subtotals->reduce '+'
-  rotationMatrices->reduce ordered MatMult
-  Integer[]{1, 2, 3} -> reduce '+'
-  Matrix[]{A, B, C} -> reduce ordered MatMult
+  subtotals->reduce '+';
+  rotationMatrices->reduce ordered MatMult;
+  Integer[]{1, 2, 3} -> reduce '+';
+  Matrix[]{A, B, C} -> reduce ordered MatMult;
 
   c->select x (x>1);
   Customer->select c (c.name == customerName);
@@ -89,9 +84,12 @@ activity ExpressionStatements() {
 
   count++;
   size--;
+  this.x++;
+  this.total[i]--;
   total[i]++;
 
   ++count;
+  --this.numberWaiting[queueIndex];
   --numberWaiting[queueIndex];
 
   !isActive;
@@ -113,12 +111,12 @@ activity ExpressionStatements() {
   amount * interestRate;
   duration / timeStep;
   length % unit;
-  initialPosition + positionChange
-  basePrice - discount
-  sensorReading > threshold
-  count <= limit
-  3 < * 
-  (UnlimitedNatural)(+3) < *
+  initialPosition + positionChange;
+  basePrice - discount;
+  sensorReading > threshold;
+  count <= limit;
+  3 < * ;
+  (UnlimitedNatural)(+3) < *;
   action instanceof ActionActivation;
   'signal' hastype SignalArrival;
   errorCount==0;
@@ -133,6 +131,7 @@ activity ExpressionStatements() {
   isNormalOps? readPrimarySensor(): readBackupSensor();
   
   customer = new Customer();                // Local name assignment
+  customer[i] = new Customer();             // Indexed local name assignment
   reply = this.createReply(request,result); // Output parameter assignment
   customer.email = checkout.customerEmail;  // Attribute assignment
   customer.address[i] = newAddress;         // Indexed attribute assignment

@@ -6,7 +6,7 @@ Establishing Customer and Verifying Payment
 */
 activity establishCustomer(in rcvd_evt: CheckOut)
 {
-  R10 -> add (                                             // See Note 1
+  R10.createLink (                                             // See Note 1
     'selections are purchased in'    => this, 
     'is a purchase of selections in' => rcvd_evt.cart
   );
@@ -30,7 +30,7 @@ activity establishCustomer(in rcvd_evt: CheckOut)
   customer.phone = rcvd_evt.customerPhone;
 
   // Link the order to the customer
-  R5 -> add (
+  R5.createLink (
     places          => this,
     'is placed by'  => customer
   );

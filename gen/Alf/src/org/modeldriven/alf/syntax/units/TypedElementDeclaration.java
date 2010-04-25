@@ -24,7 +24,6 @@ public class TypedElementDeclaration extends SyntaxNode {
 	private String upperBound = "";
 	private boolean isOrdered = false;
 	private boolean isNonunique = false;
-	private String collection = "";
 
 	public void setLowerBound(String lowerBound) {
 		this.lowerBound = lowerBound;
@@ -66,19 +65,10 @@ public class TypedElementDeclaration extends SyntaxNode {
 		return this.type;
 	} // getType
 
-	public void setCollection(String collection) {
-		this.collection = collection;
-	} // setCollection
-
-	public String getCollection() {
-		return this.collection;
-	} // getCollection
-
 	public String toString() {
 		return super.toString() + " lowerBound:" + this.getLowerBound()
 				+ " upperBound:" + this.getUpperBound() + " isOrdered:"
-				+ this.isOrdered() + " isNonunique:" + this.isNonunique()
-				+ " collection:" + this.getCollection();
+				+ this.isOrdered() + " isNonunique:" + this.isNonunique();
 	} // toString
 
 	public void print(String prefix) {
@@ -100,17 +90,14 @@ public class TypedElementDeclaration extends SyntaxNode {
 		return thisClassifier == otherClassifier
 				&& this.getLower() == other.getLower()
 				&& this.getUpper() == other.getUpper()
-				&& this.getOrdering() == other.getOrdering()
-				&& this.getNonuniqueness() == other.getNonuniqueness();
+				&& this.isOrdered() == other.isOrdered()
+				&& this.isNonunique() == other.isNonunique();
 	} // equals
 
 	public int getLower() {
 		String lower = this.getLowerBound();
-		String collection = this.getCollection();
 
-		if (collection != null && !collection.equals("")) {
-			return 0;
-		} else if (lower != null && !lower.equals("")) {
+		if (lower != null && !lower.equals("")) {
 			return Integer.valueOf(lower);
 		} else {
 			int upper = this.getUpper();
@@ -121,11 +108,8 @@ public class TypedElementDeclaration extends SyntaxNode {
 
 	public int getUpper() {
 		String upper = this.getUpperBound();
-		String collection = this.getCollection();
 
-		if (collection != null && !collection.equals("")) {
-			return collection.equals("Option") ? 1 : -1;
-		} else if (upper == null || upper.equals("")) {
+		if (upper == null || upper.equals("")) {
 			return 1;
 		} else if (upper.equals("*")) {
 			return -1;
@@ -133,27 +117,6 @@ public class TypedElementDeclaration extends SyntaxNode {
 			return Integer.valueOf(upper);
 		}
 	} // getUpper
-
-	public boolean getOrdering() {
-		String collection = this.getCollection();
-
-		if (collection == null || collection.equals("")) {
-			return this.isOrdered();
-		} else {
-			return collection.equals("OrderedSet")
-					|| collection.equals("Sequence");
-		}
-	} // getOrdering
-
-	public boolean getNonuniqueness() {
-		String collection = this.getCollection();
-
-		if (collection == null || collection.equals("")) {
-			return this.isNonunique();
-		} else {
-			return collection.equals("Bag") || collection.equals("Sequence");
-		}
-	} // getNonuniqueness
 
 	public Member getClassifier(NamespaceDefinition context) {
 		// System.out.println("getClassifier: this = " + this + " context = " +

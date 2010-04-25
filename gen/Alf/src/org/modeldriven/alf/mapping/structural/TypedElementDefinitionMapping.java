@@ -36,8 +36,8 @@ public abstract class TypedElementDefinitionMapping extends MemberMapping {
 			TypedElementDeclaration declaration = definition.getDeclaration();
 			multiplicityElement.setLower(declaration.getLower());
 			multiplicityElement.setUpper(declaration.getUpper());
-			multiplicityElement.setIsOrdered(declaration.getOrdering());
-			multiplicityElement.setIsUnique(!declaration.getNonuniqueness());
+			multiplicityElement.setIsOrdered(declaration.isOrdered());
+			multiplicityElement.setIsUnique(!declaration.isNonunique());
 
 			if (type != null) {
 				ClassifierDefinitionMapping mapping = (ClassifierDefinitionMapping) this

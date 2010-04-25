@@ -1,14 +1,14 @@
 /*
    Parser for the 
    Action Language for Foundational UML (Alf)
-   Version 0.07
+   Version 0.08
 
    with construction of the Abstract Syntax Tree
    
    Written by
    Ed Seidewitz / Model Driven Solutions
    
-   Copyright (c) 2009 Data Access Technologies, Inc.
+   Copyright (c) 2010 Data Access Technologies, Inc.
 */
 
 options {
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class AlfParser {
 
-  public static final String version = "0.07";
+  public static final String version = "0.08";
 
   private static void completeSubunits(NamespaceDefinition namespace) {
     for (Member member: namespace.getMembers()) {
@@ -249,9 +249,12 @@ TOKEN:
 | < CASE: "case" >
 | < CLASS: "class" >
 | < CLASSIFY: "classify" >
+| < CLEAR_ASSOC: "clearAssoc" >
 | < COMPOSE: "compose" >
+| < CREATE_LINK: "createLink" >
 | < DATATYPE: "datatype" >
 | < DEFAULT_: "default" >
+| < DESTROY_LINK: "destroyLink" >
 | < DO: "do">
 | < ELSE: "else">
 | < ENUM: "enum">
@@ -277,6 +280,7 @@ TOKEN:
 | < PUBLIC: "public" >
 | < RECEIVE: "receive" >
 | < REDEFINES: "redefines" >
+| < REDUCE: "reduce" >
 | < RETURN: "return" >
 | < SPECIALIZES: "specializes" >
 | < SUPER: "super" >
@@ -285,7 +289,6 @@ TOKEN:
 | < THIS: "this" >
 | < TO: "to" >
 | < WHILE: "while" >
-| < COLLECTION_NAME: "Set" | "OrderedSet" | "Bag" | "Sequence" | "Option" >
 }
 
 /* NAMES */
@@ -382,8 +385,6 @@ TOKEN:
 | < ORASSIGN: "|=" >
 | < XORASSIGN: "^=" >
 | < REMASSIGN: "%=" >
-| < HASH: "#" >
-| < DOUBLE_HASH: "##" >
 }
 
 /***************
@@ -415,7 +416,24 @@ QualifiedName QualifiedName():
     LOOKAHEAD(3)
     q = DotQualifiedName()
   |
-    n = Name() { q = new QualifiedName(); q.addName(n); }
+    q = UnqualifiedName()
+  )
+  { return q; }
+}
+
+QualifiedName PotentiallyAmbiguousQualifiedName():
+{
+  String n;
+  QualifiedName q;
+}
+{
+  ( LOOKAHEAD(3)
+    q = ColonQualifiedName()
+  |
+    LOOKAHEAD(3)
+    q = DotQualifiedName() { q.setIsAmbiguous(); } /* AMBIGUOUS */
+  |
+    q = UnqualifiedName()
   )
   { return q; }
 }
@@ -440,6 +458,17 @@ QualifiedName DotQualifiedName():
   { return q; }
 }
 
+QualifiedName UnqualifiedName():
+{
+  QualifiedName q = new QualifiedName();
+  String n;
+}
+{
+  n = Name() 
+  { q.addName(n); 
+    return q; }
+}
+
 /***************
  * EXPRESSIONS *
  ***************/
@@ -452,9 +481,7 @@ Expression Expression():
 }
 {
   ( 
-    LOOKAHEAD(2) q = ColonQualifiedName() e = UnambiguousQualifiedNameExpressionCompletion(q)
-  | LOOKAHEAD(3) q = DotQualifiedName() e = AmbiguousQualifiedNameExpressionCompletion(q) /* AMBIGUOUS */
-  | n = Name() { q = new QualifiedName(); q.addName(n); } e = NameExpressionCompletion(q)
+    q = PotentiallyAmbiguousQualifiedName() e = NameToExpressionCompletion(q)
   | e = NonNameExpression()
   )
   
@@ -473,22 +500,12 @@ Expression NonNameExpression():
     <LPAREN>
     ( LOOKAHEAD(2)
       <ANY> <RPAREN> e1 = CastCompletion(null) e2 = ConditionalExpressionCompletion(e1)
-    | LOOKAHEAD(2) q = ColonQualifiedName() 
+    | q = PotentiallyAmbiguousQualifiedName() 
       ( LOOKAHEAD(2)
         <RPAREN> e1 = CastCompletion(q) e2 = ConditionalExpressionCompletion(e1)
-      | e1 = UnambiguousQualifiedNameExpressionCompletion(q) <RPAREN> e2 = ExpressionCompletion(e1)
+      | e1 = NameToExpressionCompletion(q) <RPAREN> e2 = ExpressionCompletion(e1)
       )
-    | LOOKAHEAD(3) q = DotQualifiedName() 
-      ( LOOKAHEAD(2)
-        <RPAREN> e1 = CastCompletion(q) e2 = ConditionalExpressionCompletion(e1)
-       | e1 = AmbiguousQualifiedNameExpressionCompletion(q) /* AMBIGUOUS */ <RPAREN> e2 = ExpressionCompletion(e1)
-      )
-    | n = Name() { q = new QualifiedName(); q.addName(n); } 
-      ( LOOKAHEAD(2)
-        <RPAREN> e1 = CastCompletion(q) e2 = ConditionalExpressionCompletion(e1)
-      | e1 = NameExpressionCompletion(q) <RPAREN> e2 = ExpressionCompletion(e1)
-      )
-    | e1 = NonNameExpression() <RPAREN> e2 = ExpressionCompletion(e1)
+     | e1 = NonNameExpression() <RPAREN> e2 = ExpressionCompletion(e1)
     )
   | e1 = NonPostfixNonCastUnaryExpression() e2 = ConditionalExpressionCompletion(e1)
   | e1 = BaseExpression() e2 = ExpressionCompletion(e1)
@@ -497,21 +514,21 @@ Expression NonNameExpression():
   { return e2; }
 }
 
-Expression ExpressionCompletion(Expression c) :
+Expression ExpressionCompletion(Expression p) :
 {
   Expression i;
   Expression e;
 }
 {
   (
-    i = Index() e = ExpressionCompletion(new CollectionAccessExpression(c, i))
-  | e = NonIndexExpressionCompletion(c)
+    i = Index() e = ExpressionCompletion(new SequenceAccessExpression(p, i))
+  | e = NonIndexExpressionCompletion(p)
   )
   
   { return e; }
 }
 
-Expression NonIndexExpressionCompletion(Expression c):
+Expression NonIndexExpressionCompletion(Expression p):
 {
   Expression e;
   FeatureReference f;
@@ -519,85 +536,45 @@ Expression NonIndexExpressionCompletion(Expression c):
 {
   (
     LOOKAHEAD(2) 
-    f = Feature(c) e = FeatureExpressionCompletion(f)
-  | e = NonFeatureExpressionCompletion(c)
+    f = Feature(p) e = FeatureToExpressionCompletion(f)
+  | e = SequenceOperationOrReductionOrExpansion(p) e = ExpressionCompletion(e)
+  | e = ConditionalExpressionCompletion(p)
   )
   
   { return e; }
 }
 
-Expression NonFeatureExpressionCompletion(Expression c):
+Expression NameToExpressionCompletion(QualifiedName q):
 {
   Expression e1;
   Expression e2;
 }
 {
-  (
-    e1 = CollectionOperationOrExpansion(c) e2 = ExpressionCompletion(e1)
-  | e1 = PostfixOperation(c) e2 = ConditionalExpressionCompletion(e1)
+  ( 
+    e2 = PostfixOperationOrAssignment(new NameLeftHandSide(q, null))
+  | LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) e2 = ExpressionCompletion(e1)
+  | e1 = Index()
+    ( e2 = PostfixOperationOrAssignment(new NameLeftHandSide(q, e1))
+    | e2 = ExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), e1))
+    )
+  | e2 = NonIndexExpressionCompletion(new NameExpression(q))
   )
   
   { return e2; }
 }
 
-Expression UnambiguousQualifiedNameExpressionCompletion(QualifiedName q):
-{
-  Expression e;
-}
-{
-  ( 
-    e = Assignment(new NameLeftHandSide(q))
-  | LOOKAHEAD(2) e = CollectionExpressionCompletion(q) e = ExpressionCompletion(e)
-  | e = ExpressionCompletion(new NameExpression(q))
-  )
-  
-  { return e; }
-}
-
-Expression AmbiguousQualifiedNameExpressionCompletion(QualifiedName q):
-{
-  Expression i;
-  Expression e;
-}
-{
-  { q.setIsAmbiguous(); }
-  
-  ( 
-    e = Assignment(new NameLeftHandSide(q))
-  | LOOKAHEAD(2) e = CollectionExpressionCompletion(q) e = ExpressionCompletion(e)
-  | i = Index() e = IndexFeatureExpressionCompletion(new NameExpression(q), i)
-  | e = NonIndexExpressionCompletion(new NameExpression(q))
-  )
-  
-  { return e; }
-}
-
-Expression NameExpressionCompletion(QualifiedName q):
-{
-  Expression i;
-  Expression e;
-}
-{
-  ( 
-    e = Assignment(new NameLeftHandSide(q))
-  | LOOKAHEAD(2) e = CollectionExpressionCompletion(q) e = ExpressionCompletion(e)
-  | i = Index() e = ExpressionCompletion(new CollectionAccessExpression(new NameExpression(q), i))
-  | e = NonFeatureExpressionCompletion(new NameExpression(q))
-  )
-  
-  { return e; }
-}
-
-Expression FeatureExpressionCompletion(FeatureReference f):
+Expression FeatureToExpressionCompletion(FeatureReference f):
 {
   Expression e1;
   Expression e2;
 }
 {
   (
-    LOOKAHEAD(AssignmentOperator()) 
-    e2 = Assignment(new FeatureLeftHandSide(f, null))
-  | e1 = Index() e2 = IndexFeatureExpressionCompletion(f, e1)
+    e2 = PostfixOperationOrAssignment(new FeatureLeftHandSide(f, null))
+  | e1 = Index()
+    ( e2 = PostfixOperationOrAssignment(new FeatureLeftHandSide(f, e1))
+    | e2 = ExpressionCompletion(new SequenceAccessExpression(f, e1))
+    )
   | e1 = FeatureInvocation(f) e2 = ExpressionCompletion(e1)
   | e2 = NonIndexExpressionCompletion(f)
   )
@@ -605,34 +582,7 @@ Expression FeatureExpressionCompletion(FeatureReference f):
   { return e2; }
 }
 
-Expression IndexFeatureExpressionCompletion(Expression f, Expression i):
-{
-  Expression e1;
-  Expression e2;
-}
-{
-  (
-    LOOKAHEAD(AssignmentOperator()) 
-    { /* Reinterpret a previously parsed name expression 
-         as a feature reference left-hand side.
-      */
-      if (f instanceof NameExpression) {
-        NameExpression e = (NameExpression) f;
-        QualifiedName q = e.getName();
-        ArrayList<String> nl = q.getNames();
-        String n = nl.remove(nl.size()-1);
-        f = new FeatureReference(e, n);
-      }
-    }
-    e2 = Assignment(new FeatureLeftHandSide((FeatureReference)f, i))
-  | e1 = Index() e2 = ExpressionCompletion(new CollectionAccessExpression(new CollectionAccessExpression(f, i), e1))
-  | e2 = NonIndexExpressionCompletion(new CollectionAccessExpression(f, i))
-  )
-  
-  { return e2; }
-}  
-
-/* PRIMARY AND COLLECTION EXPRESSIONS */
+/* PRIMARY EXPRESSIONS */
 
 Expression BaseExpression():
 {
@@ -643,38 +593,46 @@ Expression BaseExpression():
     e = LiteralExpression()
   | e = ThisExpression()
   | e = SuperInvocationExpression()
-  | e = InstanceCreationOrCollectionValueExpression()
-  | e = ReductionExpression()
-  | e = CollectionAnyExpression()
+  | e = InstanceCreationOrSequenceConstructionExpression()
+  | e = SequenceAnyExpression()
   )
 
   { return e; }
 }
 
-Expression CollectionExpressionCompletion(QualifiedName n):
+Expression NameToPrimaryExpressionCompletion(QualifiedName q):
 {
   Expression e;
 }
 {
   (
-    e = ClassExtentExpressionCompletion(n)
-  | e = CollectionValueExpressionCompletion(n)
-  | e = BehaviorInvocation(n)
+    <DOT> ( e = LinkOperationCompletion(q)
+          | e = ClassExtentExpressionCompletion(q)
+          )
+  | e = SequenceConstructionExpressionCompletion(q)
+  | e = BehaviorInvocation(q)
   )
   
   { return e; }
 }
 
-Expression CollectionModifier(Expression c):
+Expression PrimaryExpressionCompletion(Expression e):
+{}
+{
+  ( LOOKAHEAD(2) e = PrimaryModifier(e) )*
+  { return e; }
+}
+  
+Expression PrimaryModifier(Expression p):
 {
   Expression i;
   Expression e;
 }
 {
   (
-    e = Feature(c) [ LOOKAHEAD(2) e = FeatureInvocation((FeatureReference)e) ]
-  | e = CollectionOperationOrExpansion(c)
-  | i = Index() { e = new CollectionAccessExpression(c, i); }
+    e = Feature(p) [ LOOKAHEAD(2) e = FeatureInvocation((FeatureReference)e) ]
+  | e = SequenceOperationOrReductionOrExpansion(p)
+  | i = Index() { e = new SequenceAccessExpression(p, i); }
   )
   
   { return e; }
@@ -700,19 +658,14 @@ Expression LiteralExpression():
 
 /* NAME EXPRESSIONS */
 
-Expression NameOrCollectionExpression():
+Expression NameOrPrimaryExpression():
 {
   QualifiedName q;
-  String n;
   Expression e;
 }
 {
-  ( LOOKAHEAD(2) q = ColonQualifiedName() 
-  | LOOKAHEAD(2) q = DotQualifiedName() { q.setIsAmbiguous(); } /* AMBIGUOUS */
-  | n = Name() {q = new QualifiedName(); q.addName(n); }
-  )
-  { e = new NameExpression(q); }
-  [ LOOKAHEAD(2) e = CollectionExpressionCompletion(q) ]
+  q = PotentiallyAmbiguousQualifiedName() { e = new NameExpression(q); }
+  [ LOOKAHEAD(2) e = NameToPrimaryExpressionCompletion(q) ]
   { return e; }
 }
 
@@ -839,7 +792,7 @@ Expression SuperInvocationExpression():
 
 /* INSTANCE CREATION EXPRESSIONS */
 
-Expression InstanceCreationOrCollectionValueExpression():
+Expression InstanceCreationOrSequenceConstructionExpression():
 {
   QualifiedName n;
   Tuple t;
@@ -847,120 +800,39 @@ Expression InstanceCreationOrCollectionValueExpression():
 }
 {
   <NEW> n = QualifiedName() 
-  ( e = CollectionValueExpressionCompletion(n)
+  ( e = SequenceConstructionExpressionCompletion(n)
   | t = Tuple() { e = new InstanceCreationExpression(n, t); } )
   { return e; }
 }
 
-/* REDUCTION EXPRESSIONS */
+/* LINK OPERATION EXPRESSIONS */
 
-Expression ReductionExpression():
+Expression LinkOperationCompletion(QualifiedName q):
 {
   String op;
-  QualifiedName n;
-  Expression e;
+  Tuple t;
 }
 {
-  op = ReductionOperator() n = QualifiedName() <LPAREN> e = Expression() <RPAREN>
-  { return new ReductionExpression(op, n, e); }
+  op = LinkOperation() t = LinkOperationTuple()
+  { return new LinkOperationExpression(q, op, t); }
 }
 
-String ReductionOperator():
+String LinkOperation():
 {
   Token t;
 }
 {
   (
-    t = <HASH>
-  | t = <DOUBLE_HASH>
+    t = <CREATE_LINK>
+  | t = <DESTROY_LINK>
+  | t = <CLEAR_ASSOC>
   )
   
   { return t.image; }
 }
 
-/* CLASS EXTENT EXPRESSIONS */
 
-Expression ClassExtentExpressionCompletion(QualifiedName n):
-{}
-{
-  <DOT> <ALL_INSTANCES> <LPAREN> <RPAREN>
-  { return new ClassExtentExpression(n); }
-}
-
-/* COLLECTION VALUE EXPRESSIONS */
-
-Expression CollectionAnyExpression():
-{
-  Expression e;
-}
-{
-  (
-    <ANY> e = CollectionValueExpressionCompletion(null)
-  | <NULL> { e = new CollectionValueExpression(new TypedElementDeclaration(), null); }
-  )
-  
-  { return e; }
-}
-
-Expression CollectionValueExpressionCompletion(QualifiedName t):
-{
-  TypedElementDeclaration d = new TypedElementDeclaration();
-  CollectionElements c = null;
-}
-{
-  MultiplicityIndicator(d)
-  <LBRACE> [ c = CollectionElements() ] <RBRACE>
-  { d.setType(t); 
-    d.setIsOrdered(); 
-    d.setIsNonunique(); 
-    return new CollectionValueExpression(d, c); }
-}
-
-CollectionElements CollectionElements():
-{
-  CollectionElements c;
-  Expression e1;
-  Expression e2;
-}
-{
-  e1 = Expression() 
-  ( <DOUBLE_DOT> e2 = Expression() { c = new CollectionRange(e1, e2); }
-  | { c = new ExpressionList(); ((ExpressionList)c).add(e1);} 
-    ( <COMMA> e2 = Expression() { ((ExpressionList)c).add(e2); } )*  )
-  { return c; }
-}
-
-/* COLLECTION ACCESS EXPRESSIONS */
-
-Expression Index(): 
-{
-  Expression e;
-}
-{
-  <LBRACKET> e = Expression() <RBRACKET>
-  { return e; }
-}
-
-/* COLLECTION OPERATION AND EXPANSION EXPRESSIONS */
-
-Expression CollectionOperationOrExpansion(Expression c):
-{
-  Token op;
-  String n;
-  Tuple t;
-  Expression e;
-}
-{
-  <ARROW> op = <IDENTIFIER> 
-  ( n = Name() t = Tuple() { e = new CollectionExpansionExpression(c, op.image, n, t); }
-  | t = CollectionOperationTuple() { e = new CollectionOperationExpression(c, op.image, t); }
-  )
-  
-  { return e; }
-}
-
-
-Tuple CollectionOperationTuple():
+Tuple LinkOperationTuple():
 {
   QualifiedName q;
   String n;
@@ -972,15 +844,15 @@ Tuple CollectionOperationTuple():
 {
   <LPAREN>
   [ LOOKAHEAD(2)
-    t = CollectionOperationPositionalTuple()
+    t = LinkOperationPositionalTuple()
   | n = Name() { q = new QualifiedName(); q.addName(n); }
     ( i = Index() 
       ( <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, i)
-      | e = ExpressionCompletion(new CollectionAccessExpression(new NameExpression(q), i))
+      | e = ExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), i))
         { el.add(e); } ExpressionListCompletion(el) { t = new PositionalTuple(el.getList()); }
       )
     | <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, null)
-    | e = NonFeatureExpressionCompletion(new NameExpression(q))
+    | e = NonIndexExpressionCompletion(new NameExpression(q))
       { el.add(e); } ExpressionListCompletion(el) { t = new PositionalTuple(el.getList()); }
     )
   ]
@@ -989,7 +861,7 @@ Tuple CollectionOperationTuple():
   { return t; }
 }
 
-Tuple CollectionOperationPositionalTuple():
+Tuple LinkOperationPositionalTuple():
 {
   QualifiedName q;
   Expression e;
@@ -997,8 +869,11 @@ Tuple CollectionOperationPositionalTuple():
 }
 {
   (
-    LOOKAHEAD(2) q = ColonQualifiedName() e = UnambiguousQualifiedNameExpressionCompletion(q)
-  | q = DotQualifiedName() e = AmbiguousQualifiedNameExpressionCompletion(q) /* AMBIGUOUS */
+    ( LOOKAHEAD(2) 
+      q = ColonQualifiedName()
+    | q = DotQualifiedName() { q.setIsAmbiguous(); } /* AMBIGUOUS */
+    ) 
+    e = NameToExpressionCompletion(q) 
   | e = NonNameExpression() 
   )
   { el.add(e); } ExpressionListCompletion(el) 
@@ -1030,58 +905,134 @@ NamedExpression IndexedNamedExpression():
   { return new NamedExpression(n, i, e); }
 }
 
-/* POSTFIX EXPRESSIONS */
+/* CLASS EXTENT EXPRESSIONS */
 
-Expression PostfixOrCastExpression():
+Expression ClassExtentExpressionCompletion(QualifiedName q):
+{}
+{
+  <ALL_INSTANCES> <LPAREN> <RPAREN>
+  { return new ClassExtentExpression(q); }
+}
+
+/* SEQUENCE CONSTRUCTION EXPRESSIONS */
+
+Expression SequenceAnyExpression():
 {
   Expression e;
-  QualifiedName q;
-  String n;
 }
 {
   (
-    <LPAREN>
-    ( LOOKAHEAD(2)
-      <ANY> <RPAREN> e = CastCompletion(null)
-    | LOOKAHEAD(2) q = ColonQualifiedName() 
-      ( LOOKAHEAD(2)
-        <RPAREN> e = CastCompletion(q)
-      | e = UnambiguousQualifiedNameExpressionCompletion(q) <RPAREN> e = PostfixCompletion(e)
-      )
-    | LOOKAHEAD(3) q = DotQualifiedName() 
-      ( LOOKAHEAD(2)
-        <RPAREN> e = CastCompletion(q) 
-       | e = AmbiguousQualifiedNameExpressionCompletion(q) /* AMBIGUOUS */ <RPAREN> e = PostfixCompletion(e)
-      )
-    | n = Name() { q = new QualifiedName(); q.addName(n); } 
-      ( LOOKAHEAD(2)
-        <RPAREN> e = CastCompletion(q)
-      | e = NameExpressionCompletion(q) <RPAREN> e = PostfixCompletion(e)
-      )
-    | e = NonNameExpression() <RPAREN> e = PostfixCompletion(e)
-    )
-  | e = NameOrCollectionExpression() e = PostfixCompletion(e)
-  | e = BaseExpression() e = PostfixCompletion(e)
+    <ANY> e = SequenceConstructionExpressionCompletion(null)
+  | <NULL> { e = new SequenceConstructionExpression(new TypedElementDeclaration(), null); }
   )
   
   { return e; }
 }
 
-Expression PostfixCompletion(Expression e):
-{}
+Expression SequenceConstructionExpressionCompletion(QualifiedName t):
 {
-  ( LOOKAHEAD(2) e = CollectionModifier(e) )* e = PostfixOperation(e)
+  TypedElementDeclaration d = new TypedElementDeclaration();
+  SequenceElements c = null;
+}
+{
+  MultiplicityIndicator(d)
+  <LBRACE> [ c = SequenceElements() ] <RBRACE>
+  { d.setType(t); 
+    d.setIsOrdered(); 
+    d.setIsNonunique(); 
+    return new SequenceConstructionExpression(d, c); }
+}
+
+SequenceElements SequenceElements():
+{
+  SequenceElements c;
+  Expression e1;
+  Expression e2;
+}
+{
+  e1 = Expression() 
+  ( <DOUBLE_DOT> e2 = Expression() { c = new SequenceRange(e1, e2); }
+  | { c = new ExpressionList(); ((ExpressionList)c).add(e1);} 
+    ( <COMMA> e2 = Expression() { ((ExpressionList)c).add(e2); } )*  )
+  { return c; }
+}
+
+/* SEQUENCE ACCESS EXPRESSIONS */
+
+Expression Index(): 
+{
+  Expression e;
+}
+{
+  <LBRACKET> e = Expression() <RBRACKET>
   { return e; }
 }
-  
-Expression PostfixOperation(Expression c):
+
+/* SEQUENCE OPERATION, REDUCTION AND EXPANSION EXPRESSIONS */
+
+Expression SequenceOperationOrReductionOrExpansion(Expression p):
 {
-  Expression e = c;
+  QualifiedName q;
+  Token op;
+  String n;
+  Tuple t;
+  Expression e;
+  boolean ordered = false;
+}
+{
+  <ARROW> 
+  ( LOOKAHEAD(2) 
+    q = QualifiedName() t = Tuple() 
+    { e = new SequenceOperationExpression(p, q, t); }
+  | <REDUCE> [ <ORDERED> { ordered = true; } ] q = QualifiedName() 
+    { e = new SequenceReductionExpression(p, q, ordered); }
+  | op = <IDENTIFIER> n = Name() t = Tuple() 
+    { e = new SequenceExpansionExpression(p, op.image, n, t); }
+  )
+  
+  { return e; }
+}
+
+
+/* INCREMENT OR DECREMENT EXPRESSIONS */
+
+Expression PostfixOperationOrAssignment(LeftHandSide lhs):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  (
+    e1 = PostfixOperation(lhs) e2 = ConditionalExpressionCompletion(e1)
+  | e2 = Assignment(lhs)
+  )
+  
+  { return e2; }
+}
+
+Expression PostfixOperation(LeftHandSide lhs):
+{
+  Expression e;
   String op;
 }
 {
-  ( op = AffixOperator() { e = new PostfixExpression(op, e); } )*
-  { return e; }
+  op = AffixOperator()
+  { return new IncrementOrDecrementExpression(op, lhs); }
+}
+
+Expression PrefixExpression():
+{
+  String op;
+  LeftHandSide lhs;
+  IncrementOrDecrementExpression e;
+}
+{
+  op = AffixOperator() lhs = LeftHandSide()
+  
+  { e = new IncrementOrDecrementExpression(op, lhs);
+    e.setIsPrefix();
+    return e;
+  }
 }
 
 String AffixOperator():
@@ -1099,6 +1050,7 @@ String AffixOperator():
 
 /* UNARY EXPRESSIONS */
 
+
 Expression UnaryExpression():
 {
   Expression e;
@@ -1112,29 +1064,112 @@ Expression UnaryExpression():
   { return e; }
 }
 
+Expression PostfixOrCastExpression():
+{
+  QualifiedName q;
+  String n;
+  Expression e1;
+  Expression e2;
+}
+{
+  ( 
+    q = PotentiallyAmbiguousQualifiedName() e2 = NameToPostfixExpressionCompletion(q)
+  | <LPAREN>
+    ( LOOKAHEAD(2)
+      <ANY> <RPAREN> e2 = CastCompletion(null)
+    | q = PotentiallyAmbiguousQualifiedName() 
+      ( LOOKAHEAD(2)
+        <RPAREN> e2 = CastCompletion(q)
+      | e1 = NameToExpressionCompletion(q) <RPAREN> e2 = PrimaryExpressionCompletion(e1)
+      )
+    | e1 = NonNameExpression() <RPAREN> e2 = PrimaryExpressionCompletion(e1)
+    )
+  | e1 = BaseExpression() e2 = PostfixExpressionCompletion(e1)
+  )
+  
+  { return e2; }
+}
+
+Expression PostfixExpressionCompletion(Expression p) :
+{
+  Expression i;
+  Expression e;
+}
+{
+  (
+    i = Index() e = PostfixExpressionCompletion(new SequenceAccessExpression(p, i))
+  | e = NonIndexPostfixExpressionCompletion(p)
+  )
+  
+  { return e; }
+}
+
+Expression NonIndexPostfixExpressionCompletion(Expression p):
+{
+  Expression e = p;
+  FeatureReference f;
+}
+{
+  [
+    LOOKAHEAD(2) 
+    f = Feature(p) e = FeatureToPostfixExpressionCompletion(f)
+  | e = SequenceOperationOrReductionOrExpansion(p) e = PostfixExpressionCompletion(e)
+  ]
+  
+  { return e; }
+}
+
+Expression NameToPostfixExpressionCompletion(QualifiedName q):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  ( 
+    e2 = PostfixOperation(new NameLeftHandSide(q, null))
+  | LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) e2 = PostfixExpressionCompletion(e1)
+  | e1 = Index()
+    ( e2 = PostfixOperation(new NameLeftHandSide(q, e1))
+    | e2 = PostfixExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), e1))
+    )
+  | e2 = NonIndexPostfixExpressionCompletion(new NameExpression(q))
+  )
+  
+  { return e2; }
+}
+
+Expression FeatureToPostfixExpressionCompletion(FeatureReference f):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  (
+    e2 = PostfixOperation(new FeatureLeftHandSide(f, null))
+  | e1 = Index() 
+    ( e2 = PostfixOperation(new FeatureLeftHandSide(f, e1))
+    | e2 = PostfixExpressionCompletion(new SequenceAccessExpression(f, e1))
+    )
+  | e1 = FeatureInvocation(f) e2 = PostfixExpressionCompletion(e1)
+  | e2 = NonIndexPostfixExpressionCompletion(f)
+  )
+  
+  { return e2; }
+}
+
 Expression NonPostfixNonCastUnaryExpression():
 {
   Expression e;
 }
 {
   (
-    e = PrefixedExpression()
+    e = PrefixExpression()
   | e = NumericUnaryExpression()
   | e = BooleanNegationExpression()
   | e = IsolationExpression()
   )
   
   { return e; }
-}
-
-PrefixExpression PrefixedExpression():
-{
-  String op;
-  Expression e;
-}
-{
-  op = AffixOperator() e = UnaryExpression()
-  { return new PrefixExpression(op, e); }
 }
 
 Expression BooleanNegationExpression():
@@ -1161,12 +1196,12 @@ String NumericUnaryOperator():
   Token t;
 }
 {
-	(
-	  t = <PLUS>
-	| t = <MINUS>
-	)
+  (
+    t = <PLUS>
+  | t = <MINUS>
+  )
 	
-	{ return t.image; }
+  { return t.image; }
 }
 
 Expression IsolationExpression():
@@ -1202,7 +1237,7 @@ Expression CastCompletion(QualifiedName t):
   { return new CastExpression(t, e); }
 }
 
-/* MULTIPLICATIVE OPERATORS */
+/* ARITHMETIC EXPRESSIONS */
 
 Expression MultiplicativeExpression():
 {
@@ -1214,7 +1249,6 @@ Expression MultiplicativeExpression():
   { return e; }
 }
 
-/* ADDED */
 Expression MultiplicativeExpressionCompletion(Expression u):
 {
   Expression e1 = u;
@@ -1240,8 +1274,6 @@ String MultiplicativeOperator():
   
   { return t.image; }
 }
-
-/* ADDITIVE OPERATORS */
 
 Expression AdditiveExpression():
 {
@@ -1279,7 +1311,7 @@ String AdditiveOperator():
   { return t.image; }
 }
 
-/* RELATIONAL OPERATORS */
+/* RELATIONAL EXPRESSIONS */
 
 Expression RelationalExpression():
 {
@@ -1319,6 +1351,8 @@ String RelationalOperator():
   { return t.image; }
 }
 
+/* CLASSIFICATION EXPRESSIONS */
+
 Expression ClassificationExpression():
 {
   Expression u;
@@ -1355,7 +1389,7 @@ String ClassificationOperator():
   { return t.image; }
 }
 
-/* EQUALITY OPERATORS */
+/* EQUALITY EXPRESSIONS */
 
 Expression EqualityExpression():
 {
@@ -1393,7 +1427,7 @@ String EqualityOperator():
   { return t.image; }
 }
 
-/* LOGICAL OPERATORS */
+/* LOGICAL EXPRESSIONS */
 
 Expression AndExpression():
 {
@@ -1461,7 +1495,7 @@ Expression InclusiveOrExpressionCompletion(Expression u):
   { return e1; }
 }
 
-/* CONDITIONAL-AND OPERATOR */
+/* CONDITIONAL LOGICAL EXPRESSIONS */
 
 Expression ConditionalAndExpression():
 {
@@ -1485,8 +1519,6 @@ Expression ConditionalAndExpressionCompletion(Expression u):
   { return e1; }
 }
 
-/* CONDITIONAL-OR OPERATOR */
-
 Expression ConditionalOrExpression():
 {
   Expression u;
@@ -1509,7 +1541,7 @@ Expression ConditionalOrExpressionCompletion(Expression u):
   { return e1; }
 }
 
-/* CONDITIONAL-TEST OPERATOR */
+/* CONDITIONAL-TEST EXPRESSIONS */
 
 Expression ConditionalExpression():
 {
@@ -1534,7 +1566,7 @@ Expression ConditionalExpressionCompletion(Expression u):
   { return e1; }
 }
 
-/* ASSIGNMENT OPERATORS */
+/* ASSIGNMENT EXPRESSIONS */
 
 Expression Assignment(LeftHandSide lhs):
 {
@@ -1544,6 +1576,84 @@ Expression Assignment(LeftHandSide lhs):
 {
   op = AssignmentOperator() e = Expression() 
   { return new AssignmentExpression(lhs, op, e); }
+}
+
+LeftHandSide LeftHandSide():
+{
+   QualifiedName q;
+   LeftHandSide lhs;
+   Expression e;
+}
+{
+  ( 
+    q = PotentiallyAmbiguousQualifiedName() lhs = NameToLeftHandSideCompletion(q)
+  | e = BaseExpression() lhs = LeftHandSideCompletion(e)
+  | e = ParenthesizedExpression() lhs = LeftHandSideCompletion(e)
+  )
+  
+  { return lhs; }
+}
+
+LeftHandSide LeftHandSideCompletion(Expression p) :
+{
+  Expression i;
+  LeftHandSide lhs;
+}
+{
+  (
+    i = Index() lhs = LeftHandSideCompletion(new SequenceAccessExpression(p, i))
+  | lhs = NonIndexLeftHandSideCompletion(p)
+  )
+  
+  { return lhs; }
+}
+
+LeftHandSide NonIndexLeftHandSideCompletion(Expression p):
+{
+  Expression e;
+  FeatureReference f;
+  LeftHandSide lhs;
+}
+{
+  (
+    LOOKAHEAD(2) 
+    f = Feature(p) lhs = FeatureToLeftHandSideCompletion(f)
+  | e = SequenceOperationOrReductionOrExpansion(p) lhs = LeftHandSideCompletion(e)
+  )
+  
+  { return lhs; }
+}
+
+LeftHandSide NameToLeftHandSideCompletion(QualifiedName q):
+{
+  Expression e;
+  LeftHandSide lhs = new NameLeftHandSide(q, null);
+}
+{
+  [ 
+    LOOKAHEAD(2) e = NameToPrimaryExpressionCompletion(q) lhs = LeftHandSideCompletion(e)
+  | e = Index() { lhs = new NameLeftHandSide(q, e); }
+    [ lhs = LeftHandSideCompletion(new SequenceAccessExpression(new NameExpression(q), e)) ]
+  | lhs = NonIndexLeftHandSideCompletion(new NameExpression(q))
+  ]
+  
+  { return lhs; }
+}
+
+LeftHandSide FeatureToLeftHandSideCompletion(FeatureReference f):
+{
+  Expression e;
+  LeftHandSide lhs = new FeatureLeftHandSide(f, null);
+}
+{
+  [
+    e = Index() { lhs = new FeatureLeftHandSide(f, e); }
+    [ lhs = LeftHandSideCompletion(new SequenceAccessExpression(f, e)) ]
+  | e = FeatureInvocation(f) lhs = LeftHandSideCompletion(e)
+  | lhs = NonIndexLeftHandSideCompletion(f)
+  ]
+  
+  { return lhs; }
 }
 
 String AssignmentOperator():
@@ -1724,6 +1834,7 @@ Statement LocalNameDeclarationOrExpressionStatement():
 {
   { d.setLowerBound("0"); d.setUpperBound("1"); d.setIsOrdered(); d.setIsNonunique(); }
   (
+  /*
     LOOKAHEAD(2)  
     q = ColonQualifiedName() { d.setType(q); }
     ( LOOKAHEAD(3) [ MultiplicityIndicator(d) ] n = Name() s = LocalNameDeclarationStatementCompletion(n,d) 
@@ -1733,9 +1844,13 @@ Statement LocalNameDeclarationOrExpressionStatement():
     ( LOOKAHEAD(3) [ MultiplicityIndicator(d) ] n = Name() s = LocalNameDeclarationStatementCompletion(n,d) 
     | e = AmbiguousQualifiedNameExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
   | 
-    n = Name() { q = new QualifiedName(); q.addName(n); d.setType(q); }
+    q = UnqualifiedName() { d.setType(q); }
     ( LOOKAHEAD(3) [ MultiplicityIndicator(d) ] n = Name() s = LocalNameDeclarationStatementCompletion(n,d) 
-    | e = NameExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
+    | e = UnambiguousQualifiedNameExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
+  */
+    q = PotentiallyAmbiguousQualifiedName() { d.setType(q); }
+    ( LOOKAHEAD(3) [ MultiplicityIndicator(d) ] n = Name() s = LocalNameDeclarationStatementCompletion(n,d) 
+    | e = NameToExpressionCompletion(q) <SEMICOLON> { s = new ExpressionStatement(e); } )
   | 
     e = NonNameExpression() <SEMICOLON> { s = new ExpressionStatement(e); }
   )
@@ -2921,8 +3036,6 @@ void TypePart(TypedElementDeclaration d):
 }
 {
   t = TypeName() { d.setType(t); } [ Multiplicity(d) ]
-| tc = <COLLECTION_NAME> { d.setCollection(tc.image); }
-  [ <LT> t = TypeName() { d.setType(t); } <GT> ]
 }
 
 QualifiedName TypeName():

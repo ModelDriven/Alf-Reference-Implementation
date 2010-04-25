@@ -4,7 +4,6 @@ class Properties {
   public wheels: compose Wheel [2..4];
   public items: Item [0..*] ordered nonunique;
   public items: Item[] ordered nonunique;
-  public items: Sequence<Item>;
   
   public a: A = new A();
   public b: compose B = new B();
