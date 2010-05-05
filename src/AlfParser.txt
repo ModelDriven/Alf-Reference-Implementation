@@ -5,11 +5,7 @@ TOKENS
  * LEXICAL STRUCTURE *
  *********************/
 
-
-
 /* WHITE SPACE */
-
-
 
 <DEFAULT,IN_STATEMENT_ANNOTATION,IN_IN_LINE_ANNOTATION> SKIP : {
 " "
@@ -23,8 +19,6 @@ TOKENS
 }
 
 /* STATEMENT ANNOTATIONS */
-
-
 
 <DEFAULT> TOKEN : {
 <SLASH_SLASH_AT: "//@"> : IN_STATEMENT_ANNOTATION
@@ -40,8 +34,6 @@ TOKENS
 }
 
 /* COMMENTS */
-
-
 
 <DEFAULT> SKIP : {
 <"/**" ~["/"]> : IN_DOCUMENTATION_COMMENT
@@ -88,8 +80,6 @@ TOKENS
 
 /* RESERVED WORDS */
 
-
-
 <DEFAULT,IN_STATEMENT_ANNOTATION,IN_IN_LINE_ANNOTATION> TOKEN : {
 <ABSTRACT: "abstract">
 | <ACCEPT: "accept">
@@ -103,9 +93,12 @@ TOKENS
 | <CASE: "case">
 | <CLASS: "class">
 | <CLASSIFY: "classify">
+| <CLEAR_ASSOC: "clearAssoc">
 | <COMPOSE: "compose">
+| <CREATE_LINK: "createLink">
 | <DATATYPE: "datatype">
 | <DEFAULT_: "default">
+| <DESTROY_LINK: "destroyLink">
 | <DO: "do">
 | <ELSE: "else">
 | <ENUM: "enum">
@@ -131,6 +124,7 @@ TOKENS
 | <PUBLIC: "public">
 | <RECEIVE: "receive">
 | <REDEFINES: "redefines">
+| <REDUCE: "reduce">
 | <RETURN: "return">
 | <SPECIALIZES: "specializes">
 | <SUPER: "super">
@@ -139,12 +133,9 @@ TOKENS
 | <THIS: "this">
 | <TO: "to">
 | <WHILE: "while">
-| <COLLECTION_NAME: "Set" | "OrderedSet" | "Bag" | "Sequence" | "Option">
 }
 
 /* NAMES */
-
-
 
 <DEFAULT,IN_STATEMENT_ANNOTATION,IN_IN_LINE_ANNOTATION> TOKEN : {
 <IDENTIFIER: <IDENTIFIER_LETTER> (<IDENTIFIER_LETTER_OR_DIGIT>)*>
@@ -159,8 +150,6 @@ TOKENS
 
 /* PRIMITIVE LITERALS */
 
-
-
 <DEFAULT,IN_STATEMENT_ANNOTATION,IN_IN_LINE_ANNOTATION> TOKEN : {
 <BOOLEAN_LITERAL: "true" | "false">
 | <NATURAL_LITERAL: (<DIGIT>)+>
@@ -169,8 +158,6 @@ TOKENS
 }
 
 /* PUNCTUATION */
-
-
 
 <DEFAULT,IN_STATEMENT_ANNOTATION,IN_IN_LINE_ANNOTATION> TOKEN : {
 <LPAREN: "(">
@@ -190,8 +177,6 @@ TOKENS
 }
 
 /* OPERATORS */
-
-
 
 <DEFAULT,IN_STATEMENT_ANNOTATION,IN_IN_LINE_ANNOTATION> TOKEN : {
 <ASSIGN: "=">
@@ -226,8 +211,6 @@ TOKENS
 | <ORASSIGN: "|=">
 | <XORASSIGN: "^=">
 | <REMASSIGN: "%=">
-| <HASH: "#">
-| <DOUBLE_HASH: "##">
 }
 
 NON-TERMINALS
@@ -235,54 +218,51 @@ NON-TERMINALS
  *    NAMES    *
  ***************/
 
- 	Name	:=	( <IDENTIFIER> | <UNRESTRICTED_NAME> )
-	QualifiedName	:=	( ColonQualifiedName | DotQualifiedName | Name )
+	Name	:=	( <IDENTIFIER> | <UNRESTRICTED_NAME> )
+	QualifiedName	:=	( ColonQualifiedName | DotQualifiedName | UnqualifiedName )
+	PotentiallyAmbiguousQualifiedName	:=	( ColonQualifiedName | DotQualifiedName | UnqualifiedName )
 	ColonQualifiedName	:=	Name ( <DOUBLE_COLON> Name )+
 	DotQualifiedName	:=	Name ( <DOT> Name )+
+	UnqualifiedName	:=	Name
 
 /***************
  * EXPRESSIONS *
  ***************/
 
- 	Expression	:=	( ColonQualifiedName UnambiguousQualifiedNameExpressionCompletion | DotQualifiedName AmbiguousQualifiedNameExpressionCompletion | Name NameExpressionCompletion | NonNameExpression )
-	NonNameExpression	:=	( <LPAREN> ( <ANY> <RPAREN> CastCompletion ConditionalExpressionCompletion | ColonQualifiedName ( <RPAREN> CastCompletion ConditionalExpressionCompletion | UnambiguousQualifiedNameExpressionCompletion <RPAREN> ExpressionCompletion ) | DotQualifiedName ( <RPAREN> CastCompletion ConditionalExpressionCompletion | AmbiguousQualifiedNameExpressionCompletion <RPAREN> ExpressionCompletion ) | Name ( <RPAREN> CastCompletion ConditionalExpressionCompletion | NameExpressionCompletion <RPAREN> ExpressionCompletion ) | NonNameExpression <RPAREN> ExpressionCompletion ) | NonPostfixNonCastUnaryExpression ConditionalExpressionCompletion | BaseExpression ExpressionCompletion )
+	Expression	:=	( PotentiallyAmbiguousQualifiedName NameToExpressionCompletion | NonNameExpression )
+	NonNameExpression	:=	( <LPAREN> ( <ANY> <RPAREN> CastCompletion ConditionalExpressionCompletion | PotentiallyAmbiguousQualifiedName ( <RPAREN> CastCompletion ConditionalExpressionCompletion | NameToExpressionCompletion <RPAREN> ExpressionCompletion ) | NonNameExpression <RPAREN> ExpressionCompletion ) | NonPostfixNonCastUnaryExpression ConditionalExpressionCompletion | BaseExpression ExpressionCompletion )
 	ExpressionCompletion	:=	( Index ExpressionCompletion | NonIndexExpressionCompletion )
-	NonIndexExpressionCompletion	:=	( Feature FeatureExpressionCompletion | NonFeatureExpressionCompletion )
-	NonFeatureExpressionCompletion	:=	( CollectionOperationOrExpansion ExpressionCompletion | PostfixOperation ConditionalExpressionCompletion )
-	UnambiguousQualifiedNameExpressionCompletion	:=	( Assignment | CollectionExpressionCompletion ExpressionCompletion | ExpressionCompletion )
-	AmbiguousQualifiedNameExpressionCompletion	:=	( Assignment | CollectionExpressionCompletion ExpressionCompletion | Index IndexFeatureExpressionCompletion | NonIndexExpressionCompletion )
-	NameExpressionCompletion	:=	( Assignment | CollectionExpressionCompletion ExpressionCompletion | Index ExpressionCompletion | NonFeatureExpressionCompletion )
-	FeatureExpressionCompletion	:=	( Assignment | Index IndexFeatureExpressionCompletion | FeatureInvocation ExpressionCompletion | NonIndexExpressionCompletion )
-	IndexFeatureExpressionCompletion	:=	( Assignment | Index ExpressionCompletion | NonIndexExpressionCompletion )
-	
-/* PRIMARY AND COLLECTION EXPRESSIONS */
+	NonIndexExpressionCompletion	:=	( Feature FeatureToExpressionCompletion | SequenceOperationOrReductionOrExpansion ExpressionCompletion | ConditionalExpressionCompletion )
+	NameToExpressionCompletion	:=	( PostfixOperationOrAssignment | NameToPrimaryExpressionCompletion ExpressionCompletion | Index ( PostfixOperationOrAssignment | ExpressionCompletion ) | NonIndexExpressionCompletion )
+	FeatureToExpressionCompletion	:=	( PostfixOperationOrAssignment | Index ( PostfixOperationOrAssignment | ExpressionCompletion ) | FeatureInvocation ExpressionCompletion | NonIndexExpressionCompletion )
 
-    BaseExpression	:=	( LiteralExpression | ThisExpression | SuperInvocationExpression | InstanceCreationOrCollectionValueExpression | ReductionExpression | CollectionAnyExpression )
-	CollectionExpressionCompletion	:=	( ClassExtentExpressionCompletion | CollectionValueExpressionCompletion | BehaviorInvocation )
-	CollectionModifier	:=	( Feature ( FeatureInvocation )? | CollectionOperationOrExpansion | Index )
-	
+/* PRIMARY EXPRESSIONS */
+
+	BaseExpression	:=	( LiteralExpression | ThisExpression | SuperInvocationExpression | InstanceCreationOrSequenceConstructionExpression | SequenceAnyExpression )
+	NameToPrimaryExpressionCompletion	:=	( <DOT> ( LinkOperationCompletion | ClassExtentExpressionCompletion ) | SequenceConstructionExpressionCompletion | BehaviorInvocation )
+	PrimaryExpressionCompletion	:=	( PrimaryModifier )*
+	PrimaryModifier	:=	( Feature ( FeatureInvocation )? | SequenceOperationOrReductionOrExpansion | Index )
+
 /* LITERAL EXPRESSIONS */
 
 	LiteralExpression	:=	( <BOOLEAN_LITERAL> | <NATURAL_LITERAL> | <STRING_LITERAL> | <STAR> )
-	
+
 /* NAME EXPRESSIONS */
 
+	NameOrPrimaryExpression	:=	PotentiallyAmbiguousQualifiedName ( NameToPrimaryExpressionCompletion )?
 
-
-	NameOrCollectionExpression	:=	( ColonQualifiedName | DotQualifiedName | Name ) ( CollectionExpressionCompletion )?
-	
 /* THIS EXPRESSIONS */
 
 	ThisExpression	:=	<THIS> ( Tuple )?
-	
+
 /* PARENTHESIZED EXPRESSIONS */
 
 	ParenthesizedExpression	:=	<LPAREN> Expression <RPAREN>
-	
+
 /* PROPERTY ACCESS EXPRESSIONS */
 
 	Feature	:=	<DOT> Name
-	
+
 /* INVOCATION EXPRESSIONS */
 
 	Tuple	:=	<LPAREN> ( NamedExpressionList | ( ExpressionList )? ) <RPAREN>
@@ -293,50 +273,54 @@ NON-TERMINALS
 	BehaviorInvocation	:=	Tuple
 	FeatureInvocation	:=	Tuple
 	SuperInvocationExpression	:=	<SUPER> ( <DOT> QualifiedName )? Tuple
-	
+
 /* INSTANCE CREATION EXPRESSIONS */
 
-	InstanceCreationOrCollectionValueExpression	:=	<NEW> QualifiedName ( CollectionValueExpressionCompletion | Tuple )
+	InstanceCreationOrSequenceConstructionExpression	:=	<NEW> QualifiedName ( SequenceConstructionExpressionCompletion | Tuple )
 
-/* REDUCTION EXPRESSIONS */
+/* LINK OPERATION EXPRESSIONS */
 
-	ReductionExpression	:=	ReductionOperator QualifiedName <LPAREN> Expression <RPAREN>
-	ReductionOperator	:=	( <HASH> | <DOUBLE_HASH> )
-
-/* CLASS EXTENT EXPRESSIONS */
-
-	ClassExtentExpressionCompletion	:=	<DOT> <ALL_INSTANCES> <LPAREN> <RPAREN>
-
-/* COLLECTION VALUE EXPRESSIONS */
-
-	CollectionAnyExpression	:=	( <ANY> CollectionValueExpressionCompletion | <NULL> )
-	CollectionValueExpressionCompletion	:=	MultiplicityIndicator <LBRACE> ( CollectionElements )? <RBRACE>
-	CollectionElements	:=	Expression ( <DOUBLE_DOT> Expression | ( <COMMA> Expression )* )
-
-/* COLLECTION ACCESS EXPRESSIONS */
-
-	Index	:=	<LBRACKET> Expression <RBRACKET>
-
-/* COLLECTION OPERATION AND EXPANSION EXPRESSIONS */
-
-	CollectionOperationOrExpansion	:=	<ARROW> <IDENTIFIER> ( Name Tuple | CollectionOperationTuple )
-	CollectionOperationTuple	:=	<LPAREN> ( CollectionOperationPositionalTuple | Name ( Index ( <THICK_ARROW> IndexedNamedExpressionListCompletion | ExpressionCompletion ExpressionListCompletion ) | <THICK_ARROW> IndexedNamedExpressionListCompletion | NonFeatureExpressionCompletion ExpressionListCompletion ) )? <RPAREN>
-	CollectionOperationPositionalTuple	:=	( ColonQualifiedName UnambiguousQualifiedNameExpressionCompletion | DotQualifiedName AmbiguousQualifiedNameExpressionCompletion | NonNameExpression ) ExpressionListCompletion
+	LinkOperationCompletion	:=	LinkOperation LinkOperationTuple
+	LinkOperation	:=	( <CREATE_LINK> | <DESTROY_LINK> | <CLEAR_ASSOC> )
+	LinkOperationTuple	:=	<LPAREN> ( LinkOperationPositionalTuple | Name ( Index ( <THICK_ARROW> IndexedNamedExpressionListCompletion | ExpressionCompletion ExpressionListCompletion ) | <THICK_ARROW> IndexedNamedExpressionListCompletion | NonIndexExpressionCompletion ExpressionListCompletion ) )? <RPAREN>
+	LinkOperationPositionalTuple	:=	( ( ColonQualifiedName | DotQualifiedName ) NameToExpressionCompletion | NonNameExpression ) ExpressionListCompletion
 	IndexedNamedExpressionListCompletion	:=	Expression ( <COMMA> IndexedNamedExpression )*
 	IndexedNamedExpression	:=	Name ( Index )? <THICK_ARROW> Expression
 
-/* POSTFIX EXPRESSIONS */
+/* CLASS EXTENT EXPRESSIONS */
 
-	PostfixOrCastExpression	:=	( <LPAREN> ( <ANY> <RPAREN> CastCompletion | ColonQualifiedName ( <RPAREN> CastCompletion | UnambiguousQualifiedNameExpressionCompletion <RPAREN> PostfixCompletion ) | DotQualifiedName ( <RPAREN> CastCompletion | AmbiguousQualifiedNameExpressionCompletion <RPAREN> PostfixCompletion ) | Name ( <RPAREN> CastCompletion | NameExpressionCompletion <RPAREN> PostfixCompletion ) | NonNameExpression <RPAREN> PostfixCompletion ) | NameOrCollectionExpression PostfixCompletion | BaseExpression PostfixCompletion )
-	PostfixCompletion	:=	( CollectionModifier )* PostfixOperation
-	PostfixOperation	:=	( AffixOperator )*
+	ClassExtentExpressionCompletion	:=	<ALL_INSTANCES> <LPAREN> <RPAREN>
+
+/* SEQUENCE CONSTRUCTION EXPRESSIONS */
+
+	SequenceAnyExpression	:=	( <ANY> SequenceConstructionExpressionCompletion | <NULL> )
+	SequenceConstructionExpressionCompletion	:=	MultiplicityIndicator <LBRACE> ( SequenceElements )? <RBRACE>
+	SequenceElements	:=	Expression ( <DOUBLE_DOT> Expression | ( <COMMA> Expression )* )
+
+/* SEQUENCE ACCESS EXPRESSIONS */
+
+	Index	:=	<LBRACKET> Expression <RBRACKET>
+
+/* SEQUENCE OPERATION, REDUCTION AND EXPANSION EXPRESSIONS */
+
+	SequenceOperationOrReductionOrExpansion	:=	<ARROW> ( QualifiedName Tuple | <REDUCE> ( <ORDERED> )? QualifiedName | <IDENTIFIER> Name Tuple )
+
+/* INCREMENT OR DECREMENT EXPRESSIONS */
+
+	PostfixOperationOrAssignment	:=	( PostfixOperation ConditionalExpressionCompletion | Assignment )
+	PostfixOperation	:=	AffixOperator
+	PrefixExpression	:=	AffixOperator LeftHandSide
 	AffixOperator	:=	( <INCR> | <DECR> )
 
 /* UNARY EXPRESSIONS */
 
 	UnaryExpression	:=	( PostfixOrCastExpression | NonPostfixNonCastUnaryExpression )
-	NonPostfixNonCastUnaryExpression	:=	( PrefixedExpression | NumericUnaryExpression | BooleanNegationExpression | IsolationExpression )
-	PrefixedExpression	:=	AffixOperator UnaryExpression
+	PostfixOrCastExpression	:=	( PotentiallyAmbiguousQualifiedName NameToPostfixExpressionCompletion | <LPAREN> ( <ANY> <RPAREN> CastCompletion | PotentiallyAmbiguousQualifiedName ( <RPAREN> CastCompletion | NameToExpressionCompletion <RPAREN> PrimaryExpressionCompletion ) | NonNameExpression <RPAREN> PrimaryExpressionCompletion ) | BaseExpression PostfixExpressionCompletion )
+	PostfixExpressionCompletion	:=	( Index PostfixExpressionCompletion | NonIndexPostfixExpressionCompletion )
+	NonIndexPostfixExpressionCompletion	:=	( Feature FeatureToPostfixExpressionCompletion | SequenceOperationOrReductionOrExpansion PostfixExpressionCompletion )?
+	NameToPostfixExpressionCompletion	:=	( PostfixOperation | NameToPrimaryExpressionCompletion PostfixExpressionCompletion | Index ( PostfixOperation | PostfixExpressionCompletion ) | NonIndexPostfixExpressionCompletion )
+	FeatureToPostfixExpressionCompletion	:=	( PostfixOperation | Index ( PostfixOperation | PostfixExpressionCompletion ) | FeatureInvocation PostfixExpressionCompletion | NonIndexPostfixExpressionCompletion )
+	NonPostfixNonCastUnaryExpression	:=	( PrefixExpression | NumericUnaryExpression | BooleanNegationExpression | IsolationExpression )
 	BooleanNegationExpression	:=	<BANG> UnaryExpression
 	NumericUnaryExpression	:=	NumericUnaryOperator UnaryExpression
 	NumericUnaryOperator	:=	( <PLUS> | <MINUS> )
@@ -344,37 +328,34 @@ NON-TERMINALS
 	CastExpression	:=	<LPAREN> TypeName <RPAREN> CastCompletion
 	CastCompletion	:=	( PostfixOrCastExpression | BooleanNegationExpression | IsolationExpression )
 
-/* MULTIPLICATIVE OPERATORS */
+/* ARITHMETIC EXPRESSIONS */
 
 	MultiplicativeExpression	:=	UnaryExpression MultiplicativeExpressionCompletion
-
-/* ADDED */
-
 	MultiplicativeExpressionCompletion	:=	( MultiplicativeOperator UnaryExpression )*
 	MultiplicativeOperator	:=	( <STAR> | <SLASH> | <REM> )
-
-/* ADDITIVE OPERATORS */
-
 	AdditiveExpression	:=	UnaryExpression AdditiveExpressionCompletion
 	AdditiveExpressionCompletion	:=	MultiplicativeExpressionCompletion ( AdditiveOperator MultiplicativeExpression )*
 	AdditiveOperator	:=	( <PLUS> | <MINUS> )
 
-/* RELATIONAL OPERATORS */
+/* RELATIONAL EXPRESSIONS */
 
 	RelationalExpression	:=	UnaryExpression RelationalExpressionCompletion
 	RelationalExpressionCompletion	:=	AdditiveExpressionCompletion ( RelationalOperator AdditiveExpression )*
 	RelationalOperator	:=	( <LT> | <GT> | <LE> | <GE> )
+
+/* CLASSIFICATION EXPRESSIONS */
+
 	ClassificationExpression	:=	UnaryExpression ClassificationExpressionCompletion
 	ClassificationExpressionCompletion	:=	RelationalExpressionCompletion ( ClassificationOperator QualifiedName )?
 	ClassificationOperator	:=	( <INSTANCEOF> | <HASTYPE> )
 
-/* EQUALITY OPERATORS */
+/* EQUALITY EXPRESSIONS */
 
 	EqualityExpression	:=	UnaryExpression ClassificationExpressionCompletion
 	EqualityExpressionCompletion	:=	ClassificationExpressionCompletion ( EqualityOperator ClassificationExpression )*
 	EqualityOperator	:=	( <EQ> | <NE> )
 
-/* LOGICAL OPERATORS */
+/* LOGICAL EXPRESSIONS */
 
 	AndExpression	:=	UnaryExpression AndExpressionCompletion
 	AndExpressionCompletion	:=	EqualityExpressionCompletion ( <LOGICAL_AND> EqualityExpression )*
@@ -383,24 +364,26 @@ NON-TERMINALS
 	InclusiveOrExpression	:=	UnaryExpression InclusiveOrExpressionCompletion
 	InclusiveOrExpressionCompletion	:=	ExclusiveOrExpressionCompletion ( <LOGICAL_OR> ExclusiveOrExpression )*
 
-/* CONDITIONAL-AND OPERATOR */
+/* CONDITIONAL LOGICAL EXPRESSIONS */
 
 	ConditionalAndExpression	:=	UnaryExpression ConditionalAndExpressionCompletion
 	ConditionalAndExpressionCompletion	:=	InclusiveOrExpressionCompletion ( <SC_AND> InclusiveOrExpression )*
-
-/* CONDITIONAL-OR OPERATOR */
-
 	ConditionalOrExpression	:=	UnaryExpression ConditionalOrExpressionCompletion
 	ConditionalOrExpressionCompletion	:=	ConditionalAndExpressionCompletion ( <SC_OR> ConditionalAndExpression )*
 
-/* CONDITIONAL-TEST OPERATOR */
+/* CONDITIONAL-TEST EXPRESSIONS */
 
 	ConditionalExpression	:=	UnaryExpression ConditionalExpressionCompletion
 	ConditionalExpressionCompletion	:=	ConditionalOrExpressionCompletion ( <HOOK> Expression <COLON> ConditionalExpression )?
 
-/* ASSIGNMENT OPERATORS */
+/* ASSIGNMENT EXPRESSIONS */
 
 	Assignment	:=	AssignmentOperator Expression
+	LeftHandSide	:=	( PotentiallyAmbiguousQualifiedName NameToLeftHandSideCompletion | BaseExpression LeftHandSideCompletion | ParenthesizedExpression LeftHandSideCompletion )
+	LeftHandSideCompletion	:=	( Index LeftHandSideCompletion | NonIndexLeftHandSideCompletion )
+	NonIndexLeftHandSideCompletion	:=	( Feature FeatureToLeftHandSideCompletion | SequenceOperationOrReductionOrExpansion LeftHandSideCompletion )
+	NameToLeftHandSideCompletion	:=	( NameToPrimaryExpressionCompletion LeftHandSideCompletion | Index ( LeftHandSideCompletion )? | NonIndexLeftHandSideCompletion )?
+	FeatureToLeftHandSideCompletion	:=	( Index ( LeftHandSideCompletion )? | FeatureInvocation LeftHandSideCompletion | NonIndexLeftHandSideCompletion )?
 	AssignmentOperator	:=	( <ASSIGN> | <PLUSASSIGN> | <MINUSASSIGN> | <STARASSIGN> | <SLASHASSIGN> | <REMASSIGN> | <ANDASSIGN> | <ORASSIGN> | <XORASSIGN> )
 
 /**************
@@ -436,7 +419,7 @@ NON-TERMINALS
 
 /* LOCAL NAME DECLARATION AND EXPRESSION STATEMENTS */
 
-	LocalNameDeclarationOrExpressionStatement	:=	( ColonQualifiedName ( ( MultiplicityIndicator )? Name LocalNameDeclarationStatementCompletion | UnambiguousQualifiedNameExpressionCompletion <SEMICOLON> ) | DotQualifiedName ( ( MultiplicityIndicator )? Name LocalNameDeclarationStatementCompletion | AmbiguousQualifiedNameExpressionCompletion <SEMICOLON> ) | Name ( ( MultiplicityIndicator )? Name LocalNameDeclarationStatementCompletion | NameExpressionCompletion <SEMICOLON> ) | NonNameExpression <SEMICOLON> )
+	LocalNameDeclarationOrExpressionStatement	:=	( PotentiallyAmbiguousQualifiedName ( ( MultiplicityIndicator )? Name LocalNameDeclarationStatementCompletion | NameToExpressionCompletion <SEMICOLON> ) | NonNameExpression <SEMICOLON> )
 	MultiplicityIndicator	:=	<LBRACKET> <RBRACKET>
 	LocalNameDeclarationStatement	:=	<LET> Name <COLON> TypeName ( MultiplicityIndicator )? LocalNameDeclarationStatementCompletion
 	LocalNameDeclarationStatementCompletion	:=	<ASSIGN> Expression <SEMICOLON>
@@ -467,8 +450,8 @@ NON-TERMINALS
 /* FOR STATEMENTS */
 
 	ForStatement	:=	<FOR> <LPAREN> ForControl <RPAREN> Block
-	ForControl	:=	ForVariableDefinition ( <COMMA> ForVariableDefinition )* ( <WHILE> Expression )?
-	ForVariableDefinition	:=	( Name <IN> Expression ( <DOUBLE_DOT> Expression )? | QualifiedName Name <COLON> Expression )
+	ForControl	:=	LoopVariableDefinition ( <COMMA> LoopVariableDefinition )* ( <WHILE> Expression )?
+	LoopVariableDefinition	:=	( Name <IN> Expression ( <DOUBLE_DOT> Expression )? | QualifiedName Name <COLON> Expression )
 
 /* BREAK STATEMENTS */
 
@@ -604,7 +587,6 @@ NON-TERMINALS
 	AttributeInitializer	:=	<ASSIGN> Expression
 	PropertyDeclaration	:=	Name <COLON> ( <COMPOSE> )? TypePart
 	TypePart	:=	TypeName ( Multiplicity )?
-		|	<COLLECTION_NAME> ( <LT> TypeName <GT> )?
 	TypeName	:=	( QualifiedName | <ANY> )
 	Multiplicity	:=	<LBRACKET> ( MultiplicityRange )? <RBRACKET> ( <ORDERED> )? ( <NONUNIQUE> )?
 	MultiplicityRange	:=	( <NATURAL_LITERAL> <DOUBLE_DOT> )? UnlimitedNaturalLiteral
