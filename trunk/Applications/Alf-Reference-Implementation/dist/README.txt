@@ -1,11 +1,11 @@
 ACTION LANGUAGE FOR UML (Alf) PARSER
 ------------------------------------
-Copyright 2009 Data Access Technologies, Inc. (Model Driven Solutions)
+Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
 
 Alf is action language for UML being developed in response to the OMG Request
-for Proposals "Concrete Syntax for a UML Action Language". Revised submissions
-are currently due February 15, 2010. For a copy of the RFP and the latest
-draft specification, see
+for Proposals "Concrete Syntax for a UML Action Language". The second revised
+submission is currently due August 23, 2010. For a copy of the RFP and the 
+latest draft specification, see
 
 http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/doc/
 
@@ -35,4 +35,3 @@ found in Root\Model\MyModel\MyPackage\MyClass.alf, while
 Root\Library\FoundationalModelLibrary\BasicInputOutput.alf). 
 
 Some sample Alf code can be found in the tests.zip archive.
-
