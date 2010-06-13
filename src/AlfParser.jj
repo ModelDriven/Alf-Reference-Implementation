@@ -926,7 +926,6 @@ Tuple LinkOperationTuple():
   String n;
   Expression e;
   Expression i;
-  ExpressionList el = new ExpressionList();
   Tuple t = new PositionalTuple();
 }
 {
