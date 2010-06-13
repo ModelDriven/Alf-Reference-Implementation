@@ -1,0 +1,1 @@
+class MapToString<T> specializes Map<Entry=>T, Value=>String> { }
