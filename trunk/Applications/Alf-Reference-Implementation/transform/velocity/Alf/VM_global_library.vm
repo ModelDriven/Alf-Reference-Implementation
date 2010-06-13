@@ -141,7 +141,7 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 	#if ( !${foundBody} )
 	    #if ( ${operation.name.startsWith("set")} )
 	        #if ( ${operation.ownedParameters.size()} == 0 )
-	         	this.i${operation.name.substring(4)} = true;
+	         	this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)} = true;
 	        #else
 	        	this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)} = ${operation.ownedParameters.get(0).name};
 	        #end
@@ -157,7 +157,7 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 	        #if ($opt) } #end
 	    #elseif ( ${operation.name.startsWith("get")} )
          	return this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)};
-	    #elseif ( ${operation.name.startsWith("is")} )
+	    #elseif ( ${operation.ownedParameters.size()} == 1&&${operation.returnResult.type.eClass().name}=="PrimitiveType"&&${operation.returnResult.type.name}=="Boolean" )
         	return this.${operation.name};
 	  	#else
 	  		// TODO

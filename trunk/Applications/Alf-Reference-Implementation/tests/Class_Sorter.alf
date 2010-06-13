@@ -1,0 +1,11 @@
+class Sorter<T specializes Comparable> {
+
+  private list: List<T>;
+  @Create public Sorter() { }
+  @Create public Sorter(in list: List<T>);
+
+  public append(in elements: List<T>);
+  public sort();
+  public getList(): List<T>;
+  public clear();
+}

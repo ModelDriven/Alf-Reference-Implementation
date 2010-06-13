@@ -122,6 +122,15 @@
 			<arg value="tests\Class_SuperConstructors.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Class_Collection.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Class_MapToString.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Class_Sorter.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\Datatype_Complex.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">

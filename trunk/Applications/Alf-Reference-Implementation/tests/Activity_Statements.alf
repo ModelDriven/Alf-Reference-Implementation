@@ -19,6 +19,9 @@ activity Statements() {
   DomainTypes.CurrencyAmount interest = this.principal * this.rate * period;
   let inactiveMembers : Member[] = members -> select member (!member.isActive);
   RealProperty[] realProperties = (RealProperty)assets;
+  let origin : Point = new(0,0);
+  IntegerList list = {1, 2, 3};
+  Set<RealProperty> fixedAssets = new { land, home, condominium };
   
   if (reading > threshold) {
      monitor.raiseAlarm(sensorId); 
