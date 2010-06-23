@@ -22,7 +22,7 @@ public class FeatureReference extends Expression {
 	private Expression expression = null;
 	public NameBinding nameBinding = null;
 
-	public FeatureReference(Expression expression, NameBinding nameBiinding) {
+	public FeatureReference(Expression expression, NameBinding nameBinding) {
 		this.expression = expression;
 		this.nameBinding = nameBinding;
 	} // FeatureReference
