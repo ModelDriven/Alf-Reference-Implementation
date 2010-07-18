@@ -1,0 +1,35 @@
+namespace Alf::Library::Collections::CollectionClasses::Impl;
+private import Alf::Library::FunctionBehaviors::Collections::CollectionFunctions::*;
+/**
+The concrete implementation of the standard library template Set class.
+*/
+class Set<T> specializes CollectionImpl<T>, CollectionClasses::Set<T> {
+
+  private content: T[0..*];
+
+  @Create public Set (in seq: T[0..*] sequence): Set<T> { 
+    super.CollectionImpl(seq);
+  }
+
+  @Destroy public destroy () { 
+    super.CollectionImpl<T>::destroy();
+  }
+
+  private setContent (in seq: T[0..*] sequence) {
+    this.content = seq;
+  }                                                                      
+
+  public addAll (in seq: T[0..*] sequence): Boolean {
+    return super.CollectionImpl<T>::addAll(seq->toOrderedSet());
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public equals (in seq: T[0..*] sequence): Boolean { 
+    set = seq->toOrderedSet();
+    return this.size() == set->size() && this.includesAll(set);
+  }
+  
+  public toSequence (): T[0..*] sequence {
+    return this.content;
+  }
+
+}

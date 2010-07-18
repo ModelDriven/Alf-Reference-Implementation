@@ -1,0 +1,49 @@
+namespace Alf::Library::Collections::CollectionClasses::Impl;
+private import Alf::Library::FunctionBehaviors::Collections::CollectionFunctions::*;
+/**
+The concrete implementation of the standard library template Deque class.
+*/
+class Deque<T> specializes Queue<T> {
+
+  @Create public Deque (in seq: T[0..*] sequence): Deque<T> { 
+    super(seq);
+  }
+
+  @Destroy public destroy () { 
+    super.destroy();
+  }
+
+  public addFirst (in element: T): Boolean {
+    this.setContent(this.toSequence()->includeAt(1, element));
+    return true;
+  }
+  
+  public last (): T[0..1] {
+    return this.toSequence()->last();
+  }
+  
+  public removeLast (): T[0..1] {
+    result = this.last();
+    this.setContent(this.toSequence()->subsequence(1,this.size()-1));
+    return result;
+  }
+  
+  public removeLastOne (in element: T): T[0..1] {
+    result = null;
+    i = this.size();
+    while (i > 0 && result == null) {
+      e = this.toSequence()->at(i);
+      if (e == element) {
+        result = e;
+        this.setContent(this.toSequence()->excludeAt(i));
+      }
+      i = i - 1;
+    }
+    return result;
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public toSequence (): T[0..*] sequence {
+    return this.content;
+  }
+
+}

@@ -1,0 +1,51 @@
+namespace Alf::Library::Collections::CollectionClasses::Impl;
+private import Alf::Library::FunctionBehaviors::Collections::CollectionFunctions::*;
+/**
+The concrete implementation of the standard library template OrderedSet class.
+*/
+class OrderedSet<T> 
+  specializes OrderedCollectionImpl<T>, CollectionClasses::OrderedSet<T> {
+  
+  private content: T[0..*] ordered;
+  
+  @Create public OrderedSet (in seq: T[0..*] sequence): OrderedSet<T> { 
+    super.OrderedCollectionImpl(seq->toOrderedSet());
+  }
+
+  @Destroy public destroy () { 
+    super.OrderedCollectionImpl<T>::destroy();
+  }
+
+  private setContent(in seq: T[0..*] sequence) {
+    this.content = seq;
+  }
+
+  public equals (in seq: T[0..*] sequence): Boolean { 
+    return super.OrdredCollcetionImpl<T>::equals(seq->toOrderedSet());
+  }
+
+  public addAll (in seq: T[0..*] sequence): Boolean {
+    return super.OrderedCollectionImpl<T>::addAll(seq->toOrderedSet());
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public addAllAt (in index: Integer, in seq: T[0..*] sequence): Boolean {
+    return super.OrderedCollectionImpl<T>::addAllAt(index, seq->toOrderedSet());
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public replaceAt (in index: Integer, in element: T): T[0..1] {
+    result = this.at(index);
+    if (result->notEmpty()) {
+      this.remove(result);
+      this.addAt(index, element);
+    }
+    return result;
+  }
+  
+  public subOrderedSet (in lower: Integer, in upper: Integer): OrderedSet<T> {
+    return new OrderedSet(this.toSequence()->subsequence(lower, upper));
+  }
+  
+  public toSequence(): T[0..*] sequence {
+    return this.content;
+  }
+}

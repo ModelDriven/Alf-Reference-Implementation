@@ -1,0 +1,44 @@
+namespace Alf::Library::Collections::CollectionClasses::Impl;
+private import Alf::Library::FunctionBehaviors::Collections::CollectionFunctions::*;
+/**
+The concrete implementation of the standard library template Queue class.
+*/
+class Queue<T> specializes CollectionImpl<T>, CollectionClasses::Set<T> {
+
+  private content: T[0..*] sequence;
+
+  @Create public Queue (in seq: T[0..*] sequence): Queue<T> { 
+    super.CollectionImpl(seq);
+  }
+
+  @Destroy public destroy () { 
+    super.CollectionImpl<T>::destroy();
+  }
+
+  protected setContent (in seq: T[0..*] sequence) {
+    this.content = seq;
+  }
+  
+  public addLast (in element : T): Boolean {
+    return this.add(element);
+  }
+  
+  public first(): T[0..1] {
+    return this.toSequence()->first();
+  }
+  
+  public removeFirst (): T[0..1] {
+    result = this.toSequence()->first();
+    this.setContent(this.toSequence->subsequence(2,this.size()));
+    return result;
+  }
+  
+  public removeFirstOne (in element: T): T[0..*] {
+    return this.removeOne(element);
+  }                      
+
+  public toSequence (): T[0..*] sequence {
+    return this.content;
+  }
+
+}

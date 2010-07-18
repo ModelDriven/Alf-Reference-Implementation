@@ -68,6 +68,36 @@
 			<arg value="tests\Example3j.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-CollectionClasses-Impl.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-CollectionImpl.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-OrderedCollectionImpl.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Set.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-OrderedSet.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Bag.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-List.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Queue.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Deque.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Map.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\ActiveClass_Order.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
