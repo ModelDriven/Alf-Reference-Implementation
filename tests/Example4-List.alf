@@ -1,0 +1,30 @@
+namespace Alf::Library::Collections::CollectionClasses::Impl;
+private import Alf::Library::FunctionBehaviors::Collections::CollectionFunctions::*;
+/**
+The concrete implementation of the standard library template List class.
+*/
+class List<T> 
+  specializes OrderedCollectionImpl<T>, CollectionClasses::OrderedSet<T> {
+  
+  private content: T[0..*] sequence;
+
+  @Create public List (in seq: T[0..*] sequence): List<T> { 
+    super.OrderedCollectionImpl(seq);
+  }
+
+  @Destroy public destroy () { 
+    super.OrderedCollectionImpl<T>::destroy();
+  }
+
+  private setContent(in seq: T[0..*]) {
+    this.content = seq;
+  }
+  
+  public subList (in lower: Integer, in upper: Integer): OrderedSet<T> {
+    return new List(this.toSequence()->subsequence(lower, upper));
+  }
+  
+  public toSequence(): T[0..*] sequence {
+    return this.content;
+  }
+}

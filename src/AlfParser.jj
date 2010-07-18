@@ -282,6 +282,7 @@ TOKEN:
 | < REDEFINES: "redefines" >
 | < REDUCE: "reduce" >
 | < RETURN: "return" >
+| < SEQUENCE: "sequence" >
 | < SPECIALIZES: "specializes" >
 | < SUPER: "super" >
 | < SIGNAL: "signal" >
@@ -3251,7 +3252,10 @@ void Multiplicity(TypedElementDeclaration d):
 {}
 {
   <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET> 
-  [ <ORDERED> { d.setIsOrdered(); } ] [ <NONUNIQUE> { d.setIsNonunique(); } ]
+  [ <ORDERED> { d.setIsOrdered(); } [ <NONUNIQUE> { d.setIsNonunique(); } ]
+  | <NONUNIQUE> { d.setIsNonunique(); } [ <ORDERED> { d.setIsOrdered(); } ]
+  | <SEQUENCE> { d.setIsNonunique(); d.setIsOrdered(); }
+  ]
 }
 
 void MultiplicityRange(TypedElementDeclaration d):

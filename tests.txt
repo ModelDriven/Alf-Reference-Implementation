@@ -1931,6 +1931,1966 @@ UnitDefinition name:retrieve
          NameExpression
           QualifiedName property
 Alf 0.09 Parser
+Parsing tests\Example4-CollectionClasses-Impl.alf...
+Parsed successfully.
+UnitDefinition name:Impl
+ QualifiedName Alf::Library::Collections::CollectionClasses
+ PackageDefinition name:Impl visibility: isStub:false
+ @ModelLibrary
+  ClassDefinition name:CollectionImpl visibility:private isStub:true isAbstract: false
+   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  ClassDefinition name:OrderedCollectionImpl visibility:private isStub:true isAbstract: false
+   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+   QualifiedNameList
+    QualifiedName CollectionImpl<T>
+  ClassDefinition name:Set visibility:public isStub:true isAbstract: false
+   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+   QualifiedNameList
+    QualifiedName CollectionImpl<T>
+    QualifiedName CollectionClasses::Set<T>
+  ClassDefinition name:Bag visibility:public isStub:true isAbstract: false
+   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+   QualifiedNameList
+    QualifiedName CollectionImpl<T>
+    QualifiedName CollectionClasses::Bag<T>
+  ClassDefinition name:OrderedSet visibility:public isStub:true isAbstract: false
+   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+   QualifiedNameList
+    QualifiedName OrderedCollectionImpl<T>
+    QualifiedName CollectionClasses::OrderedSet<T>
+  ClassDefinition name:List visibility:public isStub:true isAbstract: false
+   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+   QualifiedNameList
+    QualifiedName OrderedCollectionImpl<T>
+    QualifiedName CollectionClasses::List<T>
+  ClassDefinition name:Queue visibility:public isStub:true isAbstract: false
+   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+   QualifiedNameList
+    QualifiedName CollectionImpl<T>
+    QualifiedName CollectionClasses::Queue<T>
+  ClassDefinition name:Deque visibility:public isStub:true isAbstract: false
+   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+   QualifiedNameList
+    QualifiedName CollectionImpl<T>
+    QualifiedName CollectionClasses::Deque<T>
+  ClassDefinition name:Map visibility:public isStub:true isAbstract: false
+   ClassifierTemplateParameter name:Key visibility:private isStub:false isAbstract: true
+   ClassifierTemplateParameter name:Value visibility:private isStub:false isAbstract: true
+   QualifiedNameList
+    QualifiedName CollectionClasses::Map<Key,Value>
+Alf 0.09 Parser
+Parsing tests\Example4-CollectionImpl.alf...
+Parsed successfully.
+UnitDefinition name:CollectionImpl
+
+The base concrete implementation for all the standard library collection classes.
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:CollectionImpl visibility: isStub:false isAbstract: true
+  ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  OperationDefinition name:CollectionImpl visibility:protected isStub:false isAbstract:false
+  @Create
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName seq
+  OperationDefinition name:setContent visibility:protected isStub:false isAbstract:true
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+  OperationDefinition name:toSequence visibility:public isStub:false isAbstract:true
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+  OperationDefinition name:add visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      FeatureInvocationExpression
+       FeatureReference nameBinding:excludes
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName element
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName including
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName element
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:addAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName preSize
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName union
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName seq
+    ReturnStatement
+     BinaryExpression operator:>
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+      NameExpression
+       QualifiedName preSize
+  OperationDefinition name:clear visibility:public isStub:false isAbstract:false
+   Block
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceConstructionExpression null
+  OperationDefinition name:count visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName count
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:equals visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName equals
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+       NameExpression
+        QualifiedName seq
+  OperationDefinition name:excludes visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName excludes
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:excludesAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName excludesAll
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:includes visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName includes
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:includesAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName includesAll
+      FeatureReference nameBinding:toSequence
+       ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:isEmpty visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName isEmpty
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+  OperationDefinition name:notEmpty visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName notEmpty
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+  OperationDefinition name:remove visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      FeatureInvocationExpression
+       FeatureReference nameBinding:count
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName element
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName excluding
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName element
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:removeAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName preSize
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName difference
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName seq
+    ReturnStatement
+     BinaryExpression operator:<
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+      NameExpression
+       QualifiedName preSize
+  OperationDefinition name:removeOne visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      BehaviorInvocationExpression
+       QualifiedName self::includes(?)
+       PositionalTuple
+        NameExpression
+         QualifiedName element
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName excludingOne
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName element
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:replace visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name:newElement visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      FeatureInvocationExpression
+       FeatureReference nameBinding:count
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName element
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName replacing
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName element
+         NameExpression
+          QualifiedName newElement
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:replaceOne visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name:newElement visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      FeatureInvocationExpression
+       FeatureReference nameBinding:includes
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName element
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName replacingOne
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName element
+         NameExpression
+          QualifiedName newElement
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:retainAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName preSize
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName intersection
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName seq
+    ReturnStatement
+     BinaryExpression operator:<
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+      BehaviorInvocationExpression
+       QualifiedName preSize
+       PositionalTuple
+  OperationDefinition name:size visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName size
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+Alf 0.09 Parser
+Parsing tests\Example4-OrderedCollectionImpl.alf...
+Parsed successfully.
+UnitDefinition name:OrderedCollectionImpl
+
+The base concrete implementation for the standard library ordered collection 
+classes
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:OrderedCollectionImpl visibility: isStub:false isAbstract: true
+  ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  OperationDefinition name:OrderedCollectionImpl visibility:protected isStub:false isAbstract:false
+  @Create
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName seq
+  OperationDefinition name:addAllAt visibility:public isStub:false isAbstract:false
+   FormalParameter name:index visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName preSize
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName includeAllAt
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName index
+         NameExpression
+          QualifiedName seq
+    ReturnStatement
+     BinaryExpression operator:>
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+      NameExpression
+       QualifiedName preSize
+  OperationDefinition name:addAt visibility:public isStub:false isAbstract:false
+   FormalParameter name:index visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     BehaviorInvocationExpression
+      QualifiedName addAllAt
+      PositionalTuple
+       NameExpression
+        QualifiedName index
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:at visibility:public isStub:false isAbstract:false
+   FormalParameter name:index visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName at
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+       NameExpression
+        QualifiedName index
+  OperationDefinition name:first visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:at
+       ThisExpression
+      PositionalTuple
+       NaturalLiteral image:1
+  OperationDefinition name:indexOf visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName Integer
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName indexof
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:last visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:at
+       ThisExpression
+      PositionalTuple
+       FeatureInvocationExpression
+        FeatureReference nameBinding:size
+         ThisExpression
+        PositionalTuple
+  OperationDefinition name:removeAt visibility:public isStub:false isAbstract:false
+   FormalParameter name:index visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      FeatureInvocationExpression
+       FeatureReference nameBinding:at
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName index
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName excludeAt
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName index
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:replaceAt visibility:public isStub:false isAbstract:false
+   FormalParameter name:index visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      FeatureInvocationExpression
+       FeatureReference nameBinding:at
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName index
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName replacingAt
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName index
+         NameExpression
+          QualifiedName element
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  QualifiedNameList
+   QualifiedName CollectionImpl<T>
+Alf 0.09 Parser
+Parsing tests\Example4-Set.alf...
+Parsed successfully.
+UnitDefinition name:Set
+
+The concrete implementation of the standard library template Set class.
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:Set visibility: isStub:false isAbstract: false
+  ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  PropertyDefinition name:content visibility:private isStub:false isComposite:false
+   TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+    QualifiedName T
+  OperationDefinition name:Set visibility:public isStub:false isAbstract:false
+  @Create
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Set<T>
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName CollectionImpl
+      PositionalTuple
+       NameExpression
+        QualifiedName seq
+  OperationDefinition name:destroy visibility:public isStub:false isAbstract:false
+  @Destroy
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName CollectionImpl<T>::destroy
+      PositionalTuple
+  OperationDefinition name:setContent visibility:private isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      FeatureLeftHandSide
+       FeatureReference nameBinding:content
+        ThisExpression
+      NameExpression
+       QualifiedName seq
+  OperationDefinition name:addAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SuperInvocationExpression
+      QualifiedName CollectionImpl<T>::addAll
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName toOrderedSet
+        NameExpression
+         QualifiedName seq
+        PositionalTuple
+  OperationDefinition name:equals visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName set
+      SequenceOperationExpression
+       QualifiedName toOrderedSet
+       NameExpression
+        QualifiedName seq
+       PositionalTuple
+    ReturnStatement
+     ConditionalBinaryExpression operator:&&
+      BinaryExpression operator:==
+       FeatureInvocationExpression
+        FeatureReference nameBinding:size
+         ThisExpression
+        PositionalTuple
+       SequenceOperationExpression
+        QualifiedName size
+        NameExpression
+         QualifiedName set
+        PositionalTuple
+      FeatureInvocationExpression
+       FeatureReference nameBinding:includesAll
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName set
+  OperationDefinition name:toSequence visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureReference nameBinding:content
+      ThisExpression
+  QualifiedNameList
+   QualifiedName CollectionImpl<T>
+   QualifiedName CollectionClasses::Set<T>
+Alf 0.09 Parser
+Parsing tests\Example4-OrderedSet.alf...
+Parsed successfully.
+UnitDefinition name:OrderedSet
+
+The concrete implementation of the standard library template OrderedSet class.
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:OrderedSet visibility: isStub:false isAbstract: false
+  ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  PropertyDefinition name:content visibility:private isStub:false isComposite:false
+   TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:false
+    QualifiedName T
+  OperationDefinition name:OrderedSet visibility:public isStub:false isAbstract:false
+  @Create
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName OrderedSet<T>
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName OrderedCollectionImpl
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName toOrderedSet
+        NameExpression
+         QualifiedName seq
+        PositionalTuple
+  OperationDefinition name:destroy visibility:public isStub:false isAbstract:false
+  @Destroy
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName OrderedCollectionImpl<T>::destroy
+      PositionalTuple
+  OperationDefinition name:setContent visibility:private isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      FeatureLeftHandSide
+       FeatureReference nameBinding:content
+        ThisExpression
+      NameExpression
+       QualifiedName seq
+  OperationDefinition name:equals visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SuperInvocationExpression
+      QualifiedName OrdredCollcetionImpl<T>::equals
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName toOrderedSet
+        NameExpression
+         QualifiedName seq
+        PositionalTuple
+  OperationDefinition name:addAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SuperInvocationExpression
+      QualifiedName OrderedCollectionImpl<T>::addAll
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName toOrderedSet
+        NameExpression
+         QualifiedName seq
+        PositionalTuple
+  OperationDefinition name:addAllAt visibility:public isStub:false isAbstract:false
+   FormalParameter name:index visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SuperInvocationExpression
+      QualifiedName OrderedCollectionImpl<T>::addAllAt
+      PositionalTuple
+       NameExpression
+        QualifiedName index
+       SequenceOperationExpression
+        QualifiedName toOrderedSet
+        NameExpression
+         QualifiedName seq
+        PositionalTuple
+  OperationDefinition name:replaceAt visibility:public isStub:false isAbstract:false
+   FormalParameter name:index visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      FeatureInvocationExpression
+       FeatureReference nameBinding:at
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName index
+    IfStatement
+     ConcurrentClauses
+      NonFinalClause
+       SequenceOperationExpression
+        QualifiedName notEmpty
+        NameExpression
+         QualifiedName result
+        PositionalTuple
+       Block
+        ExpressionStatement
+         FeatureInvocationExpression
+          FeatureReference nameBinding:remove
+           ThisExpression
+          PositionalTuple
+           NameExpression
+            QualifiedName result
+        ExpressionStatement
+         FeatureInvocationExpression
+          FeatureReference nameBinding:addAt
+           ThisExpression
+          PositionalTuple
+           NameExpression
+            QualifiedName index
+           NameExpression
+            QualifiedName element
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:subOrderedSet visibility:public isStub:false isAbstract:false
+   FormalParameter name:lower visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name:upper visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName OrderedSet<T>
+   Block
+    ReturnStatement
+     InstanceCreationExpression
+      QualifiedName OrderedSet
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName subsequence
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName lower
+         NameExpression
+          QualifiedName upper
+  OperationDefinition name:toSequence visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureReference nameBinding:content
+      ThisExpression
+  QualifiedNameList
+   QualifiedName OrderedCollectionImpl<T>
+   QualifiedName CollectionClasses::OrderedSet<T>
+Alf 0.09 Parser
+Parsing tests\Example4-Bag.alf...
+Parsed successfully.
+UnitDefinition name:Bag
+
+The concrete implementation of the standard library template Bag class.
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:Bag visibility: isStub:false isAbstract: false
+  ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  PropertyDefinition name:content visibility:private isStub:false isComposite:false
+   TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:true
+    QualifiedName T
+  OperationDefinition name:Bag visibility:public isStub:false isAbstract:false
+  @Create
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Bag<T>
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName OrderedCollectionImpl
+      PositionalTuple
+       NameExpression
+        QualifiedName seq
+  OperationDefinition name:destroy visibility:public isStub:false isAbstract:false
+  @Destroy
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName CollectionImpl<T>::destroy
+      PositionalTuple
+  OperationDefinition name:setContent visibility:private isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      FeatureLeftHandSide
+       FeatureReference nameBinding:content
+        ThisExpression
+      NameExpression
+       QualifiedName seq
+  OperationDefinition name:equals visibility:public isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     ConditionalBinaryExpression operator:&&
+      BinaryExpression operator:==
+       FeatureInvocationExpression
+        FeatureReference nameBinding:size
+         ThisExpression
+        PositionalTuple
+       SequenceOperationExpression
+        QualifiedName size
+        NameExpression
+         QualifiedName seq
+        PositionalTuple
+      FeatureInvocationExpression
+       FeatureReference nameBinding:includesAll
+        ThisExpression
+       PositionalTuple
+        NameExpression
+         QualifiedName seq
+  OperationDefinition name:toSequence visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureReference nameBinding:content
+      ThisExpression
+  QualifiedNameList
+   QualifiedName CollectionImpl<T>
+   QualifiedName CollectionClasses::Bag<T>
+Alf 0.09 Parser
+Parsing tests\Example4-List.alf...
+Parsed successfully.
+UnitDefinition name:List
+
+The concrete implementation of the standard library template List class.
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:List visibility: isStub:false isAbstract: false
+  ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  PropertyDefinition name:content visibility:private isStub:false isComposite:false
+   TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+    QualifiedName T
+  OperationDefinition name:List visibility:public isStub:false isAbstract:false
+  @Create
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName List<T>
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName OrderedCollectionImpl
+      PositionalTuple
+       NameExpression
+        QualifiedName seq
+  OperationDefinition name:destroy visibility:public isStub:false isAbstract:false
+  @Destroy
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName OrderedCollectionImpl<T>::destroy
+      PositionalTuple
+  OperationDefinition name:setContent visibility:private isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      FeatureLeftHandSide
+       FeatureReference nameBinding:content
+        ThisExpression
+      NameExpression
+       QualifiedName seq
+  OperationDefinition name:subList visibility:public isStub:false isAbstract:false
+   FormalParameter name:lower visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name:upper visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName OrderedSet<T>
+   Block
+    ReturnStatement
+     InstanceCreationExpression
+      QualifiedName List
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName subsequence
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NameExpression
+          QualifiedName lower
+         NameExpression
+          QualifiedName upper
+  OperationDefinition name:toSequence visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureReference nameBinding:content
+      ThisExpression
+  QualifiedNameList
+   QualifiedName OrderedCollectionImpl<T>
+   QualifiedName CollectionClasses::OrderedSet<T>
+Alf 0.09 Parser
+Parsing tests\Example4-Queue.alf...
+Parsed successfully.
+UnitDefinition name:Queue
+
+The concrete implementation of the standard library template Queue class.
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:Queue visibility: isStub:false isAbstract: false
+  ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  PropertyDefinition name:content visibility:private isStub:false isComposite:false
+   TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+    QualifiedName T
+  OperationDefinition name:Queue visibility:public isStub:false isAbstract:false
+  @Create
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Queue<T>
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName CollectionImpl
+      PositionalTuple
+       NameExpression
+        QualifiedName seq
+  OperationDefinition name:destroy visibility:public isStub:false isAbstract:false
+  @Destroy
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName CollectionImpl<T>::destroy
+      PositionalTuple
+  OperationDefinition name:setContent visibility:protected isStub:false isAbstract:false
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      FeatureLeftHandSide
+       FeatureReference nameBinding:content
+        ThisExpression
+      NameExpression
+       QualifiedName seq
+  OperationDefinition name:addLast visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:add
+       ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:first visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName first
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+  OperationDefinition name:removeFirst visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      SequenceOperationExpression
+       QualifiedName first
+       FeatureInvocationExpression
+        FeatureReference nameBinding:toSequence
+         ThisExpression
+        PositionalTuple
+       PositionalTuple
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName subsequence
+        FeatureReference nameBinding:toSequence
+         ThisExpression
+        PositionalTuple
+         NaturalLiteral image:2
+         FeatureInvocationExpression
+          FeatureReference nameBinding:size
+           ThisExpression
+          PositionalTuple
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:removeFirstOne visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:removeOne
+       ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName element
+  OperationDefinition name:toSequence visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureReference nameBinding:content
+      ThisExpression
+  QualifiedNameList
+   QualifiedName CollectionImpl<T>
+   QualifiedName CollectionClasses::Set<T>
+Alf 0.09 Parser
+Parsing tests\Example4-Deque.alf...
+Parsed successfully.
+UnitDefinition name:Deque
+
+The concrete implementation of the standard library template Deque class.
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:Deque visibility: isStub:false isAbstract: false
+  ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
+  OperationDefinition name:Deque visibility:public isStub:false isAbstract:false
+  @Create
+   FormalParameter name:seq visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Deque<T>
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName seq
+  OperationDefinition name:destroy visibility:public isStub:false isAbstract:false
+  @Destroy
+   Block
+    ExpressionStatement
+     SuperInvocationExpression
+      QualifiedName destroy
+      PositionalTuple
+  OperationDefinition name:addFirst visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName includeAt
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NaturalLiteral image:1
+         NameExpression
+          QualifiedName element
+    ReturnStatement
+     NameExpression
+      QualifiedName true
+  OperationDefinition name:last visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName last
+      FeatureInvocationExpression
+       FeatureReference nameBinding:toSequence
+        ThisExpression
+       PositionalTuple
+      PositionalTuple
+  OperationDefinition name:removeLast visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      FeatureInvocationExpression
+       FeatureReference nameBinding:last
+        ThisExpression
+       PositionalTuple
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:setContent
+       ThisExpression
+      PositionalTuple
+       SequenceOperationExpression
+        QualifiedName subsequence
+        FeatureInvocationExpression
+         FeatureReference nameBinding:toSequence
+          ThisExpression
+         PositionalTuple
+        PositionalTuple
+         NaturalLiteral image:1
+         BinaryExpression operator:-
+          FeatureInvocationExpression
+           FeatureReference nameBinding:size
+            ThisExpression
+           PositionalTuple
+          NaturalLiteral image:1
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:removeLastOne visibility:public isStub:false isAbstract:false
+   FormalParameter name:element visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName T
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName T
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName result
+      SequenceConstructionExpression null
+    ExpressionStatement
+     AssignmentExpression operator:=
+      NameLeftHandSide
+       QualifiedName i
+      FeatureInvocationExpression
+       FeatureReference nameBinding:size
+        ThisExpression
+       PositionalTuple
+    WhileStatement
+     ConditionalBinaryExpression operator:&&
+      BinaryExpression operator:>
+       NameExpression
+        QualifiedName i
+       NaturalLiteral image:0
+      BinaryExpression operator:==
+       NameExpression
+        QualifiedName result
+       SequenceConstructionExpression null
+     Block
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName e
+        SequenceOperationExpression
+         QualifiedName at
+         FeatureInvocationExpression
+          FeatureReference nameBinding:toSequence
+           ThisExpression
+          PositionalTuple
+         PositionalTuple
+          NameExpression
+           QualifiedName i
+      IfStatement
+       ConcurrentClauses
+        NonFinalClause
+         BinaryExpression operator:==
+          NameExpression
+           QualifiedName e
+          NameExpression
+           QualifiedName element
+         Block
+          ExpressionStatement
+           AssignmentExpression operator:=
+            NameLeftHandSide
+             QualifiedName result
+            NameExpression
+             QualifiedName e
+          ExpressionStatement
+           FeatureInvocationExpression
+            FeatureReference nameBinding:setContent
+             ThisExpression
+            PositionalTuple
+             SequenceOperationExpression
+              QualifiedName excludeAt
+              FeatureInvocationExpression
+               FeatureReference nameBinding:toSequence
+                ThisExpression
+               PositionalTuple
+              PositionalTuple
+               NameExpression
+                QualifiedName i
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName i
+        BinaryExpression operator:-
+         NameExpression
+          QualifiedName i
+         NaturalLiteral image:1
+    ReturnStatement
+     NameExpression
+      QualifiedName result
+  OperationDefinition name:toSequence visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName T
+   Block
+    ReturnStatement
+     FeatureReference nameBinding:content
+      ThisExpression
+  QualifiedNameList
+   QualifiedName Queue<T>
+Alf 0.09 Parser
+Parsing tests\Example4-Map.alf...
+Parsed successfully.
+UnitDefinition name:Map
+
+The concrete implementation of the standard library template Map class.
+
+ QualifiedName Alf::Library::Collections::CollectionClasses::Impl
+ ImportReference visibility:private alias: packageImport:true
+  QualifiedName Alf::Library::FunctionBehaviors::Collections::CollectionFunctions
+ ClassDefinition name:Map visibility: isStub:false isAbstract: false
+  ClassifierTemplateParameter name:Key visibility:private isStub:false isAbstract: true
+  ClassifierTemplateParameter name:Value visibility:private isStub:false isAbstract: true
+  PropertyDefinition name:entries visibility:private isStub:false isComposite:false
+   TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+    QualifiedName Entry
+  OperationDefinition name:Map visibility:public isStub:false isAbstract:false
+  @Create
+   FormalParameter name:entries visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+     QualifiedName Entry
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Map<Key,Value>
+   Block
+    ExpressionStatement
+     FeatureInvocationExpression
+      FeatureReference nameBinding:putAll
+       ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName entries
+  OperationDefinition name:destroy visibility:public isStub:false isAbstract:false
+  @Destroy
+   Block
+  OperationDefinition name:indexOf visibility:private isStub:false isAbstract:false
+   FormalParameter name:key visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Key
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName Integer
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName indexOf
+      FeatureReference nameBinding:key
+       FeatureReference nameBinding:entries
+        ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName key
+  OperationDefinition name:entries visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Set<Entry>
+   Block
+    ReturnStatement
+     InstanceCreationExpression
+      QualifiedName Set<Entry>
+      PositionalTuple
+       FeatureReference nameBinding:entries
+        ThisExpression
+  OperationDefinition name:clear visibility:public isStub:false isAbstract:false
+   Block
+    ExpressionStatement
+     AssignmentExpression operator:=
+      FeatureLeftHandSide
+       FeatureReference nameBinding:entries
+        ThisExpression
+      SequenceConstructionExpression null
+  OperationDefinition name:excludesAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:entries visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+     QualifiedName Entry
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName excludesAll
+      FeatureReference nameBinding:entries
+       ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName entries
+  OperationDefinition name:get visibility:public isStub:false isAbstract:false
+   FormalParameter name:key visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Key
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName Value
+   Block
+    IfStatement
+     ConcurrentClauses
+      NonFinalClause
+       SequenceOperationExpression
+        QualifiedName isEmpty
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName i
+         FeatureInvocationExpression
+          FeatureReference nameBinding:indexOf
+           ThisExpression
+          PositionalTuple
+           NameExpression
+            QualifiedName key
+        PositionalTuple
+       Block
+        ReturnStatement
+         SequenceConstructionExpression null
+     Block
+      ReturnStatement
+       FeatureReference nameBinding:value
+        SequenceAccessExpression
+         FeatureReference nameBinding:entries
+          ThisExpression
+         NameExpression
+          QualifiedName i
+  OperationDefinition name:includesAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:entries visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+     QualifiedName Entry
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName includesAll
+      FeatureReference nameBinding:entries
+       ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName entries
+  OperationDefinition name:includesKey visibility:public isStub:false isAbstract:false
+   FormalParameter name:key visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Key
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName includes
+      FeatureReference nameBinding:key
+       FeatureReference nameBinding:entries
+        ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName key
+  OperationDefinition name:includesValue visibility:public isStub:false isAbstract:false
+   FormalParameter name:value visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName Value
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName includes
+      FeatureReference nameBinding:value
+       FeatureReference nameBinding:entries
+        ThisExpression
+      PositionalTuple
+       NameExpression
+        QualifiedName value
+  OperationDefinition name:isEmpty visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName isEmpty
+      FeatureReference nameBinding:entries
+       ThisExpression
+      PositionalTuple
+  OperationDefinition name:keys visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Set<Key>
+   Block
+    ReturnStatement
+     InstanceCreationExpression
+      QualifiedName Set<Key>
+      PositionalTuple
+       FeatureReference nameBinding:key
+        FeatureReference nameBinding:entries
+         ThisExpression
+  OperationDefinition name:notEmpty visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Boolean
+   Block
+    ReturnStatement
+     SequenceOperationExpression
+      QualifiedName notEmpty
+      FeatureReference nameBinding:entries
+       ThisExpression
+      PositionalTuple
+  OperationDefinition name:put visibility:public isStub:false isAbstract:false
+   FormalParameter name:key visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Key
+   FormalParameter name:value visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName Value
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName Value
+   Block
+    IfStatement
+     ConcurrentClauses
+      NonFinalClause
+       SequenceOperationExpression
+        QualifiedName isEmpty
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName i
+         FeatureInvocationExpression
+          FeatureReference nameBinding:indexOf
+           ThisExpression
+          PositionalTuple
+           NameExpression
+            QualifiedName key
+        PositionalTuple
+       Block
+        ExpressionStatement
+         SequenceOperationExpression
+          QualifiedName add
+          FeatureReference nameBinding:entries
+           ThisExpression
+          PositionalTuple
+           InstanceCreationExpression
+            QualifiedName Entry
+            PositionalTuple
+             NameExpression
+              QualifiedName key
+             NameExpression
+              QualifiedName value
+        ReturnStatement
+         SequenceConstructionExpression null
+     Block
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName result
+        FeatureReference nameBinding:value
+         SequenceAccessExpression
+          FeatureReference nameBinding:entries
+           ThisExpression
+          NameExpression
+           QualifiedName i
+      ExpressionStatement
+       AssignmentExpression operator:=
+        FeatureLeftHandSide
+         FeatureReference nameBinding:value
+          SequenceAccessExpression
+           FeatureReference nameBinding:entries
+            ThisExpression
+           NameExpression
+            QualifiedName i
+        NameExpression
+         QualifiedName value
+      ReturnStatement
+       NameExpression
+        QualifiedName result
+  OperationDefinition name:putAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:entries visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+     QualifiedName Entry
+   Block
+    ExpressionStatement
+     SequenceExpansionExpression operation:iterate variable:e
+      NameExpression
+       QualifiedName entries
+      PositionalTuple
+       FeatureInvocationExpression
+        FeatureReference nameBinding:put
+         ThisExpression
+        PositionalTuple
+         NameExpression
+          QualifiedName e::key(?)
+         NameExpression
+          QualifiedName e::value(?)
+  OperationDefinition name:remove visibility:public isStub:false isAbstract:false
+   FormalParameter name:key visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Key
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
+     QualifiedName Value
+   Block
+    IfStatement
+     ConcurrentClauses
+      NonFinalClause
+       SequenceOperationExpression
+        QualifiedName isEmpty
+        AssignmentExpression operator:=
+         NameLeftHandSide
+          QualifiedName i
+         FeatureInvocationExpression
+          FeatureReference nameBinding:indexOf
+           ThisExpression
+          PositionalTuple
+           NameExpression
+            QualifiedName key
+        PositionalTuple
+       Block
+        ReturnStatement
+         SequenceConstructionExpression null
+     Block
+      ExpressionStatement
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName result
+        SequenceAccessExpression
+         FeatureReference nameBinding:entries
+          ThisExpression
+         NameExpression
+          QualifiedName i
+      ExpressionStatement
+       SequenceOperationExpression
+        QualifiedName removeAt
+        FeatureReference nameBinding:entries
+         ThisExpression
+        PositionalTuple
+         NameExpression
+          QualifiedName i
+      ReturnStatement
+       NameExpression
+        QualifiedName result
+  OperationDefinition name:removeAll visibility:public isStub:false isAbstract:false
+   FormalParameter name:keys visibility: isStub:false direction:in
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:false isNonunique:false
+     QualifiedName Key
+   Block
+    ExpressionStatement
+     SequenceExpansionExpression operation:iterate variable:k
+      NameExpression
+       QualifiedName keys
+      PositionalTuple
+       FeatureInvocationExpression
+        FeatureReference nameBinding:remove
+         ThisExpression
+        PositionalTuple
+         NameExpression
+          QualifiedName k
+  OperationDefinition name:size visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Integer
+   Block
+    ExpressionStatement
+     SequenceOperationExpression
+      QualifiedName size
+      FeatureReference nameBinding:entries
+       ThisExpression
+      PositionalTuple
+  OperationDefinition name:toSequence visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound:0 upperBound:* isOrdered:true isNonunique:true
+     QualifiedName Entry
+   Block
+    ReturnStatement
+     FeatureReference nameBinding:entries
+      ThisExpression
+  OperationDefinition name:values visibility:public isStub:false isAbstract:false
+   FormalParameter name: visibility: isStub:false direction:return
+    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
+     QualifiedName Bag<Value>
+   Block
+    ReturnStatement
+     InstanceCreationExpression
+      QualifiedName Bag<Value>
+      PositionalTuple
+       FeatureReference nameBinding:value
+        FeatureReference nameBinding:entries
+         ThisExpression
+  QualifiedNameList
+   QualifiedName CollectionClasses::Map<Key,Value>
+Alf 0.09 Parser
 Parsing tests\ActiveClass_Order.alf...
 Parsed successfully.
 UnitDefinition name:Order

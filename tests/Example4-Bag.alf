@@ -1,0 +1,29 @@
+namespace Alf::Library::Collections::CollectionClasses::Impl;
+private import Alf::Library::FunctionBehaviors::Collections::CollectionFunctions::*;
+/**
+The concrete implementation of the standard library template Bag class.
+*/
+class Bag<T> specializes CollectionImpl<T>, CollectionClasses::Bag<T> {
+
+  private content: T[0..*] nonunique;
+
+  @Create public Bag (in seq: T[0..*] sequence): Bag<T> { 
+    super.OrderedCollectionImpl(seq);
+  }
+
+  @Destroy public destroy () { 
+    super.CollectionImpl<T>::destroy();
+  }
+  
+  private setContent(in seq: T[0..*] sequence) {
+    this.content = seq;
+  }
+
+  public equals (in seq: T[0..*] sequence): Boolean { 
+    return this.size() == seq->size() && this.includesAll(seq);
+  }
+  
+  public toSequence(): T[0..*] sequence {
+    return this.content;
+  }
+}
