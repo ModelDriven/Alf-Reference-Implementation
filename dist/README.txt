@@ -2,7 +2,7 @@ ACTION LANGUAGE FOR UML (Alf) PARSER
 ------------------------------------
 Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
 
-Alf is action language for UML being developed in response to the OMG Request
+Alf is an action language for UML being developed in response to the OMG Request
 for Proposals "Concrete Syntax for a UML Action Language". The second revised
 submission is currently due August 23, 2010. For a copy of the RFP and the 
 latest draft specification, see
