@@ -4958,6 +4958,100 @@ UnitDefinition name:ExpressionStatements
         QualifiedName a
        NaturalLiteral image:3
 Alf 0.09 Parser
+Parsing tests\Activity_TemplateExpressions.alf...
+Parsed successfully.
+UnitDefinition name:TemplateExpressions
+ ActivityDefinition name:TemplateExpressions visibility: isStub:false isAbstract: false
+  Block
+   ExpressionStatement
+    BinaryExpression operator:<
+     NameExpression
+      QualifiedName A
+     BinaryExpression operator:>
+      NameExpression
+       QualifiedName B
+      NameExpression
+       QualifiedName C
+   ExpressionStatement
+    NameExpression
+     QualifiedName A<B>::C(?)
+   ExpressionStatement
+    BehaviorInvocationExpression
+     QualifiedName A<B>::C(?)
+     PositionalTuple
+      NameExpression
+       QualifiedName D
+   ExpressionStatement
+    BinaryExpression operator:<
+     NameExpression
+      QualifiedName A<B>::C(?)
+     BinaryExpression operator:>
+      NameExpression
+       QualifiedName D
+      NameExpression
+       QualifiedName E
+   ExpressionStatement
+    BinaryExpression operator:<
+     NameExpression
+      QualifiedName A
+     BinaryExpression operator:>
+      NameExpression
+       QualifiedName B
+      NameExpression
+       QualifiedName C
+   ExpressionStatement
+    BinaryExpression operator:<
+     NameExpression
+      QualifiedName A
+     BinaryExpression operator:>
+      NameExpression
+       QualifiedName B
+      NameExpression
+       QualifiedName C::D(?)
+   ExpressionStatement
+    BinaryExpression operator:<
+     NameExpression
+      QualifiedName A
+     BinaryExpression operator:>
+      NameExpression
+       QualifiedName B
+      BehaviorInvocationExpression
+       QualifiedName C::D(?)
+       PositionalTuple
+        NameExpression
+         QualifiedName E
+   ExpressionStatement
+    BinaryExpression operator:<
+     NameExpression
+      QualifiedName A
+     BinaryExpression operator:>
+      BinaryExpression operator:<
+       BinaryExpression operator:>
+        NameExpression
+         QualifiedName B
+        NameExpression
+         QualifiedName C::D(?)
+       NameExpression
+        QualifiedName E
+      NameExpression
+       QualifiedName F
+   ExpressionStatement
+    BinaryExpression operator:+
+     NameExpression
+      QualifiedName A
+     NameExpression
+      QualifiedName B<C>
+   ExpressionStatement
+    ConditionalBinaryExpression operator:&&
+     ConditionalBinaryExpression operator:&&
+      NameExpression
+       QualifiedName A
+      IncrementOrDecrementExpression operator:++ isPrefix:false
+       NameLeftHandSide
+        QualifiedName B<C>
+     NameExpression
+      QualifiedName D
+Alf 0.09 Parser
 Parsing tests\Activity_getNodeActivations.alf...
 Parsed successfully.
 UnitDefinition name:getNodeActivations
