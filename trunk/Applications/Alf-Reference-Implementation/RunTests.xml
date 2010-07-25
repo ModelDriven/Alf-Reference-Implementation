@@ -116,6 +116,9 @@
 			<arg value="tests\Activity_Expressions.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Activity_TemplateExpressions.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\Activity_getNodeActivations.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
