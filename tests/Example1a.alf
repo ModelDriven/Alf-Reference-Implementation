@@ -1,5 +1,5 @@
-activity Quicksort(in list: Integer[0..*] ordered):        // See Note 1
-  Integer[0..*] ordered 
+activity Quicksort(in list: Integer[0..*] sequence):        // See Note 1
+  Integer[0..*] sequence 
 {
   if (list->isEmpty()) {                                   // See Notes 2 & 3
     return null;                                           // See Notes 4 & 5

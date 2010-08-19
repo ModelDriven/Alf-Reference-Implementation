@@ -21,11 +21,12 @@ activity run(in activations: ActivityNodeActivation[]){    // See Note 3
       activation instanceof ControlNodeActivation ||
       activation instanceof ActivityParameterNodeActivation;
 
-    for (incomingEdge in activation.incomingEdges while isEnabled) {
-                                                           // See Note 9
-      for (otherActivation in Activations while isEnabled) {
+    for (incomingEdge in activation.incomingEdges) {       // See Note 9
+      if (!isEnabled) { break; }
+      for (otherActivation in Activations) {
         if (otherActivation.isSourceFor(incomingEdge)) {
           isEnabled = false;                               // See Note 10
+          break;
         }
       }
     }

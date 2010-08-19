@@ -1,5 +1,5 @@
 activity QuicksortInPlace                                  // See Note 1
-  (inout list: Integer[0..*] ordered, in low: Integer, in high: Integer) 
+  (inout list: Integer[0..*] sequence, in low: Integer, in high: Integer) 
 {
   if (low < high) {
     l = low;                                               // See Note 2

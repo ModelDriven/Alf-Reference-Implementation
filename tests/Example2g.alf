@@ -1,9 +1,9 @@
-namespace Ordering::Order;
+private import EE_OnlineCustomer;
 private import Shipping::Shipment;
 /**
-From Executable UML, Figure B.3, entry behavior for Being Packed and Shipped
+Entry behavior for State 4. Being Packed and Shipped
 */
-activity packAndShip()
+activity PackAndShip()
 {
   // Notify the customer that the charge was approved 
   // and the order will be shipped

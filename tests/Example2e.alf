@@ -1,17 +1,18 @@
-namespace Ordering::Order;
 /**
-From Executable UML, Figure B.3, entry behavior for Submitting Charge
+Entry behavior for State 2. Submitting Charge
 */
-activity processCharge(in rcvd_evt: SubmitCharge)
+activity ProcessCharge()
 {
   // Create a Credit Card Charge and submit it
   // to the credit card company
   creditCardCharge = new CreditCardCharge();
   creditCardCharge.MakeCharge(
-    accountNumber      => rcvd_evt.accountNumber,
-    billingAddress     => rcvd_evt.billingAddress,
-    cardExpirationDate => rcvd_evt.cardExpirationDate,
-    chargeAmount       => self.totalValue,
-    order              => self
+    new ChargeData (
+      accountNumber      => this.chargeSubmissionData.accountNumber,
+      billingAddress     => this.chargeSubmissionData.billingAddress,
+      cardExpirationDate => this.chargeSubmissionData.cardExpirationDate,
+      chargeAmount       => this.totalValue,
+      order              => this
+    )
   );
 }
