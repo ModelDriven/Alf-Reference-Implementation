@@ -1,8 +1,8 @@
-namespace Ordering::Order;
+private import EE_OnlineCustomer;
 /**
-From Executable UML, Figure B.3, entry behavior for Delivered to Customer
+Entry behavior for State 5. Delivered to Customer
 */
-activity notifyOfDelivery()
+activity NotifyOfDelivery()
 {
   // Notify the customer that the Order
   // has been delivered

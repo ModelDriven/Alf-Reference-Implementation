@@ -1,8 +1,8 @@
-namespace Ordering::Order;
+private import EE_OnlineCustomer;
 /**
-From Executable UML, Figure B.3, entry behavior for Payment Not Approved
+Entry behavior for State 3. Payment Not Approved
 */
-activity declineCharge()
+activity DeclineCharge()
 {
   // Notify the customer that the charge was rejected
   customer = this.'is placed by';

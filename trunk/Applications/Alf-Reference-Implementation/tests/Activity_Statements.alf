@@ -68,13 +68,11 @@ activity Statements() {
     condition = error; }
     
   switch (month) {
-    case 1: case 3: case 5: case 7: case 8: case 10: case 12: {
+    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
       numDays = 31; 
-    }
-    case 4: case 6: case 9: case 11: {
+     case 4: case 6: case 9: case 11:
       numDays = 30; 
-    }
-    case 2: {
+    case 2:
       if ( ((year % 4 == 0) && !(year % 100 == 0))
            || (year % 400 == 0) ) {
         numDays = 29;
@@ -82,11 +80,9 @@ activity Statements() {
       else {
         numDays = 28;
       }
-    }
-    default: {
+    default:
       WriteLine("Invalid month.");
       numDays = 0;
-    }
   }
   
   while ((last = this.list->size()) > 0) {
@@ -116,7 +112,10 @@ activity Statements() {
     addresses->add(member.address);
   }
   
-  for (sensor in sensors while (reading = sensor.reading())->notEmpty()) {
+  for (sensor in sensors) {
+    if ((reading = sensor.reading())->isEmpty()) {
+      break;
+    }
     if (reading > noiseLimit) {
       readings->add(reading);
     }

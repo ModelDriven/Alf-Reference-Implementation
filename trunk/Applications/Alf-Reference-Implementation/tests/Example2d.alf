@@ -1,36 +1,34 @@
-namespace Ordering::Order;
 private import TIM;
-/**
-From Executable UML, Figure B.3, entry behavior for
-Establishing Customer and Verifying Payment
+/**                                                        // See Note 1
+Entry action for State 1. Establishing Customer and Verifying Payment
 */
-activity establishCustomer(in rcvd_evt: CheckOut)
+activity EstablishCustomer()
 {
-  R10.createLink (                                             // See Note 1
+  R2.createLink (                                          // See Note 2
     'selections are purchased in'    => this, 
-    'is a purchase of selections in' => rcvd_evt.cart
+    'is a purchase of selections in' => this.checkOutData.cart
   );
 
   // Create a Customer if one does not already exist
   // with the given email address
-  matchingCustomers = Customer -> select c                 // See Note 2
-                        (c.email == rcvd_evt.customerEmail);
+  matchingCustomers = Customer -> select c                 // See Note 3
+                        (c.email == this.checkOutData.customerEmail);
 
   if (matchingCustomers->isEmpty()) {
-    customer = new Customer();                             // See Note 3
-    customer.email = rcvd_evt.customerEmail;
+    customer = new Customer();                             // See Note 4
+    customer.email = this.checkOutData.customerEmail;
   } else {
-    customer = matchingCustomers[1];                       // See Note 4
+    customer = matchingCustomers[1];                       // See Note 5
   } 
   
   // Use the name, address, etc. to update Customer
   // whether new or existing
-  customer.name = rcvd_evt.customerName;
-  customer.shippingAddress = rcvd_evt.shippingAddress;
-  customer.phone = rcvd_evt.customerPhone;
+  customer.name = this.checkOutData.customerName;
+  customer.shippingAddress = this.checkOutData.shippingAddress;
+  customer.phone = this.checkOutData.customerPhone;
 
   // Link the order to the customer
-  R5.createLink (
+  R3.createLink (
     places          => this,
     'is placed by'  => customer
   );
@@ -40,9 +38,12 @@ activity establishCustomer(in rcvd_evt: CheckOut)
 
   // Create a credit card charge and submit it
   // to the credit card company
-  this.SubmitCharge(                                       // See Note 5
-    accountNumber      => rcvd_evt.accountNumber,          // See Note 6
-    billingAddress     => rcvd_evt.billingAddress,
-    cardExpirationDate => rcvd_evt.cardExpirationDate,
-    cardholderName     => rcvd_evt.cardholderName);
+  this.SubmitCharge(                                       // See Note 6
+    new ChargeSubmissionData (                             // See Note 7
+      accountNumber      => this.checkOutData.accountNumber, 
+      billingAddress     => this.checkOutData.billingAddress,
+      cardExpirationDate => this.checkOutData.cardExpirationDate,
+      cardholderName     => this.checkOutData.cardholderName
+    )
+  );
 }

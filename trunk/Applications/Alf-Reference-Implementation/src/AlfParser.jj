@@ -1,7 +1,7 @@
 /*
    Parser for the 
    Action Language for Foundational UML (Alf)
-   Version 0.09 (revision 1)
+   Version 0.10
 
    with construction of the Abstract Syntax Tree
    
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class AlfParser {
 
-  public static final String version = "0.09";
+  public static final String version = "0.10";
 
   private static void completeSubunits(NamespaceDefinition namespace) {
     for (Member member: namespace.getMembers()) {
@@ -303,7 +303,9 @@ TOKEN:
 |
   < #IDENTIFIER_LETTER: [ "a"-"z", "A"-"Z", "_" ] >
 |
-  < #DIGIT: [ "0"-"9" ] >
+  < #DIGIT: "0" | <NONZERO_DIGIT> >
+|
+  < #NONZERO_DIGIT: [ "1"-"9" ] >
 |
   < UNRESTRICTED_NAME: "'" ( <NAME_CHARACTER> )+ "'" >
 |
@@ -321,7 +323,19 @@ TOKEN:
 {
   < BOOLEAN_LITERAL: "true" | "false" >
 |
-  < NATURAL_LITERAL: ( <DIGIT> )+ >
+  < BINARY_LITERAL:  ( "0b" | "0B" ) <BINARY_DIGIT> ( ( "_" )? <BINARY_DIGIT> )* >
+|
+  < #BINARY_DIGIT: [ "0", "1" ] >
+|
+  < HEX_LITERAL:  ( "0x" | "0X" ) <HEX_DIGIT> ( ( "_" )? <HEX_DIGIT> )* >
+|
+  < #HEX_DIGIT: <DIGIT> | [ "a"-"f", "A"-"F" ] >
+|
+  < OCTAL_LITERAL:  "0" ( ( "_" )? <OCTAL_DIGIT> )+ >
+|
+  < #OCTAL_DIGIT: [ "0"-"7" ] >
+|
+  < DECIMAL_LITERAL: "0" | <NONZERO_DIGIT> ( ( "_" )? <DIGIT> )* >
 |
   < STRING_LITERAL: "\"" ( <STRING_CHARACTER> )* "\"" >
 |
@@ -358,6 +372,7 @@ TOKEN:
 | < GT: ">" >
 | < LT: "<" >
 | < BANG: "!" >
+| < TILDE: "~" >
 | < HOOK: "?" >
 | < AT: "@" >
 | < DOLLAR: "$" >
@@ -378,6 +393,8 @@ TOKEN:
 | < XOR: "^" >
 | < REM: "%" >
 | < LSHIFT: "<<" >
+| < RSHIFT: ">>" >
+| < URSHIFT: ">>>" >
 | < PLUSASSIGN: "+=" >
 | < MINUSASSIGN: "-=" >
 | < STARASSIGN: "*=" >
@@ -386,6 +403,9 @@ TOKEN:
 | < ORASSIGN: "|=" >
 | < XORASSIGN: "^=" >
 | < REMASSIGN: "%=" >
+| < LSHIFTASSIGN: "<<=" >
+| < RSHIFTASSIGN: ">>=" >
+| < URSHIFTASSIGN: ">>>=" >
 }
 
 /***************
@@ -490,16 +510,10 @@ NameBinding NameBinding():
 }
 {
   n = Name() { nb.setName(n); }
-  [ LOOKAHEAD(2) /* TemplateBindingLookahead()) / Unbounded lookahead */
+  [ LOOKAHEAD(TemplateBindingLookahead()) /* Unbounded lookahead */
     tb = TemplateBinding() { nb.setBinding(tb); }
   ]
   { return nb; }
-}
-
-void LessThanExpressionLookahead():
-{ }
-{
-  <LT> AdditiveExpression()
 }
 
 void TemplateBindingLookahead():
@@ -570,12 +584,11 @@ TemplateParameterSubstitution TemplateParameterSubstitution():
 
 Expression Expression():
 {
-  String n;
   QualifiedName q;
   Expression e;
 }
 {
-  ( n = Name() { q = new QualifiedName(); q.addName(n); } e = NameToExpressionCompletion(q)
+  ( q = PotentiallyAmbiguousQualifiedName() e = NameToExpressionCompletion(q)
   | e = NonNameExpression()
   )
   
@@ -594,12 +607,12 @@ Expression NonNameExpression():
     <LPAREN>
     ( LOOKAHEAD(2)
       <ANY> <RPAREN> e1 = CastCompletion(null) e2 = ConditionalExpressionCompletion(e1)
-    | LOOKAHEAD(QualifiedName() <RPAREN>)
-      q = PotentiallyAmbiguousQualifiedName() <RPAREN>
-      ( LOOKAHEAD(3) e1 = CastCompletion(q) e2 = ConditionalExpressionCompletion(e1)
-      | e2 = ExpressionCompletion(new NameExpression(q))
+    | q = PotentiallyAmbiguousQualifiedName()
+      ( LOOKAHEAD(2)
+         <RPAREN> e1 = CastCompletion(q) e2 = ConditionalExpressionCompletion(e1)
+      | e1 = NameToExpressionCompletion(q) <RPAREN> e2 = ExpressionCompletion(e1)
       )
-    | e1 = Expression() <RPAREN> e2 = ExpressionCompletion(e1)
+    | e1 = NonNameExpression() <RPAREN> e2 = ExpressionCompletion(e1)
     )
   | e1 = NonPostfixNonCastUnaryExpression() e2 = ConditionalExpressionCompletion(e1)
   | e1 = BaseExpression() e2 = ExpressionCompletion(e1)
@@ -640,120 +653,6 @@ Expression NonIndexExpressionCompletion(Expression p):
 
 Expression NameToExpressionCompletion(QualifiedName q):
 {
-  String n;
-  QualifiedName q2;
-  Expression e;
-  PositionalTemplateBinding b;
-}
-{
-  ( 
-    <DOUBLE_COLON> n = Name() { q.addName(n); }
-    e = ColonQualifiedNameToExpressionCompletion(q)
-  | LOOKAHEAD(2) <DOT> n = Name() { q.addName(n); q.setIsAmbiguous(); }
-    e = DotQualifiedNameToExpressionCompletion(q)
-  | LOOKAHEAD(<LT> QualifiedName() <GT>)
-    <LT> q2 = QualifiedName() <GT>
-    ( LOOKAHEAD(UnaryExpression()) 
-      e = NonTemplateBindingToExpressionCompletion(new NameExpression(q2))
-      { e = new BinaryExpression(new NameExpression(q), "<", e); }
-    | { b = new PositionalTemplateBinding(); b.addArgumentName(q2); 
-        q.appendBinding(b); }
-      e = NameToExpressionCompletion(q)
-    )
-  | e = QualifiedNameToExpressionCompletion(q)
-  )
-  
-  { return e; }
-}
-
-Expression ColonQualifiedNameToExpressionCompletion(QualifiedName q):
-{
-  String n;
-  QualifiedName q2;
-  Expression e;
-  FeatureReference f;
-  PositionalTemplateBinding b;
-}
-{
-  ( 
-    <DOUBLE_COLON> n = Name() { q.addName(n); }
-    e = ColonQualifiedNameToExpressionCompletion(q)
-  | LOOKAHEAD(<LT> QualifiedName() <GT>)
-    <LT> q2 = QualifiedName() <GT>
-    ( LOOKAHEAD(UnaryExpression()) 
-      e = NonTemplateBindingToExpressionCompletion(new NameExpression(q2))
-      { e = new BinaryExpression(new NameExpression(q), "<", e); }
-    | { b = new PositionalTemplateBinding(); b.addArgumentName(q2); 
-        q.appendBinding(b); }
-      e = ColonQualifiedNameToExpressionCompletion(q)
-    )
-  | LOOKAHEAD(2) f = Feature(new NameExpression(q)) e = FeatureToExpressionCompletion(f)
-  | e = QualifiedNameToExpressionCompletion(q)
-  )
-  
-  { return e; }
-}
-
-Expression DotQualifiedNameToExpressionCompletion(QualifiedName q):
-{
-  String n;
-  QualifiedName q2;
-  Expression e;
-  PositionalTemplateBinding b;
-}
-{
-  ( 
-    LOOKAHEAD(2) <DOT> n = Name() { q.addName(n); q.setIsAmbiguous(); }
-    e = DotQualifiedNameToExpressionCompletion(q)
-  | LOOKAHEAD(<LT> QualifiedName() <GT>)
-    <LT> q2 = QualifiedName() <GT>
-    ( LOOKAHEAD(UnaryExpression()) 
-      e = NonTemplateBindingToExpressionCompletion(new NameExpression(q2))
-      { e = new BinaryExpression(new NameExpression(q), "<", e); }
-    | { b = new PositionalTemplateBinding(); b.addArgumentName(q2); 
-        q.appendBinding(b); }
-       e = DotQualifiedNameToExpressionCompletion(q)
-    )
-  | e = QualifiedNameToExpressionCompletion(q)
-  )
-  
-  { return e;}
-}
-
-Expression NonTemplateBindingToExpressionCompletion(Expression e):
-{
-  Expression e1;
-  Expression e2;
-  Expression e3;
-  String op;
-  QualifiedName n;
-}
-{
-  e2 = AdditiveExpression() { e1 = new BinaryExpression(e, ">", e2); } 
-  ( op = RelationalOperator() e2 = AdditiveExpression() 
-    { e1 = new BinaryExpression(e1, op, e2); } )*
-  [ op = ClassificationOperator() n = QualifiedName()
-    { e1 = new ClassificationExpression(e, op, n); } ]
-  ( op = EqualityOperator() e2 = ClassificationExpression() 
-    { e1 = new BinaryExpression(e1, op, e2); } )*
-  ( <LOGICAL_AND> e2 = EqualityExpression() 
-    { e1 = new BinaryExpression(e1, "&", e2); } )*
-  ( <XOR> e2 = AndExpression() 
-    { e1 = new BinaryExpression(e1, "^", e2); } )*
-  ( <LOGICAL_OR> e2 = ExclusiveOrExpression() 
-    { e1 = new BinaryExpression(e1, "|", e2); } )*
-  ( <SC_AND> e2 = InclusiveOrExpression() 
-    { e1 = new ConditionalBinaryExpression(e1, "&&", e2); } )*
-  ( <SC_OR> e2 = ConditionalAndExpression() 
-    { e1 = new ConditionalBinaryExpression(e1, "||", e2); } )*
-  [ <HOOK> e2 = Expression() <COLON> e3 = ConditionalExpression() 
-    { e1 = new ConditionalExpression(e1, e2, e3); } ]
-
-  { return e1; }
-}
-
-Expression QualifiedNameToExpressionCompletion(QualifiedName q):
-{
   Expression e1;
   Expression e2;
 }
@@ -765,8 +664,7 @@ Expression QualifiedNameToExpressionCompletion(QualifiedName q):
     ( e2 = PostfixOperationOrAssignment(new NameLeftHandSide(q, e1))
     | e2 = ExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), e1))
     )
-  | e1 = SequenceOperationOrReductionOrExpansion(new NameExpression(q)) e2 = ExpressionCompletion(e1)
-  | e2 = ConditionalExpressionCompletion(new NameExpression(q))
+  | e2 = NonIndexExpressionCompletion(new NameExpression(q))
   )
   
   { return e2; }
@@ -857,7 +755,10 @@ Expression LiteralExpression():
 {
   (
     t = <BOOLEAN_LITERAL> { e = new BooleanLiteral(t.image); }
-  | t = <NATURAL_LITERAL> { e = new NaturalLiteral(t.image); }
+  | t = <DECIMAL_LITERAL> { e = new NaturalLiteral(t.image); }
+  | t = <BINARY_LITERAL>  { e = new NaturalLiteral(t.image); }
+  | t = <OCTAL_LITERAL>   { e = new NaturalLiteral(t.image); }
+  | t = <HEX_LITERAL>     { e = new NaturalLiteral(t.image); }
   | t = <STRING_LITERAL>  { e = new StringLiteral(t.image); }
   | t = <STAR>            { e = new UnboundedLiteral(); }
   )
@@ -1323,24 +1224,22 @@ Expression UnaryExpression():
 
 Expression PostfixOrCastExpression():
 {
-  String n;
   QualifiedName q;
   Expression e1;
   Expression e2;
 }
 {
   ( 
-    n = Name() { q = new QualifiedName(); q.addName(n); }
-    e2 = NameToPostfixExpressionCompletion(q)
+    q = PotentiallyAmbiguousQualifiedName() e2 = NameToPostfixExpressionCompletion(q)
   | <LPAREN>
     ( LOOKAHEAD(2)
       <ANY> <RPAREN> e2 = CastCompletion(null)
-    | LOOKAHEAD(QualifiedName() <RPAREN>)
-      q = PotentiallyAmbiguousQualifiedName() <RPAREN>
-      ( e2 = CastCompletion(q)
-      | e2 = PrimaryExpressionCompletion(new NameExpression(q))
+    | q = PotentiallyAmbiguousQualifiedName() 
+      ( LOOKAHEAD(2)
+        <RPAREN> e2 = CastCompletion(q)
+      | e1 = NameToExpressionCompletion(q) <RPAREN> e2 = PrimaryExpressionCompletion(e1)
       )
-    | e1 = Expression() <RPAREN> e2 = PrimaryExpressionCompletion(e1)
+    | e1 = NonNameExpression() <RPAREN> e2 = PrimaryExpressionCompletion(e1)
     )
   | e1 = BaseExpression() e2 = PostfixExpressionCompletion(e1)
   )
@@ -1379,95 +1278,19 @@ Expression NonIndexPostfixExpressionCompletion(Expression p):
 
 Expression NameToPostfixExpressionCompletion(QualifiedName q):
 {
-  String n;
-  QualifiedName q2;
-  Expression e;
-  PositionalTemplateBinding b;
-}
-{
-  ( 
-    <DOUBLE_COLON> n = Name() { q.addName(n); }
-    e = ColonQualifiedNameToPostfixExpressionCompletion(q)
-  | LOOKAHEAD(2) <DOT> n = Name() { q.addName(n); q.setIsAmbiguous(); }
-    e = DotQualifiedNameToPostfixExpressionCompletion(q)
-  | LOOKAHEAD(<LT> QualifiedName() <GT> UnaryExpression()) 
-    { e = new NameExpression(q); }
-  | LOOKAHEAD(<LT> QualifiedName() <GT>)
-    <LT> q2 = QualifiedName() <GT>
-    { b = new PositionalTemplateBinding(); b.addArgumentName(q2); 
-      q.appendBinding(b); }
-      e = NameToPostfixExpressionCompletion(q)
-  | e = QualifiedNameToPostfixExpressionCompletion(q)
-  )
-  
-  { return e; }
-}
-
-Expression ColonQualifiedNameToPostfixExpressionCompletion(QualifiedName q):
-{
-  String n;
-  QualifiedName q2;
-  Expression e;
-  FeatureReference f;
-  PositionalTemplateBinding b;
-}
-{
-  ( 
-    <DOUBLE_COLON> n = Name() { q.addName(n); }
-    e = ColonQualifiedNameToPostfixExpressionCompletion(q)
-  | LOOKAHEAD(<LT> QualifiedName() <GT> UnaryExpression()) 
-    { e = new NameExpression(q); }
-  | LOOKAHEAD(<LT> QualifiedName() <GT>)
-    <LT> q2 = QualifiedName() <GT>
-    { b = new PositionalTemplateBinding(); b.addArgumentName(q2); 
-      q.appendBinding(b); }
-    e = ColonQualifiedNameToPostfixExpressionCompletion(q)
-  | LOOKAHEAD(2) f = Feature(new NameExpression(q)) e = FeatureToPostfixExpressionCompletion(f)
-  | e = QualifiedNameToPostfixExpressionCompletion(q)
-  )
-  
-  { return e; }
-}
-
-Expression DotQualifiedNameToPostfixExpressionCompletion(QualifiedName q):
-{
-  String n;
-  QualifiedName q2;
-  Expression e;
-  PositionalTemplateBinding b;
-}
-{
-  ( 
-    LOOKAHEAD(2) <DOT> n = Name() { q.addName(n); q.setIsAmbiguous(); }
-    e = DotQualifiedNameToPostfixExpressionCompletion(q)
-  | LOOKAHEAD(<LT> QualifiedName() <GT> UnaryExpression()) 
-    { e = new NameExpression(q); }
-  | LOOKAHEAD(<LT> QualifiedName() <GT>)
-    <LT> q2 = QualifiedName() <GT>
-    { b = new PositionalTemplateBinding(); b.addArgumentName(q2); 
-      q.appendBinding(b); }
-    e = DotQualifiedNameToPostfixExpressionCompletion(q)
-  | e = QualifiedNameToPostfixExpressionCompletion(q)
-  )
-  
-  { return e;}
-}
-
-Expression QualifiedNameToPostfixExpressionCompletion(QualifiedName q):
-{
   Expression e1;
-  Expression e2 = new NameExpression(q);
+  Expression e2;
 }
 {
-  [ 
+  ( 
     e2 = PostfixOperation(new NameLeftHandSide(q, null))
   | LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) e2 = PostfixExpressionCompletion(e1)
   | e1 = Index()
     ( e2 = PostfixOperation(new NameLeftHandSide(q, e1))
     | e2 = PostfixExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), e1))
     )
-  | e1 = SequenceOperationOrReductionOrExpansion(e2) e2 = PostfixExpressionCompletion(e1)
-  ]
+  | e2 = NonIndexPostfixExpressionCompletion(new NameExpression(q))
+  )
   
   { return e2; }
 }
@@ -1500,6 +1323,7 @@ Expression NonPostfixNonCastUnaryExpression():
     e = PrefixExpression()
   | e = NumericUnaryExpression()
   | e = BooleanNegationExpression()
+  | e = BitStringComplementExpression()
   | e = IsolationExpression()
   )
   
@@ -1513,6 +1337,15 @@ Expression BooleanNegationExpression():
 {
   <BANG> e = UnaryExpression()
   { return new UnaryExpression("!", e); }
+}
+
+Expression BitStringComplementExpression():
+{
+  Expression e;
+}
+{
+  <TILDE> e = UnaryExpression()
+  { return new UnaryExpression("~", e); }
 }
 
 Expression NumericUnaryExpression():
@@ -1645,6 +1478,45 @@ String AdditiveOperator():
   { return t.image; }
 }
 
+/* SHIFT EXPRESSIONS */
+
+Expression ShiftExpression():
+{
+  Expression u;
+  Expression e;
+}
+{
+  u = UnaryExpression() e = ShiftExpressionCompletion(u)
+  { return e; }
+}
+
+Expression ShiftExpressionCompletion(Expression u):
+{
+  Expression e1;
+  String op;
+  Expression e2;
+}
+{
+  e1 = AdditiveExpressionCompletion(u) 
+  ( op = ShiftOperator() e2 = AdditiveExpression() 
+    { e1 = new BinaryExpression(e1, op, e2); } )*
+  { return e1; }
+}  
+
+String ShiftOperator():
+{
+  Token t;
+}
+{
+  (
+    t = <LSHIFT>
+  | t = <RSHIFT>
+  | t = <URSHIFT>
+  )
+  
+  { return t.image; }
+}
+
 /* RELATIONAL EXPRESSIONS */
 
 Expression RelationalExpression():
@@ -1666,9 +1538,9 @@ Expression RelationalExpressionCompletion(Expression u):
   TemplateBinding b;
 }
 {
-  e1 = AdditiveExpressionCompletion(u) 
-  ( op = RelationalOperator() e2 = AdditiveExpression() 
-    { e1 = new BinaryExpression(e1, op, e2); } )*
+  e1 = ShiftExpressionCompletion(u) 
+  [ op = RelationalOperator() e2 = ShiftExpression() 
+    { e1 = new BinaryExpression(e1, op, e2); } ]
   
   { return e1; }
 }
@@ -1680,20 +1552,8 @@ String RelationalOperator():
 }
 {
   (
-    t = <LT> { s = t.image; }
-  | s = NonLTRelationalOperator()
-  )
-  
-  { return s; }
-}
-
-String NonLTRelationalOperator():
-{
-  Token t;
-}
-{
-  (
-    t = <GT>
+    t = <LT>
+  | t = <GT>
   | t = <LE>
   | t = <GE>
   )
@@ -2022,6 +1882,9 @@ String AssignmentOperator():
   | t = <ANDASSIGN>
   | t = <ORASSIGN>
   | t = <XORASSIGN>
+  | t = <LSHIFTASSIGN>
+  | t = <RSHIFTASSIGN>
+  | t = <URSHIFTASSIGN>
   )
 
   { return t.image; }
@@ -2184,12 +2047,15 @@ Statement LocalNameDeclarationOrExpressionStatement():
   Statement s2;
 }
 {
-  ( LOOKAHEAD(QualifiedName() [ MultiplicityIndicator() ] Name() <ASSIGN>)
+  (
     q = PotentiallyAmbiguousQualifiedName()
-    [ MultiplicityIndicator() { s1.setHasMultiplicity(); } ] 
-    n = Name() { s1.setName(n); s1.setTypeName(q); } 
-    LocalNameDeclarationStatementCompletion(s1) { s2 = s1; }
-  | e = Expression() <SEMICOLON> { s2 = new ExpressionStatement(e); }
+    ( LOOKAHEAD(3) 
+      [ MultiplicityIndicator() { s1.setHasMultiplicity(); } ] 
+      n = Name() { s1.setName(n); s1.setTypeName(q); } 
+      LocalNameDeclarationStatementCompletion(s1) { s2 = s1; }
+    | e = NameToExpressionCompletion(q) <SEMICOLON> { s2 = new ExpressionStatement(e); } )
+  | 
+    e = NonNameExpression() <SEMICOLON> { s2 = new ExpressionStatement(e); }
   )
   
   { return s2; }
@@ -2313,8 +2179,9 @@ SwitchClause SwitchClause():
   Block b;
 }
 {
-  e = SwitchCase() { c.addCase(e); } ( e = SwitchCase() { c.addCase(e); } )* 
-  b = Block() { c.setBlock(b); }
+  e = SwitchCase() { c.addCase(e); } 
+  ( LOOKAHEAD(2) e = SwitchCase() { c.addCase(e); } )* 
+  b = NonEmptyStatementSequence() { c.setBlock(b); }
   { return c; }
 }
 
@@ -2332,7 +2199,18 @@ Block SwitchDefaultClause():
   Block b;
 }
 {
-  <DEFAULT_> <COLON> b = Block()
+  <DEFAULT_> <COLON> b = NonEmptyStatementSequence()
+  { return b; }
+}
+
+Block NonEmptyStatementSequence():
+{
+  Statement s;
+  Block b = new Block();
+}
+{
+  ( s = DocumentedStatement() { b.addStatement(s); } )+
+  
   { return b; }
 }
 
@@ -2382,7 +2260,6 @@ void ForControl(ForStatement s):
 {
   d = LoopVariableDefinition() { s.addVariableDefinition(d); }
   ( <COMMA> LoopVariableDefinition() { s.addVariableDefinition(d); } )*
-  [ <WHILE> e = Expression() { s.setCondition(e); } ]
 }
 
 LoopVariableDefinition LoopVariableDefinition(): 
@@ -2628,7 +2505,12 @@ TaggedValue TaggedValue():
     t = <BOOLEAN_LITERAL> { v = t.image; }
   | t = <STRING_LITERAL>  { v = t.image; }
   | t = <STAR>            { v = t.image; }
-  | [ <PLUS> | <MINUS> { v = "-"; } ] t = <NATURAL_LITERAL> { v = v + t.image; }
+  | [ <PLUS> | <MINUS> { v = "-"; } ] 
+    ( t = <DECIMAL_LITERAL> 
+    | t = <BINARY_LITERAL> 
+    | t = <OCTAL_LITERAL> 
+    | t = <HEX_LITERAL> )
+    { v = v + t.image; }
   )
   
   { return new TaggedValue(n, v); }
@@ -3463,7 +3345,7 @@ void MultiplicityRange(TypedElementDeclaration d):
   String n;
 }
 {
-  [ LOOKAHEAD(2) t = <NATURAL_LITERAL> <DOUBLE_DOT> { d.setLowerBound(t.image); } ] 
+  [ LOOKAHEAD(2) t = <DECIMAL_LITERAL> <DOUBLE_DOT> { d.setLowerBound(t.image); } ] 
   n = UnlimitedNaturalLiteral() { d.setUpperBound(n); }
 }
 
@@ -3473,7 +3355,7 @@ String UnlimitedNaturalLiteral():
 }
 {
   (
-    t = <NATURAL_LITERAL>
+    t = <DECIMAL_LITERAL>
   | t = <STAR>
   )
   
