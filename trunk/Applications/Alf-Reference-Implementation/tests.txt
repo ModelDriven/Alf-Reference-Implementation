@@ -4396,6 +4396,17 @@ UnitDefinition name:ExpressionStatements
       NameExpression
        QualifiedName jack
    ExpressionStatement
+    LinkOperationExpression operation:createLink
+     QualifiedName Owns
+     PositionalTuple
+      AssignmentExpression operator:=
+       NameLeftHandSide
+        QualifiedName jack
+       NameExpression
+        QualifiedName oldHouse::owner(?)
+      NameExpression
+       QualifiedName newHouse
+   ExpressionStatement
     SequenceConstructionExpression type:String[]
      SequenceExpressionList
       StringLiteral image:"apple"
@@ -4973,19 +4984,19 @@ UnitDefinition name:ExpressionStatements
       NameExpression
        QualifiedName limit
    ExpressionStatement
-    AssignmentExpression operator:=
-     NameLeftHandSide
-      QualifiedName index
-     ConditionalBinaryExpression operator:||
+    ConditionalBinaryExpression operator:||
+     BinaryExpression operator:==
+      NameExpression
+       QualifiedName index
       NaturalLiteral image:0
-      BinaryExpression operator:>=
-       SequenceAccessExpression
-        NameExpression
-         QualifiedName value
-        NameExpression
-         QualifiedName index
+     BinaryExpression operator:>=
+      SequenceAccessExpression
        NameExpression
-        QualifiedName limit
+        QualifiedName value
+       NameExpression
+        QualifiedName index
+      NameExpression
+       QualifiedName limit
    ExpressionStatement
     ConditionalExpression
      NameExpression
