@@ -1039,7 +1039,8 @@ SequenceElements SequenceElementListCompletion(Expression e1):
 }
 {
   { c.addElement(e1); }
-  ( <COMMA> e2 = SequenceElement() { c.addElement(e2); } )*
+  ( LOOKAHEAD(2) <COMMA> e2 = SequenceElement() { c.addElement(e2); } )* 
+  [ <COMMA> ]
   
   { return c; }
 }
