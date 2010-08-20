@@ -581,15 +581,16 @@ TemplateParameterSubstitution TemplateParameterSubstitution():
 /***************
  * EXPRESSIONS *
  ***************/
-
+ 
 Expression Expression():
 {
-  QualifiedName q;
   Expression e;
 }
 {
-  ( q = PotentiallyAmbiguousQualifiedName() e = NameToExpressionCompletion(q)
-  | e = NonNameExpression()
+  e = UnaryExpression()
+  ( LOOKAHEAD(AssignmentOperator()) 
+    e = Assignment(e)
+  | e = ConditionalExpressionCompletion(e)
   )
   
   { return e; }
@@ -623,29 +624,13 @@ Expression NonNameExpression():
 
 Expression ExpressionCompletion(Expression p):
 {
-  Expression i;
   Expression e;
 }
 {
-  (
-    i = Index() e = ExpressionCompletion(new SequenceAccessExpression(p, i))
-  | e = NonIndexExpressionCompletion(p)
-  )
-  
-  { return e; }
-}
-
-Expression NonIndexExpressionCompletion(Expression p):
-{
-  Expression e;
-  FeatureReference f;
-}
-{
-  (
-    LOOKAHEAD(2) 
-    f = Feature(p) e = FeatureToExpressionCompletion(f)
-  | e = SequenceOperationOrReductionOrExpansion(p) e = ExpressionCompletion(e)
-  | e = ConditionalExpressionCompletion(p)
+  e = PrimaryExpressionCompletion(p)
+  ( LOOKAHEAD(AssignmentOperator()) 
+    e = Assignment(e)
+  | [ e = PostfixOperation(e) ] e = ConditionalExpressionCompletion(e)
   )
   
   { return e; }
@@ -653,43 +638,34 @@ Expression NonIndexExpressionCompletion(Expression p):
 
 Expression NameToExpressionCompletion(QualifiedName q):
 {
-  Expression e1;
+  Expression e1 = new NameExpression(q);
   Expression e2;
 }
 {
-  ( 
-    e2 = PostfixOperationOrAssignment(new NameLeftHandSide(q, null))
-  | LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) e2 = ExpressionCompletion(e1)
-  | e1 = Index()
-    ( e2 = PostfixOperationOrAssignment(new NameLeftHandSide(q, e1))
-    | e2 = ExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), e1))
-    )
-  | e2 = NonIndexExpressionCompletion(new NameExpression(q))
-  )
-  
-  { return e2; }
-}
-
-Expression FeatureToExpressionCompletion(FeatureReference f):
-{
-  Expression e1;
-  Expression e2;
-}
-{
-  (
-    e2 = PostfixOperationOrAssignment(new FeatureLeftHandSide(f, null))
-  | e1 = Index()
-    ( e2 = PostfixOperationOrAssignment(new FeatureLeftHandSide(f, e1))
-    | e2 = ExpressionCompletion(new SequenceAccessExpression(f, e1))
-    )
-  | e1 = FeatureInvocation(f) e2 = ExpressionCompletion(e1)
-  | e2 = NonIndexExpressionCompletion(f)
-  )
+  [ LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) ] e2 = ExpressionCompletion(e1)
   
   { return e2; }
 }
 
 /* PRIMARY EXPRESSIONS */
+
+Expression PrimaryExpression():
+{
+   QualifiedName q;
+   LeftHandSide lhs;
+   Expression e;
+}
+{
+  ( 
+    e = NameOrPrimaryExpression()
+  | e = BaseExpression()
+  | e = ParenthesizedExpression()
+  )
+  
+  e = PrimaryExpressionCompletion(e)
+  
+  { return e; }
+}
 
 Expression BaseExpression():
 {
@@ -957,14 +933,15 @@ Tuple LinkOperationTuple():
   [ LOOKAHEAD(2)
     t = LinkOperationPositionalTuple()
   | n = Name() { q = new QualifiedName(); q.addName(n); }
-    ( i = Index() 
+    ( LOOKAHEAD(<LBRACKET>)
+      i = Index() 
       ( <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, i)
       | e = ExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), i))
         { ((PositionalTuple)t).addExpression(e); } 
         PositionalTupleExpressionListCompletion((PositionalTuple)t)
       )
     | <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, null)
-    | e = NonIndexExpressionCompletion(new NameExpression(q))
+    | e = ExpressionCompletion(new NameExpression(q))
       { ((PositionalTuple)t).addExpression(e); } 
       PositionalTupleExpressionListCompletion((PositionalTuple)t)
     )
@@ -1154,26 +1131,29 @@ Expression SequenceOperationOrReductionOrExpansion(Expression p):
 
 /* INCREMENT OR DECREMENT EXPRESSIONS */
 
-Expression PostfixOperationOrAssignment(LeftHandSide lhs):
+Expression PostfixOperation(Expression e1):
 {
-  Expression e1;
-  Expression e2;
-}
-{
-  (
-    e1 = PostfixOperation(lhs) e2 = ConditionalExpressionCompletion(e1)
-  | e2 = Assignment(lhs)
-  )
-  
-  { return e2; }
-}
-
-Expression PostfixOperation(LeftHandSide lhs):
-{
-  Expression e;
+  Expression i = null;
+  LeftHandSide lhs;
   String op;
 }
 {
+  { 
+    if (e1 instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e = (SequenceAccessExpression)e1;
+      i = e.getIndex();
+      e1 = e.getSequence();
+    }
+    
+    if (e1 instanceof NameExpression) {
+      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
+    } else if (e1 instanceof FeatureReference) {
+      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    } else {
+      throw generateParseException();
+    }
+  }
+
   op = AffixOperator()
   { return new IncrementOrDecrementExpression(op, lhs); }
 }
@@ -1181,15 +1161,32 @@ Expression PostfixOperation(LeftHandSide lhs):
 Expression PrefixExpression():
 {
   String op;
+  Expression i = null;
   LeftHandSide lhs;
-  IncrementOrDecrementExpression e;
+  Expression e1;
+  IncrementOrDecrementExpression e2;
 }
 {
-  op = AffixOperator() lhs = LeftHandSide()
+  op = AffixOperator() e1 = PrimaryExpression()
   
-  { e = new IncrementOrDecrementExpression(op, lhs);
-    e.setIsPrefix();
-    return e;
+  { 
+    if (e1 instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e = (SequenceAccessExpression)e1;
+      i = e.getIndex();
+      e1 = e.getSequence();
+    }
+    
+    if (e1 instanceof NameExpression) {
+      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
+    } else if (e1 instanceof FeatureReference) {
+      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    } else {
+      throw generateParseException();
+    }
+    
+    e2 = new IncrementOrDecrementExpression(op, lhs);
+    e2.setIsPrefix();
+    return e2;
   }
 }
 
@@ -1253,63 +1250,18 @@ Expression PostfixExpressionCompletion(Expression p) :
   Expression e;
 }
 {
-  (
-    i = Index() e = PostfixExpressionCompletion(new SequenceAccessExpression(p, i))
-  | e = NonIndexPostfixExpressionCompletion(p)
-  )
-  
-  { return e; }
-}
-
-Expression NonIndexPostfixExpressionCompletion(Expression p):
-{
-  Expression e = p;
-  FeatureReference f;
-}
-{
-  [
-    LOOKAHEAD(2) 
-    f = Feature(p) e = FeatureToPostfixExpressionCompletion(f)
-  | e = SequenceOperationOrReductionOrExpansion(p) e = PostfixExpressionCompletion(e)
-  ]
+  e = PrimaryExpressionCompletion(p) [ e = PostfixOperation(e) ]
   
   { return e; }
 }
 
 Expression NameToPostfixExpressionCompletion(QualifiedName q):
 {
-  Expression e1;
-  Expression e2;
+  Expression e1 = new NameExpression(q);
+  Expression e2 = e1;
 }
 {
-  ( 
-    e2 = PostfixOperation(new NameLeftHandSide(q, null))
-  | LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) e2 = PostfixExpressionCompletion(e1)
-  | e1 = Index()
-    ( e2 = PostfixOperation(new NameLeftHandSide(q, e1))
-    | e2 = PostfixExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), e1))
-    )
-  | e2 = NonIndexPostfixExpressionCompletion(new NameExpression(q))
-  )
-  
-  { return e2; }
-}
-
-Expression FeatureToPostfixExpressionCompletion(FeatureReference f):
-{
-  Expression e1;
-  Expression e2;
-}
-{
-  (
-    e2 = PostfixOperation(new FeatureLeftHandSide(f, null))
-  | e1 = Index() 
-    ( e2 = PostfixOperation(new FeatureLeftHandSide(f, e1))
-    | e2 = PostfixExpressionCompletion(new SequenceAccessExpression(f, e1))
-    )
-  | e1 = FeatureInvocation(f) e2 = PostfixExpressionCompletion(e1)
-  | e2 = NonIndexPostfixExpressionCompletion(f)
-  )
+  [ LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) ] e2 = PostfixExpressionCompletion(e1)
   
   { return e2; }
 }
@@ -1779,92 +1731,32 @@ Expression ConditionalExpressionCompletion(Expression u):
 
 /* ASSIGNMENT EXPRESSIONS */
 
-Expression Assignment(LeftHandSide lhs):
+Expression Assignment(Expression e1):
 {
+  Expression i = null;
+  LeftHandSide lhs = null;
   String op;
-  Expression e;
+  Expression e2;
 }
 {
-  op = AssignmentOperator() e = Expression() 
-  { return new AssignmentExpression(lhs, op, e); }
-}
+  { 
+    if (e1 instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e = (SequenceAccessExpression)e1;
+      i = e.getIndex();
+      e1 = e.getSequence();
+    }
+    
+    if (e1 instanceof NameExpression) {
+      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
+    } else if (e1 instanceof FeatureReference) {
+      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    } else {
+      throw generateParseException();
+    }
+  }
 
-LeftHandSide LeftHandSide():
-{
-   QualifiedName q;
-   LeftHandSide lhs;
-   Expression e;
-}
-{
-  ( 
-    q = PotentiallyAmbiguousQualifiedName() lhs = NameToLeftHandSideCompletion(q)
-  | e = BaseExpression() lhs = LeftHandSideCompletion(e)
-  | e = ParenthesizedExpression() lhs = LeftHandSideCompletion(e)
-  )
-  
-  { return lhs; }
-}
-
-LeftHandSide LeftHandSideCompletion(Expression p) :
-{
-  Expression i;
-  LeftHandSide lhs;
-}
-{
-  (
-    i = Index() lhs = LeftHandSideCompletion(new SequenceAccessExpression(p, i))
-  | lhs = NonIndexLeftHandSideCompletion(p)
-  )
-  
-  { return lhs; }
-}
-
-LeftHandSide NonIndexLeftHandSideCompletion(Expression p):
-{
-  Expression e;
-  FeatureReference f;
-  LeftHandSide lhs;
-}
-{
-  (
-    LOOKAHEAD(2) 
-    f = Feature(p) lhs = FeatureToLeftHandSideCompletion(f)
-  | e = SequenceOperationOrReductionOrExpansion(p) lhs = LeftHandSideCompletion(e)
-  )
-  
-  { return lhs; }
-}
-
-LeftHandSide NameToLeftHandSideCompletion(QualifiedName q):
-{
-  Expression e;
-  LeftHandSide lhs = new NameLeftHandSide(q, null);
-}
-{
-  [ 
-    LOOKAHEAD(2) e = NameToPrimaryExpressionCompletion(q) lhs = LeftHandSideCompletion(e)
-  | e = Index() { lhs = new NameLeftHandSide(q, e); }
-    [ lhs = LeftHandSideCompletion(new SequenceAccessExpression(new NameExpression(q), e)) ]
-  | lhs = NonIndexLeftHandSideCompletion(new NameExpression(q))
-  ]
-  
-  { return lhs; }
-}
-
-LeftHandSide FeatureToLeftHandSideCompletion(FeatureReference f):
-{
-  Expression e;
-  LeftHandSide lhs = new FeatureLeftHandSide(f, null);
-}
-{
-  [
-    e = Index() { lhs = new FeatureLeftHandSide(f, e); }
-    [ lhs = LeftHandSideCompletion(new SequenceAccessExpression(f, e)) ]
-  | e = FeatureInvocation(f) lhs = LeftHandSideCompletion(e)
-  | lhs = NonIndexLeftHandSideCompletion(f)
-  ]
-  
-  { return lhs; }
+  op = AssignmentOperator() e2 = Expression() 
+  { return new AssignmentExpression(lhs, op, e2); }
 }
 
 String AssignmentOperator():
