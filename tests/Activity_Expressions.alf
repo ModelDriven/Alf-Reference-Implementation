@@ -113,6 +113,7 @@ activity ExpressionStatements() {
   this.x++;
   this.total[i]--;
   total[i]++;
+  -(a).b++;
 
   ++count;
   --this.numberWaiting[queueIndex];

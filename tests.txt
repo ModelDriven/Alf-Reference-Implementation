@@ -4720,6 +4720,13 @@ UnitDefinition name:ExpressionStatements
       NameExpression
        QualifiedName i
    ExpressionStatement
+    UnaryExpression operator:-
+     IncrementOrDecrementExpression operator:++ isPrefix:false
+      FeatureLeftHandSide
+       FeatureReference nameBinding:b
+        NameExpression
+         QualifiedName a
+   ExpressionStatement
     IncrementOrDecrementExpression operator:++ isPrefix:true
      NameLeftHandSide
       QualifiedName count
