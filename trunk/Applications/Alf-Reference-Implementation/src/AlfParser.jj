@@ -587,72 +587,57 @@ Expression Expression():
   Expression e;
 }
 {
-  e = UnaryExpression()
-  ( LOOKAHEAD(AssignmentOperator()) 
-    e = Assignment(e)
-  | e = ConditionalExpressionCompletion(e)
-  )
+  e = UnaryExpression() e = ExpressionCompletion(e)
   
   { return e; }
 }
 
 Expression NonNameExpression():
 {
-  QualifiedName q;
-  String n;
-  Expression e1;
-  Expression e2;
-}
-{
-  (
-    <LPAREN>
-    ( LOOKAHEAD(2)
-      <ANY> <RPAREN> e1 = CastCompletion(null) e2 = ConditionalExpressionCompletion(e1)
-    | q = PotentiallyAmbiguousQualifiedName()
-      ( LOOKAHEAD(2)
-         <RPAREN> e1 = CastCompletion(q) e2 = ConditionalExpressionCompletion(e1)
-      | e1 = NameToExpressionCompletion(q) <RPAREN> e2 = ExpressionCompletion(e1)
-      )
-    | e1 = NonNameExpression() <RPAREN> e2 = ExpressionCompletion(e1)
-    )
-  | e1 = NonPostfixNonCastUnaryExpression() e2 = ConditionalExpressionCompletion(e1)
-  | e1 = BaseExpression() e2 = ExpressionCompletion(e1)
-  )
-  
-  { return e2; }
-}
-
-Expression ExpressionCompletion(Expression p):
-{
   Expression e;
 }
 {
-  e = PrimaryExpressionCompletion(p)
-  ( LOOKAHEAD(AssignmentOperator()) 
-    e = Assignment(e)
-  | [ e = PostfixOperation(e) ] e = ConditionalExpressionCompletion(e)
-  )
+  e = NonNameUnaryExpression() e = ExpressionCompletion(e)
   
   { return e; }
 }
 
 Expression NameToExpressionCompletion(QualifiedName q):
 {
-  Expression e1 = new NameExpression(q);
-  Expression e2;
+  Expression e = new NameExpression(q);
 }
 {
-  [ LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) ] e2 = ExpressionCompletion(e1)
+  [ LOOKAHEAD(2) e = NameToPrimaryExpression(q) ] 
+  e = PrimaryToExpressionCompletion(e)
   
-  { return e2; }
+  { return e; }
+}
+
+Expression PrimaryToExpressionCompletion(Expression p):
+{
+  Expression e;
+}
+{
+  e = PostfixExpressionCompletion(p) e = ExpressionCompletion(e)
+  
+  { return e; }
+}
+
+Expression ExpressionCompletion(Expression e):
+{}
+{
+  ( LOOKAHEAD(AssignmentOperator()) 
+    e = Assignment(e)
+  | e = ConditionalExpressionCompletion(e)
+  )
+
+  { return e; }
 }
 
 /* PRIMARY EXPRESSIONS */
 
 Expression PrimaryExpression():
 {
-   QualifiedName q;
-   LeftHandSide lhs;
    Expression e;
 }
 {
@@ -683,7 +668,7 @@ Expression BaseExpression():
   { return e; }
 }
 
-Expression NameToPrimaryExpressionCompletion(QualifiedName q):
+Expression NameToPrimaryExpression(QualifiedName q):
 {
   Expression e;
 }
@@ -699,24 +684,17 @@ Expression NameToPrimaryExpressionCompletion(QualifiedName q):
   { return e; }
 }
 
-Expression PrimaryExpressionCompletion(Expression e):
-{}
-{
-  ( LOOKAHEAD(2) e = PrimaryModifier(e) )*
-  { return e; }
-}
-  
-Expression PrimaryModifier(Expression p):
+Expression PrimaryExpressionCompletion(Expression p):
 {
   Expression i;
-  Expression e;
+  Expression e = p;
 }
 {
-  (
-    e = Feature(p) [ LOOKAHEAD(2) e = FeatureInvocation((FeatureReference)e) ]
-  | e = SequenceOperationOrReductionOrExpansion(p)
-  | i = Index() { e = new SequenceAccessExpression(p, i); }
-  )
+  ( 
+    e = Feature(e) [ LOOKAHEAD(2) e = FeatureInvocation((FeatureReference)e) ]
+  | e = SequenceOperationOrReductionOrExpansion(e)
+  | i = Index() { e = new SequenceAccessExpression(e, i); }
+  )*
   
   { return e; }
 }
@@ -751,7 +729,7 @@ Expression NameOrPrimaryExpression():
 }
 {
   q = PotentiallyAmbiguousQualifiedName() { e = new NameExpression(q); }
-  [ LOOKAHEAD(2) e = NameToPrimaryExpressionCompletion(q) ]
+  [ LOOKAHEAD(2) e = NameToPrimaryExpression(q) ]
   { return e; }
 }
 
@@ -936,12 +914,12 @@ Tuple LinkOperationTuple():
     ( LOOKAHEAD(<LBRACKET>)
       i = Index() 
       ( <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, i)
-      | e = ExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), i))
+      | e = PrimaryToExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), i))
         { ((PositionalTuple)t).addExpression(e); } 
         PositionalTupleExpressionListCompletion((PositionalTuple)t)
       )
     | <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, null)
-    | e = ExpressionCompletion(new NameExpression(q))
+    | e = NameToExpressionCompletion(q)
       { ((PositionalTuple)t).addExpression(e); } 
       PositionalTupleExpressionListCompletion((PositionalTuple)t)
     )
@@ -1131,6 +1109,14 @@ Expression SequenceOperationOrReductionOrExpansion(Expression p):
 
 /* INCREMENT OR DECREMENT EXPRESSIONS */
 
+Expression PostfixExpressionCompletion(Expression e):
+{}
+{
+  e = PrimaryExpressionCompletion(e) [ e = PostfixOperation(e) ]
+  
+  { return e; }
+}
+
 Expression PostfixOperation(Expression e1):
 {
   Expression i = null;
@@ -1221,47 +1207,50 @@ Expression UnaryExpression():
 
 Expression PostfixOrCastExpression():
 {
+  Expression e;
+}
+{
+  (
+    e = NonNamePostfixOrCastExpression() 
+  | e = NameOrPrimaryExpression() e = PostfixExpressionCompletion(e)
+  )
+
+  { return e; }
+}
+
+Expression NonNameUnaryExpression():
+{
+  Expression e;
+}
+{
+  (
+    e = NonNamePostfixOrCastExpression()
+  | e = NonPostfixNonCastUnaryExpression()
+  )
+  
+  { return e; }
+}  
+
+Expression NonNamePostfixOrCastExpression():
+{
   QualifiedName q;
   Expression e1;
   Expression e2;
 }
 {
-  ( 
-    q = PotentiallyAmbiguousQualifiedName() e2 = NameToPostfixExpressionCompletion(q)
-  | <LPAREN>
+  (
+    <LPAREN>
     ( LOOKAHEAD(2)
       <ANY> <RPAREN> e2 = CastCompletion(null)
     | q = PotentiallyAmbiguousQualifiedName() 
       ( LOOKAHEAD(2)
         <RPAREN> e2 = CastCompletion(q)
-      | e1 = NameToExpressionCompletion(q) <RPAREN> e2 = PrimaryExpressionCompletion(e1)
+      | e1 = NameToExpressionCompletion(q) <RPAREN> e2 = PostfixExpressionCompletion(e1)
       )
-    | e1 = NonNameExpression() <RPAREN> e2 = PrimaryExpressionCompletion(e1)
+    | e1 = NonNameExpression() <RPAREN> e2 = PostfixExpressionCompletion(e1)
     )
   | e1 = BaseExpression() e2 = PostfixExpressionCompletion(e1)
   )
-  
-  { return e2; }
-}
-
-Expression PostfixExpressionCompletion(Expression p) :
-{
-  Expression i;
-  Expression e;
-}
-{
-  e = PrimaryExpressionCompletion(p) [ e = PostfixOperation(e) ]
-  
-  { return e; }
-}
-
-Expression NameToPostfixExpressionCompletion(QualifiedName q):
-{
-  Expression e1 = new NameExpression(q);
-  Expression e2 = e1;
-}
-{
-  [ LOOKAHEAD(2) e1 = NameToPrimaryExpressionCompletion(q) ] e2 = PostfixExpressionCompletion(e1)
   
   { return e2; }
 }
@@ -1350,6 +1339,7 @@ Expression CastCompletion(QualifiedName q):
   (
     e = PostfixOrCastExpression()
   | e = BooleanNegationExpression()
+  | e = BitStringComplementExpression()
   | e = IsolationExpression()
   )
   
