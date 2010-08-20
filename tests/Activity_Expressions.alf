@@ -60,9 +60,11 @@ activity ExpressionStatements() {
   Owns.createLink(jack, newHouse);
   Owns.createLink(owner=>jack, house=>newHouse);
   Owns.createLink(owner=>jack, house[1]=>newHouse);
+  Owns.createLink(owner=>jack, house[n = iter.next()]=>newHouse);
   Owns.destroyLink(owner=>jack, house=>newHouse);
   Owns.clearAssoc(jack);
   Owns.createLink(jack = oldHouse.owner, newHouse);
+  Owns.createLink(getOwner<House>(oldHouse), newHouse);
   
   String[]{"apple","orange","strawberry"};
   new String[]{"apple","orange","strawberry",};
