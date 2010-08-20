@@ -627,7 +627,7 @@ Expression ExpressionCompletion(Expression e):
 {}
 {
   ( LOOKAHEAD(AssignmentOperator()) 
-    e = Assignment(e)
+    e = AssignmentExpressionCompletion(e)
   | e = ConditionalExpressionCompletion(e)
   )
 
@@ -908,46 +908,22 @@ Tuple LinkOperationTuple():
 }
 {
   <LPAREN>
-  [ LOOKAHEAD(2)
-    t = LinkOperationPositionalTuple()
-  | n = Name() { q = new QualifiedName(); q.addName(n); }
-    ( LOOKAHEAD(<LBRACKET>)
-      i = Index() 
+  [ LOOKAHEAD(Name() ( <LBRACKET> | <THICK_ARROW> ))
+    n = Name() { q = new QualifiedName(); q.addName(n); }
+    ( i = Index() 
       ( <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, i)
       | e = PrimaryToExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), i))
         { ((PositionalTuple)t).addExpression(e); } 
         PositionalTupleExpressionListCompletion((PositionalTuple)t)
       )
     | <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, null)
-    | e = NameToExpressionCompletion(q)
-      { ((PositionalTuple)t).addExpression(e); } 
-      PositionalTupleExpressionListCompletion((PositionalTuple)t)
     )
+  | t = PositionalTupleExpressionList()
   ]
   <RPAREN>
   
   { return t; }
 }
-
-PositionalTuple LinkOperationPositionalTuple():
-{
-  QualifiedName q;
-  Expression e;
-  PositionalTuple t = new PositionalTuple();
-}
-{
-  (
-    ( LOOKAHEAD(2) 
-      q = ColonQualifiedName()
-    | q = DotQualifiedName() { q.setIsAmbiguous(); } /* AMBIGUOUS */
-    ) 
-    e = NameToExpressionCompletion(q) 
-  | e = NonNameExpression() 
-  )
-  { t.addExpression(e); } PositionalTupleExpressionListCompletion(t) 
-  
-  { return t; }
-}  
 
 NamedTuple IndexedNamedExpressionListCompletion(String n, Expression i):
 {
@@ -1722,7 +1698,7 @@ Expression ConditionalExpressionCompletion(Expression u):
 
 /* ASSIGNMENT EXPRESSIONS */
 
-Expression Assignment(Expression e1):
+Expression AssignmentExpressionCompletion(Expression e1):
 {
   Expression i = null;
   LeftHandSide lhs = null;

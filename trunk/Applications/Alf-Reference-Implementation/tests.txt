@@ -4380,6 +4380,22 @@ UnitDefinition name:ExpressionStatements
        NameExpression
         QualifiedName newHouse
    ExpressionStatement
+    LinkOperationExpression operation:createLink
+     QualifiedName Owns
+     NamedTuple
+      NamedExpression name:owner
+       NameExpression
+        QualifiedName jack
+      NamedExpression name:house
+       AssignmentExpression operator:=
+        NameLeftHandSide
+         QualifiedName n
+        BehaviorInvocationExpression
+         QualifiedName iter::next(?)
+         PositionalTuple
+       NameExpression
+        QualifiedName newHouse
+   ExpressionStatement
     LinkOperationExpression operation:destroyLink
      QualifiedName Owns
      NamedTuple
@@ -4404,6 +4420,17 @@ UnitDefinition name:ExpressionStatements
         QualifiedName jack
        NameExpression
         QualifiedName oldHouse::owner(?)
+      NameExpression
+       QualifiedName newHouse
+   ExpressionStatement
+    LinkOperationExpression operation:createLink
+     QualifiedName Owns
+     PositionalTuple
+      BehaviorInvocationExpression
+       QualifiedName getOwner<House>
+       PositionalTuple
+        NameExpression
+         QualifiedName oldHouse
       NameExpression
        QualifiedName newHouse
    ExpressionStatement
@@ -4448,6 +4475,19 @@ UnitDefinition name:ExpressionStatements
       BinaryExpression operator:+
        NaturalLiteral image:6
        NaturalLiteral image:4
+   ExpressionStatement
+    SequenceConstructionExpression type:Integer[]
+     SequenceExpressionList
+      NaturalLiteral image:1
+      NaturalLiteral image:2
+      NaturalLiteral image:3
+      NaturalLiteral image:4
+      NaturalLiteral image:5
+      NaturalLiteral image:6
+      NaturalLiteral image:7
+      NaturalLiteral image:8
+      NaturalLiteral image:9
+      NaturalLiteral image:10
    ExpressionStatement
     SequenceConstructionExpression type:Integer[]
      SequenceExpressionList
