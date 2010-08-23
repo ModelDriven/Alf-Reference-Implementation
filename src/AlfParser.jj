@@ -1,7 +1,7 @@
 /*
    Parser for the 
    Action Language for Foundational UML (Alf)
-   Version 0.10
+   Version 0.11
 
    with construction of the Abstract Syntax Tree
    
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class AlfParser {
 
-  public static final String version = "0.10";
+  public static final String version = "0.11";
 
   private static void completeSubunits(NamespaceDefinition namespace) {
     for (Member member: namespace.getMembers()) {
@@ -2222,24 +2222,6 @@ AcceptBlock AcceptClause():
   { return new AcceptBlock(n, nl); }
 }
 
-QualifiedNameList ClassificationFromClause():
-{
-  QualifiedNameList nl;
-}
-{
-  <FROM> nl = QualifiedNameList()
-  { return nl; }
-}
-
-QualifiedNameList ClassificationToClause(): 
-{
-  QualifiedNameList nl;
-}
-{
-  <TO> nl = QualifiedNameList()
-  { return nl; }
-}
-
 /* CLASSIFY STATEMENTS */
 
 ClassifyStatement ClassifyStatement():
@@ -2263,6 +2245,24 @@ void ClassificationClause(ClassifyStatement s):
   [ ClassificationToClause() { s.setToList(nl); } ]
 | [ ReclassifyAllClause() { s.setFromList(new QualifiedNameList()); }] 
   nl = ClassificationToClause() { s.setToList(nl); }
+}
+
+QualifiedNameList ClassificationFromClause():
+{
+  QualifiedNameList nl;
+}
+{
+  <FROM> nl = QualifiedNameList()
+  { return nl; }
+}
+
+QualifiedNameList ClassificationToClause(): 
+{
+  QualifiedNameList nl;
+}
+{
+  <TO> nl = QualifiedNameList()
+  { return nl; }
 }
 
 void ReclassifyAllClause():
