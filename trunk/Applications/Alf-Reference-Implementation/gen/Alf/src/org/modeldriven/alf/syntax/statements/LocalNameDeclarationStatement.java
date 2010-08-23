@@ -57,7 +57,8 @@ public class LocalNameDeclarationStatement extends Statement {
 	} // getExpression
 
 	public String toString() {
-		return super.toString() + " name:" + this.getName();
+		return super.toString() + " name:" + this.getName()
+				+ " hasMultiplicity:" + this.hasMultiplicity();
 	} // toString
 
 	public void print(String prefix) {

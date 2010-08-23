@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class AlfParser implements AlfParserConstants {
 
-  public static final String version = "0.10";
+  public static final String version = "0.11";
 
   private static void completeSubunits(NamespaceDefinition namespace) {
     for (Member member: namespace.getMembers()) {
@@ -3116,22 +3116,6 @@ public class AlfParser implements AlfParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public QualifiedNameList ClassificationFromClause() throws ParseException {
-  QualifiedNameList nl;
-    jj_consume_token(FROM);
-    nl = QualifiedNameList();
-    {if (true) return nl;}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public QualifiedNameList ClassificationToClause() throws ParseException {
-  QualifiedNameList nl;
-    jj_consume_token(TO);
-    nl = QualifiedNameList();
-    {if (true) return nl;}
-    throw new Error("Missing return statement in function");
-  }
-
 /* CLASSIFY STATEMENTS */
   final public ClassifyStatement ClassifyStatement() throws ParseException {
   ClassifyStatement s;
@@ -3181,6 +3165,22 @@ public class AlfParser implements AlfParserConstants {
         throw new ParseException();
       }
     }
+  }
+
+  final public QualifiedNameList ClassificationFromClause() throws ParseException {
+  QualifiedNameList nl;
+    jj_consume_token(FROM);
+    nl = QualifiedNameList();
+    {if (true) return nl;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public QualifiedNameList ClassificationToClause() throws ParseException {
+  QualifiedNameList nl;
+    jj_consume_token(TO);
+    nl = QualifiedNameList();
+    {if (true) return nl;}
+    throw new Error("Missing return statement in function");
   }
 
   final public void ReclassifyAllClause() throws ParseException {
@@ -5426,8 +5426,9 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_27() {
-    if (jj_3R_63()) return true;
+  private boolean jj_3R_63() {
+    if (jj_scan_token(FROM)) return true;
+    if (jj_3R_64()) return true;
     return false;
   }
 
@@ -5479,6 +5480,11 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3_10() {
     if (jj_3R_50()) return true;
+    return false;
+  }
+
+  private boolean jj_3_27() {
+    if (jj_3R_63()) return true;
     return false;
   }
 
@@ -5544,12 +5550,6 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_197() {
     if (jj_3R_211()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_63() {
-    if (jj_scan_token(FROM)) return true;
-    if (jj_3R_64()) return true;
     return false;
   }
 

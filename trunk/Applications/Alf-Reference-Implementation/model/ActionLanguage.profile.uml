@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Profile xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.0.0/UML" xmi:id="_16_5_2_1a900482_1251866854062_915728_1258" name="ActionLanguage" metamodelReference="_0metamodelReferenceActionLanguage">
-  <eAnnotations xmi:id="_sCdCcn7-Ed-9BrLR2sB7wA" source="http://www.eclipse.org/uml2/2.0.0/UML">
-    <contents xmi:type="ecore:EPackage" xmi:id="_sCdCc37-Ed-9BrLR2sB7wA" name="ActionLanguage" nsURI="http:///schemas/ActionLanguage/_rvYVAH7-Ed-9BrLR2sB7wA/0" nsPrefix="ActionLanguage">
-      <eClassifiers xmi:type="ecore:EClass" xmi:id="_sCdCdH7-Ed-9BrLR2sB7wA" name="Java">
-        <eAnnotations xmi:id="_sCdCdX7-Ed-9BrLR2sB7wA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5_2_1a900482_1251866914093_534198_1259"/>
-        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_sCdCdn7-Ed-9BrLR2sB7wA" name="base_Comment" ordered="false" lowerBound="1">
+  <eAnnotations xmi:id="_dQa1qq8OEd-Lk7plEUoG5Q" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_dQa1q68OEd-Lk7plEUoG5Q" name="ActionLanguage" nsURI="http:///schemas/ActionLanguage/_dDAnQK8OEd-Lk7plEUoG5Q/0" nsPrefix="ActionLanguage">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_dQa1rK8OEd-Lk7plEUoG5Q" name="Java">
+        <eAnnotations xmi:id="_dQa1ra8OEd-Lk7plEUoG5Q" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_16_5_2_1a900482_1251866914093_534198_1259"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_dQa1rq8OEd-Lk7plEUoG5Q" name="base_Comment" ordered="false" lowerBound="1">
           <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Comment"/>
         </eStructuralFeatures>
       </eClassifiers>

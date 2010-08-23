@@ -1,4 +1,4 @@
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example0a.alf...
 Parsed successfully.
 UnitDefinition name:run
@@ -21,7 +21,7 @@ UnitDefinition name:run
       BehaviorInvocationExpression
        QualifiedName activation::run(?)
        PositionalTuple
-   LocalNameDeclarationStatement name:enabledActivations
+   LocalNameDeclarationStatement name:enabledActivations hasMultiplicity:true
     QualifiedName ActivityNodeActivation
     SequenceConstructionExpression null
    ForStatement
@@ -29,7 +29,7 @@ UnitDefinition name:run
      NameExpression
       QualifiedName activations
     Block
-     LocalNameDeclarationStatement name:isEnabled
+     LocalNameDeclarationStatement name:isEnabled hasMultiplicity:false
       QualifiedName Boolean
       ConditionalBinaryExpression operator:||
        ConditionalBinaryExpression operator:||
@@ -114,7 +114,7 @@ UnitDefinition name:run
       BehaviorInvocationExpression
        QualifiedName enabledActivation::receiveOffer(?)
        PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example0b.alf...
 Parsed successfully.
 UnitDefinition name:run
@@ -186,7 +186,7 @@ UnitDefinition name:run
     BehaviorInvocationExpression
      QualifiedName enabledActivations::receiveOffer(?)
      PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example1a.alf...
 Parsed successfully.
 UnitDefinition name:Quicksort
@@ -258,7 +258,7 @@ UnitDefinition name:Quicksort
               QualifiedName b
              NameExpression
               QualifiedName x
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example1b.alf...
 Parsed successfully.
 UnitDefinition name:QuicksortInPlace
@@ -447,7 +447,7 @@ UnitDefinition name:QuicksortInPlace
            NaturalLiteral image:1
           NameExpression
            QualifiedName high
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example2a.alf...
 Parsed successfully.
 UnitDefinition name:Order_Behavior
@@ -529,7 +529,7 @@ See Figure B.3 for original state machine diagram.
      FeatureReference nameBinding:notifyOfDelivery
       ThisExpression
      PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example2b.alf...
 Parsed successfully.
 UnitDefinition name:Ordering
@@ -586,7 +586,7 @@ Online Bookstore, Ordering Subsystem
    PropertyDefinition name:'is paid for by' visibility:public isStub:false isComposite:false
     TypedElementDeclaration lowerBound:0 upperBound:1 isOrdered:false isNonunique:false
      QualifiedName CreditCardCharge
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example2c.alf...
 Parsed successfully.
 UnitDefinition name:Order
@@ -744,7 +744,7 @@ Active class for managing an order
      BehaviorInvocationExpression
       QualifiedName NotifyOfDelivery
       PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example2d.alf...
 Parsed successfully.
 UnitDefinition name:EstablishCustomer
@@ -872,7 +872,7 @@ Entry action for State 1. Establishing Customer and Verifying Payment
          FeatureReference nameBinding:cardholderName
           FeatureReference nameBinding:checkOutData
            ThisExpression
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example2e.alf...
 Parsed successfully.
 UnitDefinition name:ProcessCharge
@@ -912,7 +912,7 @@ Entry behavior for State 2. Submitting Charge
           ThisExpression
         NamedExpression name:order
          ThisExpression
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example2f.alf...
 Parsed successfully.
 UnitDefinition name:DeclineCharge
@@ -936,7 +936,7 @@ Entry behavior for State 3. Payment Not Approved
       NamedExpression name:customerEmail
        NameExpression
         QualifiedName customer::email(?)
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example2g.alf...
 Parsed successfully.
 UnitDefinition name:PackAndShip
@@ -975,7 +975,7 @@ Entry behavior for State 4. Being Packed and Shipped
      NamedTuple
       NamedExpression name:order
        ThisExpression
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example2h.alf...
 Parsed successfully.
 UnitDefinition name:NotifyOfDelivery
@@ -999,7 +999,7 @@ Entry behavior for State 5. Delivered to Customer
       NamedExpression name:customerEmail
        NameExpression
         QualifiedName customer::email(?)
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3a.alf...
 Parsed successfully.
 UnitDefinition name:'create property'
@@ -1034,7 +1034,7 @@ UnitDefinition name:'create property'
      FeatureReference nameBinding:'update status'
       ThisExpression
      PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3b.alf...
 Parsed successfully.
 UnitDefinition name:'update status'
@@ -1083,7 +1083,7 @@ UnitDefinition name:'update status'
          ThisExpression
        NameExpression
         QualifiedName 'Property Status'::disposed
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3c.alf...
 Parsed successfully.
 UnitDefinition name:'get next identifier'
@@ -1102,7 +1102,7 @@ UnitDefinition name:'get next identifier'
         FeatureReference nameBinding:'next identifier'
          ThisExpression
      PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3d.alf...
 Parsed successfully.
 UnitDefinition name:'create reply'
@@ -1209,7 +1209,7 @@ UnitDefinition name:'create reply'
       NamedExpression name:property
        NameExpression
         QualifiedName propertyData
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3e.alf...
 Parsed successfully.
 UnitDefinition name:establish
@@ -1283,7 +1283,7 @@ UnitDefinition name:establish
         QualifiedName request::identifier(?)
        NameExpression
         QualifiedName property
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3f.alf...
 Parsed successfully.
 UnitDefinition name:acquire
@@ -1395,7 +1395,7 @@ UnitDefinition name:acquire
           QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3g.alf...
 Parsed successfully.
 UnitDefinition name:update
@@ -1682,7 +1682,7 @@ UnitDefinition name:update
           QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3h.alf...
 Parsed successfully.
 UnitDefinition name:dispose
@@ -1794,7 +1794,7 @@ UnitDefinition name:dispose
           QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3i.alf...
 Parsed successfully.
 UnitDefinition name:delete
@@ -1873,7 +1873,7 @@ UnitDefinition name:delete
       BehaviorInvocationExpression
        QualifiedName property::destroy(?)
        PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example3j.alf...
 Parsed successfully.
 UnitDefinition name:retrieve
@@ -1948,7 +1948,7 @@ UnitDefinition name:retrieve
           QualifiedName request::identifier(?)
          NameExpression
           QualifiedName property
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-CollectionClasses-Impl.alf...
 Parsed successfully.
 UnitDefinition name:Impl
@@ -1996,7 +1996,7 @@ UnitDefinition name:Impl
    ClassifierTemplateParameter name:Value visibility:private isStub:false isAbstract: true
    QualifiedNameList
     QualifiedName CollectionClasses::Map<Key,Value>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-CollectionImpl.alf...
 Parsed successfully.
 UnitDefinition name:CollectionImpl
@@ -2481,7 +2481,7 @@ The base concrete implementation for all the standard library collection classes
         ThisExpression
        PositionalTuple
       PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-OrderedCollectionImpl.alf...
 Parsed successfully.
 UnitDefinition name:OrderedCollectionImpl
@@ -2705,7 +2705,7 @@ classes
       QualifiedName result
   QualifiedNameList
    QualifiedName CollectionImpl<T>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-Set.alf...
 Parsed successfully.
 UnitDefinition name:Set
@@ -2817,7 +2817,7 @@ The concrete implementation of the standard library template Set class.
   QualifiedNameList
    QualifiedName CollectionImpl<T>
    QualifiedName CollectionClasses::Set<T>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-OrderedSet.alf...
 Parsed successfully.
 UnitDefinition name:OrderedSet
@@ -3011,7 +3011,7 @@ The concrete implementation of the standard library template OrderedSet class.
   QualifiedNameList
    QualifiedName OrderedCollectionImpl<T>
    QualifiedName CollectionClasses::OrderedSet<T>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-Bag.alf...
 Parsed successfully.
 UnitDefinition name:Bag
@@ -3097,7 +3097,7 @@ The concrete implementation of the standard library template Bag class.
   QualifiedNameList
    QualifiedName CollectionImpl<T>
    QualifiedName CollectionClasses::Bag<T>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-List.alf...
 Parsed successfully.
 UnitDefinition name:List
@@ -3183,7 +3183,7 @@ The concrete implementation of the standard library template List class.
   QualifiedNameList
    QualifiedName OrderedCollectionImpl<T>
    QualifiedName CollectionClasses::OrderedSet<T>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-Queue.alf...
 Parsed successfully.
 UnitDefinition name:Queue
@@ -3320,7 +3320,7 @@ The concrete implementation of the standard library template Queue class.
   QualifiedNameList
    QualifiedName CollectionImpl<T>
    QualifiedName CollectionClasses::Set<T>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-Deque.alf...
 Parsed successfully.
 UnitDefinition name:Deque
@@ -3522,7 +3522,7 @@ The concrete implementation of the standard library template Deque class.
       ThisExpression
   QualifiedNameList
    QualifiedName Queue<T>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Example4-Map.alf...
 Parsed successfully.
 UnitDefinition name:Map
@@ -3908,7 +3908,7 @@ The concrete implementation of the standard library template Map class.
          ThisExpression
   QualifiedNameList
    QualifiedName CollectionClasses::Map<Key,Value>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\ActiveClass_Order.alf...
 Parsed successfully.
 UnitDefinition name:Order
@@ -3937,7 +3937,7 @@ UnitDefinition name:Order
   ReceptionDefinition name:OrderDelivered visibility:public isStub:false
    QualifiedName OrderDelivered
   ActivityDefinition name:Order_Behavior visibility:private isStub:true isAbstract: false
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\ActiveClass_ProcessQueue.alf...
 Parsed successfully.
 UnitDefinition name:ProcessQueue
@@ -4021,7 +4021,7 @@ UnitDefinition name:ProcessQueue
                ThisExpression
              NameExpression
               QualifiedName false
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\ActiveClass_ProcessQueueImpl.alf...
 Parsed successfully.
 UnitDefinition name:ProcessQueueImpl
@@ -4043,7 +4043,7 @@ UnitDefinition name:ProcessQueueImpl
      QualifiedName Boolean
   QualifiedNameList
    QualifiedName ProcessQueue
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\ActiveClass_Receptions.alf...
 Parsed successfully.
 UnitDefinition name:Receptions
@@ -4063,7 +4063,7 @@ UnitDefinition name:Receptions
    PropertyDefinition name:cardholderName visibility:public isStub:false isComposite:false
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
      QualifiedName PersonalName
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Activity_execute.alf...
 Parsed successfully.
 UnitDefinition name:execute
@@ -4113,7 +4113,7 @@ UnitDefinition name:execute
            QualifiedName 'activity'::node(?)
           NameExpression
            QualifiedName 'activity'::edge(?)
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Activity_Expressions.alf...
 Parsed successfully.
 UnitDefinition name:ExpressionStatements
@@ -5166,7 +5166,7 @@ UnitDefinition name:ExpressionStatements
      NameLeftHandSide
       QualifiedName j
      NaturalLiteral image:1
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Activity_TemplateExpressions.alf...
 Parsed successfully.
 UnitDefinition name:TemplateExpressions
@@ -5209,7 +5209,7 @@ UnitDefinition name:TemplateExpressions
         QualifiedName B<C>
      NameExpression
       QualifiedName D
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Activity_getNodeActivations.alf...
 Parsed successfully.
 UnitDefinition name:getNodeActivations
@@ -5231,7 +5231,7 @@ UnitDefinition name:getNodeActivations
         QualifiedName a::node(?)
        NameExpression
         QualifiedName node
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Activity_Order_Behavior.alf...
 Parsed successfully.
 UnitDefinition name:Order_Behavior
@@ -5303,7 +5303,7 @@ UnitDefinition name:Order_Behavior
      FeatureReference nameBinding:notifyOfDelivery
       ThisExpression
      PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Activity_Statements.alf...
 Parsed successfully.
 UnitDefinition name:Statements
@@ -5350,13 +5350,13 @@ UnitDefinition name:Statements
            NameLeftHandSide
             QualifiedName i
    EmptyStatement
-   LocalNameDeclarationStatement name:currentOffer
+   LocalNameDeclarationStatement name:currentOffer hasMultiplicity:false
     QualifiedName Offer
     SequenceAccessExpression
      FeatureReference nameBinding:offers
       ThisExpression
      NaturalLiteral image:1
-   LocalNameDeclarationStatement name:interest
+   LocalNameDeclarationStatement name:interest hasMultiplicity:false
     QualifiedName DomainTypes::CurrencyAmount(?)
     BinaryExpression operator:*
      BinaryExpression operator:*
@@ -5366,7 +5366,7 @@ UnitDefinition name:Statements
        ThisExpression
      NameExpression
       QualifiedName period
-   LocalNameDeclarationStatement name:inactiveMembers
+   LocalNameDeclarationStatement name:inactiveMembers hasMultiplicity:true
     QualifiedName Member
     SequenceExpansionExpression operation:select variable:member
      NameExpression
@@ -5375,26 +5375,26 @@ UnitDefinition name:Statements
       UnaryExpression operator:!
        NameExpression
         QualifiedName member::isActive(?)
-   LocalNameDeclarationStatement name:realProperties
+   LocalNameDeclarationStatement name:realProperties hasMultiplicity:true
     QualifiedName RealProperty
     CastExpression
      QualifiedName RealProperty
      NameExpression
       QualifiedName assets
-   LocalNameDeclarationStatement name:origin
+   LocalNameDeclarationStatement name:origin hasMultiplicity:false
     QualifiedName Point
     InstanceCreationExpression
      PositionalTuple
       NaturalLiteral image:0
       NaturalLiteral image:0
-   LocalNameDeclarationStatement name:list
+   LocalNameDeclarationStatement name:list hasMultiplicity:false
     QualifiedName IntegerList
     SequenceConstructionExpression
      SequenceExpressionList
       NaturalLiteral image:1
       NaturalLiteral image:2
       NaturalLiteral image:3
-   LocalNameDeclarationStatement name:fixedAssets
+   LocalNameDeclarationStatement name:fixedAssets hasMultiplicity:false
     QualifiedName Set<RealProperty>
     SequenceConstructionExpression
      SequenceExpressionList
@@ -6086,7 +6086,7 @@ UnitDefinition name:Statements
     QualifiedNameList
      QualifiedName Pending
      QualifiedName Overdue
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Assoc_Selection.alf...
 Parsed successfully.
 UnitDefinition name:Selection
@@ -6100,7 +6100,7 @@ UnitDefinition name:Selection
   PropertyDefinition name:selectionInfo visibility:public isStub:false isComposite:false
    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
     QualifiedName ProductSelection
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Constructors.alf...
 Parsed successfully.
 UnitDefinition name:Constructors
@@ -6135,7 +6135,7 @@ UnitDefinition name:Constructors
         PositionalTuple
       PositionalTuple
        ThisExpression
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Destructors.alf...
 Parsed successfully.
 UnitDefinition name:Destructors
@@ -6183,7 +6183,7 @@ UnitDefinition name:Destructors
       PositionalTuple
   QualifiedNameList
    QualifiedName FoundationalModelLibrary::BasicInputOutput::Channel
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Initialization.alf...
 Parsed successfully.
 UnitDefinition name:Initialization
@@ -6200,7 +6200,7 @@ UnitDefinition name:Initialization
    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
     QualifiedName Integer
    NaturalLiteral image:1
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Operations.alf...
 Parsed successfully.
 UnitDefinition name:Operations
@@ -6258,7 +6258,7 @@ UnitDefinition name:Operations
      QualifiedName Money
    QualifiedNameList
     QualifiedName Selection::getUnitPriceOfSelection
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Properties.alf...
 Parsed successfully.
 UnitDefinition name:Properties
@@ -6291,7 +6291,7 @@ UnitDefinition name:Properties
    InstanceCreationExpression
     QualifiedName B
     PositionalTuple
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Redefinitions.alf...
 Parsed successfully.
 UnitDefinition name:Redefinitions
@@ -6316,7 +6316,7 @@ UnitDefinition name:Redefinitions
      QualifiedName Integer
    QualifiedNameList
     QualifiedName A::p
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Singleton.alf...
 Parsed successfully.
 UnitDefinition name:Singleton
@@ -6357,7 +6357,7 @@ UnitDefinition name:Singleton
       NameExpression
        QualifiedName instance
       NaturalLiteral image:1
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_SuperConstructors.alf...
 Parsed successfully.
 UnitDefinition name:SuperConstructors
@@ -6407,13 +6407,13 @@ UnitDefinition name:SuperConstructors
         QualifiedName x
   QualifiedNameList
    QualifiedName FoundationalModelLibrary::BasicInputOutput::Channel
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Collection.alf...
 Parsed successfully.
 UnitDefinition name:Collection
  ClassDefinition name:Collection visibility: isStub:false isAbstract: true
   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_MapToString.alf...
 Parsed successfully.
 UnitDefinition name:MapToString
@@ -6421,7 +6421,7 @@ UnitDefinition name:MapToString
   ClassifierTemplateParameter name:T visibility:private isStub:false isAbstract: true
   QualifiedNameList
    QualifiedName Map<Entry=>T,Value=>String>
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Class_Sorter.alf...
 Parsed successfully.
 UnitDefinition name:Sorter
@@ -6450,7 +6450,7 @@ UnitDefinition name:Sorter
     TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
      QualifiedName List<T>
   OperationDefinition name:clear visibility:public isStub:true isAbstract:false
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Datatype_Complex.alf...
 Parsed successfully.
 UnitDefinition name:Complex
@@ -6461,7 +6461,7 @@ UnitDefinition name:Complex
   PropertyDefinition name:im visibility:public isStub:false isComposite:false
    TypedElementDeclaration lowerBound: upperBound: isOrdered:false isNonunique:false
     QualifiedName Real
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Enum_TrafficLightColor.alf...
 Parsed successfully.
 UnitDefinition name:TrafficLightColor
@@ -6469,7 +6469,7 @@ UnitDefinition name:TrafficLightColor
   EnumerationLiteralName name:RED visibility: isStub:false
   EnumerationLiteralName name:YELLOW visibility: isStub:false
   EnumerationLiteralName name:GREEN visibility: isStub:false
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Package_Ordering.alf...
 Parsed successfully.
 UnitDefinition name:Ordering
@@ -6487,7 +6487,7 @@ UnitDefinition name:Ordering
   ActiveClassDefinition name:ShoppingCart visibility:public isStub:true isAbstract: false classifierBehavior:null
   ActiveClassDefinition name:Order visibility:public isStub:true isAbstract: true classifierBehavior:null
   ClassDefinition name:ProductSelection visibility:public isStub:true isAbstract: false
-Alf 0.10 Parser
+Alf 0.11 Parser
 Parsing tests\Signal_SubmitCharge.alf...
 Parsed successfully.
 UnitDefinition name:SubmitCharge
