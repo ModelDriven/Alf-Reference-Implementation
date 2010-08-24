@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uml:Profile xmlns:xmi="http://schema.omg.org/spec/XMI/2.1"
+	xmlns:uml="http://www.omg.org/spec/UML/20100901" xmi:version="2.1" xmi:id="_0"
+	name="ActionLanguage" visibility="public"
+	URI="http://www.omg.org/spec/ALF/20100801/ActionLanguage">
+	<packagedElement xmi:type="uml:Stereotype" xmi:id="TextualRepresentation"
+		name="TextualRepresentation" visibility="public" isLeaf="false" isAbstract="false"
+		isActive="false">
+		<ownedAttribute xmi:type="uml:Property" xmi:id="TextualRepresentation-base_Comment"
+			name="base_Comment" visibility="private" isOrdered="false" isUnique="true"
+			isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false"
+			isDerivedUnion="false" aggregation="none"
+			association="TextualRepresentation-_Extension.0">
+			<type xmi:type="uml:Class" href="http://www.omg.org/spec/UML/20100901/UML.xmi#Comment"/>
+		</ownedAttribute>
+		<ownedAttribute xmi:type="uml:Property" xmi:id="TextualRepresentation-language"
+			name="language" visibility="public" isOrdered="false" isUnique="true" isLeaf="false"
+			isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false"
+			aggregation="none">
+			<type xmi:type="uml:PrimitiveType"
+				href="http://www.omg.org/spec/UML/20100901/PrimitiveTypes.xmi#String"> </type>
+		</ownedAttribute>
+	</packagedElement>
+	<packagedElement xmi:type="uml:Extension" xmi:id="TextualRepresentation-_Extension.0" name=""
+		visibility="public" isLeaf="false" isAbstract="false" isDerived="false">
+		<memberEnd xmi:idref="TextualRepresentation-base_Comment"/>
+		<memberEnd xmi:idref="TextualRepresentation-_Extension.0-extension_"/>
+		<ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="TextualRepresentation-_Extension.0-extension_"
+			name="extension_" visibility="private" isOrdered="false" isUnique="true" isLeaf="false"
+			isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false"
+			aggregation="composite" type="TextualRepresentation"
+			association="TextualRepresentation-_Extension.0">
+			<lowerValue xmi:type="uml:LiteralInteger"
+				xmi:id="TextualRepresentation-_Extension.0-extension_-_LiteralInteger.0" name=""
+				visibility="public" value="0"/>
+		</ownedEnd>
+	</packagedElement>
+</uml:Profile>
