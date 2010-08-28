@@ -9,16 +9,12 @@ import java.util.ArrayList;
 
 public class AlfParser implements AlfParserConstants {
 
-  public static final String version = "0.11";
-
-  private static void completeSubunits(NamespaceDefinition namespace) {
-    for (Member member: namespace.getMembers()) {
-      if (member instanceof NamespaceDefinition) {
-        member.completeStub();
-        completeSubunits((NamespaceDefinition)member);
-      }
-    }
+  private String errorMessage(String message) {
+    return "Error at line " + token.beginLine + ", column " +
+           token.beginColumn + ". \u005cn" + message;
   }
+
+  public static final String version = "0.11";
 
   public static UnitDefinition parse(String fileName) {
     AlfParser parser;
@@ -41,11 +37,12 @@ public class AlfParser implements AlfParserConstants {
       return unit;
 
     } catch (Throwable e) {
-      System.out.println(e.getMessage());
-      if (e.getMessage()==null) {
+      System.out.println("Parse failed.");
+      if (!(e instanceof ParseException)) {
         e.printStackTrace();
+      } else if (e.getMessage()!=null) {
+        System.out.println(e.getMessage());
       }
-      System.out.println("Encountered errors during parse.");
       return null;
     }
 
@@ -57,47 +54,21 @@ public class AlfParser implements AlfParserConstants {
 
     System.out.println("Alf " + version + " Parser");
 
-    if (args.length == 0 || args.length == 1 && args[0].equals("-complete")) {
+    if (args.length == 0) {
       unit = parse(null);
-      complete = args.length == 1;
-    } else if (args.length == 1 || args.length == 2 && args[0].equals("-complete")) {
-      unit = parse(args[args.length-1]);
-      complete = args.length == 2;
+    } else if (args.length == 1) {
+      unit = parse(args[0]);
     } else {
       System.out.println("Usage is");
-      System.out.println("         alfp [ -complete ] < inputfile");
+      System.out.println("         alfp < inputfile");
       System.out.println("OR");
-      System.out.println("         alfp [ -complete ] inputfile");
+      System.out.println("         alfp inputfile");
       return;
     }
 
     if (unit != null) {
-      if (!complete) {
-        unit.print();
-      } else {
-        unit.addImplicitImports();
-
-        // Ensure all imports are resolved.
-        unit.getDefinition().getAllMembers();
-
-        // Recursively complete subunits.
-        completeSubunits(unit.getDefinition());
-
-        unit.getModelNamespace().print();
-      }
+      unit.print("");
     }
-
-    /*
-    ArrayList<Member> members = unit.getAllMembers();
-    System.out.println(unit.toString());
-    for (Member member: members) {
-      if (member.isError()) {
-        member.printChild("");
-      } else {
-        System.out.println(member.toString(" "));
-      }
-    }
-    */
   }
 
 /***************
@@ -154,7 +125,7 @@ public class AlfParser implements AlfParserConstants {
         break;
       case DOT:
         DotQualifiedNameCompletion(q);
-                                     q.setIsAmbiguous();
+                                     q.setIsAmbiguous(true);
         break;
       default:
         jj_la1[2] = jj_gen;
@@ -373,7 +344,8 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public Expression NameToExpressionCompletion(QualifiedName q) throws ParseException {
-  Expression e = new NameExpression(q);
+  Expression e = new NameExpression();
+    ((NameExpression) e).setName(q);
     if (jj_2_8(2)) {
       e = NameToPrimaryExpression(q);
     } else {
@@ -508,6 +480,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public Expression PrimaryExpressionCompletion(Expression p) throws ParseException {
+  FeatureReference f;
   Expression i;
   Expression e = p;
     label_5:
@@ -524,9 +497,11 @@ public class AlfParser implements AlfParserConstants {
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case DOT:
-        e = Feature(e);
+        f = Feature(e);
+      e = new PropertyAccessExpression();
+      ((PropertyAccessExpression)e).setFeatureReference(f);
         if (jj_2_10(2)) {
-          e = FeatureInvocation((FeatureReference)e);
+          e = FeatureInvocation(f);
         } else {
           ;
         }
@@ -536,7 +511,10 @@ public class AlfParser implements AlfParserConstants {
         break;
       case LBRACKET:
         i = Index();
-                  e = new SequenceAccessExpression(e, i);
+      SequenceAccessExpression s = new SequenceAccessExpression();
+      s.setPrimary(e);
+      s.setIndex(i);
+      e = s;
         break;
       default:
         jj_la1[13] = jj_gen;
@@ -555,31 +533,31 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOOLEAN_LITERAL:
       t = jj_consume_token(BOOLEAN_LITERAL);
-                            e = new BooleanLiteral(t.image);
+      e = new BooleanLiteralExpression(); ((BooleanLiteralExpression)e).setImage(t.image);
       break;
     case DECIMAL_LITERAL:
       t = jj_consume_token(DECIMAL_LITERAL);
-                            e = new NaturalLiteral(t.image);
+      e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image);
       break;
     case BINARY_LITERAL:
       t = jj_consume_token(BINARY_LITERAL);
-                            e = new NaturalLiteral(t.image);
+      e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image);
       break;
     case OCTAL_LITERAL:
       t = jj_consume_token(OCTAL_LITERAL);
-                            e = new NaturalLiteral(t.image);
+      e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image);
       break;
     case HEX_LITERAL:
       t = jj_consume_token(HEX_LITERAL);
-                            e = new NaturalLiteral(t.image);
+      e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image);
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                            e = new StringLiteral(t.image);
+      e = new StringLiteralExpression(); ((StringLiteralExpression)e).setImage(t.image);
       break;
     case STAR:
       t = jj_consume_token(STAR);
-                            e = new UnboundedLiteral();
+      e = new UnboundedLiteralExpression();
       break;
     default:
       jj_la1[14] = jj_gen;
@@ -593,9 +571,10 @@ public class AlfParser implements AlfParserConstants {
 /* NAME EXPRESSIONS */
   final public Expression NameOrPrimaryExpression() throws ParseException {
   QualifiedName q;
-  Expression e;
+  NameExpression ne = new NameExpression();
+  Expression e = ne;
     q = PotentiallyAmbiguousQualifiedName();
-                                            e = new NameExpression(q);
+                                            ne.setName(q);
     if (jj_2_11(2)) {
       e = NameToPrimaryExpression(q);
     } else {
@@ -613,7 +592,8 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
       t = Tuple();
-                         e = new FeatureInvocationExpression(new FeatureReference(e, null), t);
+      e = new FeatureInvocationExpression();
+      ((FeatureInvocationExpression) e).setTuple(t);
       break;
     default:
       jj_la1[15] = jj_gen;
@@ -634,11 +614,14 @@ public class AlfParser implements AlfParserConstants {
   }
 
 /* PROPERTY ACCESS EXPRESSIONS */
-  final public FeatureReference Feature(Expression c) throws ParseException {
+  final public FeatureReference Feature(Expression p) throws ParseException {
   NameBinding n;
     jj_consume_token(DOT);
     n = NameBinding();
-    {if (true) return new FeatureReference(c, n);}
+    FeatureReference f = new FeatureReference();
+    f.setExpression(p);
+    f.setNameBinding(n);
+    {if (true) return f;}
     throw new Error("Missing return statement in function");
   }
 
@@ -716,7 +699,7 @@ public class AlfParser implements AlfParserConstants {
   NamedTuple t = new NamedTuple();
   NamedExpression n;
     n = NamedExpression();
-                          t.addExpression(n);
+                          t.addNamedExpression(n);
     label_7:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -729,7 +712,7 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(COMMA);
       n = NamedExpression();
-                                    t.addExpression(n);
+                                    t.addNamedExpression(n);
     }
     {if (true) return t;}
     throw new Error("Missing return statement in function");
@@ -741,21 +724,30 @@ public class AlfParser implements AlfParserConstants {
     n = Name();
     jj_consume_token(THICK_ARROW);
     e = Expression();
-    {if (true) return new NamedExpression(n, e);}
+    NamedExpression ne = new NamedExpression();
+    ne.setName(n);
+    ne.setExpression(e);
+    {if (true) return ne;}
     throw new Error("Missing return statement in function");
   }
 
   final public Expression BehaviorInvocation(QualifiedName n) throws ParseException {
   Tuple t;
     t = Tuple();
-    {if (true) return new BehaviorInvocationExpression(n, t);}
+    BehaviorInvocationExpression e = new BehaviorInvocationExpression();
+    e.setTarget(n);
+    e.setTuple(t);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
   final public Expression FeatureInvocation(FeatureReference f) throws ParseException {
   Tuple t;
     t = Tuple();
-    {if (true) return new FeatureInvocationExpression(f, t);}
+    FeatureInvocationExpression e = new FeatureInvocationExpression();
+    e.setTarget(f);
+    e.setTuple(t);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
@@ -773,7 +765,10 @@ public class AlfParser implements AlfParserConstants {
       ;
     }
     t = Tuple();
-    {if (true) return new SuperInvocationExpression(n, t);}
+    SuperInvocationExpression e = new SuperInvocationExpression();
+    e.setTarget(n);
+    e.setTuple(t);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
@@ -791,7 +786,10 @@ public class AlfParser implements AlfParserConstants {
       break;
     case LPAREN:
       t = Tuple();
-                  e = new InstanceCreationExpression(n, t);
+      InstanceCreationExpression ice = new InstanceCreationExpression();
+      ice.setConstructor(n);
+      ice.setTuple(t);
+      e = ice;
       break;
     default:
       jj_la1[20] = jj_gen;
@@ -808,7 +806,11 @@ public class AlfParser implements AlfParserConstants {
   Tuple t;
     op = LinkOperation();
     t = LinkOperationTuple();
-    {if (true) return new LinkOperationExpression(q, op, t);}
+    LinkOperationExpression e = new LinkOperationExpression();
+    e.setAssociationName(q);
+    e.setOperation(op);
+    e.setTuple(t);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
@@ -836,6 +838,7 @@ public class AlfParser implements AlfParserConstants {
   final public Tuple LinkOperationTuple() throws ParseException {
   QualifiedName q;
   String n;
+  NameBinding b;
   Expression e;
   Expression i;
   Tuple t = new PositionalTuple();
@@ -865,7 +868,8 @@ public class AlfParser implements AlfParserConstants {
     case STAR:
       if (jj_2_13(2147483647)) {
         n = Name();
-                 q = new QualifiedName(); q.addName(n);
+      b = new NameBinding(); q = new QualifiedName();
+      b.setName(n); q.addNameBinding(b);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case LBRACKET:
           i = Index();
@@ -876,7 +880,12 @@ public class AlfParser implements AlfParserConstants {
             break;
           default:
             jj_la1[22] = jj_gen;
-            e = PrimaryToExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), i));
+          NameExpression ne = new NameExpression();
+          ne.setName(q);
+          SequenceAccessExpression s = new SequenceAccessExpression();
+          s.setPrimary(ne);
+          s.setIndex(i);
+            e = PrimaryToExpressionCompletion(s);
           ((PositionalTuple)t).addExpression(e);
             PositionalTupleExpressionListCompletion((PositionalTuple)t);
           }
@@ -937,7 +946,11 @@ public class AlfParser implements AlfParserConstants {
   Expression e;
   NamedExpression ne;
     e = Expression();
-                     ne = new NamedExpression(n, i, e); t.addExpression(ne);
+    ne = new NamedExpression();
+    ne.setName(n);
+    ne.setIndex(i);
+    ne.setExpression(e);
+    t.addNamedExpression(ne);
     label_8:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -950,7 +963,7 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(COMMA);
       ne = IndexedNamedExpression();
-                                            t.addExpression(ne);
+                                            t.addNamedExpression(ne);
     }
     {if (true) return t;}
     throw new Error("Missing return statement in function");
@@ -971,7 +984,11 @@ public class AlfParser implements AlfParserConstants {
     }
     jj_consume_token(THICK_ARROW);
     e = Expression();
-    {if (true) return new NamedExpression(n, i, e);}
+    NamedExpression ne = new NamedExpression();
+    ne.setName(n);
+    ne.setIndex(i);
+    ne.setExpression(e);
+    {if (true) return ne;}
     throw new Error("Missing return statement in function");
   }
 
@@ -980,7 +997,9 @@ public class AlfParser implements AlfParserConstants {
     jj_consume_token(ALL_INSTANCES);
     jj_consume_token(LPAREN);
     jj_consume_token(RPAREN);
-    {if (true) return new ClassExtentExpression(q);}
+    ClassExtentExpression e = new ClassExtentExpression();
+    e.setClassName(q);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1011,7 +1030,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LBRACKET:
       MultiplicityIndicator();
-                              e.setHasMultiplicity();
+                              e.setHasMultiplicity(true);
       break;
     default:
       jj_la1[29] = jj_gen;
@@ -1070,7 +1089,10 @@ public class AlfParser implements AlfParserConstants {
       case DOUBLE_DOT:
         jj_consume_token(DOUBLE_DOT);
         e2 = Expression();
-                                       c = new SequenceRange(e1, e2);
+        SequenceRange r = new SequenceRange();
+        r.setRangeLower(e1);
+        r.setRangeUpper(e2);
+        c = r;
         break;
       default:
         jj_la1[31] = jj_gen;
@@ -1171,17 +1193,27 @@ public class AlfParser implements AlfParserConstants {
 
 /* SEQUENCE OPERATION, REDUCTION AND EXPANSION EXPRESSIONS */
   final public Expression SequenceOperationOrReductionOrExpansion(Expression p) throws ParseException {
+  ExtentOrExpression ee = new ExtentOrExpression();
   QualifiedName q;
   Token op;
   String n;
   Tuple t;
   Expression e;
   boolean ordered = false;
+    if (p instanceof NameExpression) {
+      ee.setName(((NameExpression)p).getName());
+    } else {
+      ee.setNonNameExpression(p);
+    }
     jj_consume_token(ARROW);
     if (jj_2_17(2)) {
       q = QualifiedName();
       t = Tuple();
-      e = new SequenceOperationExpression(p, q, t);
+      SequenceOperationExpression soe = new SequenceOperationExpression();
+      soe.setPrimary(ee);
+      soe.setOperation(q);
+      soe.setTuple(t);
+      e = soe;
     } else {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case REDUCE:
@@ -1196,16 +1228,35 @@ public class AlfParser implements AlfParserConstants {
           ;
         }
         q = QualifiedName();
-      e = new SequenceReductionExpression(p, q, ordered);
+      SequenceReductionExpression sre = new SequenceReductionExpression();
+      sre.setPrimary(ee);
+      sre.setBehaviorName(q);
+      sre.setIsOrdered(ordered);
+      e = sre;
         break;
       case IDENTIFIER:
         op = jj_consume_token(IDENTIFIER);
+      SequenceExpansionExpression see;
+      if (op.image.equals("select") || op.image.equals("reject")) {
+        see = new SelectOrRejectExpression();
+      } else if (op.image.equals("collect") || op.image.equals("iterate")) {
+        see = new CollectOrIterateExpression();
+      } else if (op.image.equals("forAll") || op.image.equals("exists") || op.image.equals("one")) {
+        see = new ForAllOrExistsOrOneExpression();
+      } else if (op.image.equals("isUnique")) {
+        see = new IsUniqueExpression();
+      } else {
+        {if (true) throw new ParseException(errorMessage("\u005c""+ op.image + "\u005c" is not a legal expansion operation."));}
+      }
         n = Name();
         jj_consume_token(LPAREN);
         e = Expression();
         jj_consume_token(RPAREN);
-      t = new PositionalTuple(); ((PositionalTuple)t).addExpression(e);
-      e = new SequenceExpansionExpression(p, op.image, n, t);
+      see.setPrimary(ee);
+      see.setOperation(op.image);
+      see.setVariable(n);
+      see.setArgument(e);
+      e = see;
         break;
       default:
         jj_la1[37] = jj_gen;
@@ -1233,53 +1284,64 @@ public class AlfParser implements AlfParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public Expression PostfixOperation(Expression e1) throws ParseException {
+  final public Expression PostfixOperation(Expression p) throws ParseException {
   Expression i = null;
   LeftHandSide lhs;
   String op;
-    if (e1 instanceof SequenceAccessExpression) {
-      SequenceAccessExpression e = (SequenceAccessExpression)e1;
+    op = AffixOperator();
+    if (p instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e = (SequenceAccessExpression)p;
       i = e.getIndex();
-      e1 = e.getSequence();
+      p = e.getPrimary();
     }
 
-    if (e1 instanceof NameExpression) {
-      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
-    } else if (e1 instanceof FeatureReference) {
-      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    if (p instanceof NameExpression) {
+      lhs = new NameLeftHandSide();
+      ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
+    } else if (p instanceof PropertyAccessExpression) {
+      lhs = new FeatureLeftHandSide();
+      ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      {if (true) throw generateParseException();}
+      {if (true) throw new ParseException(errorMessage("Not a legal operand for increment or decrement."));}
     }
-    op = AffixOperator();
-    {if (true) return new IncrementOrDecrementExpression(op, lhs);}
+    lhs.setIndex(i);
+
+    IncrementOrDecrementExpression e = new IncrementOrDecrementExpression();
+    e.setOperator(op);
+    e.setOperand(lhs);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
   final public Expression PrefixExpression() throws ParseException {
   String op;
+  Expression p;
   Expression i = null;
   LeftHandSide lhs;
-  Expression e1;
-  IncrementOrDecrementExpression e2;
     op = AffixOperator();
-    e1 = PrimaryExpression();
-    if (e1 instanceof SequenceAccessExpression) {
-      SequenceAccessExpression e = (SequenceAccessExpression)e1;
+    p = PrimaryExpression();
+    if (p instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e = (SequenceAccessExpression)p;
       i = e.getIndex();
-      e1 = e.getSequence();
+      p = e.getPrimary();
     }
 
-    if (e1 instanceof NameExpression) {
-      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
-    } else if (e1 instanceof FeatureReference) {
-      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    if (p instanceof NameExpression) {
+      lhs = new NameLeftHandSide();
+      ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
+    } else if (p instanceof PropertyAccessExpression) {
+      lhs = new FeatureLeftHandSide();
+      ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      {if (true) throw generateParseException();}
+      {if (true) throw new ParseException(errorMessage("Not a legal operand for increment or decrement."));}
     }
+    lhs.setIndex(i);
 
-    e2 = new IncrementOrDecrementExpression(op, lhs);
-    e2.setIsPrefix();
-    {if (true) return e2;}
+    IncrementOrDecrementExpression e = new IncrementOrDecrementExpression();
+    e.setOperator(op);
+    e.setOperand(lhs);
+    e.setIsPrefix(true);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1570,7 +1632,10 @@ public class AlfParser implements AlfParserConstants {
   Expression e;
     jj_consume_token(BANG);
     e = UnaryExpression();
-    {if (true) return new UnaryExpression("!", e);}
+    UnaryExpression u = new BooleanUnaryExpression();
+    u.setOperator("!");
+    u.setOperand(e);
+    {if (true) return u;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1578,7 +1643,10 @@ public class AlfParser implements AlfParserConstants {
   Expression e;
     jj_consume_token(TILDE);
     e = UnaryExpression();
-    {if (true) return new UnaryExpression("~", e);}
+    UnaryExpression u = new BitStringUnaryExpression();
+    u.setOperator("~");
+    u.setOperand(e);
+    {if (true) return u;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1587,7 +1655,10 @@ public class AlfParser implements AlfParserConstants {
   Expression e;
     op = NumericUnaryOperator();
     e = UnaryExpression();
-    {if (true) return new UnaryExpression(op, e);}
+    UnaryExpression u = new NumericUnaryExpression();
+    u.setOperator(op);
+    u.setOperand(e);
+    {if (true) return u;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1613,7 +1684,10 @@ public class AlfParser implements AlfParserConstants {
   Expression e;
     jj_consume_token(DOLLAR);
     e = UnaryExpression();
-    {if (true) return new UnaryExpression("$", e);}
+    UnaryExpression u = new IsolationExpression();
+    u.setOperator("$");
+    u.setOperand(e);
+    {if (true) return u;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1662,7 +1736,10 @@ public class AlfParser implements AlfParserConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    {if (true) return new CastExpression(q, e);}
+    CastExpression c = new CastExpression();
+    c.setTypeName(q);
+    c.setOperand(e);
+    {if (true) return c;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1694,7 +1771,11 @@ public class AlfParser implements AlfParserConstants {
       }
       op = MultiplicativeOperator();
       e2 = UnaryExpression();
-      e1 = new BinaryExpression(e1, op, e2);
+      BinaryExpression b = new ArithmeticExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b;
     }
     {if (true) return e1;}
     throw new Error("Missing return statement in function");
@@ -1748,7 +1829,11 @@ public class AlfParser implements AlfParserConstants {
       }
       op = AdditiveOperator();
       e2 = MultiplicativeExpression();
-      e1 = new BinaryExpression(e1, op, e2);
+      BinaryExpression b = new ArithmeticExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b;
     }
     {if (true) return e1;}
     throw new Error("Missing return statement in function");
@@ -1801,7 +1886,11 @@ public class AlfParser implements AlfParserConstants {
       }
       op = ShiftOperator();
       e2 = AdditiveExpression();
-      e1 = new BinaryExpression(e1, op, e2);
+      BinaryExpression b = new ShiftExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b;
     }
     {if (true) return e1;}
     throw new Error("Missing return statement in function");
@@ -1842,8 +1931,6 @@ public class AlfParser implements AlfParserConstants {
   Expression e1;
   String op;
   Expression e2;
-  QualifiedName q;
-  TemplateBinding b;
     e1 = ShiftExpressionCompletion(u);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case GT:
@@ -1852,7 +1939,11 @@ public class AlfParser implements AlfParserConstants {
     case GE:
       op = RelationalOperator();
       e2 = ShiftExpression();
-      e1 = new BinaryExpression(e1, op, e2);
+      BinaryExpression b = new RelationalExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b;
       break;
     default:
       jj_la1[55] = jj_gen;
@@ -1864,7 +1955,6 @@ public class AlfParser implements AlfParserConstants {
 
   final public String RelationalOperator() throws ParseException {
   Token t;
-  String s;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LT:
       t = jj_consume_token(LT);
@@ -1907,7 +1997,11 @@ public class AlfParser implements AlfParserConstants {
     case INSTANCEOF:
       op = ClassificationOperator();
       n = QualifiedName();
-      e = new ClassificationExpression(e, op, n);
+      ClassificationExpression c = new ClassificationExpression();
+      c.setOperand(e);
+      c.setOperator(op);
+      c.setTypeName(n);
+      e = c;
       break;
     default:
       jj_la1[57] = jj_gen;
@@ -1963,7 +2057,11 @@ public class AlfParser implements AlfParserConstants {
       }
       op = EqualityOperator();
       e2 = ClassificationExpression();
-      e1 = new BinaryExpression(e1, op, e2);
+      BinaryExpression b = new EqualityExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b;
     }
     {if (true) return e1;}
     throw new Error("Missing return statement in function");
@@ -2013,9 +2111,13 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(LOGICAL_AND);
       e2 = EqualityExpression();
-      e1 = new BinaryExpression(e1, "&", e2);
+       BinaryExpression b = new LogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("&");
+      b.setOperand2(e2);
+      e1 = b;
     }
-    {if (true) return e1;}
+   {if (true) return e1;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2044,7 +2146,11 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(XOR);
       e2 = AndExpression();
-      e1 = new BinaryExpression(e1, "^", e2);
+      BinaryExpression b = new LogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("^");
+      b.setOperand2(e2);
+      e1 = b;
     }
     {if (true) return e1;}
     throw new Error("Missing return statement in function");
@@ -2075,7 +2181,11 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(LOGICAL_OR);
       e2 = ExclusiveOrExpression();
-      e1 = new BinaryExpression(e1, "|", e2);
+      BinaryExpression b = new LogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("|");
+      b.setOperand2(e2);
+      e1 = b;
     }
     {if (true) return e1;}
     throw new Error("Missing return statement in function");
@@ -2107,7 +2217,11 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(SC_AND);
       e2 = InclusiveOrExpression();
-      e1 = new ConditionalBinaryExpression(e1, "&&", e2);
+      ConditionalLogicalExpression b = new ConditionalLogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("&&");
+      b.setOperand2(e2);
+      e1 = b;
     }
     {if (true) return e1;}
     throw new Error("Missing return statement in function");
@@ -2138,7 +2252,11 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(SC_OR);
       e2 = ConditionalAndExpression();
-      e1 = new ConditionalBinaryExpression(e1, "||", e2);
+      ConditionalLogicalExpression b = new ConditionalLogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("||");
+      b.setOperand2(e2);
+      e1 = b;
     }
     {if (true) return e1;}
     throw new Error("Missing return statement in function");
@@ -2165,7 +2283,11 @@ public class AlfParser implements AlfParserConstants {
       e2 = Expression();
       jj_consume_token(COLON);
       e3 = ConditionalExpression();
-      e1 = new ConditionalExpression(e1, e2, e3);
+      ConditionalTestExpression c = new ConditionalTestExpression();
+      c.setOperand1(e1);
+      c.setOperand2(e2);
+      c.setOperand3(e3);
+      e1 = c;
       break;
     default:
       jj_la1[66] = jj_gen;
@@ -2176,27 +2298,34 @@ public class AlfParser implements AlfParserConstants {
   }
 
 /* ASSIGNMENT EXPRESSIONS */
-  final public Expression AssignmentExpressionCompletion(Expression e1) throws ParseException {
+  final public Expression AssignmentExpressionCompletion(Expression p) throws ParseException {
   Expression i = null;
   LeftHandSide lhs = null;
   String op;
   Expression e2;
-    if (e1 instanceof SequenceAccessExpression) {
-      SequenceAccessExpression e = (SequenceAccessExpression)e1;
-      i = e.getIndex();
-      e1 = e.getSequence();
+    op = AssignmentOperator();
+    if (p instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e1 = (SequenceAccessExpression)p;
+      i = e1.getIndex();
+      p = e1.getPrimary();
     }
 
-    if (e1 instanceof NameExpression) {
-      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
-    } else if (e1 instanceof FeatureReference) {
-      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    if (p instanceof NameExpression) {
+      lhs = new NameLeftHandSide();
+      ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
+    } else if (p instanceof PropertyAccessExpression) {
+      lhs = new FeatureLeftHandSide();
+      ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      {if (true) throw generateParseException();}
+      {if (true) throw new ParseException(errorMessage("Not a legal left-hand side."));}
     }
-    op = AssignmentOperator();
+    lhs.setIndex(i);
     e2 = Expression();
-    {if (true) return new AssignmentExpression(lhs, op, e2);}
+    AssignmentExpression e = new AssignmentExpression();
+    e.setLeftHandSide(lhs);
+    e.setOperator(op);
+    e.setRightHandSide(e2);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2321,7 +2450,7 @@ public class AlfParser implements AlfParserConstants {
       ;
     }
     s = Statement();
-    s.addDocumentation(c);
+    if (c!=null) { s.addDocumentation(c); }
     {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
@@ -2422,9 +2551,7 @@ public class AlfParser implements AlfParserConstants {
     al = Annotations();
     jj_consume_token(EOL);
     s = Statement();
-    for (Annotation an: al) {
-      s.addAnnotation(an);
-    }
+    s.setAnnotation(al);
     {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
@@ -2454,42 +2581,36 @@ public class AlfParser implements AlfParserConstants {
 
   final public Annotation Annotation() throws ParseException {
   Token t;
-  NameList nl = null;
+  String n;
+  Annotation a = new Annotation();
     t = jj_consume_token(IDENTIFIER);
+                     a.setIdentifier(t.image);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
       jj_consume_token(LPAREN);
-      nl = NameList();
+      n = Name();
+                          a.addArgument(n);
+      label_21:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COMMA:
+          ;
+          break;
+        default:
+          jj_la1[72] = jj_gen;
+          break label_21;
+        }
+        jj_consume_token(COMMA);
+        n = Name();
+                           a.addArgument(n);
+      }
       jj_consume_token(RPAREN);
       break;
     default:
-      jj_la1[72] = jj_gen;
+      jj_la1[73] = jj_gen;
       ;
     }
-    {if (true) return new Annotation(t.image, nl);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public NameList NameList() throws ParseException {
-  NameList nl = new NameList();
-  String n;
-    n = Name();
-               nl.add(n);
-    label_21:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case COMMA:
-        ;
-        break;
-      default:
-        jj_la1[73] = jj_gen;
-        break label_21;
-      }
-      jj_consume_token(COMMA);
-      n = Name();
-                                                   nl.add(n);
-    }
-    {if (true) return nl;}
+    {if (true) return a;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2498,13 +2619,20 @@ public class AlfParser implements AlfParserConstants {
   Token t;
   String n;
   Token d;
+  InLineStatement s = new InLineStatement();
     jj_consume_token(SLASH_STAR_AT);
     t = jj_consume_token(IDENTIFIER);
+    if (!t.image.equals("inline")) {
+          {if (true) throw new ParseException(errorMessage("Encountered \u005c"" + t.image
+            + "\u005c". Expected \u005c"inline\u005c"."));}
+        }
     jj_consume_token(LPAREN);
     n = Name();
     jj_consume_token(RPAREN);
     d = jj_consume_token(DOCUMENTATION_COMMENT);
-    {if (true) return new InLineStatement(t.image, n, d.image);}
+    s.setLanguage(n);
+    s.setCode(d.image);
+    {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2512,7 +2640,9 @@ public class AlfParser implements AlfParserConstants {
   final public BlockStatement BlockStatement() throws ParseException {
   Block b;
     b = Block();
-    {if (true) return new BlockStatement(b);}
+    BlockStatement s = new BlockStatement();
+    s.setBlock(b);
+    {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2529,7 +2659,8 @@ public class AlfParser implements AlfParserConstants {
   String n;
   Expression e;
   LocalNameDeclarationStatement s1 = new LocalNameDeclarationStatement();
-  Statement s2;
+  ExpressionStatement s2 = new ExpressionStatement();
+  Statement s;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
     case UNRESTRICTED_NAME:
@@ -2538,7 +2669,7 @@ public class AlfParser implements AlfParserConstants {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case LBRACKET:
           MultiplicityIndicator();
-                                  s1.setHasMultiplicity();
+                                  s1.setHasMultiplicity(true);
           break;
         default:
           jj_la1[74] = jj_gen;
@@ -2547,7 +2678,7 @@ public class AlfParser implements AlfParserConstants {
         n = Name();
                    s1.setName(n); s1.setTypeName(q);
         LocalNameDeclarationStatementCompletion(s1);
-                                                    s2 = s1;
+                                                    s = s1;
       } else {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case HASTYPE:
@@ -2594,7 +2725,7 @@ public class AlfParser implements AlfParserConstants {
         case URSHIFTASSIGN:
           e = NameToExpressionCompletion(q);
           jj_consume_token(SEMICOLON);
-                                                      s2 = new ExpressionStatement(e);
+                                                      s2.setExpression(e); s = s2;
           break;
         default:
           jj_la1[75] = jj_gen;
@@ -2625,14 +2756,14 @@ public class AlfParser implements AlfParserConstants {
     case STAR:
       e = NonNameExpression();
       jj_consume_token(SEMICOLON);
-                                          s2 = new ExpressionStatement(e);
+                                          s2.setExpression(e); s = s2;
       break;
     default:
       jj_la1[76] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-    {if (true) return s2;}
+    {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2649,7 +2780,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LBRACKET:
       MultiplicityIndicator();
-                              s.setHasMultiplicity();
+                              s.setHasMultiplicity(true);
       break;
     default:
       jj_la1[77] = jj_gen;
@@ -2693,7 +2824,9 @@ public class AlfParser implements AlfParserConstants {
   Tuple t;
     jj_consume_token(NEW);
     t = Tuple();
-    {if (true) return new InstanceCreationExpression(null, t);}
+    InstanceCreationExpression e = new InstanceCreationExpression();
+    e.setTuple(t);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2765,7 +2898,10 @@ public class AlfParser implements AlfParserConstants {
     e = Expression();
     jj_consume_token(RPAREN);
     b = Block();
-    {if (true) return new NonFinalClause(e, b);}
+    NonFinalClause c = new NonFinalClause();
+    c.setCondition(e);
+    c.setBody(b);
+    {if (true) return c;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2787,7 +2923,7 @@ public class AlfParser implements AlfParserConstants {
     jj_consume_token(LPAREN);
     e = Expression();
     jj_consume_token(RPAREN);
-                                                s = new SwitchStatement(e);
+    s = new SwitchStatement(); s.setExpression(e);
     jj_consume_token(LBRACE);
     label_24:
     while (true) {
@@ -2921,7 +3057,10 @@ public class AlfParser implements AlfParserConstants {
     e = Expression();
     jj_consume_token(RPAREN);
     b = Block();
-    {if (true) return new WhileStatement(e, b);}
+    WhileStatement s = new WhileStatement();
+    s.setCondition(e);
+    s.setBody(b);
+    {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
 
@@ -2936,7 +3075,10 @@ public class AlfParser implements AlfParserConstants {
     e = Expression();
     jj_consume_token(RPAREN);
     jj_consume_token(SEMICOLON);
-    {if (true) return new DoStatement(b, e);}
+    DoStatement s = new DoStatement();
+    s.setCondition(e);
+    s.setBody(b);
+    {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
 
@@ -3002,7 +3144,7 @@ public class AlfParser implements AlfParserConstants {
         n = Name();
         jj_consume_token(COLON);
         e1 = Expression();
-      d.setTypeIsInferred();
+      d.setTypeIsInferred(true);
         break;
       default:
         jj_la1[86] = jj_gen;
@@ -3029,10 +3171,12 @@ public class AlfParser implements AlfParserConstants {
 /* RETURN STATEMENTS */
   final public ReturnStatement ReturnStatement() throws ParseException {
   Expression e;
+  ReturnStatement s = new ReturnStatement();
     jj_consume_token(RETURN);
     e = Expression();
     jj_consume_token(SEMICOLON);
-    {if (true) return new ReturnStatement(e);}
+    s.setExpression(e);
+    {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
 
@@ -3112,7 +3256,10 @@ public class AlfParser implements AlfParserConstants {
     }
     nl = QualifiedNameList();
     jj_consume_token(RPAREN);
-    {if (true) return new AcceptBlock(n, nl);}
+    AcceptBlock b = new AcceptBlock();
+    b.setName(n);
+    b.setSignalNames(nl);
+    {if (true) return b;}
     throw new Error("Missing return statement in function");
   }
 
@@ -3122,7 +3269,7 @@ public class AlfParser implements AlfParserConstants {
   Expression e;
     jj_consume_token(CLASSIFY);
     e = Expression();
-                                s = new ClassifyStatement(e);
+                                s = new ClassifyStatement(); s.setExpression(e);
     ClassificationClause(s);
     jj_consume_token(SEMICOLON);
     {if (true) return s;}
@@ -3192,7 +3339,7 @@ public class AlfParser implements AlfParserConstants {
   QualifiedNameList nl = new QualifiedNameList();
   QualifiedName n;
     n = QualifiedName();
-                        nl.add(n);
+                        nl.addName(n);
     label_29:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -3205,7 +3352,7 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(COMMA);
       n = QualifiedName();
-                                  nl.add(n);
+                                  nl.addName(n);
     }
     {if (true) return nl;}
     throw new Error("Missing return statement in function");
@@ -3218,13 +3365,13 @@ public class AlfParser implements AlfParserConstants {
   QualifiedName n;
   ImportReference i;
   Token t;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   NamespaceDefinition d;
   UnitDefinition u = new UnitDefinition();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NAMESPACE:
       n = NamespaceDeclaration();
-                                 u.setNamespace(n);
+                                 u.setNamespaceName(n);
       break;
     default:
       jj_la1[93] = jj_gen;
@@ -3256,15 +3403,15 @@ public class AlfParser implements AlfParserConstants {
     sl = StereotypeAnnotations();
     d = NamespaceDefinition();
     jj_consume_token(0);
-    d.setAnnotations(sl);
+    d.setAnnotation(sl);
     u.setDefinition(d);
     {if (true) return u;}
     throw new Error("Missing return statement in function");
   }
 
-  final public StereotypeAnnotationList StereotypeAnnotations() throws ParseException {
+  final public ArrayList<StereotypeAnnotation> StereotypeAnnotations() throws ParseException {
   StereotypeAnnotation s;
-  StereotypeAnnotationList sl = new StereotypeAnnotationList();
+  ArrayList<StereotypeAnnotation> sl = new ArrayList<StereotypeAnnotation>();
     label_31:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -3284,10 +3431,10 @@ public class AlfParser implements AlfParserConstants {
 
   final public StereotypeAnnotation StereotypeAnnotation() throws ParseException {
   QualifiedName n;
-  StereotypeAnnotation s;
+  StereotypeAnnotation s = new StereotypeAnnotation();
     jj_consume_token(AT);
     n = QualifiedName();
-                             s = new StereotypeAnnotation(n);
+                             s.setStereotypeName(n);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
       jj_consume_token(LPAREN);
@@ -3327,7 +3474,7 @@ public class AlfParser implements AlfParserConstants {
   TaggedValue v;
   TaggedValueList tl = new TaggedValueList();
     v = TaggedValue();
-                      tl.add(v);
+                      tl.addTaggedValue(v);
     label_32:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -3340,7 +3487,7 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(COMMA);
       v = TaggedValue();
-                            tl.add(v);
+                            tl.addTaggedValue(v);
     }
     {if (true) return tl;}
     throw new Error("Missing return statement in function");
@@ -3349,21 +3496,19 @@ public class AlfParser implements AlfParserConstants {
   final public TaggedValue TaggedValue() throws ParseException {
   String n;
   Token t;
-  String v = "";
+  TaggedValue v = new TaggedValue();
     n = Name();
     jj_consume_token(THICK_ARROW);
+                             v.setName(n);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOOLEAN_LITERAL:
       t = jj_consume_token(BOOLEAN_LITERAL);
-                            v = t.image;
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                            v = t.image;
       break;
     case STAR:
       t = jj_consume_token(STAR);
-                            v = t.image;
       break;
     case BINARY_LITERAL:
     case HEX_LITERAL:
@@ -3377,10 +3522,11 @@ public class AlfParser implements AlfParserConstants {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case PLUS:
           jj_consume_token(PLUS);
+               v.setOperator("+");
           break;
         case MINUS:
           jj_consume_token(MINUS);
-                         v = "-";
+                v.setOperator("-");
           break;
         default:
           jj_la1[100] = jj_gen;
@@ -3410,14 +3556,14 @@ public class AlfParser implements AlfParserConstants {
         jj_consume_token(-1);
         throw new ParseException();
       }
-      v = v + t.image;
       break;
     default:
       jj_la1[103] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-    {if (true) return new TaggedValue(n, v);}
+    v.setValue(t.image);
+    {if (true) return v;}
     throw new Error("Missing return statement in function");
   }
 
@@ -3464,10 +3610,9 @@ public class AlfParser implements AlfParserConstants {
   String n;
   QualifiedName q;
   String a;
-  ImportReference i;
+  ImportReference i = new ElementImportReference();
     if (jj_2_29(3)) {
       q = ColonQualifiedName();
-                               i = new ImportReference(q);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case AS:
       case DOUBLE_COLON:
@@ -3475,11 +3620,11 @@ public class AlfParser implements AlfParserConstants {
         case DOUBLE_COLON:
           jj_consume_token(DOUBLE_COLON);
           jj_consume_token(STAR);
-                              i.setIsPackageImport();
+                              i = new PackageImportReference();
           break;
         case AS:
           a = AliasDefinition();
-                              i.setAlias(a);
+                              ((ElementImportReference)i).setAlias(a);
           break;
         default:
           jj_la1[105] = jj_gen;
@@ -3493,7 +3638,6 @@ public class AlfParser implements AlfParserConstants {
       }
     } else if (jj_2_30(3)) {
       q = DotQualifiedName();
-                             i = new ImportReference(q);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case AS:
       case DOT:
@@ -3501,11 +3645,11 @@ public class AlfParser implements AlfParserConstants {
         case DOT:
           jj_consume_token(DOT);
           jj_consume_token(STAR);
-                     i.setIsPackageImport();
+                     i = new PackageImportReference();
           break;
         case AS:
           a = AliasDefinition();
-                              i.setAlias(a);
+                              ((ElementImportReference)i).setAlias(a);
           break;
         default:
           jj_la1[107] = jj_gen;
@@ -3522,7 +3666,8 @@ public class AlfParser implements AlfParserConstants {
       case IDENTIFIER:
       case UNRESTRICTED_NAME:
         n = Name();
-                 q = new QualifiedName(); q.addName(n); i = new ImportReference(q);
+      NameBinding b = new NameBinding(); q = new QualifiedName();
+      b.setName(n); q.addNameBinding(b);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case AS:
         case DOT:
@@ -3543,11 +3688,11 @@ public class AlfParser implements AlfParserConstants {
               throw new ParseException();
             }
             jj_consume_token(STAR);
-                                          i.setIsPackageImport();
+                                          i = new PackageImportReference();
             break;
           case AS:
             a = AliasDefinition();
-                              i.setAlias(a);
+                              ((ElementImportReference)i).setAlias(a);
             break;
           default:
             jj_la1[110] = jj_gen;
@@ -3566,6 +3711,7 @@ public class AlfParser implements AlfParserConstants {
         throw new ParseException();
       }
     }
+    i.setReferentName(q);
     {if (true) return i;}
     throw new Error("Missing return statement in function");
   }
@@ -3636,9 +3782,9 @@ public class AlfParser implements AlfParserConstants {
 
   final public PackageDefinition PackageDefinition() throws ParseException {
   String n;
-  PackageDefinition d;
+  PackageDefinition d = new PackageDefinition();
     n = PackageDeclaration();
-                             d = new PackageDefinition(n);
+                             d.setName(n);
     PackageBody(d);
     {if (true) return d;}
     throw new Error("Missing return statement in function");
@@ -3646,13 +3792,13 @@ public class AlfParser implements AlfParserConstants {
 
   final public PackageDefinition PackageDefinitionOrStub() throws ParseException {
   String n;
-  PackageDefinition d;
+  PackageDefinition d = new PackageDefinition();
     n = PackageDeclaration();
-                             d = new PackageDefinition(n);
+                             d.setName(n);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  d.setIsStub();
+                  d.setIsStub(true);
       break;
     case LBRACE:
       PackageBody(d);
@@ -3691,7 +3837,7 @@ public class AlfParser implements AlfParserConstants {
   final public Member PackagedElement() throws ParseException {
   Token t;
   String c = null;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v;
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -3706,8 +3852,8 @@ public class AlfParser implements AlfParserConstants {
     sl = StereotypeAnnotations();
     v = ImportVisibilityIndicator();
     m = PackagedElementDefinition();
-    m.addDocumentation(c);
-    m.setAnnotations(sl);
+    if (c!=null) { m.addDocumentation(c); }
+    m.setAnnotation(sl);
     m.setVisibility(v);
     {if (true) return m;}
     throw new Error("Missing return statement in function");
@@ -3881,7 +4027,7 @@ public class AlfParser implements AlfParserConstants {
       jj_consume_token(SPECIALIZES);
       q = QualifiedName();
       nl = new QualifiedNameList();
-      nl.add(q);
+      nl.addName(q);
       p.setSpecialization(nl);
       break;
     default:
@@ -3889,7 +4035,7 @@ public class AlfParser implements AlfParserConstants {
       ;
     }
     p.setVisibility("private");
-    p.setIsAbstract();
+    p.setIsAbstract(true);
     {if (true) return p;}
     throw new Error("Missing return statement in function");
   }
@@ -3910,7 +4056,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
       jj_consume_token(ABSTRACT);
-                 d.setIsAbstract();
+                 d.setIsAbstract(true);
       break;
     default:
       jj_la1[128] = jj_gen;
@@ -3936,7 +4082,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  d.setIsStub();
+                  d.setIsStub(true);
       break;
     case LBRACE:
       ClassBody(d);
@@ -3986,7 +4132,7 @@ public class AlfParser implements AlfParserConstants {
   final public Member ClassMember() throws ParseException {
   Token t;
   String c = null;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4010,8 +4156,8 @@ public class AlfParser implements AlfParserConstants {
       ;
     }
     m = ClassMemberDefinition();
-    m.addDocumentation(c);
-    m.setAnnotations(sl);
+    if (c!=null) { m.addDocumentation(c); }
+    m.setAnnotation(sl);
     m.setVisibility(v);
     {if (true) return m;}
     throw new Error("Missing return statement in function");
@@ -4046,7 +4192,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
       jj_consume_token(ABSTRACT);
-                 d.setIsAbstract();
+                 d.setIsAbstract(true);
       break;
     default:
       jj_la1[134] = jj_gen;
@@ -4073,7 +4219,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  d.setIsStub();
+                  d.setIsStub(true);
       break;
     case LBRACE:
       ActiveClassBody(d);
@@ -4144,7 +4290,7 @@ public class AlfParser implements AlfParserConstants {
     case IDENTIFIER:
     case UNRESTRICTED_NAME:
       n = Name();
-                       a.setName(n); a.setIsStub();
+                       a.setName(n); a.setIsStub(true);
       break;
     default:
       jj_la1[138] = jj_gen;
@@ -4159,7 +4305,7 @@ public class AlfParser implements AlfParserConstants {
   final public Member ActiveClassMember() throws ParseException {
   Token t;
   String c = null;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4183,8 +4329,8 @@ public class AlfParser implements AlfParserConstants {
       ;
     }
     m = ActiveClassMemberDefinition();
-    m.addDocumentation(c);
-    m.setAnnotations(sl);
+    if (c!=null) { m.addDocumentation(c); }
+    m.setAnnotation(sl);
     m.setVisibility(v);
     {if (true) return m;}
     throw new Error("Missing return statement in function");
@@ -4226,7 +4372,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
       jj_consume_token(ABSTRACT);
-                  d.setIsAbstract();
+                  d.setIsAbstract(true);
       break;
     default:
       jj_la1[142] = jj_gen;
@@ -4252,7 +4398,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  d.setIsStub();
+                  d.setIsStub(true);
       break;
     case LBRACE:
       StructuredBody(d);
@@ -4292,7 +4438,7 @@ public class AlfParser implements AlfParserConstants {
   final public Member StructuredMember() throws ParseException {
   Token t;
   String c = null;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4315,8 +4461,8 @@ public class AlfParser implements AlfParserConstants {
       ;
     }
     m = PropertyDefinition();
-    m.addDocumentation(c);
-    m.setAnnotations(sl);
+    if (c!=null) { m.addDocumentation(c); }
+    m.setAnnotation(sl);
     m.setVisibility(v);
     {if (true) return m;}
     throw new Error("Missing return statement in function");
@@ -4330,7 +4476,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
       jj_consume_token(ABSTRACT);
-                 d.setIsAbstract();
+                 d.setIsAbstract(true);
       break;
     default:
       jj_la1[147] = jj_gen;
@@ -4356,7 +4502,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  d.setIsStub();
+                  d.setIsStub(true);
       break;
     case LBRACE:
       StructuredBody(d);
@@ -4405,7 +4551,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  d.setIsStub();
+                  d.setIsStub(true);
       break;
     case LBRACE:
       EnumerationBody(d);
@@ -4445,17 +4591,19 @@ public class AlfParser implements AlfParserConstants {
   Token t;
   String c = null;
   String n;
+  EnumerationLiteralName e = new EnumerationLiteralName();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOCUMENTATION_COMMENT:
       t = jj_consume_token(DOCUMENTATION_COMMENT);
-                                  c = t.image;
+                                  e.addDocumentation(t.image);
       break;
     default:
       jj_la1[152] = jj_gen;
       ;
     }
     n = Name();
-    {if (true) return new EnumerationLiteralName(n, c);}
+    e.setName(n);
+    {if (true) return e;}
     throw new Error("Missing return statement in function");
   }
 
@@ -4467,7 +4615,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
       jj_consume_token(ABSTRACT);
-                 d.setIsAbstract();
+                 d.setIsAbstract(true);
       break;
     default:
       jj_la1[153] = jj_gen;
@@ -4493,7 +4641,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  d.setIsStub();
+                  d.setIsStub(true);
       break;
     case LBRACE:
       StructuredBody(d);
@@ -4509,8 +4657,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* ACTIVITIES */
   final public ActivityDefinition ActivityDeclaration() throws ParseException {
-  TypedElementDeclaration t = new TypedElementDeclaration();
-  FormalParameter p = new FormalParameter(t);
+  FormalParameter p = new FormalParameter();
   ActivityDefinition d = new ActivityDefinition();
   String n;
     jj_consume_token(ACTIVITY);
@@ -4528,7 +4675,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COLON:
       jj_consume_token(COLON);
-      TypePart(t);
+      TypePart(p);
                           p.setDirection("return"); d.addOwnedMember(p);
       break;
     default:
@@ -4556,7 +4703,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  a.setIsStub();
+                  a.setIsStub(true);
       break;
     case LBRACE:
       b = Block();
@@ -4610,11 +4757,10 @@ public class AlfParser implements AlfParserConstants {
 
   final public FormalParameter FormalParameter() throws ParseException {
   Token t;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String d;
   String n;
-  TypedElementDeclaration e = new TypedElementDeclaration();
-  FormalParameter p = new FormalParameter(e);
+  FormalParameter p = new FormalParameter();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOCUMENTATION_COMMENT:
       t = jj_consume_token(DOCUMENTATION_COMMENT);
@@ -4625,13 +4771,13 @@ public class AlfParser implements AlfParserConstants {
       ;
     }
     sl = StereotypeAnnotations();
-                                 p.setAnnotations(sl);
+                                 p.setAnnotation(sl);
     d = ParameterDirection();
                              p.setDirection(d);
     n = Name();
                p.setName(n);
     jj_consume_token(COLON);
-    TypePart(e);
+    TypePart(p);
     {if (true) return p;}
     throw new Error("Missing return statement in function");
   }
@@ -4734,8 +4880,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public PropertyDefinition PropertyDeclaration() throws ParseException {
-  TypedElementDeclaration t = new TypedElementDeclaration();
-  PropertyDefinition d = new PropertyDefinition(t);
+  PropertyDefinition d = new PropertyDefinition();
   String n;
     n = Name();
                d.setName(n);
@@ -4743,22 +4888,22 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMPOSE:
       jj_consume_token(COMPOSE);
-                        d.setIsComposite();
+                        d.setIsComposite(true);
       break;
     default:
       jj_la1[165] = jj_gen;
       ;
     }
-    TypePart(t);
+    TypePart(d);
     {if (true) return d;}
     throw new Error("Missing return statement in function");
   }
 
-  final public void TypePart(TypedElementDeclaration d) throws ParseException {
+  final public void TypePart(TypedElementDefinition d) throws ParseException {
   QualifiedName t;
   Token tc;
     t = TypeName();
-                   d.setType(t);
+                   d.setTypeName(t);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LBRACKET:
       Multiplicity(d);
@@ -4788,7 +4933,7 @@ public class AlfParser implements AlfParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public void Multiplicity(TypedElementDeclaration d) throws ParseException {
+  final public void Multiplicity(TypedElementDefinition d) throws ParseException {
     jj_consume_token(LBRACKET);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DECIMAL_LITERAL:
@@ -4807,11 +4952,11 @@ public class AlfParser implements AlfParserConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case ORDERED:
         jj_consume_token(ORDERED);
-                d.setIsOrdered();
+                d.setIsOrdered(true);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case NONUNIQUE:
           jj_consume_token(NONUNIQUE);
-                                                    d.setIsNonunique();
+                                                        d.setIsNonunique(true);
           break;
         default:
           jj_la1[169] = jj_gen;
@@ -4820,11 +4965,11 @@ public class AlfParser implements AlfParserConstants {
         break;
       case NONUNIQUE:
         jj_consume_token(NONUNIQUE);
-                  d.setIsNonunique();
+                  d.setIsNonunique(true);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case ORDERED:
           jj_consume_token(ORDERED);
-                                                      d.setIsOrdered();
+                                                          d.setIsOrdered(true);
           break;
         default:
           jj_la1[170] = jj_gen;
@@ -4833,7 +4978,7 @@ public class AlfParser implements AlfParserConstants {
         break;
       case SEQUENCE:
         jj_consume_token(SEQUENCE);
-                 d.setIsNonunique(); d.setIsOrdered();
+                 d.setIsNonunique(true); d.setIsOrdered(true);
         break;
       default:
         jj_la1[171] = jj_gen;
@@ -4847,7 +4992,7 @@ public class AlfParser implements AlfParserConstants {
     }
   }
 
-  final public void MultiplicityRange(TypedElementDeclaration d) throws ParseException {
+  final public void MultiplicityRange(TypedElementDefinition d) throws ParseException {
   Token t;
   String n;
     if (jj_2_45(2)) {
@@ -4881,27 +5026,26 @@ public class AlfParser implements AlfParserConstants {
 
 /* OPERATIONS */
   final public OperationDefinition OperationDeclaration() throws ParseException {
-  TypedElementDeclaration t = new TypedElementDeclaration();
-  FormalParameter p = new FormalParameter(t);
+  FormalParameter p = new FormalParameter();
   OperationDefinition d = new OperationDefinition();
   String n;
   QualifiedNameList nl;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
       jj_consume_token(ABSTRACT);
-                 d.setIsAbstract();
+                 d.setIsAbstract(true);
       break;
     default:
       jj_la1[174] = jj_gen;
       ;
     }
     n = Name();
-                                                     d.setName(n);
+                                                         d.setName(n);
     FormalParameters(d);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COLON:
       jj_consume_token(COLON);
-      TypePart(t);
+      TypePart(p);
                                              p.setDirection("return"); d.addOwnedMember(p);
       break;
     default:
@@ -4928,7 +5072,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  if (!o.isAbstract()) { o.setIsStub(); }
+                  if (!o.getIsAbstract()) { o.setIsStub(true); }
       break;
     case LBRACE:
       b = Block();
@@ -4954,10 +5098,12 @@ public class AlfParser implements AlfParserConstants {
 /* RECEPTIONS */
   final public ReceptionDefinition ReceptionDefinition() throws ParseException {
   QualifiedName n;
+  ReceptionDefinition d = new ReceptionDefinition();
     jj_consume_token(RECEIVE);
     n = QualifiedName();
     jj_consume_token(SEMICOLON);
-    {if (true) return new ReceptionDefinition(n);}
+    d.setSignalName(n);
+    {if (true) return d;}
     throw new Error("Missing return statement in function");
   }
 
@@ -4988,7 +5134,7 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                  d.setIsStub();
+                  d.setIsStub(true);
       break;
     case LBRACE:
       StructuredBody(d);
@@ -5317,502 +5463,6 @@ public class AlfParser implements AlfParserConstants {
     finally { jj_save(44, xla); }
   }
 
-  private boolean jj_3R_72() {
-    if (jj_3R_102()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_198() {
-    if (jj_scan_token(LPAREN)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_225() {
-    if (jj_3R_57()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_101() {
-    if (jj_scan_token(COMMA)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_163() {
-    if (jj_3R_173()) return true;
-    if (jj_3R_174()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_67() {
-    if (jj_3R_102()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_64() {
-    if (jj_3R_46()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_101()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_234() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(51)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(46)) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_172() {
-    if (jj_3R_183()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_202() {
-    if (jj_scan_token(THIS)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_225()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_133() {
-    if (jj_3R_148()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_126() {
-    if (jj_scan_token(ABSTRACT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_230() {
-    if (jj_3R_234()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_102() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_126()) jj_scanpos = xsp;
-    if (jj_scan_token(CLASS)) return true;
-    if (jj_3R_127()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_227() {
-    if (jj_3R_229()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_230()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3_11() {
-    if (jj_3R_48()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_161() {
-    if (jj_3R_169()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_11()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_63() {
-    if (jj_scan_token(FROM)) return true;
-    if (jj_3R_64()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_183() {
-    if (jj_3R_173()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_148() {
-    if (jj_scan_token(ACTIVITY)) return true;
-    if (jj_3R_52()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_220() {
-    if (jj_scan_token(STAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_219() {
-    if (jj_scan_token(STRING_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_218() {
-    if (jj_scan_token(HEX_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_217() {
-    if (jj_scan_token(OCTAL_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_216() {
-    if (jj_scan_token(BINARY_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_215() {
-    if (jj_scan_token(DECIMAL_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_214() {
-    if (jj_scan_token(BOOLEAN_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3_10() {
-    if (jj_3R_50()) return true;
-    return false;
-  }
-
-  private boolean jj_3_27() {
-    if (jj_3R_63()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_201() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_214()) {
-    jj_scanpos = xsp;
-    if (jj_3R_215()) {
-    jj_scanpos = xsp;
-    if (jj_3R_216()) {
-    jj_scanpos = xsp;
-    if (jj_3R_217()) {
-    jj_scanpos = xsp;
-    if (jj_3R_218()) {
-    jj_scanpos = xsp;
-    if (jj_3R_219()) {
-    jj_scanpos = xsp;
-    if (jj_3R_220()) return true;
-    }
-    }
-    }
-    }
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_162() {
-    if (jj_3R_171()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_172()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3_26() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(COLON)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_237() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(111)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(110)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(118)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(119)) return true;
-    }
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_76() {
-    if (jj_3R_106()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_197() {
-    if (jj_3R_211()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_233() {
-    if (jj_3R_237()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_196() {
-    if (jj_3R_210()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_195() {
-    if (jj_3R_209()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_182() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_195()) {
-    jj_scanpos = xsp;
-    if (jj_3R_196()) {
-    jj_scanpos = xsp;
-    if (jj_3R_197()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_229() {
-    if (jj_3R_232()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_233()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_71() {
-    if (jj_3R_106()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_171() {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_182()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3_17() {
-    if (jj_3R_46()) return true;
-    if (jj_3R_57()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_210() {
-    if (jj_scan_token(ARROW)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_112() {
-    if (jj_3R_137()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_111() {
-    if (jj_3R_136()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_131() {
-    if (jj_scan_token(ABSTRACT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_108() {
-    if (jj_3R_133()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_106() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_131()) jj_scanpos = xsp;
-    if (jj_scan_token(SIGNAL)) return true;
-    if (jj_3R_127()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_88() {
-    if (jj_3R_114()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_87() {
-    if (jj_3R_113()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_107() {
-    if (jj_3R_132()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_127() {
-    if (jj_3R_52()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_86() {
-    if (jj_scan_token(DOT)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_111()) {
-    jj_scanpos = xsp;
-    if (jj_3R_112()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_48() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_86()) {
-    jj_scanpos = xsp;
-    if (jj_3R_87()) {
-    jj_scanpos = xsp;
-    if (jj_3R_88()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_211() {
-    if (jj_scan_token(LBRACKET)) return true;
-    return false;
-  }
-
-  private boolean jj_3_40() {
-    if (jj_3R_76()) return true;
-    return false;
-  }
-
-  private boolean jj_3_39() {
-    if (jj_3R_75()) return true;
-    return false;
-  }
-
-  private boolean jj_3_38() {
-    if (jj_3R_74()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_193() {
-    if (jj_3R_205()) return true;
-    return false;
-  }
-
-  private boolean jj_3_37() {
-    if (jj_3R_73()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_192() {
-    if (jj_3R_204()) return true;
-    return false;
-  }
-
-  private boolean jj_3_36() {
-    if (jj_3R_72()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_191() {
-    if (jj_3R_203()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_240() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(133)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(134)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(135)) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_190() {
-    if (jj_3R_202()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_189() {
-    if (jj_3R_201()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_77() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_36()) {
-    jj_scanpos = xsp;
-    if (jj_3_37()) {
-    jj_scanpos = xsp;
-    if (jj_3_38()) {
-    jj_scanpos = xsp;
-    if (jj_3R_107()) {
-    jj_scanpos = xsp;
-    if (jj_3_39()) {
-    jj_scanpos = xsp;
-    if (jj_3_40()) {
-    jj_scanpos = xsp;
-    if (jj_3R_108()) return true;
-    }
-    }
-    }
-    }
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_178() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_189()) {
-    jj_scanpos = xsp;
-    if (jj_3R_190()) {
-    jj_scanpos = xsp;
-    if (jj_3R_191()) {
-    jj_scanpos = xsp;
-    if (jj_3R_192()) {
-    jj_scanpos = xsp;
-    if (jj_3R_193()) return true;
-    }
-    }
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_61() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(54)) jj_scanpos = xsp;
-    if (jj_scan_token(LBRACE)) return true;
-    if (jj_3R_100()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_236() {
-    if (jj_3R_240()) return true;
-    return false;
-  }
-
   private boolean jj_3R_232() {
     if (jj_3R_235()) return true;
     Token xsp;
@@ -5823,316 +5473,19 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_35() {
-    if (jj_3R_71()) return true;
+  private boolean jj_3R_209() {
+    if (jj_scan_token(DOT)) return true;
     return false;
   }
 
-  private boolean jj_3_34() {
-    if (jj_3R_70()) return true;
+  private boolean jj_3R_198() {
+    if (jj_scan_token(LPAREN)) return true;
     return false;
   }
 
-  private boolean jj_3_33() {
-    if (jj_3R_69()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_186() {
-    if (jj_3R_198()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_93() {
-    if (jj_3R_61()) return true;
-    return false;
-  }
-
-  private boolean jj_3_32() {
-    if (jj_3R_68()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_185() {
-    if (jj_3R_178()) return true;
-    return false;
-  }
-
-  private boolean jj_3_16() {
-    if (jj_3R_53()) return true;
-    return false;
-  }
-
-  private boolean jj_3_31() {
-    if (jj_3R_67()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_184() {
-    if (jj_3R_161()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_132() {
-    if (jj_3R_147()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_56() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_16()) {
-    jj_scanpos = xsp;
-    if (jj_3R_93()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_174() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_184()) {
-    jj_scanpos = xsp;
-    if (jj_3R_185()) {
-    jj_scanpos = xsp;
-    if (jj_3R_186()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3_9() {
-    if (jj_3R_49()) return true;
-    return false;
-  }
-
-  private boolean jj_3_15() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_56()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_92() {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_15()) { jj_scanpos = xsp; break; }
-    }
-    xsp = jj_scanpos;
-    if (jj_scan_token(102)) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_119() {
-    if (jj_3R_143()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_118() {
-    if (jj_3R_142()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_91() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_118()) {
-    jj_scanpos = xsp;
-    if (jj_3R_119()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_147() {
-    if (jj_scan_token(ENUM)) return true;
-    if (jj_3R_52()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_242() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(125)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(126)) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_55() {
-    if (jj_3R_92()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_54() {
-    if (jj_scan_token(DOUBLE_DOT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_125() {
-    if (jj_3R_61()) return true;
-    return false;
-  }
-
-  private boolean jj_3_14() {
-    if (jj_3R_53()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_54()) {
-    jj_scanpos = xsp;
-    if (jj_3R_55()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_239() {
-    if (jj_3R_242()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_100() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_14()) {
-    jj_scanpos = xsp;
-    if (jj_3R_125()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_235() {
-    if (jj_3R_238()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_239()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3_8() {
-    if (jj_3R_48()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_139() {
-    if (jj_3R_100()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_75() {
-    if (jj_3R_105()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_134() {
-    if (jj_3R_149()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_98() {
-    if (jj_scan_token(LBRACKET)) return true;
-    if (jj_scan_token(RBRACKET)) return true;
-    return false;
-  }
-
-  private boolean jj_3_25() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(IN)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_70() {
-    if (jj_3R_105()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_149() {
-    if (jj_scan_token(RECEIVE)) return true;
-    if (jj_scan_token(SIGNAL)) return true;
-    if (jj_3R_52()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_138() {
-    if (jj_3R_98()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_194() {
-    if (jj_3R_208()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_113() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_138()) jj_scanpos = xsp;
-    if (jj_scan_token(LBRACE)) return true;
-    xsp = jj_scanpos;
-    if (jj_3R_139()) jj_scanpos = xsp;
-    if (jj_scan_token(RBRACE)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_130() {
-    if (jj_scan_token(ABSTRACT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_105() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_130()) jj_scanpos = xsp;
-    if (jj_scan_token(ASSOC)) return true;
-    if (jj_3R_127()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_53() {
-    if (jj_3R_90()) return true;
-    if (jj_3R_91()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_80() {
-    if (jj_scan_token(RECEIVE)) return true;
+  private boolean jj_3_17() {
     if (jj_3R_46()) return true;
-    if (jj_scan_token(SEMICOLON)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_243() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(127)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(128)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(132)) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_222() {
-    if (jj_scan_token(NULL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_221() {
-    if (jj_scan_token(ANY)) return true;
-    if (jj_3R_113()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_205() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_221()) {
-    jj_scanpos = xsp;
-    if (jj_3R_222()) return true;
-    }
+    if (jj_3R_57()) return true;
     return false;
   }
 
@@ -6176,102 +5529,31 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_241() {
-    if (jj_3R_243()) return true;
+  private boolean jj_3R_225() {
+    if (jj_3R_57()) return true;
     return false;
   }
 
-  private boolean jj_3R_238() {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_241()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_137() {
-    if (jj_scan_token(ALL_INSTANCES)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_85() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(THICK_ARROW)) return true;
-    if (jj_3R_46()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_206() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_85()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_142() {
-    if (jj_3R_49()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_47() {
-    if (jj_3R_85()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_206()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_97() {
-    if (jj_3R_123()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_96() {
-    if (jj_3R_122()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_95() {
-    if (jj_3R_121()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_94() {
-    if (jj_3R_120()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_207() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_46()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_58() {
+  private boolean jj_3R_242() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_94()) {
+    if (jj_scan_token(125)) {
     jj_scanpos = xsp;
-    if (jj_3R_95()) {
-    jj_scanpos = xsp;
-    if (jj_3R_96()) {
-    jj_scanpos = xsp;
-    if (jj_3R_97()) return true;
-    }
-    }
+    if (jj_scan_token(126)) return true;
     }
     return false;
   }
 
-  private boolean jj_3R_179() {
-    if (jj_3R_46()) return true;
+  private boolean jj_3R_202() {
+    if (jj_scan_token(THIS)) return true;
     Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_207()) { jj_scanpos = xsp; break; }
-    }
+    xsp = jj_scanpos;
+    if (jj_3R_225()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_210() {
+    if (jj_scan_token(ARROW)) return true;
     return false;
   }
 
@@ -6280,32 +5562,31 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_159() {
-    if (jj_scan_token(HOOK)) return true;
+  private boolean jj_3_11() {
+    if (jj_3R_48()) return true;
     return false;
   }
 
-  private boolean jj_3R_143() {
-    if (jj_3R_158()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_159()) jj_scanpos = xsp;
+  private boolean jj_3R_239() {
+    if (jj_3R_242()) return true;
     return false;
   }
 
-  private boolean jj_3_13() {
-    if (jj_3R_52()) return true;
+  private boolean jj_3R_161() {
+    if (jj_3R_169()) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(99)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(108)) return true;
+    if (jj_3_11()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_235() {
+    if (jj_3R_238()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_239()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  private boolean jj_3R_170() {
-    if (jj_3R_179()) return true;
     return false;
   }
 
@@ -6314,26 +5595,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_7() {
-    if (jj_3R_47()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_150() {
-    if (jj_scan_token(LT)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_7()) {
-    jj_scanpos = xsp;
-    if (jj_3R_170()) return true;
-    }
-    if (jj_scan_token(GT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_123() {
-    if (jj_scan_token(DOLLAR)) return true;
-    if (jj_3R_90()) return true;
+  private boolean jj_3R_211() {
+    if (jj_scan_token(LBRACKET)) return true;
     return false;
   }
 
@@ -6354,6 +5617,1079 @@ public class AlfParser implements AlfParserConstants {
   private boolean jj_3_45() {
     if (jj_scan_token(DECIMAL_LITERAL)) return true;
     if (jj_scan_token(DOUBLE_DOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_220() {
+    if (jj_scan_token(STAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_142() {
+    if (jj_3R_49()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_219() {
+    if (jj_scan_token(STRING_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_218() {
+    if (jj_scan_token(HEX_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_217() {
+    if (jj_scan_token(OCTAL_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_61() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(54)) jj_scanpos = xsp;
+    if (jj_scan_token(LBRACE)) return true;
+    if (jj_3R_100()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_216() {
+    if (jj_scan_token(BINARY_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_215() {
+    if (jj_scan_token(DECIMAL_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3_42() {
+    if (jj_3R_78()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_214() {
+    if (jj_scan_token(BOOLEAN_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_243() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(127)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(128)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(132)) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_201() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_214()) {
+    jj_scanpos = xsp;
+    if (jj_3R_215()) {
+    jj_scanpos = xsp;
+    if (jj_3R_216()) {
+    jj_scanpos = xsp;
+    if (jj_3R_217()) {
+    jj_scanpos = xsp;
+    if (jj_3R_218()) {
+    jj_scanpos = xsp;
+    if (jj_3R_219()) {
+    jj_scanpos = xsp;
+    if (jj_3R_220()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_93() {
+    if (jj_3R_61()) return true;
+    return false;
+  }
+
+  private boolean jj_3_16() {
+    if (jj_3R_53()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_159() {
+    if (jj_scan_token(HOOK)) return true;
+    return false;
+  }
+
+  private boolean jj_3_30() {
+    if (jj_3R_66()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_56() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_16()) {
+    jj_scanpos = xsp;
+    if (jj_3R_93()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_62() {
+    if (jj_scan_token(CASE)) return true;
+    if (jj_3R_53()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_143() {
+    if (jj_3R_158()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_159()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3_29() {
+    if (jj_3R_65()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_241() {
+    if (jj_3R_243()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_238() {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_241()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_15() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_56()) return true;
+    return false;
+  }
+
+  private boolean jj_3_24() {
+    if (jj_3R_62()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_197() {
+    if (jj_3R_211()) return true;
+    return false;
+  }
+
+  private boolean jj_3_10() {
+    if (jj_3R_50()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_196() {
+    if (jj_3R_210()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_92() {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_15()) { jj_scanpos = xsp; break; }
+    }
+    xsp = jj_scanpos;
+    if (jj_scan_token(102)) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_195() {
+    if (jj_3R_209()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_182() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_195()) {
+    jj_scanpos = xsp;
+    if (jj_3R_196()) {
+    jj_scanpos = xsp;
+    if (jj_3R_197()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_171() {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_182()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_55() {
+    if (jj_3R_92()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_125() {
+    if (jj_3R_61()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_110() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(COLON)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_112() {
+    if (jj_3R_137()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_111() {
+    if (jj_3R_136()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_54() {
+    if (jj_scan_token(DOUBLE_DOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_166() {
+    if (jj_scan_token(SC_OR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_14() {
+    if (jj_3R_53()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_54()) {
+    jj_scanpos = xsp;
+    if (jj_3R_55()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_88() {
+    if (jj_3R_114()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_158() {
+    if (jj_3R_165()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_166()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_87() {
+    if (jj_3R_113()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_100() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_14()) {
+    jj_scanpos = xsp;
+    if (jj_3R_125()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_97() {
+    if (jj_3R_123()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_86() {
+    if (jj_scan_token(DOT)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_111()) {
+    jj_scanpos = xsp;
+    if (jj_3R_112()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_96() {
+    if (jj_3R_122()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_95() {
+    if (jj_3R_121()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_94() {
+    if (jj_3R_120()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_48() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_86()) {
+    jj_scanpos = xsp;
+    if (jj_3R_87()) {
+    jj_scanpos = xsp;
+    if (jj_3R_88()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_139() {
+    if (jj_3R_100()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_58() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_94()) {
+    jj_scanpos = xsp;
+    if (jj_3R_95()) {
+    jj_scanpos = xsp;
+    if (jj_3R_96()) {
+    jj_scanpos = xsp;
+    if (jj_3R_97()) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_98() {
+    if (jj_scan_token(LBRACKET)) return true;
+    if (jj_scan_token(RBRACKET)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_79() {
+    if (jj_3R_110()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_193() {
+    if (jj_3R_205()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_192() {
+    if (jj_3R_204()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_191() {
+    if (jj_3R_203()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_190() {
+    if (jj_3R_202()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_138() {
+    if (jj_3R_98()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_189() {
+    if (jj_3R_201()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_113() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_138()) jj_scanpos = xsp;
+    if (jj_scan_token(LBRACE)) return true;
+    xsp = jj_scanpos;
+    if (jj_3R_139()) jj_scanpos = xsp;
+    if (jj_scan_token(RBRACE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_178() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_189()) {
+    jj_scanpos = xsp;
+    if (jj_3R_190()) {
+    jj_scanpos = xsp;
+    if (jj_3R_191()) {
+    jj_scanpos = xsp;
+    if (jj_3R_192()) {
+    jj_scanpos = xsp;
+    if (jj_3R_193()) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_177() {
+    if (jj_scan_token(SC_AND)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_73() {
+    if (jj_3R_103()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_165() {
+    if (jj_3R_176()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_177()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_222() {
+    if (jj_scan_token(NULL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_123() {
+    if (jj_scan_token(DOLLAR)) return true;
+    if (jj_3R_90()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_221() {
+    if (jj_scan_token(ANY)) return true;
+    if (jj_3R_113()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_68() {
+    if (jj_3R_103()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_186() {
+    if (jj_3R_198()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_205() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_221()) {
+    jj_scanpos = xsp;
+    if (jj_3R_222()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_185() {
+    if (jj_3R_178()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_184() {
+    if (jj_3R_161()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_109() {
+    if (jj_3R_134()) return true;
+    return false;
+  }
+
+  private boolean jj_3_44() {
+    if (jj_3R_80()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_174() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_184()) {
+    jj_scanpos = xsp;
+    if (jj_3R_185()) {
+    jj_scanpos = xsp;
+    if (jj_3R_186()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3_23() {
+    if (jj_scan_token(ELSE)) return true;
+    if (jj_scan_token(IF)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_128() {
+    if (jj_scan_token(ABSTRACT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_78() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_44()) {
+    jj_scanpos = xsp;
+    if (jj_3R_109()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_9() {
+    if (jj_3R_49()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_103() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_128()) jj_scanpos = xsp;
+    if (jj_scan_token(ACTIVE)) return true;
+    if (jj_scan_token(CLASS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_175() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(125)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(126)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_137() {
+    if (jj_scan_token(ALL_INSTANCES)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_119() {
+    if (jj_3R_143()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_188() {
+    if (jj_scan_token(LOGICAL_OR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_118() {
+    if (jj_3R_142()) return true;
+    return false;
+  }
+
+  private boolean jj_3_43() {
+    if (jj_3R_79()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_91() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_118()) {
+    jj_scanpos = xsp;
+    if (jj_3R_119()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_176() {
+    if (jj_3R_187()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_188()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_164() {
+    if (jj_3R_175()) return true;
+    if (jj_3R_90()) return true;
+    return false;
+  }
+
+  private boolean jj_3_28() {
+    if (jj_3R_64()) return true;
+    return false;
+  }
+
+  private boolean jj_3_41() {
+    if (jj_3R_77()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_146() {
+    if (jj_scan_token(NEW)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_122() {
+    if (jj_scan_token(TILDE)) return true;
+    if (jj_3R_90()) return true;
+    return false;
+  }
+
+  private boolean jj_3_8() {
+    if (jj_3R_48()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_124() {
+    if (jj_3R_146()) return true;
+    return false;
+  }
+
+  private boolean jj_3_22() {
+    if (jj_3R_61()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_200() {
+    if (jj_scan_token(XOR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_21() {
+    if (jj_3R_53()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_99() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_21()) {
+    jj_scanpos = xsp;
+    if (jj_3_22()) {
+    jj_scanpos = xsp;
+    if (jj_3R_124()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_187() {
+    if (jj_3R_199()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_200()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_121() {
+    if (jj_scan_token(BANG)) return true;
+    if (jj_3R_90()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_194() {
+    if (jj_3R_208()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_60() {
+    if (jj_scan_token(ASSIGN)) return true;
+    if (jj_3R_99()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_157() {
+    if (jj_3R_123()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_156() {
+    if (jj_3R_122()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_155() {
+    if (jj_3R_121()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_154() {
+    if (jj_3R_164()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_153() {
+    if (jj_3R_163()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_53() {
+    if (jj_3R_90()) return true;
+    if (jj_3R_91()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_141() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_153()) {
+    jj_scanpos = xsp;
+    if (jj_3R_154()) {
+    jj_scanpos = xsp;
+    if (jj_3R_155()) {
+    jj_scanpos = xsp;
+    if (jj_3R_156()) {
+    jj_scanpos = xsp;
+    if (jj_3R_157()) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3_13() {
+    if (jj_3R_52()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(99)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(108)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_72() {
+    if (jj_3R_102()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_213() {
+    if (jj_scan_token(LOGICAL_AND)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_181() {
+    if (jj_3R_194()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_168() {
+    if (jj_3R_178()) return true;
+    if (jj_3R_162()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_199() {
+    if (jj_3R_212()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_213()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_18() {
+    if (jj_scan_token(RPAREN)) return true;
+    if (jj_3R_58()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_67() {
+    if (jj_3R_102()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_180() {
+    if (jj_3R_169()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_85() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(THICK_ARROW)) return true;
+    if (jj_3R_46()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_59() {
+    if (jj_3R_98()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_101() {
+    if (jj_scan_token(COMMA)) return true;
+    return false;
+  }
+
+  private boolean jj_3_19() {
+    if (jj_scan_token(ANY)) return true;
+    if (jj_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  private boolean jj_3_20() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_59()) jj_scanpos = xsp;
+    if (jj_3R_52()) return true;
+    if (jj_3R_60()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_64() {
+    if (jj_3R_46()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_101()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_133() {
+    if (jj_3R_148()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_167() {
+    if (jj_scan_token(LPAREN)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_19()) {
+    jj_scanpos = xsp;
+    if (jj_3R_180()) {
+    jj_scanpos = xsp;
+    if (jj_3R_181()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_126() {
+    if (jj_scan_token(ABSTRACT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_160() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_167()) {
+    jj_scanpos = xsp;
+    if (jj_3R_168()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_102() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_126()) jj_scanpos = xsp;
+    if (jj_scan_token(CLASS)) return true;
+    if (jj_3R_127()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_206() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_85()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_47() {
+    if (jj_3R_85()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_206()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_224() {
+    if (jj_3R_141()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_223() {
+    if (jj_3R_160()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_207() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_46()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_151() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(37)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(40)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(35)) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_231() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(117)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(120)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_208() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_223()) {
+    jj_scanpos = xsp;
+    if (jj_3R_224()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_179() {
+    if (jj_3R_46()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_207()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_148() {
+    if (jj_scan_token(ACTIVITY)) return true;
+    if (jj_3R_52()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_63() {
+    if (jj_scan_token(FROM)) return true;
+    if (jj_3R_64()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_145() {
+    if (jj_3R_161()) return true;
+    if (jj_3R_162()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_144() {
+    if (jj_3R_160()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_228() {
+    if (jj_3R_231()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_136() {
+    if (jj_3R_151()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_170() {
+    if (jj_3R_179()) return true;
+    return false;
+  }
+
+  private boolean jj_3_7() {
+    if (jj_3R_47()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_120() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_144()) {
+    jj_scanpos = xsp;
+    if (jj_3R_145()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_212() {
+    if (jj_3R_227()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_228()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_150() {
+    if (jj_scan_token(LT)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_7()) {
+    jj_scanpos = xsp;
+    if (jj_3R_170()) return true;
+    }
+    if (jj_scan_token(GT)) return true;
+    return false;
+  }
+
+  private boolean jj_3_27() {
+    if (jj_3R_63()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_76() {
+    if (jj_3R_106()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_117() {
+    if (jj_3R_141()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_116() {
+    if (jj_3R_120()) return true;
+    return false;
+  }
+
+  private boolean jj_3_26() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(COLON)) return true;
     return false;
   }
 
@@ -6379,6 +6715,16 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_90() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_116()) {
+    jj_scanpos = xsp;
+    if (jj_3R_117()) return true;
+    }
+    return false;
+  }
+
   private boolean jj_3R_45() {
     if (jj_scan_token(LT)) return true;
     Token xsp;
@@ -6390,34 +6736,14 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_166() {
-    if (jj_scan_token(SC_OR)) return true;
+  private boolean jj_3R_204() {
+    if (jj_scan_token(NEW)) return true;
+    if (jj_3R_46()) return true;
     return false;
   }
 
-  private boolean jj_3R_62() {
-    if (jj_scan_token(CASE)) return true;
-    if (jj_3R_53()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_175() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(125)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(126)) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_158() {
-    if (jj_3R_165()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_166()) { jj_scanpos = xsp; break; }
-    }
+  private boolean jj_3R_71() {
+    if (jj_3R_106()) return true;
     return false;
   }
 
@@ -6426,8 +6752,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_42() {
-    if (jj_3R_78()) return true;
+  private boolean jj_3R_226() {
+    if (jj_scan_token(DOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_131() {
+    if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
@@ -6439,37 +6770,56 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_24() {
-    if (jj_3R_62()) return true;
-    return false;
-  }
-
-  private boolean jj_3_30() {
-    if (jj_3R_66()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_164() {
-    if (jj_3R_175()) return true;
-    if (jj_3R_90()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_151() {
+  private boolean jj_3R_106() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(37)) {
+    if (jj_3R_131()) jj_scanpos = xsp;
+    if (jj_scan_token(SIGNAL)) return true;
+    if (jj_3R_127()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_108() {
+    if (jj_3R_133()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_234() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(51)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(40)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(35)) return true;
-    }
+    if (jj_scan_token(46)) return true;
     }
     return false;
   }
 
-  private boolean jj_3_29() {
-    if (jj_3R_65()) return true;
+  private boolean jj_3R_173() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(123)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(124)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_107() {
+    if (jj_3R_132()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_127() {
+    if (jj_3R_52()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_203() {
+    if (jj_scan_token(SUPER)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_226()) jj_scanpos = xsp;
+    if (jj_3R_57()) return true;
     return false;
   }
 
@@ -6478,35 +6828,42 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_177() {
-    if (jj_scan_token(SC_AND)) return true;
+  private boolean jj_3R_230() {
+    if (jj_3R_234()) return true;
     return false;
   }
 
-  private boolean jj_3R_136() {
-    if (jj_3R_151()) return true;
+  private boolean jj_3_40() {
+    if (jj_3R_76()) return true;
     return false;
   }
 
-  private boolean jj_3R_122() {
-    if (jj_scan_token(TILDE)) return true;
-    if (jj_3R_90()) return true;
+  private boolean jj_3_39() {
+    if (jj_3R_75()) return true;
     return false;
   }
 
-  private boolean jj_3R_165() {
-    if (jj_3R_176()) return true;
+  private boolean jj_3R_227() {
+    if (jj_3R_229()) return true;
     Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_177()) { jj_scanpos = xsp; break; }
-    }
+    xsp = jj_scanpos;
+    if (jj_3R_230()) jj_scanpos = xsp;
     return false;
   }
 
   private boolean jj_3_4() {
     if (jj_scan_token(DOT)) return true;
     if (jj_3R_44()) return true;
+    return false;
+  }
+
+  private boolean jj_3_38() {
+    if (jj_3R_74()) return true;
+    return false;
+  }
+
+  private boolean jj_3_37() {
+    if (jj_3R_73()) return true;
     return false;
   }
 
@@ -6520,31 +6877,38 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_121() {
-    if (jj_scan_token(BANG)) return true;
-    if (jj_3R_90()) return true;
+  private boolean jj_3R_50() {
+    if (jj_3R_57()) return true;
     return false;
   }
 
-  private boolean jj_3R_204() {
-    if (jj_scan_token(NEW)) return true;
-    if (jj_3R_46()) return true;
+  private boolean jj_3_36() {
+    if (jj_3R_72()) return true;
     return false;
   }
 
-  private boolean jj_3R_110() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(COLON)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_226() {
-    if (jj_scan_token(DOT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_157() {
-    if (jj_3R_123()) return true;
+  private boolean jj_3R_77() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_36()) {
+    jj_scanpos = xsp;
+    if (jj_3_37()) {
+    jj_scanpos = xsp;
+    if (jj_3_38()) {
+    jj_scanpos = xsp;
+    if (jj_3R_107()) {
+    jj_scanpos = xsp;
+    if (jj_3_39()) {
+    jj_scanpos = xsp;
+    if (jj_3_40()) {
+    jj_scanpos = xsp;
+    if (jj_3R_108()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
     return false;
   }
 
@@ -6554,28 +6918,24 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_156() {
-    if (jj_3R_122()) return true;
+  private boolean jj_3R_114() {
+    if (jj_3R_57()) return true;
     return false;
   }
 
-  private boolean jj_3R_155() {
-    if (jj_3R_121()) return true;
+  private boolean jj_3_35() {
+    if (jj_3R_71()) return true;
     return false;
   }
 
-  private boolean jj_3R_154() {
-    if (jj_3R_164()) return true;
+  private boolean jj_3_34() {
+    if (jj_3R_70()) return true;
     return false;
   }
 
-  private boolean jj_3R_153() {
-    if (jj_3R_163()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_188() {
-    if (jj_scan_token(LOGICAL_OR)) return true;
+  private boolean jj_3R_163() {
+    if (jj_3R_173()) return true;
+    if (jj_3R_174()) return true;
     return false;
   }
 
@@ -6585,22 +6945,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_141() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_153()) {
-    jj_scanpos = xsp;
-    if (jj_3R_154()) {
-    jj_scanpos = xsp;
-    if (jj_3R_155()) {
-    jj_scanpos = xsp;
-    if (jj_3R_156()) {
-    jj_scanpos = xsp;
-    if (jj_3R_157()) return true;
-    }
-    }
-    }
-    }
+  private boolean jj_3_33() {
+    if (jj_3R_69()) return true;
+    return false;
+  }
+
+  private boolean jj_3_32() {
+    if (jj_3R_68()) return true;
     return false;
   }
 
@@ -6614,33 +6965,40 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_176() {
-    if (jj_3R_187()) return true;
+  private boolean jj_3_31() {
+    if (jj_3R_67()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_132() {
+    if (jj_3R_147()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_89() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(THICK_ARROW)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_237() {
     Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_188()) { jj_scanpos = xsp; break; }
+    xsp = jj_scanpos;
+    if (jj_scan_token(111)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(110)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(118)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(119)) return true;
+    }
+    }
     }
     return false;
   }
 
-  private boolean jj_3R_203() {
-    if (jj_scan_token(SUPER)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_226()) jj_scanpos = xsp;
-    if (jj_3R_57()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_181() {
-    if (jj_3R_194()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_168() {
-    if (jj_3R_178()) return true;
-    if (jj_3R_162()) return true;
+  private boolean jj_3R_172() {
+    if (jj_3R_183()) return true;
     return false;
   }
 
@@ -6650,50 +7008,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_18() {
-    if (jj_scan_token(RPAREN)) return true;
-    if (jj_3R_58()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_50() {
-    if (jj_3R_57()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_79() {
-    if (jj_3R_110()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_180() {
-    if (jj_3R_169()) return true;
-    return false;
-  }
-
-  private boolean jj_3_19() {
-    if (jj_scan_token(ANY)) return true;
-    if (jj_scan_token(RPAREN)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_167() {
-    if (jj_scan_token(LPAREN)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_19()) {
-    jj_scanpos = xsp;
-    if (jj_3R_180()) {
-    jj_scanpos = xsp;
-    if (jj_3R_181()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3_23() {
-    if (jj_scan_token(ELSE)) return true;
-    if (jj_scan_token(IF)) return true;
+  private boolean jj_3R_51() {
+    if (jj_3R_89()) return true;
     return false;
   }
 
@@ -6702,8 +7018,9 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_200() {
-    if (jj_scan_token(XOR)) return true;
+  private boolean jj_3R_147() {
+    if (jj_scan_token(ENUM)) return true;
+    if (jj_3R_52()) return true;
     return false;
   }
 
@@ -6712,13 +7029,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_160() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_167()) {
-    jj_scanpos = xsp;
-    if (jj_3R_168()) return true;
-    }
+  private boolean jj_3R_233() {
+    if (jj_3R_237()) return true;
     return false;
   }
 
@@ -6732,23 +7044,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_114() {
-    if (jj_3R_57()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_73() {
-    if (jj_3R_103()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_187() {
-    if (jj_3R_199()) return true;
+  private boolean jj_3R_229() {
+    if (jj_3R_232()) return true;
     Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_200()) { jj_scanpos = xsp; break; }
-    }
+    xsp = jj_scanpos;
+    if (jj_3R_233()) jj_scanpos = xsp;
     return false;
   }
 
@@ -6760,29 +7060,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_89() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(THICK_ARROW)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_68() {
-    if (jj_3R_103()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_224() {
-    if (jj_3R_141()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_223() {
-    if (jj_3R_160()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_109() {
-    if (jj_3R_134()) return true;
+  private boolean jj_3R_183() {
+    if (jj_3R_173()) return true;
     return false;
   }
 
@@ -6796,21 +7075,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_44() {
-    if (jj_3R_80()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_208() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_223()) {
-    jj_scanpos = xsp;
-    if (jj_3R_224()) return true;
-    }
-    return false;
-  }
-
   private boolean jj_3_1() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6821,18 +7085,18 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_128() {
-    if (jj_scan_token(ABSTRACT)) return true;
+  private boolean jj_3R_75() {
+    if (jj_3R_105()) return true;
     return false;
   }
 
-  private boolean jj_3R_78() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_44()) {
-    jj_scanpos = xsp;
-    if (jj_3R_109()) return true;
-    }
+  private boolean jj_3R_134() {
+    if (jj_3R_149()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_152() {
+    if (jj_3R_53()) return true;
     return false;
   }
 
@@ -6844,152 +7108,23 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_103() {
+  private boolean jj_3R_162() {
+    if (jj_3R_171()) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_128()) jj_scanpos = xsp;
-    if (jj_scan_token(ACTIVE)) return true;
-    if (jj_scan_token(CLASS)) return true;
+    if (jj_3R_172()) jj_scanpos = xsp;
     return false;
   }
 
-  private boolean jj_3R_213() {
-    if (jj_scan_token(LOGICAL_AND)) return true;
+  private boolean jj_3R_70() {
+    if (jj_3R_105()) return true;
     return false;
   }
 
-  private boolean jj_3R_51() {
-    if (jj_3R_89()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_146() {
-    if (jj_scan_token(NEW)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_199() {
-    if (jj_3R_212()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_213()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_145() {
-    if (jj_3R_161()) return true;
-    if (jj_3R_162()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_144() {
-    if (jj_3R_160()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_120() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_144()) {
-    jj_scanpos = xsp;
-    if (jj_3R_145()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3_43() {
-    if (jj_3R_79()) return true;
-    return false;
-  }
-
-  private boolean jj_3_28() {
-    if (jj_3R_64()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_124() {
-    if (jj_3R_146()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_52() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(76)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(81)) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3_22() {
-    if (jj_3R_61()) return true;
-    return false;
-  }
-
-  private boolean jj_3_21() {
-    if (jj_3R_53()) return true;
-    return false;
-  }
-
-  private boolean jj_3_41() {
-    if (jj_3R_77()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_99() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_21()) {
-    jj_scanpos = xsp;
-    if (jj_3_22()) {
-    jj_scanpos = xsp;
-    if (jj_3R_124()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_117() {
-    if (jj_3R_141()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_116() {
-    if (jj_3R_120()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_152() {
-    if (jj_3R_53()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_90() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_116()) {
-    jj_scanpos = xsp;
-    if (jj_3R_117()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_60() {
-    if (jj_scan_token(ASSIGN)) return true;
-    if (jj_3R_99()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_231() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(117)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(120)) return true;
-    }
+  private boolean jj_3R_149() {
+    if (jj_scan_token(RECEIVE)) return true;
+    if (jj_scan_token(SIGNAL)) return true;
+    if (jj_3R_52()) return true;
     return false;
   }
 
@@ -7010,18 +7145,37 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_173() {
+  private boolean jj_3R_240() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(123)) {
+    if (jj_scan_token(133)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(124)) return true;
+    if (jj_scan_token(134)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(135)) return true;
+    }
     }
     return false;
   }
 
-  private boolean jj_3R_228() {
-    if (jj_3R_231()) return true;
+  private boolean jj_3R_52() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(76)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(81)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_25() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(IN)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_130() {
+    if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
@@ -7037,32 +7191,24 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_212() {
-    if (jj_3R_227()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_228()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_59() {
-    if (jj_3R_98()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_209() {
-    if (jj_scan_token(DOT)) return true;
-    return false;
-  }
-
-  private boolean jj_3_20() {
+  private boolean jj_3R_105() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_59()) jj_scanpos = xsp;
-    if (jj_3R_52()) return true;
-    if (jj_3R_60()) return true;
+    if (jj_3R_130()) jj_scanpos = xsp;
+    if (jj_scan_token(ASSOC)) return true;
+    if (jj_3R_127()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_80() {
+    if (jj_scan_token(RECEIVE)) return true;
+    if (jj_3R_46()) return true;
+    if (jj_scan_token(SEMICOLON)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_236() {
+    if (jj_3R_240()) return true;
     return false;
   }
 
@@ -7097,10 +7243,10 @@ public class AlfParser implements AlfParserConstants {
       jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1400000,0x1400000,0x128,0x0,0x0,0x0,0x0,0x0,0x1400000,0x0,0x0,0x0,0x0,0x128,0x0,0x0,0x1400000,0x1400000,0x0,0x0,0x1000000,0x0,0x1400000,0x0,0x400000,0x0,0x400000,0x400000,0x4000000,0x0,0x0,0x0,0x1400000,0x1400000,0x1400000,0x84000,0x1400000,0x1400000,0x0,0x0,0x1400000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x84000,0x84000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1509204,0x0,0x1509204,0x0,0x0,0x0,0x0,0x84000,0x1400000,0x0,0x400000,0x400,0x2000000,0x1,0x80,0x1509204,0x0,0x0,0x0,0x0,0x2000000,0x0,0x2000,0x2000,0x0,0x200000,0xa0000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xa0000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x10000842,0xe0000000,0x0,0xa0000000,0x0,0x10000842,0x800,0x0,0x800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xe0000842,0x0,0xe0000000,0x0,0x0,0x0,0xe0000842,0x200,0x0,0x0,0xe0000000,0x842,0x0,0x0,0x80000000,0x0,0x80000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8060000,0x0,0x0,0x8060000,0x0,0x0,0x0,0x10,0x0,0x0,0x0,0x800000,0x4000000,0x4800000,0x4800000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x21000,0x0,0x0,0x0,0x21000,0x21000,0x0,0x0,0xb5621240,0x35600240,0x0,0x80000000,0x0,0x0,0x35600000,0x80000000,0xb5621240,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0xb5621240,0xb5621240,0x0,0x0,0x0,0x0,0xb5621240,0x0,0x0,0x0,0x0,0x0,0x0,0x1004,0x0,0x0,0xb5621240,0xb5621240,0xb5600240,0x80000000,0xb5621240,0xb5600240,0x0,0x0,0xb5621240,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xb5621b48,0x0,0xb5621b48,0x0,0x80000000,0x0,0x0,0x80000000,0xb5621240,0x0,0x0,0x0,0x0,0x0,0x0,0xb5621b48,0x0,0x0,0x21000,0x0,0x0,0x400,0x0,0x400,0x0,0x0,0x0,0x0,0x0,0x80000000,0x21000,0x0,0x0,0x0,0x15400000,0x35600000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x21000,0x80,0x0,0x0,0x0,0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x20,0x0,0x0,0x20,0x0,0x0,0x21080,0x0,0x0,0x21000,0x0,0x0,0x21081,0x0,0x21000,0x0,0x0,0x21080,0x0,0x0,0x21000,0x0,0x0,0x0,0x0,0x20,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x21000,0x1,0x0,0x0,0x0,0x21000,0x10000000,0x0,0x0,0x10,0x10,0x10000000,0x0,0x0,0x2,0x0,0x20,0x0,};
+      jj_la1_2 = new int[] {0x21000,0x0,0x0,0x0,0x21000,0x21000,0x0,0x0,0xb5621240,0x35600240,0x0,0x80000000,0x0,0x0,0x35600000,0x80000000,0xb5621240,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0xb5621240,0xb5621240,0x0,0x0,0x0,0x0,0xb5621240,0x0,0x0,0x0,0x0,0x0,0x0,0x1004,0x0,0x0,0xb5621240,0xb5621240,0xb5600240,0x80000000,0xb5621240,0xb5600240,0x0,0x0,0xb5621240,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xb5621b48,0x0,0xb5621b48,0x0,0x0,0x80000000,0x0,0x80000000,0xb5621240,0x0,0x0,0x0,0x0,0x0,0x0,0xb5621b48,0x0,0x0,0x21000,0x0,0x0,0x400,0x0,0x400,0x0,0x0,0x0,0x0,0x0,0x80000000,0x21000,0x0,0x0,0x0,0x15400000,0x35600000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x21000,0x80,0x0,0x0,0x0,0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x20,0x0,0x0,0x20,0x0,0x0,0x21080,0x0,0x0,0x21000,0x0,0x0,0x21081,0x0,0x21000,0x0,0x0,0x21080,0x0,0x0,0x21000,0x0,0x0,0x0,0x0,0x20,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x21000,0x1,0x0,0x0,0x0,0x21000,0x10000000,0x0,0x0,0x10,0x10,0x10000000,0x0,0x0,0x2,0x0,0x20,0x0,};
    }
    private static void jj_la1_init_3() {
-      jj_la1_3 = new int[] {0x0,0x480,0x480,0x4040,0x0,0x0,0x40,0x40,0x80000000,0x80000000,0x0,0x8a,0x888,0x888,0x80000000,0x0,0xf8130000,0x40,0x40,0x80,0xa,0x0,0x1000,0x1008,0xf8130000,0xf8130000,0x40,0x8,0x0,0x8,0xf8130002,0x100,0x2,0x40,0x2,0x0,0x0,0x0,0x18000000,0x18000000,0xf8130000,0x80000000,0xf8130000,0xffe4e88b,0xf8130000,0x80000000,0x78130000,0x60000000,0x80130000,0x80000000,0x80000000,0x60000000,0x60000000,0x0,0x0,0xc0c000,0xc0c000,0x0,0x0,0x1200000,0x1200000,0x0,0x0,0x0,0x4000000,0x2000000,0x40000,0x2000,0xf8130022,0x0,0xf8130022,0x80000,0x0,0x40,0x8,0xffe4e8aa,0xf8130000,0x8,0x0,0x0,0x0,0x0,0x0,0xf8130022,0x40,0x100,0x0,0x22,0x0,0x0,0x0,0x0,0x40,0x0,0x0,0x0,0x80000,0x0,0x0,0x40,0x60000000,0x60000000,0x0,0xe0000000,0x0,0x400,0x400,0x80,0x80,0x480,0x480,0x480,0x0,0x0,0x0,0x22,0x80000,0x0,0x0,0x0,0x0,0x0,0x0,0x8000,0x0,0x40,0x0,0x0,0x0,0x22,0x80000,0x0,0x0,0x0,0x0,0x22,0x80000,0x0,0x2,0x0,0x0,0x0,0x0,0x22,0x80000,0x0,0x0,0x0,0x22,0x0,0x22,0x40,0x0,0x0,0x22,0x8000,0x200,0x22,0x80000,0x40,0x0,0x0,0x0,0x0,0x2000,0x0,0x8,0x0,0x80000000,0x0,0x0,0x0,0x0,0x80000000,0x0,0x200,0x0,0x22,0x0,0x22,};
+      jj_la1_3 = new int[] {0x0,0x480,0x480,0x4040,0x0,0x0,0x40,0x40,0x80000000,0x80000000,0x0,0x8a,0x888,0x888,0x80000000,0x0,0xf8130000,0x40,0x40,0x80,0xa,0x0,0x1000,0x1008,0xf8130000,0xf8130000,0x40,0x8,0x0,0x8,0xf8130002,0x100,0x2,0x40,0x2,0x0,0x0,0x0,0x18000000,0x18000000,0xf8130000,0x80000000,0xf8130000,0xffe4e88b,0xf8130000,0x80000000,0x78130000,0x60000000,0x80130000,0x80000000,0x80000000,0x60000000,0x60000000,0x0,0x0,0xc0c000,0xc0c000,0x0,0x0,0x1200000,0x1200000,0x0,0x0,0x0,0x4000000,0x2000000,0x40000,0x2000,0xf8130022,0x0,0xf8130022,0x80000,0x40,0x0,0x8,0xffe4e8aa,0xf8130000,0x8,0x0,0x0,0x0,0x0,0x0,0xf8130022,0x40,0x100,0x0,0x22,0x0,0x0,0x0,0x0,0x40,0x0,0x0,0x0,0x80000,0x0,0x0,0x40,0x60000000,0x60000000,0x0,0xe0000000,0x0,0x400,0x400,0x80,0x80,0x480,0x480,0x480,0x0,0x0,0x0,0x22,0x80000,0x0,0x0,0x0,0x0,0x0,0x0,0x8000,0x0,0x40,0x0,0x0,0x0,0x22,0x80000,0x0,0x0,0x0,0x0,0x22,0x80000,0x0,0x2,0x0,0x0,0x0,0x0,0x22,0x80000,0x0,0x0,0x0,0x22,0x0,0x22,0x40,0x0,0x0,0x22,0x8000,0x200,0x22,0x80000,0x40,0x0,0x0,0x0,0x0,0x2000,0x0,0x8,0x0,0x80000000,0x0,0x0,0x0,0x0,0x80000000,0x0,0x200,0x0,0x22,0x0,0x22,};
    }
    private static void jj_la1_init_4() {
       jj_la1_4 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x7ffff,0x0,0x0,0x0,0x0,0x0,0x11,0x11,0x0,0x0,0xe0,0xe0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x8,0x4,0x0,0x0,0x0,0x7ff00,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x7ffff,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};

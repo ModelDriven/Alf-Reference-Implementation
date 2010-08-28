@@ -1,9 +1,10 @@
 /*
    Parser for the 
    Action Language for Foundational UML (Alf)
-   Version 0.11
+   Version 0.11 (revision 1)
 
-   with construction of the Abstract Syntax Tree
+   with construction of an Abstract Syntax Tree
+   as an instance of the Alf Abstract Syntax model
    
    Written by
    Ed Seidewitz / Model Driven Solutions
@@ -30,17 +31,13 @@ import java.util.ArrayList;
 
 public class AlfParser {
 
+  private String errorMessage(String message) {
+    return "Error at line " + token.beginLine + ", column " + 
+           token.beginColumn + ". \n" + message;
+  } 
+
   public static final String version = "0.11";
 
-  private static void completeSubunits(NamespaceDefinition namespace) {
-    for (Member member: namespace.getMembers()) {
-      if (member instanceof NamespaceDefinition) {
-        member.completeStub();
-        completeSubunits((NamespaceDefinition)member);
-      }
-    }
-  }
-  
   public static UnitDefinition parse(String fileName) {
     AlfParser parser;
     
@@ -62,11 +59,12 @@ public class AlfParser {
       return unit;
 
     } catch (Throwable e) {
-      System.out.println(e.getMessage());
-      if (e.getMessage()==null) {
+      System.out.println("Parse failed.");
+      if (!(e instanceof ParseException)) {
         e.printStackTrace();
+      } else if (e.getMessage()!=null) {
+        System.out.println(e.getMessage());
       }
-      System.out.println("Encountered errors during parse.");
       return null;
     }
 
@@ -78,47 +76,21 @@ public class AlfParser {
     
     System.out.println("Alf " + version + " Parser");
 
-    if (args.length == 0 || args.length == 1 && args[0].equals("-complete")) {
+    if (args.length == 0) {
       unit = parse(null);
-      complete = args.length == 1;
-    } else if (args.length == 1 || args.length == 2 && args[0].equals("-complete")) {
-      unit = parse(args[args.length-1]);
-      complete = args.length == 2;
+    } else if (args.length == 1) {
+      unit = parse(args[0]);
     } else {
       System.out.println("Usage is");
-      System.out.println("         alfp [ -complete ] < inputfile");
+      System.out.println("         alfp < inputfile");
       System.out.println("OR");
-      System.out.println("         alfp [ -complete ] inputfile");
+      System.out.println("         alfp inputfile");
       return;
     }
 
     if (unit != null) {
-      if (!complete) {
-        unit.print();
-      } else {
-        unit.addImplicitImports();
-        
-        // Ensure all imports are resolved.
-        unit.getDefinition().getAllMembers();
-        
-        // Recursively complete subunits.
-        completeSubunits(unit.getDefinition());
-        
-        unit.getModelNamespace().print();
-      }
+      unit.print("");
     }
-      
-    /*
-    ArrayList<Member> members = unit.getAllMembers();
-    System.out.println(unit.toString());
-    for (Member member: members) {
-      if (member.isError()) {
-        member.printChild("");
-      } else {
-        System.out.println(member.toString(" "));
-      }
-    }
-    */
   }
 }
 
@@ -449,7 +421,7 @@ QualifiedName PotentiallyAmbiguousQualifiedName():
   q = UnqualifiedName()
   [ LOOKAHEAD(2) (
     ColonQualifiedNameCompletion(q)
-  | DotQualifiedNameCompletion(q)  { q.setIsAmbiguous(); } /* AMBIGUOUS */
+  | DotQualifiedNameCompletion(q)  { q.setIsAmbiguous(true); } /* AMBIGUOUS */
   ) ]
 
   { return q; }
@@ -604,9 +576,10 @@ Expression NonNameExpression():
 
 Expression NameToExpressionCompletion(QualifiedName q):
 {
-  Expression e = new NameExpression(q);
+  Expression e = new NameExpression();
 }
 {
+  { ((NameExpression) e).setName(q); }
   [ LOOKAHEAD(2) e = NameToPrimaryExpression(q) ] 
   e = PrimaryToExpressionCompletion(e)
   
@@ -686,14 +659,22 @@ Expression NameToPrimaryExpression(QualifiedName q):
 
 Expression PrimaryExpressionCompletion(Expression p):
 {
+  FeatureReference f;
   Expression i;
   Expression e = p;
 }
 {
   ( 
-    e = Feature(e) [ LOOKAHEAD(2) e = FeatureInvocation((FeatureReference)e) ]
+    f = Feature(e) 
+    { e = new PropertyAccessExpression();
+      ((PropertyAccessExpression)e).setFeatureReference(f); }
+    [ LOOKAHEAD(2) e = FeatureInvocation(f) ]
   | e = SequenceOperationOrReductionOrExpansion(e)
-  | i = Index() { e = new SequenceAccessExpression(e, i); }
+  | i = Index() 
+    { SequenceAccessExpression s = new SequenceAccessExpression();
+      s.setPrimary(e);
+      s.setIndex(i);
+      e = s; }
   )*
   
   { return e; }
@@ -708,13 +689,20 @@ Expression LiteralExpression():
 }
 {
   (
-    t = <BOOLEAN_LITERAL> { e = new BooleanLiteral(t.image); }
-  | t = <DECIMAL_LITERAL> { e = new NaturalLiteral(t.image); }
-  | t = <BINARY_LITERAL>  { e = new NaturalLiteral(t.image); }
-  | t = <OCTAL_LITERAL>   { e = new NaturalLiteral(t.image); }
-  | t = <HEX_LITERAL>     { e = new NaturalLiteral(t.image); }
-  | t = <STRING_LITERAL>  { e = new StringLiteral(t.image); }
-  | t = <STAR>            { e = new UnboundedLiteral(); }
+    t = <BOOLEAN_LITERAL> 
+    { e = new BooleanLiteralExpression(); ((BooleanLiteralExpression)e).setImage(t.image); }
+  | t = <DECIMAL_LITERAL> 
+    { e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image); }
+  | t = <BINARY_LITERAL>  
+    { e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image); }
+  | t = <OCTAL_LITERAL>   
+    { e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image); }
+  | t = <HEX_LITERAL>     
+    { e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image); }
+  | t = <STRING_LITERAL>  
+    { e = new StringLiteralExpression(); ((StringLiteralExpression)e).setImage(t.image); }
+  | t = <STAR>
+    { e = new UnboundedLiteralExpression(); }
   )
   
   { return e; }
@@ -725,10 +713,11 @@ Expression LiteralExpression():
 Expression NameOrPrimaryExpression():
 {
   QualifiedName q;
-  Expression e;
+  NameExpression ne = new NameExpression();
+  Expression e = ne;
 }
 {
-  q = PotentiallyAmbiguousQualifiedName() { e = new NameExpression(q); }
+  q = PotentiallyAmbiguousQualifiedName() { ne.setName(q); }
   [ LOOKAHEAD(2) e = NameToPrimaryExpression(q) ]
   { return e; }
 }
@@ -741,7 +730,11 @@ Expression ThisExpression():
   Expression e = new ThisExpression();
 }
 {
-  <THIS> [ t = Tuple() { e = new FeatureInvocationExpression(new FeatureReference(e, null), t); } ]
+  <THIS> 
+  [ t = Tuple() 
+    { e = new FeatureInvocationExpression();
+      ((FeatureInvocationExpression) e).setTuple(t); } 
+  ]
   { return e; }
 }
 
@@ -758,13 +751,16 @@ Expression ParenthesizedExpression():
 
 /* PROPERTY ACCESS EXPRESSIONS */
 
-FeatureReference Feature(Expression c):
+FeatureReference Feature(Expression p):
 {
   NameBinding n;
 }
 {
   <DOT> n = NameBinding()
-  { return new FeatureReference(c, n); }
+  { FeatureReference f = new FeatureReference();
+    f.setExpression(p);
+    f.setNameBinding(n);
+    return f; }
 }
 
 /* INVOCATION EXPRESSIONS */
@@ -811,8 +807,8 @@ NamedTuple NamedTupleExpressionList():
   NamedExpression n;
 }
 {
-  n = NamedExpression() { t.addExpression(n); }
-  ( <COMMA> n = NamedExpression() { t.addExpression(n); } )*
+  n = NamedExpression() { t.addNamedExpression(n); }
+  ( <COMMA> n = NamedExpression() { t.addNamedExpression(n); } )*
   
   { return t; }
 }
@@ -824,7 +820,10 @@ NamedExpression NamedExpression():
 }
 {
   n = Name() <THICK_ARROW> e = Expression()
-  { return new NamedExpression(n, e); }
+  { NamedExpression ne = new NamedExpression();
+    ne.setName(n);
+    ne.setExpression(e);
+    return ne; }
 }
 
 Expression BehaviorInvocation(QualifiedName n):
@@ -833,7 +832,10 @@ Expression BehaviorInvocation(QualifiedName n):
 }
 {
   t = Tuple() 
-  { return new BehaviorInvocationExpression(n, t); }
+  { BehaviorInvocationExpression e = new BehaviorInvocationExpression();
+    e.setTarget(n);
+    e.setTuple(t);
+    return e; }
 }
 
 Expression FeatureInvocation(FeatureReference f):
@@ -842,7 +844,10 @@ Expression FeatureInvocation(FeatureReference f):
 }
 {
   t = Tuple()
-  { return new FeatureInvocationExpression(f, t); }
+  { FeatureInvocationExpression e = new FeatureInvocationExpression();
+    e.setTarget(f);
+    e.setTuple(t); 
+    return e; }
 }
 
 Expression SuperInvocationExpression():
@@ -852,7 +857,10 @@ Expression SuperInvocationExpression():
 }
 {
   <SUPER> [ <DOT> n = QualifiedName() ] t = Tuple() 
-  { return new SuperInvocationExpression(n, t); }
+  { SuperInvocationExpression e = new SuperInvocationExpression();
+    e.setTarget(n);
+    e.setTuple(t);
+    return e; }
 
 }
 
@@ -867,7 +875,11 @@ Expression InstanceCreationOrSequenceConstructionExpression():
 {
   <NEW> n = QualifiedName() 
   ( e = SequenceConstructionExpressionCompletion(n)
-  | t = Tuple() { e = new InstanceCreationExpression(n, t); } )
+  | t = Tuple() 
+    { InstanceCreationExpression ice = new InstanceCreationExpression();
+      ice.setConstructor(n);
+      ice.setTuple(t);
+      e = ice; } )
   { return e; }
 }
 
@@ -880,7 +892,11 @@ Expression LinkOperationCompletion(QualifiedName q):
 }
 {
   op = LinkOperation() t = LinkOperationTuple()
-  { return new LinkOperationExpression(q, op, t); }
+  { LinkOperationExpression e = new LinkOperationExpression();
+    e.setAssociationName(q);
+    e.setOperation(op);
+    e.setTuple(t);
+    return e; }
 }
 
 String LinkOperation():
@@ -902,6 +918,7 @@ Tuple LinkOperationTuple():
 {
   QualifiedName q;
   String n;
+  NameBinding b;
   Expression e;
   Expression i;
   Tuple t = new PositionalTuple();
@@ -909,10 +926,18 @@ Tuple LinkOperationTuple():
 {
   <LPAREN>
   [ LOOKAHEAD(Name() ( <LBRACKET> | <THICK_ARROW> ))
-    n = Name() { q = new QualifiedName(); q.addName(n); }
+    n = Name() 
+    { b = new NameBinding(); q = new QualifiedName(); 
+      b.setName(n); q.addNameBinding(b); }
     ( i = Index() 
       ( <THICK_ARROW> t = IndexedNamedExpressionListCompletion(n, i)
-      | e = PrimaryToExpressionCompletion(new SequenceAccessExpression(new NameExpression(q), i))
+      | { NameExpression ne = new NameExpression();
+          ne.setName(q);
+          SequenceAccessExpression s = new SequenceAccessExpression();
+          s.setPrimary(ne);
+          s.setIndex(i);
+        }
+        e = PrimaryToExpressionCompletion(s)
         { ((PositionalTuple)t).addExpression(e); } 
         PositionalTupleExpressionListCompletion((PositionalTuple)t)
       )
@@ -932,8 +957,13 @@ NamedTuple IndexedNamedExpressionListCompletion(String n, Expression i):
   NamedExpression ne;
 }
 {
-  e = Expression() { ne = new NamedExpression(n, i, e); t.addExpression(ne); }
-  ( <COMMA> ne = IndexedNamedExpression() { t.addExpression(ne); } )*
+  e = Expression() 
+  { ne = new NamedExpression();
+    ne.setName(n);
+    ne.setIndex(i);
+    ne.setExpression(e); 
+    t.addNamedExpression(ne); }
+  ( <COMMA> ne = IndexedNamedExpression() { t.addNamedExpression(ne); } )*
   
   { return t; }
 }
@@ -946,7 +976,11 @@ NamedExpression IndexedNamedExpression():
 }
 {
   n = Name() [ i = Index() ] <THICK_ARROW> e = Expression()
-  { return new NamedExpression(n, i, e); }
+  { NamedExpression ne = new NamedExpression();
+    ne.setName(n);
+    ne.setIndex(i);
+    ne.setExpression(e); 
+    return ne; }
 }
 
 /* CLASS EXTENT EXPRESSIONS */
@@ -955,7 +989,9 @@ Expression ClassExtentExpressionCompletion(QualifiedName q):
 {}
 {
   <ALL_INSTANCES> <LPAREN> <RPAREN>
-  { return new ClassExtentExpression(q); }
+  { ClassExtentExpression e = new ClassExtentExpression();
+    e.setClassName(q);
+    return e; }
 }
 
 /* SEQUENCE CONSTRUCTION EXPRESSIONS */
@@ -979,7 +1015,7 @@ Expression SequenceConstructionExpressionCompletion(QualifiedName q):
   SequenceElements c;
 }
 {
-  [ MultiplicityIndicator() { e.setHasMultiplicity(); } ]
+  [ MultiplicityIndicator() { e.setHasMultiplicity(true); } ]
   <LBRACE> [ c = SequenceElements() { e.setElements(c); } ] <RBRACE>
   { e.setTypeName(q); 
     return e; }
@@ -1000,7 +1036,11 @@ SequenceElements SequenceElements():
 {
   (
     LOOKAHEAD(2) e1 = Expression() 
-    ( <DOUBLE_DOT> e2 = Expression() { c = new SequenceRange(e1, e2); }
+    ( <DOUBLE_DOT> e2 = Expression() 
+      { SequenceRange r = new SequenceRange();
+        r.setRangeLower(e1);
+        r.setRangeUpper(e2);
+        c = r; }
     | c = SequenceElementListCompletion(e1) )
   | e1 = SequenceInitializationExpression() c = SequenceElementListCompletion(e1)
   )
@@ -1061,6 +1101,7 @@ Expression Index():
 
 Expression SequenceOperationOrReductionOrExpansion(Expression p):
 {
+  ExtentOrExpression ee = new ExtentOrExpression();
   QualifiedName q;
   Token op;
   String n;
@@ -1069,15 +1110,48 @@ Expression SequenceOperationOrReductionOrExpansion(Expression p):
   boolean ordered = false;
 }
 {
+  { if (p instanceof NameExpression) {
+      ee.setName(((NameExpression)p).getName());
+    } else {
+      ee.setNonNameExpression(p);
+    }
+  }
+  
   <ARROW> 
   ( LOOKAHEAD(2) 
     q = QualifiedName() t = Tuple() 
-    { e = new SequenceOperationExpression(p, q, t); }
+    { SequenceOperationExpression soe = new SequenceOperationExpression();
+      soe.setPrimary(ee);
+      soe.setOperation(q);
+      soe.setTuple(t);
+      e = soe; }
   | <REDUCE> [ <ORDERED> { ordered = true; } ] q = QualifiedName() 
-    { e = new SequenceReductionExpression(p, q, ordered); }
-  | op = <IDENTIFIER> n = Name() <LPAREN> e = Expression() <RPAREN> 
-    { t = new PositionalTuple(); ((PositionalTuple)t).addExpression(e); }
-    { e = new SequenceExpansionExpression(p, op.image, n, t); }
+    { SequenceReductionExpression sre = new SequenceReductionExpression();
+      sre.setPrimary(ee);
+      sre.setBehaviorName(q);
+      sre.setIsOrdered(ordered);
+      e = sre; }
+  | op = <IDENTIFIER> 
+    { SequenceExpansionExpression see;
+      if (op.image.equals("select") || op.image.equals("reject")) { 
+      	see = new SelectOrRejectExpression();
+      } else if (op.image.equals("collect") || op.image.equals("iterate")) { 
+      	see = new CollectOrIterateExpression();
+      } else if (op.image.equals("forAll") || op.image.equals("exists") || op.image.equals("one")) { 
+      	see = new ForAllOrExistsOrOneExpression();
+      } else if (op.image.equals("isUnique")) { 
+      	see = new IsUniqueExpression();
+      } else {
+        throw new ParseException(errorMessage("\""+ op.image + "\" is not a legal expansion operation."));
+      }
+    }
+    n = Name() <LPAREN> e = Expression() <RPAREN>
+    { see.setPrimary(ee);
+      see.setOperation(op.image);
+      see.setVariable(n);
+      see.setArgument(e); 
+      e = see; 
+    }
   )
   
   { return e; }
@@ -1094,62 +1168,73 @@ Expression PostfixExpressionCompletion(Expression e):
   { return e; }
 }
 
-Expression PostfixOperation(Expression e1):
+Expression PostfixOperation(Expression p):
 {
   Expression i = null;
   LeftHandSide lhs;
   String op;
 }
 {
+  op = AffixOperator()
+
   { 
-    if (e1 instanceof SequenceAccessExpression) {
-      SequenceAccessExpression e = (SequenceAccessExpression)e1;
+    if (p instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e = (SequenceAccessExpression)p;
       i = e.getIndex();
-      e1 = e.getSequence();
+      p = e.getPrimary();
     }
     
-    if (e1 instanceof NameExpression) {
-      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
-    } else if (e1 instanceof FeatureReference) {
-      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    if (p instanceof NameExpression) {
+      lhs = new NameLeftHandSide();
+      ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
+    } else if (p instanceof PropertyAccessExpression) {
+      lhs = new FeatureLeftHandSide();
+      ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      throw generateParseException();
+      throw new ParseException(errorMessage("Not a legal operand for increment or decrement."));
     }
+    lhs.setIndex(i);
+    
+    IncrementOrDecrementExpression e = new IncrementOrDecrementExpression();
+    e.setOperator(op);
+    e.setOperand(lhs);
+    return e; 
   }
-
-  op = AffixOperator()
-  { return new IncrementOrDecrementExpression(op, lhs); }
 }
 
 Expression PrefixExpression():
 {
   String op;
+  Expression p;
   Expression i = null;
   LeftHandSide lhs;
-  Expression e1;
-  IncrementOrDecrementExpression e2;
 }
 {
-  op = AffixOperator() e1 = PrimaryExpression()
+  op = AffixOperator() p = PrimaryExpression()
   
   { 
-    if (e1 instanceof SequenceAccessExpression) {
-      SequenceAccessExpression e = (SequenceAccessExpression)e1;
+    if (p instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e = (SequenceAccessExpression)p;
       i = e.getIndex();
-      e1 = e.getSequence();
+      p = e.getPrimary();
     }
     
-    if (e1 instanceof NameExpression) {
-      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
-    } else if (e1 instanceof FeatureReference) {
-      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    if (p instanceof NameExpression) {
+      lhs = new NameLeftHandSide();
+      ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
+    } else if (p instanceof PropertyAccessExpression) {
+      lhs = new FeatureLeftHandSide();
+      ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      throw generateParseException();
+      throw new ParseException(errorMessage("Not a legal operand for increment or decrement."));
     }
+    lhs.setIndex(i);
     
-    e2 = new IncrementOrDecrementExpression(op, lhs);
-    e2.setIsPrefix();
-    return e2;
+    IncrementOrDecrementExpression e = new IncrementOrDecrementExpression();
+    e.setOperator(op);
+    e.setOperand(lhs);
+    e.setIsPrefix(true);
+    return e; 
   }
 }
 
@@ -1254,7 +1339,10 @@ Expression BooleanNegationExpression():
 }
 {
   <BANG> e = UnaryExpression()
-  { return new UnaryExpression("!", e); }
+  { UnaryExpression u = new BooleanUnaryExpression();
+    u.setOperator("!");
+    u.setOperand(e);
+    return u; }
 }
 
 Expression BitStringComplementExpression():
@@ -1263,7 +1351,10 @@ Expression BitStringComplementExpression():
 }
 {
   <TILDE> e = UnaryExpression()
-  { return new UnaryExpression("~", e); }
+  { UnaryExpression u = new BitStringUnaryExpression();
+    u.setOperator("~");
+    u.setOperand(e);
+    return u; }
 }
 
 Expression NumericUnaryExpression():
@@ -1273,7 +1364,10 @@ Expression NumericUnaryExpression():
 }
 {
   op = NumericUnaryOperator() e = UnaryExpression()
-  { return new UnaryExpression(op, e); }
+  { UnaryExpression u = new NumericUnaryExpression();
+    u.setOperator(op);
+    u.setOperand(e);
+    return u; }
 }
 
 String NumericUnaryOperator():
@@ -1295,7 +1389,10 @@ Expression IsolationExpression():
 }
 {
   <DOLLAR> e = UnaryExpression()
-  { return new UnaryExpression("$", e); }
+  { UnaryExpression u = new IsolationExpression();
+    u.setOperator("$");
+    u.setOperand(e);
+    return u; }
 }
 
 Expression CastExpression():
@@ -1320,7 +1417,10 @@ Expression CastCompletion(QualifiedName q):
   | e = IsolationExpression()
   )
   
-  { return new CastExpression(q, e); }
+  { CastExpression c = new CastExpression();
+    c.setTypeName(q);
+    c.setOperand(e);
+    return c; }
 }
 
 /* ARITHMETIC EXPRESSIONS */
@@ -1343,7 +1443,11 @@ Expression MultiplicativeExpressionCompletion(Expression u):
 }
 {
   ( op = MultiplicativeOperator() e2 = UnaryExpression() 
-    { e1 = new BinaryExpression(e1, op, e2); } )*
+    { BinaryExpression b = new ArithmeticExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b; } )*
   { return e1; }
 }
 
@@ -1380,7 +1484,11 @@ Expression AdditiveExpressionCompletion(Expression u):
 {
   e1 = MultiplicativeExpressionCompletion(u) 
   ( op = AdditiveOperator() e2 = MultiplicativeExpression() 
-    { e1 = new BinaryExpression(e1, op, e2); } )*
+    { BinaryExpression b = new ArithmeticExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b; } )*
   { return e1; }
 }  
 
@@ -1418,7 +1526,11 @@ Expression ShiftExpressionCompletion(Expression u):
 {
   e1 = AdditiveExpressionCompletion(u) 
   ( op = ShiftOperator() e2 = AdditiveExpression() 
-    { e1 = new BinaryExpression(e1, op, e2); } )*
+    { BinaryExpression b = new ShiftExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b; } )*
   { return e1; }
 }  
 
@@ -1453,13 +1565,15 @@ Expression RelationalExpressionCompletion(Expression u):
   Expression e1;
   String op;
   Expression e2;
-  QualifiedName q;
-  TemplateBinding b;
 }
 {
   e1 = ShiftExpressionCompletion(u) 
   [ op = RelationalOperator() e2 = ShiftExpression() 
-    { e1 = new BinaryExpression(e1, op, e2); } ]
+    { BinaryExpression b = new RelationalExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b; } ]
   
   { return e1; }
 }
@@ -1467,7 +1581,6 @@ Expression RelationalExpressionCompletion(Expression u):
 String RelationalOperator():
 {
   Token t;
-  String s;
 }
 {
   (
@@ -1501,7 +1614,11 @@ Expression ClassificationExpressionCompletion(Expression u):
 { 
   e = RelationalExpressionCompletion(u) 
   [ op = ClassificationOperator() n = QualifiedName()
-    { e = new ClassificationExpression(e, op, n); } ]
+    { ClassificationExpression c = new ClassificationExpression();
+      c.setOperand(e);
+      c.setOperator(op);
+      c.setTypeName(n);
+      e = c; } ]
   { return e; }
 }
 
@@ -1539,7 +1656,11 @@ Expression EqualityExpressionCompletion(Expression u):
 {
   e1 = ClassificationExpressionCompletion(u) 
   ( op = EqualityOperator() e2 = ClassificationExpression() 
-    { e1 = new BinaryExpression(e1, op, e2); } )*
+    { BinaryExpression b = new EqualityExpression();
+      b.setOperand1(e1);
+      b.setOperator(op);
+      b.setOperand2(e2);
+      e1 = b; } )*
   { return e1; }
 }
 
@@ -1576,8 +1697,12 @@ Expression AndExpressionCompletion(Expression u):
 {
   e1 = EqualityExpressionCompletion(u) 
   ( <LOGICAL_AND> e2 = EqualityExpression() 
-    { e1 = new BinaryExpression(e1, "&", e2); } )*
-  { return e1; }
+     { BinaryExpression b = new LogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("&");
+      b.setOperand2(e2);
+      e1 = b; } )*
+ { return e1; }
 }
 
 Expression ExclusiveOrExpression():
@@ -1598,7 +1723,11 @@ Expression ExclusiveOrExpressionCompletion(Expression u):
 {
   e1 = AndExpressionCompletion(u) 
   ( <XOR> e2 = AndExpression() 
-    { e1 = new BinaryExpression(e1, "^", e2); } )*
+    { BinaryExpression b = new LogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("^");
+      b.setOperand2(e2);
+      e1 = b; } )*
   { return e1; }
 }
 
@@ -1620,7 +1749,11 @@ Expression InclusiveOrExpressionCompletion(Expression u):
 {
   e1 = ExclusiveOrExpressionCompletion(u) 
   ( <LOGICAL_OR> e2 = ExclusiveOrExpression() 
-    { e1 = new BinaryExpression(e1, "|", e2); } )*
+    { BinaryExpression b = new LogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("|");
+      b.setOperand2(e2);
+      e1 = b; } )*
   { return e1; }
 }
  
@@ -1644,7 +1777,11 @@ Expression ConditionalAndExpressionCompletion(Expression u):
 {
   e1 = InclusiveOrExpressionCompletion(u) 
   ( <SC_AND> e2 = InclusiveOrExpression() 
-    { e1 = new ConditionalBinaryExpression(e1, "&&", e2); } )*
+    { ConditionalLogicalExpression b = new ConditionalLogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("&&");
+      b.setOperand2(e2);
+      e1 = b; } )*
   { return e1; }
 }
 
@@ -1666,7 +1803,11 @@ Expression ConditionalOrExpressionCompletion(Expression u):
 {
   e1 = ConditionalAndExpressionCompletion(u) 
   ( <SC_OR> e2 = ConditionalAndExpression() 
-    { e1 = new ConditionalBinaryExpression(e1, "||", e2); } )*
+    { ConditionalLogicalExpression b = new ConditionalLogicalExpression();
+      b.setOperand1(e1);
+      b.setOperator("||");
+      b.setOperand2(e2);
+      e1 = b; } )*
   { return e1; }
 }
 
@@ -1691,14 +1832,18 @@ Expression ConditionalExpressionCompletion(Expression u):
 {
   e1 = ConditionalOrExpressionCompletion(u) 
   [ <HOOK> e2 = Expression() <COLON> e3 = ConditionalExpression() 
-    { e1 = new ConditionalExpression(e1, e2, e3); } ]
+    { ConditionalTestExpression c = new ConditionalTestExpression();
+      c.setOperand1(e1);
+      c.setOperand2(e2);
+      c.setOperand3(e3);
+      e1 = c; } ]
   { return e1; }
 }
 
 
 /* ASSIGNMENT EXPRESSIONS */
 
-Expression AssignmentExpressionCompletion(Expression e1):
+Expression AssignmentExpressionCompletion(Expression p):
 {
   Expression i = null;
   LeftHandSide lhs = null;
@@ -1706,24 +1851,33 @@ Expression AssignmentExpressionCompletion(Expression e1):
   Expression e2;
 }
 {
+  op = AssignmentOperator()
+  
   { 
-    if (e1 instanceof SequenceAccessExpression) {
-      SequenceAccessExpression e = (SequenceAccessExpression)e1;
-      i = e.getIndex();
-      e1 = e.getSequence();
+    if (p instanceof SequenceAccessExpression) {
+      SequenceAccessExpression e1 = (SequenceAccessExpression)p;
+      i = e1.getIndex();
+      p = e1.getPrimary();
     }
     
-    if (e1 instanceof NameExpression) {
-      lhs = new NameLeftHandSide(((NameExpression)e1).getName(), i);
-    } else if (e1 instanceof FeatureReference) {
-      lhs = new FeatureLeftHandSide((FeatureReference)e1, i);
+    if (p instanceof NameExpression) {
+      lhs = new NameLeftHandSide();
+      ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
+    } else if (p instanceof PropertyAccessExpression) {
+      lhs = new FeatureLeftHandSide();
+      ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      throw generateParseException();
+      throw new ParseException(errorMessage("Not a legal left-hand side."));
     }
+    lhs.setIndex(i);
   }
 
-  op = AssignmentOperator() e2 = Expression() 
-  { return new AssignmentExpression(lhs, op, e2); }
+  e2 = Expression() 
+  { AssignmentExpression e = new AssignmentExpression();
+    e.setLeftHandSide(lhs);
+    e.setOperator(op);
+    e.setRightHandSide(e2);
+    return e; }
 }
 
 String AssignmentOperator():
@@ -1771,7 +1925,7 @@ Statement DocumentedStatement():
 }
 {
   [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] s = Statement()
-  { s.addDocumentation(c);
+  { if (c!=null) { s.addDocumentation(c); }
     return s;
   }
 }
@@ -1824,9 +1978,7 @@ Statement AnnotatedStatement():
   <SLASH_SLASH_AT> al = Annotations() <EOL>
   s = Statement()
   { 
-    for (Annotation an: al) {
-      s.addAnnotation(an);
-    }
+    s.setAnnotation(al);
     return s;
   }
 }
@@ -1844,21 +1996,14 @@ ArrayList<Annotation> Annotations():
 Annotation Annotation():
 {
   Token t;
-  NameList nl = null;
-}
-{
-  t = <IDENTIFIER> [ <LPAREN> nl = NameList() <RPAREN> ]
-  { return new Annotation(t.image, nl); }
-}
-
-NameList NameList():
-{
-  NameList nl = new NameList();
   String n;
+  Annotation a = new Annotation();
 }
-{ 
-  n = Name() { nl.add(n); } ( <COMMA> n = Name() { nl.add(n); } )*
-  { return nl; }
+{
+  t = <IDENTIFIER> { a.setIdentifier(t.image); }
+  [ <LPAREN> n = Name() { a.addArgument(n); } 
+    ( <COMMA> n = Name() { a.addArgument(n); } )* <RPAREN> ]
+  { return a; }
 }
 
 /* IN-LINE STATEMENTS */
@@ -1868,12 +2013,23 @@ InLineStatement InLineStatement():
   Token t;
   String n;
   Token d;
+  InLineStatement s = new InLineStatement();
 }
 {
-  <SLASH_STAR_AT> t = <IDENTIFIER> <LPAREN> n = Name() <RPAREN>
-  d = <DOCUMENTATION_COMMENT>
-  { return new InLineStatement(t.image, n, d.image); }
-}
+  <SLASH_STAR_AT> t = <IDENTIFIER> 
+  
+  { if (!t.image.equals("inline")) { 
+  	  throw new ParseException(errorMessage("Encountered \"" + t.image 
+  	    + "\". Expected \"inline\".")); 
+  	}
+  }
+  
+  <LPAREN> n = Name() <RPAREN> d = <DOCUMENTATION_COMMENT> 
+  
+  { s.setLanguage(n);
+    s.setCode(d.image);
+    return s; }
+ }
 
 /* BLOCK STATEMENTS */
 
@@ -1883,7 +2039,9 @@ BlockStatement BlockStatement():
 }
 {
   b = Block()
-  { return new BlockStatement(b); }
+  { BlockStatement s = new BlockStatement();
+    s.setBlock(b);
+    return s; }
 }
 
 /* EMPTY STATEMENTS */
@@ -1903,21 +2061,22 @@ Statement LocalNameDeclarationOrExpressionStatement():
   String n;
   Expression e;
   LocalNameDeclarationStatement s1 = new LocalNameDeclarationStatement();
-  Statement s2;
+  ExpressionStatement s2 = new ExpressionStatement();
+  Statement s;
 }
 {
   (
     q = PotentiallyAmbiguousQualifiedName()
     ( LOOKAHEAD(3) 
-      [ MultiplicityIndicator() { s1.setHasMultiplicity(); } ] 
+      [ MultiplicityIndicator() { s1.setHasMultiplicity(true); } ] 
       n = Name() { s1.setName(n); s1.setTypeName(q); } 
-      LocalNameDeclarationStatementCompletion(s1) { s2 = s1; }
-    | e = NameToExpressionCompletion(q) <SEMICOLON> { s2 = new ExpressionStatement(e); } )
+      LocalNameDeclarationStatementCompletion(s1) { s = s1; }
+    | e = NameToExpressionCompletion(q) <SEMICOLON> { s2.setExpression(e); s = s2; } )
   | 
-    e = NonNameExpression() <SEMICOLON> { s2 = new ExpressionStatement(e); }
+    e = NonNameExpression() <SEMICOLON> { s2.setExpression(e); s = s2; }
   )
   
-  { return s2; }
+  { return s; }
 }
 
 LocalNameDeclarationStatement LocalNameDeclarationStatement():
@@ -1928,7 +2087,7 @@ LocalNameDeclarationStatement LocalNameDeclarationStatement():
 }
 {
   <LET> n = Name() { s.setName(n); } <COLON> q = TypeName() { s.setTypeName(q); } 
-  [ MultiplicityIndicator() { s.setHasMultiplicity(); } ] 
+  [ MultiplicityIndicator() { s.setHasMultiplicity(true); } ] 
   LocalNameDeclarationStatementCompletion(s)
   { return s; }
 }
@@ -1961,7 +2120,9 @@ Expression InstanceInitializationExpression():
 {
   <NEW> t = Tuple()
   
-  { return new InstanceCreationExpression(null, t); }
+  { InstanceCreationExpression e = new InstanceCreationExpression();
+    e.setTuple(t);
+    return e; }
 }
 
 /* IF STATEMENTS */
@@ -2003,7 +2164,10 @@ NonFinalClause NonFinalClause():
 }
 {
   <LPAREN> e = Expression() <RPAREN> b = Block()
-  { return new NonFinalClause(e, b); }
+  { NonFinalClause c = new NonFinalClause();
+    c.setCondition(e);
+    c.setBody(b);
+    return c; }
 }
 
 Block FinalClause():
@@ -2025,7 +2189,8 @@ SwitchStatement SwitchStatement():
   Block b;
 }
 {
-  <SWITCH> <LPAREN> e = Expression() <RPAREN> { s = new SwitchStatement(e); }
+  <SWITCH> <LPAREN> e = Expression() <RPAREN> 
+  { s = new SwitchStatement(); s.setExpression(e); }
   <LBRACE> ( c = SwitchClause() { s.addNonDefaultClause(c); } )* 
   [ b = SwitchDefaultClause() { s.setDefaultClause(b); } ] <RBRACE>
   { return s; }
@@ -2082,7 +2247,10 @@ WhileStatement WhileStatement():
 }
 {
   <WHILE> <LPAREN> e = Expression() <RPAREN> b = Block()
-  { return new WhileStatement(e, b); }
+  { WhileStatement s = new WhileStatement();
+    s.setCondition(e);
+    s.setBody(b);
+    return s; }
 }
 
 /* DO STATEMENTS */
@@ -2094,7 +2262,10 @@ DoStatement DoStatement():
 }
 {
   <DO> b = Block() <WHILE> <LPAREN> e = Expression() <RPAREN> <SEMICOLON>
-  { return new DoStatement(b, e); }
+  { DoStatement s = new DoStatement();
+    s.setCondition(e);
+    s.setBody(b);
+    return s; }
 }
 
 /* FOR STATEMENTS */
@@ -2133,7 +2304,7 @@ LoopVariableDefinition LoopVariableDefinition():
   ( LOOKAHEAD(2)
     n = Name() <IN> e1 = Expression() [ <DOUBLE_DOT> e2 = Expression() ]
   | q = QualifiedName() n = Name() <COLON> e1 = Expression()
-    { d.setTypeIsInferred(); }
+    { d.setTypeIsInferred(true); }
   )
   
   { d.setVariable(n);
@@ -2158,10 +2329,12 @@ BreakStatement BreakStatement():
 ReturnStatement ReturnStatement():
 {
   Expression e;
+  ReturnStatement s = new ReturnStatement();
 }
 {
   <RETURN> e = Expression() <SEMICOLON>
-  { return new ReturnStatement(e); }
+  { s.setExpression(e);
+    return s; }
 }
 
 /* ACCEPT STATEMENTS */
@@ -2219,7 +2392,10 @@ AcceptBlock AcceptClause():
 }
 {
   <ACCEPT> <LPAREN> [ LOOKAHEAD(2) n = Name() <COLON> ] nl = QualifiedNameList() <RPAREN>
-  { return new AcceptBlock(n, nl); }
+  { AcceptBlock b = new AcceptBlock();
+    b.setName(n);
+    b.setSignalNames(nl);
+    return b; }
 }
 
 /* CLASSIFY STATEMENTS */
@@ -2230,7 +2406,7 @@ ClassifyStatement ClassifyStatement():
   Expression e;
 }
 {
-  <CLASSIFY> e = Expression() { s = new ClassifyStatement(e); }
+  <CLASSIFY> e = Expression() { s = new ClassifyStatement(); s.setExpression(e); }
   ClassificationClause(s) <SEMICOLON>
   { return s; }
 }
@@ -2277,8 +2453,8 @@ QualifiedNameList QualifiedNameList():
   QualifiedName n;
 }
 {
-  n = QualifiedName() { nl.add(n); }
-  ( <COMMA> n = QualifiedName() { nl.add(n); } )*
+  n = QualifiedName() { nl.addName(n); }
+  ( <COMMA> n = QualifiedName() { nl.addName(n); } )*
   { return nl; }
 }
 
@@ -2291,27 +2467,27 @@ UnitDefinition UnitDefinition():
   QualifiedName n;
   ImportReference i;
   Token t;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   NamespaceDefinition d;
   UnitDefinition u = new UnitDefinition();
 }
 {
-  [ n = NamespaceDeclaration() { u.setNamespace(n); } ] 
+  [ n = NamespaceDeclaration() { u.setNamespaceName(n); } ] 
   ( i = ImportDeclaration() { u.addImport(i); } )*
   [ t = <DOCUMENTATION_COMMENT> { u.addDocumentation(t.image); } ] 
   sl = StereotypeAnnotations()
   d = NamespaceDefinition()
   <EOF>
-  { d.setAnnotations(sl);
+  { d.setAnnotation(sl);
     u.setDefinition(d);
     return u; 
   }
 }
 
-StereotypeAnnotationList StereotypeAnnotations():
+ArrayList<StereotypeAnnotation> StereotypeAnnotations():
 {
   StereotypeAnnotation s;
-  StereotypeAnnotationList sl = new StereotypeAnnotationList();
+  ArrayList<StereotypeAnnotation> sl = new ArrayList<StereotypeAnnotation>();
 }
 {
   ( s = StereotypeAnnotation() { sl.add(s); } )*
@@ -2321,10 +2497,10 @@ StereotypeAnnotationList StereotypeAnnotations():
 StereotypeAnnotation StereotypeAnnotation():
 {
   QualifiedName n;
-  StereotypeAnnotation s;
+  StereotypeAnnotation s = new StereotypeAnnotation();
 }
 {
-  <AT> n = QualifiedName() { s = new StereotypeAnnotation(n); }
+  <AT> n = QualifiedName() { s.setStereotypeName(n); }
   [ <LPAREN> TaggedValues(s) <RPAREN> ]
   
   { return s; }
@@ -2346,8 +2522,8 @@ TaggedValueList TaggedValueList():
   TaggedValueList tl = new TaggedValueList();
 }
 {
-  v = TaggedValue() { tl.add(v); }
-  ( "," v = TaggedValue() { tl.add(v); } )*
+  v = TaggedValue() { tl.addTaggedValue(v); }
+  ( "," v = TaggedValue() { tl.addTaggedValue(v); } )*
   
   { return tl; }
 }
@@ -2356,23 +2532,24 @@ TaggedValue TaggedValue():
 {
   String n;
   Token t;
-  String v = "";
+  TaggedValue v = new TaggedValue();
 }
 {
-  n = Name() <THICK_ARROW>
+  n = Name() <THICK_ARROW> { v.setName(n); }
   (
-    t = <BOOLEAN_LITERAL> { v = t.image; }
-  | t = <STRING_LITERAL>  { v = t.image; }
-  | t = <STAR>            { v = t.image; }
-  | [ <PLUS> | <MINUS> { v = "-"; } ] 
+    t = <BOOLEAN_LITERAL>
+  | t = <STRING_LITERAL>
+  | t = <STAR>
+  | [ <PLUS> { v.setOperator("+"); } 
+    | <MINUS> { v.setOperator("-"); } ] 
     ( t = <DECIMAL_LITERAL> 
     | t = <BINARY_LITERAL> 
     | t = <OCTAL_LITERAL> 
     | t = <HEX_LITERAL> )
-    { v = v + t.image; }
   )
   
-  { return new TaggedValue(n, v); }
+  { v.setValue(t.image);
+    return v; }
 }
 
 QualifiedName NamespaceDeclaration():
@@ -2413,23 +2590,26 @@ ImportReference ImportReference():
   String n;
   QualifiedName q;
   String a;
-  ImportReference i;
+  ImportReference i = new ElementImportReference();
 }
 {
   ( LOOKAHEAD(3)
-    q = ColonQualifiedName() { i = new ImportReference(q); }
-    [ <DOUBLE_COLON> <STAR> { i.setIsPackageImport(); } 
-    | a = AliasDefinition() { i.setAlias(a); } ]
+    q = ColonQualifiedName()
+    [ <DOUBLE_COLON> <STAR> { i = new PackageImportReference(); } 
+    | a = AliasDefinition() { ((ElementImportReference)i).setAlias(a); } ]
   | LOOKAHEAD(3)
-    q = DotQualifiedName() { i = new ImportReference(q); }
-    [ <DOT> <STAR> { i.setIsPackageImport(); } 
-    | a = AliasDefinition() { i.setAlias(a); } ]
+    q = DotQualifiedName()
+    [ <DOT> <STAR> { i = new PackageImportReference(); } 
+    | a = AliasDefinition() { ((ElementImportReference)i).setAlias(a); } ]
   |
-    n = Name() { q = new QualifiedName(); q.addName(n); i = new ImportReference(q); }
-    [ ( <DOUBLE_COLON> | <DOT> ) <STAR> { i.setIsPackageImport(); }
-    | a = AliasDefinition() { i.setAlias(a); } ]    
+    n = Name() 
+    { NameBinding b = new NameBinding(); q = new QualifiedName(); 
+      b.setName(n); q.addNameBinding(b); }
+    [ ( <DOUBLE_COLON> | <DOT> ) <STAR> { i = new PackageImportReference(); }
+    | a = AliasDefinition() { ((ElementImportReference)i).setAlias(a); } ]    
   )
-  { return i; }
+  { i.setReferentName(q);
+    return i; }
 }
 
 String AliasDefinition():
@@ -2484,10 +2664,10 @@ String PackageDeclaration():
 PackageDefinition PackageDefinition():
 {
   String n;
-  PackageDefinition d;
+  PackageDefinition d = new PackageDefinition();
 }
 {
-  n = PackageDeclaration() { d = new PackageDefinition(n); }
+  n = PackageDeclaration() { d.setName(n); }
   PackageBody(d)
   
   { return d; }
@@ -2496,11 +2676,11 @@ PackageDefinition PackageDefinition():
 PackageDefinition PackageDefinitionOrStub():
 {
   String n;
-  PackageDefinition d;
+  PackageDefinition d = new PackageDefinition();
 }
 {
-  n = PackageDeclaration() { d = new PackageDefinition(n); }
-  ( <SEMICOLON> { d.setIsStub(); }
+  n = PackageDeclaration() { d.setName(n); }
+  ( <SEMICOLON> { d.setIsStub(true); }
   | PackageBody(d)
   )
 
@@ -2519,7 +2699,7 @@ Member PackagedElement():
 {
   Token t;
   String c = null;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v;
   Member m;
 }
@@ -2528,8 +2708,8 @@ Member PackagedElement():
   sl = StereotypeAnnotations()
   v = ImportVisibilityIndicator()
   m = PackagedElementDefinition()
-  { m.addDocumentation(c);
-    m.setAnnotations(sl);
+  { if (c!=null) { m.addDocumentation(c); }
+    m.setAnnotation(sl);
     m.setVisibility(v);
     return m;
   }
@@ -2622,13 +2802,13 @@ ClassifierTemplateParameter ClassifierTemplateParameter():
   n = Name() { p.setName(n); }
   [ <SPECIALIZES> q = QualifiedName() 
     { nl = new QualifiedNameList(); 
-      nl.add(q);
+      nl.addName(q);
       p.setSpecialization(nl); 
     } 
   ]
   
   { p.setVisibility("private");
-    p.setIsAbstract();
+    p.setIsAbstract(true);
     return p;
   }
 }
@@ -2651,7 +2831,7 @@ ClassDefinition ClassDeclaration():
   QualifiedNameList nl;
 }
 {
-  [ <ABSTRACT> { d.setIsAbstract(); } ] <CLASS> ClassifierSignature(d)
+  [ <ABSTRACT> { d.setIsAbstract(true); } ] <CLASS> ClassifierSignature(d)
   
   { return d; }
 }
@@ -2671,7 +2851,7 @@ ClassDefinition ClassDefinitionOrStub():
 }
 {
   d = ClassDeclaration() 
-  ( <SEMICOLON> { d.setIsStub(); }
+  ( <SEMICOLON> { d.setIsStub(true); }
   | ClassBody(d)
   )
   
@@ -2690,7 +2870,7 @@ Member ClassMember():
 {
   Token t;
   String c = null;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -2699,8 +2879,8 @@ Member ClassMember():
   sl = StereotypeAnnotations()
   [ v = VisibilityIndicator() ]
   m = ClassMemberDefinition()
-  { m.addDocumentation(c);
-    m.setAnnotations(sl);
+  { if (c!=null) { m.addDocumentation(c); }
+    m.setAnnotation(sl);
     m.setVisibility(v);
     return m;
   }
@@ -2728,7 +2908,7 @@ ActiveClassDefinition ActiveClassDeclaration():
   QualifiedNameList nl;
 }
 {
-  [ <ABSTRACT> { d.setIsAbstract(); } ] <ACTIVE> <CLASS> ClassifierSignature(d)
+  [ <ABSTRACT> { d.setIsAbstract(true); } ] <ACTIVE> <CLASS> ClassifierSignature(d)
   
   { return d; }
 }
@@ -2748,7 +2928,7 @@ ActiveClassDefinition ActiveClassDefinitionOrStub():
 }
 {
   d = ActiveClassDeclaration() 
-  ( <SEMICOLON> { d.setIsStub(); }
+  ( <SEMICOLON> { d.setIsStub(true); }
   | ActiveClassBody(d)
   )
   
@@ -2774,7 +2954,7 @@ ActivityDefinition BehaviorClause():
 {
 	(
 	  b = Block() { a.setBody(b); }
-	| n = Name() { a.setName(n); a.setIsStub(); }
+	| n = Name() { a.setName(n); a.setIsStub(true); }
 	)
 	
 	{ a.setVisibility("private");
@@ -2785,7 +2965,7 @@ Member ActiveClassMember():
 {
   Token t;
   String c = null;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -2794,8 +2974,8 @@ Member ActiveClassMember():
   sl = StereotypeAnnotations()
   [ v = VisibilityIndicator() ]
   m = ActiveClassMemberDefinition()
-  { m.addDocumentation(c);
-    m.setAnnotations(sl);
+  { if (c!=null) { m.addDocumentation(c); }
+    m.setAnnotation(sl);
     m.setVisibility(v);
     return m;
   }
@@ -2823,7 +3003,7 @@ DataTypeDefinition DataTypeDeclaration():
   QualifiedNameList nl;
 }
 {
-  [ <ABSTRACT>  { d.setIsAbstract(); } ] <DATATYPE> ClassifierSignature(d)
+  [ <ABSTRACT>  { d.setIsAbstract(true); } ] <DATATYPE> ClassifierSignature(d)
   
   { return d; }
 }
@@ -2843,7 +3023,7 @@ DataTypeDefinition DataTypeDefinitionOrStub():
 }
 {
   d = DataTypeDeclaration() 
-  ( <SEMICOLON> { d.setIsStub(); }
+  ( <SEMICOLON> { d.setIsStub(true); }
   | StructuredBody(d)
   )
   
@@ -2862,7 +3042,7 @@ Member StructuredMember():
 {
   Token t;
   String c = null;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -2871,8 +3051,8 @@ Member StructuredMember():
   sl = StereotypeAnnotations()
   [ t = <PUBLIC> { v = t.image; }]    
   m = PropertyDefinition()
-  { m.addDocumentation(c);
-    m.setAnnotations(sl);
+  { if (c!=null) { m.addDocumentation(c); }
+    m.setAnnotation(sl);
     m.setVisibility(v);
     return m;
   }
@@ -2887,7 +3067,7 @@ AssociationDefinition AssociationDeclaration():
   QualifiedNameList nl;
 }
 {
-  [ <ABSTRACT> { d.setIsAbstract(); } ] <ASSOC> ClassifierSignature(d)
+  [ <ABSTRACT> { d.setIsAbstract(true); } ] <ASSOC> ClassifierSignature(d)
   
   { return d; }
 }
@@ -2907,7 +3087,7 @@ AssociationDefinition AssociationDefinitionOrStub():
 }
 {
   d = AssociationDeclaration() 
-  ( <SEMICOLON> { d.setIsStub(); }
+  ( <SEMICOLON> { d.setIsStub(true); }
   | StructuredBody(d)
   )
   
@@ -2943,7 +3123,7 @@ EnumerationDefinition EnumerationDefinitionOrStub():
 }
 {
   d = EnumerationDeclaration() 
-  ( <SEMICOLON> { d.setIsStub(); }
+  ( <SEMICOLON> { d.setIsStub(true); }
   | EnumerationBody(d)
   )
   
@@ -2964,10 +3144,12 @@ EnumerationLiteralName EnumerationLiteralName():
   Token t;
   String c = null;
   String n;
+  EnumerationLiteralName e = new EnumerationLiteralName();
 }
 {
-  [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ]  n = Name()
-  { return new EnumerationLiteralName(n, c); }
+  [ t = <DOCUMENTATION_COMMENT> { e.addDocumentation(t.image); } ]  n = Name()
+  { e.setName(n);
+    return e; }
 }
 
 /* SIGNALS */
@@ -2979,7 +3161,7 @@ SignalDefinition SignalDeclaration():
   QualifiedNameList nl;
 }
 {
-  [ <ABSTRACT> { d.setIsAbstract(); } ] <SIGNAL> ClassifierSignature(d)
+  [ <ABSTRACT> { d.setIsAbstract(true); } ] <SIGNAL> ClassifierSignature(d)
   
   { return d; }
 }
@@ -2999,7 +3181,7 @@ SignalDefinition SignalDefinitionOrStub():
 }
 {
   d = SignalDeclaration() 
-  ( <SEMICOLON> { d.setIsStub(); }
+  ( <SEMICOLON> { d.setIsStub(true); }
   | StructuredBody(d)
   )
   { return d; }
@@ -3009,15 +3191,14 @@ SignalDefinition SignalDefinitionOrStub():
 
 ActivityDefinition ActivityDeclaration():
 {
-  TypedElementDeclaration t = new TypedElementDeclaration();
-  FormalParameter p = new FormalParameter(t);
+  FormalParameter p = new FormalParameter();
   ActivityDefinition d = new ActivityDefinition();
   String n;
 }
 { 
   <ACTIVITY> n = Name() { d.setName(n); } 
   [ TemplateParameters(d) ] FormalParameters(d) 
-  [ <COLON> TypePart(t) { p.setDirection("return"); d.addOwnedMember(p); } ]
+  [ <COLON> TypePart(p) { p.setDirection("return"); d.addOwnedMember(p); } ]
   { return d; }
 }
 
@@ -3039,7 +3220,7 @@ ActivityDefinition ActivityDefinitionOrStub():
 }
 {
   a = ActivityDeclaration() 
-  ( <SEMICOLON> { a.setIsStub(); }
+  ( <SEMICOLON> { a.setIsStub(true); }
   | b = Block() { a.setBody(b); }
   )
   
@@ -3064,17 +3245,16 @@ void FormalParameterList(NamespaceDefinition d):
 FormalParameter FormalParameter():
 {
   Token t;
-  StereotypeAnnotationList sl;
+  ArrayList<StereotypeAnnotation> sl;
   String d;
   String n;
-  TypedElementDeclaration e = new TypedElementDeclaration();
-  FormalParameter p = new FormalParameter(e);
+  FormalParameter p = new FormalParameter();
 }
 {
   [ t = <DOCUMENTATION_COMMENT> { p.addDocumentation(t.image); } ]
-  sl = StereotypeAnnotations() { p.setAnnotations(sl); }
+  sl = StereotypeAnnotations() { p.setAnnotation(sl); }
   d = ParameterDirection() { p.setDirection(d); }
-  n = Name() { p.setName(n); } <COLON> TypePart(e)
+  n = Name() { p.setName(n); } <COLON> TypePart(p)
   { return p; }
 }
 
@@ -3156,23 +3336,22 @@ Expression AttributeInitializer():
 
 PropertyDefinition PropertyDeclaration():
 {
-  TypedElementDeclaration t = new TypedElementDeclaration();
-  PropertyDefinition d = new PropertyDefinition(t);
+  PropertyDefinition d = new PropertyDefinition();
   String n;
 }
 {
   n = Name() { d.setName(n); } 
-  <COLON> [ <COMPOSE> { d.setIsComposite(); } ] TypePart(t)
+  <COLON> [ <COMPOSE> { d.setIsComposite(true); } ] TypePart(d)
   { return d; }
 }
 
-void TypePart(TypedElementDeclaration d):
+void TypePart(TypedElementDefinition d):
 {
   QualifiedName t;
   Token tc;
 }
 {
-  t = TypeName() { d.setType(t); } [ Multiplicity(d) ]
+  t = TypeName() { d.setTypeName(t); } [ Multiplicity(d) ]
 }
 
 QualifiedName TypeName():
@@ -3188,17 +3367,17 @@ QualifiedName TypeName():
   { return n; }
 }
 
-void Multiplicity(TypedElementDeclaration d):
+void Multiplicity(TypedElementDefinition d):
 {}
 {
   <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET> 
-  [ <ORDERED> { d.setIsOrdered(); } [ <NONUNIQUE> { d.setIsNonunique(); } ]
-  | <NONUNIQUE> { d.setIsNonunique(); } [ <ORDERED> { d.setIsOrdered(); } ]
-  | <SEQUENCE> { d.setIsNonunique(); d.setIsOrdered(); }
+  [ <ORDERED> { d.setIsOrdered(true); } [ <NONUNIQUE> { d.setIsNonunique(true); } ]
+  | <NONUNIQUE> { d.setIsNonunique(true); } [ <ORDERED> { d.setIsOrdered(true); } ]
+  | <SEQUENCE> { d.setIsNonunique(true); d.setIsOrdered(true); }
   ]
 }
 
-void MultiplicityRange(TypedElementDeclaration d):
+void MultiplicityRange(TypedElementDefinition d):
 {
   Token t;
   String n;
@@ -3225,15 +3404,14 @@ String UnlimitedNaturalLiteral():
 
 OperationDefinition OperationDeclaration():
 {
-  TypedElementDeclaration t = new TypedElementDeclaration();
-  FormalParameter p = new FormalParameter(t);
+  FormalParameter p = new FormalParameter();
   OperationDefinition d = new OperationDefinition();
   String n;
   QualifiedNameList nl;
 }
 {
-  [ <ABSTRACT> { d.setIsAbstract(); } ] n = Name() { d.setName(n); }
-  FormalParameters(d) [<COLON> TypePart(t) { p.setDirection("return"); d.addOwnedMember(p); } ] 
+  [ <ABSTRACT> { d.setIsAbstract(true); } ] n = Name() { d.setName(n); }
+  FormalParameters(d) [<COLON> TypePart(p) { p.setDirection("return"); d.addOwnedMember(p); } ] 
   [ nl = RedefinitionClause() { d.setRedefinition(nl); } ]
   { return d; }
 }
@@ -3245,7 +3423,7 @@ OperationDefinition OperationDefinitionOrStub():
 }
 {
   o = OperationDeclaration() 
-  ( <SEMICOLON> { if (!o.isAbstract()) { o.setIsStub(); } }
+  ( <SEMICOLON> { if (!o.getIsAbstract()) { o.setIsStub(true); } }
   | b = Block() { o.setBody(b); }
   )
   
@@ -3266,10 +3444,12 @@ QualifiedNameList RedefinitionClause():
 ReceptionDefinition ReceptionDefinition():
 {
   QualifiedName n;
+  ReceptionDefinition d = new ReceptionDefinition();
 }
 { 
   <RECEIVE> n = QualifiedName() <SEMICOLON>
-  { return new ReceptionDefinition(n); }
+  { d.setSignalName(n);
+    return d; }
 }
 
 SignalReceptionDefinition SignalReceptionDeclaration():
@@ -3290,7 +3470,7 @@ SignalReceptionDefinition SignalReceptionDefinitionOrStub():
 }
 {
   d = SignalReceptionDeclaration() 
-  ( <SEMICOLON> { d.setIsStub(); }
+  ( <SEMICOLON> { d.setIsStub(true); }
   | StructuredBody(d)
   )
   
