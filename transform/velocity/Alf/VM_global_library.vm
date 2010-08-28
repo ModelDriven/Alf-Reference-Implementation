@@ -82,10 +82,19 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 #macro( visibility $element )${element.visibility}#end
 #macro( abstract $element ) #if ( ${element.isAbstract()})abstract#end#end 
 #macro( static $element ) #if ( ${element.isStatic()} )static#end#end 
-#macro( name $name )#if (${name}=="Class")Class_#else${name}#end#end
+#macro( name $name )
+  #if (${name}=="Class")Class_
+  #elseif (${name}=="case")case_
+  #elseif (${name}=="import")import_
+  #else${name}
+  #end
+#end
 #macro( qualifiedName $element )#qualifiedPackageName(${element.owner}).#name(${element.name})#end
 #macro( qualifiedPackageName $element )org.modeldriven.${element.qualifiedName.toLowerCase().replace("::",".")}#end
-#macro( primitiveName $primitive )#if(${primitive.name}=="Boolean")boolean#elseif(${primitive.name}=="Integer")int#else#name(${primitive.name})#end#end
+#macro( primitiveName $primitive )
+#if(${primitive.name}=="Boolean")boolean
+#elseif(${primitive.name}=="Integer" || ${primitive.name}=="UnlimitedNatural")int
+#else#name(${primitive.name})#end#end
 
 
 #macro( defaultValue $feature)
@@ -97,7 +106,7 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 #macro( createValue $element )
 #if(${element.upper}!=1)new #type(${element})()##
 #elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="Boolean")false##
-#elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="Integer")0##
+#elseif(${element.type.eClass().name}=="PrimitiveType"&&(${element.type.name}=="Integer" || ${element.type.name}=="UnlimitedNatural"))0##
 #elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="String")""##
 #else null##
 #end
@@ -117,9 +126,47 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 #macro( operationType $element $operation $class)#if(${operation.name}==${class.name})#else#type(${element})#end#end
 
 #macro( throws $operation) #end 
+
+#macro( upperCase $name )
+${name.substring(0,1).toUpperCase()}${name.substring(1)}
+#end
+
+#macro( getter $attribute )
+public #type(${attribute}) get#upperCase(${attribute.name})() { return this.#name($attribute.name); }
+#end
+
+#macro( setter $attribute )
+public void set#upperCase(${attribute.name})(#type($attribute) #name($attribute.name)) 
+{ this.#name($attribute.name) = #name($attribute.name); }
+#if ($attribute.upper!=1)
+public void add#upperCase(${attribute.name})(#basicType($attribute) #name($attribute.name)) 
+{ this.#name($attribute.name).add(#name($attribute.name)); }
+#end
+#end
  
 #macro( body $operation $class)#if(${operation.isAbstract()});#else {
-#bodycontent(${operation} ${class})	  } // ${operation.name}
+## #bodycontent(${operation} ${class})	  
+#foreach ( $comment in ${operation.ownedComments} )
+/*
+${comment.body}##
+*/
+#end
+#set( $foundBody = false )
+#foreach ( $method in ${operation.methods} )
+   #if ( ${method.eClass().name}=="OpaqueBehavior" || ${method.eClass().name} == "FunctionBehavior" )
+	  #foreach ( $language in ${method.languages} )
+	     #if ( $language=="Java" )
+		    #set( $i = $velocityCount - 1 )
+	        ${method.bodies.get($i)}##
+	        #set( $foundBody = true )
+	     #end
+	  #end
+   #end
+#end
+#if (!${foundBody} && !${operation.isAbstract} && ${operation.returnResult})
+return #createValue(${operation.returnResult}); // STUB
+#end
+} // ${operation.name}
 
 #end  
 #end
@@ -187,5 +234,55 @@ ${comment.body}
 #end
 #end
 
-	
-  
+#macro( printOperations $class )
+public String toString() {
+	#if (${class.superClasses.size()}==0)
+		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
+	#else
+		StringBuffer s = new StringBuffer(super.toString());
+	#end	
+	#foreach ( $attribute in ${class.ownedAttributes} )
+		#if (!${attribute.isDerived()} && 
+			 ${attribute.type.eClass().name}=="PrimitiveType" &&
+			 ${attribute.upper}==1)
+			s.append(" ${attribute.name}:");
+			s.append(this.#name(${attribute.name}));
+		#end
+	#end
+	return s.toString();
+}
+
+public void print(String prefix) {
+	#if (${class.superClasses.size()}==0)
+		System.out.println(prefix + this.toString());
+	#else
+		super.print(prefix);
+	#end	
+	#foreach ( $attribute in ${class.ownedAttributes} )
+		#if (!${attribute.isDerived()})
+     		#if (${attribute.upper}!=1)
+	     		#if (${attribute.type.eClass().name}=="PrimitiveType")
+	     			if (this.#name($attribute.name).size()>0) {
+		     			System.out.println(prefix + " ${attribute.name}:");
+		     		}
+	     		#end
+	     		for (#basicType($attribute) #name($attribute.name): this.get#upperCase(${attribute.name})()) {
+		     		#if (${attribute.type.eClass().name}=="PrimitiveType")
+	    	 			System.out.println(prefix + "  " + #name($attribute.name));
+	     			#else
+	     			    if (#name(${attribute.name})!=null) {
+							#name(${attribute.name}).print(prefix+" ");
+						} else {
+						  System.out.println(prefix + " null");
+						}
+	     			#end
+     			}
+     		#elseif (${attribute.type.eClass().name}!="PrimitiveType")
+     			if (this.#name(${attribute.name})!=null) {
+					this.#name(${attribute.name}).print(prefix+" ");
+				}
+			#end
+		#end
+	#end
+}
+#end

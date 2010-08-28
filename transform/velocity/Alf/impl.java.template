@@ -24,13 +24,27 @@ ${packageDeclaration}
 ## #end
     
 #foreach ( $feature in ${object.ownedAttributes} )
-  #visibility(${feature}) #static(${feature}) #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
+  #if(${feature.isStatic()})
+  #visibility(${feature}) static #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
+  #else
+  private #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});  #if(${feature.isDerived()})// DERIVED
+  #end
+  #end  
+#end
+
+#foreach ( $attribute in ${object.ownedAttributes} )
+  #if(!${attribute.isStatic()})
+  #getter(${attribute})
+  #setter(${attribute})
+  #end  
 #end
     
 #foreach ( $operation in ${object.ownedOperations} )
   ## #featureJavaDoc("operation ${operation.name}" ${operation})
   #visibility(${operation}) #abstract(${operation}) #static(${operation}) #operationType(${operation.returnResult} ${operation} ${object}) #name(${operation.name})(#operationParameters(${operation})) #throws(${operation})#body(${operation} ${object})
 #end
+
+#printOperations(${object})
 } //${object.name}
 #end
 
