@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,48 +22,31 @@ import java.util.ArrayList;
  * variables on each iteration.
  **/
 
-public class ForStatement extends Statement {
+public class ForStatement extends Statement implements IForStatement {
 
-	private Block body = null;
-	private ArrayList<LoopVariableDefinition> variableDefinition = new ArrayList<LoopVariableDefinition>();
-	private boolean isParallel = false; // DERIVED
+	private IBlock body = null;
+	private ArrayList<ILoopVariableDefinition> variableDefinition = new ArrayList<ILoopVariableDefinition>();
 
-	public Block getBody() {
+	public IBlock getBody() {
 		return this.body;
 	}
 
-	public void setBody(Block body) {
+	public void setBody(IBlock body) {
 		this.body = body;
 	}
 
-	public ArrayList<LoopVariableDefinition> getVariableDefinition() {
+	public ArrayList<ILoopVariableDefinition> getVariableDefinition() {
 		return this.variableDefinition;
 	}
 
 	public void setVariableDefinition(
-			ArrayList<LoopVariableDefinition> variableDefinition) {
+			ArrayList<ILoopVariableDefinition> variableDefinition) {
 		this.variableDefinition = variableDefinition;
 	}
 
-	public void addVariableDefinition(LoopVariableDefinition variableDefinition) {
+	public void addVariableDefinition(ILoopVariableDefinition variableDefinition) {
 		this.variableDefinition.add(variableDefinition);
 	}
-
-	public boolean getIsParallel() {
-		return this.isParallel;
-	}
-
-	public void setIsParallel(boolean isParallel) {
-		this.isParallel = isParallel;
-	}
-
-	public boolean annotationAllowed(Annotation annotation) {
-		/*
-		 * In addition to an @isolated annotation, a for statement may have a
-		 * @parallel annotation.
-		 */
-		return false; // STUB
-	} // annotationAllowed
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -72,10 +55,11 @@ public class ForStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.body != null) {
-			this.body.print(prefix + " ");
+		IBlock body = this.getBody();
+		if (body != null) {
+			body.print(prefix + " ");
 		}
-		for (LoopVariableDefinition variableDefinition : this
+		for (ILoopVariableDefinition variableDefinition : this
 				.getVariableDefinition()) {
 			if (variableDefinition != null) {
 				variableDefinition.print(prefix + " ");

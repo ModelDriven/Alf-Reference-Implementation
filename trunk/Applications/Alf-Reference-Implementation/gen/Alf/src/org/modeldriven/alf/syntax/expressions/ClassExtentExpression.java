@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,15 +21,16 @@ import java.util.ArrayList;
  * An expression used to obtain the objects in the extent of a class.
  **/
 
-public class ClassExtentExpression extends Expression {
+public class ClassExtentExpression extends Expression implements
+		IClassExtentExpression {
 
-	private QualifiedName className = null;
+	private IQualifiedName className = null;
 
-	public QualifiedName getClassName() {
+	public IQualifiedName getClassName() {
 		return this.className;
 	}
 
-	public void setClassName(QualifiedName className) {
+	public void setClassName(IQualifiedName className) {
 		this.className = className;
 	}
 
@@ -40,8 +41,9 @@ public class ClassExtentExpression extends Expression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.className != null) {
-			this.className.print(prefix + " ");
+		IQualifiedName className = this.getClassName();
+		if (className != null) {
+			className.print(prefix + " ");
 		}
 	}
 } // ClassExtentExpression

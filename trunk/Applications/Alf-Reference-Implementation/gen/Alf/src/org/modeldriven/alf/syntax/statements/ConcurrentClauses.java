@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,19 +21,20 @@ import java.util.ArrayList;
  * A grouping of non-final conditional clauses to be tested concurrently.
  **/
 
-public class ConcurrentClauses extends SyntaxElement {
+public class ConcurrentClauses extends SyntaxElement implements
+		IConcurrentClauses {
 
-	private ArrayList<NonFinalClause> clause = new ArrayList<NonFinalClause>();
+	private ArrayList<INonFinalClause> clause = new ArrayList<INonFinalClause>();
 
-	public ArrayList<NonFinalClause> getClause() {
+	public ArrayList<INonFinalClause> getClause() {
 		return this.clause;
 	}
 
-	public void setClause(ArrayList<NonFinalClause> clause) {
+	public void setClause(ArrayList<INonFinalClause> clause) {
 		this.clause = clause;
 	}
 
-	public void addClause(NonFinalClause clause) {
+	public void addClause(INonFinalClause clause) {
 		this.clause.add(clause);
 	}
 
@@ -44,7 +45,7 @@ public class ConcurrentClauses extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (NonFinalClause clause : this.getClause()) {
+		for (INonFinalClause clause : this.getClause()) {
 			if (clause != null) {
 				clause.print(prefix + " ");
 			} else {

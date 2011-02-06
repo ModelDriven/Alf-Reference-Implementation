@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,17 +22,13 @@ import java.util.ArrayList;
  * in Alf.
  **/
 
-public abstract class Member extends DocumentedElement {
+public abstract class Member extends DocumentedElement implements IMember {
 
 	private String name = "";
 	private String visibility = "";
-	private boolean isStub = false;
-	private NamespaceDefinition namespace = null;
-	private ArrayList<StereotypeAnnotation> annotation = new ArrayList<StereotypeAnnotation>();
-	private boolean isFeature = false; // DERIVED
-	private boolean isPrimitive = false; // DERIVED
-	private boolean isExternal = false; // DERIVED
-	private UnitDefinition subunit = null; // DERIVED
+	private Boolean isStub = false;
+	private INamespaceDefinition namespace = null;
+	private ArrayList<IStereotypeAnnotation> annotation = new ArrayList<IStereotypeAnnotation>();
 
 	public String getName() {
 		return this.name;
@@ -50,108 +46,52 @@ public abstract class Member extends DocumentedElement {
 		this.visibility = visibility;
 	}
 
-	public boolean getIsStub() {
+	public Boolean getIsStub() {
 		return this.isStub;
 	}
 
-	public void setIsStub(boolean isStub) {
+	public void setIsStub(Boolean isStub) {
 		this.isStub = isStub;
 	}
 
-	public NamespaceDefinition getNamespace() {
+	public INamespaceDefinition getNamespace() {
 		return this.namespace;
 	}
 
-	public void setNamespace(NamespaceDefinition namespace) {
+	public void setNamespace(INamespaceDefinition namespace) {
 		this.namespace = namespace;
 	}
 
-	public ArrayList<StereotypeAnnotation> getAnnotation() {
+	public ArrayList<IStereotypeAnnotation> getAnnotation() {
 		return this.annotation;
 	}
 
-	public void setAnnotation(ArrayList<StereotypeAnnotation> annotation) {
+	public void setAnnotation(ArrayList<IStereotypeAnnotation> annotation) {
 		this.annotation = annotation;
 	}
 
-	public void addAnnotation(StereotypeAnnotation annotation) {
+	public void addAnnotation(IStereotypeAnnotation annotation) {
 		this.annotation.add(annotation);
 	}
-
-	public boolean getIsFeature() {
-		return this.isFeature;
-	}
-
-	public void setIsFeature(boolean isFeature) {
-		this.isFeature = isFeature;
-	}
-
-	public boolean getIsPrimitive() {
-		return this.isPrimitive;
-	}
-
-	public void setIsPrimitive(boolean isPrimitive) {
-		this.isPrimitive = isPrimitive;
-	}
-
-	public boolean getIsExternal() {
-		return this.isExternal;
-	}
-
-	public void setIsExternal(boolean isExternal) {
-		this.isExternal = isExternal;
-	}
-
-	public UnitDefinition getSubunit() {
-		return this.subunit;
-	}
-
-	public void setSubunit(UnitDefinition subunit) {
-		this.subunit = subunit;
-	}
-
-	public abstract boolean annotationAllowed(StereotypeAnnotation annotation);
-
-	public boolean matchForStub(UnitDefinition unit) {
-		/*
-		 * Returns true of the given unit definition is a legal match for this
-		 * member as a stub. By default, always returns false.
-		 */
-		return false; // STUB
-	} // matchForStub
-
-	public boolean isDistinguishableFrom(Member member) {
-		/*
-		 * Returns true if this member is distinguishable from the given member.
-		 * Two members are distinguishable if their names are different or the
-		 * they are of different kinds (as determined by the isSameKindAs
-		 * operation). However, in any case that the UML Superstructure
-		 * considers two names to be distinguishable if they are different, an
-		 * Alf implementation may instead impose the stronger requirement that
-		 * the names not be conflicting.
-		 */
-		return false; // STUB
-	} // isDistinguishableFrom
-
-	public abstract boolean isSameKindAs(Member member);
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
-		s.append(this.name);
+		s.append(this.getName());
 		s.append(" visibility:");
-		s.append(this.visibility);
+		s.append(this.getVisibility());
 		s.append(" isStub:");
-		s.append(this.isStub);
+		s.append(this.getIsStub());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.namespace != null) {
-			this.namespace.print(prefix + " ");
+		INamespaceDefinition namespace = this.getNamespace();
+		if (namespace != null) {
+			namespace.print(prefix + " ");
 		}
-		for (StereotypeAnnotation annotation : this.getAnnotation()) {
+		for (IStereotypeAnnotation annotation : this.getAnnotation()) {
 			if (annotation != null) {
 				annotation.print(prefix + " ");
 			} else {

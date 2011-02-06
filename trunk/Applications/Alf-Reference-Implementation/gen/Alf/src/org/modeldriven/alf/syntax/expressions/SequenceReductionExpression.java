@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,67 +22,53 @@ import java.util.ArrayList;
  * binary operation between the values.
  **/
 
-public class SequenceReductionExpression extends Expression {
+public class SequenceReductionExpression extends Expression implements
+		ISequenceReductionExpression {
 
-	private ElementReference referent = null; // DERIVED
-	private boolean isOrdered = false;
-	private ExtentOrExpression primary = null;
-	private QualifiedName behaviorName = null;
+	private Boolean isOrdered = false;
+	private IExtentOrExpression primary = null;
+	private IQualifiedName behaviorName = null;
 
-	public ElementReference getReferent() {
-		return this.referent;
-	}
-
-	public void setReferent(ElementReference referent) {
-		this.referent = referent;
-	}
-
-	public boolean getIsOrdered() {
+	public Boolean getIsOrdered() {
 		return this.isOrdered;
 	}
 
-	public void setIsOrdered(boolean isOrdered) {
+	public void setIsOrdered(Boolean isOrdered) {
 		this.isOrdered = isOrdered;
 	}
 
-	public ExtentOrExpression getPrimary() {
+	public IExtentOrExpression getPrimary() {
 		return this.primary;
 	}
 
-	public void setPrimary(ExtentOrExpression primary) {
+	public void setPrimary(IExtentOrExpression primary) {
 		this.primary = primary;
 	}
 
-	public QualifiedName getBehaviorName() {
+	public IQualifiedName getBehaviorName() {
 		return this.behaviorName;
 	}
 
-	public void setBehaviorName(QualifiedName behaviorName) {
+	public void setBehaviorName(IQualifiedName behaviorName) {
 		this.behaviorName = behaviorName;
 	}
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * The assignments after a sequence reduction expression are the same as
-		 * after its primary expression.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" isOrdered:");
-		s.append(this.isOrdered);
+		s.append(this.getIsOrdered());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.primary != null) {
-			this.primary.print(prefix + " ");
+		IExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.print(prefix + " ");
 		}
-		if (this.behaviorName != null) {
-			this.behaviorName.print(prefix + " ");
+		IQualifiedName behaviorName = this.getBehaviorName();
+		if (behaviorName != null) {
+			behaviorName.print(prefix + " ");
 		}
 	}
 } // SequenceReductionExpression

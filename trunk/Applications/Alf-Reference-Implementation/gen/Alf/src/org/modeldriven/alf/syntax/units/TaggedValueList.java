@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,19 +21,19 @@ import java.util.ArrayList;
  * A set of tagged values for a stereotype application.
  **/
 
-public class TaggedValueList extends SyntaxElement {
+public class TaggedValueList extends SyntaxElement implements ITaggedValueList {
 
-	private ArrayList<TaggedValue> taggedValue = new ArrayList<TaggedValue>();
+	private ArrayList<ITaggedValue> taggedValue = new ArrayList<ITaggedValue>();
 
-	public ArrayList<TaggedValue> getTaggedValue() {
+	public ArrayList<ITaggedValue> getTaggedValue() {
 		return this.taggedValue;
 	}
 
-	public void setTaggedValue(ArrayList<TaggedValue> taggedValue) {
+	public void setTaggedValue(ArrayList<ITaggedValue> taggedValue) {
 		this.taggedValue = taggedValue;
 	}
 
-	public void addTaggedValue(TaggedValue taggedValue) {
+	public void addTaggedValue(ITaggedValue taggedValue) {
 		this.taggedValue.add(taggedValue);
 	}
 
@@ -44,7 +44,7 @@ public class TaggedValueList extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (TaggedValue taggedValue : this.getTaggedValue()) {
+		for (ITaggedValue taggedValue : this.getTaggedValue()) {
 			if (taggedValue != null) {
 				taggedValue.print(prefix + " ");
 			} else {

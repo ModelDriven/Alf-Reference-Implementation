@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,42 +22,26 @@ import java.util.ArrayList;
  * statements that may be executed if the condition is true.
  **/
 
-public class NonFinalClause extends SyntaxElement {
+public class NonFinalClause extends SyntaxElement implements INonFinalClause {
 
-	private Expression condition = null;
-	private Block body = null;
+	private IExpression condition = null;
+	private IBlock body = null;
 
-	public Expression getCondition() {
+	public IExpression getCondition() {
 		return this.condition;
 	}
 
-	public void setCondition(Expression condition) {
+	public void setCondition(IExpression condition) {
 		this.condition = condition;
 	}
 
-	public Block getBody() {
+	public IBlock getBody() {
 		return this.body;
 	}
 
-	public void setBody(Block body) {
+	public void setBody(IBlock body) {
 		this.body = body;
 	}
-
-	public ArrayList<AssignedSource> assignmentsBefore() {
-		/*
-		 * The assignments before a non-final clause are the assignments before
-		 * the condition of the clause.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // assignmentsBefore
-
-	public ArrayList<AssignedSource> assignmentsAfter() {
-		/*
-		 * The assignments after a non-final clause are the assignments after
-		 * the block of the clause.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // assignmentsAfter
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -66,11 +50,13 @@ public class NonFinalClause extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.condition != null) {
-			this.condition.print(prefix + " ");
+		IExpression condition = this.getCondition();
+		if (condition != null) {
+			condition.print(prefix + " ");
 		}
-		if (this.body != null) {
-			this.body.print(prefix + " ");
+		IBlock body = this.getBody();
+		if (body != null) {
+			body.print(prefix + " ");
 		}
 	}
 } // NonFinalClause

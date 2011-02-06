@@ -1,0 +1,39 @@
+#**
+*intf.java template for uml project
+@projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/I${object.name}.java 
+@artifactContext GenClass 
+*#
+#parse( "uml.fragment" )
+${copyrightBoilerPlate}
+${packageDeclaration};
+#imports()
+#comments(${object})
+
+#macro( interface $object)
+## #classJavaDoc(${object}) 
+
+#visibility(${object}) #abstract(${object}) interface I#name(${object.name})
+#foreach ( $superclass in ${object.superClasses} )
+    extends I#name(${superclass.name}) 
+#end    
+    {
+#foreach ( $attribute in ${object.ownedAttributes} )
+  #if( !${attribute.isStatic()} && !${attribute.isDerived()} )
+  public #type(${attribute}) get#upperCase(${attribute.name})();
+  public void set#upperCase(${attribute.name})(#type($attribute) #name($attribute.name));
+  #end  
+#end
+
+## #foreach ( $rule in ${object.ownedRules} )
+##  #comments(${rule})
+##  #constraint(${rule} ${object})
+## #end
+
+public String toString();
+
+public void print(String prefix);
+    
+} //${object.name}
+#end
+
+#interface(${object})

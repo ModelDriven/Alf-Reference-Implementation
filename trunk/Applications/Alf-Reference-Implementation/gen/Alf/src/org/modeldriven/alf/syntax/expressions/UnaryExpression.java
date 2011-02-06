@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,10 +22,11 @@ import java.util.ArrayList;
  * expression.
  **/
 
-public abstract class UnaryExpression extends Expression {
+public abstract class UnaryExpression extends Expression implements
+		IUnaryExpression {
 
 	private String operator = "";
-	private Expression operand = null;
+	private IExpression operand = null;
 
 	public String getOperator() {
 		return this.operator;
@@ -35,33 +36,26 @@ public abstract class UnaryExpression extends Expression {
 		this.operator = operator;
 	}
 
-	public Expression getOperand() {
+	public IExpression getOperand() {
 		return this.operand;
 	}
 
-	public void setOperand(Expression operand) {
+	public void setOperand(IExpression operand) {
 		this.operand = operand;
 	}
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * By default, the assignments after a unary expression are the same as
-		 * those after its operand expression.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operator:");
-		s.append(this.operator);
+		s.append(this.getOperator());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.operand != null) {
-			this.operand.print(prefix + " ");
+		IExpression operand = this.getOperand();
+		if (operand != null) {
+			operand.print(prefix + " ");
 		}
 	}
 } // UnaryExpression

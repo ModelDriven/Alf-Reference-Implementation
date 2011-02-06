@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,15 +21,16 @@ import java.util.ArrayList;
  * A left-hand side that is a property reference.
  **/
 
-public class FeatureLeftHandSide extends LeftHandSide {
+public class FeatureLeftHandSide extends LeftHandSide implements
+		IFeatureLeftHandSide {
 
-	private FeatureReference feature = null;
+	private IFeatureReference feature = null;
 
-	public FeatureReference getFeature() {
+	public IFeatureReference getFeature() {
 		return this.feature;
 	}
 
-	public void setFeature(FeatureReference feature) {
+	public void setFeature(IFeatureReference feature) {
 		this.feature = feature;
 	}
 
@@ -40,8 +41,9 @@ public class FeatureLeftHandSide extends LeftHandSide {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.feature != null) {
-			this.feature.print(prefix + " ");
+		IFeatureReference feature = this.getFeature();
+		if (feature != null) {
+			feature.print(prefix + " ");
 		}
 	}
 } // FeatureLeftHandSide

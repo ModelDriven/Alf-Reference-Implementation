@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,28 +22,8 @@ import java.util.ArrayList;
  * within the definition of the template.
  **/
 
-public class ClassifierTemplateParameter extends ClassifierDefinition {
-
-	public boolean annotationAllowed(StereotypeAnnotation annotation) {
-		/*
-		 * Annotations are not allowed on classifier template parameters.
-		 */
-		return false; // STUB
-	} // annotationAllowed
-
-	public boolean matchForStub(UnitDefinition unit) {
-		/*
-		 * Returns false. (Classifier template parameters cannot be stubs.)
-		 */
-		return false; // STUB
-	} // matchForStub
-
-	public boolean isSameKindAs(Member member) {
-		/*
-		 * Return true if the given member is a classifier template parameter.
-		 */
-		return false; // STUB
-	} // isSameKindAs
+public class ClassifierTemplateParameter extends ClassifierDefinition implements
+		IClassifierTemplateParameter {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

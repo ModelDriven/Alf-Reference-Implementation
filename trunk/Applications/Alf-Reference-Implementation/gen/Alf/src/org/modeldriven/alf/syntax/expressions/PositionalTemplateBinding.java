@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,19 +22,20 @@ import java.util.ArrayList;
  * parameters in order by position.
  **/
 
-public class PositionalTemplateBinding extends TemplateBinding {
+public class PositionalTemplateBinding extends TemplateBinding implements
+		IPositionalTemplateBinding {
 
-	private ArrayList<QualifiedName> argumentName = new ArrayList<QualifiedName>();
+	private ArrayList<IQualifiedName> argumentName = new ArrayList<IQualifiedName>();
 
-	public ArrayList<QualifiedName> getArgumentName() {
+	public ArrayList<IQualifiedName> getArgumentName() {
 		return this.argumentName;
 	}
 
-	public void setArgumentName(ArrayList<QualifiedName> argumentName) {
+	public void setArgumentName(ArrayList<IQualifiedName> argumentName) {
 		this.argumentName = argumentName;
 	}
 
-	public void addArgumentName(QualifiedName argumentName) {
+	public void addArgumentName(IQualifiedName argumentName) {
 		this.argumentName.add(argumentName);
 	}
 
@@ -45,7 +46,7 @@ public class PositionalTemplateBinding extends TemplateBinding {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (QualifiedName argumentName : this.getArgumentName()) {
+		for (IQualifiedName argumentName : this.getArgumentName()) {
 			if (argumentName != null) {
 				argumentName.print(prefix + " ");
 			} else {

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,65 +22,39 @@ import java.util.ArrayList;
  * on matching a switch value to a set of test cases.
  **/
 
-public class SwitchStatement extends Statement {
+public class SwitchStatement extends Statement implements ISwitchStatement {
 
-	private ArrayList<SwitchClause> nonDefaultClause = new ArrayList<SwitchClause>();
-	private Expression expression = null;
-	private Block defaultClause = null;
-	private boolean isAssured = false; // DERIVED
-	private boolean isDetermined = false; // DERIVED
+	private ArrayList<ISwitchClause> nonDefaultClause = new ArrayList<ISwitchClause>();
+	private IExpression expression = null;
+	private IBlock defaultClause = null;
 
-	public ArrayList<SwitchClause> getNonDefaultClause() {
+	public ArrayList<ISwitchClause> getNonDefaultClause() {
 		return this.nonDefaultClause;
 	}
 
-	public void setNonDefaultClause(ArrayList<SwitchClause> nonDefaultClause) {
+	public void setNonDefaultClause(ArrayList<ISwitchClause> nonDefaultClause) {
 		this.nonDefaultClause = nonDefaultClause;
 	}
 
-	public void addNonDefaultClause(SwitchClause nonDefaultClause) {
+	public void addNonDefaultClause(ISwitchClause nonDefaultClause) {
 		this.nonDefaultClause.add(nonDefaultClause);
 	}
 
-	public Expression getExpression() {
+	public IExpression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(Expression expression) {
+	public void setExpression(IExpression expression) {
 		this.expression = expression;
 	}
 
-	public Block getDefaultClause() {
+	public IBlock getDefaultClause() {
 		return this.defaultClause;
 	}
 
-	public void setDefaultClause(Block defaultClause) {
+	public void setDefaultClause(IBlock defaultClause) {
 		this.defaultClause = defaultClause;
 	}
-
-	public boolean getIsAssured() {
-		return this.isAssured;
-	}
-
-	public void setIsAssured(boolean isAssured) {
-		this.isAssured = isAssured;
-	}
-
-	public boolean getIsDetermined() {
-		return this.isDetermined;
-	}
-
-	public void setIsDetermined(boolean isDetermined) {
-		this.isDetermined = isDetermined;
-	}
-
-	public boolean annotationAllowed(Annotation annotation) {
-		/*
-		 * In addition to an @isolated annotation, a switch statement may have
-		 * @assured and @determined annotations. They may not have arguments.
-		 */
-		return false; // STUB
-	} // annotationAllowed
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -89,18 +63,20 @@ public class SwitchStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (SwitchClause nonDefaultClause : this.getNonDefaultClause()) {
+		for (ISwitchClause nonDefaultClause : this.getNonDefaultClause()) {
 			if (nonDefaultClause != null) {
 				nonDefaultClause.print(prefix + " ");
 			} else {
 				System.out.println(prefix + " null");
 			}
 		}
-		if (this.expression != null) {
-			this.expression.print(prefix + " ");
+		IExpression expression = this.getExpression();
+		if (expression != null) {
+			expression.print(prefix + " ");
 		}
-		if (this.defaultClause != null) {
-			this.defaultClause.print(prefix + " ");
+		IBlock defaultClause = this.getDefaultClause();
+		if (defaultClause != null) {
+			defaultClause.print(prefix + " ");
 		}
 	}
 } // SwitchStatement

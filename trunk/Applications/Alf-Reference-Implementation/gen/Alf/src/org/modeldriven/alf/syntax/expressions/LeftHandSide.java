@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -24,41 +24,16 @@ import java.util.ArrayList;
  * to its various subclasses.
  **/
 
-public abstract class LeftHandSide extends SyntaxElement {
+public abstract class LeftHandSide extends SyntaxElement implements
+		ILeftHandSide {
 
-	private ArrayList<AssignedSource> assignmentBefore = new ArrayList<AssignedSource>(); // DERIVED
-	private ArrayList<AssignedSource> assignmentAfter = new ArrayList<AssignedSource>(); // DERIVED
-	private Expression index = null;
+	private IExpression index = null;
 
-	public ArrayList<AssignedSource> getAssignmentBefore() {
-		return this.assignmentBefore;
-	}
-
-	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
-		this.assignmentBefore = assignmentBefore;
-	}
-
-	public void addAssignmentBefore(AssignedSource assignmentBefore) {
-		this.assignmentBefore.add(assignmentBefore);
-	}
-
-	public ArrayList<AssignedSource> getAssignmentAfter() {
-		return this.assignmentAfter;
-	}
-
-	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
-		this.assignmentAfter = assignmentAfter;
-	}
-
-	public void addAssignmentAfter(AssignedSource assignmentAfter) {
-		this.assignmentAfter.add(assignmentAfter);
-	}
-
-	public Expression getIndex() {
+	public IExpression getIndex() {
 		return this.index;
 	}
 
-	public void setIndex(Expression index) {
+	public void setIndex(IExpression index) {
 		this.index = index;
 	}
 
@@ -69,8 +44,9 @@ public abstract class LeftHandSide extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.index != null) {
-			this.index.print(prefix + " ");
+		IExpression index = this.getIndex();
+		if (index != null) {
+			index.print(prefix + " ");
 		}
 	}
 } // LeftHandSide

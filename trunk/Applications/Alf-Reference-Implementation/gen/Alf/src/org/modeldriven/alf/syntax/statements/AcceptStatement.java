@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,38 +21,20 @@ import java.util.ArrayList;
  * A statement used to accept the receipt of instances of one or more signals.
  **/
 
-public class AcceptStatement extends Statement {
+public class AcceptStatement extends Statement implements IAcceptStatement {
 
-	private ArrayList<AcceptBlock> acceptBlock = new ArrayList<AcceptBlock>();
-	private ElementReference behavior = null; // DERIVED
-	private boolean isSimple = false; // DERIVED
+	private ArrayList<IAcceptBlock> acceptBlock = new ArrayList<IAcceptBlock>();
 
-	public ArrayList<AcceptBlock> getAcceptBlock() {
+	public ArrayList<IAcceptBlock> getAcceptBlock() {
 		return this.acceptBlock;
 	}
 
-	public void setAcceptBlock(ArrayList<AcceptBlock> acceptBlock) {
+	public void setAcceptBlock(ArrayList<IAcceptBlock> acceptBlock) {
 		this.acceptBlock = acceptBlock;
 	}
 
-	public void addAcceptBlock(AcceptBlock acceptBlock) {
+	public void addAcceptBlock(IAcceptBlock acceptBlock) {
 		this.acceptBlock.add(acceptBlock);
-	}
-
-	public ElementReference getBehavior() {
-		return this.behavior;
-	}
-
-	public void setBehavior(ElementReference behavior) {
-		this.behavior = behavior;
-	}
-
-	public boolean getIsSimple() {
-		return this.isSimple;
-	}
-
-	public void setIsSimple(boolean isSimple) {
-		this.isSimple = isSimple;
 	}
 
 	public String toString() {
@@ -62,7 +44,7 @@ public class AcceptStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (AcceptBlock acceptBlock : this.getAcceptBlock()) {
+		for (IAcceptBlock acceptBlock : this.getAcceptBlock()) {
 			if (acceptBlock != null) {
 				acceptBlock.print(prefix + " ");
 			} else {

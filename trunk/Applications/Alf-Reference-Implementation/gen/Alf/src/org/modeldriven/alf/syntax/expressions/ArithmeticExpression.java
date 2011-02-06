@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,17 +21,8 @@ import java.util.ArrayList;
  * A binary expression with an arithmetic operator.
  **/
 
-public class ArithmeticExpression extends BinaryExpression {
-
-	private boolean isConcatenation = false; // DERIVED
-
-	public boolean getIsConcatenation() {
-		return this.isConcatenation;
-	}
-
-	public void setIsConcatenation(boolean isConcatenation) {
-		this.isConcatenation = isConcatenation;
-	}
+public class ArithmeticExpression extends BinaryExpression implements
+		IArithmeticExpression {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

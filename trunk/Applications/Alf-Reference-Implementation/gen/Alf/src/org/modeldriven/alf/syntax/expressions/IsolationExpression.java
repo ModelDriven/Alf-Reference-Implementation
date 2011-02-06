@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,7 +21,8 @@ import java.util.ArrayList;
  * An expression used to evaluate its operand expression in isolation.
  **/
 
-public class IsolationExpression extends UnaryExpression {
+public class IsolationExpression extends UnaryExpression implements
+		IIsolationExpression {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

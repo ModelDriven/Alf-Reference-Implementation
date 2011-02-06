@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,17 +21,8 @@ import java.util.ArrayList;
  * A binary expression with a relational operator.
  **/
 
-public class RelationalExpression extends BinaryExpression {
-
-	private boolean isUnlimitedNatural = false; // DERIVED
-
-	public boolean getIsUnlimitedNatural() {
-		return this.isUnlimitedNatural;
-	}
-
-	public void setIsUnlimitedNatural(boolean isUnlimitedNatural) {
-		this.isUnlimitedNatural = isUnlimitedNatural;
-	}
+public class RelationalExpression extends BinaryExpression implements
+		IRelationalExpression {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,33 +22,24 @@ import java.util.ArrayList;
  * may be either a primary expression or a class name denoting the class extent.
  **/
 
-public class ExtentOrExpression {
+public class ExtentOrExpression implements IExtentOrExpression {
 
-	private QualifiedName name = null;
-	private Expression expression = null; // DERIVED
-	private Expression nonNameExpression = null;
+	private IQualifiedName name = null;
+	private IExpression nonNameExpression = null;
 
-	public QualifiedName getName() {
+	public IQualifiedName getName() {
 		return this.name;
 	}
 
-	public void setName(QualifiedName name) {
+	public void setName(IQualifiedName name) {
 		this.name = name;
 	}
 
-	public Expression getExpression() {
-		return this.expression;
-	}
-
-	public void setExpression(Expression expression) {
-		this.expression = expression;
-	}
-
-	public Expression getNonNameExpression() {
+	public IExpression getNonNameExpression() {
 		return this.nonNameExpression;
 	}
 
-	public void setNonNameExpression(Expression nonNameExpression) {
+	public void setNonNameExpression(IExpression nonNameExpression) {
 		this.nonNameExpression = nonNameExpression;
 	}
 
@@ -59,11 +50,13 @@ public class ExtentOrExpression {
 
 	public void print(String prefix) {
 		System.out.println(prefix + this.toString());
-		if (this.name != null) {
-			this.name.print(prefix + " ");
+		IQualifiedName name = this.getName();
+		if (name != null) {
+			name.print(prefix + " ");
 		}
-		if (this.nonNameExpression != null) {
-			this.nonNameExpression.print(prefix + " ");
+		IExpression nonNameExpression = this.getNonNameExpression();
+		if (nonNameExpression != null) {
+			nonNameExpression.print(prefix + " ");
 		}
 	}
 } // ExtentOrExpression

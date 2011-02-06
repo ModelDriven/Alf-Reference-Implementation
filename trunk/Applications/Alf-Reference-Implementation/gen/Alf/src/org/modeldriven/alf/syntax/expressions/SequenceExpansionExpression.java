@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,13 +22,13 @@ import java.util.ArrayList;
  * each of the elements in a sequence.
  **/
 
-public abstract class SequenceExpansionExpression extends Expression {
+public abstract class SequenceExpansionExpression extends Expression implements
+		ISequenceExpansionExpression {
 
 	private String operation = "";
 	private String variable = "";
-	private AssignedSource variableSource = null; // DERIVED
-	private Expression argument = null;
-	private ExtentOrExpression primary = null;
+	private IExpression argument = null;
+	private IExtentOrExpression primary = null;
 
 	public String getOperation() {
 		return this.operation;
@@ -46,54 +46,40 @@ public abstract class SequenceExpansionExpression extends Expression {
 		this.variable = variable;
 	}
 
-	public AssignedSource getVariableSource() {
-		return this.variableSource;
-	}
-
-	public void setVariableSource(AssignedSource variableSource) {
-		this.variableSource = variableSource;
-	}
-
-	public Expression getArgument() {
+	public IExpression getArgument() {
 		return this.argument;
 	}
 
-	public void setArgument(Expression argument) {
+	public void setArgument(IExpression argument) {
 		this.argument = argument;
 	}
 
-	public ExtentOrExpression getPrimary() {
+	public IExtentOrExpression getPrimary() {
 		return this.primary;
 	}
 
-	public void setPrimary(ExtentOrExpression primary) {
+	public void setPrimary(IExtentOrExpression primary) {
 		this.primary = primary;
 	}
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * The assignments after a sequence expansion expression are the same as
-		 * after its primary expression.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operation:");
-		s.append(this.operation);
+		s.append(this.getOperation());
 		s.append(" variable:");
-		s.append(this.variable);
+		s.append(this.getVariable());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.argument != null) {
-			this.argument.print(prefix + " ");
+		IExpression argument = this.getArgument();
+		if (argument != null) {
+			argument.print(prefix + " ");
 		}
-		if (this.primary != null) {
-			this.primary.print(prefix + " ");
+		IExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.print(prefix + " ");
 		}
 	}
 } // SequenceExpansionExpression

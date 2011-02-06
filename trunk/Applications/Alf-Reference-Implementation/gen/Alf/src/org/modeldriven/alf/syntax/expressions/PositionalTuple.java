@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,19 +22,19 @@ import java.util.ArrayList;
  * position.
  **/
 
-public class PositionalTuple extends Tuple {
+public class PositionalTuple extends Tuple implements IPositionalTuple {
 
-	private ArrayList<Expression> expression = new ArrayList<Expression>();
+	private ArrayList<IExpression> expression = new ArrayList<IExpression>();
 
-	public ArrayList<Expression> getExpression() {
+	public ArrayList<IExpression> getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(ArrayList<Expression> expression) {
+	public void setExpression(ArrayList<IExpression> expression) {
 		this.expression = expression;
 	}
 
-	public void addExpression(Expression expression) {
+	public void addExpression(IExpression expression) {
 		this.expression.add(expression);
 	}
 
@@ -45,7 +45,7 @@ public class PositionalTuple extends Tuple {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (Expression expression : this.getExpression()) {
+		for (IExpression expression : this.getExpression()) {
 			if (expression != null) {
 				expression.print(prefix + " ");
 			} else {

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,15 +21,16 @@ import java.util.ArrayList;
  * An invocation of a feature referenced on a sequence of instances.
  **/
 
-public class FeatureInvocationExpression extends InvocationExpression {
+public class FeatureInvocationExpression extends InvocationExpression implements
+		IFeatureInvocationExpression {
 
-	private FeatureReference target = null;
+	private IFeatureReference target = null;
 
-	public FeatureReference getTarget() {
+	public IFeatureReference getTarget() {
 		return this.target;
 	}
 
-	public void setTarget(FeatureReference target) {
+	public void setTarget(IFeatureReference target) {
 		this.target = target;
 	}
 
@@ -40,8 +41,9 @@ public class FeatureInvocationExpression extends InvocationExpression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.target != null) {
-			this.target.print(prefix + " ");
+		IFeatureReference target = this.getTarget();
+		if (target != null) {
+			target.print(prefix + " ");
 		}
 	}
 } // FeatureInvocationExpression

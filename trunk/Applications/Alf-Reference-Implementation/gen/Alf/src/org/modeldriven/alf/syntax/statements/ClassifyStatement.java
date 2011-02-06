@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,88 +21,65 @@ import java.util.ArrayList;
  * A statement that changes the classification of an object.
  **/
 
-public class ClassifyStatement extends Statement {
+public class ClassifyStatement extends Statement implements IClassifyStatement {
 
-	private Expression expression = null;
-	private QualifiedNameList fromList = null;
-	private QualifiedNameList toList = null;
-	private ArrayList<ElementReference> fromClass = new ArrayList<ElementReference>(); // DERIVED
-	private ArrayList<ElementReference> toClass = new ArrayList<ElementReference>(); // DERIVED
-	private boolean isReclassifyAll = false;
+	private IExpression expression = null;
+	private IQualifiedNameList fromList = null;
+	private IQualifiedNameList toList = null;
+	private Boolean isReclassifyAll = false;
 
-	public Expression getExpression() {
+	public IExpression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(Expression expression) {
+	public void setExpression(IExpression expression) {
 		this.expression = expression;
 	}
 
-	public QualifiedNameList getFromList() {
+	public IQualifiedNameList getFromList() {
 		return this.fromList;
 	}
 
-	public void setFromList(QualifiedNameList fromList) {
+	public void setFromList(IQualifiedNameList fromList) {
 		this.fromList = fromList;
 	}
 
-	public QualifiedNameList getToList() {
+	public IQualifiedNameList getToList() {
 		return this.toList;
 	}
 
-	public void setToList(QualifiedNameList toList) {
+	public void setToList(IQualifiedNameList toList) {
 		this.toList = toList;
 	}
 
-	public ArrayList<ElementReference> getFromClass() {
-		return this.fromClass;
-	}
-
-	public void setFromClass(ArrayList<ElementReference> fromClass) {
-		this.fromClass = fromClass;
-	}
-
-	public void addFromClass(ElementReference fromClass) {
-		this.fromClass.add(fromClass);
-	}
-
-	public ArrayList<ElementReference> getToClass() {
-		return this.toClass;
-	}
-
-	public void setToClass(ArrayList<ElementReference> toClass) {
-		this.toClass = toClass;
-	}
-
-	public void addToClass(ElementReference toClass) {
-		this.toClass.add(toClass);
-	}
-
-	public boolean getIsReclassifyAll() {
+	public Boolean getIsReclassifyAll() {
 		return this.isReclassifyAll;
 	}
 
-	public void setIsReclassifyAll(boolean isReclassifyAll) {
+	public void setIsReclassifyAll(Boolean isReclassifyAll) {
 		this.isReclassifyAll = isReclassifyAll;
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" isReclassifyAll:");
-		s.append(this.isReclassifyAll);
+		s.append(this.getIsReclassifyAll());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.expression != null) {
-			this.expression.print(prefix + " ");
+		IExpression expression = this.getExpression();
+		if (expression != null) {
+			expression.print(prefix + " ");
 		}
-		if (this.fromList != null) {
-			this.fromList.print(prefix + " ");
+		IQualifiedNameList fromList = this.getFromList();
+		if (fromList != null) {
+			fromList.print(prefix + " ");
 		}
-		if (this.toList != null) {
-			this.toList.print(prefix + " ");
+		IQualifiedNameList toList = this.getToList();
+		if (toList != null) {
+			toList.print(prefix + " ");
 		}
 	}
 } // ClassifyStatement

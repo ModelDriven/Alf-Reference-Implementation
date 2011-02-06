@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,7 +21,8 @@ import java.util.ArrayList;
  * An import reference to a single element to be imported into a unit.
  **/
 
-public class ElementImportReference extends ImportReference {
+public class ElementImportReference extends ImportReference implements
+		IElementImportReference {
 
 	private String alias = "";
 
@@ -36,7 +37,7 @@ public class ElementImportReference extends ImportReference {
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" alias:");
-		s.append(this.alias);
+		s.append(this.getAlias());
 		return s.toString();
 	}
 

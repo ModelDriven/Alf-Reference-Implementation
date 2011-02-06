@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,15 +21,16 @@ import java.util.ArrayList;
  * A direct reference to a UML model element.
  **/
 
-public class ExternalElementReference extends ElementReference {
+public class ExternalElementReference extends ElementReference implements
+		IExternalElementReference {
 
-	private Element element = null;
+	private IElement element = null;
 
-	public Element getElement() {
+	public IElement getElement() {
 		return this.element;
 	}
 
-	public void setElement(Element element) {
+	public void setElement(IElement element) {
 		this.element = element;
 	}
 
@@ -40,8 +41,9 @@ public class ExternalElementReference extends ElementReference {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.element != null) {
-			this.element.print(prefix + " ");
+		IElement element = this.getElement();
+		if (element != null) {
+			element.print(prefix + " ");
 		}
 	}
 } // ExternalElementReference

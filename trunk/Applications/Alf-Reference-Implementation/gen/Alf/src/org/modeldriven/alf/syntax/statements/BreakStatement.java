@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,24 +22,7 @@ import java.util.ArrayList;
  * enclosing block.
  **/
 
-public class BreakStatement extends Statement {
-
-	private Statement target = null; // DERIVED
-
-	public Statement getTarget() {
-		return this.target;
-	}
-
-	public void setTarget(Statement target) {
-		this.target = target;
-	}
-
-	public boolean annotationAllowed(Annotation annotation) {
-		/*
-		 * A break statement may not have any annotations.
-		 */
-		return false; // STUB
-	} // annotationAllowed
+public class BreakStatement extends Statement implements IBreakStatement {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

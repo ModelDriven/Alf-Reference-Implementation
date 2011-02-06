@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,24 +22,24 @@ import java.util.ArrayList;
  * after the first iteration.
  **/
 
-public class DoStatement extends Statement {
+public class DoStatement extends Statement implements IDoStatement {
 
-	private Expression condition = null;
-	private Block body = null;
+	private IExpression condition = null;
+	private IBlock body = null;
 
-	public Expression getCondition() {
+	public IExpression getCondition() {
 		return this.condition;
 	}
 
-	public void setCondition(Expression condition) {
+	public void setCondition(IExpression condition) {
 		this.condition = condition;
 	}
 
-	public Block getBody() {
+	public IBlock getBody() {
 		return this.body;
 	}
 
-	public void setBody(Block body) {
+	public void setBody(IBlock body) {
 		this.body = body;
 	}
 
@@ -50,11 +50,13 @@ public class DoStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.condition != null) {
-			this.condition.print(prefix + " ");
+		IExpression condition = this.getCondition();
+		if (condition != null) {
+			condition.print(prefix + " ");
 		}
-		if (this.body != null) {
-			this.body.print(prefix + " ");
+		IBlock body = this.getBody();
+		if (body != null) {
+			body.print(prefix + " ");
 		}
 	}
 } // DoStatement

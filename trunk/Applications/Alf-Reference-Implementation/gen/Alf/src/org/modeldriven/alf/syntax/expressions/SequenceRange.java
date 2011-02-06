@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,24 +21,24 @@ import java.util.ArrayList;
  * A specification of the elements of a sequence as a range of integers.
  **/
 
-public class SequenceRange extends SequenceElements {
+public class SequenceRange extends SequenceElements implements ISequenceRange {
 
-	private Expression rangeLower = null;
-	private Expression rangeUpper = null;
+	private IExpression rangeLower = null;
+	private IExpression rangeUpper = null;
 
-	public Expression getRangeLower() {
+	public IExpression getRangeLower() {
 		return this.rangeLower;
 	}
 
-	public void setRangeLower(Expression rangeLower) {
+	public void setRangeLower(IExpression rangeLower) {
 		this.rangeLower = rangeLower;
 	}
 
-	public Expression getRangeUpper() {
+	public IExpression getRangeUpper() {
 		return this.rangeUpper;
 	}
 
-	public void setRangeUpper(Expression rangeUpper) {
+	public void setRangeUpper(IExpression rangeUpper) {
 		this.rangeUpper = rangeUpper;
 	}
 
@@ -49,11 +49,13 @@ public class SequenceRange extends SequenceElements {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.rangeLower != null) {
-			this.rangeLower.print(prefix + " ");
+		IExpression rangeLower = this.getRangeLower();
+		if (rangeLower != null) {
+			rangeLower.print(prefix + " ");
 		}
-		if (this.rangeUpper != null) {
-			this.rangeUpper.print(prefix + " ");
+		IExpression rangeUpper = this.getRangeUpper();
+		if (rangeUpper != null) {
+			rangeUpper.print(prefix + " ");
 		}
 	}
 } // SequenceRange

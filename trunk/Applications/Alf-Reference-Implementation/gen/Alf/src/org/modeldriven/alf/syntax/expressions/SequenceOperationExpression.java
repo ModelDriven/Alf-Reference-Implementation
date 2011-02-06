@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,54 +22,27 @@ import java.util.ArrayList;
  * sequence as a whole.
  **/
 
-public class SequenceOperationExpression extends InvocationExpression {
+public class SequenceOperationExpression extends InvocationExpression implements
+		ISequenceOperationExpression {
 
-	private ExtentOrExpression primary = null;
-	private QualifiedName operation = null;
-	private boolean isCollectionConversion = false; // DERIVED
-	private boolean isBitStringConversion = false; // DERIVED
+	private IExtentOrExpression primary = null;
+	private IQualifiedName operation = null;
 
-	public ExtentOrExpression getPrimary() {
+	public IExtentOrExpression getPrimary() {
 		return this.primary;
 	}
 
-	public void setPrimary(ExtentOrExpression primary) {
+	public void setPrimary(IExtentOrExpression primary) {
 		this.primary = primary;
 	}
 
-	public QualifiedName getOperation() {
+	public IQualifiedName getOperation() {
 		return this.operation;
 	}
 
-	public void setOperation(QualifiedName operation) {
+	public void setOperation(IQualifiedName operation) {
 		this.operation = operation;
 	}
-
-	public boolean getIsCollectionConversion() {
-		return this.isCollectionConversion;
-	}
-
-	public void setIsCollectionConversion(boolean isCollectionConversion) {
-		this.isCollectionConversion = isCollectionConversion;
-	}
-
-	public boolean getIsBitStringConversion() {
-		return this.isBitStringConversion;
-	}
-
-	public void setIsBitStringConversion(boolean isBitStringConversion) {
-		this.isBitStringConversion = isBitStringConversion;
-	}
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * The assignments after a sequence operation expression include those
-		 * made in the primary expression and those made in the tuple and, for
-		 * an "in place" operation (one whose first parameter is inout), that
-		 * made by the sequence operation expression itself.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -78,11 +51,13 @@ public class SequenceOperationExpression extends InvocationExpression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.primary != null) {
-			this.primary.print(prefix + " ");
+		IExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.print(prefix + " ");
 		}
-		if (this.operation != null) {
-			this.operation.print(prefix + " ");
+		IQualifiedName operation = this.getOperation();
+		if (operation != null) {
+			operation.print(prefix + " ");
 		}
 	}
 } // SequenceOperationExpression

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,48 +22,18 @@ import java.util.ArrayList;
  * members.
  **/
 
-public class ActivityDefinition extends ClassifierDefinition {
+public class ActivityDefinition extends ClassifierDefinition implements
+		IActivityDefinition {
 
-	private Block body = null;
+	private IBlock body = null;
 
-	public Block getBody() {
+	public IBlock getBody() {
 		return this.body;
 	}
 
-	public void setBody(Block body) {
+	public void setBody(IBlock body) {
 		this.body = body;
 	}
-
-	public boolean annotationAllowed(StereotypeAnnotation annotation) {
-		/*
-		 * In addition to the annotations allowed for classifiers in general, an
-		 * activity definition allows @primitive annotations and any stereotype
-		 * whose metaclass is consistent with Activity.
-		 */
-		return false; // STUB
-	} // annotationAllowed
-
-	public boolean matchForStub(UnitDefinition unit) {
-		/*
-		 * Returns true if the given unit definition matches this activity
-		 * definition considered as a classifier definition and the subunit is
-		 * for an activity definition. In addition, the subunit definition must
-		 * have formal parameters that match each of the formal parameters of
-		 * the stub definition, in order. Two formal parameters match if they
-		 * have the same direction, name, multiplicity bounds, ordering,
-		 * uniqueness and type reference.
-		 */
-		return false; // STUB
-	} // matchForStub
-
-	public boolean isSameKindAs(Member member) {
-		/*
-		 * Return true if the given member is either an ActivityDefinition or an
-		 * imported member whose referent is an ActivityDefinition or an
-		 * Activity.
-		 */
-		return false; // STUB
-	} // isSameKindAs
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -72,8 +42,9 @@ public class ActivityDefinition extends ClassifierDefinition {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.body != null) {
-			this.body.print(prefix + " ");
+		IBlock body = this.getBody();
+		if (body != null) {
+			body.print(prefix + " ");
 		}
 	}
 } // ActivityDefinition

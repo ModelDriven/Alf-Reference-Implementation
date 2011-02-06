@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,17 +21,8 @@ import java.util.ArrayList;
  * A binary expression that tests the equality of its operands.
  **/
 
-public class EqualityExpression extends BinaryExpression {
-
-	private boolean isNegated = false; // DERIVED
-
-	public boolean getIsNegated() {
-		return this.isNegated;
-	}
-
-	public void setIsNegated(boolean isNegated) {
-		this.isNegated = isNegated;
-	}
+public class EqualityExpression extends BinaryExpression implements
+		IEqualityExpression {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

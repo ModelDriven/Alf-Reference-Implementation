@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,15 +21,15 @@ import java.util.ArrayList;
  * A left-hand side that is a name.
  **/
 
-public class NameLeftHandSide extends LeftHandSide {
+public class NameLeftHandSide extends LeftHandSide implements INameLeftHandSide {
 
-	private QualifiedName target = null;
+	private IQualifiedName target = null;
 
-	public QualifiedName getTarget() {
+	public IQualifiedName getTarget() {
 		return this.target;
 	}
 
-	public void setTarget(QualifiedName target) {
+	public void setTarget(IQualifiedName target) {
 		this.target = target;
 	}
 
@@ -40,8 +40,9 @@ public class NameLeftHandSide extends LeftHandSide {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.target != null) {
-			this.target.print(prefix + " ");
+		IQualifiedName target = this.getTarget();
+		if (target != null) {
+			target.print(prefix + " ");
 		}
 	}
 } // NameLeftHandSide

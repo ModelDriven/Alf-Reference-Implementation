@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,21 +22,8 @@ import java.util.ArrayList;
  * definition.
  **/
 
-public class EnumerationLiteralName extends Member {
-
-	public boolean annotationAllowed(StereotypeAnnotation annotation) {
-		/*
-		 * Returns false. (Enumeration literal name cannot have annotations.)
-		 */
-		return false; // STUB
-	} // annotationAllowed
-
-	public boolean isSameKindAs(Member member) {
-		/*
-		 * Return true if the given member is an EnumerationLiteralName.
-		 */
-		return false; // STUB
-	} // isSameKindAs
+public class EnumerationLiteralName extends Member implements
+		IEnumerationLiteralName {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

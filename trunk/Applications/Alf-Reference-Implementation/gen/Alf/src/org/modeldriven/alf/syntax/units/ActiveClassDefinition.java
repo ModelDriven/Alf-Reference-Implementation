@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,26 +21,18 @@ import java.util.ArrayList;
  * The definition of an active class.
  **/
 
-public class ActiveClassDefinition extends ClassDefinition {
+public class ActiveClassDefinition extends ClassDefinition implements
+		IActiveClassDefinition {
 
-	private ActivityDefinition classifierBehavior = null;
+	private IActivityDefinition classifierBehavior = null;
 
-	public ActivityDefinition getClassifierBehavior() {
+	public IActivityDefinition getClassifierBehavior() {
 		return this.classifierBehavior;
 	}
 
-	public void setClassifierBehavior(ActivityDefinition classifierBehavior) {
+	public void setClassifierBehavior(IActivityDefinition classifierBehavior) {
 		this.classifierBehavior = classifierBehavior;
 	}
-
-	public boolean matchForStub(UnitDefinition unit) {
-		/*
-		 * Returns true if the given unit definition matches this active class
-		 * definition considered as a class definition and the subunit is for an
-		 * active class definition.
-		 */
-		return false; // STUB
-	} // matchForStub
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -49,8 +41,9 @@ public class ActiveClassDefinition extends ClassDefinition {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.classifierBehavior != null) {
-			this.classifierBehavior.print(prefix + " ");
+		IActivityDefinition classifierBehavior = this.getClassifierBehavior();
+		if (classifierBehavior != null) {
+			classifierBehavior.print(prefix + " ");
 		}
 	}
 } // ActiveClassDefinition

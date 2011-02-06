@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,19 +21,20 @@ import java.util.ArrayList;
  * A specification of the elements of a sequence using a list of expressions.
  **/
 
-public class SequenceExpressionList extends SequenceElements {
+public class SequenceExpressionList extends SequenceElements implements
+		ISequenceExpressionList {
 
-	private ArrayList<Expression> element = new ArrayList<Expression>();
+	private ArrayList<IExpression> element = new ArrayList<IExpression>();
 
-	public ArrayList<Expression> getElement() {
+	public ArrayList<IExpression> getElement() {
 		return this.element;
 	}
 
-	public void setElement(ArrayList<Expression> element) {
+	public void setElement(ArrayList<IExpression> element) {
 		this.element = element;
 	}
 
-	public void addElement(Expression element) {
+	public void addElement(IExpression element) {
 		this.element.add(element);
 	}
 
@@ -44,7 +45,7 @@ public class SequenceExpressionList extends SequenceElements {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (Expression element : this.getElement()) {
+		for (IExpression element : this.getElement()) {
 			if (element != null) {
 				element.print(prefix + " ");
 			} else {

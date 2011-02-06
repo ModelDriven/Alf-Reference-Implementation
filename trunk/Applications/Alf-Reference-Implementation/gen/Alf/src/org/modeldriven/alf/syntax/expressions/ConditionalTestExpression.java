@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,46 +22,36 @@ import java.util.ArrayList;
  * evaluation of one of two other operand expressions.
  **/
 
-public class ConditionalTestExpression extends Expression {
+public class ConditionalTestExpression extends Expression implements
+		IConditionalTestExpression {
 
-	private Expression operand1 = null;
-	private Expression operand2 = null;
-	private Expression operand3 = null;
+	private IExpression operand1 = null;
+	private IExpression operand2 = null;
+	private IExpression operand3 = null;
 
-	public Expression getOperand1() {
+	public IExpression getOperand1() {
 		return this.operand1;
 	}
 
-	public void setOperand1(Expression operand1) {
+	public void setOperand1(IExpression operand1) {
 		this.operand1 = operand1;
 	}
 
-	public Expression getOperand2() {
+	public IExpression getOperand2() {
 		return this.operand2;
 	}
 
-	public void setOperand2(Expression operand2) {
+	public void setOperand2(IExpression operand2) {
 		this.operand2 = operand2;
 	}
 
-	public Expression getOperand3() {
+	public IExpression getOperand3() {
 		return this.operand3;
 	}
 
-	public void setOperand3(Expression operand3) {
+	public void setOperand3(IExpression operand3) {
 		this.operand3 = operand3;
 	}
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * Returns unchanged all assignments for local names that are not
-		 * reassigned in either the second or third operand expressions. Any
-		 * local names that have different assignments after the second and
-		 * third operand expressions are adjusted to have the conditional-test
-		 * expression as their assigned source.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -70,14 +60,17 @@ public class ConditionalTestExpression extends Expression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.operand1 != null) {
-			this.operand1.print(prefix + " ");
+		IExpression operand1 = this.getOperand1();
+		if (operand1 != null) {
+			operand1.print(prefix + " ");
 		}
-		if (this.operand2 != null) {
-			this.operand2.print(prefix + " ");
+		IExpression operand2 = this.getOperand2();
+		if (operand2 != null) {
+			operand2.print(prefix + " ");
 		}
-		if (this.operand3 != null) {
-			this.operand3.print(prefix + " ");
+		IExpression operand3 = this.getOperand3();
+		if (operand3 != null) {
+			operand3.print(prefix + " ");
 		}
 	}
 } // ConditionalTestExpression

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,46 +22,30 @@ import java.util.ArrayList;
  * statements that may be executed if one of the cases matches the switch value.
  **/
 
-public class SwitchClause extends SyntaxElement {
+public class SwitchClause extends SyntaxElement implements ISwitchClause {
 
-	private ArrayList<Expression> case_ = new ArrayList<Expression>();
-	private Block block = null;
+	private ArrayList<IExpression> case_ = new ArrayList<IExpression>();
+	private IBlock block = null;
 
-	public ArrayList<Expression> getCase() {
+	public ArrayList<IExpression> getCase() {
 		return this.case_;
 	}
 
-	public void setCase(ArrayList<Expression> case_) {
+	public void setCase(ArrayList<IExpression> case_) {
 		this.case_ = case_;
 	}
 
-	public void addCase(Expression case_) {
+	public void addCase(IExpression case_) {
 		this.case_.add(case_);
 	}
 
-	public Block getBlock() {
+	public IBlock getBlock() {
 		return this.block;
 	}
 
-	public void setBlock(Block block) {
+	public void setBlock(IBlock block) {
 		this.block = block;
 	}
-
-	public ArrayList<AssignedSource> assignmentsBefore() {
-		/*
-		 * The assignments before a switch clause are the assignments before any
-		 * case expression of the clause.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // assignmentsBefore
-
-	public ArrayList<AssignedSource> assignmentsAfter() {
-		/*
-		 * The assignments after a switch clause are the assignments after the
-		 * block of the switch clause.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // assignmentsAfter
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -70,15 +54,16 @@ public class SwitchClause extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (Expression case_ : this.getCase()) {
+		for (IExpression case_ : this.getCase()) {
 			if (case_ != null) {
 				case_.print(prefix + " ");
 			} else {
 				System.out.println(prefix + " null");
 			}
 		}
-		if (this.block != null) {
-			this.block.print(prefix + " ");
+		IBlock block = this.getBlock();
+		if (block != null) {
+			block.print(prefix + " ");
 		}
 	}
 } // SwitchClause

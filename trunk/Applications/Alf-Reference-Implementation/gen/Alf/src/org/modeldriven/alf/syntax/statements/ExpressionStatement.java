@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,15 +21,16 @@ import java.util.ArrayList;
  * A statement that evaluates an expression when executed.
  **/
 
-public class ExpressionStatement extends Statement {
+public class ExpressionStatement extends Statement implements
+		IExpressionStatement {
 
-	private Expression expression = null;
+	private IExpression expression = null;
 
-	public Expression getExpression() {
+	public IExpression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(Expression expression) {
+	public void setExpression(IExpression expression) {
 		this.expression = expression;
 	}
 
@@ -40,8 +41,9 @@ public class ExpressionStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.expression != null) {
-			this.expression.print(prefix + " ");
+		IExpression expression = this.getExpression();
+		if (expression != null) {
+			expression.print(prefix + " ");
 		}
 	}
 } // ExpressionStatement

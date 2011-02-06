@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,24 +21,25 @@ import java.util.ArrayList;
  * An expression used to access a specific element of a sequence.
  **/
 
-public class SequenceAccessExpression extends Expression {
+public class SequenceAccessExpression extends Expression implements
+		ISequenceAccessExpression {
 
-	private Expression primary = null;
-	private Expression index = null;
+	private IExpression primary = null;
+	private IExpression index = null;
 
-	public Expression getPrimary() {
+	public IExpression getPrimary() {
 		return this.primary;
 	}
 
-	public void setPrimary(Expression primary) {
+	public void setPrimary(IExpression primary) {
 		this.primary = primary;
 	}
 
-	public Expression getIndex() {
+	public IExpression getIndex() {
 		return this.index;
 	}
 
-	public void setIndex(Expression index) {
+	public void setIndex(IExpression index) {
 		this.index = index;
 	}
 
@@ -49,11 +50,13 @@ public class SequenceAccessExpression extends Expression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.primary != null) {
-			this.primary.print(prefix + " ");
+		IExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.print(prefix + " ");
 		}
-		if (this.index != null) {
-			this.index.print(prefix + " ");
+		IExpression index = this.getIndex();
+		if (index != null) {
+			index.print(prefix + " ");
 		}
 	}
 } // SequenceAccessExpression

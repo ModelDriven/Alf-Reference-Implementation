@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * An expression comprising the keyword “this”.
  **/
 
-public class ThisExpression extends Expression {
+public class ThisExpression extends Expression implements IThisExpression {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * An assignment of a value to an attribute of an applied stereotype.
  **/
 
-public class TaggedValue extends SyntaxElement {
+public class TaggedValue extends SyntaxElement implements ITaggedValue {
 
 	private String name = "";
 	private String value = "";
@@ -54,11 +54,11 @@ public class TaggedValue extends SyntaxElement {
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
-		s.append(this.name);
+		s.append(this.getName());
 		s.append(" value:");
-		s.append(this.value);
+		s.append(this.getValue());
 		s.append(" operator:");
-		s.append(this.operator);
+		s.append(this.getOperator());
 		return s.toString();
 	}
 
