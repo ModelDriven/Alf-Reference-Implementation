@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * An identified modification to the behavior of an annotated statement.
  **/
 
-public class Annotation extends SyntaxElement {
+public class Annotation extends SyntaxElement implements IAnnotation {
 
 	private String identifier = "";
 	private ArrayList<String> argument = new ArrayList<String>();
@@ -49,13 +49,13 @@ public class Annotation extends SyntaxElement {
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" identifier:");
-		s.append(this.identifier);
+		s.append(this.getIdentifier());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.argument.size() > 0) {
+		if (this.getArgument().size() > 0) {
 			System.out.println(prefix + " argument:");
 		}
 		for (String argument : this.getArgument()) {

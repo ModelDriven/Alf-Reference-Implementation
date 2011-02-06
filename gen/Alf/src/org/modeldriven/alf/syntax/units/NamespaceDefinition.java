@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,45 +21,31 @@ import java.util.ArrayList;
  * A model of the common properties of the definition of a namespace in Alf.
  **/
 
-public abstract class NamespaceDefinition extends Member {
+public abstract class NamespaceDefinition extends Member implements
+		INamespaceDefinition {
 
-	private ArrayList<Member> ownedMember = new ArrayList<Member>();
-	private UnitDefinition unit = null;
-	private ArrayList<Member> member = new ArrayList<Member>(); // DERIVED
+	private ArrayList<IMember> ownedMember = new ArrayList<IMember>();
+	private IUnitDefinition unit = null;
 
-	public ArrayList<Member> getOwnedMember() {
+	public ArrayList<IMember> getOwnedMember() {
 		return this.ownedMember;
 	}
 
-	public void setOwnedMember(ArrayList<Member> ownedMember) {
+	public void setOwnedMember(ArrayList<IMember> ownedMember) {
 		this.ownedMember = ownedMember;
 	}
 
-	public void addOwnedMember(Member ownedMember) {
+	public void addOwnedMember(IMember ownedMember) {
 		this.ownedMember.add(ownedMember);
 	}
 
-	public UnitDefinition getUnit() {
+	public IUnitDefinition getUnit() {
 		return this.unit;
 	}
 
-	public void setUnit(UnitDefinition unit) {
+	public void setUnit(IUnitDefinition unit) {
 		this.unit = unit;
 	}
-
-	public ArrayList<Member> getMember() {
-		return this.member;
-	}
-
-	public void setMember(ArrayList<Member> member) {
-		this.member = member;
-	}
-
-	public void addMember(Member member) {
-		this.member.add(member);
-	}
-
-	public abstract boolean annotationAllowed(StereotypeAnnotation annotation);
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -68,15 +54,16 @@ public abstract class NamespaceDefinition extends Member {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (Member ownedMember : this.getOwnedMember()) {
+		for (IMember ownedMember : this.getOwnedMember()) {
 			if (ownedMember != null) {
 				ownedMember.print(prefix + " ");
 			} else {
 				System.out.println(prefix + " null");
 			}
 		}
-		if (this.unit != null) {
-			this.unit.print(prefix + " ");
+		IUnitDefinition unit = this.getUnit();
+		if (unit != null) {
+			unit.print(prefix + " ");
 		}
 	}
 } // NamespaceDefinition

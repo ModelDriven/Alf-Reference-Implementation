@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,34 +21,26 @@ import java.util.ArrayList;
  * An expression used to filter values by type.
  **/
 
-public class CastExpression extends Expression {
+public class CastExpression extends Expression implements ICastExpression {
 
-	private Expression operand = null;
-	private QualifiedName typeName = null;
+	private IExpression operand = null;
+	private IQualifiedName typeName = null;
 
-	public Expression getOperand() {
+	public IExpression getOperand() {
 		return this.operand;
 	}
 
-	public void setOperand(Expression operand) {
+	public void setOperand(IExpression operand) {
 		this.operand = operand;
 	}
 
-	public QualifiedName getTypeName() {
+	public IQualifiedName getTypeName() {
 		return this.typeName;
 	}
 
-	public void setTypeName(QualifiedName typeName) {
+	public void setTypeName(IQualifiedName typeName) {
 		this.typeName = typeName;
 	}
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * The assignments after a cast expression are the same as those after
-		 * its operand expression.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -57,11 +49,13 @@ public class CastExpression extends Expression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.operand != null) {
-			this.operand.print(prefix + " ");
+		IExpression operand = this.getOperand();
+		if (operand != null) {
+			operand.print(prefix + " ");
 		}
-		if (this.typeName != null) {
-			this.typeName.print(prefix + " ");
+		IQualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.print(prefix + " ");
 		}
 	}
 } // CastExpression

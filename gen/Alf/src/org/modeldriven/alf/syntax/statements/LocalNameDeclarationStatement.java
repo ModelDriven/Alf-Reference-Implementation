@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,13 +22,13 @@ import java.util.ArrayList;
  * value.
  **/
 
-public class LocalNameDeclarationStatement extends Statement {
+public class LocalNameDeclarationStatement extends Statement implements
+		ILocalNameDeclarationStatement {
 
 	private String name = "";
-	private Expression expression = null;
-	private boolean hasMultiplicity = false;
-	private QualifiedName typeName = null;
-	private ElementReference type = null; // DERIVED
+	private IExpression expression = null;
+	private Boolean hasMultiplicity = false;
+	private IQualifiedName typeName = null;
 
 	public String getName() {
 		return this.name;
@@ -38,54 +38,48 @@ public class LocalNameDeclarationStatement extends Statement {
 		this.name = name;
 	}
 
-	public Expression getExpression() {
+	public IExpression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(Expression expression) {
+	public void setExpression(IExpression expression) {
 		this.expression = expression;
 	}
 
-	public boolean getHasMultiplicity() {
+	public Boolean getHasMultiplicity() {
 		return this.hasMultiplicity;
 	}
 
-	public void setHasMultiplicity(boolean hasMultiplicity) {
+	public void setHasMultiplicity(Boolean hasMultiplicity) {
 		this.hasMultiplicity = hasMultiplicity;
 	}
 
-	public QualifiedName getTypeName() {
+	public IQualifiedName getTypeName() {
 		return this.typeName;
 	}
 
-	public void setTypeName(QualifiedName typeName) {
+	public void setTypeName(IQualifiedName typeName) {
 		this.typeName = typeName;
-	}
-
-	public ElementReference getType() {
-		return this.type;
-	}
-
-	public void setType(ElementReference type) {
-		this.type = type;
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
-		s.append(this.name);
+		s.append(this.getName());
 		s.append(" hasMultiplicity:");
-		s.append(this.hasMultiplicity);
+		s.append(this.getHasMultiplicity());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.expression != null) {
-			this.expression.print(prefix + " ");
+		IExpression expression = this.getExpression();
+		if (expression != null) {
+			expression.print(prefix + " ");
 		}
-		if (this.typeName != null) {
-			this.typeName.print(prefix + " ");
+		IQualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.print(prefix + " ");
 		}
 	}
 } // LocalNameDeclarationStatement

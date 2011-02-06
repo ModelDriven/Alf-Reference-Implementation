@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,56 +22,30 @@ import java.util.ArrayList;
  * on boolean conditions.
  **/
 
-public class IfStatement extends Statement {
+public class IfStatement extends Statement implements IIfStatement {
 
-	private ArrayList<ConcurrentClauses> nonFinalClauses = new ArrayList<ConcurrentClauses>();
-	private Block finalClause = null;
-	private boolean isAssured = false; // DERIVED
-	private boolean isDetermined = false; // DERIVED
+	private ArrayList<IConcurrentClauses> nonFinalClauses = new ArrayList<IConcurrentClauses>();
+	private IBlock finalClause = null;
 
-	public ArrayList<ConcurrentClauses> getNonFinalClauses() {
+	public ArrayList<IConcurrentClauses> getNonFinalClauses() {
 		return this.nonFinalClauses;
 	}
 
-	public void setNonFinalClauses(ArrayList<ConcurrentClauses> nonFinalClauses) {
+	public void setNonFinalClauses(ArrayList<IConcurrentClauses> nonFinalClauses) {
 		this.nonFinalClauses = nonFinalClauses;
 	}
 
-	public void addNonFinalClauses(ConcurrentClauses nonFinalClauses) {
+	public void addNonFinalClauses(IConcurrentClauses nonFinalClauses) {
 		this.nonFinalClauses.add(nonFinalClauses);
 	}
 
-	public Block getFinalClause() {
+	public IBlock getFinalClause() {
 		return this.finalClause;
 	}
 
-	public void setFinalClause(Block finalClause) {
+	public void setFinalClause(IBlock finalClause) {
 		this.finalClause = finalClause;
 	}
-
-	public boolean getIsAssured() {
-		return this.isAssured;
-	}
-
-	public void setIsAssured(boolean isAssured) {
-		this.isAssured = isAssured;
-	}
-
-	public boolean getIsDetermined() {
-		return this.isDetermined;
-	}
-
-	public void setIsDetermined(boolean isDetermined) {
-		this.isDetermined = isDetermined;
-	}
-
-	public boolean annotationAllowed(Annotation annotation) {
-		/*
-		 * In addition to an @isolated annotation, an if statement may have
-		 * @assured and @determined annotations. They may not have arguments.
-		 */
-		return false; // STUB
-	} // annotationAllowed
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -80,15 +54,16 @@ public class IfStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (ConcurrentClauses nonFinalClauses : this.getNonFinalClauses()) {
+		for (IConcurrentClauses nonFinalClauses : this.getNonFinalClauses()) {
 			if (nonFinalClauses != null) {
 				nonFinalClauses.print(prefix + " ");
 			} else {
 				System.out.println(prefix + " null");
 			}
 		}
-		if (this.finalClause != null) {
-			this.finalClause.print(prefix + " ");
+		IBlock finalClause = this.getFinalClause();
+		if (finalClause != null) {
+			finalClause.print(prefix + " ");
 		}
 	}
 } // IfStatement

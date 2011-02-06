@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,34 +21,18 @@ import java.util.ArrayList;
  * An expression comprising a reference to a structural feature.
  **/
 
-public class PropertyAccessExpression extends Expression {
+public class PropertyAccessExpression extends Expression implements
+		IPropertyAccessExpression {
 
-	private FeatureReference featureReference = null;
-	private ElementReference feature = null; // DERIVED
+	private IFeatureReference featureReference = null;
 
-	public FeatureReference getFeatureReference() {
+	public IFeatureReference getFeatureReference() {
 		return this.featureReference;
 	}
 
-	public void setFeatureReference(FeatureReference featureReference) {
+	public void setFeatureReference(IFeatureReference featureReference) {
 		this.featureReference = featureReference;
 	}
-
-	public ElementReference getFeature() {
-		return this.feature;
-	}
-
-	public void setFeature(ElementReference feature) {
-		this.feature = feature;
-	}
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * The assignments after a property access expression are the same as
-		 * those after the target expression of its feature reference.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -57,8 +41,9 @@ public class PropertyAccessExpression extends Expression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.featureReference != null) {
-			this.featureReference.print(prefix + " ");
+		IFeatureReference featureReference = this.getFeatureReference();
+		if (featureReference != null) {
+			featureReference.print(prefix + " ");
 		}
 	}
 } // PropertyAccessExpression

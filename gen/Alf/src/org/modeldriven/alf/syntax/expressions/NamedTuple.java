@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,19 +21,19 @@ import java.util.ArrayList;
  * A tuple in which the arguments are matched to parameters by name.
  **/
 
-public class NamedTuple extends Tuple {
+public class NamedTuple extends Tuple implements INamedTuple {
 
-	private ArrayList<NamedExpression> namedExpression = new ArrayList<NamedExpression>();
+	private ArrayList<INamedExpression> namedExpression = new ArrayList<INamedExpression>();
 
-	public ArrayList<NamedExpression> getNamedExpression() {
+	public ArrayList<INamedExpression> getNamedExpression() {
 		return this.namedExpression;
 	}
 
-	public void setNamedExpression(ArrayList<NamedExpression> namedExpression) {
+	public void setNamedExpression(ArrayList<INamedExpression> namedExpression) {
 		this.namedExpression = namedExpression;
 	}
 
-	public void addNamedExpression(NamedExpression namedExpression) {
+	public void addNamedExpression(INamedExpression namedExpression) {
 		this.namedExpression.add(namedExpression);
 	}
 
@@ -44,7 +44,7 @@ public class NamedTuple extends Tuple {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (NamedExpression namedExpression : this.getNamedExpression()) {
+		for (INamedExpression namedExpression : this.getNamedExpression()) {
 			if (namedExpression != null) {
 				namedExpression.print(prefix + " ");
 			} else {

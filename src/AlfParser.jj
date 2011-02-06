@@ -1221,8 +1221,8 @@ Expression PostfixOperation(Expression p):
   { 
     if (p instanceof SequenceAccessExpression) {
       SequenceAccessExpression e = (SequenceAccessExpression)p;
-      i = e.getIndex();
-      p = e.getPrimary();
+      i = (Expression)e.getIndex();
+      p = (Expression)e.getPrimary();
     }
     
     if (p instanceof NameExpression) {
@@ -1256,8 +1256,8 @@ Expression PrefixExpression():
   { 
     if (p instanceof SequenceAccessExpression) {
       SequenceAccessExpression e = (SequenceAccessExpression)p;
-      i = e.getIndex();
-      p = e.getPrimary();
+      i = (Expression)e.getIndex();
+      p = (Expression)e.getPrimary();
     }
     
     if (p instanceof NameExpression) {
@@ -1897,8 +1897,8 @@ Expression AssignmentExpressionCompletion(Expression p):
   { 
     if (p instanceof SequenceAccessExpression) {
       SequenceAccessExpression e1 = (SequenceAccessExpression)p;
-      i = e1.getIndex();
-      p = e1.getPrimary();
+      i = (Expression)e1.getIndex();
+      p = (Expression)e1.getPrimary();
     }
     
     if (p instanceof NameExpression) {
@@ -2012,7 +2012,7 @@ Block Block():
 
 Statement AnnotatedStatement():
 {
-  ArrayList<Annotation> al;
+  ArrayList<IAnnotation> al;
   Statement s;
 }
 { 
@@ -2024,10 +2024,10 @@ Statement AnnotatedStatement():
   }
 }
 
-ArrayList<Annotation> Annotations():
+ArrayList<IAnnotation> Annotations():
 {
   Annotation a;
-  ArrayList<Annotation> al = new ArrayList<Annotation>();
+  ArrayList<IAnnotation> al = new ArrayList<IAnnotation>();
 }
 {
    a = Annotation() { al.add(a); } ( <AT> a = Annotation() { al.add(a); } )*
@@ -2508,7 +2508,7 @@ UnitDefinition UnitDefinition():
   QualifiedName n;
   ImportReference i;
   Token t;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   NamespaceDefinition d;
   UnitDefinition u = new UnitDefinition();
 }
@@ -2525,10 +2525,10 @@ UnitDefinition UnitDefinition():
   }
 }
 
-ArrayList<StereotypeAnnotation> StereotypeAnnotations():
+ArrayList<IStereotypeAnnotation> StereotypeAnnotations():
 {
   StereotypeAnnotation s;
-  ArrayList<StereotypeAnnotation> sl = new ArrayList<StereotypeAnnotation>();
+  ArrayList<IStereotypeAnnotation> sl = new ArrayList<IStereotypeAnnotation>();
 }
 {
   ( s = StereotypeAnnotation() { sl.add(s); } )*
@@ -2740,7 +2740,7 @@ Member PackagedElement():
 {
   Token t;
   String c = null;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String v;
   Member m;
 }
@@ -2911,7 +2911,7 @@ Member ClassMember():
 {
   Token t;
   String c = null;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -3006,7 +3006,7 @@ Member ActiveClassMember():
 {
   Token t;
   String c = null;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -3083,7 +3083,7 @@ Member StructuredMember():
 {
   Token t;
   String c = null;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -3286,7 +3286,7 @@ void FormalParameterList(NamespaceDefinition d):
 FormalParameter FormalParameter():
 {
   Token t;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String d;
   String n;
   FormalParameter p = new FormalParameter();

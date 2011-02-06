@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,33 +21,16 @@ import java.util.ArrayList;
  * An expression used to test the dynamic type of its operand.
  **/
 
-public class ClassificationExpression extends UnaryExpression {
+public class ClassificationExpression extends UnaryExpression implements
+		IClassificationExpression {
 
-	private ElementReference referent = null; // DERIVED
-	private boolean isDirect = false; // DERIVED
-	private QualifiedName typeName = null;
+	private IQualifiedName typeName = null;
 
-	public ElementReference getReferent() {
-		return this.referent;
-	}
-
-	public void setReferent(ElementReference referent) {
-		this.referent = referent;
-	}
-
-	public boolean getIsDirect() {
-		return this.isDirect;
-	}
-
-	public void setIsDirect(boolean isDirect) {
-		this.isDirect = isDirect;
-	}
-
-	public QualifiedName getTypeName() {
+	public IQualifiedName getTypeName() {
 		return this.typeName;
 	}
 
-	public void setTypeName(QualifiedName typeName) {
+	public void setTypeName(IQualifiedName typeName) {
 		this.typeName = typeName;
 	}
 
@@ -58,8 +41,9 @@ public class ClassificationExpression extends UnaryExpression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.typeName != null) {
-			this.typeName.print(prefix + " ");
+		IQualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.print(prefix + " ");
 		}
 	}
 } // ClassificationExpression

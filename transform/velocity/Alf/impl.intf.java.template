@@ -1,0 +1,32 @@
+#**
+*impl.intf.java template for uml project
+@projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/impl/I${object.name}Impl.java 
+@artifactContext GenClass 
+*#
+#parse( "uml.fragment" )
+${copyrightBoilerPlate}
+${packageDeclaration}.impl;
+#imports()
+#comments(${object})
+
+#macro( interface $object)
+## #classJavaDoc(${object}) 
+
+#visibility(${object}) #abstract(${object}) interface I#name(${object.name})Impl
+    extends I#name(${object.name})
+    {
+#foreach ( $attribute in ${object.ownedAttributes} )
+   #if( ${attribute.isDerived()} )
+   public #type(${attribute}) get#upperCase(${attribute.name})();
+   #end  
+#end
+
+#foreach ( $rule in ${object.ownedRules} )
+  #comments(${rule})
+  public boolean ${rule.name}();
+#end
+    
+} //${object.name}
+#end
+
+#interface(${object})

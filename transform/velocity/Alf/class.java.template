@@ -1,0 +1,55 @@
+#**
+*class.java template for uml project
+@projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/${object.name}.java 
+@artifactContext GenClass 
+*#
+#parse( "uml.fragment" )
+${copyrightBoilerPlate}
+${packageDeclaration};
+#imports()
+#comments(${object})
+
+#macro( class $object)
+## #classJavaDoc(${object}) 
+
+#visibility(${object}) #abstract(${object}) class #name(${object.name})
+#foreach ( $superclass in ${object.superClasses} )
+    extends #name(${superclass.name}) 
+#end
+ implements I#name(${object.name}) 
+    {
+## #foreach( $behavior in ${object.ownedBehaviors} )
+## #if( ${behavior.eClass().name}=="Activity" )
+## #class(${behavior})
+## #end
+## #end
+    
+#foreach( $feature in ${object.ownedAttributes} )
+  #if( !${feature.isDerived()} )
+  private #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
+  #end  
+#end
+
+#foreach ( $attribute in ${object.ownedAttributes} )
+  #if( !${attribute.isStatic()} && !${attribute.isDerived()} )
+  #getter(${attribute})
+  #setter(${attribute})
+  #end  
+#end
+
+## #foreach ( $rule in ${object.ownedRules} )
+##   #comments(${rule})
+##   #constraint(${rule} ${object})
+## #end
+    
+## #foreach ( $operation in ${object.ownedOperations} )
+##   ## #featureJavaDoc("operation ${operation.name}" ${operation})
+##   #comments(${operation})
+##  #visibility(${operation}) #abstract(${operation}) #static(${operation}) #operationType(${operation.returnResult} ${operation} ${object}) #name(${operation.name})(#operationParameters(${operation})) #throws(${operation})#body(${operation} ${object})
+## #end
+
+#printOperations(${object} false)
+} //${object.name}
+#end
+
+#class(${object})

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,7 +22,8 @@ import java.util.ArrayList;
  * operation.
  **/
 
-public class FormalParameter extends TypedElementDefinition {
+public class FormalParameter extends TypedElementDefinition implements
+		IFormalParameter {
 
 	private String direction = "";
 
@@ -34,25 +35,10 @@ public class FormalParameter extends TypedElementDefinition {
 		this.direction = direction;
 	}
 
-	public boolean annotationAllowed(StereotypeAnnotation annotation) {
-		/*
-		 * Returns true if the annotation is for a stereotype that has a
-		 * metaclass consistent with Parameter.
-		 */
-		return false; // STUB
-	} // annotationAllowed
-
-	public boolean isSameKindAs(Member member) {
-		/*
-		 * Return true if the given member is a FormalParameter.
-		 */
-		return false; // STUB
-	} // isSameKindAs
-
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" direction:");
-		s.append(this.direction);
+		s.append(this.getDirection());
 		return s.toString();
 	}
 

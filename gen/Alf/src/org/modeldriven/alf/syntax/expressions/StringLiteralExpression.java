@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,7 +21,8 @@ import java.util.ArrayList;
  * An expression that comprises a String literal.
  **/
 
-public class StringLiteralExpression extends LiteralExpression {
+public class StringLiteralExpression extends LiteralExpression implements
+		IStringLiteralExpression {
 
 	private String image = "";
 
@@ -36,7 +37,7 @@ public class StringLiteralExpression extends LiteralExpression {
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" image:");
-		s.append(this.image);
+		s.append(this.getImage());
 		return s.toString();
 	}
 

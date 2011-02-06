@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,17 +21,12 @@ import java.util.ArrayList;
  * A unary expression with either an increment or decrement operator.
  **/
 
-public class IncrementOrDecrementExpression extends Expression {
+public class IncrementOrDecrementExpression extends Expression implements
+		IIncrementOrDecrementExpression {
 
 	private String operator = "";
-	private AssignedSource assignment = null; // DERIVED
-	private LeftHandSide operand = null;
-	private Expression expression = null; // DERIVED
-	private ElementReference feature = null; // DERIVED
-	private boolean isPrefix = false;
-	private boolean isFeature = false; // DERIVED
-	private boolean isIndexed = false; // DERIVED
-	private boolean isDataValueUpdate = false; // DERIVED
+	private ILeftHandSide operand = null;
+	private Boolean isPrefix = false;
 
 	public String getOperator() {
 		return this.operator;
@@ -41,93 +36,36 @@ public class IncrementOrDecrementExpression extends Expression {
 		this.operator = operator;
 	}
 
-	public AssignedSource getAssignment() {
-		return this.assignment;
-	}
-
-	public void setAssignment(AssignedSource assignment) {
-		this.assignment = assignment;
-	}
-
-	public LeftHandSide getOperand() {
+	public ILeftHandSide getOperand() {
 		return this.operand;
 	}
 
-	public void setOperand(LeftHandSide operand) {
+	public void setOperand(ILeftHandSide operand) {
 		this.operand = operand;
 	}
 
-	public Expression getExpression() {
-		return this.expression;
-	}
-
-	public void setExpression(Expression expression) {
-		this.expression = expression;
-	}
-
-	public ElementReference getFeature() {
-		return this.feature;
-	}
-
-	public void setFeature(ElementReference feature) {
-		this.feature = feature;
-	}
-
-	public boolean getIsPrefix() {
+	public Boolean getIsPrefix() {
 		return this.isPrefix;
 	}
 
-	public void setIsPrefix(boolean isPrefix) {
+	public void setIsPrefix(Boolean isPrefix) {
 		this.isPrefix = isPrefix;
 	}
-
-	public boolean getIsFeature() {
-		return this.isFeature;
-	}
-
-	public void setIsFeature(boolean isFeature) {
-		this.isFeature = isFeature;
-	}
-
-	public boolean getIsIndexed() {
-		return this.isIndexed;
-	}
-
-	public void setIsIndexed(boolean isIndexed) {
-		this.isIndexed = isIndexed;
-	}
-
-	public boolean getIsDataValueUpdate() {
-		return this.isDataValueUpdate;
-	}
-
-	public void setIsDataValueUpdate(boolean isDataValueUpdate) {
-		this.isDataValueUpdate = isDataValueUpdate;
-	}
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * The assignments after an increment and decrement expression include
-		 * all those after its operand expression. Further, if the operand
-		 * expression, considered as a left hand side, is a local name, then
-		 * this is reassigned.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operator:");
-		s.append(this.operator);
+		s.append(this.getOperator());
 		s.append(" isPrefix:");
-		s.append(this.isPrefix);
+		s.append(this.getIsPrefix());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.operand != null) {
-			this.operand.print(prefix + " ");
+		ILeftHandSide operand = this.getOperand();
+		if (operand != null) {
+			operand.print(prefix + " ");
 		}
 	}
 } // IncrementOrDecrementExpression

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,43 +22,35 @@ import java.util.ArrayList;
  * stereotype (or one of a small number of special-case annotations).
  **/
 
-public class StereotypeAnnotation extends SyntaxElement {
+public class StereotypeAnnotation extends SyntaxElement implements
+		IStereotypeAnnotation {
 
-	private TaggedValueList taggedValues = null;
-	private QualifiedNameList names = null;
-	private QualifiedName stereotypeName = null;
-	private Stereotype stereotype = null; // DERIVED
+	private ITaggedValueList taggedValues = null;
+	private IQualifiedNameList names = null;
+	private IQualifiedName stereotypeName = null;
 
-	public TaggedValueList getTaggedValues() {
+	public ITaggedValueList getTaggedValues() {
 		return this.taggedValues;
 	}
 
-	public void setTaggedValues(TaggedValueList taggedValues) {
+	public void setTaggedValues(ITaggedValueList taggedValues) {
 		this.taggedValues = taggedValues;
 	}
 
-	public QualifiedNameList getNames() {
+	public IQualifiedNameList getNames() {
 		return this.names;
 	}
 
-	public void setNames(QualifiedNameList names) {
+	public void setNames(IQualifiedNameList names) {
 		this.names = names;
 	}
 
-	public QualifiedName getStereotypeName() {
+	public IQualifiedName getStereotypeName() {
 		return this.stereotypeName;
 	}
 
-	public void setStereotypeName(QualifiedName stereotypeName) {
+	public void setStereotypeName(IQualifiedName stereotypeName) {
 		this.stereotypeName = stereotypeName;
-	}
-
-	public Stereotype getStereotype() {
-		return this.stereotype;
-	}
-
-	public void setStereotype(Stereotype stereotype) {
-		this.stereotype = stereotype;
 	}
 
 	public String toString() {
@@ -68,14 +60,17 @@ public class StereotypeAnnotation extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.taggedValues != null) {
-			this.taggedValues.print(prefix + " ");
+		ITaggedValueList taggedValues = this.getTaggedValues();
+		if (taggedValues != null) {
+			taggedValues.print(prefix + " ");
 		}
-		if (this.names != null) {
-			this.names.print(prefix + " ");
+		IQualifiedNameList names = this.getNames();
+		if (names != null) {
+			names.print(prefix + " ");
 		}
-		if (this.stereotypeName != null) {
-			this.stereotypeName.print(prefix + " ");
+		IQualifiedName stereotypeName = this.getStereotypeName();
+		if (stereotypeName != null) {
+			stereotypeName.print(prefix + " ");
 		}
 	}
 } // StereotypeAnnotation

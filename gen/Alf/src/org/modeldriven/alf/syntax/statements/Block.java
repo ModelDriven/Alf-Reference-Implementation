@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,46 +21,20 @@ import java.util.ArrayList;
  * A grouped sequence of statements.
  **/
 
-public class Block extends SyntaxElement {
+public class Block extends SyntaxElement implements IBlock {
 
-	private ArrayList<Statement> statement = new ArrayList<Statement>();
-	private ArrayList<AssignedSource> assignmentAfter = new ArrayList<AssignedSource>(); // DERIVED
-	private ArrayList<AssignedSource> assignmentBefore = new ArrayList<AssignedSource>(); // DERIVED
+	private ArrayList<IStatement> statement = new ArrayList<IStatement>();
 
-	public ArrayList<Statement> getStatement() {
+	public ArrayList<IStatement> getStatement() {
 		return this.statement;
 	}
 
-	public void setStatement(ArrayList<Statement> statement) {
+	public void setStatement(ArrayList<IStatement> statement) {
 		this.statement = statement;
 	}
 
-	public void addStatement(Statement statement) {
+	public void addStatement(IStatement statement) {
 		this.statement.add(statement);
-	}
-
-	public ArrayList<AssignedSource> getAssignmentAfter() {
-		return this.assignmentAfter;
-	}
-
-	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
-		this.assignmentAfter = assignmentAfter;
-	}
-
-	public void addAssignmentAfter(AssignedSource assignmentAfter) {
-		this.assignmentAfter.add(assignmentAfter);
-	}
-
-	public ArrayList<AssignedSource> getAssignmentBefore() {
-		return this.assignmentBefore;
-	}
-
-	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
-		this.assignmentBefore = assignmentBefore;
-	}
-
-	public void addAssignmentBefore(AssignedSource assignmentBefore) {
-		this.assignmentBefore.add(assignmentBefore);
 	}
 
 	public String toString() {
@@ -70,7 +44,7 @@ public class Block extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (Statement statement : this.getStatement()) {
+		for (IStatement statement : this.getStatement()) {
 			if (statement != null) {
 				statement.print(prefix + " ");
 			} else {

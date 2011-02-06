@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,10 +22,11 @@ import java.util.ArrayList;
  * parameter.
  **/
 
-public class TemplateParameterSubstitution extends SyntaxElement {
+public class TemplateParameterSubstitution extends SyntaxElement implements
+		ITemplateParameterSubstitution {
 
 	private String parameterName = "";
-	private QualifiedName argumentName = null;
+	private IQualifiedName argumentName = null;
 
 	public String getParameterName() {
 		return this.parameterName;
@@ -35,25 +36,26 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 		this.parameterName = parameterName;
 	}
 
-	public QualifiedName getArgumentName() {
+	public IQualifiedName getArgumentName() {
 		return this.argumentName;
 	}
 
-	public void setArgumentName(QualifiedName argumentName) {
+	public void setArgumentName(IQualifiedName argumentName) {
 		this.argumentName = argumentName;
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" parameterName:");
-		s.append(this.parameterName);
+		s.append(this.getParameterName());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.argumentName != null) {
-			this.argumentName.print(prefix + " ");
+		IQualifiedName argumentName = this.getArgumentName();
+		if (argumentName != null) {
+			argumentName.print(prefix + " ");
 		}
 	}
 } // TemplateParameterSubstitution

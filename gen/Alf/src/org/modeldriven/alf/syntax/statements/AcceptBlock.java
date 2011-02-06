@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,12 +21,11 @@ import java.util.ArrayList;
  * A block of an accept statement that accepts one or more signals.
  **/
 
-public class AcceptBlock extends SyntaxElement {
+public class AcceptBlock extends SyntaxElement implements IAcceptBlock {
 
 	private String name = "";
-	private Block block = null;
-	private QualifiedNameList signalNames = null;
-	private ArrayList<ElementReference> signal = new ArrayList<ElementReference>(); // DERIVED
+	private IBlock block = null;
+	private IQualifiedNameList signalNames = null;
 
 	public String getName() {
 		return this.name;
@@ -36,48 +35,38 @@ public class AcceptBlock extends SyntaxElement {
 		this.name = name;
 	}
 
-	public Block getBlock() {
+	public IBlock getBlock() {
 		return this.block;
 	}
 
-	public void setBlock(Block block) {
+	public void setBlock(IBlock block) {
 		this.block = block;
 	}
 
-	public QualifiedNameList getSignalNames() {
+	public IQualifiedNameList getSignalNames() {
 		return this.signalNames;
 	}
 
-	public void setSignalNames(QualifiedNameList signalNames) {
+	public void setSignalNames(IQualifiedNameList signalNames) {
 		this.signalNames = signalNames;
-	}
-
-	public ArrayList<ElementReference> getSignal() {
-		return this.signal;
-	}
-
-	public void setSignal(ArrayList<ElementReference> signal) {
-		this.signal = signal;
-	}
-
-	public void addSignal(ElementReference signal) {
-		this.signal.add(signal);
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
-		s.append(this.name);
+		s.append(this.getName());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.block != null) {
-			this.block.print(prefix + " ");
+		IBlock block = this.getBlock();
+		if (block != null) {
+			block.print(prefix + " ");
 		}
-		if (this.signalNames != null) {
-			this.signalNames.print(prefix + " ");
+		IQualifiedNameList signalNames = this.getSignalNames();
+		if (signalNames != null) {
+			signalNames.print(prefix + " ");
 		}
 	}
 } // AcceptBlock

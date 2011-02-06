@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,43 +21,17 @@ import java.util.ArrayList;
  * The declaration of the ability of an active class to receive a signal.
  **/
 
-public class ReceptionDefinition extends Member {
+public class ReceptionDefinition extends Member implements IReceptionDefinition {
 
-	private QualifiedName signalName = null;
-	private ElementReference signal = null; // DERIVED
+	private IQualifiedName signalName = null;
 
-	public QualifiedName getSignalName() {
+	public IQualifiedName getSignalName() {
 		return this.signalName;
 	}
 
-	public void setSignalName(QualifiedName signalName) {
+	public void setSignalName(IQualifiedName signalName) {
 		this.signalName = signalName;
 	}
-
-	public ElementReference getSignal() {
-		return this.signal;
-	}
-
-	public void setSignal(ElementReference signal) {
-		this.signal = signal;
-	}
-
-	public boolean annotationAllowed(StereotypeAnnotation annotation) {
-		/*
-		 * Returns true if the annotation is for a stereotype that has a
-		 * metaclass consistent with Reception.
-		 */
-		return false; // STUB
-	} // annotationAllowed
-
-	public boolean isSameKindAs(Member member) {
-		/*
-		 * Return true if the given member is either a ReceptionDefinition, a
-		 * SignalReceptionDefinition or an imported member whose referent is a
-		 * ReceptionDefinition, a SignalReceptionDefinition or a Reception.
-		 */
-		return false; // STUB
-	} // isSameKindAs
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -66,8 +40,9 @@ public class ReceptionDefinition extends Member {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.signalName != null) {
-			this.signalName.print(prefix + " ");
+		IQualifiedName signalName = this.getSignalName();
+		if (signalName != null) {
+			signalName.print(prefix + " ");
 		}
 	}
 } // ReceptionDefinition

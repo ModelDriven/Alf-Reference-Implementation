@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * A statement that executes code in a language other than Alf.
  **/
 
-public class InLineStatement extends Statement {
+public class InLineStatement extends Statement implements IInLineStatement {
 
 	private String language = "";
 	private String code = "";
@@ -45,9 +45,9 @@ public class InLineStatement extends Statement {
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" language:");
-		s.append(this.language);
+		s.append(this.getLanguage());
 		s.append(" code:");
-		s.append(this.code);
+		s.append(this.getCode());
 		return s.toString();
 	}
 

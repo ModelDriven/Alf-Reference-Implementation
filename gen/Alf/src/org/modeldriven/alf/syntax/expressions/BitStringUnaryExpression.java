@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -17,17 +17,8 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
-public class BitStringUnaryExpression extends UnaryExpression {
-
-	private boolean isBitStringConversion = false; // DERIVED
-
-	public boolean getIsBitStringConversion() {
-		return this.isBitStringConversion;
-	}
-
-	public void setIsBitStringConversion(boolean isBitStringConversion) {
-		this.isBitStringConversion = isBitStringConversion;
-	}
+public class BitStringUnaryExpression extends UnaryExpression implements
+		IBitStringUnaryExpression {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

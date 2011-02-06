@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,50 +21,53 @@ import java.util.ArrayList;
  * An expression used to construct a sequence of values.
  **/
 
-public class SequenceConstructionExpression extends Expression {
+public class SequenceConstructionExpression extends Expression implements
+		ISequenceConstructionExpression {
 
-	private SequenceElements elements = null;
-	private boolean hasMultiplicity = false;
-	private QualifiedName typeName = null;
+	private ISequenceElements elements = null;
+	private Boolean hasMultiplicity = false;
+	private IQualifiedName typeName = null;
 
-	public SequenceElements getElements() {
+	public ISequenceElements getElements() {
 		return this.elements;
 	}
 
-	public void setElements(SequenceElements elements) {
+	public void setElements(ISequenceElements elements) {
 		this.elements = elements;
 	}
 
-	public boolean getHasMultiplicity() {
+	public Boolean getHasMultiplicity() {
 		return this.hasMultiplicity;
 	}
 
-	public void setHasMultiplicity(boolean hasMultiplicity) {
+	public void setHasMultiplicity(Boolean hasMultiplicity) {
 		this.hasMultiplicity = hasMultiplicity;
 	}
 
-	public QualifiedName getTypeName() {
+	public IQualifiedName getTypeName() {
 		return this.typeName;
 	}
 
-	public void setTypeName(QualifiedName typeName) {
+	public void setTypeName(IQualifiedName typeName) {
 		this.typeName = typeName;
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" hasMultiplicity:");
-		s.append(this.hasMultiplicity);
+		s.append(this.getHasMultiplicity());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.elements != null) {
-			this.elements.print(prefix + " ");
+		ISequenceElements elements = this.getElements();
+		if (elements != null) {
+			elements.print(prefix + " ");
 		}
-		if (this.typeName != null) {
-			this.typeName.print(prefix + " ");
+		IQualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.print(prefix + " ");
 		}
 	}
 } // SequenceConstructionExpression

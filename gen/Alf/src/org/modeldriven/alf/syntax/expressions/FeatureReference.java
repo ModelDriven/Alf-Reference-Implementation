@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -23,37 +23,25 @@ import java.util.ArrayList;
  * the type of its target expression.
  **/
 
-public class FeatureReference extends SyntaxElement {
+public class FeatureReference extends SyntaxElement implements
+		IFeatureReference {
 
-	private Expression expression = null;
-	private ArrayList<ElementReference> referent = new ArrayList<ElementReference>(); // DERIVED
-	private NameBinding nameBinding = null;
+	private IExpression expression = null;
+	private INameBinding nameBinding = null;
 
-	public Expression getExpression() {
+	public IExpression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(Expression expression) {
+	public void setExpression(IExpression expression) {
 		this.expression = expression;
 	}
 
-	public ArrayList<ElementReference> getReferent() {
-		return this.referent;
-	}
-
-	public void setReferent(ArrayList<ElementReference> referent) {
-		this.referent = referent;
-	}
-
-	public void addReferent(ElementReference referent) {
-		this.referent.add(referent);
-	}
-
-	public NameBinding getNameBinding() {
+	public INameBinding getNameBinding() {
 		return this.nameBinding;
 	}
 
-	public void setNameBinding(NameBinding nameBinding) {
+	public void setNameBinding(INameBinding nameBinding) {
 		this.nameBinding = nameBinding;
 	}
 
@@ -64,11 +52,13 @@ public class FeatureReference extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.expression != null) {
-			this.expression.print(prefix + " ");
+		IExpression expression = this.getExpression();
+		if (expression != null) {
+			expression.print(prefix + " ");
 		}
-		if (this.nameBinding != null) {
-			this.nameBinding.print(prefix + " ");
+		INameBinding nameBinding = this.getNameBinding();
+		if (nameBinding != null) {
+			nameBinding.print(prefix + " ");
 		}
 	}
 } // FeatureReference

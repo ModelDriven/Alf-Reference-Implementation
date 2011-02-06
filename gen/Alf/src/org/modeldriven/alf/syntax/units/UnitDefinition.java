@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,69 +21,39 @@ import java.util.ArrayList;
  * The definition of a namespace as an Alf unit.
  **/
 
-public class UnitDefinition extends DocumentedElement {
+public class UnitDefinition extends DocumentedElement implements
+		IUnitDefinition {
 
-	private QualifiedName namespaceName = null;
-	private NamespaceDefinition definition = null;
-	private ArrayList<ImportReference> import_ = new ArrayList<ImportReference>();
-	private ElementReference namespace = null; // DERIVED
-	private boolean isModelLibrary = false; // DERIVED
-	private ArrayList<Profile> appliedProfile = new ArrayList<Profile>(); // DERIVED
+	private IQualifiedName namespaceName = null;
+	private INamespaceDefinition definition = null;
+	private ArrayList<IImportReference> import_ = new ArrayList<IImportReference>();
 
-	public QualifiedName getNamespaceName() {
+	public IQualifiedName getNamespaceName() {
 		return this.namespaceName;
 	}
 
-	public void setNamespaceName(QualifiedName namespaceName) {
+	public void setNamespaceName(IQualifiedName namespaceName) {
 		this.namespaceName = namespaceName;
 	}
 
-	public NamespaceDefinition getDefinition() {
+	public INamespaceDefinition getDefinition() {
 		return this.definition;
 	}
 
-	public void setDefinition(NamespaceDefinition definition) {
+	public void setDefinition(INamespaceDefinition definition) {
 		this.definition = definition;
 	}
 
-	public ArrayList<ImportReference> getImport() {
+	public ArrayList<IImportReference> getImport() {
 		return this.import_;
 	}
 
-	public void setImport(ArrayList<ImportReference> import_) {
+	public void setImport(ArrayList<IImportReference> import_) {
 		this.import_ = import_;
 	}
 
-	public void addImport(ImportReference import_) {
+	public void addImport(IImportReference import_) {
 		this.import_.add(import_);
-	}
-
-	public ElementReference getNamespace() {
-		return this.namespace;
-	}
-
-	public void setNamespace(ElementReference namespace) {
-		this.namespace = namespace;
-	}
-
-	public boolean getIsModelLibrary() {
-		return this.isModelLibrary;
-	}
-
-	public void setIsModelLibrary(boolean isModelLibrary) {
-		this.isModelLibrary = isModelLibrary;
-	}
-
-	public ArrayList<Profile> getAppliedProfile() {
-		return this.appliedProfile;
-	}
-
-	public void setAppliedProfile(ArrayList<Profile> appliedProfile) {
-		this.appliedProfile = appliedProfile;
-	}
-
-	public void addAppliedProfile(Profile appliedProfile) {
-		this.appliedProfile.add(appliedProfile);
 	}
 
 	public String toString() {
@@ -93,13 +63,15 @@ public class UnitDefinition extends DocumentedElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.namespaceName != null) {
-			this.namespaceName.print(prefix + " ");
+		IQualifiedName namespaceName = this.getNamespaceName();
+		if (namespaceName != null) {
+			namespaceName.print(prefix + " ");
 		}
-		if (this.definition != null) {
-			this.definition.print(prefix + " ");
+		INamespaceDefinition definition = this.getDefinition();
+		if (definition != null) {
+			definition.print(prefix + " ");
 		}
-		for (ImportReference import_ : this.getImport()) {
+		for (IImportReference import_ : this.getImport()) {
 			if (import_ != null) {
 				import_.print(prefix + " ");
 			} else {

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,7 +21,8 @@ import java.util.ArrayList;
  * A syntax element that has documentation comments associated with it.
  **/
 
-public abstract class DocumentedElement extends SyntaxElement {
+public abstract class DocumentedElement extends SyntaxElement implements
+		IDocumentedElement {
 
 	private ArrayList<String> documentation = new ArrayList<String>();
 
@@ -44,7 +45,7 @@ public abstract class DocumentedElement extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.documentation.size() > 0) {
+		if (this.getDocumentation().size() > 0) {
 			System.out.println(prefix + " documentation:");
 		}
 		for (String documentation : this.getDocumentation()) {

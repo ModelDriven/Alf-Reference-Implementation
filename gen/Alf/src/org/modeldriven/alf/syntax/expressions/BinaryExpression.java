@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,25 +21,26 @@ import java.util.ArrayList;
  * An expression consisting of an operator acting on two operand expressions.
  **/
 
-public abstract class BinaryExpression extends Expression {
+public abstract class BinaryExpression extends Expression implements
+		IBinaryExpression {
 
-	private Expression operand1 = null;
-	private Expression operand2 = null;
+	private IExpression operand1 = null;
+	private IExpression operand2 = null;
 	private String operator = "";
 
-	public Expression getOperand1() {
+	public IExpression getOperand1() {
 		return this.operand1;
 	}
 
-	public void setOperand1(Expression operand1) {
+	public void setOperand1(IExpression operand1) {
 		this.operand1 = operand1;
 	}
 
-	public Expression getOperand2() {
+	public IExpression getOperand2() {
 		return this.operand2;
 	}
 
-	public void setOperand2(Expression operand2) {
+	public void setOperand2(IExpression operand2) {
 		this.operand2 = operand2;
 	}
 
@@ -51,41 +52,22 @@ public abstract class BinaryExpression extends Expression {
 		this.operator = operator;
 	}
 
-	public boolean validateAssignments() {
-		/*
-		 * In general the assignments before the operand expressions of a binary
-		 * expression are the same as those before the binary expression and, if
-		 * an assignment for a name is changed in one operand expression, then
-		 * the assignment for that name may not change in the other operand
-		 * expression. (This is overridden for conditional logical expressions.)
-		 */
-		return false; // STUB
-	} // validateAssignments
-
-	public ArrayList<AssignedSource> updateAssignments() {
-		/*
-		 * The assignments after a binary expression include all the assignments
-		 * before the expression that are not reassigned in either operand
-		 * expression, plus the new assignments from each of the operand
-		 * expressions.
-		 */
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
-
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operator:");
-		s.append(this.operator);
+		s.append(this.getOperator());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.operand1 != null) {
-			this.operand1.print(prefix + " ");
+		IExpression operand1 = this.getOperand1();
+		if (operand1 != null) {
+			operand1.print(prefix + " ");
 		}
-		if (this.operand2 != null) {
-			this.operand2.print(prefix + " ");
+		IExpression operand2 = this.getOperand2();
+		if (operand2 != null) {
+			operand2.print(prefix + " ");
 		}
 	}
 } // BinaryExpression

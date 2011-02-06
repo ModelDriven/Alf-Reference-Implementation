@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,18 +21,14 @@ import java.util.ArrayList;
  * The definition of a loop variable in a for statement.
  **/
 
-public class LoopVariableDefinition extends SyntaxElement {
+public class LoopVariableDefinition extends SyntaxElement implements
+		ILoopVariableDefinition {
 
 	private String variable = "";
-	private Expression expression1 = null;
-	private Expression expression2 = null;
-	private QualifiedName typeName = null;
-	private boolean typeIsInferred = true;
-	private boolean isCollectionConversion = false; // DERIVED
-	private ElementReference type = null; // DERIVED
-	private boolean isFirst = false; // DERIVED
-	private ArrayList<AssignedSource> assignmentBefore = new ArrayList<AssignedSource>(); // DERIVED
-	private ArrayList<AssignedSource> assignmentAfter = new ArrayList<AssignedSource>(); // DERIVED
+	private IExpression expression1 = null;
+	private IExpression expression2 = null;
+	private IQualifiedName typeName = null;
+	private Boolean typeIsInferred = true;
 
 	public String getVariable() {
 		return this.variable;
@@ -42,105 +38,60 @@ public class LoopVariableDefinition extends SyntaxElement {
 		this.variable = variable;
 	}
 
-	public Expression getExpression1() {
+	public IExpression getExpression1() {
 		return this.expression1;
 	}
 
-	public void setExpression1(Expression expression1) {
+	public void setExpression1(IExpression expression1) {
 		this.expression1 = expression1;
 	}
 
-	public Expression getExpression2() {
+	public IExpression getExpression2() {
 		return this.expression2;
 	}
 
-	public void setExpression2(Expression expression2) {
+	public void setExpression2(IExpression expression2) {
 		this.expression2 = expression2;
 	}
 
-	public QualifiedName getTypeName() {
+	public IQualifiedName getTypeName() {
 		return this.typeName;
 	}
 
-	public void setTypeName(QualifiedName typeName) {
+	public void setTypeName(IQualifiedName typeName) {
 		this.typeName = typeName;
 	}
 
-	public boolean getTypeIsInferred() {
+	public Boolean getTypeIsInferred() {
 		return this.typeIsInferred;
 	}
 
-	public void setTypeIsInferred(boolean typeIsInferred) {
+	public void setTypeIsInferred(Boolean typeIsInferred) {
 		this.typeIsInferred = typeIsInferred;
-	}
-
-	public boolean getIsCollectionConversion() {
-		return this.isCollectionConversion;
-	}
-
-	public void setIsCollectionConversion(boolean isCollectionConversion) {
-		this.isCollectionConversion = isCollectionConversion;
-	}
-
-	public ElementReference getType() {
-		return this.type;
-	}
-
-	public void setType(ElementReference type) {
-		this.type = type;
-	}
-
-	public boolean getIsFirst() {
-		return this.isFirst;
-	}
-
-	public void setIsFirst(boolean isFirst) {
-		this.isFirst = isFirst;
-	}
-
-	public ArrayList<AssignedSource> getAssignmentBefore() {
-		return this.assignmentBefore;
-	}
-
-	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
-		this.assignmentBefore = assignmentBefore;
-	}
-
-	public void addAssignmentBefore(AssignedSource assignmentBefore) {
-		this.assignmentBefore.add(assignmentBefore);
-	}
-
-	public ArrayList<AssignedSource> getAssignmentAfter() {
-		return this.assignmentAfter;
-	}
-
-	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
-		this.assignmentAfter = assignmentAfter;
-	}
-
-	public void addAssignmentAfter(AssignedSource assignmentAfter) {
-		this.assignmentAfter.add(assignmentAfter);
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" variable:");
-		s.append(this.variable);
+		s.append(this.getVariable());
 		s.append(" typeIsInferred:");
-		s.append(this.typeIsInferred);
+		s.append(this.getTypeIsInferred());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.expression1 != null) {
-			this.expression1.print(prefix + " ");
+		IExpression expression1 = this.getExpression1();
+		if (expression1 != null) {
+			expression1.print(prefix + " ");
 		}
-		if (this.expression2 != null) {
-			this.expression2.print(prefix + " ");
+		IExpression expression2 = this.getExpression2();
+		if (expression2 != null) {
+			expression2.print(prefix + " ");
 		}
-		if (this.typeName != null) {
-			this.typeName.print(prefix + " ");
+		IQualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.print(prefix + " ");
 		}
 	}
 } // LoopVariableDefinition

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,17 +21,8 @@ import java.util.ArrayList;
  * A named argument expression for an output parameter.
  **/
 
-public class OutputNamedExpression extends NamedExpression {
-
-	private LeftHandSide leftHandSide = null; // DERIVED
-
-	public LeftHandSide getLeftHandSide() {
-		return this.leftHandSide;
-	}
-
-	public void setLeftHandSide(LeftHandSide leftHandSide) {
-		this.leftHandSide = leftHandSide;
-	}
+public class OutputNamedExpression extends NamedExpression implements
+		IOutputNamedExpression {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

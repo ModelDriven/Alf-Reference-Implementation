@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,7 +22,8 @@ import java.util.ArrayList;
  * imported.
  **/
 
-public class PackageImportReference extends ImportReference {
+public class PackageImportReference extends ImportReference implements
+		IPackageImportReference {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,16 +21,14 @@ import java.util.ArrayList;
  * The common properties of the definitions of typed elements.
  **/
 
-public abstract class TypedElementDefinition extends Member {
+public abstract class TypedElementDefinition extends Member implements
+		ITypedElementDefinition {
 
 	private String lowerBound = "";
 	private String upperBound = "1";
-	private boolean isOrdered = false;
-	private boolean isNonunique = false;
-	private QualifiedName typeName = null;
-	private ElementReference type = null; // DERIVED
-	private int lower = 0; // DERIVED
-	private int upper = 0; // DERIVED
+	private Boolean isOrdered = false;
+	private Boolean isNonunique = false;
+	private IQualifiedName typeName = null;
 
 	public String getLowerBound() {
 		return this.lowerBound;
@@ -48,71 +46,48 @@ public abstract class TypedElementDefinition extends Member {
 		this.upperBound = upperBound;
 	}
 
-	public boolean getIsOrdered() {
+	public Boolean getIsOrdered() {
 		return this.isOrdered;
 	}
 
-	public void setIsOrdered(boolean isOrdered) {
+	public void setIsOrdered(Boolean isOrdered) {
 		this.isOrdered = isOrdered;
 	}
 
-	public boolean getIsNonunique() {
+	public Boolean getIsNonunique() {
 		return this.isNonunique;
 	}
 
-	public void setIsNonunique(boolean isNonunique) {
+	public void setIsNonunique(Boolean isNonunique) {
 		this.isNonunique = isNonunique;
 	}
 
-	public QualifiedName getTypeName() {
+	public IQualifiedName getTypeName() {
 		return this.typeName;
 	}
 
-	public void setTypeName(QualifiedName typeName) {
+	public void setTypeName(IQualifiedName typeName) {
 		this.typeName = typeName;
-	}
-
-	public ElementReference getType() {
-		return this.type;
-	}
-
-	public void setType(ElementReference type) {
-		this.type = type;
-	}
-
-	public int getLower() {
-		return this.lower;
-	}
-
-	public void setLower(int lower) {
-		this.lower = lower;
-	}
-
-	public int getUpper() {
-		return this.upper;
-	}
-
-	public void setUpper(int upper) {
-		this.upper = upper;
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" lowerBound:");
-		s.append(this.lowerBound);
+		s.append(this.getLowerBound());
 		s.append(" upperBound:");
-		s.append(this.upperBound);
+		s.append(this.getUpperBound());
 		s.append(" isOrdered:");
-		s.append(this.isOrdered);
+		s.append(this.getIsOrdered());
 		s.append(" isNonunique:");
-		s.append(this.isNonunique);
+		s.append(this.getIsNonunique());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.typeName != null) {
-			this.typeName.print(prefix + " ");
+		IQualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.print(prefix + " ");
 		}
 	}
 } // TypedElementDefinition

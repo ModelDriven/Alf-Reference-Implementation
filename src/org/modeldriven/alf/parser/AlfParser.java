@@ -1332,8 +1332,8 @@ public class AlfParser implements AlfParserConstants {
     op = AffixOperator();
     if (p instanceof SequenceAccessExpression) {
       SequenceAccessExpression e = (SequenceAccessExpression)p;
-      i = e.getIndex();
-      p = e.getPrimary();
+      i = (Expression)e.getIndex();
+      p = (Expression)e.getPrimary();
     }
 
     if (p instanceof NameExpression) {
@@ -1363,8 +1363,8 @@ public class AlfParser implements AlfParserConstants {
     p = PrimaryExpression();
     if (p instanceof SequenceAccessExpression) {
       SequenceAccessExpression e = (SequenceAccessExpression)p;
-      i = e.getIndex();
-      p = e.getPrimary();
+      i = (Expression)e.getIndex();
+      p = (Expression)e.getPrimary();
     }
 
     if (p instanceof NameExpression) {
@@ -2347,8 +2347,8 @@ public class AlfParser implements AlfParserConstants {
     op = AssignmentOperator();
     if (p instanceof SequenceAccessExpression) {
       SequenceAccessExpression e1 = (SequenceAccessExpression)p;
-      i = e1.getIndex();
-      p = e1.getPrimary();
+      i = (Expression)e1.getIndex();
+      p = (Expression)e1.getPrimary();
     }
 
     if (p instanceof NameExpression) {
@@ -2586,7 +2586,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* ANNOTATED STATEMENTS */
   final public Statement AnnotatedStatement() throws ParseException {
-  ArrayList<Annotation> al;
+  ArrayList<IAnnotation> al;
   Statement s;
     jj_consume_token(SLASH_SLASH_AT);
     al = Annotations();
@@ -2597,9 +2597,9 @@ public class AlfParser implements AlfParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public ArrayList<Annotation> Annotations() throws ParseException {
+  final public ArrayList<IAnnotation> Annotations() throws ParseException {
   Annotation a;
-  ArrayList<Annotation> al = new ArrayList<Annotation>();
+  ArrayList<IAnnotation> al = new ArrayList<IAnnotation>();
     a = Annotation();
                       al.add(a);
     label_20:
@@ -3406,7 +3406,7 @@ public class AlfParser implements AlfParserConstants {
   QualifiedName n;
   ImportReference i;
   Token t;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   NamespaceDefinition d;
   UnitDefinition u = new UnitDefinition();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -3450,9 +3450,9 @@ public class AlfParser implements AlfParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public ArrayList<StereotypeAnnotation> StereotypeAnnotations() throws ParseException {
+  final public ArrayList<IStereotypeAnnotation> StereotypeAnnotations() throws ParseException {
   StereotypeAnnotation s;
-  ArrayList<StereotypeAnnotation> sl = new ArrayList<StereotypeAnnotation>();
+  ArrayList<IStereotypeAnnotation> sl = new ArrayList<IStereotypeAnnotation>();
     label_31:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -3878,7 +3878,7 @@ public class AlfParser implements AlfParserConstants {
   final public Member PackagedElement() throws ParseException {
   Token t;
   String c = null;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String v;
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4173,7 +4173,7 @@ public class AlfParser implements AlfParserConstants {
   final public Member ClassMember() throws ParseException {
   Token t;
   String c = null;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String v = null;
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4346,7 +4346,7 @@ public class AlfParser implements AlfParserConstants {
   final public Member ActiveClassMember() throws ParseException {
   Token t;
   String c = null;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String v = null;
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4479,7 +4479,7 @@ public class AlfParser implements AlfParserConstants {
   final public Member StructuredMember() throws ParseException {
   Token t;
   String c = null;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String v = null;
   Member m;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4798,7 +4798,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public FormalParameter FormalParameter() throws ParseException {
   Token t;
-  ArrayList<StereotypeAnnotation> sl;
+  ArrayList<IStereotypeAnnotation> sl;
   String d;
   String n;
   FormalParameter p = new FormalParameter();

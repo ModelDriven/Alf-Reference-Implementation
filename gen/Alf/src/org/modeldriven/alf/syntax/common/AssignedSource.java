@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -23,13 +23,13 @@ import java.util.ArrayList;
  * name.
  **/
 
-public class AssignedSource {
+public class AssignedSource implements IAssignedSource {
 
 	private String name = "";
-	private SyntaxElement source = null;
-	private int upper = 0;
-	private int lower = 0;
-	private ElementReference type = null;
+	private ISyntaxElement source = null;
+	private Integer upper = 0;
+	private Integer lower = 0;
+	private IElementReference type = null;
 
 	public String getName() {
 		return this.name;
@@ -39,56 +39,58 @@ public class AssignedSource {
 		this.name = name;
 	}
 
-	public SyntaxElement getSource() {
+	public ISyntaxElement getSource() {
 		return this.source;
 	}
 
-	public void setSource(SyntaxElement source) {
+	public void setSource(ISyntaxElement source) {
 		this.source = source;
 	}
 
-	public int getUpper() {
+	public Integer getUpper() {
 		return this.upper;
 	}
 
-	public void setUpper(int upper) {
+	public void setUpper(Integer upper) {
 		this.upper = upper;
 	}
 
-	public int getLower() {
+	public Integer getLower() {
 		return this.lower;
 	}
 
-	public void setLower(int lower) {
+	public void setLower(Integer lower) {
 		this.lower = lower;
 	}
 
-	public ElementReference getType() {
+	public IElementReference getType() {
 		return this.type;
 	}
 
-	public void setType(ElementReference type) {
+	public void setType(IElementReference type) {
 		this.type = type;
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		s.append(" name:");
-		s.append(this.name);
+		s.append(this.getName());
 		s.append(" upper:");
-		s.append(this.upper);
+		s.append(this.getUpper());
 		s.append(" lower:");
-		s.append(this.lower);
+		s.append(this.getLower());
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		System.out.println(prefix + this.toString());
-		if (this.source != null) {
-			this.source.print(prefix + " ");
+		ISyntaxElement source = this.getSource();
+		if (source != null) {
+			source.print(prefix + " ");
 		}
-		if (this.type != null) {
-			this.type.print(prefix + " ");
+		IElementReference type = this.getType();
+		if (type != null) {
+			type.print(prefix + " ");
 		}
 	}
 } // AssignedSource

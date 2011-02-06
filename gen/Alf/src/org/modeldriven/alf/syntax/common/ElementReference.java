@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * ElementReference are specific to its subclasses.)
  **/
 
-public abstract class ElementReference {
+public abstract class ElementReference implements IElementReference {
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());

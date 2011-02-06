@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,25 +21,16 @@ import java.util.ArrayList;
  * A statement that provides a value for the return parameter of an activity.
  **/
 
-public class ReturnStatement extends Statement {
+public class ReturnStatement extends Statement implements IReturnStatement {
 
-	private Expression expression = null;
-	private ElementReference behavior = null; // DERIVED
+	private IExpression expression = null;
 
-	public Expression getExpression() {
+	public IExpression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(Expression expression) {
+	public void setExpression(IExpression expression) {
 		this.expression = expression;
-	}
-
-	public ElementReference getBehavior() {
-		return this.behavior;
-	}
-
-	public void setBehavior(ElementReference behavior) {
-		this.behavior = behavior;
 	}
 
 	public String toString() {
@@ -49,8 +40,9 @@ public class ReturnStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.expression != null) {
-			this.expression.print(prefix + " ");
+		IExpression expression = this.getExpression();
+		if (expression != null) {
+			expression.print(prefix + " ");
 		}
 	}
 } // ReturnStatement

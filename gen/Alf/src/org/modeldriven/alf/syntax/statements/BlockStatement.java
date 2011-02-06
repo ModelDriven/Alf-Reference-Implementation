@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,34 +21,17 @@ import java.util.ArrayList;
  * A statement that executes a block.
  **/
 
-public class BlockStatement extends Statement {
+public class BlockStatement extends Statement implements IBlockStatement {
 
-	private Block block = null;
-	private boolean isParallel = false; // DERIVED
+	private IBlock block = null;
 
-	public Block getBlock() {
+	public IBlock getBlock() {
 		return this.block;
 	}
 
-	public void setBlock(Block block) {
+	public void setBlock(IBlock block) {
 		this.block = block;
 	}
-
-	public boolean getIsParallel() {
-		return this.isParallel;
-	}
-
-	public void setIsParallel(boolean isParallel) {
-		this.isParallel = isParallel;
-	}
-
-	public boolean annotationAllowed(Annotation annotation) {
-		/*
-		 * In addition to an @isolated annotation, a block statement may have a
-		 * @parallel annotation. It may not have any arguments.
-		 */
-		return false; // STUB
-	} // annotationAllowed
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
@@ -57,8 +40,9 @@ public class BlockStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.block != null) {
-			this.block.print(prefix + " ");
+		IBlock block = this.getBlock();
+		if (block != null) {
+			block.print(prefix + " ");
 		}
 	}
 } // BlockStatement

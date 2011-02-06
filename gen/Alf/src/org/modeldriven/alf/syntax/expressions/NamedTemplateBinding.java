@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -22,20 +22,21 @@ import java.util.ArrayList;
  * parameters by name.
  **/
 
-public class NamedTemplateBinding extends TemplateBinding {
+public class NamedTemplateBinding extends TemplateBinding implements
+		INamedTemplateBinding {
 
-	private ArrayList<TemplateParameterSubstitution> substitution = new ArrayList<TemplateParameterSubstitution>();
+	private ArrayList<ITemplateParameterSubstitution> substitution = new ArrayList<ITemplateParameterSubstitution>();
 
-	public ArrayList<TemplateParameterSubstitution> getSubstitution() {
+	public ArrayList<ITemplateParameterSubstitution> getSubstitution() {
 		return this.substitution;
 	}
 
 	public void setSubstitution(
-			ArrayList<TemplateParameterSubstitution> substitution) {
+			ArrayList<ITemplateParameterSubstitution> substitution) {
 		this.substitution = substitution;
 	}
 
-	public void addSubstitution(TemplateParameterSubstitution substitution) {
+	public void addSubstitution(ITemplateParameterSubstitution substitution) {
 		this.substitution.add(substitution);
 	}
 
@@ -46,7 +47,7 @@ public class NamedTemplateBinding extends TemplateBinding {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (TemplateParameterSubstitution substitution : this
+		for (ITemplateParameterSubstitution substitution : this
 				.getSubstitution()) {
 			if (substitution != null) {
 				substitution.print(prefix + " ");

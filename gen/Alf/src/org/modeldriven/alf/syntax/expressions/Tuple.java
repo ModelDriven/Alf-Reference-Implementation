@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,42 +21,16 @@ import java.util.ArrayList;
  * A list of expressions used to provide the arguments for an invocation.
  **/
 
-public abstract class Tuple extends SyntaxElement {
+public abstract class Tuple extends SyntaxElement implements ITuple {
 
-	private ArrayList<NamedExpression> input = new ArrayList<NamedExpression>(); // DERIVED
-	private InvocationExpression invocation = null;
-	private ArrayList<OutputNamedExpression> output = new ArrayList<OutputNamedExpression>(); // DERIVED
+	private IInvocationExpression invocation = null;
 
-	public ArrayList<NamedExpression> getInput() {
-		return this.input;
-	}
-
-	public void setInput(ArrayList<NamedExpression> input) {
-		this.input = input;
-	}
-
-	public void addInput(NamedExpression input) {
-		this.input.add(input);
-	}
-
-	public InvocationExpression getInvocation() {
+	public IInvocationExpression getInvocation() {
 		return this.invocation;
 	}
 
-	public void setInvocation(InvocationExpression invocation) {
+	public void setInvocation(IInvocationExpression invocation) {
 		this.invocation = invocation;
-	}
-
-	public ArrayList<OutputNamedExpression> getOutput() {
-		return this.output;
-	}
-
-	public void setOutput(ArrayList<OutputNamedExpression> output) {
-		this.output = output;
-	}
-
-	public void addOutput(OutputNamedExpression output) {
-		this.output.add(output);
 	}
 
 	public String toString() {
@@ -66,8 +40,9 @@ public abstract class Tuple extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.invocation != null) {
-			this.invocation.print(prefix + " ");
+		IInvocationExpression invocation = this.getInvocation();
+		if (invocation != null) {
+			invocation.print(prefix + " ");
 		}
 	}
 } // Tuple

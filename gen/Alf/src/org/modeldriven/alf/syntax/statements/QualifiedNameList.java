@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,19 +21,20 @@ import java.util.ArrayList;
  * A group of qualified names.
  **/
 
-public class QualifiedNameList extends SyntaxElement {
+public class QualifiedNameList extends SyntaxElement implements
+		IQualifiedNameList {
 
-	private ArrayList<QualifiedName> name = new ArrayList<QualifiedName>();
+	private ArrayList<IQualifiedName> name = new ArrayList<IQualifiedName>();
 
-	public ArrayList<QualifiedName> getName() {
+	public ArrayList<IQualifiedName> getName() {
 		return this.name;
 	}
 
-	public void setName(ArrayList<QualifiedName> name) {
+	public void setName(ArrayList<IQualifiedName> name) {
 		this.name = name;
 	}
 
-	public void addName(QualifiedName name) {
+	public void addName(IQualifiedName name) {
 		this.name.add(name);
 	}
 
@@ -44,7 +45,7 @@ public class QualifiedNameList extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (QualifiedName name : this.getName()) {
+		for (IQualifiedName name : this.getName()) {
 			if (name != null) {
 				name.print(prefix + " ");
 			} else {
