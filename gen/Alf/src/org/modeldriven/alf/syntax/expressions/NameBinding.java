@@ -17,20 +17,30 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.NameBindingImpl;
+
 /**
  * An unqualified name, optionally with a template binding.
  **/
 
-public class NameBinding extends SyntaxElement implements INameBinding {
+public class NameBinding extends SyntaxElement {
 
-	private ITemplateBinding binding = null;
+	private TemplateBinding binding = null;
 	private String name = "";
 
-	public ITemplateBinding getBinding() {
+	public NameBinding() {
+		this.impl = new NameBindingImpl(this);
+	}
+
+	public NameBindingImpl getImpl() {
+		return (NameBindingImpl) this.impl;
+	}
+
+	public TemplateBinding getBinding() {
 		return this.binding;
 	}
 
-	public void setBinding(ITemplateBinding binding) {
+	public void setBinding(TemplateBinding binding) {
 		this.binding = binding;
 	}
 
@@ -51,7 +61,7 @@ public class NameBinding extends SyntaxElement implements INameBinding {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ITemplateBinding binding = this.getBinding();
+		TemplateBinding binding = this.getBinding();
 		if (binding != null) {
 			binding.print(prefix + " ");
 		}

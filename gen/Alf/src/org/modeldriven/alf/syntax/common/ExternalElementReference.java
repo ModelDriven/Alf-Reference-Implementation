@@ -17,20 +17,29 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.common.impl.ExternalElementReferenceImpl;
+
 /**
  * A direct reference to a UML model element.
  **/
 
-public class ExternalElementReference extends ElementReference implements
-		IExternalElementReference {
+public class ExternalElementReference extends ElementReference {
 
-	private IElement element = null;
+	private Element element = null;
 
-	public IElement getElement() {
+	public ExternalElementReference() {
+		this.impl = new ExternalElementReferenceImpl(this);
+	}
+
+	public ExternalElementReferenceImpl getImpl() {
+		return (ExternalElementReferenceImpl) this.impl;
+	}
+
+	public Element getElement() {
 		return this.element;
 	}
 
-	public void setElement(IElement element) {
+	public void setElement(Element element) {
 		this.element = element;
 	}
 
@@ -41,7 +50,7 @@ public class ExternalElementReference extends ElementReference implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IElement element = this.getElement();
+		Element element = this.getElement();
 		if (element != null) {
 			element.print(prefix + " ");
 		}

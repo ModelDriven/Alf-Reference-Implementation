@@ -17,15 +17,24 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.FormalParameterImpl;
+
 /**
  * A typed element definition for the formal parameter of an activity or
  * operation.
  **/
 
-public class FormalParameter extends TypedElementDefinition implements
-		IFormalParameter {
+public class FormalParameter extends TypedElementDefinition {
 
 	private String direction = "";
+
+	public FormalParameter() {
+		this.impl = new FormalParameterImpl(this);
+	}
+
+	public FormalParameterImpl getImpl() {
+		return (FormalParameterImpl) this.impl;
+	}
 
 	public String getDirection() {
 		return this.direction;
@@ -33,6 +42,21 @@ public class FormalParameter extends TypedElementDefinition implements
 
 	public void setDirection(String direction) {
 		this.direction = direction;
+	}
+
+	/**
+	 * Returns true if the annotation is for a stereotype that has a metaclass
+	 * consistent with Parameter.
+	 **/
+	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+		return this.getImpl().annotationAllowed(annotation);
+	}
+
+	/**
+	 * Return true if the given member is a FormalParameter.
+	 **/
+	public Boolean isSameKindAs(Member member) {
+		return this.getImpl().isSameKindAs(member);
 	}
 
 	public String toString() {

@@ -17,23 +17,33 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.NamedTupleImpl;
+
 /**
  * A tuple in which the arguments are matched to parameters by name.
  **/
 
-public class NamedTuple extends Tuple implements INamedTuple {
+public class NamedTuple extends Tuple {
 
-	private ArrayList<INamedExpression> namedExpression = new ArrayList<INamedExpression>();
+	private ArrayList<NamedExpression> namedExpression = new ArrayList<NamedExpression>();
 
-	public ArrayList<INamedExpression> getNamedExpression() {
+	public NamedTuple() {
+		this.impl = new NamedTupleImpl(this);
+	}
+
+	public NamedTupleImpl getImpl() {
+		return (NamedTupleImpl) this.impl;
+	}
+
+	public ArrayList<NamedExpression> getNamedExpression() {
 		return this.namedExpression;
 	}
 
-	public void setNamedExpression(ArrayList<INamedExpression> namedExpression) {
+	public void setNamedExpression(ArrayList<NamedExpression> namedExpression) {
 		this.namedExpression = namedExpression;
 	}
 
-	public void addNamedExpression(INamedExpression namedExpression) {
+	public void addNamedExpression(NamedExpression namedExpression) {
 		this.namedExpression.add(namedExpression);
 	}
 
@@ -44,9 +54,9 @@ public class NamedTuple extends Tuple implements INamedTuple {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<INamedExpression> namedExpression = this.getNamedExpression();
+		ArrayList<NamedExpression> namedExpression = this.getNamedExpression();
 		if (namedExpression != null) {
-			for (INamedExpression item : this.getNamedExpression()) {
+			for (NamedExpression item : this.getNamedExpression()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {

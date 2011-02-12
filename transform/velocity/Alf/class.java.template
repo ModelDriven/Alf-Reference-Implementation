@@ -1,5 +1,5 @@
 #**
-*class.java template for uml project
+*class.java template for alf project
 @projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/${object.name}.java 
 @artifactContext GenClass 
 *#
@@ -7,17 +7,17 @@
 ${copyrightBoilerPlate}
 ${packageDeclaration};
 #imports()
+import #qualifiedPackageName(${object.owner}).impl.${object.name}Impl;
 #comments(${object})
 
-#macro( class $object)
+#macro( class $object )
 ## #classJavaDoc(${object}) 
 
 #visibility(${object}) #abstract(${object}) class #name(${object.name})
 #foreach ( $superclass in ${object.superClasses} )
     extends #name(${superclass.name}) 
-#end
- implements I#name(${object.name}) 
-    {
+#end 
+{
 ## #foreach( $behavior in ${object.ownedBehaviors} )
 ## #if( ${behavior.eClass().name}=="Activity" )
 ## #class(${behavior})
@@ -25,30 +25,50 @@ ${packageDeclaration};
 ## #end
     
 #foreach( $feature in ${object.ownedAttributes} )
-  #if( !${feature.isDerived()} )
+  #if( ${feature.isStatic()} )
+  #visibility(${feature}) static #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
+  #elseif( ${feature.isDerived()} )
+  private #type(${feature}) #name(${feature.name}) = null; // DERIVED
+  #else
   private #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
   #end  
 #end
 
+#if( ${object.superClasses.size()}==0 )
+  protected ${object.name}Impl impl;
+#end
+
+#if( !${object.isAbstract()} )
+public #name(${object.name})() {
+  this.impl = new ${object.name}Impl(this);
+}
+#end
+
+public ${object.name}Impl getImpl() {
+  return (${object.name}Impl)this.impl;
+}
+
 #foreach ( $attribute in ${object.ownedAttributes} )
-  #if( !${attribute.isStatic()} && !${attribute.isDerived()} )
+  #if( !${attribute.isStatic()} )
   #getter(${attribute})
   #setter(${attribute})
   #end  
 #end
 
-## #foreach ( $rule in ${object.ownedRules} )
-##   #comments(${rule})
-##   #constraint(${rule} ${object})
-## #end
+#foreach ( $rule in ${object.ownedRules} )
+  #comments(${rule})
+  public boolean ${rule.name}() { return this.getImpl().${rule.name}(); }
+#end
     
-## #foreach ( $operation in ${object.ownedOperations} )
-##   ## #featureJavaDoc("operation ${operation.name}" ${operation})
-##   #comments(${operation})
-##  #visibility(${operation}) #abstract(${operation}) #static(${operation}) #operationType(${operation.returnResult} ${operation} ${object}) #name(${operation.name})(#operationParameters(${operation})) #throws(${operation})#body(${operation} ${object})
-## #end
+#foreach ( $operation in ${object.ownedOperations} )
+  ## #featureJavaDoc("operation ${operation.name}" ${operation})
+  #comments(${operation})
+  #visibility(${operation}) #static(${operation}) #operationType(${operation.returnResult} ${operation} ${object}) #name(${operation.name})(#operationParameters(${operation})) #throws(${operation}) {
+    return #if(${operation.returnResult})this.getImpl().#name(${operation.name})(#operationParameterNames(${operation}))#end;
+  }
+#end
 
-#printOperations(${object} false)
+#printOperations(${object})
 } //${object.name}
 #end
 

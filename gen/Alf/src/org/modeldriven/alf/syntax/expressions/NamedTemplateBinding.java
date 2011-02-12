@@ -17,26 +17,35 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.NamedTemplateBindingImpl;
+
 /**
  * A template binding in which the arguments are matched to formal template
  * parameters by name.
  **/
 
-public class NamedTemplateBinding extends TemplateBinding implements
-		INamedTemplateBinding {
+public class NamedTemplateBinding extends TemplateBinding {
 
-	private ArrayList<ITemplateParameterSubstitution> substitution = new ArrayList<ITemplateParameterSubstitution>();
+	private ArrayList<TemplateParameterSubstitution> substitution = new ArrayList<TemplateParameterSubstitution>();
 
-	public ArrayList<ITemplateParameterSubstitution> getSubstitution() {
+	public NamedTemplateBinding() {
+		this.impl = new NamedTemplateBindingImpl(this);
+	}
+
+	public NamedTemplateBindingImpl getImpl() {
+		return (NamedTemplateBindingImpl) this.impl;
+	}
+
+	public ArrayList<TemplateParameterSubstitution> getSubstitution() {
 		return this.substitution;
 	}
 
 	public void setSubstitution(
-			ArrayList<ITemplateParameterSubstitution> substitution) {
+			ArrayList<TemplateParameterSubstitution> substitution) {
 		this.substitution = substitution;
 	}
 
-	public void addSubstitution(ITemplateParameterSubstitution substitution) {
+	public void addSubstitution(TemplateParameterSubstitution substitution) {
 		this.substitution.add(substitution);
 	}
 
@@ -47,10 +56,10 @@ public class NamedTemplateBinding extends TemplateBinding implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<ITemplateParameterSubstitution> substitution = this
+		ArrayList<TemplateParameterSubstitution> substitution = this
 				.getSubstitution();
 		if (substitution != null) {
-			for (ITemplateParameterSubstitution item : this.getSubstitution()) {
+			for (TemplateParameterSubstitution item : this.getSubstitution()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {

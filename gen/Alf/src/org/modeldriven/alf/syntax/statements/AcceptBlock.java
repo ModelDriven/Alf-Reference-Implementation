@@ -17,15 +17,26 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.AcceptBlockImpl;
+
 /**
  * A block of an accept statement that accepts one or more signals.
  **/
 
-public class AcceptBlock extends SyntaxElement implements IAcceptBlock {
+public class AcceptBlock extends SyntaxElement {
 
 	private String name = "";
-	private IBlock block = null;
-	private IQualifiedNameList signalNames = null;
+	private Block block = null;
+	private QualifiedNameList signalNames = null;
+	private ArrayList<ElementReference> signal = null; // DERIVED
+
+	public AcceptBlock() {
+		this.impl = new AcceptBlockImpl(this);
+	}
+
+	public AcceptBlockImpl getImpl() {
+		return (AcceptBlockImpl) this.impl;
+	}
 
 	public String getName() {
 		return this.name;
@@ -35,20 +46,42 @@ public class AcceptBlock extends SyntaxElement implements IAcceptBlock {
 		this.name = name;
 	}
 
-	public IBlock getBlock() {
+	public Block getBlock() {
 		return this.block;
 	}
 
-	public void setBlock(IBlock block) {
+	public void setBlock(Block block) {
 		this.block = block;
 	}
 
-	public IQualifiedNameList getSignalNames() {
+	public QualifiedNameList getSignalNames() {
 		return this.signalNames;
 	}
 
-	public void setSignalNames(IQualifiedNameList signalNames) {
+	public void setSignalNames(QualifiedNameList signalNames) {
 		this.signalNames = signalNames;
+	}
+
+	public ArrayList<ElementReference> getSignal() {
+		if (this.signal == null) {
+			this.signal = this.getImpl().deriveSignal();
+		}
+		return this.signal;
+	}
+
+	/**
+	 * The signals of an accept block are the referents of the signal names of
+	 * the accept block.
+	 **/
+	public boolean acceptBlockSignalDerivation() {
+		return this.getImpl().acceptBlockSignalDerivation();
+	}
+
+	/**
+	 * All signal names in an accept block must resolve to signals.
+	 **/
+	public boolean acceptBlockSignalNames() {
+		return this.getImpl().acceptBlockSignalNames();
 	}
 
 	public String toString() {
@@ -60,13 +93,19 @@ public class AcceptBlock extends SyntaxElement implements IAcceptBlock {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IBlock block = this.getBlock();
+		Block block = this.getBlock();
 		if (block != null) {
 			block.print(prefix + " ");
 		}
-		IQualifiedNameList signalNames = this.getSignalNames();
+		QualifiedNameList signalNames = this.getSignalNames();
 		if (signalNames != null) {
 			signalNames.print(prefix + " ");
+		}
+		ArrayList<ElementReference> signal = this.getSignal();
+		if (signal != null) {
+			for (ElementReference item : this.getSignal()) {
+				System.out.println(prefix + " /" + item);
+			}
 		}
 	}
 } // AcceptBlock

@@ -17,12 +17,20 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
+
 /**
  * A syntax element synthesized in an abstract syntax tree, along with any
  * additional information determined during static semantic analysis.
  **/
 
-public abstract class SyntaxElement implements ISyntaxElement {
+public abstract class SyntaxElement {
+
+	protected SyntaxElementImpl impl;
+
+	public SyntaxElementImpl getImpl() {
+		return (SyntaxElementImpl) this.impl;
+	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());

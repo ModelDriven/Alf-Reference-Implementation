@@ -17,14 +17,24 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.AnnotationImpl;
+
 /**
  * An identified modification to the behavior of an annotated statement.
  **/
 
-public class Annotation extends SyntaxElement implements IAnnotation {
+public class Annotation extends SyntaxElement {
 
 	private String identifier = "";
 	private ArrayList<String> argument = new ArrayList<String>();
+
+	public Annotation() {
+		this.impl = new AnnotationImpl(this);
+	}
+
+	public AnnotationImpl getImpl() {
+		return (AnnotationImpl) this.impl;
+	}
 
 	public String getIdentifier() {
 		return this.identifier;

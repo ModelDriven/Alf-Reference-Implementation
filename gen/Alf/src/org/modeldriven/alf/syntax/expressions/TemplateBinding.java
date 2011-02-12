@@ -17,13 +17,18 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.TemplateBindingImpl;
+
 /**
  * A list of type names used to provide arguments for the parameters of a
  * template.
  **/
 
-public abstract class TemplateBinding extends SyntaxElement implements
-		ITemplateBinding {
+public abstract class TemplateBinding extends SyntaxElement {
+
+	public TemplateBindingImpl getImpl() {
+		return (TemplateBindingImpl) this.impl;
+	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

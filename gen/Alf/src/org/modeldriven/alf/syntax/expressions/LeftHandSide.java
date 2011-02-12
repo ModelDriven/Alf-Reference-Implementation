@@ -17,6 +17,8 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.LeftHandSideImpl;
+
 /**
  * The left-hand side of an assignment expression.
  * 
@@ -24,17 +26,44 @@ import java.util.ArrayList;
  * to its various subclasses.
  **/
 
-public abstract class LeftHandSide extends SyntaxElement implements
-		ILeftHandSide {
+public abstract class LeftHandSide extends SyntaxElement {
 
-	private IExpression index = null;
+	private ArrayList<AssignedSource> assignmentBefore = null; // DERIVED
+	private ArrayList<AssignedSource> assignmentAfter = null; // DERIVED
+	private Expression index = null;
 
-	public IExpression getIndex() {
+	public LeftHandSideImpl getImpl() {
+		return (LeftHandSideImpl) this.impl;
+	}
+
+	public ArrayList<AssignedSource> getAssignmentBefore() {
+		if (this.assignmentBefore == null) {
+			this.assignmentBefore = this.getImpl().deriveAssignmentBefore();
+		}
+		return this.assignmentBefore;
+	}
+
+	public ArrayList<AssignedSource> getAssignmentAfter() {
+		if (this.assignmentAfter == null) {
+			this.assignmentAfter = this.getImpl().deriveAssignmentAfter();
+		}
+		return this.assignmentAfter;
+	}
+
+	public Expression getIndex() {
 		return this.index;
 	}
 
-	public void setIndex(IExpression index) {
+	public void setIndex(Expression index) {
 		this.index = index;
+	}
+
+	/**
+	 * If a left-hand side has an index, then the index expression must have a
+	 * multiplicity upper bound no greater than 1.
+	 **/
+	public boolean leftHandSideIndexExpression() {
+		return this.getImpl().leftHandSideIndexExpression();
 	}
 
 	public String toString() {
@@ -44,7 +73,19 @@ public abstract class LeftHandSide extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression index = this.getIndex();
+		ArrayList<AssignedSource> assignmentBefore = this.getAssignmentBefore();
+		if (assignmentBefore != null) {
+			for (AssignedSource item : this.getAssignmentBefore()) {
+				System.out.println(prefix + " /" + item);
+			}
+		}
+		ArrayList<AssignedSource> assignmentAfter = this.getAssignmentAfter();
+		if (assignmentAfter != null) {
+			for (AssignedSource item : this.getAssignmentAfter()) {
+				System.out.println(prefix + " /" + item);
+			}
+		}
+		Expression index = this.getIndex();
 		if (index != null) {
 			index.print(prefix + " ");
 		}

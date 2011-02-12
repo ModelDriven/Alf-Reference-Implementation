@@ -17,15 +17,27 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.NamedExpressionImpl;
+
 /**
  * A pairing of a parameter name and an argument expression in a tuple.
  **/
 
-public class NamedExpression extends SyntaxElement implements INamedExpression {
+public class NamedExpression extends SyntaxElement {
 
 	private String name = "";
-	private IExpression expression = null;
-	private IExpression index = null;
+	private Expression expression = null;
+	private Expression index = null;
+	private Boolean isCollectionConversion = null; // DERIVED
+	private Boolean isBitStringConversion = null; // DERIVED
+
+	public NamedExpression() {
+		this.impl = new NamedExpressionImpl(this);
+	}
+
+	public NamedExpressionImpl getImpl() {
+		return (NamedExpressionImpl) this.impl;
+	}
 
 	public String getName() {
 		return this.name;
@@ -35,36 +47,81 @@ public class NamedExpression extends SyntaxElement implements INamedExpression {
 		this.name = name;
 	}
 
-	public IExpression getExpression() {
+	public Expression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(IExpression expression) {
+	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
 
-	public IExpression getIndex() {
+	public Expression getIndex() {
 		return this.index;
 	}
 
-	public void setIndex(IExpression index) {
+	public void setIndex(Expression index) {
 		this.index = index;
+	}
+
+	public Boolean getIsCollectionConversion() {
+		if (this.isCollectionConversion == null) {
+			this.isCollectionConversion = this.getImpl()
+					.deriveIsCollectionConversion();
+		}
+		return this.isCollectionConversion;
+	}
+
+	public Boolean getIsBitStringConversion() {
+		if (this.isBitStringConversion == null) {
+			this.isBitStringConversion = this.getImpl()
+					.deriveIsBitStringConversion();
+		}
+		return this.isBitStringConversion;
+	}
+
+	/**
+	 * Collection conversion is required if the type of the corresponding
+	 * parameter is a collection class and the type of the argument expression
+	 * is not.
+	 **/
+	public boolean namedExpressionIsCollectionConversionDerivation() {
+		return this.getImpl().namedExpressionIsCollectionConversionDerivation();
+	}
+
+	/**
+	 * Bit string conversion is required if the type of the type of the
+	 * corresponding parameter is BitString, or a collection class instantiated
+	 * with a BitString type, and the type of the argument expression is not
+	 * BitString.
+	 **/
+	public boolean namedExpressionIsBitStringConversionDerivation() {
+		return this.getImpl().namedExpressionIsBitStringConversionDerivation();
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
 		s.append(this.getName());
+		Boolean isCollectionConversion = this.getIsCollectionConversion();
+		if (isCollectionConversion != null) {
+			s.append(" /isCollectionConversion:");
+			s.append(isCollectionConversion);
+		}
+		Boolean isBitStringConversion = this.getIsBitStringConversion();
+		if (isBitStringConversion != null) {
+			s.append(" /isBitStringConversion:");
+			s.append(isBitStringConversion);
+		}
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression expression = this.getExpression();
+		Expression expression = this.getExpression();
 		if (expression != null) {
 			expression.print(prefix + " ");
 		}
-		IExpression index = this.getIndex();
+		Expression index = this.getIndex();
 		if (index != null) {
 			index.print(prefix + " ");
 		}

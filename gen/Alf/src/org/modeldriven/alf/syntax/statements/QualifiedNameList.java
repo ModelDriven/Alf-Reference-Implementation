@@ -17,24 +17,33 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.QualifiedNameListImpl;
+
 /**
  * A group of qualified names.
  **/
 
-public class QualifiedNameList extends SyntaxElement implements
-		IQualifiedNameList {
+public class QualifiedNameList extends SyntaxElement {
 
-	private ArrayList<IQualifiedName> name = new ArrayList<IQualifiedName>();
+	private ArrayList<QualifiedName> name = new ArrayList<QualifiedName>();
 
-	public ArrayList<IQualifiedName> getName() {
+	public QualifiedNameList() {
+		this.impl = new QualifiedNameListImpl(this);
+	}
+
+	public QualifiedNameListImpl getImpl() {
+		return (QualifiedNameListImpl) this.impl;
+	}
+
+	public ArrayList<QualifiedName> getName() {
 		return this.name;
 	}
 
-	public void setName(ArrayList<IQualifiedName> name) {
+	public void setName(ArrayList<QualifiedName> name) {
 		this.name = name;
 	}
 
-	public void addName(IQualifiedName name) {
+	public void addName(QualifiedName name) {
 		this.name.add(name);
 	}
 
@@ -45,9 +54,9 @@ public class QualifiedNameList extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<IQualifiedName> name = this.getName();
+		ArrayList<QualifiedName> name = this.getName();
 		if (name != null) {
-			for (IQualifiedName item : this.getName()) {
+			for (QualifiedName item : this.getName()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {

@@ -17,55 +17,164 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.SwitchStatementImpl;
+
 /**
  * A statement that executes (at most) one of a set of statement sequences based
  * on matching a switch value to a set of test cases.
  **/
 
-public class SwitchStatement extends Statement implements ISwitchStatement {
+public class SwitchStatement extends Statement {
 
-	private ArrayList<ISwitchClause> nonDefaultClause = new ArrayList<ISwitchClause>();
-	private IExpression expression = null;
-	private IBlock defaultClause = null;
+	private ArrayList<SwitchClause> nonDefaultClause = new ArrayList<SwitchClause>();
+	private Expression expression = null;
+	private Block defaultClause = null;
+	private Boolean isAssured = null; // DERIVED
+	private Boolean isDetermined = null; // DERIVED
 
-	public ArrayList<ISwitchClause> getNonDefaultClause() {
+	public SwitchStatement() {
+		this.impl = new SwitchStatementImpl(this);
+	}
+
+	public SwitchStatementImpl getImpl() {
+		return (SwitchStatementImpl) this.impl;
+	}
+
+	public ArrayList<SwitchClause> getNonDefaultClause() {
 		return this.nonDefaultClause;
 	}
 
-	public void setNonDefaultClause(ArrayList<ISwitchClause> nonDefaultClause) {
+	public void setNonDefaultClause(ArrayList<SwitchClause> nonDefaultClause) {
 		this.nonDefaultClause = nonDefaultClause;
 	}
 
-	public void addNonDefaultClause(ISwitchClause nonDefaultClause) {
+	public void addNonDefaultClause(SwitchClause nonDefaultClause) {
 		this.nonDefaultClause.add(nonDefaultClause);
 	}
 
-	public IExpression getExpression() {
+	public Expression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(IExpression expression) {
+	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
 
-	public IBlock getDefaultClause() {
+	public Block getDefaultClause() {
 		return this.defaultClause;
 	}
 
-	public void setDefaultClause(IBlock defaultClause) {
+	public void setDefaultClause(Block defaultClause) {
 		this.defaultClause = defaultClause;
+	}
+
+	public Boolean getIsAssured() {
+		if (this.isAssured == null) {
+			this.isAssured = this.getImpl().deriveIsAssured();
+		}
+		return this.isAssured;
+	}
+
+	public Boolean getIsDetermined() {
+		if (this.isDetermined == null) {
+			this.isDetermined = this.getImpl().deriveIsDetermined();
+		}
+		return this.isDetermined;
+	}
+
+	/**
+	 * The assignments before all clauses of a switch statement are the same as
+	 * the assignments before the switch statement.
+	 **/
+	public boolean switchStatementAssignmentsBefore() {
+		return this.getImpl().switchStatementAssignmentsBefore();
+	}
+
+	/**
+	 * The same local name may not be assigned in more than one case expression
+	 * in a switch statement.
+	 **/
+	public boolean switchStatementCaseAssignments() {
+		return this.getImpl().switchStatementCaseAssignments();
+	}
+
+	/**
+	 * If a name has an assigned source after any clause of a switch statement
+	 * that is different than before that clause (including newly defined
+	 * names), the assigned source after the switch statement is the switch
+	 * statement. Otherwise, the assigned source of a name after the switch
+	 * statement is the same as before the switch statement.
+	 **/
+	public boolean switchStatementAssignmentsAfter() {
+		return this.getImpl().switchStatementAssignmentsAfter();
+	}
+
+	/**
+	 * If a switch statement does not have a final default clause, then any name
+	 * that is unassigned before the switch statement is unassigned after the
+	 * switch statement. If a switch statement does have a final default clause,
+	 * then any name that is unassigned before the switch statement and is
+	 * assigned after any one clause of the switch statement must also be
+	 * assigned after every other clause. The type of such names after the
+	 * switch statement is the effective common ancestor of the types of the
+	 * name in each clause with a multiplicity lower bound that is the minimum
+	 * of the lower bound for the name in each clause and a multiplicity upper
+	 * bound that is the maximum for the name in each clause.
+	 **/
+	public boolean switchStatementAssignments() {
+		return this.getImpl().switchStatementAssignments();
+	}
+
+	public boolean switchStatementExpression() {
+		return this.getImpl().switchStatementExpression();
+	}
+
+	public boolean switchStatementEnclosedStatements() {
+		return this.getImpl().switchStatementEnclosedStatements();
+	}
+
+	/**
+	 * An switch statement is determined if it has an @determined annotation.
+	 **/
+	public boolean switchStatementIsDeterminedDerivation() {
+		return this.getImpl().switchStatementIsDeterminedDerivation();
+	}
+
+	/**
+	 * An switch statement is assured if it has an @assured annotation.
+	 **/
+	public boolean switchStatementIsAssuredDerivation() {
+		return this.getImpl().switchStatementIsAssuredDerivation();
+	}
+
+	/**
+	 * In addition to an @isolated annotation, a switch statement may have @assured
+	 * and @determined annotations. They may not have arguments.
+	 **/
+	public Boolean annotationAllowed(Annotation annotation) {
+		return this.getImpl().annotationAllowed(annotation);
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
+		Boolean isAssured = this.getIsAssured();
+		if (isAssured != null) {
+			s.append(" /isAssured:");
+			s.append(isAssured);
+		}
+		Boolean isDetermined = this.getIsDetermined();
+		if (isDetermined != null) {
+			s.append(" /isDetermined:");
+			s.append(isDetermined);
+		}
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<ISwitchClause> nonDefaultClause = this.getNonDefaultClause();
+		ArrayList<SwitchClause> nonDefaultClause = this.getNonDefaultClause();
 		if (nonDefaultClause != null) {
-			for (ISwitchClause item : this.getNonDefaultClause()) {
+			for (SwitchClause item : this.getNonDefaultClause()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {
@@ -73,11 +182,11 @@ public class SwitchStatement extends Statement implements ISwitchStatement {
 				}
 			}
 		}
-		IExpression expression = this.getExpression();
+		Expression expression = this.getExpression();
 		if (expression != null) {
 			expression.print(prefix + " ");
 		}
-		IBlock defaultClause = this.getDefaultClause();
+		Block defaultClause = this.getDefaultClause();
 		if (defaultClause != null) {
 			defaultClause.print(prefix + " ");
 		}

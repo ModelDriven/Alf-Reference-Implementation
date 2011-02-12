@@ -17,16 +17,21 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.UnaryExpressionImpl;
+
 /**
  * An expression consisting of an operator acting on a single operand
  * expression.
  **/
 
-public abstract class UnaryExpression extends Expression implements
-		IUnaryExpression {
+public abstract class UnaryExpression extends Expression {
 
 	private String operator = "";
-	private IExpression operand = null;
+	private Expression operand = null;
+
+	public UnaryExpressionImpl getImpl() {
+		return (UnaryExpressionImpl) this.impl;
+	}
 
 	public String getOperator() {
 		return this.operator;
@@ -36,12 +41,28 @@ public abstract class UnaryExpression extends Expression implements
 		this.operator = operator;
 	}
 
-	public IExpression getOperand() {
+	public Expression getOperand() {
 		return this.operand;
 	}
 
-	public void setOperand(IExpression operand) {
+	public void setOperand(Expression operand) {
 		this.operand = operand;
+	}
+
+	/**
+	 * The assignments before the operand of a unary expression are the same as
+	 * those before the unary expression.
+	 **/
+	public boolean unaryExpressionAssignmentsBefore() {
+		return this.getImpl().unaryExpressionAssignmentsBefore();
+	}
+
+	/**
+	 * By default, the assignments after a unary expression are the same as
+	 * those after its operand expression.
+	 **/
+	public ArrayList<AssignedSource> updateAssignments() {
+		return this.getImpl().updateAssignments();
 	}
 
 	public String toString() {
@@ -53,7 +74,7 @@ public abstract class UnaryExpression extends Expression implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression operand = this.getOperand();
+		Expression operand = this.getOperand();
 		if (operand != null) {
 			operand.print(prefix + " ");
 		}

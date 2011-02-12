@@ -17,22 +17,76 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.ActivityDefinitionImpl;
+
 /**
  * The definition of an activity, with any formal parameters defined as owned
  * members.
  **/
 
-public class ActivityDefinition extends ClassifierDefinition implements
-		IActivityDefinition {
+public class ActivityDefinition extends ClassifierDefinition {
 
-	private IBlock body = null;
+	private Block body = null;
 
-	public IBlock getBody() {
+	public ActivityDefinition() {
+		this.impl = new ActivityDefinitionImpl(this);
+	}
+
+	public ActivityDefinitionImpl getImpl() {
+		return (ActivityDefinitionImpl) this.impl;
+	}
+
+	public Block getBody() {
 		return this.body;
 	}
 
-	public void setBody(IBlock body) {
+	public void setBody(Block body) {
 		this.body = body;
+	}
+
+	/**
+	 * An activity definition may not have a specialization list.
+	 **/
+	public boolean activityDefinitionSpecialization() {
+		return this.getImpl().activityDefinitionSpecialization();
+	}
+
+	/**
+	 * If an activity definition is primitive, then it must have a body that is
+	 * empty.
+	 **/
+	public boolean activityDefinitionPrimitive() {
+		return this.getImpl().activityDefinitionPrimitive();
+	}
+
+	/**
+	 * In addition to the annotations allowed for classifiers in general, an
+	 * activity definition allows @primitive annotations and any stereotype
+	 * whose metaclass is consistent with Activity.
+	 **/
+	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+		return this.getImpl().annotationAllowed(annotation);
+	}
+
+	/**
+	 * Returns true if the given unit definition matches this activity
+	 * definition considered as a classifier definition and the subunit is for
+	 * an activity definition. In addition, the subunit definition must have
+	 * formal parameters that match each of the formal parameters of the stub
+	 * definition, in order. Two formal parameters match if they have the same
+	 * direction, name, multiplicity bounds, ordering, uniqueness and type
+	 * reference.
+	 **/
+	public Boolean matchForStub(UnitDefinition unit) {
+		return this.getImpl().matchForStub(unit);
+	}
+
+	/**
+	 * Return true if the given member is either an ActivityDefinition or an
+	 * imported member whose referent is an ActivityDefinition or an Activity.
+	 **/
+	public Boolean isSameKindAs(Member member) {
+		return this.getImpl().isSameKindAs(member);
 	}
 
 	public String toString() {
@@ -42,7 +96,7 @@ public class ActivityDefinition extends ClassifierDefinition implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IBlock body = this.getBody();
+		Block body = this.getBody();
 		if (body != null) {
 			body.print(prefix + " ");
 		}

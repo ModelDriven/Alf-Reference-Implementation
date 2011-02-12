@@ -17,19 +17,31 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
+
 /**
  * An assignment of a source element that gives the value of a local name, along
  * with a record of the defined type (if any) and multiplicity of the local
  * name.
  **/
 
-public class AssignedSource implements IAssignedSource {
+public class AssignedSource {
 
 	private String name = "";
-	private ISyntaxElement source = null;
+	private SyntaxElement source = null;
 	private Integer upper = 0;
 	private Integer lower = 0;
-	private IElementReference type = null;
+	private ElementReference type = null;
+
+	protected AssignedSourceImpl impl;
+
+	public AssignedSource() {
+		this.impl = new AssignedSourceImpl(this);
+	}
+
+	public AssignedSourceImpl getImpl() {
+		return (AssignedSourceImpl) this.impl;
+	}
 
 	public String getName() {
 		return this.name;
@@ -39,11 +51,11 @@ public class AssignedSource implements IAssignedSource {
 		this.name = name;
 	}
 
-	public ISyntaxElement getSource() {
+	public SyntaxElement getSource() {
 		return this.source;
 	}
 
-	public void setSource(ISyntaxElement source) {
+	public void setSource(SyntaxElement source) {
 		this.source = source;
 	}
 
@@ -63,11 +75,11 @@ public class AssignedSource implements IAssignedSource {
 		this.lower = lower;
 	}
 
-	public IElementReference getType() {
+	public ElementReference getType() {
 		return this.type;
 	}
 
-	public void setType(IElementReference type) {
+	public void setType(ElementReference type) {
 		this.type = type;
 	}
 
@@ -84,11 +96,11 @@ public class AssignedSource implements IAssignedSource {
 
 	public void print(String prefix) {
 		System.out.println(prefix + this.toString());
-		ISyntaxElement source = this.getSource();
+		SyntaxElement source = this.getSource();
 		if (source != null) {
 			source.print(prefix + " ");
 		}
-		IElementReference type = this.getType();
+		ElementReference type = this.getType();
 		if (type != null) {
 			type.print(prefix + " ");
 		}

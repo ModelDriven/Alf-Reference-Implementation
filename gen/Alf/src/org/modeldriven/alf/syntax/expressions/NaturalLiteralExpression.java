@@ -17,14 +17,23 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.NaturalLiteralExpressionImpl;
+
 /**
  * An expression that comprises a natural literal.
  **/
 
-public class NaturalLiteralExpression extends LiteralExpression implements
-		INaturalLiteralExpression {
+public class NaturalLiteralExpression extends LiteralExpression {
 
 	private String image = "";
+
+	public NaturalLiteralExpression() {
+		this.impl = new NaturalLiteralExpressionImpl(this);
+	}
+
+	public NaturalLiteralExpressionImpl getImpl() {
+		return (NaturalLiteralExpressionImpl) this.impl;
+	}
 
 	public String getImage() {
 		return this.image;
@@ -32,6 +41,19 @@ public class NaturalLiteralExpression extends LiteralExpression implements
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	/**
+	 * The type of a natural literal is the Alf library type Natural.
+	 * 
+	 * NOTE: If the context of a natural literal expression unambiguously
+	 * requires either an Integer or an UnlimitedNatural value, then the result
+	 * of the literal expression is implicitly downcast to the required type. If
+	 * the context is ambiguous, however, than an explicit cast to Integer or
+	 * UnlimitedNatural must be used.
+	 **/
+	public boolean naturalLiteralExpressionTypeDerivation() {
+		return this.getImpl().naturalLiteralExpressionTypeDerivation();
 	}
 
 	public String toString() {

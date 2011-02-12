@@ -23,14 +23,10 @@ PARSER_BEGIN(AlfParser)
 
 package org.modeldriven.alf.parser;
 
-import org.modeldriven.alf.syntax.expressions.IExpression;
-import org.modeldriven.alf.syntax.statements.IAnnotation;
-import org.modeldriven.alf.syntax.units.IStereotypeAnnotation;
-
-import org.modeldriven.alf.syntax.common.impl.gen.SyntaxElement;
-import org.modeldriven.alf.syntax.expressions.impl.gen.*;
-import org.modeldriven.alf.syntax.statements.impl.gen.*;
-import org.modeldriven.alf.syntax.units.impl.gen.*;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
+import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.statements.*;
+import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
@@ -2016,7 +2012,7 @@ Block Block():
 
 Statement AnnotatedStatement():
 {
-  ArrayList<IAnnotation> al;
+  ArrayList<Annotation> al;
   Statement s;
 }
 { 
@@ -2028,10 +2024,10 @@ Statement AnnotatedStatement():
   }
 }
 
-ArrayList<IAnnotation> Annotations():
+ArrayList<Annotation> Annotations():
 {
   Annotation a;
-  ArrayList<IAnnotation> al = new ArrayList<IAnnotation>();
+  ArrayList<Annotation> al = new ArrayList<Annotation>();
 }
 {
    a = Annotation() { al.add(a); } ( <AT> a = Annotation() { al.add(a); } )*
@@ -2512,7 +2508,7 @@ UnitDefinition UnitDefinition():
   QualifiedName n;
   ImportReference i;
   Token t;
-  ArrayList<IStereotypeAnnotation> sl;
+  ArrayList<StereotypeAnnotation> sl;
   NamespaceDefinition d;
   UnitDefinition u = new UnitDefinition();
 }
@@ -2529,10 +2525,10 @@ UnitDefinition UnitDefinition():
   }
 }
 
-ArrayList<IStereotypeAnnotation> StereotypeAnnotations():
+ArrayList<StereotypeAnnotation> StereotypeAnnotations():
 {
   StereotypeAnnotation s;
-  ArrayList<IStereotypeAnnotation> sl = new ArrayList<IStereotypeAnnotation>();
+  ArrayList<StereotypeAnnotation> sl = new ArrayList<StereotypeAnnotation>();
 }
 {
   ( s = StereotypeAnnotation() { sl.add(s); } )*
@@ -2744,7 +2740,7 @@ Member PackagedElement():
 {
   Token t;
   String c = null;
-  ArrayList<IStereotypeAnnotation> sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v;
   Member m;
 }
@@ -2915,7 +2911,7 @@ Member ClassMember():
 {
   Token t;
   String c = null;
-  ArrayList<IStereotypeAnnotation> sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -3010,7 +3006,7 @@ Member ActiveClassMember():
 {
   Token t;
   String c = null;
-  ArrayList<IStereotypeAnnotation> sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -3087,7 +3083,7 @@ Member StructuredMember():
 {
   Token t;
   String c = null;
-  ArrayList<IStereotypeAnnotation> sl;
+  ArrayList<StereotypeAnnotation> sl;
   String v = null;
   Member m;
 }
@@ -3290,7 +3286,7 @@ void FormalParameterList(NamespaceDefinition d):
 FormalParameter FormalParameter():
 {
   Token t;
-  ArrayList<IStereotypeAnnotation> sl;
+  ArrayList<StereotypeAnnotation> sl;
   String d;
   String n;
   FormalParameter p = new FormalParameter();

@@ -17,20 +17,118 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.NameExpressionImpl;
+
 /**
  * An expression that comprises a name reference.
  **/
 
-public class NameExpression extends Expression implements INameExpression {
+public class NameExpression extends Expression {
 
-	private IQualifiedName name = null;
+	private ElementReference enumerationLiteral = null; // DERIVED
+	private AssignedSource assignment = null; // DERIVED
+	private PropertyAccessExpression propertyAccess = null; // DERIVED
+	private QualifiedName name = null;
 
-	public IQualifiedName getName() {
+	public NameExpression() {
+		this.impl = new NameExpressionImpl(this);
+	}
+
+	public NameExpressionImpl getImpl() {
+		return (NameExpressionImpl) this.impl;
+	}
+
+	public ElementReference getEnumerationLiteral() {
+		if (this.enumerationLiteral == null) {
+			this.enumerationLiteral = this.getImpl().deriveEnumerationLiteral();
+		}
+		return this.enumerationLiteral;
+	}
+
+	public AssignedSource getAssignment() {
+		if (this.assignment == null) {
+			this.assignment = this.getImpl().deriveAssignment();
+		}
+		return this.assignment;
+	}
+
+	public PropertyAccessExpression getPropertyAccess() {
+		if (this.propertyAccess == null) {
+			this.propertyAccess = this.getImpl().derivePropertyAccess();
+		}
+		return this.propertyAccess;
+	}
+
+	public QualifiedName getName() {
 		return this.name;
 	}
 
-	public void setName(IQualifiedName name) {
+	public void setName(QualifiedName name) {
 		this.name = name;
+	}
+
+	/**
+	 * If the name in a name expression is a local or parameter name, then its
+	 * assignment is its assigned source before the expression.
+	 **/
+	public boolean nameExpressionAssignmentDerivation() {
+		return this.getImpl().nameExpressionAssignmentDerivation();
+	}
+
+	/**
+	 * If the name in a name expression resolves to an enumeration literal name,
+	 * then that is the enumeration literal for the expression.
+	 **/
+	public boolean nameExpressionEnumerationLiteralDerivation() {
+		return this.getImpl().nameExpressionEnumerationLiteralDerivation();
+	}
+
+	/**
+	 * If the name in a name expression disambiguates to a feature reference,
+	 * then the equivalent property access expression has the disambiguation of
+	 * the name as its feature. The assignments before the property access
+	 * expression are the same as those before the name expression.
+	 **/
+	public boolean nameExpressionPropertyAccessDerivation() {
+		return this.getImpl().nameExpressionPropertyAccessDerivation();
+	}
+
+	/**
+	 * The type of a name expression is determined by its name. If the name is a
+	 * local name or parameter with an assignment, then the type of the name
+	 * expression is the type of that assignment. If the name is an enumeration
+	 * literal, then the type of the name expression is the corresponding
+	 * enumeration. If the name disambiguates to a feature reference, then the
+	 * type of the name expression is the type of the equivalent property access
+	 * expression.
+	 **/
+	public boolean nameExpressionTypeDerivation() {
+		return this.getImpl().nameExpressionTypeDerivation();
+	}
+
+	/**
+	 * The multiplicity upper bound of a name expression is determined by its
+	 * name.
+	 **/
+	public boolean nameExpressionUpperDerivation() {
+		return this.getImpl().nameExpressionUpperDerivation();
+	}
+
+	/**
+	 * The multiplicity lower bound of a name expression is determined by its
+	 * name.
+	 **/
+	public boolean nameExpressionLowerDerivation() {
+		return this.getImpl().nameExpressionLowerDerivation();
+	}
+
+	/**
+	 * If the name referenced by this expression is not a disambiguated feature
+	 * reference or a local or parameter name, then it must resolve to exactly
+	 * one enumeration literal.
+	 **/
+	public boolean nameExpressionResolution() {
+		return this.getImpl().nameExpressionResolution();
 	}
 
 	public String toString() {
@@ -40,7 +138,19 @@ public class NameExpression extends Expression implements INameExpression {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IQualifiedName name = this.getName();
+		ElementReference enumerationLiteral = this.getEnumerationLiteral();
+		if (enumerationLiteral != null) {
+			System.out.println(prefix + " /" + enumerationLiteral);
+		}
+		AssignedSource assignment = this.getAssignment();
+		if (assignment != null) {
+			System.out.println(prefix + " /" + assignment);
+		}
+		PropertyAccessExpression propertyAccess = this.getPropertyAccess();
+		if (propertyAccess != null) {
+			System.out.println(prefix + " /" + propertyAccess);
+		}
+		QualifiedName name = this.getName();
 		if (name != null) {
 			name.print(prefix + " ");
 		}

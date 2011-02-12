@@ -17,29 +17,55 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.SequenceRangeImpl;
+
 /**
  * A specification of the elements of a sequence as a range of integers.
  **/
 
-public class SequenceRange extends SequenceElements implements ISequenceRange {
+public class SequenceRange extends SequenceElements {
 
-	private IExpression rangeLower = null;
-	private IExpression rangeUpper = null;
+	private Expression rangeLower = null;
+	private Expression rangeUpper = null;
 
-	public IExpression getRangeLower() {
+	public SequenceRange() {
+		this.impl = new SequenceRangeImpl(this);
+	}
+
+	public SequenceRangeImpl getImpl() {
+		return (SequenceRangeImpl) this.impl;
+	}
+
+	public Expression getRangeLower() {
 		return this.rangeLower;
 	}
 
-	public void setRangeLower(IExpression rangeLower) {
+	public void setRangeLower(Expression rangeLower) {
 		this.rangeLower = rangeLower;
 	}
 
-	public IExpression getRangeUpper() {
+	public Expression getRangeUpper() {
 		return this.rangeUpper;
 	}
 
-	public void setRangeUpper(IExpression rangeUpper) {
+	public void setRangeUpper(Expression rangeUpper) {
 		this.rangeUpper = rangeUpper;
+	}
+
+	/**
+	 * The multiplicity lower bound of a sequence range is 0.
+	 **/
+	public boolean sequenceRangeLowerDerivation() {
+		return this.getImpl().sequenceRangeLowerDerivation();
+	}
+
+	/**
+	 * The multiplicity uper bound of a sequence range is * (since it is not
+	 * possible, in general, to statically determine a more constrained upper
+	 * bound).
+	 **/
+	public boolean sequenceRangeUpperDerivation() {
+		return this.getImpl().sequenceRangeUpperDerivation();
 	}
 
 	public String toString() {
@@ -49,11 +75,11 @@ public class SequenceRange extends SequenceElements implements ISequenceRange {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression rangeLower = this.getRangeLower();
+		Expression rangeLower = this.getRangeLower();
 		if (rangeLower != null) {
 			rangeLower.print(prefix + " ");
 		}
-		IExpression rangeUpper = this.getRangeUpper();
+		Expression rangeUpper = this.getRangeUpper();
 		if (rangeUpper != null) {
 			rangeUpper.print(prefix + " ");
 		}

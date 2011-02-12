@@ -17,39 +17,65 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.ClassifyStatementImpl;
+
 /**
  * A statement that changes the classification of an object.
  **/
 
-public class ClassifyStatement extends Statement implements IClassifyStatement {
+public class ClassifyStatement extends Statement {
 
-	private IExpression expression = null;
-	private IQualifiedNameList fromList = null;
-	private IQualifiedNameList toList = null;
+	private Expression expression = null;
+	private QualifiedNameList fromList = null;
+	private QualifiedNameList toList = null;
+	private ArrayList<ElementReference> fromClass = null; // DERIVED
+	private ArrayList<ElementReference> toClass = null; // DERIVED
 	private Boolean isReclassifyAll = false;
 
-	public IExpression getExpression() {
+	public ClassifyStatement() {
+		this.impl = new ClassifyStatementImpl(this);
+	}
+
+	public ClassifyStatementImpl getImpl() {
+		return (ClassifyStatementImpl) this.impl;
+	}
+
+	public Expression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(IExpression expression) {
+	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
 
-	public IQualifiedNameList getFromList() {
+	public QualifiedNameList getFromList() {
 		return this.fromList;
 	}
 
-	public void setFromList(IQualifiedNameList fromList) {
+	public void setFromList(QualifiedNameList fromList) {
 		this.fromList = fromList;
 	}
 
-	public IQualifiedNameList getToList() {
+	public QualifiedNameList getToList() {
 		return this.toList;
 	}
 
-	public void setToList(IQualifiedNameList toList) {
+	public void setToList(QualifiedNameList toList) {
 		this.toList = toList;
+	}
+
+	public ArrayList<ElementReference> getFromClass() {
+		if (this.fromClass == null) {
+			this.fromClass = this.getImpl().deriveFromClass();
+		}
+		return this.fromClass;
+	}
+
+	public ArrayList<ElementReference> getToClass() {
+		if (this.toClass == null) {
+			this.toClass = this.getImpl().deriveToClass();
+		}
+		return this.toClass;
 	}
 
 	public Boolean getIsReclassifyAll() {
@@ -58,6 +84,64 @@ public class ClassifyStatement extends Statement implements IClassifyStatement {
 
 	public void setIsReclassifyAll(Boolean isReclassifyAll) {
 		this.isReclassifyAll = isReclassifyAll;
+	}
+
+	/**
+	 * The expression in a classify statement must have a class as its type and
+	 * multiplicity upper bound of 1.
+	 **/
+	public boolean classifyStatementExpression() {
+		return this.getImpl().classifyStatementExpression();
+	}
+
+	/**
+	 * All qualified names listed in the from or to lists of a classify
+	 * statement must resolve to classes.
+	 **/
+	public boolean classifyStatementClassNames() {
+		return this.getImpl().classifyStatementClassNames();
+	}
+
+	/**
+	 * All the from and to classes of a classify statement must be subclasses of
+	 * the type of the target expression and none of them may have a common
+	 * superclass that is a subclass of the type of the target expression (that
+	 * is, they must be disjoint subclasses).
+	 **/
+	public boolean classifyStatementClasses() {
+		return this.getImpl().classifyStatementClasses();
+	}
+
+	/**
+	 * The assignments before the expression of a classify statement are the
+	 * same as the assignments before the statement.
+	 **/
+	public boolean classifyStatementAssignmentsBefore() {
+		return this.getImpl().classifyStatementAssignmentsBefore();
+	}
+
+	/**
+	 * The assignments after a classify statement are the same as the
+	 * assignments after its expression.
+	 **/
+	public boolean classifyStatementAssignmentsAfter() {
+		return this.getImpl().classifyStatementAssignmentsAfter();
+	}
+
+	/**
+	 * The from classes of a classify statement are the class referents of the
+	 * qualified names in the from list for the statement.
+	 **/
+	public boolean classifyStatementFromClassDerivation() {
+		return this.getImpl().classifyStatementFromClassDerivation();
+	}
+
+	/**
+	 * The to classes of a classify statement are the class referents of the
+	 * qualified names in the to list for the statement.
+	 **/
+	public boolean classifyStatementToClassDerivation() {
+		return this.getImpl().classifyStatementToClassDerivation();
 	}
 
 	public String toString() {
@@ -69,17 +153,29 @@ public class ClassifyStatement extends Statement implements IClassifyStatement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression expression = this.getExpression();
+		Expression expression = this.getExpression();
 		if (expression != null) {
 			expression.print(prefix + " ");
 		}
-		IQualifiedNameList fromList = this.getFromList();
+		QualifiedNameList fromList = this.getFromList();
 		if (fromList != null) {
 			fromList.print(prefix + " ");
 		}
-		IQualifiedNameList toList = this.getToList();
+		QualifiedNameList toList = this.getToList();
 		if (toList != null) {
 			toList.print(prefix + " ");
+		}
+		ArrayList<ElementReference> fromClass = this.getFromClass();
+		if (fromClass != null) {
+			for (ElementReference item : this.getFromClass()) {
+				System.out.println(prefix + " /" + item);
+			}
+		}
+		ArrayList<ElementReference> toClass = this.getToClass();
+		if (toClass != null) {
+			for (ElementReference item : this.getToClass()) {
+				System.out.println(prefix + " /" + item);
+			}
 		}
 	}
 } // ClassifyStatement

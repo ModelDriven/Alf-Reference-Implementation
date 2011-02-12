@@ -17,13 +17,29 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.SignalReceptionDefinitionImpl;
+
 /**
  * The definition of both a signal and a reception of that signal as a feature
  * of the containing active class.
  **/
 
-public class SignalReceptionDefinition extends SignalDefinition implements
-		ISignalReceptionDefinition {
+public class SignalReceptionDefinition extends SignalDefinition {
+
+	public SignalReceptionDefinition() {
+		this.impl = new SignalReceptionDefinitionImpl(this);
+	}
+
+	public SignalReceptionDefinitionImpl getImpl() {
+		return (SignalReceptionDefinitionImpl) this.impl;
+	}
+
+	/**
+	 * A signal reception definition is a feature.
+	 **/
+	public boolean signalReceptionDefinitionIsFeatureDerivation() {
+		return this.getImpl().signalReceptionDefinitionIsFeatureDerivation();
+	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

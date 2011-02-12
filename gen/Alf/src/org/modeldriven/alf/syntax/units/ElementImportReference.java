@@ -17,14 +17,23 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.ElementImportReferenceImpl;
+
 /**
  * An import reference to a single element to be imported into a unit.
  **/
 
-public class ElementImportReference extends ImportReference implements
-		IElementImportReference {
+public class ElementImportReference extends ImportReference {
 
 	private String alias = "";
+
+	public ElementImportReference() {
+		this.impl = new ElementImportReferenceImpl(this);
+	}
+
+	public ElementImportReferenceImpl getImpl() {
+		return (ElementImportReferenceImpl) this.impl;
+	}
 
 	public String getAlias() {
 		return this.alias;

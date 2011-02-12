@@ -17,30 +17,76 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.SequenceAccessExpressionImpl;
+
 /**
  * An expression used to access a specific element of a sequence.
  **/
 
-public class SequenceAccessExpression extends Expression implements
-		ISequenceAccessExpression {
+public class SequenceAccessExpression extends Expression {
 
-	private IExpression primary = null;
-	private IExpression index = null;
+	private Expression primary = null;
+	private Expression index = null;
 
-	public IExpression getPrimary() {
+	public SequenceAccessExpression() {
+		this.impl = new SequenceAccessExpressionImpl(this);
+	}
+
+	public SequenceAccessExpressionImpl getImpl() {
+		return (SequenceAccessExpressionImpl) this.impl;
+	}
+
+	public Expression getPrimary() {
 		return this.primary;
 	}
 
-	public void setPrimary(IExpression primary) {
+	public void setPrimary(Expression primary) {
 		this.primary = primary;
 	}
 
-	public IExpression getIndex() {
+	public Expression getIndex() {
 		return this.index;
 	}
 
-	public void setIndex(IExpression index) {
+	public void setIndex(Expression index) {
 		this.index = index;
+	}
+
+	/**
+	 * The type of a sequence access expression is the same as the type of its
+	 * primary expression.
+	 **/
+	public boolean sequenceAccessExpressionTypeDerivation() {
+		return this.getImpl().sequenceAccessExpressionTypeDerivation();
+	}
+
+	/**
+	 * The multiplicity lower bound of a sequence access expression is 0.
+	 **/
+	public boolean sequenceAccessExpressionLowerDerivation() {
+		return this.getImpl().sequenceAccessExpressionLowerDerivation();
+	}
+
+	/**
+	 * The multiplicity upper bound of a sequence access expression is 1.
+	 **/
+	public boolean sequenceAccessExpressionUpperDerivation() {
+		return this.getImpl().sequenceAccessExpressionUpperDerivation();
+	}
+
+	/**
+	 * The type of the index of a sequence access expression must be Integer.
+	 **/
+	public boolean sequenceAccessExpressionIndexType() {
+		return this.getImpl().sequenceAccessExpressionIndexType();
+	}
+
+	/**
+	 * The multiplicity upper bound of the index of a sequence access expression
+	 * must be 1.
+	 **/
+	public boolean sequenceAccessExpressionIndexMultiplicity() {
+		return this.getImpl().sequenceAccessExpressionIndexMultiplicity();
 	}
 
 	public String toString() {
@@ -50,11 +96,11 @@ public class SequenceAccessExpression extends Expression implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression primary = this.getPrimary();
+		Expression primary = this.getPrimary();
 		if (primary != null) {
 			primary.print(prefix + " ");
 		}
-		IExpression index = this.getIndex();
+		Expression index = this.getIndex();
 		if (index != null) {
 			index.print(prefix + " ");
 		}
