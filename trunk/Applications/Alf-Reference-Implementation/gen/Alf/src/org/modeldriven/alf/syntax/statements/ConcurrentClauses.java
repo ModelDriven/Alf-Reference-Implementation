@@ -45,11 +45,14 @@ public class ConcurrentClauses extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (INonFinalClause clause : this.getClause()) {
-			if (clause != null) {
-				clause.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<INonFinalClause> clause = this.getClause();
+		if (clause != null) {
+			for (INonFinalClause item : this.getClause()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

@@ -285,25 +285,28 @@ public void print(String prefix) {
 	#foreach( $attribute in ${class.ownedAttributes} )
 		#if( !${attribute.isDerived()} || $includeDerived )
      		#if( ${attribute.upper}!=1 )
-	     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
-	     			if (this.get#upperCase($attribute.name)().size()>0) {
+    		    #type($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+     			if (#name(${attribute.name})!=null) {
+ 	     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
+	     			if (#name($attribute.name).size()>0) {
 		     			System.out.println(prefix + " ${attribute.name}:");
 		     		}
 	     		#end
-	     		for (#basicType($attribute) #name($attribute.name): this.get#upperCase(${attribute.name})()) {
+	     		for (#basicType($attribute) item: this.get#upperCase(${attribute.name})()) {
 		     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
-	    	 			System.out.println(prefix + "  " + #name($attribute.name));
+	    	 			System.out.println(prefix + "  " + item);
 	     			#else
-	     			    if (#name(${attribute.name})!=null) {
-							#name(${attribute.name}).print(prefix+" ");
+	     			    if (item!=null) {
+							item.print(prefix+" ");
 						} else {
 						  System.out.println(prefix + " null");
 						}
 	     			#end
      			}
+     			}
      		#elseif( ${attribute.type.eClass().name}!="PrimitiveType" )
-     		    #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
-     			if (#name(${attribute.name})!=null) {
+    		    #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+      			if (#name(${attribute.name})!=null) {
 					#name(${attribute.name}).print(prefix+" ");
 				}
 			#end

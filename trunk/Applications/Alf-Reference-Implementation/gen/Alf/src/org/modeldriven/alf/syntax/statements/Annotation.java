@@ -55,11 +55,14 @@ public class Annotation extends SyntaxElement implements IAnnotation {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.getArgument().size() > 0) {
-			System.out.println(prefix + " argument:");
-		}
-		for (String argument : this.getArgument()) {
-			System.out.println(prefix + "  " + argument);
+		ArrayList<String> argument = this.getArgument();
+		if (argument != null) {
+			if (argument.size() > 0) {
+				System.out.println(prefix + " argument:");
+			}
+			for (String item : this.getArgument()) {
+				System.out.println(prefix + "  " + item);
+			}
 		}
 	}
 } // Annotation

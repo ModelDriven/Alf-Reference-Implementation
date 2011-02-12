@@ -63,11 +63,14 @@ public class SwitchStatement extends Statement implements ISwitchStatement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (ISwitchClause nonDefaultClause : this.getNonDefaultClause()) {
-			if (nonDefaultClause != null) {
-				nonDefaultClause.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<ISwitchClause> nonDefaultClause = this.getNonDefaultClause();
+		if (nonDefaultClause != null) {
+			for (ISwitchClause item : this.getNonDefaultClause()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 		IExpression expression = this.getExpression();

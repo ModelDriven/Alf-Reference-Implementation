@@ -46,11 +46,14 @@ public class PositionalTemplateBinding extends TemplateBinding implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IQualifiedName argumentName : this.getArgumentName()) {
-			if (argumentName != null) {
-				argumentName.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IQualifiedName> argumentName = this.getArgumentName();
+		if (argumentName != null) {
+			for (IQualifiedName item : this.getArgumentName()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

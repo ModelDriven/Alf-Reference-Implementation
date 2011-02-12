@@ -45,11 +45,14 @@ public abstract class DocumentedElement extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		if (this.getDocumentation().size() > 0) {
-			System.out.println(prefix + " documentation:");
-		}
-		for (String documentation : this.getDocumentation()) {
-			System.out.println(prefix + "  " + documentation);
+		ArrayList<String> documentation = this.getDocumentation();
+		if (documentation != null) {
+			if (documentation.size() > 0) {
+				System.out.println(prefix + " documentation:");
+			}
+			for (String item : this.getDocumentation()) {
+				System.out.println(prefix + "  " + item);
+			}
 		}
 	}
 } // DocumentedElement

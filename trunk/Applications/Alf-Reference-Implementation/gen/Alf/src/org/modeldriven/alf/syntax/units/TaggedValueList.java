@@ -44,11 +44,14 @@ public class TaggedValueList extends SyntaxElement implements ITaggedValueList {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (ITaggedValue taggedValue : this.getTaggedValue()) {
-			if (taggedValue != null) {
-				taggedValue.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<ITaggedValue> taggedValue = this.getTaggedValue();
+		if (taggedValue != null) {
+			for (ITaggedValue item : this.getTaggedValue()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

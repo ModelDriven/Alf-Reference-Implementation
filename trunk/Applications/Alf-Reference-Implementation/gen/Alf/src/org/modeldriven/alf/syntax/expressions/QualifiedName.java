@@ -56,11 +56,14 @@ public class QualifiedName extends SyntaxElement implements IQualifiedName {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (INameBinding nameBinding : this.getNameBinding()) {
-			if (nameBinding != null) {
-				nameBinding.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<INameBinding> nameBinding = this.getNameBinding();
+		if (nameBinding != null) {
+			for (INameBinding item : this.getNameBinding()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

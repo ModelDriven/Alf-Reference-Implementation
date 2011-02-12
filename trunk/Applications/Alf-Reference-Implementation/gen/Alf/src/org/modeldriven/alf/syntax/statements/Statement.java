@@ -44,11 +44,14 @@ public abstract class Statement extends DocumentedElement implements IStatement 
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IAnnotation annotation : this.getAnnotation()) {
-			if (annotation != null) {
-				annotation.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IAnnotation> annotation = this.getAnnotation();
+		if (annotation != null) {
+			for (IAnnotation item : this.getAnnotation()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

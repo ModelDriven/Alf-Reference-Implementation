@@ -59,12 +59,15 @@ public class ForStatement extends Statement implements IForStatement {
 		if (body != null) {
 			body.print(prefix + " ");
 		}
-		for (ILoopVariableDefinition variableDefinition : this
-				.getVariableDefinition()) {
-			if (variableDefinition != null) {
-				variableDefinition.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<ILoopVariableDefinition> variableDefinition = this
+				.getVariableDefinition();
+		if (variableDefinition != null) {
+			for (ILoopVariableDefinition item : this.getVariableDefinition()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

@@ -44,11 +44,14 @@ public class NamedTuple extends Tuple implements INamedTuple {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (INamedExpression namedExpression : this.getNamedExpression()) {
-			if (namedExpression != null) {
-				namedExpression.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<INamedExpression> namedExpression = this.getNamedExpression();
+		if (namedExpression != null) {
+			for (INamedExpression item : this.getNamedExpression()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

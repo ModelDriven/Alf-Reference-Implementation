@@ -44,11 +44,14 @@ public class Block extends SyntaxElement implements IBlock {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IStatement statement : this.getStatement()) {
-			if (statement != null) {
-				statement.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IStatement> statement = this.getStatement();
+		if (statement != null) {
+			for (IStatement item : this.getStatement()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

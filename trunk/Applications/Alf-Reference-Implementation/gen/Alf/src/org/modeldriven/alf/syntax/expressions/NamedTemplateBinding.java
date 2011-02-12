@@ -47,12 +47,15 @@ public class NamedTemplateBinding extends TemplateBinding implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (ITemplateParameterSubstitution substitution : this
-				.getSubstitution()) {
-			if (substitution != null) {
-				substitution.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<ITemplateParameterSubstitution> substitution = this
+				.getSubstitution();
+		if (substitution != null) {
+			for (ITemplateParameterSubstitution item : this.getSubstitution()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

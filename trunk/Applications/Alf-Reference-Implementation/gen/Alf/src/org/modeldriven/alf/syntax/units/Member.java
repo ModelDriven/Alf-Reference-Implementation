@@ -91,11 +91,14 @@ public abstract class Member extends DocumentedElement implements IMember {
 		if (namespace != null) {
 			namespace.print(prefix + " ");
 		}
-		for (IStereotypeAnnotation annotation : this.getAnnotation()) {
-			if (annotation != null) {
-				annotation.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IStereotypeAnnotation> annotation = this.getAnnotation();
+		if (annotation != null) {
+			for (IStereotypeAnnotation item : this.getAnnotation()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}
