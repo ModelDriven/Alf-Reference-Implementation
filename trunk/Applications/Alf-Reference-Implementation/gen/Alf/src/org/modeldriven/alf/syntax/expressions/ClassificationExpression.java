@@ -17,31 +17,118 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.ClassificationExpressionImpl;
+
 /**
  * An expression used to test the dynamic type of its operand.
  **/
 
-public class ClassificationExpression extends UnaryExpression implements
-		IClassificationExpression {
+public class ClassificationExpression extends UnaryExpression {
 
-	private IQualifiedName typeName = null;
+	private ElementReference referent = null; // DERIVED
+	private Boolean isDirect = null; // DERIVED
+	private QualifiedName typeName = null;
 
-	public IQualifiedName getTypeName() {
+	public ClassificationExpression() {
+		this.impl = new ClassificationExpressionImpl(this);
+	}
+
+	public ClassificationExpressionImpl getImpl() {
+		return (ClassificationExpressionImpl) this.impl;
+	}
+
+	public ElementReference getReferent() {
+		if (this.referent == null) {
+			this.referent = this.getImpl().deriveReferent();
+		}
+		return this.referent;
+	}
+
+	public Boolean getIsDirect() {
+		if (this.isDirect == null) {
+			this.isDirect = this.getImpl().deriveIsDirect();
+		}
+		return this.isDirect;
+	}
+
+	public QualifiedName getTypeName() {
 		return this.typeName;
 	}
 
-	public void setTypeName(IQualifiedName typeName) {
+	public void setTypeName(QualifiedName typeName) {
 		this.typeName = typeName;
+	}
+
+	/**
+	 * A classification expression is direct if its operator is "hastype".
+	 **/
+	public boolean classificationExpressionIsDirectDerivation() {
+		return this.getImpl().classificationExpressionIsDirectDerivation();
+	}
+
+	/**
+	 * The referent of a classification expression is the classifier to which
+	 * the type name resolves.
+	 **/
+	public boolean classificationExpressionReferentDerivation() {
+		return this.getImpl().classificationExpressionReferentDerivation();
+	}
+
+	/**
+	 * A classification expression has type Boolean.
+	 **/
+	public boolean classificationExpressionTypeDerivation() {
+		return this.getImpl().classificationExpressionTypeDerivation();
+	}
+
+	/**
+	 * A classification expression has a multiplicity lower bound that is the
+	 * same as the lower bound of its operand expression.
+	 **/
+	public boolean classificationExpressionLowerDerivation() {
+		return this.getImpl().classificationExpressionLowerDerivation();
+	}
+
+	/**
+	 * A classification expression has a multiplicity upper bound of 1.
+	 **/
+	public boolean classificationExpressionUpperDerivation() {
+		return this.getImpl().classificationExpressionUpperDerivation();
+	}
+
+	/**
+	 * The type name in a classification expression must resolve to a
+	 * classifier.
+	 **/
+	public boolean classificationExpressionTypeName() {
+		return this.getImpl().classificationExpressionTypeName();
+	}
+
+	/**
+	 * The operand expression of a classification expression must have a
+	 * multiplicity upper bound of 1.
+	 **/
+	public boolean classificationExpressionOperand() {
+		return this.getImpl().classificationExpressionOperand();
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
+		Boolean isDirect = this.getIsDirect();
+		if (isDirect != null) {
+			s.append(" /isDirect:");
+			s.append(isDirect);
+		}
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IQualifiedName typeName = this.getTypeName();
+		ElementReference referent = this.getReferent();
+		if (referent != null) {
+			System.out.println(prefix + " /" + referent);
+		}
+		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
 			typeName.print(prefix + " ");
 		}

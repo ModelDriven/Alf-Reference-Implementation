@@ -17,32 +17,67 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.FeatureReferenceImpl;
+
 /**
  * A reference to a structural or behavioral feature of the type of its target
  * expression or a binary association end the opposite end of which is typed by
  * the type of its target expression.
  **/
 
-public class FeatureReference extends SyntaxElement implements
-		IFeatureReference {
+public class FeatureReference extends SyntaxElement {
 
-	private IExpression expression = null;
-	private INameBinding nameBinding = null;
+	private Expression expression = null;
+	private ArrayList<ElementReference> referent = null; // DERIVED
+	private NameBinding nameBinding = null;
 
-	public IExpression getExpression() {
+	public FeatureReference() {
+		this.impl = new FeatureReferenceImpl(this);
+	}
+
+	public FeatureReferenceImpl getImpl() {
+		return (FeatureReferenceImpl) this.impl;
+	}
+
+	public Expression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(IExpression expression) {
+	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
 
-	public INameBinding getNameBinding() {
+	public ArrayList<ElementReference> getReferent() {
+		if (this.referent == null) {
+			this.referent = this.getImpl().deriveReferent();
+		}
+		return this.referent;
+	}
+
+	public NameBinding getNameBinding() {
 		return this.nameBinding;
 	}
 
-	public void setNameBinding(INameBinding nameBinding) {
+	public void setNameBinding(NameBinding nameBinding) {
 		this.nameBinding = nameBinding;
+	}
+
+	/**
+	 * The features referenced by a feature reference include the features of
+	 * the type of the target expression and the association ends of any binary
+	 * associations whose opposite ends are typed by the type of the target
+	 * expression.
+	 **/
+	public boolean featureReferenceReferentDerivation() {
+		return this.getImpl().featureReferenceReferentDerivation();
+	}
+
+	/**
+	 * The target expression of the feature reference may not be untyped, nor
+	 * may it have a primitive or enumeration type.
+	 **/
+	public boolean featureReferenceTargetType() {
+		return this.getImpl().featureReferenceTargetType();
 	}
 
 	public String toString() {
@@ -52,11 +87,17 @@ public class FeatureReference extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression expression = this.getExpression();
+		Expression expression = this.getExpression();
 		if (expression != null) {
 			expression.print(prefix + " ");
 		}
-		INameBinding nameBinding = this.getNameBinding();
+		ArrayList<ElementReference> referent = this.getReferent();
+		if (referent != null) {
+			for (ElementReference item : this.getReferent()) {
+				System.out.println(prefix + " /" + item);
+			}
+		}
+		NameBinding nameBinding = this.getNameBinding();
 		if (nameBinding != null) {
 			nameBinding.print(prefix + " ");
 		}

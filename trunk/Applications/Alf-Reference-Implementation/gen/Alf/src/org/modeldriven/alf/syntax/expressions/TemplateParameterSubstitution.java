@@ -17,16 +17,25 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.TemplateParameterSubstitutionImpl;
+
 /**
  * A specification of the substitution of an argument type name for a template
  * parameter.
  **/
 
-public class TemplateParameterSubstitution extends SyntaxElement implements
-		ITemplateParameterSubstitution {
+public class TemplateParameterSubstitution extends SyntaxElement {
 
 	private String parameterName = "";
-	private IQualifiedName argumentName = null;
+	private QualifiedName argumentName = null;
+
+	public TemplateParameterSubstitution() {
+		this.impl = new TemplateParameterSubstitutionImpl(this);
+	}
+
+	public TemplateParameterSubstitutionImpl getImpl() {
+		return (TemplateParameterSubstitutionImpl) this.impl;
+	}
 
 	public String getParameterName() {
 		return this.parameterName;
@@ -36,11 +45,11 @@ public class TemplateParameterSubstitution extends SyntaxElement implements
 		this.parameterName = parameterName;
 	}
 
-	public IQualifiedName getArgumentName() {
+	public QualifiedName getArgumentName() {
 		return this.argumentName;
 	}
 
-	public void setArgumentName(IQualifiedName argumentName) {
+	public void setArgumentName(QualifiedName argumentName) {
 		this.argumentName = argumentName;
 	}
 
@@ -53,7 +62,7 @@ public class TemplateParameterSubstitution extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IQualifiedName argumentName = this.getArgumentName();
+		QualifiedName argumentName = this.getArgumentName();
 		if (argumentName != null) {
 			argumentName.print(prefix + " ");
 		}

@@ -17,34 +17,77 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl;
+
 /**
  * A model of the common properties of the definition of a namespace in Alf.
  **/
 
-public abstract class NamespaceDefinition extends Member implements
-		INamespaceDefinition {
+public abstract class NamespaceDefinition extends Member {
 
-	private ArrayList<IMember> ownedMember = new ArrayList<IMember>();
-	private IUnitDefinition unit = null;
+	private ArrayList<Member> ownedMember = new ArrayList<Member>();
+	private UnitDefinition unit = null;
+	private ArrayList<Member> member = null; // DERIVED
 
-	public ArrayList<IMember> getOwnedMember() {
+	public NamespaceDefinitionImpl getImpl() {
+		return (NamespaceDefinitionImpl) this.impl;
+	}
+
+	public ArrayList<Member> getOwnedMember() {
 		return this.ownedMember;
 	}
 
-	public void setOwnedMember(ArrayList<IMember> ownedMember) {
+	public void setOwnedMember(ArrayList<Member> ownedMember) {
 		this.ownedMember = ownedMember;
 	}
 
-	public void addOwnedMember(IMember ownedMember) {
+	public void addOwnedMember(Member ownedMember) {
 		this.ownedMember.add(ownedMember);
 	}
 
-	public IUnitDefinition getUnit() {
+	public UnitDefinition getUnit() {
 		return this.unit;
 	}
 
-	public void setUnit(IUnitDefinition unit) {
+	public void setUnit(UnitDefinition unit) {
 		this.unit = unit;
+	}
+
+	public ArrayList<Member> getMember() {
+		if (this.member == null) {
+			this.member = this.getImpl().deriveMember();
+		}
+		return this.member;
+	}
+
+	/**
+	 * The members of a namespace definition include references to all owned
+	 * members. Also, if the namespace definition has a unit with imports, then
+	 * the members include imported members with referents to all imported
+	 * elements. The imported elements and their visibility are determined as
+	 * given in the UML Superstructure. The name of an imported member is the
+	 * name of the imported element or its alias, if one has been given for it.
+	 * Elements that would be indistinguishable from each other or from an owned
+	 * member (as determined by the Member::isDistinguishableFrom operation) are
+	 * not imported.
+	 **/
+	public boolean namespaceDefinitionMemberDerivation() {
+		return this.getImpl().namespaceDefinitionMemberDerivation();
+	}
+
+	/**
+	 * The members of a namespace must be distinguishable as determined by the
+	 * Member::isDistinguishableFrom operation.
+	 **/
+	public boolean namespaceDefinitionMemberDistinguishaibility() {
+		return this.getImpl().namespaceDefinitionMemberDistinguishaibility();
+	}
+
+	/**
+	 * Returns true if the annotation is @external.
+	 **/
+	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+		return this.getImpl().annotationAllowed(annotation);
 	}
 
 	public String toString() {
@@ -54,9 +97,9 @@ public abstract class NamespaceDefinition extends Member implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<IMember> ownedMember = this.getOwnedMember();
+		ArrayList<Member> ownedMember = this.getOwnedMember();
 		if (ownedMember != null) {
-			for (IMember item : this.getOwnedMember()) {
+			for (Member item : this.getOwnedMember()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {
@@ -64,9 +107,15 @@ public abstract class NamespaceDefinition extends Member implements
 				}
 			}
 		}
-		IUnitDefinition unit = this.getUnit();
+		UnitDefinition unit = this.getUnit();
 		if (unit != null) {
 			unit.print(prefix + " ");
+		}
+		ArrayList<Member> member = this.getMember();
+		if (member != null) {
+			for (Member item : this.getMember()) {
+				System.out.println(prefix + " /" + item);
+			}
 		}
 	}
 } // NamespaceDefinition

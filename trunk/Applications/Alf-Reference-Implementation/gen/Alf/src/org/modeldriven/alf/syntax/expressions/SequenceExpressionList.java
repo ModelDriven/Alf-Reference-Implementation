@@ -17,25 +17,54 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.SequenceExpressionListImpl;
+
 /**
  * A specification of the elements of a sequence using a list of expressions.
  **/
 
-public class SequenceExpressionList extends SequenceElements implements
-		ISequenceExpressionList {
+public class SequenceExpressionList extends SequenceElements {
 
-	private ArrayList<IExpression> element = new ArrayList<IExpression>();
+	private ArrayList<Expression> element = new ArrayList<Expression>();
 
-	public ArrayList<IExpression> getElement() {
+	public SequenceExpressionList() {
+		this.impl = new SequenceExpressionListImpl(this);
+	}
+
+	public SequenceExpressionListImpl getImpl() {
+		return (SequenceExpressionListImpl) this.impl;
+	}
+
+	public ArrayList<Expression> getElement() {
 		return this.element;
 	}
 
-	public void setElement(ArrayList<IExpression> element) {
+	public void setElement(ArrayList<Expression> element) {
 		this.element = element;
 	}
 
-	public void addElement(IExpression element) {
+	public void addElement(Expression element) {
 		this.element.add(element);
+	}
+
+	/**
+	 * The multiplicity lower bound of the elements of a sequence expression
+	 * list is given by the sum of the lower bounds of each of the expressions
+	 * in the list.
+	 **/
+	public boolean sequenceExpressionListLowerDerivation() {
+		return this.getImpl().sequenceExpressionListLowerDerivation();
+	}
+
+	/**
+	 * The multiplicity lower bound of the elements of a sequence expression
+	 * list is given by the sum of the lower bounds of each of the expressions
+	 * in the list. If any of the expressions in the list have an unbounded
+	 * upper bound, then the sequence expression list also has an unbounded
+	 * upper bound.
+	 **/
+	public boolean sequenceExpressionListUpperDerivation() {
+		return this.getImpl().sequenceExpressionListUpperDerivation();
 	}
 
 	public String toString() {
@@ -45,9 +74,9 @@ public class SequenceExpressionList extends SequenceElements implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<IExpression> element = this.getElement();
+		ArrayList<Expression> element = this.getElement();
 		if (element != null) {
-			for (IExpression item : this.getElement()) {
+			for (Expression item : this.getElement()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {

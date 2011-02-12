@@ -17,42 +17,134 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.StatementImpl;
+
 /**
  * A model of an Alf statement.
  **/
 
-public abstract class Statement extends DocumentedElement implements IStatement {
+public abstract class Statement extends DocumentedElement {
 
-	private ArrayList<IAnnotation> annotation = new ArrayList<IAnnotation>();
+	private ArrayList<Annotation> annotation = new ArrayList<Annotation>();
+	private ArrayList<AssignedSource> assignmentBefore = null; // DERIVED
+	private ArrayList<AssignedSource> assignmentAfter = null; // DERIVED
+	private Statement enclosingStatement = null; // DERIVED
+	private Boolean isIsolated = null; // DERIVED
 
-	public ArrayList<IAnnotation> getAnnotation() {
+	public StatementImpl getImpl() {
+		return (StatementImpl) this.impl;
+	}
+
+	public ArrayList<Annotation> getAnnotation() {
 		return this.annotation;
 	}
 
-	public void setAnnotation(ArrayList<IAnnotation> annotation) {
+	public void setAnnotation(ArrayList<Annotation> annotation) {
 		this.annotation = annotation;
 	}
 
-	public void addAnnotation(IAnnotation annotation) {
+	public void addAnnotation(Annotation annotation) {
 		this.annotation.add(annotation);
+	}
+
+	public ArrayList<AssignedSource> getAssignmentBefore() {
+		if (this.assignmentBefore == null) {
+			this.assignmentBefore = this.getImpl().deriveAssignmentBefore();
+		}
+		return this.assignmentBefore;
+	}
+
+	public ArrayList<AssignedSource> getAssignmentAfter() {
+		if (this.assignmentAfter == null) {
+			this.assignmentAfter = this.getImpl().deriveAssignmentAfter();
+		}
+		return this.assignmentAfter;
+	}
+
+	public Statement getEnclosingStatement() {
+		if (this.enclosingStatement == null) {
+			this.enclosingStatement = this.getImpl().deriveEnclosingStatement();
+		}
+		return this.enclosingStatement;
+	}
+
+	public Boolean getIsIsolated() {
+		if (this.isIsolated == null) {
+			this.isIsolated = this.getImpl().deriveIsIsolated();
+		}
+		return this.isIsolated;
+	}
+
+	/**
+	 * All the annotations of a statement must be allowed, as given by the
+	 * annotationAllowed operation for the statement.
+	 **/
+	public boolean statementAnnotationsAllowed() {
+		return this.getImpl().statementAnnotationsAllowed();
+	}
+
+	/**
+	 * No name may be assigned more than once before or after a statement.
+	 **/
+	public boolean statementUniqueAssignments() {
+		return this.getImpl().statementUniqueAssignments();
+	}
+
+	/**
+	 * A statement is isolated if it has an @isolated annotation.
+	 **/
+	public boolean statementIsIsolatedDerivation() {
+		return this.getImpl().statementIsIsolatedDerivation();
+	}
+
+	/**
+	 * Returns true if the given annotation is allowed for this kind of
+	 * statement. By default, only an @isolated annotation is allowed, with no
+	 * arguments. This operation is redefined only in subclasses of Statement
+	 * for kinds of statements that allow different annotations than this
+	 * default.
+	 **/
+	public Boolean annotationAllowed(Annotation annotation) {
+		return this.getImpl().annotationAllowed(annotation);
 	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
+		Boolean isIsolated = this.getIsIsolated();
+		if (isIsolated != null) {
+			s.append(" /isIsolated:");
+			s.append(isIsolated);
+		}
 		return s.toString();
 	}
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<IAnnotation> annotation = this.getAnnotation();
+		ArrayList<Annotation> annotation = this.getAnnotation();
 		if (annotation != null) {
-			for (IAnnotation item : this.getAnnotation()) {
+			for (Annotation item : this.getAnnotation()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {
 					System.out.println(prefix + " null");
 				}
 			}
+		}
+		ArrayList<AssignedSource> assignmentBefore = this.getAssignmentBefore();
+		if (assignmentBefore != null) {
+			for (AssignedSource item : this.getAssignmentBefore()) {
+				System.out.println(prefix + " /" + item);
+			}
+		}
+		ArrayList<AssignedSource> assignmentAfter = this.getAssignmentAfter();
+		if (assignmentAfter != null) {
+			for (AssignedSource item : this.getAssignmentAfter()) {
+				System.out.println(prefix + " /" + item);
+			}
+		}
+		Statement enclosingStatement = this.getEnclosingStatement();
+		if (enclosingStatement != null) {
+			System.out.println(prefix + " /" + enclosingStatement);
 		}
 	}
 } // Statement

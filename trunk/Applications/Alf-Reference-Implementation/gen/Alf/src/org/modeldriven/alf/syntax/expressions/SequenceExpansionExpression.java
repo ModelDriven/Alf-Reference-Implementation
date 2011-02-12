@@ -17,18 +17,24 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionImpl;
+
 /**
  * An expression used to carry out one of a predefined set of operations over
  * each of the elements in a sequence.
  **/
 
-public abstract class SequenceExpansionExpression extends Expression implements
-		ISequenceExpansionExpression {
+public abstract class SequenceExpansionExpression extends Expression {
 
 	private String operation = "";
 	private String variable = "";
-	private IExpression argument = null;
-	private IExtentOrExpression primary = null;
+	private AssignedSource variableSource = null; // DERIVED
+	private Expression argument = null;
+	private ExtentOrExpression primary = null;
+
+	public SequenceExpansionExpressionImpl getImpl() {
+		return (SequenceExpansionExpressionImpl) this.impl;
+	}
 
 	public String getOperation() {
 		return this.operation;
@@ -46,20 +52,80 @@ public abstract class SequenceExpansionExpression extends Expression implements
 		this.variable = variable;
 	}
 
-	public IExpression getArgument() {
+	public AssignedSource getVariableSource() {
+		if (this.variableSource == null) {
+			this.variableSource = this.getImpl().deriveVariableSource();
+		}
+		return this.variableSource;
+	}
+
+	public Expression getArgument() {
 		return this.argument;
 	}
 
-	public void setArgument(IExpression argument) {
+	public void setArgument(Expression argument) {
 		this.argument = argument;
 	}
 
-	public IExtentOrExpression getPrimary() {
+	public ExtentOrExpression getPrimary() {
 		return this.primary;
 	}
 
-	public void setPrimary(IExtentOrExpression primary) {
+	public void setPrimary(ExtentOrExpression primary) {
 		this.primary = primary;
+	}
+
+	/**
+	 * The assigned source for the expansion variable of a sequence expansion
+	 * expression is the expression itself.
+	 **/
+	public boolean sequenceExpansionExpressionVariableSourceDerivation() {
+		return this.getImpl()
+				.sequenceExpansionExpressionVariableSourceDerivation();
+	}
+
+	/**
+	 * The assignments before the primary expression of a sequence expansion
+	 * expression are the same as the assignments before the sequence expansion
+	 * expression.
+	 **/
+	public boolean sequenceExpansionExpressionAssignmentsBeforePrimary() {
+		return this.getImpl()
+				.sequenceExpansionExpressionAssignmentsBeforePrimary();
+	}
+
+	/**
+	 * The assignments before the argument expression of a sequence expansion
+	 * expression include those after the primary expression plus one for the
+	 * expansion variable.
+	 **/
+	public boolean sequenceExpansionExpressionAssignmentsBeforeArgument() {
+		return this.getImpl()
+				.sequenceExpansionExpressionAssignmentsBeforeArgument();
+	}
+
+	/**
+	 * The expansion variable name may not conflict with any name already
+	 * assigned after the primary expression.
+	 **/
+	public boolean sequenceExpansionExpressionVariableName() {
+		return this.getImpl().sequenceExpansionExpressionVariableName();
+	}
+
+	/**
+	 * The expansion variable may not be assigned within the argument
+	 * expression.
+	 **/
+	public boolean sequenceExpansionExpressionVariableAssignment() {
+		return this.getImpl().sequenceExpansionExpressionVariableAssignment();
+	}
+
+	/**
+	 * The assignments after a sequence expansion expression are the same as
+	 * after its primary expression.
+	 **/
+	public ArrayList<AssignedSource> updateAssignments() {
+		return this.getImpl().updateAssignments();
 	}
 
 	public String toString() {
@@ -73,11 +139,15 @@ public abstract class SequenceExpansionExpression extends Expression implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression argument = this.getArgument();
+		AssignedSource variableSource = this.getVariableSource();
+		if (variableSource != null) {
+			System.out.println(prefix + " /" + variableSource);
+		}
+		Expression argument = this.getArgument();
 		if (argument != null) {
 			argument.print(prefix + " ");
 		}
-		IExtentOrExpression primary = this.getPrimary();
+		ExtentOrExpression primary = this.getPrimary();
 		if (primary != null) {
 			primary.print(prefix + " ");
 		}

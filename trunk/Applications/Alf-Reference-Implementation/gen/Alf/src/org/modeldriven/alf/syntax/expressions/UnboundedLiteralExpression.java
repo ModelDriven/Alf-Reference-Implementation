@@ -17,12 +17,28 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.UnboundedLiteralExpressionImpl;
+
 /**
  * An expression that comprises an unbounded value literal.
  **/
 
-public class UnboundedLiteralExpression extends LiteralExpression implements
-		IUnboundedLiteralExpression {
+public class UnboundedLiteralExpression extends LiteralExpression {
+
+	public UnboundedLiteralExpression() {
+		this.impl = new UnboundedLiteralExpressionImpl(this);
+	}
+
+	public UnboundedLiteralExpressionImpl getImpl() {
+		return (UnboundedLiteralExpressionImpl) this.impl;
+	}
+
+	/**
+	 * The type of an unbounded literal expression is UnlimitedNatural.
+	 **/
+	public boolean unboundedLiteralExpressionTypeDerivation() {
+		return this.getImpl().unboundedLiteralExpressionTypeDerivation();
+	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

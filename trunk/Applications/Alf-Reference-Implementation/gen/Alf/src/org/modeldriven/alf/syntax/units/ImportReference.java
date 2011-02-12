@@ -17,16 +17,22 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.ImportReferenceImpl;
+
 /**
  * A reference to an element or package to be imported into a unit.
  **/
 
-public abstract class ImportReference extends SyntaxElement implements
-		IImportReference {
+public abstract class ImportReference extends SyntaxElement {
 
 	private String visibility = "";
-	private IQualifiedName referentName = null;
-	private IUnitDefinition unit = null;
+	private QualifiedName referentName = null;
+	private UnitDefinition unit = null;
+	private ElementReference referent = null; // DERIVED
+
+	public ImportReferenceImpl getImpl() {
+		return (ImportReferenceImpl) this.impl;
+	}
 
 	public String getVisibility() {
 		return this.visibility;
@@ -36,20 +42,43 @@ public abstract class ImportReference extends SyntaxElement implements
 		this.visibility = visibility;
 	}
 
-	public IQualifiedName getReferentName() {
+	public QualifiedName getReferentName() {
 		return this.referentName;
 	}
 
-	public void setReferentName(IQualifiedName referentName) {
+	public void setReferentName(QualifiedName referentName) {
 		this.referentName = referentName;
 	}
 
-	public IUnitDefinition getUnit() {
+	public UnitDefinition getUnit() {
 		return this.unit;
 	}
 
-	public void setUnit(IUnitDefinition unit) {
+	public void setUnit(UnitDefinition unit) {
 		this.unit = unit;
+	}
+
+	public ElementReference getReferent() {
+		if (this.referent == null) {
+			this.referent = this.getImpl().deriveReferent();
+		}
+		return this.referent;
+	}
+
+	/**
+	 * The referent of an import reference is the element denoted by the
+	 * referent name.
+	 **/
+	public boolean importReferenceReferentDerivation() {
+		return this.getImpl().importReferenceReferentDerivation();
+	}
+
+	/**
+	 * The referent name of an import reference must resolve to a single element
+	 * with public or empty visibility.
+	 **/
+	public boolean importReferenceReferent() {
+		return this.getImpl().importReferenceReferent();
 	}
 
 	public String toString() {
@@ -61,13 +90,17 @@ public abstract class ImportReference extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IQualifiedName referentName = this.getReferentName();
+		QualifiedName referentName = this.getReferentName();
 		if (referentName != null) {
 			referentName.print(prefix + " ");
 		}
-		IUnitDefinition unit = this.getUnit();
+		UnitDefinition unit = this.getUnit();
 		if (unit != null) {
 			unit.print(prefix + " ");
+		}
+		ElementReference referent = this.getReferent();
+		if (referent != null) {
+			System.out.println(prefix + " /" + referent);
 		}
 	}
 } // ImportReference

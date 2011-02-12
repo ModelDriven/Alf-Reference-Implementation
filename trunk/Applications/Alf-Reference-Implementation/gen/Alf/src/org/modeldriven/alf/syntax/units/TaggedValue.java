@@ -17,15 +17,25 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.TaggedValueImpl;
+
 /**
  * An assignment of a value to an attribute of an applied stereotype.
  **/
 
-public class TaggedValue extends SyntaxElement implements ITaggedValue {
+public class TaggedValue extends SyntaxElement {
 
 	private String name = "";
 	private String value = "";
 	private String operator = "";
+
+	public TaggedValue() {
+		this.impl = new TaggedValueImpl(this);
+	}
+
+	public TaggedValueImpl getImpl() {
+		return (TaggedValueImpl) this.impl;
+	}
 
 	public String getName() {
 		return this.name;

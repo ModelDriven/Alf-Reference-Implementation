@@ -17,23 +17,33 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.TaggedValueListImpl;
+
 /**
  * A set of tagged values for a stereotype application.
  **/
 
-public class TaggedValueList extends SyntaxElement implements ITaggedValueList {
+public class TaggedValueList extends SyntaxElement {
 
-	private ArrayList<ITaggedValue> taggedValue = new ArrayList<ITaggedValue>();
+	private ArrayList<TaggedValue> taggedValue = new ArrayList<TaggedValue>();
 
-	public ArrayList<ITaggedValue> getTaggedValue() {
+	public TaggedValueList() {
+		this.impl = new TaggedValueListImpl(this);
+	}
+
+	public TaggedValueListImpl getImpl() {
+		return (TaggedValueListImpl) this.impl;
+	}
+
+	public ArrayList<TaggedValue> getTaggedValue() {
 		return this.taggedValue;
 	}
 
-	public void setTaggedValue(ArrayList<ITaggedValue> taggedValue) {
+	public void setTaggedValue(ArrayList<TaggedValue> taggedValue) {
 		this.taggedValue = taggedValue;
 	}
 
-	public void addTaggedValue(ITaggedValue taggedValue) {
+	public void addTaggedValue(TaggedValue taggedValue) {
 		this.taggedValue.add(taggedValue);
 	}
 
@@ -44,9 +54,9 @@ public class TaggedValueList extends SyntaxElement implements ITaggedValueList {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<ITaggedValue> taggedValue = this.getTaggedValue();
+		ArrayList<TaggedValue> taggedValue = this.getTaggedValue();
 		if (taggedValue != null) {
-			for (ITaggedValue item : this.getTaggedValue()) {
+			for (TaggedValue item : this.getTaggedValue()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {

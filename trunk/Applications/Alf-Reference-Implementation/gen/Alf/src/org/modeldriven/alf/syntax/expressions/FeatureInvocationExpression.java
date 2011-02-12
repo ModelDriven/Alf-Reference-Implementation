@@ -17,21 +17,75 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.FeatureInvocationExpressionImpl;
+
 /**
  * An invocation of a feature referenced on a sequence of instances.
  **/
 
-public class FeatureInvocationExpression extends InvocationExpression implements
-		IFeatureInvocationExpression {
+public class FeatureInvocationExpression extends InvocationExpression {
 
-	private IFeatureReference target = null;
+	private FeatureReference target = null;
 
-	public IFeatureReference getTarget() {
+	public FeatureInvocationExpression() {
+		this.impl = new FeatureInvocationExpressionImpl(this);
+	}
+
+	public FeatureInvocationExpressionImpl getImpl() {
+		return (FeatureInvocationExpressionImpl) this.impl;
+	}
+
+	public FeatureReference getTarget() {
 		return this.target;
 	}
 
-	public void setTarget(IFeatureReference target) {
+	public void setTarget(FeatureReference target) {
 		this.target = target;
+	}
+
+	/**
+	 * If a feature invocation expression is an implicit object destruction, it
+	 * has no referent. Otherwise, its referent is the referent of its feature.
+	 **/
+	public boolean featureInvocationExpressionReferentDerivation() {
+		return this.getImpl().featureInvocationExpressionReferentDerivation();
+	}
+
+	/**
+	 * If a feature invocation expression has an explicit target, then that is
+	 * its feature. Otherwise, it is an alternative constructor call with its
+	 * feature determined implicitly.
+	 **/
+	public boolean featureInvocationExpressionFeatureDerivation() {
+		return this.getImpl().featureInvocationExpressionFeatureDerivation();
+	}
+
+	/**
+	 * If a feature invocation expression is not an implicit destructor call,
+	 * then it must be possible to determine a single valid referent for it
+	 * according to the overloading resolution rules.
+	 **/
+	public boolean featureInvocationExpressionReferentExists() {
+		return this.getImpl().featureInvocationExpressionReferentExists();
+	}
+
+	/**
+	 * An alternative constructor invocation may only occur in an expression
+	 * statement as the first statement in the definition for the method of a
+	 * constructor operation.
+	 **/
+	public boolean featureInvocationExpressionAlternativeConstructor() {
+		return this.getImpl()
+				.featureInvocationExpressionAlternativeConstructor();
+	}
+
+	/**
+	 * If there is no target feature expression, then the implicit feature with
+	 * the same name as the target type must be a constructor.
+	 **/
+	public boolean featureInvocationExpressionImplicitAlternativeConstructor() {
+		return this.getImpl()
+				.featureInvocationExpressionImplicitAlternativeConstructor();
 	}
 
 	public String toString() {
@@ -41,7 +95,7 @@ public class FeatureInvocationExpression extends InvocationExpression implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IFeatureReference target = this.getTarget();
+		FeatureReference target = this.getTarget();
 		if (target != null) {
 			target.print(prefix + " ");
 		}

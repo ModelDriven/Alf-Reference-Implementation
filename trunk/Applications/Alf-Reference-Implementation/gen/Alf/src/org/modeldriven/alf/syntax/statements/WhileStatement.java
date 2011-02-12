@@ -17,30 +17,78 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.WhileStatementImpl;
+
 /**
  * A looping statement for which the continuation condition is first tested
  * before the first iteration.
  **/
 
-public class WhileStatement extends Statement implements IWhileStatement {
+public class WhileStatement extends Statement {
 
-	private IBlock body = null;
-	private IExpression condition = null;
+	private Block body = null;
+	private Expression condition = null;
 
-	public IBlock getBody() {
+	public WhileStatement() {
+		this.impl = new WhileStatementImpl(this);
+	}
+
+	public WhileStatementImpl getImpl() {
+		return (WhileStatementImpl) this.impl;
+	}
+
+	public Block getBody() {
 		return this.body;
 	}
 
-	public void setBody(IBlock body) {
+	public void setBody(Block body) {
 		this.body = body;
 	}
 
-	public IExpression getCondition() {
+	public Expression getCondition() {
 		return this.condition;
 	}
 
-	public void setCondition(IExpression condition) {
+	public void setCondition(Expression condition) {
 		this.condition = condition;
+	}
+
+	/**
+	 * The assignments before the condition expression of a while statement are
+	 * the same as the assignments before the while statement. The assignments
+	 * before the block of the while statement are the same as the assignments
+	 * after the condition expression.
+	 **/
+	public boolean whileStatementAssignmentsBefore() {
+		return this.getImpl().whileStatementAssignmentsBefore();
+	}
+
+	/**
+	 * If a name is assigned before the block, but the assigned source for the
+	 * name after the block is different than before the block, then the
+	 * assigned source of the name after the while statement is the while
+	 * statement. Otherwise it is the same as before the block. If a name is
+	 * unassigned before the block of a while statement, then it is unassigned
+	 * after the while statement, even if it is assigned after the block.
+	 **/
+	public boolean whileStatementAssignmentsAfter() {
+		return this.getImpl().whileStatementAssignmentsAfter();
+	}
+
+	/**
+	 * The condition expression of a while statement must have type Boolean and
+	 * a multiplicity upper bound of 1.
+	 **/
+	public boolean whileStatementCondition() {
+		return this.getImpl().whileStatementCondition();
+	}
+
+	/**
+	 * The enclosing statement for all statements in the body of a while
+	 * statement are the while statement.
+	 **/
+	public boolean whileStatementEnclosedStatements() {
+		return this.getImpl().whileStatementEnclosedStatements();
 	}
 
 	public String toString() {
@@ -50,11 +98,11 @@ public class WhileStatement extends Statement implements IWhileStatement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IBlock body = this.getBody();
+		Block body = this.getBody();
 		if (body != null) {
 			body.print(prefix + " ");
 		}
-		IExpression condition = this.getCondition();
+		Expression condition = this.getCondition();
 		if (condition != null) {
 			condition.print(prefix + " ");
 		}

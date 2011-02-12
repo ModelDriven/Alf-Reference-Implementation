@@ -17,12 +17,39 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl;
+
 /**
  * An expression that comprises a primitive literal.
  **/
 
-public abstract class LiteralExpression extends Expression implements
-		ILiteralExpression {
+public abstract class LiteralExpression extends Expression {
+
+	public LiteralExpressionImpl getImpl() {
+		return (LiteralExpressionImpl) this.impl;
+	}
+
+	/**
+	 * The type of a literal expression is given by the type of the literal, as
+	 * defined for each subclass below.
+	 **/
+	public boolean literalExpressionTypeDerivation() {
+		return this.getImpl().literalExpressionTypeDerivation();
+	}
+
+	/**
+	 * The multiplicity upper bound of a literal expression is always 1.
+	 **/
+	public boolean literalExpressionUpperDerivation() {
+		return this.getImpl().literalExpressionUpperDerivation();
+	}
+
+	/**
+	 * The multiplicity lower bound of a literal expression is always 1.
+	 **/
+	public boolean literalExpressionLowerDerivation() {
+		return this.getImpl().literalExpressionLowerDerivation();
+	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

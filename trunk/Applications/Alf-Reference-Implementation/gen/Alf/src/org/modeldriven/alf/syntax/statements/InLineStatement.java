@@ -17,14 +17,24 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.InLineStatementImpl;
+
 /**
  * A statement that executes code in a language other than Alf.
  **/
 
-public class InLineStatement extends Statement implements IInLineStatement {
+public class InLineStatement extends Statement {
 
 	private String language = "";
 	private String code = "";
+
+	public InLineStatement() {
+		this.impl = new InLineStatementImpl(this);
+	}
+
+	public InLineStatementImpl getImpl() {
+		return (InLineStatementImpl) this.impl;
+	}
 
 	public String getLanguage() {
 		return this.language;
@@ -40,6 +50,14 @@ public class InLineStatement extends Statement implements IInLineStatement {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	/**
+	 * The assignments after an in-line statement are the same as the
+	 * assignments before the statement.
+	 **/
+	public boolean inLineStatementAssignmentsAfter() {
+		return this.getImpl().inLineStatementAssignmentsAfter();
 	}
 
 	public String toString() {

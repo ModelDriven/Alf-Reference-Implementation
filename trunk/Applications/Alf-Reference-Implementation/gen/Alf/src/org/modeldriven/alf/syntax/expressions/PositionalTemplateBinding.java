@@ -17,25 +17,34 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.PositionalTemplateBindingImpl;
+
 /**
  * A template binding in which the arguments are matched to formal template
  * parameters in order by position.
  **/
 
-public class PositionalTemplateBinding extends TemplateBinding implements
-		IPositionalTemplateBinding {
+public class PositionalTemplateBinding extends TemplateBinding {
 
-	private ArrayList<IQualifiedName> argumentName = new ArrayList<IQualifiedName>();
+	private ArrayList<QualifiedName> argumentName = new ArrayList<QualifiedName>();
 
-	public ArrayList<IQualifiedName> getArgumentName() {
+	public PositionalTemplateBinding() {
+		this.impl = new PositionalTemplateBindingImpl(this);
+	}
+
+	public PositionalTemplateBindingImpl getImpl() {
+		return (PositionalTemplateBindingImpl) this.impl;
+	}
+
+	public ArrayList<QualifiedName> getArgumentName() {
 		return this.argumentName;
 	}
 
-	public void setArgumentName(ArrayList<IQualifiedName> argumentName) {
+	public void setArgumentName(ArrayList<QualifiedName> argumentName) {
 		this.argumentName = argumentName;
 	}
 
-	public void addArgumentName(IQualifiedName argumentName) {
+	public void addArgumentName(QualifiedName argumentName) {
 		this.argumentName.add(argumentName);
 	}
 
@@ -46,9 +55,9 @@ public class PositionalTemplateBinding extends TemplateBinding implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<IQualifiedName> argumentName = this.getArgumentName();
+		ArrayList<QualifiedName> argumentName = this.getArgumentName();
 		if (argumentName != null) {
-			for (IQualifiedName item : this.getArgumentName()) {
+			for (QualifiedName item : this.getArgumentName()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {

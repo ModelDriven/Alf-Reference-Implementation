@@ -17,14 +17,19 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
+
 /**
  * A syntax element that has documentation comments associated with it.
  **/
 
-public abstract class DocumentedElement extends SyntaxElement implements
-		IDocumentedElement {
+public abstract class DocumentedElement extends SyntaxElement {
 
 	private ArrayList<String> documentation = new ArrayList<String>();
+
+	public DocumentedElementImpl getImpl() {
+		return (DocumentedElementImpl) this.impl;
+	}
 
 	public ArrayList<String> getDocumentation() {
 		return this.documentation;

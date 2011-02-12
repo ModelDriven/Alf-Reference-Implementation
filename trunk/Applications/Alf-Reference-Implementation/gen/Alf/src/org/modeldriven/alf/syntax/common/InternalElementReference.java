@@ -17,20 +17,29 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.common.impl.InternalElementReferenceImpl;
+
 /**
  * A direct reference to a UML model element.
  **/
 
-public class InternalElementReference extends ElementReference implements
-		IInternalElementReference {
+public class InternalElementReference extends ElementReference {
 
-	private ISyntaxElement element = null;
+	private SyntaxElement element = null;
 
-	public ISyntaxElement getElement() {
+	public InternalElementReference() {
+		this.impl = new InternalElementReferenceImpl(this);
+	}
+
+	public InternalElementReferenceImpl getImpl() {
+		return (InternalElementReferenceImpl) this.impl;
+	}
+
+	public SyntaxElement getElement() {
 		return this.element;
 	}
 
-	public void setElement(ISyntaxElement element) {
+	public void setElement(SyntaxElement element) {
 		this.element = element;
 	}
 
@@ -41,7 +50,7 @@ public class InternalElementReference extends ElementReference implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ISyntaxElement element = this.getElement();
+		SyntaxElement element = this.getElement();
 		if (element != null) {
 			element.print(prefix + " ");
 		}

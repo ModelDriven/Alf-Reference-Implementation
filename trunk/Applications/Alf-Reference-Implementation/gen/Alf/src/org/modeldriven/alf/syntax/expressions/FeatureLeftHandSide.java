@@ -17,21 +17,65 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.FeatureLeftHandSideImpl;
+
 /**
  * A left-hand side that is a property reference.
  **/
 
-public class FeatureLeftHandSide extends LeftHandSide implements
-		IFeatureLeftHandSide {
+public class FeatureLeftHandSide extends LeftHandSide {
 
-	private IFeatureReference feature = null;
+	private FeatureReference feature = null;
 
-	public IFeatureReference getFeature() {
+	public FeatureLeftHandSide() {
+		this.impl = new FeatureLeftHandSideImpl(this);
+	}
+
+	public FeatureLeftHandSideImpl getImpl() {
+		return (FeatureLeftHandSideImpl) this.impl;
+	}
+
+	public FeatureReference getFeature() {
 		return this.feature;
 	}
 
-	public void setFeature(IFeatureReference feature) {
+	public void setFeature(FeatureReference feature) {
 		this.feature = feature;
+	}
+
+	/**
+	 * The assignments before the expression of the feature reference of a
+	 * feature left-hand side are the assignments before the feature left-hand
+	 * side.
+	 **/
+	public boolean featureLeftHandSideAssignmentBeforeDerivation() {
+		return this.getImpl().featureLeftHandSideAssignmentBeforeDerivation();
+	}
+
+	/**
+	 * The assignments after a feature left-hand side are the assignments after
+	 * the expression of the feature reference or, if there is an index, those
+	 * after the index expression.
+	 **/
+	public boolean featureLeftHandSideAssignmentAfterDerivation() {
+		return this.getImpl().featureLeftHandSideAssignmentAfterDerivation();
+	}
+
+	/**
+	 * The expression of the feature reference of a feature left-hand side must
+	 * have a multiplicity upper bound of 1.
+	 **/
+	public boolean featureLeftHandSideFeatureExpression() {
+		return this.getImpl().featureLeftHandSideFeatureExpression();
+	}
+
+	/**
+	 * If a feature left-hand side has an index, then the assignments before the
+	 * index expression are the assignments after the expression of the feature
+	 * reference.
+	 **/
+	public boolean featureLeftHandSideAssignmentsBefore() {
+		return this.getImpl().featureLeftHandSideAssignmentsBefore();
 	}
 
 	public String toString() {
@@ -41,7 +85,7 @@ public class FeatureLeftHandSide extends LeftHandSide implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IFeatureReference feature = this.getFeature();
+		FeatureReference feature = this.getFeature();
 		if (feature != null) {
 			feature.print(prefix + " ");
 		}

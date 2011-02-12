@@ -17,24 +17,34 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.PositionalTupleImpl;
+
 /**
  * A tuple in which the arguments are matched to parameters in order by
  * position.
  **/
 
-public class PositionalTuple extends Tuple implements IPositionalTuple {
+public class PositionalTuple extends Tuple {
 
-	private ArrayList<IExpression> expression = new ArrayList<IExpression>();
+	private ArrayList<Expression> expression = new ArrayList<Expression>();
 
-	public ArrayList<IExpression> getExpression() {
+	public PositionalTuple() {
+		this.impl = new PositionalTupleImpl(this);
+	}
+
+	public PositionalTupleImpl getImpl() {
+		return (PositionalTupleImpl) this.impl;
+	}
+
+	public ArrayList<Expression> getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(ArrayList<IExpression> expression) {
+	public void setExpression(ArrayList<Expression> expression) {
 		this.expression = expression;
 	}
 
-	public void addExpression(IExpression expression) {
+	public void addExpression(Expression expression) {
 		this.expression.add(expression);
 	}
 
@@ -45,9 +55,9 @@ public class PositionalTuple extends Tuple implements IPositionalTuple {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<IExpression> expression = this.getExpression();
+		ArrayList<Expression> expression = this.getExpression();
 		if (expression != null) {
-			for (IExpression item : this.getExpression()) {
+			for (Expression item : this.getExpression()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {

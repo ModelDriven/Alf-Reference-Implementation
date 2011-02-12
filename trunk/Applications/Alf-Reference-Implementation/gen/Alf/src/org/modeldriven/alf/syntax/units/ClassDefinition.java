@@ -17,13 +17,57 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.ClassDefinitionImpl;
+
 /**
  * The definition of a class, whose members may be properties, operations,
  * signals or signal receptions.
  **/
 
-public class ClassDefinition extends ClassifierDefinition implements
-		IClassDefinition {
+public class ClassDefinition extends ClassifierDefinition {
+
+	public ClassDefinition() {
+		this.impl = new ClassDefinitionImpl(this);
+	}
+
+	public ClassDefinitionImpl getImpl() {
+		return (ClassDefinitionImpl) this.impl;
+	}
+
+	/**
+	 * The specialization referents of a class definition must all be classes. A
+	 * class definition may not have any referents that are active classes
+	 * unless this is an active class definition.
+	 **/
+	public boolean classDefinitionSpecializationReferent() {
+		return this.getImpl().classDefinitionSpecializationReferent();
+	}
+
+	/**
+	 * In addition to the annotations allowed for classifiers in general, a
+	 * class definition allows an annotation for any stereotype whose metaclass
+	 * is consistent with Class.
+	 **/
+	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+		return this.getImpl().annotationAllowed(annotation);
+	}
+
+	/**
+	 * Returns true if the given unit definition matches this class definition
+	 * considered as a classifier definition and the subunit is for a class
+	 * definition.
+	 **/
+	public Boolean matchForStub(UnitDefinition unit) {
+		return this.getImpl().matchForStub(unit);
+	}
+
+	/**
+	 * Return true if the given member is either a ClassDefinition or an
+	 * imported member whose referent is a ClassDefinition or a Class.
+	 **/
+	public Boolean isSameKindAs(Member member) {
+		return this.getImpl().isSameKindAs(member);
+	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

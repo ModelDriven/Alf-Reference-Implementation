@@ -17,21 +17,46 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.ExpressionStatementImpl;
+
 /**
  * A statement that evaluates an expression when executed.
  **/
 
-public class ExpressionStatement extends Statement implements
-		IExpressionStatement {
+public class ExpressionStatement extends Statement {
 
-	private IExpression expression = null;
+	private Expression expression = null;
 
-	public IExpression getExpression() {
+	public ExpressionStatement() {
+		this.impl = new ExpressionStatementImpl(this);
+	}
+
+	public ExpressionStatementImpl getImpl() {
+		return (ExpressionStatementImpl) this.impl;
+	}
+
+	public Expression getExpression() {
 		return this.expression;
 	}
 
-	public void setExpression(IExpression expression) {
+	public void setExpression(Expression expression) {
 		this.expression = expression;
+	}
+
+	/**
+	 * The assignments before the expression of an expression statement are the
+	 * same as the assignments before the statement.
+	 **/
+	public boolean expressionStatementAssignmentsBefore() {
+		return this.getImpl().expressionStatementAssignmentsBefore();
+	}
+
+	/**
+	 * The assignments after an expression statement are the same as the
+	 * assignments after its expression.
+	 **/
+	public boolean expressionStatementAssignmentsAfter() {
+		return this.getImpl().expressionStatementAssignmentsAfter();
 	}
 
 	public String toString() {
@@ -41,7 +66,7 @@ public class ExpressionStatement extends Statement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		IExpression expression = this.getExpression();
+		Expression expression = this.getExpression();
 		if (expression != null) {
 			expression.print(prefix + " ");
 		}

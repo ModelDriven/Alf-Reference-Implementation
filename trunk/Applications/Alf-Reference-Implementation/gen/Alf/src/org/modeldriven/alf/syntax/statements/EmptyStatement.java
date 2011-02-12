@@ -17,11 +17,36 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.EmptyStatementImpl;
+
 /**
  * A statement that has no affect when executed.
  **/
 
-public class EmptyStatement extends Statement implements IEmptyStatement {
+public class EmptyStatement extends Statement {
+
+	public EmptyStatement() {
+		this.impl = new EmptyStatementImpl(this);
+	}
+
+	public EmptyStatementImpl getImpl() {
+		return (EmptyStatementImpl) this.impl;
+	}
+
+	/**
+	 * The assignments after and empty statement are the same as the assignments
+	 * before the statement.
+	 **/
+	public boolean emptyStatementAssignmentsAfter() {
+		return this.getImpl().emptyStatementAssignmentsAfter();
+	}
+
+	/**
+	 * An empty statement may not have any annotations.
+	 **/
+	public Boolean annotationAllowed(Annotation annotation) {
+		return this.getImpl().annotationAllowed(annotation);
+	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

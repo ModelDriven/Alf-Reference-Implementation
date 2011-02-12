@@ -17,14 +17,23 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.BooleanLiteralExpressionImpl;
+
 /**
  * An expression that comprises a Boolean literal.
  **/
 
-public class BooleanLiteralExpression extends LiteralExpression implements
-		IBooleanLiteralExpression {
+public class BooleanLiteralExpression extends LiteralExpression {
 
 	private String image = "";
+
+	public BooleanLiteralExpression() {
+		this.impl = new BooleanLiteralExpressionImpl(this);
+	}
+
+	public BooleanLiteralExpressionImpl getImpl() {
+		return (BooleanLiteralExpressionImpl) this.impl;
+	}
 
 	public String getImage() {
 		return this.image;
@@ -32,6 +41,13 @@ public class BooleanLiteralExpression extends LiteralExpression implements
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	/**
+	 * The type of a boolean literal expression is Boolean.
+	 **/
+	public boolean booleanLiteralExpressionTypeDerivation() {
+		return this.getImpl().booleanLiteralExpressionTypeDerivation();
 	}
 
 	public String toString() {

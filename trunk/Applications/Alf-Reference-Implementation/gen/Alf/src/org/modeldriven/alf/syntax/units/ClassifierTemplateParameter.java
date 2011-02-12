@@ -17,13 +17,43 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.units.impl.ClassifierTemplateParameterImpl;
+
 /**
  * The definition of a classifier template parameter, which acts as a classifier
  * within the definition of the template.
  **/
 
-public class ClassifierTemplateParameter extends ClassifierDefinition implements
-		IClassifierTemplateParameter {
+public class ClassifierTemplateParameter extends ClassifierDefinition {
+
+	public ClassifierTemplateParameter() {
+		this.impl = new ClassifierTemplateParameterImpl(this);
+	}
+
+	public ClassifierTemplateParameterImpl getImpl() {
+		return (ClassifierTemplateParameterImpl) this.impl;
+	}
+
+	/**
+	 * Annotations are not allowed on classifier template parameters.
+	 **/
+	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+		return this.getImpl().annotationAllowed(annotation);
+	}
+
+	/**
+	 * Returns false. (Classifier template parameters cannot be stubs.)
+	 **/
+	public Boolean matchForStub(UnitDefinition unit) {
+		return this.getImpl().matchForStub(unit);
+	}
+
+	/**
+	 * Return true if the given member is a classifier template parameter.
+	 **/
+	public Boolean isSameKindAs(Member member) {
+		return this.getImpl().isSameKindAs(member);
+	}
 
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());

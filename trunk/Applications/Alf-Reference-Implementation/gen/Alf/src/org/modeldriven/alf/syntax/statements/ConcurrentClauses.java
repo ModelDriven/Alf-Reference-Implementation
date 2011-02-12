@@ -17,25 +17,50 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.statements.impl.ConcurrentClausesImpl;
+
 /**
  * A grouping of non-final conditional clauses to be tested concurrently.
  **/
 
-public class ConcurrentClauses extends SyntaxElement implements
-		IConcurrentClauses {
+public class ConcurrentClauses extends SyntaxElement {
 
-	private ArrayList<INonFinalClause> clause = new ArrayList<INonFinalClause>();
+	private ArrayList<NonFinalClause> clause = new ArrayList<NonFinalClause>();
 
-	public ArrayList<INonFinalClause> getClause() {
+	public ConcurrentClauses() {
+		this.impl = new ConcurrentClausesImpl(this);
+	}
+
+	public ConcurrentClausesImpl getImpl() {
+		return (ConcurrentClausesImpl) this.impl;
+	}
+
+	public ArrayList<NonFinalClause> getClause() {
 		return this.clause;
 	}
 
-	public void setClause(ArrayList<INonFinalClause> clause) {
+	public void setClause(ArrayList<NonFinalClause> clause) {
 		this.clause = clause;
 	}
 
-	public void addClause(INonFinalClause clause) {
+	public void addClause(NonFinalClause clause) {
 		this.clause.add(clause);
+	}
+
+	/**
+	 * The assignments before each of the clauses in a set of concurrent clauses
+	 * are the same as the assignments before the concurrent clauses.
+	 **/
+	public boolean concurrentClausesAssignmentsBefore() {
+		return this.getImpl().concurrentClausesAssignmentsBefore();
+	}
+
+	/**
+	 * The same name may not be assigned in more than one conditional expression
+	 * within the same concurrent set of clauses.
+	 **/
+	public boolean concurrentClausesConditionAssignments() {
+		return this.getImpl().concurrentClausesConditionAssignments();
 	}
 
 	public String toString() {
@@ -45,9 +70,9 @@ public class ConcurrentClauses extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<INonFinalClause> clause = this.getClause();
+		ArrayList<NonFinalClause> clause = this.getClause();
 		if (clause != null) {
-			for (INonFinalClause item : this.getClause()) {
+			for (NonFinalClause item : this.getClause()) {
 				if (item != null) {
 					item.print(prefix + " ");
 				} else {

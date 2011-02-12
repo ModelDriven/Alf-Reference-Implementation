@@ -112,15 +112,14 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 
 #macro( listablePrimitiveName $primitive )#name(${primitive.name})#end
 #macro( basicName $element )#if(${element.eClass().name}=="PrimitiveType")#primitiveName(${element})#else#name(${element.name})#end#end
-#macro( basicType $element )#if(${element.type.eClass().name}=="PrimitiveType")#primitiveName(${element.type})#else I#name(${element.type.name})#end#end
+#macro( basicType $element )#if(${element.type.eClass().name}=="PrimitiveType")#primitiveName(${element.type})#else #name(${element.type.name})#end#end
 #macro( basicQualifiedType $element )#if(${element.type.eClass().name}=="PrimitiveType")#qualifiedPackageName(${element.type.owner}).#end#basicType(${element})#end
 #macro( listable $type )#if(${type.eClass().name}=="PrimitiveType")#listablePrimitiveName(${type})#else#qualifiedName(${type})#end#end
 #macro( listableType $element )#listable(${element.type})#end
 #macro( type $element )#if(${element})#if(${element.upper}!=1)ArrayList<#basicType(${element})>#else#basicType(${element})#end#else#**#void#end#end
 
 #macro( operationParameters $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else#type(${parameter}) #name(${parameter.name})#if($velocityCount+1<${operation.ownedParameters.size()}||($velocityCount+1==${operation.ownedParameters.size()}&&${operation.ownedParameters.get($velocityCount).direction.toString()}!="return")), #end#end#end#end
-#macro( operationParameterNames $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else, #name(${parameter.name})#end#end#end
-
+#macro( operationParameterNames $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else#name(${parameter.name})#if($velocityCount+1<${operation.ownedParameters.size()}||($velocityCount+1==${operation.ownedParameters.size()}&&${operation.ownedParameters.get($velocityCount).direction.toString()}!="return")), #end#end#end#end
 #macro( operationType $element $operation $class)#if(${operation.name}==${class.name})#else#type(${element})#end#end
 
 #macro( throws $operation) #end 
@@ -130,10 +129,18 @@ ${name.substring(0,1).toUpperCase()}${name.substring(1)}
 #end
 
 #macro( getter $attribute )
-public #type(${attribute}) get#upperCase(${attribute.name})() { return this.#name($attribute.name); }
+public #type(${attribute}) get#upperCase(${attribute.name})() { 
+#if( ${attribute.isDerived()} )
+   if (this.#name($attribute.name)==null) {
+     this.#name($attribute.name) = this.getImpl().derive#upperCase(${attribute.name})();
+   }
+#end
+   return this.#name($attribute.name);
+}
 #end
 
 #macro( setter $attribute )
+#if( !$attribute.isDerived() )
 public void set#upperCase(${attribute.name})(#type($attribute) #name($attribute.name)) 
 { this.#name($attribute.name) = #name($attribute.name); }
 #if( $attribute.upper!=1 )
@@ -141,31 +148,12 @@ public void add#upperCase(${attribute.name})(#basicType($attribute) #name($attri
 { this.#name($attribute.name).add(#name($attribute.name)); }
 #end
 #end
+#end
 
-#macro( implGetter $attribute )
-#if( !$attribute.isDerived() )
-public #type(${attribute}) get#upperCase(${attribute.name})() 
-{ return this.getBase().get#upperCase($attribute.name)(); }
-#else
-public #type(${attribute}) get#upperCase(${attribute.name})() { 
-   if (this.#name($attribute.name)==null) {
-     derive#upperCase(${attribute.name})();
-   }
-   return this.#name($attribute.name);
+#macro( deriver $attribute )
+public #type(${attribute}) derive#upperCase(${attribute.name})() { 
+  return null; //STUB 
 }
-protected void derive#upperCase(${attribute.name})() { }
-#end
-#end
-
-#macro( implSetter $attribute )
-#if( !$attribute.isDerived() )
-public void set#upperCase(${attribute.name})(#type($attribute) #name($attribute.name)) 
-{ this.getBase().set#upperCase($attribute.name)(#name($attribute.name)); }
-#if( $attribute.upper!=1 )
-public void add#upperCase(${attribute.name})(#basicType($attribute) #name($attribute.name)) 
-{ this.getBase().add#upperCase($attribute.name)(#name($attribute.name)); }
-#end
-#end
 #end
 
 #macro( body $operation $class)#if(${operation.isAbstract()});#else {
@@ -258,7 +246,7 @@ ${comment.body}
 #end
 #end
 
-#macro( printOperations $class $includeDerived )
+#macro( printOperations $class )
 public String toString() {
 	#if( ${class.superClasses.size()}==0 )
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
@@ -266,11 +254,18 @@ public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 	#end	
 	#foreach( $attribute in ${class.ownedAttributes} )
-		#if( (!${attribute.isDerived()} || $includeDerived) && 
-			 ${attribute.type.eClass().name}=="PrimitiveType" &&
+		#if( ${attribute.type.eClass().name}=="PrimitiveType" &&
 			 ${attribute.upper}==1 )
+			#if( ${attribute.isDerived()} )
+			#type(${attribute}) #name(${attribute.name}) = this.get#upperCase(${attribute.name})();
+			if (#name(${attribute.name})!=null) {
+				s.append(" /${attribute.name}:");
+				s.append(#name(${attribute.name}));
+			}
+			#else
 			s.append(" ${attribute.name}:");
 			s.append(this.get#upperCase(${attribute.name})());
+			#end
 		#end
 	#end
 	return s.toString();
@@ -283,33 +278,37 @@ public void print(String prefix) {
 		super.print(prefix);
 	#end	
 	#foreach( $attribute in ${class.ownedAttributes} )
-		#if( !${attribute.isDerived()} || $includeDerived )
-     		#if( ${attribute.upper}!=1 )
-    		    #type($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
-     			if (#name(${attribute.name})!=null) {
- 	     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
-	     			if (#name($attribute.name).size()>0) {
-		     			System.out.println(prefix + " ${attribute.name}:");
-		     		}
-	     		#end
-	     		for (#basicType($attribute) item: this.get#upperCase(${attribute.name})()) {
-		     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
-	    	 			System.out.println(prefix + "  " + item);
-	     			#else
-	     			    if (item!=null) {
-							item.print(prefix+" ");
-						} else {
-						  System.out.println(prefix + " null");
-						}
-	     			#end
-     			}
-     			}
-     		#elseif( ${attribute.type.eClass().name}!="PrimitiveType" )
-    		    #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
-      			if (#name(${attribute.name})!=null) {
-					#name(${attribute.name}).print(prefix+" ");
-				}
+ 		#if( ${attribute.upper}!=1 )
+		    #type($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+ 			if (#name(${attribute.name})!=null) {
+     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
+     			if (#name($attribute.name).size()>0) {
+	     			System.out.println(prefix + " ${attribute.name}:");
+	     		}
+     		#end
+     		for (#basicType($attribute) item: this.get#upperCase(${attribute.name})()) {
+	     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
+    	 			System.out.println(prefix + "  " + item);
+    	 		#elseif( ${attribute.isDerived()} )
+    	 			System.out.println(prefix + " /" + item);
+     			#else
+     			    if (item!=null) {
+						item.print(prefix+" ");
+					} else {
+					  System.out.println(prefix + " null");
+					}
+     			#end
+ 			}
+ 			}
+ 		#elseif( ${attribute.type.eClass().name}!="PrimitiveType" )
+		    #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+  			if (#name(${attribute.name})!=null) {
+ 			#if( ${attribute.isDerived()} )
+ 				System.out.println(prefix + " /" + #name(${attribute.name}));
+ 			#else
+				#name(${attribute.name}).print(prefix+" ");
 			#end
+			}
 		#end
 	#end
 }
@@ -320,7 +319,7 @@ public void print(String prefix) {
 #set( $n = ${rule.name.length()} - 10 )
 public boolean ${rule.name}() {
 #if( ${rule.name.substring($n)}=="Derivation" )
-   get${rule.name.substring($i,$n)}();
+   this.getSelf().get${rule.name.substring($i,$n)}();
 #end
    return true;
 }

@@ -17,14 +17,23 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.StringLiteralExpressionImpl;
+
 /**
  * An expression that comprises a String literal.
  **/
 
-public class StringLiteralExpression extends LiteralExpression implements
-		IStringLiteralExpression {
+public class StringLiteralExpression extends LiteralExpression {
 
 	private String image = "";
+
+	public StringLiteralExpression() {
+		this.impl = new StringLiteralExpressionImpl(this);
+	}
+
+	public StringLiteralExpressionImpl getImpl() {
+		return (StringLiteralExpressionImpl) this.impl;
+	}
 
 	public String getImage() {
 		return this.image;
@@ -32,6 +41,13 @@ public class StringLiteralExpression extends LiteralExpression implements
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	/**
+	 * The type of a string literal expression is String.
+	 **/
+	public boolean stringLiteralExpressionTypeDerivation() {
+		return this.getImpl().stringLiteralExpressionTypeDerivation();
 	}
 
 	public String toString() {

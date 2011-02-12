@@ -1,6 +1,6 @@
 #**
-*impl.class.java template for uml project
-@projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/impl/gen/${object.name}.java 
+*impl.class.java template for alf project
+@projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/impl/gen/${object.name}Impl.java 
 @artifactContext GenClass 
 *#
 #parse( "uml.fragment" )
@@ -9,15 +9,14 @@ ${packageDeclaration}.impl.gen;
 #imports()
 #comments(${object})
 
-#macro( class $object)
+#macro( impl $object )
 ## #classJavaDoc(${object}) 
 
-#visibility(${object}) #abstract(${object}) class #name(${object.name})
+#visibility(${object}) #abstract(${object}) class ${object.name}Impl
 #foreach ( $superclass in ${object.superClasses} )
-    extends #qualifiedPackageName(${superclass.owner}).impl.gen.#name(${superclass.name}) 
+    extends #qualifiedPackageName(${superclass.owner}).impl.gen.#name(${superclass.name})Impl 
 #end
- implements #qualifiedPackageName(${object.owner}).impl.I#name(${object.name})Impl
-    {
+{
 ## #foreach( $behavior in ${object.ownedBehaviors} )
 ## #if( ${behavior.eClass().name}=="Activity" )
 ## #class(${behavior})
@@ -25,31 +24,24 @@ ${packageDeclaration}.impl.gen;
 ## #end
 
 #if( ${object.superClasses.size()}==0 )
-  protected #qualifiedName(${object}) base;
+  protected #name(${object.name}) self;
+  
+  public #name(${object.name})Impl(#name(${object.name}) self) {
+    this.self = self;
+  }
+#else
+  public #name(${object.name})Impl(#name(${object.name}) self) {
+    super(self);
+  }
 #end
 
-#if( !${object.isAbstract()} )
-public #name(${object.name})() {
-  this.base = new #qualifiedName(${object})();
+public #qualifiedName(${object}) getSelf() {
+  return (#name(${object.name}))this.self;
 }
-#end
-
-public #qualifiedName(${object}) getBase() {
-  return (#qualifiedName(${object}))this.base;
-}
-
-#foreach( $feature in ${object.ownedAttributes} )
-  #if( ${feature.isStatic()} )
-  #visibility(${feature}) static #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
-  #elseif( ${feature.isDerived()} )
-  private #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
-  #end  
-#end
 
 #foreach ( $attribute in ${object.ownedAttributes} )
-  #if( !${attribute.isStatic()} )
-  #implGetter(${attribute})
-  #implSetter(${attribute})
+  #if( ${attribute.isDerived()} )
+    #deriver(${attribute})
   #end  
 #end
 
@@ -61,11 +53,11 @@ public #qualifiedName(${object}) getBase() {
 #foreach ( $operation in ${object.ownedOperations} )
   ## #featureJavaDoc("operation ${operation.name}" ${operation})
   #comments(${operation})
-  #visibility(${operation}) #abstract(${operation}) #static(${operation}) #operationType(${operation.returnResult} ${operation} ${object}) #name(${operation.name})(#operationParameters(${operation})) #throws(${operation})#body(${operation} ${object})
+  public #abstract(${operation}) #static(${operation}) #operationType(${operation.returnResult} ${operation} ${object}) #name(${operation.name})(#operationParameters(${operation})) #throws(${operation})
+  #if( ${operation.isAbstract()} );#else#body(${operation} ${object})#end
 #end
 
-#printOperations(${object} true)
-} //${object.name}
+} //${object.name}Impl
 #end
 
-#class(${object})
+#impl(${object})

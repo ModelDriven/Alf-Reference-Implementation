@@ -17,30 +17,60 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 
+import org.modeldriven.alf.syntax.expressions.impl.ExtentOrExpressionImpl;
+
 /**
  * The target of a sequence operation, reduction or expansion expression, which
  * may be either a primary expression or a class name denoting the class extent.
  **/
 
-public class ExtentOrExpression implements IExtentOrExpression {
+public class ExtentOrExpression {
 
-	private IQualifiedName name = null;
-	private IExpression nonNameExpression = null;
+	private QualifiedName name = null;
+	private Expression expression = null; // DERIVED
+	private Expression nonNameExpression = null;
 
-	public IQualifiedName getName() {
+	protected ExtentOrExpressionImpl impl;
+
+	public ExtentOrExpression() {
+		this.impl = new ExtentOrExpressionImpl(this);
+	}
+
+	public ExtentOrExpressionImpl getImpl() {
+		return (ExtentOrExpressionImpl) this.impl;
+	}
+
+	public QualifiedName getName() {
 		return this.name;
 	}
 
-	public void setName(IQualifiedName name) {
+	public void setName(QualifiedName name) {
 		this.name = name;
 	}
 
-	public IExpression getNonNameExpression() {
+	public Expression getExpression() {
+		if (this.expression == null) {
+			this.expression = this.getImpl().deriveExpression();
+		}
+		return this.expression;
+	}
+
+	public Expression getNonNameExpression() {
 		return this.nonNameExpression;
 	}
 
-	public void setNonNameExpression(IExpression nonNameExpression) {
+	public void setNonNameExpression(Expression nonNameExpression) {
 		this.nonNameExpression = nonNameExpression;
+	}
+
+	/**
+	 * The effective expression for the target is the parsed primary expression,
+	 * if the target is not a qualified name, a name expression, if the target
+	 * is a qualified name other than a class name, or a class extent
+	 * expression, if the target is the qualified name of a class.
+	 **/
+	public boolean extentOrExpressionExpressionDerivation() {
+		return this.getImpl().extentOrExpressionExpressionDerivation();
 	}
 
 	public String toString() {
@@ -50,11 +80,15 @@ public class ExtentOrExpression implements IExtentOrExpression {
 
 	public void print(String prefix) {
 		System.out.println(prefix + this.toString());
-		IQualifiedName name = this.getName();
+		QualifiedName name = this.getName();
 		if (name != null) {
 			name.print(prefix + " ");
 		}
-		IExpression nonNameExpression = this.getNonNameExpression();
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			System.out.println(prefix + " /" + expression);
+		}
+		Expression nonNameExpression = this.getNonNameExpression();
 		if (nonNameExpression != null) {
 			nonNameExpression.print(prefix + " ");
 		}
