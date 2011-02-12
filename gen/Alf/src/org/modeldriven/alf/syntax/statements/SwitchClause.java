@@ -54,11 +54,14 @@ public class SwitchClause extends SyntaxElement implements ISwitchClause {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IExpression case_ : this.getCase()) {
-			if (case_ != null) {
-				case_.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IExpression> case_ = this.getCase();
+		if (case_ != null) {
+			for (IExpression item : this.getCase()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 		IBlock block = this.getBlock();

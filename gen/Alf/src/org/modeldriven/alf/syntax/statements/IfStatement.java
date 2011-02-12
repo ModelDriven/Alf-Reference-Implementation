@@ -54,11 +54,15 @@ public class IfStatement extends Statement implements IIfStatement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IConcurrentClauses nonFinalClauses : this.getNonFinalClauses()) {
-			if (nonFinalClauses != null) {
-				nonFinalClauses.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IConcurrentClauses> nonFinalClauses = this
+				.getNonFinalClauses();
+		if (nonFinalClauses != null) {
+			for (IConcurrentClauses item : this.getNonFinalClauses()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 		IBlock finalClause = this.getFinalClause();

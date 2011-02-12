@@ -54,11 +54,14 @@ public abstract class NamespaceDefinition extends Member implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IMember ownedMember : this.getOwnedMember()) {
-			if (ownedMember != null) {
-				ownedMember.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IMember> ownedMember = this.getOwnedMember();
+		if (ownedMember != null) {
+			for (IMember item : this.getOwnedMember()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 		IUnitDefinition unit = this.getUnit();

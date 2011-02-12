@@ -44,11 +44,14 @@ public class AcceptStatement extends Statement implements IAcceptStatement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IAcceptBlock acceptBlock : this.getAcceptBlock()) {
-			if (acceptBlock != null) {
-				acceptBlock.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IAcceptBlock> acceptBlock = this.getAcceptBlock();
+		if (acceptBlock != null) {
+			for (IAcceptBlock item : this.getAcceptBlock()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

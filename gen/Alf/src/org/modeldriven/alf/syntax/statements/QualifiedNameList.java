@@ -45,11 +45,14 @@ public class QualifiedNameList extends SyntaxElement implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IQualifiedName name : this.getName()) {
-			if (name != null) {
-				name.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IQualifiedName> name = this.getName();
+		if (name != null) {
+			for (IQualifiedName item : this.getName()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

@@ -71,11 +71,14 @@ public class UnitDefinition extends DocumentedElement implements
 		if (definition != null) {
 			definition.print(prefix + " ");
 		}
-		for (IImportReference import_ : this.getImport()) {
-			if (import_ != null) {
-				import_.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IImportReference> import_ = this.getImport();
+		if (import_ != null) {
+			for (IImportReference item : this.getImport()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

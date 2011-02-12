@@ -45,11 +45,14 @@ public class PositionalTuple extends Tuple implements IPositionalTuple {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IExpression expression : this.getExpression()) {
-			if (expression != null) {
-				expression.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IExpression> expression = this.getExpression();
+		if (expression != null) {
+			for (IExpression item : this.getExpression()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}

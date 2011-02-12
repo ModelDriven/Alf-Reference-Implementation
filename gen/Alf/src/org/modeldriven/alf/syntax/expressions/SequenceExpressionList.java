@@ -45,11 +45,14 @@ public class SequenceExpressionList extends SequenceElements implements
 
 	public void print(String prefix) {
 		super.print(prefix);
-		for (IExpression element : this.getElement()) {
-			if (element != null) {
-				element.print(prefix + " ");
-			} else {
-				System.out.println(prefix + " null");
+		ArrayList<IExpression> element = this.getElement();
+		if (element != null) {
+			for (IExpression item : this.getElement()) {
+				if (item != null) {
+					item.print(prefix + " ");
+				} else {
+					System.out.println(prefix + " null");
+				}
 			}
 		}
 	}
