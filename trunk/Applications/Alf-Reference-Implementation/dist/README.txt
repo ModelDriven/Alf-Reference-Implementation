@@ -15,7 +15,7 @@ generated from the Alf abstract syntax metamodel
 
 The parser source code and a compiled JAR file can be found at
 
-http://lib.modeldriven.org/MDLibrary/tags/Applications/Alf-Reference-Implementation/Alf-1-0-Beta-1/src/
+http://lib.modeldriven.org/MDLibrary/tags/Applications/Alf-Reference-Implementation/Alf-1-0-Beta-1/dist/
 
 The source code hierarchy is archived in the file alf-parser-src.zip and the
 compiled classes are in the file alf-parser.jar. The entry class is
