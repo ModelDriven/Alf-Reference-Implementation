@@ -1,30 +1,36 @@
 ACTION LANGUAGE FOR UML (Alf) PARSER
 ------------------------------------
-Copyright 2010 Data Access Technologies, Inc. (Model Driven Solutions)
+Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
 
 Alf is an action language for UML developed in response to the OMG Request
 for Proposals "Concrete Syntax for a UML Action Language". For a copy of the RFP
-and the submitted specification, see
+and the 1.0 Beta 1 specification, see
 
-http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/doc/
+http://lib.modeldriven.org/MDLibrary/tags/Applications/Alf-Reference-Implementation/Alf-1-0-Beta-1/doc/
 
-The Alf parser is updated to reflect the latest draft specification. It is
-implemented using JavaCC compiler-compiler technology. The parser source code
-can be found at
+The Alf Parser reflects the Beta 1 specification. It is implemented using JavaCC
+compiler-compiler technology and constructs an abstract syntax tree for the
+parsed text. The source Java classes for the abstract syntax tree elements are
+generated from the Alf abstract syntax metamodel
 
-http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/src/
+The parser source code and a compiled JAR file can be found at
 
-This source uses Java classes generated from the Alf abstract syntax metamodel
-under
+http://lib.modeldriven.org/MDLibrary/tags/Applications/Alf-Reference-Implementation/Alf-1-0-Beta-1/src/
 
-http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/gen/
+The source code hierarchy is archived in the file alf-parser-src.zip and the
+compiled classes are in the file alf-parser.jar. The entry class is
+org.modeldriven.alf.parser.AlfParser. It can either be run as a main program
+from the command line or used as an API via its methods.
 
-All compiled classes are in alf-parser.jar under
+Licensing
+---------
 
-http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/
+Data Access Technology, Inc., is the copyright owner of all Alf Parser source
+code and hereby licenses such software to you under the Academic Free License
+version 3.0, which may be found at
 
-The entry class is org.modeldriven.alf.parser.AlfParser. It can either be run as
-a main program from the command line or used as an API via its methods.
+http://www.opensource.org/licenses/afl-3.0.php
+
 
 Command Line Execution
 ----------------------
