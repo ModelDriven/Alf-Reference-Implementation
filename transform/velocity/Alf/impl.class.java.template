@@ -1,5 +1,5 @@
 #**
-*impl.class.java template for alf project
+*impl.class.java template for Alf project
 @projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/impl/gen/${object.name}Impl.java 
 @artifactContext GenClass 
 *#
