@@ -774,7 +774,8 @@ Expression ThisExpression():
   <THIS> 
   [ t = Tuple() 
     { e = new FeatureInvocationExpression();
-      ((FeatureInvocationExpression) e).setTuple(t); } 
+      ((FeatureInvocationExpression) e).setTuple(t); 
+      t.setInvocation((FeatureInvocationExpression) e); } 
   ]
   { return e; }
 }
@@ -876,6 +877,7 @@ Expression BehaviorInvocation(QualifiedName n):
   { BehaviorInvocationExpression e = new BehaviorInvocationExpression();
     e.setTarget(n);
     e.setTuple(t);
+    t.setInvocation(e);
     return e; }
 }
 
@@ -888,6 +890,7 @@ Expression FeatureInvocation(FeatureReference f):
   { FeatureInvocationExpression e = new FeatureInvocationExpression();
     e.setTarget(f);
     e.setTuple(t); 
+    t.setInvocation(e);
     return e; }
 }
 
@@ -901,6 +904,7 @@ Expression SuperInvocationExpression():
   { SuperInvocationExpression e = new SuperInvocationExpression();
     e.setTarget(n);
     e.setTuple(t);
+    t.setInvocation(e);
     return e; }
 
 }
@@ -920,6 +924,7 @@ Expression InstanceCreationOrSequenceConstructionExpression():
     { InstanceCreationExpression ice = new InstanceCreationExpression();
       ice.setConstructor(n);
       ice.setTuple(t);
+      t.setInvocation(ice);
       e = ice; } )
   { return e; }
 }
@@ -937,6 +942,7 @@ Expression LinkOperationCompletion(QualifiedName q):
     e.setAssociationName(q);
     e.setOperation(op);
     e.setTuple(t);
+    t.setInvocation(e);
     return e; }
 }
 
@@ -1165,6 +1171,7 @@ Expression SequenceOperationOrReductionOrExpansion(Expression p):
       soe.setPrimary(ee);
       soe.setOperation(q);
       soe.setTuple(t);
+      t.setInvocation(soe);
       e = soe; }
   | <REDUCE> [ <ORDERED> { ordered = true; } ] q = QualifiedName() 
     { SequenceReductionExpression sre = new SequenceReductionExpression();
@@ -2163,6 +2170,7 @@ Expression InstanceInitializationExpression():
   
   { InstanceCreationExpression e = new InstanceCreationExpression();
     e.setTuple(t);
+    t.setInvocation(e);
     return e; }
 }
 
@@ -2521,6 +2529,7 @@ UnitDefinition UnitDefinition():
   <EOF>
   { d.setAnnotation(sl);
     u.setDefinition(d);
+    d.setUnit(u);
     return u; 
   }
 }
@@ -2733,7 +2742,7 @@ void PackageBody(PackageDefinition d):
   Member m;
 }
 {
-  <LBRACE> ( m = PackagedElement() { d.addOwnedMember(m); } )* <RBRACE>
+  <LBRACE> ( m = PackagedElement() { d.addOwnedMember(m); m.setNamespace(d); } )* <RBRACE>
 }
 
 Member PackagedElement():
@@ -2825,8 +2834,8 @@ void TemplateParameters(ClassifierDefinition d):
   ClassifierTemplateParameter p;
 }
 {
-  <LT> p = ClassifierTemplateParameter() { d.addOwnedMember(p); }
-  ( <COMMA> p = ClassifierTemplateParameter() { d.addOwnedMember(p); } )*
+  <LT> p = ClassifierTemplateParameter() { d.addOwnedMember(p); p.setNamespace(d); }
+  ( <COMMA> p = ClassifierTemplateParameter() { d.addOwnedMember(p); p.setNamespace(d); } )*
   <GT>
 }
 
@@ -2904,7 +2913,7 @@ void ClassBody(ClassDefinition d):
   Member m;
 }
 {
-  <LBRACE> ( m = ClassMember() { d.addOwnedMember(m); } )* <RBRACE>
+  <LBRACE> ( m = ClassMember() { d.addOwnedMember(m); m.setNamespace(d); } )* <RBRACE>
 }
 
 Member ClassMember():
@@ -2982,7 +2991,7 @@ void ActiveClassBody(ActiveClassDefinition d):
   ActivityDefinition a;
 }
 {
-  <LBRACE> ( m = ActiveClassMember() { d.addOwnedMember(m); } )* <RBRACE>
+  <LBRACE> ( m = ActiveClassMember() { d.addOwnedMember(m); m.setNamespace(d); } )* <RBRACE>
   [ <DO> a = BehaviorClause() { d.setClassifierBehavior(a); } ]
 }
 
@@ -3076,7 +3085,7 @@ void StructuredBody(ClassifierDefinition d):
   Member m;
 }
 {
-  <LBRACE> ( m = StructuredMember() { d.addOwnedMember(m); } )* <RBRACE>
+  <LBRACE> ( m = StructuredMember() { d.addOwnedMember(m); m.setNamespace(d); } )* <RBRACE>
 }
 
 Member StructuredMember():
@@ -3176,8 +3185,8 @@ void EnumerationBody(EnumerationDefinition d):
   Member m;
 }
 {
-  <LBRACE> m = EnumerationLiteralName() { d.addOwnedMember(m); }
-  ( <COMMA> m = EnumerationLiteralName() { d.addOwnedMember(m); } )* <RBRACE>
+  <LBRACE> m = EnumerationLiteralName() { d.addOwnedMember(m); m.setNamespace(d); }
+  ( <COMMA> m = EnumerationLiteralName() { d.addOwnedMember(m); m.setNamespace(d); } )* <RBRACE>
 }
 
 EnumerationLiteralName EnumerationLiteralName():
@@ -3239,7 +3248,7 @@ ActivityDefinition ActivityDeclaration():
 { 
   <ACTIVITY> n = Name() { d.setName(n); } 
   [ TemplateParameters(d) ] FormalParameters(d) 
-  [ <COLON> TypePart(p) { p.setDirection("return"); d.addOwnedMember(p); } ]
+  [ <COLON> TypePart(p) { p.setDirection("return"); p.setNamespace(d); d.addOwnedMember(p); } ]
   { return d; }
 }
 
@@ -3279,8 +3288,8 @@ void FormalParameterList(NamespaceDefinition d):
   FormalParameter p;
 }
 {
-  p = FormalParameter() { d.addOwnedMember(p); }
-  ( <COMMA> p = FormalParameter() { d.addOwnedMember(p); } )*
+  p = FormalParameter() { d.addOwnedMember(p); p.setNamespace(d); }
+  ( <COMMA> p = FormalParameter() { d.addOwnedMember(p); p.setNamespace(d); } )*
 }
 
 FormalParameter FormalParameter():
@@ -3452,7 +3461,7 @@ OperationDefinition OperationDeclaration():
 }
 {
   [ <ABSTRACT> { d.setIsAbstract(true); } ] n = Name() { d.setName(n); }
-  FormalParameters(d) [<COLON> TypePart(p) { p.setDirection("return"); d.addOwnedMember(p); } ] 
+  FormalParameters(d) [<COLON> TypePart(p) { p.setDirection("return"); p.setNamespace(d); d.addOwnedMember(p); } ] 
   [ nl = RedefinitionClause() { d.setRedefinition(nl); } ]
   { return d; }
 }
