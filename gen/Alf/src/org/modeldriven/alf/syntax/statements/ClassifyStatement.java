@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.ClassifyStatementImpl;
@@ -155,26 +157,35 @@ public class ClassifyStatement extends Statement {
 		super.print(prefix);
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			expression.print(prefix + " ");
+			System.out.println(prefix + " expression:");
+			expression.print(prefix + "  ");
 		}
 		QualifiedNameList fromList = this.getFromList();
 		if (fromList != null) {
-			fromList.print(prefix + " ");
+			System.out.println(prefix + " fromList:");
+			fromList.print(prefix + "  ");
 		}
 		QualifiedNameList toList = this.getToList();
 		if (toList != null) {
-			toList.print(prefix + " ");
+			System.out.println(prefix + " toList:");
+			toList.print(prefix + "  ");
 		}
 		ArrayList<ElementReference> fromClass = this.getFromClass();
 		if (fromClass != null) {
+			if (fromClass.size() > 0) {
+				System.out.println(prefix + " /fromClass:");
+			}
 			for (ElementReference item : this.getFromClass()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 		ArrayList<ElementReference> toClass = this.getToClass();
 		if (toClass != null) {
+			if (toClass.size() > 0) {
+				System.out.println(prefix + " /toClass:");
+			}
 			for (ElementReference item : this.getToClass()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

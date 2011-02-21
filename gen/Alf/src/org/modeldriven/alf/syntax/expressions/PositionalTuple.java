@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.PositionalTupleImpl;
@@ -57,11 +59,14 @@ public class PositionalTuple extends Tuple {
 		super.print(prefix);
 		ArrayList<Expression> expression = this.getExpression();
 		if (expression != null) {
+			if (expression.size() > 0) {
+				System.out.println(prefix + " expression:");
+			}
 			for (Expression item : this.getExpression()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}

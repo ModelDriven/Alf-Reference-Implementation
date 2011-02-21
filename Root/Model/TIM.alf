@@ -1,4 +1,4 @@
-import DomainDataTypes::*;
+private import DomainDataTypes::*;
 
 class TIM {
 

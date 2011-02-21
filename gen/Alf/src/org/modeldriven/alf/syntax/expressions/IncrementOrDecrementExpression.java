@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.IncrementOrDecrementExpressionImpl;
@@ -240,19 +242,20 @@ public class IncrementOrDecrementExpression extends Expression {
 		super.print(prefix);
 		AssignedSource assignment = this.getAssignment();
 		if (assignment != null) {
-			System.out.println(prefix + " /" + assignment);
+			System.out.println(prefix + " /assignment:" + assignment);
 		}
 		LeftHandSide operand = this.getOperand();
 		if (operand != null) {
-			operand.print(prefix + " ");
+			System.out.println(prefix + " operand:");
+			operand.print(prefix + "  ");
 		}
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			System.out.println(prefix + " /" + expression);
+			System.out.println(prefix + " /expression:" + expression);
 		}
 		ElementReference feature = this.getFeature();
 		if (feature != null) {
-			System.out.println(prefix + " /" + feature);
+			System.out.println(prefix + " /feature:" + feature);
 		}
 	}
 } // IncrementOrDecrementExpression

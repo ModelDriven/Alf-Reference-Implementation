@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl;
@@ -259,20 +261,24 @@ public abstract class InvocationExpression extends Expression {
 		super.print(prefix);
 		FeatureReference feature = this.getFeature();
 		if (feature != null) {
-			System.out.println(prefix + " /" + feature);
+			System.out.println(prefix + " /feature:" + feature);
 		}
 		Tuple tuple = this.getTuple();
 		if (tuple != null) {
-			tuple.print(prefix + " ");
+			System.out.println(prefix + " tuple:");
+			tuple.print(prefix + "  ");
 		}
 		ElementReference referent = this.getReferent();
 		if (referent != null) {
-			System.out.println(prefix + " /" + referent);
+			System.out.println(prefix + " /referent:" + referent);
 		}
 		ArrayList<ElementReference> parameter = this.getParameter();
 		if (parameter != null) {
+			if (parameter.size() > 0) {
+				System.out.println(prefix + " /parameter:");
+			}
 			for (ElementReference item : this.getParameter()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

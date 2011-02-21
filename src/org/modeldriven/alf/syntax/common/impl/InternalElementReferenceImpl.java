@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.omg.uml.Element;
 
 import java.util.ArrayList;
 
@@ -31,5 +32,15 @@ public class InternalElementReferenceImpl extends
 	public org.modeldriven.alf.syntax.common.InternalElementReference getSelf() {
 		return (InternalElementReference) this.self;
 	}
+
+    @Override
+    public SyntaxElement getAlf() {
+        return this.getSelf().getElement();
+    }
+
+    @Override
+    public Element getUml() {
+        return null;
+    }
 
 } // InternalElementReferenceImpl

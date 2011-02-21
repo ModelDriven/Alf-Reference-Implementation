@@ -32,5 +32,18 @@ public class PositionalTemplateBindingImpl extends
 	public org.modeldriven.alf.syntax.expressions.PositionalTemplateBinding getSelf() {
 		return (PositionalTemplateBinding) this.self;
 	}
+	
+	public String toString() {
+	    StringBuffer s = new StringBuffer("<");
+	    PositionalTemplateBinding self = this.getSelf();
+	    String separator = "";
+	    for (QualifiedName q: self.getArgumentName()) {
+	        s.append(separator);
+	        s.append(q.getPathName());
+	        separator = ",";
+	    }
+	    s.append(">");
+	    return s.toString();
+	}
 
 } // PositionalTemplateBindingImpl

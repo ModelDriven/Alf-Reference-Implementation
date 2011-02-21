@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.StereotypeAnnotationImpl;
@@ -146,19 +148,22 @@ public class StereotypeAnnotation extends SyntaxElement {
 		super.print(prefix);
 		TaggedValueList taggedValues = this.getTaggedValues();
 		if (taggedValues != null) {
-			taggedValues.print(prefix + " ");
+			System.out.println(prefix + " taggedValues:");
+			taggedValues.print(prefix + "  ");
 		}
 		QualifiedNameList names = this.getNames();
 		if (names != null) {
-			names.print(prefix + " ");
+			System.out.println(prefix + " names:");
+			names.print(prefix + "  ");
 		}
 		QualifiedName stereotypeName = this.getStereotypeName();
 		if (stereotypeName != null) {
-			stereotypeName.print(prefix + " ");
+			System.out.println(prefix + " stereotypeName:");
+			stereotypeName.print(prefix + "  ");
 		}
 		Stereotype stereotype = this.getStereotype();
 		if (stereotype != null) {
-			System.out.println(prefix + " /" + stereotype);
+			System.out.println(prefix + " /stereotype:" + stereotype);
 		}
 	}
 } // StereotypeAnnotation

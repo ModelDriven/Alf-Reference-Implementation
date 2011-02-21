@@ -1,4 +1,4 @@
-package org.modeldriven.alf.syntax;
+package org.omg.uml;
 
 public class Element {
     public String toString() {

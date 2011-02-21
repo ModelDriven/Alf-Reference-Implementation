@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceAccessExpressionImpl;
@@ -98,11 +100,13 @@ public class SequenceAccessExpression extends Expression {
 		super.print(prefix);
 		Expression primary = this.getPrimary();
 		if (primary != null) {
-			primary.print(prefix + " ");
+			System.out.println(prefix + " primary:");
+			primary.print(prefix + "  ");
 		}
 		Expression index = this.getIndex();
 		if (index != null) {
-			index.print(prefix + " ");
+			System.out.println(prefix + " index:");
+			index.print(prefix + "  ");
 		}
 	}
 } // SequenceAccessExpression

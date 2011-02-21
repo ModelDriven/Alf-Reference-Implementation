@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.NonFinalClauseImpl;
@@ -103,11 +105,13 @@ public class NonFinalClause extends SyntaxElement {
 		super.print(prefix);
 		Expression condition = this.getCondition();
 		if (condition != null) {
-			condition.print(prefix + " ");
+			System.out.println(prefix + " condition:");
+			condition.print(prefix + "  ");
 		}
 		Block body = this.getBody();
 		if (body != null) {
-			body.print(prefix + " ");
+			System.out.println(prefix + " body:");
+			body.print(prefix + "  ");
 		}
 	}
 } // NonFinalClause

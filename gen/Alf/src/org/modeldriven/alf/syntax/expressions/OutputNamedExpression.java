@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.OutputNamedExpressionImpl;
@@ -81,7 +83,7 @@ public class OutputNamedExpression extends NamedExpression {
 		super.print(prefix);
 		LeftHandSide leftHandSide = this.getLeftHandSide();
 		if (leftHandSide != null) {
-			System.out.println(prefix + " /" + leftHandSide);
+			System.out.println(prefix + " /leftHandSide:" + leftHandSide);
 		}
 	}
 } // OutputNamedExpression

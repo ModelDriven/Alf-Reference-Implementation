@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.CastExpressionImpl;
@@ -108,11 +110,13 @@ public class CastExpression extends Expression {
 		super.print(prefix);
 		Expression operand = this.getOperand();
 		if (operand != null) {
-			operand.print(prefix + " ");
+			System.out.println(prefix + " operand:");
+			operand.print(prefix + "  ");
 		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
-			typeName.print(prefix + " ");
+			System.out.println(prefix + " typeName:");
+			typeName.print(prefix + "  ");
 		}
 	}
 } // CastExpression

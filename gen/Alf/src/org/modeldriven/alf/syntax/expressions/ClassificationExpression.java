@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.ClassificationExpressionImpl;
@@ -126,11 +128,12 @@ public class ClassificationExpression extends UnaryExpression {
 		super.print(prefix);
 		ElementReference referent = this.getReferent();
 		if (referent != null) {
-			System.out.println(prefix + " /" + referent);
+			System.out.println(prefix + " /referent:" + referent);
 		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
-			typeName.print(prefix + " ");
+			System.out.println(prefix + " typeName:");
+			typeName.print(prefix + "  ");
 		}
 	}
 } // ClassificationExpression

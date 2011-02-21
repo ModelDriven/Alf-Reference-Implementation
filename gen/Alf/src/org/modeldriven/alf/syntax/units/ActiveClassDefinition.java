@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.ActiveClassDefinitionImpl;
@@ -61,7 +63,8 @@ public class ActiveClassDefinition extends ClassDefinition {
 		super.print(prefix);
 		ActivityDefinition classifierBehavior = this.getClassifierBehavior();
 		if (classifierBehavior != null) {
-			classifierBehavior.print(prefix + " ");
+			System.out.println(prefix + " classifierBehavior:"
+					+ classifierBehavior);
 		}
 	}
 } // ActiveClassDefinition

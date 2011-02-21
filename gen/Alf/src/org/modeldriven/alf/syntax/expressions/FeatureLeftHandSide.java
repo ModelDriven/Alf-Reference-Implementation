@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.FeatureLeftHandSideImpl;
@@ -87,7 +89,8 @@ public class FeatureLeftHandSide extends LeftHandSide {
 		super.print(prefix);
 		FeatureReference feature = this.getFeature();
 		if (feature != null) {
-			feature.print(prefix + " ");
+			System.out.println(prefix + " feature:");
+			feature.print(prefix + "  ");
 		}
 	}
 } // FeatureLeftHandSide

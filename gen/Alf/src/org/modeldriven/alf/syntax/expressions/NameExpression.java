@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.NameExpressionImpl;
@@ -140,19 +142,21 @@ public class NameExpression extends Expression {
 		super.print(prefix);
 		ElementReference enumerationLiteral = this.getEnumerationLiteral();
 		if (enumerationLiteral != null) {
-			System.out.println(prefix + " /" + enumerationLiteral);
+			System.out.println(prefix + " /enumerationLiteral:"
+					+ enumerationLiteral);
 		}
 		AssignedSource assignment = this.getAssignment();
 		if (assignment != null) {
-			System.out.println(prefix + " /" + assignment);
+			System.out.println(prefix + " /assignment:" + assignment);
 		}
 		PropertyAccessExpression propertyAccess = this.getPropertyAccess();
 		if (propertyAccess != null) {
-			System.out.println(prefix + " /" + propertyAccess);
+			System.out.println(prefix + " /propertyAccess:" + propertyAccess);
 		}
 		QualifiedName name = this.getName();
 		if (name != null) {
-			name.print(prefix + " ");
+			System.out.println(prefix + " name:");
+			name.print(prefix + "  ");
 		}
 	}
 } // NameExpression

@@ -82,4 +82,14 @@ public abstract class ExpressionImpl extends
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 
+    public SyntaxElement resolve(String name) {
+        ArrayList<AssignedSource> assignments = this.getSelf().getAssignmentBefore();
+        for (AssignedSource assignment: assignments) {
+            if (assignment.getName().equals(name)) {
+                return assignment.getSource();
+            }
+        }
+        return null;
+    }
+
 } // ExpressionImpl

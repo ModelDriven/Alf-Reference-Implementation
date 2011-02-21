@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.ConditionalTestExpressionImpl;
@@ -136,15 +138,18 @@ public class ConditionalTestExpression extends Expression {
 		super.print(prefix);
 		Expression operand1 = this.getOperand1();
 		if (operand1 != null) {
-			operand1.print(prefix + " ");
+			System.out.println(prefix + " operand1:");
+			operand1.print(prefix + "  ");
 		}
 		Expression operand2 = this.getOperand2();
 		if (operand2 != null) {
-			operand2.print(prefix + " ");
+			System.out.println(prefix + " operand2:");
+			operand2.print(prefix + "  ");
 		}
 		Expression operand3 = this.getOperand3();
 		if (operand3 != null) {
-			operand3.print(prefix + " ");
+			System.out.println(prefix + " operand3:");
+			operand3.print(prefix + "  ");
 		}
 	}
 } // ConditionalTestExpression

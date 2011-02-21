@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.SuperInvocationExpressionImpl;
@@ -111,7 +113,8 @@ public class SuperInvocationExpression extends InvocationExpression {
 		super.print(prefix);
 		QualifiedName target = this.getTarget();
 		if (target != null) {
-			target.print(prefix + " ");
+			System.out.println(prefix + " target:");
+			target.print(prefix + "  ");
 		}
 	}
 } // SuperInvocationExpression

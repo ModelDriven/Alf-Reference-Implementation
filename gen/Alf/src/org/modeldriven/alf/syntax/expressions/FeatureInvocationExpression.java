@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.FeatureInvocationExpressionImpl;
@@ -97,7 +99,8 @@ public class FeatureInvocationExpression extends InvocationExpression {
 		super.print(prefix);
 		FeatureReference target = this.getTarget();
 		if (target != null) {
-			target.print(prefix + " ");
+			System.out.println(prefix + " target:");
+			target.print(prefix + "  ");
 		}
 	}
 } // FeatureInvocationExpression

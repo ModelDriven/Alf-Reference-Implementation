@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceReductionExpressionImpl;
@@ -145,15 +147,17 @@ public class SequenceReductionExpression extends Expression {
 		super.print(prefix);
 		ElementReference referent = this.getReferent();
 		if (referent != null) {
-			System.out.println(prefix + " /" + referent);
+			System.out.println(prefix + " /referent:" + referent);
 		}
 		ExtentOrExpression primary = this.getPrimary();
 		if (primary != null) {
-			primary.print(prefix + " ");
+			System.out.println(prefix + " primary:");
+			primary.print(prefix + "  ");
 		}
 		QualifiedName behaviorName = this.getBehaviorName();
 		if (behaviorName != null) {
-			behaviorName.print(prefix + " ");
+			System.out.println(prefix + " behaviorName:");
+			behaviorName.print(prefix + "  ");
 		}
 	}
 } // SequenceReductionExpression

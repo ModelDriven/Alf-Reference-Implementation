@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.FeatureReferenceImpl;
@@ -89,17 +91,22 @@ public class FeatureReference extends SyntaxElement {
 		super.print(prefix);
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			expression.print(prefix + " ");
+			System.out.println(prefix + " expression:");
+			expression.print(prefix + "  ");
 		}
 		ArrayList<ElementReference> referent = this.getReferent();
 		if (referent != null) {
+			if (referent.size() > 0) {
+				System.out.println(prefix + " /referent:");
+			}
 			for (ElementReference item : this.getReferent()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 		NameBinding nameBinding = this.getNameBinding();
 		if (nameBinding != null) {
-			nameBinding.print(prefix + " ");
+			System.out.println(prefix + " nameBinding:");
+			nameBinding.print(prefix + "  ");
 		}
 	}
 } // FeatureReference

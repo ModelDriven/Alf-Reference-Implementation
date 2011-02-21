@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.IfStatementImpl;
@@ -154,17 +156,21 @@ public class IfStatement extends Statement {
 		ArrayList<ConcurrentClauses> nonFinalClauses = this
 				.getNonFinalClauses();
 		if (nonFinalClauses != null) {
+			if (nonFinalClauses.size() > 0) {
+				System.out.println(prefix + " nonFinalClauses:");
+			}
 			for (ConcurrentClauses item : this.getNonFinalClauses()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}
 		Block finalClause = this.getFinalClause();
 		if (finalClause != null) {
-			finalClause.print(prefix + " ");
+			System.out.println(prefix + " finalClause:");
+			finalClause.print(prefix + "  ");
 		}
 	}
 } // IfStatement

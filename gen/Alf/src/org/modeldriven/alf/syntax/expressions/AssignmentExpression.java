@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.AssignmentExpressionImpl;
@@ -387,23 +389,25 @@ public class AssignmentExpression extends Expression {
 		super.print(prefix);
 		LeftHandSide leftHandSide = this.getLeftHandSide();
 		if (leftHandSide != null) {
-			leftHandSide.print(prefix + " ");
+			System.out.println(prefix + " leftHandSide:");
+			leftHandSide.print(prefix + "  ");
 		}
 		Expression rightHandSide = this.getRightHandSide();
 		if (rightHandSide != null) {
-			rightHandSide.print(prefix + " ");
+			System.out.println(prefix + " rightHandSide:");
+			rightHandSide.print(prefix + "  ");
 		}
 		AssignedSource assignment = this.getAssignment();
 		if (assignment != null) {
-			System.out.println(prefix + " /" + assignment);
+			System.out.println(prefix + " /assignment:" + assignment);
 		}
 		ElementReference feature = this.getFeature();
 		if (feature != null) {
-			System.out.println(prefix + " /" + feature);
+			System.out.println(prefix + " /feature:" + feature);
 		}
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			System.out.println(prefix + " /" + expression);
+			System.out.println(prefix + " /expression:" + expression);
 		}
 	}
 } // AssignmentExpression

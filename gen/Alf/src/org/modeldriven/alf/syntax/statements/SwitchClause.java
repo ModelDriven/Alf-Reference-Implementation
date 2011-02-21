@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.SwitchClauseImpl;
@@ -100,17 +102,21 @@ public class SwitchClause extends SyntaxElement {
 		super.print(prefix);
 		ArrayList<Expression> case_ = this.getCase();
 		if (case_ != null) {
+			if (case_.size() > 0) {
+				System.out.println(prefix + " case:");
+			}
 			for (Expression item : this.getCase()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}
 		Block block = this.getBlock();
 		if (block != null) {
-			block.print(prefix + " ");
+			System.out.println(prefix + " block:");
+			block.print(prefix + "  ");
 		}
 	}
 } // SwitchClause

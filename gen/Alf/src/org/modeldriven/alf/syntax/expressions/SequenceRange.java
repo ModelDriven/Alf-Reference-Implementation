@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceRangeImpl;
@@ -77,11 +79,13 @@ public class SequenceRange extends SequenceElements {
 		super.print(prefix);
 		Expression rangeLower = this.getRangeLower();
 		if (rangeLower != null) {
-			rangeLower.print(prefix + " ");
+			System.out.println(prefix + " rangeLower:");
+			rangeLower.print(prefix + "  ");
 		}
 		Expression rangeUpper = this.getRangeUpper();
 		if (rangeUpper != null) {
-			rangeUpper.print(prefix + " ");
+			System.out.println(prefix + " rangeUpper:");
+			rangeUpper.print(prefix + "  ");
 		}
 	}
 } // SequenceRange

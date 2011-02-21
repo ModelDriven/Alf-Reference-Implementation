@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.ForStatementImpl;
@@ -175,16 +177,19 @@ public class ForStatement extends Statement {
 		super.print(prefix);
 		Block body = this.getBody();
 		if (body != null) {
-			body.print(prefix + " ");
+			System.out.println(prefix + " body:" + body);
 		}
 		ArrayList<LoopVariableDefinition> variableDefinition = this
 				.getVariableDefinition();
 		if (variableDefinition != null) {
+			if (variableDefinition.size() > 0) {
+				System.out.println(prefix + " variableDefinition:");
+			}
 			for (LoopVariableDefinition item : this.getVariableDefinition()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}

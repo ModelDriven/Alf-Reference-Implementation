@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.PropertyAccessExpressionImpl;
@@ -119,11 +121,12 @@ public class PropertyAccessExpression extends Expression {
 		super.print(prefix);
 		FeatureReference featureReference = this.getFeatureReference();
 		if (featureReference != null) {
-			featureReference.print(prefix + " ");
+			System.out.println(prefix + " featureReference:");
+			featureReference.print(prefix + "  ");
 		}
 		ElementReference feature = this.getFeature();
 		if (feature != null) {
-			System.out.println(prefix + " /" + feature);
+			System.out.println(prefix + " /feature:" + feature);
 		}
 	}
 } // PropertyAccessExpression

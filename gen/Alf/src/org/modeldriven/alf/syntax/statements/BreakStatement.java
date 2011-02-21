@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.BreakStatementImpl;
@@ -74,7 +76,7 @@ public class BreakStatement extends Statement {
 		super.print(prefix);
 		Statement target = this.getTarget();
 		if (target != null) {
-			System.out.println(prefix + " /" + target);
+			System.out.println(prefix + " /target:" + target);
 		}
 	}
 } // BreakStatement
