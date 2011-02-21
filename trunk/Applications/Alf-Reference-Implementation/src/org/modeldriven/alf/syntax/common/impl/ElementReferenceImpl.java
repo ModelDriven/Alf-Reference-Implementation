@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.omg.uml.Element;
 
 import java.util.ArrayList;
 
@@ -34,5 +35,8 @@ public abstract class ElementReferenceImpl {
 	public org.modeldriven.alf.syntax.common.ElementReference getSelf() {
 		return (ElementReference) this.self;
 	}
+	
+	public abstract SyntaxElement getAlf();
+	public abstract Element getUml();
 
 } // ElementReferenceImpl

@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.ConcurrentClausesImpl;
@@ -72,11 +74,14 @@ public class ConcurrentClauses extends SyntaxElement {
 		super.print(prefix);
 		ArrayList<NonFinalClause> clause = this.getClause();
 		if (clause != null) {
+			if (clause.size() > 0) {
+				System.out.println(prefix + " clause:");
+			}
 			for (NonFinalClause item : this.getClause()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}

@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.ImportReferenceImpl;
@@ -92,15 +94,16 @@ public abstract class ImportReference extends SyntaxElement {
 		super.print(prefix);
 		QualifiedName referentName = this.getReferentName();
 		if (referentName != null) {
-			referentName.print(prefix + " ");
+			System.out.println(prefix + " referentName:");
+			referentName.print(prefix + "  ");
 		}
 		UnitDefinition unit = this.getUnit();
 		if (unit != null) {
-			unit.print(prefix + " ");
+			System.out.println(prefix + " unit:" + unit);
 		}
 		ElementReference referent = this.getReferent();
 		if (referent != null) {
-			System.out.println(prefix + " /" + referent);
+			System.out.println(prefix + " /referent:" + referent);
 		}
 	}
 } // ImportReference

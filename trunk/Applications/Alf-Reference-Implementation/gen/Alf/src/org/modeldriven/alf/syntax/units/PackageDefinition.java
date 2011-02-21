@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.PackageDefinitionImpl;
@@ -85,8 +87,11 @@ public class PackageDefinition extends NamespaceDefinition {
 		super.print(prefix);
 		ArrayList<Profile> appliedProfile = this.getAppliedProfile();
 		if (appliedProfile != null) {
+			if (appliedProfile.size() > 0) {
+				System.out.println(prefix + " /appliedProfile:");
+			}
 			for (Profile item : this.getAppliedProfile()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

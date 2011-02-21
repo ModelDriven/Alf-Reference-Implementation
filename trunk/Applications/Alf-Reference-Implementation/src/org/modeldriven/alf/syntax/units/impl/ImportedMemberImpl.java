@@ -9,13 +9,8 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 public class ImportedMemberImpl extends
 		org.modeldriven.alf.syntax.units.impl.MemberImpl {
@@ -27,27 +22,51 @@ public class ImportedMemberImpl extends
 	public org.modeldriven.alf.syntax.units.ImportedMember getSelf() {
 		return (ImportedMember) this.self;
 	}
+	
+    /**
+     * An imported element is a feature if its referent is a feature.
+     **/
+	@Override
+	public Boolean deriveIsFeature() {
+	    ElementReference referent = this.getSelf().getReferent();
+	    if (referent == null) {
+	        return false;
+	    } else {
+	        SyntaxElement element = referent.getImpl().getAlf();
+	        if (element != null) {
+	            return element instanceof Member && ((Member)element).getIsFeature();
+	        } else {
+	            // TODO: Handle deriveIsFeature for external element references.
+	            return false;
+	        }
+	    }
+	}
+	
+	/*
+	 * Derivations
+	 */
+
+    public boolean importedMemberIsFeatureDerivation() {
+        this.getSelf().getIsFeature();
+        return true;
+    }
+    
+    /*
+     * Constraints
+     */
 
 	/**
 	 * An imported element is not a stub.
 	 **/
 	public boolean importedMemberNotStub() {
-		return true;
-	}
-
-	/**
-	 * An imported element is a feature if its referent is a feature.
-	 **/
-	public boolean importedMemberIsFeatureDerivation() {
-		this.getSelf().getIsFeature();
-		return true;
+		return !this.getSelf().getIsStub();
 	}
 
 	/**
 	 * Returns false. (Imported members do not have annotations.)
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+		return false;
 	} // annotationAllowed
 
 	/**
@@ -63,7 +82,38 @@ public class ImportedMemberImpl extends
 	 * rules of the UML superstructure.
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+	    ImportedMember self = this.getSelf();
+	    if (member == null) {
+	        return false;
+	    } else if (!(member instanceof ImportedMember)) {
+	        return member.isSameKindAs(self);
+	    } else {
+	        ElementReference referent = self.getReferent();
+	        ElementReference otherReferent = ((ImportedMember)member).getReferent();
+	        if (referent == null || otherReferent == null) {
+	            return false;
+	        } else {
+    	        SyntaxElement element = referent.getImpl().getAlf();
+    	        SyntaxElement otherElement = otherReferent.getImpl().getAlf();
+    	        if (element != null) {
+    	            return element instanceof Member && ((Member)element).isSameKindAs(member);
+    	        } else if (otherElement != null) {
+    	            return otherElement instanceof Member && ((Member)otherElement).isSameKindAs(self);
+    	        } else {
+    	            // TODO: Handle isSameKindOf check for external element references.
+    	            return false;
+    	        }
+	        }
+	    }
 	} // isSameKindAs
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	@Override
+	public ElementReference getReferent() {
+	    return this.getSelf().getReferent();
+	}
 
 } // ImportedMemberImpl

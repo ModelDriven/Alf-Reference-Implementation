@@ -2522,7 +2522,7 @@ UnitDefinition UnitDefinition():
 }
 {
   [ n = NamespaceDeclaration() { u.setNamespaceName(n); } ] 
-  ( i = ImportDeclaration() { u.addImport(i); } )*
+  ( i = ImportDeclaration() { u.addImport(i); i.setUnit(u); } )*
   [ t = <DOCUMENTATION_COMMENT> { u.addDocumentation(t.image); } ] 
   sl = StereotypeAnnotations()
   d = NamespaceDefinition()

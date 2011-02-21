@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.TaggedValueListImpl;
@@ -56,12 +58,11 @@ public class TaggedValueList extends SyntaxElement {
 		super.print(prefix);
 		ArrayList<TaggedValue> taggedValue = this.getTaggedValue();
 		if (taggedValue != null) {
+			if (taggedValue.size() > 0) {
+				System.out.println(prefix + " taggedValue:");
+			}
 			for (TaggedValue item : this.getTaggedValue()) {
-				if (item != null) {
-					item.print(prefix + " ");
-				} else {
-					System.out.println(prefix + " null");
-				}
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

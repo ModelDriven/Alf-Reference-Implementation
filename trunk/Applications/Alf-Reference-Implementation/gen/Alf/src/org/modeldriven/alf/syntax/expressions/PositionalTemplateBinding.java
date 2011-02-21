@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.PositionalTemplateBindingImpl;
@@ -57,11 +59,14 @@ public class PositionalTemplateBinding extends TemplateBinding {
 		super.print(prefix);
 		ArrayList<QualifiedName> argumentName = this.getArgumentName();
 		if (argumentName != null) {
+			if (argumentName.size() > 0) {
+				System.out.println(prefix + " argumentName:");
+			}
 			for (QualifiedName item : this.getArgumentName()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}

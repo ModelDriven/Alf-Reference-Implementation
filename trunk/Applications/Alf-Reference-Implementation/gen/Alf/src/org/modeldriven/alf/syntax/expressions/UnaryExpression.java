@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.UnaryExpressionImpl;
@@ -76,7 +78,8 @@ public abstract class UnaryExpression extends Expression {
 		super.print(prefix);
 		Expression operand = this.getOperand();
 		if (operand != null) {
-			operand.print(prefix + " ");
+			System.out.println(prefix + " operand:");
+			operand.print(prefix + "  ");
 		}
 	}
 } // UnaryExpression

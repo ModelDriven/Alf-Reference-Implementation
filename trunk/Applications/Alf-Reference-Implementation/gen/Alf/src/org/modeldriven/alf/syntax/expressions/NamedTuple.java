@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.NamedTupleImpl;
@@ -56,11 +58,14 @@ public class NamedTuple extends Tuple {
 		super.print(prefix);
 		ArrayList<NamedExpression> namedExpression = this.getNamedExpression();
 		if (namedExpression != null) {
+			if (namedExpression.size() > 0) {
+				System.out.println(prefix + " namedExpression:");
+			}
 			for (NamedExpression item : this.getNamedExpression()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}

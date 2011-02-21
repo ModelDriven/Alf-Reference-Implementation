@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.NamedExpressionImpl;
@@ -119,11 +121,13 @@ public class NamedExpression extends SyntaxElement {
 		super.print(prefix);
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			expression.print(prefix + " ");
+			System.out.println(prefix + " expression:");
+			expression.print(prefix + "  ");
 		}
 		Expression index = this.getIndex();
 		if (index != null) {
-			index.print(prefix + " ");
+			System.out.println(prefix + " index:");
+			index.print(prefix + "  ");
 		}
 	}
 } // NamedExpression

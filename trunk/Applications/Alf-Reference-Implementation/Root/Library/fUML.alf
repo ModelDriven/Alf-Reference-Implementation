@@ -1,3 +1,4 @@
+@ModelLibrary
 package fUML {
 
   public package Semantics;

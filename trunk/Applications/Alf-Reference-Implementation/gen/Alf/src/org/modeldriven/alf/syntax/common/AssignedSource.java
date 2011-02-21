@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
@@ -98,11 +100,12 @@ public class AssignedSource {
 		System.out.println(prefix + this.toString());
 		SyntaxElement source = this.getSource();
 		if (source != null) {
-			source.print(prefix + " ");
+			System.out.println(prefix + " source:" + source);
 		}
 		ElementReference type = this.getType();
 		if (type != null) {
-			type.print(prefix + " ");
+			System.out.println(prefix + " type:");
+			type.print(prefix + "  ");
 		}
 	}
 } // AssignedSource

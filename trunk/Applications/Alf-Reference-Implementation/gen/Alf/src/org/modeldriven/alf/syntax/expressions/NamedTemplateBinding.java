@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.NamedTemplateBindingImpl;
@@ -59,11 +61,14 @@ public class NamedTemplateBinding extends TemplateBinding {
 		ArrayList<TemplateParameterSubstitution> substitution = this
 				.getSubstitution();
 		if (substitution != null) {
+			if (substitution.size() > 0) {
+				System.out.println(prefix + " substitution:");
+			}
 			for (TemplateParameterSubstitution item : this.getSubstitution()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}

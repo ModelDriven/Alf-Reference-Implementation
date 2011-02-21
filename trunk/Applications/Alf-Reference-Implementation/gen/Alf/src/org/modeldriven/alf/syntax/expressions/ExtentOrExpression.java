@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.ExtentOrExpressionImpl;
@@ -82,15 +84,17 @@ public class ExtentOrExpression {
 		System.out.println(prefix + this.toString());
 		QualifiedName name = this.getName();
 		if (name != null) {
-			name.print(prefix + " ");
+			System.out.println(prefix + " name:");
+			name.print(prefix + "  ");
 		}
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			System.out.println(prefix + " /" + expression);
+			System.out.println(prefix + " /expression:" + expression);
 		}
 		Expression nonNameExpression = this.getNonNameExpression();
 		if (nonNameExpression != null) {
-			nonNameExpression.print(prefix + " ");
+			System.out.println(prefix + " nonNameExpression:");
+			nonNameExpression.print(prefix + "  ");
 		}
 	}
 } // ExtentOrExpression

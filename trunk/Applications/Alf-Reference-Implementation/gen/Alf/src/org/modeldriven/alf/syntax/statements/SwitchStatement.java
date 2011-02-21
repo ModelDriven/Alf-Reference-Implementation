@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.SwitchStatementImpl;
@@ -174,21 +176,26 @@ public class SwitchStatement extends Statement {
 		super.print(prefix);
 		ArrayList<SwitchClause> nonDefaultClause = this.getNonDefaultClause();
 		if (nonDefaultClause != null) {
+			if (nonDefaultClause.size() > 0) {
+				System.out.println(prefix + " nonDefaultClause:");
+			}
 			for (SwitchClause item : this.getNonDefaultClause()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			expression.print(prefix + " ");
+			System.out.println(prefix + " expression:");
+			expression.print(prefix + "  ");
 		}
 		Block defaultClause = this.getDefaultClause();
 		if (defaultClause != null) {
-			defaultClause.print(prefix + " ");
+			System.out.println(prefix + " defaultClause:");
+			defaultClause.print(prefix + "  ");
 		}
 	}
 } // SwitchStatement

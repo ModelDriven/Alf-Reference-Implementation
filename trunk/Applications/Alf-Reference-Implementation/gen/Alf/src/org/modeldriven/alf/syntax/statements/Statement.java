@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.StatementImpl;
@@ -122,29 +124,39 @@ public abstract class Statement extends DocumentedElement {
 		super.print(prefix);
 		ArrayList<Annotation> annotation = this.getAnnotation();
 		if (annotation != null) {
+			if (annotation.size() > 0) {
+				System.out.println(prefix + " annotation:");
+			}
 			for (Annotation item : this.getAnnotation()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}
 		ArrayList<AssignedSource> assignmentBefore = this.getAssignmentBefore();
 		if (assignmentBefore != null) {
+			if (assignmentBefore.size() > 0) {
+				System.out.println(prefix + " /assignmentBefore:");
+			}
 			for (AssignedSource item : this.getAssignmentBefore()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 		ArrayList<AssignedSource> assignmentAfter = this.getAssignmentAfter();
 		if (assignmentAfter != null) {
+			if (assignmentAfter.size() > 0) {
+				System.out.println(prefix + " /assignmentAfter:");
+			}
 			for (AssignedSource item : this.getAssignmentAfter()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 		Statement enclosingStatement = this.getEnclosingStatement();
 		if (enclosingStatement != null) {
-			System.out.println(prefix + " /" + enclosingStatement);
+			System.out.println(prefix + " /enclosingStatement:"
+					+ enclosingStatement);
 		}
 	}
 } // Statement

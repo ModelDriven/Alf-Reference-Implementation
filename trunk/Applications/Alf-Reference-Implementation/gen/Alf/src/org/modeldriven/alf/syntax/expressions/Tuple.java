@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.TupleImpl;
@@ -125,18 +127,24 @@ public abstract class Tuple extends SyntaxElement {
 		super.print(prefix);
 		ArrayList<NamedExpression> input = this.getInput();
 		if (input != null) {
+			if (input.size() > 0) {
+				System.out.println(prefix + " /input:");
+			}
 			for (NamedExpression item : this.getInput()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 		InvocationExpression invocation = this.getInvocation();
 		if (invocation != null) {
-			invocation.print(prefix + " ");
+			System.out.println(prefix + " invocation:" + invocation);
 		}
 		ArrayList<OutputNamedExpression> output = this.getOutput();
 		if (output != null) {
+			if (output.size() > 0) {
+				System.out.println(prefix + " /output:");
+			}
 			for (OutputNamedExpression item : this.getOutput()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

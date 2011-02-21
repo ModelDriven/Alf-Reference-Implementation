@@ -3,6 +3,7 @@ namespace FoundationalModelLibrary;
 private import FoundationalModelLibrary::Common::Status;
 private import UML::AuxiliaryConstructs::PrimitiveTypes::String;
 
+@ModelLibrary
 package BasicInputOutput {
 
   public abstract class Channel;

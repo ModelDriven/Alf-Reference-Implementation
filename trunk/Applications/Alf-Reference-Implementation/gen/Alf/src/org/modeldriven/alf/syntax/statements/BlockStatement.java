@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.BlockStatementImpl;
@@ -113,7 +115,8 @@ public class BlockStatement extends Statement {
 		super.print(prefix);
 		Block block = this.getBlock();
 		if (block != null) {
-			block.print(prefix + " ");
+			System.out.println(prefix + " block:");
+			block.print(prefix + "  ");
 		}
 	}
 } // BlockStatement

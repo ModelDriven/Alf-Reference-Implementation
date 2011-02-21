@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.OperationDefinitionImpl;
@@ -229,17 +231,22 @@ public class OperationDefinition extends NamespaceDefinition {
 		super.print(prefix);
 		QualifiedNameList redefinition = this.getRedefinition();
 		if (redefinition != null) {
-			redefinition.print(prefix + " ");
+			System.out.println(prefix + " redefinition:");
+			redefinition.print(prefix + "  ");
 		}
 		Block body = this.getBody();
 		if (body != null) {
-			body.print(prefix + " ");
+			System.out.println(prefix + " body:");
+			body.print(prefix + "  ");
 		}
 		ArrayList<ElementReference> redefinedOperations = this
 				.getRedefinedOperations();
 		if (redefinedOperations != null) {
+			if (redefinedOperations.size() > 0) {
+				System.out.println(prefix + " /redefinedOperations:");
+			}
 			for (ElementReference item : this.getRedefinedOperations()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

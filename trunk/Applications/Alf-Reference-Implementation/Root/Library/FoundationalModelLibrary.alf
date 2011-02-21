@@ -1,3 +1,4 @@
+@ModelLibrary
 package FoundationalModelLibrary {
 
   public package PrimitiveBehaviors;

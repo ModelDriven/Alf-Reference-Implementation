@@ -82,4 +82,14 @@ public abstract class ClassifierDefinitionImpl extends
 		return false; // STUB
 	} // matchForStub
 
+	@Override
+    protected boolean isTemplate() {
+        for (Member member: this.getSelf().getOwnedMember()) {
+            if (member instanceof ClassifierTemplateParameter) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 } // ClassifierDefinitionImpl

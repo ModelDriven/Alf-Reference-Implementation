@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.ExpressionStatementImpl;
@@ -68,7 +70,8 @@ public class ExpressionStatement extends Statement {
 		super.print(prefix);
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			expression.print(prefix + " ");
+			System.out.println(prefix + " expression:");
+			expression.print(prefix + "  ");
 		}
 	}
 } // ExpressionStatement

@@ -33,4 +33,19 @@ public class NamedTemplateBindingImpl extends
 		return (NamedTemplateBinding) this.self;
 	}
 
+    public String toString() {
+        StringBuffer s = new StringBuffer("<");
+        NamedTemplateBinding self = this.getSelf();
+        String separator = "";
+        for (TemplateParameterSubstitution p: self.getSubstitution()) {
+            s.append(separator);
+            s.append(p.getParameterName());
+            s.append("=>");
+            s.append(p.getArgumentName().getPathName());
+            separator = ",";
+        }
+        s.append(">");
+        return s.toString();
+    }
+
 } // NamedTemplateBindingImpl

@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.LocalNameDeclarationStatementImpl;
@@ -150,15 +152,17 @@ public class LocalNameDeclarationStatement extends Statement {
 		super.print(prefix);
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			expression.print(prefix + " ");
+			System.out.println(prefix + " expression:");
+			expression.print(prefix + "  ");
 		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
-			typeName.print(prefix + " ");
+			System.out.println(prefix + " typeName:");
+			typeName.print(prefix + "  ");
 		}
 		ElementReference type = this.getType();
 		if (type != null) {
-			System.out.println(prefix + " /" + type);
+			System.out.println(prefix + " /type:" + type);
 		}
 	}
 } // LocalNameDeclarationStatement

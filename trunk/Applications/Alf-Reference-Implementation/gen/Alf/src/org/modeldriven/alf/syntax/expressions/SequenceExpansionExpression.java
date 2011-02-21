@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionImpl;
@@ -141,15 +143,17 @@ public abstract class SequenceExpansionExpression extends Expression {
 		super.print(prefix);
 		AssignedSource variableSource = this.getVariableSource();
 		if (variableSource != null) {
-			System.out.println(prefix + " /" + variableSource);
+			System.out.println(prefix + " /variableSource:" + variableSource);
 		}
 		Expression argument = this.getArgument();
 		if (argument != null) {
-			argument.print(prefix + " ");
+			System.out.println(prefix + " argument:");
+			argument.print(prefix + "  ");
 		}
 		ExtentOrExpression primary = this.getPrimary();
 		if (primary != null) {
-			primary.print(prefix + " ");
+			System.out.println(prefix + " primary:");
+			primary.print(prefix + "  ");
 		}
 	}
 } // SequenceExpansionExpression

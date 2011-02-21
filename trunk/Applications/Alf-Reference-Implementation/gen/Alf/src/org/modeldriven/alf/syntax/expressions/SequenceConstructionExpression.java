@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceConstructionExpressionImpl;
@@ -108,11 +110,13 @@ public class SequenceConstructionExpression extends Expression {
 		super.print(prefix);
 		SequenceElements elements = this.getElements();
 		if (elements != null) {
-			elements.print(prefix + " ");
+			System.out.println(prefix + " elements:");
+			elements.print(prefix + "  ");
 		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
-			typeName.print(prefix + " ");
+			System.out.println(prefix + " typeName:");
+			typeName.print(prefix + "  ");
 		}
 	}
 } // SequenceConstructionExpression

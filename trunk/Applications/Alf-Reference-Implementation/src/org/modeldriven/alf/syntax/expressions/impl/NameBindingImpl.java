@@ -31,5 +31,15 @@ public class NameBindingImpl extends
 	public org.modeldriven.alf.syntax.expressions.NameBinding getSelf() {
 		return (NameBinding) this.self;
 	}
+	
+	public String toString() {
+	    NameBinding self = this.getSelf();
+	    StringBuffer s = new StringBuffer(self.getName());
+	    TemplateBinding b = self.getBinding();
+	    if (b!=null) {
+	        s.append(b.getImpl());
+	    }
+	    return s.toString();
+	}
 
 } // NameBindingImpl

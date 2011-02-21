@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.TemplateParameterSubstitutionImpl;
@@ -64,7 +66,8 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 		super.print(prefix);
 		QualifiedName argumentName = this.getArgumentName();
 		if (argumentName != null) {
-			argumentName.print(prefix + " ");
+			System.out.println(prefix + " argumentName:");
+			argumentName.print(prefix + "  ");
 		}
 	}
 } // TemplateParameterSubstitution

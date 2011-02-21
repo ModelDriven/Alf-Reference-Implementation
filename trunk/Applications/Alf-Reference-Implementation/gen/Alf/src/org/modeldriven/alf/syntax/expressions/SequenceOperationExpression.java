@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceOperationExpressionImpl;
@@ -177,11 +179,13 @@ public class SequenceOperationExpression extends InvocationExpression {
 		super.print(prefix);
 		ExtentOrExpression primary = this.getPrimary();
 		if (primary != null) {
-			primary.print(prefix + " ");
+			System.out.println(prefix + " primary:");
+			primary.print(prefix + "  ");
 		}
 		QualifiedName operation = this.getOperation();
 		if (operation != null) {
-			operation.print(prefix + " ");
+			System.out.println(prefix + " operation:");
+			operation.print(prefix + "  ");
 		}
 	}
 } // SequenceOperationExpression

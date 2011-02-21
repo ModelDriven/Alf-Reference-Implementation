@@ -9,13 +9,13 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
+import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A model of the common properties of the definition of a member of a namespace
@@ -34,50 +34,66 @@ public abstract class MemberImpl extends
 	}
 
 	public Boolean deriveIsFeature() {
-		return null; // STUB
+		return false;
 	}
 
+    /**
+     * A member is primitive if it has a @primitive annotation.
+     **/
 	public Boolean deriveIsPrimitive() {
-		return null; // STUB
+		return this.hasAnnotation("primitive");
 	}
 
+    /**
+     * A member is external if it has an @external derivation.
+     **/
 	public Boolean deriveIsExternal() {
-		return null; // STUB
+		return this.hasAnnotation("external");
 	}
 
+	/**
+	 * If the member is a stub and is not external, then its corresponding
+	 * subunit is a unit definition with the same fully qualified name as the
+	 * stub.
+	 **/
 	public UnitDefinition deriveSubunit() {
-		return null; // STUB
+	    Member self = this.getSelf();
+	    if (!self.getIsStub() || self.getIsExternal()) {
+	        return null;
+	    } else {
+	        return ModelNamespace.resolveUnit(this.getQualifiedName());
+	    }	    
 	}
 
-	/**
-	 * All stereotype annotations for a member must be allowed, as determined
-	 * using the stereotypeAllowed operation.
-	 **/
-	public boolean memberAnnotations() {
-		return true;
-	}
+	/*
+	 * Derivations
+	 */
 
-	/**
-	 * A member is primitive if it has a @primitive annotation.
-	 **/
-	public boolean memberIsPrimitiveDerivation() {
+    public boolean memberIsPrimitiveDerivation() {
 		this.getSelf().getIsPrimitive();
 		return true;
 	}
 
-	/**
-	 * A member is external if it has an @external derivation.
-	 **/
 	public boolean memberIsExternalDerivation() {
 		this.getSelf().getIsExternal();
 		return true;
 	}
 
+	public boolean memberSubunitDerivation() {
+		this.getSelf().getSubunit();
+		return true;
+	}
+
+    /*
+     * Constraints
+     */
+
 	/**
 	 * If a member is external then it must be a stub.
 	 **/
 	public boolean memberExternal() {
-		return true;
+        Member self = this.getSelf();
+		return !self.getIsExternal() || self.getIsStub();
 	}
 
 	/**
@@ -86,17 +102,11 @@ public abstract class MemberImpl extends
 	 * as determined by the matchForStub operation.
 	 **/
 	public boolean memberStub() {
-		return true;
-	}
-
-	/**
-	 * If the member is a stub and is not external, then its corresponding
-	 * subunit is a unit definition with the same fully qualified name as the
-	 * stub.
-	 **/
-	public boolean memberSubunitDerivation() {
-		this.getSelf().getSubunit();
-		return true;
+	    Member self = this.getSelf();
+	    UnitDefinition subunit = self.getSubunit();
+		return subunit != null && 
+		    subunit.getDefinition().getImpl().getQualifiedName().equals(this.getQualifiedName()) && 
+		        self.matchForStub(subunit);
 	}
 
 	/**
@@ -105,6 +115,22 @@ public abstract class MemberImpl extends
 	 * are the same if they are for the same stereotype.
 	 **/
 	public boolean memberStubStereotypes() {
+        Member self = this.getSelf();
+        if (self.getIsStub()) {
+            ArrayList<StereotypeAnnotation> stubAnnotations = self.getAnnotation();
+            ArrayList<StereotypeAnnotation> subunitAnnotations = 
+                self.getSubunit().getDefinition().getAnnotation();
+            if (stubAnnotations != null && stubAnnotations.size() > 0 &&
+                    subunitAnnotations != null && subunitAnnotations.size() > 0) {
+                for (StereotypeAnnotation stubAnnotation: stubAnnotations) {
+                    for (StereotypeAnnotation subunitAnnotation: subunitAnnotations) {
+                        if (stubAnnotation.getStereotype() == subunitAnnotation.getStereotype()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
 		return true;
 	}
 
@@ -113,9 +139,28 @@ public abstract class MemberImpl extends
 	 * any owned members that are template parameters.
 	 **/
 	public boolean memberPrimitive() {
-		return true;
+	    Member self = this.getSelf();
+	    return !(self.getIsPrimitive() && (self.getIsStub() || this.isTemplate()));
 	}
-
+	
+    /**
+     * All stereotype annotations for a member must be allowed, as determined
+     * using the stereotypeAllowed operation.
+     **/
+    public boolean memberAnnotations() {
+        Member self = this.getSelf();
+        for (StereotypeAnnotation annotation: self.getAnnotation()) {
+            if (!self.annotationAllowed(annotation)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /*
+     * Helper methods
+     */
+    
 	/**
 	 * Returns true of the given stereotype annotation is allowed for this kind
 	 * of element.
@@ -123,28 +168,102 @@ public abstract class MemberImpl extends
 	public abstract Boolean annotationAllowed(StereotypeAnnotation annotation);
 
 	/**
-	 * Returns true of the given unit definition is a legal match for this
+	 * Returns true if the given unit definition is a legal match for this
 	 * member as a stub. By default, always returns false.
 	 **/
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+		return false;
 	} // matchForStub
 
 	/**
 	 * Returns true if this member is distinguishable from the given member. Two
 	 * members are distinguishable if their names are different or the they are
 	 * of different kinds (as determined by the isSameKindAs operation).
-	 * However, in any case that the UML Superstructure considers two names to
-	 * be distinguishable if they are different, an Alf implementation may
-	 * instead impose the stronger requirement that the names not be
-	 * conflicting.
 	 **/
 	public Boolean isDistinguishableFrom(Member member) {
-		return false; // STUB
+	    Member self = this.getSelf();
+		return !(QualifiedNameImpl.processName(self.getName()).
+		    equals(QualifiedNameImpl.processName(member.getName())) &&
+		    self.isSameKindAs(member));
 	} // isDistinguishableFrom
 
 	/**
 	 * Returns true if this member is of the same kind as the given member.
 	 **/
 	public abstract Boolean isSameKindAs(Member member);
+
+    public boolean hasNoVisibility() {
+        String visibility = this.getSelf().getVisibility();
+        return visibility == null || visibility.length() == 0;
+    }
+
+    public boolean isPublic() {
+        String visibility = this.getSelf().getVisibility();
+        return visibility != null && visibility.equals("public");
+    }
+    
+    public boolean isPackageOnly() {
+        // Default visibility for packaged members is package only.
+        return this.hasNoVisibility();
+    }
+
+    public boolean isPrivate() {
+        String visibility = this.getSelf().getVisibility();
+        return visibility != null && visibility.equals("private");
+    }
+    
+    public boolean hasAnnotation(String name) {
+        for (StereotypeAnnotation annotation: this.getSelf().getAnnotation()) {
+            QualifiedName stereotypeName = annotation.getStereotypeName();
+            if (stereotypeName.getQualification() == null &&
+                   stereotypeName.getUnqualifiedName().getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    protected boolean isTemplate() {
+        return false;
+    }
+
+    protected QualifiedName getQualifiedName() {
+        return this.getNamespaceName().getImpl().addName(this.getSelf().getName());
+    }
+    
+    protected QualifiedName getNamespaceName() {
+        Member self = this.getSelf();
+        QualifiedName qualifiedName = null;
+        NamespaceDefinition namespace = self.getNamespace();
+        if (namespace == null) {
+            qualifiedName = new QualifiedName();
+            qualifiedName.getImpl().setCurrentScope(ModelNamespace.getModelScope());
+        } else {
+            qualifiedName = namespace.getImpl().getQualifiedName();
+        }
+        return qualifiedName;
+    }
+
+    public ElementReference getReferent() {
+        InternalElementReference referent = new InternalElementReference();
+        Member self = this.getSelf();
+        UnitDefinition subunit = self.getSubunit();
+        if (subunit == null) {
+            referent.setElement(self);
+        } else {
+            referent.setElement(subunit.getDefinition());
+        }
+        return referent;
+    }
+
+    public boolean isDistinguishableFromAll(List<Member> otherMembers) {
+        Member self = this.getSelf();
+        for (Member otherMember: otherMembers) {
+            if (!self.isDistinguishableFrom(otherMember)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 } // MemberImpl

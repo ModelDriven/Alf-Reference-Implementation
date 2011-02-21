@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.UnitDefinitionImpl;
@@ -147,30 +149,38 @@ public class UnitDefinition extends DocumentedElement {
 		super.print(prefix);
 		QualifiedName namespaceName = this.getNamespaceName();
 		if (namespaceName != null) {
-			namespaceName.print(prefix + " ");
+			System.out.println(prefix + " namespaceName:");
+			namespaceName.print(prefix + "  ");
 		}
 		NamespaceDefinition definition = this.getDefinition();
 		if (definition != null) {
-			definition.print(prefix + " ");
+			System.out.println(prefix + " definition:");
+			definition.print(prefix + "  ");
 		}
 		ArrayList<ImportReference> import_ = this.getImport();
 		if (import_ != null) {
+			if (import_.size() > 0) {
+				System.out.println(prefix + " import:");
+			}
 			for (ImportReference item : this.getImport()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}
 		ElementReference namespace = this.getNamespace();
 		if (namespace != null) {
-			System.out.println(prefix + " /" + namespace);
+			System.out.println(prefix + " /namespace:" + namespace);
 		}
 		ArrayList<Profile> appliedProfile = this.getAppliedProfile();
 		if (appliedProfile != null) {
+			if (appliedProfile.size() > 0) {
+				System.out.println(prefix + " /appliedProfile:");
+			}
 			for (Profile item : this.getAppliedProfile()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

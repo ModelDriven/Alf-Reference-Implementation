@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.LoopVariableDefinitionImpl;
@@ -222,30 +224,39 @@ public class LoopVariableDefinition extends SyntaxElement {
 		super.print(prefix);
 		Expression expression1 = this.getExpression1();
 		if (expression1 != null) {
-			expression1.print(prefix + " ");
+			System.out.println(prefix + " expression1:");
+			expression1.print(prefix + "  ");
 		}
 		Expression expression2 = this.getExpression2();
 		if (expression2 != null) {
-			expression2.print(prefix + " ");
+			System.out.println(prefix + " expression2:");
+			expression2.print(prefix + "  ");
 		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
-			typeName.print(prefix + " ");
+			System.out.println(prefix + " typeName:");
+			typeName.print(prefix + "  ");
 		}
 		ElementReference type = this.getType();
 		if (type != null) {
-			System.out.println(prefix + " /" + type);
+			System.out.println(prefix + " /type:" + type);
 		}
 		ArrayList<AssignedSource> assignmentBefore = this.getAssignmentBefore();
 		if (assignmentBefore != null) {
+			if (assignmentBefore.size() > 0) {
+				System.out.println(prefix + " /assignmentBefore:");
+			}
 			for (AssignedSource item : this.getAssignmentBefore()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 		ArrayList<AssignedSource> assignmentAfter = this.getAssignmentAfter();
 		if (assignmentAfter != null) {
+			if (assignmentAfter.size() > 0) {
+				System.out.println(prefix + " /assignmentAfter:");
+			}
 			for (AssignedSource item : this.getAssignmentAfter()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

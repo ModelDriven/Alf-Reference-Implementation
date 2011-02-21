@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl;
@@ -105,11 +107,13 @@ public abstract class BinaryExpression extends Expression {
 		super.print(prefix);
 		Expression operand1 = this.getOperand1();
 		if (operand1 != null) {
-			operand1.print(prefix + " ");
+			System.out.println(prefix + " operand1:");
+			operand1.print(prefix + "  ");
 		}
 		Expression operand2 = this.getOperand2();
 		if (operand2 != null) {
-			operand2.print(prefix + " ");
+			System.out.println(prefix + " operand2:");
+			operand2.print(prefix + "  ");
 		}
 	}
 } // BinaryExpression

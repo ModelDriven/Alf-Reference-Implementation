@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.InstanceCreationExpressionImpl;
@@ -144,7 +146,8 @@ public class InstanceCreationExpression extends InvocationExpression {
 		super.print(prefix);
 		QualifiedName constructor = this.getConstructor();
 		if (constructor != null) {
-			constructor.print(prefix + " ");
+			System.out.println(prefix + " constructor:");
+			constructor.print(prefix + "  ");
 		}
 	}
 } // InstanceCreationExpression

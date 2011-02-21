@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.ReceptionDefinitionImpl;
@@ -100,11 +102,12 @@ public class ReceptionDefinition extends Member {
 		super.print(prefix);
 		QualifiedName signalName = this.getSignalName();
 		if (signalName != null) {
-			signalName.print(prefix + " ");
+			System.out.println(prefix + " signalName:");
+			signalName.print(prefix + "  ");
 		}
 		ElementReference signal = this.getSignal();
 		if (signal != null) {
-			System.out.println(prefix + " /" + signal);
+			System.out.println(prefix + " /signal:" + signal);
 		}
 	}
 } // ReceptionDefinition

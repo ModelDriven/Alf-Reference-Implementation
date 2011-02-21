@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.NameBindingImpl;
@@ -63,7 +65,8 @@ public class NameBinding extends SyntaxElement {
 		super.print(prefix);
 		TemplateBinding binding = this.getBinding();
 		if (binding != null) {
-			binding.print(prefix + " ");
+			System.out.println(prefix + " binding:");
+			binding.print(prefix + "  ");
 		}
 	}
 } // NameBinding

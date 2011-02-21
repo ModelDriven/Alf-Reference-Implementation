@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl;
@@ -99,22 +101,28 @@ public abstract class NamespaceDefinition extends Member {
 		super.print(prefix);
 		ArrayList<Member> ownedMember = this.getOwnedMember();
 		if (ownedMember != null) {
+			if (ownedMember.size() > 0) {
+				System.out.println(prefix + " ownedMember:");
+			}
 			for (Member item : this.getOwnedMember()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}
 		UnitDefinition unit = this.getUnit();
 		if (unit != null) {
-			unit.print(prefix + " ");
+			System.out.println(prefix + " unit:" + unit);
 		}
 		ArrayList<Member> member = this.getMember();
 		if (member != null) {
+			if (member.size() > 0) {
+				System.out.println(prefix + " /member:");
+			}
 			for (Member item : this.getMember()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

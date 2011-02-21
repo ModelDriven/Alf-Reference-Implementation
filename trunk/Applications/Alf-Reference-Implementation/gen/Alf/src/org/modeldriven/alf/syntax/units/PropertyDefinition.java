@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.PropertyDefinitionImpl;
@@ -140,7 +142,8 @@ public class PropertyDefinition extends TypedElementDefinition {
 		super.print(prefix);
 		Expression initializer = this.getInitializer();
 		if (initializer != null) {
-			initializer.print(prefix + " ");
+			System.out.println(prefix + " initializer:");
+			initializer.print(prefix + "  ");
 		}
 	}
 } // PropertyDefinition

@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.QualifiedNameListImpl;
@@ -56,11 +58,14 @@ public class QualifiedNameList extends SyntaxElement {
 		super.print(prefix);
 		ArrayList<QualifiedName> name = this.getName();
 		if (name != null) {
+			if (name.size() > 0) {
+				System.out.println(prefix + " name:");
+			}
 			for (QualifiedName item : this.getName()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}

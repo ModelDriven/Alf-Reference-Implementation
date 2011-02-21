@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.ClassExtentExpressionImpl;
@@ -80,7 +82,8 @@ public class ClassExtentExpression extends Expression {
 		super.print(prefix);
 		QualifiedName className = this.getClassName();
 		if (className != null) {
-			className.print(prefix + " ");
+			System.out.println(prefix + " className:");
+			className.print(prefix + "  ");
 		}
 	}
 } // ClassExtentExpression

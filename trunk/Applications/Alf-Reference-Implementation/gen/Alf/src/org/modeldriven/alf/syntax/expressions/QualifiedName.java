@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
@@ -246,35 +248,41 @@ public class QualifiedName extends SyntaxElement {
 		super.print(prefix);
 		QualifiedName qualification = this.getQualification();
 		if (qualification != null) {
-			System.out.println(prefix + " /" + qualification);
+			System.out.println(prefix + " /qualification:" + qualification);
 		}
 		FeatureReference disambiguation = this.getDisambiguation();
 		if (disambiguation != null) {
-			System.out.println(prefix + " /" + disambiguation);
+			System.out.println(prefix + " /disambiguation:" + disambiguation);
 		}
 		ArrayList<NameBinding> nameBinding = this.getNameBinding();
 		if (nameBinding != null) {
+			if (nameBinding.size() > 0) {
+				System.out.println(prefix + " nameBinding:");
+			}
 			for (NameBinding item : this.getNameBinding()) {
 				if (item != null) {
-					item.print(prefix + " ");
+					item.print(prefix + "  ");
 				} else {
-					System.out.println(prefix + " null");
+					System.out.println(prefix + "  null");
 				}
 			}
 		}
 		ArrayList<ElementReference> referent = this.getReferent();
 		if (referent != null) {
+			if (referent.size() > 0) {
+				System.out.println(prefix + " /referent:");
+			}
 			for (ElementReference item : this.getReferent()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 		NameBinding unqualifiedName = this.getUnqualifiedName();
 		if (unqualifiedName != null) {
-			System.out.println(prefix + " /" + unqualifiedName);
+			System.out.println(prefix + " /unqualifiedName:" + unqualifiedName);
 		}
 		QualifiedName templateName = this.getTemplateName();
 		if (templateName != null) {
-			System.out.println(prefix + " /" + templateName);
+			System.out.println(prefix + " /templateName:" + templateName);
 		}
 	}
 } // QualifiedName

@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.common.impl.InternalElementReferenceImpl;
@@ -52,7 +54,7 @@ public class InternalElementReference extends ElementReference {
 		super.print(prefix);
 		SyntaxElement element = this.getElement();
 		if (element != null) {
-			element.print(prefix + " ");
+			System.out.println(prefix + " element:" + element);
 		}
 	}
 } // InternalElementReference

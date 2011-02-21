@@ -1,5 +1,6 @@
 namespace FoundationalModelLibrary;
 
+@ModelLibrary
 package PrimitiveBehaviors {
 
   public package BooleanFunctions;

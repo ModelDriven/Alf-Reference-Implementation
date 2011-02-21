@@ -2,6 +2,7 @@ namespace FoundationalModelLibrary;
 
 private import UML::AuxiliaryConstructs::PrimitiveTypes::*;
 
+@ModelLibrary
 package Common {
 
   public signal Notification {

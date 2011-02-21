@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
@@ -114,13 +116,17 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 		super.print(prefix);
 		QualifiedNameList specialization = this.getSpecialization();
 		if (specialization != null) {
-			specialization.print(prefix + " ");
+			System.out.println(prefix + " specialization:");
+			specialization.print(prefix + "  ");
 		}
 		ArrayList<ElementReference> specializationReferent = this
 				.getSpecializationReferent();
 		if (specializationReferent != null) {
+			if (specializationReferent.size() > 0) {
+				System.out.println(prefix + " /specializationReferent:");
+			}
 			for (ElementReference item : this.getSpecializationReferent()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}

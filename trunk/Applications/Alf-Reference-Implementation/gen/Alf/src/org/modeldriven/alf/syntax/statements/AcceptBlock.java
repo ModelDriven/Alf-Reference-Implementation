@@ -15,6 +15,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
 
 import org.modeldriven.alf.syntax.statements.impl.AcceptBlockImpl;
@@ -95,16 +97,21 @@ public class AcceptBlock extends SyntaxElement {
 		super.print(prefix);
 		Block block = this.getBlock();
 		if (block != null) {
-			block.print(prefix + " ");
+			System.out.println(prefix + " block:");
+			block.print(prefix + "  ");
 		}
 		QualifiedNameList signalNames = this.getSignalNames();
 		if (signalNames != null) {
-			signalNames.print(prefix + " ");
+			System.out.println(prefix + " signalNames:");
+			signalNames.print(prefix + "  ");
 		}
 		ArrayList<ElementReference> signal = this.getSignal();
 		if (signal != null) {
+			if (signal.size() > 0) {
+				System.out.println(prefix + " /signal:");
+			}
 			for (ElementReference item : this.getSignal()) {
-				System.out.println(prefix + " /" + item);
+				System.out.println(prefix + "  " + item);
 			}
 		}
 	}
