@@ -35,7 +35,7 @@ ${packageDeclaration}.impl.gen;
   }
 #end
 
-public #qualifiedName(${object}) getSelf() {
+public #name(${object.name}) getSelf() {
   return (#name(${object.name}))this.self;
 }
 
