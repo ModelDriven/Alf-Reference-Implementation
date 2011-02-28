@@ -31,7 +31,7 @@ public class IsUniqueExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.IsUniqueExpression getSelf() {
+	public IsUniqueExpression getSelf() {
 		return (IsUniqueExpression) this.self;
 	}
 

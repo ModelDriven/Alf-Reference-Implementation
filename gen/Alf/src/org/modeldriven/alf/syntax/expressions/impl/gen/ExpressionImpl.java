@@ -33,7 +33,7 @@ public abstract class ExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.Expression getSelf() {
+	public Expression getSelf() {
 		return (Expression) this.self;
 	}
 

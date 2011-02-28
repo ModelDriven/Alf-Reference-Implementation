@@ -30,7 +30,7 @@ public abstract class TupleImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.Tuple getSelf() {
+	public Tuple getSelf() {
 		return (Tuple) this.self;
 	}
 

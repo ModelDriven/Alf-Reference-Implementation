@@ -30,7 +30,7 @@ public class EqualityExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.EqualityExpression getSelf() {
+	public EqualityExpression getSelf() {
 		return (EqualityExpression) this.self;
 	}
 

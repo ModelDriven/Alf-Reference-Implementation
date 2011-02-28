@@ -30,7 +30,7 @@ public class DataTypeDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.DataTypeDefinition getSelf() {
+	public DataTypeDefinition getSelf() {
 		return (DataTypeDefinition) this.self;
 	}
 

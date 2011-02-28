@@ -31,7 +31,7 @@ public class SelectOrRejectExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SelectOrRejectExpression getSelf() {
+	public SelectOrRejectExpression getSelf() {
 		return (SelectOrRejectExpression) this.self;
 	}
 

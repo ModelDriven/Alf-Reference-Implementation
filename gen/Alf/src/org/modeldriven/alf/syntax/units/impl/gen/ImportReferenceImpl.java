@@ -30,7 +30,7 @@ public abstract class ImportReferenceImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ImportReference getSelf() {
+	public ImportReference getSelf() {
 		return (ImportReference) this.self;
 	}
 

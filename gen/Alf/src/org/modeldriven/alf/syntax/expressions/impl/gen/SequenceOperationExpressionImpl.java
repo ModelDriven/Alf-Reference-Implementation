@@ -32,7 +32,7 @@ public class SequenceOperationExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceOperationExpression getSelf() {
+	public SequenceOperationExpression getSelf() {
 		return (SequenceOperationExpression) this.self;
 	}
 

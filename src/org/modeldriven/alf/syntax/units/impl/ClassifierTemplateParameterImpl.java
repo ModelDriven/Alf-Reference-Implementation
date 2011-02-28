@@ -9,26 +9,23 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The definition of a classifier template parameter, which acts as a classifier
  * within the definition of the template.
  **/
 
-public class ClassifierTemplateParameterImpl extends
-		org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl {
+public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
 
 	public ClassifierTemplateParameterImpl(ClassifierTemplateParameter self) {
 		super(self);
 	}
 
+	@Override
 	public org.modeldriven.alf.syntax.units.ClassifierTemplateParameter getSelf() {
 		return (ClassifierTemplateParameter) this.self;
 	}
@@ -36,22 +33,54 @@ public class ClassifierTemplateParameterImpl extends
 	/**
 	 * Annotations are not allowed on classifier template parameters.
 	 **/
+	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+		return false;
 	} // annotationAllowed
 
 	/**
 	 * Returns false. (Classifier template parameters cannot be stubs.)
 	 **/
+	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+		return false;
 	} // matchForStub
 
 	/**
 	 * Return true if the given member is a classifier template parameter.
 	 **/
+	@Override
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+		return member instanceof ClassifierTemplateParameter;
 	} // isSameKindAs
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	/**
+	 * Two template parameters match if they have same names and the same 
+	 * specialization referents.
+	 **/
+	@Override
+	public boolean equals(Object other) {
+	    if (!(other instanceof ClassifierTemplateParameter ||
+	            other instanceof ClassifierTemplateParameterImpl)) {
+	        return false;
+	    } else {
+	        ClassifierTemplateParameter otherParameter = 
+	            other instanceof ClassifierTemplateParameter?
+	                    (ClassifierTemplateParameter)other:
+	                    ((ClassifierTemplateParameterImpl)other).getSelf();
+	        List<ElementReference> otherSpecializations = otherParameter.getSpecializationReferent();
+	        
+	        ClassifierTemplateParameter self = this.getSelf();
+            List<ElementReference> mySpecializations = self.getSpecializationReferent();
+	        
+            return  otherParameter.getName().equals(self.getName()) &&
+                    otherSpecializations.size() == mySpecializations.size() &&
+                    otherSpecializations.containsAll(mySpecializations);
+	    }
+	}
 
 } // ClassifierTemplateParameterImpl

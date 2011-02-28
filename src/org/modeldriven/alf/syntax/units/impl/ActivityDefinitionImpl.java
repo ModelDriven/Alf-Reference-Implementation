@@ -9,13 +9,10 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The definition of an activity, with any formal parameters defined as owned
@@ -29,15 +26,20 @@ public class ActivityDefinitionImpl extends
 		super(self);
 	}
 
+    @Override
 	public org.modeldriven.alf.syntax.units.ActivityDefinition getSelf() {
 		return (ActivityDefinition) this.self;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * An activity definition may not have a specialization list.
 	 **/
 	public boolean activityDefinitionSpecialization() {
-		return true;
+		return this.getSelf().getSpecialization() == null;
 	}
 
 	/**
@@ -45,16 +47,24 @@ public class ActivityDefinitionImpl extends
 	 * empty.
 	 **/
 	public boolean activityDefinitionPrimitive() {
-		return true;
+	    ActivityDefinition self = this.getSelf();
+		return !self.getIsPrimitive() || self.getBody() == null;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * In addition to the annotations allowed for classifiers in general, an
 	 * activity definition allows @primitive annotations and any stereotype
 	 * whose metaclass is consistent with Activity.
 	 **/
+    @Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO: Allow activity stereotypes.
+		return super.annotationAllowed(annotation) || 
+		    annotation.getStereotypeName().getQualification().getPathName().equals("primitive");
 	} // annotationAllowed
 
 	/**
@@ -67,15 +77,30 @@ public class ActivityDefinitionImpl extends
 	 * reference.
 	 **/
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+	    NamespaceDefinition definition = unit.getDefinition();
+		return definition instanceof ActivityDefinition && 
+		    super.matchForStub(unit) &&
+		    FormalParameterImpl.equals(this.getFormalParameters(), 
+		            ((ActivityDefinition)definition).getImpl().getFormalParameters());
 	} // matchForStub
 
-	/**
+    /**
 	 * Return true if the given member is either an ActivityDefinition or an
 	 * imported member whose referent is an ActivityDefinition or an Activity.
 	 **/
+	@Override
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+	    return member.getImpl().getReferent().getImpl().isActivity();
 	} // isSameKindAs
+
+	public List<FormalParameter> getFormalParameters() {
+        ArrayList<FormalParameter> formalParameters = new ArrayList<FormalParameter>();
+        for (Member member: this.getSelf().getOwnedMember()) {
+            if (member instanceof FormalParameter) {
+                formalParameters.add((FormalParameter)member);
+            }
+        }
+        return formalParameters;
+    }
 
 } // ActivityDefinitionImpl

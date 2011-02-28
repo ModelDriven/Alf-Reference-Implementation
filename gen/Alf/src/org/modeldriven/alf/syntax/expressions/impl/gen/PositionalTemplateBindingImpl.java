@@ -31,7 +31,7 @@ public class PositionalTemplateBindingImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.PositionalTemplateBinding getSelf() {
+	public PositionalTemplateBinding getSelf() {
 		return (PositionalTemplateBinding) this.self;
 	}
 

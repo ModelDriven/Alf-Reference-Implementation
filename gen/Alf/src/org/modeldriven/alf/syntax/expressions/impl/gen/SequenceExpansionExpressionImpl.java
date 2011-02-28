@@ -31,7 +31,7 @@ public abstract class SequenceExpansionExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceExpansionExpression getSelf() {
+	public SequenceExpansionExpression getSelf() {
 		return (SequenceExpansionExpression) this.self;
 	}
 

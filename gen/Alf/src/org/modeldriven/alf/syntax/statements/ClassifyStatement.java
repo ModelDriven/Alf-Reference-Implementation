@@ -175,8 +175,9 @@ public class ClassifyStatement extends Statement {
 			if (fromClass.size() > 0) {
 				System.out.println(prefix + " /fromClass:");
 			}
-			for (ElementReference item : this.getFromClass()) {
-				System.out.println(prefix + "  " + item);
+			for (ElementReference _fromClass : (ArrayList<ElementReference>) fromClass
+					.clone()) {
+				System.out.println(prefix + "  " + _fromClass);
 			}
 		}
 		ArrayList<ElementReference> toClass = this.getToClass();
@@ -184,8 +185,9 @@ public class ClassifyStatement extends Statement {
 			if (toClass.size() > 0) {
 				System.out.println(prefix + " /toClass:");
 			}
-			for (ElementReference item : this.getToClass()) {
-				System.out.println(prefix + "  " + item);
+			for (ElementReference _toClass : (ArrayList<ElementReference>) toClass
+					.clone()) {
+				System.out.println(prefix + "  " + _toClass);
 			}
 		}
 	}

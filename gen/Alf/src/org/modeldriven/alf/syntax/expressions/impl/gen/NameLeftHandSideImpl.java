@@ -30,7 +30,7 @@ public class NameLeftHandSideImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NameLeftHandSide getSelf() {
+	public NameLeftHandSide getSelf() {
 		return (NameLeftHandSide) this.self;
 	}
 

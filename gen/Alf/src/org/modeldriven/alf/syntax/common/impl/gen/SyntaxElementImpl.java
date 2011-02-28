@@ -32,7 +32,7 @@ public abstract class SyntaxElementImpl {
 		this.self = self;
 	}
 
-	public org.modeldriven.alf.syntax.common.SyntaxElement getSelf() {
+	public SyntaxElement getSelf() {
 		return (SyntaxElement) this.self;
 	}
 

@@ -10,8 +10,8 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.Profile;
 
@@ -22,8 +22,7 @@ import java.util.List;
  * The definition of a namespace as an Alf unit.
  **/
 
-public class UnitDefinitionImpl extends
-		org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl {
+public class UnitDefinitionImpl extends DocumentedElementImpl {
     
     private boolean hasImplicitImports = false;
 
@@ -53,7 +52,7 @@ public class UnitDefinitionImpl extends
 	    ElementReference referent = null;
 	    QualifiedName namespaceName = self.getNamespaceName();
 	    if (namespaceName != null) {
-            namespaceName.getImpl().setCurrentScope(ModelNamespace.getModelScope());
+            namespaceName.getImpl().setCurrentScope(RootNamespace.getRootScope());
 	        referent = namespaceName.getImpl().getNamespaceReferent();
 	    }
 		return referent;
@@ -66,7 +65,8 @@ public class UnitDefinitionImpl extends
      **/
 	public Boolean deriveIsModelLibrary() {
 	    // TODO: Require reference to standard UML ModelLibary stereotype.
-		return this.getSelf().getDefinition().getImpl().hasAnnotation("ModelLibrary");
+	    NamespaceDefinition definition = this.getSelf().getDefinition();
+		return definition != null && definition.getImpl().hasAnnotation("ModelLibrary");
 	}
 
     /**
@@ -106,9 +106,15 @@ public class UnitDefinitionImpl extends
      **/
     public boolean unitDefinitionNamespace() {
         UnitDefinition self = this.getSelf();
-        SyntaxElement element = self.getNamespace().getImpl().getAlf();
-        return element != null && element instanceof NamespaceDefinition &&
-            ((NamespaceDefinition)element).getImpl().hasSubunitFor(self);
+        ElementReference namespace = self.getNamespace();
+        if (namespace == null) {
+            return true;
+        } else if (!namespace.getImpl().isNamespace()) {
+            return false;
+        } else {
+            NamespaceDefinition alfNamespace = (NamespaceDefinition)namespace.getImpl().getAlf();
+            return alfNamespace == null || alfNamespace.getImpl().hasSubunitFor(self);
+        }
     }
 
 	/**
@@ -132,19 +138,22 @@ public class UnitDefinitionImpl extends
         }
         
         // Remove conflicts
-        ArrayList<Member> ownedMembers = self.getDefinition().getOwnedMember();
-        ArrayList<Member> otherMembers = (ArrayList<Member>)importedMembers.clone();
-        int i = 0;
-        while (otherMembers.size() > 0) {
-          Member member = otherMembers.remove(0);
-          if (member.getImpl().isDistinguishableFromAll(otherMembers) &&
-            member.getImpl().isDistinguishableFromAll(ownedMembers)) {
-            i++;
-          } else {
-            importedMembers.remove(i);
-          }
+        NamespaceDefinition definition = self.getDefinition();
+        if (definition != null) {
+            ArrayList<Member> ownedMembers = definition.getOwnedMember();
+            ArrayList<Member> otherMembers = (ArrayList<Member>)importedMembers.clone();
+            int i = 0;
+            while (otherMembers.size() > 0) {
+              Member member = otherMembers.remove(0);
+              if (member.getImpl().isDistinguishableFromAll(otherMembers) &&
+                member.getImpl().isDistinguishableFromAll(ownedMembers)) {
+                i++;
+              } else {
+                importedMembers.remove(i);
+              }
+            }
         }
-
+        
         return importedMembers;
     }
     
@@ -167,40 +176,33 @@ public class UnitDefinitionImpl extends
     public void addImplicitImports() {
         if (!this.hasImplicitImports() && !this.isInModelLibrary()) {
             UnitDefinition self = this.getSelf();
-            QualifiedNameImpl fumlLibrary = new QualifiedName().getImpl();
-            fumlLibrary.addName("FoundationalModelLibrary");
-            fumlLibrary.setCurrentScope(ModelNamespace.getModelScope());
-    
-            PackageImportReference primitiveBehaviorsImport = new PackageImportReference();
-            primitiveBehaviorsImport.setReferentName(fumlLibrary.copy().addName("PrimitiveBehaviors"));
-            primitiveBehaviorsImport.setVisibility("private");
-            primitiveBehaviorsImport.setUnit(self);
-            self.addImport(primitiveBehaviorsImport);
-    
-            PackageImportReference commonImport = new PackageImportReference();
-            commonImport.setReferentName(fumlLibrary.copy().addName("Common"));
-            commonImport.setVisibility("private");
-            commonImport.setUnit(self);
-            self.addImport(commonImport);
-    
-            PackageImportReference basicInputOutputImport = new PackageImportReference();
-            basicInputOutputImport.setReferentName(fumlLibrary.copy().addName("BasicInputOutput"));
-            basicInputOutputImport.setVisibility("private");
-            basicInputOutputImport.setUnit(self);
-            self.addImport(basicInputOutputImport);
-    
+
             PackageImportReference primitiveTypesImport = new PackageImportReference();
-            QualifiedName primitiveTypes = new QualifiedName().getImpl().
-                addName("UML").getImpl().
-                addName("AuxiliaryConstructs").getImpl().
-                addName("PrimitiveTypes");
-            primitiveTypes.getImpl().setCurrentScope(ModelNamespace.getModelScope());
-            primitiveTypesImport.setReferentName(primitiveTypes);
+            primitiveTypesImport.setReferentName(RootNamespace.getPrimitiveTypes());
             primitiveTypesImport.setVisibility("private");
             primitiveTypesImport.setUnit(self);
-            self.addImport(primitiveTypesImport);
+            this.addImplicitImport(primitiveTypesImport);
             
+            PackageImportReference primitiveBehaviorsImport = new PackageImportReference();
+            primitiveBehaviorsImport.setReferentName(RootNamespace.getPrimitiveBehaviors());
+            primitiveBehaviorsImport.setVisibility("private");
+            primitiveBehaviorsImport.setUnit(self);
+            this.addImplicitImport(primitiveBehaviorsImport);
+    
+            PackageImportReference basicInputOutputImport = new PackageImportReference();
+            basicInputOutputImport.setReferentName(RootNamespace.getBasicInputOutput());
+            basicInputOutputImport.setVisibility("private");
+            basicInputOutputImport.setUnit(self);
+            this.addImplicitImport(basicInputOutputImport);
+    
             this.setHasImplicitImports(true);
+        }
+    }
+    
+    public void addImplicitImport(ImportReference importReference) {
+        UnitDefinition self = this.getSelf();
+        if (!self.getImport().contains(importReference)) {
+            self.addImport(importReference);
         }
     }
 

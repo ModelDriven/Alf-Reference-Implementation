@@ -31,7 +31,7 @@ public class FeatureInvocationExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.FeatureInvocationExpression getSelf() {
+	public FeatureInvocationExpression getSelf() {
 		return (FeatureInvocationExpression) this.self;
 	}
 

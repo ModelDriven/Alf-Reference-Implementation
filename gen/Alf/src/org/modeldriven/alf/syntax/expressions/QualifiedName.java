@@ -259,9 +259,10 @@ public class QualifiedName extends SyntaxElement {
 			if (nameBinding.size() > 0) {
 				System.out.println(prefix + " nameBinding:");
 			}
-			for (NameBinding item : this.getNameBinding()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (NameBinding _nameBinding : (ArrayList<NameBinding>) nameBinding
+					.clone()) {
+				if (_nameBinding != null) {
+					_nameBinding.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}
@@ -272,8 +273,9 @@ public class QualifiedName extends SyntaxElement {
 			if (referent.size() > 0) {
 				System.out.println(prefix + " /referent:");
 			}
-			for (ElementReference item : this.getReferent()) {
-				System.out.println(prefix + "  " + item);
+			for (ElementReference _referent : (ArrayList<ElementReference>) referent
+					.clone()) {
+				System.out.println(prefix + "  " + _referent);
 			}
 		}
 		NameBinding unqualifiedName = this.getUnqualifiedName();

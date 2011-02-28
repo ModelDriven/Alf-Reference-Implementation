@@ -9,13 +9,8 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * The definition of an association, whose members must all be properties.
@@ -31,14 +26,27 @@ public class AssociationDefinitionImpl extends
 	public org.modeldriven.alf.syntax.units.AssociationDefinition getSelf() {
 		return (AssociationDefinition) this.self;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The specialization referents of an association definition must all be
 	 * associations.
 	 **/
 	public boolean associationDefinitionSpecializationReferent() {
+	    for (ElementReference referent: this.getSelf().getSpecializationReferent()) {
+	        if (!referent.getImpl().isAssociation()) {
+	            return false;
+	        }
+	    }
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Returns true if the given unit definition matches this association
@@ -46,7 +54,8 @@ public class AssociationDefinitionImpl extends
 	 * an association definition.
 	 **/
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+		return unit.getDefinition() instanceof AssociationDefinition &&
+		    super.matchForStub(unit);
 	} // matchForStub
 
 	/**
@@ -55,7 +64,8 @@ public class AssociationDefinitionImpl extends
 	 * metaclass is consistent with Association.
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO: Allow stereotypes consistent with associations.
+		return super.annotationAllowed(annotation);
 	} // annotationAllowed
 
 	/**
@@ -64,7 +74,7 @@ public class AssociationDefinitionImpl extends
 	 * Association.
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+	    return member.getImpl().getReferent().getImpl().isAssociation();
 	} // isSameKindAs
 
 } // AssociationDefinitionImpl

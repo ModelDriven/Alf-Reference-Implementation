@@ -30,7 +30,7 @@ public class StringLiteralExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.StringLiteralExpression getSelf() {
+	public StringLiteralExpression getSelf() {
 		return (StringLiteralExpression) this.self;
 	}
 

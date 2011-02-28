@@ -32,7 +32,7 @@ public class FeatureReferenceImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.FeatureReference getSelf() {
+	public FeatureReference getSelf() {
 		return (FeatureReference) this.self;
 	}
 

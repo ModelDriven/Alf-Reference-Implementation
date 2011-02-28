@@ -125,8 +125,9 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 			if (specializationReferent.size() > 0) {
 				System.out.println(prefix + " /specializationReferent:");
 			}
-			for (ElementReference item : this.getSpecializationReferent()) {
-				System.out.println(prefix + "  " + item);
+			for (ElementReference _specializationReferent : (ArrayList<ElementReference>) specializationReferent
+					.clone()) {
+				System.out.println(prefix + "  " + _specializationReferent);
 			}
 		}
 	}

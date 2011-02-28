@@ -30,7 +30,7 @@ public abstract class ClassifierDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ClassifierDefinition getSelf() {
+	public ClassifierDefinition getSelf() {
 		return (ClassifierDefinition) this.self;
 	}
 

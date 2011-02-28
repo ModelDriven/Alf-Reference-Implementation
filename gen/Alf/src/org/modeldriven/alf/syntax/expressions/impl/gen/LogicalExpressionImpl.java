@@ -30,7 +30,7 @@ public class LogicalExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.LogicalExpression getSelf() {
+	public LogicalExpression getSelf() {
 		return (LogicalExpression) this.self;
 	}
 

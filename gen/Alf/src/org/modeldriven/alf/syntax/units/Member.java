@@ -251,9 +251,10 @@ public abstract class Member extends DocumentedElement {
 			if (annotation.size() > 0) {
 				System.out.println(prefix + " annotation:");
 			}
-			for (StereotypeAnnotation item : this.getAnnotation()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (StereotypeAnnotation _annotation : (ArrayList<StereotypeAnnotation>) annotation
+					.clone()) {
+				if (_annotation != null) {
+					_annotation.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

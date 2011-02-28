@@ -11,7 +11,7 @@ package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.Package_;
+import org.omg.uml.Package;
 import org.omg.uml.PackageableElement;
 
 import java.util.ArrayList;
@@ -21,29 +21,26 @@ import java.util.ArrayList;
  * imported.
  **/
 
-public class PackageImportReferenceImpl extends
-		org.modeldriven.alf.syntax.units.impl.ImportReferenceImpl {
+public class PackageImportReferenceImpl extends ImportReferenceImpl {
 
 	public PackageImportReferenceImpl(PackageImportReference self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.PackageImportReference getSelf() {
+	public PackageImportReference getSelf() {
 		return (PackageImportReference) this.self;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The referent of a package import must be a package.
 	 **/
 	public boolean packageImportReferenceReferent() {
 	    ElementReference referent = this.getSelf().getReferent();
-		if (referent == null) {
-		    return false;
-		} else {
-		    SyntaxElement element = referent.getImpl().getAlf();
-		    return element != null && element instanceof PackageDefinition ||
-		        referent.getImpl().getUml() instanceof Package_;
-		}
+	    return referent != null && referent.getImpl().isPackage();
 	}
 
     /*
@@ -53,15 +50,15 @@ public class PackageImportReferenceImpl extends
     @Override
     public ArrayList<Member> getImportedMembers() {
         ArrayList<Member> members = new ArrayList<Member>();
-        if (this.packageImportReferenceReferent()) {
-            ElementReference referent = this.getSelf().getReferent();
+        ElementReference referent = this.getSelf().getReferent();
+        if (referent != null && referent.getImpl().isPackage()) {
             PackageDefinition packageDefinition = (PackageDefinition)referent.getImpl().getAlf();
             if (packageDefinition != null) {
                 for (Member member: packageDefinition.getImpl().getPublicMembers()) {
                     members.add(makeImportedMember(member.getImpl().getReferent()));
                 }
             } else {
-                for (PackageableElement element: ((Package_)referent.getImpl().getUml()).visibleMembers()) {
+                for (PackageableElement element: ((Package)referent.getImpl().getUml()).visibleMembers()) {
                     ExternalElementReference memberReference = new ExternalElementReference();
                     memberReference.setElement(element);
                     members.add(makeImportedMember(memberReference));
@@ -69,6 +66,12 @@ public class PackageImportReferenceImpl extends
             }
         }
         return members;
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        return (other instanceof PackageImportReference || other instanceof PackageImportReferenceImpl) &&
+            super.equals(other);
     }
 
 } // PackageImportReferenceImpl

@@ -30,7 +30,7 @@ public class NumericUnaryExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NumericUnaryExpression getSelf() {
+	public NumericUnaryExpression getSelf() {
 		return (NumericUnaryExpression) this.self;
 	}
 

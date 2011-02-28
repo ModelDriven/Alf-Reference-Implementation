@@ -62,9 +62,10 @@ public class PositionalTuple extends Tuple {
 			if (expression.size() > 0) {
 				System.out.println(prefix + " expression:");
 			}
-			for (Expression item : this.getExpression()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (Expression _expression : (ArrayList<Expression>) expression
+					.clone()) {
+				if (_expression != null) {
+					_expression.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

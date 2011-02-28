@@ -6,4 +6,8 @@ public class NamedElement extends Element {
         return "";
     }
 
+    public VisibilityKind getVisibility() {
+        return VisibilityKind.public_;
+    }
+
 }

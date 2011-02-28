@@ -30,7 +30,7 @@ public class RelationalExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.RelationalExpression getSelf() {
+	public RelationalExpression getSelf() {
 		return (RelationalExpression) this.self;
 	}
 

@@ -90,8 +90,9 @@ public class PackageDefinition extends NamespaceDefinition {
 			if (appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");
 			}
-			for (Profile item : this.getAppliedProfile()) {
-				System.out.println(prefix + "  " + item);
+			for (Profile _appliedProfile : (ArrayList<Profile>) appliedProfile
+					.clone()) {
+				System.out.println(prefix + "  " + _appliedProfile);
 			}
 		}
 	}

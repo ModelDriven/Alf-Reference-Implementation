@@ -31,7 +31,7 @@ public class OperationDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.OperationDefinition getSelf() {
+	public OperationDefinition getSelf() {
 		return (OperationDefinition) this.self;
 	}
 

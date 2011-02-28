@@ -30,7 +30,7 @@ public class AnnotationImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.Annotation getSelf() {
+	public Annotation getSelf() {
 		return (Annotation) this.self;
 	}
 

@@ -31,7 +31,7 @@ public abstract class UnaryExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.UnaryExpression getSelf() {
+	public UnaryExpression getSelf() {
 		return (UnaryExpression) this.self;
 	}
 

@@ -30,7 +30,7 @@ public abstract class SequenceElementsImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceElements getSelf() {
+	public SequenceElements getSelf() {
 		return (SequenceElements) this.self;
 	}
 

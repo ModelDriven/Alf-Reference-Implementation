@@ -9,13 +9,7 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * An assignment of a source element that gives the value of a local name, along
@@ -31,7 +25,7 @@ public class AssignedSourceImpl {
 		this.self = self;
 	}
 
-	public org.modeldriven.alf.syntax.common.AssignedSource getSelf() {
+	public AssignedSource getSelf() {
 		return (AssignedSource) this.self;
 	}
 

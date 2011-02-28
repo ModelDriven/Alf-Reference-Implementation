@@ -30,7 +30,7 @@ public class CastExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.CastExpression getSelf() {
+	public CastExpression getSelf() {
 		return (CastExpression) this.self;
 	}
 

@@ -30,7 +30,7 @@ public abstract class DocumentedElementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.common.DocumentedElement getSelf() {
+	public DocumentedElement getSelf() {
 		return (DocumentedElement) this.self;
 	}
 

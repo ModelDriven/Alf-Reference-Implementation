@@ -31,7 +31,7 @@ public class ClassifierTemplateParameterImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ClassifierTemplateParameter getSelf() {
+	public ClassifierTemplateParameter getSelf() {
 		return (ClassifierTemplateParameter) this.self;
 	}
 

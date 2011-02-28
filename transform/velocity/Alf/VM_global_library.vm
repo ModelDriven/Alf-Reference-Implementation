@@ -289,12 +289,12 @@ public void print(String prefix) {
      			if (#name($attribute.name).size()>0) {
 	     			System.out.println(prefix + " $deriv${attribute.name}:");
 	     		}
-	     		for (#basicType($attribute) item: this.get#upperCase(${attribute.name})()) {
+	     		for (#basicType($attribute) _#name($attribute.name): (#type($attribute))#name($attribute.name).clone()) {
 		     		#if( ${attribute.type.eClass().name}=="PrimitiveType" || !${attribute.isComposite()} )
-	    	 			System.out.println(prefix + "  " + item);
+	    	 			System.out.println(prefix + "  " + _#name($attribute.name));
 	     			#else
-	     			    if (item!=null) {
-							item.print(prefix + "  ");
+	     			    if (_#name($attribute.name)!=null) {
+							_#name($attribute.name).print(prefix + "  ");
 						} else {
 						  System.out.println(prefix + "  null");
 						}

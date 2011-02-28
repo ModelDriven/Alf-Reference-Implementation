@@ -30,7 +30,7 @@ public class ConcurrentClausesImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.ConcurrentClauses getSelf() {
+	public ConcurrentClauses getSelf() {
 		return (ConcurrentClauses) this.self;
 	}
 

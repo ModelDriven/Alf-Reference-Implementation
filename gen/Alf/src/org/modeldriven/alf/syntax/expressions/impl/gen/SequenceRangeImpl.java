@@ -30,7 +30,7 @@ public class SequenceRangeImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceRange getSelf() {
+	public SequenceRange getSelf() {
 		return (SequenceRange) this.self;
 	}
 

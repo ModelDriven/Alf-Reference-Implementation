@@ -1,0 +1,5 @@
+namespace Alf::Library::PrimitiveBehaviors;
+
+@ModelLibrary
+package SequenceFunctions {
+}

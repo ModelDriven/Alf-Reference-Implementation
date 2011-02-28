@@ -30,7 +30,7 @@ public class AssociationDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.AssociationDefinition getSelf() {
+	public AssociationDefinition getSelf() {
 		return (AssociationDefinition) this.self;
 	}
 

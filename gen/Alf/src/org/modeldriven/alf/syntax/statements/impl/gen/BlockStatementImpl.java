@@ -30,7 +30,7 @@ public class BlockStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.BlockStatement getSelf() {
+	public BlockStatement getSelf() {
 		return (BlockStatement) this.self;
 	}
 

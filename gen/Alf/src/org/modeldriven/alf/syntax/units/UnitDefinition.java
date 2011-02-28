@@ -162,9 +162,10 @@ public class UnitDefinition extends DocumentedElement {
 			if (import_.size() > 0) {
 				System.out.println(prefix + " import:");
 			}
-			for (ImportReference item : this.getImport()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (ImportReference _import_ : (ArrayList<ImportReference>) import_
+					.clone()) {
+				if (_import_ != null) {
+					_import_.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}
@@ -179,8 +180,9 @@ public class UnitDefinition extends DocumentedElement {
 			if (appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");
 			}
-			for (Profile item : this.getAppliedProfile()) {
-				System.out.println(prefix + "  " + item);
+			for (Profile _appliedProfile : (ArrayList<Profile>) appliedProfile
+					.clone()) {
+				System.out.println(prefix + "  " + _appliedProfile);
 			}
 		}
 	}

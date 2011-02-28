@@ -61,9 +61,10 @@ public class NamedTuple extends Tuple {
 			if (namedExpression.size() > 0) {
 				System.out.println(prefix + " namedExpression:");
 			}
-			for (NamedExpression item : this.getNamedExpression()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (NamedExpression _namedExpression : (ArrayList<NamedExpression>) namedExpression
+					.clone()) {
+				if (_namedExpression != null) {
+					_namedExpression.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

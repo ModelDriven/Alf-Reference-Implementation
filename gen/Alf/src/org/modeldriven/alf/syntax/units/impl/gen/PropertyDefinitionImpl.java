@@ -30,7 +30,7 @@ public class PropertyDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.PropertyDefinition getSelf() {
+	public PropertyDefinition getSelf() {
 		return (PropertyDefinition) this.self;
 	}
 

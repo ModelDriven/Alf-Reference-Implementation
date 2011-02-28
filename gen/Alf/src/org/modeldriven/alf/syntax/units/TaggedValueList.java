@@ -61,8 +61,9 @@ public class TaggedValueList extends SyntaxElement {
 			if (taggedValue.size() > 0) {
 				System.out.println(prefix + " taggedValue:");
 			}
-			for (TaggedValue item : this.getTaggedValue()) {
-				System.out.println(prefix + "  " + item);
+			for (TaggedValue _taggedValue : (ArrayList<TaggedValue>) taggedValue
+					.clone()) {
+				System.out.println(prefix + "  " + _taggedValue);
 			}
 		}
 	}

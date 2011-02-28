@@ -30,7 +30,7 @@ public class UnboundedLiteralExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.UnboundedLiteralExpression getSelf() {
+	public UnboundedLiteralExpression getSelf() {
 		return (UnboundedLiteralExpression) this.self;
 	}
 

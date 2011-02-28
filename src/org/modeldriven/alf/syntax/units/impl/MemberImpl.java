@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.*;
@@ -22,8 +23,7 @@ import java.util.List;
  * in Alf.
  **/
 
-public abstract class MemberImpl extends
-		org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl {
+public abstract class MemberImpl extends DocumentedElementImpl {
 
 	public MemberImpl(Member self) {
 		super(self);
@@ -61,7 +61,7 @@ public abstract class MemberImpl extends
 	    if (!self.getIsStub() || self.getIsExternal()) {
 	        return null;
 	    } else {
-	        return ModelNamespace.resolveUnit(this.getQualifiedName());
+	        return RootNamespace.resolveUnit(this.getQualifiedName());
 	    }	    
 	}
 
@@ -214,16 +214,14 @@ public abstract class MemberImpl extends
     
     public boolean hasAnnotation(String name) {
         for (StereotypeAnnotation annotation: this.getSelf().getAnnotation()) {
-            QualifiedName stereotypeName = annotation.getStereotypeName();
-            if (stereotypeName.getQualification() == null &&
-                   stereotypeName.getUnqualifiedName().getName().equals(name)) {
+            if (annotation.getStereotypeName().getImpl().equals(name)) {
                 return true;
             }
         }
         return false;
     }
     
-    protected boolean isTemplate() {
+    public boolean isTemplate() {
         return false;
     }
 
@@ -237,11 +235,15 @@ public abstract class MemberImpl extends
         NamespaceDefinition namespace = self.getNamespace();
         if (namespace == null) {
             qualifiedName = new QualifiedName();
-            qualifiedName.getImpl().setCurrentScope(ModelNamespace.getModelScope());
+            qualifiedName.getImpl().setCurrentScope(RootNamespace.getRootScope());
         } else {
             qualifiedName = namespace.getImpl().getQualifiedName();
         }
         return qualifiedName;
+    }
+    
+    public NamespaceDefinition getOuterScope() {
+        return this.getSelf().getNamespace();
     }
 
     public ElementReference getReferent() {
@@ -264,6 +266,17 @@ public abstract class MemberImpl extends
             }
         }
         return true;
+    }
+
+    public ElementReference getNamespaceReference() {
+        NamespaceDefinition namespace = this.getSelf().getNamespace();
+        if (namespace == null) {
+            return null;
+        } else {
+            InternalElementReference reference = new InternalElementReference();
+            reference.setElement(namespace);
+            return reference;
+        }
     }
     
 } // MemberImpl

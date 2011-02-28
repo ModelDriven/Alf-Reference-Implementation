@@ -30,7 +30,7 @@ public class BooleanUnaryExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BooleanUnaryExpression getSelf() {
+	public BooleanUnaryExpression getSelf() {
 		return (BooleanUnaryExpression) this.self;
 	}
 

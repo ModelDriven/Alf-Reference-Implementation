@@ -130,8 +130,9 @@ public abstract class Tuple extends SyntaxElement {
 			if (input.size() > 0) {
 				System.out.println(prefix + " /input:");
 			}
-			for (NamedExpression item : this.getInput()) {
-				System.out.println(prefix + "  " + item);
+			for (NamedExpression _input : (ArrayList<NamedExpression>) input
+					.clone()) {
+				System.out.println(prefix + "  " + _input);
 			}
 		}
 		InvocationExpression invocation = this.getInvocation();
@@ -143,8 +144,9 @@ public abstract class Tuple extends SyntaxElement {
 			if (output.size() > 0) {
 				System.out.println(prefix + " /output:");
 			}
-			for (OutputNamedExpression item : this.getOutput()) {
-				System.out.println(prefix + "  " + item);
+			for (OutputNamedExpression _output : (ArrayList<OutputNamedExpression>) output
+					.clone()) {
+				System.out.println(prefix + "  " + _output);
 			}
 		}
 	}

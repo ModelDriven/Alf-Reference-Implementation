@@ -277,8 +277,9 @@ public abstract class InvocationExpression extends Expression {
 			if (parameter.size() > 0) {
 				System.out.println(prefix + " /parameter:");
 			}
-			for (ElementReference item : this.getParameter()) {
-				System.out.println(prefix + "  " + item);
+			for (ElementReference _parameter : (ArrayList<ElementReference>) parameter
+					.clone()) {
+				System.out.println(prefix + "  " + _parameter);
 			}
 		}
 	}

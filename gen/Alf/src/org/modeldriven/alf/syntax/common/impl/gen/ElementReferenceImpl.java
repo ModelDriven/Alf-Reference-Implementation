@@ -33,7 +33,7 @@ public abstract class ElementReferenceImpl {
 		this.self = self;
 	}
 
-	public org.modeldriven.alf.syntax.common.ElementReference getSelf() {
+	public ElementReference getSelf() {
 		return (ElementReference) this.self;
 	}
 

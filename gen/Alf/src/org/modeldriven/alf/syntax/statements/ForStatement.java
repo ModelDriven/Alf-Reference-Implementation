@@ -185,9 +185,10 @@ public class ForStatement extends Statement {
 			if (variableDefinition.size() > 0) {
 				System.out.println(prefix + " variableDefinition:");
 			}
-			for (LoopVariableDefinition item : this.getVariableDefinition()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (LoopVariableDefinition _variableDefinition : (ArrayList<LoopVariableDefinition>) variableDefinition
+					.clone()) {
+				if (_variableDefinition != null) {
+					_variableDefinition.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

@@ -30,7 +30,7 @@ public class EmptyStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.EmptyStatement getSelf() {
+	public EmptyStatement getSelf() {
 		return (EmptyStatement) this.self;
 	}
 

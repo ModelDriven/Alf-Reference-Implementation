@@ -30,7 +30,7 @@ public class NamedTupleImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NamedTuple getSelf() {
+	public NamedTuple getSelf() {
 		return (NamedTuple) this.self;
 	}
 

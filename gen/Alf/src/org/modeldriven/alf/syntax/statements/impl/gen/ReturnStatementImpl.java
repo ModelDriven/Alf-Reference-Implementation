@@ -30,7 +30,7 @@ public class ReturnStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.ReturnStatement getSelf() {
+	public ReturnStatement getSelf() {
 		return (ReturnStatement) this.self;
 	}
 

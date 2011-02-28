@@ -12,7 +12,6 @@ package org.modeldriven.alf.syntax.units.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.NamedElement;
 
 import java.util.ArrayList;
 
@@ -82,24 +81,27 @@ public abstract class ImportReferenceImpl extends
 	
 	protected ArrayList<ElementReference> getReferents() {
 	    QualifiedName referentName = this.getSelf().getReferentName();
-        referentName.getImpl().setCurrentScope(ModelNamespace.getModelScope());
+        referentName.getImpl().setCurrentScope(RootNamespace.getRootScope());
 	    return referentName.getReferent();
 	}
 	
 	public abstract ArrayList<Member> getImportedMembers();
 	
 	protected ImportedMember makeImportedMember(ElementReference referent) {
-        ImportedMember importedMember = new ImportedMember();
-        importedMember.setReferent(referent);
-        Member member = (Member)referent.getImpl().getAlf();
-        if (member != null) {
-            importedMember.setName(member.getName());
-        } else {
-            // TODO: Handle external names starting with a single quote.
-            importedMember.setName(((NamedElement)referent.getImpl().getUml()).getName());
-        }
+        ImportedMember importedMember = ImportedMemberImpl.makeImportedMember(referent);
         importedMember.setVisibility(this.getSelf().getVisibility());
         return importedMember;
 	}
+	
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ImportReference) {
+            return ((ImportReference)other).getReferentName().equals(this.getSelf().getReferentName());
+        } else if (other instanceof PackageImportReferenceImpl) {
+            return ((ImportReferenceImpl)other).getSelf().getReferentName().equals(this.getSelf().getReferentName());
+        } else {
+            return false;
+        }
+    }
 
 } // ImportReferenceImpl

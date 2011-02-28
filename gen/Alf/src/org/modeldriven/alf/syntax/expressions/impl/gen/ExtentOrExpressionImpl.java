@@ -32,7 +32,7 @@ public class ExtentOrExpressionImpl {
 		this.self = self;
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ExtentOrExpression getSelf() {
+	public ExtentOrExpression getSelf() {
 		return (ExtentOrExpression) this.self;
 	}
 

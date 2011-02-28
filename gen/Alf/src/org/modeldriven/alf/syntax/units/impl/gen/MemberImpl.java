@@ -31,7 +31,7 @@ public abstract class MemberImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.Member getSelf() {
+	public Member getSelf() {
 		return (Member) this.self;
 	}
 

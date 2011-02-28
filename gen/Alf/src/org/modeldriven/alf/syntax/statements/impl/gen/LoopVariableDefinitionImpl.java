@@ -30,7 +30,7 @@ public class LoopVariableDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.LoopVariableDefinition getSelf() {
+	public LoopVariableDefinition getSelf() {
 		return (LoopVariableDefinition) this.self;
 	}
 

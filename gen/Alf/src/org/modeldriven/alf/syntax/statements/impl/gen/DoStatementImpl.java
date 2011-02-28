@@ -31,7 +31,7 @@ public class DoStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.DoStatement getSelf() {
+	public DoStatement getSelf() {
 		return (DoStatement) this.self;
 	}
 

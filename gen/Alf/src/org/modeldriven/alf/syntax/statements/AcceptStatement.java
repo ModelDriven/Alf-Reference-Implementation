@@ -170,9 +170,10 @@ public class AcceptStatement extends Statement {
 			if (acceptBlock.size() > 0) {
 				System.out.println(prefix + " acceptBlock:");
 			}
-			for (AcceptBlock item : this.getAcceptBlock()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (AcceptBlock _acceptBlock : (ArrayList<AcceptBlock>) acceptBlock
+					.clone()) {
+				if (_acceptBlock != null) {
+					_acceptBlock.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

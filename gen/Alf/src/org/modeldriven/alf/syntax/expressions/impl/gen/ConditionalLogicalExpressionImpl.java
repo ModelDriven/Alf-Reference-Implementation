@@ -32,7 +32,7 @@ public class ConditionalLogicalExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ConditionalLogicalExpression getSelf() {
+	public ConditionalLogicalExpression getSelf() {
 		return (ConditionalLogicalExpression) this.self;
 	}
 

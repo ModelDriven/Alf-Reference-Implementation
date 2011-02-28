@@ -30,7 +30,7 @@ public class SignalDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.SignalDefinition getSelf() {
+	public SignalDefinition getSelf() {
 		return (SignalDefinition) this.self;
 	}
 

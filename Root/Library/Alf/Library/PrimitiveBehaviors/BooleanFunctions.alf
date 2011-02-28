@@ -1,0 +1,6 @@
+namespace Alf::Library::PrimitiveBehaviors;
+public import FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions;
+
+@ModelLibrary
+package BooleanFunctions {
+}

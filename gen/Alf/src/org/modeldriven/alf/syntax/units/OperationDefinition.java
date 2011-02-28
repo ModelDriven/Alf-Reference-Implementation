@@ -245,8 +245,9 @@ public class OperationDefinition extends NamespaceDefinition {
 			if (redefinedOperations.size() > 0) {
 				System.out.println(prefix + " /redefinedOperations:");
 			}
-			for (ElementReference item : this.getRedefinedOperations()) {
-				System.out.println(prefix + "  " + item);
+			for (ElementReference _redefinedOperations : (ArrayList<ElementReference>) redefinedOperations
+					.clone()) {
+				System.out.println(prefix + "  " + _redefinedOperations);
 			}
 		}
 	}

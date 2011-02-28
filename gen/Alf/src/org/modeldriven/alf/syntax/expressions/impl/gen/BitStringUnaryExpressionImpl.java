@@ -26,7 +26,7 @@ public class BitStringUnaryExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BitStringUnaryExpression getSelf() {
+	public BitStringUnaryExpression getSelf() {
 		return (BitStringUnaryExpression) this.self;
 	}
 

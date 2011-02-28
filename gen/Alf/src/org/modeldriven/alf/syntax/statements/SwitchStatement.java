@@ -179,9 +179,10 @@ public class SwitchStatement extends Statement {
 			if (nonDefaultClause.size() > 0) {
 				System.out.println(prefix + " nonDefaultClause:");
 			}
-			for (SwitchClause item : this.getNonDefaultClause()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (SwitchClause _nonDefaultClause : (ArrayList<SwitchClause>) nonDefaultClause
+					.clone()) {
+				if (_nonDefaultClause != null) {
+					_nonDefaultClause.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

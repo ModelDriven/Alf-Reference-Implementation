@@ -31,7 +31,7 @@ public class SwitchStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.SwitchStatement getSelf() {
+	public SwitchStatement getSelf() {
 		return (SwitchStatement) this.self;
 	}
 

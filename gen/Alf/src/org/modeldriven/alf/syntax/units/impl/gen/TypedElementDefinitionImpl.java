@@ -30,7 +30,7 @@ public abstract class TypedElementDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.TypedElementDefinition getSelf() {
+	public TypedElementDefinition getSelf() {
 		return (TypedElementDefinition) this.self;
 	}
 

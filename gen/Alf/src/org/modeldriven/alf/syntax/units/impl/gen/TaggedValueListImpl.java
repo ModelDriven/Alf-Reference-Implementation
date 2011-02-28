@@ -30,7 +30,7 @@ public class TaggedValueListImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.TaggedValueList getSelf() {
+	public TaggedValueList getSelf() {
 		return (TaggedValueList) this.self;
 	}
 

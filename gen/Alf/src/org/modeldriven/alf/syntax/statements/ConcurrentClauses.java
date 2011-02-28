@@ -77,9 +77,10 @@ public class ConcurrentClauses extends SyntaxElement {
 			if (clause.size() > 0) {
 				System.out.println(prefix + " clause:");
 			}
-			for (NonFinalClause item : this.getClause()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (NonFinalClause _clause : (ArrayList<NonFinalClause>) clause
+					.clone()) {
+				if (_clause != null) {
+					_clause.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

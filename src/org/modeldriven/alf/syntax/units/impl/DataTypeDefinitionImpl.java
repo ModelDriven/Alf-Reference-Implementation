@@ -9,13 +9,8 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * The definition of a data type, whose members must all be properties.
@@ -28,15 +23,20 @@ public class DataTypeDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.DataTypeDefinition getSelf() {
+	public DataTypeDefinition getSelf() {
 		return (DataTypeDefinition) this.self;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * If a data type is primitive, then it may not have any owned members.
 	 **/
 	public boolean dataTypeDefinitionPrimitive() {
-		return true;
+	    DataTypeDefinition self = this.getSelf();
+		return !self.getIsPrimitive() || self.getOwnedMember().size() == 0;
 	}
 
 	/**
@@ -44,16 +44,27 @@ public class DataTypeDefinitionImpl extends
 	 * types.
 	 **/
 	public boolean dataTypeDefinitionSpecializationReferent() {
+	    for (ElementReference referent: this.getSelf().getSpecializationReferent()) {
+	        if (!referent.getImpl().isDataType()) {
+	            return false;
+	        }
+	    }
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Returns true if the given unit definition matches this data type
 	 * definition considered as a classifier definition and the subunit is for a
 	 * data type definition.
 	 **/
+	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+		return unit.getDefinition() instanceof DataTypeDefinition &&
+		        super.matchForStub(unit);
 	} // matchForStub
 
 	/**
@@ -61,8 +72,11 @@ public class DataTypeDefinitionImpl extends
 	 * type definition allows @primitive annotations plus any stereotype whose
 	 * metaclass is consistent with DataType.
 	 **/
+	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO: Allow stereotypes consistent with data types.
+		return annotation.getStereotypeName().getImpl().equals("primitive") ||
+		        super.annotationAllowed(annotation);
 	} // annotationAllowed
 
 	/**
@@ -70,7 +84,7 @@ public class DataTypeDefinitionImpl extends
 	 * imported member whose referent is a DataTypeDefinition or a DataType.
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+		return member.getImpl().getReferent().getImpl().isDataType();
 	} // isSameKindAs
 
 } // DataTypeDefinitionImpl

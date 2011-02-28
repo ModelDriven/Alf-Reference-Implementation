@@ -9,42 +9,46 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * The definition of an enumeration literal, as a member of an enumeration
  * definition.
  **/
 
-public class EnumerationLiteralNameImpl extends
-		org.modeldriven.alf.syntax.units.impl.MemberImpl {
+public class EnumerationLiteralNameImpl extends MemberImpl {
 
 	public EnumerationLiteralNameImpl(EnumerationLiteralName self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.EnumerationLiteralName getSelf() {
+	@Override
+	public EnumerationLiteralName getSelf() {
 		return (EnumerationLiteralName) this.self;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * Returns false. (Enumeration literal name cannot have annotations.)
 	 **/
+    @Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+		return false;
 	} // annotationAllowed
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Return true if the given member is an EnumerationLiteralName.
 	 **/
+    @Override
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+		return member instanceof EnumerationLiteralName;
 	} // isSameKindAs
 
 } // EnumerationLiteralNameImpl

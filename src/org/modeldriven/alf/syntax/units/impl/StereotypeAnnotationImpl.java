@@ -9,8 +9,8 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -23,30 +23,52 @@ import java.util.ArrayList;
  * stereotype (or one of a small number of special-case annotations).
  **/
 
-public class StereotypeAnnotationImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 
 	public StereotypeAnnotationImpl(StereotypeAnnotation self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.StereotypeAnnotation getSelf() {
+	@Override
+	public StereotypeAnnotation getSelf() {
 		return (StereotypeAnnotation) this.self;
 	}
 
+    /**
+     * Unless the stereotype name is "apply", "primitive" or "external" then the
+     * stereotype for a stereotype annotation is the stereotype denoted by the
+     * stereotype name.
+     **/
 	public Stereotype deriveStereotype() {
-		return null; // STUB
+	    // TODO Allow unqualified stereotype names for standard profiles or
+	    //      if there is only one applied profile.
+	    Stereotype stereotype = null;
+	    QualifiedName stereotypeName = this.getSelf().getStereotypeName();
+	    if (stereotypeName != null && 
+	            !stereotypeName.getImpl().equals("apply") &&
+	            !stereotypeName.getImpl().equals("primitive") &&
+	            !stereotypeName.getImpl().equals("external")) {
+	        stereotypeName.getImpl().setCurrentScope(RootNamespace.getRootScope());
+	        ElementReference stereotypeReferent = stereotypeName.getImpl().getStereotypeReferent();
+	        if (stereotypeReferent != null) {
+	            stereotype = (Stereotype)stereotypeReferent.getImpl().getUml();
+	        }
+	    }
+		return stereotype;
 	}
+	
+	/*
+	 * Derivations
+	 */
 
-	/**
-	 * Unless the stereotype name is "apply", "primitive" or "external" then the
-	 * stereotype for a stereotype annotation is the stereotype denoted by the
-	 * stereotype name.
-	 **/
 	public boolean stereotypeAnnotationStereotypeDerivation() {
 		this.getSelf().getStereotype();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The stereotype name of a stereotype annotation must either be one of
@@ -57,7 +79,7 @@ public class StereotypeAnnotationImpl extends
 	 * the name.
 	 **/
 	public boolean stereotypeAnnotationStereotypeName() {
-		return true;
+		return this.getSelf().getStereotype() != null;
 	}
 
 	/**
@@ -66,6 +88,20 @@ public class StereotypeAnnotationImpl extends
 	 * profiles.
 	 **/
 	public boolean stereotypeAnnotationApply() {
+	    StereotypeAnnotation self = this.getSelf();
+	    if (self.getStereotypeName().equals("apply")) {
+	        QualifiedNameList names = self.getNames();
+	        if (names == null) {
+	            return false;
+	        } else {
+	            for (QualifiedName name: names.getName()) {
+	                name.getImpl().setCurrentScope(RootNamespace.getRootScope());
+	                if (!name.getImpl().isProfileReferent()) {
+	                    return false;
+	                }
+	            }
+	        }
+	    }
 		return true;
 	}
 
@@ -74,7 +110,9 @@ public class StereotypeAnnotationImpl extends
 	 * may not have tagged values or names.
 	 **/
 	public boolean stereotypeAnnotationPrimitive() {
-		return true;
+        StereotypeAnnotation self = this.getSelf();
+		return !self.getStereotypeName().equals("primitive") ||
+		            self.getNames() == null && self.getTaggedValues() == null;
 	}
 
 	/**
@@ -83,7 +121,26 @@ public class StereotypeAnnotationImpl extends
 	 * operator.
 	 **/
 	public boolean stereotypeAnnotationExternal() {
-		return true;
+        StereotypeAnnotation self = this.getSelf();
+        TaggedValueList taggedValueList = self.getTaggedValues();
+        if (!self.getStereotypeName().equals("external")) {
+            return true;
+        } else {
+            if (self.getNames() != null) {
+                return false;
+            } else if (taggedValueList != null) {
+                ArrayList<TaggedValue> taggedValues = taggedValueList.getTaggedValue();
+                if (taggedValues == null || taggedValues.size() > 1) {
+                    return false;
+                } else {
+                    TaggedValue taggedValue = taggedValues.get(0);
+                    return  taggedValue.getName().equals("file") &&
+                            taggedValue.getOperator() == null;
+                }
+            } else {
+                return true;
+            }
+        }
 	}
 
 	/**
@@ -92,6 +149,7 @@ public class StereotypeAnnotationImpl extends
 	 * and a value that is legally interpretable for the type of that attribute.
 	 **/
 	public boolean stereotypeAnnotationTaggedValues() {
+	    // TODO Check names and types of tagged values.
 		return true;
 	}
 
@@ -103,6 +161,7 @@ public class StereotypeAnnotationImpl extends
 	 * elements denoted by the given names.
 	 **/
 	public boolean stereotypeAnnotationNames() {
+	    // TODO Check validity of names in a stereotype name list.
 		return true;
 	}
 

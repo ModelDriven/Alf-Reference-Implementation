@@ -110,8 +110,9 @@ public class AcceptBlock extends SyntaxElement {
 			if (signal.size() > 0) {
 				System.out.println(prefix + " /signal:");
 			}
-			for (ElementReference item : this.getSignal()) {
-				System.out.println(prefix + "  " + item);
+			for (ElementReference _signal : (ArrayList<ElementReference>) signal
+					.clone()) {
+				System.out.println(prefix + "  " + _signal);
 			}
 		}
 	}

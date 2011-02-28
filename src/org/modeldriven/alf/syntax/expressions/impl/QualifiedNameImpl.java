@@ -14,7 +14,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.NamedElement;
 import org.omg.uml.Namespace;
-import org.omg.uml.Package_;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -314,12 +314,23 @@ public class QualifiedNameImpl extends
         return source;
     }
     
+    public ElementReference getNonTemplateClassifierReferent() {
+        ElementReference classifier = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (!referent.getImpl().isTemplate()) {
+                if (classifier != null) {
+                    return null;
+                }
+                classifier = referent;
+            }
+        }
+        return classifier;
+    }
+
     public ElementReference getNamespaceReferent() {
         ElementReference namespace = null;
         for (ElementReference referent: this.getSelf().getReferent()) {
-            SyntaxElement element = referent.getImpl().getAlf();
-            if ((element != null && element instanceof NamespaceDefinition) ||
-                    referent.getImpl().getUml() instanceof Namespace) {
+            if (referent.getImpl().isNamespace()) {
                 if (namespace != null) {
                     return null;
                 }
@@ -329,11 +340,70 @@ public class QualifiedNameImpl extends
         return namespace;
     }
 
-    private boolean isPackageReferent() {
+    public ElementReference getOperationReferent() {
+        ElementReference operation = null;
         for (ElementReference referent: this.getSelf().getReferent()) {
-            if ((referent.getImpl().getAlf()!=null && 
-                    referent.getImpl().getAlf() instanceof PackageDefinition) ||
-                    (referent.getImpl().getUml() instanceof Package_)) {
+            if (referent.getImpl().isOperation()) {
+                if (operation != null) {
+                    return null;
+                }
+                operation = referent;
+            }
+        }
+        return operation;
+    }
+
+    public ElementReference getClassifierReferent() {
+        ElementReference classifier = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isClassifier()) {
+                if (classifier != null) {
+                    return null;
+                }
+                classifier = referent;
+            }
+        }
+        return classifier;
+    }
+
+    public ElementReference getSignalReferent() {
+        ElementReference signal = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isSignal()) {
+                if (signal != null) {
+                    return null;
+                }
+                signal = referent;
+            }
+        }
+        return signal;
+    }
+
+    public ElementReference getStereotypeReferent() {
+        ElementReference stereotype = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isStereotype()) {
+                if (stereotype != null) {
+                    return null;
+                }
+                stereotype = referent;
+            }
+        }
+        return stereotype;
+    }
+
+    public boolean isPackageReferent() {
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isPackage()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isProfileReferent() {
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isProfile()) {
                 return true;
             }
         }
@@ -364,8 +434,10 @@ public class QualifiedNameImpl extends
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof QualifiedNameImpl)) {
-            return false;
+        if (other instanceof String) {
+            return this.getSelf().getPathName().equals(other);
+        } else if (other instanceof QualifiedName) {
+            return this.equals(((QualifiedName)other).getImpl());
         } else {
             ArrayList<NameBinding> myNameBindings = this.getSelf().getNameBinding();
             ArrayList<NameBinding> otherNameBindings = ((QualifiedNameImpl)other).getSelf().getNameBinding();
