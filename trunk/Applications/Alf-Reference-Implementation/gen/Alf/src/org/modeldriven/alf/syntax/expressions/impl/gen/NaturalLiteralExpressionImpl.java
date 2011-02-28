@@ -30,7 +30,7 @@ public class NaturalLiteralExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NaturalLiteralExpression getSelf() {
+	public NaturalLiteralExpression getSelf() {
 		return (NaturalLiteralExpression) this.self;
 	}
 

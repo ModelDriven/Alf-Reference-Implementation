@@ -30,7 +30,7 @@ public class InternalElementReferenceImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.common.InternalElementReference getSelf() {
+	public InternalElementReference getSelf() {
 		return (InternalElementReference) this.self;
 	}
 

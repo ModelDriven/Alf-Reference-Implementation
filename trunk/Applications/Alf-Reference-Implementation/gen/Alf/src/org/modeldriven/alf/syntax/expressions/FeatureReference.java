@@ -99,8 +99,9 @@ public class FeatureReference extends SyntaxElement {
 			if (referent.size() > 0) {
 				System.out.println(prefix + " /referent:");
 			}
-			for (ElementReference item : this.getReferent()) {
-				System.out.println(prefix + "  " + item);
+			for (ElementReference _referent : (ArrayList<ElementReference>) referent
+					.clone()) {
+				System.out.println(prefix + "  " + _referent);
 			}
 		}
 		NameBinding nameBinding = this.getNameBinding();

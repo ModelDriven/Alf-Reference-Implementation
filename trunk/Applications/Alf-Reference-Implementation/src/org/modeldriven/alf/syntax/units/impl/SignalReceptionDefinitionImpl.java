@@ -9,33 +9,36 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * The definition of both a signal and a reception of that signal as a feature
  * of the containing active class.
  **/
 
-public class SignalReceptionDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.SignalDefinitionImpl {
+public class SignalReceptionDefinitionImpl extends SignalDefinitionImpl {
 
 	public SignalReceptionDefinitionImpl(SignalReceptionDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.SignalReceptionDefinition getSelf() {
+	@Override
+	public SignalReceptionDefinition getSelf() {
 		return (SignalReceptionDefinition) this.self;
 	}
-
+	
 	/**
 	 * A signal reception definition is a feature.
 	 **/
+	@Override
+	public Boolean deriveIsFeature() {
+	    return true;
+	}
+
+	/*
+	 * Derivations
+	 */
+	
 	public boolean signalReceptionDefinitionIsFeatureDerivation() {
 		this.getSelf().getIsFeature();
 		return true;

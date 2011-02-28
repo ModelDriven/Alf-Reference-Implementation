@@ -104,9 +104,9 @@ public abstract class NamespaceDefinition extends Member {
 			if (ownedMember.size() > 0) {
 				System.out.println(prefix + " ownedMember:");
 			}
-			for (Member item : this.getOwnedMember()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (Member _ownedMember : (ArrayList<Member>) ownedMember.clone()) {
+				if (_ownedMember != null) {
+					_ownedMember.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}
@@ -121,8 +121,8 @@ public abstract class NamespaceDefinition extends Member {
 			if (member.size() > 0) {
 				System.out.println(prefix + " /member:");
 			}
-			for (Member item : this.getMember()) {
-				System.out.println(prefix + "  " + item);
+			for (Member _member : (ArrayList<Member>) member.clone()) {
+				System.out.println(prefix + "  " + _member);
 			}
 		}
 	}

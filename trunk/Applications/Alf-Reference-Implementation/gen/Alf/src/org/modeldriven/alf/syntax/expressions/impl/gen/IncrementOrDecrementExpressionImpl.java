@@ -31,7 +31,7 @@ public class IncrementOrDecrementExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.IncrementOrDecrementExpression getSelf() {
+	public IncrementOrDecrementExpression getSelf() {
 		return (IncrementOrDecrementExpression) this.self;
 	}
 

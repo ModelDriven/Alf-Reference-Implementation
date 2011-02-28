@@ -31,7 +31,7 @@ public class ForAllOrExistsOrOneExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ForAllOrExistsOrOneExpression getSelf() {
+	public ForAllOrExistsOrOneExpression getSelf() {
 		return (ForAllOrExistsOrOneExpression) this.self;
 	}
 

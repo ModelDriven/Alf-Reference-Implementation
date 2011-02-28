@@ -30,7 +30,7 @@ public class NameExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NameExpression getSelf() {
+	public NameExpression getSelf() {
 		return (NameExpression) this.self;
 	}
 

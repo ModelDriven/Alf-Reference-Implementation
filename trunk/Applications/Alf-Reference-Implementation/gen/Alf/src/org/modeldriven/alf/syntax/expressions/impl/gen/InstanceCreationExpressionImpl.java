@@ -31,7 +31,7 @@ public class InstanceCreationExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.InstanceCreationExpression getSelf() {
+	public InstanceCreationExpression getSelf() {
 		return (InstanceCreationExpression) this.self;
 	}
 

@@ -31,7 +31,7 @@ public class SequenceConstructionExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceConstructionExpression getSelf() {
+	public SequenceConstructionExpression getSelf() {
 		return (SequenceConstructionExpression) this.self;
 	}
 

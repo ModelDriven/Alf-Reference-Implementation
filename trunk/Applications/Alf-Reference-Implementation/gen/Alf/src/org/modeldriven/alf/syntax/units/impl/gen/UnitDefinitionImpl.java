@@ -30,7 +30,7 @@ public class UnitDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.UnitDefinition getSelf() {
+	public UnitDefinition getSelf() {
 		return (UnitDefinition) this.self;
 	}
 

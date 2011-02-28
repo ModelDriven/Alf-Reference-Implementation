@@ -9,43 +9,53 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * The definition of a signal, whose members must all be properties.
  **/
 
-public class SignalDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl {
+public class SignalDefinitionImpl extends ClassifierDefinitionImpl {
 
 	public SignalDefinitionImpl(SignalDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.SignalDefinition getSelf() {
+	@Override
+	public SignalDefinition getSelf() {
 		return (SignalDefinition) this.self;
 	}
 
+	/*
+	 * Constraints
+	 */
+	
 	/**
 	 * The specialization referents of a signal definition must all be signals.
 	 **/
 	public boolean signalDefinitionSpecializationReferent() {
-		return true;
+        for (ElementReference referent: this.getSelf().getSpecializationReferent()) {
+            if (!referent.getImpl().isSignal()) {
+                return false;
+            }
+        }
+        return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Returns true if the given unit definition matches this signal definition
 	 * considered as a classifier definition and the subunit is for a signal
 	 * definition.
 	 **/
+	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+		return unit.getDefinition() instanceof SignalDefinition &&
+		        super.matchForStub(unit);
 	} // matchForStub
 
 	/**
@@ -54,17 +64,18 @@ public class SignalDefinitionImpl extends
 	 * is consistent with Signal.
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO Allow stereotypes consistent with signal definitions
+		return super.annotationAllowed(annotation);
 	} // annotationAllowed
 
 	/**
 	 * Return true if the given member is either a SignalDefinition or an
-	 * imported member whose referent is a SignalDefinition or a Reception
+	 * imported member whose referent is a SignalDefinition or a Signal
 	 * (where signal reception definitions are considered to be kinds of signal
 	 * definitions).
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+		return member.getImpl().getReferent().getImpl().isSignal();
 	} // isSameKindAs
 
 } // SignalDefinitionImpl

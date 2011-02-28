@@ -30,7 +30,7 @@ public class ArithmeticExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ArithmeticExpression getSelf() {
+	public ArithmeticExpression getSelf() {
 		return (ArithmeticExpression) this.self;
 	}
 

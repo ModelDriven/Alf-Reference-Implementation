@@ -123,8 +123,9 @@ public abstract class Expression extends SyntaxElement {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
 			}
-			for (AssignedSource item : this.getAssignmentBefore()) {
-				System.out.println(prefix + "  " + item);
+			for (AssignedSource _assignmentBefore : (ArrayList<AssignedSource>) assignmentBefore
+					.clone()) {
+				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
 		ArrayList<AssignedSource> assignmentAfter = this.getAssignmentAfter();
@@ -132,8 +133,9 @@ public abstract class Expression extends SyntaxElement {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
 			}
-			for (AssignedSource item : this.getAssignmentAfter()) {
-				System.out.println(prefix + "  " + item);
+			for (AssignedSource _assignmentAfter : (ArrayList<AssignedSource>) assignmentAfter
+					.clone()) {
+				System.out.println(prefix + "  " + _assignmentAfter);
 			}
 		}
 		ElementReference type = this.getType();

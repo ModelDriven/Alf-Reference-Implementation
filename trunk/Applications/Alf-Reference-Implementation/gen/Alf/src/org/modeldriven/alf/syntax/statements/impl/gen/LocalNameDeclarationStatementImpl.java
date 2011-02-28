@@ -31,7 +31,7 @@ public class LocalNameDeclarationStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.LocalNameDeclarationStatement getSelf() {
+	public LocalNameDeclarationStatement getSelf() {
 		return (LocalNameDeclarationStatement) this.self;
 	}
 

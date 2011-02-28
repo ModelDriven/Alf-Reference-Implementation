@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -19,14 +20,14 @@ import java.util.List;
  * A model of the common properties of the definition of a namespace in Alf.
  **/
 
-public abstract class NamespaceDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.MemberImpl {
+public abstract class NamespaceDefinitionImpl extends MemberImpl {
 
 	public NamespaceDefinitionImpl(NamespaceDefinition self) {
 		super(self);
 	}
-
-	public org.modeldriven.alf.syntax.units.NamespaceDefinition getSelf() {
+	
+	@Override
+	public NamespaceDefinition getSelf() {
 		return (NamespaceDefinition) this.self;
 	}
 
@@ -48,7 +49,10 @@ public abstract class NamespaceDefinitionImpl extends
 	        UnitDefinition subunit = self.getSubunit();
 	        if (subunit != null) {
 	            subunit.getImpl().addImplicitImports();
-	            self = subunit.getDefinition();
+	            NamespaceDefinition definition = subunit.getDefinition();
+	            if (definition != null) {
+	                self = definition;
+	            }
 	        }
 	    }
         
@@ -56,8 +60,7 @@ public abstract class NamespaceDefinitionImpl extends
 	    
         UnitDefinition unit = self.getUnit();	    
 	    if (unit != null) {
-	      List<Member> imports = unit.getImpl().getImportedMembers();
-	      members.addAll(imports);
+	      members.addAll(unit.getImpl().getImportedMembers());
 	    }
 	    
 		return members;
@@ -97,8 +100,9 @@ public abstract class NamespaceDefinitionImpl extends
 	/**
 	 * Returns true if the annotation is @external.
 	 **/
+	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    return annotation.getStereotypeName().equals("external");
+	    return annotation.getStereotypeName().getImpl().equals("external");
 	}
 	
 	/*
@@ -107,7 +111,7 @@ public abstract class NamespaceDefinitionImpl extends
 	
     public List<Member> resolveVisible(String name, NamespaceDefinition namespace) {
         // If this namespace is a containing scope of the given namespace,
-        // then all members are visible.
+        // then all members of this namespace are visible.
         boolean containingScope = this.containsMember(namespace);
         
         ArrayList<Member> members = new ArrayList<Member>();
@@ -140,13 +144,13 @@ public abstract class NamespaceDefinitionImpl extends
         ArrayList<Member> members = new ArrayList<Member>();
         NamespaceDefinition self = this.getSelf();
         for (Member member: self.getMember()) {
-            if ( member.getName().equals(name)) {
+            if (member.getName().equals(name)) {
                 members.add(member);
              }
         }
         
         // Resolve in the containing scope, if there is one.
-        NamespaceDefinition namespace = self.getNamespace();
+        NamespaceDefinition namespace = this.getOuterScope();
         if (namespace != null) {
             for (Member member: namespace.getImpl().resolve(name)) {
                 if (member != null && member.getImpl().isDistinguishableFromAll(members)) {
@@ -180,9 +184,39 @@ public abstract class NamespaceDefinitionImpl extends
             } else {
                 qualifiedName = namespaceName.getImpl().copy().getSelf();
             }
-            qualifiedName.getImpl().setCurrentScope(ModelNamespace.getModelScope());
+            qualifiedName.getImpl().setCurrentScope(RootNamespace.getRootScope());
         }
         return qualifiedName;
+    }
+    
+    @Override
+    public NamespaceDefinition getOuterScope() {
+        UnitDefinition unit = this.getSelf().getUnit();
+        if (unit == null) {
+            return super.getOuterScope();
+        } else {
+            ElementReference namespace = unit.getNamespace();
+            if (namespace == null || namespace instanceof ExternalElementReference) {
+                return RootNamespace.getModelScope(unit);
+            } else {
+                SyntaxElement alfNamespace = namespace.getImpl().getAlf();
+                if (alfNamespace != null && alfNamespace instanceof NamespaceDefinition) {
+                    return (NamespaceDefinition)alfNamespace;
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+    
+    @Override
+    public ElementReference getNamespaceReference() {
+        UnitDefinition unit = this.getSelf().getUnit();
+        if (unit == null) {
+            return super.getNamespaceReference();
+        } else {
+            return unit.getNamespace();
+        }
     }
     
 } // NamespaceDefinitionImpl

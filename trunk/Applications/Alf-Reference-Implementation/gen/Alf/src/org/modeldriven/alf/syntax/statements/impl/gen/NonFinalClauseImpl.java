@@ -31,7 +31,7 @@ public class NonFinalClauseImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.NonFinalClause getSelf() {
+	public NonFinalClause getSelf() {
 		return (NonFinalClause) this.self;
 	}
 

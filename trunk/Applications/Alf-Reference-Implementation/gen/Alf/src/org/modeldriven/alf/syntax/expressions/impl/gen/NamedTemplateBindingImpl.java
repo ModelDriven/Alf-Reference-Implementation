@@ -31,7 +31,7 @@ public class NamedTemplateBindingImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NamedTemplateBinding getSelf() {
+	public NamedTemplateBinding getSelf() {
 		return (NamedTemplateBinding) this.self;
 	}
 

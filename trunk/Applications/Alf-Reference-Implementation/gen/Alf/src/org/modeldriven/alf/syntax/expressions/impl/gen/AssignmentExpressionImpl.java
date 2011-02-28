@@ -30,7 +30,7 @@ public class AssignmentExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.AssignmentExpression getSelf() {
+	public AssignmentExpression getSelf() {
 		return (AssignmentExpression) this.self;
 	}
 

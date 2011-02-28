@@ -30,7 +30,7 @@ public class ClassifyStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.ClassifyStatement getSelf() {
+	public ClassifyStatement getSelf() {
 		return (ClassifyStatement) this.self;
 	}
 

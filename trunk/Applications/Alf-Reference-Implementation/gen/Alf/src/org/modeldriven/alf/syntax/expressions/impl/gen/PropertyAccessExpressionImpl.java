@@ -30,7 +30,7 @@ public class PropertyAccessExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.PropertyAccessExpression getSelf() {
+	public PropertyAccessExpression getSelf() {
 		return (PropertyAccessExpression) this.self;
 	}
 

@@ -9,9 +9,7 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.Package_;
 import org.omg.uml.Profile;
 
 import java.util.ArrayList;
@@ -22,14 +20,13 @@ import java.util.List;
  * elements.
  **/
 
-public class PackageDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl {
+public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 
 	public PackageDefinitionImpl(PackageDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.PackageDefinition getSelf() {
+	public PackageDefinition getSelf() {
 		return (PackageDefinition) this.self;
 	}
 
@@ -61,7 +58,7 @@ public class PackageDefinitionImpl extends
 	 * metaclass is consistent with Package.
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO: Allow profile and stereotype applications.
+	    // TODO: Allow profile and stereotype applications on packages.
 		return super.annotationAllowed(annotation);
 	} // annotationAllowed
 
@@ -78,16 +75,7 @@ public class PackageDefinitionImpl extends
 	 * imported member whose referent is a PackageDefinition or a Package.
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		if (member instanceof ImportedMember) {
-		    SyntaxElement element = ((ImportedMember)member).getReferent().getImpl().getAlf();
-		    if (element != null) {
-		        return element instanceof PackageDefinition;
-		    } else {
-		        return ((ImportedMember)member).getReferent().getImpl().getUml() instanceof Package_;
-		    }
-		} else {
-		    return member instanceof PackageDefinition;
-		}
+	    return member.getImpl().getReferent().getImpl().isPackage();
 	} // isSameKindAs
 	
 	// Package-only members are limited to visibility within this package 

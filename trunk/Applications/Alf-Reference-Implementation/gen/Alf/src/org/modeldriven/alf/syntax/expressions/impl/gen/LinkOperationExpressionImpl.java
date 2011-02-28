@@ -31,7 +31,7 @@ public class LinkOperationExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.LinkOperationExpression getSelf() {
+	public LinkOperationExpression getSelf() {
 		return (LinkOperationExpression) this.self;
 	}
 

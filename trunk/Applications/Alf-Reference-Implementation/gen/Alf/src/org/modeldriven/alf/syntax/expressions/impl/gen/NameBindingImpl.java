@@ -30,7 +30,7 @@ public class NameBindingImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NameBinding getSelf() {
+	public NameBinding getSelf() {
 		return (NameBinding) this.self;
 	}
 

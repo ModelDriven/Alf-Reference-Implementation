@@ -30,7 +30,7 @@ public class BooleanLiteralExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BooleanLiteralExpression getSelf() {
+	public BooleanLiteralExpression getSelf() {
 		return (BooleanLiteralExpression) this.self;
 	}
 

@@ -18,14 +18,13 @@ import java.util.ArrayList;
  * An import reference to a single element to be imported into a unit.
  **/
 
-public class ElementImportReferenceImpl extends
-		org.modeldriven.alf.syntax.units.impl.ImportReferenceImpl {
+public class ElementImportReferenceImpl extends ImportReferenceImpl {
 
 	public ElementImportReferenceImpl(ElementImportReference self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ElementImportReference getSelf() {
+	public ElementImportReference getSelf() {
 		return (ElementImportReference) this.self;
 	}
 	
@@ -53,4 +52,10 @@ public class ElementImportReferenceImpl extends
         return member;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        return (other instanceof ElementImportReference || other instanceof ElementImportReferenceImpl) &&
+            super.equals(other);
+    }
+    
 } // ElementImportReferenceImpl

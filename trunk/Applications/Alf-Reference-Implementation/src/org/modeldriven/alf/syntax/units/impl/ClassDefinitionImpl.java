@@ -9,10 +9,7 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
@@ -22,16 +19,19 @@ import java.util.ArrayList;
  * signals or signal receptions.
  **/
 
-public class ClassDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl {
+public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 
 	public ClassDefinitionImpl(ClassDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ClassDefinition getSelf() {
+	public ClassDefinition getSelf() {
 		return (ClassDefinition) this.self;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The specialization referents of a class definition must all be classes. A
@@ -39,8 +39,18 @@ public class ClassDefinitionImpl extends
 	 * unless this is an active class definition.
 	 **/
 	public boolean classDefinitionSpecializationReferent() {
-		return true;
+        for (ElementReference referent: this.getSelf().getSpecializationReferent()) {
+            if (!referent.getImpl().isClass() || 
+                    referent.getImpl().isActiveClass() && !this.isActive()) {
+                return false;
+            }
+        }
+        return true;
 	}
+	
+    /*
+	 * Helper Methods
+	 */
 
 	/**
 	 * In addition to the annotations allowed for classifiers in general, a
@@ -48,7 +58,8 @@ public class ClassDefinitionImpl extends
 	 * is consistent with Class.
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO: Allow stereotypes consistent with classes.
+		return super.annotationAllowed(annotation);
 	} // annotationAllowed
 
 	/**
@@ -57,15 +68,44 @@ public class ClassDefinitionImpl extends
 	 * definition.
 	 **/
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+		return unit.getDefinition() instanceof ClassDefinition &&
+		    super.matchForStub(unit);
 	} // matchForStub
 
 	/**
 	 * Return true if the given member is either a ClassDefinition or an
 	 * imported member whose referent is a ClassDefinition or a Class.
 	 **/
+	@Override
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+	    return member.getImpl().getReferent().getImpl().isClass();
 	} // isSameKindAs
+
+	@Override
+	// Removes redefined members from inheritableMembers.
+    protected ArrayList<Member> inherit(ArrayList<Member> inheritableMembers) {
+	    ArrayList<Member> ownedMembers = this.getSelf().getOwnedMember();
+	    int i = 0;
+	    while (i < inheritableMembers.size()) {
+	        Member inheritableMember = inheritableMembers.get(i);
+	        for (Member ownedMember: ownedMembers) {
+	            // Note: Alf allows redefinition only for operations.
+	            if (ownedMember instanceof OperationDefinition &&
+	                    (!ownedMember.isDistinguishableFrom(inheritableMember) ||
+	                     ((OperationDefinition)ownedMember).getRedefinedOperations().
+	                        contains(inheritableMember.getImpl().getReferent()))) {
+	                inheritableMembers.remove(i);
+	                i--;
+	                break;
+	            }
+	        }
+	        i++;
+	    }
+        return inheritableMembers;
+    }
+
+    public boolean isActive() {
+        return false;
+    }
 
 } // ClassDefinitionImpl

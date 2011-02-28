@@ -31,7 +31,7 @@ public class SignalReceptionDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.SignalReceptionDefinition getSelf() {
+	public SignalReceptionDefinition getSelf() {
 		return (SignalReceptionDefinition) this.self;
 	}
 

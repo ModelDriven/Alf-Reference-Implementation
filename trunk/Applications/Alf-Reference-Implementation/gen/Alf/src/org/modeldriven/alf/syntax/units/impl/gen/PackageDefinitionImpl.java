@@ -31,7 +31,7 @@ public class PackageDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.PackageDefinition getSelf() {
+	public PackageDefinition getSelf() {
 		return (PackageDefinition) this.self;
 	}
 

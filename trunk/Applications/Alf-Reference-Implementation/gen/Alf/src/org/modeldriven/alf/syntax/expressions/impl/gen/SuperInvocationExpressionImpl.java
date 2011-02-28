@@ -31,7 +31,7 @@ public class SuperInvocationExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SuperInvocationExpression getSelf() {
+	public SuperInvocationExpression getSelf() {
 		return (SuperInvocationExpression) this.self;
 	}
 

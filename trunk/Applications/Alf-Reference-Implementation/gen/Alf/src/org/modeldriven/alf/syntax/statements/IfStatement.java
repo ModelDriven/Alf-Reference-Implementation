@@ -159,9 +159,10 @@ public class IfStatement extends Statement {
 			if (nonFinalClauses.size() > 0) {
 				System.out.println(prefix + " nonFinalClauses:");
 			}
-			for (ConcurrentClauses item : this.getNonFinalClauses()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (ConcurrentClauses _nonFinalClauses : (ArrayList<ConcurrentClauses>) nonFinalClauses
+					.clone()) {
+				if (_nonFinalClauses != null) {
+					_nonFinalClauses.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

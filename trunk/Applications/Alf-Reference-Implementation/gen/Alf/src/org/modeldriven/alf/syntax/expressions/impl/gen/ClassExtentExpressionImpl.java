@@ -30,7 +30,7 @@ public class ClassExtentExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ClassExtentExpression getSelf() {
+	public ClassExtentExpression getSelf() {
 		return (ClassExtentExpression) this.self;
 	}
 

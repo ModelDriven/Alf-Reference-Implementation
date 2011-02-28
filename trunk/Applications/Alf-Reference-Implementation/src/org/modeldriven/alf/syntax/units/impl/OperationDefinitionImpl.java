@@ -9,41 +9,102 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.omg.uml.Operation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The definition of an operation, with any formal parameters defined as owned
  * members.
  **/
 
-public class OperationDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl {
+public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 
 	public OperationDefinitionImpl(OperationDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.OperationDefinition getSelf() {
+	public OperationDefinition getSelf() {
 		return (OperationDefinition) this.self;
 	}
 
+    /**
+     * If an operation definition has a redefinition list, its redefined
+     * operations are the referent operations of the names in the redefinition
+     * list for the operation definition. Otherwise, the redefined operations
+     * are any operations that would otherwise be indistinguishable from the
+     * operation being defined in this operation definition.
+     **/
 	public ArrayList<ElementReference> deriveRedefinedOperations() {
-		return null; // STUB
+	    OperationDefinition self = this.getSelf();
+	    ArrayList<ElementReference> redefinedOperations = new ArrayList<ElementReference>();
+	    QualifiedNameList redefinitions = self.getRedefinition();
+	    if (redefinitions != null) {
+    	    for (QualifiedName redefinitionName: redefinitions.getName()) {
+    	        redefinitionName.getImpl().setCurrentScope(this.getOuterScope());
+    	        ElementReference referent = redefinitionName.getImpl().getOperationReferent();
+    	        if (referent != null) {
+    	            redefinedOperations.add(referent);
+    	        }
+    	    }
+	    }
+		return redefinedOperations;
 	}
 
+    /**
+     * An operation definition is a constructor if it has a @Create annotation.
+     **/
 	public Boolean deriveIsConstructor() {
-		return null; // STUB
+		return this.hasAnnotation("Create");
 	}
 
+    /**
+     * An operation definition is a destructor if it has a @Destroy annotation.
+     **/
 	public Boolean deriveIsDestructor() {
-		return null; // STUB
+        return this.hasAnnotation("Destroy");
 	}
+	
+    /**
+     * An operation definition is a feature.
+     **/
+	@Override
+	public Boolean deriveIsFeature() {
+	    return true;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
+    public boolean operationDefinitionRedefinedOperationsDerivation() {
+        this.getSelf().getRedefinedOperations();
+        return true;
+    }
+
+    public boolean operationDefinitionIsFeatureDerivation() {
+        this.getSelf().getIsFeature();
+        return true;
+    }
+
+    public boolean operationDefinitionIsConstructorDefinition() {
+        this.getSelf().getIsConstructor();
+        return true;
+    }
+
+    public boolean operationDefinitionIsDestructorDefinition() {
+        this.getSelf().getIsDestructor();
+        return true;
+    }
+    
+    /*
+     * Constraints
+     */
 
 	/**
 	 * The namespace for an operation definition must be a class definition. If
@@ -51,28 +112,24 @@ public class OperationDefinitionImpl extends
 	 * abstract.
 	 **/
 	public boolean operationDefinitionNamespace() {
-		return true;
-	}
-
-	/**
-	 * If an operation definition has a redefinition list, its redefined
-	 * operations are the referent operations of the names in the redefinition
-	 * list for the operation definition. Otherwise, the redefined operations
-	 * are any operations that would otherwise be indistinguishable from the
-	 * operation being defined in this operation definition.
-	 **/
-	public boolean operationDefinitionRedefinedOperationsDerivation() {
-		this.getSelf().getRedefinedOperations();
-		return true;
+	    ElementReference namespace = this.getNamespaceReference();
+		return namespace != null && namespace.getImpl().isClass() && 
+		        (!this.getSelf().getIsAbstract() || namespace.getImpl().isAbstractClassifier());
 	}
 
 	/**
 	 * Each name in the redefinition list of an operation definition must have a
-	 * signal referent that is an operation. This operation must be a
+	 * referent that is an operation. This operation must be a
 	 * non-private operation that is a member of a specialization referent of
 	 * the class definition of the operation definition.
 	 **/
 	public boolean operationDefinitionRedefinition() {
+	    for (QualifiedName redefinitionName: this.getSelf().getRedefinition().getName()) {
+	        redefinitionName.getImpl().setCurrentScope(this.getOuterScope());
+	        if (redefinitionName.getImpl().getOperationReferent() == null) {
+	            return false;
+	        }
+	    }
 		return true;
 	}
 
@@ -84,28 +141,11 @@ public class OperationDefinitionImpl extends
 	 * reference.
 	 **/
 	public boolean operationDefinitionRedefinedOperations() {
-		return true;
-	}
-
-	/**
-	 * An operation definition is a feature.
-	 **/
-	public boolean operationDefinitionIsFeatureDerivation() {
-		this.getSelf().getIsFeature();
-		return true;
-	}
-
-	/**
-	 * An operation definition is a constructor if it has a @Create annotation.
-	 **/
-	public boolean operationDefinitionIsConstructorDefinition() {
-		return true;
-	}
-
-	/**
-	 * An operation definition is a destructor if it has a @Destroy annotation.
-	 **/
-	public boolean operationDefinitionIsDestructorDefinition() {
+	    for (ElementReference operation: this.getSelf().getRedefinedOperations()) {
+	        if (!this.equateParameters(operation)) {
+	            return false;
+	        }
+	    }
 		return true;
 	}
 
@@ -113,7 +153,8 @@ public class OperationDefinitionImpl extends
 	 * An operation definition cannot be both a constructor and a destructor.
 	 **/
 	public boolean operationDefinitionConstructorDestructor() {
-		return true;
+	    OperationDefinition self = this.getSelf();
+		return !(self.getIsConstructor() && self.getIsDestructor());
 	}
 
 	/**
@@ -124,6 +165,15 @@ public class OperationDefinitionImpl extends
 	 * superclasses.
 	 **/
 	public boolean operationDefinitionConstructor() {
+	    // TODO: Allow alternative constructor invocations.
+	    OperationDefinition self = this.getSelf();
+	    if (self.getIsConstructor()) {
+    		for (ElementReference redefinedOperation: self.getRedefinedOperations()) {
+    		    if (!redefinedOperation.getImpl().isConstructor()) {
+    		        return false;
+    		    }
+    		}
+	    }
 		return true;
 	}
 
@@ -132,7 +182,15 @@ public class OperationDefinitionImpl extends
 	 * it must also be a destructor.
 	 **/
 	public boolean operationDefinitionDestructor() {
-		return true;
+        OperationDefinition self = this.getSelf();
+        if (self.getIsDestructor()) {
+            for (ElementReference redefinedOperation: self.getRedefinedOperations()) {
+                if (!redefinedOperation.getImpl().isDestructor()) {
+                    return false;
+                }
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -140,7 +198,8 @@ public class OperationDefinitionImpl extends
 	 * consistent with Operation.
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO: Allow stereotypes consistent with operations.
+		return false;
 	} // annotationAllowed
 
 	/**
@@ -151,8 +210,14 @@ public class OperationDefinitionImpl extends
 	 * match if they have the same direction, name, multiplicity bounds,
 	 * ordering, uniqueness and type reference.
 	 **/
+	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+        NamespaceDefinition definition = unit.getDefinition();
+        return definition instanceof ActivityDefinition && 
+            super.matchForStub(unit) && 
+            !((ActivityDefinition)definition).getImpl().isTemplate() &&
+            FormalParameterImpl.equals(this.getFormalParameters(), 
+                    ((ActivityDefinition)definition).getImpl().getFormalParameters());
 	} // matchForStub
 
 	/**
@@ -164,7 +229,42 @@ public class OperationDefinitionImpl extends
 	 * Subclause 7.3.5).
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+	    ElementReference operation = member.getImpl().getReferent();
+	    return operation.getImpl().isOperation() && this.matchParameters(operation);
 	} // isSameKindAs
+
+    private boolean equateParameters(ElementReference operation) {
+        OperationDefinition alfOperation = (OperationDefinition)operation.getImpl().getAlf();
+        Operation umlOperation = (Operation)operation.getImpl().getUml();
+        if (alfOperation != null) {
+            return FormalParameterImpl.equals(this.getFormalParameters(), alfOperation.getImpl().getFormalParameters());
+        } else if (umlOperation != null) {
+            return FormalParameterImpl.equals(this.getFormalParameters(), umlOperation.getOwnedParameter());
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean matchParameters(ElementReference operation) {
+        OperationDefinition alfOperation = (OperationDefinition)operation.getImpl().getAlf();
+        Operation umlOperation = (Operation)operation.getImpl().getUml();
+        if (alfOperation != null) {
+            return FormalParameterImpl.match(this.getFormalParameters(), alfOperation.getImpl().getFormalParameters());
+        } else if (umlOperation != null) {
+            return FormalParameterImpl.match(this.getFormalParameters(), umlOperation.getOwnedParameter());
+        } else {
+            return false;
+        }
+    }
+    
+    public List<FormalParameter> getFormalParameters() {
+        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+        for (Member member: this.getSelf().getOwnedMember()) {
+            if (member instanceof FormalParameter) {
+                parameters.add((FormalParameter)member);
+            }
+        }
+        return parameters;
+    }
 
 } // OperationDefinitionImpl

@@ -31,7 +31,7 @@ public class FormalParameterImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.FormalParameter getSelf() {
+	public FormalParameter getSelf() {
 		return (FormalParameter) this.self;
 	}
 

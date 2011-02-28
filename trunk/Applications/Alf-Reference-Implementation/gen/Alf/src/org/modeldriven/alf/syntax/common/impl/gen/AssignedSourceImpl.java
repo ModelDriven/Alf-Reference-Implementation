@@ -33,7 +33,7 @@ public class AssignedSourceImpl {
 		this.self = self;
 	}
 
-	public org.modeldriven.alf.syntax.common.AssignedSource getSelf() {
+	public AssignedSource getSelf() {
 		return (AssignedSource) this.self;
 	}
 

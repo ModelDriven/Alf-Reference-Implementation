@@ -9,13 +9,7 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * A syntax element synthesized in an abstract syntax tree, along with any
@@ -30,7 +24,7 @@ public abstract class SyntaxElementImpl {
 		this.self = self;
 	}
 
-	public org.modeldriven.alf.syntax.common.SyntaxElement getSelf() {
+	public SyntaxElement getSelf() {
 		return (SyntaxElement) this.self;
 	}
 

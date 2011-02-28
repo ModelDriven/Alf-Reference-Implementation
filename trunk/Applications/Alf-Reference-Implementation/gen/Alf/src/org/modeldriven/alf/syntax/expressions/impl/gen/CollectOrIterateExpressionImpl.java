@@ -31,7 +31,7 @@ public class CollectOrIterateExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.CollectOrIterateExpression getSelf() {
+	public CollectOrIterateExpression getSelf() {
 		return (CollectOrIterateExpression) this.self;
 	}
 

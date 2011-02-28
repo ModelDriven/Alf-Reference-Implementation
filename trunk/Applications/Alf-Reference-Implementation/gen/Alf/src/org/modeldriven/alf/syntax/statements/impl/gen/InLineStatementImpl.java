@@ -30,7 +30,7 @@ public class InLineStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.InLineStatement getSelf() {
+	public InLineStatement getSelf() {
 		return (InLineStatement) this.self;
 	}
 

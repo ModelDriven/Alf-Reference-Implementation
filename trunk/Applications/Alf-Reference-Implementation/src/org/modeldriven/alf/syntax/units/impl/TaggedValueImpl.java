@@ -9,26 +9,21 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
+import org.modeldriven.alf.syntax.units.TaggedValue;
 
 /**
  * An assignment of a value to an attribute of an applied stereotype.
  **/
 
-public class TaggedValueImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public class TaggedValueImpl extends SyntaxElementImpl {
 
 	public TaggedValueImpl(TaggedValue self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.TaggedValue getSelf() {
+	@Override
+	public TaggedValue getSelf() {
 		return (TaggedValue) this.self;
 	}
 

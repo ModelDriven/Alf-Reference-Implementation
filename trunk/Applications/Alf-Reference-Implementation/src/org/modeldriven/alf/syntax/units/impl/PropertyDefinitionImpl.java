@@ -9,77 +9,114 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * A typed element definition for a property (attribute or association end).
  **/
 
-public class PropertyDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.TypedElementDefinitionImpl {
+public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 
 	public PropertyDefinitionImpl(PropertyDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.PropertyDefinition getSelf() {
+	public PropertyDefinition getSelf() {
 		return (PropertyDefinition) this.self;
 	}
 
+    /**
+     * A property definition requires collection conversion if its initializer
+     * has a collection class as its type and the property definition does not.
+     **/
 	public Boolean deriveIsCollectionConversion() {
-		return null; // STUB
+	    PropertyDefinition self = this.getSelf();
+	    Expression initializer = self.getInitializer();
+	    if (initializer == null) {
+	        return false;
+	    } else {
+	        ElementReference initializerType = initializer.getType();
+	        ElementReference selfType = self.getType();
+	        return initializerType != null && selfType != null &&
+	                initializerType.getImpl().isCollectionClass() &&
+	                !self.getType().getImpl().isCollectionClass();
+	    }
 	}
 
+    /**
+     * A property definition requires BitString conversion if its type is
+     * BitString and the type of its initializer is Integer or a collection
+     * class whose argument type is Integer.
+     **/
 	public Boolean deriveIsBitStringConversion() {
-		return null; // STUB
+        PropertyDefinition self = this.getSelf();
+        Expression initializer = self.getInitializer();
+        if (initializer == null) {
+            return false;
+        } else {
+            ElementReference initializerType = self.getInitializer().getType();
+            ElementReference selfType = self.getType();
+            return initializerType != null && selfType != null &&
+                    (initializerType.getImpl().isCollectionClass() ||
+                    initializerType.getImpl().isIntegerCollection()) &&
+                    self.getType().getImpl().isBitString();
+        }
 	}
+	
+    /**
+     * A property definition is a feature.
+     **/
+	public Boolean deriveIsFeature() {
+	    return true;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
+	public boolean propertyDefinitionIsCollectionConversionDerivation() {
+		this.getSelf().getIsCollectionConversion();
+		return true;
+	}
+
+    public boolean propertyDefinitionIsBitStringConversion() {
+        this.getSelf().getIsBitStringConversion();
+        return true;
+    }
+
+    public boolean propertyDefinitionIsFeatureDerivation() {
+        this.getSelf().getIsFeature();
+        return true;
+    }
+    
+    /*
+     * Constraints
+     */
 
 	/**
 	 * If a property definition has an initializer, then the initializer
 	 * expression must be assignable to the property definition.
 	 **/
 	public boolean propertyDefinitionInitializer() {
-		return true;
+	    PropertyDefinition self = this.getSelf();
+	    Expression initializer = self.getInitializer();
+		return initializer.getType().getImpl().isAssignableTo(self.getType());
 	}
-
-	/**
-	 * A property definition requires collection conversion if its initializer
-	 * has a collection class as its type and the property definition does not.
-	 **/
-	public boolean propertyDefinitionIsCollectionConversionDerivation() {
-		this.getSelf().getIsCollectionConversion();
-		return true;
-	}
-
-	/**
-	 * A property definition requires BitString conversion if its type is
-	 * BitString and the type of its initializer is Integer or a collection
-	 * class whose argument type is Integer.
-	 **/
-	public boolean propertyDefinitionIsBitStringConversion() {
-		return true;
-	}
-
-	/**
-	 * A property definition is a feature.
-	 **/
-	public boolean propertyDefinitionIsFeatureDerivation() {
-		this.getSelf().getIsFeature();
-		return true;
-	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Property.
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO Allow stereotypes consistent with properties.
+		return false;
 	} // annotationAllowed
 
 	/**
@@ -87,7 +124,7 @@ public class PropertyDefinitionImpl extends
 	 * imported member whose referent is a PropertyDefinition or a Property.
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+		return member.getImpl().getReferent().getImpl().isProperty();
 	} // isSameKindAs
 
 } // PropertyDefinitionImpl

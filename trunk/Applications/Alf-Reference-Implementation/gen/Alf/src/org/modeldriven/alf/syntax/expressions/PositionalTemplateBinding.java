@@ -62,9 +62,10 @@ public class PositionalTemplateBinding extends TemplateBinding {
 			if (argumentName.size() > 0) {
 				System.out.println(prefix + " argumentName:");
 			}
-			for (QualifiedName item : this.getArgumentName()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (QualifiedName _argumentName : (ArrayList<QualifiedName>) argumentName
+					.clone()) {
+				if (_argumentName != null) {
+					_argumentName.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

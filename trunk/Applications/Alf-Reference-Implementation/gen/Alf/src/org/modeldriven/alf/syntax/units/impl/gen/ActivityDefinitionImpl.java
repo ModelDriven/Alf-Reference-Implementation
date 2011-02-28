@@ -31,7 +31,7 @@ public class ActivityDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ActivityDefinition getSelf() {
+	public ActivityDefinition getSelf() {
 		return (ActivityDefinition) this.self;
 	}
 

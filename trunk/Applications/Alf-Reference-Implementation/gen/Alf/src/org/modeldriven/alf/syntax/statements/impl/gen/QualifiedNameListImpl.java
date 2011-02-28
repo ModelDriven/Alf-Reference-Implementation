@@ -30,7 +30,7 @@ public class QualifiedNameListImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.QualifiedNameList getSelf() {
+	public QualifiedNameList getSelf() {
 		return (QualifiedNameList) this.self;
 	}
 

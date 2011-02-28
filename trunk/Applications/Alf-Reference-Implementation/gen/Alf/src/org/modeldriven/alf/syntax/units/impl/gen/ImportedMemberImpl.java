@@ -26,7 +26,7 @@ public class ImportedMemberImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ImportedMember getSelf() {
+	public ImportedMember getSelf() {
 		return (ImportedMember) this.self;
 	}
 

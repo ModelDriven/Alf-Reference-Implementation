@@ -31,7 +31,7 @@ public class PositionalTupleImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.PositionalTuple getSelf() {
+	public PositionalTuple getSelf() {
 		return (PositionalTuple) this.self;
 	}
 

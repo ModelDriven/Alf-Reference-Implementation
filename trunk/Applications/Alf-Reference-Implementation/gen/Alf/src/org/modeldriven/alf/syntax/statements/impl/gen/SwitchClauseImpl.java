@@ -31,7 +31,7 @@ public class SwitchClauseImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.SwitchClause getSelf() {
+	public SwitchClause getSelf() {
 		return (SwitchClause) this.self;
 	}
 

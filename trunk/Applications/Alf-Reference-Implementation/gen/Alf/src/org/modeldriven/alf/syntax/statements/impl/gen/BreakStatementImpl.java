@@ -31,7 +31,7 @@ public class BreakStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.BreakStatement getSelf() {
+	public BreakStatement getSelf() {
 		return (BreakStatement) this.self;
 	}
 

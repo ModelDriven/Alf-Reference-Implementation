@@ -30,7 +30,7 @@ public class ExpressionStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.ExpressionStatement getSelf() {
+	public ExpressionStatement getSelf() {
 		return (ExpressionStatement) this.self;
 	}
 

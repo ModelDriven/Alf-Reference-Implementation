@@ -81,9 +81,9 @@ public class SequenceExpressionList extends SequenceElements {
 			if (element.size() > 0) {
 				System.out.println(prefix + " element:");
 			}
-			for (Expression item : this.getElement()) {
-				if (item != null) {
-					item.print(prefix + "  ");
+			for (Expression _element : (ArrayList<Expression>) element.clone()) {
+				if (_element != null) {
+					_element.print(prefix + "  ");
 				} else {
 					System.out.println(prefix + "  null");
 				}

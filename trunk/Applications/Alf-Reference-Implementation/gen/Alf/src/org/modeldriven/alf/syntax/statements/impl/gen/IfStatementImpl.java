@@ -31,7 +31,7 @@ public class IfStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.IfStatement getSelf() {
+	public IfStatement getSelf() {
 		return (IfStatement) this.self;
 	}
 

@@ -9,13 +9,7 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * A syntax element that has documentation comments associated with it.
@@ -28,7 +22,8 @@ public abstract class DocumentedElementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.common.DocumentedElement getSelf() {
+	@Override
+	public DocumentedElement getSelf() {
 		return (DocumentedElement) this.self;
 	}
 

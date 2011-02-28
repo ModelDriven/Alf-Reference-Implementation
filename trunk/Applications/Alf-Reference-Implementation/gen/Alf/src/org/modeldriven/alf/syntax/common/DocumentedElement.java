@@ -57,8 +57,9 @@ public abstract class DocumentedElement extends SyntaxElement {
 			if (documentation.size() > 0) {
 				System.out.println(prefix + " documentation:");
 			}
-			for (String item : this.getDocumentation()) {
-				System.out.println(prefix + "  " + item);
+			for (String _documentation : (ArrayList<String>) documentation
+					.clone()) {
+				System.out.println(prefix + "  " + _documentation);
 			}
 		}
 	}

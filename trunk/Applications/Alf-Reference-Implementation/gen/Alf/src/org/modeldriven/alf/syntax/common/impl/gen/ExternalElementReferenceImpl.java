@@ -30,7 +30,7 @@ public class ExternalElementReferenceImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.common.ExternalElementReference getSelf() {
+	public ExternalElementReference getSelf() {
 		return (ExternalElementReference) this.self;
 	}
 

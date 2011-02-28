@@ -31,7 +31,7 @@ public abstract class TemplateBindingImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.TemplateBinding getSelf() {
+	public TemplateBinding getSelf() {
 		return (TemplateBinding) this.self;
 	}
 

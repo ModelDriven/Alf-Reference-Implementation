@@ -31,7 +31,7 @@ public abstract class InvocationExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.InvocationExpression getSelf() {
+	public InvocationExpression getSelf() {
 		return (InvocationExpression) this.self;
 	}
 

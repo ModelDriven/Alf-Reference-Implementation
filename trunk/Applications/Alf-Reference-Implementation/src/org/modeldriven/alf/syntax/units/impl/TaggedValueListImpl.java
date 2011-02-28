@@ -9,26 +9,20 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
+import org.modeldriven.alf.syntax.units.TaggedValueList;
 
 /**
  * A set of tagged values for a stereotype application.
  **/
 
-public class TaggedValueListImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public class TaggedValueListImpl extends SyntaxElementImpl {
 
 	public TaggedValueListImpl(TaggedValueList self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.TaggedValueList getSelf() {
+	public TaggedValueList getSelf() {
 		return (TaggedValueList) this.self;
 	}
 

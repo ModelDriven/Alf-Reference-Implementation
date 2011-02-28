@@ -30,7 +30,7 @@ public abstract class BinaryExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BinaryExpression getSelf() {
+	public BinaryExpression getSelf() {
 		return (BinaryExpression) this.self;
 	}
 

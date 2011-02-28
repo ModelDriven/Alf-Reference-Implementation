@@ -30,7 +30,7 @@ public class ReceptionDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ReceptionDefinition getSelf() {
+	public ReceptionDefinition getSelf() {
 		return (ReceptionDefinition) this.self;
 	}
 

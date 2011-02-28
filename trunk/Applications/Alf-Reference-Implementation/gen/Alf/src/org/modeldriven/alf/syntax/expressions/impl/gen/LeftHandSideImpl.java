@@ -33,7 +33,7 @@ public abstract class LeftHandSideImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.LeftHandSide getSelf() {
+	public LeftHandSide getSelf() {
 		return (LeftHandSide) this.self;
 	}
 

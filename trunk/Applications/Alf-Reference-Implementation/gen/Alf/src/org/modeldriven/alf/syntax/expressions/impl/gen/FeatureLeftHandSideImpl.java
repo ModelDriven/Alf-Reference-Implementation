@@ -30,7 +30,7 @@ public class FeatureLeftHandSideImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.FeatureLeftHandSide getSelf() {
+	public FeatureLeftHandSide getSelf() {
 		return (FeatureLeftHandSide) this.self;
 	}
 

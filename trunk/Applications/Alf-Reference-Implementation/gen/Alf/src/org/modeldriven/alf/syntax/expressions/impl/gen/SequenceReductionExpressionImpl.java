@@ -31,7 +31,7 @@ public class SequenceReductionExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceReductionExpression getSelf() {
+	public SequenceReductionExpression getSelf() {
 		return (SequenceReductionExpression) this.self;
 	}
 

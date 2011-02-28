@@ -31,7 +31,7 @@ public class StereotypeAnnotationImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.StereotypeAnnotation getSelf() {
+	public StereotypeAnnotation getSelf() {
 		return (StereotypeAnnotation) this.self;
 	}
 

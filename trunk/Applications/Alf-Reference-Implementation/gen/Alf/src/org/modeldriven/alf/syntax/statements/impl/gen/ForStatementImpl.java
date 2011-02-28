@@ -31,7 +31,7 @@ public class ForStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.ForStatement getSelf() {
+	public ForStatement getSelf() {
 		return (ForStatement) this.self;
 	}
 

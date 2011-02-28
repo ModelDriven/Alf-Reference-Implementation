@@ -9,46 +9,59 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * The definition of an enumeration, whose members must all be enumeration
  * literal names.
  **/
 
-public class EnumerationDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl {
+public class EnumerationDefinitionImpl extends ClassifierDefinitionImpl {
 
 	public EnumerationDefinitionImpl(EnumerationDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.EnumerationDefinition getSelf() {
+	@Override
+	public EnumerationDefinition getSelf() {
 		return (EnumerationDefinition) this.self;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
+    // TODO: Fix constraint name and definition.
+    public boolean classDefinitionSpecializationReferent() {
+        return enumerationDefinitionSpecializationReferent();
+    }
+    
 	/**
-	 * The specialization referents of a class definition must all be classes. A
-	 * class definition may not have any referents that are active classes
-	 * unless this is an active class definition.
+	 * The specialization referents of a enumeration definition must all be enumerations.
 	 **/
-	public boolean classDefinitionSpecializationReferent() {
-		return true;
+	public boolean enumerationDefinitionSpecializationReferent() {
+        for (ElementReference referent: this.getSelf().getSpecializationReferent()) {
+            if (!referent.getImpl().isEnumeration()) {
+                return false;
+            }
+        }
+        return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Returns true if the given unit definition matches this enumeration
 	 * definition considered as a classifier definition and the subunit is for
 	 * an enumeration definition.
 	 **/
+	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return false; // STUB
+		return unit.getDefinition() instanceof EnumerationDefinition &&
+		        super.matchForStub(unit);
 	} // matchForStub
 
 	/**
@@ -56,8 +69,10 @@ public class EnumerationDefinitionImpl extends
 	 * enumeration definition allows an annotation for any stereotype whose
 	 * metaclass is consistent with Enumeration.
 	 **/
+	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO: Allow stereotypes consistent with enumerations.
+		return super.annotationAllowed(annotation);
 	} // annotationAllowed
 
 	/**
@@ -66,7 +81,7 @@ public class EnumerationDefinitionImpl extends
 	 * Enumeration.
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+		return member.getImpl().getReferent().getImpl().isEnumeration();
 	} // isSameKindAs
 
 } // EnumerationDefinitionImpl

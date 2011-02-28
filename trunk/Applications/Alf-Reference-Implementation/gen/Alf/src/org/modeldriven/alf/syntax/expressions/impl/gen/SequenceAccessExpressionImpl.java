@@ -30,7 +30,7 @@ public class SequenceAccessExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceAccessExpression getSelf() {
+	public SequenceAccessExpression getSelf() {
 		return (SequenceAccessExpression) this.self;
 	}
 

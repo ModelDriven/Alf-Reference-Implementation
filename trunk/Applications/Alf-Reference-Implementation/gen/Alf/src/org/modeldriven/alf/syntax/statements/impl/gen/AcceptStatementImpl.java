@@ -30,7 +30,7 @@ public class AcceptStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.AcceptStatement getSelf() {
+	public AcceptStatement getSelf() {
 		return (AcceptStatement) this.self;
 	}
 

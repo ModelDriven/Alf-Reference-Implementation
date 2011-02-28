@@ -31,7 +31,7 @@ public class BehaviorInvocationExpressionImpl
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression getSelf() {
+	public BehaviorInvocationExpression getSelf() {
 		return (BehaviorInvocationExpression) this.self;
 	}
 

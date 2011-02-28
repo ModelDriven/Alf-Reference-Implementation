@@ -30,7 +30,7 @@ public class IsolationExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.IsolationExpression getSelf() {
+	public IsolationExpression getSelf() {
 		return (IsolationExpression) this.self;
 	}
 

@@ -5153,6 +5153,8 @@ public class AlfParser implements AlfParserConstants {
     n = QualifiedName();
     jj_consume_token(SEMICOLON);
     d.setSignalName(n);
+    ArrayList<NameBinding> nameBindings = n.getNameBinding();
+    d.setName(nameBindings.get(nameBindings.size()-1).getName());
     {if (true) return d;}
     throw new Error("Missing return statement in function");
   }
@@ -6991,13 +6993,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_75() {
-    if (jj_3R_105()) return true;
+  private boolean jj_3R_134() {
+    if (jj_3R_149()) return true;
     return false;
   }
 
-  private boolean jj_3R_134() {
-    if (jj_3R_149()) return true;
+  private boolean jj_3R_75() {
+    if (jj_3R_105()) return true;
     return false;
   }
 
@@ -7008,6 +7010,13 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_40() {
     if (jj_3R_81()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_149() {
+    if (jj_scan_token(RECEIVE)) return true;
+    if (jj_scan_token(SIGNAL)) return true;
+    if (jj_3R_52()) return true;
     return false;
   }
 
@@ -7036,13 +7045,6 @@ public class AlfParser implements AlfParserConstants {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_172()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_149() {
-    if (jj_scan_token(RECEIVE)) return true;
-    if (jj_scan_token(SIGNAL)) return true;
-    if (jj_3R_52()) return true;
     return false;
   }
 

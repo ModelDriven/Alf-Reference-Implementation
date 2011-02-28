@@ -30,7 +30,7 @@ public class ElementImportReferenceImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ElementImportReference getSelf() {
+	public ElementImportReference getSelf() {
 		return (ElementImportReference) this.self;
 	}
 

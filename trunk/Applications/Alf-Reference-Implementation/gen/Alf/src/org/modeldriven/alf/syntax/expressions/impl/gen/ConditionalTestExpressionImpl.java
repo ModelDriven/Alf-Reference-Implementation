@@ -31,7 +31,7 @@ public class ConditionalTestExpressionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ConditionalTestExpression getSelf() {
+	public ConditionalTestExpression getSelf() {
 		return (ConditionalTestExpression) this.self;
 	}
 

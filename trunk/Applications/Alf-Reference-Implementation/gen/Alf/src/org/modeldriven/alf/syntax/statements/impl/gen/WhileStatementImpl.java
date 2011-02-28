@@ -31,7 +31,7 @@ public class WhileStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.WhileStatement getSelf() {
+	public WhileStatement getSelf() {
 		return (WhileStatement) this.self;
 	}
 

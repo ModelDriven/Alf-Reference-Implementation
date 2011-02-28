@@ -31,7 +31,7 @@ public class EnumerationDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.EnumerationDefinition getSelf() {
+	public EnumerationDefinition getSelf() {
 		return (EnumerationDefinition) this.self;
 	}
 

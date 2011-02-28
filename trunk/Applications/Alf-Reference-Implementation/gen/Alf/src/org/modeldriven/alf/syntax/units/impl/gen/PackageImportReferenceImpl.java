@@ -31,7 +31,7 @@ public class PackageImportReferenceImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.PackageImportReference getSelf() {
+	public PackageImportReference getSelf() {
 		return (PackageImportReference) this.self;
 	}
 

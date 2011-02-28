@@ -31,7 +31,7 @@ public class TemplateParameterSubstitutionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.TemplateParameterSubstitution getSelf() {
+	public TemplateParameterSubstitution getSelf() {
 		return (TemplateParameterSubstitution) this.self;
 	}
 

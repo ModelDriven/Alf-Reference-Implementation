@@ -1,5 +1,6 @@
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modeldriven.alf.parser.*;
@@ -7,9 +8,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.*;
 
-public class ModelNamespaceImpl extends NamespaceDefinitionImpl {
+public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     
-    public ModelNamespaceImpl(ModelNamespace self) {
+    public RootNamespaceImpl(RootNamespace self) {
         super(self);
     }
 
@@ -27,16 +28,22 @@ public class ModelNamespaceImpl extends NamespaceDefinitionImpl {
     public List<Member> resolve(String name) {
         List<Member> members = super.resolve(name);
         if (members.size() == 0) {
-            NameBinding nameBinding = new NameBinding();
-            nameBinding.setName(name);
-            QualifiedName qualifiedName = new QualifiedName();
-            qualifiedName.addNameBinding(nameBinding);
+            QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
             UnitDefinition unit = this.resolveUnit(qualifiedName);
-            if (unit != null) {
-                NamespaceDefinition member = unit.getDefinition();
-                this.getSelf().addOwnedMember(member);
-                members.add(member);
+            Member member;
+            if (unit == null) {
+                member = new MissingMember(name);
+            } else {
+                member = unit.getDefinition();
+                if (member == null) {
+                    member = new MissingMember(name);
+                } else {
+                    members.add(member);
+                }
             }
+            this.getSelf().addOwnedMember(member);
+        } else if (members.get(0) instanceof MissingMember) {
+            members = new ArrayList<Member>();
         }
         return members;
     }
@@ -61,7 +68,7 @@ public class ModelNamespaceImpl extends NamespaceDefinitionImpl {
                 parser = new AlfParser(new java.io.FileInputStream("Root/Library" + path));
             } catch (java.io.FileNotFoundException e) {
                 System.out.println("Unit not found.");
-                return null;
+                return new MissingUnit(qualifiedName);
             }
         }
 
@@ -73,7 +80,7 @@ public class ModelNamespaceImpl extends NamespaceDefinitionImpl {
         } catch (ParseException e) {
             System.out.println("Parse failed.");
             System.out.println(e.getMessage());
-            return null;
+            return new MissingUnit(qualifiedName);
         }
     }
 

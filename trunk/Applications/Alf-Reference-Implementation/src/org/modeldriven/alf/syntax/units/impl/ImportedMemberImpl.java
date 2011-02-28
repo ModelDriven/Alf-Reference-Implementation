@@ -11,15 +11,16 @@ package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.omg.uml.NamedElement;
 
-public class ImportedMemberImpl extends
-		org.modeldriven.alf.syntax.units.impl.MemberImpl {
+public class ImportedMemberImpl extends MemberImpl {
 
 	public ImportedMemberImpl(ImportedMember self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ImportedMember getSelf() {
+	@Override
+	public ImportedMember getSelf() {
 		return (ImportedMember) this.self;
 	}
 	
@@ -29,17 +30,7 @@ public class ImportedMemberImpl extends
 	@Override
 	public Boolean deriveIsFeature() {
 	    ElementReference referent = this.getSelf().getReferent();
-	    if (referent == null) {
-	        return false;
-	    } else {
-	        SyntaxElement element = referent.getImpl().getAlf();
-	        if (element != null) {
-	            return element instanceof Member && ((Member)element).getIsFeature();
-	        } else {
-	            // TODO: Handle deriveIsFeature for external element references.
-	            return false;
-	        }
-	    }
+	    return referent != null && referent.getImpl().isFeature();
 	}
 	
 	/*
@@ -71,7 +62,7 @@ public class ImportedMemberImpl extends
 
 	/**
 	 * If the given member is not an imported member, then return the result of
-	 * checking whether the given member is distinguishable from this member.
+	 * checking whether the given member is the same kind as this member.
 	 * Else, if the element of the referent for this member is an Alf member,
 	 * then return the result of checking whether that element is
 	 * distinguishable from the given member. Else, if the element of the
@@ -116,4 +107,27 @@ public class ImportedMemberImpl extends
 	    return this.getSelf().getReferent();
 	}
 
+    public static ImportedMember makeImportedMember(ElementReference referent) {
+        ImportedMember importedMember = new ImportedMember();
+        importedMember.setReferent(referent);
+        Member member = (Member)referent.getImpl().getAlf();
+        if (member != null) {
+            importedMember.setName(member.getName());
+            importedMember.setVisibility(member.getVisibility());
+        } else {
+            // TODO: Handle external names starting with a single quote.
+            NamedElement element = (NamedElement)referent.getImpl().getUml();
+            importedMember.setName(element.getName());
+            String visibility = element.getVisibility().toString();
+            importedMember.setVisibility(visibility.substring(0,visibility.length()-1));
+        }
+        return importedMember;
+    }
+
+    public static ImportedMember makeImportedMember(NamedElement element) {
+        ExternalElementReference reference = new ExternalElementReference();
+        reference.setElement(element);
+        return makeImportedMember(reference);
+    }
+    
 } // ImportedMemberImpl

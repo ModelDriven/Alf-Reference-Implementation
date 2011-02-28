@@ -31,7 +31,7 @@ public class ClassDefinitionImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ClassDefinition getSelf() {
+	public ClassDefinition getSelf() {
 		return (ClassDefinition) this.self;
 	}
 

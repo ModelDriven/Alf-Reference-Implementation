@@ -31,7 +31,7 @@ public class EnumerationLiteralNameImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.EnumerationLiteralName getSelf() {
+	public EnumerationLiteralName getSelf() {
 		return (EnumerationLiteralName) this.self;
 	}
 

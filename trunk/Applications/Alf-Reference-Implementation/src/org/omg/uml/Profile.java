@@ -1,5 +1,5 @@
 package org.omg.uml;
 
-public class Profile extends Package_ {
+public class Profile extends Package {
 
 }

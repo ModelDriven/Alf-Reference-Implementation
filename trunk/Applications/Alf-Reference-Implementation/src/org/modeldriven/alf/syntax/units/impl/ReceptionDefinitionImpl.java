@@ -9,64 +9,83 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * The declaration of the ability of an active class to receive a signal.
  **/
 
-public class ReceptionDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.MemberImpl {
+public class ReceptionDefinitionImpl extends MemberImpl {
 
 	public ReceptionDefinitionImpl(ReceptionDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ReceptionDefinition getSelf() {
+	public ReceptionDefinition getSelf() {
 		return (ReceptionDefinition) this.self;
 	}
 
+    /**
+     * The signal for a reception definition is the signal referent of the
+     * signal name for the reception definition.
+     **/
 	public ElementReference deriveSignal() {
-		return null; // STUB
+	    ElementReference referent = null;
+	    QualifiedName signalName = this.getSelf().getSignalName();
+	    if (signalName != null) {
+	        referent = signalName.getImpl().getSignalReferent();
+	    }
+		return referent;
 	}
+	
+	/**
+	 * A reception definition is a feature.
+	 */
+	@Override
+	public Boolean deriveIsFeature() {
+	    return true;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
+    public boolean receptionDefinitionSignalDerivation() {
+        this.getSelf().getSignal();
+        return true;
+    }
+
+    public boolean receptionDefinitionIsFeatureDerivation() {
+        this.getSelf().getIsFeature();
+        return true;
+    }
+    
+    /*
+     * Constraints
+     */
 
 	/**
 	 * The signal name for a reception definition must have a single referent
-	 * that is a signal. This referent must not e a template.
+	 * that is a signal. This referent must not be a template.
 	 **/
 	public boolean receptionDefinitionSignalName() {
-		return true;
+	    ElementReference signal = this.getSelf().getSignal();
+		return signal != null && !signal.getImpl().isTemplate();
 	}
-
-	/**
-	 * The signal for a reception definition is the signal referent of the
-	 * signal name for the reception definition.
-	 **/
-	public boolean receptionDefinitionSignalDerivation() {
-		this.getSelf().getSignal();
-		return true;
-	}
-
-	/**
-	 * A reception definition is a feature.
-	 **/
-	public boolean receptionDefinitionIsFeatureDerivation() {
-		this.getSelf().getIsFeature();
-		return true;
-	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Reception.
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-		return false; // STUB
+	    // TODO Allow stereotypes consistent with signal definitions.
+		return false;
 	} // annotationAllowed
 
 	/**
@@ -75,7 +94,7 @@ public class ReceptionDefinitionImpl extends
 	 * ReceptionDefinition, a SignalReceptionDefinition or a Reception.
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return false; // STUB
+		return member.getImpl().getReferent().getImpl().isReception();
 	} // isSameKindAs
 
 } // ReceptionDefinitionImpl
