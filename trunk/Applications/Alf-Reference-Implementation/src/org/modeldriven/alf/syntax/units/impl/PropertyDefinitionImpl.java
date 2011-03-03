@@ -102,6 +102,7 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	public boolean propertyDefinitionInitializer() {
 	    PropertyDefinition self = this.getSelf();
 	    Expression initializer = self.getInitializer();
+	    initializer.getImpl().setCurrentScope(this.getOuterScope());
 		return initializer.getType().getImpl().isAssignableTo(self.getType());
 	}
 	

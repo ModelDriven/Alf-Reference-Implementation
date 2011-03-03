@@ -10,8 +10,11 @@
 package org.modeldriven.alf.syntax.common.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.units.ExternalNamespace;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.omg.uml.Activity;
 import org.omg.uml.Association;
+import org.omg.uml.BehavioredClassifier;
 import org.omg.uml.Class;
 import org.omg.uml.Classifier;
 import org.omg.uml.DataType;
@@ -79,12 +82,24 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean isClass() {
-        return this.getSelf().getElement() instanceof Class;
+        return this.getSelf().getElement().getClass() == Class.class;
     }
 
     @Override
     public boolean isActiveClass() {
         return this.isClass() && ((Class)this.getSelf().getElement()).getIsActive();
+    }
+
+    @Override
+    public boolean isActiveBehavior() {
+        if (!this.isActivity()) {
+            return false;
+        } else {
+            Activity element = (Activity)this.getSelf().getElement();
+            BehavioredClassifier context = element.getContext();
+            return element.getIsActive() || 
+                    context != null && context.getClassifierBehavior() == element;
+        }
     }
 
     @Override
@@ -156,6 +171,15 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         return this.getSelf().getElement() instanceof Property;
     }
     
+    @Override
+    public NamespaceDefinition asNamespace() {
+        if (this.isNamespace()) {
+            return new ExternalNamespace((Namespace)this.getSelf().getElement());
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public boolean equals(Object object) {
         Element element = null;

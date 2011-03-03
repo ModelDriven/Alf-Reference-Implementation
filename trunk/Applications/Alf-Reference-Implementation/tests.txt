@@ -1053,7 +1053,7 @@ See Figure B.3 for original state machine diagram.
    body:
     Block
      statement:
-      AcceptStatement
+      AcceptStatement /isSimple:true
        documentation:
          1. Establishing Customer and Verifying Payment 
        acceptBlock:
@@ -1064,7 +1064,12 @@ See Figure B.3 for original state machine diagram.
             QualifiedName isAmbiguous:false /pathName:Checkout /isFeatureReference:false
              nameBinding:
               NameBinding name:Checkout
+Resolving unit Checkout
+Looking for Model/Checkout.alf...
+Looking for Library/Checkout.alf...
+Unit not found.
              /unqualifiedName:NameBinding name:Checkout
+       /behavior:InternalElementReference
       ExpressionStatement
        expression:
         FeatureInvocationExpression
@@ -1095,7 +1100,7 @@ See Figure B.3 for original state machine diagram.
        body:
         Block
          statement:
-          AcceptStatement
+          AcceptStatement /isSimple:true
            documentation:
              2. Submitting Charge 
            acceptBlock:
@@ -1126,7 +1131,7 @@ See Figure B.3 for original state machine diagram.
                 ThisExpression
                nameBinding:
                 NameBinding name:processCharge
-          AcceptStatement
+          AcceptStatement /isSimple:false
            acceptBlock:
             AcceptBlock name:null
              block:
@@ -1212,7 +1217,7 @@ See Figure B.3 for original state machine diagram.
             ThisExpression
            nameBinding:
             NameBinding name:packAndShip
-      AcceptStatement
+      AcceptStatement /isSimple:true
        documentation:
          5. Delivered to Customer} 
        acceptBlock:
@@ -1223,7 +1228,12 @@ See Figure B.3 for original state machine diagram.
             QualifiedName isAmbiguous:false /pathName:OrderDelivery /isFeatureReference:false
              nameBinding:
               NameBinding name:OrderDelivery
+Resolving unit OrderDelivery
+Looking for Model/OrderDelivery.alf...
+Looking for Library/OrderDelivery.alf...
+Unit not found.
              /unqualifiedName:NameBinding name:OrderDelivery
+       /behavior:InternalElementReference
       ExpressionStatement
        expression:
         FeatureInvocationExpression
@@ -17009,7 +17019,7 @@ UnitDefinition /isModelLibrary:false
    body:
     Block
      statement:
-      AcceptStatement
+      AcceptStatement /isSimple:true
        acceptBlock:
         AcceptBlock name:checkout
          signalNames:
@@ -17018,7 +17028,12 @@ UnitDefinition /isModelLibrary:false
             QualifiedName isAmbiguous:false /pathName:Checkout /isFeatureReference:false
              nameBinding:
               NameBinding name:Checkout
+Resolving unit Checkout
+Looking for Model/Checkout.alf...
+Looking for Library/Checkout.alf...
+Unit not found.
              /unqualifiedName:NameBinding name:Checkout
+       /behavior:InternalElementReference
       ExpressionStatement
        expression:
         FeatureInvocationExpression
@@ -17049,7 +17064,7 @@ UnitDefinition /isModelLibrary:false
        body:
         Block
          statement:
-          AcceptStatement
+          AcceptStatement /isSimple:true
            acceptBlock:
             AcceptBlock name:chargeSubmission
              signalNames:
@@ -17078,7 +17093,7 @@ UnitDefinition /isModelLibrary:false
                 ThisExpression
                nameBinding:
                 NameBinding name:processCharge
-          AcceptStatement
+          AcceptStatement /isSimple:false
            acceptBlock:
             AcceptBlock name:null
              block:
@@ -17160,7 +17175,7 @@ UnitDefinition /isModelLibrary:false
             ThisExpression
            nameBinding:
             NameBinding name:packAndShip
-      AcceptStatement
+      AcceptStatement /isSimple:true
        acceptBlock:
         AcceptBlock name:null
          signalNames:
@@ -17169,7 +17184,12 @@ UnitDefinition /isModelLibrary:false
             QualifiedName isAmbiguous:false /pathName:OrderDelivery /isFeatureReference:false
              nameBinding:
               NameBinding name:OrderDelivery
+Resolving unit OrderDelivery
+Looking for Model/OrderDelivery.alf...
+Looking for Library/OrderDelivery.alf...
+Unit not found.
              /unqualifiedName:NameBinding name:OrderDelivery
+       /behavior:InternalElementReference
       ExpressionStatement
        expression:
         FeatureInvocationExpression
@@ -18739,7 +18759,7 @@ UnitDefinition /isModelLibrary:false
              nameBinding:
               NameBinding name:factorial
              /unqualifiedName:NameBinding name:factorial
-      AcceptStatement
+      AcceptStatement /isSimple:true
        acceptBlock:
         AcceptBlock name:sig
          signalNames:
@@ -18748,12 +18768,21 @@ UnitDefinition /isModelLibrary:false
             QualifiedName isAmbiguous:false /pathName:SignalNewArrival /isFeatureReference:false
              nameBinding:
               NameBinding name:SignalNewArrival
+Resolving unit SignalNewArrival
+Looking for Model/SignalNewArrival.alf...
+Looking for Library/SignalNewArrival.alf...
+Unit not found.
              /unqualifiedName:NameBinding name:SignalNewArrival
             QualifiedName isAmbiguous:false /pathName:SignalTermination /isFeatureReference:false
              nameBinding:
               NameBinding name:SignalTermination
+Resolving unit SignalTermination
+Looking for Model/SignalTermination.alf...
+Looking for Library/SignalTermination.alf...
+Unit not found.
              /unqualifiedName:NameBinding name:SignalTermination
-      AcceptStatement
+       /behavior:InternalElementReference
+      AcceptStatement /isSimple:false
        acceptBlock:
         AcceptBlock name:arrival
          block:
@@ -18832,7 +18861,8 @@ UnitDefinition /isModelLibrary:false
              nameBinding:
               NameBinding name:SignalTermination
              /unqualifiedName:NameBinding name:SignalTermination
-      AcceptStatement
+       /behavior:InternalElementReference
+      AcceptStatement /isSimple:true
        acceptBlock:
         AcceptBlock name:null
          signalNames:
@@ -18842,7 +18872,8 @@ UnitDefinition /isModelLibrary:false
              nameBinding:
               NameBinding name:SignalNewArrival
              /unqualifiedName:NameBinding name:SignalNewArrival
-      AcceptStatement
+       /behavior:InternalElementReference
+      AcceptStatement /isSimple:true
        acceptBlock:
         AcceptBlock name:arrival
          signalNames:
@@ -18852,6 +18883,7 @@ UnitDefinition /isModelLibrary:false
              nameBinding:
               NameBinding name:SignalNewArrival
              /unqualifiedName:NameBinding name:SignalNewArrival
+       /behavior:InternalElementReference
       ExpressionStatement
        expression:
         BehaviorInvocationExpression
@@ -18873,7 +18905,7 @@ UnitDefinition /isModelLibrary:false
            nameBinding:
             NameBinding name:WriteLine
            /unqualifiedName:NameBinding name:WriteLine
-      AcceptStatement
+      AcceptStatement /isSimple:true
        acceptBlock:
         AcceptBlock name:sig
          signalNames:
@@ -18887,6 +18919,7 @@ UnitDefinition /isModelLibrary:false
              nameBinding:
               NameBinding name:SignalTermination
              /unqualifiedName:NameBinding name:SignalTermination
+       /behavior:InternalElementReference
       IfStatement
        nonFinalClauses:
         ConcurrentClauses
@@ -18977,7 +19010,7 @@ UnitDefinition /isModelLibrary:false
                  nameBinding:
                   NameBinding name:true
                  /unqualifiedName:NameBinding name:true
-      AcceptStatement
+      AcceptStatement /isSimple:false
        acceptBlock:
         AcceptBlock name:arrival
          block:
@@ -19056,6 +19089,7 @@ UnitDefinition /isModelLibrary:false
              nameBinding:
               NameBinding name:SignalTermination
              /unqualifiedName:NameBinding name:SignalTermination
+       /behavior:InternalElementReference
       ClassifyStatement isReclassifyAll:false
        expression:
         NameExpression

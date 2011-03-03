@@ -11,6 +11,7 @@ package org.modeldriven.alf.syntax.common.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.omg.uml.Element;
 
@@ -46,8 +47,9 @@ public abstract class ElementReferenceImpl {
 	public abstract boolean isClassifier();
     public abstract boolean isAbstractClassifier();
     public abstract boolean isAssociation();
-	public abstract boolean isClass();
+	public abstract boolean isClass();  // But not any subtype of Class
     public abstract boolean isActiveClass();
+    public abstract boolean isActiveBehavior();
 	public abstract boolean isDataType();
 	public abstract boolean isActivity();
     public abstract boolean isEnumeration();
@@ -61,6 +63,8 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isDestructor();
     public abstract boolean isReception();
     public abstract boolean isProperty();
+
+    public abstract NamespaceDefinition asNamespace();
 
 	@Override
 	public abstract boolean equals(Object object);

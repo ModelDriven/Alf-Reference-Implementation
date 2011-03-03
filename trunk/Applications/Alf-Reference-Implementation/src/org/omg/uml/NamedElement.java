@@ -10,4 +10,8 @@ public class NamedElement extends Element {
         return VisibilityKind.public_;
     }
 
+    public Namespace getNamespace() {
+        return null;
+    }
+
 }

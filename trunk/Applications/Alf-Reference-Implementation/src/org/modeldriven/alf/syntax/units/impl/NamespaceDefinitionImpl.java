@@ -88,8 +88,11 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	    int n = members.size();
 	    for (int i = 0; i < n; i++) {
 	        Member member = members.get(i);
+	        ElementReference referent = member.getImpl().getReferent();
 	        for (int j = i+1; j < n; j++) {
-	            if (!member.isDistinguishableFrom(members.get(j))) {
+	            Member otherMember = members.get(j);
+	            if (!member.isDistinguishableFrom(otherMember) &&
+	                    !referent.equals(otherMember.getImpl().getReferent())) {
 	                return false;
 	            }
 	        }
@@ -132,7 +135,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             return false;
         } else {
             NamespaceDefinition namespace = member.getNamespace();
-            return namespace == this.getSelf() || this.containsMember(namespace);
+            return namespace != null && 
+                    (namespace.getImpl().getReferent() == this.getReferent() || 
+                    this.containsMember(namespace));
         }
     }
 
@@ -196,15 +201,10 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             return super.getOuterScope();
         } else {
             ElementReference namespace = unit.getNamespace();
-            if (namespace == null || namespace instanceof ExternalElementReference) {
+            if (namespace == null) {
                 return RootNamespace.getModelScope(unit);
             } else {
-                SyntaxElement alfNamespace = namespace.getImpl().getAlf();
-                if (alfNamespace != null && alfNamespace instanceof NamespaceDefinition) {
-                    return (NamespaceDefinition)alfNamespace;
-                } else {
-                    return null;
-                }
+                return namespace.getImpl().asNamespace();
             }
         }
     }
