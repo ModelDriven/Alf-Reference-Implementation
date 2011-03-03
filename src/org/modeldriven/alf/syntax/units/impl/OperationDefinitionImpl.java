@@ -78,6 +78,19 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	    return true;
 	}
 	
+    /* Hack to set the current scope in the body of the activity, since the
+     * effectiveBody is not currently an official derived attribute.
+     */
+    @Override
+    public UnitDefinition deriveSubunit() {
+        UnitDefinition subunit = super.deriveSubunit();
+        Block body = this.getEffectiveBody(subunit);
+        if (body != null) {
+            body.getImpl().setCurrentScope(this.getSelf());
+        }
+        return subunit;
+    }
+    
 	/*
 	 * Derivations
 	 */
@@ -265,6 +278,22 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
             }
         }
         return parameters;
+    }
+
+    public Block getEffectiveBody() {
+        return this.getEffectiveBody(this.getSelf().getSubunit());
+    }
+    
+    private Block getEffectiveBody(UnitDefinition subunit) {
+        OperationDefinition self = this.getSelf();
+        if (subunit == null) {
+            return self.getBody();
+        } else {
+            NamespaceDefinition definition = subunit.getDefinition();
+            return definition instanceof ActivityDefinition?
+                        ((ActivityDefinition)definition).getBody():
+                        null;
+        }
     }
 
 } // OperationDefinitionImpl

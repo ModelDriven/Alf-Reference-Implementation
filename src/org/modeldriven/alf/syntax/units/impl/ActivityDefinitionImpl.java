@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
@@ -30,8 +31,21 @@ public class ActivityDefinitionImpl extends
 	public org.modeldriven.alf.syntax.units.ActivityDefinition getSelf() {
 		return (ActivityDefinition) this.self;
 	}
+    
+    /* Hack to set the current scope in the body of the activity, since the
+     * effective body is not currently an official derived attribute.
+     */
+    @Override
+    public UnitDefinition deriveSubunit() {
+        UnitDefinition subunit = super.deriveSubunit();        
+        Block body = this.getEffectiveBody(subunit);
+        if (body != null) {
+            body.getImpl().setCurrentScope(this.getSelf());
+        }
+        return subunit;
+    }
 	
-	/*
+    /*
 	 * Constraints
 	 */
 
@@ -101,6 +115,26 @@ public class ActivityDefinitionImpl extends
             }
         }
         return formalParameters;
+    }
+	
+	/*
+	 * Helper Methods
+	 */
+
+    public Block getEffectiveBody() {
+        return this.getEffectiveBody(this.getSelf().getSubunit());
+    }
+    
+    private Block getEffectiveBody(UnitDefinition subunit) {
+        ActivityDefinition self = this.getSelf();
+        if (subunit == null) {
+            return self.getBody();
+        } else {
+            NamespaceDefinition definition = subunit.getDefinition();
+            return definition instanceof ActivityDefinition?
+                        ((ActivityDefinition)definition).getBody():
+                        null;
+        }
     }
 
 } // ActivityDefinitionImpl
