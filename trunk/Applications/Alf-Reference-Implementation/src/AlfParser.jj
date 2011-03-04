@@ -2992,7 +2992,8 @@ void ActiveClassBody(ActiveClassDefinition d):
 }
 {
   <LBRACE> ( m = ActiveClassMember() { d.addOwnedMember(m); m.setNamespace(d); } )* <RBRACE>
-  [ <DO> a = BehaviorClause() { d.setClassifierBehavior(a); } ]
+  [ <DO> a = BehaviorClause() 
+    { d.setClassifierBehavior(a); d.addOwnedMember(a); a.setNamespace(d); } ]
 }
 
 ActivityDefinition BehaviorClause():
