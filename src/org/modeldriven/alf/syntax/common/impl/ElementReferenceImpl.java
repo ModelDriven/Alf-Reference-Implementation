@@ -49,7 +49,6 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isAssociation();
 	public abstract boolean isClass();  // But not any subtype of Class
     public abstract boolean isActiveClass();
-    public abstract boolean isActiveBehavior();
 	public abstract boolean isDataType();
 	public abstract boolean isActivity();
     public abstract boolean isEnumeration();
@@ -65,6 +64,19 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isProperty();
 
     public abstract NamespaceDefinition asNamespace();
+
+    public abstract boolean hasReceptionFor(ElementReference signal);
+    
+    /**
+     * Return the active class corresponding to an activity, if any.
+     * This is either the activity itself, if it is active, or the class that
+     * has the activity as a classifier behavior.
+     */
+    public abstract ElementReference getActiveClass();
+    
+    public boolean isActiveBehavior() {
+        return this.getActiveClass() != null;
+    }
 
 	@Override
 	public abstract boolean equals(Object object);

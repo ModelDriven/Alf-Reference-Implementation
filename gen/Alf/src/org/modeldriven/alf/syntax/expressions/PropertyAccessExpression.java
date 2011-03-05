@@ -48,9 +48,13 @@ public class PropertyAccessExpression extends Expression {
 
 	public ElementReference getFeature() {
 		if (this.feature == null) {
-			this.feature = this.getImpl().deriveFeature();
+			this.setFeature(this.getImpl().deriveFeature());
 		}
 		return this.feature;
+	}
+
+	public void setFeature(ElementReference feature) {
+		this.feature = feature;
 	}
 
 	/**

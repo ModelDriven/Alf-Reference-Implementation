@@ -12,8 +12,11 @@ package org.modeldriven.alf.syntax.common.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.Class;
 import org.omg.uml.Element;
-import org.omg.uml.Namespace;
+import org.omg.uml.Feature;
+import org.omg.uml.Reception;
+import org.omg.uml.Signal;
 
 /**
  * A direct reference to a UML model element.
@@ -73,20 +76,6 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isActiveClass() {
         return this.getSelf().getElement() instanceof ActiveClassDefinition;
-    }
-
-    @Override
-    public boolean isActiveBehavior() {
-        SyntaxElement element = this.getSelf().getElement();
-        if (!(element instanceof ActivityDefinition)) {
-            return false;
-        } else {
-            // TODO Handle an activity that is the classifier behavior of an
-            //      external classifier.
-            NamespaceDefinition namespace = ((ActivityDefinition)element).getNamespace();
-            return namespace != null && namespace instanceof ActiveClassDefinition &&
-                   ((ActiveClassDefinition)namespace).getClassifierBehavior() == element;
-        }
     }
 
     @Override
@@ -170,6 +159,43 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public boolean hasReceptionFor(ElementReference signal) {
+        SyntaxElement alfSignal = signal.getImpl().getAlf();
+        if (alfSignal == null || !(alfSignal instanceof SignalDefinition) 
+                || !this.isClass()) {
+            return false;
+        } else {
+            ClassDefinition class_ = (ClassDefinition)this.getAlf();
+            for (Member member: class_.getOwnedMember()) {
+                if (member instanceof ReceptionDefinition &&
+                        ((ReceptionDefinition)member).getSignal().getImpl().getAlf() == alfSignal ||
+                    member instanceof SignalReceptionDefinition && member == alfSignal) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public ElementReference getActiveClass() {
+        SyntaxElement element = this.getSelf().getElement();
+        if (!(element instanceof ActivityDefinition)) {
+            return null;
+        } else {
+            NamespaceDefinition namespace = ((ActivityDefinition)element).getNamespace();
+            if (namespace != null && namespace instanceof ActiveClassDefinition &&
+                   ((ActiveClassDefinition)namespace).getClassifierBehavior() == element) {
+                InternalElementReference reference = new InternalElementReference();
+                reference.setElement(namespace);
+                return reference;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (object == null) {
             return false;
@@ -185,5 +211,5 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             return element != null && this.getSelf().getElement() == element;
         }
     }
-    
+
 } // InternalElementReferenceImpl

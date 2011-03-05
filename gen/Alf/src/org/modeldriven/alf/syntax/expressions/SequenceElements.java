@@ -36,16 +36,24 @@ public abstract class SequenceElements extends SyntaxElement {
 
 	public Integer getUpper() {
 		if (this.upper == null) {
-			this.upper = this.getImpl().deriveUpper();
+			this.setUpper(this.getImpl().deriveUpper());
 		}
 		return this.upper;
 	}
 
+	public void setUpper(Integer upper) {
+		this.upper = upper;
+	}
+
 	public Integer getLower() {
 		if (this.lower == null) {
-			this.lower = this.getImpl().deriveLower();
+			this.setLower(this.getImpl().deriveLower());
 		}
 		return this.lower;
+	}
+
+	public void setLower(Integer lower) {
+		this.lower = lower;
 	}
 
 	public String toString() {

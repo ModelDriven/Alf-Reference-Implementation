@@ -37,9 +37,17 @@ public abstract class Tuple extends SyntaxElement {
 
 	public ArrayList<NamedExpression> getInput() {
 		if (this.input == null) {
-			this.input = this.getImpl().deriveInput();
+			this.setInput(this.getImpl().deriveInput());
 		}
 		return this.input;
+	}
+
+	public void setInput(ArrayList<NamedExpression> input) {
+		this.input = input;
+	}
+
+	public void addInput(NamedExpression input) {
+		this.input.add(input);
 	}
 
 	public InvocationExpression getInvocation() {
@@ -52,9 +60,17 @@ public abstract class Tuple extends SyntaxElement {
 
 	public ArrayList<OutputNamedExpression> getOutput() {
 		if (this.output == null) {
-			this.output = this.getImpl().deriveOutput();
+			this.setOutput(this.getImpl().deriveOutput());
 		}
 		return this.output;
+	}
+
+	public void setOutput(ArrayList<OutputNamedExpression> output) {
+		this.output = output;
+	}
+
+	public void addOutput(OutputNamedExpression output) {
+		this.output.add(output);
 	}
 
 	/**
@@ -130,8 +146,7 @@ public abstract class Tuple extends SyntaxElement {
 			if (input.size() > 0) {
 				System.out.println(prefix + " /input:");
 			}
-			for (NamedExpression _input : (ArrayList<NamedExpression>) input
-					.clone()) {
+			for (NamedExpression _input : input) {
 				System.out.println(prefix + "  " + _input);
 			}
 		}
@@ -144,8 +159,7 @@ public abstract class Tuple extends SyntaxElement {
 			if (output.size() > 0) {
 				System.out.println(prefix + " /output:");
 			}
-			for (OutputNamedExpression _output : (ArrayList<OutputNamedExpression>) output
-					.clone()) {
+			for (OutputNamedExpression _output : output) {
 				System.out.println(prefix + "  " + _output);
 			}
 		}

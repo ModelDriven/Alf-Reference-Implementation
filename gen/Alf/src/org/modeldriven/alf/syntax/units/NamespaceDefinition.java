@@ -57,9 +57,17 @@ public abstract class NamespaceDefinition extends Member {
 
 	public ArrayList<Member> getMember() {
 		if (this.member == null) {
-			this.member = this.getImpl().deriveMember();
+			this.setMember(this.getImpl().deriveMember());
 		}
 		return this.member;
+	}
+
+	public void setMember(ArrayList<Member> member) {
+		this.member = member;
+	}
+
+	public void addMember(Member member) {
+		this.member.add(member);
 	}
 
 	/**
@@ -104,7 +112,7 @@ public abstract class NamespaceDefinition extends Member {
 			if (ownedMember.size() > 0) {
 				System.out.println(prefix + " ownedMember:");
 			}
-			for (Member _ownedMember : (ArrayList<Member>) ownedMember.clone()) {
+			for (Member _ownedMember : ownedMember) {
 				if (_ownedMember != null) {
 					_ownedMember.print(prefix + "  ");
 				} else {
@@ -121,7 +129,7 @@ public abstract class NamespaceDefinition extends Member {
 			if (member.size() > 0) {
 				System.out.println(prefix + " /member:");
 			}
-			for (Member _member : (ArrayList<Member>) member.clone()) {
+			for (Member _member : member) {
 				System.out.println(prefix + "  " + _member);
 			}
 		}

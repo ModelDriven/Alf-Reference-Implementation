@@ -61,5 +61,15 @@ public class BlockImpl extends
 		this.getSelf().getAssignmentAfter();
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        for (Statement statement: this.getSelf().getStatement()) {
+            statement.getImpl().setCurrentScope(currentScope);
+        }        
+    }
 
 } // BlockImpl

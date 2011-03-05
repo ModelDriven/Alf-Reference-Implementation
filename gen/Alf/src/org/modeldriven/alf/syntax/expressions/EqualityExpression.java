@@ -39,9 +39,13 @@ public class EqualityExpression extends BinaryExpression {
 
 	public Boolean getIsNegated() {
 		if (this.isNegated == null) {
-			this.isNegated = this.getImpl().deriveIsNegated();
+			this.setIsNegated(this.getImpl().deriveIsNegated());
 		}
 		return this.isNegated;
+	}
+
+	public void setIsNegated(Boolean isNegated) {
+		this.isNegated = isNegated;
 	}
 
 	/**

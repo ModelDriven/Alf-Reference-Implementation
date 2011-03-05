@@ -67,9 +67,13 @@ public class StereotypeAnnotation extends SyntaxElement {
 
 	public Stereotype getStereotype() {
 		if (this.stereotype == null) {
-			this.stereotype = this.getImpl().deriveStereotype();
+			this.setStereotype(this.getImpl().deriveStereotype());
 		}
 		return this.stereotype;
+	}
+
+	public void setStereotype(Stereotype stereotype) {
+		this.stereotype = stereotype;
 	}
 
 	/**

@@ -82,23 +82,35 @@ public abstract class TypedElementDefinition extends Member {
 
 	public ElementReference getType() {
 		if (this.type == null) {
-			this.type = this.getImpl().deriveType();
+			this.setType(this.getImpl().deriveType());
 		}
 		return this.type;
 	}
 
+	public void setType(ElementReference type) {
+		this.type = type;
+	}
+
 	public Integer getLower() {
 		if (this.lower == null) {
-			this.lower = this.getImpl().deriveLower();
+			this.setLower(this.getImpl().deriveLower());
 		}
 		return this.lower;
 	}
 
+	public void setLower(Integer lower) {
+		this.lower = lower;
+	}
+
 	public Integer getUpper() {
 		if (this.upper == null) {
-			this.upper = this.getImpl().deriveUpper();
+			this.setUpper(this.getImpl().deriveUpper());
 		}
 		return this.upper;
+	}
+
+	public void setUpper(Integer upper) {
+		this.upper = upper;
 	}
 
 	/**

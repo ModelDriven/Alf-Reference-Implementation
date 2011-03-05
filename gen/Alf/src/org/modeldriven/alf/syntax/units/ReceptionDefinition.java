@@ -48,9 +48,13 @@ public class ReceptionDefinition extends Member {
 
 	public ElementReference getSignal() {
 		if (this.signal == null) {
-			this.signal = this.getImpl().deriveSignal();
+			this.setSignal(this.getImpl().deriveSignal());
 		}
 		return this.signal;
+	}
+
+	public void setSignal(ElementReference signal) {
+		this.signal = signal;
 	}
 
 	/**

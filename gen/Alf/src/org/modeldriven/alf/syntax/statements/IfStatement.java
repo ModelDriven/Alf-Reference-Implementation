@@ -63,16 +63,24 @@ public class IfStatement extends Statement {
 
 	public Boolean getIsAssured() {
 		if (this.isAssured == null) {
-			this.isAssured = this.getImpl().deriveIsAssured();
+			this.setIsAssured(this.getImpl().deriveIsAssured());
 		}
 		return this.isAssured;
 	}
 
+	public void setIsAssured(Boolean isAssured) {
+		this.isAssured = isAssured;
+	}
+
 	public Boolean getIsDetermined() {
 		if (this.isDetermined == null) {
-			this.isDetermined = this.getImpl().deriveIsDetermined();
+			this.setIsDetermined(this.getImpl().deriveIsDetermined());
 		}
 		return this.isDetermined;
+	}
+
+	public void setIsDetermined(Boolean isDetermined) {
+		this.isDetermined = isDetermined;
 	}
 
 	/**
@@ -159,8 +167,7 @@ public class IfStatement extends Statement {
 			if (nonFinalClauses.size() > 0) {
 				System.out.println(prefix + " nonFinalClauses:");
 			}
-			for (ConcurrentClauses _nonFinalClauses : (ArrayList<ConcurrentClauses>) nonFinalClauses
-					.clone()) {
+			for (ConcurrentClauses _nonFinalClauses : nonFinalClauses) {
 				if (_nonFinalClauses != null) {
 					_nonFinalClauses.print(prefix + "  ");
 				} else {

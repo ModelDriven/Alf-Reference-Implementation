@@ -42,7 +42,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
      * member (as determined by the Member::isDistinguishableFrom operation) are
      * not imported.
      **/
-	public ArrayList<Member> deriveMember() {
+	@SuppressWarnings("unchecked")
+    public ArrayList<Member> deriveMember() {
 	    NamespaceDefinition self = this.getSelf();
 
         if (self.getIsStub()) {
@@ -56,7 +57,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	        }
 	    }
         
-	    ArrayList<Member> members = self.getOwnedMember();
+	    ArrayList<Member> members = (ArrayList<Member>)self.getOwnedMember().clone();
 	    
         UnitDefinition unit = self.getUnit();	    
 	    if (unit != null) {

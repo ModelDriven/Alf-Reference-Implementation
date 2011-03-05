@@ -105,7 +105,7 @@ public class SwitchClause extends SyntaxElement {
 			if (case_.size() > 0) {
 				System.out.println(prefix + " case:");
 			}
-			for (Expression _case_ : (ArrayList<Expression>) case_.clone()) {
+			for (Expression _case_ : case_) {
 				if (_case_ != null) {
 					_case_.print(prefix + "  ");
 				} else {

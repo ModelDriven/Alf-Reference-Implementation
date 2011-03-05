@@ -39,9 +39,13 @@ public class OutputNamedExpression extends NamedExpression {
 
 	public LeftHandSide getLeftHandSide() {
 		if (this.leftHandSide == null) {
-			this.leftHandSide = this.getImpl().deriveLeftHandSide();
+			this.setLeftHandSide(this.getImpl().deriveLeftHandSide());
 		}
 		return this.leftHandSide;
+	}
+
+	public void setLeftHandSide(LeftHandSide leftHandSide) {
+		this.leftHandSide = leftHandSide;
 	}
 
 	/**

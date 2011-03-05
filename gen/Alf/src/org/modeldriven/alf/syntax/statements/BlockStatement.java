@@ -48,9 +48,13 @@ public class BlockStatement extends Statement {
 
 	public Boolean getIsParallel() {
 		if (this.isParallel == null) {
-			this.isParallel = this.getImpl().deriveIsParallel();
+			this.setIsParallel(this.getImpl().deriveIsParallel());
 		}
 		return this.isParallel;
+	}
+
+	public void setIsParallel(Boolean isParallel) {
+		this.isParallel = isParallel;
 	}
 
 	/**

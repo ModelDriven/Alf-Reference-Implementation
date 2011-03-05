@@ -42,37 +42,65 @@ public abstract class Expression extends SyntaxElement {
 
 	public ArrayList<AssignedSource> getAssignmentBefore() {
 		if (this.assignmentBefore == null) {
-			this.assignmentBefore = this.getImpl().deriveAssignmentBefore();
+			this.setAssignmentBefore(this.getImpl().deriveAssignmentBefore());
 		}
 		return this.assignmentBefore;
 	}
 
+	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
+		this.assignmentBefore = assignmentBefore;
+	}
+
+	public void addAssignmentBefore(AssignedSource assignmentBefore) {
+		this.assignmentBefore.add(assignmentBefore);
+	}
+
 	public ArrayList<AssignedSource> getAssignmentAfter() {
 		if (this.assignmentAfter == null) {
-			this.assignmentAfter = this.getImpl().deriveAssignmentAfter();
+			this.setAssignmentAfter(this.getImpl().deriveAssignmentAfter());
 		}
 		return this.assignmentAfter;
 	}
 
+	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
+		this.assignmentAfter = assignmentAfter;
+	}
+
+	public void addAssignmentAfter(AssignedSource assignmentAfter) {
+		this.assignmentAfter.add(assignmentAfter);
+	}
+
 	public Integer getUpper() {
 		if (this.upper == null) {
-			this.upper = this.getImpl().deriveUpper();
+			this.setUpper(this.getImpl().deriveUpper());
 		}
 		return this.upper;
 	}
 
+	public void setUpper(Integer upper) {
+		this.upper = upper;
+	}
+
 	public Integer getLower() {
 		if (this.lower == null) {
-			this.lower = this.getImpl().deriveLower();
+			this.setLower(this.getImpl().deriveLower());
 		}
 		return this.lower;
 	}
 
+	public void setLower(Integer lower) {
+		this.lower = lower;
+	}
+
 	public ElementReference getType() {
 		if (this.type == null) {
-			this.type = this.getImpl().deriveType();
+			this.setType(this.getImpl().deriveType());
 		}
 		return this.type;
+	}
+
+	public void setType(ElementReference type) {
+		this.type = type;
 	}
 
 	/**
@@ -123,8 +151,7 @@ public abstract class Expression extends SyntaxElement {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
 			}
-			for (AssignedSource _assignmentBefore : (ArrayList<AssignedSource>) assignmentBefore
-					.clone()) {
+			for (AssignedSource _assignmentBefore : assignmentBefore) {
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
@@ -133,8 +160,7 @@ public abstract class Expression extends SyntaxElement {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
 			}
-			for (AssignedSource _assignmentAfter : (ArrayList<AssignedSource>) assignmentAfter
-					.clone()) {
+			for (AssignedSource _assignmentAfter : assignmentAfter) {
 				System.out.println(prefix + "  " + _assignmentAfter);
 			}
 		}

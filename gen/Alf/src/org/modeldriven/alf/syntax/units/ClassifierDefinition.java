@@ -53,10 +53,20 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 
 	public ArrayList<ElementReference> getSpecializationReferent() {
 		if (this.specializationReferent == null) {
-			this.specializationReferent = this.getImpl()
-					.deriveSpecializationReferent();
+			this.setSpecializationReferent(this.getImpl()
+					.deriveSpecializationReferent());
 		}
 		return this.specializationReferent;
+	}
+
+	public void setSpecializationReferent(
+			ArrayList<ElementReference> specializationReferent) {
+		this.specializationReferent = specializationReferent;
+	}
+
+	public void addSpecializationReferent(
+			ElementReference specializationReferent) {
+		this.specializationReferent.add(specializationReferent);
 	}
 
 	/**
@@ -125,8 +135,7 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 			if (specializationReferent.size() > 0) {
 				System.out.println(prefix + " /specializationReferent:");
 			}
-			for (ElementReference _specializationReferent : (ArrayList<ElementReference>) specializationReferent
-					.clone()) {
+			for (ElementReference _specializationReferent : specializationReferent) {
 				System.out.println(prefix + "  " + _specializationReferent);
 			}
 		}

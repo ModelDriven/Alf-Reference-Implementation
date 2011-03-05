@@ -51,9 +51,17 @@ public class FeatureReference extends SyntaxElement {
 
 	public ArrayList<ElementReference> getReferent() {
 		if (this.referent == null) {
-			this.referent = this.getImpl().deriveReferent();
+			this.setReferent(this.getImpl().deriveReferent());
 		}
 		return this.referent;
+	}
+
+	public void setReferent(ArrayList<ElementReference> referent) {
+		this.referent = referent;
+	}
+
+	public void addReferent(ElementReference referent) {
+		this.referent.add(referent);
 	}
 
 	public NameBinding getNameBinding() {
@@ -99,8 +107,7 @@ public class FeatureReference extends SyntaxElement {
 			if (referent.size() > 0) {
 				System.out.println(prefix + " /referent:");
 			}
-			for (ElementReference _referent : (ArrayList<ElementReference>) referent
-					.clone()) {
+			for (ElementReference _referent : referent) {
 				System.out.println(prefix + "  " + _referent);
 			}
 		}

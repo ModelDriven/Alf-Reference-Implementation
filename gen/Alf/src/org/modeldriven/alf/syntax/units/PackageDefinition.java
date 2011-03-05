@@ -40,9 +40,17 @@ public class PackageDefinition extends NamespaceDefinition {
 
 	public ArrayList<Profile> getAppliedProfile() {
 		if (this.appliedProfile == null) {
-			this.appliedProfile = this.getImpl().deriveAppliedProfile();
+			this.setAppliedProfile(this.getImpl().deriveAppliedProfile());
 		}
 		return this.appliedProfile;
+	}
+
+	public void setAppliedProfile(ArrayList<Profile> appliedProfile) {
+		this.appliedProfile = appliedProfile;
+	}
+
+	public void addAppliedProfile(Profile appliedProfile) {
+		this.appliedProfile.add(appliedProfile);
 	}
 
 	/**
@@ -90,8 +98,7 @@ public class PackageDefinition extends NamespaceDefinition {
 			if (appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");
 			}
-			for (Profile _appliedProfile : (ArrayList<Profile>) appliedProfile
-					.clone()) {
+			for (Profile _appliedProfile : appliedProfile) {
 				System.out.println(prefix + "  " + _appliedProfile);
 			}
 		}

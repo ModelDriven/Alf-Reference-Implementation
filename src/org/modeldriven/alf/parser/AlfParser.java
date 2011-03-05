@@ -4320,7 +4320,7 @@ public class AlfParser implements AlfParserConstants {
     case DO:
       jj_consume_token(DO);
       a = BehaviorClause();
-                                d.setClassifierBehavior(a);
+      d.setClassifierBehavior(a); d.addOwnedMember(a); a.setNamespace(d);
       break;
     default:
       jj_la1[137] = jj_gen;
@@ -5523,13 +5523,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_211() {
-    if (jj_scan_token(LBRACKET)) return true;
+  private boolean jj_3R_129() {
+    if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
-  private boolean jj_3R_129() {
-    if (jj_scan_token(ABSTRACT)) return true;
+  private boolean jj_3R_211() {
+    if (jj_scan_token(LBRACKET)) return true;
     return false;
   }
 
@@ -5567,13 +5567,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_219() {
-    if (jj_scan_token(STRING_LITERAL)) return true;
+  private boolean jj_3_42() {
+    if (jj_3R_78()) return true;
     return false;
   }
 
-  private boolean jj_3_42() {
-    if (jj_3R_78()) return true;
+  private boolean jj_3R_219() {
+    if (jj_scan_token(STRING_LITERAL)) return true;
     return false;
   }
 
@@ -5740,14 +5740,14 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_55() {
-    if (jj_3R_92()) return true;
-    return false;
-  }
-
   private boolean jj_3R_110() {
     if (jj_3R_52()) return true;
     if (jj_scan_token(COLON)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_55() {
+    if (jj_3R_92()) return true;
     return false;
   }
 
@@ -5896,14 +5896,14 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_98() {
-    if (jj_scan_token(LBRACKET)) return true;
-    if (jj_scan_token(RBRACKET)) return true;
+  private boolean jj_3R_79() {
+    if (jj_3R_110()) return true;
     return false;
   }
 
-  private boolean jj_3R_79() {
-    if (jj_3R_110()) return true;
+  private boolean jj_3R_98() {
+    if (jj_scan_token(LBRACKET)) return true;
+    if (jj_scan_token(RBRACKET)) return true;
     return false;
   }
 
@@ -6027,6 +6027,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3_44() {
+    if (jj_3R_80()) return true;
+    return false;
+  }
+
   private boolean jj_3R_205() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6037,8 +6042,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_44() {
-    if (jj_3R_80()) return true;
+  private boolean jj_3R_78() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_44()) {
+    jj_scanpos = xsp;
+    if (jj_3R_109()) return true;
+    }
     return false;
   }
 
@@ -6050,16 +6060,6 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_128() {
     if (jj_scan_token(ABSTRACT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_78() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_44()) {
-    jj_scanpos = xsp;
-    if (jj_3R_109()) return true;
-    }
     return false;
   }
 
@@ -6370,14 +6370,14 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_19() {
-    if (jj_scan_token(ANY)) return true;
-    if (jj_scan_token(RPAREN)) return true;
+  private boolean jj_3R_133() {
+    if (jj_3R_148()) return true;
     return false;
   }
 
-  private boolean jj_3R_133() {
-    if (jj_3R_148()) return true;
+  private boolean jj_3_19() {
+    if (jj_scan_token(ANY)) return true;
+    if (jj_scan_token(RPAREN)) return true;
     return false;
   }
 
@@ -6664,6 +6664,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_131() {
+    if (jj_scan_token(ABSTRACT)) return true;
+    return false;
+  }
+
   private boolean jj_3R_45() {
     if (jj_scan_token(LT)) return true;
     Token xsp;
@@ -6672,11 +6677,6 @@ public class AlfParser implements AlfParserConstants {
     jj_scanpos = xsp;
     if (jj_3R_83()) return true;
     }
-    return false;
-  }
-
-  private boolean jj_3R_131() {
-    if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
@@ -6871,14 +6871,14 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_66() {
-    if (jj_3R_84()) return true;
-    if (jj_3R_82()) return true;
+  private boolean jj_3R_132() {
+    if (jj_3R_147()) return true;
     return false;
   }
 
-  private boolean jj_3R_132() {
-    if (jj_3R_147()) return true;
+  private boolean jj_3R_66() {
+    if (jj_3R_84()) return true;
+    if (jj_3R_82()) return true;
     return false;
   }
 
@@ -6930,15 +6930,15 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_65() {
-    if (jj_3R_84()) return true;
-    if (jj_3R_81()) return true;
-    return false;
-  }
-
   private boolean jj_3R_147() {
     if (jj_scan_token(ENUM)) return true;
     if (jj_3R_52()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_65() {
+    if (jj_3R_84()) return true;
+    if (jj_3R_81()) return true;
     return false;
   }
 
@@ -6988,13 +6988,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_183() {
-    if (jj_3R_173()) return true;
+  private boolean jj_3R_134() {
+    if (jj_3R_149()) return true;
     return false;
   }
 
-  private boolean jj_3R_134() {
-    if (jj_3R_149()) return true;
+  private boolean jj_3R_183() {
+    if (jj_3R_173()) return true;
     return false;
   }
 
@@ -7008,15 +7008,15 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_40() {
-    if (jj_3R_81()) return true;
-    return false;
-  }
-
   private boolean jj_3R_149() {
     if (jj_scan_token(RECEIVE)) return true;
     if (jj_scan_token(SIGNAL)) return true;
     if (jj_3R_52()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_40() {
+    if (jj_3R_81()) return true;
     return false;
   }
 
@@ -7030,13 +7030,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_152() {
-    if (jj_3R_53()) return true;
+  private boolean jj_3R_70() {
+    if (jj_3R_105()) return true;
     return false;
   }
 
-  private boolean jj_3R_70() {
-    if (jj_3R_105()) return true;
+  private boolean jj_3R_152() {
+    if (jj_3R_53()) return true;
     return false;
   }
 
@@ -7056,6 +7056,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_130() {
+    if (jj_scan_token(ABSTRACT)) return true;
+    return false;
+  }
+
   private boolean jj_3R_240() {
     Token xsp;
     xsp = jj_scanpos;
@@ -7066,11 +7071,6 @@ public class AlfParser implements AlfParserConstants {
     if (jj_scan_token(135)) return true;
     }
     }
-    return false;
-  }
-
-  private boolean jj_3R_130() {
-    if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
@@ -7101,15 +7101,15 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_12() {
-    if (jj_3R_51()) return true;
-    return false;
-  }
-
   private boolean jj_3R_80() {
     if (jj_scan_token(RECEIVE)) return true;
     if (jj_3R_46()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
+    return false;
+  }
+
+  private boolean jj_3_12() {
+    if (jj_3R_51()) return true;
     return false;
   }
 
@@ -7216,6 +7216,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_74() {
+    if (jj_3R_104()) return true;
+    return false;
+  }
+
   private boolean jj_3R_225() {
     if (jj_3R_57()) return true;
     return false;
@@ -7223,11 +7228,6 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_210() {
     if (jj_scan_token(ARROW)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_74() {
-    if (jj_3R_104()) return true;
     return false;
   }
 

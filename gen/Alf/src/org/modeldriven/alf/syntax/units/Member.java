@@ -88,30 +88,46 @@ public abstract class Member extends DocumentedElement {
 
 	public Boolean getIsFeature() {
 		if (this.isFeature == null) {
-			this.isFeature = this.getImpl().deriveIsFeature();
+			this.setIsFeature(this.getImpl().deriveIsFeature());
 		}
 		return this.isFeature;
 	}
 
+	public void setIsFeature(Boolean isFeature) {
+		this.isFeature = isFeature;
+	}
+
 	public Boolean getIsPrimitive() {
 		if (this.isPrimitive == null) {
-			this.isPrimitive = this.getImpl().deriveIsPrimitive();
+			this.setIsPrimitive(this.getImpl().deriveIsPrimitive());
 		}
 		return this.isPrimitive;
 	}
 
+	public void setIsPrimitive(Boolean isPrimitive) {
+		this.isPrimitive = isPrimitive;
+	}
+
 	public Boolean getIsExternal() {
 		if (this.isExternal == null) {
-			this.isExternal = this.getImpl().deriveIsExternal();
+			this.setIsExternal(this.getImpl().deriveIsExternal());
 		}
 		return this.isExternal;
 	}
 
+	public void setIsExternal(Boolean isExternal) {
+		this.isExternal = isExternal;
+	}
+
 	public UnitDefinition getSubunit() {
 		if (this.subunit == null) {
-			this.subunit = this.getImpl().deriveSubunit();
+			this.setSubunit(this.getImpl().deriveSubunit());
 		}
 		return this.subunit;
+	}
+
+	public void setSubunit(UnitDefinition subunit) {
+		this.subunit = subunit;
 	}
 
 	/**
@@ -251,8 +267,7 @@ public abstract class Member extends DocumentedElement {
 			if (annotation.size() > 0) {
 				System.out.println(prefix + " annotation:");
 			}
-			for (StereotypeAnnotation _annotation : (ArrayList<StereotypeAnnotation>) annotation
-					.clone()) {
+			for (StereotypeAnnotation _annotation : annotation) {
 				if (_annotation != null) {
 					_annotation.print(prefix + "  ");
 				} else {

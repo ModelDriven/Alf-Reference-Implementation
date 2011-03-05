@@ -72,23 +72,39 @@ public class UnitDefinition extends DocumentedElement {
 
 	public ElementReference getNamespace() {
 		if (this.namespace == null) {
-			this.namespace = this.getImpl().deriveNamespace();
+			this.setNamespace(this.getImpl().deriveNamespace());
 		}
 		return this.namespace;
 	}
 
+	public void setNamespace(ElementReference namespace) {
+		this.namespace = namespace;
+	}
+
 	public Boolean getIsModelLibrary() {
 		if (this.isModelLibrary == null) {
-			this.isModelLibrary = this.getImpl().deriveIsModelLibrary();
+			this.setIsModelLibrary(this.getImpl().deriveIsModelLibrary());
 		}
 		return this.isModelLibrary;
 	}
 
+	public void setIsModelLibrary(Boolean isModelLibrary) {
+		this.isModelLibrary = isModelLibrary;
+	}
+
 	public ArrayList<Profile> getAppliedProfile() {
 		if (this.appliedProfile == null) {
-			this.appliedProfile = this.getImpl().deriveAppliedProfile();
+			this.setAppliedProfile(this.getImpl().deriveAppliedProfile());
 		}
 		return this.appliedProfile;
+	}
+
+	public void setAppliedProfile(ArrayList<Profile> appliedProfile) {
+		this.appliedProfile = appliedProfile;
+	}
+
+	public void addAppliedProfile(Profile appliedProfile) {
+		this.appliedProfile.add(appliedProfile);
 	}
 
 	/**
@@ -162,8 +178,7 @@ public class UnitDefinition extends DocumentedElement {
 			if (import_.size() > 0) {
 				System.out.println(prefix + " import:");
 			}
-			for (ImportReference _import_ : (ArrayList<ImportReference>) import_
-					.clone()) {
+			for (ImportReference _import_ : import_) {
 				if (_import_ != null) {
 					_import_.print(prefix + "  ");
 				} else {
@@ -180,8 +195,7 @@ public class UnitDefinition extends DocumentedElement {
 			if (appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");
 			}
-			for (Profile _appliedProfile : (ArrayList<Profile>) appliedProfile
-					.clone()) {
+			for (Profile _appliedProfile : appliedProfile) {
 				System.out.println(prefix + "  " + _appliedProfile);
 			}
 		}

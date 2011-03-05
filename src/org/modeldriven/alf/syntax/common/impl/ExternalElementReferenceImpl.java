@@ -91,18 +91,6 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public boolean isActiveBehavior() {
-        if (!this.isActivity()) {
-            return false;
-        } else {
-            Activity element = (Activity)this.getSelf().getElement();
-            BehavioredClassifier context = element.getContext();
-            return element.getIsActive() || 
-                    context != null && context.getClassifierBehavior() == element;
-        }
-    }
-
-    @Override
     public boolean isDataType() {
         return this.getSelf().getElement() instanceof DataType;
     }
@@ -163,7 +151,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isAbstractClassifier() {
         return this.isClassifier() &&
-                ((Classifier)this.getSelf().getElement()).isAbstract();
+                ((Classifier)this.getSelf().getElement()).getIsAbstract();
     }
 
     @Override
@@ -177,6 +165,47 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             return new ExternalNamespace((Namespace)this.getSelf().getElement());
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public boolean hasReceptionFor(ElementReference signal) {
+        Element umlSignal = signal.getImpl().getUml();
+        if (umlSignal == null || !(umlSignal instanceof Signal) 
+                || !this.isClass()) {
+            return false;
+        } else {
+            Class class_ = (Class)this.getUml();
+            for (Feature feature: class_.getFeature()) {
+                if (feature instanceof Reception &&
+                        ((Reception)feature).getSignal() == umlSignal) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public ElementReference getActiveClass() {
+        ExternalElementReference self = this.getSelf();
+        if (!this.isActivity()) {
+            return null;
+        } else {
+            Activity element = (Activity)self.getElement();
+            if (element.getIsActive()) {
+                return self;
+            } else {
+                BehavioredClassifier context = element.getContext();
+                if (context != null && 
+                        context.getClassifierBehavior() == element) {
+                    ExternalElementReference reference = new ExternalElementReference();
+                    reference.setElement(context);
+                    return reference;
+                } else {
+                    return null;
+                }
+            }
         }
     }
 

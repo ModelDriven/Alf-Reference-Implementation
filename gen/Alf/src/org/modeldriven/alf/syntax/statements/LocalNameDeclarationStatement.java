@@ -76,9 +76,13 @@ public class LocalNameDeclarationStatement extends Statement {
 
 	public ElementReference getType() {
 		if (this.type == null) {
-			this.type = this.getImpl().deriveType();
+			this.setType(this.getImpl().deriveType());
 		}
 		return this.type;
+	}
+
+	public void setType(ElementReference type) {
+		this.type = type;
 	}
 
 	/**

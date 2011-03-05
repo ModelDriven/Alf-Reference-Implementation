@@ -61,7 +61,7 @@ public class QualifiedNameList extends SyntaxElement {
 			if (name.size() > 0) {
 				System.out.println(prefix + " name:");
 			}
-			for (QualifiedName _name : (ArrayList<QualifiedName>) name.clone()) {
+			for (QualifiedName _name : name) {
 				if (_name != null) {
 					_name.print(prefix + "  ");
 				} else {

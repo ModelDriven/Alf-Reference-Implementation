@@ -42,23 +42,36 @@ public class NameExpression extends Expression {
 
 	public ElementReference getEnumerationLiteral() {
 		if (this.enumerationLiteral == null) {
-			this.enumerationLiteral = this.getImpl().deriveEnumerationLiteral();
+			this.setEnumerationLiteral(this.getImpl()
+					.deriveEnumerationLiteral());
 		}
 		return this.enumerationLiteral;
 	}
 
+	public void setEnumerationLiteral(ElementReference enumerationLiteral) {
+		this.enumerationLiteral = enumerationLiteral;
+	}
+
 	public AssignedSource getAssignment() {
 		if (this.assignment == null) {
-			this.assignment = this.getImpl().deriveAssignment();
+			this.setAssignment(this.getImpl().deriveAssignment());
 		}
 		return this.assignment;
 	}
 
+	public void setAssignment(AssignedSource assignment) {
+		this.assignment = assignment;
+	}
+
 	public PropertyAccessExpression getPropertyAccess() {
 		if (this.propertyAccess == null) {
-			this.propertyAccess = this.getImpl().derivePropertyAccess();
+			this.setPropertyAccess(this.getImpl().derivePropertyAccess());
 		}
 		return this.propertyAccess;
+	}
+
+	public void setPropertyAccess(PropertyAccessExpression propertyAccess) {
+		this.propertyAccess = propertyAccess;
 	}
 
 	public QualifiedName getName() {

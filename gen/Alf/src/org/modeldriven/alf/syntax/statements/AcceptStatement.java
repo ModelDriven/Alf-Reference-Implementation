@@ -53,16 +53,24 @@ public class AcceptStatement extends Statement {
 
 	public ElementReference getBehavior() {
 		if (this.behavior == null) {
-			this.behavior = this.getImpl().deriveBehavior();
+			this.setBehavior(this.getImpl().deriveBehavior());
 		}
 		return this.behavior;
 	}
 
+	public void setBehavior(ElementReference behavior) {
+		this.behavior = behavior;
+	}
+
 	public Boolean getIsSimple() {
 		if (this.isSimple == null) {
-			this.isSimple = this.getImpl().deriveIsSimple();
+			this.setIsSimple(this.getImpl().deriveIsSimple());
 		}
 		return this.isSimple;
+	}
+
+	public void setIsSimple(Boolean isSimple) {
+		this.isSimple = isSimple;
 	}
 
 	/**
@@ -170,8 +178,7 @@ public class AcceptStatement extends Statement {
 			if (acceptBlock.size() > 0) {
 				System.out.println(prefix + " acceptBlock:");
 			}
-			for (AcceptBlock _acceptBlock : (ArrayList<AcceptBlock>) acceptBlock
-					.clone()) {
+			for (AcceptBlock _acceptBlock : acceptBlock) {
 				if (_acceptBlock != null) {
 					_acceptBlock.print(prefix + "  ");
 				} else {

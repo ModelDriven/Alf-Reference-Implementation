@@ -72,7 +72,7 @@ public class Annotation extends SyntaxElement {
 			if (argument.size() > 0) {
 				System.out.println(prefix + " argument:");
 			}
-			for (String _argument : (ArrayList<String>) argument.clone()) {
+			for (String _argument : argument) {
 				System.out.println(prefix + "  " + _argument);
 			}
 		}

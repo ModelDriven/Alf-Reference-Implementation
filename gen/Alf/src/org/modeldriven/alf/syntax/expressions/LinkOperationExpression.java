@@ -50,16 +50,24 @@ public class LinkOperationExpression extends InvocationExpression {
 
 	public Boolean getIsCreation() {
 		if (this.isCreation == null) {
-			this.isCreation = this.getImpl().deriveIsCreation();
+			this.setIsCreation(this.getImpl().deriveIsCreation());
 		}
 		return this.isCreation;
 	}
 
+	public void setIsCreation(Boolean isCreation) {
+		this.isCreation = isCreation;
+	}
+
 	public Boolean getIsClear() {
 		if (this.isClear == null) {
-			this.isClear = this.getImpl().deriveIsClear();
+			this.setIsClear(this.getImpl().deriveIsClear());
 		}
 		return this.isClear;
+	}
+
+	public void setIsClear(Boolean isClear) {
+		this.isClear = isClear;
 	}
 
 	public QualifiedName getAssociationName() {

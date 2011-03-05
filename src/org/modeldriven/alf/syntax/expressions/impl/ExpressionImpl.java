@@ -92,4 +92,8 @@ public abstract class ExpressionImpl extends
         return null;
     }
 
+    public void setCurrentScope(NamespaceDefinition outerScope) {
+        // TODO Should be abstract        
+    }
+
 } // ExpressionImpl
