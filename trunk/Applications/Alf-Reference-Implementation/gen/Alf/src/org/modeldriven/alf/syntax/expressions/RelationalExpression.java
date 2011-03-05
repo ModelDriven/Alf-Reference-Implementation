@@ -39,9 +39,14 @@ public class RelationalExpression extends BinaryExpression {
 
 	public Boolean getIsUnlimitedNatural() {
 		if (this.isUnlimitedNatural == null) {
-			this.isUnlimitedNatural = this.getImpl().deriveIsUnlimitedNatural();
+			this.setIsUnlimitedNatural(this.getImpl()
+					.deriveIsUnlimitedNatural());
 		}
 		return this.isUnlimitedNatural;
+	}
+
+	public void setIsUnlimitedNatural(Boolean isUnlimitedNatural) {
+		this.isUnlimitedNatural = isUnlimitedNatural;
 	}
 
 	/**

@@ -48,9 +48,13 @@ public class ReturnStatement extends Statement {
 
 	public ElementReference getBehavior() {
 		if (this.behavior == null) {
-			this.behavior = this.getImpl().deriveBehavior();
+			this.setBehavior(this.getImpl().deriveBehavior());
 		}
 		return this.behavior;
+	}
+
+	public void setBehavior(ElementReference behavior) {
+		this.behavior = behavior;
 	}
 
 	/**

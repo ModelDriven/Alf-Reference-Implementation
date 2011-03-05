@@ -52,9 +52,13 @@ public class ExtentOrExpression {
 
 	public Expression getExpression() {
 		if (this.expression == null) {
-			this.expression = this.getImpl().deriveExpression();
+			this.setExpression(this.getImpl().deriveExpression());
 		}
 		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
 	}
 
 	public Expression getNonNameExpression() {

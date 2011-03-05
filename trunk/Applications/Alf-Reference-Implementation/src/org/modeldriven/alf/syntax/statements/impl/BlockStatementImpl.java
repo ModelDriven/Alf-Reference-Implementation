@@ -85,4 +85,12 @@ public class BlockStatementImpl extends
 		return false; // STUB
 	} // annotationAllowed
 
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        Block block = this.getSelf().getBlock();
+        if (block != null) {
+            block.getImpl().setCurrentScope(currentScope);
+        }
+    }
+
 } // BlockStatementImpl

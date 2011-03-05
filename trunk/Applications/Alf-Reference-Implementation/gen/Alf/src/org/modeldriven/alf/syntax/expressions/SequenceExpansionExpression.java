@@ -56,9 +56,13 @@ public abstract class SequenceExpansionExpression extends Expression {
 
 	public AssignedSource getVariableSource() {
 		if (this.variableSource == null) {
-			this.variableSource = this.getImpl().deriveVariableSource();
+			this.setVariableSource(this.getImpl().deriveVariableSource());
 		}
 		return this.variableSource;
+	}
+
+	public void setVariableSource(AssignedSource variableSource) {
+		this.variableSource = variableSource;
 	}
 
 	public Expression getArgument() {

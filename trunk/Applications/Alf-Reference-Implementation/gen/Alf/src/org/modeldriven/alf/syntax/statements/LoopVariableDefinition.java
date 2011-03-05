@@ -88,38 +88,66 @@ public class LoopVariableDefinition extends SyntaxElement {
 
 	public Boolean getIsCollectionConversion() {
 		if (this.isCollectionConversion == null) {
-			this.isCollectionConversion = this.getImpl()
-					.deriveIsCollectionConversion();
+			this.setIsCollectionConversion(this.getImpl()
+					.deriveIsCollectionConversion());
 		}
 		return this.isCollectionConversion;
 	}
 
+	public void setIsCollectionConversion(Boolean isCollectionConversion) {
+		this.isCollectionConversion = isCollectionConversion;
+	}
+
 	public ElementReference getType() {
 		if (this.type == null) {
-			this.type = this.getImpl().deriveType();
+			this.setType(this.getImpl().deriveType());
 		}
 		return this.type;
 	}
 
+	public void setType(ElementReference type) {
+		this.type = type;
+	}
+
 	public Boolean getIsFirst() {
 		if (this.isFirst == null) {
-			this.isFirst = this.getImpl().deriveIsFirst();
+			this.setIsFirst(this.getImpl().deriveIsFirst());
 		}
 		return this.isFirst;
 	}
 
+	public void setIsFirst(Boolean isFirst) {
+		this.isFirst = isFirst;
+	}
+
 	public ArrayList<AssignedSource> getAssignmentBefore() {
 		if (this.assignmentBefore == null) {
-			this.assignmentBefore = this.getImpl().deriveAssignmentBefore();
+			this.setAssignmentBefore(this.getImpl().deriveAssignmentBefore());
 		}
 		return this.assignmentBefore;
 	}
 
+	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
+		this.assignmentBefore = assignmentBefore;
+	}
+
+	public void addAssignmentBefore(AssignedSource assignmentBefore) {
+		this.assignmentBefore.add(assignmentBefore);
+	}
+
 	public ArrayList<AssignedSource> getAssignmentAfter() {
 		if (this.assignmentAfter == null) {
-			this.assignmentAfter = this.getImpl().deriveAssignmentAfter();
+			this.setAssignmentAfter(this.getImpl().deriveAssignmentAfter());
 		}
 		return this.assignmentAfter;
+	}
+
+	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
+		this.assignmentAfter = assignmentAfter;
+	}
+
+	public void addAssignmentAfter(AssignedSource assignmentAfter) {
+		this.assignmentAfter.add(assignmentAfter);
 	}
 
 	/**
@@ -246,8 +274,7 @@ public class LoopVariableDefinition extends SyntaxElement {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
 			}
-			for (AssignedSource _assignmentBefore : (ArrayList<AssignedSource>) assignmentBefore
-					.clone()) {
+			for (AssignedSource _assignmentBefore : assignmentBefore) {
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
@@ -256,8 +283,7 @@ public class LoopVariableDefinition extends SyntaxElement {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
 			}
-			for (AssignedSource _assignmentAfter : (ArrayList<AssignedSource>) assignmentAfter
-					.clone()) {
+			for (AssignedSource _assignmentAfter : assignmentAfter) {
 				System.out.println(prefix + "  " + _assignmentAfter);
 			}
 		}

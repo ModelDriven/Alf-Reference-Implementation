@@ -68,16 +68,32 @@ public class ClassifyStatement extends Statement {
 
 	public ArrayList<ElementReference> getFromClass() {
 		if (this.fromClass == null) {
-			this.fromClass = this.getImpl().deriveFromClass();
+			this.setFromClass(this.getImpl().deriveFromClass());
 		}
 		return this.fromClass;
 	}
 
+	public void setFromClass(ArrayList<ElementReference> fromClass) {
+		this.fromClass = fromClass;
+	}
+
+	public void addFromClass(ElementReference fromClass) {
+		this.fromClass.add(fromClass);
+	}
+
 	public ArrayList<ElementReference> getToClass() {
 		if (this.toClass == null) {
-			this.toClass = this.getImpl().deriveToClass();
+			this.setToClass(this.getImpl().deriveToClass());
 		}
 		return this.toClass;
+	}
+
+	public void setToClass(ArrayList<ElementReference> toClass) {
+		this.toClass = toClass;
+	}
+
+	public void addToClass(ElementReference toClass) {
+		this.toClass.add(toClass);
 	}
 
 	public Boolean getIsReclassifyAll() {
@@ -175,8 +191,7 @@ public class ClassifyStatement extends Statement {
 			if (fromClass.size() > 0) {
 				System.out.println(prefix + " /fromClass:");
 			}
-			for (ElementReference _fromClass : (ArrayList<ElementReference>) fromClass
-					.clone()) {
+			for (ElementReference _fromClass : fromClass) {
 				System.out.println(prefix + "  " + _fromClass);
 			}
 		}
@@ -185,8 +200,7 @@ public class ClassifyStatement extends Statement {
 			if (toClass.size() > 0) {
 				System.out.println(prefix + " /toClass:");
 			}
-			for (ElementReference _toClass : (ArrayList<ElementReference>) toClass
-					.clone()) {
+			for (ElementReference _toClass : toClass) {
 				System.out.println(prefix + "  " + _toClass);
 			}
 		}

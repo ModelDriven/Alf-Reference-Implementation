@@ -51,30 +51,55 @@ public abstract class Statement extends DocumentedElement {
 
 	public ArrayList<AssignedSource> getAssignmentBefore() {
 		if (this.assignmentBefore == null) {
-			this.assignmentBefore = this.getImpl().deriveAssignmentBefore();
+			this.setAssignmentBefore(this.getImpl().deriveAssignmentBefore());
 		}
 		return this.assignmentBefore;
 	}
 
+	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
+		this.assignmentBefore = assignmentBefore;
+	}
+
+	public void addAssignmentBefore(AssignedSource assignmentBefore) {
+		this.assignmentBefore.add(assignmentBefore);
+	}
+
 	public ArrayList<AssignedSource> getAssignmentAfter() {
 		if (this.assignmentAfter == null) {
-			this.assignmentAfter = this.getImpl().deriveAssignmentAfter();
+			this.setAssignmentAfter(this.getImpl().deriveAssignmentAfter());
 		}
 		return this.assignmentAfter;
 	}
 
+	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
+		this.assignmentAfter = assignmentAfter;
+	}
+
+	public void addAssignmentAfter(AssignedSource assignmentAfter) {
+		this.assignmentAfter.add(assignmentAfter);
+	}
+
 	public Statement getEnclosingStatement() {
 		if (this.enclosingStatement == null) {
-			this.enclosingStatement = this.getImpl().deriveEnclosingStatement();
+			this.setEnclosingStatement(this.getImpl()
+					.deriveEnclosingStatement());
 		}
 		return this.enclosingStatement;
 	}
 
+	public void setEnclosingStatement(Statement enclosingStatement) {
+		this.enclosingStatement = enclosingStatement;
+	}
+
 	public Boolean getIsIsolated() {
 		if (this.isIsolated == null) {
-			this.isIsolated = this.getImpl().deriveIsIsolated();
+			this.setIsIsolated(this.getImpl().deriveIsIsolated());
 		}
 		return this.isIsolated;
+	}
+
+	public void setIsIsolated(Boolean isIsolated) {
+		this.isIsolated = isIsolated;
 	}
 
 	/**
@@ -127,8 +152,7 @@ public abstract class Statement extends DocumentedElement {
 			if (annotation.size() > 0) {
 				System.out.println(prefix + " annotation:");
 			}
-			for (Annotation _annotation : (ArrayList<Annotation>) annotation
-					.clone()) {
+			for (Annotation _annotation : annotation) {
 				if (_annotation != null) {
 					_annotation.print(prefix + "  ");
 				} else {
@@ -141,8 +165,7 @@ public abstract class Statement extends DocumentedElement {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
 			}
-			for (AssignedSource _assignmentBefore : (ArrayList<AssignedSource>) assignmentBefore
-					.clone()) {
+			for (AssignedSource _assignmentBefore : assignmentBefore) {
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
@@ -151,8 +174,7 @@ public abstract class Statement extends DocumentedElement {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
 			}
-			for (AssignedSource _assignmentAfter : (ArrayList<AssignedSource>) assignmentAfter
-					.clone()) {
+			for (AssignedSource _assignmentAfter : assignmentAfter) {
 				System.out.println(prefix + "  " + _assignmentAfter);
 			}
 		}

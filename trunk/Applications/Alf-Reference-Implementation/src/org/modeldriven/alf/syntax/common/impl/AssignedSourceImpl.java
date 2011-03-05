@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
+import java.util.Collection;
+
 import org.modeldriven.alf.syntax.common.*;
 
 /**
@@ -28,5 +30,14 @@ public class AssignedSourceImpl {
 	public AssignedSource getSelf() {
 		return (AssignedSource) this.self;
 	}
+
+    public static AssignedSource getAssignment(String name, Collection<AssignedSource> assignments) {
+        for (AssignedSource assignment: assignments) {
+            if (assignment.getName().equals(name)) {
+                return assignment;
+            }
+        }
+        return null;
+    }
 
 } // AssignedSourceImpl

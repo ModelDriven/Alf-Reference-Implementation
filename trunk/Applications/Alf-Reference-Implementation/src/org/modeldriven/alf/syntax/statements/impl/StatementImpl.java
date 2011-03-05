@@ -31,7 +31,7 @@ public abstract class StatementImpl extends
 	public org.modeldriven.alf.syntax.statements.Statement getSelf() {
 		return (Statement) this.self;
 	}
-
+	
 	public ArrayList<AssignedSource> deriveAssignmentBefore() {
 		return null; // STUB
 	}
@@ -81,5 +81,9 @@ public abstract class StatementImpl extends
 	public Boolean annotationAllowed(Annotation annotation) {
 		return false; // STUB
 	} // annotationAllowed
+	
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    // TODO Make abstract?
+	}
 
 } // StatementImpl

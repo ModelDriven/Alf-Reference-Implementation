@@ -63,9 +63,13 @@ public class ForStatement extends Statement {
 
 	public Boolean getIsParallel() {
 		if (this.isParallel == null) {
-			this.isParallel = this.getImpl().deriveIsParallel();
+			this.setIsParallel(this.getImpl().deriveIsParallel());
 		}
 		return this.isParallel;
+	}
+
+	public void setIsParallel(Boolean isParallel) {
+		this.isParallel = isParallel;
 	}
 
 	/**
@@ -185,8 +189,7 @@ public class ForStatement extends Statement {
 			if (variableDefinition.size() > 0) {
 				System.out.println(prefix + " variableDefinition:");
 			}
-			for (LoopVariableDefinition _variableDefinition : (ArrayList<LoopVariableDefinition>) variableDefinition
-					.clone()) {
+			for (LoopVariableDefinition _variableDefinition : variableDefinition) {
 				if (_variableDefinition != null) {
 					_variableDefinition.print(prefix + "  ");
 				} else {

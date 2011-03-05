@@ -39,9 +39,13 @@ public class ArithmeticExpression extends BinaryExpression {
 
 	public Boolean getIsConcatenation() {
 		if (this.isConcatenation == null) {
-			this.isConcatenation = this.getImpl().deriveIsConcatenation();
+			this.setIsConcatenation(this.getImpl().deriveIsConcatenation());
 		}
 		return this.isConcatenation;
+	}
+
+	public void setIsConcatenation(Boolean isConcatenation) {
+		this.isConcatenation = isConcatenation;
 	}
 
 	/**

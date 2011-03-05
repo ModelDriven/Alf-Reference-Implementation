@@ -66,9 +66,17 @@ public class AcceptBlock extends SyntaxElement {
 
 	public ArrayList<ElementReference> getSignal() {
 		if (this.signal == null) {
-			this.signal = this.getImpl().deriveSignal();
+			this.setSignal(this.getImpl().deriveSignal());
 		}
 		return this.signal;
+	}
+
+	public void setSignal(ArrayList<ElementReference> signal) {
+		this.signal = signal;
+	}
+
+	public void addSignal(ElementReference signal) {
+		this.signal.add(signal);
 	}
 
 	/**
@@ -110,8 +118,7 @@ public class AcceptBlock extends SyntaxElement {
 			if (signal.size() > 0) {
 				System.out.println(prefix + " /signal:");
 			}
-			for (ElementReference _signal : (ArrayList<ElementReference>) signal
-					.clone()) {
+			for (ElementReference _signal : signal) {
 				System.out.println(prefix + "  " + _signal);
 			}
 		}

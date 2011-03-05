@@ -55,9 +55,13 @@ public class IncrementOrDecrementExpression extends Expression {
 
 	public AssignedSource getAssignment() {
 		if (this.assignment == null) {
-			this.assignment = this.getImpl().deriveAssignment();
+			this.setAssignment(this.getImpl().deriveAssignment());
 		}
 		return this.assignment;
+	}
+
+	public void setAssignment(AssignedSource assignment) {
+		this.assignment = assignment;
 	}
 
 	public LeftHandSide getOperand() {
@@ -70,16 +74,24 @@ public class IncrementOrDecrementExpression extends Expression {
 
 	public Expression getExpression() {
 		if (this.expression == null) {
-			this.expression = this.getImpl().deriveExpression();
+			this.setExpression(this.getImpl().deriveExpression());
 		}
 		return this.expression;
 	}
 
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
 	public ElementReference getFeature() {
 		if (this.feature == null) {
-			this.feature = this.getImpl().deriveFeature();
+			this.setFeature(this.getImpl().deriveFeature());
 		}
 		return this.feature;
+	}
+
+	public void setFeature(ElementReference feature) {
+		this.feature = feature;
 	}
 
 	public Boolean getIsPrefix() {
@@ -92,23 +104,35 @@ public class IncrementOrDecrementExpression extends Expression {
 
 	public Boolean getIsFeature() {
 		if (this.isFeature == null) {
-			this.isFeature = this.getImpl().deriveIsFeature();
+			this.setIsFeature(this.getImpl().deriveIsFeature());
 		}
 		return this.isFeature;
 	}
 
+	public void setIsFeature(Boolean isFeature) {
+		this.isFeature = isFeature;
+	}
+
 	public Boolean getIsIndexed() {
 		if (this.isIndexed == null) {
-			this.isIndexed = this.getImpl().deriveIsIndexed();
+			this.setIsIndexed(this.getImpl().deriveIsIndexed());
 		}
 		return this.isIndexed;
 	}
 
+	public void setIsIndexed(Boolean isIndexed) {
+		this.isIndexed = isIndexed;
+	}
+
 	public Boolean getIsDataValueUpdate() {
 		if (this.isDataValueUpdate == null) {
-			this.isDataValueUpdate = this.getImpl().deriveIsDataValueUpdate();
+			this.setIsDataValueUpdate(this.getImpl().deriveIsDataValueUpdate());
 		}
 		return this.isDataValueUpdate;
+	}
+
+	public void setIsDataValueUpdate(Boolean isDataValueUpdate) {
+		this.isDataValueUpdate = isDataValueUpdate;
 	}
 
 	/**

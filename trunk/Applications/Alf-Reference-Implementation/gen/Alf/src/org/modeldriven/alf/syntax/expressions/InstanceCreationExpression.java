@@ -41,16 +41,24 @@ public class InstanceCreationExpression extends InvocationExpression {
 
 	public Boolean getIsConstructorless() {
 		if (this.isConstructorless == null) {
-			this.isConstructorless = this.getImpl().deriveIsConstructorless();
+			this.setIsConstructorless(this.getImpl().deriveIsConstructorless());
 		}
 		return this.isConstructorless;
 	}
 
+	public void setIsConstructorless(Boolean isConstructorless) {
+		this.isConstructorless = isConstructorless;
+	}
+
 	public Boolean getIsObjectCreation() {
 		if (this.isObjectCreation == null) {
-			this.isObjectCreation = this.getImpl().deriveIsObjectCreation();
+			this.setIsObjectCreation(this.getImpl().deriveIsObjectCreation());
 		}
 		return this.isObjectCreation;
+	}
+
+	public void setIsObjectCreation(Boolean isObjectCreation) {
+		this.isObjectCreation = isObjectCreation;
 	}
 
 	public QualifiedName getConstructor() {

@@ -40,9 +40,13 @@ public class BreakStatement extends Statement {
 
 	public Statement getTarget() {
 		if (this.target == null) {
-			this.target = this.getImpl().deriveTarget();
+			this.setTarget(this.getImpl().deriveTarget());
 		}
 		return this.target;
+	}
+
+	public void setTarget(Statement target) {
+		this.target = target;
 	}
 
 	/**

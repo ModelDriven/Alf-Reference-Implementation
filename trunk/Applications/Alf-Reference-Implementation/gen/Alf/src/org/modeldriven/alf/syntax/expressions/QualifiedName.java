@@ -56,30 +56,47 @@ public class QualifiedName extends SyntaxElement {
 
 	public String getPathName() {
 		if (this.pathName == null) {
-			this.pathName = this.getImpl().derivePathName();
+			this.setPathName(this.getImpl().derivePathName());
 		}
 		return this.pathName;
 	}
 
+	public void setPathName(String pathName) {
+		this.pathName = pathName;
+	}
+
 	public Boolean getIsFeatureReference() {
 		if (this.isFeatureReference == null) {
-			this.isFeatureReference = this.getImpl().deriveIsFeatureReference();
+			this.setIsFeatureReference(this.getImpl()
+					.deriveIsFeatureReference());
 		}
 		return this.isFeatureReference;
 	}
 
+	public void setIsFeatureReference(Boolean isFeatureReference) {
+		this.isFeatureReference = isFeatureReference;
+	}
+
 	public QualifiedName getQualification() {
 		if (this.qualification == null) {
-			this.qualification = this.getImpl().deriveQualification();
+			this.setQualification(this.getImpl().deriveQualification());
 		}
 		return this.qualification;
 	}
 
+	public void setQualification(QualifiedName qualification) {
+		this.qualification = qualification;
+	}
+
 	public FeatureReference getDisambiguation() {
 		if (this.disambiguation == null) {
-			this.disambiguation = this.getImpl().deriveDisambiguation();
+			this.setDisambiguation(this.getImpl().deriveDisambiguation());
 		}
 		return this.disambiguation;
+	}
+
+	public void setDisambiguation(FeatureReference disambiguation) {
+		this.disambiguation = disambiguation;
 	}
 
 	public ArrayList<NameBinding> getNameBinding() {
@@ -96,23 +113,39 @@ public class QualifiedName extends SyntaxElement {
 
 	public ArrayList<ElementReference> getReferent() {
 		if (this.referent == null) {
-			this.referent = this.getImpl().deriveReferent();
+			this.setReferent(this.getImpl().deriveReferent());
 		}
 		return this.referent;
 	}
 
+	public void setReferent(ArrayList<ElementReference> referent) {
+		this.referent = referent;
+	}
+
+	public void addReferent(ElementReference referent) {
+		this.referent.add(referent);
+	}
+
 	public NameBinding getUnqualifiedName() {
 		if (this.unqualifiedName == null) {
-			this.unqualifiedName = this.getImpl().deriveUnqualifiedName();
+			this.setUnqualifiedName(this.getImpl().deriveUnqualifiedName());
 		}
 		return this.unqualifiedName;
 	}
 
+	public void setUnqualifiedName(NameBinding unqualifiedName) {
+		this.unqualifiedName = unqualifiedName;
+	}
+
 	public QualifiedName getTemplateName() {
 		if (this.templateName == null) {
-			this.templateName = this.getImpl().deriveTemplateName();
+			this.setTemplateName(this.getImpl().deriveTemplateName());
 		}
 		return this.templateName;
+	}
+
+	public void setTemplateName(QualifiedName templateName) {
+		this.templateName = templateName;
 	}
 
 	/**
@@ -259,8 +292,7 @@ public class QualifiedName extends SyntaxElement {
 			if (nameBinding.size() > 0) {
 				System.out.println(prefix + " nameBinding:");
 			}
-			for (NameBinding _nameBinding : (ArrayList<NameBinding>) nameBinding
-					.clone()) {
+			for (NameBinding _nameBinding : nameBinding) {
 				if (_nameBinding != null) {
 					_nameBinding.print(prefix + "  ");
 				} else {
@@ -273,8 +305,7 @@ public class QualifiedName extends SyntaxElement {
 			if (referent.size() > 0) {
 				System.out.println(prefix + " /referent:");
 			}
-			for (ElementReference _referent : (ArrayList<ElementReference>) referent
-					.clone()) {
+			for (ElementReference _referent : referent) {
 				System.out.println(prefix + "  " + _referent);
 			}
 		}

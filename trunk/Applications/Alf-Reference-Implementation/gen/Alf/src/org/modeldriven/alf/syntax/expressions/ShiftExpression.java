@@ -35,10 +35,14 @@ public class ShiftExpression extends BinaryExpression {
 
 	public Boolean getIsBitStringConversion() {
 		if (this.isBitStringConversion == null) {
-			this.isBitStringConversion = this.getImpl()
-					.deriveIsBitStringConversion();
+			this.setIsBitStringConversion(this.getImpl()
+					.deriveIsBitStringConversion());
 		}
 		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
 	}
 
 	/**

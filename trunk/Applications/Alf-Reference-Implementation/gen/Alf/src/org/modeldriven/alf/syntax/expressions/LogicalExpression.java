@@ -41,25 +41,37 @@ public class LogicalExpression extends BinaryExpression {
 
 	public Boolean getIsBitWise() {
 		if (this.isBitWise == null) {
-			this.isBitWise = this.getImpl().deriveIsBitWise();
+			this.setIsBitWise(this.getImpl().deriveIsBitWise());
 		}
 		return this.isBitWise;
 	}
 
+	public void setIsBitWise(Boolean isBitWise) {
+		this.isBitWise = isBitWise;
+	}
+
 	public Boolean getIsBitStringConversion1() {
 		if (this.isBitStringConversion1 == null) {
-			this.isBitStringConversion1 = this.getImpl()
-					.deriveIsBitStringConversion1();
+			this.setIsBitStringConversion1(this.getImpl()
+					.deriveIsBitStringConversion1());
 		}
 		return this.isBitStringConversion1;
 	}
 
+	public void setIsBitStringConversion1(Boolean isBitStringConversion1) {
+		this.isBitStringConversion1 = isBitStringConversion1;
+	}
+
 	public Boolean getIsBitStringConversion2() {
 		if (this.isBitStringConversion2 == null) {
-			this.isBitStringConversion2 = this.getImpl()
-					.deriveIsBitStringConversion2();
+			this.setIsBitStringConversion2(this.getImpl()
+					.deriveIsBitStringConversion2());
 		}
 		return this.isBitStringConversion2;
+	}
+
+	public void setIsBitStringConversion2(Boolean isBitStringConversion2) {
+		this.isBitStringConversion2 = isBitStringConversion2;
 	}
 
 	/**

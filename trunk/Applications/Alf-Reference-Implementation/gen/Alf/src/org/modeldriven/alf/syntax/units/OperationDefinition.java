@@ -69,24 +69,41 @@ public class OperationDefinition extends NamespaceDefinition {
 
 	public ArrayList<ElementReference> getRedefinedOperations() {
 		if (this.redefinedOperations == null) {
-			this.redefinedOperations = this.getImpl()
-					.deriveRedefinedOperations();
+			this.setRedefinedOperations(this.getImpl()
+					.deriveRedefinedOperations());
 		}
 		return this.redefinedOperations;
 	}
 
+	public void setRedefinedOperations(
+			ArrayList<ElementReference> redefinedOperations) {
+		this.redefinedOperations = redefinedOperations;
+	}
+
+	public void addRedefinedOperations(ElementReference redefinedOperations) {
+		this.redefinedOperations.add(redefinedOperations);
+	}
+
 	public Boolean getIsConstructor() {
 		if (this.isConstructor == null) {
-			this.isConstructor = this.getImpl().deriveIsConstructor();
+			this.setIsConstructor(this.getImpl().deriveIsConstructor());
 		}
 		return this.isConstructor;
 	}
 
+	public void setIsConstructor(Boolean isConstructor) {
+		this.isConstructor = isConstructor;
+	}
+
 	public Boolean getIsDestructor() {
 		if (this.isDestructor == null) {
-			this.isDestructor = this.getImpl().deriveIsDestructor();
+			this.setIsDestructor(this.getImpl().deriveIsDestructor());
 		}
 		return this.isDestructor;
+	}
+
+	public void setIsDestructor(Boolean isDestructor) {
+		this.isDestructor = isDestructor;
 	}
 
 	/**
@@ -245,8 +262,7 @@ public class OperationDefinition extends NamespaceDefinition {
 			if (redefinedOperations.size() > 0) {
 				System.out.println(prefix + " /redefinedOperations:");
 			}
-			for (ElementReference _redefinedOperations : (ArrayList<ElementReference>) redefinedOperations
-					.clone()) {
+			for (ElementReference _redefinedOperations : redefinedOperations) {
 				System.out.println(prefix + "  " + _redefinedOperations);
 			}
 		}

@@ -76,81 +76,125 @@ public class AssignmentExpression extends Expression {
 
 	public AssignedSource getAssignment() {
 		if (this.assignment == null) {
-			this.assignment = this.getImpl().deriveAssignment();
+			this.setAssignment(this.getImpl().deriveAssignment());
 		}
 		return this.assignment;
 	}
 
+	public void setAssignment(AssignedSource assignment) {
+		this.assignment = assignment;
+	}
+
 	public ElementReference getFeature() {
 		if (this.feature == null) {
-			this.feature = this.getImpl().deriveFeature();
+			this.setFeature(this.getImpl().deriveFeature());
 		}
 		return this.feature;
 	}
 
+	public void setFeature(ElementReference feature) {
+		this.feature = feature;
+	}
+
 	public Boolean getIsIndexed() {
 		if (this.isIndexed == null) {
-			this.isIndexed = this.getImpl().deriveIsIndexed();
+			this.setIsIndexed(this.getImpl().deriveIsIndexed());
 		}
 		return this.isIndexed;
 	}
 
+	public void setIsIndexed(Boolean isIndexed) {
+		this.isIndexed = isIndexed;
+	}
+
 	public Boolean getIsArithmetic() {
 		if (this.isArithmetic == null) {
-			this.isArithmetic = this.getImpl().deriveIsArithmetic();
+			this.setIsArithmetic(this.getImpl().deriveIsArithmetic());
 		}
 		return this.isArithmetic;
 	}
 
+	public void setIsArithmetic(Boolean isArithmetic) {
+		this.isArithmetic = isArithmetic;
+	}
+
 	public Boolean getIsDefinition() {
 		if (this.isDefinition == null) {
-			this.isDefinition = this.getImpl().deriveIsDefinition();
+			this.setIsDefinition(this.getImpl().deriveIsDefinition());
 		}
 		return this.isDefinition;
 	}
 
+	public void setIsDefinition(Boolean isDefinition) {
+		this.isDefinition = isDefinition;
+	}
+
 	public Boolean getIsSimple() {
 		if (this.isSimple == null) {
-			this.isSimple = this.getImpl().deriveIsSimple();
+			this.setIsSimple(this.getImpl().deriveIsSimple());
 		}
 		return this.isSimple;
 	}
 
+	public void setIsSimple(Boolean isSimple) {
+		this.isSimple = isSimple;
+	}
+
 	public Expression getExpression() {
 		if (this.expression == null) {
-			this.expression = this.getImpl().deriveExpression();
+			this.setExpression(this.getImpl().deriveExpression());
 		}
 		return this.expression;
 	}
 
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
 	public Boolean getIsFeature() {
 		if (this.isFeature == null) {
-			this.isFeature = this.getImpl().deriveIsFeature();
+			this.setIsFeature(this.getImpl().deriveIsFeature());
 		}
 		return this.isFeature;
 	}
 
+	public void setIsFeature(Boolean isFeature) {
+		this.isFeature = isFeature;
+	}
+
 	public Boolean getIsDataValueUpdate() {
 		if (this.isDataValueUpdate == null) {
-			this.isDataValueUpdate = this.getImpl().deriveIsDataValueUpdate();
+			this.setIsDataValueUpdate(this.getImpl().deriveIsDataValueUpdate());
 		}
 		return this.isDataValueUpdate;
 	}
 
+	public void setIsDataValueUpdate(Boolean isDataValueUpdate) {
+		this.isDataValueUpdate = isDataValueUpdate;
+	}
+
 	public Boolean getIsCollectionConversion() {
 		if (this.isCollectionConversion == null) {
-			this.isCollectionConversion = this.getImpl()
-					.deriveIsCollectionConversion();
+			this.setIsCollectionConversion(this.getImpl()
+					.deriveIsCollectionConversion());
 		}
 		return this.isCollectionConversion;
 	}
 
+	public void setIsCollectionConversion(Boolean isCollectionConversion) {
+		this.isCollectionConversion = isCollectionConversion;
+	}
+
 	public Boolean getIsBitStringConversion() {
 		if (this.isBitStringConversion == null) {
-			this.isBitStringConversion = this.getImpl()
-					.deriveIsBitStringConversion();
+			this.setIsBitStringConversion(this.getImpl()
+					.deriveIsBitStringConversion());
 		}
 		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
 	}
 
 	/**

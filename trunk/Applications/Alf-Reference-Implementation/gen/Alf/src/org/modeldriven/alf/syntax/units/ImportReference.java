@@ -62,9 +62,13 @@ public abstract class ImportReference extends SyntaxElement {
 
 	public ElementReference getReferent() {
 		if (this.referent == null) {
-			this.referent = this.getImpl().deriveReferent();
+			this.setReferent(this.getImpl().deriveReferent());
 		}
 		return this.referent;
+	}
+
+	public void setReferent(ElementReference referent) {
+		this.referent = referent;
 	}
 
 	/**

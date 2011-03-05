@@ -41,16 +41,24 @@ public class ClassificationExpression extends UnaryExpression {
 
 	public ElementReference getReferent() {
 		if (this.referent == null) {
-			this.referent = this.getImpl().deriveReferent();
+			this.setReferent(this.getImpl().deriveReferent());
 		}
 		return this.referent;
 	}
 
+	public void setReferent(ElementReference referent) {
+		this.referent = referent;
+	}
+
 	public Boolean getIsDirect() {
 		if (this.isDirect == null) {
-			this.isDirect = this.getImpl().deriveIsDirect();
+			this.setIsDirect(this.getImpl().deriveIsDirect());
 		}
 		return this.isDirect;
+	}
+
+	public void setIsDirect(Boolean isDirect) {
+		this.isDirect = isDirect;
 	}
 
 	public QualifiedName getTypeName() {

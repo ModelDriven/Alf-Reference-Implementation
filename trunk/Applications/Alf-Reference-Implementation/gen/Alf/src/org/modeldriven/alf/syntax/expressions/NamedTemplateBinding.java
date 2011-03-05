@@ -64,8 +64,7 @@ public class NamedTemplateBinding extends TemplateBinding {
 			if (substitution.size() > 0) {
 				System.out.println(prefix + " substitution:");
 			}
-			for (TemplateParameterSubstitution _substitution : (ArrayList<TemplateParameterSubstitution>) substitution
-					.clone()) {
+			for (TemplateParameterSubstitution _substitution : substitution) {
 				if (_substitution != null) {
 					_substitution.print(prefix + "  ");
 				} else {

@@ -67,18 +67,26 @@ public class NamedExpression extends SyntaxElement {
 
 	public Boolean getIsCollectionConversion() {
 		if (this.isCollectionConversion == null) {
-			this.isCollectionConversion = this.getImpl()
-					.deriveIsCollectionConversion();
+			this.setIsCollectionConversion(this.getImpl()
+					.deriveIsCollectionConversion());
 		}
 		return this.isCollectionConversion;
 	}
 
+	public void setIsCollectionConversion(Boolean isCollectionConversion) {
+		this.isCollectionConversion = isCollectionConversion;
+	}
+
 	public Boolean getIsBitStringConversion() {
 		if (this.isBitStringConversion == null) {
-			this.isBitStringConversion = this.getImpl()
-					.deriveIsBitStringConversion();
+			this.setIsBitStringConversion(this.getImpl()
+					.deriveIsBitStringConversion());
 		}
 		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
 	}
 
 	/**

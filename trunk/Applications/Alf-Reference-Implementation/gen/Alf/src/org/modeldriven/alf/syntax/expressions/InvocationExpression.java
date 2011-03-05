@@ -45,23 +45,35 @@ public abstract class InvocationExpression extends Expression {
 
 	public Boolean getIsBehavior() {
 		if (this.isBehavior == null) {
-			this.isBehavior = this.getImpl().deriveIsBehavior();
+			this.setIsBehavior(this.getImpl().deriveIsBehavior());
 		}
 		return this.isBehavior;
 	}
 
+	public void setIsBehavior(Boolean isBehavior) {
+		this.isBehavior = isBehavior;
+	}
+
 	public Boolean getIsAssociationEnd() {
 		if (this.isAssociationEnd == null) {
-			this.isAssociationEnd = this.getImpl().deriveIsAssociationEnd();
+			this.setIsAssociationEnd(this.getImpl().deriveIsAssociationEnd());
 		}
 		return this.isAssociationEnd;
 	}
 
+	public void setIsAssociationEnd(Boolean isAssociationEnd) {
+		this.isAssociationEnd = isAssociationEnd;
+	}
+
 	public FeatureReference getFeature() {
 		if (this.feature == null) {
-			this.feature = this.getImpl().deriveFeature();
+			this.setFeature(this.getImpl().deriveFeature());
 		}
 		return this.feature;
+	}
+
+	public void setFeature(FeatureReference feature) {
+		this.feature = feature;
 	}
 
 	public Tuple getTuple() {
@@ -74,44 +86,72 @@ public abstract class InvocationExpression extends Expression {
 
 	public Boolean getIsOperation() {
 		if (this.isOperation == null) {
-			this.isOperation = this.getImpl().deriveIsOperation();
+			this.setIsOperation(this.getImpl().deriveIsOperation());
 		}
 		return this.isOperation;
 	}
 
+	public void setIsOperation(Boolean isOperation) {
+		this.isOperation = isOperation;
+	}
+
 	public Boolean getIsDestructor() {
 		if (this.isDestructor == null) {
-			this.isDestructor = this.getImpl().deriveIsDestructor();
+			this.setIsDestructor(this.getImpl().deriveIsDestructor());
 		}
 		return this.isDestructor;
 	}
 
+	public void setIsDestructor(Boolean isDestructor) {
+		this.isDestructor = isDestructor;
+	}
+
 	public Boolean getIsImplicit() {
 		if (this.isImplicit == null) {
-			this.isImplicit = this.getImpl().deriveIsImplicit();
+			this.setIsImplicit(this.getImpl().deriveIsImplicit());
 		}
 		return this.isImplicit;
 	}
 
+	public void setIsImplicit(Boolean isImplicit) {
+		this.isImplicit = isImplicit;
+	}
+
 	public ElementReference getReferent() {
 		if (this.referent == null) {
-			this.referent = this.getImpl().deriveReferent();
+			this.setReferent(this.getImpl().deriveReferent());
 		}
 		return this.referent;
 	}
 
+	public void setReferent(ElementReference referent) {
+		this.referent = referent;
+	}
+
 	public ArrayList<ElementReference> getParameter() {
 		if (this.parameter == null) {
-			this.parameter = this.getImpl().deriveParameter();
+			this.setParameter(this.getImpl().deriveParameter());
 		}
 		return this.parameter;
 	}
 
+	public void setParameter(ArrayList<ElementReference> parameter) {
+		this.parameter = parameter;
+	}
+
+	public void addParameter(ElementReference parameter) {
+		this.parameter.add(parameter);
+	}
+
 	public Boolean getIsSignal() {
 		if (this.isSignal == null) {
-			this.isSignal = this.getImpl().deriveIsSignal();
+			this.setIsSignal(this.getImpl().deriveIsSignal());
 		}
 		return this.isSignal;
+	}
+
+	public void setIsSignal(Boolean isSignal) {
+		this.isSignal = isSignal;
 	}
 
 	/**
@@ -277,8 +317,7 @@ public abstract class InvocationExpression extends Expression {
 			if (parameter.size() > 0) {
 				System.out.println(prefix + " /parameter:");
 			}
-			for (ElementReference _parameter : (ArrayList<ElementReference>) parameter
-					.clone()) {
+			for (ElementReference _parameter : parameter) {
 				System.out.println(prefix + "  " + _parameter);
 			}
 		}
