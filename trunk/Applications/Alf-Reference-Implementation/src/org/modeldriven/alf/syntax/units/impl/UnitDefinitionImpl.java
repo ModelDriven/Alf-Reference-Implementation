@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.Profile;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -140,7 +141,7 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         // Remove conflicts
         NamespaceDefinition definition = self.getDefinition();
         if (definition != null) {
-            ArrayList<Member> ownedMembers = definition.getOwnedMember();
+            Collection<Member> ownedMembers = definition.getOwnedMember();
             ArrayList<Member> otherMembers = (ArrayList<Member>)importedMembers.clone();
             int i = 0;
             while (otherMembers.size() > 0) {

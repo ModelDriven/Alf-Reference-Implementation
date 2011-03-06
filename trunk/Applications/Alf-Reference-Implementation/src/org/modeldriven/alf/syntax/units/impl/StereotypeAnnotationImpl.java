@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * An annotation of a member definition indicating the application of a
@@ -129,11 +130,11 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
             if (self.getNames() != null) {
                 return false;
             } else if (taggedValueList != null) {
-                ArrayList<TaggedValue> taggedValues = taggedValueList.getTaggedValue();
+                Collection<TaggedValue> taggedValues = taggedValueList.getTaggedValue();
                 if (taggedValues == null || taggedValues.size() > 1) {
                     return false;
                 } else {
-                    TaggedValue taggedValue = taggedValues.get(0);
+                    TaggedValue taggedValue = (TaggedValue)taggedValues.toArray()[0];
                     return  taggedValue.getName().equals("file") &&
                             taggedValue.getOperator() == null;
                 }

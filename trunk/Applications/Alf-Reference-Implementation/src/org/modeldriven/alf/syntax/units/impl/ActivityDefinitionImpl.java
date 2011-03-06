@@ -20,23 +20,32 @@ import java.util.List;
  * members.
  **/
 
-public class ActivityDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl {
+public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
+
+    private Block body = null;
 
 	public ActivityDefinitionImpl(ActivityDefinition self) {
 		super(self);
 	}
 
     @Override
-	public org.modeldriven.alf.syntax.units.ActivityDefinition getSelf() {
+	public ActivityDefinition getSelf() {
 		return (ActivityDefinition) this.self;
 	}
     
+    public Block getBody() {
+        return this.body;
+    }
+
+    public void setBody(Block body) {
+        this.body = body;
+    }
+
     /* Hack to set the current scope in the body of the activity, since the
      * effective body is not currently an official derived attribute.
      */
     @Override
-    public UnitDefinition deriveSubunit() {
+    protected UnitDefinition deriveSubunit() {
         UnitDefinition subunit = super.deriveSubunit();        
         Block body = this.getEffectiveBody(subunit);
         if (body != null) {

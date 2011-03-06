@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A reference to an element or package to be imported into a unit.
@@ -35,9 +36,9 @@ public abstract class ImportReferenceImpl extends
      * referent name.
      **/
 	public ElementReference deriveReferent() {
-	    ArrayList<ElementReference> referents = this.getReferents();
+	    Collection<ElementReference> referents = this.getReferents();
 		if (referents.size() > 0) {
-		    return referents.get(0);
+		    return (ElementReference)referents.toArray()[0];
 		} else {
 		    return null;
 		}
@@ -79,7 +80,7 @@ public abstract class ImportReferenceImpl extends
 	 * Helper Methods
 	 */
 	
-	protected ArrayList<ElementReference> getReferents() {
+	protected Collection<ElementReference> getReferents() {
 	    QualifiedName referentName = this.getSelf().getReferentName();
         referentName.getImpl().setCurrentScope(RootNamespace.getRootScope());
 	    return referentName.getReferent();
