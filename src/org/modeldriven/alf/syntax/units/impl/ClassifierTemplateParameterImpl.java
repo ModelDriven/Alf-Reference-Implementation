@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.units.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -72,10 +73,10 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
 	            other instanceof ClassifierTemplateParameter?
 	                    (ClassifierTemplateParameter)other:
 	                    ((ClassifierTemplateParameterImpl)other).getSelf();
-	        List<ElementReference> otherSpecializations = otherParameter.getSpecializationReferent();
+	        Collection<ElementReference> otherSpecializations = otherParameter.getSpecializationReferent();
 	        
 	        ClassifierTemplateParameter self = this.getSelf();
-            List<ElementReference> mySpecializations = self.getSpecializationReferent();
+            Collection<ElementReference> mySpecializations = self.getSpecializationReferent();
 	        
             return  otherParameter.getName().equals(self.getName()) &&
                     otherSpecializations.size() == mySpecializations.size() &&

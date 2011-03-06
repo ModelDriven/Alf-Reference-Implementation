@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 public class ElementImportReferenceImpl extends ImportReferenceImpl {
 
+    private String alias = "";
+
 	public ElementImportReferenceImpl(ElementImportReference self) {
 		super(self);
 	}
@@ -28,6 +30,14 @@ public class ElementImportReferenceImpl extends ImportReferenceImpl {
 		return (ElementImportReference) this.self;
 	}
 	
+    public String getAlias() {
+        return this.alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
 	/*
 	 * Helper Methods
 	 */

@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,29 +26,127 @@ import java.util.List;
 
 public abstract class MemberImpl extends DocumentedElementImpl {
 
-	public MemberImpl(Member self) {
-		super(self);
-	}
+    private String name = "";
+    private String visibility = "";
+    private Boolean isStub = false;
+    private NamespaceDefinition namespace = null;
+    private Collection<StereotypeAnnotation> annotation = new ArrayList<StereotypeAnnotation>();
+    private Boolean isFeature = null; // DERIVED
+    private Boolean isPrimitive = null; // DERIVED
+    private Boolean isExternal = null; // DERIVED
+    private UnitDefinition subunit = null; // DERIVED
 
-	public org.modeldriven.alf.syntax.units.Member getSelf() {
-		return (Member) this.self;
-	}
+    public MemberImpl(Member self) {
+        super(self);
+    }
 
-	public Boolean deriveIsFeature() {
+    public Member getSelf() {
+        return (Member) this.self;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVisibility() {
+        return this.visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
+    public Boolean getIsStub() {
+        return this.isStub;
+    }
+
+    public void setIsStub(Boolean isStub) {
+        this.isStub = isStub;
+    }
+
+    public NamespaceDefinition getNamespace() {
+        return this.namespace;
+    }
+
+    public void setNamespace(NamespaceDefinition namespace) {
+        this.namespace = namespace;
+    }
+
+    public Collection<StereotypeAnnotation> getAnnotation() {
+        return this.annotation;
+    }
+
+    public void setAnnotation(Collection<StereotypeAnnotation> annotation) {
+        this.annotation = annotation;
+    }
+
+    public void addAnnotation(StereotypeAnnotation annotation) {
+        this.annotation.add(annotation);
+    }
+
+    public Boolean getIsFeature() {
+        if (this.isFeature == null) {
+            this.setIsFeature(this.deriveIsFeature());
+        }
+        return this.isFeature;
+    }
+
+    public void setIsFeature(Boolean isFeature) {
+        this.isFeature = isFeature;
+    }
+
+    public Boolean getIsPrimitive() {
+        if (this.isPrimitive == null) {
+            this.setIsPrimitive(this.deriveIsPrimitive());
+        }
+        return this.isPrimitive;
+    }
+
+    public void setIsPrimitive(Boolean isPrimitive) {
+        this.isPrimitive = isPrimitive;
+    }
+
+    public Boolean getIsExternal() {
+        if (this.isExternal == null) {
+            this.setIsExternal(this.deriveIsExternal());
+        }
+        return this.isExternal;
+    }
+
+    public void setIsExternal(Boolean isExternal) {
+        this.isExternal = isExternal;
+    }
+
+    public UnitDefinition getSubunit() {
+        if (this.subunit == null) {
+            this.setSubunit(this.deriveSubunit());
+        }
+        return this.subunit;
+    }
+
+    public void setSubunit(UnitDefinition subunit) {
+        this.subunit = subunit;
+    }
+
+    protected Boolean deriveIsFeature() {
 		return false;
 	}
 
     /**
      * A member is primitive if it has a @primitive annotation.
      **/
-	public Boolean deriveIsPrimitive() {
+    protected Boolean deriveIsPrimitive() {
 		return this.hasAnnotation("primitive");
 	}
 
     /**
      * A member is external if it has an @external derivation.
      **/
-	public Boolean deriveIsExternal() {
+    protected Boolean deriveIsExternal() {
 		return this.hasAnnotation("external");
 	}
 
@@ -56,7 +155,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	 * subunit is a unit definition with the same fully qualified name as the
 	 * stub.
 	 **/
-	public UnitDefinition deriveSubunit() {
+    protected UnitDefinition deriveSubunit() {
 	    Member self = this.getSelf();
 	    if (!self.getIsStub() || self.getIsExternal()) {
 	        return null;
@@ -117,8 +216,8 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	public boolean memberStubStereotypes() {
         Member self = this.getSelf();
         if (self.getIsStub()) {
-            ArrayList<StereotypeAnnotation> stubAnnotations = self.getAnnotation();
-            ArrayList<StereotypeAnnotation> subunitAnnotations = 
+            Collection<StereotypeAnnotation> stubAnnotations = self.getAnnotation();
+            Collection<StereotypeAnnotation> subunitAnnotations = 
                 self.getSubunit().getDefinition().getAnnotation();
             if (stubAnnotations != null && stubAnnotations.size() > 0 &&
                     subunitAnnotations != null && subunitAnnotations.size() > 0) {
@@ -258,9 +357,9 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         return referent;
     }
 
-    public boolean isDistinguishableFromAll(List<Member> otherMembers) {
+    public boolean isDistinguishableFromAll(Collection<Member> ownedMembers) {
         Member self = this.getSelf();
-        for (Member otherMember: otherMembers) {
+        for (Member otherMember: ownedMembers) {
             if (!self.isDistinguishableFrom(otherMember)) {
                 return false;
             }

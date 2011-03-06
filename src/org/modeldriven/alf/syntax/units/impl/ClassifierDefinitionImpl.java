@@ -18,14 +18,18 @@ import org.omg.uml.Element;
 import org.omg.uml.NamedElement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * The definition of a classifier.
  **/
 
-public abstract class ClassifierDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl {
+public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
+
+    private Boolean isAbstract = false;
+    private QualifiedNameList specialization = null;
+    private Collection<ElementReference> specializationReferent = null; // DERIVED
 
 	public ClassifierDefinitionImpl(ClassifierDefinition self) {
 		super(self);
@@ -35,21 +39,54 @@ public abstract class ClassifierDefinitionImpl extends
 		return (ClassifierDefinition) this.self;
 	}
 
+    public Boolean getIsAbstract() {
+        return this.isAbstract;
+    }
+
+    public void setIsAbstract(Boolean isAbstract) {
+        this.isAbstract = isAbstract;
+    }
+
+    public QualifiedNameList getSpecialization() {
+        return this.specialization;
+    }
+
+    public void setSpecialization(QualifiedNameList specialization) {
+        this.specialization = specialization;
+    }
+
+    public Collection<ElementReference> getSpecializationReferent() {
+        if (this.specializationReferent == null) {
+            this.setSpecializationReferent(this.deriveSpecializationReferent());
+        }
+        return this.specializationReferent;
+    }
+
+    public void setSpecializationReferent(
+            Collection<ElementReference> specializationReferent) {
+        this.specializationReferent = specializationReferent;
+    }
+
+    public void addSpecializationReferent(
+            ElementReference specializationReferent) {
+        this.specializationReferent.add(specializationReferent);
+    }
+
     /**
      * The specialization referents of a classifier definition are the
      * classifiers denoted by the names in the specialization list for the
      * classifier definition.
      **/
-	public ArrayList<ElementReference> deriveSpecializationReferent() {
+	protected Collection<ElementReference> deriveSpecializationReferent() {
 	    ClassifierDefinition self = this.getSelf();
 	    ArrayList<ElementReference> specializationReferents = new ArrayList<ElementReference>();
 	    QualifiedNameList specialization = self.getSpecialization();
 	    if (specialization != null) {
     	    for (QualifiedName qualifiedName: specialization.getName()) {
     	        qualifiedName.getImpl().setCurrentScope(this.getOuterScope());
-    	        ArrayList<ElementReference> referents = qualifiedName.getReferent();
-    	        if (referents.size() > 0) {
-    	            specializationReferents.add(referents.get(0));
+    	        ElementReference referent = qualifiedName.getImpl().getNonTemplateClassifierReferent();
+    	        if (referent != null) {
+    	            specializationReferents.add(referent);
     	        }
     	    }
 	    }
@@ -63,12 +100,12 @@ public abstract class ClassifierDefinitionImpl extends
      * 7.3.8.
      **/
 	@Override
-	public ArrayList<Member> deriveMember() {
+	protected Collection<Member> deriveMember() {
 	    ArrayList<Member> inheritedMembers = new ArrayList<Member>();
 	    for (ElementReference parent: this.getSelf().getSpecializationReferent()) {
 	        inheritedMembers.addAll(this.getInheritableMembersOf(parent));
 	    }
-	    ArrayList<Member> members = super.deriveMember();
+	    Collection<Member> members = super.deriveMember();
         members.addAll(this.inherit(inheritedMembers));
 	    return members;
 	}
@@ -93,10 +130,13 @@ public abstract class ClassifierDefinitionImpl extends
      **/
     public boolean classifierDefinitionSpecialization() {
         ClassifierDefinition self = this.getSelf();
-        for (QualifiedName qualifiedName: self.getSpecialization().getName()) {
-            qualifiedName.getImpl().setCurrentScope(this.getOuterScope());
-            if (qualifiedName.getImpl().getNonTemplateClassifierReferent() == null) {
-                return false;
+        QualifiedNameList specialization = self.getSpecialization();
+        if (specialization != null) {
+            for (QualifiedName qualifiedName: specialization.getName()) {
+                qualifiedName.getImpl().setCurrentScope(this.getOuterScope());
+                if (qualifiedName.getImpl().getNonTemplateClassifierReferent() == null) {
+                    return false;
+                }
             }
         }
         return true;
@@ -133,11 +173,11 @@ public abstract class ClassifierDefinitionImpl extends
 	        return false;
 	    } else {
 	        ClassifierDefinition other = (ClassifierDefinition)namespace;
-	        List<ElementReference> otherSpecializations = other.getSpecializationReferent();
+	        Collection<ElementReference> otherSpecializations = other.getSpecializationReferent();
 	        List<ClassifierTemplateParameter> otherParameters = other.getImpl().getTemplateParameters();
 	        
 	        ClassifierDefinition self = this.getSelf();
-            List<ElementReference> mySpecializations = self.getSpecializationReferent();
+            Collection<ElementReference> mySpecializations = self.getSpecializationReferent();
             List<ClassifierTemplateParameter> myParameters = self.getImpl().getTemplateParameters();
 	        
             return  other.getIsAbstract() == self.getIsAbstract() &&
@@ -172,10 +212,10 @@ public abstract class ClassifierDefinitionImpl extends
         return templateParameters;
 	}
 
-	private ArrayList<Member> getInheritableMembersOf(ElementReference parent) {
+	private List<Member> getInheritableMembersOf(ElementReference parent) {
 	    SyntaxElement alfParent = parent.getImpl().getAlf();
 	    Element umlParent = parent.getImpl().getUml();
-	    ArrayList<Member> inheritableMembers = null;
+	    List<Member> inheritableMembers = null;
 	    if (alfParent != null && alfParent instanceof ClassifierDefinition) {
 	        inheritableMembers = ((ClassifierDefinition)alfParent).getImpl().getInheritableMembers();
 	    } else if (umlParent != null && umlParent instanceof Classifier) {
@@ -189,7 +229,7 @@ public abstract class ClassifierDefinitionImpl extends
 	    return this.inherit(inheritableMembers);
 	}
 
-	public ArrayList<Member> getInheritableMembers() {
+	public List<Member> getInheritableMembers() {
 	    ArrayList<Member> inheritableMembers = new ArrayList<Member>();
 	    for (Member member: this.getSelf().getMember()) {
 	        if (!member.getImpl().isPrivate()) {
@@ -200,7 +240,7 @@ public abstract class ClassifierDefinitionImpl extends
 	}
 
 	// Note: Overrides of this operation may modify the contents of inheritableMembers.
-	protected ArrayList<Member> inherit(ArrayList<Member> inheritableMembers) {
+	protected List<Member> inherit(List<Member> inheritableMembers) {
 	    return inheritableMembers;
 	}
 

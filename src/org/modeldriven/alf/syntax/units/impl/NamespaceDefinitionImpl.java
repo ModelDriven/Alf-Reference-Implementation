@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -42,8 +43,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
      * member (as determined by the Member::isDistinguishableFrom operation) are
      * not imported.
      **/
-	@SuppressWarnings("unchecked")
-    public ArrayList<Member> deriveMember() {
+    protected Collection<Member> deriveMember() {
 	    NamespaceDefinition self = this.getSelf();
 
         if (self.getIsStub()) {
@@ -57,7 +57,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	        }
 	    }
         
-	    ArrayList<Member> members = (ArrayList<Member>)self.getOwnedMember().clone();
+	    ArrayList<Member> members = new ArrayList<Member>(self.getOwnedMember());
 	    
         UnitDefinition unit = self.getUnit();	    
 	    if (unit != null) {
@@ -85,7 +85,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	 * Member::isDistinguishableFrom operation.
 	 **/
 	public boolean namespaceDefinitionMemberDistinguishaibility() {
-	    ArrayList<Member> members = this.getSelf().getMember();
+	    ArrayList<Member> members = new ArrayList<Member>(this.getSelf().getMember());
 	    int n = members.size();
 	    for (int i = 0; i < n; i++) {
 	        Member member = members.get(i);
