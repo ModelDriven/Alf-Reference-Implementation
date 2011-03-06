@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.ImportReferenceImpl;
 
@@ -27,48 +29,40 @@ import org.modeldriven.alf.syntax.units.impl.ImportReferenceImpl;
 
 public abstract class ImportReference extends SyntaxElement {
 
-	private String visibility = "";
-	private QualifiedName referentName = null;
-	private UnitDefinition unit = null;
-	private ElementReference referent = null; // DERIVED
-
 	public ImportReferenceImpl getImpl() {
 		return (ImportReferenceImpl) this.impl;
 	}
 
 	public String getVisibility() {
-		return this.visibility;
+		return this.getImpl().getVisibility();
 	}
 
 	public void setVisibility(String visibility) {
-		this.visibility = visibility;
+		this.getImpl().setVisibility(visibility);
 	}
 
 	public QualifiedName getReferentName() {
-		return this.referentName;
+		return this.getImpl().getReferentName();
 	}
 
 	public void setReferentName(QualifiedName referentName) {
-		this.referentName = referentName;
+		this.getImpl().setReferentName(referentName);
 	}
 
 	public UnitDefinition getUnit() {
-		return this.unit;
+		return this.getImpl().getUnit();
 	}
 
 	public void setUnit(UnitDefinition unit) {
-		this.unit = unit;
+		this.getImpl().setUnit(unit);
 	}
 
 	public ElementReference getReferent() {
-		if (this.referent == null) {
-			this.setReferent(this.getImpl().deriveReferent());
-		}
-		return this.referent;
+		return this.getImpl().getReferent();
 	}
 
 	public void setReferent(ElementReference referent) {
-		this.referent = referent;
+		this.getImpl().setReferent(referent);
 	}
 
 	/**

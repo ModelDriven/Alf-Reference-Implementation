@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A block of an accept statement that accepts one or more signals.
@@ -25,6 +27,11 @@ import java.util.ArrayList;
 
 public class AcceptBlockImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
+
+	private String name = "";
+	private Block block = null;
+	private QualifiedNameList signalNames = null;
+	private Collection<ElementReference> signal = null; // DERIVED
 
 	public AcceptBlockImpl(AcceptBlock self) {
 		super(self);
@@ -34,7 +41,46 @@ public class AcceptBlockImpl extends
 		return (AcceptBlock) this.self;
 	}
 
-	public ArrayList<ElementReference> deriveSignal() {
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Block getBlock() {
+		return this.block;
+	}
+
+	public void setBlock(Block block) {
+		this.block = block;
+	}
+
+	public QualifiedNameList getSignalNames() {
+		return this.signalNames;
+	}
+
+	public void setSignalNames(QualifiedNameList signalNames) {
+		this.signalNames = signalNames;
+	}
+
+	public Collection<ElementReference> getSignal() {
+		if (this.signal == null) {
+			this.setSignal(this.deriveSignal());
+		}
+		return this.signal;
+	}
+
+	public void setSignal(Collection<ElementReference> signal) {
+		this.signal = signal;
+	}
+
+	public void addSignal(ElementReference signal) {
+		this.signal.add(signal);
+	}
+
+	protected Collection<ElementReference> deriveSignal() {
 		return null; // STUB
 	}
 

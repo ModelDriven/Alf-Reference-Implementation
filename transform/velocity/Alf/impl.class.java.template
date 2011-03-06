@@ -23,6 +23,16 @@ ${packageDeclaration}.impl.gen;
 ## #end
 ## #end
 
+#foreach( $feature in ${object.ownedAttributes} )
+  #if( ${feature.isStatic()} )
+  #visibility(${feature}) static #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
+  #elseif( ${feature.isDerived()} )
+  private #type(${feature}) #name(${feature.name}) = null; // DERIVED
+  #else
+  private #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
+  #end  
+#end
+
 #if( ${object.superClasses.size()}==0 )
   protected #name(${object.name}) self;
   
@@ -38,6 +48,13 @@ ${packageDeclaration}.impl.gen;
 public #name(${object.name}) getSelf() {
   return (#name(${object.name}))this.self;
 }
+
+#foreach ( $attribute in ${object.ownedAttributes} )
+  #if( !${attribute.isStatic()} )
+  #getterImpl(${attribute})
+  #setterImpl(${attribute})
+  #end  
+#end
 
 #foreach ( $attribute in ${object.ownedAttributes} )
   #if( ${attribute.isDerived()} )

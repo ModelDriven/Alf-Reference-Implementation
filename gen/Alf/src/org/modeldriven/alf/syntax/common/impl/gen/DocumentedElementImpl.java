@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A syntax element that has documentation comments associated with it.
@@ -26,12 +28,26 @@ import java.util.ArrayList;
 public abstract class DocumentedElementImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private Collection<String> documentation = new ArrayList<String>();
+
 	public DocumentedElementImpl(DocumentedElement self) {
 		super(self);
 	}
 
 	public DocumentedElement getSelf() {
 		return (DocumentedElement) this.self;
+	}
+
+	public Collection<String> getDocumentation() {
+		return this.documentation;
+	}
+
+	public void setDocumentation(Collection<String> documentation) {
+		this.documentation = documentation;
+	}
+
+	public void addDocumentation(String documentation) {
+		this.documentation.add(documentation);
 	}
 
 } // DocumentedElementImpl

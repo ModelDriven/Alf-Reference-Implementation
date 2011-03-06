@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.OperationDefinitionImpl;
 
@@ -28,13 +30,6 @@ import org.modeldriven.alf.syntax.units.impl.OperationDefinitionImpl;
 
 public class OperationDefinition extends NamespaceDefinition {
 
-	private QualifiedNameList redefinition = null;
-	private Boolean isAbstract = false;
-	private Block body = null;
-	private ArrayList<ElementReference> redefinedOperations = null; // DERIVED
-	private Boolean isConstructor = null; // DERIVED
-	private Boolean isDestructor = null; // DERIVED
-
 	public OperationDefinition() {
 		this.impl = new OperationDefinitionImpl(this);
 	}
@@ -44,66 +39,56 @@ public class OperationDefinition extends NamespaceDefinition {
 	}
 
 	public QualifiedNameList getRedefinition() {
-		return this.redefinition;
+		return this.getImpl().getRedefinition();
 	}
 
 	public void setRedefinition(QualifiedNameList redefinition) {
-		this.redefinition = redefinition;
+		this.getImpl().setRedefinition(redefinition);
 	}
 
 	public Boolean getIsAbstract() {
-		return this.isAbstract;
+		return this.getImpl().getIsAbstract();
 	}
 
 	public void setIsAbstract(Boolean isAbstract) {
-		this.isAbstract = isAbstract;
+		this.getImpl().setIsAbstract(isAbstract);
 	}
 
 	public Block getBody() {
-		return this.body;
+		return this.getImpl().getBody();
 	}
 
 	public void setBody(Block body) {
-		this.body = body;
+		this.getImpl().setBody(body);
 	}
 
-	public ArrayList<ElementReference> getRedefinedOperations() {
-		if (this.redefinedOperations == null) {
-			this.setRedefinedOperations(this.getImpl()
-					.deriveRedefinedOperations());
-		}
-		return this.redefinedOperations;
+	public Collection<ElementReference> getRedefinedOperations() {
+		return this.getImpl().getRedefinedOperations();
 	}
 
 	public void setRedefinedOperations(
-			ArrayList<ElementReference> redefinedOperations) {
-		this.redefinedOperations = redefinedOperations;
+			Collection<ElementReference> redefinedOperations) {
+		this.getImpl().setRedefinedOperations(redefinedOperations);
 	}
 
 	public void addRedefinedOperations(ElementReference redefinedOperations) {
-		this.redefinedOperations.add(redefinedOperations);
+		this.getImpl().addRedefinedOperations(redefinedOperations);
 	}
 
 	public Boolean getIsConstructor() {
-		if (this.isConstructor == null) {
-			this.setIsConstructor(this.getImpl().deriveIsConstructor());
-		}
-		return this.isConstructor;
+		return this.getImpl().getIsConstructor();
 	}
 
 	public void setIsConstructor(Boolean isConstructor) {
-		this.isConstructor = isConstructor;
+		this.getImpl().setIsConstructor(isConstructor);
 	}
 
 	public Boolean getIsDestructor() {
-		if (this.isDestructor == null) {
-			this.setIsDestructor(this.getImpl().deriveIsDestructor());
-		}
-		return this.isDestructor;
+		return this.getImpl().getIsDestructor();
 	}
 
 	public void setIsDestructor(Boolean isDestructor) {
-		this.isDestructor = isDestructor;
+		this.getImpl().setIsDestructor(isDestructor);
 	}
 
 	/**
@@ -256,7 +241,7 @@ public class OperationDefinition extends NamespaceDefinition {
 			System.out.println(prefix + " body:");
 			body.print(prefix + "  ");
 		}
-		ArrayList<ElementReference> redefinedOperations = this
+		Collection<ElementReference> redefinedOperations = this
 				.getRedefinedOperations();
 		if (redefinedOperations != null) {
 			if (redefinedOperations.size() > 0) {

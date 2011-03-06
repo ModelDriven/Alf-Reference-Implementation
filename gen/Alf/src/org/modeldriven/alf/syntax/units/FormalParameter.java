@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.FormalParameterImpl;
 
@@ -28,8 +30,6 @@ import org.modeldriven.alf.syntax.units.impl.FormalParameterImpl;
 
 public class FormalParameter extends TypedElementDefinition {
 
-	private String direction = "";
-
 	public FormalParameter() {
 		this.impl = new FormalParameterImpl(this);
 	}
@@ -39,11 +39,11 @@ public class FormalParameter extends TypedElementDefinition {
 	}
 
 	public String getDirection() {
-		return this.direction;
+		return this.getImpl().getDirection();
 	}
 
 	public void setDirection(String direction) {
-		this.direction = direction;
+		this.getImpl().setDirection(direction);
 	}
 
 	/**

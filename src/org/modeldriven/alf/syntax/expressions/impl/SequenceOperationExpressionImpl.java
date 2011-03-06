@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,29 +15,76 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to invoke a behavior as if it was an operation on a target
  * sequence as a whole.
  **/
 
-public class SequenceOperationExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl {
+public class SequenceOperationExpressionImpl
+		extends InvocationExpressionImpl {
+
+	private ExtentOrExpression primary = null;
+	private QualifiedName operation = null;
+	private Boolean isCollectionConversion = null; // DERIVED
+	private Boolean isBitStringConversion = null; // DERIVED
 
 	public SequenceOperationExpressionImpl(SequenceOperationExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceOperationExpression getSelf() {
+	public SequenceOperationExpression getSelf() {
 		return (SequenceOperationExpression) this.self;
 	}
 
-	public Boolean deriveIsCollectionConversion() {
+	public ExtentOrExpression getPrimary() {
+		return this.primary;
+	}
+
+	public void setPrimary(ExtentOrExpression primary) {
+		this.primary = primary;
+	}
+
+	public QualifiedName getOperation() {
+		return this.operation;
+	}
+
+	public void setOperation(QualifiedName operation) {
+		this.operation = operation;
+	}
+
+	public Boolean getIsCollectionConversion() {
+		if (this.isCollectionConversion == null) {
+			this.setIsCollectionConversion(this.deriveIsCollectionConversion());
+		}
+		return this.isCollectionConversion;
+	}
+
+	public void setIsCollectionConversion(Boolean isCollectionConversion) {
+		this.isCollectionConversion = isCollectionConversion;
+	}
+
+	public Boolean getIsBitStringConversion() {
+		if (this.isBitStringConversion == null) {
+			this.setIsBitStringConversion(this.deriveIsBitStringConversion());
+		}
+		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
+	}
+
+	protected Boolean deriveIsCollectionConversion() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsBitStringConversion() {
+	protected Boolean deriveIsBitStringConversion() {
 		return null; // STUB
 	}
 
@@ -125,7 +172,7 @@ public class SequenceOperationExpressionImpl extends
 	 * "in place" operation (one whose first parameter is inout), that made by
 	 * the sequence operation expression itself.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

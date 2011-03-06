@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -11,32 +11,78 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A list of expressions used to provide the arguments for an invocation.
  **/
 
-public abstract class TupleImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public abstract class TupleImpl extends SyntaxElementImpl {
+
+	private Collection<NamedExpression> input = null; // DERIVED
+	private InvocationExpression invocation = null;
+	private Collection<OutputNamedExpression> output = null; // DERIVED
 
 	public TupleImpl(Tuple self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.Tuple getSelf() {
+	public Tuple getSelf() {
 		return (Tuple) this.self;
 	}
 
-	public ArrayList<NamedExpression> deriveInput() {
+	public Collection<NamedExpression> getInput() {
+		if (this.input == null) {
+			this.setInput(this.deriveInput());
+		}
+		return this.input;
+	}
+
+	public void setInput(Collection<NamedExpression> input) {
+		this.input = input;
+	}
+
+	public void addInput(NamedExpression input) {
+		this.input.add(input);
+	}
+
+	public InvocationExpression getInvocation() {
+		return this.invocation;
+	}
+
+	public void setInvocation(InvocationExpression invocation) {
+		this.invocation = invocation;
+	}
+
+	public Collection<OutputNamedExpression> getOutput() {
+		if (this.output == null) {
+			this.setOutput(this.deriveOutput());
+		}
+		return this.output;
+	}
+
+	public void setOutput(Collection<OutputNamedExpression> output) {
+		this.output = output;
+	}
+
+	public void addOutput(OutputNamedExpression output) {
+		this.output.add(output);
+	}
+
+	protected Collection<NamedExpression> deriveInput() {
 		return null; // STUB
 	}
 
-	public ArrayList<OutputNamedExpression> deriveOutput() {
+	protected Collection<OutputNamedExpression> deriveOutput() {
 		return null; // STUB
 	}
 

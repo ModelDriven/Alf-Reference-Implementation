@@ -25,19 +25,54 @@ import java.util.List;
  * A statement used to accept the receipt of instances of one or more signals.
  **/
 
-public class AcceptStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class AcceptStatementImpl extends StatementImpl {
     
-    private NamespaceDefinition currentScope = null;
+    private Collection<AcceptBlock> acceptBlock = new ArrayList<AcceptBlock>();
+    private ElementReference behavior = null; // DERIVED
+    private Boolean isSimple = null; // DERIVED
 
-	public AcceptStatementImpl(AcceptStatement self) {
-		super(self);
-	}
+    public AcceptStatementImpl(AcceptStatement self) {
+        super(self);
+    }
 
-	public org.modeldriven.alf.syntax.statements.AcceptStatement getSelf() {
-		return (AcceptStatement) this.self;
-	}
-	
+    public AcceptStatement getSelf() {
+        return (AcceptStatement) this.self;
+    }
+
+    public Collection<AcceptBlock> getAcceptBlock() {
+        return this.acceptBlock;
+    }
+
+    public void setAcceptBlock(Collection<AcceptBlock> acceptBlock) {
+        this.acceptBlock = acceptBlock;
+    }
+
+    public void addAcceptBlock(AcceptBlock acceptBlock) {
+        this.acceptBlock.add(acceptBlock);
+    }
+
+    public ElementReference getBehavior() {
+        if (this.behavior == null) {
+            this.setBehavior(this.deriveBehavior());
+        }
+        return this.behavior;
+    }
+
+    public void setBehavior(ElementReference behavior) {
+        this.behavior = behavior;
+    }
+
+    public Boolean getIsSimple() {
+        if (this.isSimple == null) {
+            this.setIsSimple(this.deriveIsSimple());
+        }
+        return this.isSimple;
+    }
+
+    public void setIsSimple(Boolean isSimple) {
+        this.isSimple = isSimple;
+    }
+
 	/**
 	 * The current scope for an accept statement should be the containing
 	 * behavior. It is implicitly set by setCurrentScope().
@@ -51,8 +86,9 @@ public class AcceptStatementImpl extends
      * accept block does not have a block.
      **/
 	public Boolean deriveIsSimple() {
-		List<AcceptBlock> acceptBlocks = this.getSelf().getAcceptBlock();
-		return acceptBlocks.size() == 1 && acceptBlocks.get(0).getBlock() == null;
+		Collection<AcceptBlock> acceptBlocks = this.getSelf().getAcceptBlock();
+		return acceptBlocks.size() == 1 && 
+		        ((AcceptBlock)acceptBlocks.toArray()[0]).getBlock() == null;
 	}
 	
     /**
@@ -68,11 +104,11 @@ public class AcceptStatementImpl extends
      **/
 	@Override
     @SuppressWarnings("unchecked")
-	public ArrayList<AssignedSource> deriveAssignmentAfter() {
+	protected Collection<AssignedSource> deriveAssignmentAfter() {
         AcceptStatement self = this.getSelf();
-        ArrayList<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
+        Collection<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
         ArrayList<AssignedSource> assignmentsAfter = 
-            (ArrayList<AssignedSource>)assignmentsBefore.clone();
+            new ArrayList<AssignedSource>(assignmentsBefore);
 /*        if (self.getIsSimple()) {
             AcceptBlock block = self.getAcceptBlock().get(0);
             String name = block.getName();
@@ -165,7 +201,7 @@ public class AcceptStatementImpl extends
 	 **/
 	public boolean acceptStatementNames() {
 	    AcceptStatement self = this.getSelf();
-	    ArrayList<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
+	    Collection<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
 	    for (AcceptBlock block: self.getAcceptBlock()) {
 	        String name = block.getName();
 	        if (name != null && 
@@ -226,15 +262,11 @@ public class AcceptStatementImpl extends
 	 **/
 	public boolean acceptStatementNewAssignments() {
 	    AcceptStatement self = this.getSelf();
-	    ArrayList<AcceptBlock> acceptBlocks = self.getAcceptBlock();
+	    Collection<AcceptBlock> acceptBlocks = self.getAcceptBlock();
 	    if (acceptBlocks.size() > 1) {
-    	    ArrayList<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
+    	    Collection<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
     	    self.getAssignmentAfter();
     	    HashMap<String, AssignedSource> assignments = new HashMap<String, AssignedSource>();
-    	    Block block = acceptBlocks.get(0).getBlock();
-    	    if (block != null) {
-    	        
-    	    }
 	    }
 		return true;
 	}

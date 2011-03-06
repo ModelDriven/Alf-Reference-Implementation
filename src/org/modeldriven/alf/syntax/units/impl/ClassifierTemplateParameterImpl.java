@@ -13,7 +13,6 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * The definition of a classifier template parameter, which acts as a classifier

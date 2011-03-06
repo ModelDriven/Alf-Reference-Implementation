@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A binary expression with an arithmetic operator.
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 
 public class ArithmeticExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.BinaryExpressionImpl {
+
+	private Boolean isConcatenation = null; // DERIVED
 
 	public ArithmeticExpressionImpl(ArithmeticExpression self) {
 		super(self);
@@ -34,7 +38,18 @@ public class ArithmeticExpressionImpl extends
 		return (ArithmeticExpression) this.self;
 	}
 
-	public Boolean deriveIsConcatenation() {
+	public Boolean getIsConcatenation() {
+		if (this.isConcatenation == null) {
+			this.setIsConcatenation(this.deriveIsConcatenation());
+		}
+		return this.isConcatenation;
+	}
+
+	public void setIsConcatenation(Boolean isConcatenation) {
+		this.isConcatenation = isConcatenation;
+	}
+
+	protected Boolean deriveIsConcatenation() {
 		return null; // STUB
 	}
 

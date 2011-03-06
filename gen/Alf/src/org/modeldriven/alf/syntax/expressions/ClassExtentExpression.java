@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.ClassExtentExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.ClassExtentExpressionImpl;
  **/
 
 public class ClassExtentExpression extends Expression {
-
-	private QualifiedName className = null;
 
 	public ClassExtentExpression() {
 		this.impl = new ClassExtentExpressionImpl(this);
@@ -38,11 +38,11 @@ public class ClassExtentExpression extends Expression {
 	}
 
 	public QualifiedName getClassName() {
-		return this.className;
+		return this.getImpl().getClassName();
 	}
 
 	public void setClassName(QualifiedName className) {
-		this.className = className;
+		this.getImpl().setClassName(className);
 	}
 
 	/**

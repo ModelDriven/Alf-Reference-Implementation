@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,32 +15,81 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression that comprises a name reference.
  **/
 
-public class NameExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl {
+public class NameExpressionImpl extends ExpressionImpl {
+
+	private ElementReference enumerationLiteral = null; // DERIVED
+	private AssignedSource assignment = null; // DERIVED
+	private PropertyAccessExpression propertyAccess = null; // DERIVED
+	private QualifiedName name = null;
 
 	public NameExpressionImpl(NameExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NameExpression getSelf() {
+	public NameExpression getSelf() {
 		return (NameExpression) this.self;
 	}
 
-	public ElementReference deriveEnumerationLiteral() {
+	public ElementReference getEnumerationLiteral() {
+		if (this.enumerationLiteral == null) {
+			this.setEnumerationLiteral(this.deriveEnumerationLiteral());
+		}
+		return this.enumerationLiteral;
+	}
+
+	public void setEnumerationLiteral(ElementReference enumerationLiteral) {
+		this.enumerationLiteral = enumerationLiteral;
+	}
+
+	public AssignedSource getAssignment() {
+		if (this.assignment == null) {
+			this.setAssignment(this.deriveAssignment());
+		}
+		return this.assignment;
+	}
+
+	public void setAssignment(AssignedSource assignment) {
+		this.assignment = assignment;
+	}
+
+	public PropertyAccessExpression getPropertyAccess() {
+		if (this.propertyAccess == null) {
+			this.setPropertyAccess(this.derivePropertyAccess());
+		}
+		return this.propertyAccess;
+	}
+
+	public void setPropertyAccess(PropertyAccessExpression propertyAccess) {
+		this.propertyAccess = propertyAccess;
+	}
+
+	public QualifiedName getName() {
+		return this.name;
+	}
+
+	public void setName(QualifiedName name) {
+		this.name = name;
+	}
+
+	protected ElementReference deriveEnumerationLiteral() {
 		return null; // STUB
 	}
 
-	public AssignedSource deriveAssignment() {
+	protected AssignedSource deriveAssignment() {
 		return null; // STUB
 	}
 
-	public PropertyAccessExpression derivePropertyAccess() {
+	protected PropertyAccessExpression derivePropertyAccess() {
 		return null; // STUB
 	}
 

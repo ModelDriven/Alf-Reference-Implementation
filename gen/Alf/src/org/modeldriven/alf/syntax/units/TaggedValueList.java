@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.TaggedValueListImpl;
 
@@ -27,8 +29,6 @@ import org.modeldriven.alf.syntax.units.impl.TaggedValueListImpl;
 
 public class TaggedValueList extends SyntaxElement {
 
-	private ArrayList<TaggedValue> taggedValue = new ArrayList<TaggedValue>();
-
 	public TaggedValueList() {
 		this.impl = new TaggedValueListImpl(this);
 	}
@@ -37,16 +37,16 @@ public class TaggedValueList extends SyntaxElement {
 		return (TaggedValueListImpl) this.impl;
 	}
 
-	public ArrayList<TaggedValue> getTaggedValue() {
-		return this.taggedValue;
+	public Collection<TaggedValue> getTaggedValue() {
+		return this.getImpl().getTaggedValue();
 	}
 
-	public void setTaggedValue(ArrayList<TaggedValue> taggedValue) {
-		this.taggedValue = taggedValue;
+	public void setTaggedValue(Collection<TaggedValue> taggedValue) {
+		this.getImpl().setTaggedValue(taggedValue);
 	}
 
 	public void addTaggedValue(TaggedValue taggedValue) {
-		this.taggedValue.add(taggedValue);
+		this.getImpl().addTaggedValue(taggedValue);
 	}
 
 	public String toString() {
@@ -56,7 +56,7 @@ public class TaggedValueList extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<TaggedValue> taggedValue = this.getTaggedValue();
+		Collection<TaggedValue> taggedValue = this.getTaggedValue();
 		if (taggedValue != null) {
 			if (taggedValue.size() > 0) {
 				System.out.println(prefix + " taggedValue:");

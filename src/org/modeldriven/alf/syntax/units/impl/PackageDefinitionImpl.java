@@ -13,6 +13,7 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.Profile;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,6 +23,8 @@ import java.util.List;
 
 public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 
+	private Collection<Profile> appliedProfile = null; // DERIVED
+
 	public PackageDefinitionImpl(PackageDefinition self) {
 		super(self);
 	}
@@ -30,11 +33,26 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 		return (PackageDefinition) this.self;
 	}
 
+	public Collection<Profile> getAppliedProfile() {
+		if (this.appliedProfile == null) {
+			this.setAppliedProfile(this.deriveAppliedProfile());
+		}
+		return this.appliedProfile;
+	}
+
+	public void setAppliedProfile(Collection<Profile> appliedProfile) {
+		this.appliedProfile = appliedProfile;
+	}
+
+	public void addAppliedProfile(Profile appliedProfile) {
+		this.appliedProfile.add(appliedProfile);
+	}
+
 	/**
 	 * The applied profiles of a package definition are the profiles listed in
 	 * any @apply annotations on the package.
 	 **/
-	public ArrayList<Profile> deriveAppliedProfile() {
+	protected Collection<Profile> deriveAppliedProfile() {
 	    // TODO: Handle applied profiles.
 		return new ArrayList<Profile>();
 	}

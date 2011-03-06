@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement that evaluates an expression when executed.
@@ -26,12 +28,22 @@ import java.util.ArrayList;
 public class ExpressionStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
 
+	private Expression expression = null;
+
 	public ExpressionStatementImpl(ExpressionStatement self) {
 		super(self);
 	}
 
 	public ExpressionStatement getSelf() {
 		return (ExpressionStatement) this.self;
+	}
+
+	public Expression getExpression() {
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
 	}
 
 	/**

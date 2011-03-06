@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.ClassificationExpressionImpl;
 
@@ -26,10 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.ClassificationExpressionImpl;
  **/
 
 public class ClassificationExpression extends UnaryExpression {
-
-	private ElementReference referent = null; // DERIVED
-	private Boolean isDirect = null; // DERIVED
-	private QualifiedName typeName = null;
 
 	public ClassificationExpression() {
 		this.impl = new ClassificationExpressionImpl(this);
@@ -40,33 +38,27 @@ public class ClassificationExpression extends UnaryExpression {
 	}
 
 	public ElementReference getReferent() {
-		if (this.referent == null) {
-			this.setReferent(this.getImpl().deriveReferent());
-		}
-		return this.referent;
+		return this.getImpl().getReferent();
 	}
 
 	public void setReferent(ElementReference referent) {
-		this.referent = referent;
+		this.getImpl().setReferent(referent);
 	}
 
 	public Boolean getIsDirect() {
-		if (this.isDirect == null) {
-			this.setIsDirect(this.getImpl().deriveIsDirect());
-		}
-		return this.isDirect;
+		return this.getImpl().getIsDirect();
 	}
 
 	public void setIsDirect(Boolean isDirect) {
-		this.isDirect = isDirect;
+		this.getImpl().setIsDirect(isDirect);
 	}
 
 	public QualifiedName getTypeName() {
-		return this.typeName;
+		return this.getImpl().getTypeName();
 	}
 
 	public void setTypeName(QualifiedName typeName) {
-		this.typeName = typeName;
+		this.getImpl().setTypeName(typeName);
 	}
 
 	/**

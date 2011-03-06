@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression that comprises a String literal.
@@ -26,12 +28,22 @@ import java.util.ArrayList;
 public class StringLiteralExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.LiteralExpressionImpl {
 
+	private String image = "";
+
 	public StringLiteralExpressionImpl(StringLiteralExpression self) {
 		super(self);
 	}
 
 	public StringLiteralExpression getSelf() {
 		return (StringLiteralExpression) this.self;
+	}
+
+	public String getImage() {
+		return this.image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	/**

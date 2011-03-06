@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,7 +15,11 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A grouping of non-final conditional clauses to be tested concurrently.
@@ -24,12 +28,26 @@ import java.util.ArrayList;
 public class ConcurrentClausesImpl extends
 		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
 
+	private Collection<NonFinalClause> clause = new ArrayList<NonFinalClause>();
+
 	public ConcurrentClausesImpl(ConcurrentClauses self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.ConcurrentClauses getSelf() {
+	public ConcurrentClauses getSelf() {
 		return (ConcurrentClauses) this.self;
+	}
+
+	public Collection<NonFinalClause> getClause() {
+		return this.clause;
+	}
+
+	public void setClause(Collection<NonFinalClause> clause) {
+		this.clause = clause;
+	}
+
+	public void addClause(NonFinalClause clause) {
+		this.clause.add(clause);
 	}
 
 	/**

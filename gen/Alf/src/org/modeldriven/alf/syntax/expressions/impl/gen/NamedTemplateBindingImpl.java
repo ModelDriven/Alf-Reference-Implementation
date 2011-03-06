@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A template binding in which the arguments are matched to formal template
@@ -27,12 +29,27 @@ import java.util.ArrayList;
 public class NamedTemplateBindingImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.TemplateBindingImpl {
 
+	private Collection<TemplateParameterSubstitution> substitution = new ArrayList<TemplateParameterSubstitution>();
+
 	public NamedTemplateBindingImpl(NamedTemplateBinding self) {
 		super(self);
 	}
 
 	public NamedTemplateBinding getSelf() {
 		return (NamedTemplateBinding) this.self;
+	}
+
+	public Collection<TemplateParameterSubstitution> getSubstitution() {
+		return this.substitution;
+	}
+
+	public void setSubstitution(
+			Collection<TemplateParameterSubstitution> substitution) {
+		this.substitution = substitution;
+	}
+
+	public void addSubstitution(TemplateParameterSubstitution substitution) {
+		this.substitution.add(substitution);
 	}
 
 } // NamedTemplateBindingImpl

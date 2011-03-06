@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.AcceptStatementImpl;
 
@@ -27,10 +29,6 @@ import org.modeldriven.alf.syntax.statements.impl.AcceptStatementImpl;
 
 public class AcceptStatement extends Statement {
 
-	private ArrayList<AcceptBlock> acceptBlock = new ArrayList<AcceptBlock>();
-	private ElementReference behavior = null; // DERIVED
-	private Boolean isSimple = null; // DERIVED
-
 	public AcceptStatement() {
 		this.impl = new AcceptStatementImpl(this);
 	}
@@ -39,38 +37,32 @@ public class AcceptStatement extends Statement {
 		return (AcceptStatementImpl) this.impl;
 	}
 
-	public ArrayList<AcceptBlock> getAcceptBlock() {
-		return this.acceptBlock;
+	public Collection<AcceptBlock> getAcceptBlock() {
+		return this.getImpl().getAcceptBlock();
 	}
 
-	public void setAcceptBlock(ArrayList<AcceptBlock> acceptBlock) {
-		this.acceptBlock = acceptBlock;
+	public void setAcceptBlock(Collection<AcceptBlock> acceptBlock) {
+		this.getImpl().setAcceptBlock(acceptBlock);
 	}
 
 	public void addAcceptBlock(AcceptBlock acceptBlock) {
-		this.acceptBlock.add(acceptBlock);
+		this.getImpl().addAcceptBlock(acceptBlock);
 	}
 
 	public ElementReference getBehavior() {
-		if (this.behavior == null) {
-			this.setBehavior(this.getImpl().deriveBehavior());
-		}
-		return this.behavior;
+		return this.getImpl().getBehavior();
 	}
 
 	public void setBehavior(ElementReference behavior) {
-		this.behavior = behavior;
+		this.getImpl().setBehavior(behavior);
 	}
 
 	public Boolean getIsSimple() {
-		if (this.isSimple == null) {
-			this.setIsSimple(this.getImpl().deriveIsSimple());
-		}
-		return this.isSimple;
+		return this.getImpl().getIsSimple();
 	}
 
 	public void setIsSimple(Boolean isSimple) {
-		this.isSimple = isSimple;
+		this.getImpl().setIsSimple(isSimple);
 	}
 
 	/**
@@ -173,7 +165,7 @@ public class AcceptStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<AcceptBlock> acceptBlock = this.getAcceptBlock();
+		Collection<AcceptBlock> acceptBlock = this.getAcceptBlock();
 		if (acceptBlock != null) {
 			if (acceptBlock.size() > 0) {
 				System.out.println(prefix + " acceptBlock:");

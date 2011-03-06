@@ -18,12 +18,12 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
 
 public class ImportedMember extends Member {
-
-	private ElementReference referent = null;
 
 	public ImportedMember() {
 		this.impl = new ImportedMemberImpl(this);
@@ -34,11 +34,11 @@ public class ImportedMember extends Member {
 	}
 
 	public ElementReference getReferent() {
-		return this.referent;
+		return this.getImpl().getReferent();
 	}
 
 	public void setReferent(ElementReference referent) {
-		this.referent = referent;
+		this.getImpl().setReferent(referent);
 	}
 
 	/**

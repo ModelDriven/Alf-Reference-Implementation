@@ -18,12 +18,12 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.BitStringUnaryExpressionImpl;
 
 public class BitStringUnaryExpression extends UnaryExpression {
-
-	private Boolean isBitStringConversion = null; // DERIVED
 
 	public BitStringUnaryExpression() {
 		this.impl = new BitStringUnaryExpressionImpl(this);
@@ -34,15 +34,11 @@ public class BitStringUnaryExpression extends UnaryExpression {
 	}
 
 	public Boolean getIsBitStringConversion() {
-		if (this.isBitStringConversion == null) {
-			this.setIsBitStringConversion(this.getImpl()
-					.deriveIsBitStringConversion());
-		}
-		return this.isBitStringConversion;
+		return this.getImpl().getIsBitStringConversion();
 	}
 
 	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.isBitStringConversion = isBitStringConversion;
+		this.getImpl().setIsBitStringConversion(isBitStringConversion);
 	}
 
 	/**

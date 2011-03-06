@@ -24,6 +24,9 @@ import java.util.ArrayList;
 public class NameBindingImpl extends
 		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
 
+    private TemplateBinding binding = null;
+    private String name = "";
+
 	public NameBindingImpl(NameBinding self) {
 		super(self);
 	}
@@ -32,6 +35,23 @@ public class NameBindingImpl extends
 		return (NameBinding) this.self;
 	}
 	
+    public TemplateBinding getBinding() {
+        return this.binding;
+    }
+
+    public void setBinding(TemplateBinding binding) {
+        this.binding = binding;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
 	public String toString() {
 	    NameBinding self = this.getSelf();
 	    StringBuffer s = new StringBuffer(self.getName());

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement that causes the termination of execution of an immediately
@@ -27,6 +29,8 @@ import java.util.ArrayList;
 public class BreakStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
 
+	private Statement target = null; // DERIVED
+
 	public BreakStatementImpl(BreakStatement self) {
 		super(self);
 	}
@@ -35,7 +39,18 @@ public class BreakStatementImpl extends
 		return (BreakStatement) this.self;
 	}
 
-	public Statement deriveTarget() {
+	public Statement getTarget() {
+		if (this.target == null) {
+			this.setTarget(this.deriveTarget());
+		}
+		return this.target;
+	}
+
+	public void setTarget(Statement target) {
+		this.target = target;
+	}
+
+	protected Statement deriveTarget() {
 		return null; // STUB
 	}
 

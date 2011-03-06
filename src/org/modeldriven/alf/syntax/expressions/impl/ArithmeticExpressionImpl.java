@@ -15,24 +15,40 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A binary expression with an arithmetic operator.
  **/
 
-public class ArithmeticExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl {
+public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
+
+	private Boolean isConcatenation = null; // DERIVED
 
 	public ArithmeticExpressionImpl(ArithmeticExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ArithmeticExpression getSelf() {
+	public ArithmeticExpression getSelf() {
 		return (ArithmeticExpression) this.self;
 	}
 
-	public Boolean deriveIsConcatenation() {
+	public Boolean getIsConcatenation() {
+		if (this.isConcatenation == null) {
+			this.setIsConcatenation(this.deriveIsConcatenation());
+		}
+		return this.isConcatenation;
+	}
+
+	public void setIsConcatenation(Boolean isConcatenation) {
+		this.isConcatenation = isConcatenation;
+	}
+
+	protected Boolean deriveIsConcatenation() {
 		return null; // STUB
 	}
 

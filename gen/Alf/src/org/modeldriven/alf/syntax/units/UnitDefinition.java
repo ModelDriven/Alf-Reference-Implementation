@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.UnitDefinitionImpl;
 
@@ -26,13 +28,6 @@ import org.modeldriven.alf.syntax.units.impl.UnitDefinitionImpl;
  **/
 
 public class UnitDefinition extends DocumentedElement {
-
-	private QualifiedName namespaceName = null;
-	private NamespaceDefinition definition = null;
-	private ArrayList<ImportReference> import_ = new ArrayList<ImportReference>();
-	private ElementReference namespace = null; // DERIVED
-	private Boolean isModelLibrary = null; // DERIVED
-	private ArrayList<Profile> appliedProfile = null; // DERIVED
 
 	public UnitDefinition() {
 		this.impl = new UnitDefinitionImpl(this);
@@ -43,68 +38,59 @@ public class UnitDefinition extends DocumentedElement {
 	}
 
 	public QualifiedName getNamespaceName() {
-		return this.namespaceName;
+		return this.getImpl().getNamespaceName();
 	}
 
 	public void setNamespaceName(QualifiedName namespaceName) {
-		this.namespaceName = namespaceName;
+		this.getImpl().setNamespaceName(namespaceName);
 	}
 
 	public NamespaceDefinition getDefinition() {
-		return this.definition;
+		return this.getImpl().getDefinition();
 	}
 
 	public void setDefinition(NamespaceDefinition definition) {
-		this.definition = definition;
+		this.getImpl().setDefinition(definition);
 	}
 
-	public ArrayList<ImportReference> getImport() {
-		return this.import_;
+	public Collection<ImportReference> getImport() {
+		return this.getImpl().getImport();
 	}
 
-	public void setImport(ArrayList<ImportReference> import_) {
-		this.import_ = import_;
+	public void setImport(Collection<ImportReference> import_) {
+		this.getImpl().setImport(import_);
 	}
 
 	public void addImport(ImportReference import_) {
-		this.import_.add(import_);
+		this.getImpl().addImport(import_);
 	}
 
 	public ElementReference getNamespace() {
-		if (this.namespace == null) {
-			this.setNamespace(this.getImpl().deriveNamespace());
-		}
-		return this.namespace;
+		return this.getImpl().getNamespace();
 	}
 
 	public void setNamespace(ElementReference namespace) {
-		this.namespace = namespace;
+		this.getImpl().setNamespace(namespace);
 	}
 
 	public Boolean getIsModelLibrary() {
-		if (this.isModelLibrary == null) {
-			this.setIsModelLibrary(this.getImpl().deriveIsModelLibrary());
-		}
-		return this.isModelLibrary;
+		return this.getImpl().getIsModelLibrary();
 	}
 
 	public void setIsModelLibrary(Boolean isModelLibrary) {
-		this.isModelLibrary = isModelLibrary;
+		this.getImpl().setIsModelLibrary(isModelLibrary);
 	}
 
-	public ArrayList<Profile> getAppliedProfile() {
-		if (this.appliedProfile == null) {
-			this.setAppliedProfile(this.getImpl().deriveAppliedProfile());
-		}
-		return this.appliedProfile;
+	public Collection<Profile> getAppliedProfile() {
+		return this.getImpl().getAppliedProfile();
 	}
 
-	public void setAppliedProfile(ArrayList<Profile> appliedProfile) {
-		this.appliedProfile = appliedProfile;
+	public void setAppliedProfile(Collection<Profile> appliedProfile) {
+		this.getImpl().setAppliedProfile(appliedProfile);
 	}
 
 	public void addAppliedProfile(Profile appliedProfile) {
-		this.appliedProfile.add(appliedProfile);
+		this.getImpl().addAppliedProfile(appliedProfile);
 	}
 
 	/**
@@ -173,7 +159,7 @@ public class UnitDefinition extends DocumentedElement {
 			System.out.println(prefix + " definition:");
 			definition.print(prefix + "  ");
 		}
-		ArrayList<ImportReference> import_ = this.getImport();
+		Collection<ImportReference> import_ = this.getImport();
 		if (import_ != null) {
 			if (import_.size() > 0) {
 				System.out.println(prefix + " import:");
@@ -190,7 +176,7 @@ public class UnitDefinition extends DocumentedElement {
 		if (namespace != null) {
 			System.out.println(prefix + " /namespace:" + namespace);
 		}
-		ArrayList<Profile> appliedProfile = this.getAppliedProfile();
+		Collection<Profile> appliedProfile = this.getAppliedProfile();
 		if (appliedProfile != null) {
 			if (appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.PositionalTupleImpl;
 
@@ -28,8 +30,6 @@ import org.modeldriven.alf.syntax.expressions.impl.PositionalTupleImpl;
 
 public class PositionalTuple extends Tuple {
 
-	private ArrayList<Expression> expression = new ArrayList<Expression>();
-
 	public PositionalTuple() {
 		this.impl = new PositionalTupleImpl(this);
 	}
@@ -38,16 +38,16 @@ public class PositionalTuple extends Tuple {
 		return (PositionalTupleImpl) this.impl;
 	}
 
-	public ArrayList<Expression> getExpression() {
-		return this.expression;
+	public List<Expression> getExpression() {
+		return this.getImpl().getExpression();
 	}
 
-	public void setExpression(ArrayList<Expression> expression) {
-		this.expression = expression;
+	public void setExpression(List<Expression> expression) {
+		this.getImpl().setExpression(expression);
 	}
 
 	public void addExpression(Expression expression) {
-		this.expression.add(expression);
+		this.getImpl().addExpression(expression);
 	}
 
 	public String toString() {
@@ -57,7 +57,7 @@ public class PositionalTuple extends Tuple {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<Expression> expression = this.getExpression();
+		List<Expression> expression = this.getExpression();
 		if (expression != null) {
 			if (expression.size() > 0) {
 				System.out.println(prefix + " expression:");

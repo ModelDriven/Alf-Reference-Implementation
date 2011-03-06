@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceExpressionListImpl;
 
@@ -27,8 +29,6 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceExpressionListImpl;
 
 public class SequenceExpressionList extends SequenceElements {
 
-	private ArrayList<Expression> element = new ArrayList<Expression>();
-
 	public SequenceExpressionList() {
 		this.impl = new SequenceExpressionListImpl(this);
 	}
@@ -37,16 +37,16 @@ public class SequenceExpressionList extends SequenceElements {
 		return (SequenceExpressionListImpl) this.impl;
 	}
 
-	public ArrayList<Expression> getElement() {
-		return this.element;
+	public Collection<Expression> getElement() {
+		return this.getImpl().getElement();
 	}
 
-	public void setElement(ArrayList<Expression> element) {
-		this.element = element;
+	public void setElement(Collection<Expression> element) {
+		this.getImpl().setElement(element);
 	}
 
 	public void addElement(Expression element) {
-		this.element.add(element);
+		this.getImpl().addElement(element);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class SequenceExpressionList extends SequenceElements {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<Expression> element = this.getElement();
+		Collection<Expression> element = this.getElement();
 		if (element != null) {
 			if (element.size() > 0) {
 				System.out.println(prefix + " element:");

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of an operation, with any formal parameters defined as owned
@@ -27,6 +29,13 @@ import java.util.ArrayList;
 public class OperationDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.NamespaceDefinitionImpl {
 
+	private QualifiedNameList redefinition = null;
+	private Boolean isAbstract = false;
+	private Block body = null;
+	private Collection<ElementReference> redefinedOperations = null; // DERIVED
+	private Boolean isConstructor = null; // DERIVED
+	private Boolean isDestructor = null; // DERIVED
+
 	public OperationDefinitionImpl(OperationDefinition self) {
 		super(self);
 	}
@@ -35,15 +44,77 @@ public class OperationDefinitionImpl extends
 		return (OperationDefinition) this.self;
 	}
 
-	public ArrayList<ElementReference> deriveRedefinedOperations() {
+	public QualifiedNameList getRedefinition() {
+		return this.redefinition;
+	}
+
+	public void setRedefinition(QualifiedNameList redefinition) {
+		this.redefinition = redefinition;
+	}
+
+	public Boolean getIsAbstract() {
+		return this.isAbstract;
+	}
+
+	public void setIsAbstract(Boolean isAbstract) {
+		this.isAbstract = isAbstract;
+	}
+
+	public Block getBody() {
+		return this.body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
+	}
+
+	public Collection<ElementReference> getRedefinedOperations() {
+		if (this.redefinedOperations == null) {
+			this.setRedefinedOperations(this.deriveRedefinedOperations());
+		}
+		return this.redefinedOperations;
+	}
+
+	public void setRedefinedOperations(
+			Collection<ElementReference> redefinedOperations) {
+		this.redefinedOperations = redefinedOperations;
+	}
+
+	public void addRedefinedOperations(ElementReference redefinedOperations) {
+		this.redefinedOperations.add(redefinedOperations);
+	}
+
+	public Boolean getIsConstructor() {
+		if (this.isConstructor == null) {
+			this.setIsConstructor(this.deriveIsConstructor());
+		}
+		return this.isConstructor;
+	}
+
+	public void setIsConstructor(Boolean isConstructor) {
+		this.isConstructor = isConstructor;
+	}
+
+	public Boolean getIsDestructor() {
+		if (this.isDestructor == null) {
+			this.setIsDestructor(this.deriveIsDestructor());
+		}
+		return this.isDestructor;
+	}
+
+	public void setIsDestructor(Boolean isDestructor) {
+		this.isDestructor = isDestructor;
+	}
+
+	protected Collection<ElementReference> deriveRedefinedOperations() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsConstructor() {
+	protected Boolean deriveIsConstructor() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsDestructor() {
+	protected Boolean deriveIsDestructor() {
 		return null; // STUB
 	}
 

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to create a new instance of a class or data type.
@@ -27,6 +29,10 @@ public class InstanceCreationExpressionImpl
 		extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.InvocationExpressionImpl {
 
+	private Boolean isConstructorless = null; // DERIVED
+	private Boolean isObjectCreation = null; // DERIVED
+	private QualifiedName constructor = null;
+
 	public InstanceCreationExpressionImpl(InstanceCreationExpression self) {
 		super(self);
 	}
@@ -35,11 +41,41 @@ public class InstanceCreationExpressionImpl
 		return (InstanceCreationExpression) this.self;
 	}
 
-	public Boolean deriveIsConstructorless() {
+	public Boolean getIsConstructorless() {
+		if (this.isConstructorless == null) {
+			this.setIsConstructorless(this.deriveIsConstructorless());
+		}
+		return this.isConstructorless;
+	}
+
+	public void setIsConstructorless(Boolean isConstructorless) {
+		this.isConstructorless = isConstructorless;
+	}
+
+	public Boolean getIsObjectCreation() {
+		if (this.isObjectCreation == null) {
+			this.setIsObjectCreation(this.deriveIsObjectCreation());
+		}
+		return this.isObjectCreation;
+	}
+
+	public void setIsObjectCreation(Boolean isObjectCreation) {
+		this.isObjectCreation = isObjectCreation;
+	}
+
+	public QualifiedName getConstructor() {
+		return this.constructor;
+	}
+
+	public void setConstructor(QualifiedName constructor) {
+		this.constructor = constructor;
+	}
+
+	protected Boolean deriveIsConstructorless() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsObjectCreation() {
+	protected Boolean deriveIsObjectCreation() {
 		return null; // STUB
 	}
 
@@ -107,7 +143,7 @@ public class InstanceCreationExpressionImpl
 	 * Returns the parameters of a constructor operation or the attributes of a
 	 * data type, or an empty set for a constructorless instance creation.
 	 **/
-	public ArrayList<ElementReference> parameterElements() {
+	public Collection<ElementReference> parameterElements() {
 		return new ArrayList<ElementReference>(); // STUB
 	} // parameterElements
 

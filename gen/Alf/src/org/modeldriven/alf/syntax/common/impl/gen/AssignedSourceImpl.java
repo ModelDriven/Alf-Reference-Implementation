@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An assignment of a source element that gives the value of a local name, along
@@ -27,6 +29,12 @@ import java.util.ArrayList;
 
 public class AssignedSourceImpl {
 
+	private String name = "";
+	private SyntaxElement source = null;
+	private Integer upper = 0;
+	private Integer lower = 0;
+	private ElementReference type = null;
+
 	protected AssignedSource self;
 
 	public AssignedSourceImpl(AssignedSource self) {
@@ -35,6 +43,46 @@ public class AssignedSourceImpl {
 
 	public AssignedSource getSelf() {
 		return (AssignedSource) this.self;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public SyntaxElement getSource() {
+		return this.source;
+	}
+
+	public void setSource(SyntaxElement source) {
+		this.source = source;
+	}
+
+	public Integer getUpper() {
+		return this.upper;
+	}
+
+	public void setUpper(Integer upper) {
+		this.upper = upper;
+	}
+
+	public Integer getLower() {
+		return this.lower;
+	}
+
+	public void setLower(Integer lower) {
+		this.lower = lower;
+	}
+
+	public ElementReference getType() {
+		return this.type;
+	}
+
+	public void setType(ElementReference type) {
+		this.type = type;
 	}
 
 } // AssignedSourceImpl

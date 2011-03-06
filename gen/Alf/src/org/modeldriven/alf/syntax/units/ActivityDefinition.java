@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.ActivityDefinitionImpl;
 
@@ -28,8 +30,6 @@ import org.modeldriven.alf.syntax.units.impl.ActivityDefinitionImpl;
 
 public class ActivityDefinition extends ClassifierDefinition {
 
-	private Block body = null;
-
 	public ActivityDefinition() {
 		this.impl = new ActivityDefinitionImpl(this);
 	}
@@ -39,11 +39,11 @@ public class ActivityDefinition extends ClassifierDefinition {
 	}
 
 	public Block getBody() {
-		return this.body;
+		return this.getImpl().getBody();
 	}
 
 	public void setBody(Block body) {
-		this.body = body;
+		this.getImpl().setBody(body);
 	}
 
 	/**

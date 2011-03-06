@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.PositionalTemplateBindingImpl;
 
@@ -28,8 +30,6 @@ import org.modeldriven.alf.syntax.expressions.impl.PositionalTemplateBindingImpl
 
 public class PositionalTemplateBinding extends TemplateBinding {
 
-	private ArrayList<QualifiedName> argumentName = new ArrayList<QualifiedName>();
-
 	public PositionalTemplateBinding() {
 		this.impl = new PositionalTemplateBindingImpl(this);
 	}
@@ -38,16 +38,16 @@ public class PositionalTemplateBinding extends TemplateBinding {
 		return (PositionalTemplateBindingImpl) this.impl;
 	}
 
-	public ArrayList<QualifiedName> getArgumentName() {
-		return this.argumentName;
+	public Collection<QualifiedName> getArgumentName() {
+		return this.getImpl().getArgumentName();
 	}
 
-	public void setArgumentName(ArrayList<QualifiedName> argumentName) {
-		this.argumentName = argumentName;
+	public void setArgumentName(Collection<QualifiedName> argumentName) {
+		this.getImpl().setArgumentName(argumentName);
 	}
 
 	public void addArgumentName(QualifiedName argumentName) {
-		this.argumentName.add(argumentName);
+		this.getImpl().addArgumentName(argumentName);
 	}
 
 	public String toString() {
@@ -57,7 +57,7 @@ public class PositionalTemplateBinding extends TemplateBinding {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<QualifiedName> argumentName = this.getArgumentName();
+		Collection<QualifiedName> argumentName = this.getArgumentName();
 		if (argumentName != null) {
 			if (argumentName.size() > 0) {
 				System.out.println(prefix + " argumentName:");

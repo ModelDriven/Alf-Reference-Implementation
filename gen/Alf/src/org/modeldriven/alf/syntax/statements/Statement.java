@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.StatementImpl;
 
@@ -27,79 +29,60 @@ import org.modeldriven.alf.syntax.statements.impl.StatementImpl;
 
 public abstract class Statement extends DocumentedElement {
 
-	private ArrayList<Annotation> annotation = new ArrayList<Annotation>();
-	private ArrayList<AssignedSource> assignmentBefore = null; // DERIVED
-	private ArrayList<AssignedSource> assignmentAfter = null; // DERIVED
-	private Statement enclosingStatement = null; // DERIVED
-	private Boolean isIsolated = null; // DERIVED
-
 	public StatementImpl getImpl() {
 		return (StatementImpl) this.impl;
 	}
 
-	public ArrayList<Annotation> getAnnotation() {
-		return this.annotation;
+	public Collection<Annotation> getAnnotation() {
+		return this.getImpl().getAnnotation();
 	}
 
-	public void setAnnotation(ArrayList<Annotation> annotation) {
-		this.annotation = annotation;
+	public void setAnnotation(Collection<Annotation> annotation) {
+		this.getImpl().setAnnotation(annotation);
 	}
 
 	public void addAnnotation(Annotation annotation) {
-		this.annotation.add(annotation);
+		this.getImpl().addAnnotation(annotation);
 	}
 
-	public ArrayList<AssignedSource> getAssignmentBefore() {
-		if (this.assignmentBefore == null) {
-			this.setAssignmentBefore(this.getImpl().deriveAssignmentBefore());
-		}
-		return this.assignmentBefore;
+	public Collection<AssignedSource> getAssignmentBefore() {
+		return this.getImpl().getAssignmentBefore();
 	}
 
-	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
-		this.assignmentBefore = assignmentBefore;
+	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+		this.getImpl().setAssignmentBefore(assignmentBefore);
 	}
 
 	public void addAssignmentBefore(AssignedSource assignmentBefore) {
-		this.assignmentBefore.add(assignmentBefore);
+		this.getImpl().addAssignmentBefore(assignmentBefore);
 	}
 
-	public ArrayList<AssignedSource> getAssignmentAfter() {
-		if (this.assignmentAfter == null) {
-			this.setAssignmentAfter(this.getImpl().deriveAssignmentAfter());
-		}
-		return this.assignmentAfter;
+	public Collection<AssignedSource> getAssignmentAfter() {
+		return this.getImpl().getAssignmentAfter();
 	}
 
-	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
-		this.assignmentAfter = assignmentAfter;
+	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+		this.getImpl().setAssignmentAfter(assignmentAfter);
 	}
 
 	public void addAssignmentAfter(AssignedSource assignmentAfter) {
-		this.assignmentAfter.add(assignmentAfter);
+		this.getImpl().addAssignmentAfter(assignmentAfter);
 	}
 
 	public Statement getEnclosingStatement() {
-		if (this.enclosingStatement == null) {
-			this.setEnclosingStatement(this.getImpl()
-					.deriveEnclosingStatement());
-		}
-		return this.enclosingStatement;
+		return this.getImpl().getEnclosingStatement();
 	}
 
 	public void setEnclosingStatement(Statement enclosingStatement) {
-		this.enclosingStatement = enclosingStatement;
+		this.getImpl().setEnclosingStatement(enclosingStatement);
 	}
 
 	public Boolean getIsIsolated() {
-		if (this.isIsolated == null) {
-			this.setIsIsolated(this.getImpl().deriveIsIsolated());
-		}
-		return this.isIsolated;
+		return this.getImpl().getIsIsolated();
 	}
 
 	public void setIsIsolated(Boolean isIsolated) {
-		this.isIsolated = isIsolated;
+		this.getImpl().setIsIsolated(isIsolated);
 	}
 
 	/**
@@ -147,7 +130,7 @@ public abstract class Statement extends DocumentedElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<Annotation> annotation = this.getAnnotation();
+		Collection<Annotation> annotation = this.getAnnotation();
 		if (annotation != null) {
 			if (annotation.size() > 0) {
 				System.out.println(prefix + " annotation:");
@@ -160,7 +143,8 @@ public abstract class Statement extends DocumentedElement {
 				}
 			}
 		}
-		ArrayList<AssignedSource> assignmentBefore = this.getAssignmentBefore();
+		Collection<AssignedSource> assignmentBefore = this
+				.getAssignmentBefore();
 		if (assignmentBefore != null) {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
@@ -169,7 +153,7 @@ public abstract class Statement extends DocumentedElement {
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
-		ArrayList<AssignedSource> assignmentAfter = this.getAssignmentAfter();
+		Collection<AssignedSource> assignmentAfter = this.getAssignmentAfter();
 		if (assignmentAfter != null) {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.NamedTupleImpl;
 
@@ -27,8 +29,6 @@ import org.modeldriven.alf.syntax.expressions.impl.NamedTupleImpl;
 
 public class NamedTuple extends Tuple {
 
-	private ArrayList<NamedExpression> namedExpression = new ArrayList<NamedExpression>();
-
 	public NamedTuple() {
 		this.impl = new NamedTupleImpl(this);
 	}
@@ -37,16 +37,16 @@ public class NamedTuple extends Tuple {
 		return (NamedTupleImpl) this.impl;
 	}
 
-	public ArrayList<NamedExpression> getNamedExpression() {
-		return this.namedExpression;
+	public List<NamedExpression> getNamedExpression() {
+		return this.getImpl().getNamedExpression();
 	}
 
-	public void setNamedExpression(ArrayList<NamedExpression> namedExpression) {
-		this.namedExpression = namedExpression;
+	public void setNamedExpression(List<NamedExpression> namedExpression) {
+		this.getImpl().setNamedExpression(namedExpression);
 	}
 
 	public void addNamedExpression(NamedExpression namedExpression) {
-		this.namedExpression.add(namedExpression);
+		this.getImpl().addNamedExpression(namedExpression);
 	}
 
 	public String toString() {
@@ -56,7 +56,7 @@ public class NamedTuple extends Tuple {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<NamedExpression> namedExpression = this.getNamedExpression();
+		List<NamedExpression> namedExpression = this.getNamedExpression();
 		if (namedExpression != null) {
 			if (namedExpression.size() > 0) {
 				System.out.println(prefix + " namedExpression:");

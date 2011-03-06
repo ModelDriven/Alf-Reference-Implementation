@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.FeatureLeftHandSideImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.FeatureLeftHandSideImpl;
  **/
 
 public class FeatureLeftHandSide extends LeftHandSide {
-
-	private FeatureReference feature = null;
 
 	public FeatureLeftHandSide() {
 		this.impl = new FeatureLeftHandSideImpl(this);
@@ -38,11 +38,11 @@ public class FeatureLeftHandSide extends LeftHandSide {
 	}
 
 	public FeatureReference getFeature() {
-		return this.feature;
+		return this.getImpl().getFeature();
 	}
 
 	public void setFeature(FeatureReference feature) {
-		this.feature = feature;
+		this.getImpl().setFeature(feature);
 	}
 
 	/**

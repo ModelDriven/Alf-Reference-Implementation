@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An annotation of a member definition indicating the application of a
@@ -27,6 +29,11 @@ import java.util.ArrayList;
 public class StereotypeAnnotationImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private TaggedValueList taggedValues = null;
+	private QualifiedNameList names = null;
+	private QualifiedName stereotypeName = null;
+	private Stereotype stereotype = null; // DERIVED
+
 	public StereotypeAnnotationImpl(StereotypeAnnotation self) {
 		super(self);
 	}
@@ -35,7 +42,42 @@ public class StereotypeAnnotationImpl extends
 		return (StereotypeAnnotation) this.self;
 	}
 
-	public Stereotype deriveStereotype() {
+	public TaggedValueList getTaggedValues() {
+		return this.taggedValues;
+	}
+
+	public void setTaggedValues(TaggedValueList taggedValues) {
+		this.taggedValues = taggedValues;
+	}
+
+	public QualifiedNameList getNames() {
+		return this.names;
+	}
+
+	public void setNames(QualifiedNameList names) {
+		this.names = names;
+	}
+
+	public QualifiedName getStereotypeName() {
+		return this.stereotypeName;
+	}
+
+	public void setStereotypeName(QualifiedName stereotypeName) {
+		this.stereotypeName = stereotypeName;
+	}
+
+	public Stereotype getStereotype() {
+		if (this.stereotype == null) {
+			this.setStereotype(this.deriveStereotype());
+		}
+		return this.stereotype;
+	}
+
+	public void setStereotype(Stereotype stereotype) {
+		this.stereotype = stereotype;
+	}
+
+	protected Stereotype deriveStereotype() {
 		return null; // STUB
 	}
 

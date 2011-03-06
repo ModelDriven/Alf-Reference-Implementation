@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.BreakStatementImpl;
 
@@ -28,8 +30,6 @@ import org.modeldriven.alf.syntax.statements.impl.BreakStatementImpl;
 
 public class BreakStatement extends Statement {
 
-	private Statement target = null; // DERIVED
-
 	public BreakStatement() {
 		this.impl = new BreakStatementImpl(this);
 	}
@@ -39,14 +39,11 @@ public class BreakStatement extends Statement {
 	}
 
 	public Statement getTarget() {
-		if (this.target == null) {
-			this.setTarget(this.getImpl().deriveTarget());
-		}
-		return this.target;
+		return this.getImpl().getTarget();
 	}
 
 	public void setTarget(Statement target) {
-		this.target = target;
+		this.getImpl().setTarget(target);
 	}
 
 	/**

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A clause in a switch statement with a set of cases and a sequence of
@@ -27,12 +29,35 @@ import java.util.ArrayList;
 public class SwitchClauseImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private Collection<Expression> case_ = new ArrayList<Expression>();
+	private Block block = null;
+
 	public SwitchClauseImpl(SwitchClause self) {
 		super(self);
 	}
 
 	public SwitchClause getSelf() {
 		return (SwitchClause) this.self;
+	}
+
+	public Collection<Expression> getCase() {
+		return this.case_;
+	}
+
+	public void setCase(Collection<Expression> case_) {
+		this.case_ = case_;
+	}
+
+	public void addCase(Expression case_) {
+		this.case_.add(case_);
+	}
+
+	public Block getBlock() {
+		return this.block;
+	}
+
+	public void setBlock(Block block) {
+		this.block = block;
 	}
 
 	/**
@@ -57,7 +82,7 @@ public class SwitchClauseImpl extends
 	 * The assignments before a switch clause are the assignments before any
 	 * case expression of the clause.
 	 **/
-	public ArrayList<AssignedSource> assignmentsBefore() {
+	public Collection<AssignedSource> assignmentsBefore() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // assignmentsBefore
 
@@ -65,7 +90,7 @@ public class SwitchClauseImpl extends
 	 * The assignments after a switch clause are the assignments after the block
 	 * of the switch clause.
 	 **/
-	public ArrayList<AssignedSource> assignmentsAfter() {
+	public Collection<AssignedSource> assignmentsAfter() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // assignmentsAfter
 

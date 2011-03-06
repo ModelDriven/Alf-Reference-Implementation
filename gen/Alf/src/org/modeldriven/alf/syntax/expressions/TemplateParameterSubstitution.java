@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.TemplateParameterSubstitutionImpl;
 
@@ -28,9 +30,6 @@ import org.modeldriven.alf.syntax.expressions.impl.TemplateParameterSubstitution
 
 public class TemplateParameterSubstitution extends SyntaxElement {
 
-	private String parameterName = "";
-	private QualifiedName argumentName = null;
-
 	public TemplateParameterSubstitution() {
 		this.impl = new TemplateParameterSubstitutionImpl(this);
 	}
@@ -40,19 +39,19 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 	}
 
 	public String getParameterName() {
-		return this.parameterName;
+		return this.getImpl().getParameterName();
 	}
 
 	public void setParameterName(String parameterName) {
-		this.parameterName = parameterName;
+		this.getImpl().setParameterName(parameterName);
 	}
 
 	public QualifiedName getArgumentName() {
-		return this.argumentName;
+		return this.getImpl().getArgumentName();
 	}
 
 	public void setArgumentName(QualifiedName argumentName) {
-		this.argumentName = argumentName;
+		this.getImpl().setArgumentName(argumentName);
 	}
 
 	public String toString() {

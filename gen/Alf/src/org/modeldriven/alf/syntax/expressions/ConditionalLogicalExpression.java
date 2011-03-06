@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.ConditionalLogicalExpressionImpl;
 
@@ -86,7 +88,7 @@ public class ConditionalLogicalExpression extends BinaryExpression {
 	 * conditional logical expression is the conditional logical expression
 	 * itself.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

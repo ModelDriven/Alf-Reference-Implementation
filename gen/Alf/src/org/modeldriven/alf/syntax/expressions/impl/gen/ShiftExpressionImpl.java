@@ -18,9 +18,13 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ShiftExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.BinaryExpressionImpl {
+
+	private Boolean isBitStringConversion = null; // DERIVED
 
 	public ShiftExpressionImpl(ShiftExpression self) {
 		super(self);
@@ -30,7 +34,18 @@ public class ShiftExpressionImpl extends
 		return (ShiftExpression) this.self;
 	}
 
-	public Boolean deriveIsBitStringConversion() {
+	public Boolean getIsBitStringConversion() {
+		if (this.isBitStringConversion == null) {
+			this.setIsBitStringConversion(this.deriveIsBitStringConversion());
+		}
+		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
+	}
+
+	protected Boolean deriveIsBitStringConversion() {
 		return null; // STUB
 	}
 

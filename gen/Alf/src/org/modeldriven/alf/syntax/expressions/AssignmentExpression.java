@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.AssignmentExpressionImpl;
 
@@ -26,21 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.AssignmentExpressionImpl;
  **/
 
 public class AssignmentExpression extends Expression {
-
-	private String operator = "";
-	private LeftHandSide leftHandSide = null;
-	private Expression rightHandSide = null;
-	private AssignedSource assignment = null; // DERIVED
-	private ElementReference feature = null; // DERIVED
-	private Boolean isIndexed = null; // DERIVED
-	private Boolean isArithmetic = null; // DERIVED
-	private Boolean isDefinition = null; // DERIVED
-	private Boolean isSimple = null; // DERIVED
-	private Expression expression = null; // DERIVED
-	private Boolean isFeature = null; // DERIVED
-	private Boolean isDataValueUpdate = null; // DERIVED
-	private Boolean isCollectionConversion = null; // DERIVED
-	private Boolean isBitStringConversion = null; // DERIVED
 
 	public AssignmentExpression() {
 		this.impl = new AssignmentExpressionImpl(this);
@@ -51,150 +38,115 @@ public class AssignmentExpression extends Expression {
 	}
 
 	public String getOperator() {
-		return this.operator;
+		return this.getImpl().getOperator();
 	}
 
 	public void setOperator(String operator) {
-		this.operator = operator;
+		this.getImpl().setOperator(operator);
 	}
 
 	public LeftHandSide getLeftHandSide() {
-		return this.leftHandSide;
+		return this.getImpl().getLeftHandSide();
 	}
 
 	public void setLeftHandSide(LeftHandSide leftHandSide) {
-		this.leftHandSide = leftHandSide;
+		this.getImpl().setLeftHandSide(leftHandSide);
 	}
 
 	public Expression getRightHandSide() {
-		return this.rightHandSide;
+		return this.getImpl().getRightHandSide();
 	}
 
 	public void setRightHandSide(Expression rightHandSide) {
-		this.rightHandSide = rightHandSide;
+		this.getImpl().setRightHandSide(rightHandSide);
 	}
 
 	public AssignedSource getAssignment() {
-		if (this.assignment == null) {
-			this.setAssignment(this.getImpl().deriveAssignment());
-		}
-		return this.assignment;
+		return this.getImpl().getAssignment();
 	}
 
 	public void setAssignment(AssignedSource assignment) {
-		this.assignment = assignment;
+		this.getImpl().setAssignment(assignment);
 	}
 
 	public ElementReference getFeature() {
-		if (this.feature == null) {
-			this.setFeature(this.getImpl().deriveFeature());
-		}
-		return this.feature;
+		return this.getImpl().getFeature();
 	}
 
 	public void setFeature(ElementReference feature) {
-		this.feature = feature;
+		this.getImpl().setFeature(feature);
 	}
 
 	public Boolean getIsIndexed() {
-		if (this.isIndexed == null) {
-			this.setIsIndexed(this.getImpl().deriveIsIndexed());
-		}
-		return this.isIndexed;
+		return this.getImpl().getIsIndexed();
 	}
 
 	public void setIsIndexed(Boolean isIndexed) {
-		this.isIndexed = isIndexed;
+		this.getImpl().setIsIndexed(isIndexed);
 	}
 
 	public Boolean getIsArithmetic() {
-		if (this.isArithmetic == null) {
-			this.setIsArithmetic(this.getImpl().deriveIsArithmetic());
-		}
-		return this.isArithmetic;
+		return this.getImpl().getIsArithmetic();
 	}
 
 	public void setIsArithmetic(Boolean isArithmetic) {
-		this.isArithmetic = isArithmetic;
+		this.getImpl().setIsArithmetic(isArithmetic);
 	}
 
 	public Boolean getIsDefinition() {
-		if (this.isDefinition == null) {
-			this.setIsDefinition(this.getImpl().deriveIsDefinition());
-		}
-		return this.isDefinition;
+		return this.getImpl().getIsDefinition();
 	}
 
 	public void setIsDefinition(Boolean isDefinition) {
-		this.isDefinition = isDefinition;
+		this.getImpl().setIsDefinition(isDefinition);
 	}
 
 	public Boolean getIsSimple() {
-		if (this.isSimple == null) {
-			this.setIsSimple(this.getImpl().deriveIsSimple());
-		}
-		return this.isSimple;
+		return this.getImpl().getIsSimple();
 	}
 
 	public void setIsSimple(Boolean isSimple) {
-		this.isSimple = isSimple;
+		this.getImpl().setIsSimple(isSimple);
 	}
 
 	public Expression getExpression() {
-		if (this.expression == null) {
-			this.setExpression(this.getImpl().deriveExpression());
-		}
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	public Boolean getIsFeature() {
-		if (this.isFeature == null) {
-			this.setIsFeature(this.getImpl().deriveIsFeature());
-		}
-		return this.isFeature;
+		return this.getImpl().getIsFeature();
 	}
 
 	public void setIsFeature(Boolean isFeature) {
-		this.isFeature = isFeature;
+		this.getImpl().setIsFeature(isFeature);
 	}
 
 	public Boolean getIsDataValueUpdate() {
-		if (this.isDataValueUpdate == null) {
-			this.setIsDataValueUpdate(this.getImpl().deriveIsDataValueUpdate());
-		}
-		return this.isDataValueUpdate;
+		return this.getImpl().getIsDataValueUpdate();
 	}
 
 	public void setIsDataValueUpdate(Boolean isDataValueUpdate) {
-		this.isDataValueUpdate = isDataValueUpdate;
+		this.getImpl().setIsDataValueUpdate(isDataValueUpdate);
 	}
 
 	public Boolean getIsCollectionConversion() {
-		if (this.isCollectionConversion == null) {
-			this.setIsCollectionConversion(this.getImpl()
-					.deriveIsCollectionConversion());
-		}
-		return this.isCollectionConversion;
+		return this.getImpl().getIsCollectionConversion();
 	}
 
 	public void setIsCollectionConversion(Boolean isCollectionConversion) {
-		this.isCollectionConversion = isCollectionConversion;
+		this.getImpl().setIsCollectionConversion(isCollectionConversion);
 	}
 
 	public Boolean getIsBitStringConversion() {
-		if (this.isBitStringConversion == null) {
-			this.setIsBitStringConversion(this.getImpl()
-					.deriveIsBitStringConversion());
-		}
-		return this.isBitStringConversion;
+		return this.getImpl().getIsBitStringConversion();
 	}
 
 	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.isBitStringConversion = isBitStringConversion;
+		this.getImpl().setIsBitStringConversion(isBitStringConversion);
 	}
 
 	/**
@@ -378,7 +330,7 @@ public class AssignmentExpression extends Expression {
 	 * the left-hand side, updated by the assignment from the assignment
 	 * statement, if any.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

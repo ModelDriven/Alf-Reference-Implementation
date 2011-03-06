@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A grouping of non-final conditional clauses to be tested concurrently.
@@ -26,12 +28,26 @@ import java.util.ArrayList;
 public class ConcurrentClausesImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private Collection<NonFinalClause> clause = new ArrayList<NonFinalClause>();
+
 	public ConcurrentClausesImpl(ConcurrentClauses self) {
 		super(self);
 	}
 
 	public ConcurrentClauses getSelf() {
 		return (ConcurrentClauses) this.self;
+	}
+
+	public Collection<NonFinalClause> getClause() {
+		return this.clause;
+	}
+
+	public void setClause(Collection<NonFinalClause> clause) {
+		this.clause = clause;
+	}
+
+	public void addClause(NonFinalClause clause) {
+		this.clause.add(clause);
 	}
 
 	/**

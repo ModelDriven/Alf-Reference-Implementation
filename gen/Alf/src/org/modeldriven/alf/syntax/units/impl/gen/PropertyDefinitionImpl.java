@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A typed element definition for a property (attribute or association end).
@@ -25,6 +27,11 @@ import java.util.ArrayList;
 
 public class PropertyDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.TypedElementDefinitionImpl {
+
+	private Boolean isComposite = false;
+	private Expression initializer = null;
+	private Boolean isCollectionConversion = null; // DERIVED
+	private Boolean isBitStringConversion = null; // DERIVED
 
 	public PropertyDefinitionImpl(PropertyDefinition self) {
 		super(self);
@@ -34,11 +41,49 @@ public class PropertyDefinitionImpl extends
 		return (PropertyDefinition) this.self;
 	}
 
-	public Boolean deriveIsCollectionConversion() {
+	public Boolean getIsComposite() {
+		return this.isComposite;
+	}
+
+	public void setIsComposite(Boolean isComposite) {
+		this.isComposite = isComposite;
+	}
+
+	public Expression getInitializer() {
+		return this.initializer;
+	}
+
+	public void setInitializer(Expression initializer) {
+		this.initializer = initializer;
+	}
+
+	public Boolean getIsCollectionConversion() {
+		if (this.isCollectionConversion == null) {
+			this.setIsCollectionConversion(this.deriveIsCollectionConversion());
+		}
+		return this.isCollectionConversion;
+	}
+
+	public void setIsCollectionConversion(Boolean isCollectionConversion) {
+		this.isCollectionConversion = isCollectionConversion;
+	}
+
+	public Boolean getIsBitStringConversion() {
+		if (this.isBitStringConversion == null) {
+			this.setIsBitStringConversion(this.deriveIsBitStringConversion());
+		}
+		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
+	}
+
+	protected Boolean deriveIsCollectionConversion() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsBitStringConversion() {
+	protected Boolean deriveIsBitStringConversion() {
 		return null; // STUB
 	}
 

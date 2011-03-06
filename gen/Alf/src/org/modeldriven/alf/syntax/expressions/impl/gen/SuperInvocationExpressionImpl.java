@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An invocation expression used to invoke an operation of a superclass.
@@ -27,12 +29,22 @@ public class SuperInvocationExpressionImpl
 		extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.InvocationExpressionImpl {
 
+	private QualifiedName target = null;
+
 	public SuperInvocationExpressionImpl(SuperInvocationExpression self) {
 		super(self);
 	}
 
 	public SuperInvocationExpression getSelf() {
 		return (SuperInvocationExpression) this.self;
+	}
+
+	public QualifiedName getTarget() {
+		return this.target;
+	}
+
+	public void setTarget(QualifiedName target) {
+		this.target = target;
 	}
 
 	/**

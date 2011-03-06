@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,21 +15,38 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A specification of the elements of a sequence using a list of expressions.
  **/
 
-public class SequenceExpressionListImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.SequenceElementsImpl {
+public class SequenceExpressionListImpl extends SequenceElementsImpl {
+
+	private Collection<Expression> element = new ArrayList<Expression>();
 
 	public SequenceExpressionListImpl(SequenceExpressionList self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceExpressionList getSelf() {
+	public SequenceExpressionList getSelf() {
 		return (SequenceExpressionList) this.self;
+	}
+
+	public Collection<Expression> getElement() {
+		return this.element;
+	}
+
+	public void setElement(Collection<Expression> element) {
+		this.element = element;
+	}
+
+	public void addElement(Expression element) {
+		this.element.add(element);
 	}
 
 	/**

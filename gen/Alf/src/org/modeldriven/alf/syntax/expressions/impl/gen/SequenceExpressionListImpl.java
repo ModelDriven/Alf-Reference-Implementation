@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A specification of the elements of a sequence using a list of expressions.
@@ -26,12 +28,26 @@ import java.util.ArrayList;
 public class SequenceExpressionListImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.SequenceElementsImpl {
 
+	private Collection<Expression> element = new ArrayList<Expression>();
+
 	public SequenceExpressionListImpl(SequenceExpressionList self) {
 		super(self);
 	}
 
 	public SequenceExpressionList getSelf() {
 		return (SequenceExpressionList) this.self;
+	}
+
+	public Collection<Expression> getElement() {
+		return this.element;
+	}
+
+	public void setElement(Collection<Expression> element) {
+		this.element = element;
+	}
+
+	public void addElement(Expression element) {
+		this.element.add(element);
 	}
 
 	/**

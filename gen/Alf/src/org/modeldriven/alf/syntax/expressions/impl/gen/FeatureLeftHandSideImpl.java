@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A left-hand side that is a property reference.
@@ -26,12 +28,22 @@ import java.util.ArrayList;
 public class FeatureLeftHandSideImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.LeftHandSideImpl {
 
+	private FeatureReference feature = null;
+
 	public FeatureLeftHandSideImpl(FeatureLeftHandSide self) {
 		super(self);
 	}
 
 	public FeatureLeftHandSide getSelf() {
 		return (FeatureLeftHandSide) this.self;
+	}
+
+	public FeatureReference getFeature() {
+		return this.feature;
+	}
+
+	public void setFeature(FeatureReference feature) {
+		this.feature = feature;
 	}
 
 	/**

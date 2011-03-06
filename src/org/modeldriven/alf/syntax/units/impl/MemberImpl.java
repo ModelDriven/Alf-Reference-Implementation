@@ -17,7 +17,6 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * A model of the common properties of the definition of a member of a namespace

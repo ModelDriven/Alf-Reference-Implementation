@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.ConcurrentClausesImpl;
 
@@ -27,8 +29,6 @@ import org.modeldriven.alf.syntax.statements.impl.ConcurrentClausesImpl;
 
 public class ConcurrentClauses extends SyntaxElement {
 
-	private ArrayList<NonFinalClause> clause = new ArrayList<NonFinalClause>();
-
 	public ConcurrentClauses() {
 		this.impl = new ConcurrentClausesImpl(this);
 	}
@@ -37,16 +37,16 @@ public class ConcurrentClauses extends SyntaxElement {
 		return (ConcurrentClausesImpl) this.impl;
 	}
 
-	public ArrayList<NonFinalClause> getClause() {
-		return this.clause;
+	public Collection<NonFinalClause> getClause() {
+		return this.getImpl().getClause();
 	}
 
-	public void setClause(ArrayList<NonFinalClause> clause) {
-		this.clause = clause;
+	public void setClause(Collection<NonFinalClause> clause) {
+		this.getImpl().setClause(clause);
 	}
 
 	public void addClause(NonFinalClause clause) {
-		this.clause.add(clause);
+		this.getImpl().addClause(clause);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ConcurrentClauses extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<NonFinalClause> clause = this.getClause();
+		Collection<NonFinalClause> clause = this.getClause();
 		if (clause != null) {
 			if (clause.size() > 0) {
 				System.out.println(prefix + " clause:");

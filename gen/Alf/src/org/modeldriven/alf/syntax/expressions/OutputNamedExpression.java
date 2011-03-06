@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.OutputNamedExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.OutputNamedExpressionImpl;
  **/
 
 public class OutputNamedExpression extends NamedExpression {
-
-	private LeftHandSide leftHandSide = null; // DERIVED
 
 	public OutputNamedExpression() {
 		this.impl = new OutputNamedExpressionImpl(this);
@@ -38,14 +38,11 @@ public class OutputNamedExpression extends NamedExpression {
 	}
 
 	public LeftHandSide getLeftHandSide() {
-		if (this.leftHandSide == null) {
-			this.setLeftHandSide(this.getImpl().deriveLeftHandSide());
-		}
-		return this.leftHandSide;
+		return this.getImpl().getLeftHandSide();
 	}
 
 	public void setLeftHandSide(LeftHandSide leftHandSide) {
-		this.leftHandSide = leftHandSide;
+		this.getImpl().setLeftHandSide(leftHandSide);
 	}
 
 	/**

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement that executes a block.
@@ -25,6 +27,9 @@ import java.util.ArrayList;
 
 public class BlockStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
+
+	private Block block = null;
+	private Boolean isParallel = null; // DERIVED
 
 	public BlockStatementImpl(BlockStatement self) {
 		super(self);
@@ -34,7 +39,26 @@ public class BlockStatementImpl extends
 		return (BlockStatement) this.self;
 	}
 
-	public Boolean deriveIsParallel() {
+	public Block getBlock() {
+		return this.block;
+	}
+
+	public void setBlock(Block block) {
+		this.block = block;
+	}
+
+	public Boolean getIsParallel() {
+		if (this.isParallel == null) {
+			this.setIsParallel(this.deriveIsParallel());
+		}
+		return this.isParallel;
+	}
+
+	public void setIsParallel(Boolean isParallel) {
+		this.isParallel = isParallel;
+	}
+
+	protected Boolean deriveIsParallel() {
 		return null; // STUB
 	}
 

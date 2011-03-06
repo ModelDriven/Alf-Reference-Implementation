@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to reduce a sequence of values effectively by inserting a
@@ -27,6 +29,11 @@ import java.util.ArrayList;
 public class SequenceReductionExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.ExpressionImpl {
 
+	private ElementReference referent = null; // DERIVED
+	private Boolean isOrdered = false;
+	private ExtentOrExpression primary = null;
+	private QualifiedName behaviorName = null;
+
 	public SequenceReductionExpressionImpl(SequenceReductionExpression self) {
 		super(self);
 	}
@@ -35,7 +42,42 @@ public class SequenceReductionExpressionImpl extends
 		return (SequenceReductionExpression) this.self;
 	}
 
-	public ElementReference deriveReferent() {
+	public ElementReference getReferent() {
+		if (this.referent == null) {
+			this.setReferent(this.deriveReferent());
+		}
+		return this.referent;
+	}
+
+	public void setReferent(ElementReference referent) {
+		this.referent = referent;
+	}
+
+	public Boolean getIsOrdered() {
+		return this.isOrdered;
+	}
+
+	public void setIsOrdered(Boolean isOrdered) {
+		this.isOrdered = isOrdered;
+	}
+
+	public ExtentOrExpression getPrimary() {
+		return this.primary;
+	}
+
+	public void setPrimary(ExtentOrExpression primary) {
+		this.primary = primary;
+	}
+
+	public QualifiedName getBehaviorName() {
+		return this.behaviorName;
+	}
+
+	public void setBehaviorName(QualifiedName behaviorName) {
+		this.behaviorName = behaviorName;
+	}
+
+	protected ElementReference deriveReferent() {
 		return null; // STUB
 	}
 
@@ -103,7 +145,7 @@ public class SequenceReductionExpressionImpl extends
 	 * The assignments after a sequence reduction expression are the same as
 	 * after its primary expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

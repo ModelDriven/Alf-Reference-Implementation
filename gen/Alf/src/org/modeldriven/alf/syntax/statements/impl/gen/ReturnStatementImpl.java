@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement that provides a value for the return parameter of an activity.
@@ -25,6 +27,9 @@ import java.util.ArrayList;
 
 public class ReturnStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
+
+	private Expression expression = null;
+	private ElementReference behavior = null; // DERIVED
 
 	public ReturnStatementImpl(ReturnStatement self) {
 		super(self);
@@ -34,7 +39,26 @@ public class ReturnStatementImpl extends
 		return (ReturnStatement) this.self;
 	}
 
-	public ElementReference deriveBehavior() {
+	public Expression getExpression() {
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
+	public ElementReference getBehavior() {
+		if (this.behavior == null) {
+			this.setBehavior(this.deriveBehavior());
+		}
+		return this.behavior;
+	}
+
+	public void setBehavior(ElementReference behavior) {
+		this.behavior = behavior;
+	}
+
+	protected ElementReference deriveBehavior() {
 		return null; // STUB
 	}
 

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.StereotypeAnnotationImpl;
 
@@ -28,11 +30,6 @@ import org.modeldriven.alf.syntax.units.impl.StereotypeAnnotationImpl;
 
 public class StereotypeAnnotation extends SyntaxElement {
 
-	private TaggedValueList taggedValues = null;
-	private QualifiedNameList names = null;
-	private QualifiedName stereotypeName = null;
-	private Stereotype stereotype = null; // DERIVED
-
 	public StereotypeAnnotation() {
 		this.impl = new StereotypeAnnotationImpl(this);
 	}
@@ -42,38 +39,35 @@ public class StereotypeAnnotation extends SyntaxElement {
 	}
 
 	public TaggedValueList getTaggedValues() {
-		return this.taggedValues;
+		return this.getImpl().getTaggedValues();
 	}
 
 	public void setTaggedValues(TaggedValueList taggedValues) {
-		this.taggedValues = taggedValues;
+		this.getImpl().setTaggedValues(taggedValues);
 	}
 
 	public QualifiedNameList getNames() {
-		return this.names;
+		return this.getImpl().getNames();
 	}
 
 	public void setNames(QualifiedNameList names) {
-		this.names = names;
+		this.getImpl().setNames(names);
 	}
 
 	public QualifiedName getStereotypeName() {
-		return this.stereotypeName;
+		return this.getImpl().getStereotypeName();
 	}
 
 	public void setStereotypeName(QualifiedName stereotypeName) {
-		this.stereotypeName = stereotypeName;
+		this.getImpl().setStereotypeName(stereotypeName);
 	}
 
 	public Stereotype getStereotype() {
-		if (this.stereotype == null) {
-			this.setStereotype(this.getImpl().deriveStereotype());
-		}
-		return this.stereotype;
+		return this.getImpl().getStereotype();
 	}
 
 	public void setStereotype(Stereotype stereotype) {
-		this.stereotype = stereotype;
+		this.getImpl().setStereotype(stereotype);
 	}
 
 	/**

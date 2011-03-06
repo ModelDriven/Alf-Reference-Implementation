@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.ArithmeticExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.ArithmeticExpressionImpl;
  **/
 
 public class ArithmeticExpression extends BinaryExpression {
-
-	private Boolean isConcatenation = null; // DERIVED
 
 	public ArithmeticExpression() {
 		this.impl = new ArithmeticExpressionImpl(this);
@@ -38,14 +38,11 @@ public class ArithmeticExpression extends BinaryExpression {
 	}
 
 	public Boolean getIsConcatenation() {
-		if (this.isConcatenation == null) {
-			this.setIsConcatenation(this.getImpl().deriveIsConcatenation());
-		}
-		return this.isConcatenation;
+		return this.getImpl().getIsConcatenation();
 	}
 
 	public void setIsConcatenation(Boolean isConcatenation) {
-		this.isConcatenation = isConcatenation;
+		this.getImpl().setIsConcatenation(isConcatenation);
 	}
 
 	/**

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.NamedExpressionImpl;
 
@@ -26,12 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.NamedExpressionImpl;
  **/
 
 public class NamedExpression extends SyntaxElement {
-
-	private String name = "";
-	private Expression expression = null;
-	private Expression index = null;
-	private Boolean isCollectionConversion = null; // DERIVED
-	private Boolean isBitStringConversion = null; // DERIVED
 
 	public NamedExpression() {
 		this.impl = new NamedExpressionImpl(this);
@@ -42,51 +38,43 @@ public class NamedExpression extends SyntaxElement {
 	}
 
 	public String getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	public Expression getExpression() {
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	public Expression getIndex() {
-		return this.index;
+		return this.getImpl().getIndex();
 	}
 
 	public void setIndex(Expression index) {
-		this.index = index;
+		this.getImpl().setIndex(index);
 	}
 
 	public Boolean getIsCollectionConversion() {
-		if (this.isCollectionConversion == null) {
-			this.setIsCollectionConversion(this.getImpl()
-					.deriveIsCollectionConversion());
-		}
-		return this.isCollectionConversion;
+		return this.getImpl().getIsCollectionConversion();
 	}
 
 	public void setIsCollectionConversion(Boolean isCollectionConversion) {
-		this.isCollectionConversion = isCollectionConversion;
+		this.getImpl().setIsCollectionConversion(isCollectionConversion);
 	}
 
 	public Boolean getIsBitStringConversion() {
-		if (this.isBitStringConversion == null) {
-			this.setIsBitStringConversion(this.getImpl()
-					.deriveIsBitStringConversion());
-		}
-		return this.isBitStringConversion;
+		return this.getImpl().getIsBitStringConversion();
 	}
 
 	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.isBitStringConversion = isBitStringConversion;
+		this.getImpl().setIsBitStringConversion(isBitStringConversion);
 	}
 
 	/**

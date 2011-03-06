@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceElementsImpl;
 
@@ -27,33 +29,24 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceElementsImpl;
 
 public abstract class SequenceElements extends SyntaxElement {
 
-	private Integer upper = null; // DERIVED
-	private Integer lower = null; // DERIVED
-
 	public SequenceElementsImpl getImpl() {
 		return (SequenceElementsImpl) this.impl;
 	}
 
 	public Integer getUpper() {
-		if (this.upper == null) {
-			this.setUpper(this.getImpl().deriveUpper());
-		}
-		return this.upper;
+		return this.getImpl().getUpper();
 	}
 
 	public void setUpper(Integer upper) {
-		this.upper = upper;
+		this.getImpl().setUpper(upper);
 	}
 
 	public Integer getLower() {
-		if (this.lower == null) {
-			this.setLower(this.getImpl().deriveLower());
-		}
-		return this.lower;
+		return this.getImpl().getLower();
 	}
 
 	public void setLower(Integer lower) {
-		this.lower = lower;
+		this.getImpl().setLower(lower);
 	}
 
 	public String toString() {

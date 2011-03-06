@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A left-hand side that is a name.
@@ -26,12 +28,22 @@ import java.util.ArrayList;
 public class NameLeftHandSideImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.LeftHandSideImpl {
 
+	private QualifiedName target = null;
+
 	public NameLeftHandSideImpl(NameLeftHandSide self) {
 		super(self);
 	}
 
 	public NameLeftHandSide getSelf() {
 		return (NameLeftHandSide) this.self;
+	}
+
+	public QualifiedName getTarget() {
+		return this.target;
+	}
+
+	public void setTarget(QualifiedName target) {
+		this.target = target;
 	}
 
 	/**

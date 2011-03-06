@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A tuple in which the arguments are matched to parameters in order by
@@ -27,12 +29,26 @@ import java.util.ArrayList;
 public class PositionalTupleImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.TupleImpl {
 
+	private List<Expression> expression = new ArrayList<Expression>();
+
 	public PositionalTupleImpl(PositionalTuple self) {
 		super(self);
 	}
 
 	public PositionalTuple getSelf() {
 		return (PositionalTuple) this.self;
+	}
+
+	public List<Expression> getExpression() {
+		return this.expression;
+	}
+
+	public void setExpression(List<Expression> expression) {
+		this.expression = expression;
+	}
+
+	public void addExpression(Expression expression) {
+		this.expression.add(expression);
 	}
 
 } // PositionalTupleImpl

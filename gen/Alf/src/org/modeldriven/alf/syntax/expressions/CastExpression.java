@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.CastExpressionImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.CastExpressionImpl;
  **/
 
 public class CastExpression extends Expression {
-
-	private Expression operand = null;
-	private QualifiedName typeName = null;
 
 	public CastExpression() {
 		this.impl = new CastExpressionImpl(this);
@@ -39,19 +38,19 @@ public class CastExpression extends Expression {
 	}
 
 	public Expression getOperand() {
-		return this.operand;
+		return this.getImpl().getOperand();
 	}
 
 	public void setOperand(Expression operand) {
-		this.operand = operand;
+		this.getImpl().setOperand(operand);
 	}
 
 	public QualifiedName getTypeName() {
-		return this.typeName;
+		return this.getImpl().getTypeName();
 	}
 
 	public void setTypeName(QualifiedName typeName) {
-		this.typeName = typeName;
+		this.getImpl().setTypeName(typeName);
 	}
 
 	/**
@@ -97,7 +96,7 @@ public class CastExpression extends Expression {
 	 * The assignments after a cast expression are the same as those after its
 	 * operand expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

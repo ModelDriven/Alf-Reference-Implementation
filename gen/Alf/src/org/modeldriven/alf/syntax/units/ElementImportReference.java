@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.ElementImportReferenceImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.units.impl.ElementImportReferenceImpl;
  **/
 
 public class ElementImportReference extends ImportReference {
-
-	private String alias = "";
 
 	public ElementImportReference() {
 		this.impl = new ElementImportReferenceImpl(this);
@@ -38,11 +38,11 @@ public class ElementImportReference extends ImportReference {
 	}
 
 	public String getAlias() {
-		return this.alias;
+		return this.getImpl().getAlias();
 	}
 
 	public void setAlias(String alias) {
-		this.alias = alias;
+		this.getImpl().setAlias(alias);
 	}
 
 	public String toString() {

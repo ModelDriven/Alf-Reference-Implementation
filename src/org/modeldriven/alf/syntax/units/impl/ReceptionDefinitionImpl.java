@@ -19,19 +19,42 @@ import org.modeldriven.alf.syntax.units.*;
 
 public class ReceptionDefinitionImpl extends MemberImpl {
 
+	private QualifiedName signalName = null;
+	private ElementReference signal = null; // DERIVED
+
 	public ReceptionDefinitionImpl(ReceptionDefinition self) {
 		super(self);
 	}
 
+	@Override
 	public ReceptionDefinition getSelf() {
 		return (ReceptionDefinition) this.self;
+	}
+
+	public QualifiedName getSignalName() {
+		return this.signalName;
+	}
+
+	public void setSignalName(QualifiedName signalName) {
+		this.signalName = signalName;
+	}
+
+	public ElementReference getSignal() {
+		if (this.signal == null) {
+			this.setSignal(this.deriveSignal());
+		}
+		return this.signal;
+	}
+
+	public void setSignal(ElementReference signal) {
+		this.signal = signal;
 	}
 
     /**
      * The signal for a reception definition is the signal referent of the
      * signal name for the reception definition.
      **/
-	public ElementReference deriveSignal() {
+	protected ElementReference deriveSignal() {
 	    ElementReference referent = null;
 	    QualifiedName signalName = this.getSelf().getSignalName();
 	    if (signalName != null) {
@@ -44,7 +67,7 @@ public class ReceptionDefinitionImpl extends MemberImpl {
 	 * A reception definition is a feature.
 	 */
 	@Override
-	public Boolean deriveIsFeature() {
+	protected Boolean deriveIsFeature() {
 	    return true;
 	}
 	

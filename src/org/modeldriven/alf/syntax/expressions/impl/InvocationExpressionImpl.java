@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,57 +15,182 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression denoting the invocation of a behavior or operation, or the
  * sending of a signal.
  **/
 
-public abstract class InvocationExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl {
+public abstract class InvocationExpressionImpl extends ExpressionImpl {
+
+	private Boolean isBehavior = null; // DERIVED
+	private Boolean isAssociationEnd = null; // DERIVED
+	private FeatureReference feature = null; // DERIVED
+	private Tuple tuple = null;
+	private Boolean isOperation = null; // DERIVED
+	private Boolean isDestructor = null; // DERIVED
+	private Boolean isImplicit = null; // DERIVED
+	private ElementReference referent = null; // DERIVED
+	private List<ElementReference> parameter = null; // DERIVED
+	private Boolean isSignal = null; // DERIVED
 
 	public InvocationExpressionImpl(InvocationExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.InvocationExpression getSelf() {
+	public InvocationExpression getSelf() {
 		return (InvocationExpression) this.self;
 	}
 
-	public Boolean deriveIsBehavior() {
+	public Boolean getIsBehavior() {
+		if (this.isBehavior == null) {
+			this.setIsBehavior(this.deriveIsBehavior());
+		}
+		return this.isBehavior;
+	}
+
+	public void setIsBehavior(Boolean isBehavior) {
+		this.isBehavior = isBehavior;
+	}
+
+	public Boolean getIsAssociationEnd() {
+		if (this.isAssociationEnd == null) {
+			this.setIsAssociationEnd(this.deriveIsAssociationEnd());
+		}
+		return this.isAssociationEnd;
+	}
+
+	public void setIsAssociationEnd(Boolean isAssociationEnd) {
+		this.isAssociationEnd = isAssociationEnd;
+	}
+
+	public FeatureReference getFeature() {
+		if (this.feature == null) {
+			this.setFeature(this.deriveFeature());
+		}
+		return this.feature;
+	}
+
+	public void setFeature(FeatureReference feature) {
+		this.feature = feature;
+	}
+
+	public Tuple getTuple() {
+		return this.tuple;
+	}
+
+	public void setTuple(Tuple tuple) {
+		this.tuple = tuple;
+	}
+
+	public Boolean getIsOperation() {
+		if (this.isOperation == null) {
+			this.setIsOperation(this.deriveIsOperation());
+		}
+		return this.isOperation;
+	}
+
+	public void setIsOperation(Boolean isOperation) {
+		this.isOperation = isOperation;
+	}
+
+	public Boolean getIsDestructor() {
+		if (this.isDestructor == null) {
+			this.setIsDestructor(this.deriveIsDestructor());
+		}
+		return this.isDestructor;
+	}
+
+	public void setIsDestructor(Boolean isDestructor) {
+		this.isDestructor = isDestructor;
+	}
+
+	public Boolean getIsImplicit() {
+		if (this.isImplicit == null) {
+			this.setIsImplicit(this.deriveIsImplicit());
+		}
+		return this.isImplicit;
+	}
+
+	public void setIsImplicit(Boolean isImplicit) {
+		this.isImplicit = isImplicit;
+	}
+
+	public ElementReference getReferent() {
+		if (this.referent == null) {
+			this.setReferent(this.deriveReferent());
+		}
+		return this.referent;
+	}
+
+	public void setReferent(ElementReference referent) {
+		this.referent = referent;
+	}
+
+	public List<ElementReference> getParameter() {
+		if (this.parameter == null) {
+			this.setParameter(this.deriveParameter());
+		}
+		return this.parameter;
+	}
+
+	public void setParameter(List<ElementReference> parameter) {
+		this.parameter = parameter;
+	}
+
+	public void addParameter(ElementReference parameter) {
+		this.parameter.add(parameter);
+	}
+
+	public Boolean getIsSignal() {
+		if (this.isSignal == null) {
+			this.setIsSignal(this.deriveIsSignal());
+		}
+		return this.isSignal;
+	}
+
+	public void setIsSignal(Boolean isSignal) {
+		this.isSignal = isSignal;
+	}
+
+	protected Boolean deriveIsBehavior() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsAssociationEnd() {
+	protected Boolean deriveIsAssociationEnd() {
 		return null; // STUB
 	}
 
-	public FeatureReference deriveFeature() {
+	protected FeatureReference deriveFeature() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsOperation() {
+	protected Boolean deriveIsOperation() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsDestructor() {
+	protected Boolean deriveIsDestructor() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsImplicit() {
+	protected Boolean deriveIsImplicit() {
 		return null; // STUB
 	}
 
-	public ElementReference deriveReferent() {
+	protected ElementReference deriveReferent() {
 		return null; // STUB
 	}
 
-	public ArrayList<ElementReference> deriveParameter() {
+	protected List<ElementReference> deriveParameter() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsSignal() {
+	protected Boolean deriveIsSignal() {
 		return null; // STUB
 	}
 
@@ -175,7 +300,7 @@ public abstract class InvocationExpressionImpl extends
 	 * parameters. (This is defined as a helper operation, so that it can be
 	 * overridden by subclasses of InvocationExpression, if necessary.)
 	 **/
-	public ArrayList<ElementReference> parameterElements() {
+	public Collection<ElementReference> parameterElements() {
 		return new ArrayList<ElementReference>(); // STUB
 	} // parameterElements
 
@@ -183,7 +308,7 @@ public abstract class InvocationExpressionImpl extends
 	 * The assignments after an invocation expression are the same as those
 	 * after the tuple of the expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

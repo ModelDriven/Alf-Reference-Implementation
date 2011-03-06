@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,7 +15,11 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A looping statement that gives successive values to one or more loop
@@ -25,15 +29,51 @@ import java.util.ArrayList;
 public class ForStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
 
+	private Block body = null;
+	private List<LoopVariableDefinition> variableDefinition = new ArrayList<LoopVariableDefinition>();
+	private Boolean isParallel = null; // DERIVED
+
 	public ForStatementImpl(ForStatement self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.ForStatement getSelf() {
+	public ForStatement getSelf() {
 		return (ForStatement) this.self;
 	}
 
-	public Boolean deriveIsParallel() {
+	public Block getBody() {
+		return this.body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
+	}
+
+	public List<LoopVariableDefinition> getVariableDefinition() {
+		return this.variableDefinition;
+	}
+
+	public void setVariableDefinition(
+			List<LoopVariableDefinition> variableDefinition) {
+		this.variableDefinition = variableDefinition;
+	}
+
+	public void addVariableDefinition(LoopVariableDefinition variableDefinition) {
+		this.variableDefinition.add(variableDefinition);
+	}
+
+	public Boolean getIsParallel() {
+		if (this.isParallel == null) {
+			this.setIsParallel(this.deriveIsParallel());
+		}
+		return this.isParallel;
+	}
+
+	public void setIsParallel(Boolean isParallel) {
+		this.isParallel = isParallel;
+	}
+
+	protected Boolean deriveIsParallel() {
 		return null; // STUB
 	}
 

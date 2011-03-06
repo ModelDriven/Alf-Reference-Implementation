@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
 
@@ -27,22 +29,20 @@ import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
 
 public abstract class DocumentedElement extends SyntaxElement {
 
-	private ArrayList<String> documentation = new ArrayList<String>();
-
 	public DocumentedElementImpl getImpl() {
 		return (DocumentedElementImpl) this.impl;
 	}
 
-	public ArrayList<String> getDocumentation() {
-		return this.documentation;
+	public Collection<String> getDocumentation() {
+		return this.getImpl().getDocumentation();
 	}
 
-	public void setDocumentation(ArrayList<String> documentation) {
-		this.documentation = documentation;
+	public void setDocumentation(Collection<String> documentation) {
+		this.getImpl().setDocumentation(documentation);
 	}
 
 	public void addDocumentation(String documentation) {
-		this.documentation.add(documentation);
+		this.getImpl().addDocumentation(documentation);
 	}
 
 	public String toString() {
@@ -52,7 +52,7 @@ public abstract class DocumentedElement extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<String> documentation = this.getDocumentation();
+		Collection<String> documentation = this.getDocumentation();
 		if (documentation != null) {
 			if (documentation.size() > 0) {
 				System.out.println(prefix + " documentation:");

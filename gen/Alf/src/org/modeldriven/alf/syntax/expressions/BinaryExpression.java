@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl;
 
@@ -27,36 +29,32 @@ import org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl;
 
 public abstract class BinaryExpression extends Expression {
 
-	private Expression operand1 = null;
-	private Expression operand2 = null;
-	private String operator = "";
-
 	public BinaryExpressionImpl getImpl() {
 		return (BinaryExpressionImpl) this.impl;
 	}
 
 	public Expression getOperand1() {
-		return this.operand1;
+		return this.getImpl().getOperand1();
 	}
 
 	public void setOperand1(Expression operand1) {
-		this.operand1 = operand1;
+		this.getImpl().setOperand1(operand1);
 	}
 
 	public Expression getOperand2() {
-		return this.operand2;
+		return this.getImpl().getOperand2();
 	}
 
 	public void setOperand2(Expression operand2) {
-		this.operand2 = operand2;
+		this.getImpl().setOperand2(operand2);
 	}
 
 	public String getOperator() {
-		return this.operator;
+		return this.getImpl().getOperator();
 	}
 
 	public void setOperator(String operator) {
-		this.operator = operator;
+		this.getImpl().setOperator(operator);
 	}
 
 	/**
@@ -92,7 +90,7 @@ public abstract class BinaryExpression extends Expression {
 	 * expression, plus the new assignments from each of the operand
 	 * expressions.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

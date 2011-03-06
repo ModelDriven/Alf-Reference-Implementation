@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.DoStatementImpl;
 
@@ -28,9 +30,6 @@ import org.modeldriven.alf.syntax.statements.impl.DoStatementImpl;
 
 public class DoStatement extends Statement {
 
-	private Expression condition = null;
-	private Block body = null;
-
 	public DoStatement() {
 		this.impl = new DoStatementImpl(this);
 	}
@@ -40,19 +39,19 @@ public class DoStatement extends Statement {
 	}
 
 	public Expression getCondition() {
-		return this.condition;
+		return this.getImpl().getCondition();
 	}
 
 	public void setCondition(Expression condition) {
-		this.condition = condition;
+		this.getImpl().setCondition(condition);
 	}
 
 	public Block getBody() {
-		return this.body;
+		return this.getImpl().getBody();
 	}
 
 	public void setBody(Block body) {
-		this.body = body;
+		this.getImpl().setBody(body);
 	}
 
 	/**

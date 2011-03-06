@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A model of an Alf statement.
@@ -25,6 +27,12 @@ import java.util.ArrayList;
 
 public abstract class StatementImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.DocumentedElementImpl {
+
+	private Collection<Annotation> annotation = new ArrayList<Annotation>();
+	private Collection<AssignedSource> assignmentBefore = null; // DERIVED
+	private Collection<AssignedSource> assignmentAfter = null; // DERIVED
+	private Statement enclosingStatement = null; // DERIVED
+	private Boolean isIsolated = null; // DERIVED
 
 	public StatementImpl(Statement self) {
 		super(self);
@@ -34,19 +42,83 @@ public abstract class StatementImpl extends
 		return (Statement) this.self;
 	}
 
-	public ArrayList<AssignedSource> deriveAssignmentBefore() {
+	public Collection<Annotation> getAnnotation() {
+		return this.annotation;
+	}
+
+	public void setAnnotation(Collection<Annotation> annotation) {
+		this.annotation = annotation;
+	}
+
+	public void addAnnotation(Annotation annotation) {
+		this.annotation.add(annotation);
+	}
+
+	public Collection<AssignedSource> getAssignmentBefore() {
+		if (this.assignmentBefore == null) {
+			this.setAssignmentBefore(this.deriveAssignmentBefore());
+		}
+		return this.assignmentBefore;
+	}
+
+	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+		this.assignmentBefore = assignmentBefore;
+	}
+
+	public void addAssignmentBefore(AssignedSource assignmentBefore) {
+		this.assignmentBefore.add(assignmentBefore);
+	}
+
+	public Collection<AssignedSource> getAssignmentAfter() {
+		if (this.assignmentAfter == null) {
+			this.setAssignmentAfter(this.deriveAssignmentAfter());
+		}
+		return this.assignmentAfter;
+	}
+
+	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+		this.assignmentAfter = assignmentAfter;
+	}
+
+	public void addAssignmentAfter(AssignedSource assignmentAfter) {
+		this.assignmentAfter.add(assignmentAfter);
+	}
+
+	public Statement getEnclosingStatement() {
+		if (this.enclosingStatement == null) {
+			this.setEnclosingStatement(this.deriveEnclosingStatement());
+		}
+		return this.enclosingStatement;
+	}
+
+	public void setEnclosingStatement(Statement enclosingStatement) {
+		this.enclosingStatement = enclosingStatement;
+	}
+
+	public Boolean getIsIsolated() {
+		if (this.isIsolated == null) {
+			this.setIsIsolated(this.deriveIsIsolated());
+		}
+		return this.isIsolated;
+	}
+
+	public void setIsIsolated(Boolean isIsolated) {
+		this.isIsolated = isIsolated;
+	}
+
+	protected Collection<AssignedSource> deriveAssignmentBefore() {
 		return null; // STUB
 	}
 
-	public ArrayList<AssignedSource> deriveAssignmentAfter() {
+	protected Collection<AssignedSource> deriveAssignmentAfter() {
 		return null; // STUB
 	}
 
-	public Statement deriveEnclosingStatement() {
+	protected Statement deriveEnclosingStatement() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsIsolated() {
+	protected Boolean deriveIsIsolated() {
 		return null; // STUB
 	}
 

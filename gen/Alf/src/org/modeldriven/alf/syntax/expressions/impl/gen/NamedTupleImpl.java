@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A tuple in which the arguments are matched to parameters by name.
@@ -26,12 +28,26 @@ import java.util.ArrayList;
 public class NamedTupleImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.TupleImpl {
 
+	private List<NamedExpression> namedExpression = new ArrayList<NamedExpression>();
+
 	public NamedTupleImpl(NamedTuple self) {
 		super(self);
 	}
 
 	public NamedTuple getSelf() {
 		return (NamedTuple) this.self;
+	}
+
+	public List<NamedExpression> getNamedExpression() {
+		return this.namedExpression;
+	}
+
+	public void setNamedExpression(List<NamedExpression> namedExpression) {
+		this.namedExpression = namedExpression;
+	}
+
+	public void addNamedExpression(NamedExpression namedExpression) {
+		this.namedExpression.add(namedExpression);
 	}
 
 } // NamedTupleImpl

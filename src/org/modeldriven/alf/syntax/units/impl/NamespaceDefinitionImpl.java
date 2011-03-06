@@ -23,6 +23,10 @@ import java.util.List;
 
 public abstract class NamespaceDefinitionImpl extends MemberImpl {
 
+	private Collection<Member> ownedMember = new ArrayList<Member>();
+	private UnitDefinition unit = null;
+	private Collection<Member> member = null; // DERIVED
+
 	public NamespaceDefinitionImpl(NamespaceDefinition self) {
 		super(self);
 	}
@@ -30,6 +34,41 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	@Override
 	public NamespaceDefinition getSelf() {
 		return (NamespaceDefinition) this.self;
+	}
+
+	public Collection<Member> getOwnedMember() {
+		return this.ownedMember;
+	}
+
+	public void setOwnedMember(Collection<Member> ownedMember) {
+		this.ownedMember = ownedMember;
+	}
+
+	public void addOwnedMember(Member ownedMember) {
+		this.ownedMember.add(ownedMember);
+	}
+
+	public UnitDefinition getUnit() {
+		return this.unit;
+	}
+
+	public void setUnit(UnitDefinition unit) {
+		this.unit = unit;
+	}
+
+	public Collection<Member> getMember() {
+		if (this.member == null) {
+			this.setMember(this.deriveMember());
+		}
+		return this.member;
+	}
+
+	public void setMember(Collection<Member> member) {
+		this.member = member;
+	}
+
+	public void addMember(Member member) {
+		this.member.add(member);
 	}
 
     /**

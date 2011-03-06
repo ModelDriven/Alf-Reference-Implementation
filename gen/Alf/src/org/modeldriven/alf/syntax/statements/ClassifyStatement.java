@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.ClassifyStatementImpl;
 
@@ -26,13 +28,6 @@ import org.modeldriven.alf.syntax.statements.impl.ClassifyStatementImpl;
  **/
 
 public class ClassifyStatement extends Statement {
-
-	private Expression expression = null;
-	private QualifiedNameList fromList = null;
-	private QualifiedNameList toList = null;
-	private ArrayList<ElementReference> fromClass = null; // DERIVED
-	private ArrayList<ElementReference> toClass = null; // DERIVED
-	private Boolean isReclassifyAll = false;
 
 	public ClassifyStatement() {
 		this.impl = new ClassifyStatementImpl(this);
@@ -43,65 +38,59 @@ public class ClassifyStatement extends Statement {
 	}
 
 	public Expression getExpression() {
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	public QualifiedNameList getFromList() {
-		return this.fromList;
+		return this.getImpl().getFromList();
 	}
 
 	public void setFromList(QualifiedNameList fromList) {
-		this.fromList = fromList;
+		this.getImpl().setFromList(fromList);
 	}
 
 	public QualifiedNameList getToList() {
-		return this.toList;
+		return this.getImpl().getToList();
 	}
 
 	public void setToList(QualifiedNameList toList) {
-		this.toList = toList;
+		this.getImpl().setToList(toList);
 	}
 
-	public ArrayList<ElementReference> getFromClass() {
-		if (this.fromClass == null) {
-			this.setFromClass(this.getImpl().deriveFromClass());
-		}
-		return this.fromClass;
+	public Collection<ElementReference> getFromClass() {
+		return this.getImpl().getFromClass();
 	}
 
-	public void setFromClass(ArrayList<ElementReference> fromClass) {
-		this.fromClass = fromClass;
+	public void setFromClass(Collection<ElementReference> fromClass) {
+		this.getImpl().setFromClass(fromClass);
 	}
 
 	public void addFromClass(ElementReference fromClass) {
-		this.fromClass.add(fromClass);
+		this.getImpl().addFromClass(fromClass);
 	}
 
-	public ArrayList<ElementReference> getToClass() {
-		if (this.toClass == null) {
-			this.setToClass(this.getImpl().deriveToClass());
-		}
-		return this.toClass;
+	public Collection<ElementReference> getToClass() {
+		return this.getImpl().getToClass();
 	}
 
-	public void setToClass(ArrayList<ElementReference> toClass) {
-		this.toClass = toClass;
+	public void setToClass(Collection<ElementReference> toClass) {
+		this.getImpl().setToClass(toClass);
 	}
 
 	public void addToClass(ElementReference toClass) {
-		this.toClass.add(toClass);
+		this.getImpl().addToClass(toClass);
 	}
 
 	public Boolean getIsReclassifyAll() {
-		return this.isReclassifyAll;
+		return this.getImpl().getIsReclassifyAll();
 	}
 
 	public void setIsReclassifyAll(Boolean isReclassifyAll) {
-		this.isReclassifyAll = isReclassifyAll;
+		this.getImpl().setIsReclassifyAll(isReclassifyAll);
 	}
 
 	/**
@@ -186,7 +175,7 @@ public class ClassifyStatement extends Statement {
 			System.out.println(prefix + " toList:");
 			toList.print(prefix + "  ");
 		}
-		ArrayList<ElementReference> fromClass = this.getFromClass();
+		Collection<ElementReference> fromClass = this.getFromClass();
 		if (fromClass != null) {
 			if (fromClass.size() > 0) {
 				System.out.println(prefix + " /fromClass:");
@@ -195,7 +184,7 @@ public class ClassifyStatement extends Statement {
 				System.out.println(prefix + "  " + _fromClass);
 			}
 		}
-		ArrayList<ElementReference> toClass = this.getToClass();
+		Collection<ElementReference> toClass = this.getToClass();
 		if (toClass != null) {
 			if (toClass.size() > 0) {
 				System.out.println(prefix + " /toClass:");

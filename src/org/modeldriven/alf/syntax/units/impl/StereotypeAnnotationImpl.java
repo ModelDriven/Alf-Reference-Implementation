@@ -16,7 +16,6 @@ import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.Stereotype;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -25,6 +24,11 @@ import java.util.Collection;
  **/
 
 public class StereotypeAnnotationImpl extends SyntaxElementImpl {
+
+	private TaggedValueList taggedValues = null;
+	private QualifiedNameList names = null;
+	private QualifiedName stereotypeName = null;
+	private Stereotype stereotype = null; // DERIVED
 
 	public StereotypeAnnotationImpl(StereotypeAnnotation self) {
 		super(self);
@@ -35,12 +39,47 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 		return (StereotypeAnnotation) this.self;
 	}
 
+	public TaggedValueList getTaggedValues() {
+		return this.taggedValues;
+	}
+
+	public void setTaggedValues(TaggedValueList taggedValues) {
+		this.taggedValues = taggedValues;
+	}
+
+	public QualifiedNameList getNames() {
+		return this.names;
+	}
+
+	public void setNames(QualifiedNameList names) {
+		this.names = names;
+	}
+
+	public QualifiedName getStereotypeName() {
+		return this.stereotypeName;
+	}
+
+	public void setStereotypeName(QualifiedName stereotypeName) {
+		this.stereotypeName = stereotypeName;
+	}
+
+	public Stereotype getStereotype() {
+		if (this.stereotype == null) {
+			this.setStereotype(this.deriveStereotype());
+		}
+		return this.stereotype;
+	}
+
+	public void setStereotype(Stereotype stereotype) {
+		this.stereotype = stereotype;
+	}
+
     /**
      * Unless the stereotype name is "apply", "primitive" or "external" then the
      * stereotype for a stereotype annotation is the stereotype denoted by the
      * stereotype name.
      **/
-	public Stereotype deriveStereotype() {
+	protected Stereotype deriveStereotype() {
 	    // TODO Allow unqualified stereotype names for standard profiles or
 	    //      if there is only one applied profile.
 	    Stereotype stereotype = null;

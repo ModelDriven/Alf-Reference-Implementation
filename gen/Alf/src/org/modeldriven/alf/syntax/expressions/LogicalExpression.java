@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.LogicalExpressionImpl;
 
@@ -26,10 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.LogicalExpressionImpl;
  **/
 
 public class LogicalExpression extends BinaryExpression {
-
-	private Boolean isBitWise = null; // DERIVED
-	private Boolean isBitStringConversion1 = null; // DERIVED
-	private Boolean isBitStringConversion2 = null; // DERIVED
 
 	public LogicalExpression() {
 		this.impl = new LogicalExpressionImpl(this);
@@ -40,38 +38,27 @@ public class LogicalExpression extends BinaryExpression {
 	}
 
 	public Boolean getIsBitWise() {
-		if (this.isBitWise == null) {
-			this.setIsBitWise(this.getImpl().deriveIsBitWise());
-		}
-		return this.isBitWise;
+		return this.getImpl().getIsBitWise();
 	}
 
 	public void setIsBitWise(Boolean isBitWise) {
-		this.isBitWise = isBitWise;
+		this.getImpl().setIsBitWise(isBitWise);
 	}
 
 	public Boolean getIsBitStringConversion1() {
-		if (this.isBitStringConversion1 == null) {
-			this.setIsBitStringConversion1(this.getImpl()
-					.deriveIsBitStringConversion1());
-		}
-		return this.isBitStringConversion1;
+		return this.getImpl().getIsBitStringConversion1();
 	}
 
 	public void setIsBitStringConversion1(Boolean isBitStringConversion1) {
-		this.isBitStringConversion1 = isBitStringConversion1;
+		this.getImpl().setIsBitStringConversion1(isBitStringConversion1);
 	}
 
 	public Boolean getIsBitStringConversion2() {
-		if (this.isBitStringConversion2 == null) {
-			this.setIsBitStringConversion2(this.getImpl()
-					.deriveIsBitStringConversion2());
-		}
-		return this.isBitStringConversion2;
+		return this.getImpl().getIsBitStringConversion2();
 	}
 
 	public void setIsBitStringConversion2(Boolean isBitStringConversion2) {
-		this.isBitStringConversion2 = isBitStringConversion2;
+		this.getImpl().setIsBitStringConversion2(isBitStringConversion2);
 	}
 
 	/**

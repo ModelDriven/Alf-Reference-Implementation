@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of an activity, with any formal parameters defined as owned
@@ -27,12 +29,22 @@ import java.util.ArrayList;
 public class ActivityDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.ClassifierDefinitionImpl {
 
+	private Block body = null;
+
 	public ActivityDefinitionImpl(ActivityDefinition self) {
 		super(self);
 	}
 
 	public ActivityDefinition getSelf() {
 		return (ActivityDefinition) this.self;
+	}
+
+	public Block getBody() {
+		return this.body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
 	}
 
 	/**

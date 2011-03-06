@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,20 +15,23 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression that comprises a primitive literal.
  **/
 
-public abstract class LiteralExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl {
+public abstract class LiteralExpressionImpl extends ExpressionImpl {
 
 	public LiteralExpressionImpl(LiteralExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.LiteralExpression getSelf() {
+	public LiteralExpression getSelf() {
 		return (LiteralExpression) this.self;
 	}
 

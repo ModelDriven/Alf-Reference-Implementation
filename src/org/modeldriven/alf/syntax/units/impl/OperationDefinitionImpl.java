@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.Operation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,12 +26,81 @@ import java.util.List;
 
 public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 
+	private QualifiedNameList redefinition = null;
+	private Boolean isAbstract = false;
+	private Block body = null;
+	private Collection<ElementReference> redefinedOperations = null; // DERIVED
+	private Boolean isConstructor = null; // DERIVED
+	private Boolean isDestructor = null; // DERIVED
+
 	public OperationDefinitionImpl(OperationDefinition self) {
 		super(self);
 	}
 
 	public OperationDefinition getSelf() {
 		return (OperationDefinition) this.self;
+	}
+
+	public QualifiedNameList getRedefinition() {
+		return this.redefinition;
+	}
+
+	public void setRedefinition(QualifiedNameList redefinition) {
+		this.redefinition = redefinition;
+	}
+
+	public Boolean getIsAbstract() {
+		return this.isAbstract;
+	}
+
+	public void setIsAbstract(Boolean isAbstract) {
+		this.isAbstract = isAbstract;
+	}
+
+	public Block getBody() {
+		return this.body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
+	}
+
+	public Collection<ElementReference> getRedefinedOperations() {
+		if (this.redefinedOperations == null) {
+			this.setRedefinedOperations(this.deriveRedefinedOperations());
+		}
+		return this.redefinedOperations;
+	}
+
+	public void setRedefinedOperations(
+			Collection<ElementReference> redefinedOperations) {
+		this.redefinedOperations = redefinedOperations;
+	}
+
+	public void addRedefinedOperations(ElementReference redefinedOperations) {
+		this.redefinedOperations.add(redefinedOperations);
+	}
+
+	public Boolean getIsConstructor() {
+		if (this.isConstructor == null) {
+			this.setIsConstructor(this.deriveIsConstructor());
+		}
+		return this.isConstructor;
+	}
+
+	public void setIsConstructor(Boolean isConstructor) {
+		this.isConstructor = isConstructor;
+	}
+
+	public Boolean getIsDestructor() {
+		if (this.isDestructor == null) {
+			this.setIsDestructor(this.deriveIsDestructor());
+		}
+		return this.isDestructor;
+	}
+
+	public void setIsDestructor(Boolean isDestructor) {
+		this.isDestructor = isDestructor;
 	}
 
     /**
@@ -40,7 +110,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
      * are any operations that would otherwise be indistinguishable from the
      * operation being defined in this operation definition.
      **/
-	public ArrayList<ElementReference> deriveRedefinedOperations() {
+	protected Collection<ElementReference> deriveRedefinedOperations() {
 	    OperationDefinition self = this.getSelf();
 	    ArrayList<ElementReference> redefinedOperations = new ArrayList<ElementReference>();
 	    QualifiedNameList redefinitions = self.getRedefinition();
@@ -59,14 +129,14 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     /**
      * An operation definition is a constructor if it has a @Create annotation.
      **/
-	public Boolean deriveIsConstructor() {
+	protected Boolean deriveIsConstructor() {
 		return this.hasAnnotation("Create");
 	}
 
     /**
      * An operation definition is a destructor if it has a @Destroy annotation.
      **/
-	public Boolean deriveIsDestructor() {
+	protected Boolean deriveIsDestructor() {
         return this.hasAnnotation("Destroy");
 	}
 	
@@ -74,7 +144,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
      * An operation definition is a feature.
      **/
 	@Override
-	public Boolean deriveIsFeature() {
+	protected Boolean deriveIsFeature() {
 	    return true;
 	}
 	
@@ -82,7 +152,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
      * effectiveBody is not currently an official derived attribute.
      */
     @Override
-    public UnitDefinition deriveSubunit() {
+    protected UnitDefinition deriveSubunit() {
         UnitDefinition subunit = super.deriveSubunit();
         Block body = this.getEffectiveBody(subunit);
         if (body != null) {

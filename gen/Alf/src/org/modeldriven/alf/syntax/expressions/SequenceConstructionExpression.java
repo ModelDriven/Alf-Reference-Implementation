@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceConstructionExpressionImpl;
 
@@ -26,10 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceConstructionExpressio
  **/
 
 public class SequenceConstructionExpression extends Expression {
-
-	private SequenceElements elements = null;
-	private Boolean hasMultiplicity = false;
-	private QualifiedName typeName = null;
 
 	public SequenceConstructionExpression() {
 		this.impl = new SequenceConstructionExpressionImpl(this);
@@ -40,27 +38,27 @@ public class SequenceConstructionExpression extends Expression {
 	}
 
 	public SequenceElements getElements() {
-		return this.elements;
+		return this.getImpl().getElements();
 	}
 
 	public void setElements(SequenceElements elements) {
-		this.elements = elements;
+		this.getImpl().setElements(elements);
 	}
 
 	public Boolean getHasMultiplicity() {
-		return this.hasMultiplicity;
+		return this.getImpl().getHasMultiplicity();
 	}
 
 	public void setHasMultiplicity(Boolean hasMultiplicity) {
-		this.hasMultiplicity = hasMultiplicity;
+		this.getImpl().setHasMultiplicity(hasMultiplicity);
 	}
 
 	public QualifiedName getTypeName() {
-		return this.typeName;
+		return this.getImpl().getTypeName();
 	}
 
 	public void setTypeName(QualifiedName typeName) {
-		this.typeName = typeName;
+		this.getImpl().setTypeName(typeName);
 	}
 
 	/**

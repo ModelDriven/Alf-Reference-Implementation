@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.LocalNameDeclarationStatementImpl;
 
@@ -28,12 +30,6 @@ import org.modeldriven.alf.syntax.statements.impl.LocalNameDeclarationStatementI
 
 public class LocalNameDeclarationStatement extends Statement {
 
-	private String name = "";
-	private Expression expression = null;
-	private Boolean hasMultiplicity = false;
-	private QualifiedName typeName = null;
-	private ElementReference type = null; // DERIVED
-
 	public LocalNameDeclarationStatement() {
 		this.impl = new LocalNameDeclarationStatementImpl(this);
 	}
@@ -43,46 +39,43 @@ public class LocalNameDeclarationStatement extends Statement {
 	}
 
 	public String getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	public Expression getExpression() {
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	public Boolean getHasMultiplicity() {
-		return this.hasMultiplicity;
+		return this.getImpl().getHasMultiplicity();
 	}
 
 	public void setHasMultiplicity(Boolean hasMultiplicity) {
-		this.hasMultiplicity = hasMultiplicity;
+		this.getImpl().setHasMultiplicity(hasMultiplicity);
 	}
 
 	public QualifiedName getTypeName() {
-		return this.typeName;
+		return this.getImpl().getTypeName();
 	}
 
 	public void setTypeName(QualifiedName typeName) {
-		this.typeName = typeName;
+		this.getImpl().setTypeName(typeName);
 	}
 
 	public ElementReference getType() {
-		if (this.type == null) {
-			this.setType(this.getImpl().deriveType());
-		}
-		return this.type;
+		return this.getImpl().getType();
 	}
 
 	public void setType(ElementReference type) {
-		this.type = type;
+		this.getImpl().setType(type);
 	}
 
 	/**

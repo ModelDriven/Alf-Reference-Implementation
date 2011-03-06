@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A template binding in which the arguments are matched to formal template
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 public class PositionalTemplateBindingImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.TemplateBindingImpl {
 
+    private Collection<QualifiedName> argumentName = new ArrayList<QualifiedName>();
+
 	public PositionalTemplateBindingImpl(PositionalTemplateBinding self) {
 		super(self);
 	}
@@ -33,6 +36,19 @@ public class PositionalTemplateBindingImpl extends
 		return (PositionalTemplateBinding) this.self;
 	}
 	
+    public Collection<QualifiedName> getArgumentName() {
+        return this.argumentName;
+    }
+
+    public void setArgumentName(Collection<QualifiedName> argumentName) {
+        this.argumentName = argumentName;
+    }
+
+    public void addArgumentName(QualifiedName argumentName) {
+        this.argumentName.add(argumentName);
+    }
+
+    @Override
 	public String toString() {
 	    StringBuffer s = new StringBuffer("<");
 	    PositionalTemplateBinding self = this.getSelf();

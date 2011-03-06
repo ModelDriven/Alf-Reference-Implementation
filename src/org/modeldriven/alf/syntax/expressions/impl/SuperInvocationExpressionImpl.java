@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,21 +15,35 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An invocation expression used to invoke an operation of a superclass.
  **/
 
-public class SuperInvocationExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl {
+public class SuperInvocationExpressionImpl
+		extends InvocationExpressionImpl {
+
+	private QualifiedName target = null;
 
 	public SuperInvocationExpressionImpl(SuperInvocationExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SuperInvocationExpression getSelf() {
+	public SuperInvocationExpression getSelf() {
 		return (SuperInvocationExpression) this.self;
+	}
+
+	public QualifiedName getTarget() {
+		return this.target;
+	}
+
+	public void setTarget(QualifiedName target) {
+		this.target = target;
 	}
 
 	/**

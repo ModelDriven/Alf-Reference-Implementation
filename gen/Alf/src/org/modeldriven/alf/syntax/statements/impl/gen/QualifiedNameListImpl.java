@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A group of qualified names.
@@ -26,12 +28,26 @@ import java.util.ArrayList;
 public class QualifiedNameListImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private Collection<QualifiedName> name = new ArrayList<QualifiedName>();
+
 	public QualifiedNameListImpl(QualifiedNameList self) {
 		super(self);
 	}
 
 	public QualifiedNameList getSelf() {
 		return (QualifiedNameList) this.self;
+	}
+
+	public Collection<QualifiedName> getName() {
+		return this.name;
+	}
+
+	public void setName(Collection<QualifiedName> name) {
+		this.name = name;
+	}
+
+	public void addName(QualifiedName name) {
+		this.name.add(name);
 	}
 
 } // QualifiedNameListImpl

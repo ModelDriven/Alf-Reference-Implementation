@@ -15,21 +15,52 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression consisting of an operator acting on two operand expressions.
  **/
 
-public abstract class BinaryExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl {
+public abstract class BinaryExpressionImpl extends ExpressionImpl {
+
+	private Expression operand1 = null;
+	private Expression operand2 = null;
+	private String operator = "";
 
 	public BinaryExpressionImpl(BinaryExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BinaryExpression getSelf() {
+	public BinaryExpression getSelf() {
 		return (BinaryExpression) this.self;
+	}
+
+	public Expression getOperand1() {
+		return this.operand1;
+	}
+
+	public void setOperand1(Expression operand1) {
+		this.operand1 = operand1;
+	}
+
+	public Expression getOperand2() {
+		return this.operand2;
+	}
+
+	public void setOperand2(Expression operand2) {
+		this.operand2 = operand2;
+	}
+
+	public String getOperator() {
+		return this.operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
 	/**
@@ -65,7 +96,7 @@ public abstract class BinaryExpressionImpl extends
 	 * expression, plus the new assignments from each of the operand
 	 * expressions.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

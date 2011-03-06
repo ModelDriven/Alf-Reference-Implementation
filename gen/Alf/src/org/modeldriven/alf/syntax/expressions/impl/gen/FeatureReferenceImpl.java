@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A reference to a structural or behavioral feature of the type of its target
@@ -28,6 +30,10 @@ import java.util.ArrayList;
 public class FeatureReferenceImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private Expression expression = null;
+	private Collection<ElementReference> referent = null; // DERIVED
+	private NameBinding nameBinding = null;
+
 	public FeatureReferenceImpl(FeatureReference self) {
 		super(self);
 	}
@@ -36,7 +42,38 @@ public class FeatureReferenceImpl extends
 		return (FeatureReference) this.self;
 	}
 
-	public ArrayList<ElementReference> deriveReferent() {
+	public Expression getExpression() {
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
+	public Collection<ElementReference> getReferent() {
+		if (this.referent == null) {
+			this.setReferent(this.deriveReferent());
+		}
+		return this.referent;
+	}
+
+	public void setReferent(Collection<ElementReference> referent) {
+		this.referent = referent;
+	}
+
+	public void addReferent(ElementReference referent) {
+		this.referent.add(referent);
+	}
+
+	public NameBinding getNameBinding() {
+		return this.nameBinding;
+	}
+
+	public void setNameBinding(NameBinding nameBinding) {
+		this.nameBinding = nameBinding;
+	}
+
+	protected Collection<ElementReference> deriveReferent() {
 		return null; // STUB
 	}
 

@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,24 +15,40 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A binary expression with a relational operator.
  **/
 
-public class RelationalExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl {
+public class RelationalExpressionImpl extends BinaryExpressionImpl {
+
+	private Boolean isUnlimitedNatural = null; // DERIVED
 
 	public RelationalExpressionImpl(RelationalExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.RelationalExpression getSelf() {
+	public RelationalExpression getSelf() {
 		return (RelationalExpression) this.self;
 	}
 
-	public Boolean deriveIsUnlimitedNatural() {
+	public Boolean getIsUnlimitedNatural() {
+		if (this.isUnlimitedNatural == null) {
+			this.setIsUnlimitedNatural(this.deriveIsUnlimitedNatural());
+		}
+		return this.isUnlimitedNatural;
+	}
+
+	public void setIsUnlimitedNatural(Boolean isUnlimitedNatural) {
+		this.isUnlimitedNatural = isUnlimitedNatural;
+	}
+
+	protected Boolean deriveIsUnlimitedNatural() {
 		return null; // STUB
 	}
 

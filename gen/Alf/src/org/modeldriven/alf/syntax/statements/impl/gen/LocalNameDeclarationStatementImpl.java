@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement that declares the type of a local name and assigns it an initial
@@ -27,6 +29,12 @@ import java.util.ArrayList;
 public class LocalNameDeclarationStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
 
+	private String name = "";
+	private Expression expression = null;
+	private Boolean hasMultiplicity = false;
+	private QualifiedName typeName = null;
+	private ElementReference type = null; // DERIVED
+
 	public LocalNameDeclarationStatementImpl(LocalNameDeclarationStatement self) {
 		super(self);
 	}
@@ -35,7 +43,50 @@ public class LocalNameDeclarationStatementImpl extends
 		return (LocalNameDeclarationStatement) this.self;
 	}
 
-	public ElementReference deriveType() {
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Expression getExpression() {
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
+	public Boolean getHasMultiplicity() {
+		return this.hasMultiplicity;
+	}
+
+	public void setHasMultiplicity(Boolean hasMultiplicity) {
+		this.hasMultiplicity = hasMultiplicity;
+	}
+
+	public QualifiedName getTypeName() {
+		return this.typeName;
+	}
+
+	public void setTypeName(QualifiedName typeName) {
+		this.typeName = typeName;
+	}
+
+	public ElementReference getType() {
+		if (this.type == null) {
+			this.setType(this.deriveType());
+		}
+		return this.type;
+	}
+
+	public void setType(ElementReference type) {
+		this.type = type;
+	}
+
+	protected ElementReference deriveType() {
 		return null; // STUB
 	}
 

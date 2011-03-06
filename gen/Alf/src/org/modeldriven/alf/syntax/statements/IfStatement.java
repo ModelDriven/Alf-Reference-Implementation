@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.IfStatementImpl;
 
@@ -28,11 +30,6 @@ import org.modeldriven.alf.syntax.statements.impl.IfStatementImpl;
 
 public class IfStatement extends Statement {
 
-	private ArrayList<ConcurrentClauses> nonFinalClauses = new ArrayList<ConcurrentClauses>();
-	private Block finalClause = null;
-	private Boolean isAssured = null; // DERIVED
-	private Boolean isDetermined = null; // DERIVED
-
 	public IfStatement() {
 		this.impl = new IfStatementImpl(this);
 	}
@@ -41,46 +38,40 @@ public class IfStatement extends Statement {
 		return (IfStatementImpl) this.impl;
 	}
 
-	public ArrayList<ConcurrentClauses> getNonFinalClauses() {
-		return this.nonFinalClauses;
+	public List<ConcurrentClauses> getNonFinalClauses() {
+		return this.getImpl().getNonFinalClauses();
 	}
 
-	public void setNonFinalClauses(ArrayList<ConcurrentClauses> nonFinalClauses) {
-		this.nonFinalClauses = nonFinalClauses;
+	public void setNonFinalClauses(List<ConcurrentClauses> nonFinalClauses) {
+		this.getImpl().setNonFinalClauses(nonFinalClauses);
 	}
 
 	public void addNonFinalClauses(ConcurrentClauses nonFinalClauses) {
-		this.nonFinalClauses.add(nonFinalClauses);
+		this.getImpl().addNonFinalClauses(nonFinalClauses);
 	}
 
 	public Block getFinalClause() {
-		return this.finalClause;
+		return this.getImpl().getFinalClause();
 	}
 
 	public void setFinalClause(Block finalClause) {
-		this.finalClause = finalClause;
+		this.getImpl().setFinalClause(finalClause);
 	}
 
 	public Boolean getIsAssured() {
-		if (this.isAssured == null) {
-			this.setIsAssured(this.getImpl().deriveIsAssured());
-		}
-		return this.isAssured;
+		return this.getImpl().getIsAssured();
 	}
 
 	public void setIsAssured(Boolean isAssured) {
-		this.isAssured = isAssured;
+		this.getImpl().setIsAssured(isAssured);
 	}
 
 	public Boolean getIsDetermined() {
-		if (this.isDetermined == null) {
-			this.setIsDetermined(this.getImpl().deriveIsDetermined());
-		}
-		return this.isDetermined;
+		return this.getImpl().getIsDetermined();
 	}
 
 	public void setIsDetermined(Boolean isDetermined) {
-		this.isDetermined = isDetermined;
+		this.getImpl().setIsDetermined(isDetermined);
 	}
 
 	/**
@@ -161,8 +152,7 @@ public class IfStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<ConcurrentClauses> nonFinalClauses = this
-				.getNonFinalClauses();
+		List<ConcurrentClauses> nonFinalClauses = this.getNonFinalClauses();
 		if (nonFinalClauses != null) {
 			if (nonFinalClauses.size() > 0) {
 				System.out.println(prefix + " nonFinalClauses:");

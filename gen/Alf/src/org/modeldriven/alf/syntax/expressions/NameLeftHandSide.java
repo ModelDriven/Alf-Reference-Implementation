@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.NameLeftHandSideImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.NameLeftHandSideImpl;
  **/
 
 public class NameLeftHandSide extends LeftHandSide {
-
-	private QualifiedName target = null;
 
 	public NameLeftHandSide() {
 		this.impl = new NameLeftHandSideImpl(this);
@@ -38,11 +38,11 @@ public class NameLeftHandSide extends LeftHandSide {
 	}
 
 	public QualifiedName getTarget() {
-		return this.target;
+		return this.getImpl().getTarget();
 	}
 
 	public void setTarget(QualifiedName target) {
-		this.target = target;
+		this.getImpl().setTarget(target);
 	}
 
 	/**

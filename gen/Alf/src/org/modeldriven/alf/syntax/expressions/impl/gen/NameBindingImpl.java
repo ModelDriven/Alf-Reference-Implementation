@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An unqualified name, optionally with a template binding.
@@ -26,12 +28,31 @@ import java.util.ArrayList;
 public class NameBindingImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private TemplateBinding binding = null;
+	private String name = "";
+
 	public NameBindingImpl(NameBinding self) {
 		super(self);
 	}
 
 	public NameBinding getSelf() {
 		return (NameBinding) this.self;
+	}
+
+	public TemplateBinding getBinding() {
+		return this.binding;
+	}
+
+	public void setBinding(TemplateBinding binding) {
+		this.binding = binding;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 } // NameBindingImpl

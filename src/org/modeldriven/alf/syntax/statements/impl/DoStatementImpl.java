@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,7 +15,11 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A looping statement for which the continuation condition is first tested
@@ -25,12 +29,31 @@ import java.util.ArrayList;
 public class DoStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
 
+	private Expression condition = null;
+	private Block body = null;
+
 	public DoStatementImpl(DoStatement self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.DoStatement getSelf() {
+	public DoStatement getSelf() {
 		return (DoStatement) this.self;
+	}
+
+	public Expression getCondition() {
+		return this.condition;
+	}
+
+	public void setCondition(Expression condition) {
+		this.condition = condition;
+	}
+
+	public Block getBody() {
+		return this.body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
 	}
 
 	/**

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A pairing of a parameter name and an argument expression in a tuple.
@@ -25,6 +27,12 @@ import java.util.ArrayList;
 
 public class NamedExpressionImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
+
+	private String name = "";
+	private Expression expression = null;
+	private Expression index = null;
+	private Boolean isCollectionConversion = null; // DERIVED
+	private Boolean isBitStringConversion = null; // DERIVED
 
 	public NamedExpressionImpl(NamedExpression self) {
 		super(self);
@@ -34,11 +42,57 @@ public class NamedExpressionImpl extends
 		return (NamedExpression) this.self;
 	}
 
-	public Boolean deriveIsCollectionConversion() {
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Expression getExpression() {
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
+	public Expression getIndex() {
+		return this.index;
+	}
+
+	public void setIndex(Expression index) {
+		this.index = index;
+	}
+
+	public Boolean getIsCollectionConversion() {
+		if (this.isCollectionConversion == null) {
+			this.setIsCollectionConversion(this.deriveIsCollectionConversion());
+		}
+		return this.isCollectionConversion;
+	}
+
+	public void setIsCollectionConversion(Boolean isCollectionConversion) {
+		this.isCollectionConversion = isCollectionConversion;
+	}
+
+	public Boolean getIsBitStringConversion() {
+		if (this.isBitStringConversion == null) {
+			this.setIsBitStringConversion(this.deriveIsBitStringConversion());
+		}
+		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
+	}
+
+	protected Boolean deriveIsCollectionConversion() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsBitStringConversion() {
+	protected Boolean deriveIsBitStringConversion() {
 		return null; // STUB
 	}
 

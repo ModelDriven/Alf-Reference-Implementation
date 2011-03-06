@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.ReceptionDefinitionImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.units.impl.ReceptionDefinitionImpl;
  **/
 
 public class ReceptionDefinition extends Member {
-
-	private QualifiedName signalName = null;
-	private ElementReference signal = null; // DERIVED
 
 	public ReceptionDefinition() {
 		this.impl = new ReceptionDefinitionImpl(this);
@@ -39,22 +38,19 @@ public class ReceptionDefinition extends Member {
 	}
 
 	public QualifiedName getSignalName() {
-		return this.signalName;
+		return this.getImpl().getSignalName();
 	}
 
 	public void setSignalName(QualifiedName signalName) {
-		this.signalName = signalName;
+		this.getImpl().setSignalName(signalName);
 	}
 
 	public ElementReference getSignal() {
-		if (this.signal == null) {
-			this.setSignal(this.getImpl().deriveSignal());
-		}
-		return this.signal;
+		return this.getImpl().getSignal();
 	}
 
 	public void setSignal(ElementReference signal) {
-		this.signal = signal;
+		this.getImpl().setSignal(signal);
 	}
 
 	/**

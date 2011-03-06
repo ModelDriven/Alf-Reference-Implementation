@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of a package, all of whose members must be packageable
@@ -27,6 +29,8 @@ import java.util.ArrayList;
 public class PackageDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.NamespaceDefinitionImpl {
 
+	private Collection<Profile> appliedProfile = null; // DERIVED
+
 	public PackageDefinitionImpl(PackageDefinition self) {
 		super(self);
 	}
@@ -35,7 +39,22 @@ public class PackageDefinitionImpl extends
 		return (PackageDefinition) this.self;
 	}
 
-	public ArrayList<Profile> deriveAppliedProfile() {
+	public Collection<Profile> getAppliedProfile() {
+		if (this.appliedProfile == null) {
+			this.setAppliedProfile(this.deriveAppliedProfile());
+		}
+		return this.appliedProfile;
+	}
+
+	public void setAppliedProfile(Collection<Profile> appliedProfile) {
+		this.appliedProfile = appliedProfile;
+	}
+
+	public void addAppliedProfile(Profile appliedProfile) {
+		this.appliedProfile.add(appliedProfile);
+	}
+
+	protected Collection<Profile> deriveAppliedProfile() {
 		return null; // STUB
 	}
 

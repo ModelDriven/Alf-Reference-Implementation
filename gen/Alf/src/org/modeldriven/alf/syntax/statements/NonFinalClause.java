@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.NonFinalClauseImpl;
 
@@ -28,9 +30,6 @@ import org.modeldriven.alf.syntax.statements.impl.NonFinalClauseImpl;
 
 public class NonFinalClause extends SyntaxElement {
 
-	private Expression condition = null;
-	private Block body = null;
-
 	public NonFinalClause() {
 		this.impl = new NonFinalClauseImpl(this);
 	}
@@ -40,19 +39,19 @@ public class NonFinalClause extends SyntaxElement {
 	}
 
 	public Expression getCondition() {
-		return this.condition;
+		return this.getImpl().getCondition();
 	}
 
 	public void setCondition(Expression condition) {
-		this.condition = condition;
+		this.getImpl().setCondition(condition);
 	}
 
 	public Block getBody() {
-		return this.body;
+		return this.getImpl().getBody();
 	}
 
 	public void setBody(Block body) {
-		this.body = body;
+		this.getImpl().setBody(body);
 	}
 
 	/**
@@ -84,7 +83,7 @@ public class NonFinalClause extends SyntaxElement {
 	 * The assignments before a non-final clause are the assignments before the
 	 * condition of the clause.
 	 **/
-	public ArrayList<AssignedSource> assignmentsBefore() {
+	public Collection<AssignedSource> assignmentsBefore() {
 		return this.getImpl().assignmentsBefore();
 	}
 
@@ -92,7 +91,7 @@ public class NonFinalClause extends SyntaxElement {
 	 * The assignments after a non-final clause are the assignments after the
 	 * block of the clause.
 	 **/
-	public ArrayList<AssignedSource> assignmentsAfter() {
+	public Collection<AssignedSource> assignmentsAfter() {
 		return this.getImpl().assignmentsAfter();
 	}
 

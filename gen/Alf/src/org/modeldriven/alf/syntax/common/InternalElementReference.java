@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.common.impl.InternalElementReferenceImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.common.impl.InternalElementReferenceImpl;
  **/
 
 public class InternalElementReference extends ElementReference {
-
-	private SyntaxElement element = null;
 
 	public InternalElementReference() {
 		this.impl = new InternalElementReferenceImpl(this);
@@ -38,11 +38,11 @@ public class InternalElementReference extends ElementReference {
 	}
 
 	public SyntaxElement getElement() {
-		return this.element;
+		return this.getImpl().getElement();
 	}
 
 	public void setElement(SyntaxElement element) {
-		this.element = element;
+		this.getImpl().setElement(element);
 	}
 
 	public String toString() {

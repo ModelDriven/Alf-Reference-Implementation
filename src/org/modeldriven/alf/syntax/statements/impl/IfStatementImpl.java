@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,7 +15,11 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A conditional statement that executes (at most) one of a set of clauses based
@@ -25,19 +29,66 @@ import java.util.ArrayList;
 public class IfStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
 
+	private List<ConcurrentClauses> nonFinalClauses = new ArrayList<ConcurrentClauses>();
+	private Block finalClause = null;
+	private Boolean isAssured = null; // DERIVED
+	private Boolean isDetermined = null; // DERIVED
+
 	public IfStatementImpl(IfStatement self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.IfStatement getSelf() {
+	public IfStatement getSelf() {
 		return (IfStatement) this.self;
 	}
 
-	public Boolean deriveIsAssured() {
+	public List<ConcurrentClauses> getNonFinalClauses() {
+		return this.nonFinalClauses;
+	}
+
+	public void setNonFinalClauses(List<ConcurrentClauses> nonFinalClauses) {
+		this.nonFinalClauses = nonFinalClauses;
+	}
+
+	public void addNonFinalClauses(ConcurrentClauses nonFinalClauses) {
+		this.nonFinalClauses.add(nonFinalClauses);
+	}
+
+	public Block getFinalClause() {
+		return this.finalClause;
+	}
+
+	public void setFinalClause(Block finalClause) {
+		this.finalClause = finalClause;
+	}
+
+	public Boolean getIsAssured() {
+		if (this.isAssured == null) {
+			this.setIsAssured(this.deriveIsAssured());
+		}
+		return this.isAssured;
+	}
+
+	public void setIsAssured(Boolean isAssured) {
+		this.isAssured = isAssured;
+	}
+
+	public Boolean getIsDetermined() {
+		if (this.isDetermined == null) {
+			this.setIsDetermined(this.deriveIsDetermined());
+		}
+		return this.isDetermined;
+	}
+
+	public void setIsDetermined(Boolean isDetermined) {
+		this.isDetermined = isDetermined;
+	}
+
+	protected Boolean deriveIsAssured() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsDetermined() {
+	protected Boolean deriveIsDetermined() {
 		return null; // STUB
 	}
 

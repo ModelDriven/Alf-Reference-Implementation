@@ -17,6 +17,8 @@ import org.modeldriven.alf.syntax.units.*;
 
 public class ActiveClassDefinitionImpl extends ClassDefinitionImpl {
 
+    private ActivityDefinition classifierBehavior = null;
+
 	public ActiveClassDefinitionImpl(ActiveClassDefinition self) {
 		super(self);
 	}
@@ -26,6 +28,14 @@ public class ActiveClassDefinitionImpl extends ClassDefinitionImpl {
 		return (ActiveClassDefinition) this.self;
 	}
     
+    public ActivityDefinition getClassifierBehavior() {
+        return this.classifierBehavior;
+    }
+
+    public void setClassifierBehavior(ActivityDefinition classifierBehavior) {
+        this.classifierBehavior = classifierBehavior;
+    }
+
     /*
      * Helper Methods
      */

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The target of a sequence operation, reduction or expansion expression, which
@@ -25,6 +27,10 @@ import java.util.ArrayList;
  **/
 
 public class ExtentOrExpressionImpl {
+
+	private QualifiedName name = null;
+	private Expression expression = null; // DERIVED
+	private Expression nonNameExpression = null;
 
 	protected ExtentOrExpression self;
 
@@ -36,7 +42,34 @@ public class ExtentOrExpressionImpl {
 		return (ExtentOrExpression) this.self;
 	}
 
-	public Expression deriveExpression() {
+	public QualifiedName getName() {
+		return this.name;
+	}
+
+	public void setName(QualifiedName name) {
+		this.name = name;
+	}
+
+	public Expression getExpression() {
+		if (this.expression == null) {
+			this.setExpression(this.deriveExpression());
+		}
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
+	public Expression getNonNameExpression() {
+		return this.nonNameExpression;
+	}
+
+	public void setNonNameExpression(Expression nonNameExpression) {
+		this.nonNameExpression = nonNameExpression;
+	}
+
+	protected Expression deriveExpression() {
 		return null; // STUB
 	}
 

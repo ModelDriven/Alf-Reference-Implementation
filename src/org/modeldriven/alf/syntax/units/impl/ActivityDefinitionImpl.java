@@ -39,21 +39,11 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 
     public void setBody(Block body) {
         this.body = body;
-    }
-
-    /* Hack to set the current scope in the body of the activity, since the
-     * effective body is not currently an official derived attribute.
-     */
-    @Override
-    protected UnitDefinition deriveSubunit() {
-        UnitDefinition subunit = super.deriveSubunit();        
-        Block body = this.getEffectiveBody(subunit);
         if (body != null) {
             body.getImpl().setCurrentScope(this.getSelf());
         }
-        return subunit;
     }
-	
+
     /*
 	 * Constraints
 	 */

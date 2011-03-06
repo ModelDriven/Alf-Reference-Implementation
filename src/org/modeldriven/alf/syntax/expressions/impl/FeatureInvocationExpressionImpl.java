@@ -15,21 +15,35 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An invocation of a feature referenced on a sequence of instances.
  **/
 
-public class FeatureInvocationExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl {
+public class FeatureInvocationExpressionImpl
+		extends InvocationExpressionImpl {
+
+	private FeatureReference target = null;
 
 	public FeatureInvocationExpressionImpl(FeatureInvocationExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.FeatureInvocationExpression getSelf() {
+	public FeatureInvocationExpression getSelf() {
 		return (FeatureInvocationExpression) this.self;
+	}
+
+	public FeatureReference getTarget() {
+		return this.target;
+	}
+
+	public void setTarget(FeatureReference target) {
+		this.target = target;
 	}
 
 	/**

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement used to accept the receipt of instances of one or more signals.
@@ -25,6 +27,10 @@ import java.util.ArrayList;
 
 public class AcceptStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
+
+	private Collection<AcceptBlock> acceptBlock = new ArrayList<AcceptBlock>();
+	private ElementReference behavior = null; // DERIVED
+	private Boolean isSimple = null; // DERIVED
 
 	public AcceptStatementImpl(AcceptStatement self) {
 		super(self);
@@ -34,11 +40,45 @@ public class AcceptStatementImpl extends
 		return (AcceptStatement) this.self;
 	}
 
-	public ElementReference deriveBehavior() {
+	public Collection<AcceptBlock> getAcceptBlock() {
+		return this.acceptBlock;
+	}
+
+	public void setAcceptBlock(Collection<AcceptBlock> acceptBlock) {
+		this.acceptBlock = acceptBlock;
+	}
+
+	public void addAcceptBlock(AcceptBlock acceptBlock) {
+		this.acceptBlock.add(acceptBlock);
+	}
+
+	public ElementReference getBehavior() {
+		if (this.behavior == null) {
+			this.setBehavior(this.deriveBehavior());
+		}
+		return this.behavior;
+	}
+
+	public void setBehavior(ElementReference behavior) {
+		this.behavior = behavior;
+	}
+
+	public Boolean getIsSimple() {
+		if (this.isSimple == null) {
+			this.setIsSimple(this.deriveIsSimple());
+		}
+		return this.isSimple;
+	}
+
+	public void setIsSimple(Boolean isSimple) {
+		this.isSimple = isSimple;
+	}
+
+	protected ElementReference deriveBehavior() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsSimple() {
+	protected Boolean deriveIsSimple() {
 		return null; // STUB
 	}
 

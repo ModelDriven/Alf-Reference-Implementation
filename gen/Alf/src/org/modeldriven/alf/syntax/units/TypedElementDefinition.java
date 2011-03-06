@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.TypedElementDefinitionImpl;
 
@@ -27,90 +29,72 @@ import org.modeldriven.alf.syntax.units.impl.TypedElementDefinitionImpl;
 
 public abstract class TypedElementDefinition extends Member {
 
-	private String lowerBound = "";
-	private String upperBound = "1";
-	private Boolean isOrdered = false;
-	private Boolean isNonunique = false;
-	private QualifiedName typeName = null;
-	private ElementReference type = null; // DERIVED
-	private Integer lower = null; // DERIVED
-	private Integer upper = null; // DERIVED
-
 	public TypedElementDefinitionImpl getImpl() {
 		return (TypedElementDefinitionImpl) this.impl;
 	}
 
 	public String getLowerBound() {
-		return this.lowerBound;
+		return this.getImpl().getLowerBound();
 	}
 
 	public void setLowerBound(String lowerBound) {
-		this.lowerBound = lowerBound;
+		this.getImpl().setLowerBound(lowerBound);
 	}
 
 	public String getUpperBound() {
-		return this.upperBound;
+		return this.getImpl().getUpperBound();
 	}
 
 	public void setUpperBound(String upperBound) {
-		this.upperBound = upperBound;
+		this.getImpl().setUpperBound(upperBound);
 	}
 
 	public Boolean getIsOrdered() {
-		return this.isOrdered;
+		return this.getImpl().getIsOrdered();
 	}
 
 	public void setIsOrdered(Boolean isOrdered) {
-		this.isOrdered = isOrdered;
+		this.getImpl().setIsOrdered(isOrdered);
 	}
 
 	public Boolean getIsNonunique() {
-		return this.isNonunique;
+		return this.getImpl().getIsNonunique();
 	}
 
 	public void setIsNonunique(Boolean isNonunique) {
-		this.isNonunique = isNonunique;
+		this.getImpl().setIsNonunique(isNonunique);
 	}
 
 	public QualifiedName getTypeName() {
-		return this.typeName;
+		return this.getImpl().getTypeName();
 	}
 
 	public void setTypeName(QualifiedName typeName) {
-		this.typeName = typeName;
+		this.getImpl().setTypeName(typeName);
 	}
 
 	public ElementReference getType() {
-		if (this.type == null) {
-			this.setType(this.getImpl().deriveType());
-		}
-		return this.type;
+		return this.getImpl().getType();
 	}
 
 	public void setType(ElementReference type) {
-		this.type = type;
+		this.getImpl().setType(type);
 	}
 
 	public Integer getLower() {
-		if (this.lower == null) {
-			this.setLower(this.getImpl().deriveLower());
-		}
-		return this.lower;
+		return this.getImpl().getLower();
 	}
 
 	public void setLower(Integer lower) {
-		this.lower = lower;
+		this.getImpl().setLower(lower);
 	}
 
 	public Integer getUpper() {
-		if (this.upper == null) {
-			this.setUpper(this.getImpl().deriveUpper());
-		}
-		return this.upper;
+		return this.getImpl().getUpper();
 	}
 
 	public void setUpper(Integer upper) {
-		this.upper = upper;
+		this.getImpl().setUpper(upper);
 	}
 
 	/**

@@ -24,16 +24,6 @@ import #qualifiedPackageName(${object.owner}).impl.${object.name}Impl;
 ## #end
 ## #end
     
-#foreach( $feature in ${object.ownedAttributes} )
-  #if( ${feature.isStatic()} )
-  #visibility(${feature}) static #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
-  #elseif( ${feature.isDerived()} )
-  private #type(${feature}) #name(${feature.name}) = null; // DERIVED
-  #else
-  private #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
-  #end  
-#end
-
 #if( ${object.superClasses.size()}==0 )
   protected ${object.name}Impl impl;
 #end

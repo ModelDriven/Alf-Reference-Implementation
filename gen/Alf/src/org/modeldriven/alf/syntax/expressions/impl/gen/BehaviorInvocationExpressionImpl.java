@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An invocation of a behavior referenced by name.
@@ -27,12 +29,22 @@ public class BehaviorInvocationExpressionImpl
 		extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.InvocationExpressionImpl {
 
+	private QualifiedName target = null;
+
 	public BehaviorInvocationExpressionImpl(BehaviorInvocationExpression self) {
 		super(self);
 	}
 
 	public BehaviorInvocationExpression getSelf() {
 		return (BehaviorInvocationExpression) this.self;
+	}
+
+	public QualifiedName getTarget() {
+		return this.target;
+	}
+
+	public void setTarget(QualifiedName target) {
+		this.target = target;
 	}
 
 	/**
