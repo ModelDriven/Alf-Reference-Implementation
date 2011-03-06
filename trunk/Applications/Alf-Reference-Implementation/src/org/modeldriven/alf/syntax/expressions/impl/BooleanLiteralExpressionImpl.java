@@ -15,21 +15,34 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression that comprises a Boolean literal.
  **/
 
-public class BooleanLiteralExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl {
+public class BooleanLiteralExpressionImpl extends LiteralExpressionImpl {
+
+	private String image = "";
 
 	public BooleanLiteralExpressionImpl(BooleanLiteralExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BooleanLiteralExpression getSelf() {
+	public BooleanLiteralExpression getSelf() {
 		return (BooleanLiteralExpression) this.self;
+	}
+
+	public String getImage() {
+		return this.image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	/**

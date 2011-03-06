@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to obtain the objects in the extent of a class.
@@ -26,12 +28,22 @@ import java.util.ArrayList;
 public class ClassExtentExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.ExpressionImpl {
 
+	private QualifiedName className = null;
+
 	public ClassExtentExpressionImpl(ClassExtentExpression self) {
 		super(self);
 	}
 
 	public ClassExtentExpression getSelf() {
 		return (ClassExtentExpression) this.self;
+	}
+
+	public QualifiedName getClassName() {
+		return this.className;
+	}
+
+	public void setClassName(QualifiedName className) {
+		this.className = className;
 	}
 
 	/**

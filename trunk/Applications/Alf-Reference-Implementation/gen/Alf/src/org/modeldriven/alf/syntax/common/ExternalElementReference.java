@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.common.impl.ExternalElementReferenceImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.common.impl.ExternalElementReferenceImpl;
  **/
 
 public class ExternalElementReference extends ElementReference {
-
-	private Element element = null;
 
 	public ExternalElementReference() {
 		this.impl = new ExternalElementReferenceImpl(this);
@@ -38,11 +38,11 @@ public class ExternalElementReference extends ElementReference {
 	}
 
 	public Element getElement() {
-		return this.element;
+		return this.getImpl().getElement();
 	}
 
 	public void setElement(Element element) {
-		this.element = element;
+		this.getImpl().setElement(element);
 	}
 
 	public String toString() {

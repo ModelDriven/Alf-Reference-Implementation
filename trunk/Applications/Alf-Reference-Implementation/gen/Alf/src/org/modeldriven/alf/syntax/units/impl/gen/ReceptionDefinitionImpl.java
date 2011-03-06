@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The declaration of the ability of an active class to receive a signal.
@@ -25,6 +27,9 @@ import java.util.ArrayList;
 
 public class ReceptionDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.MemberImpl {
+
+	private QualifiedName signalName = null;
+	private ElementReference signal = null; // DERIVED
 
 	public ReceptionDefinitionImpl(ReceptionDefinition self) {
 		super(self);
@@ -34,7 +39,26 @@ public class ReceptionDefinitionImpl extends
 		return (ReceptionDefinition) this.self;
 	}
 
-	public ElementReference deriveSignal() {
+	public QualifiedName getSignalName() {
+		return this.signalName;
+	}
+
+	public void setSignalName(QualifiedName signalName) {
+		this.signalName = signalName;
+	}
+
+	public ElementReference getSignal() {
+		if (this.signal == null) {
+			this.setSignal(this.deriveSignal());
+		}
+		return this.signal;
+	}
+
+	public void setSignal(ElementReference signal) {
+		this.signal = signal;
+	}
+
+	protected ElementReference deriveSignal() {
 		return null; // STUB
 	}
 

@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,21 +15,24 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A sequence expansion expression with a forAll, exists or one operation.
  **/
 
 public class ForAllOrExistsOrOneExpressionImpl
-		extends
-		org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionImpl {
+		extends SequenceExpansionExpressionImpl {
 
 	public ForAllOrExistsOrOneExpressionImpl(ForAllOrExistsOrOneExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ForAllOrExistsOrOneExpression getSelf() {
+	public ForAllOrExistsOrOneExpression getSelf() {
 		return (ForAllOrExistsOrOneExpression) this.self;
 	}
 

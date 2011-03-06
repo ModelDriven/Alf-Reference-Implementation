@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to test the dynamic type of its operand.
@@ -25,6 +27,10 @@ import java.util.ArrayList;
 
 public class ClassificationExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.UnaryExpressionImpl {
+
+	private ElementReference referent = null; // DERIVED
+	private Boolean isDirect = null; // DERIVED
+	private QualifiedName typeName = null;
 
 	public ClassificationExpressionImpl(ClassificationExpression self) {
 		super(self);
@@ -34,11 +40,41 @@ public class ClassificationExpressionImpl extends
 		return (ClassificationExpression) this.self;
 	}
 
-	public ElementReference deriveReferent() {
+	public ElementReference getReferent() {
+		if (this.referent == null) {
+			this.setReferent(this.deriveReferent());
+		}
+		return this.referent;
+	}
+
+	public void setReferent(ElementReference referent) {
+		this.referent = referent;
+	}
+
+	public Boolean getIsDirect() {
+		if (this.isDirect == null) {
+			this.setIsDirect(this.deriveIsDirect());
+		}
+		return this.isDirect;
+	}
+
+	public void setIsDirect(Boolean isDirect) {
+		this.isDirect = isDirect;
+	}
+
+	public QualifiedName getTypeName() {
+		return this.typeName;
+	}
+
+	public void setTypeName(QualifiedName typeName) {
+		this.typeName = typeName;
+	}
+
+	protected ElementReference deriveReferent() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsDirect() {
+	protected Boolean deriveIsDirect() {
 		return null; // STUB
 	}
 

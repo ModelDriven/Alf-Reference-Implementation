@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A clause of an if statement with a conditional expression and a sequence of
@@ -27,12 +29,31 @@ import java.util.ArrayList;
 public class NonFinalClauseImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private Expression condition = null;
+	private Block body = null;
+
 	public NonFinalClauseImpl(NonFinalClause self) {
 		super(self);
 	}
 
 	public NonFinalClause getSelf() {
 		return (NonFinalClause) this.self;
+	}
+
+	public Expression getCondition() {
+		return this.condition;
+	}
+
+	public void setCondition(Expression condition) {
+		this.condition = condition;
+	}
+
+	public Block getBody() {
+		return this.body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
 	}
 
 	/**
@@ -64,7 +85,7 @@ public class NonFinalClauseImpl extends
 	 * The assignments before a non-final clause are the assignments before the
 	 * condition of the clause.
 	 **/
-	public ArrayList<AssignedSource> assignmentsBefore() {
+	public Collection<AssignedSource> assignmentsBefore() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // assignmentsBefore
 
@@ -72,7 +93,7 @@ public class NonFinalClauseImpl extends
 	 * The assignments after a non-final clause are the assignments after the
 	 * block of the clause.
 	 **/
-	public ArrayList<AssignedSource> assignmentsAfter() {
+	public Collection<AssignedSource> assignmentsAfter() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // assignmentsAfter
 

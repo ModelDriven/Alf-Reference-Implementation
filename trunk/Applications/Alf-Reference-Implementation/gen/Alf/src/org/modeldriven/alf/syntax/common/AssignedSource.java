@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 
@@ -28,12 +30,6 @@ import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
  **/
 
 public class AssignedSource {
-
-	private String name = "";
-	private SyntaxElement source = null;
-	private Integer upper = 0;
-	private Integer lower = 0;
-	private ElementReference type = null;
 
 	protected AssignedSourceImpl impl;
 
@@ -46,43 +42,43 @@ public class AssignedSource {
 	}
 
 	public String getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	public SyntaxElement getSource() {
-		return this.source;
+		return this.getImpl().getSource();
 	}
 
 	public void setSource(SyntaxElement source) {
-		this.source = source;
+		this.getImpl().setSource(source);
 	}
 
 	public Integer getUpper() {
-		return this.upper;
+		return this.getImpl().getUpper();
 	}
 
 	public void setUpper(Integer upper) {
-		this.upper = upper;
+		this.getImpl().setUpper(upper);
 	}
 
 	public Integer getLower() {
-		return this.lower;
+		return this.getImpl().getLower();
 	}
 
 	public void setLower(Integer lower) {
-		this.lower = lower;
+		this.getImpl().setLower(lower);
 	}
 
 	public ElementReference getType() {
-		return this.type;
+		return this.getImpl().getType();
 	}
 
 	public void setType(ElementReference type) {
-		this.type = type;
+		this.getImpl().setType(type);
 	}
 
 	public String toString() {

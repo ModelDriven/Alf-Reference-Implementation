@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl;
 
@@ -27,47 +29,40 @@ import org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl;
 
 public abstract class NamespaceDefinition extends Member {
 
-	private ArrayList<Member> ownedMember = new ArrayList<Member>();
-	private UnitDefinition unit = null;
-	private ArrayList<Member> member = null; // DERIVED
-
 	public NamespaceDefinitionImpl getImpl() {
 		return (NamespaceDefinitionImpl) this.impl;
 	}
 
-	public ArrayList<Member> getOwnedMember() {
-		return this.ownedMember;
+	public Collection<Member> getOwnedMember() {
+		return this.getImpl().getOwnedMember();
 	}
 
-	public void setOwnedMember(ArrayList<Member> ownedMember) {
-		this.ownedMember = ownedMember;
+	public void setOwnedMember(Collection<Member> ownedMember) {
+		this.getImpl().setOwnedMember(ownedMember);
 	}
 
 	public void addOwnedMember(Member ownedMember) {
-		this.ownedMember.add(ownedMember);
+		this.getImpl().addOwnedMember(ownedMember);
 	}
 
 	public UnitDefinition getUnit() {
-		return this.unit;
+		return this.getImpl().getUnit();
 	}
 
 	public void setUnit(UnitDefinition unit) {
-		this.unit = unit;
+		this.getImpl().setUnit(unit);
 	}
 
-	public ArrayList<Member> getMember() {
-		if (this.member == null) {
-			this.setMember(this.getImpl().deriveMember());
-		}
-		return this.member;
+	public Collection<Member> getMember() {
+		return this.getImpl().getMember();
 	}
 
-	public void setMember(ArrayList<Member> member) {
-		this.member = member;
+	public void setMember(Collection<Member> member) {
+		this.getImpl().setMember(member);
 	}
 
 	public void addMember(Member member) {
-		this.member.add(member);
+		this.getImpl().addMember(member);
 	}
 
 	/**
@@ -107,7 +102,7 @@ public abstract class NamespaceDefinition extends Member {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<Member> ownedMember = this.getOwnedMember();
+		Collection<Member> ownedMember = this.getOwnedMember();
 		if (ownedMember != null) {
 			if (ownedMember.size() > 0) {
 				System.out.println(prefix + " ownedMember:");
@@ -124,7 +119,7 @@ public abstract class NamespaceDefinition extends Member {
 		if (unit != null) {
 			System.out.println(prefix + " unit:" + unit);
 		}
-		ArrayList<Member> member = this.getMember();
+		Collection<Member> member = this.getMember();
 		if (member != null) {
 			if (member.size() > 0) {
 				System.out.println(prefix + " /member:");

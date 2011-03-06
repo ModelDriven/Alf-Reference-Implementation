@@ -12,17 +12,15 @@ package org.modeldriven.alf.syntax.common.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.Class;
 import org.omg.uml.Element;
-import org.omg.uml.Feature;
-import org.omg.uml.Reception;
-import org.omg.uml.Signal;
 
 /**
  * A direct reference to a UML model element.
  **/
 
 public class InternalElementReferenceImpl extends ElementReferenceImpl {
+
+    private SyntaxElement element = null;
 
 	public InternalElementReferenceImpl(InternalElementReference self) {
 		super(self);
@@ -32,6 +30,14 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 	public InternalElementReference getSelf() {
 		return (InternalElementReference) this.self;
 	}
+
+    public SyntaxElement getElement() {
+        return this.element;
+    }
+
+    public void setElement(SyntaxElement element) {
+        this.element = element;
+    }
 
     @Override
     public SyntaxElement getAlf() {

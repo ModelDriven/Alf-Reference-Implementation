@@ -23,6 +23,8 @@ import java.util.List;
 
 public class FormalParameterImpl extends TypedElementDefinitionImpl {
 
+    private String direction = "";
+
 	public FormalParameterImpl(FormalParameter self) {
 		super(self);
 	}
@@ -31,6 +33,14 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
 		return (FormalParameter) this.self;
 	}
 	
+    public String getDirection() {
+        return this.direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
 	/*
 	 * Helper Methods
 	 */

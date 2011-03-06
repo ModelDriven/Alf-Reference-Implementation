@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.RelationalExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.RelationalExpressionImpl;
  **/
 
 public class RelationalExpression extends BinaryExpression {
-
-	private Boolean isUnlimitedNatural = null; // DERIVED
 
 	public RelationalExpression() {
 		this.impl = new RelationalExpressionImpl(this);
@@ -38,15 +38,11 @@ public class RelationalExpression extends BinaryExpression {
 	}
 
 	public Boolean getIsUnlimitedNatural() {
-		if (this.isUnlimitedNatural == null) {
-			this.setIsUnlimitedNatural(this.getImpl()
-					.deriveIsUnlimitedNatural());
-		}
-		return this.isUnlimitedNatural;
+		return this.getImpl().getIsUnlimitedNatural();
 	}
 
 	public void setIsUnlimitedNatural(Boolean isUnlimitedNatural) {
-		this.isUnlimitedNatural = isUnlimitedNatural;
+		this.getImpl().setIsUnlimitedNatural(isUnlimitedNatural);
 	}
 
 	/**

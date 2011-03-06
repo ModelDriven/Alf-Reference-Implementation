@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The representation of a qualified name as a sequence of individual simple
@@ -27,6 +29,16 @@ import java.util.ArrayList;
 public class QualifiedNameImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private Boolean isAmbiguous = false;
+	private String pathName = null; // DERIVED
+	private Boolean isFeatureReference = null; // DERIVED
+	private QualifiedName qualification = null; // DERIVED
+	private FeatureReference disambiguation = null; // DERIVED
+	private List<NameBinding> nameBinding = new ArrayList<NameBinding>();
+	private Collection<ElementReference> referent = null; // DERIVED
+	private NameBinding unqualifiedName = null; // DERIVED
+	private QualifiedName templateName = null; // DERIVED
+
 	public QualifiedNameImpl(QualifiedName self) {
 		super(self);
 	}
@@ -35,31 +47,132 @@ public class QualifiedNameImpl extends
 		return (QualifiedName) this.self;
 	}
 
-	public String derivePathName() {
+	public Boolean getIsAmbiguous() {
+		return this.isAmbiguous;
+	}
+
+	public void setIsAmbiguous(Boolean isAmbiguous) {
+		this.isAmbiguous = isAmbiguous;
+	}
+
+	public String getPathName() {
+		if (this.pathName == null) {
+			this.setPathName(this.derivePathName());
+		}
+		return this.pathName;
+	}
+
+	public void setPathName(String pathName) {
+		this.pathName = pathName;
+	}
+
+	public Boolean getIsFeatureReference() {
+		if (this.isFeatureReference == null) {
+			this.setIsFeatureReference(this.deriveIsFeatureReference());
+		}
+		return this.isFeatureReference;
+	}
+
+	public void setIsFeatureReference(Boolean isFeatureReference) {
+		this.isFeatureReference = isFeatureReference;
+	}
+
+	public QualifiedName getQualification() {
+		if (this.qualification == null) {
+			this.setQualification(this.deriveQualification());
+		}
+		return this.qualification;
+	}
+
+	public void setQualification(QualifiedName qualification) {
+		this.qualification = qualification;
+	}
+
+	public FeatureReference getDisambiguation() {
+		if (this.disambiguation == null) {
+			this.setDisambiguation(this.deriveDisambiguation());
+		}
+		return this.disambiguation;
+	}
+
+	public void setDisambiguation(FeatureReference disambiguation) {
+		this.disambiguation = disambiguation;
+	}
+
+	public List<NameBinding> getNameBinding() {
+		return this.nameBinding;
+	}
+
+	public void setNameBinding(List<NameBinding> nameBinding) {
+		this.nameBinding = nameBinding;
+	}
+
+	public void addNameBinding(NameBinding nameBinding) {
+		this.nameBinding.add(nameBinding);
+	}
+
+	public Collection<ElementReference> getReferent() {
+		if (this.referent == null) {
+			this.setReferent(this.deriveReferent());
+		}
+		return this.referent;
+	}
+
+	public void setReferent(Collection<ElementReference> referent) {
+		this.referent = referent;
+	}
+
+	public void addReferent(ElementReference referent) {
+		this.referent.add(referent);
+	}
+
+	public NameBinding getUnqualifiedName() {
+		if (this.unqualifiedName == null) {
+			this.setUnqualifiedName(this.deriveUnqualifiedName());
+		}
+		return this.unqualifiedName;
+	}
+
+	public void setUnqualifiedName(NameBinding unqualifiedName) {
+		this.unqualifiedName = unqualifiedName;
+	}
+
+	public QualifiedName getTemplateName() {
+		if (this.templateName == null) {
+			this.setTemplateName(this.deriveTemplateName());
+		}
+		return this.templateName;
+	}
+
+	public void setTemplateName(QualifiedName templateName) {
+		this.templateName = templateName;
+	}
+
+	protected String derivePathName() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsFeatureReference() {
+	protected Boolean deriveIsFeatureReference() {
 		return null; // STUB
 	}
 
-	public QualifiedName deriveQualification() {
+	protected QualifiedName deriveQualification() {
 		return null; // STUB
 	}
 
-	public FeatureReference deriveDisambiguation() {
+	protected FeatureReference deriveDisambiguation() {
 		return null; // STUB
 	}
 
-	public ArrayList<ElementReference> deriveReferent() {
+	protected Collection<ElementReference> deriveReferent() {
 		return null; // STUB
 	}
 
-	public NameBinding deriveUnqualifiedName() {
+	protected NameBinding deriveUnqualifiedName() {
 		return null; // STUB
 	}
 
-	public QualifiedName deriveTemplateName() {
+	protected QualifiedName deriveTemplateName() {
 		return null; // STUB
 	}
 

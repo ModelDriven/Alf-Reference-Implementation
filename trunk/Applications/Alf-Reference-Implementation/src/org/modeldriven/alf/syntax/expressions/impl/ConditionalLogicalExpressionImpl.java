@@ -15,7 +15,11 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A binary expression with a conditional logical expression, for which the
@@ -23,14 +27,13 @@ import java.util.ArrayList;
  * evaluating the first operand expression.
  **/
 
-public class ConditionalLogicalExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl {
+public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
 
 	public ConditionalLogicalExpressionImpl(ConditionalLogicalExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ConditionalLogicalExpression getSelf() {
+	public ConditionalLogicalExpression getSelf() {
 		return (ConditionalLogicalExpression) this.self;
 	}
 
@@ -84,7 +87,7 @@ public class ConditionalLogicalExpressionImpl extends
 	 * conditional logical expression is the conditional logical expression
 	 * itself.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

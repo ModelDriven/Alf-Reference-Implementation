@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceRangeImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceRangeImpl;
  **/
 
 public class SequenceRange extends SequenceElements {
-
-	private Expression rangeLower = null;
-	private Expression rangeUpper = null;
 
 	public SequenceRange() {
 		this.impl = new SequenceRangeImpl(this);
@@ -39,19 +38,19 @@ public class SequenceRange extends SequenceElements {
 	}
 
 	public Expression getRangeLower() {
-		return this.rangeLower;
+		return this.getImpl().getRangeLower();
 	}
 
 	public void setRangeLower(Expression rangeLower) {
-		this.rangeLower = rangeLower;
+		this.getImpl().setRangeLower(rangeLower);
 	}
 
 	public Expression getRangeUpper() {
-		return this.rangeUpper;
+		return this.getImpl().getRangeUpper();
 	}
 
 	public void setRangeUpper(Expression rangeUpper) {
-		this.rangeUpper = rangeUpper;
+		this.getImpl().setRangeUpper(rangeUpper);
 	}
 
 	/**

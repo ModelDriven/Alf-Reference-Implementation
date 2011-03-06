@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.AnnotationImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.statements.impl.AnnotationImpl;
  **/
 
 public class Annotation extends SyntaxElement {
-
-	private String identifier = "";
-	private ArrayList<String> argument = new ArrayList<String>();
 
 	public Annotation() {
 		this.impl = new AnnotationImpl(this);
@@ -39,23 +38,23 @@ public class Annotation extends SyntaxElement {
 	}
 
 	public String getIdentifier() {
-		return this.identifier;
+		return this.getImpl().getIdentifier();
 	}
 
 	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+		this.getImpl().setIdentifier(identifier);
 	}
 
-	public ArrayList<String> getArgument() {
-		return this.argument;
+	public Collection<String> getArgument() {
+		return this.getImpl().getArgument();
 	}
 
-	public void setArgument(ArrayList<String> argument) {
-		this.argument = argument;
+	public void setArgument(Collection<String> argument) {
+		this.getImpl().setArgument(argument);
 	}
 
 	public void addArgument(String argument) {
-		this.argument.add(argument);
+		this.getImpl().addArgument(argument);
 	}
 
 	public String toString() {
@@ -67,7 +66,7 @@ public class Annotation extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<String> argument = this.getArgument();
+		Collection<String> argument = this.getArgument();
 		if (argument != null) {
 			if (argument.size() > 0) {
 				System.out.println(prefix + " argument:");

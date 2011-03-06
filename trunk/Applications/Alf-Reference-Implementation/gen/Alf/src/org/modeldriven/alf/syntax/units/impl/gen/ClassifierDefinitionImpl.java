@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of a classifier.
@@ -25,6 +27,10 @@ import java.util.ArrayList;
 
 public abstract class ClassifierDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.NamespaceDefinitionImpl {
+
+	private Boolean isAbstract = false;
+	private QualifiedNameList specialization = null;
+	private Collection<ElementReference> specializationReferent = null; // DERIVED
 
 	public ClassifierDefinitionImpl(ClassifierDefinition self) {
 		super(self);
@@ -34,7 +40,40 @@ public abstract class ClassifierDefinitionImpl extends
 		return (ClassifierDefinition) this.self;
 	}
 
-	public ArrayList<ElementReference> deriveSpecializationReferent() {
+	public Boolean getIsAbstract() {
+		return this.isAbstract;
+	}
+
+	public void setIsAbstract(Boolean isAbstract) {
+		this.isAbstract = isAbstract;
+	}
+
+	public QualifiedNameList getSpecialization() {
+		return this.specialization;
+	}
+
+	public void setSpecialization(QualifiedNameList specialization) {
+		this.specialization = specialization;
+	}
+
+	public Collection<ElementReference> getSpecializationReferent() {
+		if (this.specializationReferent == null) {
+			this.setSpecializationReferent(this.deriveSpecializationReferent());
+		}
+		return this.specializationReferent;
+	}
+
+	public void setSpecializationReferent(
+			Collection<ElementReference> specializationReferent) {
+		this.specializationReferent = specializationReferent;
+	}
+
+	public void addSpecializationReferent(
+			ElementReference specializationReferent) {
+		this.specializationReferent.add(specializationReferent);
+	}
+
+	protected Collection<ElementReference> deriveSpecializationReferent() {
 		return null; // STUB
 	}
 

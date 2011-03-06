@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,7 +15,11 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement that executes code in a language other than Alf.
@@ -24,12 +28,31 @@ import java.util.ArrayList;
 public class InLineStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
 
+	private String language = "";
+	private String code = "";
+
 	public InLineStatementImpl(InLineStatement self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.InLineStatement getSelf() {
+	public InLineStatement getSelf() {
 		return (InLineStatement) this.self;
+	}
+
+	public String getLanguage() {
+		return this.language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public String getCode() {
+		return this.code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	/**

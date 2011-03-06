@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.BooleanLiteralExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.BooleanLiteralExpressionImpl;
  **/
 
 public class BooleanLiteralExpression extends LiteralExpression {
-
-	private String image = "";
 
 	public BooleanLiteralExpression() {
 		this.impl = new BooleanLiteralExpressionImpl(this);
@@ -38,11 +38,11 @@ public class BooleanLiteralExpression extends LiteralExpression {
 	}
 
 	public String getImage() {
-		return this.image;
+		return this.getImpl().getImage();
 	}
 
 	public void setImage(String image) {
-		this.image = image;
+		this.getImpl().setImage(image);
 	}
 
 	/**

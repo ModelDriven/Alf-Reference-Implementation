@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.MemberImpl;
 
@@ -28,106 +30,84 @@ import org.modeldriven.alf.syntax.units.impl.MemberImpl;
 
 public abstract class Member extends DocumentedElement {
 
-	private String name = "";
-	private String visibility = "";
-	private Boolean isStub = false;
-	private NamespaceDefinition namespace = null;
-	private ArrayList<StereotypeAnnotation> annotation = new ArrayList<StereotypeAnnotation>();
-	private Boolean isFeature = null; // DERIVED
-	private Boolean isPrimitive = null; // DERIVED
-	private Boolean isExternal = null; // DERIVED
-	private UnitDefinition subunit = null; // DERIVED
-
 	public MemberImpl getImpl() {
 		return (MemberImpl) this.impl;
 	}
 
 	public String getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	public String getVisibility() {
-		return this.visibility;
+		return this.getImpl().getVisibility();
 	}
 
 	public void setVisibility(String visibility) {
-		this.visibility = visibility;
+		this.getImpl().setVisibility(visibility);
 	}
 
 	public Boolean getIsStub() {
-		return this.isStub;
+		return this.getImpl().getIsStub();
 	}
 
 	public void setIsStub(Boolean isStub) {
-		this.isStub = isStub;
+		this.getImpl().setIsStub(isStub);
 	}
 
 	public NamespaceDefinition getNamespace() {
-		return this.namespace;
+		return this.getImpl().getNamespace();
 	}
 
 	public void setNamespace(NamespaceDefinition namespace) {
-		this.namespace = namespace;
+		this.getImpl().setNamespace(namespace);
 	}
 
-	public ArrayList<StereotypeAnnotation> getAnnotation() {
-		return this.annotation;
+	public Collection<StereotypeAnnotation> getAnnotation() {
+		return this.getImpl().getAnnotation();
 	}
 
-	public void setAnnotation(ArrayList<StereotypeAnnotation> annotation) {
-		this.annotation = annotation;
+	public void setAnnotation(Collection<StereotypeAnnotation> annotation) {
+		this.getImpl().setAnnotation(annotation);
 	}
 
 	public void addAnnotation(StereotypeAnnotation annotation) {
-		this.annotation.add(annotation);
+		this.getImpl().addAnnotation(annotation);
 	}
 
 	public Boolean getIsFeature() {
-		if (this.isFeature == null) {
-			this.setIsFeature(this.getImpl().deriveIsFeature());
-		}
-		return this.isFeature;
+		return this.getImpl().getIsFeature();
 	}
 
 	public void setIsFeature(Boolean isFeature) {
-		this.isFeature = isFeature;
+		this.getImpl().setIsFeature(isFeature);
 	}
 
 	public Boolean getIsPrimitive() {
-		if (this.isPrimitive == null) {
-			this.setIsPrimitive(this.getImpl().deriveIsPrimitive());
-		}
-		return this.isPrimitive;
+		return this.getImpl().getIsPrimitive();
 	}
 
 	public void setIsPrimitive(Boolean isPrimitive) {
-		this.isPrimitive = isPrimitive;
+		this.getImpl().setIsPrimitive(isPrimitive);
 	}
 
 	public Boolean getIsExternal() {
-		if (this.isExternal == null) {
-			this.setIsExternal(this.getImpl().deriveIsExternal());
-		}
-		return this.isExternal;
+		return this.getImpl().getIsExternal();
 	}
 
 	public void setIsExternal(Boolean isExternal) {
-		this.isExternal = isExternal;
+		this.getImpl().setIsExternal(isExternal);
 	}
 
 	public UnitDefinition getSubunit() {
-		if (this.subunit == null) {
-			this.setSubunit(this.getImpl().deriveSubunit());
-		}
-		return this.subunit;
+		return this.getImpl().getSubunit();
 	}
 
 	public void setSubunit(UnitDefinition subunit) {
-		this.subunit = subunit;
+		this.getImpl().setSubunit(subunit);
 	}
 
 	/**
@@ -262,7 +242,7 @@ public abstract class Member extends DocumentedElement {
 		if (namespace != null) {
 			System.out.println(prefix + " namespace:" + namespace);
 		}
-		ArrayList<StereotypeAnnotation> annotation = this.getAnnotation();
+		Collection<StereotypeAnnotation> annotation = this.getAnnotation();
 		if (annotation != null) {
 			if (annotation.size() > 0) {
 				System.out.println(prefix + " annotation:");

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to construct a sequence of values.
@@ -26,6 +28,10 @@ import java.util.ArrayList;
 public class SequenceConstructionExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.ExpressionImpl {
 
+	private SequenceElements elements = null;
+	private Boolean hasMultiplicity = false;
+	private QualifiedName typeName = null;
+
 	public SequenceConstructionExpressionImpl(
 			SequenceConstructionExpression self) {
 		super(self);
@@ -33,6 +39,30 @@ public class SequenceConstructionExpressionImpl extends
 
 	public SequenceConstructionExpression getSelf() {
 		return (SequenceConstructionExpression) this.self;
+	}
+
+	public SequenceElements getElements() {
+		return this.elements;
+	}
+
+	public void setElements(SequenceElements elements) {
+		this.elements = elements;
+	}
+
+	public Boolean getHasMultiplicity() {
+		return this.hasMultiplicity;
+	}
+
+	public void setHasMultiplicity(Boolean hasMultiplicity) {
+		this.hasMultiplicity = hasMultiplicity;
+	}
+
+	public QualifiedName getTypeName() {
+		return this.typeName;
+	}
+
+	public void setTypeName(QualifiedName typeName) {
+		this.typeName = typeName;
 	}
 
 	/**

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.FeatureReferenceImpl;
 
@@ -29,10 +31,6 @@ import org.modeldriven.alf.syntax.expressions.impl.FeatureReferenceImpl;
 
 public class FeatureReference extends SyntaxElement {
 
-	private Expression expression = null;
-	private ArrayList<ElementReference> referent = null; // DERIVED
-	private NameBinding nameBinding = null;
-
 	public FeatureReference() {
 		this.impl = new FeatureReferenceImpl(this);
 	}
@@ -42,34 +40,31 @@ public class FeatureReference extends SyntaxElement {
 	}
 
 	public Expression getExpression() {
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
-	public ArrayList<ElementReference> getReferent() {
-		if (this.referent == null) {
-			this.setReferent(this.getImpl().deriveReferent());
-		}
-		return this.referent;
+	public Collection<ElementReference> getReferent() {
+		return this.getImpl().getReferent();
 	}
 
-	public void setReferent(ArrayList<ElementReference> referent) {
-		this.referent = referent;
+	public void setReferent(Collection<ElementReference> referent) {
+		this.getImpl().setReferent(referent);
 	}
 
 	public void addReferent(ElementReference referent) {
-		this.referent.add(referent);
+		this.getImpl().addReferent(referent);
 	}
 
 	public NameBinding getNameBinding() {
-		return this.nameBinding;
+		return this.getImpl().getNameBinding();
 	}
 
 	public void setNameBinding(NameBinding nameBinding) {
-		this.nameBinding = nameBinding;
+		this.getImpl().setNameBinding(nameBinding);
 	}
 
 	/**
@@ -102,7 +97,7 @@ public class FeatureReference extends SyntaxElement {
 			System.out.println(prefix + " expression:");
 			expression.print(prefix + "  ");
 		}
-		ArrayList<ElementReference> referent = this.getReferent();
+		Collection<ElementReference> referent = this.getReferent();
 		if (referent != null) {
 			if (referent.size() > 0) {
 				System.out.println(prefix + " /referent:");

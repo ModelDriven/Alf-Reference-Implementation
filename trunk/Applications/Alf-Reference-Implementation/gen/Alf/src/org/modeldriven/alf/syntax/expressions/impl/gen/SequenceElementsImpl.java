@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A specification of the elements of a sequence.
@@ -25,6 +27,9 @@ import java.util.ArrayList;
 
 public abstract class SequenceElementsImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
+
+	private Integer upper = null; // DERIVED
+	private Integer lower = null; // DERIVED
 
 	public SequenceElementsImpl(SequenceElements self) {
 		super(self);
@@ -34,11 +39,33 @@ public abstract class SequenceElementsImpl extends
 		return (SequenceElements) this.self;
 	}
 
-	public Integer deriveUpper() {
+	public Integer getUpper() {
+		if (this.upper == null) {
+			this.setUpper(this.deriveUpper());
+		}
+		return this.upper;
+	}
+
+	public void setUpper(Integer upper) {
+		this.upper = upper;
+	}
+
+	public Integer getLower() {
+		if (this.lower == null) {
+			this.setLower(this.deriveLower());
+		}
+		return this.lower;
+	}
+
+	public void setLower(Integer lower) {
+		this.lower = lower;
+	}
+
+	protected Integer deriveUpper() {
 		return null; // STUB
 	}
 
-	public Integer deriveLower() {
+	protected Integer deriveLower() {
 		return null; // STUB
 	}
 

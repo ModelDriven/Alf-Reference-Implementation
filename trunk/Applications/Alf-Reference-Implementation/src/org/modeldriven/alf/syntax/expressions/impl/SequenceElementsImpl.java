@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -11,32 +11,61 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A specification of the elements of a sequence.
  **/
 
-public abstract class SequenceElementsImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public abstract class SequenceElementsImpl extends SyntaxElementImpl {
+
+	private Integer upper = null; // DERIVED
+	private Integer lower = null; // DERIVED
 
 	public SequenceElementsImpl(SequenceElements self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceElements getSelf() {
+	public SequenceElements getSelf() {
 		return (SequenceElements) this.self;
 	}
 
-	public Integer deriveUpper() {
+	public Integer getUpper() {
+		if (this.upper == null) {
+			this.setUpper(this.deriveUpper());
+		}
+		return this.upper;
+	}
+
+	public void setUpper(Integer upper) {
+		this.upper = upper;
+	}
+
+	public Integer getLower() {
+		if (this.lower == null) {
+			this.setLower(this.deriveLower());
+		}
+		return this.lower;
+	}
+
+	public void setLower(Integer lower) {
+		this.lower = lower;
+	}
+
+	protected Integer deriveUpper() {
 		return null; // STUB
 	}
 
-	public Integer deriveLower() {
+	protected Integer deriveLower() {
 		return null; // STUB
 	}
 

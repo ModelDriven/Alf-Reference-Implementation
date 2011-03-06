@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.TaggedValueImpl;
 
@@ -26,10 +28,6 @@ import org.modeldriven.alf.syntax.units.impl.TaggedValueImpl;
  **/
 
 public class TaggedValue extends SyntaxElement {
-
-	private String name = "";
-	private String value = "";
-	private String operator = "";
 
 	public TaggedValue() {
 		this.impl = new TaggedValueImpl(this);
@@ -40,27 +38,27 @@ public class TaggedValue extends SyntaxElement {
 	}
 
 	public String getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	public String getValue() {
-		return this.value;
+		return this.getImpl().getValue();
 	}
 
 	public void setValue(String value) {
-		this.value = value;
+		this.getImpl().setValue(value);
 	}
 
 	public String getOperator() {
-		return this.operator;
+		return this.getImpl().getOperator();
 	}
 
 	public void setOperator(String operator) {
-		this.operator = operator;
+		this.getImpl().setOperator(operator);
 	}
 
 	public String toString() {

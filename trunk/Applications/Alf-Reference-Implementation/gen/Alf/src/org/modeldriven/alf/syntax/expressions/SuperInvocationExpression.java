@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SuperInvocationExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.SuperInvocationExpressionImpl
  **/
 
 public class SuperInvocationExpression extends InvocationExpression {
-
-	private QualifiedName target = null;
 
 	public SuperInvocationExpression() {
 		this.impl = new SuperInvocationExpressionImpl(this);
@@ -38,11 +38,11 @@ public class SuperInvocationExpression extends InvocationExpression {
 	}
 
 	public QualifiedName getTarget() {
-		return this.target;
+		return this.getImpl().getTarget();
 	}
 
 	public void setTarget(QualifiedName target) {
-		this.target = target;
+		this.getImpl().setTarget(target);
 	}
 
 	/**

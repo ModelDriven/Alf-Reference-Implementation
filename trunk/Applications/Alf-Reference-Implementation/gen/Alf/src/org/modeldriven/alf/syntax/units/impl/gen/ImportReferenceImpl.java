@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A reference to an element or package to be imported into a unit.
@@ -25,6 +27,11 @@ import java.util.ArrayList;
 
 public abstract class ImportReferenceImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
+
+	private String visibility = "";
+	private QualifiedName referentName = null;
+	private UnitDefinition unit = null;
+	private ElementReference referent = null; // DERIVED
 
 	public ImportReferenceImpl(ImportReference self) {
 		super(self);
@@ -34,7 +41,42 @@ public abstract class ImportReferenceImpl extends
 		return (ImportReference) this.self;
 	}
 
-	public ElementReference deriveReferent() {
+	public String getVisibility() {
+		return this.visibility;
+	}
+
+	public void setVisibility(String visibility) {
+		this.visibility = visibility;
+	}
+
+	public QualifiedName getReferentName() {
+		return this.referentName;
+	}
+
+	public void setReferentName(QualifiedName referentName) {
+		this.referentName = referentName;
+	}
+
+	public UnitDefinition getUnit() {
+		return this.unit;
+	}
+
+	public void setUnit(UnitDefinition unit) {
+		this.unit = unit;
+	}
+
+	public ElementReference getReferent() {
+		if (this.referent == null) {
+			this.setReferent(this.deriveReferent());
+		}
+		return this.referent;
+	}
+
+	public void setReferent(ElementReference referent) {
+		this.referent = referent;
+	}
+
+	protected ElementReference deriveReferent() {
 		return null; // STUB
 	}
 

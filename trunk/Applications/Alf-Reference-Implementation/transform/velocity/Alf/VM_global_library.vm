@@ -102,7 +102,7 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 #end
 
 #macro( createValue $element )
-#if(${element.upper}!=1)new #type(${element})()##
+#if(${element.upper}!=1)new ArrayList<#basicType(${element})>()##
 #elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="Boolean")false##
 #elseif(${element.type.eClass().name}=="PrimitiveType"&&(${element.type.name}=="Integer" || ${element.type.name}=="UnlimitedNatural"))0##
 #elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="String")""##
@@ -116,7 +116,7 @@ import ${definitionPackage}.${classifier.classifierAccessorName};
 #macro( basicQualifiedType $element )#if(${element.type.eClass().name}=="PrimitiveType")#qualifiedPackageName(${element.type.owner}).#end#basicType(${element})#end
 #macro( listable $type )#if(${type.eClass().name}=="PrimitiveType")#listablePrimitiveName(${type})#else#qualifiedName(${type})#end#end
 #macro( listableType $element )#listable(${element.type})#end
-#macro( type $element )#if(${element})#if(${element.upper}!=1)ArrayList<#basicType(${element})>#else#basicType(${element})#end#else#**#void#end#end
+#macro( type $element )#if(${element})#if(${element.upper}!=1)#if(${element.isOrdered()})List#else#**#Collection#end<#basicType(${element})>#else#basicType(${element})#end#else#**#void#end#end
 
 #macro( operationParameters $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else#type(${parameter}) #name(${parameter.name})#if($velocityCount+1<${operation.ownedParameters.size()}||($velocityCount+1==${operation.ownedParameters.size()}&&${operation.ownedParameters.get($velocityCount).direction.toString()}!="return")), #end#end#end#end
 #macro( operationParameterNames $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else#name(${parameter.name})#if($velocityCount+1<${operation.ownedParameters.size()}||($velocityCount+1==${operation.ownedParameters.size()}&&${operation.ownedParameters.get($velocityCount).direction.toString()}!="return")), #end#end#end#end
@@ -130,16 +130,31 @@ ${name.substring(0,1).toUpperCase()}${name.substring(1)}
 
 #macro( getter $attribute )
 public #type(${attribute}) get#upperCase(${attribute.name})() { 
+   return this.getImpl().get#upperCase(${attribute.name})();
+}
+#end
+
+#macro( setter $attribute )
+public void set#upperCase(${attribute.name})(#type($attribute) #name($attribute.name)) 
+{ this.getImpl().set#upperCase(${attribute.name})(#name($attribute.name)); }
+#if( $attribute.upper!=1 )
+public void add#upperCase(${attribute.name})(#basicType($attribute) #name($attribute.name)) 
+{ this.getImpl().add#upperCase(${attribute.name})(#name($attribute.name)); }
+#end
+#end
+
+#macro( getterImpl $attribute )
+public #type(${attribute}) get#upperCase(${attribute.name})() { 
 #if( ${attribute.isDerived()} )
    if (this.#name($attribute.name)==null) {
-     this.set#upperCase(${attribute.name})(this.getImpl().derive#upperCase(${attribute.name})());
+     this.set#upperCase(${attribute.name})(this.derive#upperCase(${attribute.name})());
    }
 #end
    return this.#name($attribute.name);
 }
 #end
 
-#macro( setter $attribute )
+#macro( setterImpl $attribute )
 public void set#upperCase(${attribute.name})(#type($attribute) #name($attribute.name)) 
 { this.#name($attribute.name) = #name($attribute.name); }
 #if( $attribute.upper!=1 )
@@ -149,7 +164,7 @@ public void add#upperCase(${attribute.name})(#basicType($attribute) #name($attri
 #end
 
 #macro( deriver $attribute )
-public #type(${attribute}) derive#upperCase(${attribute.name})() { 
+protected #type(${attribute}) derive#upperCase(${attribute.name})() { 
   return null; //STUB 
 }
 #end

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.PropertyAccessExpressionImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.PropertyAccessExpressionImpl;
  **/
 
 public class PropertyAccessExpression extends Expression {
-
-	private FeatureReference featureReference = null;
-	private ElementReference feature = null; // DERIVED
 
 	public PropertyAccessExpression() {
 		this.impl = new PropertyAccessExpressionImpl(this);
@@ -39,22 +38,19 @@ public class PropertyAccessExpression extends Expression {
 	}
 
 	public FeatureReference getFeatureReference() {
-		return this.featureReference;
+		return this.getImpl().getFeatureReference();
 	}
 
 	public void setFeatureReference(FeatureReference featureReference) {
-		this.featureReference = featureReference;
+		this.getImpl().setFeatureReference(featureReference);
 	}
 
 	public ElementReference getFeature() {
-		if (this.feature == null) {
-			this.setFeature(this.getImpl().deriveFeature());
-		}
-		return this.feature;
+		return this.getImpl().getFeature();
 	}
 
 	public void setFeature(ElementReference feature) {
-		this.feature = feature;
+		this.getImpl().setFeature(feature);
 	}
 
 	/**
@@ -112,7 +108,7 @@ public class PropertyAccessExpression extends Expression {
 	 * The assignments after a property access expression are the same as those
 	 * after the target expression of its feature reference.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

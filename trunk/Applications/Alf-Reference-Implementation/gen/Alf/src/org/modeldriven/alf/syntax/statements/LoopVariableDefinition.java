@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.LoopVariableDefinitionImpl;
 
@@ -26,17 +28,6 @@ import org.modeldriven.alf.syntax.statements.impl.LoopVariableDefinitionImpl;
  **/
 
 public class LoopVariableDefinition extends SyntaxElement {
-
-	private String variable = "";
-	private Expression expression1 = null;
-	private Expression expression2 = null;
-	private QualifiedName typeName = null;
-	private Boolean typeIsInferred = true;
-	private Boolean isCollectionConversion = null; // DERIVED
-	private ElementReference type = null; // DERIVED
-	private Boolean isFirst = null; // DERIVED
-	private ArrayList<AssignedSource> assignmentBefore = null; // DERIVED
-	private ArrayList<AssignedSource> assignmentAfter = null; // DERIVED
 
 	public LoopVariableDefinition() {
 		this.impl = new LoopVariableDefinitionImpl(this);
@@ -47,107 +38,91 @@ public class LoopVariableDefinition extends SyntaxElement {
 	}
 
 	public String getVariable() {
-		return this.variable;
+		return this.getImpl().getVariable();
 	}
 
 	public void setVariable(String variable) {
-		this.variable = variable;
+		this.getImpl().setVariable(variable);
 	}
 
 	public Expression getExpression1() {
-		return this.expression1;
+		return this.getImpl().getExpression1();
 	}
 
 	public void setExpression1(Expression expression1) {
-		this.expression1 = expression1;
+		this.getImpl().setExpression1(expression1);
 	}
 
 	public Expression getExpression2() {
-		return this.expression2;
+		return this.getImpl().getExpression2();
 	}
 
 	public void setExpression2(Expression expression2) {
-		this.expression2 = expression2;
+		this.getImpl().setExpression2(expression2);
 	}
 
 	public QualifiedName getTypeName() {
-		return this.typeName;
+		return this.getImpl().getTypeName();
 	}
 
 	public void setTypeName(QualifiedName typeName) {
-		this.typeName = typeName;
+		this.getImpl().setTypeName(typeName);
 	}
 
 	public Boolean getTypeIsInferred() {
-		return this.typeIsInferred;
+		return this.getImpl().getTypeIsInferred();
 	}
 
 	public void setTypeIsInferred(Boolean typeIsInferred) {
-		this.typeIsInferred = typeIsInferred;
+		this.getImpl().setTypeIsInferred(typeIsInferred);
 	}
 
 	public Boolean getIsCollectionConversion() {
-		if (this.isCollectionConversion == null) {
-			this.setIsCollectionConversion(this.getImpl()
-					.deriveIsCollectionConversion());
-		}
-		return this.isCollectionConversion;
+		return this.getImpl().getIsCollectionConversion();
 	}
 
 	public void setIsCollectionConversion(Boolean isCollectionConversion) {
-		this.isCollectionConversion = isCollectionConversion;
+		this.getImpl().setIsCollectionConversion(isCollectionConversion);
 	}
 
 	public ElementReference getType() {
-		if (this.type == null) {
-			this.setType(this.getImpl().deriveType());
-		}
-		return this.type;
+		return this.getImpl().getType();
 	}
 
 	public void setType(ElementReference type) {
-		this.type = type;
+		this.getImpl().setType(type);
 	}
 
 	public Boolean getIsFirst() {
-		if (this.isFirst == null) {
-			this.setIsFirst(this.getImpl().deriveIsFirst());
-		}
-		return this.isFirst;
+		return this.getImpl().getIsFirst();
 	}
 
 	public void setIsFirst(Boolean isFirst) {
-		this.isFirst = isFirst;
+		this.getImpl().setIsFirst(isFirst);
 	}
 
-	public ArrayList<AssignedSource> getAssignmentBefore() {
-		if (this.assignmentBefore == null) {
-			this.setAssignmentBefore(this.getImpl().deriveAssignmentBefore());
-		}
-		return this.assignmentBefore;
+	public Collection<AssignedSource> getAssignmentBefore() {
+		return this.getImpl().getAssignmentBefore();
 	}
 
-	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
-		this.assignmentBefore = assignmentBefore;
+	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+		this.getImpl().setAssignmentBefore(assignmentBefore);
 	}
 
 	public void addAssignmentBefore(AssignedSource assignmentBefore) {
-		this.assignmentBefore.add(assignmentBefore);
+		this.getImpl().addAssignmentBefore(assignmentBefore);
 	}
 
-	public ArrayList<AssignedSource> getAssignmentAfter() {
-		if (this.assignmentAfter == null) {
-			this.setAssignmentAfter(this.getImpl().deriveAssignmentAfter());
-		}
-		return this.assignmentAfter;
+	public Collection<AssignedSource> getAssignmentAfter() {
+		return this.getImpl().getAssignmentAfter();
 	}
 
-	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
-		this.assignmentAfter = assignmentAfter;
+	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+		this.getImpl().setAssignmentAfter(assignmentAfter);
 	}
 
 	public void addAssignmentAfter(AssignedSource assignmentAfter) {
-		this.assignmentAfter.add(assignmentAfter);
+		this.getImpl().addAssignmentAfter(assignmentAfter);
 	}
 
 	/**
@@ -269,7 +244,8 @@ public class LoopVariableDefinition extends SyntaxElement {
 		if (type != null) {
 			System.out.println(prefix + " /type:" + type);
 		}
-		ArrayList<AssignedSource> assignmentBefore = this.getAssignmentBefore();
+		Collection<AssignedSource> assignmentBefore = this
+				.getAssignmentBefore();
 		if (assignmentBefore != null) {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
@@ -278,7 +254,7 @@ public class LoopVariableDefinition extends SyntaxElement {
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
-		ArrayList<AssignedSource> assignmentAfter = this.getAssignmentAfter();
+		Collection<AssignedSource> assignmentAfter = this.getAssignmentAfter();
 		if (assignmentAfter != null) {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");

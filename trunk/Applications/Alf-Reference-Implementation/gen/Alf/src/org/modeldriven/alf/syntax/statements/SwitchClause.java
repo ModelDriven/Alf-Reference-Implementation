@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.SwitchClauseImpl;
 
@@ -28,9 +30,6 @@ import org.modeldriven.alf.syntax.statements.impl.SwitchClauseImpl;
 
 public class SwitchClause extends SyntaxElement {
 
-	private ArrayList<Expression> case_ = new ArrayList<Expression>();
-	private Block block = null;
-
 	public SwitchClause() {
 		this.impl = new SwitchClauseImpl(this);
 	}
@@ -39,24 +38,24 @@ public class SwitchClause extends SyntaxElement {
 		return (SwitchClauseImpl) this.impl;
 	}
 
-	public ArrayList<Expression> getCase() {
-		return this.case_;
+	public Collection<Expression> getCase() {
+		return this.getImpl().getCase();
 	}
 
-	public void setCase(ArrayList<Expression> case_) {
-		this.case_ = case_;
+	public void setCase(Collection<Expression> case_) {
+		this.getImpl().setCase(case_);
 	}
 
 	public void addCase(Expression case_) {
-		this.case_.add(case_);
+		this.getImpl().addCase(case_);
 	}
 
 	public Block getBlock() {
-		return this.block;
+		return this.getImpl().getBlock();
 	}
 
 	public void setBlock(Block block) {
-		this.block = block;
+		this.getImpl().setBlock(block);
 	}
 
 	/**
@@ -81,7 +80,7 @@ public class SwitchClause extends SyntaxElement {
 	 * The assignments before a switch clause are the assignments before any
 	 * case expression of the clause.
 	 **/
-	public ArrayList<AssignedSource> assignmentsBefore() {
+	public Collection<AssignedSource> assignmentsBefore() {
 		return this.getImpl().assignmentsBefore();
 	}
 
@@ -89,7 +88,7 @@ public class SwitchClause extends SyntaxElement {
 	 * The assignments after a switch clause are the assignments after the block
 	 * of the switch clause.
 	 **/
-	public ArrayList<AssignedSource> assignmentsAfter() {
+	public Collection<AssignedSource> assignmentsAfter() {
 		return this.getImpl().assignmentsAfter();
 	}
 
@@ -100,7 +99,7 @@ public class SwitchClause extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<Expression> case_ = this.getCase();
+		Collection<Expression> case_ = this.getCase();
 		if (case_ != null) {
 			if (case_.size() > 0) {
 				System.out.println(prefix + " case:");

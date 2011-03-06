@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceOperationExpressionImpl;
 
@@ -28,11 +30,6 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceOperationExpressionIm
 
 public class SequenceOperationExpression extends InvocationExpression {
 
-	private ExtentOrExpression primary = null;
-	private QualifiedName operation = null;
-	private Boolean isCollectionConversion = null; // DERIVED
-	private Boolean isBitStringConversion = null; // DERIVED
-
 	public SequenceOperationExpression() {
 		this.impl = new SequenceOperationExpressionImpl(this);
 	}
@@ -42,43 +39,35 @@ public class SequenceOperationExpression extends InvocationExpression {
 	}
 
 	public ExtentOrExpression getPrimary() {
-		return this.primary;
+		return this.getImpl().getPrimary();
 	}
 
 	public void setPrimary(ExtentOrExpression primary) {
-		this.primary = primary;
+		this.getImpl().setPrimary(primary);
 	}
 
 	public QualifiedName getOperation() {
-		return this.operation;
+		return this.getImpl().getOperation();
 	}
 
 	public void setOperation(QualifiedName operation) {
-		this.operation = operation;
+		this.getImpl().setOperation(operation);
 	}
 
 	public Boolean getIsCollectionConversion() {
-		if (this.isCollectionConversion == null) {
-			this.setIsCollectionConversion(this.getImpl()
-					.deriveIsCollectionConversion());
-		}
-		return this.isCollectionConversion;
+		return this.getImpl().getIsCollectionConversion();
 	}
 
 	public void setIsCollectionConversion(Boolean isCollectionConversion) {
-		this.isCollectionConversion = isCollectionConversion;
+		this.getImpl().setIsCollectionConversion(isCollectionConversion);
 	}
 
 	public Boolean getIsBitStringConversion() {
-		if (this.isBitStringConversion == null) {
-			this.setIsBitStringConversion(this.getImpl()
-					.deriveIsBitStringConversion());
-		}
-		return this.isBitStringConversion;
+		return this.getImpl().getIsBitStringConversion();
 	}
 
 	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.isBitStringConversion = isBitStringConversion;
+		this.getImpl().setIsBitStringConversion(isBitStringConversion);
 	}
 
 	/**
@@ -164,7 +153,7 @@ public class SequenceOperationExpression extends InvocationExpression {
 	 * "in place" operation (one whose first parameter is inout), that made by
 	 * the sequence operation expression itself.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

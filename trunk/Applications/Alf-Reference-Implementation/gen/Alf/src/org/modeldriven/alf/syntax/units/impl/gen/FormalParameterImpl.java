@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A typed element definition for the formal parameter of an activity or
@@ -27,12 +29,22 @@ import java.util.ArrayList;
 public class FormalParameterImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.TypedElementDefinitionImpl {
 
+	private String direction = "";
+
 	public FormalParameterImpl(FormalParameter self) {
 		super(self);
 	}
 
 	public FormalParameter getSelf() {
 		return (FormalParameter) this.self;
+	}
+
+	public String getDirection() {
+		return this.direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
 	}
 
 	/**

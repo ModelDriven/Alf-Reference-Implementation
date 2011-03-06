@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of a loop variable in a for statement.
@@ -25,6 +27,17 @@ import java.util.ArrayList;
 
 public class LoopVariableDefinitionImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
+
+	private String variable = "";
+	private Expression expression1 = null;
+	private Expression expression2 = null;
+	private QualifiedName typeName = null;
+	private Boolean typeIsInferred = true;
+	private Boolean isCollectionConversion = null; // DERIVED
+	private ElementReference type = null; // DERIVED
+	private Boolean isFirst = null; // DERIVED
+	private Collection<AssignedSource> assignmentBefore = null; // DERIVED
+	private Collection<AssignedSource> assignmentAfter = null; // DERIVED
 
 	public LoopVariableDefinitionImpl(LoopVariableDefinition self) {
 		super(self);
@@ -34,23 +47,126 @@ public class LoopVariableDefinitionImpl extends
 		return (LoopVariableDefinition) this.self;
 	}
 
-	public Boolean deriveIsCollectionConversion() {
+	public String getVariable() {
+		return this.variable;
+	}
+
+	public void setVariable(String variable) {
+		this.variable = variable;
+	}
+
+	public Expression getExpression1() {
+		return this.expression1;
+	}
+
+	public void setExpression1(Expression expression1) {
+		this.expression1 = expression1;
+	}
+
+	public Expression getExpression2() {
+		return this.expression2;
+	}
+
+	public void setExpression2(Expression expression2) {
+		this.expression2 = expression2;
+	}
+
+	public QualifiedName getTypeName() {
+		return this.typeName;
+	}
+
+	public void setTypeName(QualifiedName typeName) {
+		this.typeName = typeName;
+	}
+
+	public Boolean getTypeIsInferred() {
+		return this.typeIsInferred;
+	}
+
+	public void setTypeIsInferred(Boolean typeIsInferred) {
+		this.typeIsInferred = typeIsInferred;
+	}
+
+	public Boolean getIsCollectionConversion() {
+		if (this.isCollectionConversion == null) {
+			this.setIsCollectionConversion(this.deriveIsCollectionConversion());
+		}
+		return this.isCollectionConversion;
+	}
+
+	public void setIsCollectionConversion(Boolean isCollectionConversion) {
+		this.isCollectionConversion = isCollectionConversion;
+	}
+
+	public ElementReference getType() {
+		if (this.type == null) {
+			this.setType(this.deriveType());
+		}
+		return this.type;
+	}
+
+	public void setType(ElementReference type) {
+		this.type = type;
+	}
+
+	public Boolean getIsFirst() {
+		if (this.isFirst == null) {
+			this.setIsFirst(this.deriveIsFirst());
+		}
+		return this.isFirst;
+	}
+
+	public void setIsFirst(Boolean isFirst) {
+		this.isFirst = isFirst;
+	}
+
+	public Collection<AssignedSource> getAssignmentBefore() {
+		if (this.assignmentBefore == null) {
+			this.setAssignmentBefore(this.deriveAssignmentBefore());
+		}
+		return this.assignmentBefore;
+	}
+
+	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+		this.assignmentBefore = assignmentBefore;
+	}
+
+	public void addAssignmentBefore(AssignedSource assignmentBefore) {
+		this.assignmentBefore.add(assignmentBefore);
+	}
+
+	public Collection<AssignedSource> getAssignmentAfter() {
+		if (this.assignmentAfter == null) {
+			this.setAssignmentAfter(this.deriveAssignmentAfter());
+		}
+		return this.assignmentAfter;
+	}
+
+	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+		this.assignmentAfter = assignmentAfter;
+	}
+
+	public void addAssignmentAfter(AssignedSource assignmentAfter) {
+		this.assignmentAfter.add(assignmentAfter);
+	}
+
+	protected Boolean deriveIsCollectionConversion() {
 		return null; // STUB
 	}
 
-	public ElementReference deriveType() {
+	protected ElementReference deriveType() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsFirst() {
+	protected Boolean deriveIsFirst() {
 		return null; // STUB
 	}
 
-	public ArrayList<AssignedSource> deriveAssignmentBefore() {
+	protected Collection<AssignedSource> deriveAssignmentBefore() {
 		return null; // STUB
 	}
 
-	public ArrayList<AssignedSource> deriveAssignmentAfter() {
+	protected Collection<AssignedSource> deriveAssignmentAfter() {
 		return null; // STUB
 	}
 

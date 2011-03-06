@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,25 +15,68 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to reduce a sequence of values effectively by inserting a
  * binary operation between the values.
  **/
 
-public class SequenceReductionExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl {
+public class SequenceReductionExpressionImpl extends ExpressionImpl {
+
+	private ElementReference referent = null; // DERIVED
+	private Boolean isOrdered = false;
+	private ExtentOrExpression primary = null;
+	private QualifiedName behaviorName = null;
 
 	public SequenceReductionExpressionImpl(SequenceReductionExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceReductionExpression getSelf() {
+	public SequenceReductionExpression getSelf() {
 		return (SequenceReductionExpression) this.self;
 	}
 
-	public ElementReference deriveReferent() {
+	public ElementReference getReferent() {
+		if (this.referent == null) {
+			this.setReferent(this.deriveReferent());
+		}
+		return this.referent;
+	}
+
+	public void setReferent(ElementReference referent) {
+		this.referent = referent;
+	}
+
+	public Boolean getIsOrdered() {
+		return this.isOrdered;
+	}
+
+	public void setIsOrdered(Boolean isOrdered) {
+		this.isOrdered = isOrdered;
+	}
+
+	public ExtentOrExpression getPrimary() {
+		return this.primary;
+	}
+
+	public void setPrimary(ExtentOrExpression primary) {
+		this.primary = primary;
+	}
+
+	public QualifiedName getBehaviorName() {
+		return this.behaviorName;
+	}
+
+	public void setBehaviorName(QualifiedName behaviorName) {
+		this.behaviorName = behaviorName;
+	}
+
+	protected ElementReference deriveReferent() {
 		return null; // STUB
 	}
 
@@ -101,7 +144,7 @@ public class SequenceReductionExpressionImpl extends
 	 * The assignments after a sequence reduction expression are the same as
 	 * after its primary expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

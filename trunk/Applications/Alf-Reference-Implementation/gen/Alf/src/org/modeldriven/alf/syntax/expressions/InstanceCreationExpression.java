@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.InstanceCreationExpressionImpl;
 
@@ -26,10 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.InstanceCreationExpressionImp
  **/
 
 public class InstanceCreationExpression extends InvocationExpression {
-
-	private Boolean isConstructorless = null; // DERIVED
-	private Boolean isObjectCreation = null; // DERIVED
-	private QualifiedName constructor = null;
 
 	public InstanceCreationExpression() {
 		this.impl = new InstanceCreationExpressionImpl(this);
@@ -40,33 +38,27 @@ public class InstanceCreationExpression extends InvocationExpression {
 	}
 
 	public Boolean getIsConstructorless() {
-		if (this.isConstructorless == null) {
-			this.setIsConstructorless(this.getImpl().deriveIsConstructorless());
-		}
-		return this.isConstructorless;
+		return this.getImpl().getIsConstructorless();
 	}
 
 	public void setIsConstructorless(Boolean isConstructorless) {
-		this.isConstructorless = isConstructorless;
+		this.getImpl().setIsConstructorless(isConstructorless);
 	}
 
 	public Boolean getIsObjectCreation() {
-		if (this.isObjectCreation == null) {
-			this.setIsObjectCreation(this.getImpl().deriveIsObjectCreation());
-		}
-		return this.isObjectCreation;
+		return this.getImpl().getIsObjectCreation();
 	}
 
 	public void setIsObjectCreation(Boolean isObjectCreation) {
-		this.isObjectCreation = isObjectCreation;
+		this.getImpl().setIsObjectCreation(isObjectCreation);
 	}
 
 	public QualifiedName getConstructor() {
-		return this.constructor;
+		return this.getImpl().getConstructor();
 	}
 
 	public void setConstructor(QualifiedName constructor) {
-		this.constructor = constructor;
+		this.getImpl().setConstructor(constructor);
 	}
 
 	/**
@@ -131,7 +123,7 @@ public class InstanceCreationExpression extends InvocationExpression {
 	 * Returns the parameters of a constructor operation or the attributes of a
 	 * data type, or an empty set for a constructorless instance creation.
 	 **/
-	public ArrayList<ElementReference> parameterElements() {
+	public Collection<ElementReference> parameterElements() {
 		return this.getImpl().parameterElements();
 	}
 

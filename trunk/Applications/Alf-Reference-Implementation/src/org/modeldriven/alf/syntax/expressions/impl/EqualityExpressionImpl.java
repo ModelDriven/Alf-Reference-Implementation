@@ -15,24 +15,40 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A binary expression that tests the equality of its operands.
  **/
 
-public class EqualityExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl {
+public class EqualityExpressionImpl extends BinaryExpressionImpl {
+
+	private Boolean isNegated = null; // DERIVED
 
 	public EqualityExpressionImpl(EqualityExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.EqualityExpression getSelf() {
+	public EqualityExpression getSelf() {
 		return (EqualityExpression) this.self;
 	}
 
-	public Boolean deriveIsNegated() {
+	public Boolean getIsNegated() {
+		if (this.isNegated == null) {
+			this.setIsNegated(this.deriveIsNegated());
+		}
+		return this.isNegated;
+	}
+
+	public void setIsNegated(Boolean isNegated) {
+		this.isNegated = isNegated;
+	}
+
+	protected Boolean deriveIsNegated() {
 		return null; // STUB
 	}
 

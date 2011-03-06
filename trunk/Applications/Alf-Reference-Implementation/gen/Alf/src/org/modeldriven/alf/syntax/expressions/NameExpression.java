@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.NameExpressionImpl;
 
@@ -26,11 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.NameExpressionImpl;
  **/
 
 public class NameExpression extends Expression {
-
-	private ElementReference enumerationLiteral = null; // DERIVED
-	private AssignedSource assignment = null; // DERIVED
-	private PropertyAccessExpression propertyAccess = null; // DERIVED
-	private QualifiedName name = null;
 
 	public NameExpression() {
 		this.impl = new NameExpressionImpl(this);
@@ -41,45 +38,35 @@ public class NameExpression extends Expression {
 	}
 
 	public ElementReference getEnumerationLiteral() {
-		if (this.enumerationLiteral == null) {
-			this.setEnumerationLiteral(this.getImpl()
-					.deriveEnumerationLiteral());
-		}
-		return this.enumerationLiteral;
+		return this.getImpl().getEnumerationLiteral();
 	}
 
 	public void setEnumerationLiteral(ElementReference enumerationLiteral) {
-		this.enumerationLiteral = enumerationLiteral;
+		this.getImpl().setEnumerationLiteral(enumerationLiteral);
 	}
 
 	public AssignedSource getAssignment() {
-		if (this.assignment == null) {
-			this.setAssignment(this.getImpl().deriveAssignment());
-		}
-		return this.assignment;
+		return this.getImpl().getAssignment();
 	}
 
 	public void setAssignment(AssignedSource assignment) {
-		this.assignment = assignment;
+		this.getImpl().setAssignment(assignment);
 	}
 
 	public PropertyAccessExpression getPropertyAccess() {
-		if (this.propertyAccess == null) {
-			this.setPropertyAccess(this.getImpl().derivePropertyAccess());
-		}
-		return this.propertyAccess;
+		return this.getImpl().getPropertyAccess();
 	}
 
 	public void setPropertyAccess(PropertyAccessExpression propertyAccess) {
-		this.propertyAccess = propertyAccess;
+		this.getImpl().setPropertyAccess(propertyAccess);
 	}
 
 	public QualifiedName getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(QualifiedName name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	/**

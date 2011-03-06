@@ -15,20 +15,36 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import java.util.ArrayList;
+import org.omg.uml.*;
 
-public class BitStringUnaryExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.UnaryExpressionImpl {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class BitStringUnaryExpressionImpl extends UnaryExpressionImpl {
+
+	private Boolean isBitStringConversion = null; // DERIVED
 
 	public BitStringUnaryExpressionImpl(BitStringUnaryExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BitStringUnaryExpression getSelf() {
+	public BitStringUnaryExpression getSelf() {
 		return (BitStringUnaryExpression) this.self;
 	}
 
-	public Boolean deriveIsBitStringConversion() {
+	public Boolean getIsBitStringConversion() {
+		if (this.isBitStringConversion == null) {
+			this.setIsBitStringConversion(this.deriveIsBitStringConversion());
+		}
+		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
+	}
+
+	protected Boolean deriveIsBitStringConversion() {
 		return null; // STUB
 	}
 

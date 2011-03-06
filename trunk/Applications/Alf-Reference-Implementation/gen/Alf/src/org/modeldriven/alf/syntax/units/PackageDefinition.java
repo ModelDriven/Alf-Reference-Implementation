@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.PackageDefinitionImpl;
 
@@ -28,8 +30,6 @@ import org.modeldriven.alf.syntax.units.impl.PackageDefinitionImpl;
 
 public class PackageDefinition extends NamespaceDefinition {
 
-	private ArrayList<Profile> appliedProfile = null; // DERIVED
-
 	public PackageDefinition() {
 		this.impl = new PackageDefinitionImpl(this);
 	}
@@ -38,19 +38,16 @@ public class PackageDefinition extends NamespaceDefinition {
 		return (PackageDefinitionImpl) this.impl;
 	}
 
-	public ArrayList<Profile> getAppliedProfile() {
-		if (this.appliedProfile == null) {
-			this.setAppliedProfile(this.getImpl().deriveAppliedProfile());
-		}
-		return this.appliedProfile;
+	public Collection<Profile> getAppliedProfile() {
+		return this.getImpl().getAppliedProfile();
 	}
 
-	public void setAppliedProfile(ArrayList<Profile> appliedProfile) {
-		this.appliedProfile = appliedProfile;
+	public void setAppliedProfile(Collection<Profile> appliedProfile) {
+		this.getImpl().setAppliedProfile(appliedProfile);
 	}
 
 	public void addAppliedProfile(Profile appliedProfile) {
-		this.appliedProfile.add(appliedProfile);
+		this.getImpl().addAppliedProfile(appliedProfile);
 	}
 
 	/**
@@ -93,7 +90,7 @@ public class PackageDefinition extends NamespaceDefinition {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<Profile> appliedProfile = this.getAppliedProfile();
+		Collection<Profile> appliedProfile = this.getAppliedProfile();
 		if (appliedProfile != null) {
 			if (appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");

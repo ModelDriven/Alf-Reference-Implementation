@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A set of tagged values for a stereotype application.
@@ -26,12 +28,26 @@ import java.util.ArrayList;
 public class TaggedValueListImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private Collection<TaggedValue> taggedValue = new ArrayList<TaggedValue>();
+
 	public TaggedValueListImpl(TaggedValueList self) {
 		super(self);
 	}
 
 	public TaggedValueList getSelf() {
 		return (TaggedValueList) this.self;
+	}
+
+	public Collection<TaggedValue> getTaggedValue() {
+		return this.taggedValue;
+	}
+
+	public void setTaggedValue(Collection<TaggedValue> taggedValue) {
+		this.taggedValue = taggedValue;
+	}
+
+	public void addTaggedValue(TaggedValue taggedValue) {
+		this.taggedValue.add(taggedValue);
 	}
 
 } // TaggedValueListImpl

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.NameBindingImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.NameBindingImpl;
  **/
 
 public class NameBinding extends SyntaxElement {
-
-	private TemplateBinding binding = null;
-	private String name = "";
 
 	public NameBinding() {
 		this.impl = new NameBindingImpl(this);
@@ -39,19 +38,19 @@ public class NameBinding extends SyntaxElement {
 	}
 
 	public TemplateBinding getBinding() {
-		return this.binding;
+		return this.getImpl().getBinding();
 	}
 
 	public void setBinding(TemplateBinding binding) {
-		this.binding = binding;
+		this.getImpl().setBinding(binding);
 	}
 
 	public String getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	public String toString() {

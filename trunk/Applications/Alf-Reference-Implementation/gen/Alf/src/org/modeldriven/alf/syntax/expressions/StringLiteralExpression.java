@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.StringLiteralExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.StringLiteralExpressionImpl;
  **/
 
 public class StringLiteralExpression extends LiteralExpression {
-
-	private String image = "";
 
 	public StringLiteralExpression() {
 		this.impl = new StringLiteralExpressionImpl(this);
@@ -38,11 +38,11 @@ public class StringLiteralExpression extends LiteralExpression {
 	}
 
 	public String getImage() {
-		return this.image;
+		return this.getImpl().getImage();
 	}
 
 	public void setImage(String image) {
-		this.image = image;
+		this.getImpl().setImage(image);
 	}
 
 	/**

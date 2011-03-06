@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl;
 
@@ -30,77 +32,56 @@ import org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl;
 
 public abstract class Expression extends SyntaxElement {
 
-	private ArrayList<AssignedSource> assignmentBefore = null; // DERIVED
-	private ArrayList<AssignedSource> assignmentAfter = null; // DERIVED
-	private Integer upper = null; // DERIVED
-	private Integer lower = null; // DERIVED
-	private ElementReference type = null; // DERIVED
-
 	public ExpressionImpl getImpl() {
 		return (ExpressionImpl) this.impl;
 	}
 
-	public ArrayList<AssignedSource> getAssignmentBefore() {
-		if (this.assignmentBefore == null) {
-			this.setAssignmentBefore(this.getImpl().deriveAssignmentBefore());
-		}
-		return this.assignmentBefore;
+	public Collection<AssignedSource> getAssignmentBefore() {
+		return this.getImpl().getAssignmentBefore();
 	}
 
-	public void setAssignmentBefore(ArrayList<AssignedSource> assignmentBefore) {
-		this.assignmentBefore = assignmentBefore;
+	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+		this.getImpl().setAssignmentBefore(assignmentBefore);
 	}
 
 	public void addAssignmentBefore(AssignedSource assignmentBefore) {
-		this.assignmentBefore.add(assignmentBefore);
+		this.getImpl().addAssignmentBefore(assignmentBefore);
 	}
 
-	public ArrayList<AssignedSource> getAssignmentAfter() {
-		if (this.assignmentAfter == null) {
-			this.setAssignmentAfter(this.getImpl().deriveAssignmentAfter());
-		}
-		return this.assignmentAfter;
+	public Collection<AssignedSource> getAssignmentAfter() {
+		return this.getImpl().getAssignmentAfter();
 	}
 
-	public void setAssignmentAfter(ArrayList<AssignedSource> assignmentAfter) {
-		this.assignmentAfter = assignmentAfter;
+	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+		this.getImpl().setAssignmentAfter(assignmentAfter);
 	}
 
 	public void addAssignmentAfter(AssignedSource assignmentAfter) {
-		this.assignmentAfter.add(assignmentAfter);
+		this.getImpl().addAssignmentAfter(assignmentAfter);
 	}
 
 	public Integer getUpper() {
-		if (this.upper == null) {
-			this.setUpper(this.getImpl().deriveUpper());
-		}
-		return this.upper;
+		return this.getImpl().getUpper();
 	}
 
 	public void setUpper(Integer upper) {
-		this.upper = upper;
+		this.getImpl().setUpper(upper);
 	}
 
 	public Integer getLower() {
-		if (this.lower == null) {
-			this.setLower(this.getImpl().deriveLower());
-		}
-		return this.lower;
+		return this.getImpl().getLower();
 	}
 
 	public void setLower(Integer lower) {
-		this.lower = lower;
+		this.getImpl().setLower(lower);
 	}
 
 	public ElementReference getType() {
-		if (this.type == null) {
-			this.setType(this.getImpl().deriveType());
-		}
-		return this.type;
+		return this.getImpl().getType();
 	}
 
 	public void setType(ElementReference type) {
-		this.type = type;
+		this.getImpl().setType(type);
 	}
 
 	/**
@@ -125,7 +106,7 @@ public abstract class Expression extends SyntaxElement {
 	 * in subclasses of Expression for kinds of expressions that make
 	 * assignments.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 
@@ -146,7 +127,8 @@ public abstract class Expression extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<AssignedSource> assignmentBefore = this.getAssignmentBefore();
+		Collection<AssignedSource> assignmentBefore = this
+				.getAssignmentBefore();
 		if (assignmentBefore != null) {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
@@ -155,7 +137,7 @@ public abstract class Expression extends SyntaxElement {
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
-		ArrayList<AssignedSource> assignmentAfter = this.getAssignmentAfter();
+		Collection<AssignedSource> assignmentAfter = this.getAssignmentAfter();
 		if (assignmentAfter != null) {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");

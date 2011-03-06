@@ -25,6 +25,13 @@ import java.util.List;
 
 public class UnitDefinitionImpl extends DocumentedElementImpl {
     
+	private QualifiedName namespaceName = null;
+	private NamespaceDefinition definition = null;
+	private Collection<ImportReference> import_ = new ArrayList<ImportReference>();
+	private ElementReference namespace = null; // DERIVED
+	private Boolean isModelLibrary = null; // DERIVED
+	private Collection<Profile> appliedProfile = null; // DERIVED
+
     private boolean hasImplicitImports = false;
 
 	public UnitDefinitionImpl(UnitDefinition self) {
@@ -32,8 +39,73 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
 	}
 
 	@Override
-	public org.modeldriven.alf.syntax.units.UnitDefinition getSelf() {
+	public UnitDefinition getSelf() {
 		return (UnitDefinition) this.self;
+	}
+
+	public QualifiedName getNamespaceName() {
+		return this.namespaceName;
+	}
+
+	public void setNamespaceName(QualifiedName namespaceName) {
+		this.namespaceName = namespaceName;
+	}
+
+	public NamespaceDefinition getDefinition() {
+		return this.definition;
+	}
+
+	public void setDefinition(NamespaceDefinition definition) {
+		this.definition = definition;
+	}
+
+	public Collection<ImportReference> getImport() {
+		return this.import_;
+	}
+
+	public void setImport(Collection<ImportReference> import_) {
+		this.import_ = import_;
+	}
+
+	public void addImport(ImportReference import_) {
+		this.import_.add(import_);
+	}
+
+	public ElementReference getNamespace() {
+		if (this.namespace == null) {
+			this.setNamespace(this.deriveNamespace());
+		}
+		return this.namespace;
+	}
+
+	public void setNamespace(ElementReference namespace) {
+		this.namespace = namespace;
+	}
+
+	public Boolean getIsModelLibrary() {
+		if (this.isModelLibrary == null) {
+			this.setIsModelLibrary(this.deriveIsModelLibrary());
+		}
+		return this.isModelLibrary;
+	}
+
+	public void setIsModelLibrary(Boolean isModelLibrary) {
+		this.isModelLibrary = isModelLibrary;
+	}
+
+	public Collection<Profile> getAppliedProfile() {
+		if (this.appliedProfile == null) {
+			this.setAppliedProfile(this.deriveAppliedProfile());
+		}
+		return this.appliedProfile;
+	}
+
+	public void setAppliedProfile(Collection<Profile> appliedProfile) {
+		this.appliedProfile = appliedProfile;
+	}
+
+	public void addAppliedProfile(Profile appliedProfile) {
+		this.appliedProfile.add(appliedProfile);
 	}
 
     public boolean hasImplicitImports() {
@@ -48,7 +120,7 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
      * If a unit definition has a declared namespace name, then the containing
      * namespace for the unit is the referent for that name.
      **/
-	public ElementReference deriveNamespace() {
+	protected ElementReference deriveNamespace() {
 	    UnitDefinition self = this.getSelf();
 	    ElementReference referent = null;
 	    QualifiedName namespaceName = self.getNamespaceName();
@@ -64,7 +136,7 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
      * definition has a stereotype annotation for the UML standard stereotype
      * ModelLibrary.
      **/
-	public Boolean deriveIsModelLibrary() {
+	protected Boolean deriveIsModelLibrary() {
 	    // TODO: Require reference to standard UML ModelLibary stereotype.
 	    NamespaceDefinition definition = this.getSelf().getDefinition();
 		return definition != null && definition.getImpl().hasAnnotation("ModelLibrary");
@@ -76,7 +148,7 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
      * is for a package, then the applied profiles for the unit definition also
      * include the applied profiles for its associated package definition.
      **/
-	public ArrayList<Profile> deriveAppliedProfile() {
+	protected Collection<Profile> deriveAppliedProfile() {
 	    // TODO: Implement profile application.
 		return new ArrayList<Profile>(); // STUB
 	}

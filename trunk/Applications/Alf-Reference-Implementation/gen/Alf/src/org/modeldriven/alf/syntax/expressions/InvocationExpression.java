@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl;
 
@@ -28,130 +30,92 @@ import org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl;
 
 public abstract class InvocationExpression extends Expression {
 
-	private Boolean isBehavior = null; // DERIVED
-	private Boolean isAssociationEnd = null; // DERIVED
-	private FeatureReference feature = null; // DERIVED
-	private Tuple tuple = null;
-	private Boolean isOperation = null; // DERIVED
-	private Boolean isDestructor = null; // DERIVED
-	private Boolean isImplicit = null; // DERIVED
-	private ElementReference referent = null; // DERIVED
-	private ArrayList<ElementReference> parameter = null; // DERIVED
-	private Boolean isSignal = null; // DERIVED
-
 	public InvocationExpressionImpl getImpl() {
 		return (InvocationExpressionImpl) this.impl;
 	}
 
 	public Boolean getIsBehavior() {
-		if (this.isBehavior == null) {
-			this.setIsBehavior(this.getImpl().deriveIsBehavior());
-		}
-		return this.isBehavior;
+		return this.getImpl().getIsBehavior();
 	}
 
 	public void setIsBehavior(Boolean isBehavior) {
-		this.isBehavior = isBehavior;
+		this.getImpl().setIsBehavior(isBehavior);
 	}
 
 	public Boolean getIsAssociationEnd() {
-		if (this.isAssociationEnd == null) {
-			this.setIsAssociationEnd(this.getImpl().deriveIsAssociationEnd());
-		}
-		return this.isAssociationEnd;
+		return this.getImpl().getIsAssociationEnd();
 	}
 
 	public void setIsAssociationEnd(Boolean isAssociationEnd) {
-		this.isAssociationEnd = isAssociationEnd;
+		this.getImpl().setIsAssociationEnd(isAssociationEnd);
 	}
 
 	public FeatureReference getFeature() {
-		if (this.feature == null) {
-			this.setFeature(this.getImpl().deriveFeature());
-		}
-		return this.feature;
+		return this.getImpl().getFeature();
 	}
 
 	public void setFeature(FeatureReference feature) {
-		this.feature = feature;
+		this.getImpl().setFeature(feature);
 	}
 
 	public Tuple getTuple() {
-		return this.tuple;
+		return this.getImpl().getTuple();
 	}
 
 	public void setTuple(Tuple tuple) {
-		this.tuple = tuple;
+		this.getImpl().setTuple(tuple);
 	}
 
 	public Boolean getIsOperation() {
-		if (this.isOperation == null) {
-			this.setIsOperation(this.getImpl().deriveIsOperation());
-		}
-		return this.isOperation;
+		return this.getImpl().getIsOperation();
 	}
 
 	public void setIsOperation(Boolean isOperation) {
-		this.isOperation = isOperation;
+		this.getImpl().setIsOperation(isOperation);
 	}
 
 	public Boolean getIsDestructor() {
-		if (this.isDestructor == null) {
-			this.setIsDestructor(this.getImpl().deriveIsDestructor());
-		}
-		return this.isDestructor;
+		return this.getImpl().getIsDestructor();
 	}
 
 	public void setIsDestructor(Boolean isDestructor) {
-		this.isDestructor = isDestructor;
+		this.getImpl().setIsDestructor(isDestructor);
 	}
 
 	public Boolean getIsImplicit() {
-		if (this.isImplicit == null) {
-			this.setIsImplicit(this.getImpl().deriveIsImplicit());
-		}
-		return this.isImplicit;
+		return this.getImpl().getIsImplicit();
 	}
 
 	public void setIsImplicit(Boolean isImplicit) {
-		this.isImplicit = isImplicit;
+		this.getImpl().setIsImplicit(isImplicit);
 	}
 
 	public ElementReference getReferent() {
-		if (this.referent == null) {
-			this.setReferent(this.getImpl().deriveReferent());
-		}
-		return this.referent;
+		return this.getImpl().getReferent();
 	}
 
 	public void setReferent(ElementReference referent) {
-		this.referent = referent;
+		this.getImpl().setReferent(referent);
 	}
 
-	public ArrayList<ElementReference> getParameter() {
-		if (this.parameter == null) {
-			this.setParameter(this.getImpl().deriveParameter());
-		}
-		return this.parameter;
+	public List<ElementReference> getParameter() {
+		return this.getImpl().getParameter();
 	}
 
-	public void setParameter(ArrayList<ElementReference> parameter) {
-		this.parameter = parameter;
+	public void setParameter(List<ElementReference> parameter) {
+		this.getImpl().setParameter(parameter);
 	}
 
 	public void addParameter(ElementReference parameter) {
-		this.parameter.add(parameter);
+		this.getImpl().addParameter(parameter);
 	}
 
 	public Boolean getIsSignal() {
-		if (this.isSignal == null) {
-			this.setIsSignal(this.getImpl().deriveIsSignal());
-		}
-		return this.isSignal;
+		return this.getImpl().getIsSignal();
 	}
 
 	public void setIsSignal(Boolean isSignal) {
-		this.isSignal = isSignal;
+		this.getImpl().setIsSignal(isSignal);
 	}
 
 	/**
@@ -250,7 +214,7 @@ public abstract class InvocationExpression extends Expression {
 	 * parameters. (This is defined as a helper operation, so that it can be
 	 * overridden by subclasses of InvocationExpression, if necessary.)
 	 **/
-	public ArrayList<ElementReference> parameterElements() {
+	public Collection<ElementReference> parameterElements() {
 		return this.getImpl().parameterElements();
 	}
 
@@ -258,7 +222,7 @@ public abstract class InvocationExpression extends Expression {
 	 * The assignments after an invocation expression are the same as those
 	 * after the tuple of the expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 
@@ -312,7 +276,7 @@ public abstract class InvocationExpression extends Expression {
 		if (referent != null) {
 			System.out.println(prefix + " /referent:" + referent);
 		}
-		ArrayList<ElementReference> parameter = this.getParameter();
+		List<ElementReference> parameter = this.getParameter();
 		if (parameter != null) {
 			if (parameter.size() > 0) {
 				System.out.println(prefix + " /parameter:");

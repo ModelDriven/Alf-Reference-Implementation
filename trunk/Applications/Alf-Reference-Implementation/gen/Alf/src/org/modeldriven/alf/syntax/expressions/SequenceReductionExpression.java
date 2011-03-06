@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceReductionExpressionImpl;
 
@@ -28,11 +30,6 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceReductionExpressionIm
 
 public class SequenceReductionExpression extends Expression {
 
-	private ElementReference referent = null; // DERIVED
-	private Boolean isOrdered = false;
-	private ExtentOrExpression primary = null;
-	private QualifiedName behaviorName = null;
-
 	public SequenceReductionExpression() {
 		this.impl = new SequenceReductionExpressionImpl(this);
 	}
@@ -42,38 +39,35 @@ public class SequenceReductionExpression extends Expression {
 	}
 
 	public ElementReference getReferent() {
-		if (this.referent == null) {
-			this.setReferent(this.getImpl().deriveReferent());
-		}
-		return this.referent;
+		return this.getImpl().getReferent();
 	}
 
 	public void setReferent(ElementReference referent) {
-		this.referent = referent;
+		this.getImpl().setReferent(referent);
 	}
 
 	public Boolean getIsOrdered() {
-		return this.isOrdered;
+		return this.getImpl().getIsOrdered();
 	}
 
 	public void setIsOrdered(Boolean isOrdered) {
-		this.isOrdered = isOrdered;
+		this.getImpl().setIsOrdered(isOrdered);
 	}
 
 	public ExtentOrExpression getPrimary() {
-		return this.primary;
+		return this.getImpl().getPrimary();
 	}
 
 	public void setPrimary(ExtentOrExpression primary) {
-		this.primary = primary;
+		this.getImpl().setPrimary(primary);
 	}
 
 	public QualifiedName getBehaviorName() {
-		return this.behaviorName;
+		return this.getImpl().getBehaviorName();
 	}
 
 	public void setBehaviorName(QualifiedName behaviorName) {
-		this.behaviorName = behaviorName;
+		this.getImpl().setBehaviorName(behaviorName);
 	}
 
 	/**
@@ -136,7 +130,7 @@ public class SequenceReductionExpression extends Expression {
 	 * The assignments after a sequence reduction expression are the same as
 	 * after its primary expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

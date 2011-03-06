@@ -12,8 +12,8 @@ package org.modeldriven.alf.syntax.units.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of a class, whose members may be properties, operations,
@@ -84,7 +84,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 
 	@Override
 	// Removes redefined members from inheritableMembers.
-    protected ArrayList<Member> inherit(ArrayList<Member> inheritableMembers) {
+    protected List<Member> inherit(List<Member> inheritableMembers) {
 	    Collection<Member> ownedMembers = this.getSelf().getOwnedMember();
 	    int i = 0;
 	    while (i < inheritableMembers.size()) {

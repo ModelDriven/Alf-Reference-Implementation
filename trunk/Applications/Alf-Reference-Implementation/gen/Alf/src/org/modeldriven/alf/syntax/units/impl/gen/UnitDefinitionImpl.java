@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of a namespace as an Alf unit.
@@ -25,6 +27,13 @@ import java.util.ArrayList;
 
 public class UnitDefinitionImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.DocumentedElementImpl {
+
+	private QualifiedName namespaceName = null;
+	private NamespaceDefinition definition = null;
+	private Collection<ImportReference> import_ = new ArrayList<ImportReference>();
+	private ElementReference namespace = null; // DERIVED
+	private Boolean isModelLibrary = null; // DERIVED
+	private Collection<Profile> appliedProfile = null; // DERIVED
 
 	public UnitDefinitionImpl(UnitDefinition self) {
 		super(self);
@@ -34,15 +43,80 @@ public class UnitDefinitionImpl extends
 		return (UnitDefinition) this.self;
 	}
 
-	public ElementReference deriveNamespace() {
+	public QualifiedName getNamespaceName() {
+		return this.namespaceName;
+	}
+
+	public void setNamespaceName(QualifiedName namespaceName) {
+		this.namespaceName = namespaceName;
+	}
+
+	public NamespaceDefinition getDefinition() {
+		return this.definition;
+	}
+
+	public void setDefinition(NamespaceDefinition definition) {
+		this.definition = definition;
+	}
+
+	public Collection<ImportReference> getImport() {
+		return this.import_;
+	}
+
+	public void setImport(Collection<ImportReference> import_) {
+		this.import_ = import_;
+	}
+
+	public void addImport(ImportReference import_) {
+		this.import_.add(import_);
+	}
+
+	public ElementReference getNamespace() {
+		if (this.namespace == null) {
+			this.setNamespace(this.deriveNamespace());
+		}
+		return this.namespace;
+	}
+
+	public void setNamespace(ElementReference namespace) {
+		this.namespace = namespace;
+	}
+
+	public Boolean getIsModelLibrary() {
+		if (this.isModelLibrary == null) {
+			this.setIsModelLibrary(this.deriveIsModelLibrary());
+		}
+		return this.isModelLibrary;
+	}
+
+	public void setIsModelLibrary(Boolean isModelLibrary) {
+		this.isModelLibrary = isModelLibrary;
+	}
+
+	public Collection<Profile> getAppliedProfile() {
+		if (this.appliedProfile == null) {
+			this.setAppliedProfile(this.deriveAppliedProfile());
+		}
+		return this.appliedProfile;
+	}
+
+	public void setAppliedProfile(Collection<Profile> appliedProfile) {
+		this.appliedProfile = appliedProfile;
+	}
+
+	public void addAppliedProfile(Profile appliedProfile) {
+		this.appliedProfile.add(appliedProfile);
+	}
+
+	protected ElementReference deriveNamespace() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsModelLibrary() {
+	protected Boolean deriveIsModelLibrary() {
 		return null; // STUB
 	}
 
-	public ArrayList<Profile> deriveAppliedProfile() {
+	protected Collection<Profile> deriveAppliedProfile() {
 		return null; // STUB
 	}
 

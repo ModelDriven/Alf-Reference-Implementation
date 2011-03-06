@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A grouped sequence of statements.
@@ -25,6 +27,10 @@ import java.util.ArrayList;
 
 public class BlockImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
+
+	private List<Statement> statement = new ArrayList<Statement>();
+	private Collection<AssignedSource> assignmentAfter = null; // DERIVED
+	private Collection<AssignedSource> assignmentBefore = null; // DERIVED
 
 	public BlockImpl(Block self) {
 		super(self);
@@ -34,11 +40,53 @@ public class BlockImpl extends
 		return (Block) this.self;
 	}
 
-	public ArrayList<AssignedSource> deriveAssignmentAfter() {
+	public List<Statement> getStatement() {
+		return this.statement;
+	}
+
+	public void setStatement(List<Statement> statement) {
+		this.statement = statement;
+	}
+
+	public void addStatement(Statement statement) {
+		this.statement.add(statement);
+	}
+
+	public Collection<AssignedSource> getAssignmentAfter() {
+		if (this.assignmentAfter == null) {
+			this.setAssignmentAfter(this.deriveAssignmentAfter());
+		}
+		return this.assignmentAfter;
+	}
+
+	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+		this.assignmentAfter = assignmentAfter;
+	}
+
+	public void addAssignmentAfter(AssignedSource assignmentAfter) {
+		this.assignmentAfter.add(assignmentAfter);
+	}
+
+	public Collection<AssignedSource> getAssignmentBefore() {
+		if (this.assignmentBefore == null) {
+			this.setAssignmentBefore(this.deriveAssignmentBefore());
+		}
+		return this.assignmentBefore;
+	}
+
+	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+		this.assignmentBefore = assignmentBefore;
+	}
+
+	public void addAssignmentBefore(AssignedSource assignmentBefore) {
+		this.assignmentBefore.add(assignmentBefore);
+	}
+
+	protected Collection<AssignedSource> deriveAssignmentAfter() {
 		return null; // STUB
 	}
 
-	public ArrayList<AssignedSource> deriveAssignmentBefore() {
+	protected Collection<AssignedSource> deriveAssignmentBefore() {
 		return null; // STUB
 	}
 

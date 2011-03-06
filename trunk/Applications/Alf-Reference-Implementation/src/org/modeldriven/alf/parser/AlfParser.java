@@ -7,6 +7,7 @@ import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AlfParser implements AlfParserConstants {
 
@@ -5153,7 +5154,7 @@ public class AlfParser implements AlfParserConstants {
     n = QualifiedName();
     jj_consume_token(SEMICOLON);
     d.setSignalName(n);
-    ArrayList<NameBinding> nameBindings = n.getNameBinding();
+    List<NameBinding> nameBindings = n.getNameBinding();
     d.setName(nameBindings.get(nameBindings.size()-1).getName());
     {if (true) return d;}
     throw new Error("Missing return statement in function");

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.PropertyDefinitionImpl;
 
@@ -26,11 +28,6 @@ import org.modeldriven.alf.syntax.units.impl.PropertyDefinitionImpl;
  **/
 
 public class PropertyDefinition extends TypedElementDefinition {
-
-	private Boolean isComposite = false;
-	private Expression initializer = null;
-	private Boolean isCollectionConversion = null; // DERIVED
-	private Boolean isBitStringConversion = null; // DERIVED
 
 	public PropertyDefinition() {
 		this.impl = new PropertyDefinitionImpl(this);
@@ -41,43 +38,35 @@ public class PropertyDefinition extends TypedElementDefinition {
 	}
 
 	public Boolean getIsComposite() {
-		return this.isComposite;
+		return this.getImpl().getIsComposite();
 	}
 
 	public void setIsComposite(Boolean isComposite) {
-		this.isComposite = isComposite;
+		this.getImpl().setIsComposite(isComposite);
 	}
 
 	public Expression getInitializer() {
-		return this.initializer;
+		return this.getImpl().getInitializer();
 	}
 
 	public void setInitializer(Expression initializer) {
-		this.initializer = initializer;
+		this.getImpl().setInitializer(initializer);
 	}
 
 	public Boolean getIsCollectionConversion() {
-		if (this.isCollectionConversion == null) {
-			this.setIsCollectionConversion(this.getImpl()
-					.deriveIsCollectionConversion());
-		}
-		return this.isCollectionConversion;
+		return this.getImpl().getIsCollectionConversion();
 	}
 
 	public void setIsCollectionConversion(Boolean isCollectionConversion) {
-		this.isCollectionConversion = isCollectionConversion;
+		this.getImpl().setIsCollectionConversion(isCollectionConversion);
 	}
 
 	public Boolean getIsBitStringConversion() {
-		if (this.isBitStringConversion == null) {
-			this.setIsBitStringConversion(this.getImpl()
-					.deriveIsBitStringConversion());
-		}
-		return this.isBitStringConversion;
+		return this.getImpl().getIsBitStringConversion();
 	}
 
 	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.isBitStringConversion = isBitStringConversion;
+		this.getImpl().setIsBitStringConversion(isBitStringConversion);
 	}
 
 	/**

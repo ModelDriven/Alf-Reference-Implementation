@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to access a specific element of a sequence.
@@ -26,12 +28,31 @@ import java.util.ArrayList;
 public class SequenceAccessExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.ExpressionImpl {
 
+	private Expression primary = null;
+	private Expression index = null;
+
 	public SequenceAccessExpressionImpl(SequenceAccessExpression self) {
 		super(self);
 	}
 
 	public SequenceAccessExpression getSelf() {
 		return (SequenceAccessExpression) this.self;
+	}
+
+	public Expression getPrimary() {
+		return this.primary;
+	}
+
+	public void setPrimary(Expression primary) {
+		this.primary = primary;
+	}
+
+	public Expression getIndex() {
+		return this.index;
+	}
+
+	public void setIndex(Expression index) {
+		this.index = index;
 	}
 
 	/**

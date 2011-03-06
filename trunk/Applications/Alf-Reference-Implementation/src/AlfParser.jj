@@ -29,6 +29,7 @@ import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AlfParser {
 
@@ -3500,7 +3501,7 @@ ReceptionDefinition ReceptionDefinition():
 { 
   <RECEIVE> n = QualifiedName() <SEMICOLON>
   { d.setSignalName(n);
-    ArrayList<NameBinding> nameBindings = n.getNameBinding();
+    List<NameBinding> nameBindings = n.getNameBinding();
     d.setName(nameBindings.get(nameBindings.size()-1).getName());
     return d; }
 }

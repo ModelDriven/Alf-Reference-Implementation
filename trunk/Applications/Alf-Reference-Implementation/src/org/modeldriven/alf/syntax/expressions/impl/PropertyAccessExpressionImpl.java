@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,24 +15,49 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression comprising a reference to a structural feature.
  **/
 
-public class PropertyAccessExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl {
+public class PropertyAccessExpressionImpl extends ExpressionImpl {
+
+	private FeatureReference featureReference = null;
+	private ElementReference feature = null; // DERIVED
 
 	public PropertyAccessExpressionImpl(PropertyAccessExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.PropertyAccessExpression getSelf() {
+	public PropertyAccessExpression getSelf() {
 		return (PropertyAccessExpression) this.self;
 	}
 
-	public ElementReference deriveFeature() {
+	public FeatureReference getFeatureReference() {
+		return this.featureReference;
+	}
+
+	public void setFeatureReference(FeatureReference featureReference) {
+		this.featureReference = featureReference;
+	}
+
+	public ElementReference getFeature() {
+		if (this.feature == null) {
+			this.setFeature(this.deriveFeature());
+		}
+		return this.feature;
+	}
+
+	public void setFeature(ElementReference feature) {
+		this.feature = feature;
+	}
+
+	protected ElementReference deriveFeature() {
 		return null; // STUB
 	}
 
@@ -95,7 +120,7 @@ public class PropertyAccessExpressionImpl extends
 	 * The assignments after a property access expression are the same as those
 	 * after the target expression of its feature reference.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

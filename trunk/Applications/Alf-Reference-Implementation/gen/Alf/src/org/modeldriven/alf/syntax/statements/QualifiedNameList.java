@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.QualifiedNameListImpl;
 
@@ -27,8 +29,6 @@ import org.modeldriven.alf.syntax.statements.impl.QualifiedNameListImpl;
 
 public class QualifiedNameList extends SyntaxElement {
 
-	private ArrayList<QualifiedName> name = new ArrayList<QualifiedName>();
-
 	public QualifiedNameList() {
 		this.impl = new QualifiedNameListImpl(this);
 	}
@@ -37,16 +37,16 @@ public class QualifiedNameList extends SyntaxElement {
 		return (QualifiedNameListImpl) this.impl;
 	}
 
-	public ArrayList<QualifiedName> getName() {
-		return this.name;
+	public Collection<QualifiedName> getName() {
+		return this.getImpl().getName();
 	}
 
-	public void setName(ArrayList<QualifiedName> name) {
-		this.name = name;
+	public void setName(Collection<QualifiedName> name) {
+		this.getImpl().setName(name);
 	}
 
 	public void addName(QualifiedName name) {
-		this.name.add(name);
+		this.getImpl().addName(name);
 	}
 
 	public String toString() {
@@ -56,7 +56,7 @@ public class QualifiedNameList extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<QualifiedName> name = this.getName();
+		Collection<QualifiedName> name = this.getName();
 		if (name != null) {
 			if (name.size() > 0) {
 				System.out.println(prefix + " name:");

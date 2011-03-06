@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement that changes the classification of an object.
@@ -25,6 +27,13 @@ import java.util.ArrayList;
 
 public class ClassifyStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
+
+	private Expression expression = null;
+	private QualifiedNameList fromList = null;
+	private QualifiedNameList toList = null;
+	private Collection<ElementReference> fromClass = null; // DERIVED
+	private Collection<ElementReference> toClass = null; // DERIVED
+	private Boolean isReclassifyAll = false;
 
 	public ClassifyStatementImpl(ClassifyStatement self) {
 		super(self);
@@ -34,11 +43,73 @@ public class ClassifyStatementImpl extends
 		return (ClassifyStatement) this.self;
 	}
 
-	public ArrayList<ElementReference> deriveFromClass() {
+	public Expression getExpression() {
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
+	public QualifiedNameList getFromList() {
+		return this.fromList;
+	}
+
+	public void setFromList(QualifiedNameList fromList) {
+		this.fromList = fromList;
+	}
+
+	public QualifiedNameList getToList() {
+		return this.toList;
+	}
+
+	public void setToList(QualifiedNameList toList) {
+		this.toList = toList;
+	}
+
+	public Collection<ElementReference> getFromClass() {
+		if (this.fromClass == null) {
+			this.setFromClass(this.deriveFromClass());
+		}
+		return this.fromClass;
+	}
+
+	public void setFromClass(Collection<ElementReference> fromClass) {
+		this.fromClass = fromClass;
+	}
+
+	public void addFromClass(ElementReference fromClass) {
+		this.fromClass.add(fromClass);
+	}
+
+	public Collection<ElementReference> getToClass() {
+		if (this.toClass == null) {
+			this.setToClass(this.deriveToClass());
+		}
+		return this.toClass;
+	}
+
+	public void setToClass(Collection<ElementReference> toClass) {
+		this.toClass = toClass;
+	}
+
+	public void addToClass(ElementReference toClass) {
+		this.toClass.add(toClass);
+	}
+
+	public Boolean getIsReclassifyAll() {
+		return this.isReclassifyAll;
+	}
+
+	public void setIsReclassifyAll(Boolean isReclassifyAll) {
+		this.isReclassifyAll = isReclassifyAll;
+	}
+
+	protected Collection<ElementReference> deriveFromClass() {
 		return null; // STUB
 	}
 
-	public ArrayList<ElementReference> deriveToClass() {
+	protected Collection<ElementReference> deriveToClass() {
 		return null; // STUB
 	}
 

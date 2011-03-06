@@ -19,6 +19,11 @@ import org.modeldriven.alf.syntax.units.*;
 
 public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 
+	private Boolean isComposite = false;
+	private Expression initializer = null;
+	private Boolean isCollectionConversion = null; // DERIVED
+	private Boolean isBitStringConversion = null; // DERIVED
+
 	public PropertyDefinitionImpl(PropertyDefinition self) {
 		super(self);
 	}
@@ -27,11 +32,49 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 		return (PropertyDefinition) this.self;
 	}
 
+	public Boolean getIsComposite() {
+		return this.isComposite;
+	}
+
+	public void setIsComposite(Boolean isComposite) {
+		this.isComposite = isComposite;
+	}
+
+	public Expression getInitializer() {
+		return this.initializer;
+	}
+
+	public void setInitializer(Expression initializer) {
+		this.initializer = initializer;
+	}
+
+	public Boolean getIsCollectionConversion() {
+		if (this.isCollectionConversion == null) {
+			this.setIsCollectionConversion(this.deriveIsCollectionConversion());
+		}
+		return this.isCollectionConversion;
+	}
+
+	public void setIsCollectionConversion(Boolean isCollectionConversion) {
+		this.isCollectionConversion = isCollectionConversion;
+	}
+
+	public Boolean getIsBitStringConversion() {
+		if (this.isBitStringConversion == null) {
+			this.setIsBitStringConversion(this.deriveIsBitStringConversion());
+		}
+		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
+	}
+
     /**
      * A property definition requires collection conversion if its initializer
      * has a collection class as its type and the property definition does not.
      **/
-	public Boolean deriveIsCollectionConversion() {
+	protected Boolean deriveIsCollectionConversion() {
 	    PropertyDefinition self = this.getSelf();
 	    Expression initializer = self.getInitializer();
 	    if (initializer == null) {
@@ -50,7 +93,7 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
      * BitString and the type of its initializer is Integer or a collection
      * class whose argument type is Integer.
      **/
-	public Boolean deriveIsBitStringConversion() {
+	protected Boolean deriveIsBitStringConversion() {
         PropertyDefinition self = this.getSelf();
         Expression initializer = self.getInitializer();
         if (initializer == null) {
@@ -68,7 +111,8 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
     /**
      * A property definition is a feature.
      **/
-	public Boolean deriveIsFeature() {
+	@Override
+	protected Boolean deriveIsFeature() {
 	    return true;
 	}
 	

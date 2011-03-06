@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.ForStatementImpl;
 
@@ -28,10 +30,6 @@ import org.modeldriven.alf.syntax.statements.impl.ForStatementImpl;
 
 public class ForStatement extends Statement {
 
-	private Block body = null;
-	private ArrayList<LoopVariableDefinition> variableDefinition = new ArrayList<LoopVariableDefinition>();
-	private Boolean isParallel = null; // DERIVED
-
 	public ForStatement() {
 		this.impl = new ForStatementImpl(this);
 	}
@@ -41,35 +39,32 @@ public class ForStatement extends Statement {
 	}
 
 	public Block getBody() {
-		return this.body;
+		return this.getImpl().getBody();
 	}
 
 	public void setBody(Block body) {
-		this.body = body;
+		this.getImpl().setBody(body);
 	}
 
-	public ArrayList<LoopVariableDefinition> getVariableDefinition() {
-		return this.variableDefinition;
+	public List<LoopVariableDefinition> getVariableDefinition() {
+		return this.getImpl().getVariableDefinition();
 	}
 
 	public void setVariableDefinition(
-			ArrayList<LoopVariableDefinition> variableDefinition) {
-		this.variableDefinition = variableDefinition;
+			List<LoopVariableDefinition> variableDefinition) {
+		this.getImpl().setVariableDefinition(variableDefinition);
 	}
 
 	public void addVariableDefinition(LoopVariableDefinition variableDefinition) {
-		this.variableDefinition.add(variableDefinition);
+		this.getImpl().addVariableDefinition(variableDefinition);
 	}
 
 	public Boolean getIsParallel() {
-		if (this.isParallel == null) {
-			this.setIsParallel(this.getImpl().deriveIsParallel());
-		}
-		return this.isParallel;
+		return this.getImpl().getIsParallel();
 	}
 
 	public void setIsParallel(Boolean isParallel) {
-		this.isParallel = isParallel;
+		this.getImpl().setIsParallel(isParallel);
 	}
 
 	/**
@@ -183,7 +178,7 @@ public class ForStatement extends Statement {
 		if (body != null) {
 			System.out.println(prefix + " body:" + body);
 		}
-		ArrayList<LoopVariableDefinition> variableDefinition = this
+		List<LoopVariableDefinition> variableDefinition = this
 				.getVariableDefinition();
 		if (variableDefinition != null) {
 			if (variableDefinition.size() > 0) {

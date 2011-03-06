@@ -21,7 +21,13 @@ import org.modeldriven.alf.syntax.common.*;
 
 public class AssignedSourceImpl {
 
-	protected AssignedSource self;
+    private String name = "";
+    private SyntaxElement source = null;
+    private Integer upper = 0;
+    private Integer lower = 0;
+    private ElementReference type = null;
+
+    protected AssignedSource self;
 
 	public AssignedSourceImpl(AssignedSource self) {
 		this.self = self;
@@ -30,6 +36,46 @@ public class AssignedSourceImpl {
 	public AssignedSource getSelf() {
 		return (AssignedSource) this.self;
 	}
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public SyntaxElement getSource() {
+        return this.source;
+    }
+
+    public void setSource(SyntaxElement source) {
+        this.source = source;
+    }
+
+    public Integer getUpper() {
+        return this.upper;
+    }
+
+    public void setUpper(Integer upper) {
+        this.upper = upper;
+    }
+
+    public Integer getLower() {
+        return this.lower;
+    }
+
+    public void setLower(Integer lower) {
+        this.lower = lower;
+    }
+
+    public ElementReference getType() {
+        return this.type;
+    }
+
+    public void setType(ElementReference type) {
+        this.type = type;
+    }
 
     public static AssignedSource getAssignment(String name, Collection<AssignedSource> assignments) {
         for (AssignedSource assignment: assignments) {

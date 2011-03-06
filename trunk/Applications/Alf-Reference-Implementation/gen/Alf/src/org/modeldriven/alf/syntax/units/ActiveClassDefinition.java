@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.ActiveClassDefinitionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.units.impl.ActiveClassDefinitionImpl;
  **/
 
 public class ActiveClassDefinition extends ClassDefinition {
-
-	private ActivityDefinition classifierBehavior = null;
 
 	public ActiveClassDefinition() {
 		this.impl = new ActiveClassDefinitionImpl(this);
@@ -38,11 +38,11 @@ public class ActiveClassDefinition extends ClassDefinition {
 	}
 
 	public ActivityDefinition getClassifierBehavior() {
-		return this.classifierBehavior;
+		return this.getImpl().getClassifierBehavior();
 	}
 
 	public void setClassifierBehavior(ActivityDefinition classifierBehavior) {
-		this.classifierBehavior = classifierBehavior;
+		this.getImpl().setClassifierBehavior(classifierBehavior);
 	}
 
 	/**

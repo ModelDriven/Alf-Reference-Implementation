@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,26 +15,39 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression that comprises a natural literal.
  **/
 
-public class NaturalLiteralExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl {
+public class NaturalLiteralExpressionImpl extends LiteralExpressionImpl {
+
+	private String image = "";
 
 	public NaturalLiteralExpressionImpl(NaturalLiteralExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NaturalLiteralExpression getSelf() {
+	public NaturalLiteralExpression getSelf() {
 		return (NaturalLiteralExpression) this.self;
+	}
+
+	public String getImage() {
+		return this.image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	/**
 	 * The type of a natural literal is the Alf library type Natural.
-	 * 
+	 *
 	 * NOTE: If the context of a natural literal expression unambiguously
 	 * requires either an Integer or an UnlimitedNatural value, then the result
 	 * of the literal expression is implicitly downcast to the required type. If

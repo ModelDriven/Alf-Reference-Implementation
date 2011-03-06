@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,20 +15,36 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import java.util.ArrayList;
+import org.omg.uml.*;
 
-public class ShiftExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class ShiftExpressionImpl extends BinaryExpressionImpl {
+
+	private Boolean isBitStringConversion = null; // DERIVED
 
 	public ShiftExpressionImpl(ShiftExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.ShiftExpression getSelf() {
+	public ShiftExpression getSelf() {
 		return (ShiftExpression) this.self;
 	}
 
-	public Boolean deriveIsBitStringConversion() {
+	public Boolean getIsBitStringConversion() {
+		if (this.isBitStringConversion == null) {
+			this.setIsBitStringConversion(this.deriveIsBitStringConversion());
+		}
+		return this.isBitStringConversion;
+	}
+
+	public void setIsBitStringConversion(Boolean isBitStringConversion) {
+		this.isBitStringConversion = isBitStringConversion;
+	}
+
+	protected Boolean deriveIsBitStringConversion() {
 		return null; // STUB
 	}
 

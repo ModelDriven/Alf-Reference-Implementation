@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.SwitchStatementImpl;
 
@@ -28,12 +30,6 @@ import org.modeldriven.alf.syntax.statements.impl.SwitchStatementImpl;
 
 public class SwitchStatement extends Statement {
 
-	private ArrayList<SwitchClause> nonDefaultClause = new ArrayList<SwitchClause>();
-	private Expression expression = null;
-	private Block defaultClause = null;
-	private Boolean isAssured = null; // DERIVED
-	private Boolean isDetermined = null; // DERIVED
-
 	public SwitchStatement() {
 		this.impl = new SwitchStatementImpl(this);
 	}
@@ -42,54 +38,48 @@ public class SwitchStatement extends Statement {
 		return (SwitchStatementImpl) this.impl;
 	}
 
-	public ArrayList<SwitchClause> getNonDefaultClause() {
-		return this.nonDefaultClause;
+	public Collection<SwitchClause> getNonDefaultClause() {
+		return this.getImpl().getNonDefaultClause();
 	}
 
-	public void setNonDefaultClause(ArrayList<SwitchClause> nonDefaultClause) {
-		this.nonDefaultClause = nonDefaultClause;
+	public void setNonDefaultClause(Collection<SwitchClause> nonDefaultClause) {
+		this.getImpl().setNonDefaultClause(nonDefaultClause);
 	}
 
 	public void addNonDefaultClause(SwitchClause nonDefaultClause) {
-		this.nonDefaultClause.add(nonDefaultClause);
+		this.getImpl().addNonDefaultClause(nonDefaultClause);
 	}
 
 	public Expression getExpression() {
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	public Block getDefaultClause() {
-		return this.defaultClause;
+		return this.getImpl().getDefaultClause();
 	}
 
 	public void setDefaultClause(Block defaultClause) {
-		this.defaultClause = defaultClause;
+		this.getImpl().setDefaultClause(defaultClause);
 	}
 
 	public Boolean getIsAssured() {
-		if (this.isAssured == null) {
-			this.setIsAssured(this.getImpl().deriveIsAssured());
-		}
-		return this.isAssured;
+		return this.getImpl().getIsAssured();
 	}
 
 	public void setIsAssured(Boolean isAssured) {
-		this.isAssured = isAssured;
+		this.getImpl().setIsAssured(isAssured);
 	}
 
 	public Boolean getIsDetermined() {
-		if (this.isDetermined == null) {
-			this.setIsDetermined(this.getImpl().deriveIsDetermined());
-		}
-		return this.isDetermined;
+		return this.getImpl().getIsDetermined();
 	}
 
 	public void setIsDetermined(Boolean isDetermined) {
-		this.isDetermined = isDetermined;
+		this.getImpl().setIsDetermined(isDetermined);
 	}
 
 	/**
@@ -182,7 +172,7 @@ public class SwitchStatement extends Statement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<SwitchClause> nonDefaultClause = this.getNonDefaultClause();
+		Collection<SwitchClause> nonDefaultClause = this.getNonDefaultClause();
 		if (nonDefaultClause != null) {
 			if (nonDefaultClause.size() > 0) {
 				System.out.println(prefix + " nonDefaultClause:");

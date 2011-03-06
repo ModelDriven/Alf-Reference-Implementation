@@ -15,6 +15,8 @@ import org.omg.uml.NamedElement;
 
 public class ImportedMemberImpl extends MemberImpl {
 
+    private ElementReference referent = null;
+
 	public ImportedMemberImpl(ImportedMember self) {
 		super(self);
 	}
@@ -23,12 +25,21 @@ public class ImportedMemberImpl extends MemberImpl {
 	public ImportedMember getSelf() {
 		return (ImportedMember) this.self;
 	}
-	
+
+	@Override
+    public ElementReference getReferent() {
+        return this.referent;
+    }
+
+    public void setReferent(ElementReference referent) {
+        this.referent = referent;
+    }
+
     /**
      * An imported element is a feature if its referent is a feature.
      **/
 	@Override
-	public Boolean deriveIsFeature() {
+	protected Boolean deriveIsFeature() {
 	    ElementReference referent = this.getSelf().getReferent();
 	    return referent != null && referent.getImpl().isFeature();
 	}
@@ -102,11 +113,6 @@ public class ImportedMemberImpl extends MemberImpl {
 	 * Helper Methods
 	 */
 	
-	@Override
-	public ElementReference getReferent() {
-	    return this.getSelf().getReferent();
-	}
-
     public static ImportedMember makeImportedMember(ElementReference referent) {
         ImportedMember importedMember = new ImportedMember();
         importedMember.setReferent(referent);

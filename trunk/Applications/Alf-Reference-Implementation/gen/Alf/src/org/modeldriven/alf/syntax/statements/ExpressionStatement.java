@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.ExpressionStatementImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.statements.impl.ExpressionStatementImpl;
  **/
 
 public class ExpressionStatement extends Statement {
-
-	private Expression expression = null;
 
 	public ExpressionStatement() {
 		this.impl = new ExpressionStatementImpl(this);
@@ -38,11 +38,11 @@ public class ExpressionStatement extends Statement {
 	}
 
 	public Expression getExpression() {
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	/**

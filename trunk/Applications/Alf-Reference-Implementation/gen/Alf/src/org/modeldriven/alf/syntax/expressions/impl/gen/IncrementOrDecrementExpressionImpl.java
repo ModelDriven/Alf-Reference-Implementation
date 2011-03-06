@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A unary expression with either an increment or decrement operator.
@@ -25,6 +27,16 @@ import java.util.ArrayList;
 
 public class IncrementOrDecrementExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.ExpressionImpl {
+
+	private String operator = "";
+	private AssignedSource assignment = null; // DERIVED
+	private LeftHandSide operand = null;
+	private Expression expression = null; // DERIVED
+	private ElementReference feature = null; // DERIVED
+	private Boolean isPrefix = false;
+	private Boolean isFeature = null; // DERIVED
+	private Boolean isIndexed = null; // DERIVED
+	private Boolean isDataValueUpdate = null; // DERIVED
 
 	public IncrementOrDecrementExpressionImpl(
 			IncrementOrDecrementExpression self) {
@@ -35,27 +47,117 @@ public class IncrementOrDecrementExpressionImpl extends
 		return (IncrementOrDecrementExpression) this.self;
 	}
 
-	public AssignedSource deriveAssignment() {
+	public String getOperator() {
+		return this.operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	public AssignedSource getAssignment() {
+		if (this.assignment == null) {
+			this.setAssignment(this.deriveAssignment());
+		}
+		return this.assignment;
+	}
+
+	public void setAssignment(AssignedSource assignment) {
+		this.assignment = assignment;
+	}
+
+	public LeftHandSide getOperand() {
+		return this.operand;
+	}
+
+	public void setOperand(LeftHandSide operand) {
+		this.operand = operand;
+	}
+
+	public Expression getExpression() {
+		if (this.expression == null) {
+			this.setExpression(this.deriveExpression());
+		}
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
+	public ElementReference getFeature() {
+		if (this.feature == null) {
+			this.setFeature(this.deriveFeature());
+		}
+		return this.feature;
+	}
+
+	public void setFeature(ElementReference feature) {
+		this.feature = feature;
+	}
+
+	public Boolean getIsPrefix() {
+		return this.isPrefix;
+	}
+
+	public void setIsPrefix(Boolean isPrefix) {
+		this.isPrefix = isPrefix;
+	}
+
+	public Boolean getIsFeature() {
+		if (this.isFeature == null) {
+			this.setIsFeature(this.deriveIsFeature());
+		}
+		return this.isFeature;
+	}
+
+	public void setIsFeature(Boolean isFeature) {
+		this.isFeature = isFeature;
+	}
+
+	public Boolean getIsIndexed() {
+		if (this.isIndexed == null) {
+			this.setIsIndexed(this.deriveIsIndexed());
+		}
+		return this.isIndexed;
+	}
+
+	public void setIsIndexed(Boolean isIndexed) {
+		this.isIndexed = isIndexed;
+	}
+
+	public Boolean getIsDataValueUpdate() {
+		if (this.isDataValueUpdate == null) {
+			this.setIsDataValueUpdate(this.deriveIsDataValueUpdate());
+		}
+		return this.isDataValueUpdate;
+	}
+
+	public void setIsDataValueUpdate(Boolean isDataValueUpdate) {
+		this.isDataValueUpdate = isDataValueUpdate;
+	}
+
+	protected AssignedSource deriveAssignment() {
 		return null; // STUB
 	}
 
-	public Expression deriveExpression() {
+	protected Expression deriveExpression() {
 		return null; // STUB
 	}
 
-	public ElementReference deriveFeature() {
+	protected ElementReference deriveFeature() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsFeature() {
+	protected Boolean deriveIsFeature() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsIndexed() {
+	protected Boolean deriveIsIndexed() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsDataValueUpdate() {
+	protected Boolean deriveIsDataValueUpdate() {
 		return null; // STUB
 	}
 
@@ -161,7 +263,7 @@ public class IncrementOrDecrementExpressionImpl extends
 	 * those after its operand expression. Further, if the operand expression,
 	 * considered as a left hand side, is a local name, then this is reassigned.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

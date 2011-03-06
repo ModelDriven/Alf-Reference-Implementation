@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.IncrementOrDecrementExpressionImpl;
 
@@ -26,16 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.IncrementOrDecrementExpressio
  **/
 
 public class IncrementOrDecrementExpression extends Expression {
-
-	private String operator = "";
-	private AssignedSource assignment = null; // DERIVED
-	private LeftHandSide operand = null;
-	private Expression expression = null; // DERIVED
-	private ElementReference feature = null; // DERIVED
-	private Boolean isPrefix = false;
-	private Boolean isFeature = null; // DERIVED
-	private Boolean isIndexed = null; // DERIVED
-	private Boolean isDataValueUpdate = null; // DERIVED
 
 	public IncrementOrDecrementExpression() {
 		this.impl = new IncrementOrDecrementExpressionImpl(this);
@@ -46,93 +38,75 @@ public class IncrementOrDecrementExpression extends Expression {
 	}
 
 	public String getOperator() {
-		return this.operator;
+		return this.getImpl().getOperator();
 	}
 
 	public void setOperator(String operator) {
-		this.operator = operator;
+		this.getImpl().setOperator(operator);
 	}
 
 	public AssignedSource getAssignment() {
-		if (this.assignment == null) {
-			this.setAssignment(this.getImpl().deriveAssignment());
-		}
-		return this.assignment;
+		return this.getImpl().getAssignment();
 	}
 
 	public void setAssignment(AssignedSource assignment) {
-		this.assignment = assignment;
+		this.getImpl().setAssignment(assignment);
 	}
 
 	public LeftHandSide getOperand() {
-		return this.operand;
+		return this.getImpl().getOperand();
 	}
 
 	public void setOperand(LeftHandSide operand) {
-		this.operand = operand;
+		this.getImpl().setOperand(operand);
 	}
 
 	public Expression getExpression() {
-		if (this.expression == null) {
-			this.setExpression(this.getImpl().deriveExpression());
-		}
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	public ElementReference getFeature() {
-		if (this.feature == null) {
-			this.setFeature(this.getImpl().deriveFeature());
-		}
-		return this.feature;
+		return this.getImpl().getFeature();
 	}
 
 	public void setFeature(ElementReference feature) {
-		this.feature = feature;
+		this.getImpl().setFeature(feature);
 	}
 
 	public Boolean getIsPrefix() {
-		return this.isPrefix;
+		return this.getImpl().getIsPrefix();
 	}
 
 	public void setIsPrefix(Boolean isPrefix) {
-		this.isPrefix = isPrefix;
+		this.getImpl().setIsPrefix(isPrefix);
 	}
 
 	public Boolean getIsFeature() {
-		if (this.isFeature == null) {
-			this.setIsFeature(this.getImpl().deriveIsFeature());
-		}
-		return this.isFeature;
+		return this.getImpl().getIsFeature();
 	}
 
 	public void setIsFeature(Boolean isFeature) {
-		this.isFeature = isFeature;
+		this.getImpl().setIsFeature(isFeature);
 	}
 
 	public Boolean getIsIndexed() {
-		if (this.isIndexed == null) {
-			this.setIsIndexed(this.getImpl().deriveIsIndexed());
-		}
-		return this.isIndexed;
+		return this.getImpl().getIsIndexed();
 	}
 
 	public void setIsIndexed(Boolean isIndexed) {
-		this.isIndexed = isIndexed;
+		this.getImpl().setIsIndexed(isIndexed);
 	}
 
 	public Boolean getIsDataValueUpdate() {
-		if (this.isDataValueUpdate == null) {
-			this.setIsDataValueUpdate(this.getImpl().deriveIsDataValueUpdate());
-		}
-		return this.isDataValueUpdate;
+		return this.getImpl().getIsDataValueUpdate();
 	}
 
 	public void setIsDataValueUpdate(Boolean isDataValueUpdate) {
-		this.isDataValueUpdate = isDataValueUpdate;
+		this.getImpl().setIsDataValueUpdate(isDataValueUpdate);
 	}
 
 	/**
@@ -234,7 +208,7 @@ public class IncrementOrDecrementExpression extends Expression {
 	 * those after its operand expression. Further, if the operand expression,
 	 * considered as a left hand side, is a local name, then this is reassigned.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

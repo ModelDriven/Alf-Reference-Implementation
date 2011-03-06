@@ -15,20 +15,23 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A unary expression with a Boolean operator.
  **/
 
-public class BooleanUnaryExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.UnaryExpressionImpl {
+public class BooleanUnaryExpressionImpl extends UnaryExpressionImpl {
 
 	public BooleanUnaryExpressionImpl(BooleanUnaryExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.BooleanUnaryExpression getSelf() {
+	public BooleanUnaryExpression getSelf() {
 		return (BooleanUnaryExpression) this.self;
 	}
 

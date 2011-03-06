@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A looping statement that gives successive values to one or more loop
@@ -27,6 +29,10 @@ import java.util.ArrayList;
 public class ForStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
 
+	private Block body = null;
+	private List<LoopVariableDefinition> variableDefinition = new ArrayList<LoopVariableDefinition>();
+	private Boolean isParallel = null; // DERIVED
+
 	public ForStatementImpl(ForStatement self) {
 		super(self);
 	}
@@ -35,7 +41,39 @@ public class ForStatementImpl extends
 		return (ForStatement) this.self;
 	}
 
-	public Boolean deriveIsParallel() {
+	public Block getBody() {
+		return this.body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
+	}
+
+	public List<LoopVariableDefinition> getVariableDefinition() {
+		return this.variableDefinition;
+	}
+
+	public void setVariableDefinition(
+			List<LoopVariableDefinition> variableDefinition) {
+		this.variableDefinition = variableDefinition;
+	}
+
+	public void addVariableDefinition(LoopVariableDefinition variableDefinition) {
+		this.variableDefinition.add(variableDefinition);
+	}
+
+	public Boolean getIsParallel() {
+		if (this.isParallel == null) {
+			this.setIsParallel(this.deriveIsParallel());
+		}
+		return this.isParallel;
+	}
+
+	public void setIsParallel(Boolean isParallel) {
+		this.isParallel = isParallel;
+	}
+
+	protected Boolean deriveIsParallel() {
 		return null; // STUB
 	}
 

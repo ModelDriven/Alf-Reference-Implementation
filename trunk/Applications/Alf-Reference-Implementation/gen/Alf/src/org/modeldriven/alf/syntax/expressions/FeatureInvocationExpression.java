@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.FeatureInvocationExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.FeatureInvocationExpressionIm
  **/
 
 public class FeatureInvocationExpression extends InvocationExpression {
-
-	private FeatureReference target = null;
 
 	public FeatureInvocationExpression() {
 		this.impl = new FeatureInvocationExpressionImpl(this);
@@ -38,11 +38,11 @@ public class FeatureInvocationExpression extends InvocationExpression {
 	}
 
 	public FeatureReference getTarget() {
-		return this.target;
+		return this.getImpl().getTarget();
 	}
 
 	public void setTarget(FeatureReference target) {
-		this.target = target;
+		this.getImpl().setTarget(target);
 	}
 
 	/**

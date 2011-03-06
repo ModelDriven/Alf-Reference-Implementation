@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A direct reference to a UML model element.
@@ -26,12 +28,22 @@ import java.util.ArrayList;
 public class ExternalElementReferenceImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.ElementReferenceImpl {
 
+	private Element element = null;
+
 	public ExternalElementReferenceImpl(ExternalElementReference self) {
 		super(self);
 	}
 
 	public ExternalElementReference getSelf() {
 		return (ExternalElementReference) this.self;
+	}
+
+	public Element getElement() {
+		return this.element;
+	}
+
+	public void setElement(Element element) {
+		this.element = element;
 	}
 
 } // ExternalElementReferenceImpl

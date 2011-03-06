@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,24 +15,40 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A named argument expression for an output parameter.
  **/
 
-public class OutputNamedExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.NamedExpressionImpl {
+public class OutputNamedExpressionImpl extends NamedExpressionImpl {
+
+	private LeftHandSide leftHandSide = null; // DERIVED
 
 	public OutputNamedExpressionImpl(OutputNamedExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.OutputNamedExpression getSelf() {
+	public OutputNamedExpression getSelf() {
 		return (OutputNamedExpression) this.self;
 	}
 
-	public LeftHandSide deriveLeftHandSide() {
+	public LeftHandSide getLeftHandSide() {
+		if (this.leftHandSide == null) {
+			this.setLeftHandSide(this.deriveLeftHandSide());
+		}
+		return this.leftHandSide;
+	}
+
+	public void setLeftHandSide(LeftHandSide leftHandSide) {
+		this.leftHandSide = leftHandSide;
+	}
+
+	protected LeftHandSide deriveLeftHandSide() {
 		return null; // STUB
 	}
 

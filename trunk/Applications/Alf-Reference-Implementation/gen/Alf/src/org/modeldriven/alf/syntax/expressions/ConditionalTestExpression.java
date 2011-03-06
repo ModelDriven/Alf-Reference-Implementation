@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.ConditionalTestExpressionImpl;
 
@@ -28,10 +30,6 @@ import org.modeldriven.alf.syntax.expressions.impl.ConditionalTestExpressionImpl
 
 public class ConditionalTestExpression extends Expression {
 
-	private Expression operand1 = null;
-	private Expression operand2 = null;
-	private Expression operand3 = null;
-
 	public ConditionalTestExpression() {
 		this.impl = new ConditionalTestExpressionImpl(this);
 	}
@@ -41,27 +39,27 @@ public class ConditionalTestExpression extends Expression {
 	}
 
 	public Expression getOperand1() {
-		return this.operand1;
+		return this.getImpl().getOperand1();
 	}
 
 	public void setOperand1(Expression operand1) {
-		this.operand1 = operand1;
+		this.getImpl().setOperand1(operand1);
 	}
 
 	public Expression getOperand2() {
-		return this.operand2;
+		return this.getImpl().getOperand2();
 	}
 
 	public void setOperand2(Expression operand2) {
-		this.operand2 = operand2;
+		this.getImpl().setOperand2(operand2);
 	}
 
 	public Expression getOperand3() {
-		return this.operand3;
+		return this.getImpl().getOperand3();
 	}
 
 	public void setOperand3(Expression operand3) {
-		this.operand3 = operand3;
+		this.getImpl().setOperand3(operand3);
 	}
 
 	/**
@@ -125,7 +123,7 @@ public class ConditionalTestExpression extends Expression {
 	 * are adjusted to have the conditional-test expression as their assigned
 	 * source.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

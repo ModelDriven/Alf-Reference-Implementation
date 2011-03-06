@@ -19,6 +19,15 @@ import org.modeldriven.alf.syntax.units.*;
 
 public abstract class TypedElementDefinitionImpl extends MemberImpl {
 
+	private String lowerBound = "";
+	private String upperBound = "1";
+	private Boolean isOrdered = false;
+	private Boolean isNonunique = false;
+	private QualifiedName typeName = null;
+	private ElementReference type = null; // DERIVED
+	private Integer lower = null; // DERIVED
+	private Integer upper = null; // DERIVED
+
 	public TypedElementDefinitionImpl(TypedElementDefinition self) {
 		super(self);
 	}
@@ -28,11 +37,84 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl {
 		return (TypedElementDefinition) this.self;
 	}
 
+	public String getLowerBound() {
+		return this.lowerBound;
+	}
+
+	public void setLowerBound(String lowerBound) {
+		this.lowerBound = lowerBound;
+	}
+
+	public String getUpperBound() {
+		return this.upperBound;
+	}
+
+	public void setUpperBound(String upperBound) {
+		this.upperBound = upperBound;
+	}
+
+	public Boolean getIsOrdered() {
+		return this.isOrdered;
+	}
+
+	public void setIsOrdered(Boolean isOrdered) {
+		this.isOrdered = isOrdered;
+	}
+
+	public Boolean getIsNonunique() {
+		return this.isNonunique;
+	}
+
+	public void setIsNonunique(Boolean isNonunique) {
+		this.isNonunique = isNonunique;
+	}
+
+	public QualifiedName getTypeName() {
+		return this.typeName;
+	}
+
+	public void setTypeName(QualifiedName typeName) {
+		this.typeName = typeName;
+	}
+
+	public ElementReference getType() {
+		if (this.type == null) {
+			this.setType(this.deriveType());
+		}
+		return this.type;
+	}
+
+	public void setType(ElementReference type) {
+		this.type = type;
+	}
+
+	public Integer getLower() {
+		if (this.lower == null) {
+			this.setLower(this.deriveLower());
+		}
+		return this.lower;
+	}
+
+	public void setLower(Integer lower) {
+		this.lower = lower;
+	}
+
+	public Integer getUpper() {
+		if (this.upper == null) {
+			this.setUpper(this.deriveUpper());
+		}
+		return this.upper;
+	}
+
+	public void setUpper(Integer upper) {
+		this.upper = upper;
+	}
+
     /**
      * The type of a typed element definition is the single classifier referent
      * of the type name.
      **/
-	public ElementReference deriveType() {
+	protected ElementReference deriveType() {
 	    QualifiedName typeName = this.getSelf().getTypeName();
 	    if (typeName == null) {
 	        return null;
@@ -48,7 +130,7 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl {
      * bound string. Otherwise the lower bound is equal to the upper bound,
      * unless the upper bound is unbounded, in which case the lower bound is 0.
      **/
-	public Integer deriveLower() {
+	protected Integer deriveLower() {
 	    TypedElementDefinition self = this.getSelf();
 	    String lowerBound = self.getLowerBound();
 	    if (lowerBound != null && !lowerBound.equals("")) {
@@ -63,7 +145,7 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl {
 	 * The unlimited natural upper bound value is the unlimited natural value of
 	 * the upper bound string (with "*" representing the unbounded value).
 	 **/
-	public Integer deriveUpper() {
+	protected Integer deriveUpper() {
 	    String upperBound = this.getSelf().getUpperBound();
 	    if (upperBound == null) {
 	        return 0;
@@ -100,7 +182,8 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl {
 	 * referent. This referent may not be a template.
 	 **/
 	public boolean typedElementDefinitionTypeName() {
-		return this.getSelf().getType() != null;
+	    TypedElementDefinition self = this.getSelf();
+		return self.getTypeName() == null || self.getType() != null;
 	}
 
 } // TypedElementDefinitionImpl

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.InLineStatementImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.statements.impl.InLineStatementImpl;
  **/
 
 public class InLineStatement extends Statement {
-
-	private String language = "";
-	private String code = "";
 
 	public InLineStatement() {
 		this.impl = new InLineStatementImpl(this);
@@ -39,19 +38,19 @@ public class InLineStatement extends Statement {
 	}
 
 	public String getLanguage() {
-		return this.language;
+		return this.getImpl().getLanguage();
 	}
 
 	public void setLanguage(String language) {
-		this.language = language;
+		this.getImpl().setLanguage(language);
 	}
 
 	public String getCode() {
-		return this.code;
+		return this.getImpl().getCode();
 	}
 
 	public void setCode(String code) {
-		this.code = code;
+		this.getImpl().setCode(code);
 	}
 
 	/**

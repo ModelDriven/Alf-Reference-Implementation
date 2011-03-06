@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.NamedElement;
@@ -17,6 +18,7 @@ import org.omg.uml.Namespace;
 import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -24,9 +26,18 @@ import java.util.List;
  * names.
  **/
 
-public class QualifiedNameImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public class QualifiedNameImpl extends SyntaxElementImpl {
     
+    private Boolean isAmbiguous = false;
+    private String pathName = null; // DERIVED
+    private Boolean isFeatureReference = null; // DERIVED
+    private QualifiedName qualification = null; // DERIVED
+    private FeatureReference disambiguation = null; // DERIVED
+    private List<NameBinding> nameBinding = new ArrayList<NameBinding>();
+    private Collection<ElementReference> referent = null; // DERIVED
+    private NameBinding unqualifiedName = null; // DERIVED
+    private QualifiedName templateName = null; // DERIVED
+
     private NamespaceDefinition currentScope = null;
     private Expression containingExpression = null;
 
@@ -38,6 +49,107 @@ public class QualifiedNameImpl extends
 		return (QualifiedName) this.self;
 	}
 	
+    public Boolean getIsAmbiguous() {
+        return this.isAmbiguous;
+    }
+
+    public void setIsAmbiguous(Boolean isAmbiguous) {
+        this.isAmbiguous = isAmbiguous;
+    }
+
+    public String getPathName() {
+        if (this.pathName == null) {
+            this.setPathName(this.derivePathName());
+        }
+        return this.pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
+    }
+
+    public Boolean getIsFeatureReference() {
+        if (this.isFeatureReference == null) {
+            this.setIsFeatureReference(this.deriveIsFeatureReference());
+        }
+        return this.isFeatureReference;
+    }
+
+    public void setIsFeatureReference(Boolean isFeatureReference) {
+        this.isFeatureReference = isFeatureReference;
+    }
+
+    public QualifiedName getQualification() {
+        if (this.qualification == null) {
+            this.setQualification(this.deriveQualification());
+        }
+        return this.qualification;
+    }
+
+    public void setQualification(QualifiedName qualification) {
+        this.qualification = qualification;
+    }
+
+    public FeatureReference getDisambiguation() {
+        if (this.disambiguation == null) {
+            this.setDisambiguation(this.deriveDisambiguation());
+        }
+        return this.disambiguation;
+    }
+
+    public void setDisambiguation(FeatureReference disambiguation) {
+        this.disambiguation = disambiguation;
+    }
+
+    public List<NameBinding> getNameBinding() {
+        return this.nameBinding;
+    }
+
+    public void setNameBinding(List<NameBinding> nameBinding) {
+        this.nameBinding = nameBinding;
+    }
+
+    public void addNameBinding(NameBinding nameBinding) {
+        this.nameBinding.add(nameBinding);
+    }
+
+    public Collection<ElementReference> getReferent() {
+        if (this.referent == null) {
+            this.setReferent(this.deriveReferent());
+        }
+        return this.referent;
+    }
+
+    public void setReferent(Collection<ElementReference> referent) {
+        this.referent = referent;
+    }
+
+    public void addReferent(ElementReference referent) {
+        this.referent.add(referent);
+    }
+
+    public NameBinding getUnqualifiedName() {
+        if (this.unqualifiedName == null) {
+            this.setUnqualifiedName(this.deriveUnqualifiedName());
+        }
+        return this.unqualifiedName;
+    }
+
+    public void setUnqualifiedName(NameBinding unqualifiedName) {
+        this.unqualifiedName = unqualifiedName;
+    }
+
+    public QualifiedName getTemplateName() {
+        if (this.templateName == null) {
+            this.setTemplateName(this.deriveTemplateName());
+        }
+        return this.templateName;
+    }
+
+    public void setTemplateName(QualifiedName templateName) {
+        this.templateName = templateName;
+    }
+
 	public NamespaceDefinition getCurrentScope() {
 	    return this.currentScope;
 	}
@@ -68,7 +180,7 @@ public class QualifiedNameImpl extends
      * qualified name, separated by commas, all surrounded by the angle brackets
      * "<" and ">".
      **/
-	public String derivePathName() {
+	protected String derivePathName() {
 	    QualifiedName self = this.getSelf();
 	    StringBuffer pathName = new StringBuffer();
 	    String separator = "";
@@ -84,7 +196,7 @@ public class QualifiedNameImpl extends
      * A qualified name is a feature reference if its disambiguation is not
      * empty.
      **/
-	public Boolean deriveIsFeatureReference() {
+	protected Boolean deriveIsFeatureReference() {
 		return this.getSelf().getDisambiguation() != null;
 	}
 
@@ -95,10 +207,10 @@ public class QualifiedNameImpl extends
      * last one. The qualification of a qualified name is considered ambiguous
      * if the qualified name is ambiguous and has more than two name bindings.
      **/
-	public QualifiedName deriveQualification() {
+	protected QualifiedName deriveQualification() {
 	    QualifiedName qualification = null;
 	    QualifiedName self = this.getSelf();
-	    ArrayList<NameBinding> bindings = self.getNameBinding();
+	    List<NameBinding> bindings = self.getNameBinding();
 	    int n = bindings.size()-1;
 	    if (n > 0) {
 	        qualification = new QualifiedName();
@@ -118,7 +230,7 @@ public class QualifiedNameImpl extends
      * and a target expression determined by the disambiguation of the
      * qualification of the qualified name.
      **/
-	public FeatureReference deriveDisambiguation() {
+	protected FeatureReference deriveDisambiguation() {
 	    FeatureReference disambiguation = null;
 	    QualifiedName self = this.getSelf();
 	    if (self.getIsAmbiguous() && !this.isPackageReferent()) {
@@ -144,7 +256,7 @@ public class QualifiedNameImpl extends
      * resolve in the current scope, according to the UML rules for namespaces
      * and named elements.
      **/
-	public ArrayList<ElementReference> deriveReferent() {
+	protected Collection<ElementReference> deriveReferent() {
 	    ArrayList<ElementReference> referents = new ArrayList<ElementReference>();
 	    
 	    QualifiedName self = this.getSelf();
@@ -185,8 +297,8 @@ public class QualifiedNameImpl extends
     /**
      * The unqualified name of a qualified name is the last name binding.
      **/
-	public NameBinding deriveUnqualifiedName() {
-	    ArrayList<NameBinding> bindings = this.getSelf().getNameBinding();
+	protected NameBinding deriveUnqualifiedName() {
+	    List<NameBinding> bindings = this.getSelf().getNameBinding();
 		return bindings.get(bindings.size()-1);
 	}
 
@@ -202,7 +314,7 @@ public class QualifiedNameImpl extends
             return null;
         } else {
     	    QualifiedName templateName = new QualifiedName();
-    	    ArrayList<NameBinding> bindings = self.getNameBinding();
+    	    List<NameBinding> bindings = self.getNameBinding();
     	    int n = bindings.size();
     	    for (int i=0; i<n; i++) {
     	        NameBinding binding = bindings.get(i);
@@ -439,8 +551,8 @@ public class QualifiedNameImpl extends
         } else if (other instanceof QualifiedName) {
             return this.equals(((QualifiedName)other).getImpl());
         } else {
-            ArrayList<NameBinding> myNameBindings = this.getSelf().getNameBinding();
-            ArrayList<NameBinding> otherNameBindings = ((QualifiedNameImpl)other).getSelf().getNameBinding();
+            List<NameBinding> myNameBindings = this.getSelf().getNameBinding();
+            List<NameBinding> otherNameBindings = ((QualifiedNameImpl)other).getSelf().getNameBinding();
             if (myNameBindings.size() != otherNameBindings.size()) {
                 return false;
             } else {

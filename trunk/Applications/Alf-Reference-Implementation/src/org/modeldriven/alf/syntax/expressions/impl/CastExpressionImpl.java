@@ -15,21 +15,43 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to filter values by type.
  **/
 
-public class CastExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl {
+public class CastExpressionImpl extends ExpressionImpl {
+
+	private Expression operand = null;
+	private QualifiedName typeName = null;
 
 	public CastExpressionImpl(CastExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.CastExpression getSelf() {
+	public CastExpression getSelf() {
 		return (CastExpression) this.self;
+	}
+
+	public Expression getOperand() {
+		return this.operand;
+	}
+
+	public void setOperand(Expression operand) {
+		this.operand = operand;
+	}
+
+	public QualifiedName getTypeName() {
+		return this.typeName;
+	}
+
+	public void setTypeName(QualifiedName typeName) {
+		this.typeName = typeName;
 	}
 
 	/**
@@ -78,7 +100,7 @@ public class CastExpressionImpl extends
 	 * The assignments after a cast expression are the same as those after its
 	 * operand expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

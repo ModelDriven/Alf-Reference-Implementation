@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A binary expression that tests the equality of its operands.
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 
 public class EqualityExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.BinaryExpressionImpl {
+
+	private Boolean isNegated = null; // DERIVED
 
 	public EqualityExpressionImpl(EqualityExpression self) {
 		super(self);
@@ -34,7 +38,18 @@ public class EqualityExpressionImpl extends
 		return (EqualityExpression) this.self;
 	}
 
-	public Boolean deriveIsNegated() {
+	public Boolean getIsNegated() {
+		if (this.isNegated == null) {
+			this.setIsNegated(this.deriveIsNegated());
+		}
+		return this.isNegated;
+	}
+
+	public void setIsNegated(Boolean isNegated) {
+		this.isNegated = isNegated;
+	}
+
+	protected Boolean deriveIsNegated() {
 		return null; // STUB
 	}
 

@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,21 +15,43 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression used to access a specific element of a sequence.
  **/
 
-public class SequenceAccessExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl {
+public class SequenceAccessExpressionImpl extends ExpressionImpl {
+
+	private Expression primary = null;
+	private Expression index = null;
 
 	public SequenceAccessExpressionImpl(SequenceAccessExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.SequenceAccessExpression getSelf() {
+	public SequenceAccessExpression getSelf() {
 		return (SequenceAccessExpression) this.self;
+	}
+
+	public Expression getPrimary() {
+		return this.primary;
+	}
+
+	public void setPrimary(Expression primary) {
+		this.primary = primary;
+	}
+
+	public Expression getIndex() {
+		return this.index;
+	}
+
+	public void setIndex(Expression index) {
+		this.index = index;
 	}
 
 	/**

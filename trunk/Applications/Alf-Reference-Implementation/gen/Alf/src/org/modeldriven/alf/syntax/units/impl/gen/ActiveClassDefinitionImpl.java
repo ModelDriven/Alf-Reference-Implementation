@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of an active class.
@@ -26,12 +28,22 @@ import java.util.ArrayList;
 public class ActiveClassDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.ClassDefinitionImpl {
 
+	private ActivityDefinition classifierBehavior = null;
+
 	public ActiveClassDefinitionImpl(ActiveClassDefinition self) {
 		super(self);
 	}
 
 	public ActiveClassDefinition getSelf() {
 		return (ActiveClassDefinition) this.self;
+	}
+
+	public ActivityDefinition getClassifierBehavior() {
+		return this.classifierBehavior;
+	}
+
+	public void setClassifierBehavior(ActivityDefinition classifierBehavior) {
+		this.classifierBehavior = classifierBehavior;
 	}
 
 	/**

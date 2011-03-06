@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression comprising a reference to a structural feature.
@@ -25,6 +27,9 @@ import java.util.ArrayList;
 
 public class PropertyAccessExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.ExpressionImpl {
+
+	private FeatureReference featureReference = null;
+	private ElementReference feature = null; // DERIVED
 
 	public PropertyAccessExpressionImpl(PropertyAccessExpression self) {
 		super(self);
@@ -34,7 +39,26 @@ public class PropertyAccessExpressionImpl extends
 		return (PropertyAccessExpression) this.self;
 	}
 
-	public ElementReference deriveFeature() {
+	public FeatureReference getFeatureReference() {
+		return this.featureReference;
+	}
+
+	public void setFeatureReference(FeatureReference featureReference) {
+		this.featureReference = featureReference;
+	}
+
+	public ElementReference getFeature() {
+		if (this.feature == null) {
+			this.setFeature(this.deriveFeature());
+		}
+		return this.feature;
+	}
+
+	public void setFeature(ElementReference feature) {
+		this.feature = feature;
+	}
+
+	protected ElementReference deriveFeature() {
 		return null; // STUB
 	}
 
@@ -97,7 +121,7 @@ public class PropertyAccessExpressionImpl extends
 	 * The assignments after a property access expression are the same as those
 	 * after the target expression of its feature reference.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

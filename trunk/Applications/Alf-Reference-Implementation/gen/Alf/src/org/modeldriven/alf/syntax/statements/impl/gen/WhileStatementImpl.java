@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A looping statement for which the continuation condition is first tested
@@ -27,12 +29,31 @@ import java.util.ArrayList;
 public class WhileStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.gen.StatementImpl {
 
+	private Block body = null;
+	private Expression condition = null;
+
 	public WhileStatementImpl(WhileStatement self) {
 		super(self);
 	}
 
 	public WhileStatement getSelf() {
 		return (WhileStatement) this.self;
+	}
+
+	public Block getBody() {
+		return this.body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
+	}
+
+	public Expression getCondition() {
+		return this.condition;
+	}
+
+	public void setCondition(Expression condition) {
+		this.condition = condition;
 	}
 
 	/**

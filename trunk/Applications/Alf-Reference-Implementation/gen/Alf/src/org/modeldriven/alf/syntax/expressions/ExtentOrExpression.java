@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.ExtentOrExpressionImpl;
 
@@ -27,10 +29,6 @@ import org.modeldriven.alf.syntax.expressions.impl.ExtentOrExpressionImpl;
  **/
 
 public class ExtentOrExpression {
-
-	private QualifiedName name = null;
-	private Expression expression = null; // DERIVED
-	private Expression nonNameExpression = null;
 
 	protected ExtentOrExpressionImpl impl;
 
@@ -43,30 +41,27 @@ public class ExtentOrExpression {
 	}
 
 	public QualifiedName getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(QualifiedName name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	public Expression getExpression() {
-		if (this.expression == null) {
-			this.setExpression(this.getImpl().deriveExpression());
-		}
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	public Expression getNonNameExpression() {
-		return this.nonNameExpression;
+		return this.getImpl().getNonNameExpression();
 	}
 
 	public void setNonNameExpression(Expression nonNameExpression) {
-		this.nonNameExpression = nonNameExpression;
+		this.getImpl().setNonNameExpression(nonNameExpression);
 	}
 
 	/**

@@ -36,6 +36,8 @@ import org.omg.uml.Stereotype;
 
 public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
+    private Element element = null;
+
 	public ExternalElementReferenceImpl(ExternalElementReference self) {
 		super(self);
 	}
@@ -44,6 +46,14 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 	public ExternalElementReference getSelf() {
 		return (ExternalElementReference) this.self;
 	}
+
+    public Element getElement() {
+        return this.element;
+    }
+
+    public void setElement(Element element) {
+        this.element = element;
+    }
 
     @Override
     public SyntaxElement getAlf() {

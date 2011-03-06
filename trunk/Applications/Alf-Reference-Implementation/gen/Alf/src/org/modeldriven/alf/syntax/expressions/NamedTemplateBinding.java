@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.NamedTemplateBindingImpl;
 
@@ -28,8 +30,6 @@ import org.modeldriven.alf.syntax.expressions.impl.NamedTemplateBindingImpl;
 
 public class NamedTemplateBinding extends TemplateBinding {
 
-	private ArrayList<TemplateParameterSubstitution> substitution = new ArrayList<TemplateParameterSubstitution>();
-
 	public NamedTemplateBinding() {
 		this.impl = new NamedTemplateBindingImpl(this);
 	}
@@ -38,17 +38,17 @@ public class NamedTemplateBinding extends TemplateBinding {
 		return (NamedTemplateBindingImpl) this.impl;
 	}
 
-	public ArrayList<TemplateParameterSubstitution> getSubstitution() {
-		return this.substitution;
+	public Collection<TemplateParameterSubstitution> getSubstitution() {
+		return this.getImpl().getSubstitution();
 	}
 
 	public void setSubstitution(
-			ArrayList<TemplateParameterSubstitution> substitution) {
-		this.substitution = substitution;
+			Collection<TemplateParameterSubstitution> substitution) {
+		this.getImpl().setSubstitution(substitution);
 	}
 
 	public void addSubstitution(TemplateParameterSubstitution substitution) {
-		this.substitution.add(substitution);
+		this.getImpl().addSubstitution(substitution);
 	}
 
 	public String toString() {
@@ -58,7 +58,7 @@ public class NamedTemplateBinding extends TemplateBinding {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<TemplateParameterSubstitution> substitution = this
+		Collection<TemplateParameterSubstitution> substitution = this
 				.getSubstitution();
 		if (substitution != null) {
 			if (substitution.size() > 0) {

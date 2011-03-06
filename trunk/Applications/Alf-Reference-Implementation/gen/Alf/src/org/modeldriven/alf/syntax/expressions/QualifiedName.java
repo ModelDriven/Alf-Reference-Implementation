@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 
@@ -28,16 +30,6 @@ import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 
 public class QualifiedName extends SyntaxElement {
 
-	private Boolean isAmbiguous = false;
-	private String pathName = null; // DERIVED
-	private Boolean isFeatureReference = null; // DERIVED
-	private QualifiedName qualification = null; // DERIVED
-	private FeatureReference disambiguation = null; // DERIVED
-	private ArrayList<NameBinding> nameBinding = new ArrayList<NameBinding>();
-	private ArrayList<ElementReference> referent = null; // DERIVED
-	private NameBinding unqualifiedName = null; // DERIVED
-	private QualifiedName templateName = null; // DERIVED
-
 	public QualifiedName() {
 		this.impl = new QualifiedNameImpl(this);
 	}
@@ -47,105 +39,83 @@ public class QualifiedName extends SyntaxElement {
 	}
 
 	public Boolean getIsAmbiguous() {
-		return this.isAmbiguous;
+		return this.getImpl().getIsAmbiguous();
 	}
 
 	public void setIsAmbiguous(Boolean isAmbiguous) {
-		this.isAmbiguous = isAmbiguous;
+		this.getImpl().setIsAmbiguous(isAmbiguous);
 	}
 
 	public String getPathName() {
-		if (this.pathName == null) {
-			this.setPathName(this.getImpl().derivePathName());
-		}
-		return this.pathName;
+		return this.getImpl().getPathName();
 	}
 
 	public void setPathName(String pathName) {
-		this.pathName = pathName;
+		this.getImpl().setPathName(pathName);
 	}
 
 	public Boolean getIsFeatureReference() {
-		if (this.isFeatureReference == null) {
-			this.setIsFeatureReference(this.getImpl()
-					.deriveIsFeatureReference());
-		}
-		return this.isFeatureReference;
+		return this.getImpl().getIsFeatureReference();
 	}
 
 	public void setIsFeatureReference(Boolean isFeatureReference) {
-		this.isFeatureReference = isFeatureReference;
+		this.getImpl().setIsFeatureReference(isFeatureReference);
 	}
 
 	public QualifiedName getQualification() {
-		if (this.qualification == null) {
-			this.setQualification(this.getImpl().deriveQualification());
-		}
-		return this.qualification;
+		return this.getImpl().getQualification();
 	}
 
 	public void setQualification(QualifiedName qualification) {
-		this.qualification = qualification;
+		this.getImpl().setQualification(qualification);
 	}
 
 	public FeatureReference getDisambiguation() {
-		if (this.disambiguation == null) {
-			this.setDisambiguation(this.getImpl().deriveDisambiguation());
-		}
-		return this.disambiguation;
+		return this.getImpl().getDisambiguation();
 	}
 
 	public void setDisambiguation(FeatureReference disambiguation) {
-		this.disambiguation = disambiguation;
+		this.getImpl().setDisambiguation(disambiguation);
 	}
 
-	public ArrayList<NameBinding> getNameBinding() {
-		return this.nameBinding;
+	public List<NameBinding> getNameBinding() {
+		return this.getImpl().getNameBinding();
 	}
 
-	public void setNameBinding(ArrayList<NameBinding> nameBinding) {
-		this.nameBinding = nameBinding;
+	public void setNameBinding(List<NameBinding> nameBinding) {
+		this.getImpl().setNameBinding(nameBinding);
 	}
 
 	public void addNameBinding(NameBinding nameBinding) {
-		this.nameBinding.add(nameBinding);
+		this.getImpl().addNameBinding(nameBinding);
 	}
 
-	public ArrayList<ElementReference> getReferent() {
-		if (this.referent == null) {
-			this.setReferent(this.getImpl().deriveReferent());
-		}
-		return this.referent;
+	public Collection<ElementReference> getReferent() {
+		return this.getImpl().getReferent();
 	}
 
-	public void setReferent(ArrayList<ElementReference> referent) {
-		this.referent = referent;
+	public void setReferent(Collection<ElementReference> referent) {
+		this.getImpl().setReferent(referent);
 	}
 
 	public void addReferent(ElementReference referent) {
-		this.referent.add(referent);
+		this.getImpl().addReferent(referent);
 	}
 
 	public NameBinding getUnqualifiedName() {
-		if (this.unqualifiedName == null) {
-			this.setUnqualifiedName(this.getImpl().deriveUnqualifiedName());
-		}
-		return this.unqualifiedName;
+		return this.getImpl().getUnqualifiedName();
 	}
 
 	public void setUnqualifiedName(NameBinding unqualifiedName) {
-		this.unqualifiedName = unqualifiedName;
+		this.getImpl().setUnqualifiedName(unqualifiedName);
 	}
 
 	public QualifiedName getTemplateName() {
-		if (this.templateName == null) {
-			this.setTemplateName(this.getImpl().deriveTemplateName());
-		}
-		return this.templateName;
+		return this.getImpl().getTemplateName();
 	}
 
 	public void setTemplateName(QualifiedName templateName) {
-		this.templateName = templateName;
+		this.getImpl().setTemplateName(templateName);
 	}
 
 	/**
@@ -287,7 +257,7 @@ public class QualifiedName extends SyntaxElement {
 		if (disambiguation != null) {
 			System.out.println(prefix + " /disambiguation:" + disambiguation);
 		}
-		ArrayList<NameBinding> nameBinding = this.getNameBinding();
+		List<NameBinding> nameBinding = this.getNameBinding();
 		if (nameBinding != null) {
 			if (nameBinding.size() > 0) {
 				System.out.println(prefix + " nameBinding:");
@@ -300,7 +270,7 @@ public class QualifiedName extends SyntaxElement {
 				}
 			}
 		}
-		ArrayList<ElementReference> referent = this.getReferent();
+		Collection<ElementReference> referent = this.getReferent();
 		if (referent != null) {
 			if (referent.size() > 0) {
 				System.out.println(prefix + " /referent:");

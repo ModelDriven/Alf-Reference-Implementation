@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 
@@ -27,46 +29,38 @@ import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 
 public abstract class ClassifierDefinition extends NamespaceDefinition {
 
-	private Boolean isAbstract = false;
-	private QualifiedNameList specialization = null;
-	private ArrayList<ElementReference> specializationReferent = null; // DERIVED
-
 	public ClassifierDefinitionImpl getImpl() {
 		return (ClassifierDefinitionImpl) this.impl;
 	}
 
 	public Boolean getIsAbstract() {
-		return this.isAbstract;
+		return this.getImpl().getIsAbstract();
 	}
 
 	public void setIsAbstract(Boolean isAbstract) {
-		this.isAbstract = isAbstract;
+		this.getImpl().setIsAbstract(isAbstract);
 	}
 
 	public QualifiedNameList getSpecialization() {
-		return this.specialization;
+		return this.getImpl().getSpecialization();
 	}
 
 	public void setSpecialization(QualifiedNameList specialization) {
-		this.specialization = specialization;
+		this.getImpl().setSpecialization(specialization);
 	}
 
-	public ArrayList<ElementReference> getSpecializationReferent() {
-		if (this.specializationReferent == null) {
-			this.setSpecializationReferent(this.getImpl()
-					.deriveSpecializationReferent());
-		}
-		return this.specializationReferent;
+	public Collection<ElementReference> getSpecializationReferent() {
+		return this.getImpl().getSpecializationReferent();
 	}
 
 	public void setSpecializationReferent(
-			ArrayList<ElementReference> specializationReferent) {
-		this.specializationReferent = specializationReferent;
+			Collection<ElementReference> specializationReferent) {
+		this.getImpl().setSpecializationReferent(specializationReferent);
 	}
 
 	public void addSpecializationReferent(
 			ElementReference specializationReferent) {
-		this.specializationReferent.add(specializationReferent);
+		this.getImpl().addSpecializationReferent(specializationReferent);
 	}
 
 	/**
@@ -129,7 +123,7 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 			System.out.println(prefix + " specialization:");
 			specialization.print(prefix + "  ");
 		}
-		ArrayList<ElementReference> specializationReferent = this
+		Collection<ElementReference> specializationReferent = this
 				.getSpecializationReferent();
 		if (specializationReferent != null) {
 			if (specializationReferent.size() > 0) {

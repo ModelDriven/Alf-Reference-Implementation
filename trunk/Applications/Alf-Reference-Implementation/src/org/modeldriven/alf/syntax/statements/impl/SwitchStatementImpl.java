@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,7 +15,11 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A statement that executes (at most) one of a set of statement sequences based
@@ -25,19 +29,75 @@ import java.util.ArrayList;
 public class SwitchStatementImpl extends
 		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
 
+	private Collection<SwitchClause> nonDefaultClause = new ArrayList<SwitchClause>();
+	private Expression expression = null;
+	private Block defaultClause = null;
+	private Boolean isAssured = null; // DERIVED
+	private Boolean isDetermined = null; // DERIVED
+
 	public SwitchStatementImpl(SwitchStatement self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.SwitchStatement getSelf() {
+	public SwitchStatement getSelf() {
 		return (SwitchStatement) this.self;
 	}
 
-	public Boolean deriveIsAssured() {
+	public Collection<SwitchClause> getNonDefaultClause() {
+		return this.nonDefaultClause;
+	}
+
+	public void setNonDefaultClause(Collection<SwitchClause> nonDefaultClause) {
+		this.nonDefaultClause = nonDefaultClause;
+	}
+
+	public void addNonDefaultClause(SwitchClause nonDefaultClause) {
+		this.nonDefaultClause.add(nonDefaultClause);
+	}
+
+	public Expression getExpression() {
+		return this.expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
+
+	public Block getDefaultClause() {
+		return this.defaultClause;
+	}
+
+	public void setDefaultClause(Block defaultClause) {
+		this.defaultClause = defaultClause;
+	}
+
+	public Boolean getIsAssured() {
+		if (this.isAssured == null) {
+			this.setIsAssured(this.deriveIsAssured());
+		}
+		return this.isAssured;
+	}
+
+	public void setIsAssured(Boolean isAssured) {
+		this.isAssured = isAssured;
+	}
+
+	public Boolean getIsDetermined() {
+		if (this.isDetermined == null) {
+			this.setIsDetermined(this.deriveIsDetermined());
+		}
+		return this.isDetermined;
+	}
+
+	public void setIsDetermined(Boolean isDetermined) {
+		this.isDetermined = isDetermined;
+	}
+
+	protected Boolean deriveIsAssured() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsDetermined() {
+	protected Boolean deriveIsDetermined() {
 		return null; // STUB
 	}
 

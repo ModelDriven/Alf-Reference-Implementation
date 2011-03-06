@@ -16,22 +16,37 @@ import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A template binding in which the arguments are matched to formal template
  * parameters by name.
  **/
 
-public class NamedTemplateBindingImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.TemplateBindingImpl {
+public class NamedTemplateBindingImpl extends TemplateBindingImpl {
 
-	public NamedTemplateBindingImpl(NamedTemplateBinding self) {
-		super(self);
-	}
+    private Collection<TemplateParameterSubstitution> substitution = new ArrayList<TemplateParameterSubstitution>();
 
-	public org.modeldriven.alf.syntax.expressions.NamedTemplateBinding getSelf() {
-		return (NamedTemplateBinding) this.self;
-	}
+    public NamedTemplateBindingImpl(NamedTemplateBinding self) {
+        super(self);
+    }
+
+    public NamedTemplateBinding getSelf() {
+        return (NamedTemplateBinding) this.self;
+    }
+
+    public Collection<TemplateParameterSubstitution> getSubstitution() {
+        return this.substitution;
+    }
+
+    public void setSubstitution(
+            Collection<TemplateParameterSubstitution> substitution) {
+        this.substitution = substitution;
+    }
+
+    public void addSubstitution(TemplateParameterSubstitution substitution) {
+        this.substitution.add(substitution);
+    }
 
     public String toString() {
         StringBuffer s = new StringBuffer("<");

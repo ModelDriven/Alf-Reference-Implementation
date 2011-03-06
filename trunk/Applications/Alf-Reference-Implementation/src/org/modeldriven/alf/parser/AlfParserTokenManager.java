@@ -5,6 +5,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Token Manager. */
 public class AlfParserTokenManager implements AlfParserConstants

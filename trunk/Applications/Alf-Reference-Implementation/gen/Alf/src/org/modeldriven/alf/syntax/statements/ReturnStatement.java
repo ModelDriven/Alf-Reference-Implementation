@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.ReturnStatementImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.statements.impl.ReturnStatementImpl;
  **/
 
 public class ReturnStatement extends Statement {
-
-	private Expression expression = null;
-	private ElementReference behavior = null; // DERIVED
 
 	public ReturnStatement() {
 		this.impl = new ReturnStatementImpl(this);
@@ -39,22 +38,19 @@ public class ReturnStatement extends Statement {
 	}
 
 	public Expression getExpression() {
-		return this.expression;
+		return this.getImpl().getExpression();
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.getImpl().setExpression(expression);
 	}
 
 	public ElementReference getBehavior() {
-		if (this.behavior == null) {
-			this.setBehavior(this.getImpl().deriveBehavior());
-		}
-		return this.behavior;
+		return this.getImpl().getBehavior();
 	}
 
 	public void setBehavior(ElementReference behavior) {
-		this.behavior = behavior;
+		this.getImpl().setBehavior(behavior);
 	}
 
 	/**

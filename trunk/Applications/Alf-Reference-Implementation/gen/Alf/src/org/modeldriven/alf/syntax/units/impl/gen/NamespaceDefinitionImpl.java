@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A model of the common properties of the definition of a namespace in Alf.
@@ -25,6 +27,10 @@ import java.util.ArrayList;
 
 public abstract class NamespaceDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.MemberImpl {
+
+	private Collection<Member> ownedMember = new ArrayList<Member>();
+	private UnitDefinition unit = null;
+	private Collection<Member> member = null; // DERIVED
 
 	public NamespaceDefinitionImpl(NamespaceDefinition self) {
 		super(self);
@@ -34,7 +40,42 @@ public abstract class NamespaceDefinitionImpl extends
 		return (NamespaceDefinition) this.self;
 	}
 
-	public ArrayList<Member> deriveMember() {
+	public Collection<Member> getOwnedMember() {
+		return this.ownedMember;
+	}
+
+	public void setOwnedMember(Collection<Member> ownedMember) {
+		this.ownedMember = ownedMember;
+	}
+
+	public void addOwnedMember(Member ownedMember) {
+		this.ownedMember.add(ownedMember);
+	}
+
+	public UnitDefinition getUnit() {
+		return this.unit;
+	}
+
+	public void setUnit(UnitDefinition unit) {
+		this.unit = unit;
+	}
+
+	public Collection<Member> getMember() {
+		if (this.member == null) {
+			this.setMember(this.deriveMember());
+		}
+		return this.member;
+	}
+
+	public void setMember(Collection<Member> member) {
+		this.member = member;
+	}
+
+	public void addMember(Member member) {
+		this.member.add(member);
+	}
+
+	protected Collection<Member> deriveMember() {
 		return null; // STUB
 	}
 

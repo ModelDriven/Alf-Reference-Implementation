@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An expression consisting of an operator acting on a single operand
@@ -27,12 +29,31 @@ import java.util.ArrayList;
 public abstract class UnaryExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.ExpressionImpl {
 
+	private String operator = "";
+	private Expression operand = null;
+
 	public UnaryExpressionImpl(UnaryExpression self) {
 		super(self);
 	}
 
 	public UnaryExpression getSelf() {
 		return (UnaryExpression) this.self;
+	}
+
+	public String getOperator() {
+		return this.operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	public Expression getOperand() {
+		return this.operand;
+	}
+
+	public void setOperand(Expression operand) {
+		this.operand = operand;
 	}
 
 	/**
@@ -47,7 +68,7 @@ public abstract class UnaryExpressionImpl extends
 	 * By default, the assignments after a unary expression are the same as
 	 * those after its operand expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.EqualityExpressionImpl;
 
@@ -26,8 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.EqualityExpressionImpl;
  **/
 
 public class EqualityExpression extends BinaryExpression {
-
-	private Boolean isNegated = null; // DERIVED
 
 	public EqualityExpression() {
 		this.impl = new EqualityExpressionImpl(this);
@@ -38,14 +38,11 @@ public class EqualityExpression extends BinaryExpression {
 	}
 
 	public Boolean getIsNegated() {
-		if (this.isNegated == null) {
-			this.setIsNegated(this.getImpl().deriveIsNegated());
-		}
-		return this.isNegated;
+		return this.getImpl().getIsNegated();
 	}
 
 	public void setIsNegated(Boolean isNegated) {
-		this.isNegated = isNegated;
+		this.getImpl().setIsNegated(isNegated);
 	}
 
 	/**

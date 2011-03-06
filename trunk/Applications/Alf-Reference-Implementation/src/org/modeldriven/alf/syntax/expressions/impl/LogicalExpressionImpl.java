@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,32 +15,72 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A binary expression with a logical operator.
  **/
 
-public class LogicalExpressionImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl {
+public class LogicalExpressionImpl extends BinaryExpressionImpl {
+
+	private Boolean isBitWise = null; // DERIVED
+	private Boolean isBitStringConversion1 = null; // DERIVED
+	private Boolean isBitStringConversion2 = null; // DERIVED
 
 	public LogicalExpressionImpl(LogicalExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.LogicalExpression getSelf() {
+	public LogicalExpression getSelf() {
 		return (LogicalExpression) this.self;
 	}
 
-	public Boolean deriveIsBitWise() {
+	public Boolean getIsBitWise() {
+		if (this.isBitWise == null) {
+			this.setIsBitWise(this.deriveIsBitWise());
+		}
+		return this.isBitWise;
+	}
+
+	public void setIsBitWise(Boolean isBitWise) {
+		this.isBitWise = isBitWise;
+	}
+
+	public Boolean getIsBitStringConversion1() {
+		if (this.isBitStringConversion1 == null) {
+			this.setIsBitStringConversion1(this.deriveIsBitStringConversion1());
+		}
+		return this.isBitStringConversion1;
+	}
+
+	public void setIsBitStringConversion1(Boolean isBitStringConversion1) {
+		this.isBitStringConversion1 = isBitStringConversion1;
+	}
+
+	public Boolean getIsBitStringConversion2() {
+		if (this.isBitStringConversion2 == null) {
+			this.setIsBitStringConversion2(this.deriveIsBitStringConversion2());
+		}
+		return this.isBitStringConversion2;
+	}
+
+	public void setIsBitStringConversion2(Boolean isBitStringConversion2) {
+		this.isBitStringConversion2 = isBitStringConversion2;
+	}
+
+	protected Boolean deriveIsBitWise() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsBitStringConversion1() {
+	protected Boolean deriveIsBitStringConversion1() {
 		return null; // STUB
 	}
 
-	public Boolean deriveIsBitStringConversion2() {
+	protected Boolean deriveIsBitStringConversion2() {
 		return null; // STUB
 	}
 

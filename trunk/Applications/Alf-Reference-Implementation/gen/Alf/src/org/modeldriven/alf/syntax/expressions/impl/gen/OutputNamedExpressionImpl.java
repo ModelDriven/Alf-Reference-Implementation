@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A named argument expression for an output parameter.
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 
 public class OutputNamedExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.NamedExpressionImpl {
+
+	private LeftHandSide leftHandSide = null; // DERIVED
 
 	public OutputNamedExpressionImpl(OutputNamedExpression self) {
 		super(self);
@@ -34,7 +38,18 @@ public class OutputNamedExpressionImpl extends
 		return (OutputNamedExpression) this.self;
 	}
 
-	public LeftHandSide deriveLeftHandSide() {
+	public LeftHandSide getLeftHandSide() {
+		if (this.leftHandSide == null) {
+			this.setLeftHandSide(this.deriveLeftHandSide());
+		}
+		return this.leftHandSide;
+	}
+
+	public void setLeftHandSide(LeftHandSide leftHandSide) {
+		this.leftHandSide = leftHandSide;
+	}
+
+	protected LeftHandSide deriveLeftHandSide() {
 		return null; // STUB
 	}
 

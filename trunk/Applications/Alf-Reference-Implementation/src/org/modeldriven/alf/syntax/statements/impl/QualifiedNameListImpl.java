@@ -2,8 +2,8 @@
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
+ * Licensed under the Academic Free License version 3.0
+ * (http://www.opensource.org/licenses/afl-3.0.php)
  *
  */
 
@@ -15,7 +15,11 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A group of qualified names.
@@ -24,12 +28,26 @@ import java.util.ArrayList;
 public class QualifiedNameListImpl extends
 		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
 
+	private Collection<QualifiedName> name = new ArrayList<QualifiedName>();
+
 	public QualifiedNameListImpl(QualifiedNameList self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.QualifiedNameList getSelf() {
+	public QualifiedNameList getSelf() {
 		return (QualifiedNameList) this.self;
+	}
+
+	public Collection<QualifiedName> getName() {
+		return this.name;
+	}
+
+	public void setName(Collection<QualifiedName> name) {
+		this.name = name;
+	}
+
+	public void addName(QualifiedName name) {
+		this.name.add(name);
 	}
 
 } // QualifiedNameListImpl

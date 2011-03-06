@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The common properties of the definitions of typed elements.
@@ -25,6 +27,15 @@ import java.util.ArrayList;
 
 public abstract class TypedElementDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.MemberImpl {
+
+	private String lowerBound = "";
+	private String upperBound = "1";
+	private Boolean isOrdered = false;
+	private Boolean isNonunique = false;
+	private QualifiedName typeName = null;
+	private ElementReference type = null; // DERIVED
+	private Integer lower = null; // DERIVED
+	private Integer upper = null; // DERIVED
 
 	public TypedElementDefinitionImpl(TypedElementDefinition self) {
 		super(self);
@@ -34,15 +45,88 @@ public abstract class TypedElementDefinitionImpl extends
 		return (TypedElementDefinition) this.self;
 	}
 
-	public ElementReference deriveType() {
+	public String getLowerBound() {
+		return this.lowerBound;
+	}
+
+	public void setLowerBound(String lowerBound) {
+		this.lowerBound = lowerBound;
+	}
+
+	public String getUpperBound() {
+		return this.upperBound;
+	}
+
+	public void setUpperBound(String upperBound) {
+		this.upperBound = upperBound;
+	}
+
+	public Boolean getIsOrdered() {
+		return this.isOrdered;
+	}
+
+	public void setIsOrdered(Boolean isOrdered) {
+		this.isOrdered = isOrdered;
+	}
+
+	public Boolean getIsNonunique() {
+		return this.isNonunique;
+	}
+
+	public void setIsNonunique(Boolean isNonunique) {
+		this.isNonunique = isNonunique;
+	}
+
+	public QualifiedName getTypeName() {
+		return this.typeName;
+	}
+
+	public void setTypeName(QualifiedName typeName) {
+		this.typeName = typeName;
+	}
+
+	public ElementReference getType() {
+		if (this.type == null) {
+			this.setType(this.deriveType());
+		}
+		return this.type;
+	}
+
+	public void setType(ElementReference type) {
+		this.type = type;
+	}
+
+	public Integer getLower() {
+		if (this.lower == null) {
+			this.setLower(this.deriveLower());
+		}
+		return this.lower;
+	}
+
+	public void setLower(Integer lower) {
+		this.lower = lower;
+	}
+
+	public Integer getUpper() {
+		if (this.upper == null) {
+			this.setUpper(this.deriveUpper());
+		}
+		return this.upper;
+	}
+
+	public void setUpper(Integer upper) {
+		this.upper = upper;
+	}
+
+	protected ElementReference deriveType() {
 		return null; // STUB
 	}
 
-	public Integer deriveLower() {
+	protected Integer deriveLower() {
 		return null; // STUB
 	}
 
-	public Integer deriveUpper() {
+	protected Integer deriveUpper() {
 		return null; // STUB
 	}
 

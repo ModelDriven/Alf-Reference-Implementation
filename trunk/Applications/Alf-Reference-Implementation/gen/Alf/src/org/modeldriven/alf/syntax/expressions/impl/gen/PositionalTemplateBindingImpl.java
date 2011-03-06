@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A template binding in which the arguments are matched to formal template
@@ -27,12 +29,26 @@ import java.util.ArrayList;
 public class PositionalTemplateBindingImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.TemplateBindingImpl {
 
+	private Collection<QualifiedName> argumentName = new ArrayList<QualifiedName>();
+
 	public PositionalTemplateBindingImpl(PositionalTemplateBinding self) {
 		super(self);
 	}
 
 	public PositionalTemplateBinding getSelf() {
 		return (PositionalTemplateBinding) this.self;
+	}
+
+	public Collection<QualifiedName> getArgumentName() {
+		return this.argumentName;
+	}
+
+	public void setArgumentName(Collection<QualifiedName> argumentName) {
+		this.argumentName = argumentName;
+	}
+
+	public void addArgumentName(QualifiedName argumentName) {
+		this.argumentName.add(argumentName);
 	}
 
 } // PositionalTemplateBindingImpl

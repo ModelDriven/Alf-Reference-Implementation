@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.TupleImpl;
 
@@ -27,50 +29,40 @@ import org.modeldriven.alf.syntax.expressions.impl.TupleImpl;
 
 public abstract class Tuple extends SyntaxElement {
 
-	private ArrayList<NamedExpression> input = null; // DERIVED
-	private InvocationExpression invocation = null;
-	private ArrayList<OutputNamedExpression> output = null; // DERIVED
-
 	public TupleImpl getImpl() {
 		return (TupleImpl) this.impl;
 	}
 
-	public ArrayList<NamedExpression> getInput() {
-		if (this.input == null) {
-			this.setInput(this.getImpl().deriveInput());
-		}
-		return this.input;
+	public Collection<NamedExpression> getInput() {
+		return this.getImpl().getInput();
 	}
 
-	public void setInput(ArrayList<NamedExpression> input) {
-		this.input = input;
+	public void setInput(Collection<NamedExpression> input) {
+		this.getImpl().setInput(input);
 	}
 
 	public void addInput(NamedExpression input) {
-		this.input.add(input);
+		this.getImpl().addInput(input);
 	}
 
 	public InvocationExpression getInvocation() {
-		return this.invocation;
+		return this.getImpl().getInvocation();
 	}
 
 	public void setInvocation(InvocationExpression invocation) {
-		this.invocation = invocation;
+		this.getImpl().setInvocation(invocation);
 	}
 
-	public ArrayList<OutputNamedExpression> getOutput() {
-		if (this.output == null) {
-			this.setOutput(this.getImpl().deriveOutput());
-		}
-		return this.output;
+	public Collection<OutputNamedExpression> getOutput() {
+		return this.getImpl().getOutput();
 	}
 
-	public void setOutput(ArrayList<OutputNamedExpression> output) {
-		this.output = output;
+	public void setOutput(Collection<OutputNamedExpression> output) {
+		this.getImpl().setOutput(output);
 	}
 
 	public void addOutput(OutputNamedExpression output) {
-		this.output.add(output);
+		this.getImpl().addOutput(output);
 	}
 
 	/**
@@ -141,7 +133,7 @@ public abstract class Tuple extends SyntaxElement {
 
 	public void print(String prefix) {
 		super.print(prefix);
-		ArrayList<NamedExpression> input = this.getInput();
+		Collection<NamedExpression> input = this.getInput();
 		if (input != null) {
 			if (input.size() > 0) {
 				System.out.println(prefix + " /input:");
@@ -154,7 +146,7 @@ public abstract class Tuple extends SyntaxElement {
 		if (invocation != null) {
 			System.out.println(prefix + " invocation:" + invocation);
 		}
-		ArrayList<OutputNamedExpression> output = this.getOutput();
+		Collection<OutputNamedExpression> output = this.getOutput();
 		if (output != null) {
 			if (output.size() > 0) {
 				System.out.println(prefix + " /output:");

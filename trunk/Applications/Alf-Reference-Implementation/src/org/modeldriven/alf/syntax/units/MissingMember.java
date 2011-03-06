@@ -1,9 +1,13 @@
 package org.modeldriven.alf.syntax.units;
 
-public class MissingMember extends Member {
+import org.modeldriven.alf.syntax.units.impl.MissingMemberImpl;
 
+public class MissingMember extends Member {
+    
     public MissingMember(String name) {
-        super();
+        this.impl = new MissingMemberImpl(this);
         this.setName(name);
+        this.setVisibility("private");
     }
+    
 }

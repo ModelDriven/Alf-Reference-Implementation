@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.LinkOperationExpressionImpl;
 
@@ -26,11 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.LinkOperationExpressionImpl;
  **/
 
 public class LinkOperationExpression extends InvocationExpression {
-
-	private String operation = "";
-	private Boolean isCreation = null; // DERIVED
-	private Boolean isClear = null; // DERIVED
-	private QualifiedName associationName = null;
 
 	public LinkOperationExpression() {
 		this.impl = new LinkOperationExpressionImpl(this);
@@ -41,41 +38,35 @@ public class LinkOperationExpression extends InvocationExpression {
 	}
 
 	public String getOperation() {
-		return this.operation;
+		return this.getImpl().getOperation();
 	}
 
 	public void setOperation(String operation) {
-		this.operation = operation;
+		this.getImpl().setOperation(operation);
 	}
 
 	public Boolean getIsCreation() {
-		if (this.isCreation == null) {
-			this.setIsCreation(this.getImpl().deriveIsCreation());
-		}
-		return this.isCreation;
+		return this.getImpl().getIsCreation();
 	}
 
 	public void setIsCreation(Boolean isCreation) {
-		this.isCreation = isCreation;
+		this.getImpl().setIsCreation(isCreation);
 	}
 
 	public Boolean getIsClear() {
-		if (this.isClear == null) {
-			this.setIsClear(this.getImpl().deriveIsClear());
-		}
-		return this.isClear;
+		return this.getImpl().getIsClear();
 	}
 
 	public void setIsClear(Boolean isClear) {
-		this.isClear = isClear;
+		this.getImpl().setIsClear(isClear);
 	}
 
 	public QualifiedName getAssociationName() {
-		return this.associationName;
+		return this.getImpl().getAssociationName();
 	}
 
 	public void setAssociationName(QualifiedName associationName) {
-		this.associationName = associationName;
+		this.getImpl().setAssociationName(associationName);
 	}
 
 	/**
@@ -128,7 +119,7 @@ public class LinkOperationExpression extends InvocationExpression {
 	 * For a clear association operation, returns a single, typeless parameter.
 	 * Otherwise, returns the ends of the named association.
 	 **/
-	public ArrayList<ElementReference> parameterElements() {
+	public Collection<ElementReference> parameterElements() {
 		return this.getImpl().parameterElements();
 	}
 

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionImpl;
 
@@ -28,57 +30,48 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionIm
 
 public abstract class SequenceExpansionExpression extends Expression {
 
-	private String operation = "";
-	private String variable = "";
-	private AssignedSource variableSource = null; // DERIVED
-	private Expression argument = null;
-	private ExtentOrExpression primary = null;
-
 	public SequenceExpansionExpressionImpl getImpl() {
 		return (SequenceExpansionExpressionImpl) this.impl;
 	}
 
 	public String getOperation() {
-		return this.operation;
+		return this.getImpl().getOperation();
 	}
 
 	public void setOperation(String operation) {
-		this.operation = operation;
+		this.getImpl().setOperation(operation);
 	}
 
 	public String getVariable() {
-		return this.variable;
+		return this.getImpl().getVariable();
 	}
 
 	public void setVariable(String variable) {
-		this.variable = variable;
+		this.getImpl().setVariable(variable);
 	}
 
 	public AssignedSource getVariableSource() {
-		if (this.variableSource == null) {
-			this.setVariableSource(this.getImpl().deriveVariableSource());
-		}
-		return this.variableSource;
+		return this.getImpl().getVariableSource();
 	}
 
 	public void setVariableSource(AssignedSource variableSource) {
-		this.variableSource = variableSource;
+		this.getImpl().setVariableSource(variableSource);
 	}
 
 	public Expression getArgument() {
-		return this.argument;
+		return this.getImpl().getArgument();
 	}
 
 	public void setArgument(Expression argument) {
-		this.argument = argument;
+		this.getImpl().setArgument(argument);
 	}
 
 	public ExtentOrExpression getPrimary() {
-		return this.primary;
+		return this.getImpl().getPrimary();
 	}
 
 	public void setPrimary(ExtentOrExpression primary) {
-		this.primary = primary;
+		this.getImpl().setPrimary(primary);
 	}
 
 	/**
@@ -130,7 +123,7 @@ public abstract class SequenceExpansionExpression extends Expression {
 	 * The assignments after a sequence expansion expression are the same as
 	 * after its primary expression.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceAccessExpressionImpl;
 
@@ -26,9 +28,6 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceAccessExpressionImpl;
  **/
 
 public class SequenceAccessExpression extends Expression {
-
-	private Expression primary = null;
-	private Expression index = null;
 
 	public SequenceAccessExpression() {
 		this.impl = new SequenceAccessExpressionImpl(this);
@@ -39,19 +38,19 @@ public class SequenceAccessExpression extends Expression {
 	}
 
 	public Expression getPrimary() {
-		return this.primary;
+		return this.getImpl().getPrimary();
 	}
 
 	public void setPrimary(Expression primary) {
-		this.primary = primary;
+		this.getImpl().setPrimary(primary);
 	}
 
 	public Expression getIndex() {
-		return this.index;
+		return this.getImpl().getIndex();
 	}
 
 	public void setIndex(Expression index) {
-		this.index = index;
+		this.getImpl().setIndex(index);
 	}
 
 	/**

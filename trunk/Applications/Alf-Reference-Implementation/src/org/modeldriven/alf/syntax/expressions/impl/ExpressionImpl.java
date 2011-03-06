@@ -11,11 +11,13 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A model of the common properties derived for any Alf expression.
@@ -24,8 +26,13 @@ import java.util.ArrayList;
  * AssignmentsAfter are specific to its various subclasses.
  **/
 
-public abstract class ExpressionImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public abstract class ExpressionImpl extends SyntaxElementImpl {
+
+    private Collection<AssignedSource> assignmentBefore = null; // DERIVED
+    private Collection<AssignedSource> assignmentAfter = null; // DERIVED
+    private Integer upper = null; // DERIVED
+    private Integer lower = null; // DERIVED
+    private ElementReference type = null; // DERIVED
 
 	public ExpressionImpl(Expression self) {
 		super(self);
@@ -35,11 +42,74 @@ public abstract class ExpressionImpl extends
 		return (Expression) this.self;
 	}
 
-	public ArrayList<AssignedSource> deriveAssignmentBefore() {
+    public Collection<AssignedSource> getAssignmentBefore() {
+        if (this.assignmentBefore == null) {
+            this.setAssignmentBefore(this.deriveAssignmentBefore());
+        }
+        return this.assignmentBefore;
+    }
+
+    public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+        this.assignmentBefore = assignmentBefore;
+    }
+
+    public void addAssignmentBefore(AssignedSource assignmentBefore) {
+        this.assignmentBefore.add(assignmentBefore);
+    }
+
+    public Collection<AssignedSource> getAssignmentAfter() {
+        if (this.assignmentAfter == null) {
+            this.setAssignmentAfter(this.deriveAssignmentAfter());
+        }
+        return this.assignmentAfter;
+    }
+
+    public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+        this.assignmentAfter = assignmentAfter;
+    }
+
+    public void addAssignmentAfter(AssignedSource assignmentAfter) {
+        this.assignmentAfter.add(assignmentAfter);
+    }
+
+    public Integer getUpper() {
+        if (this.upper == null) {
+            this.setUpper(this.deriveUpper());
+        }
+        return this.upper;
+    }
+
+    public void setUpper(Integer upper) {
+        this.upper = upper;
+    }
+
+    public Integer getLower() {
+        if (this.lower == null) {
+            this.setLower(this.deriveLower());
+        }
+        return this.lower;
+    }
+
+    public void setLower(Integer lower) {
+        this.lower = lower;
+    }
+
+    public ElementReference getType() {
+        if (this.type == null) {
+            this.setType(this.deriveType());
+        }
+        return this.type;
+    }
+
+    public void setType(ElementReference type) {
+        this.type = type;
+    }
+
+	public Collection<AssignedSource> deriveAssignmentBefore() {
 		return null; // STUB
 	}
 
-	public ArrayList<AssignedSource> deriveAssignmentAfter() {
+	public Collection<AssignedSource> deriveAssignmentAfter() {
 		return null; // STUB
 	}
 
@@ -78,12 +148,12 @@ public abstract class ExpressionImpl extends
 	 * in subclasses of Expression for kinds of expressions that make
 	 * assignments.
 	 **/
-	public ArrayList<AssignedSource> updateAssignments() {
+	public Collection<AssignedSource> updateAssignments() {
 		return new ArrayList<AssignedSource>(); // STUB
 	} // updateAssignments
 
     public SyntaxElement resolve(String name) {
-        ArrayList<AssignedSource> assignments = this.getSelf().getAssignmentBefore();
+        Collection<AssignedSource> assignments = this.getSelf().getAssignmentBefore();
         for (AssignedSource assignment: assignments) {
             if (assignment.getName().equals(name)) {
                 return assignment.getSource();

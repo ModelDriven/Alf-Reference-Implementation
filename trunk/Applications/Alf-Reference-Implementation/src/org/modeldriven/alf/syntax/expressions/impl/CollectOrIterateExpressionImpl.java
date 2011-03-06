@@ -15,21 +15,24 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.omg.uml.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A sequence expansion expression with a collect or iterate operation.
  **/
 
 public class CollectOrIterateExpressionImpl
-		extends
-		org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionImpl {
+		extends SequenceExpansionExpressionImpl {
 
 	public CollectOrIterateExpressionImpl(CollectOrIterateExpression self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.CollectOrIterateExpression getSelf() {
+	public CollectOrIterateExpression getSelf() {
 		return (CollectOrIterateExpression) this.self;
 	}
 

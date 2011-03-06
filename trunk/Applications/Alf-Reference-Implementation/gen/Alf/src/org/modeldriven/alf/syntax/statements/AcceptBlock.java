@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.AcceptBlockImpl;
 
@@ -26,11 +28,6 @@ import org.modeldriven.alf.syntax.statements.impl.AcceptBlockImpl;
  **/
 
 public class AcceptBlock extends SyntaxElement {
-
-	private String name = "";
-	private Block block = null;
-	private QualifiedNameList signalNames = null;
-	private ArrayList<ElementReference> signal = null; // DERIVED
 
 	public AcceptBlock() {
 		this.impl = new AcceptBlockImpl(this);
@@ -41,42 +38,39 @@ public class AcceptBlock extends SyntaxElement {
 	}
 
 	public String getName() {
-		return this.name;
+		return this.getImpl().getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.getImpl().setName(name);
 	}
 
 	public Block getBlock() {
-		return this.block;
+		return this.getImpl().getBlock();
 	}
 
 	public void setBlock(Block block) {
-		this.block = block;
+		this.getImpl().setBlock(block);
 	}
 
 	public QualifiedNameList getSignalNames() {
-		return this.signalNames;
+		return this.getImpl().getSignalNames();
 	}
 
 	public void setSignalNames(QualifiedNameList signalNames) {
-		this.signalNames = signalNames;
+		this.getImpl().setSignalNames(signalNames);
 	}
 
-	public ArrayList<ElementReference> getSignal() {
-		if (this.signal == null) {
-			this.setSignal(this.getImpl().deriveSignal());
-		}
-		return this.signal;
+	public Collection<ElementReference> getSignal() {
+		return this.getImpl().getSignal();
 	}
 
-	public void setSignal(ArrayList<ElementReference> signal) {
-		this.signal = signal;
+	public void setSignal(Collection<ElementReference> signal) {
+		this.getImpl().setSignal(signal);
 	}
 
 	public void addSignal(ElementReference signal) {
-		this.signal.add(signal);
+		this.getImpl().addSignal(signal);
 	}
 
 	/**
@@ -113,7 +107,7 @@ public class AcceptBlock extends SyntaxElement {
 			System.out.println(prefix + " signalNames:");
 			signalNames.print(prefix + "  ");
 		}
-		ArrayList<ElementReference> signal = this.getSignal();
+		Collection<ElementReference> signal = this.getSignal();
 		if (signal != null) {
 			if (signal.size() > 0) {
 				System.out.println(prefix + " /signal:");

@@ -18,6 +18,8 @@ import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A specification of the substitution of an argument type name for a template
@@ -27,12 +29,31 @@ import java.util.ArrayList;
 public class TemplateParameterSubstitutionImpl extends
 		org.modeldriven.alf.syntax.common.impl.gen.SyntaxElementImpl {
 
+	private String parameterName = "";
+	private QualifiedName argumentName = null;
+
 	public TemplateParameterSubstitutionImpl(TemplateParameterSubstitution self) {
 		super(self);
 	}
 
 	public TemplateParameterSubstitution getSelf() {
 		return (TemplateParameterSubstitution) this.self;
+	}
+
+	public String getParameterName() {
+		return this.parameterName;
+	}
+
+	public void setParameterName(String parameterName) {
+		this.parameterName = parameterName;
+	}
+
+	public QualifiedName getArgumentName() {
+		return this.argumentName;
+	}
+
+	public void setArgumentName(QualifiedName argumentName) {
+		this.argumentName = argumentName;
 	}
 
 } // TemplateParameterSubstitutionImpl
