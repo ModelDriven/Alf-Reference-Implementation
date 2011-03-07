@@ -1,6 +1,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.parser.*;
@@ -25,8 +26,8 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
-    public List<Member> resolve(String name) {
-        List<Member> members = super.resolve(name);
+    public Collection<Member> resolve(String name) {
+        Collection<Member> members = super.resolve(name);
         if (members.size() == 0) {
             QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
             UnitDefinition unit = this.resolveUnit(qualifiedName);
@@ -42,7 +43,7 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
                 }
             }
             this.getSelf().addOwnedMember(member);
-        } else if (members.get(0) instanceof MissingMember) {
+        } else if (members.toArray()[0] instanceof MissingMember) {
             members = new ArrayList<Member>();
         }
         return members;
