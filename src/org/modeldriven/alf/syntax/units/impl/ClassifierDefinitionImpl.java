@@ -20,6 +20,7 @@ import org.omg.uml.NamedElement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The definition of a classifier.
@@ -100,13 +101,13 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
      * 7.3.8.
      **/
 	@Override
-	protected Collection<Member> deriveMember() {
+	protected Map<String, Collection<Member>> deriveMember() {
 	    ArrayList<Member> inheritedMembers = new ArrayList<Member>();
 	    for (ElementReference parent: this.getSelf().getSpecializationReferent()) {
 	        inheritedMembers.addAll(this.getInheritableMembersOf(parent));
 	    }
-	    Collection<Member> members = super.deriveMember();
-        members.addAll(this.inherit(inheritedMembers));
+	    Map<String, Collection<Member>> members = super.deriveMember();
+        addAllMembers(this.inherit(inheritedMembers), members);
 	    return members;
 	}
 	

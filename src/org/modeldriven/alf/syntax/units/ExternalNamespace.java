@@ -50,5 +50,4 @@ public class ExternalNamespace extends NamespaceDefinition {
         return members;
     }
 
-
 }

@@ -13,9 +13,6 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.NamedElement;
-import org.omg.uml.Namespace;
-import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -278,15 +275,11 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	        // Resolve as a qualified name
 	        ElementReference namespaceReference = self.getQualification().getImpl().getNamespaceReferent();
 	        if (namespaceReference != null) {
-	            NamespaceDefinition namespace = (NamespaceDefinition)namespaceReference.getImpl().getAlf();
+	            NamespaceDefinition namespace = namespaceReference.getImpl().asNamespace();
 	            if (namespace != null) {
 	                this.addReferentsTo(referents, 
                         namespace.getImpl().resolveVisible(self.getUnqualifiedName().getName(),
                             this.getCurrentScope()));
-	            } else {
-	                this.addReferentsTo(referents, 
-                        this.resolveExternal((Namespace)namespaceReference.getImpl().getUml(), 
-	                        self.getUnqualifiedName().getName()));
 	            }
 	        }
 	    }
@@ -523,25 +516,10 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     }
     
     private void addReferentsTo(List<ElementReference> referents, 
-            List<Member> members) {
+            Collection<Member> members) {
         for (Member member: members) {
             referents.add(member.getImpl().getReferent());
         }
-    }
-
-    private void addReferentsTo(ArrayList<ElementReference> referents,
-            List<NamedElement> elements) {
-        for (NamedElement element: elements) {
-            ExternalElementReference referent = new ExternalElementReference();
-            referent.setElement(element);
-            referents.add(referent);
-        }
-    }
-
-    private List<NamedElement> resolveExternal(Namespace namespace, String name) {
-        List<NamedElement> elements = new ArrayList<NamedElement>();
-        // TODO: Handle name resolution for external namespaces.
-        return elements;
     }
 
     @Override

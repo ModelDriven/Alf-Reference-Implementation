@@ -15,7 +15,8 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A model of the common properties of the definition of a namespace in Alf.
@@ -25,7 +26,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 
 	private Collection<Member> ownedMember = new ArrayList<Member>();
 	private UnitDefinition unit = null;
-	private Collection<Member> member = null; // DERIVED
+	private Map<String, Collection<Member>> member = null; // DERIVED
 
 	public NamespaceDefinitionImpl(NamespaceDefinition self) {
 		super(self);
@@ -57,18 +58,26 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	}
 
 	public Collection<Member> getMember() {
-		if (this.member == null) {
-			this.setMember(this.deriveMember());
+		Collection<Member> allMembers = new ArrayList<Member>();
+		for (Collection<Member> members: this.getMemberMap().values()) {
+		    allMembers.addAll(members);
 		}
-		return this.member;
+		return allMembers;
+	}
+	
+	public Map<String, Collection<Member>> getMemberMap() {
+        if (this.member == null) {
+            this.member = this.deriveMember();
+        }
+	    return this.member;
 	}
 
-	public void setMember(Collection<Member> member) {
-		this.member = member;
+	public void setMember(Collection<Member> members) {
+		addAllMembers(members, this.member);
 	}
 
 	public void addMember(Member member) {
-		this.member.add(member);
+	    addMember(member, this.member);
 	}
 
     /**
@@ -82,7 +91,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
      * member (as determined by the Member::isDistinguishableFrom operation) are
      * not imported.
      **/
-    protected Collection<Member> deriveMember() {
+    protected Map<String, Collection<Member>> deriveMember() {
 	    NamespaceDefinition self = this.getSelf();
 
         if (self.getIsStub()) {
@@ -96,17 +105,18 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	        }
 	    }
         
-	    ArrayList<Member> members = new ArrayList<Member>(self.getOwnedMember());
-	    
+        Map<String, Collection<Member>> members = new HashMap<String, Collection<Member>>();
+        addAllMembers(self.getOwnedMember(), members);
+        
         UnitDefinition unit = self.getUnit();	    
 	    if (unit != null) {
-	      members.addAll(unit.getImpl().getImportedMembers());
+	      addAllMembers(unit.getImpl().getImportedMembers(), members);
 	    }
 	    
 		return members;
 	}
 
-	/*
+    /*
 	 * Derivations
 	 */
 	
@@ -152,18 +162,18 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	 *  Helper methods
 	 */
 	
-    public List<Member> resolveVisible(String name, NamespaceDefinition namespace) {
-        // If this namespace is a containing scope of the given namespace,
+    public Collection<Member> resolveVisible(String name, NamespaceDefinition namespace) {
+        Collection<Member> members = this.resolveInScope(name);
+            
+        // Note: If this namespace is a containing scope of the given namespace,
         // then all members of this namespace are visible.
-        boolean containingScope = this.containsMember(namespace);
-        
-        ArrayList<Member> members = new ArrayList<Member>();
-        boolean allowPackageOnly = this.allowPackageOnly();
-        for (Member member: this.getSelf().getMember()) {
-            if (member.getName().equals(name) && 
-                    (containingScope || member.getImpl().isPublic() || 
-                            allowPackageOnly && member.getImpl().isPackageOnly())) {
-                members.add(member);
+        if (!this.containsMember(namespace)){
+            boolean allowPackageOnly = this.allowPackageOnly();
+            for (Member member: members) {
+                if (!(member.getImpl().isPublic() || 
+                        allowPackageOnly && member.getImpl().isPackageOnly())) {
+                    members.remove(member);
+                }
             }
         }
         
@@ -185,14 +195,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return true;
     }
 
-    public List<Member> resolve(String name) {
-        ArrayList<Member> members = new ArrayList<Member>();
-        NamespaceDefinition self = this.getSelf();
-        for (Member member: self.getMember()) {
-            if (member.getName().equals(name)) {
-                members.add(member);
-             }
-        }
+    public Collection<Member> resolve(String name) {
+        Collection<Member> members = this.resolveInScope(name);
         
         // Resolve in the containing scope, if there is one.
         NamespaceDefinition namespace = this.getOuterScope();
@@ -204,6 +208,14 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             }
         }
 
+        return members;
+    }
+    
+    private Collection<Member> resolveInScope(String name) {
+        Collection<Member> members = this.getMemberMap().get(name);
+        if (members == null) {
+            members = new ArrayList<Member>();
+        }
         return members;
     }
 
@@ -259,4 +271,24 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         }
     }
     
+    protected static void addAllMembers(Collection<Member> members,
+            Map<String, Collection<Member>> map) {
+        for (Member member: members) {
+            addMember(member, map);          
+        }       
+    }
+    
+    protected static void addMember(Member member, Map<String, Collection<Member>> map) {
+        String name = member.getName();
+        if (name == null) {
+            name = "";
+        }
+        Collection<Member> members = map.get(name);
+        if (members == null) {
+            members = new ArrayList<Member>();
+            map.put(name, members);
+        }
+        members.add(member);
+    }
+
 } // NamespaceDefinitionImpl
