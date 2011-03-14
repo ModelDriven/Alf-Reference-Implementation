@@ -9,8 +9,12 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
+import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.omg.uml.Element;
@@ -50,6 +54,7 @@ public abstract class ElementReferenceImpl {
 	public abstract boolean isClass();  // But not any subtype of Class
     public abstract boolean isActiveClass();
 	public abstract boolean isDataType();
+	public abstract boolean isBehavior();
 	public abstract boolean isActivity();
     public abstract boolean isEnumeration();
     public abstract boolean isSignal();
@@ -67,6 +72,20 @@ public abstract class ElementReferenceImpl {
 
     public abstract boolean hasReceptionFor(ElementReference signal);
     
+    public abstract Collection<ElementReference> parents();
+    public abstract Collection<ElementReference> allParents();
+
+    public abstract List<FormalParameter> getParameters();
+    
+    public FormalParameter getReturnParameter() {
+        for (FormalParameter parameter: this.getParameters()) {
+            if (parameter.getDirection().equals("return")) {
+                return parameter;
+            }
+        }
+        return null;
+    }
+
     /**
      * Return the active class corresponding to an activity, if any.
      * This is either the activity itself, if it is active, or the class that
@@ -91,6 +110,11 @@ public abstract class ElementReferenceImpl {
         return false;
     }
     
+    public ElementReference getCollectionArgument() {
+        // TODO Implement getting the argument of a collection class instantiation.
+        return null;
+    }
+
     static final QualifiedNameImpl bitString = 
         RootNamespace.getPrimitiveTypes().getImpl().copy().addName("BitString").getImpl();
     
@@ -99,9 +123,6 @@ public abstract class ElementReferenceImpl {
         return referent != null && this.equals(referent);
     }
 
-    public boolean isAssignableTo(ElementReference type) {
-        //TODO Write condition for assignability.
-        return false;
-    }
+    public abstract boolean conformsTo(ElementReference type);
 
 } // ElementReferenceImpl

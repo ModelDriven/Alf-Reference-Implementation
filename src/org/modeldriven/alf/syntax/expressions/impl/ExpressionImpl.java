@@ -11,13 +11,17 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.syntax.units.impl.TypedElementDefinitionImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A model of the common properties derived for any Alf expression.
@@ -28,8 +32,8 @@ import java.util.Collection;
 
 public abstract class ExpressionImpl extends SyntaxElementImpl {
 
-    private Collection<AssignedSource> assignmentBefore = null; // DERIVED
-    private Collection<AssignedSource> assignmentAfter = null; // DERIVED
+    private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
+    private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
     private Integer upper = null; // DERIVED
     private Integer lower = null; // DERIVED
     private ElementReference type = null; // DERIVED
@@ -43,33 +47,67 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
 	}
 
     public Collection<AssignedSource> getAssignmentBefore() {
+        return this.getAssignmentBeforeMap().values();
+    }
+    
+    public Map<String, AssignedSource> getAssignmentBeforeMap() {
         if (this.assignmentBefore == null) {
             this.setAssignmentBefore(this.deriveAssignmentBefore());
         }
         return this.assignmentBefore;
     }
+    
+    public AssignedSource getAssignmentBefore(String name) {
+        this.getAssignmentBefore();
+        return this.assignmentBefore.get(name);
+    }
 
     public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+        this.setAssignmentBefore(new HashMap<String, AssignedSource>());
+        for (AssignedSource assignment: assignmentBefore) {
+            this.addAssignmentBefore(assignment);
+        }
+    }
+    
+    public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
         this.assignmentBefore = assignmentBefore;
     }
 
     public void addAssignmentBefore(AssignedSource assignmentBefore) {
-        this.assignmentBefore.add(assignmentBefore);
+        this.getAssignmentBefore();
+        this.assignmentBefore.put(assignmentBefore.getName(), assignmentBefore);
     }
 
     public Collection<AssignedSource> getAssignmentAfter() {
+        return this.getAssignmentAfterMap().values();
+    }
+
+    public Map<String, AssignedSource> getAssignmentAfterMap() {
         if (this.assignmentAfter == null) {
             this.setAssignmentAfter(this.deriveAssignmentAfter());
         }
         return this.assignmentAfter;
     }
 
+    public AssignedSource getAssignmentAfter(String name) {
+        this.getAssignmentAfter();
+        return this.assignmentAfter.get(name);
+    }
+
     public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+        this.assignmentAfter.clear();
+        for (AssignedSource assignment: assignmentAfter) {
+            this.addAssignmentBefore(assignment);
+        }
+    }
+
+    public void setAssignmentAfter(Map<String, AssignedSource> assignmentAfter) {
         this.assignmentAfter = assignmentAfter;
     }
 
     public void addAssignmentAfter(AssignedSource assignmentAfter) {
-        this.assignmentAfter.add(assignmentAfter);
+        this.getAssignmentAfter();
+        this.assignmentAfter.put(assignmentAfter.getName(), assignmentAfter);
     }
 
     public Integer getUpper() {
@@ -105,23 +143,26 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
         this.type = type;
     }
 
-	public Collection<AssignedSource> deriveAssignmentBefore() {
+    protected Map<String, AssignedSource> deriveAssignmentBefore() {
+		return new HashMap<String, AssignedSource>(); // STUB
+	}
+
+    /**
+     * By default, the assignments after are the same as the assignments before.
+     */
+	protected Map<String, AssignedSource> deriveAssignmentAfter() {
+		return this.assignmentBefore;
+	}
+
+	protected Integer deriveUpper() {
 		return null; // STUB
 	}
 
-	public Collection<AssignedSource> deriveAssignmentAfter() {
+	protected Integer deriveLower() {
 		return null; // STUB
 	}
 
-	public Integer deriveUpper() {
-		return null; // STUB
-	}
-
-	public Integer deriveLower() {
-		return null; // STUB
-	}
-
-	public ElementReference deriveType() {
+	protected ElementReference deriveType() {
 		return null; // STUB
 	}
 
@@ -153,17 +194,21 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
 	} // updateAssignments
 
     public SyntaxElement resolve(String name) {
-        Collection<AssignedSource> assignments = this.getSelf().getAssignmentBefore();
-        for (AssignedSource assignment: assignments) {
-            if (assignment.getName().equals(name)) {
-                return assignment.getSource();
-            }
-        }
-        return null;
+        AssignedSource assignment = this.getAssignmentBefore(name);
+        return assignment == null? null: assignment.getSource();
     }
 
     public void setCurrentScope(NamespaceDefinition outerScope) {
         // TODO Should be abstract        
+    }
+
+    /**
+     * Get the assigned sources for assignments made within this expression.
+     */
+    public Collection<AssignedSource> getNewAssignments() {
+        return AssignedSourceImpl.selectNewAssignments(
+                this.getAssignmentBeforeMap(), 
+                this.getSelf().getAssignmentAfter());
     }
 
 } // ExpressionImpl

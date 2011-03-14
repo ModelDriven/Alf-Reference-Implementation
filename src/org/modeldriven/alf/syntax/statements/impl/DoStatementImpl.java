@@ -9,25 +9,22 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A looping statement for which the continuation condition is first tested
  * after the first iteration.
  **/
 
-public class DoStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class DoStatementImpl extends StatementImpl {
 
 	private Expression condition = null;
 	private Block body = null;
@@ -55,6 +52,57 @@ public class DoStatementImpl extends
 	public void setBody(Block body) {
 		this.body = body;
 	}
+	
+    /**
+     * The assignments before the block of a do statement are the same as the
+     * assignments before the do statement. The assignments before the condition
+     * expression of a do statement are the same assignments after the block.
+     *
+     * If the assigned source for a name after the condition expression is
+     * different than before the do statement, then the assigned source of the
+     * name after the do statement is the do statement. Otherwise it is the same
+     * as before the do statement.
+     **/
+	@Override
+	public Map<String, AssignedSource> deriveAssignmentAfter() {
+	    DoStatement self = this.getSelf();
+	    Expression condition = self.getCondition();
+	    Block body = self.getBody();
+	    Map<String, AssignedSource> assignmentsAfter = super.deriveAssignmentAfter();
+	    if (body != null) {
+	        body.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
+	        Set<AssignedSource> newAssignments = 
+	            new HashSet<AssignedSource>(body.getImpl().getNewAssignments());
+	        if (condition != null) {
+	            condition.getImpl().setAssignmentAfter(body.getImpl().getAssignmentAfterMap());
+	            newAssignments.addAll(condition.getImpl().getNewAssignments());
+	        }
+	        for (AssignedSource assignment: newAssignments) {
+	            AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
+	            assignmentAfter.setSource(self);
+                assignmentsAfter.put(assignmentAfter.getName(), assignmentAfter);
+	        }
+	    }
+	    return assignmentsAfter;
+	}
+	
+    /**
+     * The enclosing statement for all statements in the body of a do statement
+     * are the do statement.
+     **/
+	@Override
+	public void setEnclosingStatement(Statement enclosingStatement) {
+	    DoStatement self = this.getSelf();
+	    super.setEnclosingStatement(enclosingStatement);
+	    Block body = this.getSelf().getBody();
+	    if (body != null) {
+	        body.getImpl().setEnclosingStatement(self);
+	    }
+	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The assignments before the block of a do statement are the same as the
@@ -62,6 +110,7 @@ public class DoStatementImpl extends
 	 * expression of a do statement are the same assignments after the block.
 	 **/
 	public boolean doStatementAssignmentsBefore() {
+	    // Note: This is handled by deriveAssignmentAfter.
 		return true;
 	}
 
@@ -72,6 +121,7 @@ public class DoStatementImpl extends
 	 * as before the do statement.
 	 **/
 	public boolean doStatementAssignmentsAfter() {
+	    // Note: This is handled by overriding deriveAssignmentAfter.
 		return true;
 	}
 
@@ -80,7 +130,10 @@ public class DoStatementImpl extends
 	 * multiplicity upper bound of 1.
 	 **/
 	public boolean doStatementCondition() {
-		return true;
+	    Expression condition = this.getSelf().getCondition();
+		return condition != null && 
+		        condition.getType().equals(RootNamespace.getBooleanType()) &&
+		        condition.getUpper() == 1;
 	}
 
 	/**
@@ -88,7 +141,17 @@ public class DoStatementImpl extends
 	 * are the do statement.
 	 **/
 	public boolean doStatementEnclosedStatements() {
+	    // Note: This is handled by overriding setEncosingStatement.
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
+	@Override
+	protected Statement getLoopStatement() {
+	    return this.getSelf();
+	}
+	
 } // DoStatementImpl

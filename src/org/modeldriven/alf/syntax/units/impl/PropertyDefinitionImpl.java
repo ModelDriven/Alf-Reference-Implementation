@@ -69,6 +69,17 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	public void setIsBitStringConversion(Boolean isBitStringConversion) {
 		this.isBitStringConversion = isBitStringConversion;
 	}
+	
+	// Note: This presumes that the initializer for a property is set before
+	// the property is added to its classifier (namespace).	
+	@Override
+	public void setNamespace(NamespaceDefinition namespace) {
+	    super.setNamespace(namespace);
+	    Expression initializer = this.getSelf().getInitializer();
+	    if (initializer != null) {
+	        initializer.getImpl().setCurrentScope(namespace);
+	    }
+	}
 
     /**
      * A property definition requires collection conversion if its initializer
@@ -147,7 +158,7 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	    PropertyDefinition self = this.getSelf();
 	    Expression initializer = self.getInitializer();
 	    initializer.getImpl().setCurrentScope(this.getOuterScope());
-		return initializer.getType().getImpl().isAssignableTo(self.getType());
+		return new AssignableTypedElementImpl(this).isAssignableFrom(initializer);
 	}
 	
 	/*

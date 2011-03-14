@@ -9,6 +9,12 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -21,6 +27,8 @@ import org.omg.uml.Element;
 public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     private SyntaxElement element = null;
+    
+    private Collection<ElementReference> allParents = null;
 
 	public InternalElementReferenceImpl(InternalElementReference self) {
 		super(self);
@@ -87,6 +95,11 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isDataType() {
         return this.getSelf().getElement() instanceof DataTypeDefinition;
+    }
+
+    @Override
+    public boolean isBehavior() {
+        return this.isActivity();
     }
 
     @Override
@@ -184,6 +197,51 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public Collection<ElementReference> parents() {
+        if (this.isClassifier()) {
+            return ((ClassifierDefinition)this.getSelf().getElement()).getSpecializationReferent();
+        } else {
+            return new HashSet<ElementReference>();
+        }
+    }
+
+    @Override
+    public Collection<ElementReference> allParents() {
+        if (this.allParents == null) {
+            if (!this.isClassifier()) {
+                this.allParents = new HashSet<ElementReference>();
+            } else {
+                this.allParents = this.allParents(new HashSet<ElementReference>());
+            }
+        }
+        return this.allParents;
+    }
+
+    // This will work even if there are (illegal) cyclic generalization relationships.
+    private Collection<ElementReference> allParents(Collection<ElementReference> allReadySeen) {
+        Collection<ElementReference> parents = this.parents();
+        parents.removeAll(allReadySeen);
+        Set<ElementReference> allParents = new HashSet<ElementReference>(parents);
+        for (ElementReference parent: parents) {
+            allReadySeen.add(parent);
+            allParents.addAll(
+                    parent instanceof InternalElementReference?
+                            ((InternalElementReferenceImpl)parent.getImpl()).allParents(allReadySeen):
+                            parent.getImpl().allParents());
+        }
+        return allParents;
+    }
+
+    @Override
+    public List<FormalParameter> getParameters() {
+        if (this.isBehavior() || this.isOperation()) {
+            return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getFormalParameters();
+        } else {
+            return new ArrayList<FormalParameter>();
+        }
+    }
+
+    @Override
     public ElementReference getActiveClass() {
         SyntaxElement element = this.getSelf().getElement();
         if (!(element instanceof ActivityDefinition)) {
@@ -216,6 +274,12 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             }
             return element != null && this.getSelf().getElement() == element;
         }
+    }
+
+    @Override
+    public boolean conformsTo(ElementReference type) {
+        return this.isClassifier() && (type == null ||
+                this.equals(type) || this.allParents().contains(type));
     }
 
 } // InternalElementReferenceImpl

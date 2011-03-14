@@ -9,25 +9,20 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A statement that declares the type of a local name and assigns it an initial
  * value.
  **/
 
-public class LocalNameDeclarationStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class LocalNameDeclarationStatementImpl extends StatementImpl {
 
 	private String name = "";
 	private Expression expression = null;
@@ -86,15 +81,72 @@ public class LocalNameDeclarationStatementImpl extends
 		this.type = type;
 	}
 
+    /**
+     * The type of a local name declaration statement with a type name is the
+     * single classifier referent of the type name. Otherwise it is empty.
+     **/
 	protected ElementReference deriveType() {
-		return null; // STUB
+	    LocalNameDeclarationStatement self = this.getSelf();
+	    QualifiedName typeName = self.getTypeName();
+	    if (typeName != null) {
+	        return typeName.getImpl().getNonTemplateClassifierReferent();
+	    } else {
+	        return null;
+	    }
 	}
+	
+    /**
+     * The assignments before the expression of a local name declaration
+     * statement are the same as the assignments before the statement.
+     *
+     * The assignments after a local name declaration statement are the
+     * assignments after the expression plus a new assignment for the local name
+     * defined by the statement. The assigned source for the local name is the
+     * local name declaration statement. The local name has the type denoted by
+     * the type name if this is not empty and is untyped otherwise. If the
+     * statement has multiplicity, then the multiplicity of the local name is
+     * [0..*], otherwise it is [0..1].
+     **/
+	@Override
+	protected Map<String, AssignedSource> deriveAssignmentAfter() {
+	    LocalNameDeclarationStatement self = this.getSelf();
+	    Map<String, AssignedSource> assignmentsAfter = new HashMap<String, AssignedSource>();
+	    Expression expression = self.getExpression();
+	    if (expression == null) {
+	        assignmentsAfter.putAll(super.deriveAssignmentAfter());
+	    } else {
+	        expression.getImpl().setAssignmentBefore(self.getImpl().getAssignmentBeforeMap());
+	        assignmentsAfter.putAll(expression.getImpl().getAssignmentAfterMap());
+	    }
+	    String name = self.getName();
+	    if (name != null) {
+	        assignmentsAfter.put(name, 
+	                AssignedSourceImpl.makeAssignment(
+	                        name, self, self.getType(), 
+	                        0, self.getHasMultiplicity()? -1: 1));
+	    }
+	    return assignmentsAfter;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
+    public boolean localNameDeclarationStatementTypeDerivation() {
+        this.getSelf().getType();
+        return true;
+    }
+    
+    /*
+     * Constraints
+     */
 
 	/**
 	 * The assignments before the expression of a local name declaration
 	 * statement are the same as the assignments before the statement.
 	 **/
 	public boolean localNameDeclarationStatementAssignmentsBefore() {
+	    // Note: This is handled by deriveAssignmentAfter.
 		return true;
 	}
 
@@ -104,7 +156,9 @@ public class LocalNameDeclarationStatementImpl extends
 	 * assignable to that classifier.
 	 **/
 	public boolean localNameDeclarationStatementType() {
-		return true;
+	    LocalNameDeclarationStatement self = this.getSelf();
+	    return self.getTypeName() == null || 
+	                new AssignableLocalNameImpl(this).isAssignableFrom(self.getExpression());
 	}
 
 	/**
@@ -113,7 +167,13 @@ public class LocalNameDeclarationStatementImpl extends
 	 * remain unassigned after the expression.
 	 **/
 	public boolean localNameDeclarationStatementLocalName() {
-		return true;
+	    LocalNameDeclarationStatement self = this.getSelf();
+	    this.getAssignmentAfterMap();
+	    String name = self.getName();
+	    Expression expression = self.getExpression();
+		return name != null && expression != null &&
+		            this.getAssignmentBefore(name) == null &&
+		            expression.getImpl().getAssignmentAfter(name) == null;
 	}
 
 	/**
@@ -126,6 +186,7 @@ public class LocalNameDeclarationStatementImpl extends
 	 * [0..*], otherwise it is [0..1].
 	 **/
 	public boolean localNameDeclarationStatementAssignmentsAfter() {
+        // Note: This is handled by overriding deriveAssignmentAfter.
 		return true;
 	}
 
@@ -135,17 +196,9 @@ public class LocalNameDeclarationStatementImpl extends
 	 * greater than 1.
 	 **/
 	public boolean localNameDeclarationStatementExpressionMultiplicity() {
-		return true;
-	}
-
-	/**
-	 * The type of a local name declaration statement with a type name is the
-	 * single classifier referent of the type name. Otherwise it is the type of
-	 * the expression of the statement.
-	 **/
-	public boolean localNameDeclarationStatementTypeDerivation() {
-		this.getSelf().getType();
-		return true;
+	    LocalNameDeclarationStatement self = this.getSelf();
+	    Expression expression = self.getExpression();
+	    return self.getHasMultiplicity() || expression == null || expression.getUpper() <= 1;
 	}
 
 } // LocalNameDeclarationStatementImpl

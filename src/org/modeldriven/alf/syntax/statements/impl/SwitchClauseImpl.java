@@ -9,25 +9,22 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A clause in a switch statement with a set of cases and a sequence of
  * statements that may be executed if one of the cases matches the switch value.
  **/
 
-public class SwitchClauseImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public class SwitchClauseImpl extends SyntaxElementImpl {
 
 	private Collection<Expression> case_ = new ArrayList<Expression>();
 	private Block block = null;
@@ -59,6 +56,10 @@ public class SwitchClauseImpl extends
 	public void setBlock(Block block) {
 		this.block = block;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The assignments before any case expression of a switch clause are the
@@ -66,6 +67,7 @@ public class SwitchClauseImpl extends
 	 * block of a switch clause are the assignments after all case expressions.
 	 **/
 	public boolean switchClauseAssignmentsBefore() {
+	    // Note: This is handled by setAssignmentBefore.
 		return true;
 	}
 
@@ -75,15 +77,29 @@ public class SwitchClauseImpl extends
 	 * names may not be defined in case expressions).
 	 **/
 	public boolean switchClauseCaseLocalNames() {
+	    SwitchClause self = this.getSelf();
+	    Collection<Expression> cases = self.getCase();
+	    Collection<AssignedSource> assignmentBefore = self.assignmentsBefore();
+	    for (Expression expression: cases) {
+	        if (!assignmentBefore.containsAll(expression.getAssignmentAfter())) {
+	            return false;
+	        }
+	    }
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * The assignments before a switch clause are the assignments before any
 	 * case expression of the clause.
 	 **/
 	public Collection<AssignedSource> assignmentsBefore() {
-		return new ArrayList<AssignedSource>(); // STUB
+	    Object[] cases = this.getSelf().getCase().toArray();
+	    return cases.length == 0? new ArrayList<AssignedSource>():
+	                              ((Expression)cases[0]).getAssignmentBefore();
 	} // assignmentsBefore
 
 	/**
@@ -91,7 +107,31 @@ public class SwitchClauseImpl extends
 	 * of the switch clause.
 	 **/
 	public Collection<AssignedSource> assignmentsAfter() {
-		return new ArrayList<AssignedSource>(); // STUB
+	    Block block = this.getSelf().getBlock();
+		return block == null? new ArrayList<AssignedSource>():
+		                      block.getAssignmentAfter();
 	} // assignmentsAfter
+	
+    /**
+     * The assignments before any case expression of a switch clause are the
+     * same as the assignments before the clause. The assignments before the
+     * block of a switch clause are the assignments after all case expressions.
+     **/
+	public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
+	    SwitchClause self = this.getSelf();
+	    Collection<Expression> cases = self.getCase();
+	    Block block = self.getBlock();
+	    Map<String, AssignedSource> assignmentsAfterCases = 
+	        new HashMap<String, AssignedSource>(assignmentBefore);
+	    for (Expression expression: cases) {
+	        expression.getImpl().setAssignmentBefore(assignmentBefore);
+	        for (AssignedSource assignment: expression.getImpl().getNewAssignments()) {
+	            assignmentsAfterCases.put(assignment.getName(), assignment);
+	        }
+	    }
+	    if (block != null) {
+	        block.getImpl().setAssignmentBefore(assignmentsAfterCases);
+	    }
+	}
 
 } // SwitchClauseImpl

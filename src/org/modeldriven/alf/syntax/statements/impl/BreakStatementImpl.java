@@ -9,17 +9,7 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A statement that causes the termination of execution of an immediately
@@ -51,30 +41,43 @@ public class BreakStatementImpl extends
 	}
 
 	protected Statement deriveTarget() {
-		return null; // STUB
+	    return this.getLoopStatement();
 	}
+	
+	/*
+	 * Derivations
+	 */
 
 	/**
 	 * The target of a break statement is the innermost switch, while, do or for
 	 * statement enclosing the break statement.
 	 **/
 	public boolean breakStatementTargetDerivation() {
-		this.getSelf().getTarget();
-		return true;
+	    // Note: The target attribute is mandatory.
+		return this.getSelf().getTarget() != null;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The target of a break statement may not have a @parallel annotation.
 	 **/
 	public boolean breakStatementNonparallelTarget() {
-		return true;
+	    Statement target = this.getSelf().getTarget();
+		return target == null || !target.getImpl().hasAnnotation("parallel");
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * A break statement may not have any annotations.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
-		return false; // STUB
+		return false;
 	} // annotationAllowed
 
 } // BreakStatementImpl

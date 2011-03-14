@@ -9,24 +9,20 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * A group of qualified names.
  **/
 
-public class QualifiedNameListImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public class QualifiedNameListImpl extends SyntaxElementImpl {
 
 	private Collection<QualifiedName> name = new ArrayList<QualifiedName>();
 
@@ -50,4 +46,25 @@ public class QualifiedNameListImpl extends
 		this.name.add(name);
 	}
 
+	/*
+	 * Helper Methods
+	 */
+	
+	public Collection<ElementReference> getNonTemplateClassifierReferents() {
+        ArrayList<ElementReference> referents = new ArrayList<ElementReference>();
+        for (QualifiedName qualifiedName: this.getSelf().getName()) {
+            ElementReference referent = qualifiedName.getImpl().getNonTemplateClassifierReferent();
+            if (referent != null) {
+                referents.add(referent);
+            }
+        }
+        return referents;
+	}
+
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        for (QualifiedName name: this.getSelf().getName()) {
+            name.getImpl().setCurrentScope(currentScope);
+        }
+    }
+	
 } // QualifiedNameListImpl

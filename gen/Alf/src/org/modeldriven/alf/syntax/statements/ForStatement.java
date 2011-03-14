@@ -176,7 +176,8 @@ public class ForStatement extends Statement {
 		super.print(prefix);
 		Block body = this.getBody();
 		if (body != null) {
-			System.out.println(prefix + " body:" + body);
+			System.out.println(prefix + " body:");
+			body.print(prefix + "  ");
 		}
 		List<LoopVariableDefinition> variableDefinition = this
 				.getVariableDefinition();

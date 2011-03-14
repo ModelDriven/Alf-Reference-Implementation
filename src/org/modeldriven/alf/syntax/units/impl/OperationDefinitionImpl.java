@@ -17,7 +17,6 @@ import org.omg.uml.Operation;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * The definition of an operation, with any formal parameters defined as owned
@@ -63,6 +62,9 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 
 	public void setBody(Block body) {
 		this.body = body;
+        if (body != null) {
+            body.getImpl().setCurrentScope(this.getSelf());
+        }
 	}
 
 	public Collection<ElementReference> getRedefinedOperations() {
@@ -148,19 +150,6 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	    return true;
 	}
 	
-    /* Hack to set the current scope in the body of the activity, since the
-     * effectiveBody is not currently an official derived attribute.
-     */
-    @Override
-    protected UnitDefinition deriveSubunit() {
-        UnitDefinition subunit = super.deriveSubunit();
-        Block body = this.getEffectiveBody(subunit);
-        if (body != null) {
-            body.getImpl().setCurrentScope(this.getSelf());
-        }
-        return subunit;
-    }
-    
 	/*
 	 * Derivations
 	 */
@@ -329,27 +318,11 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     }
     
     private boolean matchParameters(ElementReference operation) {
-        OperationDefinition alfOperation = (OperationDefinition)operation.getImpl().getAlf();
-        Operation umlOperation = (Operation)operation.getImpl().getUml();
-        if (alfOperation != null) {
-            return FormalParameterImpl.match(this.getFormalParameters(), alfOperation.getImpl().getFormalParameters());
-        } else if (umlOperation != null) {
-            return FormalParameterImpl.match(this.getFormalParameters(), umlOperation.getOwnedParameter());
-        } else {
-            return false;
-        }
+        return operation != null && 
+                    FormalParameterImpl.match(this.getFormalParameters(), 
+                            operation.getImpl().getParameters());
     }
     
-    public List<FormalParameter> getFormalParameters() {
-        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
-        for (Member member: this.getSelf().getOwnedMember()) {
-            if (member instanceof FormalParameter) {
-                parameters.add((FormalParameter)member);
-            }
-        }
-        return parameters;
-    }
-
     public Block getEffectiveBody() {
         return this.getEffectiveBody(this.getSelf().getSubunit());
     }

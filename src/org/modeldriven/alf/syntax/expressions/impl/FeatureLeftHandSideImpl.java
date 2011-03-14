@@ -82,4 +82,22 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
 		return true;
 	}
 
+    @Override
+    public ElementReference getType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Integer getLower() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public Integer getUpper() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 } // FeatureLeftHandSideImpl

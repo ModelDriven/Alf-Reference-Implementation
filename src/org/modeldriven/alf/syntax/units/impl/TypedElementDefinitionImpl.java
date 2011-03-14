@@ -185,5 +185,5 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl {
 	    TypedElementDefinition self = this.getSelf();
 		return self.getTypeName() == null || self.getType() != null;
 	}
-
+	
 } // TypedElementDefinitionImpl

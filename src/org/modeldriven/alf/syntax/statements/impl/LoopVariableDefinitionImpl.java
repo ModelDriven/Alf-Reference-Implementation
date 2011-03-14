@@ -9,17 +9,16 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The definition of a loop variable in a for statement.
@@ -36,8 +35,8 @@ public class LoopVariableDefinitionImpl extends
 	private Boolean isCollectionConversion = null; // DERIVED
 	private ElementReference type = null; // DERIVED
 	private Boolean isFirst = null; // DERIVED
-	private Collection<AssignedSource> assignmentBefore = null; // DERIVED
-	private Collection<AssignedSource> assignmentAfter = null; // DERIVED
+	private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
+	private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
 
 	public LoopVariableDefinitionImpl(LoopVariableDefinition self) {
 		super(self);
@@ -120,57 +119,116 @@ public class LoopVariableDefinitionImpl extends
 		this.isFirst = isFirst;
 	}
 
-	public Collection<AssignedSource> getAssignmentBefore() {
-		if (this.assignmentBefore == null) {
-			this.setAssignmentBefore(this.deriveAssignmentBefore());
-		}
-		return this.assignmentBefore;
-	}
+    public Collection<AssignedSource> getAssignmentBefore() {
+        return this.getAssignmentBeforeMap().values();
+    }
+    
+    public Map<String, AssignedSource> getAssignmentBeforeMap() {
+        if (this.assignmentBefore == null) {
+            this.setAssignmentBefore(this.deriveAssignmentBefore());
+        }
+        return this.assignmentBefore;
+    }
+    
+    public AssignedSource getAssignmentBefore(String name) {
+        this.getAssignmentBefore();
+        return this.assignmentBefore.get(name);
+    }
 
-	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
-		this.assignmentBefore = assignmentBefore;
-	}
+    public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+        this.setAssignmentBefore(new HashMap<String, AssignedSource>());
+        for (AssignedSource assignment: assignmentBefore) {
+            this.addAssignmentBefore(assignment);
+        }
+    }
+    
+    public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
+        this.assignmentBefore = assignmentBefore;
+    }
 
-	public void addAssignmentBefore(AssignedSource assignmentBefore) {
-		this.assignmentBefore.add(assignmentBefore);
-	}
+    public void addAssignmentBefore(AssignedSource assignmentBefore) {
+        this.getAssignmentBefore();
+        this.assignmentBefore.put(assignmentBefore.getName(), assignmentBefore);
+    }
 
-	public Collection<AssignedSource> getAssignmentAfter() {
-		if (this.assignmentAfter == null) {
-			this.setAssignmentAfter(this.deriveAssignmentAfter());
-		}
-		return this.assignmentAfter;
-	}
+    public Collection<AssignedSource> getAssignmentAfter() {
+        return this.getAssignmentAfterMap().values();
+    }
 
-	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
-		this.assignmentAfter = assignmentAfter;
-	}
+    public Map<String, AssignedSource> getAssignmentAfterMap() {
+        if (this.assignmentAfter == null) {
+            this.setAssignmentAfter(this.deriveAssignmentAfter());
+        }
+        return this.assignmentAfter;
+    }
 
-	public void addAssignmentAfter(AssignedSource assignmentAfter) {
-		this.assignmentAfter.add(assignmentAfter);
-	}
+    public AssignedSource getAssignmentAfter(String name) {
+        this.getAssignmentAfter();
+        return this.assignmentAfter.get(name);
+    }
 
+    public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+        this.assignmentAfter.clear();
+        for (AssignedSource assignment: assignmentAfter) {
+            this.addAssignmentBefore(assignment);
+        }
+    }
+
+    public void setAssignmentAfter(Map<String, AssignedSource> assignmentAfter) {
+        this.assignmentAfter = assignmentAfter;
+    }
+
+    public void addAssignmentAfter(AssignedSource assignmentAfter) {
+        this.getAssignmentAfter();
+        this.assignmentAfter.put(assignmentAfter.getName(), assignmentAfter);
+    }
+
+    /**
+     * Collection conversion is required for a loop variable definition if the
+     * type for the definition is the instantiation of a collection class and
+     * the multiplicity upper bound of the first expression is no greater than
+     * 1.
+     **/
 	protected Boolean deriveIsCollectionConversion() {
-		return null; // STUB
+	    LoopVariableDefinition self = this.getSelf();
+	    ElementReference type = self.getType();
+	    Expression expression1 = self.getExpression1();
+		return type != null && type.getImpl().isCollectionClass() &&
+		            expression1 != null && expression1.getUpper() <= 1;
 	}
 
+    /**
+     * If the type of a loop variable is not inferred, then the variable has the
+     * type denoted by the type name, if it is not empty, and is untyped
+     * otherwise. If the type is inferred, them the variable has the same as the
+     * type of the expression in its definition.
+     **/
 	protected ElementReference deriveType() {
-		return null; // STUB
-	}
-
-	protected Boolean deriveIsFirst() {
-		return null; // STUB
-	}
-
-	protected Collection<AssignedSource> deriveAssignmentBefore() {
-		return null; // STUB
-	}
-
-	protected Collection<AssignedSource> deriveAssignmentAfter() {
-		return null; // STUB
+	    LoopVariableDefinition self = this.getSelf();
+	    if (self.getTypeIsInferred()) {
+	        Expression expression = self.getExpression1();
+	        return expression == null? null: expression.getType();
+	    } else {
+	        return typeName == null? null: typeName.getImpl().getClassifierReferent();
+	    }
 	}
 
 	/**
+	 * isFirst defaults to false unless explicitly set otherwise.
+	 */
+	protected Boolean deriveIsFirst() {
+		return false;
+	}
+
+	protected Map<String, AssignedSource> deriveAssignmentBefore() {
+	    // Note: This shuold always be set externally.
+		return new HashMap<String, AssignedSource>();
+	}
+
+    /**
+     * The assignments before the expressions of a loop variable definition are
+     * the assignments before the loop variable definition.
+     *
 	 * The assignments after a loop variable definition include the assignments
 	 * after the expression (or expressions) of the definition plus a new
 	 * assigned source for the loop variable itself. The assigned source for the
@@ -182,16 +240,67 @@ public class LoopVariableDefinitionImpl extends
 	 * is required, then the variable has the argument type of the collection
 	 * class.
 	 **/
+	protected Map<String, AssignedSource> deriveAssignmentAfter() {
+	    LoopVariableDefinition self = this.getSelf();
+	    String variable = self.getVariable();
+	    Expression expression1 = self.getExpression1();
+	    Expression expression2 = self.getExpression2();
+	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+	    Map<String, AssignedSource> assignmentsAfter = null;
+	    if (expression1 == null) {
+	        assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
+	    } else {
+	        expression1.getImpl().setAssignmentBefore(assignmentsBefore);
+	        if (expression2 == null) {
+	            assignmentsAfter = 
+	                new HashMap<String, AssignedSource>(expression1.getImpl().getAssignmentAfterMap());
+	        } else {
+	            expression2.getImpl().setAssignmentBefore(assignmentsBefore);
+	            assignmentsAfter =
+	                new HashMap<String, AssignedSource>(expression1.getImpl().getAssignmentAfterMap());
+	        }
+	    }
+	    if (variable != null) {
+	        ElementReference type = this.getType();
+	        if (self.getIsCollectionConversion()) {
+	            type = type.getImpl().getCollectionArgument();
+	        }
+	        int lower = self.getIsFirst()? 1: 0;
+	        assignmentsAfter.put(variable, AssignedSourceImpl.makeAssignment(
+	                variable, self, type, lower, 1));
+	    }
+	    return assignmentsAfter;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
 	public boolean loopVariableDefinitionAssignmentAfterDerivation() {
 		this.getSelf().getAssignmentAfter();
 		return true;
 	}
+	
+    public boolean loopVariableDefinitionTypeDerivation() {
+        this.getSelf().getType();
+        return true;
+    }
+
+    public boolean loopVariableDefinitionIsCollectionConversionDerivation() {
+        this.getSelf().getIsCollectionConversion();
+        return true;
+    }
+
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The assignments before the expressions of a loop variable definition are
 	 * the assignments before the loop variable definition.
 	 **/
 	public boolean loopVariableDefinitionAssignmentsBefore() {
+	    // Note: This is handled by deriveAssignmentAfter.
 		return true;
 	}
 
@@ -201,7 +310,24 @@ public class LoopVariableDefinitionImpl extends
 	 * may be newly assigned or reassigned in more than one of the expressions.
 	 **/
 	public boolean loopVariableDefinitionRangeExpressions() {
-		return true;
+	    LoopVariableDefinition self = this.getSelf();
+	    ElementReference integerType = RootNamespace.getIntegerType();
+	    Expression expression1 = self.getExpression1();
+	    Expression expression2 = self.getExpression2();
+	    if (expression2 == null) {
+	        return true;
+	    } else if (expression1.getType() != integerType || 
+	            expression1.getUpper() != 1 ||
+	            expression2.getType() != integerType ||
+	            expression2.getUpper() != 1) {
+	        return false;
+	    } else {
+	        this.getAssignmentBeforeMap(); // Force computation of assignments
+	        Collection<AssignedSource> newAssignments = 
+	            new ArrayList<AssignedSource>(expression1.getImpl().getNewAssignments());
+	        newAssignments.retainAll(expression2.getImpl().getNewAssignments());
+	        return newAssignments.isEmpty();
+	    }
 	}
 
 	/**
@@ -209,18 +335,8 @@ public class LoopVariableDefinitionImpl extends
 	 * resolve to a non-template classifier.
 	 **/
 	public boolean loopVariableDefinitionTypeName() {
-		return true;
-	}
-
-	/**
-	 * If the type of a loop variable is not inferred, then the variable has the
-	 * type denoted by the type name, if it is not empty, and is untyped
-	 * otherwise. If the type is inferred, them the variable has the same as the
-	 * type of the expression in its definition.
-	 **/
-	public boolean loopVariableDefinitionTypeDerivation() {
-		this.getSelf().getType();
-		return true;
+	    LoopVariableDefinition self = this.getSelf();
+		return self.getTypeName() == null || self.getType() != null;
 	}
 
 	/**
@@ -229,18 +345,10 @@ public class LoopVariableDefinitionImpl extends
 	 * declared type.
 	 **/
 	public boolean loopVariableDefinitionDeclaredType() {
-		return true;
-	}
-
-	/**
-	 * Collection conversion is required for a loop variable definition if the
-	 * type for the definition is the instantiation of a collection class and
-	 * the multiplicity upper bound of the first expression is no greater than
-	 * 1.
-	 **/
-	public boolean loopVariableDefinitionIsCollectionConversionDerivation() {
-		this.getSelf().getIsCollectionConversion();
-		return true;
+	    LoopVariableDefinition self = this.getSelf();
+	    Expression expression = self.getExpression1();
+		return self.getTypeIsInferred() || expression == null || 
+		            expression.getType().getImpl().conformsTo(self.getType());
 	}
 
 	/**
@@ -248,7 +356,33 @@ public class LoopVariableDefinitionImpl extends
 	 * after the expression or expressions in the definition.
 	 **/
 	public boolean loopVariableDefinitionVariable() {
-		return true;
+	    LoopVariableDefinition self = this.getSelf();
+	    String variable = self.getVariable();
+	    Expression expression1 = self.getExpression1();
+	    Expression expression2 = self.getExpression2();
+	    if (variable == null || expression1 == null) {
+	        return true;
+	    } else {
+	        this.getAssignmentAfterMap(); // Force computation of assignments.
+	        return !(expression2 == null? expression1: expression2).getImpl().
+	                    getAssignmentAfterMap().containsKey(variable);
+	    }
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        LoopVariableDefinition self = this.getSelf();
+        Expression expression1 = self.getExpression1();
+        Expression expression2 = self.getExpression2();
+        if (expression1 != null) {
+            expression1.getImpl().setCurrentScope(currentScope);
+        }
+        if (expression2 != null) {
+            expression2.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // LoopVariableDefinitionImpl

@@ -29,7 +29,7 @@ import java.util.List;
  * to its various subclasses.
  **/
 
-public abstract class LeftHandSideImpl extends SyntaxElementImpl {
+public abstract class LeftHandSideImpl extends AssignableElementImpl {
 
 	private Collection<AssignedSource> assignmentBefore = null; // DERIVED
 	private Collection<AssignedSource> assignmentAfter = null; // DERIVED
@@ -96,5 +96,5 @@ public abstract class LeftHandSideImpl extends SyntaxElementImpl {
 	public boolean leftHandSideIndexExpression() {
 		return true;
 	}
-
+	
 } // LeftHandSideImpl

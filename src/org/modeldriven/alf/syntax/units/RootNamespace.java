@@ -1,5 +1,6 @@
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.RootNamespaceImpl;
@@ -19,6 +20,9 @@ public class RootNamespace extends NamespaceDefinition {
     private static QualifiedName primitiveTypes = null;
     private static QualifiedName primitiveBehaviors = null;
     private static QualifiedName basicInputOutput = null;
+    
+    private static ElementReference booleanType = null;
+    private static ElementReference integerType = null;
 
     public static RootNamespace getRootScope() {
         return rootNamespace;
@@ -63,6 +67,22 @@ public class RootNamespace extends NamespaceDefinition {
             basicInputOutput.getImpl().setCurrentScope(getRootScope());
         }
         return basicInputOutput;
+    }
+    
+    public static ElementReference getBooleanType() {
+        if (booleanType == null) {
+            booleanType = getPrimitiveTypes().getImpl().copy().
+                            addName("Boolean").getImpl().getClassifierReferent();
+        }
+        return booleanType;
+    }
+
+    public static ElementReference getIntegerType() {
+        if (integerType == null) {
+            integerType = getPrimitiveTypes().getImpl().copy().
+                            addName("Integer").getImpl().getClassifierReferent();
+        }
+        return integerType;
     }
 
 }

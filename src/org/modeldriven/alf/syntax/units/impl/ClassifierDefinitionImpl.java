@@ -19,8 +19,10 @@ import org.omg.uml.NamedElement;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The definition of a classifier.
@@ -79,19 +81,9 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
      * classifier definition.
      **/
 	protected Collection<ElementReference> deriveSpecializationReferent() {
-	    ClassifierDefinition self = this.getSelf();
-	    ArrayList<ElementReference> specializationReferents = new ArrayList<ElementReference>();
-	    QualifiedNameList specialization = self.getSpecialization();
-	    if (specialization != null) {
-    	    for (QualifiedName qualifiedName: specialization.getName()) {
-    	        qualifiedName.getImpl().setCurrentScope(this.getOuterScope());
-    	        ElementReference referent = qualifiedName.getImpl().getNonTemplateClassifierReferent();
-    	        if (referent != null) {
-    	            specializationReferents.add(referent);
-    	        }
-    	    }
-	    }
-		return specializationReferents;
+	    QualifiedNameList specialization = this.getSelf().getSpecialization();
+	    return specialization == null? new ArrayList<ElementReference>():
+	                specialization.getImpl().getNonTemplateClassifierReferents();
 	}
 	
     /**
@@ -244,5 +236,42 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	protected List<Member> inherit(List<Member> inheritableMembers) {
 	    return inheritableMembers;
 	}
+
+    public static ElementReference commonAncestor(Collection<ElementReference> classifiers) {
+        while (classifiers.size() > 1) {
+            // Construct the set of all common ancestors of the given classifiers.
+            boolean isFirst = true;
+            Set<ElementReference> commonAncestors = new HashSet<ElementReference>();
+            for (ElementReference classifier: classifiers) {
+                Collection<ElementReference> ancestors = classifier.getImpl().allParents();
+                ancestors.add(classifier);
+                if (isFirst) {
+                    commonAncestors.addAll(ancestors);
+                    isFirst = false;
+                } else {
+                    commonAncestors.retainAll(ancestors);
+                }
+                if (commonAncestors.isEmpty()) {
+                    return null;
+                }
+            }
+            
+            // Remove any common ancestors that are parents of other common
+            // ancestors.
+            Set<ElementReference> parents = new HashSet<ElementReference>();
+            for (ElementReference ancestor: commonAncestors) {
+                parents.addAll(ancestor.getImpl().parents());
+            }
+            commonAncestors.removeAll(parents);
+            
+            classifiers.clear();
+            classifiers.addAll(commonAncestors);
+        }
+        if (classifiers.isEmpty()) {
+            return null;
+        } else {
+            return (ElementReference)classifiers.toArray()[0];
+        }
+    }
 
 } // ClassifierDefinitionImpl
