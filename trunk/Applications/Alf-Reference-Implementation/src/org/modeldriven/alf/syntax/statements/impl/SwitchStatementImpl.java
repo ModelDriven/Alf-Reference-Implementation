@@ -9,25 +9,23 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * A statement that executes (at most) one of a set of statement sequences based
  * on matching a switch value to a set of test cases.
  **/
 
-public class SwitchStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class SwitchStatementImpl extends StatementImpl {
 
 	private Collection<SwitchClause> nonDefaultClause = new ArrayList<SwitchClause>();
 	private Expression expression = null;
@@ -39,6 +37,7 @@ public class SwitchStatementImpl extends
 		super(self);
 	}
 
+	@Override
 	public SwitchStatement getSelf() {
 		return (SwitchStatement) this.self;
 	}
@@ -93,19 +92,98 @@ public class SwitchStatementImpl extends
 		this.isDetermined = isDetermined;
 	}
 
+    @Override
+    public void setEnclosingStatement(Statement enclosingStatement) {
+        super.setEnclosingStatement(enclosingStatement);
+        SwitchStatement self = this.getSelf();
+        for (SwitchClause clause: self.getNonDefaultClause()) {
+            Block block = clause.getBlock();
+            if (block != null) {
+                block.getImpl().setEnclosingStatement(self);
+            }
+        }
+        Block defaultClause = self.getDefaultClause();
+        if (defaultClause != null) {
+            defaultClause.getImpl().setEnclosingStatement(self);
+        }
+    }
+    
+    /**
+     * An switch statement is assured if it has an @assured annotation.
+     **/
 	protected Boolean deriveIsAssured() {
-		return null; // STUB
+		return this.hasAnnotation("assured");
 	}
 
+    /**
+     * An switch statement is determined if it has an @determined annotation.
+     **/
 	protected Boolean deriveIsDetermined() {
-		return null; // STUB
+		return this.hasAnnotation("determined");
 	}
+	
+    /**
+     * The assignments before all clauses of a switch statement are the same as
+     * the assignments before the switch statement. If a name has an assigned 
+     * source after any clause of a switch statement that is different than 
+     * before that clause (including newly defined names), the assigned source 
+     * after the switch statement is the switch statement. 
+     * 
+     * If a switch statement does not have a final default clause, then any name
+     * that is unassigned before the switch statement is unassigned after the
+     * switch statement. If a switch statement does have a final default clause,
+     * then any name assigned in any clause of the switch statement has a type 
+     * that is the effective common ancestor of the types of the name in each 
+     * clause and a multiplicity lower bound that is the minimum of the lower 
+     * bound for the name in each clause and a multiplicity upper bound that is 
+     * the maximum for the name in each clause. Otherwise, the assigned source 
+     * of a name after the switch statement is the same as before the switch 
+     * statement.
+     **/
+	@Override
+	protected Map<String, AssignedSource> deriveAssignmentAfter() {
+        SwitchStatement self = this.getSelf();
+        Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+        Collection<Block> blocks = new ArrayList<Block>();
+        for (SwitchClause clause: self.getNonDefaultClause()) {
+            clause.getImpl().setAssignmentBefore(assignmentsBefore);
+            blocks.add(clause.getImpl().getBlock());
+        }
+        Block defaultClause = self.getDefaultClause();
+        if (defaultClause != null) {
+            defaultClause.getImpl().setAssignmentBefore(assignmentsBefore);
+            blocks.add(defaultClause);
+        }
+        Map<String, AssignedSource> assignmentsAfter = 
+            new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
+        assignmentsAfter.putAll(this.mergeAssignments(blocks));
+        return assignmentsAfter;
+	}
+	
+	/*
+	 * Derivations
+	 */
+	
+    public boolean switchStatementIsDeterminedDerivation() {
+        this.getSelf().getIsDetermined();
+        return true;
+    }
+
+    public boolean switchStatementIsAssuredDerivation() {
+        this.getSelf().getIsAssured();
+        return true;
+    }
+
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The assignments before all clauses of a switch statement are the same as
 	 * the assignments before the switch statement.
 	 **/
 	public boolean switchStatementAssignmentsBefore() {
+	    // Note: This is handled by deriveAssignmentAfter.
 		return true;
 	}
 
@@ -114,6 +192,21 @@ public class SwitchStatementImpl extends
 	 * in a switch statement.
 	 **/
 	public boolean switchStatementCaseAssignments() {
+	    SwitchStatement self = this.getSelf();
+	    this.getAssignmentAfterMap(); // Force computation of assignments.
+	    Collection<AssignedSource> previousAssignments = new HashSet<AssignedSource>();
+	    for (SwitchClause clause: self.getNonDefaultClause()) {
+	        for (Expression expression: clause.getCase()) {
+	            Collection<AssignedSource> newAssignments = 
+	                expression.getImpl().getNewAssignments();
+	            for (AssignedSource newAssignment: newAssignments) {
+	                if (previousAssignments.contains(newAssignment)) {
+	                    return false;
+	                }
+	                previousAssignments.addAll(newAssignments);
+	            }
+	        }
+	    }
 		return true;
 	}
 
@@ -125,6 +218,7 @@ public class SwitchStatementImpl extends
 	 * statement is the same as before the switch statement.
 	 **/
 	public boolean switchStatementAssignmentsAfter() {
+        // Note: This is handled by overriding deriveAssignmentAfter.
 		return true;
 	}
 
@@ -141,39 +235,119 @@ public class SwitchStatementImpl extends
 	 * bound that is the maximum for the name in each clause.
 	 **/
 	public boolean switchStatementAssignments() {
-		return true;
+        // Note: This is partly handled by overriding deriveAssignmentAfter.
+        SwitchStatement self = this.getSelf();
+        Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+        Map<String, AssignedSource> assignmentsAfter = this.getAssignmentAfterMap();
+        if (self.getDefaultClause() == null) {
+            for (String name: assignmentsAfter.keySet()) {
+                if (!assignmentsBefore.containsKey(name)) {
+                    return false;
+                }
+            }
+        } else {
+            Collection<Block> blocks = this.getAllBlocks();
+            if (blocks.size() > 1) {
+                Map<String, Integer> definitionCount = new HashMap<String, Integer>();
+                for (Block block: blocks) {
+                    for (AssignedSource assignment: block.getImpl().getNewAssignments()) {
+                        String name = assignment.getName();
+                        Integer count = definitionCount.get(name);
+                        if (count == null) {
+                            definitionCount.put(name, 1);
+                        } else {
+                            definitionCount.put(name, count++);
+                        }
+                    }
+                }
+                int n = blocks.size();
+                for (int count: definitionCount.values()) {
+                    if (count != n) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
 	}
 
+    /**
+	 * The expression of a switch statement must have a multiplicity no greater
+	 * than 1.
+	 */
 	public boolean switchStatementExpression() {
-		return true;
+        SwitchStatement self = this.getSelf();
+        Expression expression = self.getExpression();
+        if (expression == null || expression.getUpper() > 1) {
+            return false;
+        } else {
+            /*
+             * The case expressions of a switch statement must all have a
+             * multiplicity no greater than 1.
+             * (This should really be a constraint on SwitchClause.)
+             */
+            for (SwitchClause clause: self.getNonDefaultClause()) {
+                for (Expression caseExpression: clause.getCase()) {
+                    if (caseExpression.getUpper() > 1) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 	}
 
 	public boolean switchStatementEnclosedStatements() {
+	    // Note: This is handled by setEnclosingStatement.
 		return true;
 	}
-
-	/**
-	 * An switch statement is determined if it has an @determined annotation.
-	 **/
-	public boolean switchStatementIsDeterminedDerivation() {
-		this.getSelf().getIsDetermined();
-		return true;
-	}
-
-	/**
-	 * An switch statement is assured if it has an @assured annotation.
-	 **/
-	public boolean switchStatementIsAssuredDerivation() {
-		this.getSelf().getIsAssured();
-		return true;
-	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * In addition to an @isolated annotation, a switch statement may have @assured
 	 * and @determined annotations. They may not have arguments.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
-		return false; // STUB
+	    String identifier = annotation.getIdentifier();
+		return super.annotationAllowed(annotation) ||
+		            (identifier.equals("assured") || identifier.equals("determined")) &&
+		            annotation.getArgument().isEmpty();
 	} // annotationAllowed
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+        SwitchStatement self = this.getSelf();
+        Expression expression = self.getExpression();
+        if (expression != null) {
+            expression.getImpl().setCurrentScope(currentScope);
+        }
+        for (SwitchClause clause: self.getNonDefaultClause()) {
+            Block block = clause.getBlock();
+            if (block != null) {
+                block.getImpl().setCurrentScope(currentScope);
+            }
+        }
+        Block defaultClause = self.getDefaultClause();
+        if (defaultClause != null) {
+            defaultClause.getImpl().setCurrentScope(currentScope);
+        }
+	    
+	}
+
+    private Collection<Block> getAllBlocks() {
+        SwitchStatement self = this.getSelf();
+        Collection<Block> blocks = new ArrayList<Block>();
+        for (SwitchClause clause: self.getNonDefaultClause()) {
+            blocks.add(clause.getImpl().getBlock());
+        }
+        Block defaultClause = self.getDefaultClause();
+        if (defaultClause != null) {
+            blocks.add(defaultClause);
+        }
+        return blocks;
+    }
 
 } // SwitchStatementImpl

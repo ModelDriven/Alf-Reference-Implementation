@@ -9,11 +9,20 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
+import org.modeldriven.alf.syntax.units.ExternalParameter;
+import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.omg.uml.Activity;
 import org.omg.uml.Association;
+import org.omg.uml.Behavior;
 import org.omg.uml.BehavioredClassifier;
 import org.omg.uml.Class;
 import org.omg.uml.Classifier;
@@ -24,6 +33,7 @@ import org.omg.uml.Feature;
 import org.omg.uml.Namespace;
 import org.omg.uml.Operation;
 import org.omg.uml.Package;
+import org.omg.uml.Parameter;
 import org.omg.uml.Profile;
 import org.omg.uml.Property;
 import org.omg.uml.Reception;
@@ -103,6 +113,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isDataType() {
         return this.getSelf().getElement() instanceof DataType;
+    }
+
+    @Override
+    public boolean isBehavior() {
+        return this.getSelf().getElement() instanceof Behavior;
     }
 
     @Override
@@ -197,6 +212,51 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public Collection<ElementReference> parents() {
+        if (this.isClassifier()) {
+            return setOf(((Classifier)this.getSelf().getElement()).parents());
+        } else {
+            return new HashSet<ElementReference>();
+        }
+    }
+
+    @Override
+    public Collection<ElementReference> allParents() {
+        if (this.isClassifier()) {
+            return setOf(((Classifier)this.getSelf().getElement()).allParents());
+        } else {
+            return new HashSet<ElementReference>();
+        }
+    }
+    
+    private static Set<ElementReference> setOf(Set<Classifier> classifiers) {
+        Set<ElementReference> references = new HashSet<ElementReference>();
+        for (Classifier classifier: classifiers) {
+            ExternalElementReference reference = new ExternalElementReference();
+            reference.setElement(classifier);
+            references.add(reference);
+        }
+        return references;
+    }
+
+    @Override
+    public List<FormalParameter> getParameters() {
+        List<Parameter> ownedParameters = null;
+        if (this.isBehavior()) {
+            ownedParameters = ((Behavior)this.getSelf().getElement()).getOwnedParameter();
+        } else if (this.isOperation()) {
+            ownedParameters = ((Operation)this.getSelf().getElement()).getOwnedParameter();
+        } else {
+            ownedParameters = new ArrayList<Parameter>();
+        }
+        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+        for (Parameter parameter: ownedParameters) {
+            parameters.add(new ExternalParameter(parameter));
+        }
+        return parameters;
+    }
+
+    @Override
     public ElementReference getActiveClass() {
         ExternalElementReference self = this.getSelf();
         if (!this.isActivity()) {
@@ -233,6 +293,20 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                 element = (Element)object;
             }
             return element != null && this.getSelf().getElement() == element;
+        }
+    }
+
+    @Override
+    public boolean conformsTo(ElementReference type) {
+        if (!this.isClassifier()) {
+            return false;
+        } else if (type == null) {
+            return true;
+        } else if (!type.getImpl().isClassifier() || !(type instanceof ExternalElementReference)) {
+            return false;
+        } else {
+            return ((Classifier)this.getSelf().getElement()).
+                conformsTo((Classifier)((ExternalElementReference)type).getElement());
         }
     }
 

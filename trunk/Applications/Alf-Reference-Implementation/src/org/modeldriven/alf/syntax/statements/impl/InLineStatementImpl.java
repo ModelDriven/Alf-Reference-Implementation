@@ -9,24 +9,14 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A statement that executes code in a language other than Alf.
  **/
 
-public class InLineStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class InLineStatementImpl extends StatementImpl {
 
 	private String language = "";
 	private String code = "";
@@ -35,6 +25,7 @@ public class InLineStatementImpl extends
 		super(self);
 	}
 
+	@Override
 	public InLineStatement getSelf() {
 		return (InLineStatement) this.self;
 	}
@@ -54,12 +45,17 @@ public class InLineStatementImpl extends
 	public void setCode(String code) {
 		this.code = code;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The assignments after an in-line statement are the same as the
 	 * assignments before the statement.
 	 **/
 	public boolean inLineStatementAssignmentsAfter() {
+	    // Note: This is handled by the inherited deriveAssignmentAfter.
 		return true;
 	}
 

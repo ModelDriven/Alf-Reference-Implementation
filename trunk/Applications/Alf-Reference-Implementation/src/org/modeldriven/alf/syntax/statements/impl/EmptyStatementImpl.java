@@ -9,29 +9,19 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A statement that has no affect when executed.
  **/
 
-public class EmptyStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class EmptyStatementImpl extends StatementImpl {
 
 	public EmptyStatementImpl(EmptyStatement self) {
 		super(self);
 	}
 
+	@Override
 	public EmptyStatement getSelf() {
 		return (EmptyStatement) this.self;
 	}
@@ -41,6 +31,7 @@ public class EmptyStatementImpl extends
 	 * before the statement.
 	 **/
 	public boolean emptyStatementAssignmentsAfter() {
+	    // Note: This is handled by the inherited deriveAssignmentAfter.
 		return true;
 	}
 
@@ -48,7 +39,7 @@ public class EmptyStatementImpl extends
 	 * An empty statement may not have any annotations.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
-		return false; // STUB
+		return false;
 	} // annotationAllowed
 
 } // EmptyStatementImpl

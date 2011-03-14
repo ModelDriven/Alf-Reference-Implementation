@@ -9,25 +9,22 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A conditional statement that executes (at most) one of a set of clauses based
  * on boolean conditions.
  **/
 
-public class IfStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class IfStatementImpl extends StatementImpl {
 
 	private List<ConcurrentClauses> nonFinalClauses = new ArrayList<ConcurrentClauses>();
 	private Block finalClause = null;
@@ -83,14 +80,95 @@ public class IfStatementImpl extends
 	public void setIsDetermined(Boolean isDetermined) {
 		this.isDetermined = isDetermined;
 	}
+	
+    /**
+     * The enclosing statement of all the statements in the bodies of all
+     * non-final clauses and in the final clause (if any) of an if statement is
+     * the if statement.
+     **/
+	@Override
+	public void setEnclosingStatement(Statement enclosingStatement) {
+	    super.setEnclosingStatement(enclosingStatement);
+	    IfStatement self = this.getSelf();
+	    for (ConcurrentClauses clause: self.getNonFinalClauses()) {
+	        clause.getImpl().setEnclosingStatement(self);
+	    }
+	    Block finalClause = self.getFinalClause();
+	    if (finalClause != null) {
+	        finalClause.getImpl().setEnclosingStatement(self);
+	    }
+	}
 
+    /**
+     * An if statement is assured if it has an @assured annotation.
+     **/
 	protected Boolean deriveIsAssured() {
-		return null; // STUB
+		return this.hasAnnotation("assured");
 	}
 
+    /**
+     * An if statement is determined if it has an @determined annotation.
+     **/
 	protected Boolean deriveIsDetermined() {
-		return null; // STUB
+		return this.hasAnnotation("derived");
 	}
+	
+    /**
+     * The assignments before all the non-final clauses of an if statement are
+     * the same as the assignments before the if statement. If the statement has
+     * a final clause, then the assignments before that clause are also the same
+     * as the assignments before the if statement.
+     *
+     * If an if statement does not have a final else clause, then any name that
+     * is unassigned before the if statement is unassigned after the if
+     * statement. If an if statement does have a final else clause, then names
+     * assigned in any clause of the if statement have a type after the if 
+     * statement that is the effective common ancestor of the types of the name 
+     * in each clause with a multiplicity lower bound that is the minimum of the 
+     * lower bound for the name in each clause and a multiplicity upper bound 
+     * that is the maximum for the name in each clause. For a name that has an 
+     * assigned source after any clause of an if statement that is different 
+     * than before that clause, then the assigned source after the if statement 
+     * is the if statement. Otherwise, the assigned source of a name after the 
+     * if statement is the same as before the if statement.
+     **/
+    @Override
+    protected Map<String, AssignedSource> deriveAssignmentAfter() {
+        IfStatement self = this.getSelf();
+        Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+        Collection<Block> blocks = new ArrayList<Block>();
+        for (ConcurrentClauses clauses: self.getNonFinalClauses()) {
+            clauses.getImpl().setAssignmentBefore(assignmentsBefore);
+            blocks.addAll(clauses.getImpl().getBlocks());
+        }
+        Block finalClause = self.getFinalClause();
+        if (finalClause != null) {
+            finalClause.getImpl().setAssignmentBefore(assignmentsBefore);
+            blocks.add(finalClause);
+        }
+        Map<String, AssignedSource> assignmentsAfter = 
+            new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
+        assignmentsAfter.putAll(this.mergeAssignments(blocks));
+        return assignmentsAfter;
+    }
+    
+	/*
+	 * Derivations
+	 */
+
+    public boolean ifStatementIsAssuredDerivation() {
+        this.getSelf().getIsAssured();
+        return true;
+    }
+
+    public boolean ifStatementIsDeterminedDerivation() {
+        this.getSelf().getIsDetermined();
+        return true;
+    }
+    
+    /*
+     * Constraints
+     */
 
 	/**
 	 * The assignments before all the non-final clauses of an if statement are
@@ -99,6 +177,7 @@ public class IfStatementImpl extends
 	 * as the assignments before the if statement.
 	 **/
 	public boolean ifStatementAssignmentsBefore() {
+	    // Note: This is handled by deriveAssignmentsAfter.
 		return true;
 	}
 
@@ -119,6 +198,39 @@ public class IfStatementImpl extends
 	 * same as before the if statement.
 	 **/
 	public boolean ifStatementAssignmentsAfter() {
+	    // Note: This is partly handled by overriding deriveAssignmentAfter.
+	    IfStatement self = this.getSelf();
+	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+	    Map<String, AssignedSource> assignmentsAfter = this.getAssignmentAfterMap();
+	    if (self.getFinalClause() == null) {
+	        for (String name: assignmentsAfter.keySet()) {
+	            if (!assignmentsBefore.containsKey(name)) {
+	                return false;
+	            }
+	        }
+	    } else {
+	        Collection<Block> blocks = this.getAllBlocks();
+	        if (blocks.size() > 1) {
+	            Map<String, Integer> definitionCount = new HashMap<String, Integer>();
+	            for (Block block: blocks) {
+	                for (AssignedSource assignment: block.getImpl().getNewAssignments()) {
+	                    String name = assignment.getName();
+	                    Integer count = definitionCount.get(name);
+	                    if (count == null) {
+	                        definitionCount.put(name, 1);
+	                    } else {
+	                        definitionCount.put(name, count++);
+	                    }
+	                }
+	            }
+	            int n = blocks.size();
+	            for (int count: definitionCount.values()) {
+	                if (count != n) {
+	                    return false;
+	                }
+	            }
+	        }
+	    }
 		return true;
 	}
 
@@ -128,31 +240,48 @@ public class IfStatementImpl extends
 	 * the if statement.
 	 **/
 	public boolean ifStatementEnclosedStatements() {
+	    // Note: This is handled by overriding setEnclosingStatement.
 		return true;
 	}
-
-	/**
-	 * An if statement is assured if it has an @assured annotation.
-	 **/
-	public boolean ifStatementIsAssuredDerivation() {
-		this.getSelf().getIsAssured();
-		return true;
-	}
-
-	/**
-	 * An if statement is determined if it has an @determined annotation.
-	 **/
-	public boolean ifStatementIsDeterminedDerivation() {
-		this.getSelf().getIsDetermined();
-		return true;
-	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * In addition to an @isolated annotation, an if statement may have @assured
 	 * and @determined annotations. They may not have arguments.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
-		return false; // STUB
+	    String identifier = annotation.getIdentifier();
+		return super.annotationAllowed(annotation) ||
+		            (identifier.equals("assured") || 
+		                    identifier.equals("determined")) &&
+		             annotation.getArgument().isEmpty();
 	} // annotationAllowed
+	
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    IfStatement self = this.getSelf();
+	    for (ConcurrentClauses clause: self.getNonFinalClauses()) {
+	        clause.getImpl().setCurrentScope(currentScope);
+	    }
+	    Block finalClause = self.getFinalClause();
+	    if (finalClause != null) {
+	        finalClause.getImpl().setCurrentScope(currentScope);
+	    }
+	}
+	
+	private Collection<Block> getAllBlocks() {
+	    IfStatement self = this.getSelf();
+        Collection<Block> blocks = new ArrayList<Block>();
+        for (ConcurrentClauses clauses: self.getNonFinalClauses()) {
+            blocks.addAll(clauses.getImpl().getBlocks());
+        }
+        Block finalClause = self.getFinalClause();
+        if (finalClause != null) {
+            blocks.add(finalClause);
+        }
+	    return blocks;
+	}
 
 } // IfStatementImpl

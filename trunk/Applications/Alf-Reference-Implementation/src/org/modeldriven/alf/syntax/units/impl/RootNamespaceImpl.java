@@ -2,7 +2,6 @@ package org.modeldriven.alf.syntax.units.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.modeldriven.alf.parser.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -42,7 +41,7 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
                     members.add(member);
                 }
             }
-            this.getSelf().addOwnedMember(member);
+            this.getSelf().addMember(member);
         } else if (members.toArray()[0] instanceof MissingMember) {
             members = new ArrayList<Member>();
         }

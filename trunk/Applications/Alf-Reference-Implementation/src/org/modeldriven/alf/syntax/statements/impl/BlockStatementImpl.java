@@ -9,20 +9,19 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A statement that executes a block.
  **/
 
-public class BlockStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class BlockStatementImpl extends StatementImpl {
 
     private Block block = null;
     private Boolean isParallel = null; // DERIVED
@@ -31,7 +30,8 @@ public class BlockStatementImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.statements.BlockStatement getSelf() {
+	@Override
+	public BlockStatement getSelf() {
 		return (BlockStatement) this.self;
 	}
 
@@ -53,10 +53,60 @@ public class BlockStatementImpl extends
     public void setIsParallel(Boolean isParallel) {
         this.isParallel = isParallel;
     }
-
-    protected Boolean deriveIsParallel() {
-        return null; // STUB
+    
+    /**
+     * The enclosing statement for all the statements in the block of a block
+     * statement is the block statement.
+     **/
+    @Override
+    public void setEnclosingStatement(Statement enclosingStatement) {
+        super.setEnclosingStatement(enclosingStatement);
+        BlockStatement self = this.getSelf();
+        Block block = self.getBlock();
+        if (block != null) {
+            block.getImpl().setEnclosingStatement(self);
+        }
     }
+
+    /**
+     * A block statement is parallel if it has a @parallel annotation.
+     **/
+    protected Boolean deriveIsParallel() {
+        return this.hasAnnotation("parallel");
+    }
+    
+    /**
+     * The assignments before the block of a block statement are the same as the
+     * assignments before the block statement.
+     *
+     * The assignments after a block statement are the same as the assignments
+     * after the block of the block statement.
+     **/
+    @Override
+    protected Map<String, AssignedSource> deriveAssignmentAfter() {
+        BlockStatement self = this.getSelf();
+        Block block = self.getBlock();
+        if (block == null) {
+            return null;
+        } else {
+            BlockImpl blockImpl = block.getImpl();
+            blockImpl.setAssignmentBefore(this.getAssignmentBeforeMap());
+            return blockImpl.getAssignmentAfterMap();
+        }
+    }
+
+    /*
+     * Derivations
+     */
+    
+    public boolean blockStatementIsParallelDerivation() {
+        this.getSelf().getIsParallel();
+        return true;
+    }
+    
+    /*
+     * Constraints
+     */
 
 	/**
 	 * In a parallel block statement, any name assigned in one statement of the
@@ -64,6 +114,20 @@ public class BlockStatementImpl extends
 	 * block.
 	 **/
 	public boolean blockStatementParallelAssignments() {
+	    BlockStatement self = this.getSelf();
+	    Block block = self.getBlock();
+	    if (self.getIsParallel() && block != null) {
+	        self.getAssignmentAfter(); // Make sure assignments are derived for the block.
+	        Set<AssignedSource> previousAssignments = new HashSet<AssignedSource>();
+	        for (Statement statement: block.getStatement()) {
+	            for (AssignedSource assignment: statement.getImpl().getNewAssignments()) {
+	                if (previousAssignments.contains(assignment)) {
+	                    return false;
+	                }
+	                previousAssignments.add(assignment);
+	            }
+	        }
+	    }
 		return true;
 	}
 
@@ -72,6 +136,7 @@ public class BlockStatementImpl extends
 	 * assignments before the block statement.
 	 **/
 	public boolean blockStatementAssignmentsBefore() {
+        // Note: This is handled by deriveAssignmentAfter.
 		return true;
 	}
 
@@ -80,6 +145,7 @@ public class BlockStatementImpl extends
 	 * after the block of the block statement.
 	 **/
 	public boolean blockStatementAssignmentsAfter() {
+        // Note: This is handled by deriveAssignmentAfter.
 		return true;
 	}
 
@@ -88,14 +154,7 @@ public class BlockStatementImpl extends
 	 * statement is the block statement.
 	 **/
 	public boolean blockStatementEnclosedStatements() {
-		return true;
-	}
-
-	/**
-	 * A block statement is parallel if it has a @parallel annotation.
-	 **/
-	public boolean blockStatementIsParallelDerivation() {
-		this.getSelf().getIsParallel();
+	    //Note: This is handled by setEnclosingStatement.
 		return true;
 	}
 
@@ -104,7 +163,9 @@ public class BlockStatementImpl extends
 	 * annotation. It may not have any arguments.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
-		return false; // STUB
+		return annotation != null && 
+		    (super.annotationAllowed(annotation) || 
+		            annotation.getIdentifier().equals("parallel"));
 	} // annotationAllowed
 
     @Override
@@ -114,5 +175,5 @@ public class BlockStatementImpl extends
             block.getImpl().setCurrentScope(currentScope);
         }
     }
-
+    
 } // BlockStatementImpl

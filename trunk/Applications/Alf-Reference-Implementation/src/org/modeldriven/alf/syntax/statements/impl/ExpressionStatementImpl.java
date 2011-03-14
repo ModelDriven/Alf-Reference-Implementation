@@ -9,24 +9,18 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
 /**
  * A statement that evaluates an expression when executed.
  **/
 
-public class ExpressionStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class ExpressionStatementImpl extends StatementImpl {
 
 	private Expression expression = null;
 
@@ -34,6 +28,7 @@ public class ExpressionStatementImpl extends
 		super(self);
 	}
 
+	@Override
 	public ExpressionStatement getSelf() {
 		return (ExpressionStatement) this.self;
 	}
@@ -45,12 +40,29 @@ public class ExpressionStatementImpl extends
 	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
+	
+	@Override
+	public Map<String, AssignedSource> deriveAssignmentAfter() {
+	    ExpressionStatement self = this.getSelf();
+	    Expression expression = self.getExpression();
+	    if (expression == null) {
+	        return super.deriveAssignmentAfter();
+	    } else {
+	        expression.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
+	        return expression.getImpl().getAssignmentAfterMap();
+	    }
+	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The assignments before the expression of an expression statement are the
 	 * same as the assignments before the statement.
 	 **/
 	public boolean expressionStatementAssignmentsBefore() {
+	    // Note: This is handled by deriveAssignmentAfter.
 		return true;
 	}
 
@@ -59,7 +71,20 @@ public class ExpressionStatementImpl extends
 	 * assignments after its expression.
 	 **/
 	public boolean expressionStatementAssignmentsAfter() {
+        // Note: This is handled by overriding deriveAssignmentAfter.
 		return true;
+	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    Expression expression = this.getSelf().getExpression();
+	    if (expression != null) {
+	        expression.getImpl().setCurrentScope(currentScope);
+	    }
 	}
 
 } // ExpressionStatementImpl

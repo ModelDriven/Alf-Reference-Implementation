@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.Classifier;
 import org.omg.uml.Parameter;
@@ -167,6 +168,13 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
                             myType.getImpl().equals(otherType));
             }
         }
+    }
+
+    /**
+     * Check if this parameter is assignable from the given expression.
+     */
+    public boolean isAssignableFrom(Expression expression) {
+        return new AssignableTypedElementImpl(this).isAssignableFrom(expression);
     }
 
 } // FormalParameterImpl

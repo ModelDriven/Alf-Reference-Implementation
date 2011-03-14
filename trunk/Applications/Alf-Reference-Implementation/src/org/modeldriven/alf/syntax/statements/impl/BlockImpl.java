@@ -9,15 +9,16 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A grouped sequence of statements.
@@ -27,8 +28,8 @@ public class BlockImpl extends
 		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
 
     private List<Statement> statement = new ArrayList<Statement>();
-    private Collection<AssignedSource> assignmentAfter = null; // DERIVED
-    private Collection<AssignedSource> assignmentBefore = null; // DERIVED
+    private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
+    private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
 
 	public BlockImpl(Block self) {
 		super(self);
@@ -50,66 +51,116 @@ public class BlockImpl extends
         this.statement.add(statement);
     }
 
+    public Collection<AssignedSource> getAssignmentBefore() {
+        return this.getAssignmentBeforeMap().values();
+    }
+    
+    public Map<String, AssignedSource> getAssignmentBeforeMap() {
+        if (this.assignmentBefore == null) {
+            this.setAssignmentBefore(this.deriveAssignmentBefore());
+        }
+        return this.assignmentBefore;
+    }
+    
+    public AssignedSource getAssignmentBefore(String name) {
+        this.getAssignmentBefore();
+        return this.assignmentBefore.get(name);
+    }
+
+    public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+        this.setAssignmentBefore(new HashMap<String, AssignedSource>());
+        for (AssignedSource assignment: assignmentBefore) {
+            this.addAssignmentBefore(assignment);
+        }
+    }
+    
+    public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
+        this.assignmentBefore = assignmentBefore;
+    }
+
+    public void addAssignmentBefore(AssignedSource assignmentBefore) {
+        this.getAssignmentBefore();
+        this.assignmentBefore.put(assignmentBefore.getName(), assignmentBefore);
+    }
+
     public Collection<AssignedSource> getAssignmentAfter() {
+        return this.getAssignmentAfterMap().values();
+    }
+
+    public Map<String, AssignedSource> getAssignmentAfterMap() {
         if (this.assignmentAfter == null) {
             this.setAssignmentAfter(this.deriveAssignmentAfter());
         }
         return this.assignmentAfter;
     }
 
+    public AssignedSource getAssignmentAfter(String name) {
+        this.getAssignmentAfter();
+        return this.assignmentAfter.get(name);
+    }
+
     public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
+        this.assignmentAfter.clear();
+        for (AssignedSource assignment: assignmentAfter) {
+            this.addAssignmentBefore(assignment);
+        }
+    }
+
+    public void setAssignmentAfter(Map<String, AssignedSource> assignmentAfter) {
         this.assignmentAfter = assignmentAfter;
     }
 
     public void addAssignmentAfter(AssignedSource assignmentAfter) {
-        this.assignmentAfter.add(assignmentAfter);
+        this.getAssignmentAfter();
+        this.assignmentAfter.put(assignmentAfter.getName(), assignmentAfter);
     }
 
-    public Collection<AssignedSource> getAssignmentBefore() {
-        if (this.assignmentBefore == null) {
-            this.setAssignmentBefore(this.deriveAssignmentBefore());
+    /**
+     * If a block is not empty, then the assignments after the block are the
+     * same as the assignments after the last statement of the block. Otherwise
+     * they are the same as the assignments before the block.
+     **/
+    protected Map<String, AssignedSource> deriveAssignmentAfter() {
+        Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+        for (Statement statement: this.getSelf().getStatement()) {
+            statement.getImpl().setAssignmentBefore(assignments);
+            assignments = statement.getImpl().getAssignmentAfterMap();
         }
-        return this.assignmentBefore;
+        return assignments;
     }
 
-    public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
-        this.assignmentBefore = assignmentBefore;
+    // The assignments before are set externally.
+    protected Map<String, AssignedSource> deriveAssignmentBefore() {
+        return new HashMap<String, AssignedSource>();
     }
+    
+    /*
+     * Derivations
+     */
 
-    public void addAssignmentBefore(AssignedSource assignmentBefore) {
-        this.assignmentBefore.add(assignmentBefore);
-    }
-
-    protected Collection<AssignedSource> deriveAssignmentAfter() {
-        return null; // STUB
-    }
-
-    protected Collection<AssignedSource> deriveAssignmentBefore() {
-        return null; // STUB
-    }
-
-	/**
-	 * The assignments before each statement in a block other than the first are
-	 * the same as the assignments after the previous statement.
-	 **/
-	public boolean blockAssignmentsBeforeStatements() {
-		return true;
-	}
-
-	public boolean blockAssignmentsBefore() {
-		return true;
-	}
-
-	/**
-	 * If a block is not empty, then the assignments after the block are the
-	 * same as the assignments after the last statement of the block. Otherwise
-	 * they are the same as the assignments before the block.
-	 **/
 	public boolean blockAssignmentAfterDerivation() {
 		this.getSelf().getAssignmentAfter();
 		return true;
 	}
 	
+	/*
+	 * Constraints
+	 */
+	
+	/**
+	 * The assignments before each statement in a block other than the first are
+	 * the same as the assignments after the previous statement.
+	 **/
+	public boolean blockAssignmentsBeforeStatements() {
+	    // Note: This is handled by deriveAssignementAfter.
+		return true;
+	}
+
+	// TODO: Remove this from the Abstract Syntax model.
+	public boolean blockAssignmentsBefore() {
+		return true;
+	}
+
 	/*
 	 * Helper Methods
 	 */
@@ -119,5 +170,20 @@ public class BlockImpl extends
             statement.getImpl().setCurrentScope(currentScope);
         }        
     }
+    
+    public void setEnclosingStatement(Statement enclosingStatement) {
+        for (Statement statement: this.getSelf().getStatement()) {
+            statement.setEnclosingStatement(enclosingStatement);
+        }
+    }
 
+    /**
+     * Get the assigned sources for assignments made within this expression.
+     */
+    public Collection<AssignedSource> getNewAssignments() {
+        return AssignedSourceImpl.selectNewAssignments(
+                this.getAssignmentBeforeMap(), 
+                this.getSelf().getAssignmentAfter());
+    }
+    
 } // BlockImpl

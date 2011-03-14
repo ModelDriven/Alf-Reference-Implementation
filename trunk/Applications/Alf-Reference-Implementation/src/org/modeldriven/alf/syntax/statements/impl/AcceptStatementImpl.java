@@ -9,17 +9,16 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
-import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 /**
  * A statement used to accept the receipt of instances of one or more signals.
@@ -72,6 +71,22 @@ public class AcceptStatementImpl extends StatementImpl {
     public void setIsSimple(Boolean isSimple) {
         this.isSimple = isSimple;
     }
+    
+    /**
+     * The enclosing statement for all statements in the blocks of all accept
+     * blocks of an accept statement is the accept statement.
+     **/
+    @Override
+    public void setEnclosingStatement(Statement enclosingStatement) {
+        super.setEnclosingStatement(enclosingStatement);
+        AcceptStatement self = this.getSelf();
+        for (AcceptBlock acceptBlock: self.getAcceptBlock()) {
+            Block block = acceptBlock.getBlock();
+            if (block != null) {
+                block.getImpl().setEnclosingStatement(self);
+            }
+        }
+    }
 
 	/**
 	 * The current scope for an accept statement should be the containing
@@ -103,46 +118,40 @@ public class AcceptStatementImpl extends StatementImpl {
      * the name after the accept statement is the accept statement itself.
      **/
 	@Override
-    @SuppressWarnings("unchecked")
-	protected Collection<AssignedSource> deriveAssignmentAfter() {
+	protected Map<String, AssignedSource> deriveAssignmentAfter() {
         AcceptStatement self = this.getSelf();
-        Collection<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
-        ArrayList<AssignedSource> assignmentsAfter = 
-            new ArrayList<AssignedSource>(assignmentsBefore);
-/*        if (self.getIsSimple()) {
-            AcceptBlock block = self.getAcceptBlock().get(0);
-            String name = block.getName();
-            if (name != null) {
-                AssignedSource assignment = new AssignedSource();  
-                assignment.setName(name);
-                assignment.setSource(self);
-                assignment.setType(ClassifierDefinition.commonAncestor(block.getSignal()));
-                AssignedSourceImpl.addAssignment(assignment, assignmentsAfter);
+        Map<String, AssignedSource> assignmentsAfter = 
+            new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
+        if (self.getIsSimple()) {
+            AcceptBlock acceptBlock = (AcceptBlock)self.getAcceptBlock().toArray()[0];
+            String name = acceptBlock.getName();
+            if (name == null) {
+                assignmentsAfter = super.deriveAssignmentAfter();
+            } else {
+                 assignmentsAfter.put(name, 
+                    AssignedSourceImpl.makeAssignment(name, self, 
+                            ClassifierDefinitionImpl.commonAncestor(acceptBlock.getSignal()), 
+                            1, 1));
             }
         } else {
-            this.setAssignmentsBeforeBlocks();
-            ArrayList<AssignedSource> newAssignments = new ArrayList<AssignedSource>();
-            HashMap<String, ArrayList<ElementReference>> typeMap = new HashMap<String, ArrayList<ElementReference>>();
-            for (AcceptBlock acceptBlock: self.getAcceptBlock()) {
+            Collection<Block> blocks = new ArrayList<Block>();
+            Collection<AcceptBlock> acceptBlocks = self.getAcceptBlock();
+            for (AcceptBlock acceptBlock: acceptBlocks) {
                 Block block = acceptBlock.getBlock();
                 if (block != null) {
-                    for (AssignedSource assignment: block.getImpl().getNewAssignments()) {
-                        AssignedSource newAssignment = assignment.getImpl().copy();
-                        newAssignment.setSource(self);
-                        AssignedSourceImpl.addAssignment(newAssignment, newAssignments);
-                        typeMap.get(assignment.getName()).add(assignment.getType());
-                    }
+                    this.setAssignmentBeforeBlock(acceptBlock);
+                    blocks.add(block);
                 }
-                for (AssignedSource newAssignment: newAssignments) {
-                    if (!assignmentsBefore.contains(newAssignment)) {
-                        newAssignment.setType(
-                            ClassifierDefinition.commonAncestor(
-                                    typeMap.get(newAssignment.getName())));
-                    }
+            }
+            assignmentsAfter.putAll(this.mergeAssignments(blocks));
+            for (AcceptBlock acceptBlock: acceptBlocks) {
+                String name = acceptBlock.getName();
+                if (name != null) {
+                    assignmentsAfter.remove(name);
                 }
             }
         }
-*/
+
         return assignmentsAfter;
 	}
 
@@ -201,12 +210,9 @@ public class AcceptStatementImpl extends StatementImpl {
 	 **/
 	public boolean acceptStatementNames() {
 	    AcceptStatement self = this.getSelf();
-	    Collection<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
 	    for (AcceptBlock block: self.getAcceptBlock()) {
 	        String name = block.getName();
-	        if (name != null && 
-	                AssignedSourceImpl.getAssignment(name, assignmentsBefore) 
-	                    != null) {
+	        if (name != null && this.getAssignmentBefore(name) != null) {
 	            return false;
 	        }
 	    }
@@ -264,9 +270,28 @@ public class AcceptStatementImpl extends StatementImpl {
 	    AcceptStatement self = this.getSelf();
 	    Collection<AcceptBlock> acceptBlocks = self.getAcceptBlock();
 	    if (acceptBlocks.size() > 1) {
-    	    Collection<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
-    	    self.getAssignmentAfter();
-    	    HashMap<String, AssignedSource> assignments = new HashMap<String, AssignedSource>();
+	        this.deriveAssignmentAfter(); // Force computing of assignments.
+	        Map<String, Integer> definitionCount = new HashMap<String, Integer>();
+	        for (AcceptBlock acceptBlock: acceptBlocks) {
+	            Block block = acceptBlock.getBlock();
+	            if (block != null) {
+	                for (AssignedSource assignment: block.getImpl().getNewAssignments()) {
+	                    String name = assignment.getName();
+	                    Integer count = definitionCount.get(name);
+	                    if (count == null) {
+	                        definitionCount.put(name, 1);
+	                    } else {
+	                        definitionCount.put(name, count++);
+	                    }
+	                }
+	            }
+	        }
+	        int n = acceptBlocks.size();
+	        for (int count: definitionCount.values()) {
+	            if (count != n) {
+	                return false;
+	            }
+	        }
 	    }
 		return true;
 	}
@@ -276,13 +301,7 @@ public class AcceptStatementImpl extends StatementImpl {
 	 * blocks of an accept statement is the accept statement.
 	 **/
 	public boolean acceptStatementEnclosedStatements() {
-/*	    AcceptStatement self = this.getSelf();
-	    for (AcceptBlock acceptBlock: self.getAcceptBlock()) {
-	        Block block = acceptBlock.getBlock();
-	        if (block != null) {
-	            block.getImpl().setEnclosingStatement(self);
-	        }
-	    }*/
+	    // Note: This is handled by setEnclosingStatement.
 		return true;
 	}
 	
@@ -311,26 +330,16 @@ public class AcceptStatementImpl extends StatementImpl {
     * assignments before the accept statement.
     *
     **/
-    @SuppressWarnings("unchecked")
-    private void setAssignmentsBeforeBlocks() {
-/*        AcceptStatement self = this.getSelf();
-        ArrayList<AssignedSource> assignmentsBefore = self.getAssignmentBefore();
-        for (AcceptBlock acceptBlock: self.getAcceptBlock()) {
-            Block block = acceptBlock.getBlock();
-            if (block != null) {
-                ArrayList<AssignedSource> assignments = 
-                    (ArrayList<AssignedSource>)assignmentsBefore.clone();
-                String name = acceptBlock.getName();
-                if (name != null) {
-                    AssignedSource assignment = new AssignedSource();  
-                    assignment.setName(name);
-                    assignment.setSource(self);
-                    assignment.setType(ClassifierDefinition.commonAncestor(acceptBlock.getSignal()));
-                    AssignedSourceImpl.addAssignment(assignment, assignments);
-                }
-                block.setAssignmentBefore(assignments);
-            }
-        }*/
+    private void setAssignmentBeforeBlock(AcceptBlock acceptBlock) {
+        AcceptStatement self = this.getSelf();
+        Block block = acceptBlock.getBlock();
+        block.setAssignmentBefore(self.getAssignmentBefore());
+        String name = acceptBlock.getName();
+        if (name != null) {
+            block.addAssignmentBefore(AssignedSourceImpl.makeAssignment(name, self,
+                    ClassifierDefinitionImpl.commonAncestor(acceptBlock.getSignal()),
+                    1, 1));
+        }
     }
 
 } // AcceptStatementImpl

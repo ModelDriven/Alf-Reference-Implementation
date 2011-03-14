@@ -12,9 +12,6 @@ package org.modeldriven.alf.syntax.units.impl;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The definition of an activity, with any formal parameters defined as owned
  * members.
@@ -106,16 +103,6 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	    return member.getImpl().getReferent().getImpl().isActivity();
 	} // isSameKindAs
 
-	public List<FormalParameter> getFormalParameters() {
-        ArrayList<FormalParameter> formalParameters = new ArrayList<FormalParameter>();
-        for (Member member: this.getSelf().getOwnedMember()) {
-            if (member instanceof FormalParameter) {
-                formalParameters.add((FormalParameter)member);
-            }
-        }
-        return formalParameters;
-    }
-	
 	/*
 	 * Helper Methods
 	 */

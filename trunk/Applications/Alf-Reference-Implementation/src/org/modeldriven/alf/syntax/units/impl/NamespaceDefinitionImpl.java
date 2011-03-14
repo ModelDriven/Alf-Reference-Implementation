@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.units.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -271,6 +272,16 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         }
     }
     
+    public List<FormalParameter> getFormalParameters() {
+        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+        for (Member member: this.getSelf().getOwnedMember()) {
+            if (member instanceof FormalParameter) {
+                parameters.add((FormalParameter)member);
+            }
+        }
+        return parameters;
+    }
+
     protected static void addAllMembers(Collection<Member> members,
             Map<String, Collection<Member>> map) {
         for (Member member: members) {
