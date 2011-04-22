@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * An expression that comprises an unbounded value literal.
@@ -31,6 +23,7 @@ public class UnboundedLiteralExpressionImpl extends LiteralExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public UnboundedLiteralExpression getSelf() {
 		return (UnboundedLiteralExpression) this.self;
 	}
@@ -38,6 +31,15 @@ public class UnboundedLiteralExpressionImpl extends LiteralExpressionImpl {
 	/**
 	 * The type of an unbounded literal expression is UnlimitedNatural.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    return RootNamespace.getUnlimitedNaturalType();
+	}
+	
+	/*
+	 * Derivations
+	 */
+	
 	public boolean unboundedLiteralExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;

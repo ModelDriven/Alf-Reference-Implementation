@@ -9,10 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
@@ -31,6 +28,7 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
         super(self);
     }
 
+    @Override
     public NamedTemplateBinding getSelf() {
         return (NamedTemplateBinding) this.self;
     }
@@ -47,7 +45,12 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
     public void addSubstitution(TemplateParameterSubstitution substitution) {
         this.substitution.add(substitution);
     }
+    
+    /*
+     * Helper Methods
+     */
 
+    @Override
     public String toString() {
         StringBuffer s = new StringBuffer("<");
         NamedTemplateBinding self = this.getSelf();
@@ -61,6 +64,14 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
         }
         s.append(">");
         return s.toString();
+    }
+
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        NamedTemplateBinding self = this.getSelf();
+        for (TemplateParameterSubstitution substitution: self.getSubstitution()) {
+            substitution.getImpl().setCurrentScope(currentScope);
+        }        
     }
 
 } // NamedTemplateBindingImpl

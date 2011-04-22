@@ -9,18 +9,18 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A list of expressions used to provide the arguments for an invocation.
@@ -31,6 +31,8 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	private Collection<NamedExpression> input = null; // DERIVED
 	private InvocationExpression invocation = null;
 	private Collection<OutputNamedExpression> output = null; // DERIVED
+	
+	private Map<String, AssignedSource> assignmentsAfter = null;
 
 	public TupleImpl(Tuple self) {
 		super(self);
@@ -78,14 +80,6 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 		this.output.add(output);
 	}
 
-	protected Collection<NamedExpression> deriveInput() {
-		return null; // STUB
-	}
-
-	protected Collection<OutputNamedExpression> deriveOutput() {
-		return null; // STUB
-	}
-
 	/**
 	 * A tuple has the same number of inputs as its invocation has input
 	 * parameters. For each input parameter, the tuple has a corresponding input
@@ -93,10 +87,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * matching argument from the tuple, or an empty sequence construction
 	 * expression if there is no matching argument.
 	 **/
-	public boolean tupleInputDerivation() {
-		this.getSelf().getInput();
-		return true;
-	}
+	protected abstract Collection<NamedExpression> deriveInput();
 
 	/**
 	 * A tuple has the same number of outputs as its invocation has output
@@ -105,16 +96,43 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * matching argument from the tuple, or an empty sequence construction
 	 * expression if there is no matching argument.
 	 **/
+	protected abstract Collection<OutputNamedExpression> deriveOutput();
+
+	/*
+	 * Derivations
+	 */
+	
+	public boolean tupleInputDerivation() {
+		this.getSelf().getInput();
+		return true;
+	}
+
 	public boolean tupleOutputDerivation() {
 		this.getSelf().getOutput();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * An input parameter may only have a null argument if it has a multiplicity
 	 * lower bound of 0.
 	 **/
 	public boolean tupleNullInputs() {
+	    Tuple self = this.getSelf();
+	    InvocationExpression invocation = self.getInvocation();
+	    if (invocation != null) {
+    	    for (NamedExpression argument: self.getInput()){
+    	        if (argument.getExpression().getImpl().isNull()) {
+    	            if (invocation.getImpl().parameterNamed
+    	                    (argument.getName()).getLower() > 0) { 
+    	                return false;
+    	            }
+    	        }
+    	    }
+	    }
 		return true;
 	}
 
@@ -123,7 +141,19 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * parameter.
 	 **/
 	public boolean tupleOutputs() {
-		return true;
+        Tuple self = this.getSelf();
+        InvocationExpression invocation = self.getInvocation();
+        if (invocation != null) {
+            for (NamedExpression argument: self.getInput()){
+                if (argument.getExpression().getImpl().isNull()) {
+                    if (!"out".equals(invocation.getImpl().parameterNamed
+                            (argument.getName()).getDirection())) { 
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -139,6 +169,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * invocation.
 	 **/
 	public boolean tupleAssignmentsBefore() {
+	    // Note: This is handled by getAssignmentsAfterMap()
 		return true;
 	}
 
@@ -146,7 +177,97 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * A name may be assigned in at most one argument expression of a tuple.
 	 **/
 	public boolean tupleAssignmentsAfter() {
-		return true;
+        Tuple self = this.getSelf();
+        Collection<NamedExpression> inputs = self.getInput();
+        Collection<OutputNamedExpression> outputs = self.getOutput();
+        Set<Expression> expressions = new HashSet<Expression>();
+        for (NamedExpression input: inputs) {
+            expressions.add(input.getExpression());
+        }
+        for (NamedExpression output: outputs) {
+            expressions.add(output.getExpression());
+        }
+        this.getAssignmentsAfterMap(); // Force computation of assignments.
+        Set<AssignedSource> assignments = new HashSet<AssignedSource>();
+        for (Expression expression: expressions) {
+            Collection<AssignedSource> newAssignments = 
+                expression.getImpl().getNewAssignments();
+            for (AssignedSource newAssignment: newAssignments) {
+                if (assignments.contains(newAssignment)) {
+                    return false;
+                }
+            }
+            assignments.addAll(newAssignments);
+        }
+        return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+
+    public abstract boolean isEmpty();
+
+    public Map<String, AssignedSource> getAssignmentsAfterMap() {
+        Tuple self = this.getSelf();
+        InvocationExpression invocation = self.getInvocation();
+        if (invocation == null) {
+            return new HashMap<String, AssignedSource>();
+        } else {
+            if (this.assignmentsAfter == null) {
+                this.assignmentsAfter = new HashMap<String, AssignedSource>();
+                Map<String, AssignedSource> assignmentsBefore = 
+                    invocation.getImpl().getAssignmentBeforeMap();
+                Collection<NamedExpression> inputs = self.getInput();
+                Collection<OutputNamedExpression> outputs = self.getOutput();
+                Set<Expression> expressions = new HashSet<Expression>();
+                for (NamedExpression input: inputs) {
+                    expressions.add(input.getExpression());
+                }
+                Map<String, AssignedSource> newLocalAssignments = 
+                    new HashMap<String, AssignedSource>();
+                for (OutputNamedExpression output: outputs) {
+                    Expression expression = output.getExpression();
+                    expressions.add(expression);
+                    String localName = output.getLeftHandSide().getImpl().getLocalName();
+                    if (localName != null) {
+                        if ("out".equals(invocation.getImpl().parameterNamed(output.getName()))) {
+                            AssignedSource assignment = AssignedSourceImpl.makeAssignment
+                            (localName, invocation, 
+                                    expression.getType(), 
+                                    expression.getLower(), 
+                                    expression.getUpper());
+                            newLocalAssignments.put(localName, assignment);
+                        }
+                    }
+                }
+                // Only clone assignmentsBefore if it is necessary to add new local
+                // assignments.
+                if (!newLocalAssignments.isEmpty()) {
+                    assignmentsBefore = new HashMap<String, AssignedSource>(assignmentsBefore);
+                    assignmentsBefore.putAll(newLocalAssignments);
+                }
+                for (Expression expression: expressions) {
+                    expression.getImpl().setAssignmentBefore(assignmentsBefore);
+                    this.assignmentsAfter.putAll(expression.getImpl().getAssignmentAfterMap());
+                }
+            }
+            return this.assignmentsAfter;
+        }
+    }
+    
+    public Collection<AssignedSource> getNewAssignments() {
+        Tuple self = this.getSelf();
+        InvocationExpression invocation = self.getInvocation();
+        if (invocation == null) {
+            return new ArrayList<AssignedSource>();
+        } else {
+            return AssignedSourceImpl.selectNewAssignments(
+                    invocation.getImpl().getAssignmentBeforeMap(), 
+                    this.getAssignmentsAfterMap().values());
+        }
+    }
+
+    public abstract void setCurrentScope(NamespaceDefinition currentScope);
 
 } // TupleImpl

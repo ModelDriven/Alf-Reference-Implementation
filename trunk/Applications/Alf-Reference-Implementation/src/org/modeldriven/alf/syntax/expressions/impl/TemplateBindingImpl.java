@@ -9,18 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A list of type names used to provide arguments for the parameters of a
@@ -33,8 +24,11 @@ public abstract class TemplateBindingImpl extends SyntaxElementImpl {
 		super(self);
 	}
 
+	@Override
 	public TemplateBinding getSelf() {
 		return (TemplateBinding) this.self;
 	}
+
+    public abstract void setCurrentScope(NamespaceDefinition currentScope);
 
 } // TemplateBindingImpl

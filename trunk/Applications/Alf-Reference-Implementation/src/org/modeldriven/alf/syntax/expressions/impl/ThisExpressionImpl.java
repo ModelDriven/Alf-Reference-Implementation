@@ -9,23 +9,17 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * An expression comprising the keyword “this”.
  **/
 
 public class ThisExpressionImpl extends ExpressionImpl {
+    
+    ElementReference context = null;
 
 	public ThisExpressionImpl(ThisExpression self) {
 		super(self);
@@ -39,25 +33,56 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	 * The static type of a this expression is the statically determined context
 	 * classifier for the context in which the this expression occurs.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    return this.context;
+	}
+	
+	/**
+	 * The multiplicity upper bound of a this expression is always 1.
+	 **/
+	@Override
+	protected Integer deriveUpper() {
+	    return 1;
+	}
+	
+	/**
+	 * The multiplicity lower bound of a this expression is always 1.
+	 **/
+    @Override
+    protected Integer deriveLower() {
+        return 1;
+    }
+	
+	/*
+	 * Derivations
+	 */
+	
 	public boolean thisExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * The multiplicity upper bound of a this expression is always 1.
-	 **/
 	public boolean thisExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
 
-	/**
-	 * The multiplicity lower bound of a this expression is always 1.
-	 **/
 	public boolean thisExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
+	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    this.context = currentScope.getImpl().getReferent();
+	    if (!this.context.getImpl().isClassifier()) {
+	        this.context = null;
+	    }
 	}
 
 } // ThisExpressionImpl

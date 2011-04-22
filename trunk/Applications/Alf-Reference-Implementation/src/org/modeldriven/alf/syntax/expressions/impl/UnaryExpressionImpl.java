@@ -9,17 +9,11 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
 /**
  * An expression consisting of an operator acting on a single operand
@@ -35,6 +29,7 @@ public abstract class UnaryExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public UnaryExpression getSelf() {
 		return (UnaryExpression) this.self;
 	}
@@ -54,21 +49,47 @@ public abstract class UnaryExpressionImpl extends ExpressionImpl {
 	public void setOperand(Expression operand) {
 		this.operand = operand;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The assignments before the operand of a unary expression are the same as
 	 * those before the unary expression.
 	 **/
 	public boolean unaryExpressionAssignmentsBefore() {
+	    // Note: This is handled by updateAssignments.
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * By default, the assignments after a unary expression are the same as
 	 * those after its operand expression.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
-		return new ArrayList<AssignedSource>(); // STUB
+	@Override
+	public Map<String, AssignedSource> updateAssignmentMap() {
+	    UnaryExpression self = this.getSelf();
+	    Expression operand = self.getOperand();
+	    Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+	    if (operand != null) {
+	        operand.getImpl().setAssignmentBefore(assignments);
+	        assignments = operand.getImpl().getAssignmentAfterMap();
+	    }
+	    return assignments;
 	} // updateAssignments
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+        UnaryExpression self = this.getSelf();
+        Expression operand = self.getOperand();
+        if (operand != null) {
+            operand.getImpl().setCurrentScope(currentScope);
+        }
+	}
 
 } // UnaryExpressionImpl

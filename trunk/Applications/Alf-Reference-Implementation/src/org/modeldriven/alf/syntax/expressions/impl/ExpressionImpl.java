@@ -9,16 +9,11 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
-import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.alf.syntax.units.impl.TypedElementDefinitionImpl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +25,7 @@ import java.util.Map;
  * AssignmentsAfter are specific to its various subclasses.
  **/
 
-public abstract class ExpressionImpl extends SyntaxElementImpl {
+public abstract class ExpressionImpl extends AssignableElementImpl {
 
     private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
     private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
@@ -42,7 +37,8 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.Expression getSelf() {
+	@Override
+	public Expression getSelf() {
 		return (Expression) this.self;
 	}
 
@@ -58,12 +54,15 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
     }
     
     public AssignedSource getAssignmentBefore(String name) {
-        this.getAssignmentBefore();
-        return this.assignmentBefore.get(name);
+        return this.getAssignmentBeforeMap().get(name);
     }
 
     public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
-        this.setAssignmentBefore(new HashMap<String, AssignedSource>());
+        if (this.assignmentBefore == null) {
+            this.assignmentBefore = new HashMap<String, AssignedSource>();
+        } else {
+            this.assignmentBefore.clear();
+        }
         for (AssignedSource assignment: assignmentBefore) {
             this.addAssignmentBefore(assignment);
         }
@@ -74,7 +73,6 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
     }
 
     public void addAssignmentBefore(AssignedSource assignmentBefore) {
-        this.getAssignmentBefore();
         this.assignmentBefore.put(assignmentBefore.getName(), assignmentBefore);
     }
 
@@ -90,14 +88,17 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
     }
 
     public AssignedSource getAssignmentAfter(String name) {
-        this.getAssignmentAfter();
-        return this.assignmentAfter.get(name);
+        return this.getAssignmentBeforeMap().get(name);
     }
 
     public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
-        this.assignmentAfter.clear();
+        if (this.assignmentBefore == null) {
+            this.assignmentBefore = new HashMap<String, AssignedSource>();
+        } else {
+            this.assignmentBefore.clear();
+        }
         for (AssignedSource assignment: assignmentAfter) {
-            this.addAssignmentBefore(assignment);
+            this.addAssignmentAfter(assignment);
         }
     }
 
@@ -106,7 +107,6 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
     }
 
     public void addAssignmentAfter(AssignedSource assignmentAfter) {
-        this.getAssignmentAfter();
         this.assignmentAfter.put(assignmentAfter.getName(), assignmentAfter);
     }
 
@@ -143,44 +143,51 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
         this.type = type;
     }
 
+    /**
+     * The assignments before are usually set externally.
+     */
     protected Map<String, AssignedSource> deriveAssignmentBefore() {
-		return new HashMap<String, AssignedSource>(); // STUB
+		return new HashMap<String, AssignedSource>();
 	}
 
     /**
-     * By default, the assignments after are the same as the assignments before.
-     */
+     * The assignments after an expression are given by the result of the
+     * updateAssignments helper operation.
+     **/
 	protected Map<String, AssignedSource> deriveAssignmentAfter() {
-		return this.assignmentBefore;
+		return this.updateAssignmentMap();
 	}
 
-	protected Integer deriveUpper() {
-		return null; // STUB
-	}
+	protected abstract Integer deriveUpper();
 
-	protected Integer deriveLower() {
-		return null; // STUB
-	}
+	protected abstract Integer deriveLower();
 
-	protected ElementReference deriveType() {
-		return null; // STUB
-	}
+	protected abstract ElementReference deriveType();
 
-	/**
-	 * The assignments after an expression are given by the result of the
-	 * updateAssignments helper operation.
-	 **/
+	/*
+	 * Derivations
+	 */
+	
 	public boolean expressionAssignmentAfterDerivation() {
 		this.getSelf().getAssignmentAfter();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * No name may be assigned more than once before or after an expression.
 	 **/
 	public boolean expressionUniqueAssignments() {
+	    // Note: This is enforced by the use of Map data structures.
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Returns the assignments from before this expression updated for any
@@ -190,20 +197,31 @@ public abstract class ExpressionImpl extends SyntaxElementImpl {
 	 * assignments.
 	 **/
 	public Collection<AssignedSource> updateAssignments() {
-		return new ArrayList<AssignedSource>(); // STUB
+		return this.updateAssignmentMap().values();
 	} // updateAssignments
-
+	
+	protected Map<String, AssignedSource> updateAssignmentMap() {
+	    return this.getAssignmentBeforeMap();
+	}
+	
+	/**
+	 * Get the syntax element assigned to the given name before this expression.
+	 */
     public SyntaxElement resolve(String name) {
         AssignedSource assignment = this.getAssignmentBefore(name);
         return assignment == null? null: assignment.getSource();
     }
 
-    public void setCurrentScope(NamespaceDefinition outerScope) {
-        // TODO Should be abstract        
+    /**
+     * Set the current scope as required for this expression. By default, the
+     * current scope is ignored. Subclasses should override this to propagate
+     * the current scope to subexpressions or qualified names as appropriate.
+     */
+    public void setCurrentScope(NamespaceDefinition currentScope) {
     }
 
     /**
-     * Get the assigned sources for assignments made within this expression.
+     * Get the assigned sources for new assignments made within this expression.
      */
     public Collection<AssignedSource> getNewAssignments() {
         return AssignedSourceImpl.selectNewAssignments(

@@ -9,7 +9,7 @@ public class AssignableTypedElementImpl extends AssignableElementImpl {
 
     public AssignableTypedElementImpl(TypedElementDefinitionImpl typedElement) {
         super(typedElement.getSelf());
-        this.typedElement  = typedElement;
+        this.typedElement = typedElement;
     }
 
     @Override

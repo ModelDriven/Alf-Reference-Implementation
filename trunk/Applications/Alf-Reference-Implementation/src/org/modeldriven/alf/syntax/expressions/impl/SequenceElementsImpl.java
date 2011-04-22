@@ -9,18 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A specification of the elements of a sequence.
@@ -35,6 +26,7 @@ public abstract class SequenceElementsImpl extends SyntaxElementImpl {
 		super(self);
 	}
 
+	@Override
 	public SequenceElements getSelf() {
 		return (SequenceElements) this.self;
 	}
@@ -61,12 +53,14 @@ public abstract class SequenceElementsImpl extends SyntaxElementImpl {
 		this.lower = lower;
 	}
 
-	protected Integer deriveUpper() {
-		return null; // STUB
-	}
+	protected abstract Integer deriveUpper();
 
-	protected Integer deriveLower() {
-		return null; // STUB
-	}
+	protected abstract Integer deriveLower();
+	
+	/*
+	 * Helper methods
+	 */
+
+    public abstract void setCurrentScope(NamespaceDefinition currentScope);
 
 } // SequenceElementsImpl

@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * An expression used to access a specific element of a sequence.
@@ -34,6 +26,7 @@ public class SequenceAccessExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public SequenceAccessExpression getSelf() {
 		return (SequenceAccessExpression) this.self;
 	}
@@ -58,32 +51,58 @@ public class SequenceAccessExpressionImpl extends ExpressionImpl {
 	 * The type of a sequence access expression is the same as the type of its
 	 * primary expression.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    Expression primary = this.getSelf().getPrimary();
+	    return primary == null? null: primary.getType();
+	}
+	
+	/**
+	 * The multiplicity lower bound of a sequence access expression is 0.
+	 **/
+	@Override
+	protected Integer deriveLower() {
+	    return 0;
+	}
+	
+	/**
+	 * The multiplicity upper bound of a sequence access expression is 1.
+	 **/
+    @Override
+    protected Integer deriveUpper() {
+        return 1;
+    }
+	
+	/*
+	 * Derivations
+	 */
+	
 	public boolean sequenceAccessExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * The multiplicity lower bound of a sequence access expression is 0.
-	 **/
 	public boolean sequenceAccessExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
 
-	/**
-	 * The multiplicity upper bound of a sequence access expression is 1.
-	 **/
 	public boolean sequenceAccessExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The type of the index of a sequence access expression must be Integer.
 	 **/
 	public boolean sequenceAccessExpressionIndexType() {
-		return true;
+	    Expression index = this.getSelf().getIndex();
+	    ElementReference type = index == null? null: index.getType();
+		return type != null && type.getImpl().isInteger();
 	}
 
 	/**
@@ -91,7 +110,25 @@ public class SequenceAccessExpressionImpl extends ExpressionImpl {
 	 * must be 1.
 	 **/
 	public boolean sequenceAccessExpressionIndexMultiplicity() {
-		return true;
+        Expression index = this.getSelf().getIndex();
+        return index != null && index.getUpper() == 1;
+	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    SequenceAccessExpression self = this.getSelf();
+	    Expression primary = self.getPrimary();
+	    Expression index = self.getIndex();
+	    if (primary != null) {
+	        primary.getImpl().setCurrentScope(currentScope);
+	    }
+	    if (index != null) {
+	        index.getImpl().setCurrentScope(currentScope);
+	    }
 	}
 
 } // SequenceAccessExpressionImpl

@@ -9,18 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A specification of the substitution of an argument type name for a template
@@ -36,6 +27,7 @@ public class TemplateParameterSubstitutionImpl extends SyntaxElementImpl {
 		super(self);
 	}
 
+	@Override
 	public TemplateParameterSubstitution getSelf() {
 		return (TemplateParameterSubstitution) this.self;
 	}
@@ -55,5 +47,17 @@ public class TemplateParameterSubstitutionImpl extends SyntaxElementImpl {
 	public void setArgumentName(QualifiedName argumentName) {
 		this.argumentName = argumentName;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        TemplateParameterSubstitution self = this.getSelf();
+        QualifiedName argumentName = self.getArgumentName();
+        if (argumentName != null) {
+            argumentName.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // TemplateParameterSubstitutionImpl

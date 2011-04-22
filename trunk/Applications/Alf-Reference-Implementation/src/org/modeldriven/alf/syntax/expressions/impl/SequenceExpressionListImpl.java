@@ -9,17 +9,11 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * A specification of the elements of a sequence using a list of expressions.
@@ -54,11 +48,15 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
 	 * list is given by the sum of the lower bounds of each of the expressions
 	 * in the list.
 	 **/
-	public boolean sequenceExpressionListLowerDerivation() {
-		this.getSelf().getLower();
-		return true;
+	@Override
+	protected Integer deriveLower() {
+	    int lower = 0;
+	    for (Expression element: this.getSelf().getElement()) {
+	        lower += element.getLower();
+	    }
+	    return lower;
 	}
-
+	
 	/**
 	 * The multiplicity lower bound of the elements of a sequence expression
 	 * list is given by the sum of the lower bounds of each of the expressions
@@ -66,9 +64,42 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
 	 * upper bound, then the sequence expression list also has an unbounded
 	 * upper bound.
 	 **/
+    @Override
+    protected Integer deriveUpper() {
+        int upper = 0;
+        for (Expression element: this.getSelf().getElement()) {
+            int elementUpper = element.getUpper();
+            if (elementUpper == -1) {
+                return -1;
+            }
+            upper += elementUpper;
+        }
+        return upper;
+    }
+	
+	/*
+	 * Derivations
+	 */
+	
+	public boolean sequenceExpressionListLowerDerivation() {
+		this.getSelf().getLower();
+		return true;
+	}
+
 	public boolean sequenceExpressionListUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        for (Expression element: this.getSelf().getElement()) {
+            element.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // SequenceExpressionListImpl

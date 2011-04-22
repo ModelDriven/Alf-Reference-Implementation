@@ -1,5 +1,5 @@
 package org.omg.uml;
 
-public class Enumeration extends Classifier {
+public class Enumeration extends DataType {
 
 }

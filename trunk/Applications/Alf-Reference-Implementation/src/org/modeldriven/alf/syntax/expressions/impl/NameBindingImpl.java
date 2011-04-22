@@ -9,20 +9,15 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import java.util.ArrayList;
 
 /**
  * An unqualified name, optionally with a template binding.
  **/
 
-public class NameBindingImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public class NameBindingImpl extends SyntaxElementImpl {
 
     private TemplateBinding binding = null;
     private String name = "";
@@ -31,7 +26,8 @@ public class NameBindingImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.NameBinding getSelf() {
+	@Override
+	public NameBinding getSelf() {
 		return (NameBinding) this.self;
 	}
 	
@@ -50,6 +46,10 @@ public class NameBindingImpl extends
     public void setName(String name) {
         this.name = name;
     }
+    
+    /*
+     * Helper Methods
+     */
 
     @Override
 	public String toString() {
@@ -61,5 +61,12 @@ public class NameBindingImpl extends
 	    }
 	    return s.toString();
 	}
+
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        TemplateBinding binding = this.getSelf().getBinding();
+        if (binding != null) {
+            binding.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // NameBindingImpl

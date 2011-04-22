@@ -9,13 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,6 +29,7 @@ public class PositionalTupleImpl extends TupleImpl {
 		super(self);
 	}
 
+	@Override
 	public PositionalTuple getSelf() {
 		return (PositionalTuple) this.self;
 	}
@@ -49,5 +45,87 @@ public class PositionalTupleImpl extends TupleImpl {
 	public void addExpression(Expression expression) {
 		this.expression.add(expression);
 	}
+
+    /**
+     * A tuple has the same number of inputs as its invocation has input
+     * parameters. For each input parameter, the tuple has a corresponding input
+     * with the same name as the parameter and an expression that is the
+     * matching argument from the tuple, or an empty sequence construction
+     * expression if there is no matching argument.
+     **/
+    @Override
+    protected Collection<NamedExpression> deriveInput() {
+        PositionalTuple self = this.getSelf();
+        InvocationExpression invocation = self.getInvocation();
+        Collection<NamedExpression> inputs = new ArrayList<NamedExpression>();
+        if (invocation != null) {
+            List<FormalParameter> parameters = invocation.getImpl().parameters();
+            List<Expression> expressions = self.getExpression();
+            for (int i = 0; i < parameters.size(); i++) {
+                FormalParameter parameter = parameters.get(i);
+                String direction = parameter.getDirection();
+                if (direction != null && 
+                        (direction.equals("in") || direction.equals("inout"))) {
+                    Expression expression = i < expressions.size()?
+                            expressions.get(i):
+                            new SequenceConstructionExpression();
+                    NamedExpression namedExpression = new NamedExpression();
+                    namedExpression.setName(parameter.getName());
+                    namedExpression.setExpression(expression);
+                    inputs.add(namedExpression);
+                }
+            }
+        }
+        return inputs;
+    }
+
+    /**
+     * A tuple has the same number of outputs as its invocation has output
+     * parameters. For each output parameter, the tuple has a corresponding
+     * output with the same name as the parameter and an expression that is the
+     * matching argument from the tuple, or an empty sequence construction
+     * expression if there is no matching argument.
+     **/
+    @Override
+    protected Collection<OutputNamedExpression> deriveOutput() {
+        PositionalTuple self = this.getSelf();
+        InvocationExpression invocation = self.getInvocation();
+        Collection<OutputNamedExpression> outputs = new ArrayList<OutputNamedExpression>();
+        if (invocation != null) {
+            List<FormalParameter> parameters = invocation.getImpl().parameters();
+            List<Expression> expressions = self.getExpression();
+            for (int i = 0; i < parameters.size(); i++) {
+                FormalParameter parameter = parameters.get(i);
+                String direction = parameter.getDirection();
+                if (direction != null && 
+                        (direction.equals("inout") || direction.equals("out"))) {
+                    Expression expression = i < expressions.size()?
+                            expressions.get(i):
+                            new SequenceConstructionExpression();
+                    OutputNamedExpression namedExpression = new OutputNamedExpression();
+                    namedExpression.setName(parameter.getName());
+                    namedExpression.setExpression(expression);
+                    outputs.add(namedExpression);
+                }
+            }
+        }
+        return outputs;
+    }
+
+    /*
+     * Helper Methods
+     */
+
+    @Override
+    public boolean isEmpty() {
+        return this.getSelf().getExpression().isEmpty();
+    }
+
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        for (Expression expression: this.getSelf().getExpression()) {
+            expression.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // PositionalTupleImpl

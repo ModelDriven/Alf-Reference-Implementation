@@ -9,13 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +28,7 @@ public class NamedTupleImpl extends TupleImpl {
 		super(self);
 	}
 
+	@Override
 	public NamedTuple getSelf() {
 		return (NamedTuple) this.self;
 	}
@@ -48,5 +44,95 @@ public class NamedTupleImpl extends TupleImpl {
 	public void addNamedExpression(NamedExpression namedExpression) {
 		this.namedExpression.add(namedExpression);
 	}
+	
+    /**
+     * A tuple has the same number of inputs as its invocation has input
+     * parameters. For each input parameter, the tuple has a corresponding input
+     * with the same name as the parameter and an expression that is the
+     * matching argument from the tuple, or an empty sequence construction
+     * expression if there is no matching argument.
+     **/
+	@Override
+    protected Collection<NamedExpression> deriveInput() {
+	    NamedTuple self = this.getSelf();
+	    InvocationExpression invocation = self.getInvocation();
+	    Collection<NamedExpression> inputs = new ArrayList<NamedExpression>();
+	    if (invocation != null) {
+	        List<FormalParameter> parameters = invocation.getImpl().parameters();
+	        for (FormalParameter parameter: parameters) {
+                String direction = parameter == null? null: parameter.getDirection();
+                if (direction != null && 
+                        (direction.equals("in") || direction.equals("inout"))) {
+                    String name = parameter.getName();
+                    NamedExpression argument = this.getNamedExpression(name);
+                    if (argument == null) {
+                        argument = new NamedExpression();
+                        argument.setName(name);
+                        argument.setExpression(new SequenceAccessExpression());
+                    }
+                    inputs.add(argument);
+                }
+	        }
+	    }
+        return inputs;
+    }
+
+    /**
+     * A tuple has the same number of outputs as its invocation has output
+     * parameters. For each output parameter, the tuple has a corresponding
+     * output with the same name as the parameter and an expression that is the
+     * matching argument from the tuple, or an empty sequence construction
+     * expression if there is no matching argument.
+     **/
+    @Override
+    protected Collection<OutputNamedExpression> deriveOutput() {
+        NamedTuple self = this.getSelf();
+        InvocationExpression invocation = self.getInvocation();
+        Collection<OutputNamedExpression> outputs = new ArrayList<OutputNamedExpression>();
+        if (invocation != null) {
+            List<FormalParameter> parameters = invocation.getImpl().parameters();
+            for (FormalParameter parameter: parameters) {
+                String direction = parameter == null? null: parameter.getDirection();
+                if (direction != null && 
+                        (direction.equals("out") || direction.equals("inout"))) {
+                    String name = parameter.getName();
+                    NamedExpression argument = this.getNamedExpression(name);
+                    OutputNamedExpression output = new OutputNamedExpression();
+                    output.setName(name);
+                    output.setExpression(argument == null?
+                            new SequenceConstructionExpression():
+                            argument.getExpression());
+                   outputs.add(output);
+                }
+            }
+        }
+        return outputs;
+    }
+
+	/*
+	 * Helper Methods
+	 */
+
+    private NamedExpression getNamedExpression(String name) {
+        Collection<NamedExpression> namedExpressions = this.getSelf().getNamedExpression();
+        for (NamedExpression namedExpression: namedExpressions) {
+            if (namedExpression.getName().equals(name)) {
+                return namedExpression;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.getSelf().getNamedExpression().isEmpty();
+    }
+    
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        for (NamedExpression namedExpression: this.getSelf().getNamedExpression()) {
+            namedExpression.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // NamedTupleImpl

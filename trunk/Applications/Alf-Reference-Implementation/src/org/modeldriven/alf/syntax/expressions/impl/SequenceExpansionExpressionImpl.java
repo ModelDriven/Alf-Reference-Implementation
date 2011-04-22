@@ -9,17 +9,12 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An expression used to carry out one of a predefined set of operations over
@@ -38,6 +33,7 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public SequenceExpansionExpression getSelf() {
 		return (SequenceExpansionExpression) this.self;
 	}
@@ -85,18 +81,36 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 		this.primary = primary;
 	}
 
-	protected AssignedSource deriveVariableSource() {
-		return null; // STUB
-	}
-
 	/**
 	 * The assigned source for the expansion variable of a sequence expansion
-	 * expression is the expression itself.
+	 * expression is the expression itself. The type of the assigned source is
+	 * the type of the primary expression and the multiplicity bounds are both
+	 * 1.
 	 **/
+	protected AssignedSource deriveVariableSource() {
+	    SequenceExpansionExpression self = this.getSelf();
+	    ExtentOrExpression primary = self.getPrimary();
+	    AssignedSource variableSource = new AssignedSource();
+	    variableSource.setSource(self);
+	    variableSource.setType(primary == null? null: 
+	        primary.getExpression().getType());
+	    variableSource.setLower(1);
+	    variableSource.setUpper(1);
+		return variableSource;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
 	public boolean sequenceExpansionExpressionVariableSourceDerivation() {
 		this.getSelf().getVariableSource();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The assignments before the primary expression of a sequence expansion
@@ -104,6 +118,7 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 	 * expression.
 	 **/
 	public boolean sequenceExpansionExpressionAssignmentsBeforePrimary() {
+	    // Note: This is handled by updateAssignments.
 		return true;
 	}
 
@@ -113,6 +128,7 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 	 * expansion variable.
 	 **/
 	public boolean sequenceExpansionExpressionAssignmentsBeforeArgument() {
+        // Note: This is handled by updateAssignments.
 		return true;
 	}
 
@@ -121,23 +137,80 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 	 * assigned after the primary expression.
 	 **/
 	public boolean sequenceExpansionExpressionVariableName() {
-		return true;
+	    SequenceExpansionExpression self = this.getSelf();
+	    ExtentOrExpression primary = self.getPrimary();
+	    this.getAssignmentAfterMap(); // Force computation of assignments.
+	    return !primary.getExpression().getImpl().
+	                getAssignmentAfterMap().containsKey(self.getVariable());
 	}
 
 	/**
 	 * The expansion variable may not be assigned within the argument
 	 * expression.
+	 * 
+	 * Note: This constraint needs to be expanded to:
+	 * No local variable assigned before the argument expression may be 
+	 * reassigned within that expression.
 	 **/
 	public boolean sequenceExpansionExpressionVariableAssignment() {
-		return true;
+        SequenceExpansionExpression self = this.getSelf();
+        Expression argument = self.getArgument();
+        if (argument != null) {           
+            this.getAssignmentAfterMap(); // Force computation of assignments.
+            for (AssignedSource assignmentAfter: argument.getAssignmentAfter()) {
+                AssignedSource assignmentBefore = 
+                    argument.getImpl().getAssignmentBefore(assignmentAfter.getName());
+                if (assignmentBefore != null && 
+                        assignmentBefore.getSource() != assignmentAfter.getSource()) {
+                    return false;
+                }
+            }
+        }
+        return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * The assignments after a sequence expansion expression are the same as
 	 * after its primary expression.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
-		return new ArrayList<AssignedSource>(); // STUB
+	@Override
+	public Map<String, AssignedSource> updateAssignmentMap() {
+        SequenceExpansionExpression self = this.getSelf();
+        ExtentOrExpression primary = self.getPrimary();
+        Expression argument = self.getArgument();
+        Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+        if (primary != null) {
+            Expression expression = primary.getExpression();
+            if (expression != null) {
+                expression.getImpl().setAssignmentBefore(assignments);
+                assignments = expression.getImpl().getAssignmentAfterMap();
+            }
+        }
+        if (argument != null) {
+            Map<String, AssignedSource> assignmentsBeforeArgument =
+                new HashMap<String, AssignedSource>(assignments);
+            AssignedSource variableSource = self.getVariableSource();
+            assignmentsBeforeArgument.put(variableSource.getName(), variableSource);
+            argument.getImpl().setAssignmentBefore(assignmentsBeforeArgument);
+        }
+		return assignments;
 	} // updateAssignments
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+        SequenceExpansionExpression self = this.getSelf();
+        ExtentOrExpression primary = self.getPrimary();
+        Expression argument = self.getArgument();
+        if (primary != null) {
+            primary.getImpl().setCurrentScope(currentScope);
+        }
+        if (argument != null) {
+            argument.getImpl().setCurrentScope(currentScope);
+        }
+	}
 
 } // SequenceExpansionExpressionImpl

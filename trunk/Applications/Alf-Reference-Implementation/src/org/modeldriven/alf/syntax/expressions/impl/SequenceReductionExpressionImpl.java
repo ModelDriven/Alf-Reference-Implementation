@@ -9,17 +9,12 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An expression used to reduce a sequence of values effectively by inserting a
@@ -37,6 +32,7 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public SequenceReductionExpression getSelf() {
 		return (SequenceReductionExpression) this.self;
 	}
@@ -76,50 +72,76 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 		this.behaviorName = behaviorName;
 	}
 
-	protected ElementReference deriveReferent() {
-		return null; // STUB
-	}
-
 	/**
 	 * The referent for a sequence reduction expression is the behavior denoted
 	 * by the behavior name of the expression.
 	 **/
-	public boolean sequenceReductionExpressionReferentDerivation() {
-		this.getSelf().getReferent();
-		return true;
+	protected ElementReference deriveReferent() {
+	    QualifiedName behaviorName = this.getSelf().getBehaviorName();
+		return behaviorName == null? null: behaviorName.getImpl().getBehaviorReferent();
 	}
 
 	/**
 	 * A sequence reduction expression has the same type as its primary
 	 * expression.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    ExtentOrExpression primary = this.getSelf().getPrimary();
+	    Expression expression = primary == null? null: primary.getExpression();
+	    return expression == null? null: expression.getType();
+	}
+	
+	/**
+	 * A sequence reduction expression has a multiplicity upper bound of 1.
+	 **/
+	@Override
+	protected Integer deriveUpper() {
+	    return 1;
+	}
+	
+	/**
+	 * A sequence reduction expression has a multiplicity lower bound of 1.
+	 **/
+    @Override
+    protected Integer deriveLower() {
+        return 1;
+    }
+	
+	/*
+	 * Derivations
+	 */
+	
+	public boolean sequenceReductionExpressionReferentDerivation() {
+		this.getSelf().getReferent();
+		return true;
+	}
+
 	public boolean sequenceReductionExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * A sequence reduction expression has a multiplicity upper bound of 1.
-	 **/
 	public boolean sequenceReductionExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
 
-	/**
-	 * A sequence reduction expression has a multiplicity lower bound of 1.
-	 **/
 	public boolean sequenceReductionExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
 
+	/*
+	 * Constraints
+	 */
+	
 	/**
 	 * The behavior name in a sequence reduction expression must denote a
 	 * behavior.
 	 **/
 	public boolean sequenceReductionExpressionBehavior() {
-		return true;
+		return this.getSelf().getReferent() != null;
 	}
 
 	/**
@@ -128,7 +150,29 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	 * argument expression and multiplicity [1..1].
 	 **/
 	public boolean sequenceReductionExpressionBehaviorParameters() {
-		return true;
+	    SequenceReductionExpression self = this.getSelf();
+	    ElementReference referent = self.getReferent();
+	    if (referent == null) {
+	        return false;
+	    } else {
+	        List<FormalParameter> parameters = referent.getImpl().getParameters();
+            FormalParameter returnParameter = referent.getImpl().getReturnParameter();
+	        if (parameters.size() != 3 || returnParameter == null) {
+	            return false;
+	        } else {
+	            ElementReference type = self.getType();
+	            for (FormalParameter parameter: parameters) {
+	                if (!((parameter == returnParameter ||
+	                            !parameter.getDirection().equals("in")) &&
+	                       parameter.getType().getImpl().equals(type) &&
+	                       parameter.getLower() != 1 && 
+	                       parameter.getUpper() != 1)) {
+	                    return false;
+	                }
+	            }
+	            return true;
+	        }
+	    }
 	}
 
 	/**
@@ -137,15 +181,41 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	 * expression.
 	 **/
 	public boolean sequenceReductionExpressionAssignmentsBefore() {
+	    // Note: This is handled by updateAssignments.
 		return true;
 	}
 
+	/*
+	 * Helper Methods
+	 */
+	
 	/**
 	 * The assignments after a sequence reduction expression are the same as
 	 * after its primary expression.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
-		return new ArrayList<AssignedSource>(); // STUB
-	} // updateAssignments
+	@Override
+	public Map<String, AssignedSource> updateAssignmentMap() {
+		ExtentOrExpression primary = this.getSelf().getPrimary();
+		Expression expression = primary == null? null: primary.getExpression();
+		Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+		if (expression != null) {
+		    expression.getImpl().setAssignmentBefore(assignments);
+		    assignments = expression.getImpl().getAssignmentAfterMap();
+		}
+		return assignments;
+	} // updateAssignmentMap
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    SequenceReductionExpression self = this.getSelf();
+	    ExtentOrExpression primary = self.getPrimary();
+	    QualifiedName behaviorName = self.getBehaviorName();
+	    if (primary != null) {
+	        primary.getImpl().setCurrentScope(currentScope);
+	    }
+	    if (behaviorName != null) {
+	        behaviorName.getImpl().setCurrentScope(currentScope);
+	    }
+	}
 
 } // SequenceReductionExpressionImpl

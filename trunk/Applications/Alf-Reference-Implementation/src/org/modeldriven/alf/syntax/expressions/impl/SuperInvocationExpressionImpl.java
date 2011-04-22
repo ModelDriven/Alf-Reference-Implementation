@@ -9,17 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * An invocation expression used to invoke an operation of a superclass.
@@ -29,11 +25,14 @@ public class SuperInvocationExpressionImpl
 		extends InvocationExpressionImpl {
 
 	private QualifiedName target = null;
+	
+	private ElementReferenceImpl context = null;
 
 	public SuperInvocationExpressionImpl(SuperInvocationExpression self) {
 		super(self);
 	}
 
+	@Override
 	public SuperInvocationExpression getSelf() {
 		return (SuperInvocationExpression) this.self;
 	}
@@ -50,33 +49,104 @@ public class SuperInvocationExpressionImpl
 	 * The referent of a super invocation expression is the method behavior of
 	 * the operation identified using the overloading resolution rules.
 	 **/
+	@Override
+	protected ElementReference deriveReferent() {
+	    if (this.context == null) {
+	        return null;
+	    } else {
+	        Collection<ElementReference> superclasses = null;
+	        QualifiedName target = this.getSelf().getTarget();
+	        String name = null;
+	        if (target == null) {
+	            name = this.context.getName();
+                superclasses = this.context.parents();
+	        } else {
+	            QualifiedName qualification = target.getQualification();
+	            name = target.getUnqualifiedName().getName();
+	            if (qualification == null) {
+	                superclasses = this.context.parents();
+	            } else {
+	                ElementReference superclass = 
+	                    qualification.getImpl().getClassifierReferent();
+	                if (superclass == null) {
+	                    return null;
+	                } else {
+    	                superclasses = new ArrayList<ElementReference>();
+    	                superclasses.add(superclass);
+	                }
+	            }
+	        }
+	        
+	        // TODO: Handle overloading resolution.
+	        ElementReference referent = null;
+	        for (ElementReference superclass: superclasses) {
+	            for (ElementReference feature: superclass.getImpl().getFeatures()) {
+	                if (feature.getImpl().isOperation() && 
+	                        feature.getImpl().getName().equals(name)) {
+	                    if (referent != null) {
+	                        return null;
+	                    }
+	                    referent = feature;
+	                }
+	            }
+	        }
+	        // Note: This returns the operation, not the method.
+	        return referent;
+	    }
+	}
+	
+	/**
+	 * There is no feature for a super invocation.
+	 **/
+	@Override
+	protected FeatureReference deriveFeature() {
+	    return null;
+	}
+	
+	/*
+	 * Derivations
+	 */
+	
 	public boolean superInvocationExpressionReferentDerivation() {
 		this.getSelf().getReferent();
 		return true;
 	}
 
-	/**
-	 * There is no feature for a super invocation.
-	 **/
 	public boolean superInvocationExpressionFeatureDerivation() {
 		this.getSelf().getFeature();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * If the target has a qualification, then this must resolve to one of the
 	 * superclasses of the current context class.
 	 **/
 	public boolean superInvocationExpressionQualification() {
-		return true;
+	    QualifiedName target = this.getSelf().getTarget();
+	    QualifiedName qualification = target == null? null: target.getQualification();
+	    if (qualification == null) {
+	        return true;
+	    } else {
+	        ElementReference superclass = qualification.getImpl().getClassifierReferent();
+	        return superclass != null && this.context != null && 
+	                    this.context.parents().contains(superclass);
+        }
 	}
 
 	/**
 	 * If the target is empty, the referent must be the method for a constructor
-	 * operation.
+	 * operation and the containing classifier must have exactly one superclass.
 	 **/
 	public boolean superInvocationExpressionImplicitTarget() {
-		return true;
+	    SuperInvocationExpression self = this.getSelf();
+	    ElementReference referent = self.getReferent();
+		return self.getTarget() != null || 
+		            referent != null && referent.getImpl().isConstructor() &&
+		            this.context != null && this.context.parents().size() == 1;
 	}
 
 	/**
@@ -86,7 +156,11 @@ public class SuperInvocationExpressionImpl
 	 * any statements preceding it are also super constructor invocations.
 	 **/
 	public boolean superInvocationExpressionConstructorCall() {
-		return true;
+	    // TODO: Check that a super constructor invocation occurs within an
+	    // expression statement at the start of a constructor operation.
+	    ElementReference referent = this.getSelf().getReferent();
+        return referent == null || !referent.getImpl().isConstructor() ||
+                    this.context != null && this.context.isConstructor();
 	}
 
 	/**
@@ -95,7 +169,9 @@ public class SuperInvocationExpressionImpl
 	 * operation.
 	 **/
 	public boolean superInvocationExpressionDestructorCall() {
-		return true;
+        ElementReference referent = this.getSelf().getReferent();
+	    return referent == null || !referent.getImpl().isDestructor() ||
+                    this.context != null && this.context.isDestructor();
 	}
 
 	/**
@@ -104,7 +180,21 @@ public class SuperInvocationExpressionImpl
 	 * resolution rules.
 	 **/
 	public boolean superInvocationExpressionOperation() {
-		return true;
+		return this.getSelf().getReferent() != null;
+	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    super.setCurrentScope(currentScope);
+	    QualifiedName target = this.getSelf().getTarget();
+	    if (target != null) {
+	        target.getImpl().setCurrentScope(currentScope);
+	    }
+	    context = currentScope.getImpl().getReferent().getImpl();
 	}
 
 } // SuperInvocationExpressionImpl

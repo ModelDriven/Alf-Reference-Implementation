@@ -9,17 +9,12 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
 /**
  * An expression used to assign a value to a local name, parameter or property.
@@ -46,6 +41,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public AssignmentExpression getSelf() {
 		return (AssignmentExpression) this.self;
 	}
@@ -195,164 +191,275 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 		this.isBitStringConversion = isBitStringConversion;
 	}
 
+    /**
+     * The new assigned source for an assignment to a local name is the
+     * assignment expression. If the assignment is a definition, then the type
+     * is given by the right hand side, the multiplicity upper bound is 1 if the
+     * upper bound of the right hand side is 1 and otherwise * and the
+     * multiplicity lower bound is 0. Otherwise, the type and multiplicity are
+     * the same as the left hand side.
+     **/
 	protected AssignedSource deriveAssignment() {
-		return null; // STUB
+	    AssignmentExpression self = this.getSelf();
+	    String name = this.getLocalName();
+        Expression rhs = self.getRightHandSide();
+	    if (name == null || rhs == null) {
+	        return null;
+	    } else if (self.getIsDefinition()) {
+	        int upper = rhs.getUpper() == 1? 1: -1;
+	        return AssignedSourceImpl.makeAssignment(name, rhs, rhs.getType(), 0, upper);
+	    } else {
+	        AssignedSource oldAssignment = this.getAssignmentBefore(name);
+	        if (oldAssignment == null) {
+	            return null;
+	        } else {
+    	        AssignedSource assignment = AssignedSourceImpl.makeAssignment(oldAssignment);
+    	        assignment.setSource(rhs);
+    	        return assignment;
+	        }
+	    }
 	}
 
+    /**
+     * If the left-hand side of an assignment expression is a feature, then the
+     * feature of the assignment is the referent of the left-hand side.
+     **/
 	protected ElementReference deriveFeature() {
-		return null; // STUB
+	    LeftHandSide lhs = this.getSelf().getLeftHandSide();
+	    if (lhs == null) {
+            return null;
+	    } else {
+	        FeatureReference feature = lhs.getImpl().getFeature();
+	        if (feature == null) {
+	            return null;
+	        } else {
+	            Object[] referents = feature.getReferent().toArray();
+	            if (referents.length == 0) {
+	                return null;
+	            } else {
+	                return (ElementReference)referents[0];
+	            }
+	        }
+	    }
 	}
 
+    /**
+     * The left hand side of an assignment expression is indexed if it has an
+     * index.
+     **/
 	protected Boolean deriveIsIndexed() {
-		return null; // STUB
+	    LeftHandSide lhs = this.getSelf().getLeftHandSide();
+		return lhs != null && lhs.getIndex() != null;
 	}
 
+    /**
+     * An assignment expression is an arithmetic assignment if its operator is a
+     * compound assignment operator for an arithmetic operation.
+     **/
 	protected Boolean deriveIsArithmetic() {
-		return null; // STUB
+        AssignmentExpression self = this.getSelf();
+        return !self.getIsSimple() && this.isArithmeticOperator();
 	}
-
+	
+    /**
+     * An assignment expression is a definition if it is a simple assignment and
+     * its left hand side is a local name for which there is no assignment
+     * before the expression.
+     **/
 	protected Boolean deriveIsDefinition() {
-		return null; // STUB
+	    AssignmentExpression self = this.getSelf();
+	    String name = this.getLocalName();
+		return self.getIsSimple() && name != null && 
+		       !self.getImpl().getAssignmentBeforeMap().containsKey(name);    
 	}
 
+    /**
+     * An assignment expression is a simple assignment if the assignment
+     * operator is "=".
+     **/
 	protected Boolean deriveIsSimple() {
-		return null; // STUB
+	    String operator = this.getSelf().getOperator();
+		return operator != null && operator.equals("=");
 	}
 
+    /**
+     * For a compound assignment, the effective expression is the left-hand side
+     * treated as a name expression, property access expression or sequence
+     * access expression, as appropriate for evaluation to obtain the original
+     * value to be updated.
+     **/
 	protected Expression deriveExpression() {
-		return null; // STUB
+	    LeftHandSide lhs = this.getSelf().getLeftHandSide();
+		return lhs == null? null: lhs.getImpl().getExpression();
 	}
 
+    /**
+     * The left hand side of an assignment expression is a feature if it is a
+     * kind of FeatureLeftHandSide.
+     **/
 	protected Boolean deriveIsFeature() {
-		return null; // STUB
+	    LeftHandSide lhs = this.getSelf().getLeftHandSide();
+		return lhs != null && lhs.getImpl().getFeature() != null;
 	}
 
+    /**
+     * An assignment expression is a data value update if its left hand side is
+     * an attribute of a data value held in a local name or parameter.
+     **/
 	protected Boolean deriveIsDataValueUpdate() {
-		return null; // STUB
+	    LeftHandSide lhs = this.getSelf().getLeftHandSide();
+	    return lhs != null && lhs.getImpl().isDataValueUpdate();
 	}
 
+    /**
+     * An assignment requires collection conversion if the type of the
+     * right-hand side is a collection class and its multiplicity upper bound is
+     * 1, and the type of the left-hand side is not a collection class.
+     **/
 	protected Boolean deriveIsCollectionConversion() {
-		return null; // STUB
+	    AssignmentExpression self = this.getSelf();
+	    LeftHandSide lhs = self.getLeftHandSide();
+	    Expression rhs = self.getRightHandSide();
+		if (lhs == null || rhs == null) {
+		    return false;
+		} else {
+		    ElementReference lhsType = lhs.getImpl().getType();
+		    ElementReference rhsType = rhs.getType();
+		    return rhsType != null && lhsType != null && 
+		           rhsType.getImpl().isCollectionClass() && rhs.getUpper() == 1 &&
+		           !lhsType.getImpl().isCollectionClass();
+		}
 	}
 
+    /**
+     * An assignment requires BitString conversion if the type of the left-hand
+     * side is BitString and either the type of the right-hand side is Integer
+     * or collection conversion is required and the type of the right-hand side
+     * is a collection class whose argument type is Integer.
+     **/
 	protected Boolean deriveIsBitStringConversion() {
-		return null; // STUB
+        AssignmentExpression self = this.getSelf();
+        LeftHandSide lhs = self.getLeftHandSide();
+        Expression rhs = self.getRightHandSide();
+        if (lhs == null || rhs == null) {
+            return false;
+        } else {
+            ElementReference lhsType = lhs.getImpl().getType();
+            ElementReference rhsType = rhs.getType();
+            return rhsType != null && lhsType != null && 
+                   rhsType.getImpl().isBitString() &&
+                   (lhsType.getImpl().isInteger() ||
+                           lhsType.getImpl().isIntegerCollection());
+        }
 	}
-
+	
 	/**
-	 * An assignment expression is a simple assignment if the assignment
-	 * operator is "=".
+	 * An assignment expression has the same type as its right-hand side
+	 * expression.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    Expression rhs = this.getSelf().getRightHandSide();
+	    return rhs == null? null: rhs.getType();
+	}
+	
+    /**
+     * An assignment expression has the same multiplicity upper bound as its
+     * right-hand side expression.
+     **/
+	@Override
+	protected Integer deriveUpper() {
+        Expression rhs = this.getSelf().getRightHandSide();
+        return rhs == null? null: rhs.getUpper();
+	}
+	
+    /**
+     * An assignment expression has the same multiplicity lower bound as its
+     * right-hand side expression.
+     **/
+	@Override
+	protected Integer deriveLower() {
+        Expression rhs = this.getSelf().getRightHandSide();
+        return rhs == null? null: rhs.getLower();
+	}
+	
+	/*
+	 * Derivations
+	 */
+
 	public boolean assignmentExpressionIsSimpleDerivation() {
 		this.getSelf().getIsSimple();
 		return true;
 	}
 
-	/**
-	 * An assignment expression is an arithmetic assignment if its operator is a
-	 * compound assignment operator for an arithmetic operation.
-	 **/
 	public boolean assignmentExpressionIsArithmeticDerivation() {
 		this.getSelf().getIsArithmetic();
 		return true;
 	}
 
-	/**
-	 * An assignment expression is a definition if it is a simple assignment and
-	 * its left hand side is a local name for which there is no assignment
-	 * before the expression.
-	 **/
 	public boolean assignmentExpressionIsDefinitionDerivation() {
 		this.getSelf().getIsDefinition();
 		return true;
 	}
 
-	/**
-	 * The left hand side of an assignment expression is a feature if it is a
-	 * kind of FeatureLeftHandSide.
-	 **/
 	public boolean assignmentExpressionIsFeatureDerivation() {
 		this.getSelf().getIsFeature();
 		return true;
 	}
 
-	/**
-	 * The left hand side of an assignment expression is indexed if it has an
-	 * index.
-	 **/
 	public boolean assignmentExpressionIsIndexedDerivation() {
 		this.getSelf().getIsIndexed();
 		return true;
 	}
 
-	/**
-	 * An assignment expression is a data value update if its left hand side is
-	 * an attribute of a data value held in a local name or parameter.
-	 **/
 	public boolean assignmentExpressionIsDataValueUpdateDerivation() {
 		this.getSelf().getIsDataValueUpdate();
 		return true;
 	}
 
-	/**
-	 * The new assigned source for an assignment to a local name is the
-	 * assignment expression. If the assignment is a definition, then the type
-	 * is given by the right hand side, the multiplicity upper bound is 1 if the
-	 * upper bound of the right hand side is 1 and otherwise * and the
-	 * multiplicity lower bound is 0. Otherwise, the type and multiplicity are
-	 * the same as the left hand side.
-	 **/
 	public boolean assignmentExpressionAssignmentDerivation() {
 		this.getSelf().getAssignment();
 		return true;
 	}
 
-	/**
-	 * If the left-hand side of an assignment expression is a feature, then the
-	 * feature of the assignment is the referent of the left-hand side.
-	 **/
 	public boolean assignmentExpressionFeatureDerivation() {
 		this.getSelf().getFeature();
 		return true;
 	}
 
-	/**
-	 * For a compound assignment, the effective expression is the left-hand side
-	 * treated as a name expression, property access expression or sequence
-	 * access expression, as appropriate for evaluation to obtain the original
-	 * value to be updated.
-	 **/
 	public boolean assignmentExpressionExpressionDerivation() {
 		this.getSelf().getExpression();
 		return true;
 	}
 
-	/**
-	 * An assignment expression has the same type as its right-hand side
-	 * expression.
-	 **/
 	public boolean assignmentExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * An assignment expression has the same multiplicity upper bound as its
-	 * right-hand side expression.
-	 **/
 	public boolean assignmentExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
 
-	/**
-	 * An assignment expression has the same multiplicity lower bound as its
-	 * right-hand side expression.
-	 **/
 	public boolean assignmentExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
+	
+    public boolean assignmentExpressionIsCollectionConversionDerivation() {
+        this.getSelf().getIsCollectionConversion();
+        return true;
+    }
+
+    public boolean assignmentExpressionIsBitStringConversionDerivation() {
+        this.getSelf().getIsBitStringConversion();
+        return true;
+    }
+    
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * If the left-hand side of a simple assignment is not a new local name, and
@@ -361,7 +468,16 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 * expression.
 	 **/
 	public boolean assignmentExpressionSimpleAssignmentTypeConformance() {
-		return true;
+	    AssignmentExpression self = this.getSelf();
+	    LeftHandSide lhs = self.getLeftHandSide();
+	    Expression rhs = self.getRightHandSide();
+	    if (!self.getIsSimple() || lhs == null || self.getIsDefinition() || 
+	            rhs == null || rhs.getImpl().isNull()) {
+	        return true;
+	    } else {
+	        ElementReference lhsType = lhs.getImpl().getType();
+	        return lhsType == null || lhsType.getImpl().conformsTo(rhs.getType());
+	    }
 	}
 
 	/**
@@ -371,7 +487,17 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 * greater than that of the left-hand side.
 	 **/
 	public boolean assignmentExpressionSimpleAssignmentMultiplicityConformance() {
-		return true;
+        AssignmentExpression self = this.getSelf();
+        LeftHandSide lhs = self.getLeftHandSide();
+        Expression rhs = self.getRightHandSide();
+        if (!self.getIsSimple() || lhs == null || self.getIsDefinition()) {
+            return true;
+        } else {
+            int lhsUpper = lhs.getImpl().getUpper();
+            int rhsUpper = rhs.getUpper();
+            return lhsUpper > 1 || lhsUpper == -1 || 
+                        rhsUpper != -1 && rhsUpper <= lhsUpper;
+        }
 	}
 
 	/**
@@ -380,7 +506,34 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 * operator used in the compound assignment operator.
 	 **/
 	public boolean assignmentExpressionCompoundAssignmentTypeConformance() {
-		return true;
+	    AssignmentExpression self = this.getSelf();
+	    if (self.getIsSimple()) {
+	        return true;
+	    } else {
+    	    LeftHandSide lhs = self.getLeftHandSide();
+    	    Expression rhs = self.getRightHandSide();
+    	    if (lhs == null || rhs == null) {
+    	        return false;
+    	    } else {
+    	        ElementReference lhsType = lhs.getImpl().getType();
+    	        ElementReference rhsType = rhs.getType();
+    	        return lhsType != null && rhsType != null &&
+    	               (this.isArithmeticOperator() && 
+    	                       lhsType.getImpl().isInteger() &&
+    	                       rhsType.getImpl().isInteger() ||
+    	                this.isLogicalOperator() &&
+    	                       lhsType.getImpl().isBoolean() &&
+    	                       rhsType.getImpl().isBoolean() ||
+    	                this.isBitstringOperator() &&
+    	                       lhsType.getImpl().isBitString() &&
+    	                       (rhsType.getImpl().isBitString() ||
+    	                               rhsType.getImpl().isInteger()) ||
+                        this.isStringOperator() &&
+                               lhsType.getImpl().isString() &&
+                               rhsType.getImpl().isString()
+    	                ); 
+    	    }
+	    }
 	}
 
 	/**
@@ -388,7 +541,15 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 * have a multiplicity upper bound of 1.
 	 **/
 	public boolean assignmentExpressionCompoundAssignmentMultiplicityConformance() {
-		return true;
+        AssignmentExpression self = this.getSelf();
+        if (self.getIsSimple()) {
+            return true;
+        } else {
+            LeftHandSide lhs = self.getLeftHandSide();
+            Expression rhs = self.getRightHandSide();
+            return lhs != null && rhs != null && 
+                        lhs.getImpl().getUpper() == 1 && rhs.getUpper() == 1;
+        }
 	}
 
 	/**
@@ -398,37 +559,88 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 * side is the assigned source after the right-hand side expression.
 	 **/
 	public boolean assignmentExpressionAssignmentsBefore() {
+	    // Note: This is handled by updateAssignmentMap.
 		return true;
 	}
 
-	/**
-	 * An assignment requires collection conversion if the type of the
-	 * right-hand side is a collection class and its multiplicity upper bound is
-	 * 1, and the type of the left-hand side is not a collection class.
-	 **/
-	public boolean assignmentExpressionIsCollectionConversionDerivation() {
-		this.getSelf().getIsCollectionConversion();
-		return true;
-	}
-
-	/**
-	 * An assignment requires BitString conversion if the type of the left-hand
-	 * side is BitString and either the type of the right-hand side is Integer
-	 * or collection conversion is required and the type of the right-hand side
-	 * is a collection class whose argument type is Integer.
-	 **/
-	public boolean assignmentExpressionIsBitStringConversionDerivation() {
-		this.getSelf().getIsBitStringConversion();
-		return true;
-	}
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * The assignments after an assignment expression are the assignments after
 	 * the left-hand side, updated by the assignment from the assignment
 	 * statement, if any.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
-		return new ArrayList<AssignedSource>(); // STUB
+	@Override
+	protected Map<String, AssignedSource> updateAssignmentMap() {
+	    AssignmentExpression self = this.getSelf();
+        LeftHandSide lhs = self.getLeftHandSide();
+        Expression rhs = self.getRightHandSide();
+        Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+        if (rhs != null) {
+            rhs.getImpl().setAssignmentBefore(assignments);
+            assignments = rhs.getImpl().getAssignmentAfterMap();
+        }
+        if (lhs != null) {
+            lhs.getImpl().setAssignmentBefore(assignments);
+            assignments = lhs.getImpl().getAssignmentAfterMap();
+            AssignedSource assignment = self.getAssignment();
+            if (assignment != null) {
+                assignments.put(assignment.getName(), assignment);
+            }
+        }
+        return assignments;
 	} // updateAssignments
+	
+	private String getLocalName() {
+	    LeftHandSide lhs = this.getSelf().getLeftHandSide();
+	    return lhs == null? null: lhs.getImpl().getLocalName();
+	}
+	
+    private boolean isArithmeticOperator() {
+        String operator = this.getSelf().getOperator();
+        return operator != null && (
+                operator.equals("+=") ||
+                operator.equals("-=") ||
+                operator.equals("*=") ||
+                operator.equals("/=") ||
+                operator.equals("%="));
+    }
+
+    private boolean isLogicalOperator() {
+        String operator = this.getSelf().getOperator();
+        return operator != null && (
+                operator.equals("&=") ||
+                operator.equals("|=") ||
+                operator.equals("^="));
+    }
+
+    private boolean isBitstringOperator() {
+        String operator = this.getSelf().getOperator();
+        return operator != null && (
+                this.isLogicalOperator() ||
+                operator.equals("<<=") ||
+                operator.equals(">>=") ||
+                operator.equals(">>>="));
+    }
+    
+    private boolean isStringOperator() {
+        String operator = this.getSelf().getOperator();
+        return operator != null && operator.equals("+=");
+    }
+    
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        AssignmentExpression self = this.getSelf();
+        LeftHandSide lhs = self.getLeftHandSide();
+        Expression rhs = self.getRightHandSide();
+        if (lhs != null) {
+            lhs.getImpl().setCurrentScope(currentScope);
+        }
+        if (rhs != null) {
+            rhs.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // AssignmentExpressionImpl

@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * An expression that comprises a String literal.
@@ -33,6 +25,7 @@ public class StringLiteralExpressionImpl extends LiteralExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public StringLiteralExpression getSelf() {
 		return (StringLiteralExpression) this.self;
 	}
@@ -48,6 +41,15 @@ public class StringLiteralExpressionImpl extends LiteralExpressionImpl {
 	/**
 	 * The type of a string literal expression is String.
 	 **/
+	@Override
+	public ElementReference deriveType() {
+	    return RootNamespace.getStringType();
+	}
+	
+	/*
+	 * Derivations
+	 */
+	
 	public boolean stringLiteralExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;

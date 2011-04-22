@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * An expression that comprises a Boolean literal.
@@ -33,6 +25,7 @@ public class BooleanLiteralExpressionImpl extends LiteralExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public BooleanLiteralExpression getSelf() {
 		return (BooleanLiteralExpression) this.self;
 	}
@@ -44,10 +37,19 @@ public class BooleanLiteralExpressionImpl extends LiteralExpressionImpl {
 	public void setImage(String image) {
 		this.image = image;
 	}
-
+	
 	/**
 	 * The type of a boolean literal expression is Boolean.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    return RootNamespace.getBooleanType();
+	}
+	
+	/*
+	 * Derivations
+	 */
+
 	public boolean booleanLiteralExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;

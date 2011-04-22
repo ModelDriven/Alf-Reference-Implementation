@@ -9,17 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * The target of a sequence operation, reduction or expansion expression, which
@@ -69,19 +60,59 @@ public class ExtentOrExpressionImpl {
 		this.nonNameExpression = nonNameExpression;
 	}
 
-	protected Expression deriveExpression() {
-		return null; // STUB
-	}
-
 	/**
 	 * The effective expression for the target is the parsed primary expression,
 	 * if the target is not a qualified name, a name expression, if the target
 	 * is a qualified name other than a class name, or a class extent
 	 * expression, if the target is the qualified name of a class.
 	 **/
+	protected Expression deriveExpression() {
+	    ExtentOrExpression self = this.getSelf();
+	    QualifiedName name = self.getName();
+	    Expression expression = self.getNonNameExpression();
+	    if (expression == null && name != null) {
+	        if (name.getImpl().getClassReferent() != null) {
+	            expression = new ClassExtentExpression();
+	            ((ClassExtentExpression)expression).setClassName(name);
+	        } else {
+	            expression = new NameExpression();
+	            ((NameExpression)expression).setName(name);
+	        }
+	    }
+		return expression;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
 	public boolean extentOrExpressionExpressionDerivation() {
 		this.getSelf().getExpression();
 		return true;
+	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+        ExtentOrExpression self = this.getSelf();
+        QualifiedName name = self.getName();
+        Expression nonNameExpression = self.getNonNameExpression();
+        if (name != null) {
+            name.getImpl().setCurrentScope(currentScope);
+        }
+        if (nonNameExpression != null) {
+            nonNameExpression.getImpl().setCurrentScope(currentScope);
+        }
+	}
+	
+	public void setContainingExpression(Expression expression) {
+        ExtentOrExpression self = this.getSelf();
+        QualifiedName name = self.getName();
+        if (name != null) {
+            name.getImpl().setContainingExpression(expression);
+        }
 	}
 
 } // ExtentOrExpressionImpl
