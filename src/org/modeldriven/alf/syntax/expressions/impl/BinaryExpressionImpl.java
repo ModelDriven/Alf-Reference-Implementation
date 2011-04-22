@@ -9,17 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An expression consisting of an operator acting on two operand expressions.
@@ -35,6 +31,7 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public BinaryExpression getSelf() {
 		return (BinaryExpression) this.self;
 	}
@@ -62,13 +59,21 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	public void setOperator(String operator) {
 		this.operator = operator;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The operands of a binary expression must both have a multiplicity upper
 	 * bound of 1.
 	 **/
 	public boolean binaryExpressionOperandMultiplicity() {
-		return true;
+	    BinaryExpression self = this.getSelf();
+	    Expression operand1 = self.getOperand1();
+	    Expression operand2 = self.getOperand2();
+		return operand1 != null && operand1.getUpper() == 1 &&
+		            operand2 != null && operand2.getUpper() == 1;
 	}
 
 	/**
@@ -76,9 +81,13 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	 * valid (as determined by the validateAssignments helper operation).
 	 **/
 	public boolean binaryExpressionOperandAssignments() {
-		return true;
+		return validateAssignments();
 	}
 
+    /*
+     * Helper Methods
+     */
+    
 	/**
 	 * In general the assignments before the operand expressions of a binary
 	 * expression are the same as those before the binary expression and, if an
@@ -87,7 +96,20 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	 * (This is overridden for conditional logical expressions.)
 	 **/
 	public Boolean validateAssignments() {
-		return false; // STUB
+        BinaryExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        if (operand1 != null && operand2 != null) {
+            self.getAssignmentAfter(); // Force computation of assignments.
+            Collection<AssignedSource> assignmentsAfter1 = operand1.getImpl().getNewAssignments();
+            Collection<AssignedSource> assignmentsAfter2 = operand2.getImpl().getNewAssignments();
+            for (AssignedSource assignment: assignmentsAfter1) {
+                if (assignmentsAfter2.contains(assignment)) {
+                    return false;
+                }
+            }
+        }
+		return true;
 	} // validateAssignments
 
 	/**
@@ -96,8 +118,35 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	 * expression, plus the new assignments from each of the operand
 	 * expressions.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
-		return new ArrayList<AssignedSource>(); // STUB
+	@Override
+	public Map<String, AssignedSource> updateAssignmentMap() {
+	    BinaryExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+        Map<String, AssignedSource> assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
+        if (operand1 != null) {
+            operand1.getImpl().setAssignmentBefore(assignmentsBefore);
+            assignmentsAfter.putAll(operand1.getImpl().getAssignmentAfterMap());
+        }
+        if (operand2 != null) {
+            operand2.getImpl().setAssignmentBefore(assignmentsBefore);
+            assignmentsAfter.putAll(operand1.getImpl().getAssignmentAfterMap());
+        }
+		return assignmentsAfter;
 	} // updateAssignments
+
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        BinaryExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        if (operand1 != null) {
+            operand1.getImpl().setCurrentScope(currentScope);
+        }
+        if (operand2 != null) {
+            operand2.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // BinaryExpressionImpl

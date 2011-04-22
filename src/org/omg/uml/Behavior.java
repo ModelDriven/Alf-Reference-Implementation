@@ -12,5 +12,4 @@ public class Behavior extends Class {
     public List<Parameter> getOwnedParameter() {
         return new ArrayList<Parameter>();
     }
-
 }

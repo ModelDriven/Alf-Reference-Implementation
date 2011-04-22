@@ -9,17 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A specification of the elements of a sequence as a range of integers.
@@ -34,6 +25,7 @@ public class SequenceRangeImpl extends SequenceElementsImpl {
 		super(self);
 	}
 
+	@Override
 	public SequenceRange getSelf() {
 		return (SequenceRange) this.self;
 	}
@@ -57,19 +49,50 @@ public class SequenceRangeImpl extends SequenceElementsImpl {
 	/**
 	 * The multiplicity lower bound of a sequence range is 0.
 	 **/
+	@Override
+	protected Integer deriveLower() {
+	    return 0;
+	}
+	
+	/**
+	 * The multiplicity upper bound of a sequence range is * (since it is not
+	 * possible, in general, to statically determine a more constrained upper
+	 * bound).
+	 **/
+	@Override
+	protected Integer deriveUpper() {
+	    return -1;
+	}
+	
+	/*
+	 * Derivations
+	 */
+	
 	public boolean sequenceRangeLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
 
-	/**
-	 * The multiplicity uper bound of a sequence range is * (since it is not
-	 * possible, in general, to statically determine a more constrained upper
-	 * bound).
-	 **/
 	public boolean sequenceRangeUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        SequenceRange self = this.getSelf();
+        Expression rangeLower = self.getRangeLower();
+        Expression rangeUpper = self.getRangeUpper();
+        if (rangeLower != null) {
+            rangeLower.getImpl().setCurrentScope(currentScope);
+        }
+        if (rangeUpper != null) {
+            rangeUpper.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // SequenceRangeImpl

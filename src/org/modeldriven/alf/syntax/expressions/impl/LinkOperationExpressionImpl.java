@@ -9,16 +9,11 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,6 +32,7 @@ public class LinkOperationExpressionImpl
 		super(self);
 	}
 
+	@Override
 	public LinkOperationExpression getSelf() {
 		return (LinkOperationExpression) this.self;
 	}
@@ -79,54 +75,76 @@ public class LinkOperationExpressionImpl
 		this.associationName = associationName;
 	}
 
-	protected Boolean deriveIsCreation() {
-		return null; // STUB
-	}
-
-	protected Boolean deriveIsClear() {
-		return null; // STUB
-	}
-
 	/**
 	 * A link operation expression is for link creation if its operation is
 	 * "createLink".
 	 **/
-	public boolean linkOperationExpressionIsCreationDerivation() {
-		this.getSelf().getIsCreation();
-		return true;
+	protected Boolean deriveIsCreation() {
+	    String operation = this.getSelf().getOperation();
+		return operation != null && operation.equals("createLink");
 	}
 
 	/**
 	 * A link operation expression is for clearing an association if the
 	 * operation is "clearAssoc".
 	 **/
+	protected Boolean deriveIsClear() {
+        String operation = this.getSelf().getOperation();
+        return operation != null && operation.equals("createAssoc");
+	}
+	
+	/**
+	 * The referent for a link operation expression is the named association.
+	 **/
+	@Override
+	protected ElementReference deriveReferent() {
+	    QualifiedName associationName = this.getSelf().getAssociationName();
+	    return associationName == null? null: 
+	                associationName.getImpl().getAssociationReferent();
+	}
+	
+	/**
+	 * There is no feature for a link operation expression.
+	 **/
+	@Override
+	protected FeatureReference deriveFeature() {
+	    return null;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
+	public boolean linkOperationExpressionIsCreationDerivation() {
+		this.getSelf().getIsCreation();
+		return true;
+	}
+
 	public boolean linkOperationExpressionIsClearDerivation() {
 		this.getSelf().getIsClear();
 		return true;
 	}
 
-	/**
-	 * The referent for a link operation expression is the named association.
-	 **/
 	public boolean linkOperationExpressionReferentDerivation() {
 		this.getSelf().getReferent();
 		return true;
 	}
 
-	/**
-	 * There is no feature for a link operation expression.
-	 **/
 	public boolean linkOperationExpressionFeatureDerivation() {
 		this.getSelf().getFeature();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The qualified name of a link operation expression must resolve to a
 	 * single association.
 	 **/
 	public boolean linkOperationExpressionAssociationReference() {
-		return true;
+		return this.getSelf().getReferent() != null;
 	}
 
 	/**
@@ -134,15 +152,54 @@ public class LinkOperationExpressionImpl
 	 * expression.
 	 **/
 	public boolean linkOperationExpressionArgumentCompatibility() {
-		return true;
+        LinkOperationExpression self = this.getSelf();
+        Tuple tuple = self.getTuple();
+        if (tuple == null) {
+            return false;
+        } else {
+            for (NamedExpression input: tuple.getInput()) {
+                if (!this.parameterIsAssignableFrom(input)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 	}
 
+	/*
+	 * Helper Methods
+	 */
+	
 	/**
 	 * For a clear association operation, returns a single, typeless parameter.
 	 * Otherwise, returns the ends of the named association.
 	 **/
-	public Collection<ElementReference> parameterElements() {
-		return new ArrayList<ElementReference>(); // STUB
+	@Override
+	public List<FormalParameter> parameters() {
+        LinkOperationExpression self = this.getSelf();
+        ElementReference referent = self.getReferent();
+        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+        if (self.getIsClear()) {
+            FormalParameter parameter = new FormalParameter();
+            parameter.setDirection("in");
+            parameter.setLower(1);
+            parameter.setUpper(1);
+            parameters.add(parameter);
+        } else if (referent != null) {
+            for (ElementReference property: referent.getImpl().getAssociationEnds()) {
+                parameters.add(parameterFromProperty(property));
+            }
+        }
+		return parameters;
 	} // parameterElements
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    super.setCurrentScope(currentScope);
+	    QualifiedName associationName = this.getSelf().getAssociationName();
+	    if (associationName != null) {
+	        associationName.getImpl().setCurrentScope(currentScope);
+	    }
+	}
 
 } // LinkOperationExpressionImpl

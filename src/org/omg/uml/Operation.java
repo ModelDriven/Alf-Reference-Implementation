@@ -9,4 +9,16 @@ public class Operation extends Feature {
         return new ArrayList<Parameter>();
     }
 
+    public Type getType() {
+        return null;
+    }
+
+    public Integer getLower() {
+        return null;
+    }
+
+    public Integer getUpper() {
+        return null;
+    }
+
 }

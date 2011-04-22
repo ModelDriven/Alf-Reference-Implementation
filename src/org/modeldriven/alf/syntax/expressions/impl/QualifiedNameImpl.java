@@ -471,6 +471,19 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         return classifier;
     }
 
+    public ElementReference getClassReferent() {
+        ElementReference class_ = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isClass()) {
+                if (class_ != null) {
+                    return null;
+                }
+                class_ = referent;
+            }
+        }
+        return class_;
+    }
+
     public ElementReference getSignalReferent() {
         ElementReference signal = null;
         for (ElementReference referent: this.getSelf().getReferent()) {
@@ -484,6 +497,19 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         return signal;
     }
 
+    public ElementReference getDataTypeReferent() {
+        ElementReference dataType = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isDataType()) {
+                if (dataType != null) {
+                    return null;
+                }
+                dataType = referent;
+            }
+        }
+        return dataType;
+    }
+
     public ElementReference getStereotypeReferent() {
         ElementReference stereotype = null;
         for (ElementReference referent: this.getSelf().getReferent()) {
@@ -495,6 +521,71 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             }
         }
         return stereotype;
+    }
+
+    public ElementReference getAssociationReferent() {
+        ElementReference association = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isAssociation()) {
+                if (association != null) {
+                    return null;
+                }
+                association = referent;
+            }
+        }
+        return association;
+    }
+
+    public ElementReference getBehaviorReferent() {
+        ElementReference behavior = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isStereotype()) {
+                if (behavior != null) {
+                    return null;
+                }
+                behavior = referent;
+            }
+        }
+        return behavior;
+    }
+
+    public ElementReference getPropertyReferent() {
+        ElementReference property = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isProperty()) {
+                if (property != null) {
+                    return null;
+                }
+                property = referent;
+            }
+        }
+        return property;
+    }
+
+    public ElementReference getEnumerationLiteralReferent() {
+        ElementReference literal = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isEnumerationLiteral()) {
+                if (literal != null) {
+                    return null;
+                }
+                literal = referent;
+            }
+        }
+        return literal;
+    }
+
+    public ElementReference getParameterReferent() {
+        ElementReference parameter = null;
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isParameter()) {
+                if (parameter != null) {
+                    return null;
+                }
+                parameter = referent;
+            }
+        }
+        return parameter;
     }
 
     public boolean isPackageReferent() {

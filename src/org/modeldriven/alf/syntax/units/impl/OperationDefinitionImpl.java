@@ -264,6 +264,10 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         }
         return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * Returns true if the annotation is for a stereotype that has a metaclass
@@ -304,6 +308,31 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	    ElementReference operation = member.getImpl().getReferent();
 	    return operation.getImpl().isOperation() && this.matchParameters(operation);
 	} // isSameKindAs
+	
+	public ElementReference getType() {
+	    FormalParameter returnParameter = this.getReturnParameter();
+	    return returnParameter == null? null: returnParameter.getType();
+	}
+
+    public int getLower() {
+        FormalParameter returnParameter = this.getReturnParameter();
+        return returnParameter == null? 0: returnParameter.getLower();
+    }
+    
+    public int getUpper() {
+        FormalParameter returnParameter = this.getReturnParameter();
+        return returnParameter == null? 0: returnParameter.getUpper();
+    }
+    
+    public FormalParameter getReturnParameter() {
+        Collection<FormalParameter> parameters = this.getFormalParameters();
+        for (FormalParameter parameter: parameters) {
+            if (parameter.getDirection().equals("return")) {
+                return parameter;
+            }
+        }
+        return null;
+    }
 
     private boolean equateParameters(ElementReference operation) {
         OperationDefinition alfOperation = (OperationDefinition)operation.getImpl().getAlf();

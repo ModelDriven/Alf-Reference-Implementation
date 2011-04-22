@@ -9,18 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * A reference to a structural or behavioral feature of the type of its target
@@ -38,6 +33,7 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 		super(self);
 	}
 
+	@Override
 	public FeatureReference getSelf() {
 		return (FeatureReference) this.self;
 	}
@@ -73,27 +69,92 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 		this.nameBinding = nameBinding;
 	}
 
-	protected Collection<ElementReference> deriveReferent() {
-		return null; // STUB
-	}
-
 	/**
 	 * The features referenced by a feature reference include the features of
 	 * the type of the target expression and the association ends of any binary
 	 * associations whose opposite ends are typed by the type of the target
 	 * expression.
 	 **/
+	protected Collection<ElementReference> deriveReferent() {
+	    FeatureReference self = this.getSelf();
+	    Expression target = self.getExpression();
+	    ElementReference targetType = target == null? null: target.getType();
+	    return targetType == null? new ArrayList<ElementReference>():
+	                targetType.getImpl().getFeatures();
+	}
+	
+	/*
+	 * Derivations
+	 */
+
 	public boolean featureReferenceReferentDerivation() {
 		this.getSelf().getReferent();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The target expression of the feature reference may not be untyped, nor
 	 * may it have a primitive or enumeration type.
 	 **/
 	public boolean featureReferenceTargetType() {
-		return true;
+	    FeatureReference self = this.getSelf();
+	    Expression target = self.getExpression();
+	    ElementReference targetType = target == null? null: target.getType();
+		return targetType != null && 
+		            !targetType.getImpl().isPrimitive() && 
+		            !targetType.getImpl().isEnumeration();
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+
+    public ElementReference getStructuralFeatureReferent() {
+        FeatureReference self = this.getSelf();
+        ElementReference property = null;
+        for (ElementReference referent: self.getReferent()) {
+            if (referent.getImpl().isProperty()) {
+                if (property != null) {
+                    return null;
+                }
+                property = referent;
+            }
+        }
+        return property;
+    }
+
+    public ElementReference getBehavioralFeatureReferent(InvocationExpression invocation) {
+        // TODO Handle overloading resolution.
+        FeatureReference self = this.getSelf();
+        ElementReference feature = null;
+        for (ElementReference referent: self.getReferent()) {
+            if (referent.getImpl().isOperation() ||
+                    referent.getImpl().isReception()) {
+                if (feature != null) {
+                    return null;
+                }
+                feature = referent;
+            }
+        }
+        return feature;
+    }
+
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        FeatureReference self = this.getSelf();
+        Expression expression = self.getExpression();
+        NameBinding nameBinding = self.getNameBinding();
+        
+        if (expression != null) {
+            expression.getImpl().setCurrentScope(currentScope);
+        }
+        
+        if (nameBinding != null) {
+            nameBinding.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // FeatureReferenceImpl

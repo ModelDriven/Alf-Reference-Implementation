@@ -9,17 +9,10 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
 /**
  * An expression comprising a reference to a structural feature.
@@ -34,6 +27,7 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public PropertyAccessExpression getSelf() {
 		return (PropertyAccessExpression) this.self;
 	}
@@ -57,54 +51,92 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 		this.feature = feature;
 	}
 
-	protected ElementReference deriveFeature() {
-		return null; // STUB
-	}
-
 	/**
 	 * The feature of a property access expression is the structural feature to
 	 * which its feature reference resolves.
 	 **/
-	public boolean propertyAccessExpressionFeatureDerivation() {
-		this.getSelf().getFeature();
-		return true;
+	protected ElementReference deriveFeature() {
+	    FeatureReference featureReference = this.getSelf().getFeatureReference();
+		return featureReference == null? null: 
+		            featureReference.getImpl().getStructuralFeatureReferent();
 	}
 
 	/**
 	 * The type of a property access expression is the type of the referenced
 	 * feature.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    ElementReference feature = this.getSelf().getFeature();
+	    return feature == null? null: feature.getImpl().getType();
+	}
+	
+	/**
+	 * The multiplicity upper bound of a property access expression is given by
+	 * the product of the multiplicity upper bounds of the referenced feature
+	 * and the target expression.
+	 **/
+	@Override
+	protected Integer deriveUpper() {
+	    PropertyAccessExpression self = this.getSelf();
+	    ElementReference feature = self.getFeature();
+	    FeatureReference featureReference = self.getFeatureReference();
+	    Expression target = featureReference == null? null:
+	                            featureReference.getExpression();
+	    return feature == null || target == null? 0:
+	                feature.getImpl().getUpper() * target.getUpper();
+	}
+	
+	/**
+	 * The multiplicity upper bound of a property access expression is given by
+	 * the product of the multiplicity upper bounds of the referenced feature
+	 * and the target expression.
+	 **/
+    @Override
+    protected Integer deriveLower() {
+        PropertyAccessExpression self = this.getSelf();
+        ElementReference feature = self.getFeature();
+        FeatureReference featureReference = self.getFeatureReference();
+        Expression target = featureReference == null? null:
+                                featureReference.getExpression();
+        return feature == null || target == null? 0:
+                    feature.getImpl().getLower() * target.getLower();
+    }
+	
+	/*
+	 * Derivations
+	 */
+	
+	public boolean propertyAccessExpressionFeatureDerivation() {
+		this.getSelf().getFeature();
+		return true;
+	}
+
 	public boolean propertyAccessExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * The multiplicity upper bound of a property access expression is given by
-	 * the product of the multiplicity upper bounds of the referenced feature
-	 * and the target expression.
-	 **/
 	public boolean propertyAccessExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
 
-	/**
-	 * The multiplicity upper bound of a property access expression is given by
-	 * the product of the multiplicity upper bounds of the referenced feature
-	 * and the target expression.
-	 **/
 	public boolean propertyAccessExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The feature reference for a property access expression must resolve to a
 	 * single structural feature.
 	 **/
 	public boolean propertyAccessExpressionFeatureResolution() {
-		return true;
+		return this.getSelf().getFeature() != null;
 	}
 
 	/**
@@ -113,6 +145,7 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 	 * expression.
 	 **/
 	public boolean propertyAccessExpressionAssignmentsBefore() {
+	    // Note: This is handled by updateAssignments.
 		return true;
 	}
 
@@ -120,8 +153,18 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 	 * The assignments after a property access expression are the same as those
 	 * after the target expression of its feature reference.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
-		return new ArrayList<AssignedSource>(); // STUB
+	@Override
+	public Map<String, AssignedSource> updateAssignmentMap() {
+	    PropertyAccessExpression self = this.getSelf();
+	    Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+	    FeatureReference featureReference = self.getFeatureReference();
+	    Expression expression = featureReference == null? null:
+	                                featureReference.getExpression();
+	    if (expression != null) {
+	        expression.getImpl().setAssignmentBefore(assignments);
+	        assignments = expression.getImpl().getAssignmentAfterMap();
+	    }
+		return assignments;
 	} // updateAssignments
 
 } // PropertyAccessExpressionImpl

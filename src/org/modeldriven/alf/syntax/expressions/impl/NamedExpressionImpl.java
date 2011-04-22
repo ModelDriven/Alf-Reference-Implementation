@@ -9,18 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A pairing of a parameter name and an argument expression in a tuple.
@@ -38,6 +29,7 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 		super(self);
 	}
 
+	@Override
 	public NamedExpression getSelf() {
 		return (NamedExpression) this.self;
 	}
@@ -88,22 +80,14 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 		this.isBitStringConversion = isBitStringConversion;
 	}
 
-	protected Boolean deriveIsCollectionConversion() {
-		return null; // STUB
-	}
-
-	protected Boolean deriveIsBitStringConversion() {
-		return null; // STUB
-	}
-
 	/**
 	 * Collection conversion is required if the type of the corresponding
 	 * parameter is a collection class and the type of the argument expression
 	 * is not.
 	 **/
-	public boolean namedExpressionIsCollectionConversionDerivation() {
-		this.getSelf().getIsCollectionConversion();
-		return true;
+	protected Boolean deriveIsCollectionConversion() {
+	    // This needs to be set externally.
+		return null;
 	}
 
 	/**
@@ -112,9 +96,48 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	 * with a BitString type, and the type of the argument expression is not
 	 * BitString.
 	 **/
+	protected Boolean deriveIsBitStringConversion() {
+	    // This needs to be set externally.
+		return null;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
+	public boolean namedExpressionIsCollectionConversionDerivation() {
+		this.getSelf().getIsCollectionConversion();
+		return true;
+	}
+
 	public boolean namedExpressionIsBitStringConversionDerivation() {
 		this.getSelf().getIsBitStringConversion();
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    NamedExpression self = this.getSelf();
+	    Expression expression = self.getExpression();
+	    Expression index = self.getIndex();
+	    if (expression != null) {
+	        expression.getImpl().setCurrentScope(currentScope);
+	    }
+	    if (index != null) {
+	        index.getImpl().setCurrentScope(currentScope);
+	    }
+	}
+
+    public OutputNamedExpression asOutput() {
+        NamedExpression self = this.getSelf();
+        OutputNamedExpression output = new OutputNamedExpression();
+        output.setName(self.getName());
+        output.setExpression(self.getExpression());
+        output.setIndex(self.getIndex());
+        return output;
+    }
 
 } // NamedExpressionImpl

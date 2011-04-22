@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -51,15 +50,18 @@ public abstract class ElementReferenceImpl {
 	public abstract boolean isClassifier();
     public abstract boolean isAbstractClassifier();
     public abstract boolean isAssociation();
-	public abstract boolean isClass();  // But not any subtype of Class
+	public abstract boolean isClass();  
+	public abstract boolean isClassOnly(); // But not any subtype of Class
     public abstract boolean isActiveClass();
 	public abstract boolean isDataType();
 	public abstract boolean isBehavior();
 	public abstract boolean isActivity();
     public abstract boolean isEnumeration();
+    public abstract boolean isPrimitive();
     public abstract boolean isSignal();
     public abstract boolean isStereotype();
     public abstract boolean isTemplate();
+    public abstract boolean isEnumerationLiteral();
 
     public abstract boolean isFeature();
     public abstract boolean isOperation();
@@ -67,15 +69,26 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isDestructor();
     public abstract boolean isReception();
     public abstract boolean isProperty();
+    public abstract boolean isAssociationEnd();
+    public abstract boolean isParameter();
 
     public abstract NamespaceDefinition asNamespace();
+    public abstract boolean isInNamespace(NamespaceDefinition namespace);
 
     public abstract boolean hasReceptionFor(ElementReference signal);
     
     public abstract Collection<ElementReference> parents();
     public abstract Collection<ElementReference> allParents();
 
+    public abstract String getName();
+    public abstract List<ElementReference> getFeatures();
+    public abstract List<ElementReference> getAttributes();
+    public abstract List<ElementReference> getAssociationEnds();
     public abstract List<FormalParameter> getParameters();
+    public abstract ElementReference getType();
+    public abstract ElementReference getAssociation();
+    public abstract Integer getLower();
+    public abstract Integer getUpper();
     
     public FormalParameter getReturnParameter() {
         for (FormalParameter parameter: this.getParameters()) {
@@ -97,17 +110,19 @@ public abstract class ElementReferenceImpl {
         return this.getActiveClass() != null;
     }
 
-	@Override
-	public abstract boolean equals(Object object);
-
     public boolean isCollectionClass() {
         // TODO Write condition for being a collection class.
         return false;
     }
 
     public boolean isIntegerCollection() {
-        // TODO Write condition for being an integer collection.
-        return false;
+        if (!this.isCollectionClass()) {
+            return false;
+        } else {
+            ElementReference collectionArgument = this.getCollectionArgument();
+            return collectionArgument != null && 
+                        collectionArgument.getImpl().isInteger();
+        }
     }
     
     public ElementReference getCollectionArgument() {
@@ -115,12 +130,34 @@ public abstract class ElementReferenceImpl {
         return null;
     }
 
-    static final QualifiedNameImpl bitString = 
-        RootNamespace.getPrimitiveTypes().getImpl().copy().addName("BitString").getImpl();
-    
+    public boolean isInteger() {
+        return this.equals(RootNamespace.getIntegerType());
+    }
+
+    public boolean isBoolean() {
+        return this.equals(RootNamespace.getBooleanType());
+    }
+
+    public boolean isString() {
+        return this.equals(RootNamespace.getStringType());
+    }
+
+    public boolean isUnlimitedNatural() {
+        return this.equals(RootNamespace.getUnlimitedNaturalType());
+    }
+
     public boolean isBitString() {
-        ElementReference referent = bitString.getClassifierReferent();
-        return referent != null && this.equals(referent);
+        return this.equals(RootNamespace.getBitStringType());
+    }
+
+    public boolean isNatural() {
+        return this.equals(RootNamespace.getNaturalType());
+    }
+
+    public boolean isNumeric() {
+        return this.isInteger() || 
+               this.isUnlimitedNatural() || 
+               this.isNatural();
     }
 
     public abstract boolean conformsTo(ElementReference type);

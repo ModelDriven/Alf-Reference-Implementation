@@ -9,10 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
@@ -23,8 +20,7 @@ import java.util.Collection;
  * parameters in order by position.
  **/
 
-public class PositionalTemplateBindingImpl extends
-		org.modeldriven.alf.syntax.expressions.impl.TemplateBindingImpl {
+public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
 
     private Collection<QualifiedName> argumentName = new ArrayList<QualifiedName>();
 
@@ -32,7 +28,8 @@ public class PositionalTemplateBindingImpl extends
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.expressions.PositionalTemplateBinding getSelf() {
+	@Override
+	public PositionalTemplateBinding getSelf() {
 		return (PositionalTemplateBinding) this.self;
 	}
 	
@@ -61,5 +58,13 @@ public class PositionalTemplateBindingImpl extends
 	    s.append(">");
 	    return s.toString();
 	}
+
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        PositionalTemplateBinding self = this.getSelf();
+        for (QualifiedName argumentName: self.getArgumentName()) {
+            argumentName.getImpl().setCurrentScope(currentScope);
+        }
+    }
 
 } // PositionalTemplateBindingImpl

@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * An expression that comprises a natural literal.
@@ -33,6 +25,7 @@ public class NaturalLiteralExpressionImpl extends LiteralExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public NaturalLiteralExpression getSelf() {
 		return (NaturalLiteralExpression) this.self;
 	}
@@ -54,6 +47,15 @@ public class NaturalLiteralExpressionImpl extends LiteralExpressionImpl {
 	 * the context is ambiguous, however, than an explicit cast to Integer or
 	 * UnlimitedNatural must be used.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    return RootNamespace.getNaturalType();
+	}
+	
+	/*
+	 * Derivations
+	 */
+	
 	public boolean naturalLiteralExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;

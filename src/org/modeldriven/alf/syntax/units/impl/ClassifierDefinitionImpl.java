@@ -237,12 +237,15 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	    return inheritableMembers;
 	}
 
-    public static ElementReference commonAncestor(Collection<ElementReference> classifiers) {
-        while (classifiers.size() > 1) {
+    public static ElementReference commonAncestor(ElementReference... classifiers) {
+        while (classifiers.length > 1) {
             // Construct the set of all common ancestors of the given classifiers.
             boolean isFirst = true;
             Set<ElementReference> commonAncestors = new HashSet<ElementReference>();
             for (ElementReference classifier: classifiers) {
+                if (classifier == null) {
+                    return null;
+                }
                 Collection<ElementReference> ancestors = classifier.getImpl().allParents();
                 ancestors.add(classifier);
                 if (isFirst) {
@@ -258,20 +261,23 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             
             // Remove any common ancestors that are parents of other common
             // ancestors.
-            Set<ElementReference> parents = new HashSet<ElementReference>();
-            for (ElementReference ancestor: commonAncestors) {
-                parents.addAll(ancestor.getImpl().parents());
+            for (ElementReference ancestor: commonAncestors.toArray(classifiers)) {
+                commonAncestors.removeAll(ancestor.getImpl().parents());
             }
-            commonAncestors.removeAll(parents);
-            
-            classifiers.clear();
-            classifiers.addAll(commonAncestors);
+             
+            classifiers = commonAncestors.toArray(classifiers);
         }
-        if (classifiers.isEmpty()) {
+        if (classifiers.length == 0) {
             return null;
         } else {
-            return (ElementReference)classifiers.toArray()[0];
+            return (ElementReference)classifiers[0];
         }
+    }
+    
+    public static ElementReference commonAncestor(Collection<ElementReference> classifiers) {
+        ElementReference[] classifierArray = new ElementReference[classifiers.size()];
+        classifierArray = classifiers.toArray(classifierArray);
+        return commonAncestor(classifierArray);
     }
 
 } // ClassifierDefinitionImpl

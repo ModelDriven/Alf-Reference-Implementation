@@ -67,12 +67,15 @@ public abstract class StatementImpl extends
     }
     
 	public AssignedSource getAssignmentBefore(String name) {
-	    this.getAssignmentBefore();
-	    return this.assignmentBefore.get(name);
+	    return this.getAssignmentBeforeMap().get(name);
 	}
 
 	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
-	    this.setAssignmentBefore(new HashMap<String, AssignedSource>());
+        if (this.assignmentBefore == null) {
+            this.assignmentBefore = new HashMap<String, AssignedSource>();
+        } else {
+            this.assignmentBefore.clear();
+        }
 		for (AssignedSource assignment: assignmentBefore) {
 		    this.addAssignmentBefore(assignment);
 		}
@@ -83,7 +86,6 @@ public abstract class StatementImpl extends
 	}
 
 	public void addAssignmentBefore(AssignedSource assignmentBefore) {
-        this.getAssignmentBefore();
 		this.assignmentBefore.put(assignmentBefore.getName(), assignmentBefore);
 	}
 
@@ -99,12 +101,15 @@ public abstract class StatementImpl extends
     }
 
     public AssignedSource getAssignmentAfter(String name) {
-        this.getAssignmentAfter();
-        return this.assignmentAfter.get(name);
+        return this.getAssignmentAfterMap().get(name);
     }
 
 	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
-        this.assignmentAfter.clear();
+        if (this.assignmentBefore == null) {
+            this.assignmentBefore = new HashMap<String, AssignedSource>();
+        } else {
+            this.assignmentBefore.clear();
+        }
         for (AssignedSource assignment: assignmentAfter) {
             this.addAssignmentBefore(assignment);
         }
@@ -115,7 +120,6 @@ public abstract class StatementImpl extends
     }
 
 	public void addAssignmentAfter(AssignedSource assignmentAfter) {
-        this.getAssignmentAfter();
 		this.assignmentAfter.put(assignmentAfter.getName(), assignmentAfter);
 	}
 

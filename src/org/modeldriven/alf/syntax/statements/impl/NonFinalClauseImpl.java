@@ -86,7 +86,7 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
 	public boolean nonFinalClauseConditionType() {
         Expression condition = this.getSelf().getCondition();
 		return condition == null || 
-		    condition.getType().getImpl().equals(RootNamespace.getBooleanType()) &&
+		    condition.getType().getImpl().isBoolean() &&
 		    condition.getUpper() <= 1;
 	}
 

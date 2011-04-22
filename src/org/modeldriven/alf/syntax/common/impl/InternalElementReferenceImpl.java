@@ -78,12 +78,23 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public boolean isAbstractClassifier() {
+        return this.isClassifier() &&
+                ((ClassifierDefinition)this.getSelf().getElement()).getIsAbstract();
+    }
+
+    @Override
     public boolean isAssociation() {
         return this.getSelf().getElement() instanceof AssociationDefinition;
     }
 
     @Override
     public boolean isClass() {
+        return this.getSelf().getElement() instanceof ClassDefinition;
+    }
+
+    @Override
+    public boolean isClassOnly() {
         return this.getSelf().getElement() instanceof ClassDefinition;
     }
 
@@ -110,6 +121,12 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isEnumeration() {
         return this.getSelf().getElement() instanceof EnumerationDefinition;
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return this.isDataType() && 
+               ((DataTypeDefinition)this.getSelf().getElement()).getIsPrimitive();
     }
 
     @Override
@@ -158,9 +175,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public boolean isAbstractClassifier() {
-        return this.isClassifier() &&
-                ((ClassifierDefinition)this.getSelf().getElement()).getIsAbstract();
+    public boolean isEnumerationLiteral() {
+        return this.getSelf().getElement() instanceof EnumerationLiteralName;        
     }
 
     @Override
@@ -168,6 +184,18 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         return this.getSelf().getElement() instanceof PropertyDefinition;
     }
     
+    @Override
+    public boolean isAssociationEnd() {       
+        return this.isProperty() && 
+                ((PropertyDefinition)this.getSelf().getElement()).getNamespace() 
+                    instanceof AssociationDefinition;
+    }
+
+    @Override
+    public boolean isParameter() {
+        return this.getSelf().getElement() instanceof FormalParameter;
+    }
+
     @Override
     public NamespaceDefinition asNamespace() {
         if (this.isNamespace()) {
@@ -177,6 +205,21 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         }
     }
 
+    @Override
+    public boolean isInNamespace(NamespaceDefinition namespace) {
+        SyntaxElement element = this.getSelf().getElement();
+        if (!(element instanceof Member)) {
+            return false;
+        } else {
+            NamespaceDefinition elementNamespace = ((Member)element).getNamespace();
+            return elementNamespace == namespace ||
+                        elementNamespace instanceof ExternalNamespace &&
+                        namespace instanceof ExternalNamespace &&
+                        ((ExternalNamespace)elementNamespace).getUmlNamespace() == 
+                            ((ExternalNamespace)namespace).getUmlNamespace();
+        }
+    }
+    
     @Override
     public boolean hasReceptionFor(ElementReference signal) {
         SyntaxElement alfSignal = signal.getImpl().getAlf();
@@ -233,12 +276,97 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public String getName() {
+        SyntaxElement element = this.getSelf().getElement();
+        return element instanceof Member? ((Member)element).getName(): null;
+    }
+
+    @Override
+    public List<ElementReference> getFeatures() {
+        List<ElementReference> features = new ArrayList<ElementReference>();
+        if (this.isClassifier()) {
+            for (Member member: ((ClassifierDefinition)this.getSelf().getElement()).getMember()) {
+                if (member.getIsFeature()) {
+                    features.add(member.getImpl().getReferent());
+                }
+            }
+        }
+        return features;
+    }
+
+    @Override
+    public List<ElementReference> getAttributes() {
+        List<ElementReference> attributes = new ArrayList<ElementReference>();
+        if (this.isClassifier()) {
+            for (Member member: ((ClassifierDefinition)this.getSelf().getElement()).getMember()) {
+                if (member instanceof PropertyDefinition) {
+                    attributes.add(member.getImpl().getReferent());
+                }
+            }
+        }
+        return attributes;
+    }
+    
+    @Override
+    public List<ElementReference> getAssociationEnds() {
+        return this.getAttributes();
+    }
+
+    @Override
     public List<FormalParameter> getParameters() {
         if (this.isBehavior() || this.isOperation()) {
             return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getFormalParameters();
         } else {
             return new ArrayList<FormalParameter>();
         }
+    }
+
+    @Override
+    public ElementReference getType() {
+        if (this.isProperty()) {
+            return ((PropertyDefinition)this.getSelf().getElement()).getType();
+        } else if (this.isOperation()) {
+            return ((OperationDefinition)this.getSelf().getElement()).getImpl().getType();
+        } else if (this.isBehavior()) {
+            return ((ActivityDefinition)this.getSelf().getElement()).getImpl().getType();
+        } else if (this.isEnumerationLiteral()) {
+            return ((EnumerationDefinition)
+                        ((EnumerationLiteralName)this.getSelf().getElement()).
+                            getNamespace()).getImpl().getReferent();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ElementReference getAssociation() {
+        return !this.isAssociationEnd()? null:
+                    ((Member)this.getSelf().getElement()).
+                        getNamespace().getImpl().getReferent();
+    }
+    
+    public Integer getLower() {
+        int lower = 0;
+        if (this.isProperty()) {
+            lower = ((PropertyDefinition)this.getSelf().getElement()).getLower();
+        } else if (this.isOperation()) {
+            lower = ((OperationDefinition)this.getSelf().getElement()).getImpl().getLower();
+        } else if (this.isBehavior()) {
+            lower = ((ActivityDefinition)this.getSelf().getElement()).getImpl().getLower();
+        }
+        return lower;
+    }
+
+    public Integer getUpper() {
+        int upper = 0;
+        if (this.isProperty()) {
+            upper = ((PropertyDefinition)this.getSelf().getElement()).getUpper();
+        } else if (this.isOperation()) {
+            upper = ((OperationDefinition)this.getSelf().getElement()).getImpl().getUpper();
+        } else if (this.isBehavior()) {
+            upper = ((ActivityDefinition)this.getSelf().getElement()).getImpl().getUpper();
+        }
+        return upper;
     }
 
     @Override

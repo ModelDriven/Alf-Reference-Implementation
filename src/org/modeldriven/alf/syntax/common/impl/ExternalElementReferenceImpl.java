@@ -29,11 +29,14 @@ import org.omg.uml.Classifier;
 import org.omg.uml.DataType;
 import org.omg.uml.Element;
 import org.omg.uml.Enumeration;
+import org.omg.uml.EnumerationLiteral;
 import org.omg.uml.Feature;
+import org.omg.uml.NamedElement;
 import org.omg.uml.Namespace;
 import org.omg.uml.Operation;
 import org.omg.uml.Package;
 import org.omg.uml.Parameter;
+import org.omg.uml.Primitive;
 import org.omg.uml.Profile;
 import org.omg.uml.Property;
 import org.omg.uml.Reception;
@@ -96,12 +99,23 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public boolean isAbstractClassifier() {
+        return this.isClassifier() &&
+                ((Classifier)this.getSelf().getElement()).getIsAbstract();
+    }
+
+    @Override
     public boolean isAssociation() {
         return this.getSelf().getElement() instanceof Association;
     }
 
     @Override
     public boolean isClass() {
+        return this.getSelf().getElement() instanceof Class;
+    }
+
+    @Override
+    public boolean isClassOnly() {
         return this.getSelf().getElement().getClass() == Class.class;
     }
 
@@ -128,6 +142,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isEnumeration() {
         return this.getSelf().getElement() instanceof Enumeration;
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return this.getSelf().getElement() instanceof Primitive;
     }
 
     @Override
@@ -174,14 +193,24 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public boolean isAbstractClassifier() {
-        return this.isClassifier() &&
-                ((Classifier)this.getSelf().getElement()).getIsAbstract();
+    public boolean isEnumerationLiteral() {
+        return this.getSelf().getElement() instanceof EnumerationLiteral;        
     }
 
     @Override
     public boolean isProperty() {
         return this.getSelf().getElement() instanceof Property;
+    }
+    
+    @Override
+    public boolean isAssociationEnd() {       
+        return this.isProperty() && 
+                ((Property)this.getSelf().getElement()).getAssociation() != null;
+    }
+
+    @Override
+    public boolean isParameter() {
+        return this.getSelf().getElement() instanceof Parameter;
     }
     
     @Override
@@ -191,6 +220,15 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         } else {
             return null;
         }
+    }
+    
+    @Override
+    public boolean isInNamespace(NamespaceDefinition namespace) {
+        Element element = this.getSelf().getElement();
+        return namespace instanceof ExternalNamespace &&
+                    element instanceof NamedElement &&
+                    ((NamedElement)element).getNamespace() == 
+                        ((ExternalNamespace)namespace).getUmlNamespace();
     }
 
     @Override
@@ -238,6 +276,52 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         }
         return references;
     }
+    
+    @Override
+    public String getName() {
+        Element element = this.getSelf().getElement();
+        return element instanceof NamedElement?
+                    ((NamedElement)element).getName(): null;
+    }
+
+    @Override
+    public List<ElementReference> getFeatures() {
+        List<ElementReference> features = new ArrayList<ElementReference>();
+        if (this.isClassifier()) {
+            for (Feature feature: ((Classifier)this.getSelf().getElement()).getFeature()) {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(feature);
+                features.add(reference);
+            }
+        }
+        return features;
+    }
+
+    @Override
+    public List<ElementReference> getAttributes() {
+        List<ElementReference> attributes = new ArrayList<ElementReference>();
+        if (this.isClassifier()) {
+            for (Property attribute: ((Classifier)this.getSelf().getElement()).getAttribute()) {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(attribute);
+                attributes.add(reference);
+            }
+        }
+        return attributes;
+    }
+
+    @Override
+    public List<ElementReference> getAssociationEnds() {
+        List<ElementReference> attributes = new ArrayList<ElementReference>();
+        if (this.isAssociation()) {
+            for (Property attribute: ((Association)this.getSelf().getElement()).getMemberEnd()) {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(attribute);
+                attributes.add(reference);
+            }
+        }
+        return attributes;
+    }
 
     @Override
     public List<FormalParameter> getParameters() {
@@ -254,6 +338,71 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             parameters.add(new ExternalParameter(parameter));
         }
         return parameters;
+    }
+
+    @Override
+    public ElementReference getType() {
+        ExternalElementReference reference = new ExternalElementReference();
+        if (this.isProperty()) {
+            reference.setElement(((Property)this.getSelf().getElement()).getType());
+            return reference;
+        } else if (this.isOperation()) {
+            reference.setElement(((Operation)this.getSelf().getElement()).getType());
+            return reference;
+        } else if (this.isBehavior()) {
+            FormalParameter parameter = this.getReturnParameter();
+            return parameter == null? null: parameter.getType();
+        } else if (this.isEnumerationLiteral()) {
+            reference.setElement(((EnumerationLiteral)this.getSelf().getElement()).getEnumeration());
+            return reference;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ElementReference getAssociation() {
+        if (!this.isAssociationEnd()) {
+            return null;
+        } else {
+            Association association = 
+                ((Property)this.getSelf().getElement()).getAssociation();
+            ExternalElementReference reference = new ExternalElementReference();
+            reference.setElement(association);
+            return reference;
+        }
+    }
+
+    public Integer getLower() {
+        Integer lower = null;
+        if (this.isProperty()) {
+            lower = ((Property)this.getSelf().getElement()).getLower();
+        } else if (this.isOperation()) {
+            lower = ((Operation)this.getSelf().getElement()).getLower();
+        } else if (this.isBehavior()) {
+            FormalParameter parameter = this.getReturnParameter();
+            if (parameter != null) {
+                lower = parameter.getLower();
+            }
+        }
+        // Note: This will return 0 for an operation with no return parameter.
+        return lower == null? 0: lower;
+    }
+
+    public Integer getUpper() {
+        Integer upper = null;
+        if (this.isProperty()) {
+            upper = ((Property)this.getSelf().getElement()).getUpper();
+        } else if (this.isOperation()) {
+            upper = ((Operation)this.getSelf().getElement()).getUpper();
+        } else if (this.isBehavior()) {
+            FormalParameter parameter = this.getReturnParameter();
+            if (parameter != null) {
+                upper = parameter.getUpper();
+            }
+        }
+        // Note: This will return 0 for an operation with no return parameter.
+        return upper == null? 0: upper;
     }
 
     @Override

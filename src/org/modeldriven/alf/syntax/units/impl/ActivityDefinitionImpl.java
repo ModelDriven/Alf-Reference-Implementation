@@ -9,6 +9,9 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.Collection;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -121,6 +124,31 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
                         ((ActivityDefinition)definition).getBody():
                         null;
         }
+    }
+    
+    public ElementReference getType() {
+        FormalParameter returnParameter = this.getReturnParameter();
+        return returnParameter == null? null: returnParameter.getType();
+    }
+
+    public int getLower() {
+        FormalParameter returnParameter = this.getReturnParameter();
+        return returnParameter == null? 0: returnParameter.getLower();
+    }
+    
+    public int getUpper() {
+        FormalParameter returnParameter = this.getReturnParameter();
+        return returnParameter == null? 0: returnParameter.getUpper();
+    }
+    
+    public FormalParameter getReturnParameter() {
+        Collection<FormalParameter> parameters = this.getFormalParameters();
+        for (FormalParameter parameter: parameters) {
+            if (parameter.getDirection().equals("return")) {
+                return parameter;
+            }
+        }
+        return null;
     }
 
 } // ActivityDefinitionImpl

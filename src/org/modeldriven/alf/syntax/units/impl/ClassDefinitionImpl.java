@@ -41,7 +41,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	 **/
 	public boolean classDefinitionSpecializationReferent() {
         for (ElementReference referent: this.getSelf().getSpecializationReferent()) {
-            if (!referent.getImpl().isClass() || 
+            if (!referent.getImpl().isClassOnly() || 
                     referent.getImpl().isActiveClass() && !this.isActive()) {
                 return false;
             }

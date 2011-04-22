@@ -13,7 +13,6 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -54,6 +53,20 @@ public class DoStatementImpl extends StatementImpl {
 	}
 	
     /**
+     * The enclosing statement for all statements in the body of a do statement
+     * are the do statement.
+     **/
+    @Override
+    public void setEnclosingStatement(Statement enclosingStatement) {
+        DoStatement self = this.getSelf();
+        super.setEnclosingStatement(enclosingStatement);
+        Block body = this.getSelf().getBody();
+        if (body != null) {
+            body.getImpl().setEnclosingStatement(self);
+        }
+    }
+    
+    /**
      * The assignments before the block of a do statement are the same as the
      * assignments before the do statement. The assignments before the condition
      * expression of a do statement are the same assignments after the block.
@@ -84,20 +97,6 @@ public class DoStatementImpl extends StatementImpl {
 	        }
 	    }
 	    return assignmentsAfter;
-	}
-	
-    /**
-     * The enclosing statement for all statements in the body of a do statement
-     * are the do statement.
-     **/
-	@Override
-	public void setEnclosingStatement(Statement enclosingStatement) {
-	    DoStatement self = this.getSelf();
-	    super.setEnclosingStatement(enclosingStatement);
-	    Block body = this.getSelf().getBody();
-	    if (body != null) {
-	        body.getImpl().setEnclosingStatement(self);
-	    }
 	}
 	
 	/*
@@ -132,7 +131,7 @@ public class DoStatementImpl extends StatementImpl {
 	public boolean doStatementCondition() {
 	    Expression condition = this.getSelf().getCondition();
 		return condition != null && 
-		        condition.getType().equals(RootNamespace.getBooleanType()) &&
+		        condition.getType().getImpl().isBoolean() &&
 		        condition.getUpper() == 1;
 	}
 

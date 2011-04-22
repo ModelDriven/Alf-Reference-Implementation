@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Classifier extends NamedElement {
+public class Classifier extends Type {
     
     public boolean getIsAbstract() {
         return false;
@@ -13,6 +13,10 @@ public class Classifier extends NamedElement {
     
     public List<Feature> getFeature() {
         return new ArrayList<Feature>();
+    }
+
+    public List<Property> getAttribute() {
+        return new ArrayList<Property>();
     }
 
     public boolean isTemplate() {

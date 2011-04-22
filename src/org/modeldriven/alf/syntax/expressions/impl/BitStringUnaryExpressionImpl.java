@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class BitStringUnaryExpressionImpl extends UnaryExpressionImpl {
 
@@ -29,6 +21,7 @@ public class BitStringUnaryExpressionImpl extends UnaryExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public BitStringUnaryExpression getSelf() {
 		return (BitStringUnaryExpression) this.self;
 	}
@@ -44,50 +37,87 @@ public class BitStringUnaryExpressionImpl extends UnaryExpressionImpl {
 		this.isBitStringConversion = isBitStringConversion;
 	}
 
+    /**
+     * BitString conversion is required if the operand expression of a BitString
+     * unary expression has type Integer.
+     **/
 	protected Boolean deriveIsBitStringConversion() {
-		return null; // STUB
+	    BitStringUnaryExpression self = this.getSelf();
+	    Expression operand = self.getOperand();
+	    ElementReference type = operand == null? null: operand.getType();
+		return type != null && type.getImpl().isInteger();
 	}
-
+	
 	/**
 	 * A BitString unary expression has type BitString.
-	 **/
+	 **/	
+	@Override
+    protected ElementReference deriveType() {
+        return RootNamespace.getBitStringType();
+    }
+    
+    /**
+     * A BitString unary expression has the same multiplicity lower bound as its
+     * operand expression.
+     **/
+    @Override
+    protected Integer deriveLower() {
+        BitStringUnaryExpression self = this.getSelf();
+        Expression operand = self.getOperand();
+        return operand == null? 1: operand.getLower();
+    }   
+	
+    /**
+     * A BitString unary expression has a multiplicity upper bound of 1.
+     **/
+    @Override
+    protected Integer deriveUpper() {
+        return 1;
+    }
+	
+	/*
+	 * Derivations
+	 */
+
 	public boolean bitStringUnaryExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * A BitString unary expression has the same multiplicity lower bound as its
-	 * operand expression.
-	 **/
 	public boolean bitStringUnaryExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
 
-	/**
-	 * A BitString unary expression has a multiplicity upper bound of 1.
-	 **/
 	public boolean bitStringUnaryExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
+
+	public boolean bitStringUnaryExpressionIsBitStringConversionDerivation() {
+		this.getSelf().getIsBitStringConversion();
+		return true;
+	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The operand expression of a BitString unary expression must have type
 	 * BitString or Integer and a multiplicity upper bound of 1.
 	 **/
 	public boolean bitStringUnaryExpressionOperand() {
-		return true;
-	}
-
-	/**
-	 * BitString conversion is required if the operand expression of a BitString
-	 * unary expression has type Integer.
-	 **/
-	public boolean bitStringUnaryExpressionIsBitStringConversionDerivation() {
-		this.getSelf().getIsBitStringConversion();
-		return true;
+        BitStringUnaryExpression self = this.getSelf();
+        Expression operand = self.getOperand();
+        if (operand == null) {
+            return false;
+        } else {
+            ElementReference operandType = operand.getType();
+            return operand.getUpper() == 1 && operandType != null &&
+                        (operandType.getImpl().isBitString() ||
+                         operandType.getImpl().isInteger());
+        }
 	}
 
 } // BitStringUnaryExpressionImpl

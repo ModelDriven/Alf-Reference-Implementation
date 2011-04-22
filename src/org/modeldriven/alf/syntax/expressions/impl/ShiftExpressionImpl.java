@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class ShiftExpressionImpl extends BinaryExpressionImpl {
 
@@ -29,6 +21,7 @@ public class ShiftExpressionImpl extends BinaryExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public ShiftExpression getSelf() {
 		return (ShiftExpression) this.self;
 	}
@@ -44,49 +37,89 @@ public class ShiftExpressionImpl extends BinaryExpressionImpl {
 		this.isBitStringConversion = isBitStringConversion;
 	}
 
+	/**
+	 * BitString conversion is required if the first operand expression of a
+	 * shift expression has type Integer.
+	 **/
 	protected Boolean deriveIsBitStringConversion() {
-		return null; // STUB
+	    Expression operand1 = this.getSelf().getOperand1();
+	    ElementReference type = operand1 == null? null: operand1.getType();
+		return type != null && type.getImpl().isInteger();
 	}
 
 	/**
 	 * A shift expression has type BitString.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    return RootNamespace.getBitStringType();
+	}
+	
+	/**
+	 * A shift expression has a multiplicity lower bound of 0 if the lower bound
+	 * if either operand expression is 0 and 1 otherwise.
+	 **/
+	@Override
+	protected Integer deriveLower() {
+	    ShiftExpression self = this.getSelf();
+	    Expression operand1 = self.getOperand1();
+	    Expression operand2 = self.getOperand2();
+	    return operand1 == null || operand2 == null || 
+	                operand1.getLower() == 0 || operand2.getLower() == 0? 0: 1;
+	}
+	/**
+	 * A shift expression has a multiplicity upper bound of 1.
+	 **/	
+    @Override
+    protected Integer deriveUpper() {
+        return 1;
+    }
+    
+    /*
+     * Derivations
+     */
+
+    public boolean shiftExpressionIsBitStringConversionDerivation() {
+		this.getSelf().getIsBitStringConversion();
+		return true;
+	}
+
 	public boolean shiftExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * A shift expression has a multiplicity lower bound of 0 if the lower bound
-	 * if either operand expression is 0 and 1 otherwise.
-	 **/
 	public boolean shiftExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
 
-	/**
-	 * A shift expression has a multiplicity upper bound of 1.
-	 **/
+
 	public boolean shiftExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
 
+	/*
+	 * Constraints
+	 */
+	
 	/**
-	 * The operands of a shift expression must have type BitString or Integer.
+	 * The first operand expression of a shift expression must have the type 
+	 * BitString or Integer. The second operand expression must have the type 
+	 * Integer.
 	 **/
 	public boolean shiftExpressionOperands() {
-		return true;
+        ShiftExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        ElementReference type1 = operand1.getType();
+        Expression operand2 = self.getOperand2();
+        ElementReference type2 = operand2.getType();
+		return type1 != null && 
+		            (type1.getImpl().isBitString() || 
+		                    type1.getImpl().isInteger()) &&
+		            type2.getImpl().isInteger();
 	}
-
-	/**
-	 * BitString conversion is required if the first operand expression of a
-	 * shift expression has type Integer.
-	 **/
-	public boolean shiftExpressionIsBitStringConversionDerivation() {
-		this.getSelf().getIsBitStringConversion();
-		return true;
-	}
+	
 
 } // ShiftExpressionImpl

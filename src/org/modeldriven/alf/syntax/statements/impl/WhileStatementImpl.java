@@ -13,7 +13,6 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -24,8 +23,7 @@ import java.util.Set;
  * before the first iteration.
  **/
 
-public class WhileStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class WhileStatementImpl extends StatementImpl {
 
 	private Block body = null;
 	private Expression condition = null;
@@ -54,6 +52,20 @@ public class WhileStatementImpl extends
 		this.condition = condition;
 	}
 
+    /**
+     * The enclosing statement for all statements in the body of a while statement
+     * are the while statement.
+     **/
+    @Override
+    public void setEnclosingStatement(Statement enclosingStatement) {
+        super.setEnclosingStatement(enclosingStatement);
+        WhileStatement self = this.getSelf();
+        Block body = this.getSelf().getBody();
+        if (body != null) {
+            body.getImpl().setEnclosingStatement(self);
+        }
+    }
+    
     /**
      * The assignments before the condition expression of a while statement are
      * the same as the assignments before the while statement. The assignments
@@ -94,20 +106,6 @@ public class WhileStatementImpl extends
         return assignmentsAfter;
     }
     
-    /**
-     * The enclosing statement for all statements in the body of a while statement
-     * are the while statement.
-     **/
-    @Override
-    public void setEnclosingStatement(Statement enclosingStatement) {
-        super.setEnclosingStatement(enclosingStatement);
-        WhileStatement self = this.getSelf();
-        Block body = this.getSelf().getBody();
-        if (body != null) {
-            body.getImpl().setEnclosingStatement(self);
-        }
-    }
-    
     /*
      * Constraints
      */
@@ -143,7 +141,7 @@ public class WhileStatementImpl extends
 	public boolean whileStatementCondition() {
         Expression condition = this.getSelf().getCondition();
         return condition != null && 
-                condition.getType().equals(RootNamespace.getBooleanType()) &&
+                condition.getType().getImpl().isBoolean() &&
                 condition.getUpper() == 1;
 	}
 

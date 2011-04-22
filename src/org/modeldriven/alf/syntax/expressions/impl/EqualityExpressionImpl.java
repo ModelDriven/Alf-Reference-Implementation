@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A binary expression that tests the equality of its operands.
@@ -33,6 +25,7 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public EqualityExpression getSelf() {
 		return (EqualityExpression) this.self;
 	}
@@ -48,37 +41,57 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
 		this.isNegated = isNegated;
 	}
 
-	protected Boolean deriveIsNegated() {
-		return null; // STUB
-	}
-
 	/**
 	 * An equality expression is negated if its operator is "!=".
 	 **/
-	public boolean equalityExpressionIsNegatedDerivation() {
-		this.getSelf().getIsNegated();
-		return true;
+	protected Boolean deriveIsNegated() {
+	    String operator = this.getSelf().getOperator();
+		return operator != null && operator.equals("!=");
 	}
 
 	/**
 	 * An equality expression has type Boolean.
 	 **/
+	@Override
+	protected ElementReference deriveType() {
+	    return RootNamespace.getBooleanType();
+	}
+	
+	/**
+	 * An equality expression has a multiplicity lower bound of 1.
+	 **/
+    @Override
+    protected Integer deriveLower() {
+        return 1;
+    }
+    
+	/**
+	 * An equality expression has a multiplicity upper bound of 1.
+	 **/
+    @Override
+    protected Integer deriveUpper() {
+        return 1;
+    }
+	
+	/*
+	 * Derivations
+	 */
+	
+	public boolean equalityExpressionIsNegatedDerivation() {
+		this.getSelf().getIsNegated();
+		return true;
+	}
+
 	public boolean equalityExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * An equality expression has a multiplicity lower bound of 1.
-	 **/
 	public boolean equalityExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
 
-	/**
-	 * An equality expression has a multiplicity upper bound of 1.
-	 **/
 	public boolean equalityExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;

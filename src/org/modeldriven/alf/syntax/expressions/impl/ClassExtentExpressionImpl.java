@@ -9,17 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
 /**
  * An expression used to obtain the objects in the extent of a class.
@@ -33,6 +25,7 @@ public class ClassExtentExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public ClassExtentExpression getSelf() {
 		return (ClassExtentExpression) this.self;
 	}
@@ -45,35 +38,72 @@ public class ClassExtentExpressionImpl extends ExpressionImpl {
 		this.className = className;
 	}
 
+    /**
+     * The type of a class extent expression is the given class.
+     **/
+	@Override
+	protected ElementReference deriveType() {
+	    QualifiedName className = this.getSelf().getClassName();
+	    return className == null? null: className.getImpl().getClassReferent();
+	}
+	
 	/**
-	 * The type of a class extent expression is the given class.
+	 * The multiplicity upper bound of a class expression is *.
 	 **/
+	@Override
+	protected Integer deriveUpper() {
+	    return -1;
+	}
+	
+	/**
+	 * The multiplicity lower bound of a class extent expression is 0.
+	 **/
+	@Override
+	protected Integer deriveLower() {
+	    return 0;
+	}
+	
+	/*
+	 * Derivations
+	 */
+	
 	public boolean classExtentExpressionTypeDerivation() {
 		this.getSelf().getType();
 		return true;
 	}
 
-	/**
-	 * The multiplicity upper bound of a class expression is *.
-	 **/
 	public boolean classExtentExpressionUpperDerivation() {
 		this.getSelf().getUpper();
 		return true;
 	}
 
-	/**
-	 * The multiplicity lower bound of a class extent expression is 0.
-	 **/
 	public boolean classExtentExpressionLowerDerivation() {
 		this.getSelf().getLower();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The given type name must resolve to a non-template class.
 	 **/
 	public boolean classExtentExpressionExtentType() {
-		return true;
+	    ElementReference type = this.getSelf().getType();
+		return type != null && !type.getImpl().isTemplate();
+	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    QualifiedName className = this.getSelf().getClassName();
+	    if (className != null) {
+	        className.getImpl().setCurrentScope(currentScope);
+	    }
 	}
 
 } // ClassExtentExpressionImpl

@@ -9,17 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
-import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
-import org.modeldriven.alf.syntax.units.*;
-
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A named argument expression for an output parameter.
@@ -32,7 +22,8 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	public OutputNamedExpressionImpl(OutputNamedExpression self) {
 		super(self);
 	}
-
+	
+	@Override
 	public OutputNamedExpression getSelf() {
 		return (OutputNamedExpression) this.self;
 	}
@@ -46,10 +37,6 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 
 	public void setLeftHandSide(LeftHandSide leftHandSide) {
 		this.leftHandSide = leftHandSide;
-	}
-
-	protected LeftHandSide deriveLeftHandSide() {
-		return null; // STUB
 	}
 
 	/**
@@ -68,10 +55,51 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	 * index given by the index expression of the sequence access expression.
 	 * Otherwise the left-hand side is empty.
 	 **/
+	protected LeftHandSide deriveLeftHandSide() {
+	    OutputNamedExpression self = this.getSelf();
+	    Expression expression = self.getExpression();
+	    
+	    Expression index = null;
+	    if (expression instanceof SequenceAccessExpression) {
+	        index = ((SequenceAccessExpression)expression).getIndex();
+	        expression = ((SequenceAccessExpression)expression).getPrimary();
+	    }
+	    
+        LeftHandSide lhs = null;
+	    if (expression instanceof NameExpression) {
+	        QualifiedName name = ((NameExpression)expression).getName();
+	        if (name != null && name.getIsFeatureReference()) {
+	            lhs = new FeatureLeftHandSide();
+	            ((FeatureLeftHandSide)lhs).setFeature(name.getDisambiguation());
+	        } else {
+	            lhs = new NameLeftHandSide();
+	            ((NameLeftHandSide)lhs).setTarget(name);
+	        }
+	    } else if (expression instanceof PropertyAccessExpression) {
+	        lhs = new FeatureLeftHandSide();
+	        ((FeatureLeftHandSide)lhs).setFeature
+	            (((PropertyAccessExpression)expression).getFeatureReference());
+	    }
+	    
+	    if (lhs != null) {
+	        lhs.setIndex(index);
+	    }
+	    
+		return lhs;
+	}
+	
+	/*
+	 * Derivations
+	 */
+
 	public boolean outputNamedExpressionLeftHandSideDerivation() {
 		this.getSelf().getLeftHandSide();
 		return true;
 	}
+	
+	/*
+	 * Constraints
+	 */
 
 	/**
 	 * The argument for an output parameter must be either be null, a name
@@ -80,7 +108,16 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	 * expression.
 	 **/
 	public boolean outputNamedExpressionForm() {
-		return true;
+	    Expression expression = this.getSelf().getExpression();
+	    if (expression == null) {
+	        return true;
+	    } else {
+	        if (expression instanceof SequenceAccessExpression) {
+	            expression = ((SequenceAccessExpression)expression).getPrimary();
+	        }
+	        return expression instanceof NameExpression ||
+	               expression instanceof PropertyAccessExpression;
+	    }
 	}
 
 } // OutputNamedExpressionImpl

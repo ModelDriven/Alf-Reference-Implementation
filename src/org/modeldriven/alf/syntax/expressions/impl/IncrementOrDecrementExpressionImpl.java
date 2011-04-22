@@ -9,17 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A unary expression with either an increment or decrement operator.
@@ -42,6 +38,7 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
 		super(self);
 	}
 
+	@Override
 	public IncrementOrDecrementExpression getSelf() {
 		return (IncrementOrDecrementExpression) this.self;
 	}
@@ -136,116 +133,168 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
 		this.isDataValueUpdate = isDataValueUpdate;
 	}
 
+    /**
+     * If the operand of an increment or decrement expression is a name, then
+     * the assignment for the expression is a new assigned source for the name
+     * with the expression as the source.
+     **/
 	protected AssignedSource deriveAssignment() {
-		return null; // STUB
+	    IncrementOrDecrementExpression self = this.getSelf();
+	    LeftHandSide operand = self.getOperand();
+	    if (self.getIsFeature()) {
+	        return null;
+	    } else {
+	        String name = ((NameLeftHandSide)operand).getTarget().getUnqualifiedName().getName();
+	        AssignedSource oldAssignment = this.getAssignmentBefore(name);
+	        if (oldAssignment == null) {
+	            return AssignedSourceImpl.makeAssignment(name, self, self.getType(), 1, 1);
+	        } else {
+	            AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(oldAssignment);
+	            newAssignment.setSource(self);
+	            return newAssignment;
+	        }
+	    }
 	}
 
+    /**
+     * The effective expression for the operand of an increment or decrement
+     * expression is the operand treated as a name expression, property access
+     * expression or sequence access expression, as appropriate for evaluation
+     * to obtain the original value to be updated.
+     **/
 	protected Expression deriveExpression() {
-		return null; // STUB
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+        return operand == null? null: operand.getImpl().getExpression();
 	}
 
+    /**
+     * If the operand of an increment or decrement expression is a feature, then
+     * the referent for the operand.
+     **/
 	protected ElementReference deriveFeature() {
-		return null; // STUB
-	}
-
-	protected Boolean deriveIsFeature() {
-		return null; // STUB
-	}
-
-	protected Boolean deriveIsIndexed() {
-		return null; // STUB
-	}
-
-	protected Boolean deriveIsDataValueUpdate() {
-		return null; // STUB
-	}
-
-	/**
-	 * If the operand of an increment or decrement expression is a name, then
-	 * the assignment for the expression is a new assigned source for the name
-	 * with the expression as the source.
-	 **/
-	public boolean incrementOrDecrementExpressionAssignment() {
-		return true;
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+         return !self.getIsFeature()? null:
+                     ((FeatureLeftHandSide)operand).getImpl().getReferent();
 	}
 
 	/**
 	 * An increment or decrement expression has a feature as its operand if the
 	 * operand is a kind of FeatureLeftHandSide.
 	 **/
-	public boolean incrementOrDecrementExpressionIsFeatureDerivation() {
-		this.getSelf().getIsFeature();
-		return true;
+	protected Boolean deriveIsFeature() {
+		return this.getSelf().getOperand() instanceof FeatureLeftHandSide;
 	}
 
 	/**
 	 * An increment or decrement expression is indexed if its operand is
 	 * indexed.
 	 **/
+	protected Boolean deriveIsIndexed() {
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+		return operand != null && operand.getIndex() != null;
+	}
+
+    /**
+     * An increment or decrement expression is a data value update if its
+     * operand is an attribute of a data value held in a local name or
+     * parameter.
+     **/
+	protected Boolean deriveIsDataValueUpdate() {
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+		return operand != null && operand.getImpl().isDataValueUpdate();
+	}
+
+    /**
+     * An increment or decrement expression has type Integer.
+     **/
+	@Override
+	protected ElementReference deriveType() {
+	    return RootNamespace.getIntegerType();
+	}
+	
+    /**
+     * An increment or decrement expression has the same multiplicity lower
+     * bound as its operand expression.
+     **/
+    @Override
+    protected Integer deriveLower() {
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+        return operand == null? 1: operand.getImpl().getLower();
+    }
+    
+    /**
+     * An increment or decrement expression has a multiplicity upper bound of 1.
+     **/
+    @Override
+    protected Integer deriveUpper() {
+        return 1;
+    }
+	
+	/*
+	 * Derivations
+	 */
+	
+    public boolean incrementOrDecrementExpressionAssignment() {
+        return true;
+    }
+
+	public boolean incrementOrDecrementExpressionIsFeatureDerivation() {
+		this.getSelf().getIsFeature();
+		return true;
+	}
+
 	public boolean incrementOrDecrementExpressionIsIndexedDerivation() {
 		this.getSelf().getIsIndexed();
 		return true;
 	}
 
-	/**
-	 * An increment or decrement expression is a data value update if its
-	 * operand is an attribute of a data value held in a local name or
-	 * parameter.
-	 **/
-	public boolean incrementOrDecrementExpressionIsDataValueUpdate() {
-		return true;
-	}
+    public boolean incrementOrDecrementExpressionExpressionDerivation() {
+        this.getSelf().getExpression();
+        return true;
+    }
 
-	/**
-	 * If the operand of an increment or decrement expression is a feature, then
-	 * the referent for the operand.
-	 **/
-	public boolean incrementOrDecrementExpressionFeature() {
-		return true;
-	}
+    public boolean incrementOrDecrementExpressionIsDataValueUpdate() {
+        return true;
+    }
 
-	/**
-	 * The effective expression for the operand of an increment or decrement
-	 * expression is the operand treated as a name expression, property access
-	 * expression or sequence access expression, as appropriate for evaluation
-	 * to obtain the original value to be updated.
-	 **/
-	public boolean incrementOrDecrementExpressionExpressionDerivation() {
-		this.getSelf().getExpression();
-		return true;
-	}
+    public boolean incrementOrDecrementExpressionFeature() {
+        return true;
+    }
 
-	/**
-	 * An increment or decrement expression has type Integer.
-	 **/
-	public boolean incrementOrDecrementExpressionTypeDerivation() {
-		this.getSelf().getType();
-		return true;
-	}
+    public boolean incrementOrDecrementExpressionTypeDerivation() {
+        this.getSelf().getType();
+        return true;
+    }
 
-	/**
-	 * An increment or decrement expression has the same multiplicity lower
-	 * bound as its operand expression.
-	 **/
-	public boolean incrementOrDecrementExpressionLowerDerivation() {
-		this.getSelf().getLower();
-		return true;
-	}
+    public boolean incrementOrDecrementExpressionLowerDerivation() {
+        this.getSelf().getLower();
+        return true;
+    }
 
-	/**
-	 * An increment or decrement expression has a multiplicity upper bound of 1.
-	 **/
-	public boolean incrementOrDecrementExpressionUpperDerivation() {
-		this.getSelf().getUpper();
-		return true;
-	}
+    public boolean incrementOrDecrementExpressionUpperDerivation() {
+        this.getSelf().getUpper();
+        return true;
+    }
+    
+    /*
+     * Constraints
+     */
 
 	/**
 	 * The operand expression must have type Integer and a multiplicity upper
 	 * bound of 1.
 	 **/
 	public boolean incrementOrDecrementExpressionOperand() {
-		return true;
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+        ElementReference type = operand == null? null: operand.getImpl().getType();
+        return operand != null && operand.getImpl().getUpper() == 1 &&
+                    type != null && type.getImpl().isInteger();
 	}
 
 	/**
@@ -254,16 +303,43 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
 	 * expression.
 	 **/
 	public boolean incrementOrDecrementExpressionAssignmentsBefore() {
+	    // Note: This is handled by updateAssignmentMap.
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * The assignments after an increment and decrement expression include all
 	 * those after its operand expression. Further, if the operand expression,
 	 * considered as a left hand side, is a local name, then this is reassigned.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
-		return new ArrayList<AssignedSource>(); // STUB
+	@Override
+	public Map<String, AssignedSource> updateAssignmentMap() {
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+        Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+        if (operand != null) {
+            operand.getImpl().setAssignmentBefore(assignments);
+            assignments = operand.getImpl().getAssignmentAfterMap();
+        }
+        AssignedSource assignment = self.getAssignment();
+        if (assignment != null) {
+            assignments = new HashMap<String, AssignedSource>(assignments);
+            assignments.put(assignment.getName(), assignment);
+        }
+        return assignments;
 	} // updateAssignments
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+        if (operand != null) {
+            operand.getImpl().setCurrentScope(currentScope);
+        }
+	}
 
 } // IncrementOrDecrementExpressionImpl
