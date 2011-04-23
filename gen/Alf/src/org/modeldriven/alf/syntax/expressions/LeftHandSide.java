@@ -76,9 +76,31 @@ public abstract class LeftHandSide extends SyntaxElement {
 		return this.getImpl().leftHandSideIndexExpression();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.leftHandSideIndexExpression()) {
+			violations.add(new ConstraintViolation(
+					"leftHandSideIndexExpression", this));
+		}
+		Expression index = this.getIndex();
+		if (index != null) {
+			index.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

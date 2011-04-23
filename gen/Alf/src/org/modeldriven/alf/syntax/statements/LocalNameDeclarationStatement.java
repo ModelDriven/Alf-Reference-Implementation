@@ -136,6 +136,50 @@ public class LocalNameDeclarationStatement extends Statement {
 		return this.getImpl().localNameDeclarationStatementTypeDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.localNameDeclarationStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"localNameDeclarationStatementAssignmentsBefore", this));
+		}
+		if (!this.localNameDeclarationStatementType()) {
+			violations.add(new ConstraintViolation(
+					"localNameDeclarationStatementType", this));
+		}
+		if (!this.localNameDeclarationStatementLocalName()) {
+			violations.add(new ConstraintViolation(
+					"localNameDeclarationStatementLocalName", this));
+		}
+		if (!this.localNameDeclarationStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"localNameDeclarationStatementAssignmentsAfter", this));
+		}
+		if (!this.localNameDeclarationStatementExpressionMultiplicity()) {
+			violations
+					.add(new ConstraintViolation(
+							"localNameDeclarationStatementExpressionMultiplicity",
+							this));
+		}
+		if (!this.localNameDeclarationStatementTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"localNameDeclarationStatementTypeDerivation", this));
+		}
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.checkConstraints(violations);
+		}
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
@@ -143,6 +187,10 @@ public class LocalNameDeclarationStatement extends Statement {
 		s.append(" hasMultiplicity:");
 		s.append(this.getHasMultiplicity());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

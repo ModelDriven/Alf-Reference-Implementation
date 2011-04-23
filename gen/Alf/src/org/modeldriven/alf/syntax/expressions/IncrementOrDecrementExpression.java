@@ -212,6 +212,66 @@ public class IncrementOrDecrementExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.incrementOrDecrementExpressionAssignment()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionAssignment", this));
+		}
+		if (!this.incrementOrDecrementExpressionIsFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionIsFeatureDerivation", this));
+		}
+		if (!this.incrementOrDecrementExpressionIsIndexedDerivation()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionIsIndexedDerivation", this));
+		}
+		if (!this.incrementOrDecrementExpressionIsDataValueUpdate()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionIsDataValueUpdate", this));
+		}
+		if (!this.incrementOrDecrementExpressionFeature()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionFeature", this));
+		}
+		if (!this.incrementOrDecrementExpressionExpressionDerivation()) {
+			violations
+					.add(new ConstraintViolation(
+							"incrementOrDecrementExpressionExpressionDerivation",
+							this));
+		}
+		if (!this.incrementOrDecrementExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionTypeDerivation", this));
+		}
+		if (!this.incrementOrDecrementExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionLowerDerivation", this));
+		}
+		if (!this.incrementOrDecrementExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionUpperDerivation", this));
+		}
+		if (!this.incrementOrDecrementExpressionOperand()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionOperand", this));
+		}
+		if (!this.incrementOrDecrementExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"incrementOrDecrementExpressionAssignmentsBefore", this));
+		}
+		LeftHandSide operand = this.getOperand();
+		if (operand != null) {
+			operand.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operator:");
@@ -234,6 +294,10 @@ public class IncrementOrDecrementExpression extends Expression {
 			s.append(isDataValueUpdate);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

@@ -66,11 +66,33 @@ public abstract class UnaryExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.unaryExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"unaryExpressionAssignmentsBefore", this));
+		}
+		Expression operand = this.getOperand();
+		if (operand != null) {
+			operand.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operator:");
 		s.append(this.getOperator());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

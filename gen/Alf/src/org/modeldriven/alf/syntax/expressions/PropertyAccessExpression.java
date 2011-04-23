@@ -112,9 +112,51 @@ public class PropertyAccessExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.propertyAccessExpressionFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"propertyAccessExpressionFeatureDerivation", this));
+		}
+		if (!this.propertyAccessExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"propertyAccessExpressionTypeDerivation", this));
+		}
+		if (!this.propertyAccessExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"propertyAccessExpressionUpperDerivation", this));
+		}
+		if (!this.propertyAccessExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"propertyAccessExpressionLowerDerivation", this));
+		}
+		if (!this.propertyAccessExpressionFeatureResolution()) {
+			violations.add(new ConstraintViolation(
+					"propertyAccessExpressionFeatureResolution", this));
+		}
+		if (!this.propertyAccessExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"propertyAccessExpressionAssignmentsBefore", this));
+		}
+		FeatureReference featureReference = this.getFeatureReference();
+		if (featureReference != null) {
+			featureReference.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

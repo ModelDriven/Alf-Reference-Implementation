@@ -80,6 +80,37 @@ public class BitStringUnaryExpression extends UnaryExpression {
 				.bitStringUnaryExpressionIsBitStringConversionDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.bitStringUnaryExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"bitStringUnaryExpressionTypeDerivation", this));
+		}
+		if (!this.bitStringUnaryExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"bitStringUnaryExpressionLowerDerivation", this));
+		}
+		if (!this.bitStringUnaryExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"bitStringUnaryExpressionUpperDerivation", this));
+		}
+		if (!this.bitStringUnaryExpressionOperand()) {
+			violations.add(new ConstraintViolation(
+					"bitStringUnaryExpressionOperand", this));
+		}
+		if (!this.bitStringUnaryExpressionIsBitStringConversionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"bitStringUnaryExpressionIsBitStringConversionDerivation",
+					this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isBitStringConversion = this.getIsBitStringConversion();
@@ -88,6 +119,10 @@ public class BitStringUnaryExpression extends UnaryExpression {
 			s.append(isBitStringConversion);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

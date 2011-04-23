@@ -101,6 +101,40 @@ public class BlockStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.blockStatementParallelAssignments()) {
+			violations.add(new ConstraintViolation(
+					"blockStatementParallelAssignments", this));
+		}
+		if (!this.blockStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"blockStatementAssignmentsBefore", this));
+		}
+		if (!this.blockStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"blockStatementAssignmentsAfter", this));
+		}
+		if (!this.blockStatementEnclosedStatements()) {
+			violations.add(new ConstraintViolation(
+					"blockStatementEnclosedStatements", this));
+		}
+		if (!this.blockStatementIsParallelDerivation()) {
+			violations.add(new ConstraintViolation(
+					"blockStatementIsParallelDerivation", this));
+		}
+		Block block = this.getBlock();
+		if (block != null) {
+			block.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isParallel = this.getIsParallel();
@@ -109,6 +143,10 @@ public class BlockStatement extends Statement {
 			s.append(isParallel);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

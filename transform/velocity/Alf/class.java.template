@@ -58,6 +58,7 @@ public ${object.name}Impl getImpl() {
   }
 #end
 
+#checkOperations(${object})
 #printOperations(${object})
 } //${object.name}
 #end

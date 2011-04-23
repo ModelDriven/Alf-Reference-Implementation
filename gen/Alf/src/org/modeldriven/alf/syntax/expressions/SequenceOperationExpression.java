@@ -157,6 +157,60 @@ public class SequenceOperationExpression extends InvocationExpression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.sequenceOperationExpressionReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceOperationExpressionReferentDerivation", this));
+		}
+		if (!this.sequenceOperationExpressionFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceOperationExpressionFeatureDerivation", this));
+		}
+		if (!this.sequenceOperationExpressionOperationReferent()) {
+			violations.add(new ConstraintViolation(
+					"sequenceOperationExpressionOperationReferent", this));
+		}
+		if (!this.sequenceOperationExpressionTargetCompatibility()) {
+			violations.add(new ConstraintViolation(
+					"sequenceOperationExpressionTargetCompatibility", this));
+		}
+		if (!this.sequenceOperationExpressionArgumentCompatibility()) {
+			violations.add(new ConstraintViolation(
+					"sequenceOperationExpressionArgumentCompatibility", this));
+		}
+		if (!this.sequenceOperationExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"sequenceOperationExpressionAssignmentsBefore", this));
+		}
+		if (!this.sequenceOperationExpressionIsCollectionConversionDerivation()) {
+			violations
+					.add(new ConstraintViolation(
+							"sequenceOperationExpressionIsCollectionConversionDerivation",
+							this));
+		}
+		if (!this.sequenceOperationExpressionIsBitStringConversionDerivation()) {
+			violations
+					.add(new ConstraintViolation(
+							"sequenceOperationExpressionIsBitStringConversionDerivation",
+							this));
+		}
+		ExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.checkConstraints(violations);
+		}
+		QualifiedName operation = this.getOperation();
+		if (operation != null) {
+			operation.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isCollectionConversion = this.getIsCollectionConversion();
@@ -170,6 +224,10 @@ public class SequenceOperationExpression extends InvocationExpression {
 			s.append(isBitStringConversion);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

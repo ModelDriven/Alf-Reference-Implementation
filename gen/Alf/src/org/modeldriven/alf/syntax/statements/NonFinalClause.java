@@ -95,9 +95,43 @@ public class NonFinalClause extends SyntaxElement {
 		return this.getImpl().assignmentsAfter();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.nonFinalClauseAssignmentsBeforeBody()) {
+			violations.add(new ConstraintViolation(
+					"nonFinalClauseAssignmentsBeforeBody", this));
+		}
+		if (!this.nonFinalClauseConditionLocalNames()) {
+			violations.add(new ConstraintViolation(
+					"nonFinalClauseConditionLocalNames", this));
+		}
+		if (!this.nonFinalClauseConditionType()) {
+			violations.add(new ConstraintViolation(
+					"nonFinalClauseConditionType", this));
+		}
+		Expression condition = this.getCondition();
+		if (condition != null) {
+			condition.checkConstraints(violations);
+		}
+		Block body = this.getBody();
+		if (body != null) {
+			body.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

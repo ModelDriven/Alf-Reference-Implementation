@@ -118,6 +118,38 @@ public class PropertyDefinition extends TypedElementDefinition {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.propertyDefinitionInitializer()) {
+			violations.add(new ConstraintViolation(
+					"propertyDefinitionInitializer", this));
+		}
+		if (!this.propertyDefinitionIsCollectionConversionDerivation()) {
+			violations
+					.add(new ConstraintViolation(
+							"propertyDefinitionIsCollectionConversionDerivation",
+							this));
+		}
+		if (!this.propertyDefinitionIsBitStringConversion()) {
+			violations.add(new ConstraintViolation(
+					"propertyDefinitionIsBitStringConversion", this));
+		}
+		if (!this.propertyDefinitionIsFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"propertyDefinitionIsFeatureDerivation", this));
+		}
+		Expression initializer = this.getInitializer();
+		if (initializer != null) {
+			initializer.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" isComposite:");
@@ -133,6 +165,10 @@ public class PropertyDefinition extends TypedElementDefinition {
 			s.append(isBitStringConversion);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

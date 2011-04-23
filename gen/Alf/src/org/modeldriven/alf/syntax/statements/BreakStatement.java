@@ -68,9 +68,31 @@ public class BreakStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.breakStatementTargetDerivation()) {
+			violations.add(new ConstraintViolation(
+					"breakStatementTargetDerivation", this));
+		}
+		if (!this.breakStatementNonparallelTarget()) {
+			violations.add(new ConstraintViolation(
+					"breakStatementNonparallelTarget", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

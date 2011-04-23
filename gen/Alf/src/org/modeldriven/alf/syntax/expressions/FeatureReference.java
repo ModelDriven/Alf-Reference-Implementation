@@ -85,9 +85,39 @@ public class FeatureReference extends SyntaxElement {
 		return this.getImpl().featureReferenceTargetType();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.featureReferenceReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureReferenceReferentDerivation", this));
+		}
+		if (!this.featureReferenceTargetType()) {
+			violations.add(new ConstraintViolation(
+					"featureReferenceTargetType", this));
+		}
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.checkConstraints(violations);
+		}
+		NameBinding nameBinding = this.getNameBinding();
+		if (nameBinding != null) {
+			nameBinding.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

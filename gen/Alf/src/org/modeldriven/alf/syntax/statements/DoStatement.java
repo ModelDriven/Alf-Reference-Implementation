@@ -89,9 +89,47 @@ public class DoStatement extends Statement {
 		return this.getImpl().doStatementEnclosedStatements();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.doStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"doStatementAssignmentsBefore", this));
+		}
+		if (!this.doStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"doStatementAssignmentsAfter", this));
+		}
+		if (!this.doStatementCondition()) {
+			violations
+					.add(new ConstraintViolation("doStatementCondition", this));
+		}
+		if (!this.doStatementEnclosedStatements()) {
+			violations.add(new ConstraintViolation(
+					"doStatementEnclosedStatements", this));
+		}
+		Expression condition = this.getCondition();
+		if (condition != null) {
+			condition.checkConstraints(violations);
+		}
+		Block body = this.getBody();
+		if (body != null) {
+			body.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

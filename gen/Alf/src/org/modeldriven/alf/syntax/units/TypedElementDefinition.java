@@ -131,6 +131,36 @@ public abstract class TypedElementDefinition extends Member {
 		return this.getImpl().typedElementDefinitionTypeName();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.typedElementDefinitionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"typedElementDefinitionLowerDerivation", this));
+		}
+		if (!this.typedElementDefinitionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"typedElementDefinitionUpperDerivation", this));
+		}
+		if (!this.typedElementDefinitionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"typedElementDefinitionTypeDerivation", this));
+		}
+		if (!this.typedElementDefinitionTypeName()) {
+			violations.add(new ConstraintViolation(
+					"typedElementDefinitionTypeName", this));
+		}
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" lowerBound:");
@@ -152,6 +182,10 @@ public abstract class TypedElementDefinition extends Member {
 			s.append(upper);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

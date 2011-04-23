@@ -94,11 +94,41 @@ public abstract class BinaryExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.binaryExpressionOperandMultiplicity()) {
+			violations.add(new ConstraintViolation(
+					"binaryExpressionOperandMultiplicity", this));
+		}
+		if (!this.binaryExpressionOperandAssignments()) {
+			violations.add(new ConstraintViolation(
+					"binaryExpressionOperandAssignments", this));
+		}
+		Expression operand1 = this.getOperand1();
+		if (operand1 != null) {
+			operand1.checkConstraints(violations);
+		}
+		Expression operand2 = this.getOperand2();
+		if (operand2 != null) {
+			operand2.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operator:");
 		s.append(this.getOperator());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

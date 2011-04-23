@@ -210,6 +210,47 @@ public abstract class Member extends DocumentedElement {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.memberAnnotations()) {
+			violations.add(new ConstraintViolation("memberAnnotations", this));
+		}
+		if (!this.memberIsPrimitiveDerivation()) {
+			violations.add(new ConstraintViolation(
+					"memberIsPrimitiveDerivation", this));
+		}
+		if (!this.memberIsExternalDerivation()) {
+			violations.add(new ConstraintViolation(
+					"memberIsExternalDerivation", this));
+		}
+		if (!this.memberExternal()) {
+			violations.add(new ConstraintViolation("memberExternal", this));
+		}
+		if (!this.memberStub()) {
+			violations.add(new ConstraintViolation("memberStub", this));
+		}
+		if (!this.memberSubunitDerivation()) {
+			violations.add(new ConstraintViolation("memberSubunitDerivation",
+					this));
+		}
+		if (!this.memberStubStereotypes()) {
+			violations.add(new ConstraintViolation("memberStubStereotypes",
+					this));
+		}
+		if (!this.memberPrimitive()) {
+			violations.add(new ConstraintViolation("memberPrimitive", this));
+		}
+		for (StereotypeAnnotation _annotation : this.getAnnotation()) {
+			_annotation.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
@@ -234,6 +275,10 @@ public abstract class Member extends DocumentedElement {
 			s.append(isExternal);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

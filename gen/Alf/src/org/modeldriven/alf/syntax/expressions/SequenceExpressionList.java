@@ -69,9 +69,34 @@ public class SequenceExpressionList extends SequenceElements {
 		return this.getImpl().sequenceExpressionListUpperDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.sequenceExpressionListLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceExpressionListLowerDerivation", this));
+		}
+		if (!this.sequenceExpressionListUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceExpressionListUpperDerivation", this));
+		}
+		for (Expression _element : this.getElement()) {
+			_element.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

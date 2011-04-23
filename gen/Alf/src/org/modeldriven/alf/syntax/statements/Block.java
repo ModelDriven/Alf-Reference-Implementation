@@ -94,9 +94,38 @@ public class Block extends SyntaxElement {
 		return this.getImpl().blockAssignmentAfterDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.blockAssignmentsBeforeStatements()) {
+			violations.add(new ConstraintViolation(
+					"blockAssignmentsBeforeStatements", this));
+		}
+		if (!this.blockAssignmentsBefore()) {
+			violations.add(new ConstraintViolation("blockAssignmentsBefore",
+					this));
+		}
+		if (!this.blockAssignmentAfterDerivation()) {
+			violations.add(new ConstraintViolation(
+					"blockAssignmentAfterDerivation", this));
+		}
+		for (Statement _statement : this.getStatement()) {
+			_statement.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

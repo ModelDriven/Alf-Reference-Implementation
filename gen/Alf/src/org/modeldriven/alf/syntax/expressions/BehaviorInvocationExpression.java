@@ -86,9 +86,43 @@ public class BehaviorInvocationExpression extends InvocationExpression {
 				.behaviorInvocationExpressionArgumentCompatibility();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.behaviorInvocationExpressionReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"behaviorInvocationExpressionReferentDerivation", this));
+		}
+		if (!this.behaviorInvocationExpressionFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"behaviorInvocationExpressionFeatureDerivation", this));
+		}
+		if (!this.behaviorInvocationExpressionReferentConstraint()) {
+			violations.add(new ConstraintViolation(
+					"behaviorInvocationExpressionReferentConstraint", this));
+		}
+		if (!this.behaviorInvocationExpressionArgumentCompatibility()) {
+			violations.add(new ConstraintViolation(
+					"behaviorInvocationExpressionArgumentCompatibility", this));
+		}
+		QualifiedName target = this.getTarget();
+		if (target != null) {
+			target.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

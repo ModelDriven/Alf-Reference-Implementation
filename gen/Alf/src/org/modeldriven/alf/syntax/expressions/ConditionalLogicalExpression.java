@@ -92,9 +92,39 @@ public class ConditionalLogicalExpression extends BinaryExpression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.conditionalLogicalExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"conditionalLogicalExpressionTypeDerivation", this));
+		}
+		if (!this.conditionalLogicalExpressionLower()) {
+			violations.add(new ConstraintViolation(
+					"conditionalLogicalExpressionLower", this));
+		}
+		if (!this.conditionalLogicalExpressionUpper()) {
+			violations.add(new ConstraintViolation(
+					"conditionalLogicalExpressionUpper", this));
+		}
+		if (!this.conditionalLogicalExpressionOperands()) {
+			violations.add(new ConstraintViolation(
+					"conditionalLogicalExpressionOperands", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

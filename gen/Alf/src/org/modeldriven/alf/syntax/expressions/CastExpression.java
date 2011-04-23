@@ -100,9 +100,51 @@ public class CastExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.castExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"castExpressionTypeDerivation", this));
+		}
+		if (!this.castExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"castExpressionLowerDerivation", this));
+		}
+		if (!this.castExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"castExpressionUpperDerivation", this));
+		}
+		if (!this.castExpressionTypeResolution()) {
+			violations.add(new ConstraintViolation(
+					"castExpressionTypeResolution", this));
+		}
+		if (!this.castExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"castExpressionAssignmentsBefore", this));
+		}
+		Expression operand = this.getOperand();
+		if (operand != null) {
+			operand.checkConstraints(violations);
+		}
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

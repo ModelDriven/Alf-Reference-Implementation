@@ -90,9 +90,51 @@ public class SequenceAccessExpression extends Expression {
 		return this.getImpl().sequenceAccessExpressionIndexMultiplicity();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.sequenceAccessExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceAccessExpressionTypeDerivation", this));
+		}
+		if (!this.sequenceAccessExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceAccessExpressionLowerDerivation", this));
+		}
+		if (!this.sequenceAccessExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceAccessExpressionUpperDerivation", this));
+		}
+		if (!this.sequenceAccessExpressionIndexType()) {
+			violations.add(new ConstraintViolation(
+					"sequenceAccessExpressionIndexType", this));
+		}
+		if (!this.sequenceAccessExpressionIndexMultiplicity()) {
+			violations.add(new ConstraintViolation(
+					"sequenceAccessExpressionIndexMultiplicity", this));
+		}
+		Expression primary = this.getPrimary();
+		if (primary != null) {
+			primary.checkConstraints(violations);
+		}
+		Expression index = this.getIndex();
+		if (index != null) {
+			index.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

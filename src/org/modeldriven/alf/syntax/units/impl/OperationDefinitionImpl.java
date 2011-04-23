@@ -196,11 +196,14 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	 * the class definition of the operation definition.
 	 **/
 	public boolean operationDefinitionRedefinition() {
-	    for (QualifiedName redefinitionName: this.getSelf().getRedefinition().getName()) {
-	        redefinitionName.getImpl().setCurrentScope(this.getOuterScope());
-	        if (redefinitionName.getImpl().getOperationReferent() == null) {
-	            return false;
-	        }
+	    QualifiedNameList redefinitionList = this.getSelf().getRedefinition();
+	    if (redefinitionList != null) {
+    	    for (QualifiedName redefinitionName: redefinitionList.getName()) {
+    	        redefinitionName.getImpl().setCurrentScope(this.getOuterScope());
+    	        if (redefinitionName.getImpl().getOperationReferent() == null) {
+    	            return false;
+    	        }
+    	    }
 	    }
 		return true;
 	}

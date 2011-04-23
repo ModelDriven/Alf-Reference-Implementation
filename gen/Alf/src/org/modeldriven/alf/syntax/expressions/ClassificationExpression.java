@@ -114,6 +114,48 @@ public class ClassificationExpression extends UnaryExpression {
 		return this.getImpl().classificationExpressionOperand();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.classificationExpressionIsDirectDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classificationExpressionIsDirectDerivation", this));
+		}
+		if (!this.classificationExpressionReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classificationExpressionReferentDerivation", this));
+		}
+		if (!this.classificationExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classificationExpressionTypeDerivation", this));
+		}
+		if (!this.classificationExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classificationExpressionLowerDerivation", this));
+		}
+		if (!this.classificationExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classificationExpressionUpperDerivation", this));
+		}
+		if (!this.classificationExpressionTypeName()) {
+			violations.add(new ConstraintViolation(
+					"classificationExpressionTypeName", this));
+		}
+		if (!this.classificationExpressionOperand()) {
+			violations.add(new ConstraintViolation(
+					"classificationExpressionOperand", this));
+		}
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isDirect = this.getIsDirect();
@@ -122,6 +164,10 @@ public class ClassificationExpression extends UnaryExpression {
 			s.append(isDirect);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

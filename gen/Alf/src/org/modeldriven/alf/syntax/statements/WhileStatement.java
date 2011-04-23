@@ -92,9 +92,47 @@ public class WhileStatement extends Statement {
 		return this.getImpl().whileStatementEnclosedStatements();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.whileStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"whileStatementAssignmentsBefore", this));
+		}
+		if (!this.whileStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"whileStatementAssignmentsAfter", this));
+		}
+		if (!this.whileStatementCondition()) {
+			violations.add(new ConstraintViolation("whileStatementCondition",
+					this));
+		}
+		if (!this.whileStatementEnclosedStatements()) {
+			violations.add(new ConstraintViolation(
+					"whileStatementEnclosedStatements", this));
+		}
+		Block body = this.getBody();
+		if (body != null) {
+			body.checkConstraints(violations);
+		}
+		Expression condition = this.getCondition();
+		if (condition != null) {
+			condition.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

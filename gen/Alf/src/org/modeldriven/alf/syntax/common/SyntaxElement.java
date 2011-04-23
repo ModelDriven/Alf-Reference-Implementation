@@ -36,9 +36,22 @@ public abstract class SyntaxElement {
 		return (SyntaxElementImpl) this.impl;
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

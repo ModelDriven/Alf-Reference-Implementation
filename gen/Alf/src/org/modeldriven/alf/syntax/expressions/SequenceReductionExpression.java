@@ -134,11 +134,61 @@ public class SequenceReductionExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.sequenceReductionExpressionReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceReductionExpressionReferentDerivation", this));
+		}
+		if (!this.sequenceReductionExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceReductionExpressionTypeDerivation", this));
+		}
+		if (!this.sequenceReductionExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceReductionExpressionUpperDerivation", this));
+		}
+		if (!this.sequenceReductionExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceReductionExpressionLowerDerivation", this));
+		}
+		if (!this.sequenceReductionExpressionBehavior()) {
+			violations.add(new ConstraintViolation(
+					"sequenceReductionExpressionBehavior", this));
+		}
+		if (!this.sequenceReductionExpressionBehaviorParameters()) {
+			violations.add(new ConstraintViolation(
+					"sequenceReductionExpressionBehaviorParameters", this));
+		}
+		if (!this.sequenceReductionExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"sequenceReductionExpressionAssignmentsBefore", this));
+		}
+		ExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.checkConstraints(violations);
+		}
+		QualifiedName behaviorName = this.getBehaviorName();
+		if (behaviorName != null) {
+			behaviorName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" isOrdered:");
 		s.append(this.getIsOrdered());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

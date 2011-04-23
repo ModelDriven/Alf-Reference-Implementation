@@ -73,6 +73,32 @@ public class EqualityExpression extends BinaryExpression {
 		return this.getImpl().equalityExpressionUpperDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.equalityExpressionIsNegatedDerivation()) {
+			violations.add(new ConstraintViolation(
+					"equalityExpressionIsNegatedDerivation", this));
+		}
+		if (!this.equalityExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"equalityExpressionTypeDerivation", this));
+		}
+		if (!this.equalityExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"equalityExpressionLowerDerivation", this));
+		}
+		if (!this.equalityExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"equalityExpressionUpperDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isNegated = this.getIsNegated();
@@ -81,6 +107,10 @@ public class EqualityExpression extends BinaryExpression {
 			s.append(isNegated);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

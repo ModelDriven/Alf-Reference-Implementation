@@ -74,9 +74,34 @@ public class ExtentOrExpression {
 		return this.getImpl().extentOrExpressionExpressionDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		if (!this.extentOrExpressionExpressionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"extentOrExpressionExpressionDerivation", this));
+		}
+		QualifiedName name = this.getName();
+		if (name != null) {
+			name.checkConstraints(violations);
+		}
+		Expression nonNameExpression = this.getNonNameExpression();
+		if (nonNameExpression != null) {
+			nonNameExpression.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

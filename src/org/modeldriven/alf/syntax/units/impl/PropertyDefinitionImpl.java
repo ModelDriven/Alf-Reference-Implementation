@@ -157,8 +157,12 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	public boolean propertyDefinitionInitializer() {
 	    PropertyDefinition self = this.getSelf();
 	    Expression initializer = self.getInitializer();
-	    initializer.getImpl().setCurrentScope(this.getOuterScope());
-		return new AssignableTypedElementImpl(this).isAssignableFrom(initializer);
+	    if (initializer == null) {
+	        return true;
+	    } else {
+    	    initializer.getImpl().setCurrentScope(this.getOuterScope());
+    		return new AssignableTypedElementImpl(this).isAssignableFrom(initializer);
+	    }
 	}
 	
 	/*

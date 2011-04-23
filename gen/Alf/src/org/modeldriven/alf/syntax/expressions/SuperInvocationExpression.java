@@ -104,9 +104,55 @@ public class SuperInvocationExpression extends InvocationExpression {
 		return this.getImpl().superInvocationExpressionOperation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.superInvocationExpressionReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"superInvocationExpressionReferentDerivation", this));
+		}
+		if (!this.superInvocationExpressionFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"superInvocationExpressionFeatureDerivation", this));
+		}
+		if (!this.superInvocationExpressionQualification()) {
+			violations.add(new ConstraintViolation(
+					"superInvocationExpressionQualification", this));
+		}
+		if (!this.superInvocationExpressionImplicitTarget()) {
+			violations.add(new ConstraintViolation(
+					"superInvocationExpressionImplicitTarget", this));
+		}
+		if (!this.superInvocationExpressionConstructorCall()) {
+			violations.add(new ConstraintViolation(
+					"superInvocationExpressionConstructorCall", this));
+		}
+		if (!this.superInvocationExpressionDestructorCall()) {
+			violations.add(new ConstraintViolation(
+					"superInvocationExpressionDestructorCall", this));
+		}
+		if (!this.superInvocationExpressionOperation()) {
+			violations.add(new ConstraintViolation(
+					"superInvocationExpressionOperation", this));
+		}
+		QualifiedName target = this.getTarget();
+		if (target != null) {
+			target.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

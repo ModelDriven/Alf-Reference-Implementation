@@ -83,7 +83,8 @@ public class NumericUnaryExpressionImpl extends UnaryExpressionImpl {
 	 **/
 	public boolean numericUnaryExpressionOperand() {
 	    Expression operand = this.getSelf().getOperand();
-		return operand != null && operand.getType().getImpl().isInteger() &&
+	    ElementReference type = operand == null? null: operand.getType();
+		return type != null && type.getImpl().isInteger() &&
 		            operand.getUpper() == 1;
 	}
 

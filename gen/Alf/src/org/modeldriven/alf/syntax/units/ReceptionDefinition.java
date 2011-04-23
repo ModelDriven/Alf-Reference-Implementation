@@ -93,9 +93,39 @@ public class ReceptionDefinition extends Member {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.receptionDefinitionSignalName()) {
+			violations.add(new ConstraintViolation(
+					"receptionDefinitionSignalName", this));
+		}
+		if (!this.receptionDefinitionSignalDerivation()) {
+			violations.add(new ConstraintViolation(
+					"receptionDefinitionSignalDerivation", this));
+		}
+		if (!this.receptionDefinitionIsFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"receptionDefinitionIsFeatureDerivation", this));
+		}
+		QualifiedName signalName = this.getSignalName();
+		if (signalName != null) {
+			signalName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

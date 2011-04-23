@@ -133,9 +133,55 @@ public class NameExpression extends Expression {
 		return this.getImpl().nameExpressionResolution();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.nameExpressionAssignmentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"nameExpressionAssignmentDerivation", this));
+		}
+		if (!this.nameExpressionEnumerationLiteralDerivation()) {
+			violations.add(new ConstraintViolation(
+					"nameExpressionEnumerationLiteralDerivation", this));
+		}
+		if (!this.nameExpressionPropertyAccessDerivation()) {
+			violations.add(new ConstraintViolation(
+					"nameExpressionPropertyAccessDerivation", this));
+		}
+		if (!this.nameExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"nameExpressionTypeDerivation", this));
+		}
+		if (!this.nameExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"nameExpressionUpperDerivation", this));
+		}
+		if (!this.nameExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"nameExpressionLowerDerivation", this));
+		}
+		if (!this.nameExpressionResolution()) {
+			violations.add(new ConstraintViolation("nameExpressionResolution",
+					this));
+		}
+		QualifiedName name = this.getName();
+		if (name != null) {
+			name.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

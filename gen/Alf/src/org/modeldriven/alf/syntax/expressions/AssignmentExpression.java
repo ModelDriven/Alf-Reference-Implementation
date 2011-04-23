@@ -334,6 +334,111 @@ public class AssignmentExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.assignmentExpressionIsSimpleDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionIsSimpleDerivation", this));
+		}
+		if (!this.assignmentExpressionIsArithmeticDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionIsArithmeticDerivation", this));
+		}
+		if (!this.assignmentExpressionIsDefinitionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionIsDefinitionDerivation", this));
+		}
+		if (!this.assignmentExpressionIsFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionIsFeatureDerivation", this));
+		}
+		if (!this.assignmentExpressionIsIndexedDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionIsIndexedDerivation", this));
+		}
+		if (!this.assignmentExpressionIsDataValueUpdateDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionIsDataValueUpdateDerivation", this));
+		}
+		if (!this.assignmentExpressionAssignmentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionAssignmentDerivation", this));
+		}
+		if (!this.assignmentExpressionFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionFeatureDerivation", this));
+		}
+		if (!this.assignmentExpressionExpressionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionExpressionDerivation", this));
+		}
+		if (!this.assignmentExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionTypeDerivation", this));
+		}
+		if (!this.assignmentExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionUpperDerivation", this));
+		}
+		if (!this.assignmentExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionLowerDerivation", this));
+		}
+		if (!this.assignmentExpressionSimpleAssignmentTypeConformance()) {
+			violations
+					.add(new ConstraintViolation(
+							"assignmentExpressionSimpleAssignmentTypeConformance",
+							this));
+		}
+		if (!this.assignmentExpressionSimpleAssignmentMultiplicityConformance()) {
+			violations
+					.add(new ConstraintViolation(
+							"assignmentExpressionSimpleAssignmentMultiplicityConformance",
+							this));
+		}
+		if (!this.assignmentExpressionCompoundAssignmentTypeConformance()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionCompoundAssignmentTypeConformance",
+					this));
+		}
+		if (!this
+				.assignmentExpressionCompoundAssignmentMultiplicityConformance()) {
+			violations
+					.add(new ConstraintViolation(
+							"assignmentExpressionCompoundAssignmentMultiplicityConformance",
+							this));
+		}
+		if (!this.assignmentExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionAssignmentsBefore", this));
+		}
+		if (!this.assignmentExpressionIsCollectionConversionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionIsCollectionConversionDerivation",
+					this));
+		}
+		if (!this.assignmentExpressionIsBitStringConversionDerivation()) {
+			violations
+					.add(new ConstraintViolation(
+							"assignmentExpressionIsBitStringConversionDerivation",
+							this));
+		}
+		LeftHandSide leftHandSide = this.getLeftHandSide();
+		if (leftHandSide != null) {
+			leftHandSide.checkConstraints(violations);
+		}
+		Expression rightHandSide = this.getRightHandSide();
+		if (rightHandSide != null) {
+			rightHandSide.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operator:");
@@ -379,6 +484,10 @@ public class AssignmentExpression extends Expression {
 			s.append(isBitStringConversion);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

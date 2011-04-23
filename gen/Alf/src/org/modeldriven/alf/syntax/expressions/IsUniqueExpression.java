@@ -66,9 +66,39 @@ public class IsUniqueExpression extends SequenceExpansionExpression {
 		return this.getImpl().isUniqueExpressionExpressionArgument();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.isUniqueExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"isUniqueExpressionTypeDerivation", this));
+		}
+		if (!this.isUniqueExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"isUniqueExpressionLowerDerivation", this));
+		}
+		if (!this.isUniqueExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"isUniqueExpressionUpperDerivation", this));
+		}
+		if (!this.isUniqueExpressionExpressionArgument()) {
+			violations.add(new ConstraintViolation(
+					"isUniqueExpressionExpressionArgument", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

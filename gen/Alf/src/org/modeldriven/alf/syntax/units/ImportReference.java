@@ -81,11 +81,37 @@ public abstract class ImportReference extends SyntaxElement {
 		return this.getImpl().importReferenceReferent();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.importReferenceReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"importReferenceReferentDerivation", this));
+		}
+		if (!this.importReferenceReferent()) {
+			violations.add(new ConstraintViolation("importReferenceReferent",
+					this));
+		}
+		QualifiedName referentName = this.getReferentName();
+		if (referentName != null) {
+			referentName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" visibility:");
 		s.append(this.getVisibility());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

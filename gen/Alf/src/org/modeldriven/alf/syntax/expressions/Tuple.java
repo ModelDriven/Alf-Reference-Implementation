@@ -126,9 +126,45 @@ public abstract class Tuple extends SyntaxElement {
 		return this.getImpl().tupleAssignmentsAfter();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.tupleInputDerivation()) {
+			violations
+					.add(new ConstraintViolation("tupleInputDerivation", this));
+		}
+		if (!this.tupleOutputDerivation()) {
+			violations.add(new ConstraintViolation("tupleOutputDerivation",
+					this));
+		}
+		if (!this.tupleNullInputs()) {
+			violations.add(new ConstraintViolation("tupleNullInputs", this));
+		}
+		if (!this.tupleOutputs()) {
+			violations.add(new ConstraintViolation("tupleOutputs", this));
+		}
+		if (!this.tupleAssignmentsBefore()) {
+			violations.add(new ConstraintViolation("tupleAssignmentsBefore",
+					this));
+		}
+		if (!this.tupleAssignmentsAfter()) {
+			violations.add(new ConstraintViolation("tupleAssignmentsAfter",
+					this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

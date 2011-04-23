@@ -90,9 +90,49 @@ public class FeatureInvocationExpression extends InvocationExpression {
 				.featureInvocationExpressionImplicitAlternativeConstructor();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.featureInvocationExpressionReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureInvocationExpressionReferentDerivation", this));
+		}
+		if (!this.featureInvocationExpressionFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureInvocationExpressionFeatureDerivation", this));
+		}
+		if (!this.featureInvocationExpressionReferentExists()) {
+			violations.add(new ConstraintViolation(
+					"featureInvocationExpressionReferentExists", this));
+		}
+		if (!this.featureInvocationExpressionAlternativeConstructor()) {
+			violations.add(new ConstraintViolation(
+					"featureInvocationExpressionAlternativeConstructor", this));
+		}
+		if (!this.featureInvocationExpressionImplicitAlternativeConstructor()) {
+			violations
+					.add(new ConstraintViolation(
+							"featureInvocationExpressionImplicitAlternativeConstructor",
+							this));
+		}
+		FeatureReference target = this.getTarget();
+		if (target != null) {
+			target.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

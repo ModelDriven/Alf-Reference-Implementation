@@ -78,6 +78,36 @@ public class ShiftExpression extends BinaryExpression {
 		return this.getImpl().shiftExpressionIsBitStringConversionDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.shiftExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"shiftExpressionTypeDerivation", this));
+		}
+		if (!this.shiftExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"shiftExpressionLowerDerivation", this));
+		}
+		if (!this.shiftExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"shiftExpressionUpperDerivation", this));
+		}
+		if (!this.shiftExpressionOperands()) {
+			violations.add(new ConstraintViolation("shiftExpressionOperands",
+					this));
+		}
+		if (!this.shiftExpressionIsBitStringConversionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"shiftExpressionIsBitStringConversionDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isBitStringConversion = this.getIsBitStringConversion();
@@ -86,6 +116,10 @@ public class ShiftExpression extends BinaryExpression {
 			s.append(isBitStringConversion);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

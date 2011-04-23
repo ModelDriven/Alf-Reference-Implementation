@@ -67,9 +67,39 @@ public class NumericUnaryExpression extends UnaryExpression {
 		return this.getImpl().numericUnaryExpressionOperand();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.numericUnaryExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"numericUnaryExpressionTypeDerivation", this));
+		}
+		if (!this.numericUnaryExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"numericUnaryExpressionLowerDerivation", this));
+		}
+		if (!this.numericUnaryExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"numericUnaryExpressionUpperDerivation", this));
+		}
+		if (!this.numericUnaryExpressionOperand()) {
+			violations.add(new ConstraintViolation(
+					"numericUnaryExpressionOperand", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

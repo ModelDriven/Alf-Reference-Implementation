@@ -85,6 +85,36 @@ public class RelationalExpression extends BinaryExpression {
 		return this.getImpl().relationalExpressionOperandTypes();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.relationalExpressionIsUnlimitedNaturalDerivation()) {
+			violations.add(new ConstraintViolation(
+					"relationalExpressionIsUnlimitedNaturalDerivation", this));
+		}
+		if (!this.relationalExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"relationalExpressionTypeDerivation", this));
+		}
+		if (!this.relationalExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"relationalExpressionLowerDerivation", this));
+		}
+		if (!this.relationalExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"relationalExpressionUpperDerivation", this));
+		}
+		if (!this.relationalExpressionOperandTypes()) {
+			violations.add(new ConstraintViolation(
+					"relationalExpressionOperandTypes", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isUnlimitedNatural = this.getIsUnlimitedNatural();
@@ -93,6 +123,10 @@ public class RelationalExpression extends BinaryExpression {
 			s.append(isUnlimitedNatural);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

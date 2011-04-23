@@ -127,9 +127,59 @@ public class ConditionalTestExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.conditionalTestExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"conditionalTestExpressionTypeDerivation", this));
+		}
+		if (!this.conditionalTestExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"conditionalTestExpressionLowerDerivation", this));
+		}
+		if (!this.conditionalTestExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"conditionalTestExpressionUpperDerivation", this));
+		}
+		if (!this.conditionalTestExpressionCondition()) {
+			violations.add(new ConstraintViolation(
+					"conditionalTestExpressionCondition", this));
+		}
+		if (!this.conditionalTestExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"conditionalTestExpressionAssignmentsBefore", this));
+		}
+		if (!this.conditionalTestExpressionAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"conditionalTestExpressionAssignmentsAfter", this));
+		}
+		Expression operand1 = this.getOperand1();
+		if (operand1 != null) {
+			operand1.checkConstraints(violations);
+		}
+		Expression operand2 = this.getOperand2();
+		if (operand2 != null) {
+			operand2.checkConstraints(violations);
+		}
+		Expression operand3 = this.getOperand3();
+		if (operand3 != null) {
+			operand3.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

@@ -123,6 +123,44 @@ public class LinkOperationExpression extends InvocationExpression {
 		return this.getImpl().parameterElements();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.linkOperationExpressionIsCreationDerivation()) {
+			violations.add(new ConstraintViolation(
+					"linkOperationExpressionIsCreationDerivation", this));
+		}
+		if (!this.linkOperationExpressionIsClearDerivation()) {
+			violations.add(new ConstraintViolation(
+					"linkOperationExpressionIsClearDerivation", this));
+		}
+		if (!this.linkOperationExpressionReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"linkOperationExpressionReferentDerivation", this));
+		}
+		if (!this.linkOperationExpressionFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"linkOperationExpressionFeatureDerivation", this));
+		}
+		if (!this.linkOperationExpressionAssociationReference()) {
+			violations.add(new ConstraintViolation(
+					"linkOperationExpressionAssociationReference", this));
+		}
+		if (!this.linkOperationExpressionArgumentCompatibility()) {
+			violations.add(new ConstraintViolation(
+					"linkOperationExpressionArgumentCompatibility", this));
+		}
+		QualifiedName associationName = this.getAssociationName();
+		if (associationName != null) {
+			associationName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operation:");
@@ -138,6 +176,10 @@ public class LinkOperationExpression extends InvocationExpression {
 			s.append(isClear);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

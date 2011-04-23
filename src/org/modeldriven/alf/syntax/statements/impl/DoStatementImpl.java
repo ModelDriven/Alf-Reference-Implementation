@@ -130,9 +130,9 @@ public class DoStatementImpl extends StatementImpl {
 	 **/
 	public boolean doStatementCondition() {
 	    Expression condition = this.getSelf().getCondition();
-		return condition != null && 
-		        condition.getType().getImpl().isBoolean() &&
-		        condition.getUpper() == 1;
+	    ElementReference type = condition == null? null: condition.getType();
+		return type != null && type.getImpl().isBoolean() &&
+		            condition.getUpper() == 1;
 	}
 
 	/**

@@ -71,9 +71,39 @@ public class NameLeftHandSide extends LeftHandSide {
 		return this.getImpl().nameLeftHandSideAssignmentsBefore();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.nameLeftHandSideAssignmentAfterDerivation()) {
+			violations.add(new ConstraintViolation(
+					"nameLeftHandSideAssignmentAfterDerivation", this));
+		}
+		if (!this.nameLeftHandSideTargetAssignment()) {
+			violations.add(new ConstraintViolation(
+					"nameLeftHandSideTargetAssignment", this));
+		}
+		if (!this.nameLeftHandSideAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"nameLeftHandSideAssignmentsBefore", this));
+		}
+		QualifiedName target = this.getTarget();
+		if (target != null) {
+			target.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

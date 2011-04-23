@@ -55,9 +55,35 @@ public abstract class LiteralExpression extends Expression {
 		return this.getImpl().literalExpressionLowerDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.literalExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"literalExpressionTypeDerivation", this));
+		}
+		if (!this.literalExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"literalExpressionUpperDerivation", this));
+		}
+		if (!this.literalExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"literalExpressionLowerDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

@@ -92,9 +92,38 @@ public class SwitchClause extends SyntaxElement {
 		return this.getImpl().assignmentsAfter();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.switchClauseAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"switchClauseAssignmentsBefore", this));
+		}
+		if (!this.switchClauseCaseLocalNames()) {
+			violations.add(new ConstraintViolation(
+					"switchClauseCaseLocalNames", this));
+		}
+		for (Expression _case_ : this.getCase()) {
+			_case_.checkConstraints(violations);
+		}
+		Block block = this.getBlock();
+		if (block != null) {
+			block.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

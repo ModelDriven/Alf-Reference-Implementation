@@ -127,6 +127,49 @@ public abstract class SequenceExpansionExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.sequenceExpansionExpressionVariableSourceDerivation()) {
+			violations
+					.add(new ConstraintViolation(
+							"sequenceExpansionExpressionVariableSourceDerivation",
+							this));
+		}
+		if (!this.sequenceExpansionExpressionAssignmentsBeforePrimary()) {
+			violations
+					.add(new ConstraintViolation(
+							"sequenceExpansionExpressionAssignmentsBeforePrimary",
+							this));
+		}
+		if (!this.sequenceExpansionExpressionAssignmentsBeforeArgument()) {
+			violations.add(new ConstraintViolation(
+					"sequenceExpansionExpressionAssignmentsBeforeArgument",
+					this));
+		}
+		if (!this.sequenceExpansionExpressionVariableName()) {
+			violations.add(new ConstraintViolation(
+					"sequenceExpansionExpressionVariableName", this));
+		}
+		if (!this.sequenceExpansionExpressionVariableAssignment()) {
+			violations.add(new ConstraintViolation(
+					"sequenceExpansionExpressionVariableAssignment", this));
+		}
+		Expression argument = this.getArgument();
+		if (argument != null) {
+			argument.checkConstraints(violations);
+		}
+		ExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" operation:");
@@ -134,6 +177,10 @@ public abstract class SequenceExpansionExpression extends Expression {
 		s.append(" variable:");
 		s.append(this.getVariable());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

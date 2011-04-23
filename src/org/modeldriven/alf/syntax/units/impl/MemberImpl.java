@@ -202,8 +202,9 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	public boolean memberStub() {
 	    Member self = this.getSelf();
 	    UnitDefinition subunit = self.getSubunit();
-		return subunit != null && 
-		    subunit.getDefinition().getImpl().getQualifiedName().equals(this.getQualifiedName()) && 
+	    NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
+		return definition != null && 
+		    definition.getImpl().getQualifiedName().equals(this.getQualifiedName()) && 
 		        self.matchForStub(subunit);
 	}
 
@@ -216,8 +217,9 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         Member self = this.getSelf();
         if (self.getIsStub()) {
             Collection<StereotypeAnnotation> stubAnnotations = self.getAnnotation();
+            NamespaceDefinition subunitDefinition = self.getSubunit().getDefinition();
             Collection<StereotypeAnnotation> subunitAnnotations = 
-                self.getSubunit().getDefinition().getAnnotation();
+                subunitDefinition == null? null: subunitDefinition.getAnnotation();
             if (stubAnnotations != null && stubAnnotations.size() > 0 &&
                     subunitAnnotations != null && subunitAnnotations.size() > 0) {
                 for (StereotypeAnnotation stubAnnotation: stubAnnotations) {
@@ -345,14 +347,11 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     }
 
     public ElementReference getReferent() {
-        InternalElementReference referent = new InternalElementReference();
         Member self = this.getSelf();
         UnitDefinition subunit = self.getSubunit();
-        if (subunit == null) {
-            referent.setElement(self);
-        } else {
-            referent.setElement(subunit.getDefinition());
-        }
+        NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
+        InternalElementReference referent = new InternalElementReference();
+        referent.setElement(definition == null? self: definition);
         return referent;
     }
 

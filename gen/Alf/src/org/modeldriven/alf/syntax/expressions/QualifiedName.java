@@ -230,6 +230,63 @@ public class QualifiedName extends SyntaxElement {
 		return this.getImpl().qualifiedNameTemplateNameDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.qualifiedNameUnqualifiedNameDerivation()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameUnqualifiedNameDerivation", this));
+		}
+		if (!this.qualifiedNamePathNameDerivation()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNamePathNameDerivation", this));
+		}
+		if (!this.qualifiedNameIsFeatureReferenceDerivation()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameIsFeatureReferenceDerivation", this));
+		}
+		if (!this.qualifiedNameQualificationDerivation()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameQualificationDerivation", this));
+		}
+		if (!this.qualifiedNameDisambiguationDerivation()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameDisambiguationDerivation", this));
+		}
+		if (!this.qualifiedNameReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameReferentDerivation", this));
+		}
+		if (!this.qualifiedNameLocalName()) {
+			violations.add(new ConstraintViolation("qualifiedNameLocalName",
+					this));
+		}
+		if (!this.qualifiedNameNonLocalUnqualifiedName()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameNonLocalUnqualifiedName", this));
+		}
+		if (!this.qualifiedNameQualifiedResolution()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameQualifiedResolution", this));
+		}
+		if (!this.qualifiedNameTemplateBinding()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameTemplateBinding", this));
+		}
+		if (!this.qualifiedNameTemplateNameDerivation()) {
+			violations.add(new ConstraintViolation(
+					"qualifiedNameTemplateNameDerivation", this));
+		}
+		for (NameBinding _nameBinding : this.getNameBinding()) {
+			_nameBinding.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" isAmbiguous:");
@@ -245,6 +302,10 @@ public class QualifiedName extends SyntaxElement {
 			s.append(isFeatureReference);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

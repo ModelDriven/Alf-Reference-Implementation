@@ -96,6 +96,32 @@ public class NamedExpression extends SyntaxElement {
 		return this.getImpl().namedExpressionIsBitStringConversionDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.namedExpressionIsCollectionConversionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"namedExpressionIsCollectionConversionDerivation", this));
+		}
+		if (!this.namedExpressionIsBitStringConversionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"namedExpressionIsBitStringConversionDerivation", this));
+		}
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.checkConstraints(violations);
+		}
+		Expression index = this.getIndex();
+		if (index != null) {
+			index.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
@@ -111,6 +137,10 @@ public class NamedExpression extends SyntaxElement {
 			s.append(isBitStringConversion);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

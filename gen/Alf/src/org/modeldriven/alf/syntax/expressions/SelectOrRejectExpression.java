@@ -67,9 +67,39 @@ public class SelectOrRejectExpression extends SequenceExpansionExpression {
 		return this.getImpl().selectOrRejectExpressionArgument();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.selectOrRejectExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"selectOrRejectExpressionTypeDerivation", this));
+		}
+		if (!this.selectOrRejectExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"selectOrRejectExpressionLowerDerivation", this));
+		}
+		if (!this.selectOrRejectExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"selectOrRejectExpressionUpperDerivation", this));
+		}
+		if (!this.selectOrRejectExpressionArgument()) {
+			violations.add(new ConstraintViolation(
+					"selectOrRejectExpressionArgument", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

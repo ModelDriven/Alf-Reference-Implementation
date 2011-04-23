@@ -85,6 +85,36 @@ public class ArithmeticExpression extends BinaryExpression {
 		return this.getImpl().arithmeticExpressionOperandTypes();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.arithmeticExpressionIsConcatenationDerivation()) {
+			violations.add(new ConstraintViolation(
+					"arithmeticExpressionIsConcatenationDerivation", this));
+		}
+		if (!this.arithmeticExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"arithmeticExpressionTypeDerivation", this));
+		}
+		if (!this.arithmeticExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"arithmeticExpressionLowerDerivation", this));
+		}
+		if (!this.arithmeticExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"arithmeticExpressionUpperDerivation", this));
+		}
+		if (!this.arithmeticExpressionOperandTypes()) {
+			violations.add(new ConstraintViolation(
+					"arithmeticExpressionOperandTypes", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isConcatenation = this.getIsConcatenation();
@@ -93,6 +123,10 @@ public class ArithmeticExpression extends BinaryExpression {
 			s.append(isConcatenation);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

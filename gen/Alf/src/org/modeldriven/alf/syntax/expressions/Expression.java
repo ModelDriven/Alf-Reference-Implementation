@@ -110,6 +110,24 @@ public abstract class Expression extends SyntaxElement {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.expressionAssignmentAfterDerivation()) {
+			violations.add(new ConstraintViolation(
+					"expressionAssignmentAfterDerivation", this));
+		}
+		if (!this.expressionUniqueAssignments()) {
+			violations.add(new ConstraintViolation(
+					"expressionUniqueAssignments", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Integer upper = this.getUpper();
@@ -123,6 +141,10 @@ public abstract class Expression extends SyntaxElement {
 			s.append(lower);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

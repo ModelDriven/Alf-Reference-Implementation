@@ -163,7 +163,8 @@ public class ClassifyStatementImpl extends
 	 **/
 	public boolean classifyStatementExpression() {
 	    Expression expression = this.getSelf().getExpression();
-		return expression != null && expression.getType().getImpl().isClass() &&
+	    ElementReference type = expression == null? null: expression.getType();
+		return type != null && type.getImpl().isClass() &&
 		            expression.getUpper() == 1;
 	}
 

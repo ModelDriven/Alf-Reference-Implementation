@@ -137,6 +137,47 @@ public class UnitDefinition extends DocumentedElement {
 		return this.getImpl().unitDefinitionAppliedProfileDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.unitDefinitionNamespaceDerivation()) {
+			violations.add(new ConstraintViolation(
+					"unitDefinitionNamespaceDerivation", this));
+		}
+		if (!this.unitDefinitionNamespace()) {
+			violations.add(new ConstraintViolation("unitDefinitionNamespace",
+					this));
+		}
+		if (!this.unitDefinitionIsModelLibraryDerivation()) {
+			violations.add(new ConstraintViolation(
+					"unitDefinitionIsModelLibraryDerivation", this));
+		}
+		if (!this.unitDefinitionImplicitImports()) {
+			violations.add(new ConstraintViolation(
+					"unitDefinitionImplicitImports", this));
+		}
+		if (!this.unitDefinitionAppliedProfileDerivation()) {
+			violations.add(new ConstraintViolation(
+					"unitDefinitionAppliedProfileDerivation", this));
+		}
+		QualifiedName namespaceName = this.getNamespaceName();
+		if (namespaceName != null) {
+			namespaceName.checkConstraints(violations);
+		}
+		NamespaceDefinition definition = this.getDefinition();
+		if (definition != null) {
+			definition.checkConstraints(violations);
+		}
+		for (ImportReference _import_ : this.getImport()) {
+			_import_.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isModelLibrary = this.getIsModelLibrary();
@@ -145,6 +186,10 @@ public class UnitDefinition extends DocumentedElement {
 			s.append(isModelLibrary);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

@@ -151,11 +151,65 @@ public class ClassifyStatement extends Statement {
 		return this.getImpl().classifyStatementToClassDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.classifyStatementExpression()) {
+			violations.add(new ConstraintViolation(
+					"classifyStatementExpression", this));
+		}
+		if (!this.classifyStatementClassNames()) {
+			violations.add(new ConstraintViolation(
+					"classifyStatementClassNames", this));
+		}
+		if (!this.classifyStatementClasses()) {
+			violations.add(new ConstraintViolation("classifyStatementClasses",
+					this));
+		}
+		if (!this.classifyStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"classifyStatementAssignmentsBefore", this));
+		}
+		if (!this.classifyStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"classifyStatementAssignmentsAfter", this));
+		}
+		if (!this.classifyStatementFromClassDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classifyStatementFromClassDerivation", this));
+		}
+		if (!this.classifyStatementToClassDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classifyStatementToClassDerivation", this));
+		}
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.checkConstraints(violations);
+		}
+		QualifiedNameList fromList = this.getFromList();
+		if (fromList != null) {
+			fromList.checkConstraints(violations);
+		}
+		QualifiedNameList toList = this.getToList();
+		if (toList != null) {
+			toList.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" isReclassifyAll:");
 		s.append(this.getIsReclassifyAll());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

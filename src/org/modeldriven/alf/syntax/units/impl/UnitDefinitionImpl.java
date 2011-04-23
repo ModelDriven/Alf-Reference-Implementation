@@ -241,7 +241,8 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
             } else {
                 NamespaceDefinition namespace = 
                     (NamespaceDefinition)namespaceReference.getImpl().getAlf();
-                return namespace != null && namespace.getUnit().getImpl().isInModelLibrary();
+                UnitDefinition unit = namespace == null? null: namespace.getUnit();
+                return unit != null && unit.getImpl().isInModelLibrary();
             }
         }
     }
