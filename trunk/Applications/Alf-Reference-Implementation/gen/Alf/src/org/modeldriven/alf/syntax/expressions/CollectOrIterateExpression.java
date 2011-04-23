@@ -61,9 +61,35 @@ public class CollectOrIterateExpression extends SequenceExpansionExpression {
 		return this.getImpl().collectOrIterateExpressionUpperDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.collectOrIterateExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"collectOrIterateExpressionTypeDerivation", this));
+		}
+		if (!this.collectOrIterateExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"collectOrIterateExpressionLowerDerivation", this));
+		}
+		if (!this.collectOrIterateExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"collectOrIterateExpressionUpperDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

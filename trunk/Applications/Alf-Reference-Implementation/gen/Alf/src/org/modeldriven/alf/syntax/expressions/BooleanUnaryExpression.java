@@ -67,9 +67,39 @@ public class BooleanUnaryExpression extends UnaryExpression {
 		return this.getImpl().booleanUnaryExpressionOperand();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.booleanUnaryExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"booleanUnaryExpressionTypeDerivation", this));
+		}
+		if (!this.booleanUnaryExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"booleanUnaryExpressionLowerDerivation", this));
+		}
+		if (!this.booleanUnaryExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"booleanUnaryExpressionUpperDerivation", this));
+		}
+		if (!this.booleanUnaryExpressionOperand()) {
+			violations.add(new ConstraintViolation(
+					"booleanUnaryExpressionOperand", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

@@ -127,6 +127,50 @@ public class InstanceCreationExpression extends InvocationExpression {
 		return this.getImpl().parameterElements();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.instanceCreationExpressionIsObjectCreationDerivation()) {
+			violations.add(new ConstraintViolation(
+					"instanceCreationExpressionIsObjectCreationDerivation",
+					this));
+		}
+		if (!this.instanceCreationExpressionIsConstructorlessDerivation()) {
+			violations.add(new ConstraintViolation(
+					"instanceCreationExpressionIsConstructorlessDerivation",
+					this));
+		}
+		if (!this.instanceCreationExpressionReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"instanceCreationExpressionReferentDerivation", this));
+		}
+		if (!this.instanceCreationExpressionFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"instanceCreationExpressionFeatureDerivation", this));
+		}
+		if (!this.instanceCreationExpressionConstructor()) {
+			violations.add(new ConstraintViolation(
+					"instanceCreationExpressionConstructor", this));
+		}
+		if (!this.instanceCreationExpressionTuple()) {
+			violations.add(new ConstraintViolation(
+					"instanceCreationExpressionTuple", this));
+		}
+		if (!this.instanceCreationExpressionDataTypeCompatibility()) {
+			violations.add(new ConstraintViolation(
+					"instanceCreationExpressionDataTypeCompatibility", this));
+		}
+		QualifiedName constructor = this.getConstructor();
+		if (constructor != null) {
+			constructor.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isConstructorless = this.getIsConstructorless();
@@ -140,6 +184,10 @@ public class InstanceCreationExpression extends InvocationExpression {
 			s.append(isObjectCreation);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

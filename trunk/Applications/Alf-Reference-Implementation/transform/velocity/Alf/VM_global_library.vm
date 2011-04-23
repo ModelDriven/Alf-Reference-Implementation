@@ -259,6 +259,39 @@ ${comment.body}
 #end
 #end
 
+#macro( checkOperations $class )
+public Collection<ConstraintViolation> checkConstraints() {
+    Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+    this.checkConstraints(violations);
+    return violations;
+}
+
+public void checkConstraints(Collection<ConstraintViolation> violations) {
+    #if ( ${class.superClasses.size()} > 0 )
+        super.checkConstraints(violations);
+    #end
+    #foreach( $rule in ${class.ownedRules} )
+        if (!this.${rule.name}()) {
+            violations.add(new ConstraintViolation("${rule.name}", this));
+        }
+    #end
+    #foreach( $attribute in ${class.ownedAttributes} )
+        #if( ${attribute.isComposite()} )
+            #if( ${attribute.upper} == 1 )
+		        #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+  			    if (#name(${attribute.name})!=null) {
+                    #name(${attribute.name}).checkConstraints(violations);
+                }
+            #else
+                for (#basicType($attribute) _#name($attribute.name): this.get#upperCase(${attribute.name})()) {
+                    _#name($attribute.name).checkConstraints(violations);
+                }
+            #end
+        #end
+    #end
+}
+#end
+
 #macro( printOperations $class )
 public String toString() {
 	#if( ${class.superClasses.size()}==0 )
@@ -282,6 +315,10 @@ public String toString() {
 		#end
 	#end
 	return s.toString();
+}
+
+public void print() {
+    this.print("");
 }
 
 public void print(String prefix) {

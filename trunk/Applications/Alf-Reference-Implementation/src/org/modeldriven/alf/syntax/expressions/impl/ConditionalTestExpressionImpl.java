@@ -138,8 +138,8 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	public boolean conditionalTestExpressionCondition() {
         ConditionalTestExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
-		return operand1 != null && 
-		            operand1.getType().getImpl().isBoolean() &&
+        ElementReference type = operand1 == null? null: operand1.getType();
+		return type != null && type.getImpl().isBoolean() &&
 		            operand1.getUpper() == 1;
 	}
 

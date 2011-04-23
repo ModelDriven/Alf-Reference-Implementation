@@ -78,9 +78,39 @@ public class ReturnStatement extends Statement {
 		return this.getImpl().returnStatementAssignmentsAfter();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.returnStatementContext()) {
+			violations.add(new ConstraintViolation("returnStatementContext",
+					this));
+		}
+		if (!this.returnStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"returnStatementAssignmentsBefore", this));
+		}
+		if (!this.returnStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"returnStatementAssignmentsAfter", this));
+		}
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

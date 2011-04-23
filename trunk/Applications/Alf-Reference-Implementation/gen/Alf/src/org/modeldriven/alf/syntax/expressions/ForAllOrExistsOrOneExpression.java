@@ -66,9 +66,39 @@ public class ForAllOrExistsOrOneExpression extends SequenceExpansionExpression {
 		return this.getImpl().forAllOrExistsOrOneExpressionArgument();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.forAllOrExistsOrOneExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"forAllOrExistsOrOneExpressionTypeDerivation", this));
+		}
+		if (!this.forAllOrExistsOrOneExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"forAllOrExistsOrOneExpressionLowerDerivation", this));
+		}
+		if (!this.forAllOrExistsOrOneExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"forAllOrExistsOrOneExpressionUpperDerivation", this));
+		}
+		if (!this.forAllOrExistsOrOneExpressionArgument()) {
+			violations.add(new ConstraintViolation(
+					"forAllOrExistsOrOneExpressionArgument", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

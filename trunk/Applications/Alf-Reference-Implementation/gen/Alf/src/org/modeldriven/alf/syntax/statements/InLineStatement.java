@@ -61,6 +61,20 @@ public class InLineStatement extends Statement {
 		return this.getImpl().inLineStatementAssignmentsAfter();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.inLineStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"inLineStatementAssignmentsAfter", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" language:");
@@ -68,6 +82,10 @@ public class InLineStatement extends Statement {
 		s.append(" code:");
 		s.append(this.getCode());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

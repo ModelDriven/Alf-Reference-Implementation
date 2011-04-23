@@ -118,6 +118,31 @@ public abstract class Statement extends DocumentedElement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.statementAnnotationsAllowed()) {
+			violations.add(new ConstraintViolation(
+					"statementAnnotationsAllowed", this));
+		}
+		if (!this.statementUniqueAssignments()) {
+			violations.add(new ConstraintViolation(
+					"statementUniqueAssignments", this));
+		}
+		if (!this.statementIsIsolatedDerivation()) {
+			violations.add(new ConstraintViolation(
+					"statementIsIsolatedDerivation", this));
+		}
+		for (Annotation _annotation : this.getAnnotation()) {
+			_annotation.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isIsolated = this.getIsIsolated();
@@ -126,6 +151,10 @@ public abstract class Statement extends DocumentedElement {
 			s.append(isIsolated);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

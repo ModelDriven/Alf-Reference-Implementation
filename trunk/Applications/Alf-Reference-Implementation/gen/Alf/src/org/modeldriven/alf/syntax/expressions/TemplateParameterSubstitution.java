@@ -54,11 +54,29 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 		this.getImpl().setArgumentName(argumentName);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		QualifiedName argumentName = this.getArgumentName();
+		if (argumentName != null) {
+			argumentName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" parameterName:");
 		s.append(this.getParameterName());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

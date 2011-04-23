@@ -52,11 +52,29 @@ public class BooleanLiteralExpression extends LiteralExpression {
 		return this.getImpl().booleanLiteralExpressionTypeDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.booleanLiteralExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"booleanLiteralExpressionTypeDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" image:");
 		s.append(this.getImage());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

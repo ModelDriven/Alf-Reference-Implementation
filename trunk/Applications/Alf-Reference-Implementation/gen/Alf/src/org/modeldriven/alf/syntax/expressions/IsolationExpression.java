@@ -60,9 +60,35 @@ public class IsolationExpression extends UnaryExpression {
 		return this.getImpl().isolationExpressionUpperDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.isolationExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"isolationExpressionTypeDerivation", this));
+		}
+		if (!this.isolationExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"isolationExpressionLowerDerivation", this));
+		}
+		if (!this.isolationExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"isolationExpressionUpperDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

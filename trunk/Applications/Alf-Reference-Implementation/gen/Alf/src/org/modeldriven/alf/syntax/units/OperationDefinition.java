@@ -212,6 +212,64 @@ public class OperationDefinition extends NamespaceDefinition {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.operationDefinitionNamespace()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionNamespace", this));
+		}
+		if (!this.operationDefinitionRedefinedOperationsDerivation()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionRedefinedOperationsDerivation", this));
+		}
+		if (!this.operationDefinitionRedefinition()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionRedefinition", this));
+		}
+		if (!this.operationDefinitionRedefinedOperations()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionRedefinedOperations", this));
+		}
+		if (!this.operationDefinitionIsFeatureDerivation()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionIsFeatureDerivation", this));
+		}
+		if (!this.operationDefinitionIsConstructorDefinition()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionIsConstructorDefinition", this));
+		}
+		if (!this.operationDefinitionIsDestructorDefinition()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionIsDestructorDefinition", this));
+		}
+		if (!this.operationDefinitionConstructorDestructor()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionConstructorDestructor", this));
+		}
+		if (!this.operationDefinitionConstructor()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionConstructor", this));
+		}
+		if (!this.operationDefinitionDestructor()) {
+			violations.add(new ConstraintViolation(
+					"operationDefinitionDestructor", this));
+		}
+		QualifiedNameList redefinition = this.getRedefinition();
+		if (redefinition != null) {
+			redefinition.checkConstraints(violations);
+		}
+		Block body = this.getBody();
+		if (body != null) {
+			body.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" isAbstract:");
@@ -227,6 +285,10 @@ public class OperationDefinition extends NamespaceDefinition {
 			s.append(isDestructor);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

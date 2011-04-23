@@ -166,7 +166,8 @@ public class LogicalExpressionImpl extends BinaryExpressionImpl {
 
 	/**
 	 * The operands of a logical expression must have type Boolean, BitString or
-	 * Integer. However, one of the operands is Boolean, the other must be also.
+	 * Integer. However, if one of the operands is Boolean, the other must be 
+	 * also.
 	 **/
 	public boolean logicalExpressionOperands() {
         LogicalExpression self = this.getSelf();
@@ -175,9 +176,9 @@ public class LogicalExpressionImpl extends BinaryExpressionImpl {
         ElementReference type1 = operand1 == null? null: operand1.getType();
         ElementReference type2 = operand2 == null? null: operand2.getType();
 		return type1 != null && type2 != null &&
-		       type1.getImpl().isBoolean() && type2.getImpl().isBoolean() ||
+		       (type1.getImpl().isBoolean() && type2.getImpl().isBoolean() ||
 		       (type1.getImpl().isBitString() || type1.getImpl().isInteger()) &&
-		       (type2.getImpl().isBitString() || type2.getImpl().isInteger());
+		       (type2.getImpl().isBitString() || type2.getImpl().isInteger()));
 	}
 
 } // LogicalExpressionImpl

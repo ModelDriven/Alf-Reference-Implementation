@@ -65,9 +65,34 @@ public class ConcurrentClauses extends SyntaxElement {
 		return this.getImpl().concurrentClausesConditionAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.concurrentClausesAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"concurrentClausesAssignmentsBefore", this));
+		}
+		if (!this.concurrentClausesConditionAssignments()) {
+			violations.add(new ConstraintViolation(
+					"concurrentClausesConditionAssignments", this));
+		}
+		for (NonFinalClause _clause : this.getClause()) {
+			_clause.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

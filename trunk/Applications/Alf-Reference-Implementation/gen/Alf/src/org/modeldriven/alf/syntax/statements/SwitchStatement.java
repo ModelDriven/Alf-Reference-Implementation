@@ -155,6 +155,59 @@ public class SwitchStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.switchStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"switchStatementAssignmentsBefore", this));
+		}
+		if (!this.switchStatementCaseAssignments()) {
+			violations.add(new ConstraintViolation(
+					"switchStatementCaseAssignments", this));
+		}
+		if (!this.switchStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"switchStatementAssignmentsAfter", this));
+		}
+		if (!this.switchStatementAssignments()) {
+			violations.add(new ConstraintViolation(
+					"switchStatementAssignments", this));
+		}
+		if (!this.switchStatementExpression()) {
+			violations.add(new ConstraintViolation("switchStatementExpression",
+					this));
+		}
+		if (!this.switchStatementEnclosedStatements()) {
+			violations.add(new ConstraintViolation(
+					"switchStatementEnclosedStatements", this));
+		}
+		if (!this.switchStatementIsDeterminedDerivation()) {
+			violations.add(new ConstraintViolation(
+					"switchStatementIsDeterminedDerivation", this));
+		}
+		if (!this.switchStatementIsAssuredDerivation()) {
+			violations.add(new ConstraintViolation(
+					"switchStatementIsAssuredDerivation", this));
+		}
+		for (SwitchClause _nonDefaultClause : this.getNonDefaultClause()) {
+			_nonDefaultClause.checkConstraints(violations);
+		}
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.checkConstraints(violations);
+		}
+		Block defaultClause = this.getDefaultClause();
+		if (defaultClause != null) {
+			defaultClause.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isAssured = this.getIsAssured();
@@ -168,6 +221,10 @@ public class SwitchStatement extends Statement {
 			s.append(isDetermined);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

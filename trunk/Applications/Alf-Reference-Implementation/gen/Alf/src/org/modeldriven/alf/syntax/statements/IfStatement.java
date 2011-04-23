@@ -135,6 +135,43 @@ public class IfStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.ifStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"ifStatementAssignmentsBefore", this));
+		}
+		if (!this.ifStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"ifStatementAssignmentsAfter", this));
+		}
+		if (!this.ifStatementEnclosedStatements()) {
+			violations.add(new ConstraintViolation(
+					"ifStatementEnclosedStatements", this));
+		}
+		if (!this.ifStatementIsAssuredDerivation()) {
+			violations.add(new ConstraintViolation(
+					"ifStatementIsAssuredDerivation", this));
+		}
+		if (!this.ifStatementIsDeterminedDerivation()) {
+			violations.add(new ConstraintViolation(
+					"ifStatementIsDeterminedDerivation", this));
+		}
+		for (ConcurrentClauses _nonFinalClauses : this.getNonFinalClauses()) {
+			_nonFinalClauses.checkConstraints(violations);
+		}
+		Block finalClause = this.getFinalClause();
+		if (finalClause != null) {
+			finalClause.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isAssured = this.getIsAssured();
@@ -148,6 +185,10 @@ public class IfStatement extends Statement {
 			s.append(isDetermined);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

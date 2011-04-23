@@ -59,9 +59,35 @@ public class ThisExpression extends Expression {
 		return this.getImpl().thisExpressionLowerDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.thisExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"thisExpressionTypeDerivation", this));
+		}
+		if (!this.thisExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"thisExpressionUpperDerivation", this));
+		}
+		if (!this.thisExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"thisExpressionLowerDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

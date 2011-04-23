@@ -73,9 +73,43 @@ public class ClassExtentExpression extends Expression {
 		return this.getImpl().classExtentExpressionExtentType();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.classExtentExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classExtentExpressionTypeDerivation", this));
+		}
+		if (!this.classExtentExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classExtentExpressionUpperDerivation", this));
+		}
+		if (!this.classExtentExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classExtentExpressionLowerDerivation", this));
+		}
+		if (!this.classExtentExpressionExtentType()) {
+			violations.add(new ConstraintViolation(
+					"classExtentExpressionExtentType", this));
+		}
+		QualifiedName className = this.getClassName();
+		if (className != null) {
+			className.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

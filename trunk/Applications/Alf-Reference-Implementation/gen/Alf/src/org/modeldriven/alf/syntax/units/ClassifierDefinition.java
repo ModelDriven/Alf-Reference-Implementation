@@ -109,11 +109,42 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 		return this.getImpl().matchForStub(unit);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.classifierDefinitionSpecialization()) {
+			violations.add(new ConstraintViolation(
+					"classifierDefinitionSpecialization", this));
+		}
+		if (!this.classifierDefinitionSpecializationReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"classifierDefinitionSpecializationReferentDerivation",
+					this));
+		}
+		if (!this.classifierDefinitionInheritedMembers()) {
+			violations.add(new ConstraintViolation(
+					"classifierDefinitionInheritedMembers", this));
+		}
+		QualifiedNameList specialization = this.getSpecialization();
+		if (specialization != null) {
+			specialization.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" isAbstract:");
 		s.append(this.getIsAbstract());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

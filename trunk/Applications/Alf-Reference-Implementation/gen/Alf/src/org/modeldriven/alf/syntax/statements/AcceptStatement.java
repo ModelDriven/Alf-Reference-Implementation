@@ -153,6 +153,59 @@ public class AcceptStatement extends Statement {
 		return this.getImpl().acceptStatementEnclosedStatements();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.acceptStatementContext()) {
+			violations.add(new ConstraintViolation("acceptStatementContext",
+					this));
+		}
+		if (!this.acceptStatementSignals()) {
+			violations.add(new ConstraintViolation("acceptStatementSignals",
+					this));
+		}
+		if (!this.acceptStatementNames()) {
+			violations
+					.add(new ConstraintViolation("acceptStatementNames", this));
+		}
+		if (!this.acceptStatementSimpleAcceptLocalName()) {
+			violations.add(new ConstraintViolation(
+					"acceptStatementSimpleAcceptLocalName", this));
+		}
+		if (!this.acceptStatementCompoundAcceptLocalName()) {
+			violations.add(new ConstraintViolation(
+					"acceptStatementCompoundAcceptLocalName", this));
+		}
+		if (!this.acceptStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"acceptStatementAssignmentsBefore", this));
+		}
+		if (!this.acceptStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"acceptStatementAssignmentsAfter", this));
+		}
+		if (!this.acceptStatementNewAssignments()) {
+			violations.add(new ConstraintViolation(
+					"acceptStatementNewAssignments", this));
+		}
+		if (!this.acceptStatementIsSimpleDerivation()) {
+			violations.add(new ConstraintViolation(
+					"acceptStatementIsSimpleDerivation", this));
+		}
+		if (!this.acceptStatementEnclosedStatements()) {
+			violations.add(new ConstraintViolation(
+					"acceptStatementEnclosedStatements", this));
+		}
+		for (AcceptBlock _acceptBlock : this.getAcceptBlock()) {
+			_acceptBlock.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isSimple = this.getIsSimple();
@@ -161,6 +214,10 @@ public class AcceptStatement extends Statement {
 			s.append(isSimple);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

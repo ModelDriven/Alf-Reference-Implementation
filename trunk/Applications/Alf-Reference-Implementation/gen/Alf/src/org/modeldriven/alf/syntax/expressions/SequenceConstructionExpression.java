@@ -97,11 +97,49 @@ public class SequenceConstructionExpression extends Expression {
 		return this.getImpl().sequenceConstructionExpressionType();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.sequenceConstructionExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceConstructionExpressionTypeDerivation", this));
+		}
+		if (!this.sequenceConstructionExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceConstructionExpressionUpperDerivation", this));
+		}
+		if (!this.sequenceConstructionExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceConstructionExpressionLowerDerivation", this));
+		}
+		if (!this.sequenceConstructionExpressionType()) {
+			violations.add(new ConstraintViolation(
+					"sequenceConstructionExpressionType", this));
+		}
+		SequenceElements elements = this.getElements();
+		if (elements != null) {
+			elements.checkConstraints(violations);
+		}
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" hasMultiplicity:");
 		s.append(this.getHasMultiplicity());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

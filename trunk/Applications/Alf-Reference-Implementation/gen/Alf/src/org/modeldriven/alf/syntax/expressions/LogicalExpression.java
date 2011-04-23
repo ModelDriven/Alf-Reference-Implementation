@@ -116,6 +116,44 @@ public class LogicalExpression extends BinaryExpression {
 		return this.getImpl().logicalExpressionIsBitWiseDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.logicalExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"logicalExpressionTypeDerivation", this));
+		}
+		if (!this.logicalExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"logicalExpressionLowerDerivation", this));
+		}
+		if (!this.logicalExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"logicalExpressionUpperDerivation", this));
+		}
+		if (!this.logicalExpressionOperands()) {
+			violations.add(new ConstraintViolation("logicalExpressionOperands",
+					this));
+		}
+		if (!this.logicalExpressionIsBitStringConversion1Derivation()) {
+			violations.add(new ConstraintViolation(
+					"logicalExpressionIsBitStringConversion1Derivation", this));
+		}
+		if (!this.logicalExpressionIsBitStringConversion2Derivation()) {
+			violations.add(new ConstraintViolation(
+					"logicalExpressionIsBitStringConversion2Derivation", this));
+		}
+		if (!this.logicalExpressionIsBitWiseDerivation()) {
+			violations.add(new ConstraintViolation(
+					"logicalExpressionIsBitWiseDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isBitWise = this.getIsBitWise();
@@ -134,6 +172,10 @@ public class LogicalExpression extends BinaryExpression {
 			s.append(isBitStringConversion2);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

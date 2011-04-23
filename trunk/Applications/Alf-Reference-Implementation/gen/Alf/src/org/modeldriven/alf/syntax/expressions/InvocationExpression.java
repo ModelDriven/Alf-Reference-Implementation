@@ -226,6 +226,64 @@ public abstract class InvocationExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.invocationExpressionIsBehaviorDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionIsBehaviorDerivation", this));
+		}
+		if (!this.invocationExpressionIsAssociationEndDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionIsAssociationEndDerivation", this));
+		}
+		if (!this.invocationExpressionIsOperationDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionIsOperationDerivation", this));
+		}
+		if (!this.invocationExpressionIsDestructorDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionIsDestructorDerivation", this));
+		}
+		if (!this.invocationExpressionIsImplicitDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionIsImplicitDerivation", this));
+		}
+		if (!this.invocationExpressionIsSignalDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionIsSignalDerivation", this));
+		}
+		if (!this.invocationExpressionParameterDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionParameterDerivation", this));
+		}
+		if (!this.invocationExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionTypeDerivation", this));
+		}
+		if (!this.invocationExpressionUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionUpperDerivation", this));
+		}
+		if (!this.invocationExpressionLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionLowerDerivation", this));
+		}
+		if (!this.invocationExpressionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"invocationExpressionAssignmentsBefore", this));
+		}
+		Tuple tuple = this.getTuple();
+		if (tuple != null) {
+			tuple.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isBehavior = this.getIsBehavior();
@@ -259,6 +317,10 @@ public abstract class InvocationExpression extends Expression {
 			s.append(isSignal);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

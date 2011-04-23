@@ -162,6 +162,56 @@ public class ForStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.forStatementAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"forStatementAssignmentsBefore", this));
+		}
+		if (!this.forStatementAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"forStatementAssignmentsAfter", this));
+		}
+		if (!this.forStatementParallelAnnotationNames()) {
+			violations.add(new ConstraintViolation(
+					"forStatementParallelAnnotationNames", this));
+		}
+		if (!this.forStatementParallelAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"forStatementParallelAssignmentsAfter", this));
+		}
+		if (!this.forStatementVariableDefinitions()) {
+			violations.add(new ConstraintViolation(
+					"forStatementVariableDefinitions", this));
+		}
+		if (!this.forStatementLoopVariables()) {
+			violations.add(new ConstraintViolation("forStatementLoopVariables",
+					this));
+		}
+		if (!this.forStatementIsParallelDerivation()) {
+			violations.add(new ConstraintViolation(
+					"forStatementIsParallelDerivation", this));
+		}
+		if (!this.forStatementEnclosedStatements()) {
+			violations.add(new ConstraintViolation(
+					"forStatementEnclosedStatements", this));
+		}
+		Block body = this.getBody();
+		if (body != null) {
+			body.checkConstraints(violations);
+		}
+		for (LoopVariableDefinition _variableDefinition : this
+				.getVariableDefinition()) {
+			_variableDefinition.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		Boolean isParallel = this.getIsParallel();
@@ -170,6 +220,10 @@ public class ForStatement extends Statement {
 			s.append(isParallel);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

@@ -69,9 +69,39 @@ public class SequenceRange extends SequenceElements {
 		return this.getImpl().sequenceRangeUpperDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.sequenceRangeLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceRangeLowerDerivation", this));
+		}
+		if (!this.sequenceRangeUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceRangeUpperDerivation", this));
+		}
+		Expression rangeLower = this.getRangeLower();
+		if (rangeLower != null) {
+			rangeLower.checkConstraints(violations);
+		}
+		Expression rangeUpper = this.getRangeUpper();
+		if (rangeUpper != null) {
+			rangeUpper.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

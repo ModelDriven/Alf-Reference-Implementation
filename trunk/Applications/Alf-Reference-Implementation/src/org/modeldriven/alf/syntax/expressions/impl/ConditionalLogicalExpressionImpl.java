@@ -90,8 +90,10 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
         ConditionalLogicalExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
         Expression operand2 = self.getOperand2();
-        return operand1 != null && operand1.getType().getImpl().isBoolean() &&
-               operand2 != null && operand2.getType().getImpl().isBoolean();
+        ElementReference type1 = operand1 == null? null: operand1.getType();
+        ElementReference type2 = operand1 == null? null: operand2.getType();
+        return type1 != null && type1.getImpl().isBoolean() &&
+               type2 != null && type2.getImpl().isBoolean();
 	}
 	
 	/*

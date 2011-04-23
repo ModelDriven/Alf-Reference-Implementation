@@ -88,11 +88,41 @@ public class AcceptBlock extends SyntaxElement {
 		return this.getImpl().acceptBlockSignalNames();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.acceptBlockSignalDerivation()) {
+			violations.add(new ConstraintViolation(
+					"acceptBlockSignalDerivation", this));
+		}
+		if (!this.acceptBlockSignalNames()) {
+			violations.add(new ConstraintViolation("acceptBlockSignalNames",
+					this));
+		}
+		Block block = this.getBlock();
+		if (block != null) {
+			block.checkConstraints(violations);
+		}
+		QualifiedNameList signalNames = this.getSignalNames();
+		if (signalNames != null) {
+			signalNames.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
 		s.append(this.getName());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

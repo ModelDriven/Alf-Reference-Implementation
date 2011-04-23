@@ -61,6 +61,16 @@ public class TaggedValue extends SyntaxElement {
 		this.getImpl().setOperator(operator);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" name:");
@@ -70,6 +80,10 @@ public class TaggedValue extends SyntaxElement {
 		s.append(" operator:");
 		s.append(this.getOperator());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

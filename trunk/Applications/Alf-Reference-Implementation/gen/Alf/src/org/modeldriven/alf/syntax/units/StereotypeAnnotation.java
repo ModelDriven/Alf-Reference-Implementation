@@ -137,9 +137,63 @@ public class StereotypeAnnotation extends SyntaxElement {
 		return this.getImpl().stereotypeAnnotationNames();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.stereotypeAnnotationStereotypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"stereotypeAnnotationStereotypeDerivation", this));
+		}
+		if (!this.stereotypeAnnotationStereotypeName()) {
+			violations.add(new ConstraintViolation(
+					"stereotypeAnnotationStereotypeName", this));
+		}
+		if (!this.stereotypeAnnotationApply()) {
+			violations.add(new ConstraintViolation("stereotypeAnnotationApply",
+					this));
+		}
+		if (!this.stereotypeAnnotationPrimitive()) {
+			violations.add(new ConstraintViolation(
+					"stereotypeAnnotationPrimitive", this));
+		}
+		if (!this.stereotypeAnnotationExternal()) {
+			violations.add(new ConstraintViolation(
+					"stereotypeAnnotationExternal", this));
+		}
+		if (!this.stereotypeAnnotationTaggedValues()) {
+			violations.add(new ConstraintViolation(
+					"stereotypeAnnotationTaggedValues", this));
+		}
+		if (!this.stereotypeAnnotationNames()) {
+			violations.add(new ConstraintViolation("stereotypeAnnotationNames",
+					this));
+		}
+		TaggedValueList taggedValues = this.getTaggedValues();
+		if (taggedValues != null) {
+			taggedValues.checkConstraints(violations);
+		}
+		QualifiedNameList names = this.getNames();
+		if (names != null) {
+			names.checkConstraints(violations);
+		}
+		QualifiedName stereotypeName = this.getStereotypeName();
+		if (stereotypeName != null) {
+			stereotypeName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

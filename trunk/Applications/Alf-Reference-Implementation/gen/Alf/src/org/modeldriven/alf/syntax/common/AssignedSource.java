@@ -81,6 +81,19 @@ public class AssignedSource {
 		this.getImpl().setType(type);
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		ElementReference type = this.getType();
+		if (type != null) {
+			type.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		s.append(" name:");
@@ -90,6 +103,10 @@ public class AssignedSource {
 		s.append(" lower:");
 		s.append(this.getLower());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

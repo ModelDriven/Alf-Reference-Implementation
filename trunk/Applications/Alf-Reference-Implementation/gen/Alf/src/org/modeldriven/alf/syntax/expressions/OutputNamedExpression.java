@@ -75,9 +75,31 @@ public class OutputNamedExpression extends NamedExpression {
 		return this.getImpl().outputNamedExpressionForm();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.outputNamedExpressionLeftHandSideDerivation()) {
+			violations.add(new ConstraintViolation(
+					"outputNamedExpressionLeftHandSideDerivation", this));
+		}
+		if (!this.outputNamedExpressionForm()) {
+			violations.add(new ConstraintViolation("outputNamedExpressionForm",
+					this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

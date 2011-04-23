@@ -80,9 +80,43 @@ public class FeatureLeftHandSide extends LeftHandSide {
 		return this.getImpl().featureLeftHandSideAssignmentsBefore();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.featureLeftHandSideAssignmentBeforeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideAssignmentBeforeDerivation", this));
+		}
+		if (!this.featureLeftHandSideAssignmentAfterDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideAssignmentAfterDerivation", this));
+		}
+		if (!this.featureLeftHandSideFeatureExpression()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideFeatureExpression", this));
+		}
+		if (!this.featureLeftHandSideAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideAssignmentsBefore", this));
+		}
+		FeatureReference feature = this.getFeature();
+		if (feature != null) {
+			feature.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

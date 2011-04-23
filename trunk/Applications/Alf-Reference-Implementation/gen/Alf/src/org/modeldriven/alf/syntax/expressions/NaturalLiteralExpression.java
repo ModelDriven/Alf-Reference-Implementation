@@ -58,11 +58,29 @@ public class NaturalLiteralExpression extends LiteralExpression {
 		return this.getImpl().naturalLiteralExpressionTypeDerivation();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.naturalLiteralExpressionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"naturalLiteralExpressionTypeDerivation", this));
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" image:");
 		s.append(this.getImage());
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {

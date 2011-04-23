@@ -204,6 +204,61 @@ public class LoopVariableDefinition extends SyntaxElement {
 		return this.getImpl().loopVariableDefinitionVariable();
 	}
 
+	public Collection<ConstraintViolation> checkConstraints() {
+		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		this.checkConstraints(violations);
+		return violations;
+	}
+
+	public void checkConstraints(Collection<ConstraintViolation> violations) {
+		super.checkConstraints(violations);
+		if (!this.loopVariableDefinitionAssignmentAfterDerivation()) {
+			violations.add(new ConstraintViolation(
+					"loopVariableDefinitionAssignmentAfterDerivation", this));
+		}
+		if (!this.loopVariableDefinitionAssignmentsBefore()) {
+			violations.add(new ConstraintViolation(
+					"loopVariableDefinitionAssignmentsBefore", this));
+		}
+		if (!this.loopVariableDefinitionRangeExpressions()) {
+			violations.add(new ConstraintViolation(
+					"loopVariableDefinitionRangeExpressions", this));
+		}
+		if (!this.loopVariableDefinitionTypeName()) {
+			violations.add(new ConstraintViolation(
+					"loopVariableDefinitionTypeName", this));
+		}
+		if (!this.loopVariableDefinitionTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"loopVariableDefinitionTypeDerivation", this));
+		}
+		if (!this.loopVariableDefinitionDeclaredType()) {
+			violations.add(new ConstraintViolation(
+					"loopVariableDefinitionDeclaredType", this));
+		}
+		if (!this.loopVariableDefinitionIsCollectionConversionDerivation()) {
+			violations.add(new ConstraintViolation(
+					"loopVariableDefinitionIsCollectionConversionDerivation",
+					this));
+		}
+		if (!this.loopVariableDefinitionVariable()) {
+			violations.add(new ConstraintViolation(
+					"loopVariableDefinitionVariable", this));
+		}
+		Expression expression1 = this.getExpression1();
+		if (expression1 != null) {
+			expression1.checkConstraints(violations);
+		}
+		Expression expression2 = this.getExpression2();
+		if (expression2 != null) {
+			expression2.checkConstraints(violations);
+		}
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.checkConstraints(violations);
+		}
+	}
+
 	public String toString() {
 		StringBuffer s = new StringBuffer(super.toString());
 		s.append(" variable:");
@@ -221,6 +276,10 @@ public class LoopVariableDefinition extends SyntaxElement {
 			s.append(isFirst);
 		}
 		return s.toString();
+	}
+
+	public void print() {
+		this.print("");
 	}
 
 	public void print(String prefix) {
