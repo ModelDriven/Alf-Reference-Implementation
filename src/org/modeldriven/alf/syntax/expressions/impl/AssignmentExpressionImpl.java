@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -587,6 +588,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
             assignments = lhs.getImpl().getAssignmentAfterMap();
             AssignedSource assignment = self.getAssignment();
             if (assignment != null) {
+                assignments = new HashMap<String, AssignedSource>(assignments);
                 assignments.put(assignment.getName(), assignment);
             }
         }
