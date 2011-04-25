@@ -23,7 +23,7 @@ activity run(in activations: ActivityNodeActivation[]){    // See Note 3
 
     for (incomingEdge in activation.incomingEdges) {       // See Note 9
       if (!isEnabled) { break; }
-      for (otherActivation in Activations) {
+      for (otherActivation in activations) {
         if (otherActivation.isSourceFor(incomingEdge)) {
           isEnabled = false;                               // See Note 10
           break;
