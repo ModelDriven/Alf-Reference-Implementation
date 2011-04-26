@@ -166,9 +166,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     public Collection<Member> resolveVisible(String name, NamespaceDefinition namespace) {
         Collection<Member> members = this.resolveInScope(name);
             
-        // Note: If this namespace is a containing scope of the given namespace,
-        // then all members of this namespace are visible.
-        if (!this.containsMember(namespace)){
+        // Note: If this namespace is the same as or a containing scope of the 
+        // given namespace, then all members of this namespace are visible.
+        if (this.getSelf() != namespace && !this.containsMember(namespace)) {
             boolean allowPackageOnly = this.allowPackageOnly();
             for (Member member: members) {
                 if (!(member.getImpl().isPublic() || 

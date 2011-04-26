@@ -221,19 +221,20 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	}
 
     /**
-     * If a qualified name is not ambiguous or it resolves to a namespace, then
-     * it is has no disambiguation. Otherwise, its disambiguation is a feature
-     * reference with a name given by the unqualified name of the qualified name
-     * and a target expression determined by the disambiguation of the
-     * qualification of the qualified name.
+     * If a qualified name is not ambiguous or it has a qualification that 
+     * resolves to a namespace, then it is has no disambiguation. Otherwise, its 
+     * disambiguation is a feature reference with a name given by the 
+     * unqualified name of the qualified name and a target expression determined 
+     * by the disambiguation of the qualification of the qualified name.
      **/
 	protected FeatureReference deriveDisambiguation() {
 	    FeatureReference disambiguation = null;
 	    QualifiedName self = this.getSelf();
-	    if (self.getIsAmbiguous() && !this.isPackageReferent()) {
+        QualifiedName qualification = self.getQualification();
+	    if (self.getIsAmbiguous() && 
+	            (qualification == null || !qualification.getImpl().isNamespaceReferent())) {
 	        disambiguation = new FeatureReference();
 	        disambiguation.setNameBinding(self.getUnqualifiedName());
-	        QualifiedName qualification = self.getQualification();
 	        FeatureReference featureReference = qualification.getDisambiguation();
 	        if (featureReference==null) {
 	            NameExpression nameExpression = new NameExpression();
@@ -292,7 +293,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
      **/
 	protected NameBinding deriveUnqualifiedName() {
 	    List<NameBinding> bindings = this.getSelf().getNameBinding();
-		return bindings.get(bindings.size()-1);
+		return bindings.size() == 0? null: bindings.get(bindings.size()-1);
 	}
 
     /**
@@ -588,9 +589,9 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         return parameter;
     }
 
-    public boolean isPackageReferent() {
+    public boolean isNamespaceReferent() {
         for (ElementReference referent: this.getSelf().getReferent()) {
-            if (referent.getImpl().isPackage()) {
+            if (referent.getImpl().isNamespace()) {
                 return true;
             }
         }
@@ -609,7 +610,9 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     private void addReferentsTo(List<ElementReference> referents, 
             Collection<Member> members) {
         for (Member member: members) {
-            referents.add(member.getImpl().getReferent());
+            if (!(member instanceof MissingMember)) {
+                referents.add(member.getImpl().getReferent());
+            }
         }
     }
 
