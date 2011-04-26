@@ -4,6 +4,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.RootNamespaceImpl;
+import org.omg.uml.Package;
 
 public class RootNamespace extends NamespaceDefinition {
     
@@ -27,13 +28,16 @@ public class RootNamespace extends NamespaceDefinition {
     private static ElementReference unlimitedNaturalType = null;
     private static ElementReference bitStringType = null;
     private static ElementReference naturalType = null;
+    
+    private static final NamespaceDefinition modelScope = 
+        new ExternalNamespace(new Package());
 
     public static RootNamespace getRootScope() {
         return rootNamespace;
     }
     
     public static NamespaceDefinition getModelScope(UnitDefinition unit) {
-        return getRootScope();
+        return modelScope;
     }
     
     public static UnitDefinition resolveUnit(QualifiedName qualifiedName) {
