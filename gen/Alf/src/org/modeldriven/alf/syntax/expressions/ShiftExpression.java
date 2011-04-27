@@ -109,7 +109,11 @@ public class ShiftExpression extends BinaryExpression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isBitStringConversion = this.getIsBitStringConversion();
 		if (isBitStringConversion != null) {
 			s.append(" /isBitStringConversion:");

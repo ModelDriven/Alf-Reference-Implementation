@@ -59,6 +59,13 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 	public ExternalElementReference getSelf() {
 		return (ExternalElementReference) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    return "ExternalElementReference " + 
+	                this.getElement().getClass().getSimpleName() + 
+	                " name:" + this.getName();
+	}
 
     public Element getElement() {
         return this.element;

@@ -95,6 +95,10 @@ public class AssignedSource {
 	}
 
 	public String toString() {
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		s.append(" name:");
 		s.append(this.getName());
@@ -110,7 +114,7 @@ public class AssignedSource {
 	}
 
 	public void print(String prefix) {
-		System.out.println(prefix + this.toString());
+		System.out.println(prefix + this._toString());
 		SyntaxElement source = this.getSource();
 		if (source != null) {
 			System.out.println(prefix + " source:" + source);

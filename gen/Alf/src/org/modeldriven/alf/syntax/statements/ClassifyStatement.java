@@ -202,7 +202,11 @@ public class ClassifyStatement extends Statement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" isReclassifyAll:");
 		s.append(this.getIsReclassifyAll());
 		return s.toString();

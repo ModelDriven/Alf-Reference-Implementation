@@ -116,7 +116,11 @@ public class ArithmeticExpression extends BinaryExpression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isConcatenation = this.getIsConcatenation();
 		if (isConcatenation != null) {
 			s.append(" /isConcatenation:");

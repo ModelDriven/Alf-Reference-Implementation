@@ -179,7 +179,11 @@ public class UnitDefinition extends DocumentedElement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isModelLibrary = this.getIsModelLibrary();
 		if (isModelLibrary != null) {
 			s.append(" /isModelLibrary:");

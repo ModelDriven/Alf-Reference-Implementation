@@ -144,7 +144,11 @@ public abstract class Statement extends DocumentedElement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isIsolated = this.getIsIsolated();
 		if (isIsolated != null) {
 			s.append(" /isIsolated:");

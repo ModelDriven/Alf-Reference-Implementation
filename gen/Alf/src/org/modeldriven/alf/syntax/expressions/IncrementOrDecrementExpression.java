@@ -273,7 +273,11 @@ public class IncrementOrDecrementExpression extends Expression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" operator:");
 		s.append(this.getOperator());
 		s.append(" isPrefix:");

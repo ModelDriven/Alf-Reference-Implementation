@@ -147,7 +147,11 @@ public class SuperInvocationExpression extends InvocationExpression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		return s.toString();
 	}
 

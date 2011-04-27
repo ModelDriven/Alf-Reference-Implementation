@@ -252,7 +252,11 @@ public abstract class Member extends DocumentedElement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" name:");
 		s.append(this.getName());
 		s.append(" visibility:");

@@ -172,7 +172,11 @@ public class InstanceCreationExpression extends InvocationExpression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isConstructorless = this.getIsConstructorless();
 		if (isConstructorless != null) {
 			s.append(" /isConstructorless:");

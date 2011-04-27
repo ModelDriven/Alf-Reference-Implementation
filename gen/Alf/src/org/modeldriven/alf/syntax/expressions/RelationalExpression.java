@@ -116,7 +116,11 @@ public class RelationalExpression extends BinaryExpression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isUnlimitedNatural = this.getIsUnlimitedNatural();
 		if (isUnlimitedNatural != null) {
 			s.append(" /isUnlimitedNatural:");

@@ -47,6 +47,10 @@ public abstract class ElementReference {
 	}
 
 	public String toString() {
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		return s.toString();
 	}
@@ -56,6 +60,6 @@ public abstract class ElementReference {
 	}
 
 	public void print(String prefix) {
-		System.out.println(prefix + this.toString());
+		System.out.println(prefix + this._toString());
 	}
 } // ElementReference

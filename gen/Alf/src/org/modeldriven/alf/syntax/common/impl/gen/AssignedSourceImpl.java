@@ -41,6 +41,10 @@ public class AssignedSourceImpl {
 		this.self = self;
 	}
 
+	public String toString() {
+		return this.getSelf()._toString();
+	}
+
 	public AssignedSource getSelf() {
 		return (AssignedSource) this.self;
 	}

@@ -213,7 +213,11 @@ public class ForStatement extends Statement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isParallel = this.getIsParallel();
 		if (isParallel != null) {
 			s.append(" /isParallel:");

@@ -155,7 +155,11 @@ public class LogicalExpression extends BinaryExpression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isBitWise = this.getIsBitWise();
 		if (isBitWise != null) {
 			s.append(" /isBitWise:");

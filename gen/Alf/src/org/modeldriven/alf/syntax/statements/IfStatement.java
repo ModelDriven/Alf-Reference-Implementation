@@ -173,7 +173,11 @@ public class IfStatement extends Statement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isAssured = this.getIsAssured();
 		if (isAssured != null) {
 			s.append(" /isAssured:");

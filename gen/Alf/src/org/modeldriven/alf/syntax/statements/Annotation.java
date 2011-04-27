@@ -68,7 +68,11 @@ public class Annotation extends SyntaxElement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" identifier:");
 		s.append(this.getIdentifier());
 		return s.toString();

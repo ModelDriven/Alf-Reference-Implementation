@@ -104,7 +104,11 @@ public abstract class ImportReference extends SyntaxElement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" visibility:");
 		s.append(this.getVisibility());
 		return s.toString();

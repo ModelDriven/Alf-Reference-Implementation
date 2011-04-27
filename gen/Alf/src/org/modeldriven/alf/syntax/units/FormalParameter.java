@@ -72,7 +72,11 @@ public class FormalParameter extends TypedElementDefinition {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" direction:");
 		s.append(this.getDirection());
 		return s.toString();

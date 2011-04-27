@@ -39,6 +39,13 @@ public class AssignedSourceImpl {
 	public AssignedSource getSelf() {
 		return (AssignedSource) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    return this.getSelf()._toString() + 
+	                " type:(" + this.getType() + ")" +
+	                " source:(" + this.getSource() + ")";
+	}
 
     public String getName() {
         return this.name;

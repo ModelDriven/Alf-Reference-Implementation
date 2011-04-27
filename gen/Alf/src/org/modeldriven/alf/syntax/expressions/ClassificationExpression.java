@@ -157,7 +157,11 @@ public class ClassificationExpression extends UnaryExpression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isDirect = this.getIsDirect();
 		if (isDirect != null) {
 			s.append(" /isDirect:");

@@ -27,5 +27,10 @@ public abstract class SyntaxElementImpl {
 	public SyntaxElement getSelf() {
 		return (SyntaxElement) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    return this.getSelf()._toString();
+	}
 
 } // SyntaxElementImpl
