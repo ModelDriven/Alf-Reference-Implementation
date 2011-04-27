@@ -171,7 +171,11 @@ public abstract class SequenceExpansionExpression extends Expression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" operation:");
 		s.append(this.getOperation());
 		s.append(" variable:");

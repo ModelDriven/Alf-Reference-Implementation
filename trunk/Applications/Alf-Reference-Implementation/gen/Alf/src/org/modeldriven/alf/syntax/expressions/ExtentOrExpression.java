@@ -96,6 +96,10 @@ public class ExtentOrExpression {
 	}
 
 	public String toString() {
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		return s.toString();
 	}
@@ -105,7 +109,7 @@ public class ExtentOrExpression {
 	}
 
 	public void print(String prefix) {
-		System.out.println(prefix + this.toString());
+		System.out.println(prefix + this._toString());
 		QualifiedName name = this.getName();
 		if (name != null) {
 			System.out.println(prefix + " name:");

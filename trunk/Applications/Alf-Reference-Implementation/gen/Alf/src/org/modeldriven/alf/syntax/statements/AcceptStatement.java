@@ -207,7 +207,11 @@ public class AcceptStatement extends Statement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isSimple = this.getIsSimple();
 		if (isSimple != null) {
 			s.append(" /isSimple:");

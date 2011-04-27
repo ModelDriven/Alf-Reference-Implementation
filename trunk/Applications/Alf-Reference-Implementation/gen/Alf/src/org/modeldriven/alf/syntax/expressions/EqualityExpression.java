@@ -100,7 +100,11 @@ public class EqualityExpression extends BinaryExpression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isNegated = this.getIsNegated();
 		if (isNegated != null) {
 			s.append(" /isNegated:");

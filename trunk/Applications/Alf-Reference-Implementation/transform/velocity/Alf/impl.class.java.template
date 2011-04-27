@@ -39,6 +39,10 @@ ${packageDeclaration}.impl.gen;
   public #name(${object.name})Impl(#name(${object.name}) self) {
     this.self = self;
   }
+  
+  public String toString() {
+    return this.getSelf()._toString();
+  }
 #else
   public #name(${object.name})Impl(#name(${object.name}) self) {
     super(self);

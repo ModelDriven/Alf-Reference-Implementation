@@ -181,7 +181,11 @@ public class SequenceReductionExpression extends Expression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" isOrdered:");
 		s.append(this.getIsOrdered());
 		return s.toString();

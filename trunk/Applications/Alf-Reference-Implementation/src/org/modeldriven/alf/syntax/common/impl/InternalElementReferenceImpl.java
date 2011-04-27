@@ -39,6 +39,11 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 		return (InternalElementReference) this.self;
 	}
 
+    @Override
+    public String toString() {
+        return "InternalElementReference " + this.getElement();
+    }
+
     public SyntaxElement getElement() {
         return this.element;
     }

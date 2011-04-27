@@ -285,7 +285,11 @@ public abstract class InvocationExpression extends Expression {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		Boolean isBehavior = this.getIsBehavior();
 		if (isBehavior != null) {
 			s.append(" /isBehavior:");

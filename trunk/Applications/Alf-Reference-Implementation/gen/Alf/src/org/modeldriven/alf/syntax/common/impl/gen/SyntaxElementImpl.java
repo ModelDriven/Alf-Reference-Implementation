@@ -34,6 +34,10 @@ public abstract class SyntaxElementImpl {
 		this.self = self;
 	}
 
+	public String toString() {
+		return this.getSelf()._toString();
+	}
+
 	public SyntaxElement getSelf() {
 		return (SyntaxElement) this.self;
 	}

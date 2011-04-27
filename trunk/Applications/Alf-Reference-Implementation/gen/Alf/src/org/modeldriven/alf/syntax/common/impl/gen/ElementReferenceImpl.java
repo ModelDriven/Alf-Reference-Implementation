@@ -35,6 +35,10 @@ public abstract class ElementReferenceImpl {
 		this.self = self;
 	}
 
+	public String toString() {
+		return this.getSelf()._toString();
+	}
+
 	public ElementReference getSelf() {
 		return (ElementReference) this.self;
 	}

@@ -294,10 +294,14 @@ public void checkConstraints(Collection<ConstraintViolation> violations) {
 
 #macro( printOperations $class )
 public String toString() {
+	return this.getImpl().toString();
+}
+
+public String _toString() {
 	#if( ${class.superClasses.size()}==0 )
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 	#else
-		StringBuffer s = new StringBuffer(super.toString());
+		StringBuffer s = new StringBuffer(super._toString());
 	#end	
 	#foreach( $attribute in ${class.ownedAttributes} )
 		#if( ${attribute.type.eClass().name}=="PrimitiveType" &&
@@ -323,7 +327,7 @@ public void print() {
 
 public void print(String prefix) {
 	#if( ${class.superClasses.size()}==0 )
-		System.out.println(prefix + this.toString());
+		System.out.println(prefix + this._toString());
 	#else
 		super.print(prefix);
 	#end	

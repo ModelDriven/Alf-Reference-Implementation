@@ -260,7 +260,11 @@ public class LoopVariableDefinition extends SyntaxElement {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer(super.toString());
+		return this.getImpl().toString();
+	}
+
+	public String _toString() {
+		StringBuffer s = new StringBuffer(super._toString());
 		s.append(" variable:");
 		s.append(this.getVariable());
 		s.append(" typeIsInferred:");

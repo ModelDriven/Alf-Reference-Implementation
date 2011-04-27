@@ -32,6 +32,11 @@ public class ExtentOrExpressionImpl {
 	public ExtentOrExpression getSelf() {
 		return (ExtentOrExpression) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    return this.getSelf()._toString();
+	}
 
 	public QualifiedName getName() {
 		return this.name;
