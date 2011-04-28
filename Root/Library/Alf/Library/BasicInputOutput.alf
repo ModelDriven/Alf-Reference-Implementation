@@ -1,5 +1,5 @@
 namespace Alf::Library;
-public import FoundationalModelLibrary::BasicInputOutput;
+public import FoundationalModelLibrary::BasicInputOutput::*;
 
 @ModelLibrary
 package BasicInputOutput {
