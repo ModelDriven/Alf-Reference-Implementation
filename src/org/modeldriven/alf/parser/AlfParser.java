@@ -5008,7 +5008,7 @@ public class AlfParser implements AlfParserConstants {
       break;
     default:
       jj_la1[168] = jj_gen;
-      ;
+                                        d.setUpperBound("*");
     }
     jj_consume_token(RBRACKET);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
