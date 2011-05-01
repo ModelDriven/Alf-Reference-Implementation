@@ -1,0 +1,24 @@
+namespace fUML::Syntax::Actions;
+
+public import fUML::Syntax::IntermediateActivities::*;
+public import fUML::Syntax::CompleteStructuredActivities::*;
+
+package BasicActions {
+
+  public class Action specializes ExecutableNode {
+  
+    isLocallyReentrant: Boolean = false;
+    
+    // context: Classifier[0..1];
+    input: InputPin[0..*];
+    output: OutputPin[0..*];
+    
+  }
+  
+  public class InputPin specializes Pin {}
+  public class OutputPin specializes Pin {}
+  
+  public class Pin specializes ObjectNode /*, MultiplicityElement */ {}
+
+}  
+  

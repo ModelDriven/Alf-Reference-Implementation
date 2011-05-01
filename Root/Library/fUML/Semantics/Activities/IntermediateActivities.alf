@@ -1,13 +1,25 @@
 namespace fUML::Semantics::Activities;
 
+public import fUML::Syntax::Activities::IntermediateActivities::*;
+
 package IntermediateActivities {
+
+  public class ActivityEdgeInstance {}
 
   public class ActivityNodeActivation { 
   
-    public run();
-    public receiveOffer();
+    public node: ActivityNode;
+  
+    public run() {}
+    public receiveOffer() {}
+    public isSourceFor(in edgeInstance: ActivityEdgeInstance): Boolean {}
     
   }
+  
+  public class ControlNodeActivation specializes ActivityNodeActivation {}
+
+  public class ObjectNodeActivation specializes ActivityNodeActivation {}
+  public class ActivityParameterNodeActivation specializes ObjectNodeActivation {}
 
   public class ActivityNodeActivationGroup {
   
