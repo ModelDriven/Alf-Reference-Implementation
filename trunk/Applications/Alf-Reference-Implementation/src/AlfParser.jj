@@ -1060,20 +1060,20 @@ Expression ClassExtentExpressionCompletion(QualifiedName q):
 
 /* SEQUENCE CONSTRUCTION EXPRESSIONS */
 
-Expression SequenceAnyExpression():
+SequenceConstructionExpression SequenceAnyExpression():
 {
-  Expression e;
+  SequenceConstructionExpression e;
 }
 {
   (
     <ANY> e = SequenceConstructionExpressionCompletion(null)
-  | <NULL> { e = new SequenceConstructionExpression(); }
+  | <NULL> { e = new SequenceConstructionExpression(); e.setHasMultiplicity(true); }
   )
   
   { return e; }
 }
 
-Expression SequenceConstructionExpressionCompletion(QualifiedName q):
+SequenceConstructionExpression SequenceConstructionExpressionCompletion(QualifiedName q):
 {
   SequenceConstructionExpression e = new SequenceConstructionExpression();
   SequenceElements c;
@@ -3438,7 +3438,7 @@ QualifiedName TypeName():
 void Multiplicity(TypedElementDefinition d):
 {}
 {
-  <LBRACKET> [ MultiplicityRange(d) ] <RBRACKET> 
+  <LBRACKET> ( MultiplicityRange(d) | { d.setUpperBound("*"); } ) <RBRACKET> 
   [ <ORDERED> { d.setIsOrdered(true); } [ <NONUNIQUE> { d.setIsNonunique(true); } ]
   | <NONUNIQUE> { d.setIsNonunique(true); } [ <ORDERED> { d.setIsOrdered(true); } ]
   | <SEQUENCE> { d.setIsNonunique(true); d.setIsOrdered(true); }
