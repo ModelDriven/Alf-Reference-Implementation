@@ -129,43 +129,43 @@ public interface AlfParserConstants {
   /** RegularExpression Id. */
   int WHILE = 75;
   /** RegularExpression Id. */
-  int IDENTIFIER = 76;
+  int BOOLEAN_LITERAL = 76;
   /** RegularExpression Id. */
-  int IDENTIFIER_LETTER_OR_DIGIT = 77;
+  int BINARY_LITERAL = 77;
   /** RegularExpression Id. */
-  int IDENTIFIER_LETTER = 78;
+  int BINARY_DIGIT = 78;
   /** RegularExpression Id. */
-  int DIGIT = 79;
+  int HEX_LITERAL = 79;
   /** RegularExpression Id. */
-  int NONZERO_DIGIT = 80;
+  int HEX_DIGIT = 80;
   /** RegularExpression Id. */
-  int UNRESTRICTED_NAME = 81;
+  int OCTAL_LITERAL = 81;
   /** RegularExpression Id. */
-  int NAME_CHARACTER = 82;
+  int OCTAL_DIGIT = 82;
   /** RegularExpression Id. */
-  int ESCAPE_CHARACTER = 83;
+  int DECIMAL_LITERAL = 83;
   /** RegularExpression Id. */
-  int ESCAPED_CHARACTER = 84;
+  int STRING_LITERAL = 84;
   /** RegularExpression Id. */
-  int BOOLEAN_LITERAL = 85;
+  int STRING_CHARACTER = 85;
   /** RegularExpression Id. */
-  int BINARY_LITERAL = 86;
+  int IDENTIFIER = 86;
   /** RegularExpression Id. */
-  int BINARY_DIGIT = 87;
+  int IDENTIFIER_LETTER_OR_DIGIT = 87;
   /** RegularExpression Id. */
-  int HEX_LITERAL = 88;
+  int IDENTIFIER_LETTER = 88;
   /** RegularExpression Id. */
-  int HEX_DIGIT = 89;
+  int DIGIT = 89;
   /** RegularExpression Id. */
-  int OCTAL_LITERAL = 90;
+  int NONZERO_DIGIT = 90;
   /** RegularExpression Id. */
-  int OCTAL_DIGIT = 91;
+  int UNRESTRICTED_NAME = 91;
   /** RegularExpression Id. */
-  int DECIMAL_LITERAL = 92;
+  int NAME_CHARACTER = 92;
   /** RegularExpression Id. */
-  int STRING_LITERAL = 93;
+  int ESCAPE_CHARACTER = 93;
   /** RegularExpression Id. */
-  int STRING_CHARACTER = 94;
+  int ESCAPED_CHARACTER = 94;
   /** RegularExpression Id. */
   int LPAREN = 95;
   /** RegularExpression Id. */
@@ -366,15 +366,6 @@ public interface AlfParserConstants {
     "\"this\"",
     "\"to\"",
     "\"while\"",
-    "<IDENTIFIER>",
-    "<IDENTIFIER_LETTER_OR_DIGIT>",
-    "<IDENTIFIER_LETTER>",
-    "<DIGIT>",
-    "<NONZERO_DIGIT>",
-    "<UNRESTRICTED_NAME>",
-    "<NAME_CHARACTER>",
-    "<ESCAPE_CHARACTER>",
-    "<ESCAPED_CHARACTER>",
     "<BOOLEAN_LITERAL>",
     "<BINARY_LITERAL>",
     "<BINARY_DIGIT>",
@@ -385,6 +376,15 @@ public interface AlfParserConstants {
     "<DECIMAL_LITERAL>",
     "<STRING_LITERAL>",
     "<STRING_CHARACTER>",
+    "<IDENTIFIER>",
+    "<IDENTIFIER_LETTER_OR_DIGIT>",
+    "<IDENTIFIER_LETTER>",
+    "<DIGIT>",
+    "<NONZERO_DIGIT>",
+    "<UNRESTRICTED_NAME>",
+    "<NAME_CHARACTER>",
+    "<ESCAPE_CHARACTER>",
+    "<ESCAPED_CHARACTER>",
     "\"(\"",
     "\")\"",
     "\"{\"",
