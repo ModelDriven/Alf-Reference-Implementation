@@ -11,6 +11,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.units.*;
 
 import java.util.Map;
 
@@ -148,6 +149,10 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 	    // Note: This is handled by updateAssignments.
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
 
 	/**
 	 * The assignments after a property access expression are the same as those
@@ -166,5 +171,13 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 	    }
 		return assignments;
 	} // updateAssignments
+	
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    FeatureReference featureReference = this.getSelf().getFeatureReference();
+	    if (featureReference != null) {
+	        featureReference.getImpl().setCurrentScope(currentScope);
+	    }
+	}
 
 } // PropertyAccessExpressionImpl

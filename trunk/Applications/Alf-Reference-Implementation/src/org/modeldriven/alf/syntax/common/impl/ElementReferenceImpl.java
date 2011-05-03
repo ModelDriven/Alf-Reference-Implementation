@@ -72,6 +72,7 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isAssociationEnd();
     public abstract boolean isParameter();
 
+    public abstract FormalParameter asParameter();
     public abstract NamespaceDefinition asNamespace();
     public abstract boolean isInNamespace(NamespaceDefinition namespace);
 
@@ -81,6 +82,8 @@ public abstract class ElementReferenceImpl {
     public abstract Collection<ElementReference> allParents();
 
     public abstract String getName();
+    public abstract String getVisibility();
+    public abstract List<ElementReference> getPublicMembers();
     public abstract List<ElementReference> getFeatures();
     public abstract List<ElementReference> getAttributes();
     public abstract List<ElementReference> getAssociationEnds();

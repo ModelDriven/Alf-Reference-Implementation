@@ -84,10 +84,7 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	    //      if there is only one applied profile.
 	    Stereotype stereotype = null;
 	    QualifiedName stereotypeName = this.getSelf().getStereotypeName();
-	    if (stereotypeName != null && 
-	            !stereotypeName.getImpl().equals("apply") &&
-	            !stereotypeName.getImpl().equals("primitive") &&
-	            !stereotypeName.getImpl().equals("external")) {
+	    if (stereotypeName != null && !this.isNonstereotypeAnnotation()) {
 	        stereotypeName.getImpl().setCurrentScope(RootNamespace.getRootScope());
 	        ElementReference stereotypeReferent = stereotypeName.getImpl().getStereotypeReferent();
 	        if (stereotypeReferent != null) {
@@ -119,7 +116,8 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	 * the name.
 	 **/
 	public boolean stereotypeAnnotationStereotypeName() {
-		return this.getSelf().getStereotype() != null;
+		return this.isNonstereotypeAnnotation() ||
+		            this.getSelf().getStereotype() != null;
 	}
 
 	/**
@@ -203,6 +201,19 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	public boolean stereotypeAnnotationNames() {
 	    // TODO Check validity of names in a stereotype name list.
 		return true;
+	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	private boolean isNonstereotypeAnnotation() {
+	    return stereotypeName.getImpl().equals("apply") ||
+        	   stereotypeName.getImpl().equals("primitive") ||
+        	   stereotypeName.getImpl().equals("external") ||
+        	   // The following is temporary until the standard profiles are
+        	   // specially allowed for.
+        	   stereotypeName.getImpl().equals("ModelLibrary");
 	}
 
 } // StereotypeAnnotationImpl

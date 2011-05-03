@@ -202,6 +202,15 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public FormalParameter asParameter() {
+        if (this.isParameter()) {
+            return (FormalParameter)this.getSelf().getElement();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public NamespaceDefinition asNamespace() {
         if (this.isNamespace()) {
             return (NamespaceDefinition)this.getSelf().getElement();
@@ -287,6 +296,28 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public String getVisibility() {
+        SyntaxElement element = this.getSelf().getElement();
+        if (!(element instanceof Member)) {
+            return null;
+        } else {
+            return ((Member)element).getVisibility();
+        }
+    }
+
+    @Override
+    public List<ElementReference> getPublicMembers() {
+        List<ElementReference> members = new ArrayList<ElementReference>();
+        if (this.isPackage()) {
+            for (Member member: ((PackageDefinition)this.getSelf().getElement()).getImpl().getPublicMembers()) {
+                members.add(member.getImpl().getReferent());
+            }
+        }
+        return members;
+        
+    }
+
+    @Override
     public List<ElementReference> getFeatures() {
         List<ElementReference> features = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
@@ -328,8 +359,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public ElementReference getType() {
-        if (this.isProperty()) {
-            return ((PropertyDefinition)this.getSelf().getElement()).getType();
+        if (this.isProperty() || this.isParameter()) {
+            return ((TypedElementDefinition)this.getSelf().getElement()).getType();
         } else if (this.isOperation()) {
             return ((OperationDefinition)this.getSelf().getElement()).getImpl().getType();
         } else if (this.isBehavior()) {

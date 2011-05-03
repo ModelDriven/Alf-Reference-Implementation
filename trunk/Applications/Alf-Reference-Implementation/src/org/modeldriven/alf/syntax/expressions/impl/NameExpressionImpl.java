@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -23,6 +24,8 @@ public class NameExpressionImpl extends ExpressionImpl {
 	private AssignedSource assignment = null; // DERIVED
 	private PropertyAccessExpression propertyAccess = null; // DERIVED
 	private QualifiedName name = null;
+	
+	private NamespaceDefinition currentScope = null;
 
 	public NameExpressionImpl(NameExpression self) {
 		super(self);
@@ -92,13 +95,28 @@ public class NameExpressionImpl extends ExpressionImpl {
 	 **/
 	protected AssignedSource deriveAssignment() {
         QualifiedName name = this.getSelf().getName();
-        if (name != null && !name.getIsFeatureReference() &&
-                    (name.getQualification() == null || 
-                            name.getImpl().getParameterReferent() != null)) {
-            return this.getAssignmentBefore(name.getUnqualifiedName().getName());
-        } else {
-            return null;
+        AssignedSource assignment = null;
+        if (name != null && !name.getIsFeatureReference()) {
+            ElementReference parameterReference = this.getParameter();
+            NameBinding unqualifiedName = name.getUnqualifiedName();
+            if (parameterReference != null && 
+                    parameterReference.getImpl().isInNamespace(this.currentScope) || 
+                    name.getQualification() == null && unqualifiedName != null) {
+                String localName = unqualifiedName.getName();
+                assignment = this.getAssignmentBefore(localName);
+                if (assignment == null && parameterReference != null) {
+                    FormalParameter parameter = parameterReference.getImpl().asParameter();
+                    if (!"out".equals(parameter.getDirection())) {
+                        assignment = AssignedSourceImpl.makeAssignment
+                                        (localName, parameter, 
+                                                parameter.getType(), 
+                                                parameter.getLower(), 
+                                                parameter.getUpper());
+                    }
+                }
+            }
         }
+        return assignment;
 	}
 
 	/**
@@ -121,8 +139,9 @@ public class NameExpressionImpl extends ExpressionImpl {
 	
 	/**
 	 * The type of a name expression is determined by its name. If the name is a
-	 * local name or parameter with an assignment, then the type of the name
-	 * expression is the type of that assignment. If the name is an enumeration
+	 * local name, then the type of the name expression is the type of that 
+	 * assignment. If the name is a parameter, then the type of the name
+	 * expression is the type of that parameter. If the name is an enumeration
 	 * literal, then the type of the name expression is the corresponding
 	 * enumeration. If the name disambiguates to a feature reference, then the
 	 * type of the name expression is the type of the equivalent property access
@@ -132,10 +151,13 @@ public class NameExpressionImpl extends ExpressionImpl {
 	protected ElementReference deriveType() {
 	    NameExpression self = this.getSelf();
 	    AssignedSource assignment = self.getAssignment();
+	    ElementReference parameter = this.getParameter();
 	    ElementReference enumerationLiteral = self.getEnumerationLiteral();
 	    PropertyAccessExpression propertyAccess = self.getPropertyAccess();
 	    if (assignment != null) {
 	        return assignment.getType();
+	    } else if (parameter != null) {
+	        return parameter.getImpl().getType();
 	    } else if (enumerationLiteral != null) {
 	        return enumerationLiteral.getImpl().getType();
 	    } else if (propertyAccess != null) {
@@ -145,7 +167,7 @@ public class NameExpressionImpl extends ExpressionImpl {
 	    }
 	}
 	
-	/**
+    /**
 	 * The multiplicity upper bound of a name expression is determined by its
 	 * name.
 	 **/
@@ -218,7 +240,19 @@ public class NameExpressionImpl extends ExpressionImpl {
 	 */
 	
 	@Override
+	public String toString() {
+	    NameExpression self = this.getSelf();
+	    return self._toString() + " " + self.getName().getImpl().getPathName();
+	}
+	
+    public ElementReference getParameter() {
+        QualifiedName name = this.getSelf().getName();
+        return name == null? null: name.getImpl().getParameterReferent();
+    }
+
+	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    this.currentScope = currentScope;
 	    QualifiedName name = this.getSelf().getName();
 	    if (name != null) {
 	        name.getImpl().setCurrentScope(currentScope);

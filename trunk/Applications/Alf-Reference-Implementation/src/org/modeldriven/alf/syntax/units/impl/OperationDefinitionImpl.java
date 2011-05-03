@@ -293,7 +293,6 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	public Boolean matchForStub(UnitDefinition unit) {
         NamespaceDefinition definition = unit.getDefinition();
         return definition instanceof ActivityDefinition && 
-            super.matchForStub(unit) && 
             !((ActivityDefinition)definition).getImpl().isTemplate() &&
             FormalParameterImpl.equals(this.getFormalParameters(), 
                     ((ActivityDefinition)definition).getImpl().getFormalParameters());

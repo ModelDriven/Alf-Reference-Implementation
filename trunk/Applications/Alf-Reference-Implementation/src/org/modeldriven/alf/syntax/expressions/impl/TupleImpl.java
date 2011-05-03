@@ -215,7 +215,6 @@ public abstract class TupleImpl extends SyntaxElementImpl {
             return new HashMap<String, AssignedSource>();
         } else {
             if (this.assignmentsAfter == null) {
-                this.assignmentsAfter = new HashMap<String, AssignedSource>();
                 Map<String, AssignedSource> assignmentsBefore = 
                     invocation.getImpl().getAssignmentBeforeMap();
                 Collection<NamedExpression> inputs = self.getInput();
@@ -241,15 +240,20 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                         }
                     }
                 }
-                // Only clone assignmentsBefore if it is necessary to add new local
-                // assignments.
-                if (!newLocalAssignments.isEmpty()) {
-                    assignmentsBefore = new HashMap<String, AssignedSource>(assignmentsBefore);
-                    assignmentsBefore.putAll(newLocalAssignments);
-                }
-                for (Expression expression: expressions) {
-                    expression.getImpl().setAssignmentBefore(assignmentsBefore);
-                    this.assignmentsAfter.putAll(expression.getImpl().getAssignmentAfterMap());
+                if (expressions.isEmpty()) {
+                    this.assignmentsAfter = assignmentsBefore;
+                } else {
+                    this.assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
+                    // Only clone assignmentsBefore if it is necessary to add new local
+                    // assignments.
+                    if (!newLocalAssignments.isEmpty()) {
+                        assignmentsBefore = new HashMap<String, AssignedSource>(assignmentsBefore);
+                        assignmentsBefore.putAll(newLocalAssignments);
+                    }
+                    for (Expression expression: expressions) {
+                        expression.getImpl().setAssignmentBefore(assignmentsBefore);
+                        this.assignmentsAfter.putAll(expression.getImpl().getAssignmentAfterMap());
+                    }
                 }
             }
             return this.assignmentsAfter;

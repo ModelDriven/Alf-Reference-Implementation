@@ -221,7 +221,7 @@ public class LoopVariableDefinitionImpl extends
 	}
 
 	protected Map<String, AssignedSource> deriveAssignmentBefore() {
-	    // Note: This shuold always be set externally.
+	    // Note: This should always be set externally.
 		return new HashMap<String, AssignedSource>();
 	}
 
@@ -246,18 +246,14 @@ public class LoopVariableDefinitionImpl extends
 	    Expression expression1 = self.getExpression1();
 	    Expression expression2 = self.getExpression2();
 	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
-	    Map<String, AssignedSource> assignmentsAfter = null;
-	    if (expression1 == null) {
-	        assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
-	    } else {
+	    Map<String, AssignedSource> assignmentsAfter = assignmentsBefore;
+	    if (expression1 != null) {
 	        expression1.getImpl().setAssignmentBefore(assignmentsBefore);
-	        if (expression2 == null) {
-	            assignmentsAfter = 
-	                new HashMap<String, AssignedSource>(expression1.getImpl().getAssignmentAfterMap());
-	        } else {
+	        assignmentsAfter = expression1.getImpl().getAssignmentAfterMap();
+	        if (expression2 != null) {
 	            expression2.getImpl().setAssignmentBefore(assignmentsBefore);
-	            assignmentsAfter =
-	                new HashMap<String, AssignedSource>(expression1.getImpl().getAssignmentAfterMap());
+	            assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
+	            assignmentsAfter.putAll(expression2.getImpl().getAssignmentAfterMap());
 	        }
 	    }
 	    if (variable != null) {
@@ -266,6 +262,7 @@ public class LoopVariableDefinitionImpl extends
 	            type = type.getImpl().getCollectionArgument();
 	        }
 	        int lower = self.getIsFirst()? 1: 0;
+            assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
 	        assignmentsAfter.put(variable, AssignedSourceImpl.makeAssignment(
 	                variable, self, type, lower, 1));
 	    }
