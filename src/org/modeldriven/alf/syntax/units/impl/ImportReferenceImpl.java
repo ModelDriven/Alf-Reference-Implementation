@@ -78,11 +78,8 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
      **/
 	protected ElementReference deriveReferent() {
 	    Collection<ElementReference> referents = this.getReferents();
-		if (referents.size() > 0) {
-		    return (ElementReference)referents.toArray()[0];
-		} else {
-		    return null;
-		}
+	    return referents.size() == 0? null:
+		            (ElementReference)referents.toArray()[0];
 	}
 
 	/*
@@ -123,8 +120,12 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 	
 	protected Collection<ElementReference> getReferents() {
 	    QualifiedName referentName = this.getSelf().getReferentName();
-        referentName.getImpl().setCurrentScope(RootNamespace.getRootScope());
-	    return referentName.getReferent();
+	    if (referentName == null) {
+	        return new ArrayList<ElementReference>();
+	    } else {
+            referentName.getImpl().setCurrentScope(RootNamespace.getRootScope());
+    	    return referentName.getReferent();
+	    }
 	}
 	
 	public abstract ArrayList<Member> getImportedMembers();

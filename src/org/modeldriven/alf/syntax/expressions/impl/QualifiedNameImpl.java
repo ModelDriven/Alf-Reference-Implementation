@@ -255,34 +255,36 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
      * and named elements.
      **/
 	protected Collection<ElementReference> deriveReferent() {
-	    ArrayList<ElementReference> referents = new ArrayList<ElementReference>();
-	    
+	    ArrayList<ElementReference> referents = new ArrayList<ElementReference>();    
 	    QualifiedName self = this.getSelf();
-	    NamespaceDefinition currentScope = this.getCurrentScope();
-	    int n = self.getNameBinding().size();
 	    
-	    if (n == 1) {
-	        SyntaxElement source = this.getLocalSource();
-	        if (source != null) {
-	            // Resolve as a local name
-	            InternalElementReference sourceReference = new InternalElementReference();
-	            sourceReference.setElement(source);
-	            referents.add(sourceReference);
-	        } else if (currentScope != null) {
-	            // Resolve as an unqualified name
-	            this.addReferentsTo(referents, currentScope.getImpl().resolve(self.getUnqualifiedName().getName()));
-	        }
-	    } else if (n > 0) {
-	        // Resolve as a qualified name
-	        ElementReference namespaceReference = self.getQualification().getImpl().getNamespaceReferent();
-	        if (namespaceReference != null) {
-	            NamespaceDefinition namespace = namespaceReference.getImpl().asNamespace();
-	            if (namespace != null) {
-	                this.addReferentsTo(referents, 
-                        namespace.getImpl().resolveVisible(self.getUnqualifiedName().getName(),
-                            this.getCurrentScope()));
-	            }
-	        }
+	    if (!self.getIsFeatureReference()) {
+    	    NamespaceDefinition currentScope = this.getCurrentScope();
+    	    int n = self.getNameBinding().size();
+    	    
+    	    if (n == 1) {
+    	        SyntaxElement source = this.getLocalSource();
+    	        if (source != null) {
+    	            // Resolve as a local name
+    	            InternalElementReference sourceReference = new InternalElementReference();
+    	            sourceReference.setElement(source);
+    	            referents.add(sourceReference);
+    	        } else if (currentScope != null) {
+    	            // Resolve as an unqualified name
+    	            this.addReferentsTo(referents, currentScope.getImpl().resolve(self.getUnqualifiedName().getName()));
+    	        }
+    	    } else if (n > 0) {
+    	        // Resolve as a qualified name
+    	        ElementReference namespaceReference = self.getQualification().getImpl().getNamespaceReferent();
+    	        if (namespaceReference != null) {
+    	            NamespaceDefinition namespace = namespaceReference.getImpl().asNamespace();
+    	            if (namespace != null) {
+    	                this.addReferentsTo(referents, 
+                            namespace.getImpl().resolveVisible(self.getUnqualifiedName().getName(),
+                                this.getCurrentScope()));
+    	            }
+    	        }
+    	    }
 	    }
 	    
 	    return referents;
@@ -371,7 +373,8 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	 * the same local scope as the definition of the named element.
 	 **/
 	public boolean qualifiedNameLocalName() {
-		return this.getCurrentScope() != null || this.getLocalSource() != null;
+		return this.getCurrentScope() != null || this.getIsFeatureReference() ||
+		       this.getLocalSource() != null;
 	}
 
 	/**
@@ -379,8 +382,9 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	 * visible in the current scope of the use of the name.
 	 **/
 	public boolean qualifiedNameNonLocalUnqualifiedName() {
-		return this.getLocalSource() != null || 
-		    this.getSelf().getReferent().size() > 0;
+	    QualifiedName self = this.getSelf();
+		return this.getLocalSource() != null || self.getIsFeatureReference() ||
+		            self.getReferent().size() > 0;
 	}
 
 	/**
@@ -390,8 +394,9 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	 * scope.
 	 **/
 	public boolean qualifiedNameQualifiedResolution() {
-		return this.getSelf().getQualification() == null || 
-		    this.getSelf().getReferent().size() > 0;
+        QualifiedName self = this.getSelf();
+		return self.getQualification() == null || self.getIsFeatureReference() ||
+		            self.getReferent().size() > 0;
 	}
 
 	/**

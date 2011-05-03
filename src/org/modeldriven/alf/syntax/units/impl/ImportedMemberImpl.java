@@ -116,17 +116,9 @@ public class ImportedMemberImpl extends MemberImpl {
     public static ImportedMember makeImportedMember(ElementReference referent) {
         ImportedMember importedMember = new ImportedMember();
         importedMember.setReferent(referent);
-        Member member = (Member)referent.getImpl().getAlf();
-        if (member != null) {
-            importedMember.setName(member.getName());
-            importedMember.setVisibility(member.getVisibility());
-        } else {
-            // TODO: Handle external names starting with a single quote.
-            NamedElement element = (NamedElement)referent.getImpl().getUml();
-            importedMember.setName(element.getName());
-            String visibility = element.getVisibility().toString();
-            importedMember.setVisibility(visibility.substring(0,visibility.length()-1));
-        }
+        // TODO: Handle external names starting with a single quote.
+        importedMember.setName(referent.getImpl().getName());
+        importedMember.setVisibility(referent.getImpl().getVisibility());
         return importedMember;
     }
 

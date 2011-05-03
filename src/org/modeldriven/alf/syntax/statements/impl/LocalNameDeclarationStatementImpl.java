@@ -13,6 +13,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -201,4 +202,20 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	    return self.getHasMultiplicity() || expression == null || expression.getUpper() <= 1;
 	}
 
+	/*
+	 * Helper Methods
+	 */
+	
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        LocalNameDeclarationStatement self = this.getSelf();
+        QualifiedName typeName = self.getTypeName();
+        Expression expression = self.getExpression();
+        if (typeName != null) {
+            typeName.getImpl().setCurrentScope(currentScope);
+        }
+        if (expression != null) {
+            expression.getImpl().setCurrentScope(currentScope);
+        }
+    }
+    
 } // LocalNameDeclarationStatementImpl

@@ -77,7 +77,10 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 	    // TODO: Allow profile and stereotype applications on packages.
-		return super.annotationAllowed(annotation);
+		return super.annotationAllowed(annotation) ||
+		       // The following is a temporary special check until true
+		       // stereotype resolution is implementation.
+		       annotation.getStereotypeName().getImpl().equals("ModelLibrary");
 	} // annotationAllowed
 
 	/**

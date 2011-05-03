@@ -11,8 +11,6 @@ package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.Package;
-import org.omg.uml.PackageableElement;
 
 import java.util.ArrayList;
 
@@ -51,18 +49,9 @@ public class PackageImportReferenceImpl extends ImportReferenceImpl {
     public ArrayList<Member> getImportedMembers() {
         ArrayList<Member> members = new ArrayList<Member>();
         ElementReference referent = this.getSelf().getReferent();
-        if (referent != null && referent.getImpl().isPackage()) {
-            PackageDefinition packageDefinition = (PackageDefinition)referent.getImpl().getAlf();
-            if (packageDefinition != null) {
-                for (Member member: packageDefinition.getImpl().getPublicMembers()) {
-                    members.add(makeImportedMember(member.getImpl().getReferent()));
-                }
-            } else {
-                for (PackageableElement element: ((Package)referent.getImpl().getUml()).visibleMembers()) {
-                    ExternalElementReference memberReference = new ExternalElementReference();
-                    memberReference.setElement(element);
-                    members.add(makeImportedMember(memberReference));
-                }
+        if (referent != null) {
+            for (ElementReference member: referent.getImpl().getPublicMembers()) {
+                members.add(this.makeImportedMember(member));
             }
         }
         return members;

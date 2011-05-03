@@ -219,7 +219,16 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public boolean isParameter() {
         return this.getSelf().getElement() instanceof Parameter;
     }
-    
+
+    @Override
+    public FormalParameter asParameter() {
+        if (this.isParameter()) {
+            return new ExternalParameter((Parameter)this.getSelf().getElement());
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public NamespaceDefinition asNamespace() {
         if (this.isNamespace()) {
@@ -292,6 +301,31 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public String getVisibility() {
+        Element element = this.getSelf().getElement();
+        if (!(element instanceof NamedElement)) {
+            return null;
+        } else {
+            String visibility = ((NamedElement)element).getVisibility().toString();
+            return visibility.substring(0,visibility.length()-1);
+        }
+    }
+
+    @Override
+    public List<ElementReference> getPublicMembers() {
+        List<ElementReference> members = new ArrayList<ElementReference>();
+        if (this.isPackage()) {
+            for (NamedElement member: ((Package)this.getSelf().getElement()).visibleMembers()) {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(member);
+                members.add(reference);
+            }
+        }
+        return members;
+        
+    }
+
+    @Override
     public List<ElementReference> getFeatures() {
         List<ElementReference> features = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
@@ -352,6 +386,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         ExternalElementReference reference = new ExternalElementReference();
         if (this.isProperty()) {
             reference.setElement(((Property)this.getSelf().getElement()).getType());
+            return reference;
+        } else if (this.isParameter()) {
+            reference.setElement(((Parameter)this.getSelf().getElement()).getType());
             return reference;
         } else if (this.isOperation()) {
             reference.setElement(((Operation)this.getSelf().getElement()).getType());

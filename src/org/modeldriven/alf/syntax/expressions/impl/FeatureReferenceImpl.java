@@ -76,11 +76,23 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 	 * expression.
 	 **/
 	protected Collection<ElementReference> deriveReferent() {
+	    // TODO Handle opposite association ends as feature references.
+	    // TODO Handle feature references with template bindings.
 	    FeatureReference self = this.getSelf();
 	    Expression target = self.getExpression();
+	    NameBinding nameBinding = self.getNameBinding();
 	    ElementReference targetType = target == null? null: target.getType();
-	    return targetType == null? new ArrayList<ElementReference>():
-	                targetType.getImpl().getFeatures();
+	    Collection<ElementReference> referents = new ArrayList<ElementReference>();
+	    if (targetType != null && nameBinding != null) {
+	        String name = nameBinding.getName();
+	        for (ElementReference feature: targetType.getImpl().getFeatures()) {
+	            String featureName = feature.getImpl().getName();
+	            if (name != null && name.equals(featureName)) {
+	                referents.add(feature);
+	            }
+	        }
+	    }
+	    return referents;
 	}
 	
 	/*

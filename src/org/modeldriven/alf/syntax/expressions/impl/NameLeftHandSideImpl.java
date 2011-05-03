@@ -79,9 +79,8 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	 **/
 	public boolean nameLeftHandSideTargetAssignment() {
 	    ElementReference referent = this.getReferent();
-	    if (referent == null) {
-	        // Note: The constraint below needs to be added to the spec.
-	        return this.getSelf().getTarget().getQualification() == null;
+	    if (referent.getImpl().isParameter()) {
+	        return !"in".equals(referent.getImpl().asParameter().getDirection());
 	    } else {
 	        SyntaxElement source = referent.getImpl().getAlf();
             return !(source instanceof LoopVariableDefinition ||
@@ -110,25 +109,25 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
         QualifiedName target = self.getTarget();
         if (target == null) {
             return null;
-        } else if (target.getQualification() != null) {
-            if (target.getIsFeatureReference()) {
-                return target.getDisambiguation().getImpl().getStructuralFeatureReferent();
-            } else {
-                ElementReference parameter = target.getImpl().getParameterReferent();
-                // Note: The check on the namespace of a parameter needs to be in the spec.               
-                return parameter == null ||
-                        !parameter.getImpl().isInNamespace(this.currentScope)? 
-                                null: parameter;
-            }
+        } else if (target.getIsFeatureReference()) {
+            return target.getDisambiguation().getImpl().getStructuralFeatureReferent();
         } else {
-            AssignedSource assignment = 
-                self.getImpl().getAssignmentBefore(this.getLocalName());
-            if (assignment == null) {
-                return null;
+            ElementReference parameter = target.getImpl().getParameterReferent();
+            // Note: The check on the namespace of a parameter needs to be in the spec.               
+            if (parameter != null && parameter.getImpl().isInNamespace(this.currentScope)) {
+                return parameter;
+            } else if (target.getQualification() == null) {
+                AssignedSource assignment = 
+                    self.getImpl().getAssignmentBefore(this.getLocalName());
+                if (assignment == null) {
+                    return null;
+                } else {
+                    InternalElementReference referent = new InternalElementReference();
+                    referent.setElement(assignment.getSource());
+                    return referent;
+                }
             } else {
-                InternalElementReference referent = new InternalElementReference();
-                referent.setElement(assignment.getSource());
-                return referent;
+                return null;
             }
         }
     }

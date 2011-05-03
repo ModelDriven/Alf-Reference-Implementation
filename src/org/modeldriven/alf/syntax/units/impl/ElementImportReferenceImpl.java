@@ -56,7 +56,7 @@ public class ElementImportReferenceImpl extends ImportReferenceImpl {
     protected ImportedMember makeImportedMember(ElementReference referent) {
         ImportedMember member = super.makeImportedMember(referent);
         String alias = this.getSelf().getAlias();
-        if (alias != null) {
+        if (alias != null && alias !="") {
             member.setName(alias);
         }
         return member;

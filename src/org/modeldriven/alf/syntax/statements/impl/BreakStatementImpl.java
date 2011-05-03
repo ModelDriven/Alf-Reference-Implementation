@@ -16,8 +16,7 @@ import org.modeldriven.alf.syntax.statements.*;
  * enclosing block.
  **/
 
-public class BreakStatementImpl extends
-		org.modeldriven.alf.syntax.statements.impl.StatementImpl {
+public class BreakStatementImpl extends StatementImpl {
 
 	private Statement target = null; // DERIVED
 

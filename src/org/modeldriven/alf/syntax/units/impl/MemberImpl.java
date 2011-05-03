@@ -201,11 +201,15 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	 **/
 	public boolean memberStub() {
 	    Member self = this.getSelf();
-	    UnitDefinition subunit = self.getSubunit();
-	    NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
-		return definition != null && 
-		    definition.getImpl().getQualifiedName().equals(this.getQualifiedName()) && 
-		        self.matchForStub(subunit);
+	    if (!self.getIsStub() || self.getIsExternal()) {
+	        return true;
+	    } else {
+	        UnitDefinition subunit = self.getSubunit();
+    	    NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
+    		return definition != null && 
+    		    definition.getImpl().getQualifiedName().getImpl().equals(this.getQualifiedName()) && 
+    		        self.matchForStub(subunit);
+	    }
 	}
 
 	/**
