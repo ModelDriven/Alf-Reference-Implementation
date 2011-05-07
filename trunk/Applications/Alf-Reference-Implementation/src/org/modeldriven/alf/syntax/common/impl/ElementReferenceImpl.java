@@ -134,27 +134,27 @@ public abstract class ElementReferenceImpl {
     }
 
     public boolean isInteger() {
-        return this.equals(RootNamespace.getIntegerType());
+        return this.conformsTo(RootNamespace.getIntegerType());
     }
 
     public boolean isBoolean() {
-        return this.equals(RootNamespace.getBooleanType());
+        return this.conformsTo(RootNamespace.getBooleanType());
     }
 
     public boolean isString() {
-        return this.equals(RootNamespace.getStringType());
+        return this.conformsTo(RootNamespace.getStringType());
     }
 
     public boolean isUnlimitedNatural() {
-        return this.equals(RootNamespace.getUnlimitedNaturalType());
+        return this.conformsTo(RootNamespace.getUnlimitedNaturalType());
     }
 
     public boolean isBitString() {
-        return this.equals(RootNamespace.getBitStringType());
+        return this.conformsTo(RootNamespace.getBitStringType());
     }
 
     public boolean isNatural() {
-        return this.equals(RootNamespace.getNaturalType());
+        return this.conformsTo(RootNamespace.getNaturalType());
     }
 
     public boolean isNumeric() {
