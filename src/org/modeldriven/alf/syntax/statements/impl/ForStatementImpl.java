@@ -44,8 +44,15 @@ public class ForStatementImpl extends StatementImpl {
 		return this.body;
 	}
 
+    /**
+     * The enclosing statement for all statements in the body of a for statement
+     * are the for statement.
+     **/
 	public void setBody(Block body) {
 		this.body = body;
+        if (body != null) {
+            body.getImpl().setEnclosingStatement(this.getSelf());
+        }
 	}
 
 	public List<LoopVariableDefinition> getVariableDefinition() {
@@ -146,7 +153,7 @@ public class ForStatementImpl extends StatementImpl {
 	            if (assignmentsBefore.containsKey(name)) {
 	                AssignedSource assignment = AssignedSourceImpl.makeAssignment(newAssignment);
 	                assignment.setSource(self);
-	                assignmentsAfter.put(name, newAssignment);
+	                assignmentsAfter.put(name, assignment);
 	            }
 	        }
 	    }
@@ -154,19 +161,6 @@ public class ForStatementImpl extends StatementImpl {
 	        assignmentsAfter.remove(variableDefinition.getVariable());
 	    }
 	    return assignmentsAfter;
-	}
-	
-    /**
-     * The enclosing statement for all statements in the body of a for statement
-     * are the for statement.
-     **/
-	public void setEnclosingStatement(Statement enclosingStatement) {
-	    super.setEnclosingStatement(enclosingStatement);
-	    ForStatement self = this.getSelf();
-	    Block body = self.getBody();
-	    if (body != null) {
-	        body.getImpl().setEnclosingStatement(self);
-	    }
 	}
 	
 	/*
@@ -258,15 +252,14 @@ public class ForStatementImpl extends StatementImpl {
                     }
                 }
             }
-            if (assignmentsAfter.size() != assignmentsAfterVariables.size()) {
-                return false;
-            }
             Collection<String> parallelNames = this.getParallelNames();
             for (AssignedSource assignment: assignmentsAfter.values()) {
                 String name = assignment.getName();
+                SyntaxElement source = assignment.getSource();
                 AssignedSource oldAssignment = assignmentsAfterVariables.get(name);
-                if (oldAssignment == null || assignment.getSource() != 
-                    (parallelNames.contains(name)? self: oldAssignment.getSource())) {
+                if (oldAssignment == null || 
+                        !self.getVariableDefinition().contains(source) &&
+                        source != (parallelNames.contains(name)? self: oldAssignment.getSource())) {
                     return false;
                 }
                     
@@ -358,7 +351,7 @@ public class ForStatementImpl extends StatementImpl {
         List<LoopVariableDefinition> variableDefinitions = 
             self.getVariableDefinition();
         if (variableDefinitions.isEmpty()) {
-            return new HashMap<String, AssignedSource>();
+            return this.getAssignmentBeforeMap();
         } else {
             return variableDefinitions.get(variableDefinitions.size()-1).
                         getImpl().getAssignmentAfterMap();

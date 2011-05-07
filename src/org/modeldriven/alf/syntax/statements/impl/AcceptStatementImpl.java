@@ -44,10 +44,26 @@ public class AcceptStatementImpl extends StatementImpl {
 
     public void setAcceptBlock(Collection<AcceptBlock> acceptBlock) {
         this.acceptBlock = acceptBlock;
+        if (acceptBlock != null) {
+            for (AcceptBlock anAcceptBlock: acceptBlock) {
+                Block block = anAcceptBlock.getBlock();
+                if (block != null) {
+                    block.getImpl().setEnclosingStatement(this.getSelf());
+                }
+            }
+        }
     }
 
+    /**
+     * The enclosing statement for all statements in the blocks of all accept
+     * blocks of an accept statement is the accept statement.
+     **/
     public void addAcceptBlock(AcceptBlock acceptBlock) {
         this.acceptBlock.add(acceptBlock);
+        Block block = acceptBlock == null? null: acceptBlock.getBlock();
+        if (block != null) {
+            block.getImpl().setEnclosingStatement(this.getSelf());
+        }
     }
 
     public ElementReference getBehavior() {
@@ -72,22 +88,6 @@ public class AcceptStatementImpl extends StatementImpl {
         this.isSimple = isSimple;
     }
     
-    /**
-     * The enclosing statement for all statements in the blocks of all accept
-     * blocks of an accept statement is the accept statement.
-     **/
-    @Override
-    public void setEnclosingStatement(Statement enclosingStatement) {
-        super.setEnclosingStatement(enclosingStatement);
-        AcceptStatement self = this.getSelf();
-        for (AcceptBlock acceptBlock: self.getAcceptBlock()) {
-            Block block = acceptBlock.getBlock();
-            if (block != null) {
-                block.getImpl().setEnclosingStatement(self);
-            }
-        }
-    }
-
 	/**
 	 * The current scope for an accept statement should be the containing
 	 * behavior. It is implicitly set by setCurrentScope().

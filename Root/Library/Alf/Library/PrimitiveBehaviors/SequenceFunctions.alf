@@ -1,5 +1,13 @@
 namespace Alf::Library::PrimitiveBehaviors;
 
-@ModelLibrary
+public import Alf::Library::PrimitiveTypes::*;
+
 package SequenceFunctions {
+
+  @primitive
+  public activity Size(in seq: any[*] sequence): Integer { }
+  
+  @primitive
+  public activity Including(in seq: any[*] sequence, in element: any): any[*] sequence { }
+  
 }

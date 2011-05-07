@@ -21,6 +21,8 @@ public class RootNamespace extends NamespaceDefinition {
     private static QualifiedName primitiveTypes = null;
     private static QualifiedName primitiveBehaviors = null;
     private static QualifiedName basicInputOutput = null;
+    private static QualifiedName collectionFunctions = null;
+    private static QualifiedName collectionClasses = null;
     
     private static ElementReference booleanType = null;
     private static ElementReference integerType = null;
@@ -77,7 +79,23 @@ public class RootNamespace extends NamespaceDefinition {
         return basicInputOutput;
     }
     
-    public static ElementReference getBooleanType() {
+     public static QualifiedName getCollectionFunctions() {
+        if (collectionFunctions == null) {
+            collectionFunctions = getAlfStandardLibrary().getImpl().copy().addName("CollectionFunctions");
+            collectionFunctions.getImpl().setCurrentScope(getRootScope());
+        }
+        return collectionFunctions;
+    }
+    
+    public static QualifiedName getCollectionClasses() {
+        if (collectionClasses == null) {
+            collectionClasses = getAlfStandardLibrary().getImpl().copy().addName("CollectionClasses");
+            collectionClasses.getImpl().setCurrentScope(getRootScope());
+        }
+        return collectionClasses;
+    }
+    
+   public static ElementReference getBooleanType() {
         if (booleanType == null) {
             booleanType = getPrimitiveTypes().getImpl().copy().
                             addName("Boolean").getImpl().getClassifierReferent();

@@ -107,14 +107,16 @@ public class SequenceOperationExpressionImpl
 	    } else {
 	        ExtentOrExpression primary = self.getPrimary();
 	        Expression expression = primary == null? null: primary.getExpression();
-	        ElementReference type = expression == null? null: expression.getType();
+	        ElementReference primaryType = expression == null? 
+	                                           null: expression.getType();
 	        if (self.getIsCollectionConversion()) {
-	            type = type.getImpl().getCollectionArgument();
+	            primaryType = primaryType.getImpl().getCollectionArgument();
 	        }
-	        List<FormalParameter> parameters = referent.getImpl().getParameters();
-	        return parameters.size() > 0 && 
-	                    parameters.get(0).getType().getImpl().isBitString() &&
-	                    type != null && type.getImpl().isInteger();
+	        ElementReference parameterType = this.getFirstParameterType();
+	        return parameterType != null && 
+	                   parameterType.getImpl().isBitString() &&
+	               primaryType != null && 
+	                   primaryType.getImpl().isInteger();
 	    }
 	}
 
@@ -181,8 +183,7 @@ public class SequenceOperationExpressionImpl
         } else {
             String direction = parameter.getDirection();
             return direction != null && 
-                        direction.equals("in") && 
-                        direction.equals("inout") &&
+                        (direction.equals("in") || direction.equals("inout")) &&
                         parameter.getLower() == 0 && 
                         parameter.getUpper() == -1 &&
                         new AssignableTypedElementImpl(parameter.getImpl()).
@@ -203,11 +204,11 @@ public class SequenceOperationExpressionImpl
         ExtentOrExpression primary = self.getPrimary();
         Expression expression = primary == null? null: primary.getExpression();
         LeftHandSide lhs = this.getLeftHandSide();
+        ElementReference type = this.getFirstParameterType();
         return expression == null || !this.isInPlace() ||
                     lhs != null && (lhs.getImpl().getLocalName() == null || 
                             this.getOldAssignment() != null) &&
-                    self.getReferent().getImpl().getParameters().get(0).
-                        getType().getImpl().equals(expression.getType());
+                    type != null && type.getImpl().equals(expression.getType());
 	}
 
     /**
@@ -292,7 +293,7 @@ public class SequenceOperationExpressionImpl
 	    if (tuple != null) {
 	        assignments.putAll(tuple.getImpl().getAssignmentsAfterMap());
 	    }
-	    if (!this.isInPlace()) {
+	    if (this.isInPlace()) {
     	    AssignedSource oldAssignment = this.getOldAssignment();
     	    if (oldAssignment != null) {
     	        AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(oldAssignment);
@@ -308,7 +309,7 @@ public class SequenceOperationExpressionImpl
         String name = lhs == null? null: lhs.getImpl().getLocalName();
         return name == null? null: this.getAssignmentBefore(name);
     }
-
+	
     /**
 	 * The parameters matched to the tuple of a sequence operation expression
 	 * do not include the first parameter of the behavior of the expression.
@@ -346,6 +347,11 @@ public class SequenceOperationExpressionImpl
         }
 	}
 	
+    private ElementReference getFirstParameterType() {
+        FormalParameter firstParameter = this.getFirstParameter();
+        return firstParameter == null? null: firstParameter.getType();
+    }
+
     public LeftHandSide getLeftHandSide() {
         SequenceOperationExpression self = this.getSelf();
         ExtentOrExpression primary = self.getPrimary();

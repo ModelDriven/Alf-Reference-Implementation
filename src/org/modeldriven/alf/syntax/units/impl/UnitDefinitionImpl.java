@@ -195,7 +195,7 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
 	 * import references for all the sub-packages of the Alf::Library package.
 	 **/
 	public boolean unitDefinitionImplicitImports() {
-		return this.getSelf().getIsModelLibrary() || this.hasImplicitImports();
+		return this.isInModelLibrary() || this.hasImplicitImports();
 	}
     
     /*
@@ -249,32 +249,21 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
     
     public void addImplicitImports() {
         if (!this.hasImplicitImports() && !this.isInModelLibrary()) {
-            UnitDefinition self = this.getSelf();
-
-            PackageImportReference primitiveTypesImport = new PackageImportReference();
-            primitiveTypesImport.setReferentName(RootNamespace.getPrimitiveTypes());
-            primitiveTypesImport.setVisibility("private");
-            primitiveTypesImport.setUnit(self);
-            this.addImplicitImport(primitiveTypesImport);
-            
-            PackageImportReference primitiveBehaviorsImport = new PackageImportReference();
-            primitiveBehaviorsImport.setReferentName(RootNamespace.getPrimitiveBehaviors());
-            primitiveBehaviorsImport.setVisibility("private");
-            primitiveBehaviorsImport.setUnit(self);
-            this.addImplicitImport(primitiveBehaviorsImport);
-    
-            PackageImportReference basicInputOutputImport = new PackageImportReference();
-            basicInputOutputImport.setReferentName(RootNamespace.getBasicInputOutput());
-            basicInputOutputImport.setVisibility("private");
-            basicInputOutputImport.setUnit(self);
-            this.addImplicitImport(basicInputOutputImport);
-    
+            this.addImplicitImport(RootNamespace.getPrimitiveTypes());
+            this.addImplicitImport(RootNamespace.getPrimitiveBehaviors());
+            this.addImplicitImport(RootNamespace.getBasicInputOutput());
+            this.addImplicitImport(RootNamespace.getCollectionFunctions());
+            this.addImplicitImport(RootNamespace.getCollectionClasses());   
             this.setHasImplicitImports(true);
         }
     }
     
-    public void addImplicitImport(ImportReference importReference) {
+    public void addImplicitImport(QualifiedName packageName) {
         UnitDefinition self = this.getSelf();
+        PackageImportReference importReference = new PackageImportReference();
+        importReference.setReferentName(packageName);
+        importReference.setVisibility("private");
+        importReference.setUnit(self);       
         if (!self.getImport().contains(importReference)) {
             self.addImport(importReference);
         }

@@ -32,6 +32,11 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
 	public NonFinalClauseImpl(NonFinalClause self) {
 		super(self);
 	}
+	
+	@Override
+	public String toString() {
+	    return this.getSelf()._toString() + " " + this.getSelf().getCondition();
+	}
 
 	@Override
 	public NonFinalClause getSelf() {
