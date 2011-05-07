@@ -1,5 +1,17 @@
 namespace Alf::Library;
 
-@ModelLibrary
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+
 package CollectionFunctions {
+
+  public activity size(in seq: any[*] sequence): Integer { 
+    return Size(seq);
+  }
+  
+  // "In-place" behaviors
+  
+  public activity add(inout seq: any[*] sequence, in element: any) { 
+    seq = Including(seq, element);
+  }
+  
 }

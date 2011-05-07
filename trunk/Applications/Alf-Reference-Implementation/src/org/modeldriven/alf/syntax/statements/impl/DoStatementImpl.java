@@ -48,24 +48,18 @@ public class DoStatementImpl extends StatementImpl {
 		return this.body;
 	}
 
-	public void setBody(Block body) {
-		this.body = body;
-	}
-	
     /**
      * The enclosing statement for all statements in the body of a do statement
      * are the do statement.
      **/
-    @Override
-    public void setEnclosingStatement(Statement enclosingStatement) {
-        DoStatement self = this.getSelf();
-        super.setEnclosingStatement(enclosingStatement);
-        Block body = this.getSelf().getBody();
+
+	public void setBody(Block body) {
+		this.body = body;
         if (body != null) {
-            body.getImpl().setEnclosingStatement(self);
+            body.getImpl().setEnclosingStatement(this.getSelf());
         }
-    }
-    
+	}
+	
     /**
      * The assignments before the block of a do statement are the same as the
      * assignments before the do statement. The assignments before the condition

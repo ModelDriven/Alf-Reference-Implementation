@@ -40,8 +40,15 @@ public class WhileStatementImpl extends StatementImpl {
 		return this.body;
 	}
 
+    /**
+     * The enclosing statement for all statements in the body of a while statement
+     * are the while statement.
+     **/
 	public void setBody(Block body) {
 		this.body = body;
+        if (body != null) {
+            body.getImpl().setEnclosingStatement(this.getSelf());
+        }
 	}
 
 	public Expression getCondition() {
@@ -51,20 +58,6 @@ public class WhileStatementImpl extends StatementImpl {
 	public void setCondition(Expression condition) {
 		this.condition = condition;
 	}
-
-    /**
-     * The enclosing statement for all statements in the body of a while statement
-     * are the while statement.
-     **/
-    @Override
-    public void setEnclosingStatement(Statement enclosingStatement) {
-        super.setEnclosingStatement(enclosingStatement);
-        WhileStatement self = this.getSelf();
-        Block body = this.getSelf().getBody();
-        if (body != null) {
-            body.getImpl().setEnclosingStatement(self);
-        }
-    }
     
     /**
      * The assignments before the condition expression of a while statement are

@@ -48,10 +48,24 @@ public class SwitchStatementImpl extends StatementImpl {
 
 	public void setNonDefaultClause(Collection<SwitchClause> nonDefaultClause) {
 		this.nonDefaultClause = nonDefaultClause;
+		if (nonDefaultClause != null) {
+            for (SwitchClause clause: nonDefaultClause) {
+                Block block = clause.getBlock();
+                if (block != null) {
+                    block.getImpl().setEnclosingStatement(this.getSelf());
+                }
+            }
+		}
 	}
 
 	public void addNonDefaultClause(SwitchClause nonDefaultClause) {
 		this.nonDefaultClause.add(nonDefaultClause);
+		if (nonDefaultClause != null) {
+            Block block = nonDefaultClause.getBlock();
+            if (block != null) {
+                block.getImpl().setEnclosingStatement(this.getSelf());
+            }
+		}
 	}
 
 	public Expression getExpression() {
@@ -68,7 +82,10 @@ public class SwitchStatementImpl extends StatementImpl {
 
 	public void setDefaultClause(Block defaultClause) {
 		this.defaultClause = defaultClause;
-	}
+        if (defaultClause != null) {
+            defaultClause.getImpl().setEnclosingStatement(this.getSelf());
+        }
+}
 
 	public Boolean getIsAssured() {
 		if (this.isAssured == null) {
@@ -92,22 +109,6 @@ public class SwitchStatementImpl extends StatementImpl {
 		this.isDetermined = isDetermined;
 	}
 
-    @Override
-    public void setEnclosingStatement(Statement enclosingStatement) {
-        super.setEnclosingStatement(enclosingStatement);
-        SwitchStatement self = this.getSelf();
-        for (SwitchClause clause: self.getNonDefaultClause()) {
-            Block block = clause.getBlock();
-            if (block != null) {
-                block.getImpl().setEnclosingStatement(self);
-            }
-        }
-        Block defaultClause = self.getDefaultClause();
-        if (defaultClause != null) {
-            defaultClause.getImpl().setEnclosingStatement(self);
-        }
-    }
-    
     /**
      * An switch statement is assured if it has an @assured annotation.
      **/

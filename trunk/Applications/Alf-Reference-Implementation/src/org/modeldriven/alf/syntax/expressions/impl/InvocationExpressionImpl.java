@@ -430,7 +430,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	        return false;
 	    } else {
 	        String direction = namedParameter.getDirection();
-	        return (direction.equals("in") || direction.equals("inout")) &&
+	        return direction != null && 
+	                    (direction.equals("in") || direction.equals("inout")) &&
 	                    namedParameter.getImpl().isAssignableFrom(input.getExpression());
 	    }
 	}
@@ -441,7 +442,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             return false;
         } else {
             String direction = namedParameter.getDirection();
-            return (direction.equals("out") || direction.equals("inout")) &&
+            return direction != null && 
+                        (direction.equals("out") || direction.equals("inout")) &&
                         output instanceof OutputNamedExpression &&
                         ((OutputNamedExpression)output).getLeftHandSide().getImpl().
                             isAssignableFrom(new AssignableTypedElementImpl(namedParameter.getImpl()));

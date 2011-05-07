@@ -35,7 +35,7 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
 
         int targetUpper = this.getUpper();
         int sourceUpper = source.getUpper();
-        boolean upperBoundsConform = targetUpper > 1 || 
+        boolean upperBoundsConform = targetUpper == -1 || targetUpper > 1 || 
                     sourceUpper != -1 && sourceUpper <= targetUpper;
         
         // Conformance

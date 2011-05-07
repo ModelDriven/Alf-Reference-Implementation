@@ -33,6 +33,15 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	public NamedExpression getSelf() {
 		return (NamedExpression) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    NamedExpression self = this.getSelf();
+	    Expression index = self.getIndex();
+	    return self._toString() 
+	                + " expression:(" + self.getExpression() + ")" 
+	                + (index == null? "": " index:(" + index +")");
+	}
 
 	public String getName() {
 		return this.name;

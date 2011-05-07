@@ -61,7 +61,8 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	 **/
 	public boolean activityDefinitionPrimitive() {
 	    ActivityDefinition self = this.getSelf();
-		return !self.getIsPrimitive() || self.getBody() == null;
+		return !self.getIsPrimitive() || self.getBody() == null || 
+		        self.getBody().getStatement().isEmpty();
 	}
 	
 	/*
@@ -77,7 +78,7 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 	    // TODO: Allow activity stereotypes.
 		return super.annotationAllowed(annotation) || 
-		    annotation.getStereotypeName().getQualification().getPathName().equals("primitive");
+		    annotation.getStereotypeName().getPathName().equals("primitive");
 	} // annotationAllowed
 
 	/**

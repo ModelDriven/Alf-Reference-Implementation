@@ -45,10 +45,14 @@ public class IfStatementImpl extends StatementImpl {
 
 	public void setNonFinalClauses(List<ConcurrentClauses> nonFinalClauses) {
 		this.nonFinalClauses = nonFinalClauses;
+        for (ConcurrentClauses clauses: nonFinalClauses) {
+            clauses.getImpl().setEnclosingStatement(this.getSelf());
+        }
 	}
 
 	public void addNonFinalClauses(ConcurrentClauses nonFinalClauses) {
 		this.nonFinalClauses.add(nonFinalClauses);
+        nonFinalClauses.getImpl().setEnclosingStatement(this.getSelf());
 	}
 
 	public Block getFinalClause() {
@@ -57,6 +61,9 @@ public class IfStatementImpl extends StatementImpl {
 
 	public void setFinalClause(Block finalClause) {
 		this.finalClause = finalClause;
+        if (finalClause != null) {
+            finalClause.getImpl().setEnclosingStatement(this.getSelf());
+        }
 	}
 
 	public Boolean getIsAssured() {
@@ -81,25 +88,7 @@ public class IfStatementImpl extends StatementImpl {
 		this.isDetermined = isDetermined;
 	}
 	
-    /**
-     * The enclosing statement of all the statements in the bodies of all
-     * non-final clauses and in the final clause (if any) of an if statement is
-     * the if statement.
-     **/
-	@Override
-	public void setEnclosingStatement(Statement enclosingStatement) {
-	    super.setEnclosingStatement(enclosingStatement);
-	    IfStatement self = this.getSelf();
-	    for (ConcurrentClauses clause: self.getNonFinalClauses()) {
-	        clause.getImpl().setEnclosingStatement(self);
-	    }
-	    Block finalClause = self.getFinalClause();
-	    if (finalClause != null) {
-	        finalClause.getImpl().setEnclosingStatement(self);
-	    }
-	}
-
-    /**
+	/**
      * An if statement is assured if it has an @assured annotation.
      **/
 	protected Boolean deriveIsAssured() {

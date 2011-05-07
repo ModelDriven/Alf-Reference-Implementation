@@ -545,7 +545,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     public ElementReference getBehaviorReferent() {
         ElementReference behavior = null;
         for (ElementReference referent: this.getSelf().getReferent()) {
-            if (referent.getImpl().isStereotype()) {
+            if (referent.getImpl().isBehavior()) {
                 if (behavior != null) {
                     return null;
                 }

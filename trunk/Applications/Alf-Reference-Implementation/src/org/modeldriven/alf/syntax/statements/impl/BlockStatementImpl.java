@@ -39,8 +39,15 @@ public class BlockStatementImpl extends StatementImpl {
         return this.block;
     }
 
+    /**
+     * The enclosing statement for all the statements in the block of a block
+     * statement is the block statement.
+     **/
     public void setBlock(Block block) {
         this.block = block;
+        if (block != null) {
+            block.getImpl().setEnclosingStatement(this.getSelf());
+        }
     }
 
     public Boolean getIsParallel() {
@@ -54,20 +61,6 @@ public class BlockStatementImpl extends StatementImpl {
         this.isParallel = isParallel;
     }
     
-    /**
-     * The enclosing statement for all the statements in the block of a block
-     * statement is the block statement.
-     **/
-    @Override
-    public void setEnclosingStatement(Statement enclosingStatement) {
-        super.setEnclosingStatement(enclosingStatement);
-        BlockStatement self = this.getSelf();
-        Block block = self.getBlock();
-        if (block != null) {
-            block.getImpl().setEnclosingStatement(self);
-        }
-    }
-
     /**
      * A block statement is parallel if it has a @parallel annotation.
      **/

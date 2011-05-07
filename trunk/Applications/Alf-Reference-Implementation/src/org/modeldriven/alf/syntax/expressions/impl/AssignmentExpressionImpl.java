@@ -208,14 +208,14 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	        return null;
 	    } else if (self.getIsDefinition()) {
 	        int upper = rhs.getUpper() == 1? 1: -1;
-	        return AssignedSourceImpl.makeAssignment(name, rhs, rhs.getType(), 0, upper);
+	        return AssignedSourceImpl.makeAssignment(name, self, rhs.getType(), 0, upper);
 	    } else {
 	        AssignedSource oldAssignment = this.getAssignmentBefore(name);
 	        if (oldAssignment == null) {
 	            return null;
 	        } else {
     	        AssignedSource assignment = AssignedSourceImpl.makeAssignment(oldAssignment);
-    	        assignment.setSource(rhs);
+    	        assignment.setSource(self);
     	        return assignment;
 	        }
 	    }
