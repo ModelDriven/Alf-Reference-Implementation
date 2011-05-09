@@ -373,8 +373,8 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	 * the same local scope as the definition of the named element.
 	 **/
 	public boolean qualifiedNameLocalName() {
-		return this.getCurrentScope() != null || this.getIsFeatureReference() ||
-		       this.getLocalSource() != null;
+	    // NOTE: This is handled by deriveReferent.
+		return true;
 	}
 
 	/**
@@ -382,9 +382,8 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	 * visible in the current scope of the use of the name.
 	 **/
 	public boolean qualifiedNameNonLocalUnqualifiedName() {
-	    QualifiedName self = this.getSelf();
-		return this.getLocalSource() != null || self.getIsFeatureReference() ||
-		            self.getReferent().size() > 0;
+        // NOTE: This is handled by deriveReferent.
+        return true;
 	}
 
 	/**
@@ -428,7 +427,8 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     public ElementReference getNonTemplateClassifierReferent() {
         ElementReference classifier = null;
         for (ElementReference referent: this.getSelf().getReferent()) {
-            if (!referent.getImpl().isTemplate()) {
+            if (referent.getImpl().isClassifier() && 
+                    !referent.getImpl().isTemplate()) {
                 if (classifier != null) {
                     return null;
                 }

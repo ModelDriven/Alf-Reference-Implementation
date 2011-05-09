@@ -91,6 +91,7 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 	    SequenceExpansionExpression self = this.getSelf();
 	    ExtentOrExpression primary = self.getPrimary();
 	    AssignedSource variableSource = new AssignedSource();
+	    variableSource.setName(self.getVariable());
 	    variableSource.setSource(self);
 	    variableSource.setType(primary == null? null: 
 	        primary.getExpression().getType());

@@ -10,4 +10,22 @@ package SequenceFunctions {
   @primitive
   public activity Including(in seq: any[*] sequence, in element: any): any[*] sequence { }
   
+  @primitive 
+  public activity IncludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { }
+  
+  @primitive
+  public activity Excluding(in seq: any[*] sequence, in element: any): any[*] sequence { }
+  
+  @primitive 
+  public activity ExcludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { }
+  
+  @primitive
+  public activity Union(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { }
+  
+  @primitive
+  public activity IsEmpty(in seq: any[*] sequence): Boolean { }
+
+  @primitive
+  public activity NotEmpty(in seq: any[*] sequence): Boolean { }
+  
 }

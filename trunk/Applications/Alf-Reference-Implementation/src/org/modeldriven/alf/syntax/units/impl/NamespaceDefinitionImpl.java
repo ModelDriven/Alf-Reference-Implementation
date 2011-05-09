@@ -200,9 +200,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         Collection<Member> members = this.resolveInScope(name);
         
         // Resolve in the containing scope, if there is one.
-        NamespaceDefinition namespace = this.getOuterScope();
-        if (namespace != null) {
-            for (Member member: namespace.getImpl().resolve(name)) {
+        NamespaceDefinition outerScope = this.getOuterScope();
+        if (outerScope != null) {
+            for (Member member: outerScope.getImpl().resolve(name)) {
                 if (member != null && member.getImpl().isDistinguishableFromAll(members)) {
                     members.add(member);
                 }
@@ -214,10 +214,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     
     private Collection<Member> resolveInScope(String name) {
         Collection<Member> members = this.getMemberMap().get(name);
-        if (members == null) {
-            members = new ArrayList<Member>();
-        }
-        return members;
+        return members == null? new ArrayList<Member>(): 
+                                new ArrayList<Member>(members);
     }
 
     public boolean hasSubunitFor(UnitDefinition unit) {
@@ -249,17 +247,17 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     
     @Override
     public NamespaceDefinition getOuterScope() {
+        NamespaceDefinition outerScope = super.getOuterScope();
         UnitDefinition unit = this.getSelf().getUnit();
-        if (unit == null) {
-            return super.getOuterScope();
-        } else {
+        if (outerScope == null && unit != null) {
             ElementReference namespace = unit.getNamespace();
             if (namespace == null) {
-                return RootNamespace.getModelScope(unit);
+                outerScope = RootNamespace.getModelScope(unit);
             } else {
-                return namespace.getImpl().asNamespace();
+                outerScope = namespace.getImpl().asNamespace();
             }
         }
+        return outerScope;
     }
     
     @Override

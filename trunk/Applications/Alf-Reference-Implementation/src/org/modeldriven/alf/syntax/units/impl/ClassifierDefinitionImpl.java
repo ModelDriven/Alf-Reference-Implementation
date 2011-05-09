@@ -82,8 +82,12 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
      **/
 	protected Collection<ElementReference> deriveSpecializationReferent() {
 	    QualifiedNameList specialization = this.getSelf().getSpecialization();
-	    return specialization == null? new ArrayList<ElementReference>():
-	                specialization.getImpl().getNonTemplateClassifierReferents();
+	    if (specialization == null) {
+	        return new ArrayList<ElementReference>();
+	    } else {
+            specialization.getImpl().setCurrentScope(this.getOuterScope());
+    	    return specialization.getImpl().getNonTemplateClassifierReferents();
+	    }
 	}
 	
     /**
