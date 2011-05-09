@@ -4,7 +4,6 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.RootNamespaceImpl;
-import org.omg.uml.Package;
 
 public class RootNamespace extends NamespaceDefinition {
     
@@ -31,14 +30,17 @@ public class RootNamespace extends NamespaceDefinition {
     private static ElementReference bitStringType = null;
     private static ElementReference naturalType = null;
     
-    private static final NamespaceDefinition modelScope = 
-        new ExternalNamespace(new Package());
-
     public static RootNamespace getRootScope() {
         return rootNamespace;
     }
     
     public static NamespaceDefinition getModelScope(UnitDefinition unit) {
+        // The default model scope for a unit consists of just the unit itself,
+        // so that it can refer to itself recursively.
+        NamespaceDefinition definition = unit.getDefinition();
+        NamespaceDefinition modelScope = new PackageDefinition();
+        modelScope.addOwnedMember(definition);
+        definition.setNamespace(modelScope);
         return modelScope;
     }
     

@@ -79,7 +79,9 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	 **/
 	public boolean nameLeftHandSideTargetAssignment() {
 	    ElementReference referent = this.getReferent();
-	    if (referent.getImpl().isParameter()) {
+	    if (referent == null) {
+	        return true;
+	    } else if (referent.getImpl().isParameter()) {
 	        return !"in".equals(referent.getImpl().asParameter().getDirection());
 	    } else {
 	        SyntaxElement source = referent.getImpl().getAlf();

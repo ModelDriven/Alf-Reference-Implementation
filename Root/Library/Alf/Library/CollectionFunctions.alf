@@ -8,10 +8,46 @@ package CollectionFunctions {
     return Size(seq);
   }
   
+  public activity notEmpty(in seq: any[*] sequence): Boolean {
+    return NotEmpty(seq);
+  }
+  
+  public activity including(in seq: any[*] sequence, in element: any): any[*] sequence { 
+    return Including(seq, element);
+  }
+  
+  public activity includeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { 
+    return IncludeAt(seq, index);
+  }
+  
+  public activity excluding(in seq: any[*] sequence, in element: any): any[*] sequence { 
+    return Excluding(seq, element);
+  }
+  
+  public activity excludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { 
+    return ExcludeAt(seq, index);
+  }
+  
+  public activity union(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { 
+    return Union(seq1, seq2);
+  }
+  
+  public activity isEmpty(in seq: any[*] sequence): Boolean { 
+    return IsEmpty(seq);
+  }
+
   // "In-place" behaviors
   
   public activity add(inout seq: any[*] sequence, in element: any) { 
     seq = Including(seq, element);
+  }
+  
+  public activity remove(inout seq: any[*] sequence, in element: any) { 
+    seq = Excluding(seq, element);
+  }
+  
+  public activity removeAt(inout seq: any[*] sequence, in index: Integer) { 
+    seq = ExcludeAt(seq, index);
   }
   
 }

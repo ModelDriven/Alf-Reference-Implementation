@@ -228,7 +228,8 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                 for (OutputNamedExpression output: outputs) {
                     Expression expression = output.getExpression();
                     expressions.add(expression);
-                    String localName = output.getLeftHandSide().getImpl().getLocalName();
+                    LeftHandSide lhs = output.getLeftHandSide();
+                    String localName = lhs == null? null: lhs.getImpl().getLocalName();
                     if (localName != null) {
                         if ("out".equals(invocation.getImpl().parameterNamed(output.getName()))) {
                             AssignedSource assignment = AssignedSourceImpl.makeAssignment

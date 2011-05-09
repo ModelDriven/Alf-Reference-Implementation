@@ -438,15 +438,16 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 
     protected boolean parameterIsAssignableTo(NamedExpression output) {
         FormalParameter namedParameter = this.parameterNamed(output.getName());
-        if (namedParameter == null) {
+        if (namedParameter == null || 
+                !(output instanceof OutputNamedExpression)) {
             return false;
         } else {
             String direction = namedParameter.getDirection();
-            return direction != null && 
+            LeftHandSide lhs = ((OutputNamedExpression)output).getLeftHandSide();
+            return direction != null && lhs != null &&
                         (direction.equals("out") || direction.equals("inout")) &&
-                        output instanceof OutputNamedExpression &&
-                        ((OutputNamedExpression)output).getLeftHandSide().getImpl().
-                            isAssignableFrom(new AssignableTypedElementImpl(namedParameter.getImpl()));
+                        lhs.getImpl().isAssignableFrom
+                            (new AssignableTypedElementImpl(namedParameter.getImpl()));
         }
     }
     

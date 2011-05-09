@@ -1,13 +1,13 @@
-activity Quicksort(in list: Integer[0..*] sequence):        // See Note 1
+activity Quicksort(in list: Integer[0..*] sequence):       
   Integer[0..*] sequence 
 {
-  if (list->isEmpty()) {                                   // See Notes 2 & 3
-    return null;                                           // See Notes 4 & 5
+  x = list[1];                                          
+  if (list->isEmpty()) {                                  
+    return null;                                          
   } else {
-    x = list[1];                                           // See Notes 6 & 7
-    list->remove(1);
-    return QuickSort(list->select a (a < x))->             // See Note 8
+    list->removeAt(1);
+    return Quicksort(list->select a (a < x))->           
            including(x)->
-           union(QuickSort(list->select b (b >= x)));
+           union(Quicksort(list->select b (b >= x)));
   }
 }

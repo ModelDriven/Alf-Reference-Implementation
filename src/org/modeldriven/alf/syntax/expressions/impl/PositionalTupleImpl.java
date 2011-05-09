@@ -61,8 +61,8 @@ public class PositionalTupleImpl extends TupleImpl {
         if (invocation != null) {
             List<FormalParameter> parameters = invocation.getImpl().parameters();
             List<Expression> expressions = self.getExpression();
-            for (int i = 0; i < parameters.size(); i++) {
-                FormalParameter parameter = parameters.get(i);
+            int i = 0;
+            for (FormalParameter parameter: parameters) {
                 String direction = parameter.getDirection();
                 if (direction != null && 
                         (direction.equals("in") || direction.equals("inout"))) {
@@ -73,6 +73,7 @@ public class PositionalTupleImpl extends TupleImpl {
                     namedExpression.setName(parameter.getName());
                     namedExpression.setExpression(expression);
                     inputs.add(namedExpression);
+                    i++;
                 }
             }
         }
@@ -94,8 +95,8 @@ public class PositionalTupleImpl extends TupleImpl {
         if (invocation != null) {
             List<FormalParameter> parameters = invocation.getImpl().parameters();
             List<Expression> expressions = self.getExpression();
-            for (int i = 0; i < parameters.size(); i++) {
-                FormalParameter parameter = parameters.get(i);
+            int i = 0;
+            for (FormalParameter parameter: parameters) {
                 String direction = parameter.getDirection();
                 if (direction != null && 
                         (direction.equals("inout") || direction.equals("out"))) {
@@ -106,6 +107,7 @@ public class PositionalTupleImpl extends TupleImpl {
                     namedExpression.setName(parameter.getName());
                     namedExpression.setExpression(expression);
                     outputs.add(namedExpression);
+                    i++;
                 }
             }
         }
