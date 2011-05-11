@@ -68,7 +68,7 @@ public class NamedTupleImpl extends TupleImpl {
                     if (argument == null) {
                         argument = new NamedExpression();
                         argument.setName(name);
-                        argument.setExpression(new SequenceAccessExpression());
+                        argument.setExpression(SequenceConstructionExpressionImpl.makeNull());
                     }
                     inputs.add(argument);
                 }
@@ -100,7 +100,7 @@ public class NamedTupleImpl extends TupleImpl {
                     OutputNamedExpression output = new OutputNamedExpression();
                     output.setName(name);
                     output.setExpression(argument == null?
-                            new SequenceConstructionExpression():
+                            SequenceConstructionExpressionImpl.makeNull():
                             argument.getExpression());
                    outputs.add(output);
                 }

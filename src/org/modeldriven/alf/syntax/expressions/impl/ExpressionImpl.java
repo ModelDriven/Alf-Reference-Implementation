@@ -41,6 +41,12 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
 	public Expression getSelf() {
 		return (Expression) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    Expression self = this.getSelf();
+	    return super.toString() + " type:(" + self.getType() + ")";
+	}
 
     public Collection<AssignedSource> getAssignmentBefore() {
         return this.getAssignmentBeforeMap().values();

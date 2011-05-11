@@ -12,7 +12,7 @@ package org.modeldriven.alf.syntax.units.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
+import org.modeldriven.alf.syntax.expressions.impl.NameBindingImpl;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = NameBindingImpl.processName(name);
     }
 
     public String getVisibility() {
@@ -286,9 +286,8 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	 **/
 	public Boolean isDistinguishableFrom(Member member) {
 	    Member self = this.getSelf();
-		return !(QualifiedNameImpl.processName(self.getName()).
-		    equals(QualifiedNameImpl.processName(member.getName())) &&
-		    self.isSameKindAs(member));
+		return !(self.getName().equals(member.getName()) &&
+		            self.isSameKindAs(member));
 	} // isDistinguishableFrom
 
 	/**
@@ -371,13 +370,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 
     public ElementReference getNamespaceReference() {
         NamespaceDefinition namespace = this.getSelf().getNamespace();
-        if (namespace == null) {
-            return null;
-        } else {
-            InternalElementReference reference = new InternalElementReference();
-            reference.setElement(namespace);
-            return reference;
-        }
+        return namespace == null? null: namespace.getImpl().getReferent();
     }
     
 } // MemberImpl

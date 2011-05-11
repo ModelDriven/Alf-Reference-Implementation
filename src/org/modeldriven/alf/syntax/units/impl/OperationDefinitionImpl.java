@@ -17,6 +17,7 @@ import org.omg.uml.Operation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of an operation, with any formal parameters defined as owned
@@ -324,6 +325,23 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     public int getUpper() {
         FormalParameter returnParameter = this.getReturnParameter();
         return returnParameter == null? 0: returnParameter.getUpper();
+    }
+    
+    /**
+     * For a constructor, add an implicit return parameter to the list of
+     * formal parameters in the operation signature.
+     */
+    @Override
+    public List<FormalParameter> getFormalParameters() {
+        List<FormalParameter> parameters = super.getFormalParameters();
+        if (this.getSelf().getIsConstructor() && 
+                this.getReturnParameter() == null) {
+            FormalParameter returnParameter = new FormalParameter();
+            returnParameter.setType(this.getNamespaceReference());
+            returnParameter.setDirection("return");
+            parameters.add(returnParameter);
+        }
+        return parameters;
     }
     
     public FormalParameter getReturnParameter() {

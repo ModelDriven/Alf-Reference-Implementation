@@ -38,7 +38,7 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	public String toString() {
 	    NamedExpression self = this.getSelf();
 	    Expression index = self.getIndex();
-	    return self._toString() 
+	    return super.toString() 
 	                + " expression:(" + self.getExpression() + ")" 
 	                + (index == null? "": " index:(" + index +")");
 	}
@@ -48,7 +48,7 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = NameBindingImpl.processName(name);
 	}
 
 	public Expression getExpression() {

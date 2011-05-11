@@ -37,6 +37,13 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 	public FeatureReference getSelf() {
 		return (FeatureReference) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    FeatureReference self = this.getSelf();
+	    return self._toString() + " name:" + self.getNameBinding() +
+	            " expression:(" + self.getExpression() + ")";
+	}
 
 	public Expression getExpression() {
 		return this.expression;

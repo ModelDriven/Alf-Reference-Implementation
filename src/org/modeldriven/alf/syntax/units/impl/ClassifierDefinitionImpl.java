@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.QualifiedNameList;
 import org.modeldriven.alf.syntax.units.*;
@@ -98,11 +99,18 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
      **/
 	@Override
 	protected Map<String, Collection<Member>> deriveMember() {
+	    Map<String, Collection<Member>> members = super.deriveMember();
+	    
+	    // Note: The members field is set here in order to avoid the possibility
+	    // of an infinite loop if name resolution relative to this classifier
+	    // is required in order to check the distinguishility of inherited
+	    // members
+	    this.setMemberMap(members);
+	    
 	    ArrayList<Member> inheritedMembers = new ArrayList<Member>();
 	    for (ElementReference parent: this.getSelf().getSpecializationReferent()) {
 	        inheritedMembers.addAll(this.getInheritableMembersOf(parent));
-	    }
-	    Map<String, Collection<Member>> members = super.deriveMember();
+	    }	    
         addAllMembers(this.inherit(inheritedMembers), members);
 	    return members;
 	}
@@ -241,8 +249,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	    return inheritableMembers;
 	}
 
-    public static ElementReference commonAncestor(ElementReference... classifiers) {
-        while (classifiers.length > 1) {
+    public static ElementReference commonAncestor(Collection<ElementReference> classifiers) {
+        while (classifiers.size() > 1) {
             // Construct the set of all common ancestors of the given classifiers.
             boolean isFirst = true;
             Set<ElementReference> commonAncestors = new HashSet<ElementReference>();
@@ -256,7 +264,11 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
                     commonAncestors.addAll(ancestors);
                     isFirst = false;
                 } else {
-                    commonAncestors.retainAll(ancestors);
+                    for (Object commonAncestor: commonAncestors.toArray()) {
+                        if (!contains(ancestors,(((ElementReference)commonAncestor).getImpl()))) {
+                            commonAncestors.remove(commonAncestor);
+                        }
+                    }
                 }
                 if (commonAncestors.isEmpty()) {
                     return null;
@@ -265,23 +277,39 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             
             // Remove any common ancestors that are parents of other common
             // ancestors.
-            for (ElementReference ancestor: commonAncestors.toArray(classifiers)) {
-                commonAncestors.removeAll(ancestor.getImpl().parents());
+            for (Object ancestor: commonAncestors.toArray()) {
+                Collection<ElementReference> parents = ((ElementReference)ancestor).getImpl().parents();
+                for (ElementReference parent: parents) {
+                    commonAncestors.remove(parent.getImpl());
+                }
+
             }
              
-            classifiers = commonAncestors.toArray(classifiers);
+            classifiers = commonAncestors;
         }
-        if (classifiers.length == 0) {
+        if (classifiers.size() == 0) {
             return null;
         } else {
-            return (ElementReference)classifiers[0];
+            return (ElementReference)classifiers.toArray()[0];
         }
     }
     
-    public static ElementReference commonAncestor(Collection<ElementReference> classifiers) {
-        ElementReference[] classifierArray = new ElementReference[classifiers.size()];
-        classifierArray = classifiers.toArray(classifierArray);
-        return commonAncestor(classifierArray);
+    public static ElementReference commonAncestor(ElementReference... classifiers) {
+        HashSet<ElementReference> classifierSet = new HashSet<ElementReference>();
+        for (ElementReference classifier: classifiers) {
+            classifierSet.add(classifier);
+        }
+        return commonAncestor(classifierSet);
+    }
+
+    private static boolean contains(Collection<ElementReference> elementReferences,
+            ElementReferenceImpl elementReferenceImpl) {
+        for (ElementReference elementReference: elementReferences) {
+            if (elementReferenceImpl.equals(elementReference)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 } // ClassifierDefinitionImpl

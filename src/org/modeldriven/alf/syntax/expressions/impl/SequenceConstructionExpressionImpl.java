@@ -136,6 +136,13 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	 * Helper Methods
 	 */
 	
+	public static SequenceConstructionExpression makeNull() {
+	    SequenceConstructionExpression nullExpression = 
+	        new SequenceConstructionExpression();
+	    nullExpression.setHasMultiplicity(true);
+	    return nullExpression;
+	}
+	
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    SequenceConstructionExpression self = this.getSelf();

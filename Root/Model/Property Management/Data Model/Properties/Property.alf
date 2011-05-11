@@ -1,11 +1,17 @@
 namespace 'Property Management'::'Data Model'::Properties;
 
+private import 'Property Management'::'Data Model'::Locations::Location;
+
 abstract class Property {
 
   public identifier: String;
   public name: String;
   public value: 'Currency Amount'[0..1];
   public status: 'Property Status';
+  public 'acquisition data': compose 'Property Acquisition Data';
+  public 'disposition data': compose 'Property Disposition Data';
+  
+  public location: Location [0..1];
   
   @Create public 'create property'(in identifier: String, in name: String);
   public 'update status'();

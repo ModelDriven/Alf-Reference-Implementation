@@ -144,7 +144,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
         Tuple self = this.getSelf();
         InvocationExpression invocation = self.getInvocation();
         if (invocation != null) {
-            for (NamedExpression argument: self.getInput()){
+            for (NamedExpression argument: self.getOutput()){
                 if (argument.getExpression().getImpl().isNull()) {
                     if (!"out".equals(invocation.getImpl().parameterNamed
                             (argument.getName()).getDirection())) { 
