@@ -128,6 +128,51 @@ public class InstanceCreationExpressionImpl
 	    return null;
 	}
 	
+	/**
+	 * If the referent is a classifier, not a constructor operation, then the 
+	 * type of an instance creation expression is given by the referent itself,
+	 * not a return parameter type. 
+	 */
+	@Override
+	protected ElementReference deriveType() {
+	    ElementReference referent = this.getSelf().getReferent();
+	    if (referent.getImpl().isClassifier()) {
+	        return referent;
+	    } else {
+	        return super.deriveType();
+	    }
+	}
+	
+    /**
+     * If the referent is a classifier, not a constructor operation, then the 
+     * lower bound of an instance creation expression is 1, rather than being
+     * given a return parameter lower bound. 
+     */
+    @Override
+    protected Integer deriveLower() {
+        ElementReference referent = this.getSelf().getReferent();
+        if (referent.getImpl().isClassifier()) {
+            return 1;
+        } else {
+            return super.deriveLower();
+        }
+    }
+    
+    /**
+     * If the referent is a classifier, not a constructor operation, then the 
+     * upper bound of an instance creation expression is 1, rather than being
+     * given a return parameter lower bound. 
+     */
+    @Override
+    protected Integer deriveUpper() {
+        ElementReference referent = this.getSelf().getReferent();
+        if (referent.getImpl().isClassifier()) {
+            return 1;
+        } else {
+            return super.deriveLower();
+        }
+    }
+    
 	/*
 	 * Derivations
 	 */
@@ -171,7 +216,7 @@ public class InstanceCreationExpressionImpl
 	public boolean instanceCreationExpressionTuple() {
 	    InstanceCreationExpression self = this.getSelf();
 	    Tuple tuple = self.getTuple();
-		return self.getIsConstructorless() || 
+		return !self.getIsConstructorless() || 
 		            tuple != null && tuple.getImpl().isEmpty();
 	}
 

@@ -76,6 +76,10 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	public void setMember(Collection<Member> members) {
 		addAllMembers(members, this.member);
 	}
+	
+	public void setMemberMap(Map<String, Collection<Member>> members) {
+	    this.member = members;
+	}
 
 	public void addMember(Member member) {
 	    addMember(member, this.member);

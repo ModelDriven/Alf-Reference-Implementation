@@ -35,6 +35,12 @@ public class NameExpressionImpl extends ExpressionImpl {
 		return (NameExpression) this.self;
 	}
 
+    @Override
+    public String toString() {
+        NameExpression self = this.getSelf();
+        return super.toString() + " name:" + self.getName().getImpl().getPathName();
+    }
+    
 	public ElementReference getEnumerationLiteral() {
 		if (this.enumerationLiteral == null) {
 			this.setEnumerationLiteral(this.deriveEnumerationLiteral());
@@ -238,12 +244,6 @@ public class NameExpressionImpl extends ExpressionImpl {
 	/*
 	 * Helper Methods
 	 */
-	
-	@Override
-	public String toString() {
-	    NameExpression self = this.getSelf();
-	    return self._toString() + " " + self.getName().getImpl().getPathName();
-	}
 	
     public ElementReference getParameter() {
         QualifiedName name = this.getSelf().getName();

@@ -1,6 +1,6 @@
 namespace 'Property Management'::'Data Model';
 
-private import 'Property Management'::'Basic Types';
+private import 'Property Management'::'Basic Types'::*;
 
 package Properties {
 
@@ -20,7 +20,7 @@ package Properties {
   }
   
   public datatype 'Property Disposition Data' {
-    public 'disposition date': Data;
+    public 'disposition date': Date;
     public 'disposition revenue': 'Currency Amount';
     public 'disposition type': 'Property Disposition Type';
   }
