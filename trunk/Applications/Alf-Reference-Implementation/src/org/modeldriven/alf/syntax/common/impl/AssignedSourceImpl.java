@@ -126,6 +126,15 @@ public class AssignedSourceImpl {
         return newAssignments;
     }
     
+    public boolean isAssignedIn(Collection<AssignedSource> assignments) {
+        for (AssignedSource assignment: assignments) {
+            if (this.equals(assignment)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     // Note: Equality is based solely on the AssignedSource name.
     @Override
     public boolean equals(Object other) {

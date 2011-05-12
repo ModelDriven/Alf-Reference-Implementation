@@ -93,8 +93,9 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	            // Note: Alf allows redefinition only for operations.
 	            if (ownedMember instanceof OperationDefinition &&
 	                    (!ownedMember.isDistinguishableFrom(inheritableMember) ||
-	                     ((OperationDefinition)ownedMember).getRedefinedOperations().
-	                        contains(inheritableMember.getImpl().getReferent()))) {
+	                     inheritableMember.getImpl().getReferent().getImpl().
+	                         isContainedIn(((OperationDefinition)ownedMember).
+	                                 getRedefinedOperations()))) {
 	                inheritableMembers.remove(i);
 	                i--;
 	                break;

@@ -136,7 +136,7 @@ public class InstanceCreationExpressionImpl
 	@Override
 	protected ElementReference deriveType() {
 	    ElementReference referent = this.getSelf().getReferent();
-	    if (referent.getImpl().isClassifier()) {
+	    if (referent != null && referent.getImpl().isClassifier()) {
 	        return referent;
 	    } else {
 	        return super.deriveType();
@@ -151,7 +151,7 @@ public class InstanceCreationExpressionImpl
     @Override
     protected Integer deriveLower() {
         ElementReference referent = this.getSelf().getReferent();
-        if (referent.getImpl().isClassifier()) {
+        if (referent != null && referent.getImpl().isClassifier()) {
             return 1;
         } else {
             return super.deriveLower();
@@ -166,10 +166,10 @@ public class InstanceCreationExpressionImpl
     @Override
     protected Integer deriveUpper() {
         ElementReference referent = this.getSelf().getReferent();
-        if (referent.getImpl().isClassifier()) {
+        if (referent != null && referent.getImpl().isClassifier()) {
             return 1;
         } else {
-            return super.deriveLower();
+            return super.deriveUpper();
         }
     }
     

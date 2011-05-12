@@ -76,10 +76,15 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
 	        
 	        ClassifierTemplateParameter self = this.getSelf();
             Collection<ElementReference> mySpecializations = self.getSpecializationReferent();
+            
+            for (ElementReference specialization: mySpecializations) {
+                if (!specialization.getImpl().isContainedIn(otherSpecializations)) {
+                    return false;
+                }
+            }
 	        
             return  otherParameter.getName().equals(self.getName()) &&
-                    otherSpecializations.size() == mySpecializations.size() &&
-                    otherSpecializations.containsAll(mySpecializations);
+                    otherSpecializations.size() == mySpecializations.size();
 	    }
 	}
 

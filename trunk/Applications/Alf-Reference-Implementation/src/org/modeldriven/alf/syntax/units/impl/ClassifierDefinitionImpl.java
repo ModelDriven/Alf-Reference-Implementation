@@ -185,12 +185,24 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             Collection<ElementReference> mySpecializations = self.getSpecializationReferent();
             List<ClassifierTemplateParameter> myParameters = self.getImpl().getTemplateParameters();
 	        
+            for (ElementReference specialization: mySpecializations) {
+                if (!specialization.getImpl().isContainedIn(otherSpecializations)) {
+                    return false;
+                }
+            }
+            
+            for (ClassifierTemplateParameter myParameter: myParameters) {
+                for (ClassifierTemplateParameter otherParameter: otherParameters) {
+                    if (!myParameter.getImpl().equals(otherParameter)) {
+                        return false;
+                    }
+                }
+            }
+            
             return  other.getIsAbstract() == self.getIsAbstract() &&
                     otherSpecializations.size() == mySpecializations.size() &&
-                    otherSpecializations.containsAll(mySpecializations) &&
-                    otherParameters.size() == myParameters.size() &&
-                    otherParameters.containsAll(myParameters);
-	    }
+                    otherParameters.size() == myParameters.size();
+ 	    }
 	} // matchForStub
 
 	/*
@@ -265,7 +277,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
                     isFirst = false;
                 } else {
                     for (Object commonAncestor: commonAncestors.toArray()) {
-                        if (!contains(ancestors,(((ElementReference)commonAncestor).getImpl()))) {
+                        if (!(((ElementReference)commonAncestor).getImpl().
+                                isContainedIn(ancestors))) {
                             commonAncestors.remove(commonAncestor);
                         }
                     }
@@ -300,16 +313,6 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             classifierSet.add(classifier);
         }
         return commonAncestor(classifierSet);
-    }
-
-    private static boolean contains(Collection<ElementReference> elementReferences,
-            ElementReferenceImpl elementReferenceImpl) {
-        for (ElementReference elementReference: elementReferences) {
-            if (elementReferenceImpl.equals(elementReference)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 } // ClassifierDefinitionImpl

@@ -104,7 +104,7 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
             Collection<AssignedSource> assignmentsAfter1 = operand1.getImpl().getNewAssignments();
             Collection<AssignedSource> assignmentsAfter2 = operand2.getImpl().getNewAssignments();
             for (AssignedSource assignment: assignmentsAfter1) {
-                if (assignmentsAfter2.contains(assignment)) {
+                if (assignment.getImpl().isAssignedIn(assignmentsAfter2)) {
                     return false;
                 }
             }
