@@ -67,7 +67,7 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
      * element, in order.
      **/
     public static boolean equals(List<FormalParameter> formalParameters1,
-            List<?> formalParameters2) {
+            List<FormalParameter> formalParameters2) {
         if (formalParameters1.size() != formalParameters2.size()) {
             return false;
         } else {
@@ -85,7 +85,7 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
      * element, in order.
      **/
     public static boolean match(List<FormalParameter> formalParameters1,
-            List<?> formalParameters2) {
+            List<FormalParameter> formalParameters2) {
         if (formalParameters1.size() != formalParameters2.size()) {
             return false;
         } else {
@@ -105,35 +105,24 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
 	@Override
 	public boolean equals(Object object) {
 	    if (!(object instanceof FormalParameter || 
-	            object instanceof FormalParameterImpl) ||
-	            object instanceof Parameter) {
+	            object instanceof FormalParameterImpl)) {
 	        return false;
 	    } else {
 	        FormalParameter self = this.getSelf();
-	        if (object instanceof Parameter) {
-	            Parameter other = (Parameter)object;
-	            String otherDirection = other.getDirection().toString();
-	            if (otherDirection.equals("return_")) {
-	                otherDirection = "return";
-	            }
-	            return  self.getDirection().equals(otherDirection) &&
-	                    self.getName().equals(other.getName()) &&
-	                    self.getLower() == other.getLower() &&
-	                    self.getUpper() == other.getUpper() &&
-	                    self.getIsOrdered() == other.getIsOrdered() &&
-	                    self.getIsNonunique() == !other.getIsUnique() &&
-	                    self.getType().getImpl().equals(other.getType());
-	        } else {
-    	        FormalParameter other = object instanceof FormalParameter?
-    	            (FormalParameter)object: ((FormalParameterImpl)object).getSelf();
-    	        return  self.getDirection().equals(other.getDirection()) &&
-    	                self.getName().equals(other.getName()) &&
-    	                self.getLower() == other.getLower() &&
-    	                self.getUpper() == other.getUpper() &&
-    	                self.getIsOrdered() == other.getIsOrdered() &&
-    	                self.getIsNonunique() == other.getIsNonunique() &&
-    	                self.getType().getImpl().equals(other.getType());
-	        }
+	        ElementReference myType = self.getType();
+	        
+	        FormalParameter other = object instanceof FormalParameter?
+	                (FormalParameter)object: ((FormalParameterImpl)object).getSelf();
+            ElementReference otherType = other.getType();
+            
+            return  self.getDirection().equals(other.getDirection()) &&
+                    self.getName().equals(other.getName()) &&
+                    self.getLower() == other.getLower() &&
+                    self.getUpper() == other.getUpper() &&
+                    self.getIsOrdered() == other.getIsOrdered() &&
+                    self.getIsNonunique() == other.getIsNonunique() &&
+                    (myType != null && myType.getImpl().equals(otherType) ||
+                            myType == null && otherType == null);
 	    }
 	}
 
@@ -142,31 +131,22 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
     **/
     public boolean matches(Object object) {
         if (!(object instanceof FormalParameter || 
-                object instanceof FormalParameterImpl) ||
-                object instanceof Parameter) {
+                object instanceof FormalParameterImpl)) {
             return false;
         } else {
             FormalParameter self = this.getSelf();
             String myName = self.getName();
             ElementReference myType = self.getType();
-            if (object instanceof Parameter) {
-                Parameter other = (Parameter)object;
-                String otherName = other.getName();
-                Classifier otherType = other.getType();
-                return (myName == null && otherName == null ||
-                            myName.equals(otherName)) &&
-                       (myType == null && otherType == null ||
-                            myType.getImpl().equals(otherType));
-            } else {
-                FormalParameter other = object instanceof FormalParameter?
-                    (FormalParameter)object: ((FormalParameterImpl)object).getSelf();
-                String otherName = other.getName();
-                ElementReference otherType = other.getType();
-                return (myName == null && otherName == null ||
-                            myName.equals(otherName)) &&
-                       (myType == null && otherType == null ||
-                            myType.getImpl().equals(otherType));
-            }
+            
+            FormalParameter other = object instanceof FormalParameter?
+                (FormalParameter)object: ((FormalParameterImpl)object).getSelf();
+            String otherName = other.getName();
+            ElementReference otherType = other.getType();
+            
+            return (myName == null && otherName == null ||
+                        myName != null && myName.equals(otherName)) &&
+                   (myType == null && otherType == null ||
+                        myType != null && myType.getImpl().equals(otherType));
         }
     }
 

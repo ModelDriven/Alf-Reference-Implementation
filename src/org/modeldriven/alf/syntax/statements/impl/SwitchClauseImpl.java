@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A clause in a switch statement with a set of cases and a sequence of
@@ -81,8 +82,10 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
 	    Collection<Expression> cases = self.getCase();
 	    Collection<AssignedSource> assignmentBefore = self.assignmentsBefore();
 	    for (Expression expression: cases) {
-	        if (!assignmentBefore.containsAll(expression.getAssignmentAfter())) {
-	            return false;
+	        for (AssignedSource assignmentAfter: expression.getAssignmentAfter()) {
+    	        if (!assignmentAfter.getImpl().isAssignedIn(assignmentBefore)) {
+    	            return false;
+    	        }
 	        }
 	    }
 		return true;

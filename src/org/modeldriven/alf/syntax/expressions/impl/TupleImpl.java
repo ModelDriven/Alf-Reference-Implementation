@@ -193,7 +193,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
             Collection<AssignedSource> newAssignments = 
                 expression.getImpl().getNewAssignments();
             for (AssignedSource newAssignment: newAssignments) {
-                if (assignments.contains(newAssignment)) {
+                if (newAssignment.getImpl().isAssignedIn(assignments)) {
                     return false;
                 }
             }

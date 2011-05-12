@@ -13,7 +13,6 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.Operation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -334,8 +333,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     @Override
     public List<FormalParameter> getFormalParameters() {
         List<FormalParameter> parameters = super.getFormalParameters();
-        if (this.getSelf().getIsConstructor() && 
-                this.getReturnParameter() == null) {
+        if (this.getSelf().getIsConstructor() && !this.hasReturnParameter()) {
             FormalParameter returnParameter = new FormalParameter();
             returnParameter.setType(this.getNamespaceReference());
             returnParameter.setDirection("return");
@@ -353,23 +351,29 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         }
         return null;
     }
+    
+    private boolean hasReturnParameter() {
+        List<FormalParameter> parameters = super.getFormalParameters();        
+        for (FormalParameter parameter: parameters) {
+            if (parameter.getDirection().equals("return")) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private boolean equateParameters(ElementReference operation) {
-        OperationDefinition alfOperation = (OperationDefinition)operation.getImpl().getAlf();
-        Operation umlOperation = (Operation)operation.getImpl().getUml();
-        if (alfOperation != null) {
-            return FormalParameterImpl.equals(this.getFormalParameters(), alfOperation.getImpl().getFormalParameters());
-        } else if (umlOperation != null) {
-            return FormalParameterImpl.equals(this.getFormalParameters(), umlOperation.getOwnedParameter());
-        } else {
-            return false;
-        }
+        return operation != null &&
+                    FormalParameterImpl.equals(
+                        this.getFormalParameters(), 
+                        operation.getImpl().getParameters());
     }
     
     private boolean matchParameters(ElementReference operation) {
         return operation != null && 
-                    FormalParameterImpl.match(this.getFormalParameters(), 
-                            operation.getImpl().getParameters());
+                    FormalParameterImpl.match(
+                        this.getFormalParameters(), 
+                        operation.getImpl().getParameters());
     }
     
     public Block getEffectiveBody() {

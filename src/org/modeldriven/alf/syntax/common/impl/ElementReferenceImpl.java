@@ -164,5 +164,14 @@ public abstract class ElementReferenceImpl {
     }
 
     public abstract boolean conformsTo(ElementReference type);
+    
+    public boolean isContainedIn(Collection<ElementReference> references) {
+        for (ElementReference reference: references) {
+            if (this.equals(reference)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 } // ElementReferenceImpl

@@ -201,7 +201,7 @@ public class SwitchStatementImpl extends StatementImpl {
 	            Collection<AssignedSource> newAssignments = 
 	                expression.getImpl().getNewAssignments();
 	            for (AssignedSource newAssignment: newAssignments) {
-	                if (previousAssignments.contains(newAssignment)) {
+	                if (newAssignment.getImpl().isAssignedIn(previousAssignments)) {
 	                    return false;
 	                }
 	                previousAssignments.addAll(newAssignments);

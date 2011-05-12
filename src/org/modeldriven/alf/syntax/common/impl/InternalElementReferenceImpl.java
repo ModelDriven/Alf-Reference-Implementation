@@ -443,7 +443,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean conformsTo(ElementReference type) {
         return this.isClassifier() && (type == null ||
-                this.equals(type) || this.allParents().contains(type));
+                this.equals(type) || 
+                type.getImpl().isContainedIn(this.allParents()));
     }
 
 } // InternalElementReferenceImpl

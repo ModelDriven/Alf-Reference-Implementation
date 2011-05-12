@@ -260,13 +260,17 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
     
     public void addImplicitImport(QualifiedName packageName) {
         UnitDefinition self = this.getSelf();
+        for (ImportReference importReference: self.getImport()) {
+            if (importReference instanceof PackageImportReference &&
+                    importReference.getReferentName().getImpl().equals(packageName)) {
+                return;
+            }
+        }      
         PackageImportReference importReference = new PackageImportReference();
         importReference.setReferentName(packageName);
         importReference.setVisibility("private");
-        importReference.setUnit(self);       
-        if (!self.getImport().contains(importReference)) {
-            self.addImport(importReference);
-        }
+        importReference.setUnit(self);
+        self.addImport(importReference);
     }
 
 } // UnitDefinitionImpl

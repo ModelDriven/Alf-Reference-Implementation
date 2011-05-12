@@ -194,7 +194,7 @@ public class AcceptStatementImpl extends StatementImpl {
     	        Collection<ElementReference> blockSignals = block.getSignal();
     	        for (ElementReference signal: blockSignals) {
         	        if (!behavior.getImpl().hasReceptionFor(signal) ||
-        	                signals.contains(signal)) {
+        	                signal.getImpl().isContainedIn(signals)) {
         	            return false;
         	        }
     	        }

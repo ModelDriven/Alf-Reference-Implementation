@@ -216,7 +216,7 @@ public class ClassifyStatementImpl extends
 	    boolean first = true;
 	    for (ElementReference referent: classes) {
 	        Collection<ElementReference> ancestors = referent.getImpl().allParents();
-	        if (!ancestors.contains(targetType)) {
+	        if (!targetType.getImpl().isContainedIn(ancestors)) {
 	            return false;
 	        }
 	        if (first) {
@@ -228,7 +228,7 @@ public class ClassifyStatementImpl extends
 	    
 	    //Check that no common ancestors are subclasses of the target type.
 	    for (ElementReference referent: commonAncestors) {
-	        if (referent.getImpl().allParents().contains(targetType)) {
+	        if (targetType.getImpl().isContainedIn(referent.getImpl().allParents())) {
 	            return false;
 	        }
 	    }

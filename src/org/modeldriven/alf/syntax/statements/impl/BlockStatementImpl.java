@@ -114,7 +114,7 @@ public class BlockStatementImpl extends StatementImpl {
 	        Set<AssignedSource> previousAssignments = new HashSet<AssignedSource>();
 	        for (Statement statement: block.getStatement()) {
 	            for (AssignedSource assignment: statement.getImpl().getNewAssignments()) {
-	                if (previousAssignments.contains(assignment)) {
+	                if (assignment.getImpl().isAssignedIn(previousAssignments)) {
 	                    return false;
 	                }
 	                previousAssignments.add(assignment);
