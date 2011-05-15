@@ -73,7 +73,7 @@ do                                                         // See Note 3
   this.PackAndShip();
   
   /** 5. Delivered to Customer */
-  accept(OrderDelivery);
+  accept(OrderDelivered);
   this.NotifyOfDelivery();
 
 }

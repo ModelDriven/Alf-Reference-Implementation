@@ -410,17 +410,26 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public ElementReference getClassifierBehavior() {
+        if (!this.isActiveClass()) {
+            return null;
+        } else {
+            return ((ActiveClassDefinition)this.getSelf().getElement()).
+                        getClassifierBehavior().getImpl().getReferent();
+        }
+    }
+    
+    @Override
     public ElementReference getActiveClass() {
         SyntaxElement element = this.getSelf().getElement();
         if (!(element instanceof ActivityDefinition)) {
             return null;
         } else {
-            NamespaceDefinition namespace = ((ActivityDefinition)element).getNamespace();
-            if (namespace != null && namespace instanceof ActiveClassDefinition &&
-                   ((ActiveClassDefinition)namespace).getClassifierBehavior() == element) {
-                InternalElementReference reference = new InternalElementReference();
-                reference.setElement(namespace);
-                return reference;
+            ElementReference namespace = ((ActivityDefinition)element).getImpl().
+                                                        getNamespaceReference();
+            if (namespace != null && namespace.getImpl().isActiveClass() &&
+                   this.equals(namespace.getImpl().getClassifierBehavior())) {
+                return namespace;
             } else {
                 return null;
             }

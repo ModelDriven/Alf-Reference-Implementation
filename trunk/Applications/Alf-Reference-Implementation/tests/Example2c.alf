@@ -87,7 +87,7 @@ do                                                         // See Note 3
 
   /** 4. Being Packed and Shipped */
   PackAndShip();
-  accept (OrderDelivery);
+  accept (OrderDelivered);
 
   /** 5. Delivered to Customer */
   NotifyOfDelivery();

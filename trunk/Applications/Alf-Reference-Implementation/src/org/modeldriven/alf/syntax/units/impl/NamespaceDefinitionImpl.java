@@ -223,12 +223,22 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     }
 
     public boolean hasSubunitFor(UnitDefinition unit) {
-        for (Member member: this.getSelf().getOwnedMember()) {
-            if (member.getIsStub() && member.matchForStub(unit)) {
-                return true;
+        return this.getStubFor(unit) != null;
+    }
+    
+    public Member getStubFor(UnitDefinition unit) {
+        NamespaceDefinition definition = unit == null? null: unit.getDefinition();
+        if (definition != null) {
+            for (Member member: this.getSelf().getOwnedMember()) {
+                String name = member.getName();
+                
+                if (name != null && name.equals(definition.getName()) && 
+                        member.getIsStub() && member.matchForStub(unit)) {
+                    return member;
+                }
             }
         }
-        return false;
+        return null;
     }
     
     @Override
