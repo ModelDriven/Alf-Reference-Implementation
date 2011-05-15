@@ -13,7 +13,9 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -75,19 +77,23 @@ public class DoStatementImpl extends StatementImpl {
 	    DoStatement self = this.getSelf();
 	    Expression condition = self.getCondition();
 	    Block body = self.getBody();
-	    Map<String, AssignedSource> assignmentsAfter = super.deriveAssignmentAfter();
+        Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+	    Map<String, AssignedSource> assignmentsAfter = assignmentsBefore;
 	    if (body != null) {
-	        body.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
+	        body.getImpl().setAssignmentBefore(assignmentsBefore);
 	        Set<AssignedSource> newAssignments = 
 	            new HashSet<AssignedSource>(body.getImpl().getNewAssignments());
 	        if (condition != null) {
-	            condition.getImpl().setAssignmentAfter(body.getImpl().getAssignmentAfterMap());
+	            condition.getImpl().setAssignmentBefore(body.getImpl().getAssignmentAfterMap());
 	            newAssignments.addAll(condition.getImpl().getNewAssignments());
 	        }
-	        for (AssignedSource assignment: newAssignments) {
-	            AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
-	            assignmentAfter.setSource(self);
-                assignmentsAfter.put(assignmentAfter.getName(), assignmentAfter);
+	        if (!newAssignments.isEmpty()) {
+	            assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
+    	        for (AssignedSource assignment: newAssignments) {
+    	            AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
+    	            assignmentAfter.setSource(self);
+                    assignmentsAfter.put(assignmentAfter.getName(), assignmentAfter);
+    	        }
 	        }
 	    }
 	    return assignmentsAfter;
@@ -142,6 +148,19 @@ public class DoStatementImpl extends StatementImpl {
 	 * Helper Methods
 	 */
 
+	@Override
+	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    DoStatement self = this.getSelf();
+	    Block body = self.getBody();
+	    Expression condition = self.getCondition();
+	    if (body != null) {
+	        body.getImpl().setCurrentScope(currentScope);
+	    }
+	    if (condition != null) {
+	        condition.getImpl().setCurrentScope(currentScope);
+	    }
+    }
+    
 	@Override
 	protected Statement getLoopStatement() {
 	    return this.getSelf();

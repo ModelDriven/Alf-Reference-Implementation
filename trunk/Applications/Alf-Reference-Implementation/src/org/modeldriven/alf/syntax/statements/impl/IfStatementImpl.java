@@ -138,6 +138,13 @@ public class IfStatementImpl extends StatementImpl {
         Map<String, AssignedSource> assignmentsAfter = 
             new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
         assignmentsAfter.putAll(this.mergeAssignments(blocks));
+        if (finalClause == null) {
+            for (Object name: assignmentsAfter.keySet().toArray()) {
+                if (!assignmentsBefore.containsKey(name)) {
+                    assignmentsAfter.remove(name);
+                }
+            }
+        }
         return assignmentsAfter;
     }
     

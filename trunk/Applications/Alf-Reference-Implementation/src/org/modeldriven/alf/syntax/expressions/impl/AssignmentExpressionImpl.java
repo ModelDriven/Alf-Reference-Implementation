@@ -203,8 +203,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	protected AssignedSource deriveAssignment() {
 	    AssignmentExpression self = this.getSelf();
 	    String name = this.getLocalName();
+	    LeftHandSide lhs = self.getLeftHandSide();
         Expression rhs = self.getRightHandSide();
-	    if (name == null || rhs == null) {
+	    if (name == null || lhs == null || rhs == null) {
 	        return null;
 	    } else if (self.getIsDefinition()) {
 	        int upper = rhs.getUpper() == 1? 1: -1;
@@ -212,7 +213,16 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	    } else {
 	        AssignedSource oldAssignment = this.getAssignmentBefore(name);
 	        if (oldAssignment == null) {
-	            return null;
+	            ElementReference referent = lhs.getImpl().getReferent();
+	            if (referent != null && referent.getImpl().isParameter()) {
+	                return AssignedSourceImpl.makeAssignment
+	                        (referent.getImpl().getName(), self, 
+	                         referent.getImpl().getType(), 
+	                         referent.getImpl().getLower(), 
+	                         referent.getImpl().getUpper());
+	            } else {
+	                return null;
+	            }
 	        } else {
     	        AssignedSource assignment = AssignedSourceImpl.makeAssignment(oldAssignment);
     	        assignment.setSource(self);
@@ -269,9 +279,10 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      **/
 	protected Boolean deriveIsDefinition() {
 	    AssignmentExpression self = this.getSelf();
-	    String name = this.getLocalName();
-		return self.getIsSimple() && name != null && 
-		       !self.getImpl().getAssignmentBeforeMap().containsKey(name);    
+	    LeftHandSide lhs = self.getLeftHandSide();
+		return self.getIsSimple() && 
+		        lhs != null && lhs.getImpl().getReferent() == null &&
+		        this.getLocalName() != null;    
 	}
 
     /**

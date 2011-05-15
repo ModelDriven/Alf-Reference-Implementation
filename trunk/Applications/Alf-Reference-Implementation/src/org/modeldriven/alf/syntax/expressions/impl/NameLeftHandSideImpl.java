@@ -59,6 +59,25 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	    return assignments;
 	}
 	
+	@Override
+	public ElementReference getType() {
+        AssignedSource oldAssignment = this.getOldAssignment();
+        return oldAssignment == null? super.getType(): oldAssignment.getType();
+	    
+	}
+	
+	@Override
+	public Integer getLower() {
+	    AssignedSource oldAssignment = this.getOldAssignment();
+	    return oldAssignment == null? super.getLower(): oldAssignment.getLower();
+	}
+	
+    @Override
+    public Integer getUpper() {
+        AssignedSource oldAssignment = this.getOldAssignment();
+        return oldAssignment == null? super.getUpper(): oldAssignment.getUpper();
+    }
+    
 	/*
 	 * Derivations
 	 */
@@ -107,31 +126,20 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
     
 	@Override
     protected ElementReference getReferent() {
-        NameLeftHandSide self = this.getSelf();
-        QualifiedName target = self.getTarget();
-        if (target == null) {
-            return null;
-        } else if (target.getIsFeatureReference()) {
-            return target.getDisambiguation().getImpl().getStructuralFeatureReferent();
-        } else {
-            ElementReference parameter = target.getImpl().getParameterReferent();
-            // Note: The check on the namespace of a parameter needs to be in the spec.               
-            if (parameter != null && parameter.getImpl().isInNamespace(this.currentScope)) {
-                return parameter;
-            } else if (target.getQualification() == null) {
-                AssignedSource assignment = 
-                    self.getImpl().getAssignmentBefore(this.getLocalName());
-                if (assignment == null) {
-                    return null;
-                } else {
-                    InternalElementReference referent = new InternalElementReference();
-                    referent.setElement(assignment.getSource());
-                    return referent;
-                }
-            } else {
-                return null;
-            }
-        }
+	    FeatureReference feature = this.getFeature();
+	    ElementReference parameter = this.getParameter();
+	    AssignedSource oldAssignment = this.getOldAssignment();
+	    if (feature != null) {
+	        return feature.getImpl().getStructuralFeatureReferent();
+	    } else if (oldAssignment != null) {
+	        InternalElementReference referent = new InternalElementReference();
+	        referent.setElement(oldAssignment.getSource());
+	        return referent;
+	    } else if (parameter != null) {
+	        return parameter;
+	    } else {
+	        return null;
+	    }
     }
 
     /**
@@ -155,6 +163,16 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
         QualifiedName target = this.getSelf().getTarget();
         return target == null? null: target.getDisambiguation();
     }
+    
+    public ElementReference getParameter() {
+        QualifiedName target = this.getSelf().getTarget();
+        ElementReference parameter = target == null? null: 
+                                        target.getImpl().getParameterReferent();
+        // Note: The check on the namespace of a parameter needs to be in the spec.               
+        return parameter == null || 
+                    !parameter.getImpl().isInNamespace(this.currentScope)? null: 
+                        parameter;
+    }
 
     @Override
     public String getLocalName() {
@@ -162,8 +180,16 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
             return null;
         } else {
             QualifiedName target = this.getSelf().getTarget();
-            return target == null? null: target.getUnqualifiedName().getName();
+            return target == null || 
+                    target.getQualification() != null && 
+                    this.getParameter() == null? null: 
+                        target.getUnqualifiedName().getName();
         }
+    }
+    
+    public AssignedSource getOldAssignment() {
+        String localName = this.getLocalName();
+        return localName == null? null: this.getAssignmentBefore(localName);
     }
 
     @Override

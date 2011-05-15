@@ -385,6 +385,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         int lower = 0;
         if (this.isProperty()) {
             lower = ((PropertyDefinition)this.getSelf().getElement()).getLower();
+        } else if (this.isParameter()) {
+                lower = ((FormalParameter)this.getSelf().getElement()).getLower();
         } else if (this.isOperation()) {
             lower = ((OperationDefinition)this.getSelf().getElement()).getImpl().getLower();
         } else if (this.isBehavior()) {
@@ -397,6 +399,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         int upper = 0;
         if (this.isProperty()) {
             upper = ((PropertyDefinition)this.getSelf().getElement()).getUpper();
+        } else if (this.isParameter()) {
+            upper = ((FormalParameter)this.getSelf().getElement()).getUpper();
         } else if (this.isOperation()) {
             upper = ((OperationDefinition)this.getSelf().getElement()).getImpl().getUpper();
         } else if (this.isBehavior()) {

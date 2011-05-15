@@ -228,15 +228,24 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                 for (OutputNamedExpression output: outputs) {
                     Expression expression = output.getExpression();
                     expressions.add(expression);
+                    
+                    // Note: The assignments before the expression must be set
+                    // in order to determine whether the output is a local name
+                    // without a previous assignment.
+                    expression.getImpl().setAssignmentBefore(assignmentsBefore);
+                    
                     LeftHandSide lhs = output.getLeftHandSide();
                     String localName = lhs == null? null: lhs.getImpl().getLocalName();
-                    if (localName != null) {
+                    if (localName != null && lhs.getImpl().getReferent() == null) {
+                        // A new assignment is created for a local named defined
+                        // as an output argument so the argument name expression
+                        // resolves correctly.
                         if ("out".equals(invocation.getImpl().parameterNamed(output.getName()))) {
                             AssignedSource assignment = AssignedSourceImpl.makeAssignment
                             (localName, invocation, 
                                     expression.getType(), 
-                                    expression.getLower(), 
-                                    expression.getUpper());
+                                    0, 
+                                    expression.getUpper() == 1? 1: -1);
                             newLocalAssignments.put(localName, assignment);
                         }
                     }
@@ -254,6 +263,30 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                     for (Expression expression: expressions) {
                         expression.getImpl().setAssignmentBefore(assignmentsBefore);
                         this.assignmentsAfter.putAll(expression.getImpl().getAssignmentAfterMap());
+                    }
+                    for (OutputNamedExpression output: outputs) {
+                        LeftHandSide lhs = output.getLeftHandSide();
+                        String localName = lhs == null? null: lhs.getImpl().getLocalName();
+                        if (localName != null) {
+                            AssignedSource assignmentBefore = 
+                                assignmentsBefore.get(localName);
+                            if (assignmentBefore == null) {
+                                ElementReference referent = lhs.getImpl().getReferent();
+                                if (referent != null) {
+                                    AssignedSource assignment = AssignedSourceImpl.
+                                        makeAssignment(localName, self, 
+                                                referent.getImpl().getType(),
+                                                referent.getImpl().getLower(), 
+                                                referent.getImpl().getUpper());
+                                    this.assignmentsAfter.put(localName, assignment);
+                                }
+                            } else {
+                                AssignedSource assignment = AssignedSourceImpl.
+                                    makeAssignment(assignmentBefore);
+                                assignment.setSource(self.getInvocation());
+                                this.assignmentsAfter.put(localName, assignment);
+                            }
+                        }
                     }
                 }
             }

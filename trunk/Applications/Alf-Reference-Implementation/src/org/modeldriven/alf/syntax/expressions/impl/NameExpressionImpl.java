@@ -179,7 +179,22 @@ public class NameExpressionImpl extends ExpressionImpl {
 	 **/
 	@Override
 	protected Integer deriveUpper() {
-	    return 1;
+        NameExpression self = this.getSelf();
+        AssignedSource assignment = self.getAssignment();
+        ElementReference parameter = this.getParameter();
+        ElementReference enumerationLiteral = self.getEnumerationLiteral();
+        PropertyAccessExpression propertyAccess = self.getPropertyAccess();
+        if (assignment != null) {
+            return assignment.getUpper();
+        } else if (parameter != null) {
+            return parameter.getImpl().getUpper();
+        } else if (enumerationLiteral != null) {
+            return 1;
+        } else if (propertyAccess != null) {
+            return propertyAccess.getUpper();
+        } else {
+            return 0;
+        }
 	}
 	
 	/**
@@ -188,7 +203,22 @@ public class NameExpressionImpl extends ExpressionImpl {
 	 **/
     @Override
     protected Integer deriveLower() {
-        return 1;
+        NameExpression self = this.getSelf();
+        AssignedSource assignment = self.getAssignment();
+        ElementReference parameter = this.getParameter();
+        ElementReference enumerationLiteral = self.getEnumerationLiteral();
+        PropertyAccessExpression propertyAccess = self.getPropertyAccess();
+        if (assignment != null) {
+            return assignment.getLower();
+        } else if (parameter != null) {
+            return parameter.getImpl().getLower();
+        } else if (enumerationLiteral != null) {
+            return 1;
+        } else if (propertyAccess != null) {
+            return propertyAccess.getLower();
+        } else {
+            return 0;
+        }
     }
     
 	/*

@@ -83,6 +83,9 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	    
 	    if (lhs != null) {
 	        lhs.setIndex(index);
+	        if (expression != null) {
+	            lhs.getImpl().setAssignmentBefore(expression.getImpl().getAssignmentBeforeMap());
+	        }
 	    }
 	    
 		return lhs;

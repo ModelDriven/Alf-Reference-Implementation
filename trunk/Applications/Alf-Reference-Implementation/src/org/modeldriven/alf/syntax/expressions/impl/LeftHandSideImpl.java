@@ -195,7 +195,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 
     @Override
     public Integer getLower() {
-        if (this.getSelf().getIndex() == null) {
+        if (this.getSelf().getIndex() != null) {
             return 1;
         } else {
             ElementReference referent = this.getReferent();
@@ -205,7 +205,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 
     @Override
     public Integer getUpper() {
-        if (this.getSelf().getIndex() == null) {
+        if (this.getSelf().getIndex() != null) {
             return 1;
         } else {
             ElementReference referent = this.getReferent();

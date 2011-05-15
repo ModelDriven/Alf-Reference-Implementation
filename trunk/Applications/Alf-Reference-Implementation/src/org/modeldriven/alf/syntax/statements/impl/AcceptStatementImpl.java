@@ -184,11 +184,11 @@ public class AcceptStatementImpl extends StatementImpl {
 	 **/
 	public boolean acceptStatementSignals() {
 	    AcceptStatement self = this.getSelf();
-	    ElementReference behavior = self.getBehavior();	    
+	    ElementReference behavior = self.getBehavior();
+	    behavior = behavior == null? null: behavior.getImpl().getActiveClass();
 	    if (behavior == null) {
 	        return false;
 	    } else {
-	        behavior = behavior.getImpl().getActiveClass();
     	    Collection<ElementReference> signals = new ArrayList<ElementReference>();
     	    for (AcceptBlock block: self.getAcceptBlock()) {
     	        Collection<ElementReference> blockSignals = block.getSignal();

@@ -9,6 +9,11 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -117,6 +122,31 @@ public class SequenceAccessExpressionImpl extends ExpressionImpl {
 	/*
 	 * Helper Methods
 	 */
+	
+	@Override
+	public Map<String, AssignedSource> updateAssignmentMap() {
+	    SequenceAccessExpression self = this.getSelf();
+	    Expression primary = self.getPrimary();
+	    Expression index = self.getIndex();
+	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+	    Map<String, AssignedSource> assignmentsAfter = assignmentsBefore;
+	    Collection<AssignedSource> newAssignments = new HashSet<AssignedSource>();
+	    if (primary != null) {
+	        primary.getImpl().setAssignmentBefore(assignmentsBefore);
+	        newAssignments.addAll(primary.getImpl().getNewAssignments());
+	    }
+	    if (index != null) {
+	        index.getImpl().setAssignmentBefore(assignmentsBefore);
+	        newAssignments.addAll(index.getImpl().getNewAssignments());
+	    }
+	    if (!newAssignments.isEmpty()) {
+	        assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
+	        for (AssignedSource assignment: newAssignments) {
+	            assignmentsAfter.put(assignment.getName(), assignment);
+	        }
+	    }
+	    return assignmentsAfter;
+	}
 	
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
