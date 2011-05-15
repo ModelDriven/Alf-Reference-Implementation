@@ -281,14 +281,17 @@ public class AcceptStatementImpl extends StatementImpl {
 	                    if (count == null) {
 	                        definitionCount.put(name, 1);
 	                    } else {
-	                        definitionCount.put(name, count++);
+	                        definitionCount.put(name, count+1);
 	                    }
 	                }
 	            }
 	        }
+            Map<String, AssignedSource> assignmentsBefore = 
+                this.getAssignmentBeforeMap();
 	        int n = acceptBlocks.size();
-	        for (int count: definitionCount.values()) {
-	            if (count != n) {
+	        for (String name: definitionCount.keySet()) {
+	            if (!assignmentsBefore.containsKey(name) && 
+	                    definitionCount.get(name) != n) {
 	                return false;
 	            }
 	        }

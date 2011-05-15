@@ -86,7 +86,18 @@ public class AlfParser {
       System.out.println("Parsed successfully.");
 
       if (element instanceof UnitDefinition) {
-        ((UnitDefinition)element).getImpl().addImplicitImports();
+      	UnitDefinition unit = (UnitDefinition)element;
+        unit.getImpl().addImplicitImports();
+        ElementReference namespaceReference = unit.getNamespace();
+        NamespaceDefinition namespace = namespaceReference == null? null: 
+        								namespaceReference.getImpl().asNamespace();
+        if (namespace != null) {
+          Member stub = namespace.getImpl().getStubFor(unit);
+          if (stub != null) {
+            System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
+            stub.setSubunit(unit);
+          }
+        }
         Collection<ConstraintViolation> violations = element.checkConstraints();
         if (violations.isEmpty()) {
           System.out.println("No constraint violations.");

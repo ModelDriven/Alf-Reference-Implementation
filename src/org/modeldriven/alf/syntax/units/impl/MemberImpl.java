@@ -328,7 +328,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         return false;
     }
 
-    protected QualifiedName getQualifiedName() {
+    public QualifiedName getQualifiedName() {
         return this.getNamespaceName().getImpl().addName(this.getSelf().getName());
     }
     

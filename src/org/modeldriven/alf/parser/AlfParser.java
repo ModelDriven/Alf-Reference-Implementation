@@ -63,7 +63,18 @@ public class AlfParser implements AlfParserConstants {
       System.out.println("Parsed successfully.");
 
       if (element instanceof UnitDefinition) {
-        ((UnitDefinition)element).getImpl().addImplicitImports();
+        UnitDefinition unit = (UnitDefinition)element;
+        unit.getImpl().addImplicitImports();
+        ElementReference namespaceReference = unit.getNamespace();
+        NamespaceDefinition namespace = namespaceReference == null? null:
+                                                                        namespaceReference.getImpl().asNamespace();
+        if (namespace != null) {
+          Member stub = namespace.getImpl().getStubFor(unit);
+          if (stub != null) {
+            System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
+            stub.setSubunit(unit);
+          }
+        }
         Collection<ConstraintViolation> violations = element.checkConstraints();
         if (violations.isEmpty()) {
           System.out.println("No constraint violations.");
@@ -5531,69 +5542,6 @@ public class AlfParser implements AlfParserConstants {
     finally { jj_save(44, xla); }
   }
 
-  private boolean jj_3R_219() {
-    if (jj_scan_token(STRING_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_218() {
-    if (jj_scan_token(HEX_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_243() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(127)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(128)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(132)) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_217() {
-    if (jj_scan_token(OCTAL_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_216() {
-    if (jj_scan_token(BINARY_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_215() {
-    if (jj_scan_token(DECIMAL_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3_30() {
-    if (jj_3R_66()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_93() {
-    if (jj_3R_61()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_214() {
-    if (jj_scan_token(BOOLEAN_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_159() {
-    if (jj_scan_token(HOOK)) return true;
-    return false;
-  }
-
-  private boolean jj_3_16() {
-    if (jj_3R_53()) return true;
-    return false;
-  }
-
   private boolean jj_3R_62() {
     if (jj_scan_token(CASE)) return true;
     if (jj_3R_53()) return true;
@@ -6552,14 +6500,14 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_26() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(COLON)) return true;
+  private boolean jj_3R_117() {
+    if (jj_3R_141()) return true;
     return false;
   }
 
-  private boolean jj_3R_117() {
-    if (jj_3R_141()) return true;
+  private boolean jj_3_26() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(COLON)) return true;
     return false;
   }
 
@@ -7277,6 +7225,69 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3_42() {
     if (jj_3R_78()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_219() {
+    if (jj_scan_token(STRING_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_218() {
+    if (jj_scan_token(HEX_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_243() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(127)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(128)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(132)) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_217() {
+    if (jj_scan_token(OCTAL_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_216() {
+    if (jj_scan_token(BINARY_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_215() {
+    if (jj_scan_token(DECIMAL_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3_30() {
+    if (jj_3R_66()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_93() {
+    if (jj_3R_61()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_214() {
+    if (jj_scan_token(BOOLEAN_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_159() {
+    if (jj_scan_token(HOOK)) return true;
+    return false;
+  }
+
+  private boolean jj_3_16() {
+    if (jj_3R_53()) return true;
     return false;
   }
 

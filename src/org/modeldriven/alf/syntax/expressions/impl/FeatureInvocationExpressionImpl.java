@@ -126,9 +126,12 @@ public class FeatureInvocationExpressionImpl
 	 */
 	
 	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    super.setCurrentScope(currentScope);
 	    this.currentScope = currentScope;
         FeatureReference feature = this.getSelf().getFeature();
-        feature.getImpl().setCurrentScope(currentScope);
+        if (feature != null) {
+            feature.getImpl().setCurrentScope(currentScope);
+        }
 	}
 
 } // FeatureInvocationExpressionImpl

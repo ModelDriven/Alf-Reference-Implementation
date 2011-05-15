@@ -12,7 +12,7 @@ active class Order1
   public deliveryAddress: MailingAddress;
   public contactPhone:    TelephoneNumber;
 
-  public receive signal CheckOut                           // See Note 1
+  public receive signal CheckOut
   {
     public cart:               ShoppingCart;
     public accountNumber:      BankCardAccountNumber;
@@ -37,10 +37,10 @@ active class Order1
   public receive signal PaymentApproved{}
   public receive signal OrderDelivered{}
 
-  private establishCustomer(in rcvd_evt: CheckOut);        // See Note 2
-  private processCharge(in rcvd_evt: SubmitCharge);
-  private declineCharge();
-  private packAndShip();
-  private notifyOfDelivery();
+  private establishCustomer(in rcvd_evt: CheckOut) { }
+  private processCharge(in rcvd_evt: SubmitCharge) { }
+  private declineCharge() { }
+  private packAndShip() { }
+  private notifyOfDelivery() { }
 
 } do Order_Behavior

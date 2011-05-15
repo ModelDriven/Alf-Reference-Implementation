@@ -19,7 +19,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 public class ThisExpressionImpl extends ExpressionImpl {
     
-    ElementReference context = null;
+    NamespaceDefinition currentScope = null;
 
 	public ThisExpressionImpl(ThisExpression self) {
 		super(self);
@@ -35,7 +35,14 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	 **/
 	@Override
 	protected ElementReference deriveType() {
-	    return this.context;
+	    ElementReference context = this.currentScope == null? null: 
+	                                    this.currentScope.getImpl().getReferent();
+	    if (context == null || !context.getImpl().isClassifier()) {
+	        return null;
+	    } else {
+    	    ElementReference activeClass = context.getImpl().getActiveClass();
+    	    return activeClass == null? context: activeClass;
+	    }
 	}
 	
 	/**
@@ -79,10 +86,7 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
-	    this.context = currentScope.getImpl().getReferent();
-	    if (!this.context.getImpl().isClassifier()) {
-	        this.context = null;
-	    }
+	    this.currentScope = currentScope;
 	}
 
 } // ThisExpressionImpl

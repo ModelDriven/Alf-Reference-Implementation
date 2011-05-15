@@ -452,6 +452,23 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         // Note: This will return 0 for an operation with no return parameter.
         return upper == null? 0: upper;
     }
+    
+    @Override
+    public ElementReference getClassifierBehavior() {
+        Element element = this.getSelf().getElement();
+        if (!(element instanceof BehavioredClassifier)) {
+            return null;
+        } else {
+             Behavior behavior =((BehavioredClassifier)element).getClassifierBehavior();
+             if (behavior == null) {
+                 return null;
+             } else {
+                 ExternalElementReference reference = new ExternalElementReference();
+                 reference.setElement(behavior);
+                 return reference;
+             }
+        }
+    }
 
     @Override
     public ElementReference getActiveClass() {

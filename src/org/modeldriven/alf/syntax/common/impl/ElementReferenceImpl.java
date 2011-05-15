@@ -92,6 +92,7 @@ public abstract class ElementReferenceImpl {
     public abstract ElementReference getAssociation();
     public abstract Integer getLower();
     public abstract Integer getUpper();
+    public abstract ElementReference getClassifierBehavior();
     
     public FormalParameter getReturnParameter() {
         for (FormalParameter parameter: this.getParameters()) {
