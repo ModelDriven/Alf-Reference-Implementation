@@ -421,6 +421,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         Integer lower = null;
         if (this.isProperty()) {
             lower = ((Property)this.getSelf().getElement()).getLower();
+        } else if (this.isParameter()) {
+            lower = ((Parameter)this.getSelf().getElement()).getLower();
         } else if (this.isOperation()) {
             lower = ((Operation)this.getSelf().getElement()).getLower();
         } else if (this.isBehavior()) {
@@ -437,6 +439,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         Integer upper = null;
         if (this.isProperty()) {
             upper = ((Property)this.getSelf().getElement()).getUpper();
+        } else if (this.isParameter()) {
+            upper = ((Parameter)this.getSelf().getElement()).getUpper();
         } else if (this.isOperation()) {
             upper = ((Operation)this.getSelf().getElement()).getUpper();
         } else if (this.isBehavior()) {

@@ -122,9 +122,10 @@ public class BehaviorInvocationExpressionImpl
             if (tuple == null) {
                 return false;
             } else {
+                this.getAssignmentAfterMap(); // Force computation of assignments.
                 for (NamedExpression input: tuple.getInput()) {
                     if (!this.parameterIsAssignableFrom(input)) {
-                        return false;
+                       return false;
                     }
                 }
                 for (NamedExpression output: tuple.getOutput()) {

@@ -12,8 +12,6 @@ package org.modeldriven.alf.syntax.units.impl;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.Classifier;
-import org.omg.uml.Parameter;
 
 import java.util.List;
 

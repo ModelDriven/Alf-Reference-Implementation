@@ -280,20 +280,25 @@ public abstract class StatementImpl extends
         // Merge the types and multiplicities of assignments to the same local name.
         for (String name: assignmentMap.keySet()) {
             Collection<AssignedSource> assignments = assignmentMap.get(name);
-            int lower = -1;
-            int upper = 0;
+            int low = -1;
+            int high = 0;
             Set<ElementReference> types = new HashSet<ElementReference>();
             for (AssignedSource assignment: assignments) {
-                lower = lower == -1? assignment.getLower(): 
-                    Math.min(lower, assignment.getLower());
-                upper = upper == -1? -1: 
-                    Math.max(upper, assignment.getUpper());
+                int lower = assignment.getLower();
+                int upper = assignment.getUpper();
+                low = low == -1? lower: 
+                      lower == -1? low:
+                      lower < low? lower:
+                      low;
+                high = high == -1 || upper == -1? -1: 
+                       upper > high? upper:
+                       high;
                 types.add(assignment.getType());
             }
             mergedAssignments.put(name, AssignedSourceImpl.makeAssignment(name,
                     this.getSelf(),
                     ClassifierDefinitionImpl.commonAncestor(types),
-                    lower, upper));
+                    low, high));
         }
         
         return mergedAssignments;

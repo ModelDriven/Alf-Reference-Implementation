@@ -13,7 +13,9 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -78,20 +80,23 @@ public class WhileStatementImpl extends StatementImpl {
         Expression condition = self.getCondition();
         Block body = self.getBody();
         Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
-        Map<String, AssignedSource> assignmentsAfter = super.deriveAssignmentAfter();
+        Map<String, AssignedSource> assignmentsAfter = assignmentsBefore;
         if (condition != null) {
-            condition.getImpl().setAssignmentAfter(assignmentsBefore);            
+            condition.getImpl().setAssignmentBefore(assignmentsBefore);            
             Set<AssignedSource> newAssignments = 
                 new HashSet<AssignedSource>(condition.getImpl().getNewAssignments());
             if (body != null) {
                 body.getImpl().setAssignmentBefore(condition.getImpl().getAssignmentAfterMap());
                 newAssignments.addAll(body.getAssignmentAfter());
-                for (AssignedSource assignment: newAssignments) {
-                    String name = assignment.getName();
-                    if (assignmentsBefore.containsKey(name)) {
-                        AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
-                        assignmentAfter.setSource(self);
-                        assignmentsAfter.put(name, assignmentAfter);
+                if (!newAssignments.isEmpty()) {
+                    assignmentsAfter = new HashMap<String,AssignedSource>(assignmentsAfter);
+                    for (AssignedSource assignment: newAssignments) {
+                        String name = assignment.getName();
+                        if (assignmentsBefore.containsKey(name)) {
+                            AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
+                            assignmentAfter.setSource(self);
+                            assignmentsAfter.put(name, assignmentAfter);
+                        }
                     }
                 }
             }
@@ -151,6 +156,19 @@ public class WhileStatementImpl extends StatementImpl {
      * Helper Methods
      */
 
+    @Override
+    public void setCurrentScope(NamespaceDefinition currentScope) {
+        WhileStatement self = this.getSelf();
+        Block body = self.getBody();
+        Expression condition = self.getCondition();
+        if (body != null) {
+            body.getImpl().setCurrentScope(currentScope);
+        }
+        if (condition != null) {
+            condition.getImpl().setCurrentScope(currentScope);
+        }
+    }
+    
     @Override
     protected Statement getLoopStatement() {
         return this.getSelf();
