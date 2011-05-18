@@ -471,6 +471,23 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public ElementReference getNamespace() {
+        Element element = this.getSelf().getElement();
+        if (!(element instanceof NamedElement)) {
+            return null;
+        } else {
+            Namespace namespace = ((NamedElement)element).getNamespace();
+            if (namespace == null) {
+                return null;
+            } else {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(namespace);
+                return reference;
+            }
+        }
+    }
+
+    @Override
     public ElementReference getActiveClass() {
         ExternalElementReference self = this.getSelf();
         if (!this.isActivity()) {

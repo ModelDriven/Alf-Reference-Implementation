@@ -3,8 +3,7 @@ private import ProductSpecification::Product;
 private import DomainDataTypes::*;                         // See Note 1
 
 /**
-Based on Executable UML, Appendix B, Ordering Subsystem.
-See Figure B.2 for class diagram.
+Online Bookstore, Ordering Subsystem
 */
 package Ordering
 {
@@ -14,31 +13,30 @@ package Ordering
   public active class Customer;
   public active class ProductSelection;
 
-  /** Note: fUML does not allow association classes. */
-  public assoc R4 
+  public assoc R1 
   {
     public 'selections are added to': ShoppingCart[0..*];  // See Note 3
     public 'includes selections of':  Product[1..*];
     public 'product selection is':    ProductSelection;
   }
 
-  public assoc R5 {
+  public assoc R2 {
+    public 'selections are purchased in':    Order[0..1];
+    public 'is a purchase of selections in': ShoppingCart;
+  }
+
+  public assoc R3 {
     public places:         Order[1..*];
     public 'is placed by': Customer[0..1];
   }
 
-  public assoc R7 {
-    public 'payment is attempted by':  CreditCardCharge[0..*];
+  public assoc R4 {
     public 'is an attempt to pay for': Order;
+    public 'payment is attempted by':  CreditCardCharge[0..*];
   }
 
-  public assoc R8 {
-    public 'pays for':      Order;
-    public 'is paidfor by': CreditCardCharge[0..1];
-  }
-
-  public assoc R10 {
-    public 'selections are purchased in':    Order[0..1];
-    public 'is a purchase of selections in': ShoppingCart;
+  public assoc R5 {
+    public 'pays for':      Order[0..1];
+    public 'is paid for by': CreditCardCharge[0..1];
   }
 }

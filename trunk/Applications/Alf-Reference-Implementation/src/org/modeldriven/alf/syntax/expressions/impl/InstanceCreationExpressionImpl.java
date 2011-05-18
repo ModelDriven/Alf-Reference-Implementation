@@ -256,11 +256,11 @@ public class InstanceCreationExpressionImpl
 	 * data type, or an empty set for a constructorless instance creation.
 	 **/
 	@Override
-	public List<ElementReference> parameterElementList() {
+	public List<FormalParameter> parameters() {
         if (this.getSelf().getIsConstructorless()) {
-            return new ArrayList<ElementReference>();
+            return new ArrayList<FormalParameter>();
         } else {
-            return super.parameterElementList();
+            return super.parameters();
         }
 	}
 	

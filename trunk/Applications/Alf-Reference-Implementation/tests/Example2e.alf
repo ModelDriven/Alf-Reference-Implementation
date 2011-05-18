@@ -1,3 +1,5 @@
+namespace Ordering::Order;
+
 /**
 Entry behavior for State 2. Submitting Charge
 */

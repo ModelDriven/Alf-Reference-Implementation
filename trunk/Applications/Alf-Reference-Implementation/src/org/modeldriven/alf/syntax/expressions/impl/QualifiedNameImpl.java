@@ -16,7 +16,9 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The representation of a qualified name as a sequence of individual simple
@@ -237,13 +239,22 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	        disambiguation = new FeatureReference();
 	        disambiguation.setNameBinding(self.getUnqualifiedName());
 	        FeatureReference featureReference = qualification.getDisambiguation();
+	        NamespaceDefinition currentScope = this.getCurrentScope();
+            Expression containingExpression = this.getContainingExpression();
+            Map<String, AssignedSource> assignments = 
+                containingExpression == null? new HashMap<String, AssignedSource>(): 
+                    containingExpression.getImpl().getAssignmentBeforeMap();
 	        if (featureReference==null) {
 	            NameExpression nameExpression = new NameExpression();
 	            nameExpression.setName(qualification);
+	            nameExpression.getImpl().setCurrentScope(currentScope);
+	            nameExpression.getImpl().setAssignmentBefore(assignments);
 	            disambiguation.setExpression(nameExpression);
 	        } else {
 	            PropertyAccessExpression featureExpression = new PropertyAccessExpression();
 	            featureExpression.setFeatureReference(featureReference);
+	            featureExpression.getImpl().setCurrentScope(currentScope);
+	            featureExpression.getImpl().setAssignmentBefore(assignments);
 	            disambiguation.setExpression(featureExpression);
 	        }
 	    }

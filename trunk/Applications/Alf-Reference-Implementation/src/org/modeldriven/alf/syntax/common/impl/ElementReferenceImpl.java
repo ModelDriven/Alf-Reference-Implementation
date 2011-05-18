@@ -93,6 +93,7 @@ public abstract class ElementReferenceImpl {
     public abstract Integer getLower();
     public abstract Integer getUpper();
     public abstract ElementReference getClassifierBehavior();
+    public abstract ElementReference getNamespace();
     
     public FormalParameter getReturnParameter() {
         for (FormalParameter parameter: this.getParameters()) {

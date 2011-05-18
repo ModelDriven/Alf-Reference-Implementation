@@ -50,13 +50,26 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	@Override
 	protected Map<String, AssignedSource> deriveAssignmentAfter() {
 	    NameLeftHandSide self = this.getSelf();
-	    Expression index = self.getIndex();
-	    Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
-	    if (index != null) {
-	        index.getImpl().setAssignmentBefore(assignments);
-	        assignments = index.getImpl().getAssignmentAfterMap();
-	    }
-	    return assignments;
+	    
+	    // Note: If the name disambiguates to a feature reference, then the
+	    // left hand side needs to be treated essentially as if it were a
+	    // feature left hand side.
+        FeatureReference feature = this.getFeature();
+        Expression index = self.getIndex();
+        Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+        if (feature != null) {
+            Expression expression = feature.getExpression();
+            if (expression != null) {
+                expression.getImpl().setAssignmentBefore(assignments);
+                assignments = expression.getImpl().getAssignmentAfterMap();
+            }
+        }
+        
+        if (index != null) {
+            index.getImpl().setAssignmentBefore(assignments);
+            assignments = index.getImpl().getAssignmentAfterMap();
+        }
+        return assignments;
 	}
 	
 	@Override

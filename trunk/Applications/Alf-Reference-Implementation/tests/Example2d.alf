@@ -1,3 +1,5 @@
+namespace Ordering::Order;
+
 private import TIM;
 /**                                                        // See Note 1
 Entry action for State 1. Establishing Customer and Verifying Payment
@@ -34,7 +36,7 @@ activity EstablishCustomer()
   );
 
   // Set the date order placed to today
-  this.dateOrderPlaced = TIM::current_date;
+  this.dateOrderPlaced = TIM::GetCurrentDate();
 
   // Create a credit card charge and submit it
   // to the credit card company

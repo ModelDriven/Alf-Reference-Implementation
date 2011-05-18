@@ -1,3 +1,5 @@
+namespace Ordering::Order;
+
 private import EE_OnlineCustomer;
 /**
 Entry behavior for State 3. Payment Not Approved

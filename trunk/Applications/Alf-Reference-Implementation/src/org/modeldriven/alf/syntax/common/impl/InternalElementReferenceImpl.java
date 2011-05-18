@@ -414,11 +414,24 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         if (!this.isActiveClass()) {
             return null;
         } else {
-            return ((ActiveClassDefinition)this.getSelf().getElement()).
-                        getClassifierBehavior().getImpl().getReferent();
+            ActivityDefinition classifierBehavior = 
+                ((ActiveClassDefinition)this.getSelf().getElement()).
+                    getClassifierBehavior();
+            return classifierBehavior == null? null: 
+                        classifierBehavior.getImpl().getReferent();
         }
     }
     
+    @Override
+    public ElementReference getNamespace() {
+        SyntaxElement element = this.getSelf().getElement();
+        if (!(element instanceof Member)) {
+            return null;
+        } else {
+            return ((Member)element).getImpl().getNamespaceReference();
+        }
+    }
+
     @Override
     public ElementReference getActiveClass() {
         SyntaxElement element = this.getSelf().getElement();

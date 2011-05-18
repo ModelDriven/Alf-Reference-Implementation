@@ -1,0 +1,12 @@
+namespace Ordering::Order;
+
+/**
+Entry behavior for State 5. Delivered to Customer
+*/
+activity NotifyOfDelivery()
+{
+  // Notify the customer that the Order
+  // has been delivered
+  customer = this.'is placed by';
+  EE_OnlineCustomer.OrderReportedDelivered(customerEmail => customer.email);
+}
