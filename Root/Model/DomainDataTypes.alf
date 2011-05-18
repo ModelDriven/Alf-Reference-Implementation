@@ -1,5 +1,15 @@
 package DomainDataTypes {
 
+  public datatype arbitrary_id { }
   public datatype date { }
+  public datatype Money { }
+  public datatype PersonalName { }
+  public datatype MailingAddress { }
+  public datatype TelephoneNumber { }
+  public datatype BankCardAccountNumber { }
+  public datatype MonthYear { }
+  public datatype InternetEmailAddress { }
+  
+  public datatype Count specializes Integer;
 
 }

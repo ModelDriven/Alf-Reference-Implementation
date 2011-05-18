@@ -1,79 +1,95 @@
 namespace Ordering;
 
 /**
-From Executable UML, Figure B.2, with statechart from Figure B.3
+Active class for managing an order
 */
 active class Order
 {
-  public orderID:         arbitrary_id;
-  public dateOrderPlaced: date;
-  public totalValue:      Money; // Note: fUML does not allow derived values
-  public recipient:       PersonalName;
-  public deliveryAddress: MailingAddress;
-  public contactPhone:    TelephoneNumber;
+  public orderID:               arbitrary_id;
+  public dateOrderPlaced:       date;
+  public totalValue:            Money;
+  public recipient:             PersonalName;
+  public deliveryAddress:       MailingAddress;
+  public contactPhone:          TelephoneNumber;
+
+  private checkOutData:         CheckOutData;
+  private chargeSubmissionData: ChargeSubmissionData;
+
+  public datatype CheckOutData 
+  {
+    public cart:                ShoppingCart;
+    public accountNumber:       BankCardAccountNumber;
+    public billingAddress:      MailingAddress;
+    public cardExpirationDate:  MonthYear;
+    public cardholderName:      PersonalName;
+    public customerEmail:       InternetEmailAddress;
+    public customerName:        PersonalName;
+    public customerPhone:       TelephoneNumber;
+    public shippingAddress:     MailingAddress;
+  }
+
+  public datatype ChargeSubmissionData
+  {
+    public accountNumber:       BankCardAccountNumber;
+    public billingAddress:      MailingAddress;
+    public cardExpirationDate:  MonthYear;
+    public cardholderName:      PersonalName;
+  }
 
   public receive signal CheckOut                           // See Note 1
   {
-    public cart:               ShoppingCart;
-    public accountNumber:      BankCardAccountNumber;
-    public billingAddress:     MailingAddress;
-    public cardExpirationDate: MonthYear;
-    public cardholderName:     PersonalName;
-    public customerEmail:      InternetEmailAddress;
-    public customerName:       PersonalName;
-    public customerPhone:      TelephoneNumber;
-    public shippingAddress:    MailingAddress;
+    public data:                CheckOutData;
   }
 
   public receive signal SubmitCharge
   {
-    public accountNumber:      BankCardAccountNumber;
-    public billingAddress:     MailingAddress;
-    public cardExpirationDate: MonthYear;
-    public cardholderName:     PersonalName;
+    public data:                ChargeSubmissionData;
   }
 
   public receive signal PaymentDeclined{}
   public receive signal PaymentApproved{}
   public receive signal OrderDelivered{}
 
-  private establishCustomer(in rcvd_evt: CheckOut);        // See Note 2
-  private processCharge(in rcvd_evt: SubmitCharge);
-  private declineCharge();
-  private packAndShip();
-  private notifyOfDelivery();
+  private EstablishCustomer();                    // See Note 2
+  private ProcessCharge();
+  private DeclineCharge();
+  private PackAndShip();
+  private NotifyOfDelivery();
 
 } 
 do                                                         // See Note 3
 {
 
-  /** 1. Establishing Customer and Verifying Payment */
-  accept (checkOut: CheckOut);
-  this.EstablishCustomer(checkOut);
+  /** 0. Waiting for Check Out */                          // See Note 4
+  accept (checkOut: CheckOut);                             // See Note 5
+  this.checkOutData = checkOut.data;
 
-  do {
+  /** 1. Establishing Customer and Verifying Payment */
+  this.EstablishCustomer();                                     // See Note 6
+
+  while (true) {                                           // See Note 7
+
+    accept (chargeSubmission: SubmitCharge);
+    this.chargeSubmissionData = chargeSubmission.data;
 
     /** 2. Submitting Charge */
-    accept (chargeSubmission: SubmitCharge);
-    this.ProcessCharge(chargeSubmission);
+    this.ProcessCharge();
 
     accept (PaymentDeclined) {
-      declined = true;
-
       /** 3. Payment Not Approved */
       this.DeclineCharge();
 
-    } or accept (PaymentApproved) {
-      declined = false;
+    } or accept (PaymentApproved) {                        // See Note 8
+      break;                                               // See Note 9
     }
 
-  } while (declined);
+  }
 
   /** 4. Being Packed and Shipped */
   this.PackAndShip();
-  
+  accept (OrderDelivered);
+
   /** 5. Delivered to Customer */
-  accept(OrderDelivered);
   this.NotifyOfDelivery();
 
 }

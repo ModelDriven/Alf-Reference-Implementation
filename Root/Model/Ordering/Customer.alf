@@ -2,6 +2,11 @@ namespace Ordering;
 
 active class Customer {
 
+  public email: InternetEmailAddress;
+  public name: PersonalName;
+  public shippingAddress: MailingAddress;
+  public phone: TelephoneNumber;
+
 } do {
 
 }

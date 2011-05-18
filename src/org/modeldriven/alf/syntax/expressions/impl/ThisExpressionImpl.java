@@ -37,11 +37,26 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	protected ElementReference deriveType() {
 	    ElementReference context = this.currentScope == null? null: 
 	                                    this.currentScope.getImpl().getReferent();
-	    if (context == null || !context.getImpl().isClassifier()) {
+	    if (context == null) {
 	        return null;
+	    } else if (context.getImpl().isOperation()) {
+	        return context.getImpl().getNamespace();
+	    } else if (context.getImpl().isActivity()) {
+            ElementReference activeClass = context.getImpl().getActiveClass();
+            if (activeClass != null) {
+                return activeClass;
+            } else {
+    	        UnitDefinition unit = context.getImpl().asNamespace().getUnit();
+                ElementReference namespace = unit == null? null: unit.getNamespace();
+	            return namespace != null && 
+	                    namespace.getImpl().asNamespace().getImpl().getStubFor(unit) 
+	                        instanceof OperationDefinition? 
+	                                namespace: context;
+            }
+	    } else if (context.getImpl().isClass()) {
+	        return context;
 	    } else {
-    	    ElementReference activeClass = context.getImpl().getActiveClass();
-    	    return activeClass == null? context: activeClass;
+	        return null;
 	    }
 	}
 	

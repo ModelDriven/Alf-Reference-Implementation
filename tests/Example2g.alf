@@ -1,3 +1,5 @@
+namespace Ordering::Order;
+
 private import EE_OnlineCustomer;
 private import Shipping::Shipment;
 /**

@@ -215,13 +215,14 @@ public class IfStatementImpl extends StatementImpl {
 	                    if (count == null) {
 	                        definitionCount.put(name, 1);
 	                    } else {
-	                        definitionCount.put(name, count++);
+	                        definitionCount.put(name, count+1);
 	                    }
 	                }
 	            }
 	            int n = blocks.size();
-	            for (int count: definitionCount.values()) {
-	                if (count != n) {
+	            for (String name: definitionCount.keySet()) {
+	                if (!assignmentsBefore.containsKey(name) && 
+	                        definitionCount.get(name) != n) {
 	                    return false;
 	                }
 	            }
