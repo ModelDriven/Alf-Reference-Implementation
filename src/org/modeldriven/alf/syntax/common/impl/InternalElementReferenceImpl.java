@@ -356,6 +356,15 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             return new ArrayList<FormalParameter>();
         }
     }
+    
+    @Override
+    public FormalParameter getReturnParameter() {
+        if (this.isBehavior() || this.isOperation()) {
+            return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getReturnParameter();
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public ElementReference getType() {

@@ -11,15 +11,14 @@ activity establish (
   out error: 'Error Reply' [0..1] ) {
 
   identifier = this.'property identifier factory'.'get next identifier'();  
-                                                           // See Note 1
 
   if (request.'property type' == 'Property Type'::personal) {
     property = 
-      new 'Personal Property'::'create property'(identifier, request.name); 
-                                                           // See Note 2
+      new 'Personal Property'::'create property'
+                 (identifier, request.'property name'); 
   } else {
     property = new 'Real Property'::'create property'
-                 (identifier, request.name);
+                 (identifier, request.'property name');
   }
 
   reply = this.'create reply'(request.identifier, property);

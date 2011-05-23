@@ -1,6 +1,7 @@
 namespace FoundationalModelLibrary;
 
-@ModelLibrary
+private import UML::AuxiliaryConstructs::PrimitiveTypes::*;
+
 package PrimitiveBehaviors {
 
   public package BooleanFunctions;

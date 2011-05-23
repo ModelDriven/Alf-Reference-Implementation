@@ -16,7 +16,6 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * The definition of an operation, with any formal parameters defined as owned
@@ -326,10 +325,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         return returnParameter == null? 0: returnParameter.getUpper();
     }
     
-    /**
-     * For a constructor, add an implicit return parameter to the list of
-     * formal parameters in the operation signature.
-     */
+    /*
     @Override
     public List<FormalParameter> getFormalParameters() {
         List<FormalParameter> parameters = super.getFormalParameters();
@@ -342,16 +338,6 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         return parameters;
     }
     
-    public FormalParameter getReturnParameter() {
-        Collection<FormalParameter> parameters = this.getFormalParameters();
-        for (FormalParameter parameter: parameters) {
-            if (parameter.getDirection().equals("return")) {
-                return parameter;
-            }
-        }
-        return null;
-    }
-    
     private boolean hasReturnParameter() {
         List<FormalParameter> parameters = super.getFormalParameters();        
         for (FormalParameter parameter: parameters) {
@@ -360,6 +346,21 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
             }
         }
         return false;
+    }
+    */
+    
+    /**
+     * For a constructor, return an implicit return parameter if none is given
+     * explicitly.
+     */
+    public FormalParameter getReturnParameter() {
+        FormalParameter returnParameter = super.getReturnParameter();
+        if (returnParameter == null && this.getSelf().getIsConstructor()) {
+            returnParameter = new FormalParameter();
+            returnParameter.setType(this.getNamespaceReference());
+            returnParameter.setDirection("return");
+        }
+        return returnParameter;
     }
 
     private boolean equateParameters(ElementReference operation) {
@@ -376,6 +377,18 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
                         operation.getImpl().getParameters());
     }
     
+    /**
+     * For an OperationDefinition, do not return the subunit, if it has one, as
+     * the referent, because this will be an ActivityDefinition, not an
+     * OperationDefinition.
+     */
+    @Override
+    public ElementReference getReferent() {
+        InternalElementReference referent = new InternalElementReference();
+        referent.setElement(this.getSelf());
+        return referent;
+    }
+
     public Block getEffectiveBody() {
         return this.getEffectiveBody(this.getSelf().getSubunit());
     }

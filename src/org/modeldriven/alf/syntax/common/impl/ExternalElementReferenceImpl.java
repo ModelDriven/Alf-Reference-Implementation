@@ -382,6 +382,16 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public FormalParameter getReturnParameter() {
+        for (FormalParameter parameter: this.getParameters()) {
+            if (parameter.getDirection().equals("return")) {
+                return parameter;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public ElementReference getType() {
         ExternalElementReference reference = new ExternalElementReference();
         if (this.isProperty()) {

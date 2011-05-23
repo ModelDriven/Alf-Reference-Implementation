@@ -88,6 +88,7 @@ public abstract class ElementReferenceImpl {
     public abstract List<ElementReference> getAttributes();
     public abstract List<ElementReference> getAssociationEnds();
     public abstract List<FormalParameter> getParameters();
+    public abstract FormalParameter getReturnParameter();
     public abstract ElementReference getType();
     public abstract ElementReference getAssociation();
     public abstract Integer getLower();
@@ -95,15 +96,6 @@ public abstract class ElementReferenceImpl {
     public abstract ElementReference getClassifierBehavior();
     public abstract ElementReference getNamespace();
     
-    public FormalParameter getReturnParameter() {
-        for (FormalParameter parameter: this.getParameters()) {
-            if (parameter.getDirection().equals("return")) {
-                return parameter;
-            }
-        }
-        return null;
-    }
-
     /**
      * Return the active class corresponding to an activity, if any.
      * This is either the activity itself, if it is active, or the class that

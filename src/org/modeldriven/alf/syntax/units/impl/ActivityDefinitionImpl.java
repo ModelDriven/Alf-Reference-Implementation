@@ -142,14 +142,4 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
         return returnParameter == null? 0: returnParameter.getUpper();
     }
     
-    public FormalParameter getReturnParameter() {
-        Collection<FormalParameter> parameters = this.getFormalParameters();
-        for (FormalParameter parameter: parameters) {
-            if (parameter.getDirection().equals("return")) {
-                return parameter;
-            }
-        }
-        return null;
-    }
-
 } // ActivityDefinitionImpl
