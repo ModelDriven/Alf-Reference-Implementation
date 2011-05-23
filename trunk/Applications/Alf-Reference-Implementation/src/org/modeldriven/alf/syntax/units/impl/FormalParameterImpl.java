@@ -115,10 +115,10 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
             
             return  self.getDirection().equals(other.getDirection()) &&
                     self.getName().equals(other.getName()) &&
-                    self.getLower() == other.getLower() &&
-                    self.getUpper() == other.getUpper() &&
-                    self.getIsOrdered() == other.getIsOrdered() &&
-                    self.getIsNonunique() == other.getIsNonunique() &&
+                    self.getLower().equals(other.getLower()) &&
+                    self.getUpper().equals(other.getUpper()) &&
+                    self.getIsOrdered().equals(other.getIsOrdered()) &&
+                    self.getIsNonunique().equals(other.getIsNonunique()) &&
                     (myType != null && myType.getImpl().equals(otherType) ||
                             myType == null && otherType == null);
 	    }

@@ -231,7 +231,6 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         if (definition != null) {
             for (Member member: this.getSelf().getOwnedMember()) {
                 String name = member.getName();
-                
                 if (name != null && name.equals(definition.getName()) && 
                         member.getIsStub() && member.matchForStub(unit)) {
                     return member;
@@ -292,6 +291,16 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             }
         }
         return parameters;
+    }
+
+    public FormalParameter getReturnParameter() {
+        Collection<FormalParameter> parameters = this.getFormalParameters();
+        for (FormalParameter parameter: parameters) {
+            if (parameter.getDirection().equals("return")) {
+                return parameter;
+            }
+        }
+        return null;
     }
 
     protected static void addAllMembers(Collection<Member> members,

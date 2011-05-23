@@ -1,5 +1,6 @@
 namespace Ordering::Order;
 
+private import Ordering::CreditCardCharge::ChargeData;
 /**
 Entry behavior for State 2. Submitting Charge
 */

@@ -2,6 +2,7 @@ namespace 'Property Management'::'Service Model'::
                            'Property Management Service Implementation';
 
 private import 'Property Management'::'Data Model'::Properties::*;
+private import 'Property Management'::'Data Model'::Locations::Location;
 private import 'Property Management'::'Message Model'::*;
 
 /** Update the attribute data of a property (other than acquisition or
@@ -15,7 +16,10 @@ activity update (
   out error: 'Error Reply' [0..1] ) {
 
   property = Property -> select p 
-               (p.identifier == request.'property identifier');
+               (p.identifier == request.'property identifier')[1];
+
+  reply = null;
+  error = null;
 
   if (property -> isEmpty()) {
     error = new 'Error Reply' (
@@ -24,7 +28,7 @@ activity update (
       'error code'         => "PRU-001",
       'error message'      => "Property not found." );
 
-  } else if (property.status = 'Property Type'::disposed) {
+  } else if (property.status == 'Property Status'::disposed) {
     error = new 'Error Reply' (
       identifier           => request.identifier + "/error",
       'request identifier' => request.identifier,
@@ -43,7 +47,7 @@ activity update (
 
   } else if (request.'property location' -> notEmpty() &&
               !(Location -> exists loc 
-                 (loc.identifier == request.'property location'))) {
+                 (loc.identifier == request.'property location identifier'))) {
     error = new 'Error Reply' (
       identifier           => request.identifier + "/error",
       'request identifier' => request.identifier,
@@ -53,8 +57,9 @@ activity update (
   } else {
     if (request.'property location' -> notEmpty()) {
       location = Location -> select loc 
-                   (loc.identifier == request.'property location');
-      'Property Location' -> add (property, location);
+                   (loc.identifier == request.'property location identifier')[1];
+      // 'Property Location'.createLink(property, location);
+      property.location = location;
     }
     if (request.'property name' -> notEmpty()) {
       property.name = request.'property name';

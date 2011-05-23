@@ -11,7 +11,10 @@ activity delete (
   out error: 'Error Reply' [0..1] ) {
 
   property = Property -> select p 
-               (p.identifier == request.'property identifier');
+               (p.identifier == request.'property identifier')[1];
+
+  reply = null;
+  error = null;
 
   if (property -> isEmpty()) {
     error = new 'Error Reply' (

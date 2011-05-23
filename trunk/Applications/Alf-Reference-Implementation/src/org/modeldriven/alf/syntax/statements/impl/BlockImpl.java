@@ -11,6 +11,7 @@ package org.modeldriven.alf.syntax.statements.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
+import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -24,12 +25,14 @@ import java.util.Map;
  * A grouped sequence of statements.
  **/
 
-public class BlockImpl extends
-		org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl {
+public class BlockImpl extends SyntaxElementImpl {
 
     private List<Statement> statement = new ArrayList<Statement>();
     private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
     private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
+    
+    private List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+    private boolean hasEnclosingStatement = false;
 
 	public BlockImpl(Block self) {
 		super(self);
@@ -122,6 +125,24 @@ public class BlockImpl extends
      **/
     protected Map<String, AssignedSource> deriveAssignmentAfter() {
         Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+        
+        // This ensures that there is an initial assignment for each input
+        // parameter for a block that is the body of an activity or operation.
+        if (!hasEnclosingStatement) {
+            for (FormalParameter parameter: parameters) {
+                String direction = parameter.getDirection();
+                if (direction != null &&
+                        (direction.equals("in") || direction.equals("inout"))) {
+                    String name = parameter.getName();
+                    assignments.put(name, 
+                            AssignedSourceImpl.makeAssignment(name, parameter, 
+                                    parameter.getType(), 
+                                    parameter.getLower(), 
+                                    parameter.getUpper()));
+                }
+            }
+        }
+        
         for (Statement statement: this.getSelf().getStatement()) {
             statement.getImpl().setAssignmentBefore(assignments);
             assignments = statement.getImpl().getAssignmentAfterMap();
@@ -166,12 +187,16 @@ public class BlockImpl extends
 	 */
 
     public void setCurrentScope(NamespaceDefinition currentScope) {
+        if (currentScope != null) {
+            this.parameters = currentScope.getImpl().getFormalParameters();
+        }
         for (Statement statement: this.getSelf().getStatement()) {
             statement.getImpl().setCurrentScope(currentScope);
         }        
     }
     
     public void setEnclosingStatement(Statement enclosingStatement) {
+        this.hasEnclosingStatement = enclosingStatement != null;
         for (Statement statement: this.getSelf().getStatement()) {
             statement.setEnclosingStatement(enclosingStatement);
         }

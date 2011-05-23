@@ -11,7 +11,10 @@ activity dispose (
   out error: 'Error Reply' [0..1] ) {
 
   property = Property -> select p 
-               (p.identifier == request.'property identifier');
+               (p.identifier == request.'property identifier')[1];
+
+  reply = null;
+  error = null;
 
   if (property -> isEmpty()) {
     error = new 'Error Reply' (
@@ -20,7 +23,7 @@ activity dispose (
       'error code'         => "PDN-001",
       'error message'      => "Property not found." );
 
-  } else if (property.status = 'Property Type'::pending) {
+  } else if (property.status == 'Property Status'::pending) {
     error = new 'Error Reply' (
       identifier           => request.identifier + "/error",
       'request identifier' => request.identifier,

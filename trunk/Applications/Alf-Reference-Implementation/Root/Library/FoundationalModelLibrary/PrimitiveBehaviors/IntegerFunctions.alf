@@ -2,4 +2,7 @@ namespace FoundationalModelLibrary::PrimitiveBehaviors;
 
 package IntegerFunctions {
 
+  @primitive
+  public activity ToString(in x: Integer): String {}
+
 }
