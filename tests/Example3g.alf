@@ -58,8 +58,7 @@ activity update (
     if (request.'property location' -> notEmpty()) {
       location = Location -> select loc 
                    (loc.identifier == request.'property location identifier')[1];
-      // 'Property Location'.createLink(property, location);
-      property.location = location;
+      'Property Location'.createLink(property, location);
     }
     if (request.'property name' -> notEmpty()) {
       property.name = request.'property name';

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -97,20 +96,20 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
      * 7.3.8.
      **/
 	@Override
-	protected Map<String, Collection<Member>> deriveMember() {
-	    Map<String, Collection<Member>> members = super.deriveMember();
+	protected Collection<Member> deriveMember() {
+	    Collection<Member> members = super.deriveMember();
 	    
 	    // Note: The members field is set here in order to avoid the possibility
 	    // of an infinite loop if name resolution relative to this classifier
 	    // is required in order to check the distinguishility of inherited
 	    // members
-	    this.setMemberMap(members);
+	    this.setMember(members);
 	    
 	    ArrayList<Member> inheritedMembers = new ArrayList<Member>();
 	    for (ElementReference parent: this.getSelf().getSpecializationReferent()) {
 	        inheritedMembers.addAll(this.getInheritableMembersOf(parent));
 	    }	    
-        addAllMembers(this.inherit(inheritedMembers), members);
+        members.addAll(this.inherit(inheritedMembers));
 	    return members;
 	}
 	
