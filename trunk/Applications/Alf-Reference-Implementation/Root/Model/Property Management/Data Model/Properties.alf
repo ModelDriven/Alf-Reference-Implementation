@@ -1,6 +1,7 @@
 namespace 'Property Management'::'Data Model';
 
 private import 'Property Management'::'Basic Types'::*;
+private import 'Property Management'::'Data Model'::Locations::Location;
 
 package Properties {
 
@@ -27,5 +28,10 @@ package Properties {
   
   public enum 'Property Status' {pending, acquired, disposed}
   public enum 'Property Disposition Type' {transferred, sold, destroyed}
+  
+  public assoc 'Property Location' {
+    public property: Property;
+    public location: Location;
+  }
 
 }

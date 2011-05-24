@@ -9,8 +9,6 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
-import java.util.Collection;
-
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;

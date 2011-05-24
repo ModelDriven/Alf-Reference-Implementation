@@ -16,14 +16,14 @@ import org.modeldriven.alf.syntax.units.*;
  * The definition of an association, whose members must all be properties.
  **/
 
-public class AssociationDefinitionImpl extends
-		org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl {
+public class AssociationDefinitionImpl extends ClassifierDefinitionImpl {
 
 	public AssociationDefinitionImpl(AssociationDefinition self) {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.AssociationDefinition getSelf() {
+	@Override
+	public AssociationDefinition getSelf() {
 		return (AssociationDefinition) this.self;
 	}
 	

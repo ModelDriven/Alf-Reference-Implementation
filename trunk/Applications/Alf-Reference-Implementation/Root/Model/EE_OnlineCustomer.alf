@@ -1,18 +1,15 @@
-active class EE_OnlineCustomer {
+package EE_OnlineCustomer {
 
-  public receive signal ChargeApproved
-  {
-    public customerEmail: InternetEmailAddress;
-  }
+  public activity ChargeApproved (
+    in customerEmail: InternetEmailAddress
+  ) { }
 
-  public receive signal ChargeDeclined
-  {
-    public customerEmail: InternetEmailAddress;
-  }
+  public activity ChargeDeclined (
+    in customerEmail: InternetEmailAddress
+  ) { }
 
-  public receive signal OrderReportedDelivered
-  {
-    public customerEmail: InternetEmailAddress;
-  }
+  public activity OrderReportedDelivered (
+    in customerEmail: InternetEmailAddress
+  ) { }
 
 }

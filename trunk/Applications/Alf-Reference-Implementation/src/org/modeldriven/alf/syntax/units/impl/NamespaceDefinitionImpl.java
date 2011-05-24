@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -27,7 +28,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 
 	private Collection<Member> ownedMember = new ArrayList<Member>();
 	private UnitDefinition unit = null;
-	private Map<String, Collection<Member>> member = null; // DERIVED
+    private Collection<Member> member = null; // DERIVED
+    private Map<String, Collection<Member>> memberMap = null;
 
 	public NamespaceDefinitionImpl(NamespaceDefinition self) {
 		super(self);
@@ -59,30 +61,28 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	}
 
 	public Collection<Member> getMember() {
-		Collection<Member> allMembers = new ArrayList<Member>();
-		for (Collection<Member> members: this.getMemberMap().values()) {
-		    allMembers.addAll(members);
-		}
-		return allMembers;
+        if (this.member == null) {
+            this.setMember(this.deriveMember());
+        }
+        return this.member;
 	}
 	
 	public Map<String, Collection<Member>> getMemberMap() {
-        if (this.member == null) {
-            this.member = this.deriveMember();
+        if (this.memberMap == null) {
+            this.getMember();
         }
-	    return this.member;
+	    return this.memberMap;
 	}
 
 	public void setMember(Collection<Member> members) {
-		addAllMembers(members, this.member);
+		this.member = members;
+        this.memberMap = new HashMap<String, Collection<Member>>();
+        addAllMembers(members, this.memberMap);
 	}
 	
-	public void setMemberMap(Map<String, Collection<Member>> members) {
-	    this.member = members;
-	}
-
 	public void addMember(Member member) {
-	    addMember(member, this.member);
+	    this.member.add(member);
+	    addMember(member, this.memberMap);
 	}
 
     /**
@@ -96,7 +96,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
      * member (as determined by the Member::isDistinguishableFrom operation) are
      * not imported.
      **/
-    protected Map<String, Collection<Member>> deriveMember() {
+    protected Collection<Member> deriveMember() {
 	    NamespaceDefinition self = this.getSelf();
 
         if (self.getIsStub()) {
@@ -110,12 +110,12 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	        }
 	    }
         
-        Map<String, Collection<Member>> members = new HashMap<String, Collection<Member>>();
-        addAllMembers(self.getOwnedMember(), members);
+        List<Member> members = new ArrayList<Member>();
+        members.addAll(self.getOwnedMember());
         
         UnitDefinition unit = self.getUnit();	    
 	    if (unit != null) {
-	      addAllMembers(unit.getImpl().getImportedMembers(), members);
+	      members.addAll(unit.getImpl().getImportedMembers());
 	    }
 	    
 		return members;
@@ -220,6 +220,46 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         Collection<Member> members = this.getMemberMap().get(name);
         return members == null? new ArrayList<Member>(): 
                                 new ArrayList<Member>(members);
+    }
+    
+    /**
+     * For all visible binary associations, return association ends with the
+     * given opposite end type and name.
+     */
+    public Collection<ElementReference> resolveAssociationEnd
+        (ElementReference oppositeEndType, String name) {
+        Collection<ElementReference> referents = new ArrayList<ElementReference>();
+        for (Member member: this.getSelf().getMember()) {
+            ElementReferenceImpl referent = 
+                member.getImpl().getReferent().getImpl();
+            if (referent.isAssociation()) {
+                List<ElementReference> associationEnds = 
+                    referent.getAssociationEnds();
+                if (associationEnds.size() == 2) {
+                    ElementReference associationEnd1 =
+                        associationEnds.get(0);
+                    ElementReference associationEnd2 =
+                        associationEnds.get(1);
+                    if (oppositeEndType.getImpl().
+                            equals(associationEnd1.getImpl().getType()) &&
+                        name.equals(associationEnd2.getImpl().getName())) {
+                        referents.add(associationEnd2);
+                    }                               
+                    if (oppositeEndType.getImpl().
+                            equals(associationEnd2.getImpl().getType()) &&
+                        name.equals(associationEnd1.getImpl().getName())) {
+                        referents.add(associationEnd1);
+                    }                               
+                }
+            }
+        }
+        
+        NamespaceDefinition outerScope = this.getOuterScope();
+        if (outerScope != null) {
+            referents.addAll(outerScope.getImpl().resolveAssociationEnd(oppositeEndType, name));
+        }
+        
+        return referents;
     }
 
     public boolean hasSubunitFor(UnitDefinition unit) {
