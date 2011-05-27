@@ -1,3 +1,4 @@
+public import Process;
 abstract active class ProcessQueue {      // Abstract active class
 
   private busy: Boolean = false;

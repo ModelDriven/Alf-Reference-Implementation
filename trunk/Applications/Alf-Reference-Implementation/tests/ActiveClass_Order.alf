@@ -1,7 +1,7 @@
-namespace Ordering;
+namespace Ordering1;
 active class Order {                      // An active class
 
-  public dateOrderPlaced: Date;           // Attribute definitions
+  public dateOrderPlaced: date;           // Attribute definitions
   public totalValue:      Money;
   public deliveryAddress: MailingAddress;
   public contactPhone:    TelephoneNumber;

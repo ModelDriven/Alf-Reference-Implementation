@@ -345,7 +345,15 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public List<ElementReference> getAssociationEnds() {
-        return this.getAttributes();
+        return !this.isAssociation()? new ArrayList<ElementReference>(): 
+                    this.getAttributes();
+    }
+    
+    @Override
+    public List<Member> getInheritableMembers() {
+        return !this.isClassifier()? new ArrayList<Member>():
+                ((ClassifierDefinition)this.getSelf().getElement()).getImpl().
+                    getInheritableMembers();
     }
 
     @Override

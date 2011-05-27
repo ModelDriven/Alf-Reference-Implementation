@@ -84,6 +84,19 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	    this.member.add(member);
 	    addMember(member, this.memberMap);
 	}
+	
+	public void addAllMembers(Collection<Member> members) {
+	    this.member.addAll(members);
+	    addAllMembers(members, this.memberMap);
+	}
+	
+	public void removeMember(Member member) {
+	    this.member.remove(member);
+	    Collection<Member> members = this.memberMap.get(member.getName());
+	    if (members != null) {
+	        members.remove(member);
+	    }
+	}
 
     /**
      * The members of a namespace definition include references to all owned
@@ -201,7 +214,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     }
 
     public Collection<Member> resolve(String name) {
-        Collection<Member> members = this.resolveInScope(name);
+        List<Member> members = this.resolveInScope(name);
         
         // Resolve in the containing scope, if there is one.
         NamespaceDefinition outerScope = this.getOuterScope();
@@ -212,11 +225,13 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                 }
             }
         }
+        
+        MemberImpl.removeDuplicates(members);
 
         return members;
     }
     
-    private Collection<Member> resolveInScope(String name) {
+    private List<Member> resolveInScope(String name) {
         Collection<Member> members = this.getMemberMap().get(name);
         return members == null? new ArrayList<Member>(): 
                                 new ArrayList<Member>(members);

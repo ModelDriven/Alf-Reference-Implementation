@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.FormalParameter;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.omg.uml.Element;
@@ -87,6 +88,7 @@ public abstract class ElementReferenceImpl {
     public abstract List<ElementReference> getFeatures();
     public abstract List<ElementReference> getAttributes();
     public abstract List<ElementReference> getAssociationEnds();
+    public abstract List<Member> getInheritableMembers();
     public abstract List<FormalParameter> getParameters();
     public abstract FormalParameter getReturnParameter();
     public abstract ElementReference getType();

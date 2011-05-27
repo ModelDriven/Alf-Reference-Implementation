@@ -19,7 +19,10 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.ExternalParameter;
 import org.modeldriven.alf.syntax.units.FormalParameter;
+import org.modeldriven.alf.syntax.units.ImportedMember;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
 import org.omg.uml.Activity;
 import org.omg.uml.Association;
 import org.omg.uml.Behavior;
@@ -365,6 +368,17 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public List<Member> getInheritableMembers() {
+        List<Member> inheritableMembers = new ArrayList<Member>();
+        for (NamedElement element: ((Classifier)this.getSelf().getElement()).inheritableMembers()) {
+            ImportedMember member = ImportedMemberImpl.makeImportedMember(element);
+            member.setIsFeature(element instanceof Feature);
+            inheritableMembers.add(member);
+        }
+        return inheritableMembers;
+    }
+
+    @Override
     public List<FormalParameter> getParameters() {
         List<Parameter> ownedParameters = null;
         if (this.isBehavior()) {
@@ -496,7 +510,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
     }
-
+    
     @Override
     public ElementReference getActiveClass() {
         ExternalElementReference self = this.getSelf();

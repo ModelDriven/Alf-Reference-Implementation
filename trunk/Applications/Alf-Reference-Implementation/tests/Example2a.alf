@@ -1,4 +1,4 @@
-namespace Ordering1::Order1;                               // See Note 1
+namespace Ordering1::Order;                               // See Note 1
 
 /**
 Based on Executable UML, Appendix B, Ordering Subsystem.

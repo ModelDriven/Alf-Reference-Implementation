@@ -36,12 +36,12 @@ public class ImportedMemberImpl extends MemberImpl {
     }
 
     /**
-     * An imported element is a feature if its referent is a feature.
+     * An imported element should not generally be considered a feature of the
+     * namespace it is imported into.
      **/
 	@Override
 	protected Boolean deriveIsFeature() {
-	    ElementReference referent = this.getSelf().getReferent();
-	    return referent != null && referent.getImpl().isFeature();
+	    return false;
 	}
 	
 	/*

@@ -9,7 +9,7 @@ See Figure B.2 for class diagram.
 package Ordering1
 {
   public active class ShoppingCart;                        // See Note 2
-  public active class Order1;
+  public active class Order;
   public active class CreditCardCharge;
   public active class Customer;
   public active class ProductSelection;
@@ -23,7 +23,7 @@ package Ordering1
   }
 
   public assoc R5 {
-    public places:         Order1[1..*];
+    public places:         Order[1..*];
     public 'is placed by': Customer[0..1];
   }
 
@@ -33,12 +33,38 @@ package Ordering1
   }
 
   public assoc R8 {
-    public 'pays for':      Order1;
+    public 'pays for':      Order;
     public 'is paidfor by': CreditCardCharge[0..1];
   }
 
   public assoc R10 {
-    public 'selections are purchased in':    Order1[0..1];
+    public 'selections are purchased in':    Order[0..1];
     public 'is a purchase of selections in': ShoppingCart;
   }
+  
+  public signal CheckOut
+  {
+    public cart:               ShoppingCart;
+    public accountNumber:      BankCardAccountNumber;
+    public billingAddress:     MailingAddress;
+    public cardExpirationDate: MonthYear;
+    public cardholderName:     PersonalName;
+    public customerEmail:      InternetEmailAddress;
+    public customerName:       PersonalName;
+    public customerPhone:      TelephoneNumber;
+    public shippingAddress:    MailingAddress;
+  }
+
+  public signal SubmitCharge
+  {
+    public accountNumber:      BankCardAccountNumber;
+    public billingAddress:     MailingAddress;
+    public cardExpirationDate: MonthYear;
+    public cardholderName:     PersonalName;
+  }
+
+  public signal PaymentDeclined{}
+  public signal PaymentApproved{}
+  public signal OrderDelivered{}
+
 }

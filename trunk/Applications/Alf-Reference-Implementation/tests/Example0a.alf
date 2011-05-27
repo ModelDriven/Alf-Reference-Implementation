@@ -4,6 +4,8 @@ namespace fUML.Semantics.Activities.IntermediateActivities.
 private import fUML.Syntax.Actions.BasicActions.Action;
 private import fUML.Semantics.Actions.BasicActions.ActionActivation;
 
+private import Alf.Library.CollectionFunctions.*;
+
 /** 
   Run the given node activations and then (concurrently) send an offer to
   all activations for nodes with no incoming edges within the given set.

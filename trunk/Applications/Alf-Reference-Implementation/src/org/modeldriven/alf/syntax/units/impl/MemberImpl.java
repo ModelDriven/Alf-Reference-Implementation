@@ -11,12 +11,14 @@ package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.expressions.impl.NameBindingImpl;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A model of the common properties of the definition of a member of a namespace
@@ -360,8 +362,10 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 
     public boolean isDistinguishableFromAll(Collection<Member> ownedMembers) {
         Member self = this.getSelf();
+        ElementReferenceImpl referent = this.getReferent().getImpl();
         for (Member otherMember: ownedMembers) {
-            if (!self.isDistinguishableFrom(otherMember)) {
+            if (!referent.equals(otherMember.getImpl().getReferent()) &&
+                    !self.isDistinguishableFrom(otherMember)) {
                 return false;
             }
         }
@@ -371,6 +375,22 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     public ElementReference getNamespaceReference() {
         NamespaceDefinition namespace = this.getSelf().getNamespace();
         return namespace == null? null: namespace.getImpl().getReferent();
+    }
+    
+    public static void removeDuplicates(List<Member> members) {
+        for (int i = 0; i < members.size(); i++) {
+            ElementReferenceImpl importedMember = 
+                members.get(i).getImpl().getReferent().getImpl();            
+            for (int j = i + 1; j < members.size();) {
+                ElementReference otherMember =
+                    members.get(j).getImpl().getReferent();
+                if (otherMember.getImpl().equals(importedMember)) {
+                    members.remove(j);
+                } else {
+                    j++;
+                }
+            }
+        }
     }
     
 } // MemberImpl
