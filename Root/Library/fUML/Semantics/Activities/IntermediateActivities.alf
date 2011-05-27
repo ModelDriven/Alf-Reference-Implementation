@@ -9,6 +9,8 @@ package IntermediateActivities {
   public class ActivityNodeActivation { 
   
     public node: ActivityNode;
+    public incomingEdges: ActivityEdgeInstance[*];
+    public outgoingEdges: ActivityEdgeInstance[*];
   
     public run() {}
     public receiveOffer() {}

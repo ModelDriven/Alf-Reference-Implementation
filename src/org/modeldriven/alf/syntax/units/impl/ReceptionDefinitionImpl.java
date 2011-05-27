@@ -55,9 +55,11 @@ public class ReceptionDefinitionImpl extends MemberImpl {
      * signal name for the reception definition.
      **/
 	protected ElementReference deriveSignal() {
+	    ReceptionDefinition self = this.getSelf();
 	    ElementReference referent = null;
-	    QualifiedName signalName = this.getSelf().getSignalName();
+	    QualifiedName signalName = self.getSignalName();
 	    if (signalName != null) {
+	        signalName.getImpl().setCurrentScope(self.getNamespace());
 	        referent = signalName.getImpl().getSignalReferent();
 	    }
 		return referent;
@@ -119,5 +121,5 @@ public class ReceptionDefinitionImpl extends MemberImpl {
 	public Boolean isSameKindAs(Member member) {
 		return member.getImpl().getReferent().getImpl().isReception();
 	} // isSameKindAs
-
+	
 } // ReceptionDefinitionImpl

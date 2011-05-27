@@ -10,12 +10,10 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.QualifiedNameList;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.Classifier;
-import org.omg.uml.Element;
-import org.omg.uml.NamedElement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +53,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 
     public void setSpecialization(QualifiedNameList specialization) {
         this.specialization = specialization;
+        specialization.getImpl().setCurrentScope(this.getSelf());
     }
 
     public Collection<ElementReference> getSpecializationReferent() {
@@ -84,7 +83,6 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	    if (specialization == null) {
 	        return new ArrayList<ElementReference>();
 	    } else {
-            specialization.getImpl().setCurrentScope(this.getOuterScope());
     	    return specialization.getImpl().getNonTemplateClassifierReferents();
 	    }
 	}
@@ -99,16 +97,35 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	protected Collection<Member> deriveMember() {
 	    Collection<Member> members = super.deriveMember();
 	    
-	    // Note: The members field is set here in order to avoid the possibility
-	    // of an infinite loop if name resolution relative to this classifier
-	    // is required in order to check the distinguishility of inherited
-	    // members
+        // Note: The members field is set here in order to avoid the possibility
+        // of an infinite loop in name resolution of names in the specialization
+	    // clause.
 	    this.setMember(members);
 	    
-	    ArrayList<Member> inheritedMembers = new ArrayList<Member>();
+	    List<Member> inheritedMembers = new ArrayList<Member>();
 	    for (ElementReference parent: this.getSelf().getSpecializationReferent()) {
-	        inheritedMembers.addAll(this.getInheritableMembersOf(parent));
-	    }	    
+	        inheritedMembers.addAll(parent.getImpl().getInheritableMembers());
+	    }
+	    MemberImpl.removeDuplicates(inheritedMembers);
+	    
+	    // Eliminate duplicates with imported members
+        for (int i = 0; i < inheritedMembers.size(); i++) {
+            ElementReferenceImpl inheritedMember = 
+                inheritedMembers.get(i).getImpl().getReferent().getImpl();
+            for (Object otherMember: members.toArray()) {
+                if (inheritedMember.equals
+                        (((Member)otherMember).getImpl().getReferent())) {
+                    this.removeMember((Member)otherMember);
+                }
+            }
+        }
+        
+	    // Note: Inherited members are added here so inherited type names may be
+	    // used in the resolution of parameter types for the distinguishibility
+	    // test used in the inherit method for class definitions.
+        members = new ArrayList<Member>(this.getMember());
+	    this.addAllMembers(inheritedMembers);
+	           
         members.addAll(this.inherit(inheritedMembers));
 	    return members;
 	}
@@ -136,7 +153,6 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
         QualifiedNameList specialization = self.getSpecialization();
         if (specialization != null) {
             for (QualifiedName qualifiedName: specialization.getName()) {
-                qualifiedName.getImpl().setCurrentScope(this.getOuterScope());
                 if (qualifiedName.getImpl().getNonTemplateClassifierReferent() == null) {
                     return false;
                 }
@@ -225,23 +241,6 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             }
         }
         return templateParameters;
-	}
-
-	private List<Member> getInheritableMembersOf(ElementReference parent) {
-	    SyntaxElement alfParent = parent.getImpl().getAlf();
-	    Element umlParent = parent.getImpl().getUml();
-	    List<Member> inheritableMembers = null;
-	    if (alfParent != null && alfParent instanceof ClassifierDefinition) {
-	        inheritableMembers = ((ClassifierDefinition)alfParent).getImpl().getInheritableMembers();
-	    } else if (umlParent != null && umlParent instanceof Classifier) {
-	        inheritableMembers = new ArrayList<Member>();
-	        for (NamedElement element: ((Classifier)umlParent).inheritableMembers()) {
-	            inheritableMembers.add(ImportedMemberImpl.makeImportedMember(element));
-	        }
-	    } else {
-	        inheritableMembers = new ArrayList<Member>();
-	    }
-	    return this.inherit(inheritableMembers);
 	}
 
 	public List<Member> getInheritableMembers() {

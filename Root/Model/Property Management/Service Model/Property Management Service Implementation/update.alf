@@ -46,7 +46,7 @@ activity update (
 
   } else if (request.'property location' -> notEmpty() &&
               !(Location -> exists loc 
-                 (loc.identifier == request.'property location'))) {
+                 (loc.identifier == request.'property location identifier'))) {
     error = new 'Error Reply' (
       identifier           => request.identifier + "/error",
       'request identifier' => request.identifier,
@@ -56,7 +56,7 @@ activity update (
   } else {
     if (request.'property location' -> notEmpty()) {
       location = Location -> select loc 
-                   (loc.identifier == request.'property location')[1];
+                   (loc.identifier == request.'property location identifier')[1];
       'Property Location'.createLink(property, location);
     }
     if (request.'property name' -> notEmpty()) {

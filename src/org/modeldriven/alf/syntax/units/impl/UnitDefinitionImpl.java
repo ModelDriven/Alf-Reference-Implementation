@@ -195,29 +195,35 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
 	 * import references for all the sub-packages of the Alf::Library package.
 	 **/
 	public boolean unitDefinitionImplicitImports() {
-		return this.isInModelLibrary() || this.hasImplicitImports();
+        // Note: Is is only necessary to add implicit imports to model units,
+        // since subunits will have access to these imports from their
+        // containing scope.
+	    UnitDefinition self = this.getSelf();
+		return this.hasImplicitImports() || self.getNamespaceName() != null ||
+                    self.getIsModelLibrary();
 	}
     
     /*
      * Helper Methods
      */
 
-    @SuppressWarnings("unchecked")
     public List<Member> getImportedMembers() {
         UnitDefinition self = this.getSelf();
+        
         ArrayList<Member> importedMembers = new ArrayList<Member>();
         for (ImportReference importReference: self.getImport()) {
             importedMembers.addAll(importReference.getImpl().getImportedMembers());
         }
+        MemberImpl.removeDuplicates(importedMembers);
         
         // Remove conflicts
         NamespaceDefinition definition = self.getDefinition();
         if (definition != null) {
             Collection<Member> ownedMembers = definition.getOwnedMember();
-            ArrayList<Member> otherMembers = (ArrayList<Member>)importedMembers.clone();
+            ArrayList<Member> otherMembers = new ArrayList<Member>(importedMembers);
+            otherMembers = new ArrayList<Member>(importedMembers);
             int i = 0;
-            while (otherMembers.size() > 0) {
-              Member member = otherMembers.remove(0);
+            for (Member member: otherMembers) {
               if (member.getImpl().isDistinguishableFromAll(otherMembers) &&
                 member.getImpl().isDistinguishableFromAll(ownedMembers)) {
                 i++;
@@ -230,25 +236,10 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         return importedMembers;
     }
     
-    public boolean isInModelLibrary() {
-        UnitDefinition self = this.getSelf();
-        if (self.getIsModelLibrary()) {
-            return true;
-        } else {
-            ElementReference namespaceReference = self.getNamespace();
-            if (namespaceReference == null) {
-                return false;
-            } else {
-                NamespaceDefinition namespace = 
-                    (NamespaceDefinition)namespaceReference.getImpl().getAlf();
-                UnitDefinition unit = namespace == null? null: namespace.getUnit();
-                return unit != null && unit.getImpl().isInModelLibrary();
-            }
-        }
-    }
-    
     public void addImplicitImports() {
-        if (!this.hasImplicitImports() && !this.isInModelLibrary()) {
+        UnitDefinition self = this.getSelf();
+        if (!this.hasImplicitImports() && self.getNamespaceName() == null &&
+                !self.getIsModelLibrary()) {
             this.addImplicitImport(RootNamespace.getPrimitiveTypes());
             this.addImplicitImport(RootNamespace.getPrimitiveBehaviors());
             this.addImplicitImport(RootNamespace.getBasicInputOutput());
