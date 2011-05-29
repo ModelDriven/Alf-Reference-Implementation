@@ -2,7 +2,7 @@ namespace fUML::Semantics::Activities::IntermediateActivities::
           ActivityNodeActivationGroup;
 
 private import fUML::Syntax::Actions::BasicActions::Action;
-private import fUML.Semantics::Actions::BasicActions::ActionActivation;
+private import fUML::Semantics::Actions::BasicActions::ActionActivation;
 
 private import Alf::Library::CollectionFunctions::*;
 

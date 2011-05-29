@@ -1,8 +1,8 @@
 class Singleton {
-  @create private Singleton() {}
+  @Create private Singleton() {}
 
   public activity getSingleton(): Singleton {
-    instance = Singleton.allinstances();
+    instance = Singleton.allInstances();
     if (instance -> isEmpty()) {
       instance = new Singleton();
     }

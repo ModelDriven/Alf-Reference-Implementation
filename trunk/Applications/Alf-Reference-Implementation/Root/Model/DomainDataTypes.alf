@@ -2,7 +2,7 @@ package DomainDataTypes {
 
   public datatype arbitrary_id { }
   public datatype date { }
-  public datatype Money { }
+  public datatype Money { public amount: Integer; }
   public datatype PersonalName { }
   public datatype MailingAddress { }
   public datatype TelephoneNumber { }
@@ -10,6 +10,6 @@ package DomainDataTypes {
   public datatype MonthYear { }
   public datatype InternetEmailAddress { }
   
-  public datatype Count specializes Integer;
+  public datatype Count specializes Integer { }
 
 }

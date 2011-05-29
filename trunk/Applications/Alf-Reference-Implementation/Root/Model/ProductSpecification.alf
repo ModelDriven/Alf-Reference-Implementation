@@ -1,5 +1,7 @@
 package ProductSpecification {
 
-  public class Product { }
+  public class Product { 
+    public getUnitPrice(): Money { }
+  }
   
 }

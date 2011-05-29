@@ -25,7 +25,22 @@ package IntermediateActivities {
 
   public class ActivityNodeActivationGroup {
   
+    public activityExecution: ActivityExecution;
+    public activations: ActivityNodeActivation[*];
+ 
+    public activate(in nodes: ActivityNode[*], in edges: ActivityEdge[*]); 
     public run(in activations: ActivityNodeActivation[*]);
+    public getNodeActivations(in node: ActivityNode): ActivityNodeActivation[*];
+    
+  }
+  
+  public class ActivityExecution {
+  
+    public types: Activity[*];
+    
+    public activationGroup: ActivityNodeActivationGroup;
+  
+    public execute();
     
   }
   

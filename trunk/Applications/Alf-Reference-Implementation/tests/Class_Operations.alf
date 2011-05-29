@@ -1,14 +1,19 @@
-class Operations {
+private import Ordering::*;
+private import ProductSpecification::Product;
+private import DomainDataTypes::*;
+
+abstract active class Operations specializes ProductSelection {
+
   // Abstract operation
-  abstract select(in cart: Cart, in product: Product, in quantity: Count);
+  public abstract select(in cart: ShoppingCart, in product: Product, in quantity: Count);
   
   // In-line definition
-  select(in cart: Cart, in product: Product, in quantity: Count) {
-    Selects -> add(cart, product, this);
+  public select1(in cart: ShoppingCart, in product: Product, in quantity: Count) {
+    R1.createLink(cart, product, this);
     this.quantity = quantity;
-    this.unitPriceOfSelection = produce.getUnitPrice();
+    this.unitPriceOfSelection = product.getUnitPrice();
   }
   
-  // Stub declaration
-  unitPrice(): Money redefines Selection::getUnitPriceOfSelection; 
+  // Redefinition
+  public unitPrice(): Money redefines ProductSelection::getUnitPriceOfSelection { } 
 }

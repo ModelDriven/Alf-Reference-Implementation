@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests" default="run" basedir=".">
 	<target name="run">
+		<!-- No constraint violations expected -->		
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt">
 			<arg value="tests\Example0a.alf" />
 		</java>
@@ -68,36 +69,6 @@
 			<arg value="tests\Example3j.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-CollectionClasses-Impl.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-CollectionImpl.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-OrderedCollectionImpl.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-Set.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-OrderedSet.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-Bag.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-List.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-Queue.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-Deque.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Example4-Map.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\ActiveClass_Order.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
@@ -113,19 +84,10 @@
 			<arg value="tests\Activity_execute.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Activity_Expressions.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Activity_TemplateExpressions.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\Activity_getNodeActivations.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\Activity_Order_Behavior.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Activity_Statements.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\Assoc_Selection.alf" />
@@ -158,12 +120,6 @@
 			<arg value="tests\Class_Collection.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Class_MapToString.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="tests\Class_Sorter.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\Datatype_Complex.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
@@ -174,6 +130,53 @@
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="tests\Signal_SubmitCharge.alf" />
+		</java>
+		
+		<!-- Constraint violations currently expected -->
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-CollectionClasses-Impl.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-CollectionImpl.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-OrderedCollectionImpl.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Set.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-OrderedSet.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Bag.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-List.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Queue.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Deque.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Example4-Map.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Activity_Expressions.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Activity_TemplateExpressions.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Activity_Statements.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Class_MapToString.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="tests\Class_Sorter.alf" />
 		</java>
 	</target>
 </project>

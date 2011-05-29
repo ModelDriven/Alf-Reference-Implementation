@@ -1,3 +1,4 @@
+private import DomainDataTypes::*;
 signal SubmitCharge {
     public accountNumber:      BankCardAccountNumber;
     public billingAddress:     MailingAddress;

@@ -68,13 +68,13 @@ public class PositionalTupleImpl extends TupleImpl {
                         (direction.equals("in") || direction.equals("inout"))) {
                     Expression expression = i < expressions.size()?
                             expressions.get(i):
-                            new SequenceConstructionExpression();
+                            SequenceConstructionExpressionImpl.makeNull();
                     NamedExpression namedExpression = new NamedExpression();
                     namedExpression.setName(parameter.getName());
                     namedExpression.setExpression(expression);
                     inputs.add(namedExpression);
-                    i++;
                 }
+                i++;
             }
         }
         return inputs;
@@ -97,18 +97,25 @@ public class PositionalTupleImpl extends TupleImpl {
             List<Expression> expressions = self.getExpression();
             int i = 0;
             for (FormalParameter parameter: parameters) {
+                if (i >= expressions.size()) {
+                    break;
+                }
                 String direction = parameter.getDirection();
                 if (direction != null && 
                         (direction.equals("inout") || direction.equals("out"))) {
+                    
                     Expression expression = i < expressions.size()?
                             expressions.get(i):
-                            new SequenceConstructionExpression();
-                    OutputNamedExpression namedExpression = new OutputNamedExpression();
-                    namedExpression.setName(parameter.getName());
-                    namedExpression.setExpression(expression);
-                    outputs.add(namedExpression);
-                    i++;
+                            direction.equals("out")? null:
+                            SequenceConstructionExpressionImpl.makeNull();
+                    if (expression != null) {
+                        OutputNamedExpression namedExpression = new OutputNamedExpression();
+                        namedExpression.setName(parameter.getName());
+                        namedExpression.setExpression(expression);
+                        outputs.add(namedExpression);
+                    }
                 }
+                i++;
             }
         }
         return outputs;

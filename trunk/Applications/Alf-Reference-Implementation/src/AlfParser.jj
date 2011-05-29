@@ -2142,6 +2142,8 @@ Statement LocalNameDeclarationOrExpressionStatement():
 }
 {
   (
+    // Note: To handle short form initializers correctly, the type name and
+    // multiplicity must be set before the initialization expression.
     q = PotentiallyAmbiguousQualifiedName()
     ( LOOKAHEAD(3) 
       [ MultiplicityIndicator() { s1.setHasMultiplicity(true); } ] 
@@ -2162,6 +2164,8 @@ LocalNameDeclarationStatement LocalNameDeclarationStatement():
   LocalNameDeclarationStatement s = new LocalNameDeclarationStatement();
 }
 {
+  // Note: To handle short form initializers correctly, the type name and
+  // multiplicity must be set before the initialization expression.
   <LET> n = Name() { s.setName(n); } <COLON> q = TypeName() { s.setTypeName(q); } 
   [ MultiplicityIndicator() { s.setHasMultiplicity(true); } ] 
   LocalNameDeclarationStatementCompletion(s)
@@ -3398,6 +3402,9 @@ PropertyDefinition AttributeDefinition():
   Expression e;
 }
 {
+  // Note: To handle short form initializers correctly, property declaration 
+  // (type name and multiplicity, specifically) must be set before the 
+  // initialization expression.
   d = PropertyDeclaration()
   [ e = AttributeInitializer() { d.setInitializer(e); } ] <SEMICOLON>
   { return d; }

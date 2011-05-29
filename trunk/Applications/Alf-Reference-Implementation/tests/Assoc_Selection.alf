@@ -1,3 +1,7 @@
+private import Ordering::ShoppingCart;
+private import Ordering::ProductSelection;
+private import ProductSpecification::Product;
+
 assoc Selection {
   public cart:             ShoppingCart[0..*]; // Association end definitions
   public selectedProduct:  Product[1..*];

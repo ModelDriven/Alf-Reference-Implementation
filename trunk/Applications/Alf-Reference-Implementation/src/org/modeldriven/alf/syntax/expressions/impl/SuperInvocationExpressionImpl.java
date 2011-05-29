@@ -26,6 +26,7 @@ public class SuperInvocationExpressionImpl
 
 	private QualifiedName target = null;
 	
+	private NamespaceDefinition currentScope = null;
 	private ElementReferenceImpl context = null;
 
 	public SuperInvocationExpressionImpl(SuperInvocationExpression self) {
@@ -51,20 +52,24 @@ public class SuperInvocationExpressionImpl
 	 **/
 	@Override
 	protected ElementReference deriveReferent() {
-	    if (this.context == null) {
+	    ElementReferenceImpl context = this.getContext();
+	    if (context == null) {
 	        return null;
 	    } else {
 	        Collection<ElementReference> superclasses = null;
 	        QualifiedName target = this.getSelf().getTarget();
 	        String name = null;
 	        if (target == null) {
-	            name = this.context.getName();
-                superclasses = this.context.parents();
+                superclasses = context.parents();
+                if (superclasses.size() != 1) {
+                    return null;
+                }
+                name = ((ElementReference)superclasses.toArray()[0]).getImpl().getName();
 	        } else {
 	            QualifiedName qualification = target.getQualification();
 	            name = target.getUnqualifiedName().getName();
 	            if (qualification == null) {
-	                superclasses = this.context.parents();
+	                superclasses = context.parents();
 	            } else {
 	                ElementReference superclass = 
 	                    qualification.getImpl().getClassifierReferent();
@@ -132,8 +137,9 @@ public class SuperInvocationExpressionImpl
 	        return true;
 	    } else {
 	        ElementReference superclass = qualification.getImpl().getClassifierReferent();
-	        return superclass != null && this.context != null && 
-	                    this.context.parents().contains(superclass);
+	        ElementReferenceImpl context = this.getContext();
+	        return superclass != null && context != null &&
+	                    superclass.getImpl().isContainedIn(context.parents());
         }
 	}
 
@@ -144,9 +150,10 @@ public class SuperInvocationExpressionImpl
 	public boolean superInvocationExpressionImplicitTarget() {
 	    SuperInvocationExpression self = this.getSelf();
 	    ElementReference referent = self.getReferent();
+        ElementReferenceImpl context = this.getContext();
 		return self.getTarget() != null || 
 		            referent != null && referent.getImpl().isConstructor() &&
-		            this.context != null && this.context.parents().size() == 1;
+		            context != null && context.parents().size() == 1;
 	}
 
 	/**
@@ -159,8 +166,10 @@ public class SuperInvocationExpressionImpl
 	    // TODO: Check that a super constructor invocation occurs within an
 	    // expression statement at the start of a constructor operation.
 	    ElementReference referent = this.getSelf().getReferent();
+        ElementReference operation = this.currentScope == null? null:
+            this.currentScope.getImpl().getReferent();
         return referent == null || !referent.getImpl().isConstructor() ||
-                    this.context != null && this.context.isConstructor();
+                    operation != null && operation.getImpl().isConstructor();
 	}
 
 	/**
@@ -170,11 +179,13 @@ public class SuperInvocationExpressionImpl
 	 **/
 	public boolean superInvocationExpressionDestructorCall() {
         ElementReference referent = this.getSelf().getReferent();
+        ElementReference operation = this.currentScope == null? null:
+            this.currentScope.getImpl().getReferent();
 	    return referent == null || !referent.getImpl().isDestructor() ||
-                    this.context != null && this.context.isDestructor();
+                    operation != null && operation.getImpl().isDestructor();
 	}
 
-	/**
+    /**
 	 * It must be possible to identify a single valid operation denoted by the
 	 * target of a super invocation expression that satisfies the overloading
 	 * resolution rules.
@@ -194,7 +205,25 @@ public class SuperInvocationExpressionImpl
 	    if (target != null) {
 	        target.getImpl().setCurrentScope(currentScope);
 	    }
-	    context = currentScope.getImpl().getReferent().getImpl();
+	    this.currentScope = currentScope;
+	}
+	
+	private ElementReferenceImpl getContext() {
+	    if (this.context == null && this.currentScope != null) {
+	        this.context = currentScope.getImpl().getReferent().getImpl();
+            if (!context.isClassifier()) {
+                NamespaceDefinition outerScope = this.currentScope.getImpl().getOuterScope();
+                if (outerScope == null) {
+                    this.context = null;
+                } else {
+                    this.context = outerScope.getImpl().getReferent().getImpl();
+                    if (!context.isClassifier()) {
+                        this.context = null;
+                    }
+                }
+            }
+	    }
+	    return this.context;
 	}
 
 } // SuperInvocationExpressionImpl

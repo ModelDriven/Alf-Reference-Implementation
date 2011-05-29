@@ -1,8 +1,10 @@
+private import Ordering::ShoppingCart;
+private import ProductSpecification::Product;
+private import DomainDataTypes::Count;
+
 class Constructors {
-  @Create public Table(in rows: Integer, in columns: Integer);
+  @Create public Table(in rows: Integer, in columns: Integer) { }
   @Create public ProductSelection
-    (in cart: Cart, in product: Product, in quantity: Count);
-  @Create private registered() {
-    Repository::get().register(this);
-  }
+    (in cart: ShoppingCart, in product: Product, in quantity: Count) { }
+  @Create private registered() {  }
 }
