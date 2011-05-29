@@ -277,7 +277,8 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	 **/
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 	    // TODO: Allow stereotypes consistent with operations.
-		return false;
+		return annotation.getStereotypeName().getImpl().equals("Create") || 
+		       annotation.getStereotypeName().getImpl().equals("Destroy");
 	} // annotationAllowed
 
 	/**

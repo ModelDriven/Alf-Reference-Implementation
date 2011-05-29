@@ -46,6 +46,26 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 
 	public void setInitializer(Expression initializer) {
 		this.initializer = initializer;
+		
+        // Note: The following accounts for short form instance and sequence 
+        // initialization expressions. It requires that the type name and
+		// multiplicity be set before the initializer.
+		PropertyDefinition self = this.getSelf();
+		if (this.initializer instanceof InstanceCreationExpression) {
+		    InstanceCreationExpression expression =
+		        (InstanceCreationExpression)this.initializer;
+		    if (expression.getConstructor() == null) {
+		        expression.setConstructor(self.getTypeName());
+		    }
+		} else if (this.initializer instanceof SequenceConstructionExpression) {
+		    SequenceConstructionExpression expression =
+		        (SequenceConstructionExpression)this.initializer;
+		    if (expression.getTypeName() == null) {
+		        expression.setTypeName(self.getTypeName());
+		        int upperBound = self.getUpper();
+	            expression.setHasMultiplicity(upperBound == -1 || upperBound > 1);
+		    }
+		}
 	}
 
 	public Boolean getIsCollectionConversion() {
@@ -160,7 +180,7 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	    if (initializer == null) {
 	        return true;
 	    } else {
-    	    initializer.getImpl().setCurrentScope(this.getOuterScope());
+	        initializer.getImpl().setCurrentScope(this.getOuterScope());
     		return new AssignableTypedElementImpl(this).isAssignableFrom(initializer);
 	    }
 	}

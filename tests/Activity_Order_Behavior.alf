@@ -1,6 +1,8 @@
+namespace Ordering1::Order;
+
 activity Order_Behavior() {
-  accept (checkout: Checkout);
-  this.establishCustomer(checkout);
+  accept (checkOut: CheckOut);
+  this.establishCustomer(checkOut);
 
   do {
 
@@ -18,6 +20,6 @@ activity Order_Behavior() {
   } while (declined);
 
   this.packAndShip();
-  accept(OrderDelivery);
+  accept(OrderDelivered);
   this.notifyOfDelivery();
 }

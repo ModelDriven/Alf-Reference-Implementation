@@ -52,7 +52,26 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	}
 
 	public void setExpression(Expression expression) {
-		this.expression = expression;
+		this.expression = expression;		
+        
+        // Note: The following accounts for short form instance and sequence 
+        // initialization expressions. It requires that the type name and
+        // multiplicity be set before the initializer.
+        LocalNameDeclarationStatement self = this.getSelf();
+        if (this.expression instanceof InstanceCreationExpression) {
+            InstanceCreationExpression initializer =
+                (InstanceCreationExpression)this.expression;
+            if (initializer.getConstructor() == null) {
+                initializer.setConstructor(self.getTypeName());
+            }
+        } else if (this.expression instanceof SequenceConstructionExpression) {
+            SequenceConstructionExpression initializer =
+                (SequenceConstructionExpression)this.expression;
+            if (initializer.getTypeName() == null) {
+                initializer.setTypeName(self.getTypeName());
+                initializer.setHasMultiplicity(self.getHasMultiplicity());
+            }
+        }
 	}
 
 	public Boolean getHasMultiplicity() {
@@ -158,8 +177,13 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	 **/
 	public boolean localNameDeclarationStatementType() {
 	    LocalNameDeclarationStatement self = this.getSelf();
-	    return self.getTypeName() == null || 
-	                new AssignableLocalNameImpl(this).isAssignableFrom(self.getExpression());
+	    Expression expression = self.getExpression();
+	    if (expression == null) {
+	        return false;
+	    } else {
+	        return self.getTypeName() == null || 
+	            new AssignableLocalNameImpl(this).isAssignableFrom(expression);
+	    }
 	}
 
 	/**

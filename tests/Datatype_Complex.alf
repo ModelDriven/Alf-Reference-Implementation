@@ -1,4 +1,9 @@
-datatype Complex {
-  public re: Real;
-  public im: Real;
+package DataTypes {
+    @primitive
+    public datatype Real { }
+    
+	public datatype Complex {
+	  public re: Real;
+	  public im: Real;
+	}
 }

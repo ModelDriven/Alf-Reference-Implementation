@@ -2,6 +2,11 @@ namespace Ordering;
 
 active class ProductSelection {
 
+  protected quantity: Count;
+  protected unitPriceOfSelection: Money;
+
+  public getUnitPriceOfSelection(): Money { }
+
 } do {
 
 }

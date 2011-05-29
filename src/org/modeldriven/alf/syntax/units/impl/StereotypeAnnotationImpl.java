@@ -38,6 +38,11 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	public StereotypeAnnotation getSelf() {
 		return (StereotypeAnnotation) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    return super.toString() + " stereotypeName:" + stereotypeName.getPathName();
+	}
 
 	public TaggedValueList getTaggedValues() {
 		return this.taggedValues;
@@ -211,9 +216,11 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	    return stereotypeName.getImpl().equals("apply") ||
         	   stereotypeName.getImpl().equals("primitive") ||
         	   stereotypeName.getImpl().equals("external") ||
-        	   // The following is temporary until the standard profiles are
+        	   // The following are temporary until the standard profiles are
         	   // specially allowed for.
-        	   stereotypeName.getImpl().equals("ModelLibrary");
+               stereotypeName.getImpl().equals("ModelLibrary") ||
+               stereotypeName.getImpl().equals("Create") ||
+               stereotypeName.getImpl().equals("Destroy");
 	}
 
 } // StereotypeAnnotationImpl

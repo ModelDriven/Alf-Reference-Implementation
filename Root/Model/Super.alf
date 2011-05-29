@@ -1,0 +1,9 @@
+class Super {
+
+  @Create public Super() { }
+  @Create public create() { }
+  @Create public create1(in x: Integer) { }
+  
+  @Destroy public destroy() { }
+  
+}

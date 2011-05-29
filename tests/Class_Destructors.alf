@@ -1,8 +1,9 @@
-class Destructors specializes FoundationalModelLibrary::BasicInputOutput::Channel {
-  @Destroy public destroy();
+private import Super;
+abstract class Destructors specializes Super {
+  @Destroy public destroy() { }
   
   @Destroy private unregister() {
-    Repository::get().unregister(this);
+    // Repository::get().unregister(this);
     super.destroy();
   }
   

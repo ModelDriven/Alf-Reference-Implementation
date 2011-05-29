@@ -8,7 +8,8 @@ package Ordering                                 // Base unit
   }
 
   public active class ShoppingCart;              // Stub declaration
-  public abstract active class Order;
-  public class ProductSelection;
+  public abstract active class Order { }
+  public class ProductSelection { }
+  public class Product { }
 }
 
