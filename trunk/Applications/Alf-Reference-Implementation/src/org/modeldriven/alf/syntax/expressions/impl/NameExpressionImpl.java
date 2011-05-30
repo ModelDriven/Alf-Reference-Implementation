@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Map;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -278,6 +280,22 @@ public class NameExpressionImpl extends ExpressionImpl {
     public ElementReference getParameter() {
         QualifiedName name = this.getSelf().getName();
         return name == null? null: name.getImpl().getParameterReferent();
+    }
+    
+    /**
+     * The assignments after a name expression are the assignments after its
+     * property access expression, if it has one, and otherwise are the same as
+     * the assignments before the name expression.
+     */
+    @Override
+    public Map<String, AssignedSource> updateAssignmentMap() {
+        Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+        PropertyAccessExpression propertyAccess = this.getSelf().getPropertyAccess();
+        if (propertyAccess != null) {
+            propertyAccess.getImpl().setAssignmentBefore(assignments);
+            assignments = propertyAccess.getImpl().getAssignmentAfterMap();
+        }
+        return assignments;
     }
 
 	@Override

@@ -282,6 +282,10 @@ public class QualifiedName extends SyntaxElement {
 			violations.add(new ConstraintViolation(
 					"qualifiedNameTemplateNameDerivation", this));
 		}
+		FeatureReference disambiguation = this.getDisambiguation();
+		if (disambiguation != null) {
+			disambiguation.checkConstraints(violations);
+		}
 		for (NameBinding _nameBinding : this.getNameBinding()) {
 			_nameBinding.checkConstraints(violations);
 		}
@@ -320,7 +324,8 @@ public class QualifiedName extends SyntaxElement {
 		}
 		FeatureReference disambiguation = this.getDisambiguation();
 		if (disambiguation != null) {
-			System.out.println(prefix + " /disambiguation:" + disambiguation);
+			System.out.println(prefix + " /disambiguation:");
+			disambiguation.print(prefix + "  ");
 		}
 		List<NameBinding> nameBinding = this.getNameBinding();
 		if (nameBinding != null) {
