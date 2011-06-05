@@ -311,5 +311,29 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
         }
         return commonAncestor(classifierSet);
     }
+    
+    @Override
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ClassifierDefinition) {
+            ClassifierDefinition self = this.getSelf();
+            ClassifierDefinition baseClassifier = (ClassifierDefinition)base;
+            self.setIsAbstract(baseClassifier.getIsAbstract());
+            QualifiedNameList baseSpecialization = baseClassifier.getSpecialization();
+            if (baseSpecialization != null) {
+                QualifiedNameList specialization = new QualifiedNameList();
+                for (QualifiedName baseName: baseSpecialization.getName()) {
+                    QualifiedName qualifiedName = baseName.getImpl().
+                        updateBindings(templateParameters, templateArguments);
+                    qualifiedName.getImpl().setCurrentScope(self);
+                    specialization.addName(qualifiedName);
+                }
+                self.setSpecialization(specialization);
+            }
+        }
+    }
+
 
 } // ClassifierDefinitionImpl

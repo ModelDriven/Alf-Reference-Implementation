@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,9 +61,9 @@ public class NamedTemplateBinding extends TemplateBinding {
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-		for (TemplateParameterSubstitution _substitution : this
-				.getSubstitution()) {
-			_substitution.checkConstraints(violations);
+		for (Object _substitution : this.getSubstitution().toArray()) {
+			((TemplateParameterSubstitution) _substitution)
+					.checkConstraints(violations);
 		}
 	}
 

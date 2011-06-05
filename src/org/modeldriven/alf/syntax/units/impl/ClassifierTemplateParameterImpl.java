@@ -13,6 +13,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of a classifier template parameter, which acts as a classifier
@@ -87,5 +88,14 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
                     otherSpecializations.size() == mySpecializations.size();
 	    }
 	}
+	
+    @Override
+    public Member bind(String name,
+            NamespaceDefinition namespace,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        return null;
+    }
+
 
 } // ClassifierTemplateParameterImpl

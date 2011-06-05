@@ -61,6 +61,8 @@ public class BehaviorInvocationExpressionImpl
 	                        !referent.getImpl().isAssociationEnd()) {
 	                    referent = null;
 	                }
+	            } else if (referent.getImpl().isTemplate()) {	                
+	                referent = bindTemplateImplicitArguments(target, referent, null);
 	            }
 	        }
 	    }

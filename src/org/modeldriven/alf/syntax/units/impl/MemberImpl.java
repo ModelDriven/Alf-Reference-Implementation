@@ -36,6 +36,9 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     private Boolean isPrimitive = null; // DERIVED
     private Boolean isExternal = null; // DERIVED
     private UnitDefinition subunit = null; // DERIVED
+    
+    // The base to which this member was bound due to a template binding.
+    private Member base = null;
 
     public MemberImpl(Member self) {
         super(self);
@@ -131,6 +134,14 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 
     public void setSubunit(UnitDefinition subunit) {
         this.subunit = subunit;
+    }
+    
+    public Member getBase() {
+        return this.base;
+    }
+    
+    public void setBase(Member base) {
+        this.base = base;
     }
 
     protected Boolean deriveIsFeature() {
@@ -391,6 +402,39 @@ public abstract class MemberImpl extends DocumentedElementImpl {
                 }
             }
         }
+    }
+    
+    /**
+     * Create a binding of this member to a given set of template arguments.
+     */
+    public Member bind(String name,
+            NamespaceDefinition namespace,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        Member self = this.getSelf();
+        Member boundElement = null;
+        try {
+            boundElement = self.getClass().newInstance();
+        } catch (Exception e) {
+            System.out.println("Error binding " + name + ": " + e);
+            return null;
+        }
+        boundElement.setName(name);
+        boundElement.setNamespace(namespace);
+        boundElement.getImpl().bindTo(self, templateParameters, templateArguments);
+        return boundElement;
+    }
+    
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        Member self = this.getSelf();
+        this.setBase(base);
+        self.setVisibility(base.getVisibility());
+        self.setIsStub(false);
+        self.setAnnotation(base.getAnnotation());
+        self.setIsPrimitive(base.getIsPrimitive());
+        self.setIsExternal(base.getIsExternal());
     }
     
 } // MemberImpl

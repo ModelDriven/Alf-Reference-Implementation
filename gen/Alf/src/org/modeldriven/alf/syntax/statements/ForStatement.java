@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -206,9 +208,10 @@ public class ForStatement extends Statement {
 		if (body != null) {
 			body.checkConstraints(violations);
 		}
-		for (LoopVariableDefinition _variableDefinition : this
-				.getVariableDefinition()) {
-			_variableDefinition.checkConstraints(violations);
+		for (Object _variableDefinition : this.getVariableDefinition()
+				.toArray()) {
+			((LoopVariableDefinition) _variableDefinition)
+					.checkConstraints(violations);
 		}
 	}
 

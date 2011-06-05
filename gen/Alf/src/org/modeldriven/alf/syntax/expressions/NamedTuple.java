@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,8 +59,8 @@ public class NamedTuple extends Tuple {
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-		for (NamedExpression _namedExpression : this.getNamedExpression()) {
-			_namedExpression.checkConstraints(violations);
+		for (Object _namedExpression : this.getNamedExpression().toArray()) {
+			((NamedExpression) _namedExpression).checkConstraints(violations);
 		}
 	}
 

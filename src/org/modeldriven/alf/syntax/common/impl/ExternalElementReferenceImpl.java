@@ -29,6 +29,7 @@ import org.omg.uml.Behavior;
 import org.omg.uml.BehavioredClassifier;
 import org.omg.uml.Class;
 import org.omg.uml.Classifier;
+import org.omg.uml.ClassifierTemplateParameter;
 import org.omg.uml.DataType;
 import org.omg.uml.Element;
 import org.omg.uml.Enumeration;
@@ -39,12 +40,16 @@ import org.omg.uml.Namespace;
 import org.omg.uml.Operation;
 import org.omg.uml.Package;
 import org.omg.uml.Parameter;
+import org.omg.uml.ParameterableElement;
 import org.omg.uml.Primitive;
 import org.omg.uml.Profile;
 import org.omg.uml.Property;
 import org.omg.uml.Reception;
 import org.omg.uml.Signal;
 import org.omg.uml.Stereotype;
+import org.omg.uml.TemplateParameter;
+import org.omg.uml.TemplateSignature;
+import org.omg.uml.TemplateableElement;
 
 /**
  * A direct reference to a UML model element.
@@ -197,14 +202,20 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public boolean isTemplate() {
-        return this.isClassifier() && 
-                ((Classifier)this.getSelf().getElement()).isTemplate();
+    public boolean isEnumerationLiteral() {
+        return this.getSelf().getElement() instanceof EnumerationLiteral;        
     }
 
     @Override
-    public boolean isEnumerationLiteral() {
-        return this.getSelf().getElement() instanceof EnumerationLiteral;        
+    public boolean isTemplate() {
+        Element element = this.getSelf().getElement();
+        return element instanceof TemplateableElement && 
+                ((TemplateableElement)element).isTemplate();
+    }
+
+    @Override
+    public boolean isClassifierTemplateParameter() {
+        return this.getSelf().getElement() instanceof ClassifierTemplateParameter;
     }
 
     @Override
@@ -299,6 +310,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public String getName() {
         Element element = this.getSelf().getElement();
+        if (element instanceof TemplateParameter) {
+            element = (Element)((TemplateParameter)element).getParameteredElement();
+        }
         return element instanceof NamedElement?
                     ((NamedElement)element).getName(): null;
     }
@@ -403,6 +417,52 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<ElementReference> getTemplateParameters() {
+        List<ElementReference> templateParameters = new ArrayList<ElementReference>();
+        Element element = this.getSelf().getElement();
+        if (element instanceof TemplateableElement) {
+            TemplateSignature signature = ((TemplateableElement)element).getTemplateSignature();
+            if (signature != null) {
+                for (TemplateParameter parameter: signature.getParameter()) {
+                    ExternalElementReference reference = new ExternalElementReference();
+                    reference.setElement(parameter);
+                    templateParameters.add(reference);
+                }
+            }
+        }
+        return templateParameters;
+    }
+    
+    @Override
+    public ElementReference getParameteredElement() {
+        Element element = this.getSelf().getElement();
+        if (!(element instanceof TemplateParameter)) {
+            return null;
+        } else {
+            ParameterableElement parameteredElement = 
+                ((TemplateParameter)element).getParameteredElement();
+            ExternalElementReference reference = new ExternalElementReference();
+            reference.setElement((Element)parameteredElement);
+            return reference;
+        }
+    }
+    
+    @Override
+    public Collection<ElementReference> getConstrainingClassifiers() {
+        Collection<ElementReference> constrainingClassifiers = new ArrayList<ElementReference>();
+        if (this.isClassifierTemplateParameter()) {
+            for (Classifier classifier: 
+                ((ClassifierTemplateParameter)this.getSelf().getElement()).
+                    getConstrainingClassifier()) {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(classifier);
+                constrainingClassifiers.add(reference);
+            }
+        }
+        return constrainingClassifiers;
     }
 
     @Override

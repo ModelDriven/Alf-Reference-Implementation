@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -138,8 +140,8 @@ public abstract class Statement extends DocumentedElement {
 			violations.add(new ConstraintViolation(
 					"statementIsIsolatedDerivation", this));
 		}
-		for (Annotation _annotation : this.getAnnotation()) {
-			_annotation.checkConstraints(violations);
+		for (Object _annotation : this.getAnnotation().toArray()) {
+			((Annotation) _annotation).checkConstraints(violations);
 		}
 	}
 

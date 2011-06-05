@@ -4,50 +4,54 @@ private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
 
 package CollectionFunctions {
 
-  public activity size(in seq: any[*] sequence): Integer { 
+  public activity size<T>(in seq: T[*] sequence): Integer { 
     return Size(seq);
   }
   
-  public activity notEmpty(in seq: any[*] sequence): Boolean {
+  public activity notEmpty<T>(in seq: T[*] sequence): Boolean {
     return NotEmpty(seq);
   }
   
-  public activity including(in seq: any[*] sequence, in element: any): any[*] sequence { 
-    return Including(seq, element);
+  public activity including<T>(in seq: T[*] sequence, in element: T): T[*] sequence { 
+    return (T)Including(seq, element);
   }
   
-  public activity includeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { 
-    return IncludeAt(seq, index);
+  public activity includeA<T>(in seq: T[*] sequence, in index: Integer): T[*] sequence { 
+    return (T)IncludeAt(seq, index);
   }
   
-  public activity excluding(in seq: any[*] sequence, in element: any): any[*] sequence { 
-    return Excluding(seq, element);
+  public activity excluding<T>(in seq: T[*] sequence, in element: T): T[*] sequence { 
+    return (T)Excluding(seq, element);
   }
   
-  public activity excludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { 
-    return ExcludeAt(seq, index);
+  public activity excludeAt<T>(in seq: T[*] sequence, in index: Integer): T[*] sequence { 
+    return (T)ExcludeAt(seq, index);
   }
   
-  public activity union(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { 
-    return Union(seq1, seq2);
+  public activity at<T>(in seq: T[*] sequence, in index: Integer): T[0..1]  { 
+    return (T)At(seq, index);
   }
   
-  public activity isEmpty(in seq: any[*] sequence): Boolean { 
+  public activity union<T>(in seq1: T[*] sequence, in seq2: T[*] sequence): T[*] sequence { 
+    return (T)Union(seq1, seq2);
+  }
+  
+  public activity isEmpty<T>(in seq: T[*] sequence): Boolean { 
     return IsEmpty(seq);
   }
 
   // "In-place" behaviors
   
-  public activity add(inout seq: any[*] sequence, in element: any) { 
-    seq = Including(seq, element);
+  public activity add<T>(inout seq: T[*] sequence, in element: T): T[*] sequence { 
+    return seq = including(seq, element);
   }
   
-  public activity remove(inout seq: any[*] sequence, in element: any) { 
-    seq = Excluding(seq, element);
+  public activity remove<T>(inout seq: T[*] sequence, in element: T): T[*] sequence { 
+    return seq = excluding(seq, element);
   }
   
-  public activity removeAt(inout seq: any[*] sequence, in index: Integer) { 
-    seq = ExcludeAt(seq, index);
+  public activity removeAt<T>(inout seq: T[*] sequence, in index: Integer): T[*] sequence { 
+    return seq = excludeAt(seq, index);
   }
   
 }

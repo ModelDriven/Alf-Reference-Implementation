@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -81,8 +83,8 @@ public class ConcurrentClauses extends SyntaxElement {
 			violations.add(new ConstraintViolation(
 					"concurrentClausesConditionAssignments", this));
 		}
-		for (NonFinalClause _clause : this.getClause()) {
-			_clause.checkConstraints(violations);
+		for (Object _clause : this.getClause().toArray()) {
+			((NonFinalClause) _clause).checkConstraints(violations);
 		}
 	}
 

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -205,5 +207,15 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	public Boolean isSameKindAs(Member member) {
 		return member.getImpl().getReferent().getImpl().isProperty();
 	} // isSameKindAs
+
+    @Override
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof PropertyDefinition) {
+            this.getSelf().setIsComposite(((PropertyDefinition)base).getIsComposite());
+        }
+    }
 
 } // PropertyDefinitionImpl

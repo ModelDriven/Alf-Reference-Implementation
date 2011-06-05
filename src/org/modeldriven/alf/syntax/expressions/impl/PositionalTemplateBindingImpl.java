@@ -9,11 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A template binding in which the arguments are matched to formal template
@@ -59,6 +61,23 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
 	    return s.toString();
 	}
 
+    /*
+     * Helper Methods
+     */
+    
+    @Override
+    public List<ElementReference> getArgumentReferents(
+            List<ElementReference> templateParameters) {
+        List<ElementReference> argumentReferents = new ArrayList<ElementReference>();
+        for (QualifiedName argumentName: this.getSelf().getArgumentName()) {
+            ElementReference argumentReferent = argumentName.getImpl().getClassifierReferent();
+            if (argumentReferent != null) {
+                argumentReferents.add(argumentReferent);
+            }
+        }
+        return argumentReferents;
+    }
+    
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
         PositionalTemplateBinding self = this.getSelf();
@@ -67,4 +86,15 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
         }
     }
 
+    @Override
+    public TemplateBinding update(
+            List<ElementReference> templateParameters,
+            List<ElementReference> templateArguments)  {
+        PositionalTemplateBinding templateBinding = new PositionalTemplateBinding();
+        for (QualifiedName argumentName: this.getSelf().getArgumentName()) {
+            templateBinding.addArgumentName(argumentName.getImpl().
+                    updateForBinding(templateParameters, templateArguments));
+        }
+        return templateBinding;
+    }
 } // PositionalTemplateBindingImpl

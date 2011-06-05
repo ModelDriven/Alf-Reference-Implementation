@@ -20,6 +20,9 @@ package SequenceFunctions {
   public activity ExcludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { }
   
   @primitive
+  public activity At(in seq: any[*] sequence, in index: Integer): any[0..1] { }
+  
+  @primitive
   public activity Union(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { }
   
   @primitive

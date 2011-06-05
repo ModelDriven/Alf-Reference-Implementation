@@ -9,11 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A template binding in which the arguments are matched to formal template
@@ -65,6 +67,41 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
         s.append(">");
         return s.toString();
     }
+    
+    /*
+     * Helper Methods 
+     */
+    
+    public Collection<QualifiedName> getArgumentName() {
+        Collection<QualifiedName> argumentNames = new ArrayList<QualifiedName>();
+        for (TemplateParameterSubstitution substitution: this.getSelf().getSubstitution()) {
+            argumentNames.add(substitution.getArgumentName());
+        }
+        return argumentNames;
+    }
+    
+    @Override
+    public List<ElementReference> getArgumentReferents
+        (List<ElementReference> templateParameters) {
+        Collection<TemplateParameterSubstitution> substitutions = 
+            this.getSelf().getSubstitution();
+        List<ElementReference> argumentReferents = new ArrayList<ElementReference>();
+        for (ElementReference templateParameter: templateParameters) {
+            String parameterName = templateParameter.getImpl().getName();
+            for (TemplateParameterSubstitution substitution: substitutions) {
+                String name = substitution.getParameterName();
+                if (name != null && name.equals(parameterName)) {
+                    ElementReference argumentReferent = 
+                        substitution.getArgumentName().getImpl().getClassifierReferent();
+                    if (argumentReferent != null) {
+                        argumentReferents.add(argumentReferent);
+                        break;
+                    }
+                }
+            }
+        }
+        return argumentReferents;
+    }
 
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
@@ -72,6 +109,17 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
         for (TemplateParameterSubstitution substitution: self.getSubstitution()) {
             substitution.getImpl().setCurrentScope(currentScope);
         }        
+    }
+
+    @Override
+    public TemplateBinding update(List<ElementReference> templateParameters,
+            List<ElementReference> templateArguments) {
+        NamedTemplateBinding templateBinding = new NamedTemplateBinding();
+        for (TemplateParameterSubstitution substitution: this.getSelf().getSubstitution()) {
+            templateBinding.addSubstitution(substitution.getImpl().
+                    update(templateParameters, templateArguments));
+        }
+        return templateBinding;
     }
 
 } // NamedTemplateBindingImpl

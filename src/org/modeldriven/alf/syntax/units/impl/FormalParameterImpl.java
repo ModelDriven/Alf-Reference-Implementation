@@ -154,5 +154,15 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
     public boolean isAssignableFrom(Expression expression) {
         return new AssignableTypedElementImpl(this).isAssignableFrom(expression);
     }
+    
+    @Override
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof FormalParameter) {
+            this.getSelf().setDirection(((FormalParameter)base).getDirection());
+        }
+    }
 
 } // FormalParameterImpl

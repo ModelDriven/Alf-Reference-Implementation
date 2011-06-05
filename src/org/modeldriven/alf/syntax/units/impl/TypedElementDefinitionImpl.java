@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -185,5 +187,31 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl {
 	    TypedElementDefinition self = this.getSelf();
 		return self.getTypeName() == null || self.getType() != null;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	@Override
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof TypedElementDefinition) {
+            TypedElementDefinition self = this.getSelf();
+            TypedElementDefinition baseDefinition = (TypedElementDefinition)base;
+            self.setLowerBound(baseDefinition.getLowerBound());
+            self.setUpperBound(baseDefinition.getUpperBound());
+            self.setIsOrdered(baseDefinition.getIsOrdered());
+            self.setIsNonunique(baseDefinition.getIsNonunique());
+            QualifiedName typeName = baseDefinition.getTypeName();
+            if (typeName != null) {
+                typeName.getImpl().setCurrentScope(baseDefinition.getImpl().getOuterScope());
+                typeName = typeName.getImpl().
+                    updateForBinding(templateParameters, templateArguments);
+            }
+            self.setTypeName(typeName);
+        }
+    }
 	
 } // TypedElementDefinitionImpl

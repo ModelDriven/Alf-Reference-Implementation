@@ -9,6 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -105,6 +108,20 @@ public class NameBindingImpl extends SyntaxElementImpl {
         if (binding != null) {
             binding.getImpl().setCurrentScope(currentScope);
         }
+    }
+
+    public NameBinding updateBinding(
+            List<ElementReference> templateParameters,
+            List<ElementReference> templateArguments) {
+        NameBinding self = this.getSelf();
+        NameBinding nameBinding = new NameBinding();
+        nameBinding.setName(self.getName());
+        TemplateBinding binding = self.getBinding();
+        if (binding != null) {
+            nameBinding.setBinding(binding.getImpl().
+                    update(templateParameters, templateArguments));
+        }
+        return nameBinding;
     }
 
 } // NameBindingImpl

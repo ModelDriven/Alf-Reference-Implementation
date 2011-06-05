@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -201,8 +203,8 @@ public class AcceptStatement extends Statement {
 			violations.add(new ConstraintViolation(
 					"acceptStatementEnclosedStatements", this));
 		}
-		for (AcceptBlock _acceptBlock : this.getAcceptBlock()) {
-			_acceptBlock.checkConstraints(violations);
+		for (Object _acceptBlock : this.getAcceptBlock().toArray()) {
+			((AcceptBlock) _acceptBlock).checkConstraints(violations);
 		}
 	}
 

@@ -283,8 +283,8 @@ public void checkConstraints(Collection<ConstraintViolation> violations) {
                     #name(${attribute.name}).checkConstraints(violations);
                 }
             #else
-                for (#basicType($attribute) _#name($attribute.name): this.get#upperCase(${attribute.name})()) {
-                    _#name($attribute.name).checkConstraints(violations);
+                for (Object _#name($attribute.name): this.get#upperCase(${attribute.name})().toArray()) {
+                    ((#basicType($attribute))_#name($attribute.name)).checkConstraints(violations);
                 }
             #end
         #end

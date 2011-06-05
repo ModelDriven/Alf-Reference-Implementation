@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -286,8 +288,8 @@ public class QualifiedName extends SyntaxElement {
 		if (disambiguation != null) {
 			disambiguation.checkConstraints(violations);
 		}
-		for (NameBinding _nameBinding : this.getNameBinding()) {
-			_nameBinding.checkConstraints(violations);
+		for (Object _nameBinding : this.getNameBinding().toArray()) {
+			((NameBinding) _nameBinding).checkConstraints(violations);
 		}
 	}
 
