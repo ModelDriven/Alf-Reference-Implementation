@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.NamedElement;
@@ -126,6 +128,13 @@ public class ImportedMemberImpl extends MemberImpl {
         ExternalElementReference reference = new ExternalElementReference();
         reference.setElement(element);
         return makeImportedMember(reference);
+    }
+    
+    protected void bindTo(Member base, 
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        this.setReferent(base.getImpl().getReferent());
     }
     
 } // ImportedMemberImpl

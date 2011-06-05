@@ -174,14 +174,19 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public boolean isEnumerationLiteral() {
+        return this.getSelf().getElement() instanceof EnumerationLiteralName;        
+    }
+
+    @Override
     public boolean isTemplate() {
         return this.isClassifier() && 
                 ((ClassifierDefinition)this.getSelf().getElement()).getImpl().isTemplate();
     }
-
+    
     @Override
-    public boolean isEnumerationLiteral() {
-        return this.getSelf().getElement() instanceof EnumerationLiteralName;        
+    public boolean isClassifierTemplateParameter() {
+        return this.getSelf().getElement() instanceof ClassifierTemplateParameter;
     }
 
     @Override
@@ -313,8 +318,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
                 members.add(member.getImpl().getReferent());
             }
         }
-        return members;
-        
+        return members;      
     }
 
     @Override
@@ -372,6 +376,30 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         } else {
             return null;
         }
+    }
+    
+    @Override
+    public List<ElementReference> getTemplateParameters() {
+        List<ElementReference> members = new ArrayList<ElementReference>();
+        if (this.isClassifier()) {
+            for (ClassifierTemplateParameter member: ((ClassifierDefinition)this.getSelf().getElement()).
+                    getImpl().getTemplateParameters()) {
+                members.add(member.getImpl().getReferent());
+            }
+        }
+        return members;
+    }
+    
+    @Override
+    public ElementReference getParameteredElement() {
+        return this.isClassifierTemplateParameter()? this.getSelf(): null;
+    }
+    
+    @Override
+    public Collection<ElementReference> getConstrainingClassifiers() {
+        return this.isClassifierTemplateParameter()? 
+                this.parents():
+                new ArrayList<ElementReference>();
     }
 
     @Override

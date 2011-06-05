@@ -377,5 +377,30 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         }
         members.add(member);
     }
+    
+    @Override
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof NamespaceDefinition) {
+            NamespaceDefinition self = this.getSelf();
+            NamespaceDefinition baseNamespace = (NamespaceDefinition)base;
+            Collection<Member> ownedMembers = baseNamespace.getOwnedMember();
+            self.setOwnedMember(new ArrayList<Member>());
+            self.setMember(new ArrayList<Member>());
+            for (Member member: ((NamespaceDefinition)base).getMember()) {
+                Member boundMember = 
+                    member.getImpl().bind(member.getName(), self,
+                            templateParameters, templateArguments);
+                if (boundMember != null) {
+                    self.addMember(boundMember);
+                    if (ownedMembers.contains(member)) {
+                        self.addOwnedMember(boundMember);
+                    }
+                }
+            }
+        }
+    }
 
 } // NamespaceDefinitionImpl

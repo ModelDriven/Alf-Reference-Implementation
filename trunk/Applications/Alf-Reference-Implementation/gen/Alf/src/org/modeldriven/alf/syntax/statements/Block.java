@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -114,8 +116,8 @@ public class Block extends SyntaxElement {
 			violations.add(new ConstraintViolation(
 					"blockAssignmentAfterDerivation", this));
 		}
-		for (Statement _statement : this.getStatement()) {
-			_statement.checkConstraints(violations);
+		for (Object _statement : this.getStatement().toArray()) {
+			((Statement) _statement).checkConstraints(violations);
 		}
 	}
 

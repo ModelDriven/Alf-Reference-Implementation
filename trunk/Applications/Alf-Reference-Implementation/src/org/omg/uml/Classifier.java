@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Classifier extends Type {
+public class Classifier extends Type 
+    implements TemplateableElement, ParameterableElement {
     
     public boolean getIsAbstract() {
         return false;
@@ -17,6 +18,14 @@ public class Classifier extends Type {
 
     public List<Property> getAttribute() {
         return new ArrayList<Property>();
+    }
+
+    public TemplateSignature getTemplateSignature() {
+        return null;
+    }
+
+    public TemplateParameter getTemplateParameter() {
+        return null;
     }
 
     public boolean isTemplate() {

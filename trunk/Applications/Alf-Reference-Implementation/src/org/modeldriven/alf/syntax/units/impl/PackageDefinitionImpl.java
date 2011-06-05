@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.*;
 import org.omg.uml.Profile;
 
@@ -114,4 +115,16 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
         }
         return publicMembers;
     }
+    
+    @Override
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof PackageDefinition) {
+            this.getSelf().setAppliedProfile
+                (((PackageDefinition)base).getAppliedProfile());
+        }
+    }
+
 } // PackageDefinitionImpl

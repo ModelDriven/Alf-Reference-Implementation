@@ -11,7 +11,9 @@ active class ProcessQueueImpl             // Concrete active subclass
   }
   
   private dequeue(): Process {
-    return this.waitingProcesses->remove(1);
+    process = this.waitingProcesses->at(1);
+    this.waitingProcesses->removeAt(1);
+    return process;
   }
     
   private processesWaiting(): Boolean {

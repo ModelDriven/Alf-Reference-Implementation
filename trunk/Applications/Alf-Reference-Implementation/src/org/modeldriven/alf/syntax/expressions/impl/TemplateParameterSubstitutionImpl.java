@@ -9,6 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -51,6 +54,20 @@ public class TemplateParameterSubstitutionImpl extends SyntaxElementImpl {
 	/*
 	 * Helper Methods
 	 */
+
+    public TemplateParameterSubstitution update(
+            List<ElementReference> templateParameters,
+            List<ElementReference> templateArguments) {
+        TemplateParameterSubstitution self = this.getSelf();
+        TemplateParameterSubstitution substitution = new TemplateParameterSubstitution();
+        substitution.setParameterName(self.getParameterName());
+        QualifiedName argumentName = self.getArgumentName();
+        if (argumentName != null) {
+            substitution.setArgumentName(argumentName.getImpl().
+                    updateForBinding(templateParameters, templateArguments));
+        }
+        return substitution;
+    }
 
     public void setCurrentScope(NamespaceDefinition currentScope) {
         TemplateParameterSubstitution self = this.getSelf();

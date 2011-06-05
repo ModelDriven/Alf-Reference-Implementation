@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * The definition of an operation, with any formal parameters defined as owned
@@ -403,6 +404,24 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
             return definition instanceof ActivityDefinition?
                         ((ActivityDefinition)definition).getBody():
                         null;
+        }
+    }
+
+    @Override
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof OperationDefinition) {
+            OperationDefinition self = this.getSelf();
+            OperationDefinition baseOperation = (OperationDefinition)base;
+            self.setIsAbstract(baseOperation.getIsAbstract());
+            QualifiedNameList redefinitions = new QualifiedNameList();
+            QualifiedNameList baseRedefinitions = baseOperation.getRedefinition();
+            for (QualifiedName redefinition: baseRedefinitions.getName()) {
+                redefinitions.addName(redefinition.getImpl().
+                        updateBindings(templateParameters, templateArguments));
+            }
         }
     }
 

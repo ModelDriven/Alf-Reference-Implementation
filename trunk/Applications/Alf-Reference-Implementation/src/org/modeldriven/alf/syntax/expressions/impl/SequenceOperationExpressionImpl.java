@@ -126,8 +126,17 @@ public class SequenceOperationExpressionImpl
 	 **/
 	@Override
 	protected ElementReference deriveReferent() {
-	    QualifiedName operation = this.getSelf().getOperation();
-	    return operation == null? null: operation.getImpl().getBehaviorReferent();
+	    SequenceOperationExpression self = this.getSelf();
+	    QualifiedName operation = self.getOperation();
+	    ElementReference referent = null;
+	    if (operation != null) {
+	        referent = operation.getImpl().getBehaviorReferent();
+	        if (referent != null && referent.getImpl().isTemplate()) {
+	            referent = bindTemplateImplicitArguments(operation, referent, 
+	                    self.getPrimary().getExpression());
+	        }
+	    }
+	    return referent;
 	}
 	
 	/**

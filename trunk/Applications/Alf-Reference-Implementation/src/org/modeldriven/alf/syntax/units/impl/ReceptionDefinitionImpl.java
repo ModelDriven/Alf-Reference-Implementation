@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -122,4 +124,15 @@ public class ReceptionDefinitionImpl extends MemberImpl {
 		return member.getImpl().getReferent().getImpl().isReception();
 	} // isSameKindAs
 	
+    @Override
+    protected void bindTo(Member base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ReceptionDefinition) {
+            this.getSelf().setSignalName(((ReceptionDefinition)base).getSignalName().getImpl().
+                    updateForBinding(templateParameters, templateArguments));
+        }
+    }
+
 } // ReceptionDefinitionImpl

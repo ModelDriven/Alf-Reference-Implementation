@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.syntax.units.impl.AssignableTypedElementImpl;
+import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -466,6 +467,62 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         if (tuple != null) {
             tuple.getImpl().setCurrentScope(currentScope);
         }
+    }
+    
+    /**
+     * Infer the implicit template arguments for a template behavior referent
+     * and bind them to template parameters.
+     */
+    protected ElementReference bindTemplateImplicitArguments(
+            QualifiedName target,
+            ElementReference referent, 
+            Expression primary) {
+        InvocationExpression self = this.getSelf();
+        List<ElementReference> templateParameters = 
+            referent.getImpl().getTemplateParameters();
+        
+        // Note: This should really be a separate constraint.
+        for (ElementReference templateParameter: templateParameters) {
+            ElementReference element = 
+                templateParameter.getImpl().getParameteredElement();
+            if (element == null || !element.getImpl().isClassifier()) {
+                return null;
+            }
+        }
+        
+        // This is set in order to make the parameter list available for
+        // computing assignments and for determining the tuple inputs.
+        self.setReferent(referent);
+        this.updateAssignmentMap(); // Force computation of assignments.
+        
+        
+        // This is included to handle the primary expression in an sequence
+        // operation expression.
+        FormalParameter firstParameter = null;
+        if (primary != null) {
+            List<FormalParameter> parameters = referent.getImpl().getParameters();
+            firstParameter = parameters.size() == 0? null: parameters.get(0);
+        }
+        
+        List<ElementReference> templateArguments = new ArrayList<ElementReference>();
+        for (ElementReference templateParameter: templateParameters) {
+            Collection<ElementReference> types = new ArrayList<ElementReference>();
+            if (firstParameter != null) {
+                if (templateParameter.getImpl().equals(firstParameter.getType())) {
+                    types.add(primary.getType());
+                }
+            }
+            for (NamedExpression input: self.getTuple().getInput()) {
+                if (templateParameter.getImpl().equals
+                        (this.parameterNamed(input.getName()).getType())) {
+                    types.add(input.getExpression().getType());                             
+                }
+            }
+            templateArguments.add(ClassifierDefinitionImpl.commonAncestor(types));
+        }
+        
+        return target.getImpl().getBoundElement
+            (referent, templateParameters, templateArguments);
     }
 
 } // InvocationExpressionImpl

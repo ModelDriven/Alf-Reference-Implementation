@@ -15,7 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.omg.uml.*;
+import org.omg.uml.Element;
+import org.omg.uml.Profile;
+import org.omg.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,8 +60,8 @@ public class PositionalTemplateBinding extends TemplateBinding {
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-		for (QualifiedName _argumentName : this.getArgumentName()) {
-			_argumentName.checkConstraints(violations);
+		for (Object _argumentName : this.getArgumentName().toArray()) {
+			((QualifiedName) _argumentName).checkConstraints(violations);
 		}
 	}
 

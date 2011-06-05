@@ -9,6 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -28,7 +31,18 @@ public abstract class TemplateBindingImpl extends SyntaxElementImpl {
 	public TemplateBinding getSelf() {
 		return (TemplateBinding) this.self;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	public abstract List<ElementReference> getArgumentReferents
+	    (List<ElementReference> templateParameters);
 
     public abstract void setCurrentScope(NamespaceDefinition currentScope);
+
+    public abstract TemplateBinding update(
+            List<ElementReference> templateParameters,
+            List<ElementReference> templateArguments);
 
 } // TemplateBindingImpl

@@ -61,8 +61,10 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isPrimitive();
     public abstract boolean isSignal();
     public abstract boolean isStereotype();
-    public abstract boolean isTemplate();
     public abstract boolean isEnumerationLiteral();
+    
+    public abstract boolean isTemplate();
+    public abstract boolean isClassifierTemplateParameter();
 
     public abstract boolean isFeature();
     public abstract boolean isOperation();
@@ -91,6 +93,9 @@ public abstract class ElementReferenceImpl {
     public abstract List<Member> getInheritableMembers();
     public abstract List<FormalParameter> getParameters();
     public abstract FormalParameter getReturnParameter();
+    public abstract List<ElementReference> getTemplateParameters();
+    public abstract ElementReference getParameteredElement();
+    public abstract Collection<ElementReference> getConstrainingClassifiers();
     public abstract ElementReference getType();
     public abstract ElementReference getAssociation();
     public abstract Integer getLower();
