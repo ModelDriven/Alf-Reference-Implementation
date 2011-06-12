@@ -68,7 +68,7 @@ public class NamedTemplateBinding extends TemplateBinding {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -88,7 +88,8 @@ public class NamedTemplateBinding extends TemplateBinding {
 			if (substitution.size() > 0) {
 				System.out.println(prefix + " substitution:");
 			}
-			for (TemplateParameterSubstitution _substitution : substitution) {
+			for (Object _object : substitution.toArray()) {
+				TemplateParameterSubstitution _substitution = (TemplateParameterSubstitution) _object;
 				if (_substitution != null) {
 					_substitution.print(prefix + "  ");
 				} else {

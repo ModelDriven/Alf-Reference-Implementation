@@ -91,18 +91,30 @@ public class NamedTupleImpl extends TupleImpl {
         Collection<OutputNamedExpression> outputs = new ArrayList<OutputNamedExpression>();
         if (invocation != null) {
             List<FormalParameter> parameters = invocation.getImpl().parameters();
+            boolean isAddInvocation = invocation.getImpl().isAddInvocation();
             for (FormalParameter parameter: parameters) {
                 String direction = parameter == null? null: parameter.getDirection();
                 if (direction != null && 
                         (direction.equals("out") || direction.equals("inout"))) {
                     String name = parameter.getName();
                     NamedExpression argument = this.getNamedExpression(name);
+                    Expression expression = null;
+                    if (argument == null) {
+                        expression = SequenceConstructionExpressionImpl.makeNull();
+                    } else {
+                        expression = argument.getExpression();
+                        
+                        // Identify the first argument of an invocation of
+                        // CollectionFunctions::add, since an @parallel local
+                        // name is allowed only in this position.
+                        if (isAddInvocation && parameter == parameters.get(0)) {
+                            expression.getImpl().setIsAddTarget();
+                        }
+                    }
                     OutputNamedExpression output = new OutputNamedExpression();
                     output.setName(name);
-                    output.setExpression(argument == null?
-                            SequenceConstructionExpressionImpl.makeNull():
-                            argument.getExpression());
-                   outputs.add(output);
+                    output.setExpression(expression);
+                    outputs.add(output);
                 }
             }
         }

@@ -82,13 +82,15 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	@Override
 	public Integer getLower() {
 	    AssignedSource oldAssignment = this.getOldAssignment();
-	    return oldAssignment == null? super.getLower(): oldAssignment.getLower();
+	    return this.getSelf().getIndex() != null || oldAssignment == null? 
+	            super.getLower(): oldAssignment.getLower();
 	}
 	
     @Override
     public Integer getUpper() {
         AssignedSource oldAssignment = this.getOldAssignment();
-        return oldAssignment == null? super.getUpper(): oldAssignment.getUpper();
+        return this.getSelf().getIndex() != null || oldAssignment == null? 
+                super.getUpper(): oldAssignment.getUpper();
     }
     
 	/*
@@ -193,9 +195,9 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
             return null;
         } else {
             QualifiedName target = this.getSelf().getTarget();
-            return target == null || 
+            return (target == null || 
                     target.getQualification() != null && 
-                    this.getParameter() == null? null: 
+                    this.getParameter() == null)? null: 
                         target.getUnqualifiedName().getName();
         }
     }

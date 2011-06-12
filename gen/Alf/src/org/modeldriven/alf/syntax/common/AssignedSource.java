@@ -97,7 +97,7 @@ public class AssignedSource {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -116,7 +116,8 @@ public class AssignedSource {
 	}
 
 	public void print(String prefix) {
-		System.out.println(prefix + this._toString());
+		System.out.println(prefix + "[" + this.hashCode() + "]"
+				+ this._toString());
 		SyntaxElement source = this.getSource();
 		if (source != null) {
 			System.out.println(prefix + " source:" + source);

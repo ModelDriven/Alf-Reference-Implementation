@@ -58,7 +58,7 @@ public abstract class DocumentedElement extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -77,7 +77,8 @@ public abstract class DocumentedElement extends SyntaxElement {
 			if (documentation.size() > 0) {
 				System.out.println(prefix + " documentation:");
 			}
-			for (String _documentation : documentation) {
+			for (Object _object : documentation.toArray()) {
+				String _documentation = (String) _object;
 				System.out.println(prefix + "  " + _documentation);
 			}
 		}

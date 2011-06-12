@@ -42,6 +42,11 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
 	public UnitDefinition getSelf() {
 		return (UnitDefinition) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    return super.toString() + " definition:(" + this.getSelf().getDefinition() + ")";
+	}
 
 	public QualifiedName getNamespaceName() {
 		return this.namespaceName;

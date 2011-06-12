@@ -140,6 +140,7 @@ public class ForStatementImpl extends StatementImpl {
     	        if (assignment != null) {
     	            assignment = AssignedSourceImpl.makeAssignment(assignment);
     	            assignment.setSource(self);
+    	            assignment.getImpl().setIsParallelLocalName(true);
     	            assignmentsBefore.put(name, assignment);
     	        }
     	    }
@@ -159,6 +160,14 @@ public class ForStatementImpl extends StatementImpl {
 	    }
 	    for (LoopVariableDefinition variableDefinition: variableDefinitions) {
 	        assignmentsAfter.remove(variableDefinition.getVariable());
+	    }
+	    for (String name: parallelNames) {
+	        AssignedSource assignment = assignmentsAfter.get(name);
+	        if (assignment != null) {
+	            assignment = AssignedSourceImpl.makeAssignment(assignment);
+	            assignment.getImpl().setIsParallelLocalName(false);
+	            assignmentsAfter.put(name, assignment);
+	        }
 	    }
 	    return assignmentsAfter;
 	}
@@ -223,6 +232,7 @@ public class ForStatementImpl extends StatementImpl {
 	                return false;
 	            }
 	        }
+	        // TODO: Check that annotation names are only used with add behavor.
 	    }    
 		return true;
 	}

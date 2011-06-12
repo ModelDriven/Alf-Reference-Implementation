@@ -1,8 +1,9 @@
+public import Comparable;
 class Sorter<T specializes Comparable> {
 
   private list: List<T>;
   @Create public Sorter() { }
-  @Create public Sorter(in list: List<T>) {
+  @Create public Sorter1(in list: List<T>) {
     this();
     this.list = list;
   }

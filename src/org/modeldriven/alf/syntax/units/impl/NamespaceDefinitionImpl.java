@@ -180,16 +180,18 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	 *  Helper methods
 	 */
 	
-    public Collection<Member> resolveVisible(String name, NamespaceDefinition namespace) {
-        Collection<Member> members = this.resolveInScope(name);
+    public Collection<Member> resolveVisible(String name, 
+            NamespaceDefinition namespace, boolean classifierOnly) {
+        Collection<Member> members = this.resolveInScope(name, classifierOnly);
             
         // Note: If this namespace is the same as or a containing scope of the 
         // given namespace, then all members of this namespace are visible.
         if (this.getSelf() != namespace && !this.containsMember(namespace)) {
             boolean allowPackageOnly = this.allowPackageOnly();
-            for (Member member: members) {
-                if (!(member.getImpl().isPublic() || 
-                        allowPackageOnly && member.getImpl().isPackageOnly())) {
+            for (Object member: members.toArray()) {
+                MemberImpl memberImpl = ((Member)member).getImpl();
+                if (!(memberImpl.isPublic() || 
+                        allowPackageOnly && memberImpl.isPackageOnly())) {
                     members.remove(member);
                 }
             }
@@ -212,16 +214,23 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     protected boolean allowPackageOnly() {
         return true;
     }
-
+    
     public Collection<Member> resolve(String name) {
-        List<Member> members = this.resolveInScope(name);
+        return this.resolve(name, false);
+    }
+
+    public Collection<Member> resolve(String name, boolean classifierOnly) {
+        List<Member> members = this.resolveInScope(name, classifierOnly);
         
         // Resolve in the containing scope, if there is one.
         NamespaceDefinition outerScope = this.getOuterScope();
         if (outerScope != null) {
             for (Member member: outerScope.getImpl().resolve(name)) {
-                if (member != null && member.getImpl().isDistinguishableFromAll(members)) {
-                    members.add(member);
+                if (!classifierOnly || 
+                        member.getImpl().getReferent().getImpl().isClassifier()) {
+                    if (member != null && member.getImpl().isDistinguishableFromAll(members)) {
+                        members.add(member);
+                    }
                 }
             }
         }
@@ -231,10 +240,20 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return members;
     }
     
-    private List<Member> resolveInScope(String name) {
-        Collection<Member> members = this.getMemberMap().get(name);
-        return members == null? new ArrayList<Member>(): 
-                                new ArrayList<Member>(members);
+    private List<Member> resolveInScope(String name, boolean classifierOnly) {
+        Collection<Member> namedMembers = this.getMemberMap().get(name);
+        ArrayList<Member> members = new ArrayList<Member>();
+        
+        if (namedMembers != null) {
+            for (Member member: namedMembers) {
+                if (!classifierOnly || 
+                        member.getImpl().getReferent().getImpl().isClassifier()) {
+                    members.add(member);
+                }
+            }
+        }
+       
+        return members;
     }
     
     /**
@@ -244,10 +263,13 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     public Collection<ElementReference> resolveAssociationEnd
         (ElementReference oppositeEndType, String name) {
         Collection<ElementReference> referents = new ArrayList<ElementReference>();
+        Collection<ElementReferenceImpl> associations = 
+            new ArrayList<ElementReferenceImpl>();
         for (Member member: this.getSelf().getMember()) {
             ElementReferenceImpl referent = 
                 member.getImpl().getReferent().getImpl();
             if (referent.isAssociation()) {
+                associations.add(referent);
                 List<ElementReference> associationEnds = 
                     referent.getAssociationEnds();
                 if (associationEnds.size() == 2) {
@@ -271,7 +293,20 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         
         NamespaceDefinition outerScope = this.getOuterScope();
         if (outerScope != null) {
-            referents.addAll(outerScope.getImpl().resolveAssociationEnd(oppositeEndType, name));
+            for (ElementReference outerReferent: outerScope.getImpl().
+                    resolveAssociationEnd(oppositeEndType, name)) {
+                Boolean visible = true;
+                name = outerReferent.getImpl().getName();
+                for (ElementReference referent: referents) {
+                    if (name.equals(referent.getImpl().getName())) {
+                        visible = false;
+                        break;
+                    }
+                }
+                if (visible) {
+                    referents.add(outerReferent);
+                }
+            }
         }
         
         return referents;
@@ -284,7 +319,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     public Member getStubFor(UnitDefinition unit) {
         NamespaceDefinition definition = unit == null? null: unit.getDefinition();
         if (definition != null) {
-            for (Member member: this.getSelf().getOwnedMember()) {
+            for (Object object: this.getSelf().getOwnedMember().toArray()) {
+                Member member = (Member)object;
                 String name = member.getName();
                 if (name != null && name.equals(definition.getName()) && 
                         member.getIsStub() && member.matchForStub(unit)) {
@@ -338,6 +374,16 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         }
     }
     
+    public Collection<Member> getSubunitOwnedMembers() {
+        NamespaceDefinition self = this.getSelf();
+        UnitDefinition subunit = self.getSubunit();
+        NamespaceDefinition definition = subunit == null? null: 
+            subunit.getDefinition();
+        return definition == null? 
+                self.getOwnedMember(): 
+                definition.getOwnedMember();
+    }
+    
     public List<FormalParameter> getFormalParameters() {
         List<FormalParameter> parameters = new ArrayList<FormalParameter>();
         for (Member member: this.getSelf().getOwnedMember()) {
@@ -386,19 +432,15 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         if (base instanceof NamespaceDefinition) {
             NamespaceDefinition self = this.getSelf();
             NamespaceDefinition baseNamespace = (NamespaceDefinition)base;
-            Collection<Member> ownedMembers = baseNamespace.getOwnedMember();
+            Collection<Member> ownedMembers = baseNamespace.getImpl().getSubunitOwnedMembers();
             self.setOwnedMember(new ArrayList<Member>());
             self.setMember(new ArrayList<Member>());
             for (Member member: ((NamespaceDefinition)base).getMember()) {
-                Member boundMember = 
-                    member.getImpl().bind(member.getName(), self,
-                            templateParameters, templateArguments);
-                if (boundMember != null) {
-                    self.addMember(boundMember);
-                    if (ownedMembers.contains(member)) {
-                        self.addOwnedMember(boundMember);
-                    }
-                }
+                // Note: If a boundMember is created, it will be added to
+                // the given namespace.
+                member.getImpl().bind(member.getName(), self, 
+                        ownedMembers.contains(member),
+                        templateParameters, templateArguments);
             }
         }
     }

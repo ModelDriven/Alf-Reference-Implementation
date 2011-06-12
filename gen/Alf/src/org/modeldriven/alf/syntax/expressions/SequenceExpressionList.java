@@ -93,7 +93,7 @@ public class SequenceExpressionList extends SequenceElements {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -112,7 +112,8 @@ public class SequenceExpressionList extends SequenceElements {
 			if (element.size() > 0) {
 				System.out.println(prefix + " element:");
 			}
-			for (Expression _element : element) {
+			for (Object _object : element.toArray()) {
+				Expression _element = (Expression) _object;
 				if (_element != null) {
 					_element.print(prefix + "  ");
 				} else {

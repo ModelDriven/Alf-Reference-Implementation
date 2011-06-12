@@ -122,7 +122,10 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl {
 	        return null;
 	    } else {
 	        typeName.getImpl().setCurrentScope(this.getOuterScope());
-	        return typeName.getImpl().getClassifierReferent();
+	        // Note: getClassifierOnlyReferent is used here to avoid
+	        // infinite recursion when doing type resolution during
+	        // distinguishibilty checking.
+	        return typeName.getImpl().getClassifierOnlyReferent();
 	    }
 	}
 

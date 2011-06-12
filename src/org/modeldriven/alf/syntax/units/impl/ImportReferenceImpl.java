@@ -130,12 +130,6 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 	
 	public abstract ArrayList<Member> getImportedMembers();
 	
-	protected ImportedMember makeImportedMember(ElementReference referent) {
-        ImportedMember importedMember = ImportedMemberImpl.makeImportedMember(referent);
-        importedMember.setVisibility(this.getSelf().getVisibility());
-        return importedMember;
-	}
-	
     @Override
     public boolean equals(Object other) {
         if (other instanceof ImportReference) {

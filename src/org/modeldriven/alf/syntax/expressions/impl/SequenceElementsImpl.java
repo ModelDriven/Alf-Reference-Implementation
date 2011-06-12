@@ -9,6 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Map;
+
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -60,6 +63,9 @@ public abstract class SequenceElementsImpl extends SyntaxElementImpl {
 	/*
 	 * Helper methods
 	 */
+
+    public abstract Map<String, AssignedSource> getAssignmentAfterMap(
+            Map<String, AssignedSource> assignmentBefore);
 
     public abstract void setCurrentScope(NamespaceDefinition currentScope);
 

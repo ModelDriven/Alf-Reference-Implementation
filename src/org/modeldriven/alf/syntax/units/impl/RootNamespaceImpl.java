@@ -25,8 +25,8 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
-    public Collection<Member> resolve(String name) {
-        Collection<Member> members = super.resolve(name);
+    public Collection<Member> resolve(String name, boolean classifierOnly) {
+        Collection<Member> members = super.resolve(name, classifierOnly);
         if (members.size() == 0) {
             QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
             UnitDefinition unit = this.resolveUnit(qualifiedName);

@@ -1,0 +1,39 @@
+/**
+ * Test basic expressions.
+ **/
+activity Expressions_Basic(in a: Integer) {
+
+  1234;
+  0;
+  0b1010111000010000;
+  0B0100_1010_0101_1011;
+  0xAE10;
+  0X4a_5b;
+  057410;
+  0_045_133;
+  
+  i = 1;
+  i += 4;
+  i += 1;
+  i -= 1;
+  i *= 1;
+  i %= 1;
+  i /= 1;
+  
+  f = true;
+  f &= true;
+  f |= true;
+  
+  BitString h = 0xab;
+  h <<= 1;
+  h >>= 1;
+  h >>>= 1;
+
+  filename = "xyz";
+  filename += ".doc";
+	  
+  a;
+  Expressions_Basic::a;
+  Expressions_Basic.a;
+
+}

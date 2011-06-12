@@ -43,9 +43,12 @@ public class ExternalNamespace extends NamespaceDefinition {
     }
 
     private ArrayList<Member> getMembersFrom(List<NamedElement> elements) {
+        Namespace namespace = this.getUmlNamespace();
         ArrayList<Member> members = new ArrayList<Member>();
         for (NamedElement element: elements) {
-            members.add(ImportedMemberImpl.makeImportedMember(element));
+            for (String name: namespace.getNamesOfMember(element)) {
+                members.add(ImportedMemberImpl.makeImportedMember(name, element));
+            }
         }
         return members;
     }

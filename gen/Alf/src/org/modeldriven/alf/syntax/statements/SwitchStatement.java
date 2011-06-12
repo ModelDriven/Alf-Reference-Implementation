@@ -211,7 +211,7 @@ public class SwitchStatement extends Statement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -240,7 +240,8 @@ public class SwitchStatement extends Statement {
 			if (nonDefaultClause.size() > 0) {
 				System.out.println(prefix + " nonDefaultClause:");
 			}
-			for (SwitchClause _nonDefaultClause : nonDefaultClause) {
+			for (Object _object : nonDefaultClause.toArray()) {
+				SwitchClause _nonDefaultClause = (SwitchClause) _object;
 				if (_nonDefaultClause != null) {
 					_nonDefaultClause.print(prefix + "  ");
 				} else {

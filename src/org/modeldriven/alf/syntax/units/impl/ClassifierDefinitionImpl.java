@@ -198,7 +198,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	        ClassifierDefinition self = this.getSelf();
             Collection<ElementReference> mySpecializations = self.getSpecializationReferent();
             List<ClassifierTemplateParameter> myParameters = self.getImpl().getTemplateParameters();
-	        
+            
             for (ElementReference specialization: mySpecializations) {
                 if (!specialization.getImpl().isContainedIn(otherSpecializations)) {
                     return false;
@@ -206,10 +206,15 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             }
             
             for (ClassifierTemplateParameter myParameter: myParameters) {
+                boolean found = false;
                 for (ClassifierTemplateParameter otherParameter: otherParameters) {
-                    if (!myParameter.getImpl().equals(otherParameter)) {
-                        return false;
+                    if (myParameter.getImpl().equals(otherParameter)) {
+                        found = true;
+                        break;
                     }
+                }
+                if (!found) {
+                    return false;
                 }
             }
             

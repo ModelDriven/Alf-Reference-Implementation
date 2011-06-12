@@ -66,7 +66,7 @@ public class PositionalTemplateBinding extends TemplateBinding {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -85,7 +85,8 @@ public class PositionalTemplateBinding extends TemplateBinding {
 			if (argumentName.size() > 0) {
 				System.out.println(prefix + " argumentName:");
 			}
-			for (QualifiedName _argumentName : argumentName) {
+			for (Object _object : argumentName.toArray()) {
+				QualifiedName _argumentName = (QualifiedName) _object;
 				if (_argumentName != null) {
 					_argumentName.print(prefix + "  ");
 				} else {

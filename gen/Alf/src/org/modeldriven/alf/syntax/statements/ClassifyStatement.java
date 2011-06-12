@@ -204,7 +204,7 @@ public class ClassifyStatement extends Statement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -240,7 +240,8 @@ public class ClassifyStatement extends Statement {
 			if (fromClass.size() > 0) {
 				System.out.println(prefix + " /fromClass:");
 			}
-			for (ElementReference _fromClass : fromClass) {
+			for (Object _object : fromClass.toArray()) {
+				ElementReference _fromClass = (ElementReference) _object;
 				System.out.println(prefix + "  " + _fromClass);
 			}
 		}
@@ -249,7 +250,8 @@ public class ClassifyStatement extends Statement {
 			if (toClass.size() > 0) {
 				System.out.println(prefix + " /toClass:");
 			}
-			for (ElementReference _toClass : toClass) {
+			for (Object _object : toClass.toArray()) {
+				ElementReference _toClass = (ElementReference) _object;
 				System.out.println(prefix + "  " + _toClass);
 			}
 		}

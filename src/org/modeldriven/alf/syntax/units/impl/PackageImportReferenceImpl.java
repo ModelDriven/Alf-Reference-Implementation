@@ -50,8 +50,10 @@ public class PackageImportReferenceImpl extends ImportReferenceImpl {
         ArrayList<Member> members = new ArrayList<Member>();
         ElementReference referent = this.getSelf().getReferent();
         if (referent != null) {
-            for (ElementReference member: referent.getImpl().getPublicMembers()) {
-                members.add(this.makeImportedMember(member));
+            for (Member member: referent.getImpl().getPublicMembers()) {
+                ImportedMember importedMember = ImportedMemberImpl.makeImportedMember(member);
+                importedMember.setVisibility(this.getSelf().getVisibility());
+                members.add(importedMember);
             }
         }
         return members;

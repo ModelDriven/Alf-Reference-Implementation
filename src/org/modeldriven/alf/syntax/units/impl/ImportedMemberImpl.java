@@ -115,19 +115,28 @@ public class ImportedMemberImpl extends MemberImpl {
 	 * Helper Methods
 	 */
 	
-    public static ImportedMember makeImportedMember(ElementReference referent) {
+    public static ImportedMember makeImportedMember(Member member) {
         ImportedMember importedMember = new ImportedMember();
-        importedMember.setReferent(referent);
-        // TODO: Handle external names starting with a single quote.
-        importedMember.setName(referent.getImpl().getName());
-        importedMember.setVisibility(referent.getImpl().getVisibility());
+        importedMember.setReferent(member.getImpl().getReferent());
+        importedMember.setName(member.getName());
+        importedMember.setVisibility(member.getImpl().getVisibility());
         return importedMember;
     }
+    
+    public static ImportedMember makeImportedMember(ElementReference reference) {
+        ImportedMember importedMember = new ImportedMember();
+        importedMember.setReferent(reference);
+        importedMember.getImpl().setExactName(reference.getImpl().getName());
+        importedMember.setVisibility(reference.getImpl().getVisibility());
+        return importedMember;        
+    }
 
-    public static ImportedMember makeImportedMember(NamedElement element) {
+    public static ImportedMember makeImportedMember(String name, NamedElement element) {
         ExternalElementReference reference = new ExternalElementReference();
         reference.setElement(element);
-        return makeImportedMember(reference);
+        ImportedMember importedMember = makeImportedMember(reference);
+        importedMember.getImpl().setExactName(name);
+        return importedMember;
     }
     
     protected void bindTo(Member base, 

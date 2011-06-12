@@ -8,36 +8,112 @@ package CollectionFunctions {
     return Size(seq);
   }
   
+  public activity includes<T>(in seq: T[*] sequence, in element: T): Boolean { 
+    return Includes(seq, element);
+  }
+  
+  public activity excludes<T>(in seq: T[*] sequence, in element: T): Boolean { 
+    return Excludes(seq, element);
+  }
+  
+  public activity count<T>(in seq: T[*] sequence, in element: T): Integer { 
+    return Count(seq, element);
+  }
+  
+  public activity isEmpty<T>(in seq: T[*] sequence): Boolean { 
+    return IsEmpty(seq);
+  }
+
   public activity notEmpty<T>(in seq: T[*] sequence): Boolean {
     return NotEmpty(seq);
   }
   
-  public activity including<T>(in seq: T[*] sequence, in element: T): T[*] sequence { 
-    return (T)Including(seq, element);
+  public activity includesAll<T>(in seq1: T[*] sequence, in seq2: T[*] sequence): Boolean { 
+    return IncludesAll(seq1, seq2);
+  }
+   
+  public activity excludesAll<T>(in seq1: T[*] sequence, in seq2: T[*] sequence): Boolean { 
+    return ExcludesAll(seq1, seq2);
   }
   
-  public activity includeA<T>(in seq: T[*] sequence, in index: Integer): T[*] sequence { 
-    return (T)IncludeAt(seq, index);
-  }
-  
-  public activity excluding<T>(in seq: T[*] sequence, in element: T): T[*] sequence { 
-    return (T)Excluding(seq, element);
-  }
-  
-  public activity excludeAt<T>(in seq: T[*] sequence, in index: Integer): T[*] sequence { 
-    return (T)ExcludeAt(seq, index);
+  public activity equals<T>(in seq1: T[*] sequence, in seq2: T[*] sequence): Boolean { 
+    return Equals(seq1, seq2);
   }
   
   public activity at<T>(in seq: T[*] sequence, in index: Integer): T[0..1]  { 
     return (T)At(seq, index);
   }
   
+  public activity indexOf<T>(in seq: T[*] sequence, in element: T): Integer[0..1] { 
+    return IndexOf(seq, element);
+  }
+  
+  public activity first<T>(in seq: T[*] sequence): T[0..1] { 
+    return (T)First(seq);
+  }
+  
+  public activity last<T>(in seq: T[*] sequence): T[0..1] { 
+    return (T)Last(seq);
+  }
+  
   public activity union<T>(in seq1: T[*] sequence, in seq2: T[*] sequence): T[*] sequence { 
     return (T)Union(seq1, seq2);
   }
   
-  public activity isEmpty<T>(in seq: T[*] sequence): Boolean { 
-    return IsEmpty(seq);
+  public activity intersection<T>(in seq1: T[*] sequence, in seq2: T[*] sequence): T[*] sequence { 
+    return (T)Intersection(seq1, seq2);
+  }
+  
+  public activity difference<T>(in seq1: T[*] sequence, in seq2: T[*] sequence): T[*] sequence { 
+    return (T)Difference(seq1, seq2);
+  }
+  
+  public activity including<T>(in seq: T[*] sequence, in element: T): T[*] sequence { 
+    return (T)Including(seq, element);
+  }
+  
+  public activity includeAt<T>(in seq: T[*] sequence, in index: Integer, in element: T): T[*] sequence { 
+    return (T)IncludeAt(seq, index, element);
+  }
+  
+  public activity insertAt<T>(in seq: T[*] sequence, in index: Integer, in element: T): T[*] sequence { 
+    return (T)InsertAt(seq, index, element);
+  }
+  
+  public activity includeAllAt<T>(in seq1: T[*] sequence, in index: Integer, in seq2: T[*] sequence): T[*] sequence { 
+    return (T)IncludeAllAt(seq1, index, seq2);
+  }
+  
+  public activity excluding<T>(in seq: T[*] sequence, in element: T): T[*] sequence { 
+    return (T)Excluding(seq, element);
+  }
+  
+  public activity excludingOne<T>(in seq: T[*] sequence, in element: T): T[*] sequence { 
+    return (T)ExcludingOne(seq, element);
+  }
+  
+  public activity excludeAt<T>(in seq: T[*] sequence, in index: Integer): T[*] sequence { 
+    return (T)ExcludeAt(seq, index);
+  }
+  
+  public activity replacing<T>(in seq: T[*] sequence, in element: T, in newElement: T): T[*] sequence { 
+    return (T)Replacing(seq, element, newElement);
+  }
+  
+  public activity replacingOne<T>(in seq: T[*] sequence, in element: T, in newElement: T): T[*] sequence { 
+    return (T)ReplacingOne(seq, element, newElement);
+  }
+  
+  public activity replacingAt<T>(in seq: T[*] sequence, in index: Integer, in element: T): T[*] sequence { 
+    return (T)ReplacingAt(seq, index, element);
+  }
+  
+  public activity subsequence<T>(in seq: T[*] sequence, in lower: Integer, in upper: Integer): T[*] sequence { 
+    return (T)Subsequence(seq, lower, upper);
+  }
+  
+  public activity toOrderedSet(in seq: T[*] sequence): T[*] ordered { 
+    return (T)ToOrderedSet(seq);
   }
 
   // "In-place" behaviors
@@ -52,6 +128,10 @@ package CollectionFunctions {
   
   public activity removeAt<T>(inout seq: T[*] sequence, in index: Integer): T[*] sequence { 
     return seq = excludeAt(seq, index);
+  }
+  
+  public activity removeAll<T>(inout seq: T[*] sequence, in element: T): T[*] sequence { 
+    return seq = excluding(seq, element);
   }
   
 }

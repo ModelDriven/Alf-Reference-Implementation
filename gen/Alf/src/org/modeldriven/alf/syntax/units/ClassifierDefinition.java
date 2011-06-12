@@ -139,7 +139,7 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -166,7 +166,8 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 			if (specializationReferent.size() > 0) {
 				System.out.println(prefix + " /specializationReferent:");
 			}
-			for (ElementReference _specializationReferent : specializationReferent) {
+			for (Object _object : specializationReferent.toArray()) {
+				ElementReference _specializationReferent = (ElementReference) _object;
 				System.out.println(prefix + "  " + _specializationReferent);
 			}
 		}

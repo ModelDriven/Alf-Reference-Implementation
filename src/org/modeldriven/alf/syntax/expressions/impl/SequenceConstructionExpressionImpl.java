@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Map;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -135,6 +137,17 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	/*
 	 * Helper Methods
 	 */
+	
+	@Override
+	public Map<String, AssignedSource> updateAssignmentMap() {
+	    SequenceConstructionExpression self = this.getSelf();
+	    SequenceElements elements = self.getElements();
+	    Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
+	    if (elements != null) {
+	        assignments = elements.getImpl().getAssignmentAfterMap(assignments);
+	    }
+	    return assignments;
+	}
 	
 	public static SequenceConstructionExpression makeNull() {
 	    SequenceConstructionExpression nullExpression = 

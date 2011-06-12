@@ -9,6 +9,10 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -81,6 +85,25 @@ public class SequenceRangeImpl extends SequenceElementsImpl {
 	/*
 	 * Helper Methods
 	 */
+
+    @Override
+    public Map<String, AssignedSource> getAssignmentAfterMap(
+            Map<String, AssignedSource> assignmentsBefore) {
+        SequenceRange self = this.getSelf();
+        Expression rangeLower = self.getRangeLower();
+        Expression rangeUpper = self.getRangeUpper();
+        Map<String, AssignedSource> assignmentsAfter = 
+            new HashMap<String, AssignedSource>(assignmentsBefore);
+        if (rangeLower != null) {
+            rangeLower.getImpl().setAssignmentBefore(assignmentsBefore);
+            assignmentsAfter.putAll(rangeLower.getImpl().getAssignmentAfterMap());
+        }
+        if (rangeUpper != null) {
+            rangeUpper.getImpl().setAssignmentBefore(assignmentsBefore);
+            assignmentsAfter.putAll(rangeUpper.getImpl().getAssignmentAfterMap());
+        }
+        return assignmentsAfter;
+    }
 
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {

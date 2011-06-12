@@ -171,6 +171,10 @@ public class NameExpression extends Expression {
 			violations.add(new ConstraintViolation("nameExpressionResolution",
 					this));
 		}
+		PropertyAccessExpression propertyAccess = this.getPropertyAccess();
+		if (propertyAccess != null) {
+			propertyAccess.checkConstraints(violations);
+		}
 		QualifiedName name = this.getName();
 		if (name != null) {
 			name.checkConstraints(violations);
@@ -178,7 +182,7 @@ public class NameExpression extends Expression {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -203,7 +207,8 @@ public class NameExpression extends Expression {
 		}
 		PropertyAccessExpression propertyAccess = this.getPropertyAccess();
 		if (propertyAccess != null) {
-			System.out.println(prefix + " /propertyAccess:" + propertyAccess);
+			System.out.println(prefix + " /propertyAccess:");
+			propertyAccess.print(prefix + "  ");
 		}
 		QualifiedName name = this.getName();
 		if (name != null) {

@@ -98,7 +98,7 @@ public class SequenceRange extends SequenceElements {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {

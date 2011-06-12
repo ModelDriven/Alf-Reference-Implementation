@@ -62,12 +62,17 @@ public class FeatureInvocationExpressionImpl
 	protected FeatureReference deriveFeature() {
         FeatureInvocationExpression self = this.getSelf();
         FeatureReference feature = self.getTarget();
-	    if (feature == null && currentScope != null) {
-	        feature = new FeatureReference();
-	        NameBinding nameBinding = new NameBinding();
-	        nameBinding.setName(currentScope.getName());
-	        feature.setNameBinding(nameBinding);
-	        feature.setExpression(new ThisExpression());
+	    if (feature == null && this.currentScope != null) {
+	        NamespaceDefinition outerScope = this.currentScope.getImpl().getOuterScope();
+	        if (outerScope instanceof ClassDefinition) {
+    	        feature = new FeatureReference();
+    	        NameBinding nameBinding = new NameBinding();
+    	        nameBinding.setName(outerScope.getName());
+    	        feature.setNameBinding(nameBinding);
+    	        ThisExpression thisExpression = new ThisExpression();
+    	        thisExpression.getImpl().setCurrentScope(this.currentScope);
+    	        feature.setExpression(thisExpression);
+	        }
 	    }
 	    return feature;
 	}

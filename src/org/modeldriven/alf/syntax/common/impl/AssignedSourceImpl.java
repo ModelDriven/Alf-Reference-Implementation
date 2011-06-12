@@ -29,6 +29,10 @@ public class AssignedSourceImpl {
     private Integer upper = 0;
     private Integer lower = 0;
     private ElementReference type = null;
+    
+    // Indicates whether this assignment is for a local name listed in an
+    // @parallel annotation of a for statement.
+    private boolean isParallelLocalName = false;
 
     protected AssignedSource self;
 
@@ -85,6 +89,14 @@ public class AssignedSourceImpl {
 
     public void setType(ElementReference type) {
         this.type = type;
+    }
+    
+    public boolean getIsParallelLocalName() {
+        return this.isParallelLocalName;
+    }
+    
+    public void setIsParallelLocalName(boolean isParallelLocalName) {
+        this.isParallelLocalName = isParallelLocalName;
     }
     
     /*
@@ -145,11 +157,6 @@ public class AssignedSourceImpl {
                 other instanceof AssignedSourceImpl &&
                     name.equals(((AssignedSourceImpl)other).getSelf().getName()) ||
                 other instanceof String && name.equals(other));
-    }
-
-    @Override
-    public int hashCode() {
-        return this.name.hashCode();
     }
 
 } // AssignedSourceImpl

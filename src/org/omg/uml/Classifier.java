@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Classifier extends Type 
+public class Classifier extends Namespace 
     implements TemplateableElement, ParameterableElement {
     
     public boolean getIsAbstract() {

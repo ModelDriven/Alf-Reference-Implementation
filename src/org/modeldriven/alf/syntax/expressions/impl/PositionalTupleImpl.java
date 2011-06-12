@@ -94,6 +94,7 @@ public class PositionalTupleImpl extends TupleImpl {
         Collection<OutputNamedExpression> outputs = new ArrayList<OutputNamedExpression>();
         if (invocation != null) {
             List<FormalParameter> parameters = invocation.getImpl().parameters();
+            boolean isAddInvocation = invocation.getImpl().isAddInvocation();
             List<Expression> expressions = self.getExpression();
             int i = 0;
             for (FormalParameter parameter: parameters) {
@@ -109,6 +110,14 @@ public class PositionalTupleImpl extends TupleImpl {
                             direction.equals("out")? null:
                             SequenceConstructionExpressionImpl.makeNull();
                     if (expression != null) {
+                        
+                        // Identify the first argument of an invocation of
+                        // CollectionFunctions::add, since an @parallel local
+                        // name is allowed only in this position.
+                        if (isAddInvocation && i == 0) {
+                            expression.getImpl().setIsAddTarget();
+                        }
+                        
                         OutputNamedExpression namedExpression = new OutputNamedExpression();
                         namedExpression.setName(parameter.getName());
                         namedExpression.setExpression(expression);

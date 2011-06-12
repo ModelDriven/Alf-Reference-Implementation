@@ -65,7 +65,7 @@ public class QualifiedNameList extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -84,7 +84,8 @@ public class QualifiedNameList extends SyntaxElement {
 			if (name.size() > 0) {
 				System.out.println(prefix + " name:");
 			}
-			for (QualifiedName _name : name) {
+			for (Object _object : name.toArray()) {
+				QualifiedName _name = (QualifiedName) _object;
 				if (_name != null) {
 					_name.print(prefix + "  ");
 				} else {

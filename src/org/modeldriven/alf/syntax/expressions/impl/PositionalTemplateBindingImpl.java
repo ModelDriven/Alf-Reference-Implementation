@@ -67,9 +67,11 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
     
     @Override
     public List<ElementReference> getArgumentReferents(
-            List<ElementReference> templateParameters) {
+            List<ElementReference> templateParameters,
+            NamespaceDefinition currentScope) {
         List<ElementReference> argumentReferents = new ArrayList<ElementReference>();
         for (QualifiedName argumentName: this.getSelf().getArgumentName()) {
+            argumentName.getImpl().setCurrentScope(currentScope);
             ElementReference argumentReferent = argumentName.getImpl().getClassifierReferent();
             if (argumentReferent != null) {
                 argumentReferents.add(argumentReferent);

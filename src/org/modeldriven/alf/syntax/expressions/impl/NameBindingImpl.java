@@ -34,7 +34,7 @@ public class NameBindingImpl extends SyntaxElementImpl {
 		return (NameBinding) this.self;
 	}
 	
-    @Override
+	@Override
 	public String toString() {
 	    NameBinding self = this.getSelf();
 	    StringBuffer s = new StringBuffer(self.getName());
@@ -44,7 +44,7 @@ public class NameBindingImpl extends SyntaxElementImpl {
 	    }
 	    return s.toString();
 	}
-
+	
     public TemplateBinding getBinding() {
         return this.binding;
     }

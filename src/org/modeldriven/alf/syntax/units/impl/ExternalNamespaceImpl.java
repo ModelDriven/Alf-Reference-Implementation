@@ -56,6 +56,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
     @Override
     public Member bind(String name,
             NamespaceDefinition namespace,
+            boolean isOwnedMember,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         return null;

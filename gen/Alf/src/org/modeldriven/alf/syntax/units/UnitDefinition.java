@@ -181,7 +181,7 @@ public class UnitDefinition extends DocumentedElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -215,7 +215,8 @@ public class UnitDefinition extends DocumentedElement {
 			if (import_.size() > 0) {
 				System.out.println(prefix + " import:");
 			}
-			for (ImportReference _import_ : import_) {
+			for (Object _object : import_.toArray()) {
+				ImportReference _import_ = (ImportReference) _object;
 				if (_import_ != null) {
 					_import_.print(prefix + "  ");
 				} else {
@@ -232,7 +233,8 @@ public class UnitDefinition extends DocumentedElement {
 			if (appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");
 			}
-			for (Profile _appliedProfile : appliedProfile) {
+			for (Object _object : appliedProfile.toArray()) {
+				Profile _appliedProfile = (Profile) _object;
 				System.out.println(prefix + "  " + _appliedProfile);
 			}
 		}

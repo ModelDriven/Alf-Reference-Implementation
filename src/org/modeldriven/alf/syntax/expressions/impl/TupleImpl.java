@@ -41,6 +41,11 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	public Tuple getSelf() {
 		return (Tuple) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    return super.toString() + " invocation:(" + this.getSelf().getInvocation() + ")";
+	}
 
 	public Collection<NamedExpression> getInput() {
 		if (this.input == null) {
@@ -183,6 +188,10 @@ public abstract class TupleImpl extends SyntaxElementImpl {
         Set<Expression> expressions = new HashSet<Expression>();
         for (NamedExpression input: inputs) {
             expressions.add(input.getExpression());
+            Expression index = input.getIndex();
+            if (index != null) {
+                expressions.add(index);
+            }
         }
         for (NamedExpression output: outputs) {
             expressions.add(output.getExpression());
@@ -222,13 +231,17 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                 Set<Expression> expressions = new HashSet<Expression>();
                 for (NamedExpression input: inputs) {
                     expressions.add(input.getExpression());
+                    Expression index = input.getIndex();
+                    if (index != null) {
+                        expressions.add(index);
+                    }
                 }
                 Map<String, AssignedSource> newLocalAssignments = 
                     new HashMap<String, AssignedSource>();
                 for (OutputNamedExpression output: outputs) {
                     Expression expression = output.getExpression();
                     expressions.add(expression);
-                    
+                                        
                     // Note: The assignments before the expression must be set
                     // in order to determine whether the output is a local name
                     // without a previous assignment.
@@ -254,7 +267,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                     this.assignmentsAfter = assignmentsBefore;
                 } else {
                     this.assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
-                    // Only clone assignmentsBefore if it is necessary to add new local
+                    // Only copy assignmentsBefore if it is necessary to add new local
                     // assignments.
                     if (!newLocalAssignments.isEmpty()) {
                         assignmentsBefore = new HashMap<String, AssignedSource>(assignmentsBefore);
@@ -271,6 +284,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                             AssignedSource assignmentBefore = 
                                 assignmentsBefore.get(localName);
                             if (assignmentBefore == null) {
+                                // Create an assignment for a new local name.
                                 ElementReference referent = lhs.getImpl().getReferent();
                                 if (referent != null) {
                                     AssignedSource assignment = AssignedSourceImpl.
@@ -280,7 +294,10 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                                                 referent.getImpl().getUpper());
                                     this.assignmentsAfter.put(localName, assignment);
                                 }
-                            } else {
+                            } else if (!assignmentBefore.getImpl().getIsParallelLocalName()){
+                                // Update the assignment of an already existing
+                                // local name, unless it is an @parallel local
+                                // name of a for statement.
                                 AssignedSource assignment = AssignedSourceImpl.
                                     makeAssignment(assignmentBefore);
                                 assignment.setSource(self.getInvocation());

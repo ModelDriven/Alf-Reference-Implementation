@@ -161,7 +161,7 @@ public abstract class Tuple extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -180,7 +180,8 @@ public abstract class Tuple extends SyntaxElement {
 			if (input.size() > 0) {
 				System.out.println(prefix + " /input:");
 			}
-			for (NamedExpression _input : input) {
+			for (Object _object : input.toArray()) {
+				NamedExpression _input = (NamedExpression) _object;
 				System.out.println(prefix + "  " + _input);
 			}
 		}
@@ -193,7 +194,8 @@ public abstract class Tuple extends SyntaxElement {
 			if (output.size() > 0) {
 				System.out.println(prefix + " /output:");
 			}
-			for (OutputNamedExpression _output : output) {
+			for (Object _object : output.toArray()) {
+				OutputNamedExpression _output = (OutputNamedExpression) _object;
 				System.out.println(prefix + "  " + _output);
 			}
 		}

@@ -89,7 +89,7 @@ public class ConcurrentClauses extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -108,7 +108,8 @@ public class ConcurrentClauses extends SyntaxElement {
 			if (clause.size() > 0) {
 				System.out.println(prefix + " clause:");
 			}
-			for (NonFinalClause _clause : clause) {
+			for (Object _object : clause.toArray()) {
+				NonFinalClause _clause = (NonFinalClause) _object;
 				if (_clause != null) {
 					_clause.print(prefix + "  ");
 				} else {

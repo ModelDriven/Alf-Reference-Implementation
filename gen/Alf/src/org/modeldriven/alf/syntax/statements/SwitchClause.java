@@ -120,7 +120,7 @@ public class SwitchClause extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -139,7 +139,8 @@ public class SwitchClause extends SyntaxElement {
 			if (case_.size() > 0) {
 				System.out.println(prefix + " case:");
 			}
-			for (Expression _case_ : case_) {
+			for (Object _object : case_.toArray()) {
+				Expression _case_ = (Expression) _object;
 				if (_case_ != null) {
 					_case_.print(prefix + "  ");
 				} else {

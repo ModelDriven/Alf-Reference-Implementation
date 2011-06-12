@@ -145,6 +145,11 @@ public class SwitchStatementImpl extends StatementImpl {
 	protected Map<String, AssignedSource> deriveAssignmentAfter() {
         SwitchStatement self = this.getSelf();
         Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+        Expression expression = self.getExpression();
+        if (expression != null) {
+            expression.getImpl().setAssignmentBefore(assignmentsBefore);
+            assignmentsBefore = expression.getImpl().getAssignmentAfterMap();
+        }
         Collection<Block> blocks = new ArrayList<Block>();
         for (SwitchClause clause: self.getNonDefaultClause()) {
             clause.getImpl().setAssignmentBefore(assignmentsBefore);
@@ -257,7 +262,7 @@ public class SwitchStatementImpl extends StatementImpl {
                         if (count == null) {
                             definitionCount.put(name, 1);
                         } else {
-                            definitionCount.put(name, count++);
+                            definitionCount.put(name, count + 1);
                         }
                     }
                 }

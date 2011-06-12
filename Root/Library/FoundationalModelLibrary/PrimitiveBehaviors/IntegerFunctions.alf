@@ -3,6 +3,51 @@ namespace FoundationalModelLibrary::PrimitiveBehaviors;
 package IntegerFunctions {
 
   @primitive
+  public activity Neg(in x: Integer): Integer { }
+
+  @primitive
+  public activity Abs(in x: Integer): Integer { }
+
+  @primitive
+  public activity '+'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive
+  public activity '-'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive
+  public activity '*'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive
+  public activity Div(in x: Integer, in y: Integer): Integer[0..1] { }
+
+  @primitive
+  public activity Mod(in x: Integer, in y: Integer): Integer { }
+
+  @primitive
+  public activity Max(in x: Integer, in y: Integer): Integer { }
+
+  @primitive
+  public activity Min(in x: Integer, in y: Integer): Integer { }
+
+  @primitive
+  public activity '<'(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive
+  public activity '>'(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive
+  public activity '<='(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive
+  public activity '>='(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive
   public activity ToString(in x: Integer): String {}
+
+  @primitive
+  public activity ToUnlimitedNatural(in x: Integer): UnlimitedNatural[0..1] {}
+
+  @primitive
+  public activity ToInteger(in x: String): Integer[0..1] {}
 
 }

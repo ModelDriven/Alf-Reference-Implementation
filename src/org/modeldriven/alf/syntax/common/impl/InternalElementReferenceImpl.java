@@ -247,7 +247,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             return false;
         } else {
             ClassDefinition class_ = (ClassDefinition)this.getAlf();
-            for (Member member: class_.getOwnedMember()) {
+            for (Member member: class_.getImpl().getSubunitOwnedMembers()) {
                 if (member instanceof ReceptionDefinition &&
                         ((ReceptionDefinition)member).getSignal().getImpl().getAlf() == alfSignal ||
                     member instanceof SignalReceptionDefinition && member == alfSignal) {
@@ -311,14 +311,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public List<ElementReference> getPublicMembers() {
-        List<ElementReference> members = new ArrayList<ElementReference>();
-        if (this.isPackage()) {
-            for (Member member: ((PackageDefinition)this.getSelf().getElement()).getImpl().getPublicMembers()) {
-                members.add(member.getImpl().getReferent());
-            }
-        }
-        return members;      
+    public List<Member> getPublicMembers() {
+        return !this.isPackage()? new ArrayList<Member>():
+            ((PackageDefinition)this.getSelf().getElement()).getImpl().getPublicMembers();
     }
 
     @Override

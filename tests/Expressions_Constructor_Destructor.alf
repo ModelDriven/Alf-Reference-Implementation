@@ -1,0 +1,35 @@
+/**
+ * Test constructor and destructor expressions.
+ **/
+class Expressions_Constructor_Destructor {
+
+    // Supporting declarations *************************************************
+    
+  	class Customer { }
+    class Monitor { 
+       	@Destroy public destroy(in recoveryLog: Log) { }
+    }
+    class Log { }
+   	class Employee { 
+   	    @Create public Employee(in id: Integer, in name: String) { }
+  		@Create public transferred(in employeeInfo: Employee) { }
+   	}
+  	
+	//**************************************************************************
+
+	test() {
+	
+	  i = 100;
+	  name = "Fred";
+
+	  employee = new Employee(i, name);
+	  new Employee::transferred(employee);
+	  customer = new Customer();
+	  monitor = new Monitor();
+	  
+	  customer.destroy();
+	  monitor.destroy(new Log());
+	  
+	}
+
+}

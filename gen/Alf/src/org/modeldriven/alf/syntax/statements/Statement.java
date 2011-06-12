@@ -146,7 +146,7 @@ public abstract class Statement extends DocumentedElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -170,7 +170,8 @@ public abstract class Statement extends DocumentedElement {
 			if (annotation.size() > 0) {
 				System.out.println(prefix + " annotation:");
 			}
-			for (Annotation _annotation : annotation) {
+			for (Object _object : annotation.toArray()) {
+				Annotation _annotation = (Annotation) _object;
 				if (_annotation != null) {
 					_annotation.print(prefix + "  ");
 				} else {
@@ -184,7 +185,8 @@ public abstract class Statement extends DocumentedElement {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
 			}
-			for (AssignedSource _assignmentBefore : assignmentBefore) {
+			for (Object _object : assignmentBefore.toArray()) {
+				AssignedSource _assignmentBefore = (AssignedSource) _object;
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
@@ -193,7 +195,8 @@ public abstract class Statement extends DocumentedElement {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
 			}
-			for (AssignedSource _assignmentAfter : assignmentAfter) {
+			for (Object _object : assignmentAfter.toArray()) {
+				AssignedSource _assignmentAfter = (AssignedSource) _object;
 				System.out.println(prefix + "  " + _assignmentAfter);
 			}
 		}

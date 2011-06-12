@@ -262,7 +262,7 @@ public class LoopVariableDefinition extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -315,7 +315,8 @@ public class LoopVariableDefinition extends SyntaxElement {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
 			}
-			for (AssignedSource _assignmentBefore : assignmentBefore) {
+			for (Object _object : assignmentBefore.toArray()) {
+				AssignedSource _assignmentBefore = (AssignedSource) _object;
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}
@@ -324,7 +325,8 @@ public class LoopVariableDefinition extends SyntaxElement {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
 			}
-			for (AssignedSource _assignmentAfter : assignmentAfter) {
+			for (Object _object : assignmentAfter.toArray()) {
+				AssignedSource _assignmentAfter = (AssignedSource) _object;
 				System.out.println(prefix + "  " + _assignmentAfter);
 			}
 		}

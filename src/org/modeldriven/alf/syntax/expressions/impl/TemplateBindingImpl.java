@@ -36,8 +36,9 @@ public abstract class TemplateBindingImpl extends SyntaxElementImpl {
 	 * Helper Methods
 	 */
 	
-	public abstract List<ElementReference> getArgumentReferents
-	    (List<ElementReference> templateParameters);
+	public abstract List<ElementReference> getArgumentReferents(
+	        List<ElementReference> templateParameters, 
+	        NamespaceDefinition currentScope);
 
     public abstract void setCurrentScope(NamespaceDefinition currentScope);
 

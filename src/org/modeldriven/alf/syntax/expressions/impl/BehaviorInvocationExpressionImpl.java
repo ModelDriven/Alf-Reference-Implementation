@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 /**
  * An invocation of a behavior referenced by name.
@@ -148,6 +149,15 @@ public class BehaviorInvocationExpressionImpl
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    super.setCurrentScope(currentScope);
 	    this.getSelf().getTarget().getImpl().setCurrentScope(currentScope);
+	}
+	
+	@Override
+	public boolean isAddInvocation() {
+	    // Note: The behavior referent of the target is used here to avoid
+	    // having to deal with the implicit template binding of the invocation
+	    // referent.
+	    return RootNamespace.getCollectionFunctionAdd().getImpl().
+	        equals(this.getSelf().getTarget().getImpl().getBehaviorReferent());
 	}
 
 } // BehaviorInvocationExpressionImpl

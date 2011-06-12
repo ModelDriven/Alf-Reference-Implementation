@@ -70,7 +70,7 @@ public class Annotation extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -91,7 +91,8 @@ public class Annotation extends SyntaxElement {
 			if (argument.size() > 0) {
 				System.out.println(prefix + " argument:");
 			}
-			for (String _argument : argument) {
+			for (Object _object : argument.toArray()) {
+				String _argument = (String) _object;
 				System.out.println(prefix + "  " + _argument);
 			}
 		}

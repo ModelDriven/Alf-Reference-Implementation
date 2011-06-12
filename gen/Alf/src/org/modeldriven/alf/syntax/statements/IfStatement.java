@@ -175,7 +175,7 @@ public class IfStatement extends Statement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -204,7 +204,8 @@ public class IfStatement extends Statement {
 			if (nonFinalClauses.size() > 0) {
 				System.out.println(prefix + " nonFinalClauses:");
 			}
-			for (ConcurrentClauses _nonFinalClauses : nonFinalClauses) {
+			for (Object _object : nonFinalClauses.toArray()) {
+				ConcurrentClauses _nonFinalClauses = (ConcurrentClauses) _object;
 				if (_nonFinalClauses != null) {
 					_nonFinalClauses.print(prefix + "  ");
 				} else {

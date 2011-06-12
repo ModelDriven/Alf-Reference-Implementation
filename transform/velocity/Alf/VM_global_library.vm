@@ -294,7 +294,7 @@ public void checkConstraints(Collection<ConstraintViolation> violations) {
 
 #macro( printOperations $class )
 public String toString() {
-	return this.getImpl().toString();
+	return "(" + this.hashCode() + ")" + this.getImpl().toString();
 }
 
 public String _toString() {
@@ -302,7 +302,7 @@ public String _toString() {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 	#else
 		StringBuffer s = new StringBuffer(super._toString());
-	#end	
+	#end
 	#foreach( $attribute in ${class.ownedAttributes} )
 		#if( ${attribute.type.eClass().name}=="PrimitiveType" &&
 			 ${attribute.upper}==1 )
@@ -327,7 +327,7 @@ public void print() {
 
 public void print(String prefix) {
 	#if( ${class.superClasses.size()}==0 )
-		System.out.println(prefix + this._toString());
+		System.out.println(prefix + "[" + this.hashCode() + "]" + this._toString());
 	#else
 		super.print(prefix);
 	#end	
@@ -343,7 +343,8 @@ public void print(String prefix) {
      			if (#name($attribute.name).size()>0) {
 	     			System.out.println(prefix + " $deriv${attribute.name}:");
 	     		}
-	     		for (#basicType($attribute) _#name($attribute.name): #name($attribute.name)) {
+	     		for (Object _object: #name($attribute.name).toArray()) {
+	     			#basicType($attribute) _#name($attribute.name) = (#basicType($attribute))_object;
 		     		#if( ${attribute.type.eClass().name}=="PrimitiveType" || !${attribute.isComposite()} )
 	    	 			System.out.println(prefix + "  " + _#name($attribute.name));
 	     			#else

@@ -85,23 +85,26 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	@Override
 	// Removes redefined members from inheritableMembers.
     protected List<Member> inherit(List<Member> inheritableMembers) {
-	    Collection<Member> ownedMembers = this.getSelf().getOwnedMember();
+	    Collection<Member> ownedMembers = this.getSubunitOwnedMembers();
 	    int i = 0;
 	    while (i < inheritableMembers.size()) {
 	        Member inheritableMember = inheritableMembers.get(i);
 	        for (Member ownedMember: ownedMembers) {
 	            // Note: Alf allows redefinition only for operations.
-	            if (ownedMember instanceof OperationDefinition &&
-	                    ((OperationDefinition)ownedMember).getRedefinition() == null &&
-	                    (!ownedMember.isDistinguishableFrom(inheritableMember) ||
-	                     inheritableMember.getImpl().getReferent().getImpl().
-	                         isContainedIn(((OperationDefinition)ownedMember).
-	                                 getRedefinedOperations()))) {
-	                inheritableMembers.remove(i);
-	                ((OperationDefinition)ownedMember).addRedefinedOperations
-	                                (inheritableMember.getImpl().getReferent());
-	                i--;
-	                break;
+	            if (ownedMember instanceof OperationDefinition) {
+	                if (inheritableMember.getImpl().getReferent().getImpl().
+                            isContainedIn(((OperationDefinition)ownedMember).
+                                    getRedefinedOperations())) {
+	                    inheritableMembers.remove(i);
+	                    i--;
+	                    break;
+	                } else if (!ownedMember.isDistinguishableFrom(inheritableMember)) {
+	                    inheritableMembers.remove(i);
+	                    ((OperationDefinition)ownedMember).addRedefinedOperations
+	                        (inheritableMember.getImpl().getReferent());
+    	                i--;
+    	                break;
+	                }
 	            }
 	        }
 	        i++;

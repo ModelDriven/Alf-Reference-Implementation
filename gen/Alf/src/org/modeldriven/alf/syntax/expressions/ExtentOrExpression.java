@@ -91,6 +91,10 @@ public class ExtentOrExpression {
 		if (name != null) {
 			name.checkConstraints(violations);
 		}
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.checkConstraints(violations);
+		}
 		Expression nonNameExpression = this.getNonNameExpression();
 		if (nonNameExpression != null) {
 			nonNameExpression.checkConstraints(violations);
@@ -98,7 +102,7 @@ public class ExtentOrExpression {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -111,7 +115,8 @@ public class ExtentOrExpression {
 	}
 
 	public void print(String prefix) {
-		System.out.println(prefix + this._toString());
+		System.out.println(prefix + "[" + this.hashCode() + "]"
+				+ this._toString());
 		QualifiedName name = this.getName();
 		if (name != null) {
 			System.out.println(prefix + " name:");
@@ -119,7 +124,8 @@ public class ExtentOrExpression {
 		}
 		Expression expression = this.getExpression();
 		if (expression != null) {
-			System.out.println(prefix + " /expression:" + expression);
+			System.out.println(prefix + " /expression:");
+			expression.print(prefix + "  ");
 		}
 		Expression nonNameExpression = this.getNonNameExpression();
 		if (nonNameExpression != null) {

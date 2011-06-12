@@ -209,7 +209,7 @@ public class AcceptStatement extends Statement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -233,7 +233,8 @@ public class AcceptStatement extends Statement {
 			if (acceptBlock.size() > 0) {
 				System.out.println(prefix + " acceptBlock:");
 			}
-			for (AcceptBlock _acceptBlock : acceptBlock) {
+			for (Object _object : acceptBlock.toArray()) {
+				AcceptBlock _acceptBlock = (AcceptBlock) _object;
 				if (_acceptBlock != null) {
 					_acceptBlock.print(prefix + "  ");
 				} else {

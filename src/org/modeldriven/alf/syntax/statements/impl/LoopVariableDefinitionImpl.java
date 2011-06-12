@@ -308,23 +308,26 @@ public class LoopVariableDefinitionImpl extends
 	 **/
 	public boolean loopVariableDefinitionRangeExpressions() {
 	    LoopVariableDefinition self = this.getSelf();
-	    ElementReference integerType = RootNamespace.getIntegerType();
 	    Expression expression1 = self.getExpression1();
 	    Expression expression2 = self.getExpression2();
-	    if (expression2 == null) {
+	    if (expression1 == null || expression2 == null) {
 	        return true;
-	    } else if (expression1.getType() != integerType || 
-	            expression1.getUpper() != 1 ||
-	            expression2.getType() != integerType ||
-	            expression2.getUpper() != 1) {
-	        return false;
 	    } else {
-	        this.getAssignmentBeforeMap(); // Force computation of assignments
-	        Collection<AssignedSource> newAssignments = 
-	            new ArrayList<AssignedSource>(expression1.getImpl().getNewAssignments());
-	        newAssignments.retainAll(expression2.getImpl().getNewAssignments());
-	        return newAssignments.isEmpty();
-	    }
+	        ElementReference type1 = expression1.getType();
+	        ElementReference type2 = expression2.getType();
+	        if (type1 == null || !type1.getImpl().isInteger() || 
+	                expression1.getUpper() != 1 ||
+	                type2 == null || !type2.getImpl().isInteger() ||
+	                expression2.getUpper() != 1) {
+	            return false;
+	        } else {
+	            this.getAssignmentBeforeMap(); // Force computation of assignments
+	            Collection<AssignedSource> newAssignments = 
+	                new ArrayList<AssignedSource>(expression1.getImpl().getNewAssignments());
+	            newAssignments.retainAll(expression2.getImpl().getNewAssignments());
+	            return newAssignments.isEmpty();
+	        }
+        }
 	}
 
 	/**

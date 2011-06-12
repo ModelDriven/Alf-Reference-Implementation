@@ -8,27 +8,84 @@ package SequenceFunctions {
   public activity Size(in seq: any[*] sequence): Integer { }
   
   @primitive
-  public activity Including(in seq: any[*] sequence, in element: any): any[*] sequence { }
-  
-  @primitive 
-  public activity IncludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { }
+  public activity Includes(in seq: any[*] sequence, in element: any): Boolean { }
   
   @primitive
-  public activity Excluding(in seq: any[*] sequence, in element: any): any[*] sequence { }
-  
-  @primitive 
-  public activity ExcludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { }
+  public activity Excludes(in seq: any[*] sequence, in element: any): Boolean { }
   
   @primitive
-  public activity At(in seq: any[*] sequence, in index: Integer): any[0..1] { }
-  
-  @primitive
-  public activity Union(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { }
+  public activity Count(in seq: any[*] sequence, in element: any): Integer { }
   
   @primitive
   public activity IsEmpty(in seq: any[*] sequence): Boolean { }
 
   @primitive
   public activity NotEmpty(in seq: any[*] sequence): Boolean { }
+
+  @primitive
+  public activity IncludesAll(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { }
   
+  @primitive
+  public activity ExcludesAll(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { }
+  
+  @primitive
+  public activity Equals(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { }
+  
+  @primitive
+  public activity At(in seq: any[*] sequence, in index: Integer): any[0..1] { }
+  
+  @primitive
+  public activity IndexOf(in seq: any[*] sequence, in element: any): Integer[0..1] { }
+  
+  @primitive
+  public activity First(in seq: any[*] sequence): any[0..1] { }
+  
+  @primitive
+  public activity Last(in seq: any[*] sequence): any[0..1] { }
+  
+  @primitive
+  public activity Union(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { }
+  
+  @primitive
+  public activity Intersection(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { }
+  
+  @primitive
+  public activity Difference(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { }
+  
+  @primitive
+  public activity Including(in seq: any[*] sequence, in element: any): any[*] sequence { }
+  
+  @primitive 
+  public activity IncludeAt(in seq: any[*] sequence, in index: Integer, in element: any): any[*] sequence { }
+  
+  @primitive 
+  public activity InsertAt(in seq: any[*] sequence, in index: Integer, in element: any): any[*] sequence { }
+  
+  @primitive 
+  public activity IncludeAllAt(in seq1: any[*] sequence, in index: Integer, in seq2: any[*] sequence): any[*] sequence { }
+  
+  @primitive
+  public activity Excluding(in seq: any[*] sequence, in element: any): any[*] sequence { }
+  
+  @primitive
+  public activity ExcludingOne(in seq: any[*] sequence, in element: any): any[*] sequence { }
+  
+  @primitive 
+  public activity ExcludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { }
+  
+  @primitive
+  public activity Replacing(in seq: any[*] sequence, in element: any, in newElement: any): any[*] sequence { }
+  
+  @primitive
+  public activity ReplacingOne(in seq: any[*] sequence, in element: any, in newElement: any): any[*] sequence { }
+  
+  @primitive 
+  public activity ReplacingAt(in seq: any[*] sequence, in index: Integer, in element: any): any[*] sequence { }
+  
+  @primitive
+  public activity Subsequence(in seq: any[*] sequence, in lower: Integer, in upper: Integer): any[*] sequence { }
+  
+  @primitive
+  public activity ToOrderedSet(in seq: any[*] sequence): any[*] ordered { }
+
 }

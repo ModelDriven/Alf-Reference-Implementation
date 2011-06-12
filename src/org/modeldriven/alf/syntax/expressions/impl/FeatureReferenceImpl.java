@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * A reference to a structural or behavioral feature of the type of its target
@@ -43,7 +44,7 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 	@Override
 	public String toString() {
 	    FeatureReference self = this.getSelf();
-	    return self._toString() + " name:" + self.getNameBinding() +
+	    return self._toString() + " nameBinding:" + self.getNameBinding() +
 	            " expression:(" + self.getExpression() + ")";
 	}
 
@@ -182,6 +183,13 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
         
         if (nameBinding != null) {
             nameBinding.getImpl().setCurrentScope(currentScope);
+        }
+    }
+    
+    public void setAssignmentBefore(Map<String, AssignedSource> assignmentsBefore) {
+        Expression expression = this.getSelf().getExpression();
+        if (expression != null) {
+            expression.getImpl().setAssignmentBefore(assignmentsBefore);
         }
     }
 

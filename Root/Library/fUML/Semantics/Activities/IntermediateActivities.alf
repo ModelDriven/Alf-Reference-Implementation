@@ -4,7 +4,11 @@ public import fUML::Syntax::Activities::IntermediateActivities::*;
 
 package IntermediateActivities {
 
-  public class ActivityEdgeInstance {}
+  public class Token { }
+  
+  public class ActivityEdgeInstance {
+    public sendOffer(in tokens: Token[*]);
+  }
 
   public class ActivityNodeActivation { 
   

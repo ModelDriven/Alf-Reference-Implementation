@@ -1,0 +1,26 @@
+namespace Alf::Library::CollectionClasses;
+abstract class OrderedSet<T> specializes Set<T> {
+  
+  @Create public abstract OrderedSet (in seq: T[0..*] sequence);
+  @Destroy public abstract destroy ();
+  
+  public abstract add (in element: T): Boolean;
+  public abstract addAll (in seq: T[0..*] sequence): Boolean;
+  public abstract addAllAt (in index: Integer, in seq: T[0..*] sequence): Boolean;
+  public abstract addAt (in index: Integer, in element: T): Boolean;
+  public abstract at (in index: Integer): T[0..1];
+  public abstract equals (in seq: T[0..*] sequence): Boolean;
+  public abstract first (): T[0..1];
+  public abstract indexOf (in element: T) : Integer[0..1];
+  public abstract last (): T[0..1];
+  public abstract remove (in element: T): Integer;
+  public abstract removeAll (in seq: T[0..*] sequence): Boolean;
+  public abstract removeAt (in index: Integer): T[0..1];
+  public abstract removeOne (in element: T): Boolean;
+  public abstract replace (in element: T, in newElement: T): Integer;
+  public abstract replaceAt (in index: Integer, in element: T): T[0..1];
+  public abstract replaceOne (in element: T, in newElement: T): Boolean;
+  public abstract retainAll (in seq: T[0..*] sequence): Boolean;
+  public abstract subOrderedSet (in lower: Integer, in upper: Integer): OrderedSet<T>;
+  
+}

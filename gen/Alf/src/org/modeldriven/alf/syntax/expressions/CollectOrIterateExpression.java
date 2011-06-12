@@ -86,7 +86,7 @@ public class CollectOrIterateExpression extends SequenceExpansionExpression {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {

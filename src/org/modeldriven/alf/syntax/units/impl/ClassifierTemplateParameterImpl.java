@@ -92,6 +92,7 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
     @Override
     public Member bind(String name,
             NamespaceDefinition namespace,
+            boolean isOwnedElement,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         return null;

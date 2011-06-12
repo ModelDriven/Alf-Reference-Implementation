@@ -96,7 +96,7 @@ public class NumericUnaryExpression extends UnaryExpression {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
