@@ -55,6 +55,10 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     public void setName(String name) {
         this.name = NameBindingImpl.processName(name);
     }
+    
+    public void setExactName(String name) {
+        this.name = name;
+    }
 
     public String getVisibility() {
         return this.visibility;
@@ -390,12 +394,16 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     
     public static void removeDuplicates(List<Member> members) {
         for (int i = 0; i < members.size(); i++) {
-            ElementReferenceImpl importedMember = 
-                members.get(i).getImpl().getReferent().getImpl();            
+            Member importedMember = members.get(i);
+            String name = importedMember.getName();
+            ElementReferenceImpl referent = importedMember.getImpl().
+                getReferent().getImpl();            
             for (int j = i + 1; j < members.size();) {
-                ElementReference otherMember =
-                    members.get(j).getImpl().getReferent();
-                if (otherMember.getImpl().equals(importedMember)) {
+                Member otherMember = members.get(j);                
+                ElementReference otherReferent =
+                    otherMember.getImpl().getReferent();
+                if (name != null && name.equals(otherMember.getName()) && 
+                        otherReferent.getImpl().equals(referent)) {
                     members.remove(j);
                 } else {
                     j++;
@@ -409,6 +417,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
      */
     public Member bind(String name,
             NamespaceDefinition namespace,
+            boolean isOwnedMember,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         Member self = this.getSelf();
@@ -421,6 +430,12 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         }
         boundElement.setName(name);
         boundElement.setNamespace(namespace);
+        if (namespace != null) {
+            namespace.addMember(boundElement);
+            if (isOwnedMember) {
+                namespace.addOwnedMember(boundElement);
+            }
+        }
         boundElement.getImpl().bindTo(self, templateParameters, templateArguments);
         return boundElement;
     }

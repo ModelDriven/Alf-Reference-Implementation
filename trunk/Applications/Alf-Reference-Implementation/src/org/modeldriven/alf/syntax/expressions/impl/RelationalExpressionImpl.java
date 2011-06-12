@@ -50,8 +50,10 @@ public class RelationalExpressionImpl extends BinaryExpressionImpl {
 	    Expression operand2 = self.getOperand2();
         ElementReference type1 = operand1 == null? null: operand1.getType();
         ElementReference type2 = operand2 == null? null: operand2.getType();
-		return type1 != null && type1.getImpl().isUnlimitedNatural() ||
-		       type2 != null && type2.getImpl().isUnlimitedNatural();
+        // Note: Checking for "not Integer" allows Natural values be treated as
+        // Integer, even though they are also Unlimited Natural.
+		return type1 != null && !type1.getImpl().isInteger() ||
+		       type2 != null && !type2.getImpl().isInteger();
 	}
 
 	/**
@@ -123,9 +125,11 @@ public class RelationalExpressionImpl extends BinaryExpressionImpl {
         ElementReference type1 = operand1 == null? null: operand1.getType();
         ElementReference type2 = operand2 == null? null: operand2.getType();
 		return type1 != null && type2 != null &&
-		       type1.getImpl().isNumeric() && type2.getImpl().isNumeric() &&
-		       !(type1.getImpl().isInteger() && type2.getImpl().isUnlimitedNatural() ||
-		         type2.getImpl().isInteger() && type1.getImpl().isUnlimitedNatural());
+		       // Note: The condition below checks for type conformance, not 
+		       // equality. Therefore, the case of a Natural value is covered, 
+		       // since it is both an Integer and UnlimitedNatural value.
+		       (type1.getImpl().isInteger() && type2.getImpl().isInteger() ||
+		        type1.getImpl().isUnlimitedNatural() && type2.getImpl().isUnlimitedNatural());
 	}
 
 } // RelationalExpressionImpl

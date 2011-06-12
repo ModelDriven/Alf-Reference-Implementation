@@ -9,11 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * A specification of the elements of a sequence using a list of expressions.
@@ -94,6 +96,16 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
 	/*
 	 * Helper Methods
 	 */
+
+    @Override
+    public Map<String, AssignedSource> getAssignmentAfterMap(
+            Map<String, AssignedSource> assignments) {
+        for (Expression element: this.getSelf().getElement()) {
+            element.getImpl().setAssignmentBefore(assignments);
+            assignments = element.getImpl().getAssignmentAfterMap();
+        }
+        return assignments;
+    }
 
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {

@@ -119,7 +119,7 @@ public abstract class NamespaceDefinition extends Member {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -138,7 +138,8 @@ public abstract class NamespaceDefinition extends Member {
 			if (ownedMember.size() > 0) {
 				System.out.println(prefix + " ownedMember:");
 			}
-			for (Member _ownedMember : ownedMember) {
+			for (Object _object : ownedMember.toArray()) {
+				Member _ownedMember = (Member) _object;
 				if (_ownedMember != null) {
 					_ownedMember.print(prefix + "  ");
 				} else {
@@ -155,7 +156,8 @@ public abstract class NamespaceDefinition extends Member {
 			if (member.size() > 0) {
 				System.out.println(prefix + " /member:");
 			}
-			for (Member _member : member) {
+			for (Object _object : member.toArray()) {
+				Member _member = (Member) _object;
 				System.out.println(prefix + "  " + _member);
 			}
 		}

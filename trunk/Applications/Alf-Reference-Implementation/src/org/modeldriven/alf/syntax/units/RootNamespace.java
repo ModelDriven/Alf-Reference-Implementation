@@ -30,6 +30,8 @@ public class RootNamespace extends NamespaceDefinition {
     private static ElementReference bitStringType = null;
     private static ElementReference naturalType = null;
     
+    private static ElementReference collectionFunctionAdd = null;
+    
     public static RootNamespace getRootScope() {
         return rootNamespace;
     }
@@ -143,6 +145,14 @@ public class RootNamespace extends NamespaceDefinition {
                             addName("Natural").getImpl().getClassifierReferent();
         }
         return naturalType;
+    }
+
+    public static ElementReference getCollectionFunctionAdd() {
+        if (collectionFunctionAdd == null) {
+            collectionFunctionAdd = getCollectionFunctions().getImpl().copy().
+                            addName("add").getImpl().getBehaviorReferent();
+        }
+        return collectionFunctionAdd;
     }
 
 }

@@ -36,7 +36,7 @@ public class DataTypeDefinitionImpl extends
 	 **/
 	public boolean dataTypeDefinitionPrimitive() {
 	    DataTypeDefinition self = this.getSelf();
-		return !self.getIsPrimitive() || self.getOwnedMember().size() == 0;
+		return !self.getIsPrimitive() || this.getSubunitOwnedMembers().size() == 0;
 	}
 
 	/**

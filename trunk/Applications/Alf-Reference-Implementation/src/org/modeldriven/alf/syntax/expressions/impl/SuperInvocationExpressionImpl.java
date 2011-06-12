@@ -64,7 +64,12 @@ public class SuperInvocationExpressionImpl
                 if (superclasses.size() != 1) {
                     return null;
                 }
-                name = ((ElementReference)superclasses.toArray()[0]).getImpl().getName();
+                Member superclass = ((ElementReference)superclasses.toArray()[0]).getImpl().asNamespace();
+                Member base = superclass.getImpl().getBase();
+                if (base != null) {
+                    superclass = base;
+                }
+                name = superclass.getName();
 	        } else {
 	            QualifiedName qualification = target.getQualification();
 	            name = target.getUnqualifiedName().getName();

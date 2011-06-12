@@ -28,6 +28,7 @@ public class NameExpressionImpl extends ExpressionImpl {
 	private QualifiedName name = null;
 	
 	private NamespaceDefinition currentScope = null;
+	private boolean isAddTarget = false;
 
 	public NameExpressionImpl(NameExpression self) {
 		super(self);
@@ -85,6 +86,22 @@ public class NameExpressionImpl extends ExpressionImpl {
 		if (this.name != null) {
 		    this.name.getImpl().setContainingExpression(this.getSelf());
 		}
+	}
+	
+	/**
+	 * If the source of a local name is a For Statement, it must be a @parallel
+	 * local name and it is only legal if this name expression is the target of
+	 * a CollectionFunctions::add invocation.
+	 */
+	@Override
+	public AssignedSource getAssignmentBefore(String name) {
+	    AssignedSource assignment = super.getAssignmentBefore(name);
+	    if (assignment != null && 
+	            assignment.getImpl().getIsParallelLocalName() && 
+	            !this.isAddTarget) {
+	        assignment = null;
+	    }
+	    return assignment;
 	}
 
 	/**
@@ -296,6 +313,11 @@ public class NameExpressionImpl extends ExpressionImpl {
             assignments = propertyAccess.getImpl().getAssignmentAfterMap();
         }
         return assignments;
+    }
+    
+    @Override
+    public void setIsAddTarget() {
+        this.isAddTarget = true;
     }
 
 	@Override

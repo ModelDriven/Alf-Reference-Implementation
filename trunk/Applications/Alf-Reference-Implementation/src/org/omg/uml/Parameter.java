@@ -22,7 +22,7 @@ public class Parameter extends NamedElement {
         return false;
     }
     
-    public Classifier getType() {
+    public Type getType() {
         return null;
     }
 

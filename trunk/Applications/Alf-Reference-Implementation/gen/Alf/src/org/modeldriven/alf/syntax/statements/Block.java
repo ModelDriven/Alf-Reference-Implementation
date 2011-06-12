@@ -122,7 +122,7 @@ public class Block extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -141,7 +141,8 @@ public class Block extends SyntaxElement {
 			if (statement.size() > 0) {
 				System.out.println(prefix + " statement:");
 			}
-			for (Statement _statement : statement) {
+			for (Object _object : statement.toArray()) {
+				Statement _statement = (Statement) _object;
 				if (_statement != null) {
 					_statement.print(prefix + "  ");
 				} else {
@@ -154,7 +155,8 @@ public class Block extends SyntaxElement {
 			if (assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
 			}
-			for (AssignedSource _assignmentAfter : assignmentAfter) {
+			for (Object _object : assignmentAfter.toArray()) {
+				AssignedSource _assignmentAfter = (AssignedSource) _object;
 				System.out.println(prefix + "  " + _assignmentAfter);
 			}
 		}
@@ -164,7 +166,8 @@ public class Block extends SyntaxElement {
 			if (assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
 			}
-			for (AssignedSource _assignmentBefore : assignmentBefore) {
+			for (Object _object : assignmentBefore.toArray()) {
+				AssignedSource _assignmentBefore = (AssignedSource) _object;
 				System.out.println(prefix + "  " + _assignmentBefore);
 			}
 		}

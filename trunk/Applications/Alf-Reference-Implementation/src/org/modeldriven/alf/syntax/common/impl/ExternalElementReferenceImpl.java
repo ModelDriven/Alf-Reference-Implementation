@@ -329,13 +329,14 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public List<ElementReference> getPublicMembers() {
-        List<ElementReference> members = new ArrayList<ElementReference>();
+    public List<Member> getPublicMembers() {
+        List<Member> members = new ArrayList<Member>();
         if (this.isPackage()) {
-            for (NamedElement member: ((Package)this.getSelf().getElement()).visibleMembers()) {
-                ExternalElementReference reference = new ExternalElementReference();
-                reference.setElement(member);
-                members.add(reference);
+            Package element = (Package)this.getSelf().getElement();
+            for (NamedElement member: element.visibleMembers()) {
+                for (String name: element.getNamesOfMember(member)) {
+                    members.add(ImportedMemberImpl.makeImportedMember(name, member));
+                }
             }
         }
         return members;
@@ -384,10 +385,16 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public List<Member> getInheritableMembers() {
         List<Member> inheritableMembers = new ArrayList<Member>();
-        for (NamedElement element: ((Classifier)this.getSelf().getElement()).inheritableMembers()) {
-            ImportedMember member = ImportedMemberImpl.makeImportedMember(element);
-            member.setIsFeature(element instanceof Feature);
-            inheritableMembers.add(member);
+        if (this.isClassifier()) {
+            Classifier classifier = (Classifier)this.getSelf().getElement();
+            for (NamedElement element: classifier.inheritableMembers()) {
+                for (String name: classifier.getNamesOfMember(element)) {
+                    ImportedMember member = 
+                        ImportedMemberImpl.makeImportedMember(name, element);
+                    member.setIsFeature(element instanceof Feature);
+                    inheritableMembers.add(member);
+                }
+            }
         }
         return inheritableMembers;
     }

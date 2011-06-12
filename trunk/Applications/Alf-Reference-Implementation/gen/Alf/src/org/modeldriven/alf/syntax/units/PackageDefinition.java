@@ -100,7 +100,7 @@ public class PackageDefinition extends NamespaceDefinition {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -119,7 +119,8 @@ public class PackageDefinition extends NamespaceDefinition {
 			if (appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");
 			}
-			for (Profile _appliedProfile : appliedProfile) {
+			for (Object _object : appliedProfile.toArray()) {
+				Profile _appliedProfile = (Profile) _object;
 				System.out.println(prefix + "  " + _appliedProfile);
 			}
 		}

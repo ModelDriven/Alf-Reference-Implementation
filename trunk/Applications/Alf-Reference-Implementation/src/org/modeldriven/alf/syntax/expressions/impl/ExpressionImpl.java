@@ -225,6 +225,15 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
      */
     public void setCurrentScope(NamespaceDefinition currentScope) {
     }
+    
+    /**
+     * Called when this expression is the first argument in an invocation of the
+     * CollectionFunctions::add library behavior (which is important for local
+     * names identified in a @parallel annotation on a for statement). By
+     * default this does nothing. (It is overridden by NameExpression.)
+     */
+    public void setIsAddTarget() {
+    }
 
     /**
      * Get the assigned sources for new assignments made within this expression.

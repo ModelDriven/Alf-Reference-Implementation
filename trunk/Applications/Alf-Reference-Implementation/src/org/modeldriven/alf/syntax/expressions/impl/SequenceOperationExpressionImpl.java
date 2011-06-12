@@ -33,6 +33,8 @@ public class SequenceOperationExpressionImpl
 	private QualifiedName operation = null;
 	private Boolean isCollectionConversion = null; // DERIVED
 	private Boolean isBitStringConversion = null; // DERIVED
+	
+	private Expression expression = null;
 
 	public SequenceOperationExpressionImpl(SequenceOperationExpression self) {
 		super(self);
@@ -86,8 +88,7 @@ public class SequenceOperationExpressionImpl
      * of a sequence operation expression is a collection class.
      **/
 	protected Boolean deriveIsCollectionConversion() {
-	    ExtentOrExpression primary = this.getSelf().getPrimary();
-	    Expression expression = primary == null? null: primary.getExpression();
+	    Expression expression = this.getExpression();
 	    ElementReference type = expression == null? null: expression.getType();
 		return type != null && type.getImpl().isCollectionClass();
 	}
@@ -105,8 +106,7 @@ public class SequenceOperationExpressionImpl
 	    if (referent == null) {
 	        return false;
 	    } else {
-	        ExtentOrExpression primary = self.getPrimary();
-	        Expression expression = primary == null? null: primary.getExpression();
+	        Expression expression = this.getExpression();
 	        ElementReference primaryType = expression == null? 
 	                                           null: expression.getType();
 	        if (self.getIsCollectionConversion()) {
@@ -133,7 +133,7 @@ public class SequenceOperationExpressionImpl
 	        referent = operation.getImpl().getBehaviorReferent();
 	        if (referent != null && referent.getImpl().isTemplate()) {
 	            referent = bindTemplateImplicitArguments(operation, referent, 
-	                    self.getPrimary().getExpression());
+	                    this.getExpression());
 	        }
 	    }
 	    return referent;
@@ -183,9 +183,7 @@ public class SequenceOperationExpressionImpl
 	 * assignable.
 	 **/
 	public boolean sequenceOperationExpressionOperationReferent() {
-        SequenceOperationExpression self = this.getSelf();
-        ExtentOrExpression primary = self.getPrimary();
-        Expression expression = primary == null? null: primary.getExpression();
+        Expression expression = this.getExpression();
         FormalParameter parameter = this.getFirstParameter();
         if (expression == null || parameter == null) {
             return false;
@@ -209,9 +207,7 @@ public class SequenceOperationExpressionImpl
 	 * name must already exist.
 	 **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
-        SequenceOperationExpression self = this.getSelf();
-        ExtentOrExpression primary = self.getPrimary();
-        Expression expression = primary == null? null: primary.getExpression();
+        Expression expression = this.getExpression();
         LeftHandSide lhs = this.getLeftHandSide();
         ElementReference type = this.getFirstParameterType();
         return expression == null || !this.isInPlace() ||
@@ -264,8 +260,7 @@ public class SequenceOperationExpressionImpl
 	    // the primary expression and an argument expression. This needs to be
 	    // added to the spec.
 	    SequenceOperationExpression self = this.getSelf();
-	    ExtentOrExpression primary = self.getPrimary();
-	    Expression expression = primary == null? null: primary.getExpression();
+	    Expression expression = this.getExpression();
 	    Tuple tuple = self.getTuple();
 	    if (expression == null || tuple == null) {
 	        return true;
@@ -291,8 +286,7 @@ public class SequenceOperationExpressionImpl
 	@Override
 	public Map<String, AssignedSource> updateAssignmentMap() {
 	    SequenceOperationExpression self = this.getSelf();
-	    ExtentOrExpression primary = self.getPrimary();
-	    Expression expression = primary == null? null: primary.getExpression();
+	    Expression expression = this.getExpression();
 	    Tuple tuple = self.getTuple();
 	    Map<String, AssignedSource> assignments = new HashMap<String, AssignedSource>();
 	    if (expression != null) {
@@ -304,7 +298,10 @@ public class SequenceOperationExpressionImpl
 	    }
 	    if (this.isInPlace()) {
     	    AssignedSource oldAssignment = this.getOldAssignment();
-    	    if (oldAssignment != null) {
+    	    if (oldAssignment != null && 
+    	            !oldAssignment.getImpl().getIsParallelLocalName()) {
+                // Update the assignment of an already existing local name, 
+    	        // unless it is an @parallel local name of a for statement.
     	        AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(oldAssignment);
     	        newAssignment.setSource(self);
     	        assignments.put(newAssignment.getName(), newAssignment);
@@ -360,11 +357,32 @@ public class SequenceOperationExpressionImpl
         FormalParameter firstParameter = this.getFirstParameter();
         return firstParameter == null? null: firstParameter.getType();
     }
+    
+    private Expression getExpression() {
+        if (this.expression == null) {
+            SequenceOperationExpression self = this.getSelf();
+            ExtentOrExpression primary = self.getPrimary();
+            QualifiedName operation = self.getOperation();
+            this.expression = primary == null? null: primary.getExpression();
+            
+            // Identify the first argument of an invocation of
+            // CollectionFunctions::add, since an @parallel local name is 
+            // allowed only in this position.
+            // Note: The behavior referent of the operation is used here to
+            // avoid having to deal with the implicit template binding of the
+            // invocation referent.
+            if (operation != null && this.expression != null &&
+                    RootNamespace.getCollectionFunctionAdd().getImpl().
+                        equals(operation.getImpl().getBehaviorReferent())) {
+                this.expression.getImpl().setIsAddTarget();
+            }
+            
+        }
+        return this.expression;
+    }
 
     public LeftHandSide getLeftHandSide() {
-        SequenceOperationExpression self = this.getSelf();
-        ExtentOrExpression primary = self.getPrimary();
-        Expression expression = primary == null? null: primary.getExpression();
+        Expression expression = this.getExpression();
         FormalParameter parameter = this.getFirstParameter();
         if (expression == null || parameter == null) {
             return null;

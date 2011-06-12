@@ -287,7 +287,7 @@ public abstract class InvocationExpression extends Expression {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -349,7 +349,8 @@ public abstract class InvocationExpression extends Expression {
 			if (parameter.size() > 0) {
 				System.out.println(prefix + " /parameter:");
 			}
-			for (ElementReference _parameter : parameter) {
+			for (Object _object : parameter.toArray()) {
+				ElementReference _parameter = (ElementReference) _object;
 				System.out.println(prefix + "  " + _parameter);
 			}
 		}

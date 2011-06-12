@@ -87,6 +87,7 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	 **/
 	@Override
 	protected ElementReference deriveType() {
+	    this.getAssignmentAfterMap(); // Force computation of assignments.
 	    ExtentOrExpression primary = this.getSelf().getPrimary();
 	    Expression expression = primary == null? null: primary.getExpression();
 	    return expression == null? null: expression.getType();
@@ -163,10 +164,10 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	            ElementReference type = self.getType();
 	            for (FormalParameter parameter: parameters) {
 	                if (!((parameter == returnParameter ||
-	                            !parameter.getDirection().equals("in")) &&
+	                            "in".equals(parameter.getDirection())) &&
 	                       parameter.getType().getImpl().equals(type) &&
-	                       parameter.getLower() != 1 && 
-	                       parameter.getUpper() != 1)) {
+	                       parameter.getLower() == 1 && 
+	                       parameter.getUpper() == 1)) {
 	                    return false;
 	                }
 	            }

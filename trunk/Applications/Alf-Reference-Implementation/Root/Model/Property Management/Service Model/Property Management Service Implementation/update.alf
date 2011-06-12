@@ -2,6 +2,7 @@ namespace 'Property Management'::'Service Model'::
                            'Property Management Service Implementation';
 
 private import 'Property Management'::'Data Model'::Properties::*;
+private import 'Property Management'::'Data Model'::Locations::Location;
 private import 'Property Management'::'Message Model'::*;
 
 /** Update the attribute data of a property (other than acquisition or
@@ -34,9 +35,9 @@ activity update (
       'error code'         => "PRU-002",
       'error message'      => "Property already disposed." );
 
-  } else if ((request.'serial number' -> notEmpty() && 
+  } else if ((request.'property serial number' -> notEmpty() && 
               property instanceof 'Real Property') ||
-             (request.'size' -> notEmpty() &&
+             (request.'property size' -> notEmpty() &&
               property instanceof 'Personal Property')) {
     error = new 'Error Reply' (
       identifier           => request.identifier + "/error",
@@ -44,7 +45,7 @@ activity update (
       'error code'         => "PRU-002",
       'error message'      => "Wrong property type." );
 
-  } else if (request.'property location' -> notEmpty() &&
+  } else if (request.'property location identifier' -> notEmpty() &&
               !(Location -> exists loc 
                  (loc.identifier == request.'property location identifier'))) {
     error = new 'Error Reply' (
@@ -54,7 +55,7 @@ activity update (
       'error message'      => "Location not found." );
 
   } else {
-    if (request.'property location' -> notEmpty()) {
+    if (request.'property location identifier' -> notEmpty()) {
       location = Location -> select loc 
                    (loc.identifier == request.'property location identifier')[1];
       'Property Location'.createLink(property, location);

@@ -1,17 +1,17 @@
 private import Super;
 class SuperConstructors specializes Super {
-  @Create public B(in x: Integer) {
+  @Create public SuperConstructors(in x: Integer) {
     super.create1(x);
   }
 
   @Create public B0() {
-    this.B(0);
+    this.B1(0);
   }
   @Create public B1(in x: Integer) {
     super(x);
   }
 
   @Create public B2() {
-    this();
+    this(0);
   }
 }

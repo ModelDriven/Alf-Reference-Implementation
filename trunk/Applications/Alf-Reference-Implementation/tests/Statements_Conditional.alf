@@ -1,0 +1,93 @@
+/**
+ * Test if and switch statements.
+ **/  
+class Statements_Conditional {
+
+    // Supporting declarations *************************************************
+    
+    class Monitor { 
+    	public raiseAlarm(in sensorId: Integer) { }
+    	public cleanUp() { }
+	}
+    enum Condition { normal, alert, critical, error }
+    
+	//**************************************************************************
+
+    test() {
+    
+      // Setup
+	  reading = 0;
+	  threshold = 0;
+	  safeLimit = 100;
+	  criticalLimit = 200;
+	  errorLimit = 1000;
+	  sensorId = 1;
+	  monitor = new Monitor();
+	  month = 6;
+	  year = 2011;
+	  // *****
+	  
+	  if (reading > threshold) {
+	     monitor.raiseAlarm(sensorId); 
+	  }
+	  
+	  //@determined @assured
+	  if (reading <= safeLimit) {
+	    condition = Condition::normal; }
+	  or if (reading > safeLimit && reading <= criticalLimit) {
+	    condition = Condition::alert; }
+	  or if (reading > criticalLimit) {
+	    condition = Condition::critical; }
+	  if (reading > threshold) {
+	     monitor.raiseAlarm(sensorId); 
+	  }
+	  
+	  if (reading <= safeLimit) {
+	    condition = Condition::normal; 
+	  }
+	  else if (reading <= criticalLimit) {
+	    condition = Condition::alert; 
+	  }
+	  else {
+	    condition = Condition::critical; 
+	  }
+	  
+	  if (reading <= safeLimit) {
+	    condition = Condition::normal; 
+	  }
+	  or if (reading > safeLimit && reading <= criticalLimit) {
+	    condition = Condition::alert; 
+	  }
+	  or if (reading > criticalLimit) {
+	    condition = Condition::critical; 
+	  }
+	  
+	  if (reading <= safeLimit) {
+	    condition = Condition::normal; }
+	  else if (reading > safeLimit && reading <= criticalLimit) {
+	    condition = Condition::alert; }
+	  or if (reading > criticalLimit && reading < errorLimit) {
+	    condition = Condition::critical; }
+	  else {
+	    condition = Condition::error; }
+	  
+	  switch (month) {
+	    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+	      numDays = 31; 
+	     case 4: case 6: case 9: case 11:
+	      numDays = 30; 
+	    case 2:
+	      if ( ((year % 4 == 0) && !(year % 100 == 0))
+	           || (year % 400 == 0) ) {
+	        numDays = 29;
+	      } 
+	      else {
+	        numDays = 28;
+	      }
+	    default:
+	      WriteLine("Invalid month.");
+	      numDays = 0;
+	  }
+	  
+    }
+}

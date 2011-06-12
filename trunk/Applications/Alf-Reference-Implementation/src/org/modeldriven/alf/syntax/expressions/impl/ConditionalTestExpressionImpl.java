@@ -73,9 +73,16 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	    ConditionalTestExpression self = this.getSelf();
 	    Expression operand2 = self.getOperand2();
 	    Expression operand3 = self.getOperand3();
-	    ElementReference type2 = operand2 == null? null: operand2.getType();
-	    ElementReference type3 = operand3 == null? null: operand3.getType();
-	    return ClassifierDefinitionImpl.commonAncestor(type2, type3);
+	    if (operand2 == null || operand3 == null) {
+	        return null;
+	    } else if (operand2.getImpl().isNull()) {
+	        return operand3.getType();
+	    } else if (operand3.getImpl().isNull()) {
+	        return operand2.getType();
+	    } else {
+	    return ClassifierDefinitionImpl.commonAncestor
+	                        (operand2.getType(), operand3.getType());
+	    }
 	}
 	
 	/**

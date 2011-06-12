@@ -66,7 +66,7 @@ public class PositionalTuple extends Tuple {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -85,7 +85,8 @@ public class PositionalTuple extends Tuple {
 			if (expression.size() > 0) {
 				System.out.println(prefix + " expression:");
 			}
-			for (Expression _expression : expression) {
+			for (Object _object : expression.toArray()) {
+				Expression _expression = (Expression) _object;
 				if (_expression != null) {
 					_expression.print(prefix + "  ");
 				} else {

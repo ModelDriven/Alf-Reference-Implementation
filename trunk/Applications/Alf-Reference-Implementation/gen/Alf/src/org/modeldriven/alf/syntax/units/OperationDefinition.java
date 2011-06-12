@@ -273,7 +273,7 @@ public class OperationDefinition extends NamespaceDefinition {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -315,7 +315,8 @@ public class OperationDefinition extends NamespaceDefinition {
 			if (redefinedOperations.size() > 0) {
 				System.out.println(prefix + " /redefinedOperations:");
 			}
-			for (ElementReference _redefinedOperations : redefinedOperations) {
+			for (Object _object : redefinedOperations.toArray()) {
+				ElementReference _redefinedOperations = (ElementReference) _object;
 				System.out.println(prefix + "  " + _redefinedOperations);
 			}
 		}

@@ -86,7 +86,7 @@ public abstract class ElementReferenceImpl {
 
     public abstract String getName();
     public abstract String getVisibility();
-    public abstract List<ElementReference> getPublicMembers();
+    public abstract List<Member> getPublicMembers();
     public abstract List<ElementReference> getFeatures();
     public abstract List<ElementReference> getAttributes();
     public abstract List<ElementReference> getAssociationEnds();

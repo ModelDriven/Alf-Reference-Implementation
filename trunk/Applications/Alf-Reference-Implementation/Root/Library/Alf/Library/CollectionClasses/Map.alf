@@ -1,0 +1,31 @@
+namespace Alf::Library::CollectionClasses;
+abstract class Map<Key, Value> {
+
+  public datatype Entry {
+    public key: Key;
+    public value: Value;
+  }
+
+  @Create public abstract Map (in entries: Entry[0..*]);
+  @Destroy public abstract destroy ();
+  
+  public abstract clear ();
+  public abstract entries (): Set<Entry>;
+  public abstract excludesAll (in entries: Entry[0..*]): Boolean;
+  public abstract get (in key: Key): Value[0..1];
+  public abstract includesAll (in entries: Entry[0..*]): Boolean;
+  public abstract includesKey (in key: Key): Boolean ;
+  public abstract includesValue (in value: Value[0..1]): Boolean;
+  public abstract isEmpty (): Boolean;
+  public abstract keys (): Set<Key>;
+  public abstract notEmpty (): Boolean;
+  public abstract put (in key: Key, in value: Value[0..1]): Value[0..1];
+  public abstract putAll (in entries: Entry[0..*]);
+  public abstract remove (in key: Key): Value[0..1];
+  public abstract removeAll (in keys: Key[0..*]);
+  public abstract size (): Integer;
+  public abstract toSequence (): Entry[0..*] sequence;
+  public abstract values (): Bag<Value>;
+  
+}
+

@@ -201,35 +201,37 @@ public class ClassifyStatementImpl extends
 	public boolean classifyStatementClasses() {
 	    ClassifyStatement self = this.getSelf();
 	    ElementReference targetType = self.getExpression().getType();
-	    Collection<ElementReference> fromClasses = self.getFromClass();
-	    Collection<ElementReference> toClasses = self.getToClass();
-	    Collection<ElementReference> classes = new ArrayList<ElementReference>();
-	    if (fromClasses != null) {
-	        classes.addAll(fromClasses);
-	    }
-	    if (toClasses != null) {
-	        classes.addAll(toClasses);
-	    }
-	    
-	    // Check that all classes are subclasses of the target type.
-	    Set<ElementReference> commonAncestors = new HashSet<ElementReference>();
-	    boolean first = true;
-	    for (ElementReference referent: classes) {
-	        Collection<ElementReference> ancestors = referent.getImpl().allParents();
-	        if (!targetType.getImpl().isContainedIn(ancestors)) {
-	            return false;
+	    if (targetType != null ) {
+	        Collection<ElementReference> fromClasses = self.getFromClass();
+	        Collection<ElementReference> toClasses = self.getToClass();
+	        Collection<ElementReference> classes = new ArrayList<ElementReference>();
+	        if (fromClasses != null) {
+	            classes.addAll(fromClasses);
 	        }
-	        if (first) {
-	            commonAncestors.addAll(ancestors);
-	        } else {
-	            commonAncestors.retainAll(ancestors);
+	        if (toClasses != null) {
+	            classes.addAll(toClasses);
 	        }
-	    }
-	    
-	    //Check that no common ancestors are subclasses of the target type.
-	    for (ElementReference referent: commonAncestors) {
-	        if (targetType.getImpl().isContainedIn(referent.getImpl().allParents())) {
-	            return false;
+
+	        // Check that all classes are subclasses of the target type.
+	        Set<ElementReference> commonAncestors = new HashSet<ElementReference>();
+	        boolean first = true;
+	        for (ElementReference referent: classes) {
+	            Collection<ElementReference> ancestors = referent.getImpl().allParents();
+	            if (!targetType.getImpl().isContainedIn(ancestors)) {
+	                return false;
+	            }
+	            if (first) {
+	                commonAncestors.addAll(ancestors);
+	            } else {
+	                commonAncestors.retainAll(ancestors);
+	            }
+	        }
+
+	        //Check that no common ancestors are subclasses of the target type.
+	        for (ElementReference referent: commonAncestors) {
+	            if (targetType.getImpl().isContainedIn(referent.getImpl().allParents())) {
+	                return false;
+	            }
 	        }
 	    }
 		return true;

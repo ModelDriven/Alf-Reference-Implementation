@@ -62,7 +62,7 @@ public class PackageImportReference extends ImportReference {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {

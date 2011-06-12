@@ -244,6 +244,8 @@ MORE:
 <IN_IN_LINE_COMMENT_STAR>
 MORE:
 {
+  "*"
+|
   < ~["/"] >: IN_IN_LINE_COMMENT
 }
 
@@ -270,6 +272,8 @@ TOKEN:
 <IN_DOCUMENTATION_COMMENT_STAR>
 MORE:
 {
+  "*"
+|
   < ~["/"] >: IN_DOCUMENTATION_COMMENT
 }
 
@@ -2370,7 +2374,7 @@ void ForControl(ForStatement s):
 }
 {
   d = LoopVariableDefinition() { s.addVariableDefinition(d); }
-  ( <COMMA> LoopVariableDefinition() { s.addVariableDefinition(d); } )*
+  ( <COMMA> d = LoopVariableDefinition() { s.addVariableDefinition(d); } )*
 }
 
 LoopVariableDefinition LoopVariableDefinition(): 

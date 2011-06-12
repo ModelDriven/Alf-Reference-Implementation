@@ -416,11 +416,14 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
             OperationDefinition self = this.getSelf();
             OperationDefinition baseOperation = (OperationDefinition)base;
             self.setIsAbstract(baseOperation.getIsAbstract());
-            QualifiedNameList redefinitions = new QualifiedNameList();
             QualifiedNameList baseRedefinitions = baseOperation.getRedefinition();
-            for (QualifiedName redefinition: baseRedefinitions.getName()) {
-                redefinitions.addName(redefinition.getImpl().
-                        updateBindings(templateParameters, templateArguments));
+            if (baseRedefinitions != null) {
+                QualifiedNameList redefinitions = new QualifiedNameList();
+                for (QualifiedName redefinition: baseRedefinitions.getName()) {
+                    redefinitions.addName(redefinition.getImpl().
+                            updateBindings(templateParameters, templateArguments));
+                }
+                self.setRedefinition(redefinitions);
             }
         }
     }

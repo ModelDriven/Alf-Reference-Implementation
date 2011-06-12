@@ -117,7 +117,7 @@ public class AcceptBlock extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -148,7 +148,8 @@ public class AcceptBlock extends SyntaxElement {
 			if (signal.size() > 0) {
 				System.out.println(prefix + " /signal:");
 			}
-			for (ElementReference _signal : signal) {
+			for (Object _object : signal.toArray()) {
+				ElementReference _signal = (ElementReference) _object;
 				System.out.println(prefix + "  " + _signal);
 			}
 		}

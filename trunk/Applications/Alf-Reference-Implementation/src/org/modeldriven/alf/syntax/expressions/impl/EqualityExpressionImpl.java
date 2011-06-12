@@ -96,5 +96,21 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
 		this.getSelf().getUpper();
 		return true;
 	}
+	
+	/**
+	 * The operands of a binary expression must both have a multiplicity upper
+	 * bound no greater than 1.
+	 **/
+	// Note: The general binary expression constraint needs to be weakened to
+	// not overconstrain equality expressions. 
+	@Override
+	public boolean binaryExpressionOperandMultiplicity() {
+	    BinaryExpression self = this.getSelf();
+	    Expression operand1 = self.getOperand1();
+	    Expression operand2 = self.getOperand2();
+	    return operand1 != null && operand1.getUpper() <= 1 &&
+	    operand2 != null && operand2.getUpper() <= 1;
+	}
+
 
 } // EqualityExpressionImpl

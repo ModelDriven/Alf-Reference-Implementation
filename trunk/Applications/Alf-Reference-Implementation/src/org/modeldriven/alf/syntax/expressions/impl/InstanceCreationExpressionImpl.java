@@ -101,20 +101,20 @@ public class InstanceCreationExpressionImpl
 	            constructor.getImpl().getClassReferent();
 	        ElementReference dataTypeReferent = 
 	            constructor.getImpl().getDataTypeReferent();
-	        if (classReferent != null) {
-	            if (dataTypeReferent != null) {
-	                return null;
-	            } else {
-	                return classReferent;
-	            }
-	        } else if (dataTypeReferent != null) {
-	            return dataTypeReferent;
+	        if (dataTypeReferent != null) {
+	            return classReferent != null? null: dataTypeReferent;
 	        } else {
+    	        if (classReferent != null) {
+    	            String name = constructor.getUnqualifiedName().getName();
+    	            constructor = constructor.getImpl().copy().getSelf();
+ 	                constructor.getImpl().addName(name);
+    	        }
                 // TODO: Handle overloading resolution.
                 ElementReference operationReferent = 
                     constructor.getImpl().getOperationReferent();
                 return operationReferent == null || 
-                            !operationReferent.getImpl().isConstructor()? null:
+                            !operationReferent.getImpl().isConstructor()? 
+                            classReferent:
                             operationReferent;
 	        }
 	    }

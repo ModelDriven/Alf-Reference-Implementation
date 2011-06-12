@@ -216,7 +216,7 @@ public class ForStatement extends Statement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -246,7 +246,8 @@ public class ForStatement extends Statement {
 			if (variableDefinition.size() > 0) {
 				System.out.println(prefix + " variableDefinition:");
 			}
-			for (LoopVariableDefinition _variableDefinition : variableDefinition) {
+			for (Object _object : variableDefinition.toArray()) {
+				LoopVariableDefinition _variableDefinition = (LoopVariableDefinition) _object;
 				if (_variableDefinition != null) {
 					_variableDefinition.print(prefix + "  ");
 				} else {

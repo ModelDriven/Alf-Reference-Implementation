@@ -65,7 +65,7 @@ public class NamedTuple extends Tuple {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -84,7 +84,8 @@ public class NamedTuple extends Tuple {
 			if (namedExpression.size() > 0) {
 				System.out.println(prefix + " namedExpression:");
 			}
-			for (NamedExpression _namedExpression : namedExpression) {
+			for (Object _object : namedExpression.toArray()) {
+				NamedExpression _namedExpression = (NamedExpression) _object;
 				if (_namedExpression != null) {
 					_namedExpression.print(prefix + "  ");
 				} else {

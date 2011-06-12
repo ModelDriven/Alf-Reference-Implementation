@@ -1,0 +1,61 @@
+private import DomainDataTypes;
+private import 'Property Management'::'Data Model'::Properties::*;
+
+/** 
+ * Test inline, block, empty and local name declaration statements.
+ **/
+class Statements_Simple {
+
+    // Supporting declarations *************************************************
+    
+  	offers: Offer[*];
+	principal: Integer;
+	rate: Integer;
+	
+    class Offer { }
+    class Member { 
+      	public isActive: Boolean;
+      	public name: String;
+      	public address: String;
+  	}
+  	class IntegerList specializes List<Integer> { }
+  	
+  	datatype Point { public x: Integer; public y: Integer; }
+  	
+	//**************************************************************************
+
+	test() {
+      // Setup
+	  e1 = 0;
+	  e2 = 0;
+	  period = 1;
+	  members = Member[]{};
+	  assets = null;
+	  land = new 'Real Property'();
+	  home = new 'Real Property'();
+	  condominium = new 'Real Property'();
+	  // *****
+	  	  	
+	  /*@inline('C++')  // Native code
+	    *data = this;
+	    controller->initiate();
+	  */
+
+	  //@parallel 
+	  { 
+	    i = e1;
+	    last = e2;
+	    collection = Integer[]{i, last};
+	  }
+	  
+	  ;
+	  
+	  let currentOffer : Offer = this.offers[1];
+	  DomainDataTypes.Money interest = new (this.principal * this.rate * period);
+	  let inactiveMembers : Member[] = members -> select member (!member.isActive);
+	  'Real Property'[] realProperties = ('Real Property')assets;
+	  let fixedAssets: 'Real Property'[] = new { land, home, condominium };
+	  let origin : Point = new(0,0);
+	  
+	}
+}

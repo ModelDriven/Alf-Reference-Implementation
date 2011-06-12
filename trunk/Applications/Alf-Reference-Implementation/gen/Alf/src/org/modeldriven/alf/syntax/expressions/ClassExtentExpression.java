@@ -106,7 +106,7 @@ public class ClassExtentExpression extends Expression {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {

@@ -15,10 +15,9 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A looping statement for which the continuation condition is first tested
@@ -83,16 +82,15 @@ public class WhileStatementImpl extends StatementImpl {
         Map<String, AssignedSource> assignmentsAfter = assignmentsBefore;
         if (condition != null) {
             condition.getImpl().setAssignmentBefore(assignmentsBefore);            
-            Set<AssignedSource> newAssignments = 
-                new HashSet<AssignedSource>(condition.getImpl().getNewAssignments());
+            assignmentsAfter = condition.getImpl().getAssignmentAfterMap();
             if (body != null) {
-                body.getImpl().setAssignmentBefore(condition.getImpl().getAssignmentAfterMap());
-                newAssignments.addAll(body.getAssignmentAfter());
+                body.getImpl().setAssignmentBefore(assignmentsAfter);
+                Collection<AssignedSource> newAssignments = body.getImpl().getNewAssignments();
                 if (!newAssignments.isEmpty()) {
                     assignmentsAfter = new HashMap<String,AssignedSource>(assignmentsAfter);
                     for (AssignedSource assignment: newAssignments) {
                         String name = assignment.getName();
-                        if (assignmentsBefore.containsKey(name)) {
+                        if (assignmentsAfter.containsKey(name)) {
                             AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
                             assignmentAfter.setSource(self);
                             assignmentsAfter.put(name, assignmentAfter);

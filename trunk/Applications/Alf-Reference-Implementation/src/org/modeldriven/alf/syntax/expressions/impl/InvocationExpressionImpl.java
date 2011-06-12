@@ -525,4 +525,14 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             (referent, templateParameters, templateArguments);
     }
 
+    /**
+     * Determine whether this is an invocation of the CollectionFunction:add
+     * behavior. This is false by default and overridden for behavior 
+     * invocations. (Sequence operation expressions handle add invocations
+     * separately.)
+     */
+    public boolean isAddInvocation() {
+        return false;
+    }
+
 } // InvocationExpressionImpl

@@ -1,0 +1,11 @@
+namespace Alf::Library::CollectionClasses;
+abstract class Bag<T> specializes Collection<T> {
+
+  @Create public abstract Bag (in seq: T[0..*] sequence);
+  @Destroy public abstract destroy ();
+  
+  public abstract add (in element: T): Boolean;
+  public abstract addAll (in seq: T[0..*] sequence): Boolean;
+  public abstract equals (in seq: T[0..*] sequence): Boolean;
+
+}

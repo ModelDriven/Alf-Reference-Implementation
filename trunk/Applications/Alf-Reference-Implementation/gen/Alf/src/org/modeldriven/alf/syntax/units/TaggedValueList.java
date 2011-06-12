@@ -62,7 +62,7 @@ public class TaggedValueList extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -81,7 +81,8 @@ public class TaggedValueList extends SyntaxElement {
 			if (taggedValue.size() > 0) {
 				System.out.println(prefix + " taggedValue:");
 			}
-			for (TaggedValue _taggedValue : taggedValue) {
+			for (Object _object : taggedValue.toArray()) {
+				TaggedValue _taggedValue = (TaggedValue) _object;
 				System.out.println(prefix + "  " + _taggedValue);
 			}
 		}

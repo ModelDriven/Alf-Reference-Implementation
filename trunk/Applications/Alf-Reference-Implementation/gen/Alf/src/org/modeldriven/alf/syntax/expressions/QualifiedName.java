@@ -294,7 +294,7 @@ public class QualifiedName extends SyntaxElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -334,7 +334,8 @@ public class QualifiedName extends SyntaxElement {
 			if (nameBinding.size() > 0) {
 				System.out.println(prefix + " nameBinding:");
 			}
-			for (NameBinding _nameBinding : nameBinding) {
+			for (Object _object : nameBinding.toArray()) {
+				NameBinding _nameBinding = (NameBinding) _object;
 				if (_nameBinding != null) {
 					_nameBinding.print(prefix + "  ");
 				} else {
@@ -347,7 +348,8 @@ public class QualifiedName extends SyntaxElement {
 			if (referent.size() > 0) {
 				System.out.println(prefix + " /referent:");
 			}
-			for (ElementReference _referent : referent) {
+			for (Object _object : referent.toArray()) {
+				ElementReference _referent = (ElementReference) _object;
 				System.out.println(prefix + "  " + _referent);
 			}
 		}

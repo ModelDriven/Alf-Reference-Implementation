@@ -81,8 +81,9 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
     }
     
     @Override
-    public List<ElementReference> getArgumentReferents
-        (List<ElementReference> templateParameters) {
+    public List<ElementReference> getArgumentReferents(
+            List<ElementReference> templateParameters,
+            NamespaceDefinition currentScope) {
         Collection<TemplateParameterSubstitution> substitutions = 
             this.getSelf().getSubstitution();
         List<ElementReference> argumentReferents = new ArrayList<ElementReference>();
@@ -91,8 +92,10 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
             for (TemplateParameterSubstitution substitution: substitutions) {
                 String name = substitution.getParameterName();
                 if (name != null && name.equals(parameterName)) {
+                    QualifiedName argumentName = substitution.getArgumentName();
+                    argumentName.getImpl().setCurrentScope(currentScope);
                     ElementReference argumentReferent = 
-                        substitution.getArgumentName().getImpl().getClassifierReferent();
+                        argumentName.getImpl().getClassifierReferent();
                     if (argumentReferent != null) {
                         argumentReferents.add(argumentReferent);
                         break;

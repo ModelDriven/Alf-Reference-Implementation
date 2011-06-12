@@ -6,4 +6,8 @@ class Super {
   
   @Destroy public destroy() { }
   
+  public run() { }
+  public initialize(in value: Integer) { }
+  public setName(in name: String) { }
+  
 }

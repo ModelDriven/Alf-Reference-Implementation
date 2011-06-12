@@ -90,7 +90,7 @@ public class LinkOperationExpressionImpl
 	 **/
 	protected Boolean deriveIsClear() {
         String operation = this.getSelf().getOperation();
-        return operation != null && operation.equals("createAssoc");
+        return operation != null && operation.equals("clearAssoc");
 	}
 	
 	/**

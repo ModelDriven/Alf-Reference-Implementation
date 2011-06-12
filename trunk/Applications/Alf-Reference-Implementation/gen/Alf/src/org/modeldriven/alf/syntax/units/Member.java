@@ -254,7 +254,7 @@ public abstract class Member extends DocumentedElement {
 	}
 
 	public String toString() {
-		return this.getImpl().toString();
+		return "(" + this.hashCode() + ")" + this.getImpl().toString();
 	}
 
 	public String _toString() {
@@ -298,7 +298,8 @@ public abstract class Member extends DocumentedElement {
 			if (annotation.size() > 0) {
 				System.out.println(prefix + " annotation:");
 			}
-			for (StereotypeAnnotation _annotation : annotation) {
+			for (Object _object : annotation.toArray()) {
+				StereotypeAnnotation _annotation = (StereotypeAnnotation) _object;
 				if (_annotation != null) {
 					_annotation.print(prefix + "  ");
 				} else {
