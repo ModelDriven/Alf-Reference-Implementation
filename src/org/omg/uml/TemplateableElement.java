@@ -6,4 +6,6 @@ public interface TemplateableElement {
     
     public boolean isTemplate();
 
+    public TemplateBinding getTemplateBinding();
+
 }

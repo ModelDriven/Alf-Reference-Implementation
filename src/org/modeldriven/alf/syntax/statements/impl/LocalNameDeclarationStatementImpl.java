@@ -56,7 +56,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
         
         // Note: The following accounts for short form instance and sequence 
         // initialization expressions. It requires that the type name and
-        // multiplicity be set before the initializer.
+        // multiplicity be set before the initializer expression is set.
         LocalNameDeclarationStatement self = this.getSelf();
         if (this.expression instanceof InstanceCreationExpression) {
             InstanceCreationExpression initializer =

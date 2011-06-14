@@ -469,6 +469,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	                    ElementReference templateParameter = 
 	                        templateParameters.get(i);
 	                    ElementReference templateArgument = templateArguments.get(i);
+	                    
 	                    if (!templateParameter.getImpl().isClassifierTemplateParameter()) {
 	                        return false;
 	                    } else {
@@ -781,10 +782,12 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     public ElementReference getBoundElement() {
         QualifiedName self = this.getSelf();
         // TODO: Handle bindings of non-classifier templates.
+        
         // Note: getClassifierOnlyReferent is used here to avoid infinite
         // recursion due to type resolution during distinguisbibilty checking.
         ElementReference templateReferent = 
             self.getTemplateName().getImpl().getClassifierOnlyReferent();
+        
         if (templateReferent == null || !templateReferent.getImpl().isClassifier()) {
             return null;
         } else {

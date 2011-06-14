@@ -47,7 +47,9 @@ import org.omg.uml.Property;
 import org.omg.uml.Reception;
 import org.omg.uml.Signal;
 import org.omg.uml.Stereotype;
+import org.omg.uml.TemplateBinding;
 import org.omg.uml.TemplateParameter;
+import org.omg.uml.TemplateParameterSubstitution;
 import org.omg.uml.TemplateSignature;
 import org.omg.uml.TemplateableElement;
 
@@ -457,6 +459,51 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         }
     }
     
+    @Override
+    public ElementReference getTemplate() {
+        Element element = this.getSelf().getElement();
+        if (!(element instanceof TemplateableElement)) {
+            return null;
+        } else {
+            TemplateBinding templateBinding = ((TemplateableElement)element).getTemplateBinding();
+            TemplateSignature signature = templateBinding == null? null: 
+                templateBinding.getSignature();
+            if (signature == null) {
+                return null;
+            } else {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement((Element)signature.getTemplate());
+                return reference;
+            }
+        }
+    }
+    
+    @Override 
+    public List<ElementReference> getTemplateArguments() {
+        Element element = this.getSelf().getElement();
+        List<ElementReference> references = new ArrayList<ElementReference>();
+        if (element instanceof TemplateableElement) {
+            TemplateBinding templateBinding = ((TemplateableElement)element).getTemplateBinding();
+            TemplateSignature signature = templateBinding == null? null: 
+                templateBinding.getSignature();
+            if (signature != null) {
+                Collection<TemplateParameterSubstitution> substitutions = 
+                    templateBinding.getParameterSubstitution();
+                for (TemplateParameter parameter: signature.getParameter()) {
+                    for (TemplateParameterSubstitution substitution: substitutions) {
+                        ExternalElementReference reference = null;
+                        if (substitution.getFormal() == parameter) {
+                            reference = new ExternalElementReference();
+                            reference.setElement((Element)substitution.getActual());                           
+                        }
+                        references.add(reference);
+                    }                    
+                }
+            }
+        }
+        return references;
+    }
+
     @Override
     public Collection<ElementReference> getConstrainingClassifiers() {
         Collection<ElementReference> constrainingClassifiers = new ArrayList<ElementReference>();

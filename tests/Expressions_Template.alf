@@ -38,17 +38,20 @@ package Expressions_Template {
 
 	  Set<Integer> s = new Set<Integer>(null);
 	  IntegerList list = {1, 2, 3};
+	  Integer[] list1 = list;
 	  Bag<B> bag = new { b, b, b };
 	  Map<Key=>String, Value=>Integer> m = new(null);
-	  new Map<String,Integer>(m.toSequence()).keys();
+	  list1 = m.toSequence().value;
+	  new Map<String,Integer>(m).keys();
 	  new List< List<String> >(null);
 	  new Set<Integer>(Integer[]{1,2,3});
 	  Set<Integer>{1, 3, 45, 2, 3};
 	  new List< List<String> >{{"apple","orange"},{"strawberry","raspberry"}};
 	  	  
 	  including<Integer>(Integer[]{1,2,3}, 4);
-	  add(s, 1);
-	  s -> add(1);
+	  including(s,1);
+	  s->including(1);
+	  s.add(1);
 	  
 	}
 }

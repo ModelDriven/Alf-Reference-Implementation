@@ -6,7 +6,6 @@ import org.omg.uml.NamedElement;
 import org.omg.uml.Namespace;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ExternalNamespace extends NamespaceDefinition {
     
@@ -33,19 +32,20 @@ public class ExternalNamespace extends NamespaceDefinition {
     
     @Override
     public ArrayList<Member> getOwnedMember() {
-        return this.getMembersFrom(this.getUmlNamespace().getOwnedMember());
+        Namespace namespace = this.getUmlNamespace();
+        ArrayList<Member> members = new ArrayList<Member>();
+        for (NamedElement element: namespace.getOwnedMember()) {
+            members.add(ImportedMemberImpl.makeImportedMember(element.getName(), element));
+        }
+        return members;
     }
     
 
     @Override
     public ArrayList<Member> getMember() {
-        return this.getMembersFrom(this.getUmlNamespace().getMember());
-    }
-
-    private ArrayList<Member> getMembersFrom(List<NamedElement> elements) {
         Namespace namespace = this.getUmlNamespace();
         ArrayList<Member> members = new ArrayList<Member>();
-        for (NamedElement element: elements) {
+        for (NamedElement element: namespace.getMember()) {
             for (String name: namespace.getNamesOfMember(element)) {
                 members.add(ImportedMemberImpl.makeImportedMember(name, element));
             }

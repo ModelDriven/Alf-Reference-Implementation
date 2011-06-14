@@ -9,4 +9,8 @@ public class TemplateSignature extends Element {
         return new ArrayList<TemplateParameter>();
     }
 
+    public TemplateableElement getTemplate() {
+        return null;
+    }
+
 }

@@ -56,11 +56,13 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
         }
         
         // Collection conversion
-        if (sourceType.getImpl().isCollectionClass() && 
-                source.getUpper() == 1) {
+        if (sourceType.getImpl().isCollectionClass() && source.getUpper() == 1) {
             final ElementReference collectionType = 
                 sourceType.getImpl().getCollectionArgument();
-            AssignableElementImpl effectiveSource = new AssignableElementImpl(null) {
+             AssignableElementImpl effectiveSource = new AssignableElementImpl(null) {
+                public String toString() {
+                    return "AssignableElementImpl";
+                }
                 public ElementReference getType() {
                     return collectionType;
                 }
@@ -71,9 +73,7 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
                     return -1;
                 }
             };
-            if (this.isAssignableFrom(effectiveSource)) {
-                return true;
-            }
+            return this.isAssignableFrom(effectiveSource);
         }
         
         return false;

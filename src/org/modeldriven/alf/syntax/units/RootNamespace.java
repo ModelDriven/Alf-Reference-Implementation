@@ -31,6 +31,7 @@ public class RootNamespace extends NamespaceDefinition {
     private static ElementReference naturalType = null;
     
     private static ElementReference collectionFunctionAdd = null;
+    private static ElementReference collectionClassesPackage = null;
     
     public static RootNamespace getRootScope() {
         return rootNamespace;
@@ -153,6 +154,13 @@ public class RootNamespace extends NamespaceDefinition {
                             addName("add").getImpl().getBehaviorReferent();
         }
         return collectionFunctionAdd;
+    }
+
+    public static ElementReference getCollectionClassesPackage() {
+        if (collectionClassesPackage == null) {
+            collectionClassesPackage = getCollectionClasses().getImpl().getNamespaceReferent();
+        }
+        return collectionClassesPackage;
     }
 
 }

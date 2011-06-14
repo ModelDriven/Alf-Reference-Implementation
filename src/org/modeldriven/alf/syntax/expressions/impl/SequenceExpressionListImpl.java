@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -24,7 +25,7 @@ import java.util.Map;
 public class SequenceExpressionListImpl extends SequenceElementsImpl {
 
 	private Collection<Expression> element = new ArrayList<Expression>();
-
+	
 	public SequenceExpressionListImpl(SequenceExpressionList self) {
 		super(self);
 	}
@@ -111,6 +112,49 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
     public void setCurrentScope(NamespaceDefinition currentScope) {
         for (Expression element: this.getSelf().getElement()) {
             element.getImpl().setCurrentScope(currentScope);
+        }
+    }
+
+    /**
+     * Each expression in the list must have a multiplicity upper bound of no 
+     * more than 1. The the type of each expression in the list must conform to 
+     * the given type of the owning sequence construction expression (with 
+     * allowance for bit string conversion), if that expression has a 
+     * multiplicity indicator, or to the collection argument type of the given 
+     * collection class, otherwise.
+     */
+    @Override
+    public boolean checkElements(SequenceConstructionExpression owner) {
+        ElementReference type = owner.getType();
+        if (!owner.getHasMultiplicity() && type != null) {
+            type = type.getImpl().getCollectionArgument();
+        }
+        for (Expression element: this.getSelf().getElement()) {
+            ElementReference elementType = element.getType();
+            if (element.getUpper() > 1 || elementType == null && type != null ||
+                    !elementType.getImpl().conformsTo(type) &&
+                    !(elementType.getImpl().isInteger() && 
+                            type.getImpl().isBitString())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Set the collection type of all list elements that are sequence
+     * construction expressions without explicit type names.
+     */
+    @Override
+    public void setCollectionTypeName(QualifiedName typeName) {
+        for (Expression element: this.getSelf().getElement()) {
+            if (element instanceof SequenceConstructionExpression) {
+                SequenceConstructionExpression expression = 
+                    (SequenceConstructionExpression)element;
+                if (expression.getTypeName() == null) {
+                    expression.getImpl().setCollectionTypeName(typeName);
+                }
+            }
         }
     }
 

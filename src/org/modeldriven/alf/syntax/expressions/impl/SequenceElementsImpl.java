@@ -68,5 +68,12 @@ public abstract class SequenceElementsImpl extends SyntaxElementImpl {
             Map<String, AssignedSource> assignmentBefore);
 
     public abstract void setCurrentScope(NamespaceDefinition currentScope);
+    
+    // This is overridden by SequenceExpressionListImpl. It has no effect for
+    // a sequence range.
+    public void setCollectionTypeName(QualifiedName typeName) {        
+    }
+
+    public abstract boolean checkElements(SequenceConstructionExpression owner);
 
 } // SequenceElementsImpl
