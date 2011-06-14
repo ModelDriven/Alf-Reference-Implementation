@@ -95,6 +95,8 @@ public abstract class ElementReferenceImpl {
     public abstract FormalParameter getReturnParameter();
     public abstract List<ElementReference> getTemplateParameters();
     public abstract ElementReference getParameteredElement();
+    public abstract ElementReference getTemplate();
+    public abstract List<ElementReference> getTemplateArguments();
     public abstract Collection<ElementReference> getConstrainingClassifiers();
     public abstract ElementReference getType();
     public abstract ElementReference getAssociation();
@@ -115,23 +117,40 @@ public abstract class ElementReferenceImpl {
     }
 
     public boolean isCollectionClass() {
-        // TODO Write condition for being a collection class.
-        return false;
+        // Note: This actually allows as a collection class any class that has
+        // a properly unambiguous toSequence operation of the correct form.
+        return this.getToSequenceOperation() != null;
     }
 
     public boolean isIntegerCollection() {
-        if (!this.isCollectionClass()) {
-            return false;
-        } else {
-            ElementReference collectionArgument = this.getCollectionArgument();
-            return collectionArgument != null && 
-                        collectionArgument.getImpl().isInteger();
-        }
+        ElementReference collectionArgument = this.getCollectionArgument();
+        return collectionArgument != null && 
+                    collectionArgument.getImpl().isInteger();
     }
     
     public ElementReference getCollectionArgument() {
-        // TODO Implement getting the argument of a collection class instantiation.
-        return null;
+        ElementReference toSequenceOperation = this.getToSequenceOperation();
+        return toSequenceOperation == null? null: 
+            toSequenceOperation.getImpl().getType();
+    }
+    
+    public ElementReference getToSequenceOperation() {
+        NamespaceDefinition namespace = this.asNamespace();
+        ElementReference toSequenceOperation = null;
+        if (namespace != null) {
+            for (Member member: namespace.getImpl().resolve("toSequence")) {
+                ElementReference referent = member.getImpl().getReferent();
+                if (referent.getImpl().isOperation() && 
+                        referent.getImpl().getParameters().size() == 1 &&
+                        referent.getImpl().getReturnParameter() != null) {
+                    if (toSequenceOperation != null) {
+                        return null;
+                    }
+                    toSequenceOperation = referent;
+                }
+            }
+        }
+        return toSequenceOperation;
     }
 
     public boolean isInteger() {
@@ -174,5 +193,5 @@ public abstract class ElementReferenceImpl {
         }
         return false;
     }
-
+    
 } // ElementReferenceImpl

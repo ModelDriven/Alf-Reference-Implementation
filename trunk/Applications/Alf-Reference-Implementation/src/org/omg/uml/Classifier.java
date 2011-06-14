@@ -48,4 +48,9 @@ public class Classifier extends Namespace
         return false;
     }
 
+    @Override
+    public TemplateBinding getTemplateBinding() {
+        return null;
+    }
+
 }

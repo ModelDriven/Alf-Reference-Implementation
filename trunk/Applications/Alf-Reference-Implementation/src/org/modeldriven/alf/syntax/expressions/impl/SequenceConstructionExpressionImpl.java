@@ -24,6 +24,12 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	private SequenceElements elements = null;
 	private Boolean hasMultiplicity = false;
 	private QualifiedName typeName = null;
+	
+	// If this expression does not have an explicit type name, but is contained
+	// in the element list of a sequence construction expression with a
+	// collection type, then this is the collection type name for that outer
+	// sequence construction expression.
+	private QualifiedName collectionTypeName = null;
 
 	public SequenceConstructionExpressionImpl(
 			SequenceConstructionExpression self) {
@@ -57,7 +63,24 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 
 	public void setTypeName(QualifiedName typeName) {
 		this.typeName = typeName;
+		
+		// This propagates the type name of this expression down as a collection
+		// type to be potentially used in determining the type of contained
+		// sequence construction expressions without explicit type names.
+		// Note: This requires that the elements be set BEFORE the type name.
+        SequenceConstructionExpression self = this.getSelf();
+        if (!self.getHasMultiplicity() && typeName != null) {
+            self.getElements().getImpl().setCollectionTypeName(typeName);
+        }
 	}
+
+	public QualifiedName getCollectionTypeName() {
+	    return this.collectionTypeName;
+	}
+	
+	public void setCollectionTypeName(QualifiedName collectionTypeName) {
+        this.collectionTypeName = collectionTypeName;
+    }
 
 	/**
 	 * The type of a sequence construction expression is the named type.
@@ -65,7 +88,16 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	@Override
 	protected ElementReference deriveType() {
 	    QualifiedName typeName = this.getSelf().getTypeName();
-	    return typeName == null? null: typeName.getImpl().getNonTemplateClassifierReferent();
+	    QualifiedName collectionTypeName = this.getCollectionTypeName();
+	    if (typeName != null) {
+	        return typeName.getImpl().getNonTemplateClassifierReferent();
+	    } else if (collectionTypeName != null) {
+	        ElementReference collectionType = 
+	            collectionTypeName.getImpl().getNonTemplateClassifierReferent();
+	        return collectionType == null? null: collectionType.getImpl().getCollectionArgument();
+	    } else {
+	        return null;
+	    }
 	}
 	
 	/**
@@ -129,7 +161,11 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	public boolean sequenceConstructionExpressionType() {
 	    SequenceConstructionExpression self = this.getSelf();
 	    ElementReference type = self.getType();
-		return self.getHasMultiplicity()? 
+	    SequenceElements elements = self.getElements();
+	    // Note: The checking of the sequence elements should really be done
+	    // in separate constraints on the SequenceElements subclasses.
+		return (elements == null || elements.getImpl().checkElements(self)) &&
+		        self.getHasMultiplicity()? 
 		            self.getTypeName() == null || type != null:
 		            type != null && type.getImpl().isCollectionClass();
 	}

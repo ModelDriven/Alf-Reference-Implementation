@@ -135,9 +135,9 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
             ElementReference initializerType = self.getInitializer().getType();
             ElementReference selfType = self.getType();
             return initializerType != null && selfType != null &&
-                    (initializerType.getImpl().isCollectionClass() ||
-                    initializerType.getImpl().isIntegerCollection()) &&
-                    self.getType().getImpl().isBitString();
+                    self.getType().getImpl().isBitString() &&
+                    (initializerType.getImpl().isInteger() ||
+                    initializerType.getImpl().isIntegerCollection());
         }
 	}
 	

@@ -15,7 +15,7 @@ class Expressions_Sequence_Construction {
 	  String[]{"apple","orange","strawberry"};
 	  new String[]{"apple","orange","strawberry",};
 	  Integer[]{1..6+4};
-	  Integer[]{1, Integer[]{2,3}, 4};
+	  any[]{1, true, "blah"};
 	  Integer[]{1, 2, 3, 4};
 	  Integer[]{1..6+4};
 	  Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};

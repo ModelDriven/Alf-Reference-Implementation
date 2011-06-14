@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -116,6 +117,23 @@ public class SequenceRangeImpl extends SequenceElementsImpl {
         if (rangeUpper != null) {
             rangeUpper.getImpl().setCurrentScope(currentScope);
         }
+    }
+
+    /**
+     * The lower and upper range expressions must have a multiplicity upper
+     * bound of 1 and type Integer.
+     */
+    @Override
+    public boolean checkElements(SequenceConstructionExpression owner) {
+        SequenceRange self = this.getSelf();
+        Expression rangeLower = self.getRangeLower();
+        Expression rangeUpper = self.getRangeUpper();
+        ElementReference rangeLowerType = rangeLower == null? null: rangeLower.getType();
+        ElementReference rangeUpperType = rangeUpper == null? null: rangeUpper.getType();
+        return rangeLower != null && rangeLower.getUpper() == 1 && 
+               rangeLowerType != null && rangeLowerType.getImpl().isInteger() &&
+               rangeUpper != null && rangeUpper.getUpper() == 1 && 
+               rangeUpperType != null && rangeUpperType.getImpl().isInteger();
     }
 
 } // SequenceRangeImpl

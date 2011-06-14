@@ -92,10 +92,15 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
     @Override
     public Member bind(String name,
             NamespaceDefinition namespace,
-            boolean isOwnedElement,
+            boolean isOwnedMember,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
-        return null;
+        if (this.getReferent().getImpl().isContainedIn(templateParameters)) {
+            return null;
+        } else {
+            return super.bind(name, namespace, isOwnedMember, 
+                    templateParameters, templateArguments);
+        }
     }
 
 
