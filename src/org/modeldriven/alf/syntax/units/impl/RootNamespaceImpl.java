@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import org.modeldriven.alf.parser.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.*;
 
 public class RootNamespaceImpl extends NamespaceDefinitionImpl {
@@ -53,7 +52,7 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
 
         StringBuffer path = new StringBuffer();
          for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
-            path.append("/" + QualifiedNameImpl.processNameBinding(nameBinding));
+            path.append("/" + nameBinding.getName());
         }
         path.append(".alf");
 

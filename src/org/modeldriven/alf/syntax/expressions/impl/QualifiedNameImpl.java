@@ -117,18 +117,10 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         if (this.referent == null) {
             this.setReferent(this.deriveReferent());
         }
-//        System.out.println("[getReferent] self=" + this.getPathName());
-//        for (ElementReference referent: this.referent) {
-//            System.out.println("[getReferent] referent=" + referent);
-//        }
         return this.referent;
     }
 
     public void setReferent(Collection<ElementReference> referent) {
-//        System.out.println("[setReferent] self=" + this.getPathName());
-//        for (ElementReference _referent: referent) {
-//            System.out.println("[setReferent] referent=" + _referent);
-//        }
         this.referent = referent;
     }
 
@@ -280,7 +272,6 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	private Collection<ElementReference> deriveReferent(boolean classifierOnly) {
 	    ArrayList<ElementReference> referents = new ArrayList<ElementReference>();    
 	    QualifiedName self = this.getSelf();
-//        System.out.println("[deriveReferent] self=" + self.getPathName() + " classifierOnly=" + classifierOnly);
 	    if (!self.getIsFeatureReference()) {
 	        QualifiedName templateName = self.getTemplateName();
 	        if (templateName != null) {
@@ -319,9 +310,6 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         	    }
 	        }
 	    }
-//        for (ElementReference referent: referents) {
-//            System.out.println("[deriveReferent] referent=" + referent);
-//        }
 	    return referents;
 	}
 	
@@ -732,6 +720,11 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         }
     }
 
+    /**
+     * Test for equality of qualified names IGNORING all template bindings,
+     * unless the other object is a string, in which case this is tested against
+     * the path name.
+     */
     @Override
     public boolean equals(Object other) {
         if (other instanceof String) {
@@ -745,19 +738,16 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
                 return false;
             } else {
                 for (int i=0; i<myNameBindings.size(); i++) {
-                    if (!processNameBinding(myNameBindings.get(i)).
-                            equals(processNameBinding(otherNameBindings.get(i)))) {
+                    String myName = myNameBindings.get(i).getName();
+                    String otherName = otherNameBindings.get(i).getName();
+                    if (myName == null && otherName != null ||
+                            myName != null && !myName.equals(otherName)) {
                         return false;
                     }
                 }
                 return true;
             }
         }
-    }
-    
-    public static String processNameBinding(NameBinding nameBinding) {
-        // TODO: Handle template bindings.
-      return nameBinding.getName();
     }
     
     public QualifiedName addName(String name) {
