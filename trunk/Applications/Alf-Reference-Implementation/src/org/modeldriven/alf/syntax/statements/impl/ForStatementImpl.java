@@ -218,6 +218,9 @@ public class ForStatementImpl extends StatementImpl {
 	 * names may only be used within the body of the for statement as the first
 	 * argument to for the CollectionFunctions::add behavior.
 	 **/
+	// Note: Checking that @parallel annotation names are only used with add
+	// behaviors is done in NameExpression, BehaviorInvocationExpression and
+	// SequenceOperationExpression.
 	public boolean forStatementParallelAnnotationNames() {
 	    Collection<String> parallelNames = this.getParallelNames();
 	    if (!parallelNames.isEmpty()) {
@@ -232,7 +235,6 @@ public class ForStatementImpl extends StatementImpl {
 	                return false;
 	            }
 	        }
-	        // TODO: Check that annotation names are only used with add behavor.
 	    }    
 		return true;
 	}
