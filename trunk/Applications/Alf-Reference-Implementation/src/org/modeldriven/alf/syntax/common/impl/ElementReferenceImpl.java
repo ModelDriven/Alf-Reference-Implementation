@@ -116,9 +116,27 @@ public abstract class ElementReferenceImpl {
     }
 
     public boolean isCollectionClass() {
-        // Note: This actually allows as a collection class any class that has
-        // a properly unambiguous toSequence operation of the correct form.
-        return this.getToSequenceOperation() != null;
+        // Note: The test here is that the referenced element is or has a parent
+        // that is an instantiation of a collection class template and that it
+        // has an unambiguous toSequence operation.
+        
+        ElementReferenceImpl collectionClasses = 
+            RootNamespace.getCollectionClassesPackage().getImpl();
+        ElementReference template = this.getTemplate();
+        boolean found = template != null && 
+            collectionClasses.equals(template.getImpl().getNamespace());
+        if (!found) {
+            for (ElementReference parent: this.allParents()) {
+                template = parent.getImpl().getTemplate();
+                if (template != null && collectionClasses.
+                        equals(template.getImpl().getNamespace())) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        
+        return found && this.getToSequenceOperation() != null;
     }
 
     public boolean isIntegerCollection() {
