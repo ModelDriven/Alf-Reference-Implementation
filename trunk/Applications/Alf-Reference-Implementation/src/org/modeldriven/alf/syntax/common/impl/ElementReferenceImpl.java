@@ -96,7 +96,6 @@ public abstract class ElementReferenceImpl {
     public abstract List<ElementReference> getTemplateParameters();
     public abstract ElementReference getParameteredElement();
     public abstract ElementReference getTemplate();
-    public abstract List<ElementReference> getTemplateArguments();
     public abstract Collection<ElementReference> getConstrainingClassifiers();
     public abstract ElementReference getType();
     public abstract ElementReference getAssociation();

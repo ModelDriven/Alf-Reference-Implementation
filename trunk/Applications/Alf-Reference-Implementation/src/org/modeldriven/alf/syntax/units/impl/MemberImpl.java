@@ -39,8 +39,6 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     
     // The base to which this member was bound due to a template binding.
     private Member base = null;
-    // Template arguments used in binding this member.
-    private List<ElementReference> templateArguments = null;
 
     public MemberImpl(Member self) {
         super(self);
@@ -150,14 +148,6 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         this.base = base;
     }
     
-    public List<ElementReference> getTemplateArguments() {
-        return this.templateArguments;
-    }
-    
-    public void setTemplateArguments(List<ElementReference> templateArguments) {
-        this.templateArguments = templateArguments;
-    }
-
     protected Boolean deriveIsFeature() {
 		return false;
 	}
@@ -455,7 +445,6 @@ public abstract class MemberImpl extends DocumentedElementImpl {
             List<ElementReference> templateArguments) {
         Member self = this.getSelf();
         this.setBase(base);
-        this.setTemplateArguments(templateArguments);
         self.setVisibility(base.getVisibility());
         self.setIsStub(false);
         self.setAnnotation(base.getAnnotation());

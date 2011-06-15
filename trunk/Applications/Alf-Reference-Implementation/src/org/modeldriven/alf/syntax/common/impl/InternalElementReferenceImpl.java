@@ -402,21 +402,6 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
-    public List<ElementReference> getTemplateArguments() {
-        SyntaxElement element = this.getSelf().getElement();
-        if (!(element instanceof Member)) {
-            return null;
-        } else {
-            List<ElementReference> templateArguments = 
-                ((Member)element).getImpl().getTemplateArguments();
-            return templateArguments == null? 
-                    new ArrayList<ElementReference>(): 
-                    templateArguments;
-        }
-        
-    }
-    
-    @Override
     public Collection<ElementReference> getConstrainingClassifiers() {
         return this.isClassifierTemplateParameter()? 
                 this.parents():
