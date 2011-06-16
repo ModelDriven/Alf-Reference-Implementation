@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.NamedElement;
+import org.modeldriven.alf.uml.NamedElement;
 
 public class ImportedMemberImpl extends MemberImpl {
 

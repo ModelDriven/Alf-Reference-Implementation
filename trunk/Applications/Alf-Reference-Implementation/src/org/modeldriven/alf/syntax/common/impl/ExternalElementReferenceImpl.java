@@ -23,34 +23,35 @@ import org.modeldriven.alf.syntax.units.ImportedMember;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
-import org.omg.uml.Activity;
-import org.omg.uml.Association;
-import org.omg.uml.Behavior;
-import org.omg.uml.BehavioredClassifier;
-import org.omg.uml.Class;
-import org.omg.uml.Classifier;
-import org.omg.uml.ClassifierTemplateParameter;
-import org.omg.uml.DataType;
-import org.omg.uml.Element;
-import org.omg.uml.Enumeration;
-import org.omg.uml.EnumerationLiteral;
-import org.omg.uml.Feature;
-import org.omg.uml.NamedElement;
-import org.omg.uml.Namespace;
-import org.omg.uml.Operation;
-import org.omg.uml.Package;
-import org.omg.uml.Parameter;
-import org.omg.uml.ParameterableElement;
-import org.omg.uml.Primitive;
-import org.omg.uml.Profile;
-import org.omg.uml.Property;
-import org.omg.uml.Reception;
-import org.omg.uml.Signal;
-import org.omg.uml.Stereotype;
-import org.omg.uml.TemplateBinding;
-import org.omg.uml.TemplateParameter;
-import org.omg.uml.TemplateSignature;
-import org.omg.uml.TemplateableElement;
+import org.modeldriven.alf.uml.Activity;
+import org.modeldriven.alf.uml.Association;
+import org.modeldriven.alf.uml.Behavior;
+import org.modeldriven.alf.uml.BehavioredClassifier;
+import org.modeldriven.alf.uml.Class;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.ClassifierTemplateParameter;
+import org.modeldriven.alf.uml.DataType;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Enumeration;
+import org.modeldriven.alf.uml.EnumerationLiteral;
+import org.modeldriven.alf.uml.Feature;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Namespace;
+import org.modeldriven.alf.uml.Operation;
+import org.modeldriven.alf.uml.Package;
+import org.modeldriven.alf.uml.Parameter;
+import org.modeldriven.alf.uml.ParameterableElement;
+import org.modeldriven.alf.uml.Primitive;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Property;
+import org.modeldriven.alf.uml.Reception;
+import org.modeldriven.alf.uml.Signal;
+import org.modeldriven.alf.uml.Stereotype;
+import org.modeldriven.alf.uml.TemplateBinding;
+import org.modeldriven.alf.uml.TemplateParameter;
+import org.modeldriven.alf.uml.TemplateSignature;
+import org.modeldriven.alf.uml.TemplateableElement;
+import org.modeldriven.alf.uml.TypedElement;
 
 /**
  * A direct reference to a UML model element.
@@ -312,7 +313,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public String getName() {
         Element element = this.getSelf().getElement();
         if (element instanceof TemplateParameter) {
-            element = (Element)((TemplateParameter)element).getParameteredElement();
+            element = ((TemplateParameter)element).getParameteredElement();
         }
         return element instanceof NamedElement?
                     ((NamedElement)element).getName(): null;
@@ -453,7 +454,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             ParameterableElement parameteredElement = 
                 ((TemplateParameter)element).getParameteredElement();
             ExternalElementReference reference = new ExternalElementReference();
-            reference.setElement((Element)parameteredElement);
+            reference.setElement(parameteredElement);
             return reference;
         }
     }
@@ -471,7 +472,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                 return null;
             } else {
                 ExternalElementReference reference = new ExternalElementReference();
-                reference.setElement((Element)signature.getTemplate());
+                reference.setElement(signature.getTemplate());
                 return reference;
             }
         }
@@ -495,11 +496,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public ElementReference getType() {
         ExternalElementReference reference = new ExternalElementReference();
-        if (this.isProperty()) {
-            reference.setElement(((Property)this.getSelf().getElement()).getType());
-            return reference;
-        } else if (this.isParameter()) {
-            reference.setElement(((Parameter)this.getSelf().getElement()).getType());
+        if (this.isProperty() || this.isParameter()) {
+            reference.setElement(((TypedElement)this.getSelf().getElement()).getType());
             return reference;
         } else if (this.isOperation()) {
             reference.setElement(((Operation)this.getSelf().getElement()).getType());

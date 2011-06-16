@@ -11,7 +11,7 @@ package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.Profile;
+import org.modeldriven.alf.uml.Profile;
 
 import java.util.ArrayList;
 import java.util.Collection;
