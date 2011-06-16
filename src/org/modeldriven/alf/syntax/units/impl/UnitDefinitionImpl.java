@@ -13,7 +13,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.omg.uml.Profile;
+import org.modeldriven.alf.uml.Profile;
 
 import java.util.ArrayList;
 import java.util.Collection;

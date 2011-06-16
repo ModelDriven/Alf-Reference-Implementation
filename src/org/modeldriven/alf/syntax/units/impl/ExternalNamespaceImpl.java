@@ -7,9 +7,9 @@ import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.uml.Namespace;
+import org.modeldriven.alf.uml.Package;
 
-import org.omg.uml.Namespace;
-import org.omg.uml.Package;
 
 public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
 

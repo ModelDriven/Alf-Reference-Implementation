@@ -17,8 +17,8 @@ import java.util.Set;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.uml.Element;
 
-import org.omg.uml.Element;
 
 /**
  * A direct reference to a UML model element.
@@ -417,9 +417,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         } else if (this.isBehavior()) {
             return ((ActivityDefinition)this.getSelf().getElement()).getImpl().getType();
         } else if (this.isEnumerationLiteral()) {
-            return ((EnumerationDefinition)
-                        ((EnumerationLiteralName)this.getSelf().getElement()).
-                            getNamespace()).getImpl().getReferent();
+            return ((EnumerationLiteralName)this.getSelf().getElement()).
+                            getNamespace().getImpl().getReferent();
         } else {
             return null;
         }

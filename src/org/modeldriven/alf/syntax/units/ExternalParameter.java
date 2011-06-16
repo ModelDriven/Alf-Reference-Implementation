@@ -1,7 +1,7 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.syntax.common.ExternalElementReference;
-import org.omg.uml.Parameter;
+import org.modeldriven.alf.uml.Parameter;
 
 public class ExternalParameter extends FormalParameter {
     
