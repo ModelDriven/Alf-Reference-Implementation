@@ -40,7 +40,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 	}
 
     @Override
-    public String toString() {
+    public String toString(boolean includeDerived) {
         return "InternalElementReference " + this.getElement();
     }
 

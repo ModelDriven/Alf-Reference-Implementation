@@ -209,42 +209,53 @@ public class AcceptStatement extends Statement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isSimple = this.getIsSimple();
-		if (isSimple != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isSimple:");
-			s.append(isSimple);
+			s.append(this.getIsSimple());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<AcceptBlock> acceptBlock = this.getAcceptBlock();
-		if (acceptBlock != null) {
-			if (acceptBlock.size() > 0) {
-				System.out.println(prefix + " acceptBlock:");
-			}
+		if (acceptBlock != null && acceptBlock.size() > 0) {
+			System.out.println(prefix + " acceptBlock:");
 			for (Object _object : acceptBlock.toArray()) {
 				AcceptBlock _acceptBlock = (AcceptBlock) _object;
 				if (_acceptBlock != null) {
-					_acceptBlock.print(prefix + "  ");
+					_acceptBlock.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
 			}
 		}
-		ElementReference behavior = this.getBehavior();
-		if (behavior != null) {
-			System.out.println(prefix + " /behavior:" + behavior);
+		if (includeDerived) {
+			ElementReference behavior = this.getBehavior();
+			if (behavior != null) {
+				System.out.println(prefix + " /behavior:"
+						+ behavior.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
 		}
 	}
 } // AcceptStatement

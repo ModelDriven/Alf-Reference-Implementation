@@ -102,35 +102,46 @@ public class ExtentOrExpression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
 		System.out.println(prefix + "[" + this.hashCode() + "]"
-				+ this._toString());
+				+ this._toString(includeDerived));
 		QualifiedName name = this.getName();
 		if (name != null) {
 			System.out.println(prefix + " name:");
-			name.print(prefix + "  ");
+			name.print(prefix + "  ", includeDerived);
 		}
-		Expression expression = this.getExpression();
-		if (expression != null) {
-			System.out.println(prefix + " /expression:");
-			expression.print(prefix + "  ");
+		if (includeDerived) {
+			Expression expression = this.getExpression();
+			if (expression != null) {
+				System.out.println(prefix + " /expression:");
+				expression.print(prefix + "  ", includeDerived);
+			}
 		}
 		Expression nonNameExpression = this.getNonNameExpression();
 		if (nonNameExpression != null) {
 			System.out.println(prefix + " nonNameExpression:");
-			nonNameExpression.print(prefix + "  ");
+			nonNameExpression.print(prefix + "  ", includeDerived);
 		}
 	}
 } // ExtentOrExpression

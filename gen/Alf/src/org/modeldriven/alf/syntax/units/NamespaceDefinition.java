@@ -119,29 +119,36 @@ public abstract class NamespaceDefinition extends Member {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<Member> ownedMember = this.getOwnedMember();
-		if (ownedMember != null) {
-			if (ownedMember.size() > 0) {
-				System.out.println(prefix + " ownedMember:");
-			}
+		if (ownedMember != null && ownedMember.size() > 0) {
+			System.out.println(prefix + " ownedMember:");
 			for (Object _object : ownedMember.toArray()) {
 				Member _ownedMember = (Member) _object;
 				if (_ownedMember != null) {
-					_ownedMember.print(prefix + "  ");
+					_ownedMember.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
@@ -149,16 +156,18 @@ public abstract class NamespaceDefinition extends Member {
 		}
 		UnitDefinition unit = this.getUnit();
 		if (unit != null) {
-			System.out.println(prefix + " unit:" + unit);
+			System.out.println(prefix + " unit:"
+					+ unit.toString(includeDerived));
 		}
-		Collection<Member> member = this.getMember();
-		if (member != null) {
-			if (member.size() > 0) {
+		if (includeDerived) {
+			Collection<Member> member = this.getMember();
+			if (member != null && member.size() > 0) {
 				System.out.println(prefix + " /member:");
-			}
-			for (Object _object : member.toArray()) {
-				Member _member = (Member) _object;
-				System.out.println(prefix + "  " + _member);
+				for (Object _object : member.toArray()) {
+					Member _member = (Member) _object;
+					System.out.println(prefix + "  "
+							+ _member.toString(includeDerived));
+				}
 			}
 		}
 	}

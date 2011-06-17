@@ -153,28 +153,40 @@ public class PropertyAccessExpression extends Expression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		FeatureReference featureReference = this.getFeatureReference();
 		if (featureReference != null) {
 			System.out.println(prefix + " featureReference:");
-			featureReference.print(prefix + "  ");
+			featureReference.print(prefix + "  ", includeDerived);
 		}
-		ElementReference feature = this.getFeature();
-		if (feature != null) {
-			System.out.println(prefix + " /feature:" + feature);
+		if (includeDerived) {
+			ElementReference feature = this.getFeature();
+			if (feature != null) {
+				System.out.println(prefix + " /feature:"
+						+ feature.toString(includeDerived));
+			}
 		}
 	}
 } // PropertyAccessExpression

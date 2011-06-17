@@ -30,7 +30,11 @@ public abstract class SyntaxElementImpl {
 	
 	@Override
 	public String toString() {
-	    return this.getSelf()._toString();
+	    return this.toString(false);
+	}
+	
+	public String toString(boolean includeDerived) {
+	    return this.getSelf()._toString(includeDerived);
 	}
 
 } // SyntaxElementImpl

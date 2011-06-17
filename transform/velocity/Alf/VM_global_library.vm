@@ -294,23 +294,26 @@ public void checkConstraints(Collection<ConstraintViolation> violations) {
 
 #macro( printOperations $class )
 public String toString() {
-	return "(" + this.hashCode() + ")" + this.getImpl().toString();
+	return this.toString(false);
 }
 
-public String _toString() {
+public String toString(boolean includeDerived) {
+	return "(" + this.hashCode() + ")" + this.getImpl().toString(includeDerived);
+}
+
+public String _toString(boolean includeDerived) {
 	#if( ${class.superClasses.size()}==0 )
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 	#else
-		StringBuffer s = new StringBuffer(super._toString());
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 	#end
 	#foreach( $attribute in ${class.ownedAttributes} )
 		#if( ${attribute.type.eClass().name}=="PrimitiveType" &&
 			 ${attribute.upper}==1 )
 			#if( ${attribute.isDerived()} )
-			#type(${attribute}) #name(${attribute.name}) = this.get#upperCase(${attribute.name})();
-			if (#name(${attribute.name})!=null) {
+			if (includeDerived) {
 				s.append(" /${attribute.name}:");
-				s.append(#name(${attribute.name}));
+				s.append(this.get#upperCase(${attribute.name})());
 			}
 			#else
 			s.append(" ${attribute.name}:");
@@ -322,34 +325,39 @@ public String _toString() {
 }
 
 public void print() {
-    this.print("");
+    this.print("", false);
 }
 
-public void print(String prefix) {
+public void print(boolean includeDerived) {
+	this.print("", includeDerived);
+}
+
+public void print(String prefix, boolean includeDerived) {
 	#if( ${class.superClasses.size()}==0 )
-		System.out.println(prefix + "[" + this.hashCode() + "]" + this._toString());
+		System.out.println(prefix + "[" + this.hashCode() + "]" + this._toString(includeDerived));
 	#else
-		super.print(prefix);
+		super.print(prefix, includeDerived);
 	#end	
 	#foreach( $attribute in ${class.ownedAttributes} )
 		#if( ${attribute.isDerived()} )
 			#set( $deriv = "/" )
+			if (includeDerived) {
 		#else
 			#set( $deriv = "" )
 		#end
  		#if( ${attribute.upper}!=1 )
 		    #type($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
- 			if (#name(${attribute.name})!=null) {
-     			if (#name($attribute.name).size()>0) {
-	     			System.out.println(prefix + " $deriv${attribute.name}:");
-	     		}
+ 			if (#name(${attribute.name}) != null && #name($attribute.name).size() > 0) {
+     			System.out.println(prefix + " $deriv${attribute.name}:");
 	     		for (Object _object: #name($attribute.name).toArray()) {
 	     			#basicType($attribute) _#name($attribute.name) = (#basicType($attribute))_object;
-		     		#if( ${attribute.type.eClass().name}=="PrimitiveType" || !${attribute.isComposite()} )
+		     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
 	    	 			System.out.println(prefix + "  " + _#name($attribute.name));
+	    	 	    #elseif( !${attribute.isComposite()} )
+	    	 			System.out.println(prefix + "  " + _#name($attribute.name).toString(includeDerived));
 	     			#else
 	     			    if (_#name($attribute.name)!=null) {
-							_#name($attribute.name).print(prefix + "  ");
+							_#name($attribute.name).print(prefix + "  ", includeDerived);
 						} else {
 						  System.out.println(prefix + "  null");
 						}
@@ -357,14 +365,18 @@ public void print(String prefix) {
 	 			}
  			}
  		#elseif( ${attribute.type.eClass().name}!="PrimitiveType" )
-		    #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
-  			if (#name(${attribute.name})!=null) {
- 			#if( !${attribute.isComposite()} )
- 				System.out.println(prefix + " $deriv${attribute.name}:" + #name(${attribute.name}));
- 			#else
- 				System.out.println(prefix + " $deriv${attribute.name}:");
-				#name(${attribute.name}).print(prefix + "  ");
-			#end
+	    	#basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+			if (#name(${attribute.name}) != null) {
+				#if( !${attribute.isComposite()} )
+	 				System.out.println(prefix + " $deriv${attribute.name}:" + 
+	 					#name(${attribute.name}).toString(includeDerived));
+	 			#else
+	 				System.out.println(prefix + " $deriv${attribute.name}:");
+					#name(${attribute.name}).print(prefix + "  ", includeDerived);
+				#end
+			}
+		#end
+		#if( ${attribute.isDerived()} )
 			}
 		#end
 	#end

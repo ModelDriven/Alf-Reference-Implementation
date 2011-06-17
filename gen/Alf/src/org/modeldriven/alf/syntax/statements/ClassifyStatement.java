@@ -204,55 +204,66 @@ public class ClassifyStatement extends Statement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" isReclassifyAll:");
 		s.append(this.getIsReclassifyAll());
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Expression expression = this.getExpression();
 		if (expression != null) {
 			System.out.println(prefix + " expression:");
-			expression.print(prefix + "  ");
+			expression.print(prefix + "  ", includeDerived);
 		}
 		QualifiedNameList fromList = this.getFromList();
 		if (fromList != null) {
 			System.out.println(prefix + " fromList:");
-			fromList.print(prefix + "  ");
+			fromList.print(prefix + "  ", includeDerived);
 		}
 		QualifiedNameList toList = this.getToList();
 		if (toList != null) {
 			System.out.println(prefix + " toList:");
-			toList.print(prefix + "  ");
+			toList.print(prefix + "  ", includeDerived);
 		}
-		Collection<ElementReference> fromClass = this.getFromClass();
-		if (fromClass != null) {
-			if (fromClass.size() > 0) {
+		if (includeDerived) {
+			Collection<ElementReference> fromClass = this.getFromClass();
+			if (fromClass != null && fromClass.size() > 0) {
 				System.out.println(prefix + " /fromClass:");
-			}
-			for (Object _object : fromClass.toArray()) {
-				ElementReference _fromClass = (ElementReference) _object;
-				System.out.println(prefix + "  " + _fromClass);
+				for (Object _object : fromClass.toArray()) {
+					ElementReference _fromClass = (ElementReference) _object;
+					System.out.println(prefix + "  "
+							+ _fromClass.toString(includeDerived));
+				}
 			}
 		}
-		Collection<ElementReference> toClass = this.getToClass();
-		if (toClass != null) {
-			if (toClass.size() > 0) {
+		if (includeDerived) {
+			Collection<ElementReference> toClass = this.getToClass();
+			if (toClass != null && toClass.size() > 0) {
 				System.out.println(prefix + " /toClass:");
-			}
-			for (Object _object : toClass.toArray()) {
-				ElementReference _toClass = (ElementReference) _object;
-				System.out.println(prefix + "  " + _toClass);
+				for (Object _object : toClass.toArray()) {
+					ElementReference _toClass = (ElementReference) _object;
+					System.out.println(prefix + "  "
+							+ _toClass.toString(includeDerived));
+				}
 			}
 		}
 	}

@@ -125,41 +125,52 @@ public class NamedExpression extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" name:");
 		s.append(this.getName());
-		Boolean isCollectionConversion = this.getIsCollectionConversion();
-		if (isCollectionConversion != null) {
+		if (includeDerived) {
 			s.append(" /isCollectionConversion:");
-			s.append(isCollectionConversion);
+			s.append(this.getIsCollectionConversion());
 		}
-		Boolean isBitStringConversion = this.getIsBitStringConversion();
-		if (isBitStringConversion != null) {
+		if (includeDerived) {
 			s.append(" /isBitStringConversion:");
-			s.append(isBitStringConversion);
+			s.append(this.getIsBitStringConversion());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Expression expression = this.getExpression();
 		if (expression != null) {
 			System.out.println(prefix + " expression:");
-			expression.print(prefix + "  ");
+			expression.print(prefix + "  ", includeDerived);
 		}
 		Expression index = this.getIndex();
 		if (index != null) {
 			System.out.println(prefix + " index:");
-			index.print(prefix + "  ");
+			index.print(prefix + "  ", includeDerived);
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
 		}
 	}
 } // NamedExpression

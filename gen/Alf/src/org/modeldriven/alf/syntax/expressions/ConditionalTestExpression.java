@@ -176,34 +176,43 @@ public class ConditionalTestExpression extends Expression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Expression operand1 = this.getOperand1();
 		if (operand1 != null) {
 			System.out.println(prefix + " operand1:");
-			operand1.print(prefix + "  ");
+			operand1.print(prefix + "  ", includeDerived);
 		}
 		Expression operand2 = this.getOperand2();
 		if (operand2 != null) {
 			System.out.println(prefix + " operand2:");
-			operand2.print(prefix + "  ");
+			operand2.print(prefix + "  ", includeDerived);
 		}
 		Expression operand3 = this.getOperand3();
 		if (operand3 != null) {
 			System.out.println(prefix + " operand3:");
-			operand3.print(prefix + "  ");
+			operand3.print(prefix + "  ", includeDerived);
 		}
 	}
 } // ConditionalTestExpression

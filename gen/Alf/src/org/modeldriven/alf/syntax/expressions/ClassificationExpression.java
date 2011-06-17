@@ -159,33 +159,46 @@ public class ClassificationExpression extends UnaryExpression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isDirect = this.getIsDirect();
-		if (isDirect != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isDirect:");
-			s.append(isDirect);
+			s.append(this.getIsDirect());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		ElementReference referent = this.getReferent();
-		if (referent != null) {
-			System.out.println(prefix + " /referent:" + referent);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			ElementReference referent = this.getReferent();
+			if (referent != null) {
+				System.out.println(prefix + " /referent:"
+						+ referent.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
 		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
 			System.out.println(prefix + " typeName:");
-			typeName.print(prefix + "  ");
+			typeName.print(prefix + "  ", includeDerived);
 		}
 	}
 } // ClassificationExpression

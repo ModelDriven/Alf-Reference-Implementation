@@ -128,29 +128,38 @@ public class NonFinalClause extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Expression condition = this.getCondition();
 		if (condition != null) {
 			System.out.println(prefix + " condition:");
-			condition.print(prefix + "  ");
+			condition.print(prefix + "  ", includeDerived);
 		}
 		Block body = this.getBody();
 		if (body != null) {
 			System.out.println(prefix + " body:");
-			body.print(prefix + "  ");
+			body.print(prefix + "  ", includeDerived);
 		}
 	}
 } // NonFinalClause

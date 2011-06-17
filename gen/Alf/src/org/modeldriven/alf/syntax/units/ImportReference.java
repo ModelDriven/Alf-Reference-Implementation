@@ -106,34 +106,47 @@ public abstract class ImportReference extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" visibility:");
 		s.append(this.getVisibility());
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		QualifiedName referentName = this.getReferentName();
 		if (referentName != null) {
 			System.out.println(prefix + " referentName:");
-			referentName.print(prefix + "  ");
+			referentName.print(prefix + "  ", includeDerived);
 		}
 		UnitDefinition unit = this.getUnit();
 		if (unit != null) {
-			System.out.println(prefix + " unit:" + unit);
+			System.out.println(prefix + " unit:"
+					+ unit.toString(includeDerived));
 		}
-		ElementReference referent = this.getReferent();
-		if (referent != null) {
-			System.out.println(prefix + " /referent:" + referent);
+		if (includeDerived) {
+			ElementReference referent = this.getReferent();
+			if (referent != null) {
+				System.out.println(prefix + " /referent:"
+						+ referent.toString(includeDerived));
+			}
 		}
 	}
 } // ImportReference

@@ -34,8 +34,8 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
 	}
 	
 	@Override
-	public String toString() {
-	    return this.getSelf()._toString() + " " + this.getSelf().getCondition();
+	public String toString(boolean includeDerived) {
+	    return this.getSelf()._toString(includeDerived) + " " + this.getSelf().getCondition();
 	}
 
 	@Override

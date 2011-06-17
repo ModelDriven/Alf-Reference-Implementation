@@ -43,8 +43,8 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	}
 	
 	@Override
-	public String toString() {
-	    return super.toString() + " invocation:(" + this.getSelf().getInvocation() + ")";
+	public String toString(boolean includeDerived) {
+	    return super.toString(includeDerived) + " invocation:(" + this.getSelf().getInvocation() + ")";
 	}
 
 	public Collection<NamedExpression> getInput() {

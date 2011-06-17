@@ -183,35 +183,47 @@ public class SequenceReductionExpression extends Expression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" isOrdered:");
 		s.append(this.getIsOrdered());
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		ElementReference referent = this.getReferent();
-		if (referent != null) {
-			System.out.println(prefix + " /referent:" + referent);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			ElementReference referent = this.getReferent();
+			if (referent != null) {
+				System.out.println(prefix + " /referent:"
+						+ referent.toString(includeDerived));
+			}
 		}
 		ExtentOrExpression primary = this.getPrimary();
 		if (primary != null) {
 			System.out.println(prefix + " primary:");
-			primary.print(prefix + "  ");
+			primary.print(prefix + "  ", includeDerived);
 		}
 		QualifiedName behaviorName = this.getBehaviorName();
 		if (behaviorName != null) {
 			System.out.println(prefix + " behaviorName:");
-			behaviorName.print(prefix + "  ");
+			behaviorName.print(prefix + "  ", includeDerived);
 		}
 	}
 } // SequenceReductionExpression

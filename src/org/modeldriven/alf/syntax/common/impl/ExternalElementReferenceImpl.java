@@ -71,7 +71,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString(boolean includeDerived) {
 	    return "ExternalElementReference " + 
 	                this.getElement().getClass().getSimpleName() + 
 	                " name:" + this.getName();

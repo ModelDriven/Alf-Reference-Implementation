@@ -46,7 +46,11 @@ public class AssignedSourceImpl {
 	
 	@Override
 	public String toString() {
-	    return this.getSelf()._toString() + 
+	    return this.toString(false);
+	}
+	
+	public String toString(boolean includeString) {
+	    return this.getSelf()._toString(includeString) + 
 	                " type:(" + this.getType() + ")" +
 	                " source:(" + this.getSource() + ")";
 	}

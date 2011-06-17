@@ -181,61 +181,73 @@ public class UnitDefinition extends DocumentedElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isModelLibrary = this.getIsModelLibrary();
-		if (isModelLibrary != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isModelLibrary:");
-			s.append(isModelLibrary);
+			s.append(this.getIsModelLibrary());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		QualifiedName namespaceName = this.getNamespaceName();
 		if (namespaceName != null) {
 			System.out.println(prefix + " namespaceName:");
-			namespaceName.print(prefix + "  ");
+			namespaceName.print(prefix + "  ", includeDerived);
 		}
 		NamespaceDefinition definition = this.getDefinition();
 		if (definition != null) {
 			System.out.println(prefix + " definition:");
-			definition.print(prefix + "  ");
+			definition.print(prefix + "  ", includeDerived);
 		}
 		Collection<ImportReference> import_ = this.getImport();
-		if (import_ != null) {
-			if (import_.size() > 0) {
-				System.out.println(prefix + " import:");
-			}
+		if (import_ != null && import_.size() > 0) {
+			System.out.println(prefix + " import:");
 			for (Object _object : import_.toArray()) {
 				ImportReference _import_ = (ImportReference) _object;
 				if (_import_ != null) {
-					_import_.print(prefix + "  ");
+					_import_.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
 			}
 		}
-		ElementReference namespace = this.getNamespace();
-		if (namespace != null) {
-			System.out.println(prefix + " /namespace:" + namespace);
-		}
-		Collection<Profile> appliedProfile = this.getAppliedProfile();
-		if (appliedProfile != null) {
-			if (appliedProfile.size() > 0) {
-				System.out.println(prefix + " /appliedProfile:");
+		if (includeDerived) {
+			ElementReference namespace = this.getNamespace();
+			if (namespace != null) {
+				System.out.println(prefix + " /namespace:"
+						+ namespace.toString(includeDerived));
 			}
-			for (Object _object : appliedProfile.toArray()) {
-				Profile _appliedProfile = (Profile) _object;
-				System.out.println(prefix + "  " + _appliedProfile);
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+			Collection<Profile> appliedProfile = this.getAppliedProfile();
+			if (appliedProfile != null && appliedProfile.size() > 0) {
+				System.out.println(prefix + " /appliedProfile:");
+				for (Object _object : appliedProfile.toArray()) {
+					Profile _appliedProfile = (Profile) _object;
+					System.out.println(prefix + "  "
+							+ _appliedProfile.toString(includeDerived));
+				}
 			}
 		}
 	}

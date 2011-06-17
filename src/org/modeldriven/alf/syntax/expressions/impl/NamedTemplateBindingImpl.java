@@ -53,7 +53,7 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
      */
 
     @Override
-    public String toString() {
+    public String toString(boolean includeDerived) {
         StringBuffer s = new StringBuffer("<");
         NamedTemplateBinding self = this.getSelf();
         String separator = "";

@@ -164,11 +164,16 @@ public abstract class TypedElementDefinition extends Member {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" lowerBound:");
 		s.append(this.getLowerBound());
 		s.append(" upperBound:");
@@ -177,33 +182,42 @@ public abstract class TypedElementDefinition extends Member {
 		s.append(this.getIsOrdered());
 		s.append(" isNonunique:");
 		s.append(this.getIsNonunique());
-		Integer lower = this.getLower();
-		if (lower != null) {
+		if (includeDerived) {
 			s.append(" /lower:");
-			s.append(lower);
+			s.append(this.getLower());
 		}
-		Integer upper = this.getUpper();
-		if (upper != null) {
+		if (includeDerived) {
 			s.append(" /upper:");
-			s.append(upper);
+			s.append(this.getUpper());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
 			System.out.println(prefix + " typeName:");
-			typeName.print(prefix + "  ");
+			typeName.print(prefix + "  ", includeDerived);
 		}
-		ElementReference type = this.getType();
-		if (type != null) {
-			System.out.println(prefix + " /type:" + type);
+		if (includeDerived) {
+			ElementReference type = this.getType();
+			if (type != null) {
+				System.out.println(prefix + " /type:"
+						+ type.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
 		}
 	}
 } // TypedElementDefinition

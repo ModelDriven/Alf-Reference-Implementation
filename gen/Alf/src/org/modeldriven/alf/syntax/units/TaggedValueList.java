@@ -62,28 +62,36 @@ public class TaggedValueList extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<TaggedValue> taggedValue = this.getTaggedValue();
-		if (taggedValue != null) {
-			if (taggedValue.size() > 0) {
-				System.out.println(prefix + " taggedValue:");
-			}
+		if (taggedValue != null && taggedValue.size() > 0) {
+			System.out.println(prefix + " taggedValue:");
 			for (Object _object : taggedValue.toArray()) {
 				TaggedValue _taggedValue = (TaggedValue) _object;
-				System.out.println(prefix + "  " + _taggedValue);
+				System.out.println(prefix + "  "
+						+ _taggedValue.toString(includeDerived));
 			}
 		}
 	}

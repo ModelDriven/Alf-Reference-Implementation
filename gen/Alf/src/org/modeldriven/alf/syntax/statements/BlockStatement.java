@@ -138,29 +138,39 @@ public class BlockStatement extends Statement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isParallel = this.getIsParallel();
-		if (isParallel != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isParallel:");
-			s.append(isParallel);
+			s.append(this.getIsParallel());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Block block = this.getBlock();
 		if (block != null) {
 			System.out.println(prefix + " block:");
-			block.print(prefix + "  ");
+			block.print(prefix + "  ", includeDerived);
+		}
+		if (includeDerived) {
 		}
 	}
 } // BlockStatement

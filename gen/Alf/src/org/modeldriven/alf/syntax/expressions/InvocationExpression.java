@@ -287,72 +287,94 @@ public abstract class InvocationExpression extends Expression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isBehavior = this.getIsBehavior();
-		if (isBehavior != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isBehavior:");
-			s.append(isBehavior);
+			s.append(this.getIsBehavior());
 		}
-		Boolean isAssociationEnd = this.getIsAssociationEnd();
-		if (isAssociationEnd != null) {
+		if (includeDerived) {
 			s.append(" /isAssociationEnd:");
-			s.append(isAssociationEnd);
+			s.append(this.getIsAssociationEnd());
 		}
-		Boolean isOperation = this.getIsOperation();
-		if (isOperation != null) {
+		if (includeDerived) {
 			s.append(" /isOperation:");
-			s.append(isOperation);
+			s.append(this.getIsOperation());
 		}
-		Boolean isDestructor = this.getIsDestructor();
-		if (isDestructor != null) {
+		if (includeDerived) {
 			s.append(" /isDestructor:");
-			s.append(isDestructor);
+			s.append(this.getIsDestructor());
 		}
-		Boolean isImplicit = this.getIsImplicit();
-		if (isImplicit != null) {
+		if (includeDerived) {
 			s.append(" /isImplicit:");
-			s.append(isImplicit);
+			s.append(this.getIsImplicit());
 		}
-		Boolean isSignal = this.getIsSignal();
-		if (isSignal != null) {
+		if (includeDerived) {
 			s.append(" /isSignal:");
-			s.append(isSignal);
+			s.append(this.getIsSignal());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		FeatureReference feature = this.getFeature();
-		if (feature != null) {
-			System.out.println(prefix + " /feature:" + feature);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+			FeatureReference feature = this.getFeature();
+			if (feature != null) {
+				System.out.println(prefix + " /feature:"
+						+ feature.toString(includeDerived));
+			}
 		}
 		Tuple tuple = this.getTuple();
 		if (tuple != null) {
 			System.out.println(prefix + " tuple:");
-			tuple.print(prefix + "  ");
+			tuple.print(prefix + "  ", includeDerived);
 		}
-		ElementReference referent = this.getReferent();
-		if (referent != null) {
-			System.out.println(prefix + " /referent:" + referent);
+		if (includeDerived) {
 		}
-		List<ElementReference> parameter = this.getParameter();
-		if (parameter != null) {
-			if (parameter.size() > 0) {
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+			ElementReference referent = this.getReferent();
+			if (referent != null) {
+				System.out.println(prefix + " /referent:"
+						+ referent.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
+			List<ElementReference> parameter = this.getParameter();
+			if (parameter != null && parameter.size() > 0) {
 				System.out.println(prefix + " /parameter:");
+				for (Object _object : parameter.toArray()) {
+					ElementReference _parameter = (ElementReference) _object;
+					System.out.println(prefix + "  "
+							+ _parameter.toString(includeDerived));
+				}
 			}
-			for (Object _object : parameter.toArray()) {
-				ElementReference _parameter = (ElementReference) _object;
-				System.out.println(prefix + "  " + _parameter);
-			}
+		}
+		if (includeDerived) {
 		}
 	}
 } // InvocationExpression

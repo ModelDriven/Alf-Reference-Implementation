@@ -44,8 +44,8 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
 	}
 	
 	@Override
-	public String toString() {
-	    return super.toString() + " definition:(" + this.getSelf().getDefinition() + ")";
+	public String toString(boolean includeDerived) {
+	    return super.toString(includeDerived) + " definition:(" + this.getSelf().getDefinition() + ")";
 	}
 
 	public QualifiedName getNamespaceName() {

@@ -146,64 +146,77 @@ public abstract class Statement extends DocumentedElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isIsolated = this.getIsIsolated();
-		if (isIsolated != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isIsolated:");
-			s.append(isIsolated);
+			s.append(this.getIsIsolated());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<Annotation> annotation = this.getAnnotation();
-		if (annotation != null) {
-			if (annotation.size() > 0) {
-				System.out.println(prefix + " annotation:");
-			}
+		if (annotation != null && annotation.size() > 0) {
+			System.out.println(prefix + " annotation:");
 			for (Object _object : annotation.toArray()) {
 				Annotation _annotation = (Annotation) _object;
 				if (_annotation != null) {
-					_annotation.print(prefix + "  ");
+					_annotation.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
 			}
 		}
-		Collection<AssignedSource> assignmentBefore = this
-				.getAssignmentBefore();
-		if (assignmentBefore != null) {
-			if (assignmentBefore.size() > 0) {
+		if (includeDerived) {
+			Collection<AssignedSource> assignmentBefore = this
+					.getAssignmentBefore();
+			if (assignmentBefore != null && assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
-			}
-			for (Object _object : assignmentBefore.toArray()) {
-				AssignedSource _assignmentBefore = (AssignedSource) _object;
-				System.out.println(prefix + "  " + _assignmentBefore);
+				for (Object _object : assignmentBefore.toArray()) {
+					AssignedSource _assignmentBefore = (AssignedSource) _object;
+					System.out.println(prefix + "  "
+							+ _assignmentBefore.toString(includeDerived));
+				}
 			}
 		}
-		Collection<AssignedSource> assignmentAfter = this.getAssignmentAfter();
-		if (assignmentAfter != null) {
-			if (assignmentAfter.size() > 0) {
+		if (includeDerived) {
+			Collection<AssignedSource> assignmentAfter = this
+					.getAssignmentAfter();
+			if (assignmentAfter != null && assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
-			}
-			for (Object _object : assignmentAfter.toArray()) {
-				AssignedSource _assignmentAfter = (AssignedSource) _object;
-				System.out.println(prefix + "  " + _assignmentAfter);
+				for (Object _object : assignmentAfter.toArray()) {
+					AssignedSource _assignmentAfter = (AssignedSource) _object;
+					System.out.println(prefix + "  "
+							+ _assignmentAfter.toString(includeDerived));
+				}
 			}
 		}
-		Statement enclosingStatement = this.getEnclosingStatement();
-		if (enclosingStatement != null) {
-			System.out.println(prefix + " /enclosingStatement:"
-					+ enclosingStatement);
+		if (includeDerived) {
+			Statement enclosingStatement = this.getEnclosingStatement();
+			if (enclosingStatement != null) {
+				System.out.println(prefix + " /enclosingStatement:"
+						+ enclosingStatement.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
 		}
 	}
 } // Statement

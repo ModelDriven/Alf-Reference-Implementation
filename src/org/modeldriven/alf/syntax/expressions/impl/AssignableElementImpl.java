@@ -60,7 +60,7 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
             final ElementReference collectionType = 
                 sourceType.getImpl().getCollectionArgument();
              AssignableElementImpl effectiveSource = new AssignableElementImpl(null) {
-                public String toString() {
+                public String toString(boolean includeDerived) {
                     return "AssignableElementImpl";
                 }
                 public ElementReference getType() {

@@ -164,36 +164,47 @@ public class LinkOperationExpression extends InvocationExpression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" operation:");
 		s.append(this.getOperation());
-		Boolean isCreation = this.getIsCreation();
-		if (isCreation != null) {
+		if (includeDerived) {
 			s.append(" /isCreation:");
-			s.append(isCreation);
+			s.append(this.getIsCreation());
 		}
-		Boolean isClear = this.getIsClear();
-		if (isClear != null) {
+		if (includeDerived) {
 			s.append(" /isClear:");
-			s.append(isClear);
+			s.append(this.getIsClear());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
 		QualifiedName associationName = this.getAssociationName();
 		if (associationName != null) {
 			System.out.println(prefix + " associationName:");
-			associationName.print(prefix + "  ");
+			associationName.print(prefix + "  ", includeDerived);
 		}
 	}
 } // LinkOperationExpression

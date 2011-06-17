@@ -12,8 +12,8 @@ public class MissingUnit extends UnitDefinition {
         this.getImpl().setHasImplicitImports(true);
     }
     
-    public String toString() {
-        return super.toString() + " pathName:" + pathName;
+    public String toString(boolean includeDerived) {
+        return super.toString(includeDerived) + " pathName:" + pathName;
     }
 
 }

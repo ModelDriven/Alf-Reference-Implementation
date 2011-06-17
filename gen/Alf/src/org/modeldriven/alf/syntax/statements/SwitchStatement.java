@@ -211,39 +211,44 @@ public class SwitchStatement extends Statement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isAssured = this.getIsAssured();
-		if (isAssured != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isAssured:");
-			s.append(isAssured);
+			s.append(this.getIsAssured());
 		}
-		Boolean isDetermined = this.getIsDetermined();
-		if (isDetermined != null) {
+		if (includeDerived) {
 			s.append(" /isDetermined:");
-			s.append(isDetermined);
+			s.append(this.getIsDetermined());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<SwitchClause> nonDefaultClause = this.getNonDefaultClause();
-		if (nonDefaultClause != null) {
-			if (nonDefaultClause.size() > 0) {
-				System.out.println(prefix + " nonDefaultClause:");
-			}
+		if (nonDefaultClause != null && nonDefaultClause.size() > 0) {
+			System.out.println(prefix + " nonDefaultClause:");
 			for (Object _object : nonDefaultClause.toArray()) {
 				SwitchClause _nonDefaultClause = (SwitchClause) _object;
 				if (_nonDefaultClause != null) {
-					_nonDefaultClause.print(prefix + "  ");
+					_nonDefaultClause.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
@@ -252,12 +257,16 @@ public class SwitchStatement extends Statement {
 		Expression expression = this.getExpression();
 		if (expression != null) {
 			System.out.println(prefix + " expression:");
-			expression.print(prefix + "  ");
+			expression.print(prefix + "  ", includeDerived);
 		}
 		Block defaultClause = this.getDefaultClause();
 		if (defaultClause != null) {
 			System.out.println(prefix + " defaultClause:");
-			defaultClause.print(prefix + "  ");
+			defaultClause.print(prefix + "  ", includeDerived);
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
 		}
 	}
 } // SwitchStatement

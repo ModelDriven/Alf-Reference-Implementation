@@ -273,52 +273,64 @@ public class OperationDefinition extends NamespaceDefinition {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" isAbstract:");
 		s.append(this.getIsAbstract());
-		Boolean isConstructor = this.getIsConstructor();
-		if (isConstructor != null) {
+		if (includeDerived) {
 			s.append(" /isConstructor:");
-			s.append(isConstructor);
+			s.append(this.getIsConstructor());
 		}
-		Boolean isDestructor = this.getIsDestructor();
-		if (isDestructor != null) {
+		if (includeDerived) {
 			s.append(" /isDestructor:");
-			s.append(isDestructor);
+			s.append(this.getIsDestructor());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		QualifiedNameList redefinition = this.getRedefinition();
 		if (redefinition != null) {
 			System.out.println(prefix + " redefinition:");
-			redefinition.print(prefix + "  ");
+			redefinition.print(prefix + "  ", includeDerived);
 		}
 		Block body = this.getBody();
 		if (body != null) {
 			System.out.println(prefix + " body:");
-			body.print(prefix + "  ");
+			body.print(prefix + "  ", includeDerived);
 		}
-		Collection<ElementReference> redefinedOperations = this
-				.getRedefinedOperations();
-		if (redefinedOperations != null) {
-			if (redefinedOperations.size() > 0) {
+		if (includeDerived) {
+			Collection<ElementReference> redefinedOperations = this
+					.getRedefinedOperations();
+			if (redefinedOperations != null && redefinedOperations.size() > 0) {
 				System.out.println(prefix + " /redefinedOperations:");
+				for (Object _object : redefinedOperations.toArray()) {
+					ElementReference _redefinedOperations = (ElementReference) _object;
+					System.out.println(prefix + "  "
+							+ _redefinedOperations.toString(includeDerived));
+				}
 			}
-			for (Object _object : redefinedOperations.toArray()) {
-				ElementReference _redefinedOperations = (ElementReference) _object;
-				System.out.println(prefix + "  " + _redefinedOperations);
-			}
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
 		}
 	}
 } // OperationDefinition

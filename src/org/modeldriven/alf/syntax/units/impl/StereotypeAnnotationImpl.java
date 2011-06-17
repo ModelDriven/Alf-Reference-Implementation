@@ -40,8 +40,8 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	}
 	
 	@Override
-	public String toString() {
-	    return super.toString() + " stereotypeName:" + stereotypeName.getPathName();
+	public String toString(boolean includeDerived) {
+	    return super.toString(includeDerived) + " stereotypeName:" + stereotypeName.getPathName();
 	}
 
 	public TaggedValueList getTaggedValues() {

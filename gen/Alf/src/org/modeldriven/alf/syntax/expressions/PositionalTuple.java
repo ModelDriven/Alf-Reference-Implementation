@@ -66,29 +66,36 @@ public class PositionalTuple extends Tuple {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		List<Expression> expression = this.getExpression();
-		if (expression != null) {
-			if (expression.size() > 0) {
-				System.out.println(prefix + " expression:");
-			}
+		if (expression != null && expression.size() > 0) {
+			System.out.println(prefix + " expression:");
 			for (Object _object : expression.toArray()) {
 				Expression _expression = (Expression) _object;
 				if (_expression != null) {
-					_expression.print(prefix + "  ");
+					_expression.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}

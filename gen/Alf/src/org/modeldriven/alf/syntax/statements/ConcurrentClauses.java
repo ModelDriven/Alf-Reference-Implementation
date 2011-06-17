@@ -89,29 +89,36 @@ public class ConcurrentClauses extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<NonFinalClause> clause = this.getClause();
-		if (clause != null) {
-			if (clause.size() > 0) {
-				System.out.println(prefix + " clause:");
-			}
+		if (clause != null && clause.size() > 0) {
+			System.out.println(prefix + " clause:");
 			for (Object _object : clause.toArray()) {
 				NonFinalClause _clause = (NonFinalClause) _object;
 				if (_clause != null) {
-					_clause.print(prefix + "  ");
+					_clause.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}

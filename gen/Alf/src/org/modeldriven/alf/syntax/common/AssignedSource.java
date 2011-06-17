@@ -97,10 +97,15 @@ public class AssignedSource {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		s.append(" name:");
 		s.append(this.getName());
@@ -112,20 +117,25 @@ public class AssignedSource {
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
 		System.out.println(prefix + "[" + this.hashCode() + "]"
-				+ this._toString());
+				+ this._toString(includeDerived));
 		SyntaxElement source = this.getSource();
 		if (source != null) {
-			System.out.println(prefix + " source:" + source);
+			System.out.println(prefix + " source:"
+					+ source.toString(includeDerived));
 		}
 		ElementReference type = this.getType();
 		if (type != null) {
 			System.out.println(prefix + " type:");
-			type.print(prefix + "  ");
+			type.print(prefix + "  ", includeDerived);
 		}
 	}
 } // AssignedSource

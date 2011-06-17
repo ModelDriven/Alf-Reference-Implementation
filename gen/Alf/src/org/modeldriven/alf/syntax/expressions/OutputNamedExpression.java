@@ -96,23 +96,35 @@ public class OutputNamedExpression extends NamedExpression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		LeftHandSide leftHandSide = this.getLeftHandSide();
-		if (leftHandSide != null) {
-			System.out.println(prefix + " /leftHandSide:" + leftHandSide);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			LeftHandSide leftHandSide = this.getLeftHandSide();
+			if (leftHandSide != null) {
+				System.out.println(prefix + " /leftHandSide:"
+						+ leftHandSide.toString(includeDerived));
+			}
 		}
 	}
 } // OutputNamedExpression

@@ -216,44 +216,52 @@ public class ForStatement extends Statement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isParallel = this.getIsParallel();
-		if (isParallel != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isParallel:");
-			s.append(isParallel);
+			s.append(this.getIsParallel());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Block body = this.getBody();
 		if (body != null) {
 			System.out.println(prefix + " body:");
-			body.print(prefix + "  ");
+			body.print(prefix + "  ", includeDerived);
 		}
 		List<LoopVariableDefinition> variableDefinition = this
 				.getVariableDefinition();
-		if (variableDefinition != null) {
-			if (variableDefinition.size() > 0) {
-				System.out.println(prefix + " variableDefinition:");
-			}
+		if (variableDefinition != null && variableDefinition.size() > 0) {
+			System.out.println(prefix + " variableDefinition:");
 			for (Object _object : variableDefinition.toArray()) {
 				LoopVariableDefinition _variableDefinition = (LoopVariableDefinition) _object;
 				if (_variableDefinition != null) {
-					_variableDefinition.print(prefix + "  ");
+					_variableDefinition.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
 			}
+		}
+		if (includeDerived) {
 		}
 	}
 } // ForStatement

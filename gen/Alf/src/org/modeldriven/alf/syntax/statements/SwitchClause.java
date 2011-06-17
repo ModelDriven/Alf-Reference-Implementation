@@ -120,29 +120,36 @@ public class SwitchClause extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<Expression> case_ = this.getCase();
-		if (case_ != null) {
-			if (case_.size() > 0) {
-				System.out.println(prefix + " case:");
-			}
+		if (case_ != null && case_.size() > 0) {
+			System.out.println(prefix + " case:");
 			for (Object _object : case_.toArray()) {
 				Expression _case_ = (Expression) _object;
 				if (_case_ != null) {
-					_case_.print(prefix + "  ");
+					_case_.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
@@ -151,7 +158,7 @@ public class SwitchClause extends SyntaxElement {
 		Block block = this.getBlock();
 		if (block != null) {
 			System.out.println(prefix + " block:");
-			block.print(prefix + "  ");
+			block.print(prefix + "  ", includeDerived);
 		}
 	}
 } // SwitchClause
