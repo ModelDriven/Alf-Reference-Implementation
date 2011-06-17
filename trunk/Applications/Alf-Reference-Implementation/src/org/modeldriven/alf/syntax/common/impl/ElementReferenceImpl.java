@@ -33,9 +33,16 @@ public abstract class ElementReferenceImpl {
 		this.self = self;
 	}
 
-	public org.modeldriven.alf.syntax.common.ElementReference getSelf() {
+	public ElementReference getSelf() {
 		return (ElementReference) this.self;
 	}
+	
+	@Override
+	public String toString() {
+	    return this.toString(false);
+	}
+	
+	public abstract String toString(boolean includeDerived);
 	
 	/*
 	 * Helper Methods

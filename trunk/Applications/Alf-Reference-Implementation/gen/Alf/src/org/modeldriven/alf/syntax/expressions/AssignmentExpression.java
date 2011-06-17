@@ -442,83 +442,109 @@ public class AssignmentExpression extends Expression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" operator:");
 		s.append(this.getOperator());
-		Boolean isIndexed = this.getIsIndexed();
-		if (isIndexed != null) {
+		if (includeDerived) {
 			s.append(" /isIndexed:");
-			s.append(isIndexed);
+			s.append(this.getIsIndexed());
 		}
-		Boolean isArithmetic = this.getIsArithmetic();
-		if (isArithmetic != null) {
+		if (includeDerived) {
 			s.append(" /isArithmetic:");
-			s.append(isArithmetic);
+			s.append(this.getIsArithmetic());
 		}
-		Boolean isDefinition = this.getIsDefinition();
-		if (isDefinition != null) {
+		if (includeDerived) {
 			s.append(" /isDefinition:");
-			s.append(isDefinition);
+			s.append(this.getIsDefinition());
 		}
-		Boolean isSimple = this.getIsSimple();
-		if (isSimple != null) {
+		if (includeDerived) {
 			s.append(" /isSimple:");
-			s.append(isSimple);
+			s.append(this.getIsSimple());
 		}
-		Boolean isFeature = this.getIsFeature();
-		if (isFeature != null) {
+		if (includeDerived) {
 			s.append(" /isFeature:");
-			s.append(isFeature);
+			s.append(this.getIsFeature());
 		}
-		Boolean isDataValueUpdate = this.getIsDataValueUpdate();
-		if (isDataValueUpdate != null) {
+		if (includeDerived) {
 			s.append(" /isDataValueUpdate:");
-			s.append(isDataValueUpdate);
+			s.append(this.getIsDataValueUpdate());
 		}
-		Boolean isCollectionConversion = this.getIsCollectionConversion();
-		if (isCollectionConversion != null) {
+		if (includeDerived) {
 			s.append(" /isCollectionConversion:");
-			s.append(isCollectionConversion);
+			s.append(this.getIsCollectionConversion());
 		}
-		Boolean isBitStringConversion = this.getIsBitStringConversion();
-		if (isBitStringConversion != null) {
+		if (includeDerived) {
 			s.append(" /isBitStringConversion:");
-			s.append(isBitStringConversion);
+			s.append(this.getIsBitStringConversion());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		LeftHandSide leftHandSide = this.getLeftHandSide();
 		if (leftHandSide != null) {
 			System.out.println(prefix + " leftHandSide:");
-			leftHandSide.print(prefix + "  ");
+			leftHandSide.print(prefix + "  ", includeDerived);
 		}
 		Expression rightHandSide = this.getRightHandSide();
 		if (rightHandSide != null) {
 			System.out.println(prefix + " rightHandSide:");
-			rightHandSide.print(prefix + "  ");
+			rightHandSide.print(prefix + "  ", includeDerived);
 		}
-		AssignedSource assignment = this.getAssignment();
-		if (assignment != null) {
-			System.out.println(prefix + " /assignment:" + assignment);
+		if (includeDerived) {
+			AssignedSource assignment = this.getAssignment();
+			if (assignment != null) {
+				System.out.println(prefix + " /assignment:"
+						+ assignment.toString(includeDerived));
+			}
 		}
-		ElementReference feature = this.getFeature();
-		if (feature != null) {
-			System.out.println(prefix + " /feature:" + feature);
+		if (includeDerived) {
+			ElementReference feature = this.getFeature();
+			if (feature != null) {
+				System.out.println(prefix + " /feature:"
+						+ feature.toString(includeDerived));
+			}
 		}
-		Expression expression = this.getExpression();
-		if (expression != null) {
-			System.out.println(prefix + " /expression:" + expression);
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+			Expression expression = this.getExpression();
+			if (expression != null) {
+				System.out.println(prefix + " /expression:"
+						+ expression.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
 		}
 	}
 } // AssignmentExpression

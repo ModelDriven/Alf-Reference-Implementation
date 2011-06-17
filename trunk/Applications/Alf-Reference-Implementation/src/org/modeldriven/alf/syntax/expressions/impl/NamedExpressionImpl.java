@@ -35,10 +35,10 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString(boolean includeDerived) {
 	    NamedExpression self = this.getSelf();
 	    Expression index = self.getIndex();
-	    return super.toString() 
+	    return super.toString(includeDerived) 
 	                + " expression:(" + self.getExpression() + ")" 
 	                + (index == null? "": " index:(" + index +")");
 	}

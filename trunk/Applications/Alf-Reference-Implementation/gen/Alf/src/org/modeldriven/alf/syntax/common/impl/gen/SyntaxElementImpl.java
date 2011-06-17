@@ -36,8 +36,8 @@ public abstract class SyntaxElementImpl {
 		this.self = self;
 	}
 
-	public String toString() {
-		return this.getSelf()._toString();
+	public String toString(boolean includeDerived) {
+		return this.getSelf()._toString(includeDerived);
 	}
 
 	public SyntaxElement getSelf() {

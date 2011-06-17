@@ -183,11 +183,16 @@ public class LocalNameDeclarationStatement extends Statement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" name:");
 		s.append(this.getName());
 		s.append(" hasMultiplicity:");
@@ -196,24 +201,31 @@ public class LocalNameDeclarationStatement extends Statement {
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Expression expression = this.getExpression();
 		if (expression != null) {
 			System.out.println(prefix + " expression:");
-			expression.print(prefix + "  ");
+			expression.print(prefix + "  ", includeDerived);
 		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
 			System.out.println(prefix + " typeName:");
-			typeName.print(prefix + "  ");
+			typeName.print(prefix + "  ", includeDerived);
 		}
-		ElementReference type = this.getType();
-		if (type != null) {
-			System.out.println(prefix + " /type:" + type);
+		if (includeDerived) {
+			ElementReference type = this.getType();
+			if (type != null) {
+				System.out.println(prefix + " /type:"
+						+ type.toString(includeDerived));
+			}
 		}
 	}
 } // LocalNameDeclarationStatement

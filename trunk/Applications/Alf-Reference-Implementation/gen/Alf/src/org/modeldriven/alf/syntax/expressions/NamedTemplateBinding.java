@@ -68,30 +68,37 @@ public class NamedTemplateBinding extends TemplateBinding {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<TemplateParameterSubstitution> substitution = this
 				.getSubstitution();
-		if (substitution != null) {
-			if (substitution.size() > 0) {
-				System.out.println(prefix + " substitution:");
-			}
+		if (substitution != null && substitution.size() > 0) {
+			System.out.println(prefix + " substitution:");
 			for (Object _object : substitution.toArray()) {
 				TemplateParameterSubstitution _substitution = (TemplateParameterSubstitution) _object;
 				if (_substitution != null) {
-					_substitution.print(prefix + "  ");
+					_substitution.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}

@@ -157,34 +157,46 @@ public class LogicalExpression extends BinaryExpression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isBitWise = this.getIsBitWise();
-		if (isBitWise != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isBitWise:");
-			s.append(isBitWise);
+			s.append(this.getIsBitWise());
 		}
-		Boolean isBitStringConversion1 = this.getIsBitStringConversion1();
-		if (isBitStringConversion1 != null) {
+		if (includeDerived) {
 			s.append(" /isBitStringConversion1:");
-			s.append(isBitStringConversion1);
+			s.append(this.getIsBitStringConversion1());
 		}
-		Boolean isBitStringConversion2 = this.getIsBitStringConversion2();
-		if (isBitStringConversion2 != null) {
+		if (includeDerived) {
 			s.append(" /isBitStringConversion2:");
-			s.append(isBitStringConversion2);
+			s.append(this.getIsBitStringConversion2());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
 	}
 } // LogicalExpression

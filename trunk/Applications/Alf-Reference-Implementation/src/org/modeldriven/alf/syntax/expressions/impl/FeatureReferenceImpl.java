@@ -42,9 +42,9 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString(boolean includeDerived) {
 	    FeatureReference self = this.getSelf();
-	    return self._toString() + " nameBinding:" + self.getNameBinding() +
+	    return self._toString(includeDerived) + " nameBinding:" + self.getNameBinding() +
 	            " expression:(" + self.getExpression() + ")";
 	}
 

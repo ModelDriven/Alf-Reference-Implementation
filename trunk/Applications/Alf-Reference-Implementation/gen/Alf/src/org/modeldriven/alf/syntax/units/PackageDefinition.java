@@ -100,28 +100,38 @@ public class PackageDefinition extends NamespaceDefinition {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		Collection<Profile> appliedProfile = this.getAppliedProfile();
-		if (appliedProfile != null) {
-			if (appliedProfile.size() > 0) {
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			Collection<Profile> appliedProfile = this.getAppliedProfile();
+			if (appliedProfile != null && appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");
-			}
-			for (Object _object : appliedProfile.toArray()) {
-				Profile _appliedProfile = (Profile) _object;
-				System.out.println(prefix + "  " + _appliedProfile);
+				for (Object _object : appliedProfile.toArray()) {
+					Profile _appliedProfile = (Profile) _object;
+					System.out.println(prefix + "  "
+							+ _appliedProfile.toString(includeDerived));
+				}
 			}
 		}
 	}

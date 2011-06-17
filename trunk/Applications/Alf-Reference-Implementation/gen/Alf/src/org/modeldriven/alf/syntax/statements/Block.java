@@ -122,53 +122,63 @@ public class Block extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		List<Statement> statement = this.getStatement();
-		if (statement != null) {
-			if (statement.size() > 0) {
-				System.out.println(prefix + " statement:");
-			}
+		if (statement != null && statement.size() > 0) {
+			System.out.println(prefix + " statement:");
 			for (Object _object : statement.toArray()) {
 				Statement _statement = (Statement) _object;
 				if (_statement != null) {
-					_statement.print(prefix + "  ");
+					_statement.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
 			}
 		}
-		Collection<AssignedSource> assignmentAfter = this.getAssignmentAfter();
-		if (assignmentAfter != null) {
-			if (assignmentAfter.size() > 0) {
+		if (includeDerived) {
+			Collection<AssignedSource> assignmentAfter = this
+					.getAssignmentAfter();
+			if (assignmentAfter != null && assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
-			}
-			for (Object _object : assignmentAfter.toArray()) {
-				AssignedSource _assignmentAfter = (AssignedSource) _object;
-				System.out.println(prefix + "  " + _assignmentAfter);
+				for (Object _object : assignmentAfter.toArray()) {
+					AssignedSource _assignmentAfter = (AssignedSource) _object;
+					System.out.println(prefix + "  "
+							+ _assignmentAfter.toString(includeDerived));
+				}
 			}
 		}
-		Collection<AssignedSource> assignmentBefore = this
-				.getAssignmentBefore();
-		if (assignmentBefore != null) {
-			if (assignmentBefore.size() > 0) {
+		if (includeDerived) {
+			Collection<AssignedSource> assignmentBefore = this
+					.getAssignmentBefore();
+			if (assignmentBefore != null && assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
-			}
-			for (Object _object : assignmentBefore.toArray()) {
-				AssignedSource _assignmentBefore = (AssignedSource) _object;
-				System.out.println(prefix + "  " + _assignmentBefore);
+				for (Object _object : assignmentBefore.toArray()) {
+					AssignedSource _assignmentBefore = (AssignedSource) _object;
+					System.out.println(prefix + "  "
+							+ _assignmentBefore.toString(includeDerived));
+				}
 			}
 		}
 	}

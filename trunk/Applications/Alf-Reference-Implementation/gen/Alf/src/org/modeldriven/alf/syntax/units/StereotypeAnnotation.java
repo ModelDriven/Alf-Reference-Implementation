@@ -190,38 +190,50 @@ public class StereotypeAnnotation extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		TaggedValueList taggedValues = this.getTaggedValues();
 		if (taggedValues != null) {
 			System.out.println(prefix + " taggedValues:");
-			taggedValues.print(prefix + "  ");
+			taggedValues.print(prefix + "  ", includeDerived);
 		}
 		QualifiedNameList names = this.getNames();
 		if (names != null) {
 			System.out.println(prefix + " names:");
-			names.print(prefix + "  ");
+			names.print(prefix + "  ", includeDerived);
 		}
 		QualifiedName stereotypeName = this.getStereotypeName();
 		if (stereotypeName != null) {
 			System.out.println(prefix + " stereotypeName:");
-			stereotypeName.print(prefix + "  ");
+			stereotypeName.print(prefix + "  ", includeDerived);
 		}
-		Stereotype stereotype = this.getStereotype();
-		if (stereotype != null) {
-			System.out.println(prefix + " /stereotype:" + stereotype);
+		if (includeDerived) {
+			Stereotype stereotype = this.getStereotype();
+			if (stereotype != null) {
+				System.out.println(prefix + " /stereotype:"
+						+ stereotype.toString(includeDerived));
+			}
 		}
 	}
 } // StereotypeAnnotation

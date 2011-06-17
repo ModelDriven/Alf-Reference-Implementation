@@ -43,9 +43,9 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString(boolean includesDerived) {
 	    Expression self = this.getSelf();
-	    return super.toString() + " type:(" + self.getType() + ")";
+	    return super.toString(includesDerived) + " type:(" + self.getType() + ")";
 	}
 
     public Collection<AssignedSource> getAssignmentBefore() {

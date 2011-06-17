@@ -175,39 +175,44 @@ public class IfStatement extends Statement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isAssured = this.getIsAssured();
-		if (isAssured != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isAssured:");
-			s.append(isAssured);
+			s.append(this.getIsAssured());
 		}
-		Boolean isDetermined = this.getIsDetermined();
-		if (isDetermined != null) {
+		if (includeDerived) {
 			s.append(" /isDetermined:");
-			s.append(isDetermined);
+			s.append(this.getIsDetermined());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		List<ConcurrentClauses> nonFinalClauses = this.getNonFinalClauses();
-		if (nonFinalClauses != null) {
-			if (nonFinalClauses.size() > 0) {
-				System.out.println(prefix + " nonFinalClauses:");
-			}
+		if (nonFinalClauses != null && nonFinalClauses.size() > 0) {
+			System.out.println(prefix + " nonFinalClauses:");
 			for (Object _object : nonFinalClauses.toArray()) {
 				ConcurrentClauses _nonFinalClauses = (ConcurrentClauses) _object;
 				if (_nonFinalClauses != null) {
-					_nonFinalClauses.print(prefix + "  ");
+					_nonFinalClauses.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
@@ -216,7 +221,11 @@ public class IfStatement extends Statement {
 		Block finalClause = this.getFinalClause();
 		if (finalClause != null) {
 			System.out.println(prefix + " finalClause:");
-			finalClause.print(prefix + "  ");
+			finalClause.print(prefix + "  ", includeDerived);
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
 		}
 	}
 } // IfStatement

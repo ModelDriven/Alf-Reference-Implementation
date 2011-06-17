@@ -48,7 +48,7 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     }
 
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-        System.out.println("Resolving unit " + qualifiedName.getPathName());
+        // System.out.println("Resolving unit " + qualifiedName.getPathName());
 
         StringBuffer path = new StringBuffer();
          for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
@@ -57,27 +57,32 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
         path.append(".alf");
 
         AlfParser parser;
+        boolean fromModel = true;
 
         try {
-            System.out.println("Looking for Model" + path + "...");
+            // System.out.println("Looking for Model" + path + "...");
             parser = new AlfParser(new java.io.FileInputStream("Root/Model" + path));
         } catch (java.io.FileNotFoundException e0) {
             try {
-                System.out.println("Looking for Library" + path + "...");
+                // System.out.println("Looking for Library" + path + "...");
                 parser = new AlfParser(new java.io.FileInputStream("Root/Library" + path));
+                fromModel = false;
             } catch (java.io.FileNotFoundException e) {
-                System.out.println("Unit not found.");
+                System.out.println("Unit not found: " + qualifiedName.getPathName());
                 return new MissingUnit(qualifiedName);
             }
         }
 
         try {
             UnitDefinition subunit = parser.UnitDefinition();
-            System.out.println("Parsed successfully.");
+            if (fromModel) {
+                System.out.println("Parsed Model" + path);
+            }
             subunit.getImpl().addImplicitImports();
             return subunit;           
         } catch (ParseException e) {
-            System.out.println("Parse failed.");
+            System.out.println("Parse failed: " + 
+                    (fromModel? "Model": "Library") + path);
             System.out.println(e.getMessage());
             return new MissingUnit(qualifiedName);
         }

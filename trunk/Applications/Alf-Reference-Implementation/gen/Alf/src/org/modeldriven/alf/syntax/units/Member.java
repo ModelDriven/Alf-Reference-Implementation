@@ -254,62 +254,76 @@ public abstract class Member extends DocumentedElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" name:");
 		s.append(this.getName());
 		s.append(" visibility:");
 		s.append(this.getVisibility());
 		s.append(" isStub:");
 		s.append(this.getIsStub());
-		Boolean isFeature = this.getIsFeature();
-		if (isFeature != null) {
+		if (includeDerived) {
 			s.append(" /isFeature:");
-			s.append(isFeature);
+			s.append(this.getIsFeature());
 		}
-		Boolean isPrimitive = this.getIsPrimitive();
-		if (isPrimitive != null) {
+		if (includeDerived) {
 			s.append(" /isPrimitive:");
-			s.append(isPrimitive);
+			s.append(this.getIsPrimitive());
 		}
-		Boolean isExternal = this.getIsExternal();
-		if (isExternal != null) {
+		if (includeDerived) {
 			s.append(" /isExternal:");
-			s.append(isExternal);
+			s.append(this.getIsExternal());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		NamespaceDefinition namespace = this.getNamespace();
 		if (namespace != null) {
-			System.out.println(prefix + " namespace:" + namespace);
+			System.out.println(prefix + " namespace:"
+					+ namespace.toString(includeDerived));
 		}
 		Collection<StereotypeAnnotation> annotation = this.getAnnotation();
-		if (annotation != null) {
-			if (annotation.size() > 0) {
-				System.out.println(prefix + " annotation:");
-			}
+		if (annotation != null && annotation.size() > 0) {
+			System.out.println(prefix + " annotation:");
 			for (Object _object : annotation.toArray()) {
 				StereotypeAnnotation _annotation = (StereotypeAnnotation) _object;
 				if (_annotation != null) {
-					_annotation.print(prefix + "  ");
+					_annotation.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
 			}
 		}
-		UnitDefinition subunit = this.getSubunit();
-		if (subunit != null) {
-			System.out.println(prefix + " /subunit:" + subunit);
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+			UnitDefinition subunit = this.getSubunit();
+			if (subunit != null) {
+				System.out.println(prefix + " /subunit:"
+						+ subunit.toString(includeDerived));
+			}
 		}
 	}
 } // Member

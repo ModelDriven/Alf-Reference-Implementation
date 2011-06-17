@@ -17,17 +17,59 @@ public class AlfParser implements AlfParserConstants {
            token.beginColumn + ". \u005cn" + message;
   }
 
-  public static final String version = "0.11";
+  public static final String version = "v1.0 Beta (rev 3)";
+
 
   public static final char unitOption = 'u';
   public static final char statementOption = 's';
   public static final char expressionOption = 'e';
+  public static final char checkOption = 'c';
+  public static final char derivationOption = 'd';
 
-  public static boolean isLegalOption(char option) {
-    return option == unitOption || option == statementOption || option == expressionOption;
+  private static boolean isUnit = false;
+  private static boolean isStatements = false;
+  private static boolean isExpression = false;
+  private static boolean checkConstraints = false;
+  private static boolean includeDerived = false;
+
+  private static boolean optionsAreLegal = true;
+
+  public static void parseOptions(String options) {
+
+    if (options.length() < 2) {
+      optionsAreLegal = false;
+          return;
+        }
+
+        for (int i=1; i < options.length(); i++) {
+          char option = options.charAt(i);
+          if (option == unitOption) {
+            isUnit = true;
+          } else if (option == statementOption) {
+            isStatements = true;
+          } else if (option == expressionOption) {
+            isExpression = true;
+          } else if (option == checkOption) {
+            checkConstraints = true;
+          } else if (option == derivationOption) {
+            includeDerived = true;
+          } else {
+            optionsAreLegal = false;
+            return;
+          }
+
+        }
+
+    optionsAreLegal =
+      !((isUnit || checkConstraints || includeDerived) && (isStatements || isExpression) ||
+            isStatements && (isUnit || isExpression) ||
+            isExpression && (isUnit || isStatements));
+
+    isUnit = !isStatements && !isExpression;
+
   }
 
-  public static void parse(String fileName, char option) {
+  public static void parse(String fileName) {
     AlfParser parser;
 
     if (fileName == null) {
@@ -47,22 +89,17 @@ public class AlfParser implements AlfParserConstants {
 
     try {
 
-      switch (option) {
-        case unitOption:
-          element = parser.UnitDefinition();
-          break;
-        case statementOption:
-          element = parser.StatementSequence();
-          break;
-        case expressionOption:
-          element = parser.Expression();
-          break;
-        default:
+      if (isUnit) {
+        element = parser.UnitDefinition();
+      } else if (isStatements) {
+        element = parser.StatementSequence();
+      } else if (isExpression) {
+        element = parser.Expression();
       }
 
       System.out.println("Parsed successfully.");
 
-      if (element instanceof UnitDefinition) {
+      if (checkConstraints) {
         UnitDefinition unit = (UnitDefinition)element;
         unit.getImpl().addImplicitImports();
         ElementReference namespaceReference = unit.getNamespace();
@@ -86,7 +123,7 @@ public class AlfParser implements AlfParserConstants {
         }
       }
 
-      element.print();
+      element.print(includeDerived);
 
     } catch (Throwable e) {
       if (!(e instanceof ParseException)) {
@@ -103,39 +140,37 @@ public class AlfParser implements AlfParserConstants {
   }
 
   public static void main(String args[]) {
-    SyntaxElement element;
-    Boolean complete;
-
     System.out.println("Alf " + version + " Parser");
 
-    char option = ' ';
     String fileName = null;
 
     if (args.length == 0) {
-      option = unitOption;
-    } else if (args.length == 1) {
-      if (args[0].charAt(0) == '-') {
-        option = args[0].charAt(1);
-      } else {
-        option = unitOption;
-        fileName = args[0];
-      }
-    } else if (args.length == 2 && args[0].charAt(0) == '-') {
-      option = args[0].charAt(1);
-      fileName = args[1];
+      isUnit = true;
+    } else if (args[0].charAt(0) == '-') {
+         parseOptions(args[0]);
+         if (args.length > 1) {
+            fileName = args[1];
+         }
+     } else {
+       fileName = args[0];
+       isUnit = true;
     }
 
-    if (isLegalOption(option)) {
-      parse(fileName,option);
+    if (args.length <= 2 && optionsAreLegal) {
+      parse(fileName);
     } else {
       System.out.println("Usage is");
-      System.out.println("         alfp [option] < inputfile");
+      System.out.println("         alfp [-options] < inputfile");
       System.out.println("OR");
-      System.out.println("         alfp [option] inputfile");
+      System.out.println("         alfp [-options] inputfile");
       System.out.println("Options:");
-      System.out.println("  -u   Parse as a unit (default)");
-      System.out.println("  -s   Parse as a statement sequence");
-      System.out.println("  -e   Parse as an expression");
+      System.out.println("  u   Parse as a unit (default)");
+      System.out.println("  s   Parse as a statement sequence");
+      System.out.println("  e   Parse as an expression");
+      System.out.println();
+      System.out.println("Additional options for units:");
+      System.out.println("  c   Perform static semantic checking.");
+      System.out.println("  d   Include derived properties in syntax tree.");
     }
   }
 
@@ -5547,186 +5582,6 @@ public class AlfParser implements AlfParserConstants {
     finally { jj_save(44, xla); }
   }
 
-  private boolean jj_3_24() {
-    if (jj_3R_62()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_241() {
-    if (jj_3R_243()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_238() {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_241()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3_15() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_56()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_92() {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_15()) { jj_scanpos = xsp; break; }
-    }
-    xsp = jj_scanpos;
-    if (jj_scan_token(104)) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_110() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(COLON)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_197() {
-    if (jj_3R_211()) return true;
-    return false;
-  }
-
-  private boolean jj_3_10() {
-    if (jj_3R_50()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_196() {
-    if (jj_3R_210()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_55() {
-    if (jj_3R_92()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_195() {
-    if (jj_3R_209()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_182() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_195()) {
-    jj_scanpos = xsp;
-    if (jj_3R_196()) {
-    jj_scanpos = xsp;
-    if (jj_3R_197()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_125() {
-    if (jj_3R_61()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_171() {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_182()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_54() {
-    if (jj_scan_token(DOUBLE_DOT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_166() {
-    if (jj_scan_token(SC_OR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_14() {
-    if (jj_3R_53()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_54()) {
-    jj_scanpos = xsp;
-    if (jj_3R_55()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_158() {
-    if (jj_3R_165()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_166()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_112() {
-    if (jj_3R_137()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_111() {
-    if (jj_3R_136()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_100() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_14()) {
-    jj_scanpos = xsp;
-    if (jj_3R_125()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_97() {
-    if (jj_3R_123()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_96() {
-    if (jj_3R_122()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_95() {
-    if (jj_3R_121()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_79() {
-    if (jj_3R_110()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_94() {
-    if (jj_3R_120()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_88() {
-    if (jj_3R_114()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_87() {
-    if (jj_3R_113()) return true;
-    return false;
-  }
-
   private boolean jj_3R_58() {
     Token xsp;
     xsp = jj_scanpos;
@@ -7293,6 +7148,186 @@ public class AlfParser implements AlfParserConstants {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_159()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3_24() {
+    if (jj_3R_62()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_241() {
+    if (jj_3R_243()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_238() {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_241()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_15() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_56()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_92() {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_15()) { jj_scanpos = xsp; break; }
+    }
+    xsp = jj_scanpos;
+    if (jj_scan_token(104)) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_110() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(COLON)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_197() {
+    if (jj_3R_211()) return true;
+    return false;
+  }
+
+  private boolean jj_3_10() {
+    if (jj_3R_50()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_196() {
+    if (jj_3R_210()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_55() {
+    if (jj_3R_92()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_195() {
+    if (jj_3R_209()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_182() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_195()) {
+    jj_scanpos = xsp;
+    if (jj_3R_196()) {
+    jj_scanpos = xsp;
+    if (jj_3R_197()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_125() {
+    if (jj_3R_61()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_171() {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_182()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_54() {
+    if (jj_scan_token(DOUBLE_DOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_166() {
+    if (jj_scan_token(SC_OR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_14() {
+    if (jj_3R_53()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_54()) {
+    jj_scanpos = xsp;
+    if (jj_3R_55()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_158() {
+    if (jj_3R_165()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_166()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_112() {
+    if (jj_3R_137()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_111() {
+    if (jj_3R_136()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_100() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_14()) {
+    jj_scanpos = xsp;
+    if (jj_3R_125()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_97() {
+    if (jj_3R_123()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_96() {
+    if (jj_3R_122()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_95() {
+    if (jj_3R_121()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_79() {
+    if (jj_3R_110()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_94() {
+    if (jj_3R_120()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_88() {
+    if (jj_3R_114()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_87() {
+    if (jj_3R_113()) return true;
     return false;
   }
 

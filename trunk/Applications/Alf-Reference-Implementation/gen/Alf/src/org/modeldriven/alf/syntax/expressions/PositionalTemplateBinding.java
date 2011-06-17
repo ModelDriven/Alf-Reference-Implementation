@@ -66,29 +66,36 @@ public class PositionalTemplateBinding extends TemplateBinding {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Collection<QualifiedName> argumentName = this.getArgumentName();
-		if (argumentName != null) {
-			if (argumentName.size() > 0) {
-				System.out.println(prefix + " argumentName:");
-			}
+		if (argumentName != null && argumentName.size() > 0) {
+			System.out.println(prefix + " argumentName:");
 			for (Object _object : argumentName.toArray()) {
 				QualifiedName _argumentName = (QualifiedName) _object;
 				if (_argumentName != null) {
-					_argumentName.print(prefix + "  ");
+					_argumentName.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}

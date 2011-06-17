@@ -114,39 +114,49 @@ public class FeatureReference extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Expression expression = this.getExpression();
 		if (expression != null) {
 			System.out.println(prefix + " expression:");
-			expression.print(prefix + "  ");
+			expression.print(prefix + "  ", includeDerived);
 		}
-		Collection<ElementReference> referent = this.getReferent();
-		if (referent != null) {
-			if (referent.size() > 0) {
+		if (includeDerived) {
+			Collection<ElementReference> referent = this.getReferent();
+			if (referent != null && referent.size() > 0) {
 				System.out.println(prefix + " /referent:");
-			}
-			for (Object _object : referent.toArray()) {
-				ElementReference _referent = (ElementReference) _object;
-				System.out.println(prefix + "  " + _referent);
+				for (Object _object : referent.toArray()) {
+					ElementReference _referent = (ElementReference) _object;
+					System.out.println(prefix + "  "
+							+ _referent.toString(includeDerived));
+				}
 			}
 		}
 		NameBinding nameBinding = this.getNameBinding();
 		if (nameBinding != null) {
 			System.out.println(prefix + " nameBinding:");
-			nameBinding.print(prefix + "  ");
+			nameBinding.print(prefix + "  ", includeDerived);
 		}
 	}
 } // FeatureReference

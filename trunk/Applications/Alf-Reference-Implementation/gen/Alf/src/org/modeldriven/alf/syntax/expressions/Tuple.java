@@ -161,42 +161,54 @@ public abstract class Tuple extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		Collection<NamedExpression> input = this.getInput();
-		if (input != null) {
-			if (input.size() > 0) {
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			Collection<NamedExpression> input = this.getInput();
+			if (input != null && input.size() > 0) {
 				System.out.println(prefix + " /input:");
-			}
-			for (Object _object : input.toArray()) {
-				NamedExpression _input = (NamedExpression) _object;
-				System.out.println(prefix + "  " + _input);
+				for (Object _object : input.toArray()) {
+					NamedExpression _input = (NamedExpression) _object;
+					System.out.println(prefix + "  "
+							+ _input.toString(includeDerived));
+				}
 			}
 		}
 		InvocationExpression invocation = this.getInvocation();
 		if (invocation != null) {
-			System.out.println(prefix + " invocation:" + invocation);
+			System.out.println(prefix + " invocation:"
+					+ invocation.toString(includeDerived));
 		}
-		Collection<OutputNamedExpression> output = this.getOutput();
-		if (output != null) {
-			if (output.size() > 0) {
+		if (includeDerived) {
+			Collection<OutputNamedExpression> output = this.getOutput();
+			if (output != null && output.size() > 0) {
 				System.out.println(prefix + " /output:");
-			}
-			for (Object _object : output.toArray()) {
-				OutputNamedExpression _output = (OutputNamedExpression) _object;
-				System.out.println(prefix + "  " + _output);
+				for (Object _object : output.toArray()) {
+					OutputNamedExpression _output = (OutputNamedExpression) _object;
+					System.out.println(prefix + "  "
+							+ _output.toString(includeDerived));
+				}
 			}
 		}
 	}

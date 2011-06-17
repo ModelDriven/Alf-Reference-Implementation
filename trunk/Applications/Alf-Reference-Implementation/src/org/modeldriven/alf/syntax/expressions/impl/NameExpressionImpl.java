@@ -39,9 +39,9 @@ public class NameExpressionImpl extends ExpressionImpl {
 	}
 
     @Override
-    public String toString() {
+    public String toString(boolean includeDerived) {
         NameExpression self = this.getSelf();
-        return super.toString() + " name:" + self.getName().getImpl().getPathName();
+        return super.toString(includeDerived) + " name:" + self.getName().getImpl().getPathName();
     }
     
 	public ElementReference getEnumerationLiteral() {

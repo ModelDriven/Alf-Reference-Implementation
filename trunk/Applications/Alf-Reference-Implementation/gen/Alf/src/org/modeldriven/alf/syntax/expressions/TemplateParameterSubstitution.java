@@ -71,26 +71,35 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" parameterName:");
 		s.append(this.getParameterName());
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		QualifiedName argumentName = this.getArgumentName();
 		if (argumentName != null) {
 			System.out.println(prefix + " argumentName:");
-			argumentName.print(prefix + "  ");
+			argumentName.print(prefix + "  ", includeDerived);
 		}
 	}
 } // TemplateParameterSubstitution

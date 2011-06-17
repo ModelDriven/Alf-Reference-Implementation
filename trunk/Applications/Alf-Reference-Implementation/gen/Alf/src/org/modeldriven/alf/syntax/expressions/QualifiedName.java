@@ -294,72 +294,93 @@ public class QualifiedName extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" isAmbiguous:");
 		s.append(this.getIsAmbiguous());
-		String pathName = this.getPathName();
-		if (pathName != null) {
+		if (includeDerived) {
 			s.append(" /pathName:");
-			s.append(pathName);
+			s.append(this.getPathName());
 		}
-		Boolean isFeatureReference = this.getIsFeatureReference();
-		if (isFeatureReference != null) {
+		if (includeDerived) {
 			s.append(" /isFeatureReference:");
-			s.append(isFeatureReference);
+			s.append(this.getIsFeatureReference());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		QualifiedName qualification = this.getQualification();
-		if (qualification != null) {
-			System.out.println(prefix + " /qualification:" + qualification);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
 		}
-		FeatureReference disambiguation = this.getDisambiguation();
-		if (disambiguation != null) {
-			System.out.println(prefix + " /disambiguation:");
-			disambiguation.print(prefix + "  ");
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+			QualifiedName qualification = this.getQualification();
+			if (qualification != null) {
+				System.out.println(prefix + " /qualification:"
+						+ qualification.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
+			FeatureReference disambiguation = this.getDisambiguation();
+			if (disambiguation != null) {
+				System.out.println(prefix + " /disambiguation:");
+				disambiguation.print(prefix + "  ", includeDerived);
+			}
 		}
 		List<NameBinding> nameBinding = this.getNameBinding();
-		if (nameBinding != null) {
-			if (nameBinding.size() > 0) {
-				System.out.println(prefix + " nameBinding:");
-			}
+		if (nameBinding != null && nameBinding.size() > 0) {
+			System.out.println(prefix + " nameBinding:");
 			for (Object _object : nameBinding.toArray()) {
 				NameBinding _nameBinding = (NameBinding) _object;
 				if (_nameBinding != null) {
-					_nameBinding.print(prefix + "  ");
+					_nameBinding.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}
 			}
 		}
-		Collection<ElementReference> referent = this.getReferent();
-		if (referent != null) {
-			if (referent.size() > 0) {
+		if (includeDerived) {
+			Collection<ElementReference> referent = this.getReferent();
+			if (referent != null && referent.size() > 0) {
 				System.out.println(prefix + " /referent:");
-			}
-			for (Object _object : referent.toArray()) {
-				ElementReference _referent = (ElementReference) _object;
-				System.out.println(prefix + "  " + _referent);
+				for (Object _object : referent.toArray()) {
+					ElementReference _referent = (ElementReference) _object;
+					System.out.println(prefix + "  "
+							+ _referent.toString(includeDerived));
+				}
 			}
 		}
-		NameBinding unqualifiedName = this.getUnqualifiedName();
-		if (unqualifiedName != null) {
-			System.out.println(prefix + " /unqualifiedName:" + unqualifiedName);
+		if (includeDerived) {
+			NameBinding unqualifiedName = this.getUnqualifiedName();
+			if (unqualifiedName != null) {
+				System.out.println(prefix + " /unqualifiedName:"
+						+ unqualifiedName.toString(includeDerived));
+			}
 		}
-		QualifiedName templateName = this.getTemplateName();
-		if (templateName != null) {
-			System.out.println(prefix + " /templateName:" + templateName);
+		if (includeDerived) {
+			QualifiedName templateName = this.getTemplateName();
+			if (templateName != null) {
+				System.out.println(prefix + " /templateName:"
+						+ templateName.toString(includeDerived));
+			}
 		}
 	}
 } // QualifiedName

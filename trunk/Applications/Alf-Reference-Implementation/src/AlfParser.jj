@@ -1,7 +1,7 @@
 /*
    Parser for the 
-   Action Language for Foundational UML (Alf)
-   Version 0.11 (revision 3)
+   Action Language for Foundational UML (Alf) v1.0 Beta
+   Revision 3
 
    with construction of an Abstract Syntax Tree
    as an instance of the Alf Abstract Syntax model
@@ -40,17 +40,59 @@ public class AlfParser {
            token.beginColumn + ". \n" + message;
   } 
 
-  public static final String version = "0.11";
+  public static final String version = "v1.0 Beta (rev 3)";
+  
   
   public static final char unitOption = 'u';
   public static final char statementOption = 's';
   public static final char expressionOption = 'e';
+  public static final char checkOption = 'c';
+  public static final char derivationOption = 'd';
+	
+  private static boolean isUnit = false;
+  private static boolean isStatements = false;
+  private static boolean isExpression = false;
+  private static boolean checkConstraints = false;
+  private static boolean includeDerived = false;
+  	
+  private static boolean optionsAreLegal = true;
+  	
+  public static void parseOptions(String options) {
   
-  public static boolean isLegalOption(char option) {
-    return option == unitOption || option == statementOption || option == expressionOption;
-  }
+    if (options.length() < 2) {
+      optionsAreLegal = false;
+  	  return;
+  	}
+  	
+  	for (int i=1; i < options.length(); i++) {
+  	  char option = options.charAt(i);
+  	  if (option == unitOption) {
+  	    isUnit = true;
+  	  } else if (option == statementOption) {
+  	    isStatements = true;
+  	  } else if (option == expressionOption) {
+  	    isExpression = true;
+  	  } else if (option == checkOption) {
+  	    checkConstraints = true;
+  	  } else if (option == derivationOption) {
+  	    includeDerived = true;
+  	  } else {
+  	    optionsAreLegal = false;
+  	    return;
+  	  }
+  	  
+  	}
+  	
+    optionsAreLegal =
+      !((isUnit || checkConstraints || includeDerived) && (isStatements || isExpression) ||
+  	    isStatements && (isUnit || isExpression) ||
+  	    isExpression && (isUnit || isStatements));
+  	    
+    isUnit = !isStatements && !isExpression;
 
-  public static void parse(String fileName, char option) {
+  }
+  	
+  public static void parse(String fileName) {
     AlfParser parser;
     
     if (fileName == null) {
@@ -70,22 +112,17 @@ public class AlfParser {
     
     try {
     
-      switch (option) {
-        case unitOption:
-          element = parser.UnitDefinition();
-          break;
-        case statementOption:
-          element = parser.StatementSequence();
-          break;
-        case expressionOption:
-          element = parser.Expression();
-          break;
-        default:
+      if (isUnit) {
+        element = parser.UnitDefinition();
+      } else if (isStatements) {
+        element = parser.StatementSequence();
+      } else if (isExpression) {
+        element = parser.Expression();
       }
       
       System.out.println("Parsed successfully.");
 
-      if (element instanceof UnitDefinition) {
+      if (checkConstraints) {
       	UnitDefinition unit = (UnitDefinition)element;
         unit.getImpl().addImplicitImports();
         ElementReference namespaceReference = unit.getNamespace();
@@ -109,7 +146,7 @@ public class AlfParser {
         }
       }
     
-      element.print();
+      element.print(includeDerived);
 
     } catch (Throwable e) {
       if (!(e instanceof ParseException)) {
@@ -126,39 +163,37 @@ public class AlfParser {
   }
   
   public static void main(String args[]) {
-    SyntaxElement element;
-    Boolean complete;
-    
     System.out.println("Alf " + version + " Parser");
     
-    char option = ' ';
     String fileName = null;
     
     if (args.length == 0) {
-      option = unitOption;
-    } else if (args.length == 1) {
-      if (args[0].charAt(0) == '-') {
-        option = args[0].charAt(1);
-      } else {
-        option = unitOption;
-        fileName = args[0];
-      }
-    } else if (args.length == 2 && args[0].charAt(0) == '-') {
-      option = args[0].charAt(1);
-      fileName = args[1];
+      isUnit = true;
+    } else if (args[0].charAt(0) == '-') {
+         parseOptions(args[0]);
+         if (args.length > 1) {
+            fileName = args[1];
+         }
+     } else {
+       fileName = args[0];
+       isUnit = true;
     }
-
-    if (isLegalOption(option)) {
-      parse(fileName,option);
+    
+    if (args.length <= 2 && optionsAreLegal) {
+      parse(fileName);
     } else {
       System.out.println("Usage is");
-      System.out.println("         alfp [option] < inputfile");
+      System.out.println("         alfp [-options] < inputfile");
       System.out.println("OR");
-      System.out.println("         alfp [option] inputfile");
+      System.out.println("         alfp [-options] inputfile");
       System.out.println("Options:");
-      System.out.println("  -u   Parse as a unit (default)");
-      System.out.println("  -s   Parse as a statement sequence");
-      System.out.println("  -e   Parse as an expression");
+      System.out.println("  u   Parse as a unit (default)");
+      System.out.println("  s   Parse as a statement sequence");
+      System.out.println("  e   Parse as an expression");
+      System.out.println();
+      System.out.println("Additional options for units:");
+      System.out.println("  c   Perform static semantic checking.");
+      System.out.println("  d   Include derived properties in syntax tree.");
     }
   }
 }

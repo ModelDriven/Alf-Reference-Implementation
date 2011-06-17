@@ -174,34 +174,45 @@ public class InstanceCreationExpression extends InvocationExpression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Boolean isConstructorless = this.getIsConstructorless();
-		if (isConstructorless != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /isConstructorless:");
-			s.append(isConstructorless);
+			s.append(this.getIsConstructorless());
 		}
-		Boolean isObjectCreation = this.getIsObjectCreation();
-		if (isObjectCreation != null) {
+		if (includeDerived) {
 			s.append(" /isObjectCreation:");
-			s.append(isObjectCreation);
+			s.append(this.getIsObjectCreation());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
 		QualifiedName constructor = this.getConstructor();
 		if (constructor != null) {
 			System.out.println(prefix + " constructor:");
-			constructor.print(prefix + "  ");
+			constructor.print(prefix + "  ", includeDerived);
 		}
 	}
 } // InstanceCreationExpression

@@ -182,38 +182,54 @@ public class NameExpression extends Expression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		ElementReference enumerationLiteral = this.getEnumerationLiteral();
-		if (enumerationLiteral != null) {
-			System.out.println(prefix + " /enumerationLiteral:"
-					+ enumerationLiteral);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			ElementReference enumerationLiteral = this.getEnumerationLiteral();
+			if (enumerationLiteral != null) {
+				System.out.println(prefix + " /enumerationLiteral:"
+						+ enumerationLiteral.toString(includeDerived));
+			}
 		}
-		AssignedSource assignment = this.getAssignment();
-		if (assignment != null) {
-			System.out.println(prefix + " /assignment:" + assignment);
+		if (includeDerived) {
+			AssignedSource assignment = this.getAssignment();
+			if (assignment != null) {
+				System.out.println(prefix + " /assignment:"
+						+ assignment.toString(includeDerived));
+			}
 		}
-		PropertyAccessExpression propertyAccess = this.getPropertyAccess();
-		if (propertyAccess != null) {
-			System.out.println(prefix + " /propertyAccess:");
-			propertyAccess.print(prefix + "  ");
+		if (includeDerived) {
+			PropertyAccessExpression propertyAccess = this.getPropertyAccess();
+			if (propertyAccess != null) {
+				System.out.println(prefix + " /propertyAccess:");
+				propertyAccess.print(prefix + "  ", includeDerived);
+			}
 		}
 		QualifiedName name = this.getName();
 		if (name != null) {
 			System.out.println(prefix + " name:");
-			name.print(prefix + "  ");
+			name.print(prefix + "  ", includeDerived);
 		}
 	}
 } // NameExpression

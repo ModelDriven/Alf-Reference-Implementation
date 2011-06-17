@@ -173,11 +173,16 @@ public abstract class SequenceExpansionExpression extends Expression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" operation:");
 		s.append(this.getOperation());
 		s.append(" variable:");
@@ -186,24 +191,31 @@ public abstract class SequenceExpansionExpression extends Expression {
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		AssignedSource variableSource = this.getVariableSource();
-		if (variableSource != null) {
-			System.out.println(prefix + " /variableSource:" + variableSource);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			AssignedSource variableSource = this.getVariableSource();
+			if (variableSource != null) {
+				System.out.println(prefix + " /variableSource:"
+						+ variableSource.toString(includeDerived));
+			}
 		}
 		Expression argument = this.getArgument();
 		if (argument != null) {
 			System.out.println(prefix + " argument:");
-			argument.print(prefix + "  ");
+			argument.print(prefix + "  ", includeDerived);
 		}
 		ExtentOrExpression primary = this.getPrimary();
 		if (primary != null) {
 			System.out.println(prefix + " primary:");
-			primary.print(prefix + "  ");
+			primary.print(prefix + "  ", includeDerived);
 		}
 	}
 } // SequenceExpansionExpression

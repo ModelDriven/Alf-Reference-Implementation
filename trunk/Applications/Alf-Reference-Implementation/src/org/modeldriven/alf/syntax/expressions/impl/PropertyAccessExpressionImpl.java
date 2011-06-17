@@ -34,9 +34,9 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString(boolean includeDerived) {
 	    PropertyAccessExpression self = this.getSelf();
-	    return super.toString() + " feature: (" + self.getFeature() + ")";
+	    return super.toString(includeDerived) + " feature: (" + self.getFeature() + ")";
 	}
 
 	public FeatureReference getFeatureReference() {

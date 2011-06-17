@@ -275,55 +275,76 @@ public class IncrementOrDecrementExpression extends Expression {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" operator:");
 		s.append(this.getOperator());
 		s.append(" isPrefix:");
 		s.append(this.getIsPrefix());
-		Boolean isFeature = this.getIsFeature();
-		if (isFeature != null) {
+		if (includeDerived) {
 			s.append(" /isFeature:");
-			s.append(isFeature);
+			s.append(this.getIsFeature());
 		}
-		Boolean isIndexed = this.getIsIndexed();
-		if (isIndexed != null) {
+		if (includeDerived) {
 			s.append(" /isIndexed:");
-			s.append(isIndexed);
+			s.append(this.getIsIndexed());
 		}
-		Boolean isDataValueUpdate = this.getIsDataValueUpdate();
-		if (isDataValueUpdate != null) {
+		if (includeDerived) {
 			s.append(" /isDataValueUpdate:");
-			s.append(isDataValueUpdate);
+			s.append(this.getIsDataValueUpdate());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		AssignedSource assignment = this.getAssignment();
-		if (assignment != null) {
-			System.out.println(prefix + " /assignment:" + assignment);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			AssignedSource assignment = this.getAssignment();
+			if (assignment != null) {
+				System.out.println(prefix + " /assignment:"
+						+ assignment.toString(includeDerived));
+			}
 		}
 		LeftHandSide operand = this.getOperand();
 		if (operand != null) {
 			System.out.println(prefix + " operand:");
-			operand.print(prefix + "  ");
+			operand.print(prefix + "  ", includeDerived);
 		}
-		Expression expression = this.getExpression();
-		if (expression != null) {
-			System.out.println(prefix + " /expression:" + expression);
+		if (includeDerived) {
+			Expression expression = this.getExpression();
+			if (expression != null) {
+				System.out.println(prefix + " /expression:"
+						+ expression.toString(includeDerived));
+			}
 		}
-		ElementReference feature = this.getFeature();
-		if (feature != null) {
-			System.out.println(prefix + " /feature:" + feature);
+		if (includeDerived) {
+			ElementReference feature = this.getFeature();
+			if (feature != null) {
+				System.out.println(prefix + " /feature:"
+						+ feature.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
 		}
 	}
 } // IncrementOrDecrementExpression

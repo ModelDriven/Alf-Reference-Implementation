@@ -65,29 +65,36 @@ public class NamedTuple extends Tuple {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		List<NamedExpression> namedExpression = this.getNamedExpression();
-		if (namedExpression != null) {
-			if (namedExpression.size() > 0) {
-				System.out.println(prefix + " namedExpression:");
-			}
+		if (namedExpression != null && namedExpression.size() > 0) {
+			System.out.println(prefix + " namedExpression:");
 			for (Object _object : namedExpression.toArray()) {
 				NamedExpression _namedExpression = (NamedExpression) _object;
 				if (_namedExpression != null) {
-					_namedExpression.print(prefix + "  ");
+					_namedExpression.print(prefix + "  ", includeDerived);
 				} else {
 					System.out.println(prefix + "  null");
 				}

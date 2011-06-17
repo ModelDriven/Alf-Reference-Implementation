@@ -40,8 +40,8 @@ ${packageDeclaration}.impl.gen;
     this.self = self;
   }
   
-  public String toString() {
-    return this.getSelf()._toString();
+  public String toString(boolean includeDerived) {
+    return this.getSelf()._toString(includeDerived);
   }
 #else
   public #name(${object.name})Impl(#name(${object.name}) self) {

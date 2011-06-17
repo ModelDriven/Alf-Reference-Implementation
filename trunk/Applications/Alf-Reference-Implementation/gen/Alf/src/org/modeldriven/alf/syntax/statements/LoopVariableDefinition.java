@@ -262,72 +262,89 @@ public class LoopVariableDefinition extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" variable:");
 		s.append(this.getVariable());
 		s.append(" typeIsInferred:");
 		s.append(this.getTypeIsInferred());
-		Boolean isCollectionConversion = this.getIsCollectionConversion();
-		if (isCollectionConversion != null) {
+		if (includeDerived) {
 			s.append(" /isCollectionConversion:");
-			s.append(isCollectionConversion);
+			s.append(this.getIsCollectionConversion());
 		}
-		Boolean isFirst = this.getIsFirst();
-		if (isFirst != null) {
+		if (includeDerived) {
 			s.append(" /isFirst:");
-			s.append(isFirst);
+			s.append(this.getIsFirst());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Expression expression1 = this.getExpression1();
 		if (expression1 != null) {
 			System.out.println(prefix + " expression1:");
-			expression1.print(prefix + "  ");
+			expression1.print(prefix + "  ", includeDerived);
 		}
 		Expression expression2 = this.getExpression2();
 		if (expression2 != null) {
 			System.out.println(prefix + " expression2:");
-			expression2.print(prefix + "  ");
+			expression2.print(prefix + "  ", includeDerived);
 		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
 			System.out.println(prefix + " typeName:");
-			typeName.print(prefix + "  ");
+			typeName.print(prefix + "  ", includeDerived);
 		}
-		ElementReference type = this.getType();
-		if (type != null) {
-			System.out.println(prefix + " /type:" + type);
+		if (includeDerived) {
 		}
-		Collection<AssignedSource> assignmentBefore = this
-				.getAssignmentBefore();
-		if (assignmentBefore != null) {
-			if (assignmentBefore.size() > 0) {
+		if (includeDerived) {
+			ElementReference type = this.getType();
+			if (type != null) {
+				System.out.println(prefix + " /type:"
+						+ type.toString(includeDerived));
+			}
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+			Collection<AssignedSource> assignmentBefore = this
+					.getAssignmentBefore();
+			if (assignmentBefore != null && assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
-			}
-			for (Object _object : assignmentBefore.toArray()) {
-				AssignedSource _assignmentBefore = (AssignedSource) _object;
-				System.out.println(prefix + "  " + _assignmentBefore);
+				for (Object _object : assignmentBefore.toArray()) {
+					AssignedSource _assignmentBefore = (AssignedSource) _object;
+					System.out.println(prefix + "  "
+							+ _assignmentBefore.toString(includeDerived));
+				}
 			}
 		}
-		Collection<AssignedSource> assignmentAfter = this.getAssignmentAfter();
-		if (assignmentAfter != null) {
-			if (assignmentAfter.size() > 0) {
+		if (includeDerived) {
+			Collection<AssignedSource> assignmentAfter = this
+					.getAssignmentAfter();
+			if (assignmentAfter != null && assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
-			}
-			for (Object _object : assignmentAfter.toArray()) {
-				AssignedSource _assignmentAfter = (AssignedSource) _object;
-				System.out.println(prefix + "  " + _assignmentAfter);
+				for (Object _object : assignmentAfter.toArray()) {
+					AssignedSource _assignmentAfter = (AssignedSource) _object;
+					System.out.println(prefix + "  "
+							+ _assignmentAfter.toString(includeDerived));
+				}
 			}
 		}
 	}

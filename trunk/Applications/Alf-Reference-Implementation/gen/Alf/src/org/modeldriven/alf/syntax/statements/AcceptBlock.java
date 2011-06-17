@@ -117,40 +117,50 @@ public class AcceptBlock extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" name:");
 		s.append(this.getName());
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
 		Block block = this.getBlock();
 		if (block != null) {
 			System.out.println(prefix + " block:");
-			block.print(prefix + "  ");
+			block.print(prefix + "  ", includeDerived);
 		}
 		QualifiedNameList signalNames = this.getSignalNames();
 		if (signalNames != null) {
 			System.out.println(prefix + " signalNames:");
-			signalNames.print(prefix + "  ");
+			signalNames.print(prefix + "  ", includeDerived);
 		}
-		Collection<ElementReference> signal = this.getSignal();
-		if (signal != null) {
-			if (signal.size() > 0) {
+		if (includeDerived) {
+			Collection<ElementReference> signal = this.getSignal();
+			if (signal != null && signal.size() > 0) {
 				System.out.println(prefix + " /signal:");
-			}
-			for (Object _object : signal.toArray()) {
-				ElementReference _signal = (ElementReference) _object;
-				System.out.println(prefix + "  " + _signal);
+				for (Object _object : signal.toArray()) {
+					ElementReference _signal = (ElementReference) _object;
+					System.out.println(prefix + "  "
+							+ _signal.toString(includeDerived));
+				}
 			}
 		}
 	}

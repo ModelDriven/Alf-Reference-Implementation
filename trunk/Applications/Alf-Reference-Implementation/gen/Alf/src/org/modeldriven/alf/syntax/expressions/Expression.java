@@ -131,54 +131,71 @@ public abstract class Expression extends SyntaxElement {
 	}
 
 	public String toString() {
-		return "(" + this.hashCode() + ")" + this.getImpl().toString();
+		return this.toString(false);
 	}
 
-	public String _toString() {
-		StringBuffer s = new StringBuffer(super._toString());
-		Integer upper = this.getUpper();
-		if (upper != null) {
+	public String toString(boolean includeDerived) {
+		return "(" + this.hashCode() + ")"
+				+ this.getImpl().toString(includeDerived);
+	}
+
+	public String _toString(boolean includeDerived) {
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+		if (includeDerived) {
 			s.append(" /upper:");
-			s.append(upper);
+			s.append(this.getUpper());
 		}
-		Integer lower = this.getLower();
-		if (lower != null) {
+		if (includeDerived) {
 			s.append(" /lower:");
-			s.append(lower);
+			s.append(this.getLower());
 		}
 		return s.toString();
 	}
 
 	public void print() {
-		this.print("");
+		this.print("", false);
 	}
 
-	public void print(String prefix) {
-		super.print(prefix);
-		Collection<AssignedSource> assignmentBefore = this
-				.getAssignmentBefore();
-		if (assignmentBefore != null) {
-			if (assignmentBefore.size() > 0) {
+	public void print(boolean includeDerived) {
+		this.print("", includeDerived);
+	}
+
+	public void print(String prefix, boolean includeDerived) {
+		super.print(prefix, includeDerived);
+		if (includeDerived) {
+			Collection<AssignedSource> assignmentBefore = this
+					.getAssignmentBefore();
+			if (assignmentBefore != null && assignmentBefore.size() > 0) {
 				System.out.println(prefix + " /assignmentBefore:");
-			}
-			for (Object _object : assignmentBefore.toArray()) {
-				AssignedSource _assignmentBefore = (AssignedSource) _object;
-				System.out.println(prefix + "  " + _assignmentBefore);
+				for (Object _object : assignmentBefore.toArray()) {
+					AssignedSource _assignmentBefore = (AssignedSource) _object;
+					System.out.println(prefix + "  "
+							+ _assignmentBefore.toString(includeDerived));
+				}
 			}
 		}
-		Collection<AssignedSource> assignmentAfter = this.getAssignmentAfter();
-		if (assignmentAfter != null) {
-			if (assignmentAfter.size() > 0) {
+		if (includeDerived) {
+			Collection<AssignedSource> assignmentAfter = this
+					.getAssignmentAfter();
+			if (assignmentAfter != null && assignmentAfter.size() > 0) {
 				System.out.println(prefix + " /assignmentAfter:");
-			}
-			for (Object _object : assignmentAfter.toArray()) {
-				AssignedSource _assignmentAfter = (AssignedSource) _object;
-				System.out.println(prefix + "  " + _assignmentAfter);
+				for (Object _object : assignmentAfter.toArray()) {
+					AssignedSource _assignmentAfter = (AssignedSource) _object;
+					System.out.println(prefix + "  "
+							+ _assignmentAfter.toString(includeDerived));
+				}
 			}
 		}
-		ElementReference type = this.getType();
-		if (type != null) {
-			System.out.println(prefix + " /type:" + type);
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+		}
+		if (includeDerived) {
+			ElementReference type = this.getType();
+			if (type != null) {
+				System.out.println(prefix + " /type:"
+						+ type.toString(includeDerived));
+			}
 		}
 	}
 } // Expression
