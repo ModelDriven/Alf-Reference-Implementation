@@ -142,6 +142,7 @@ public class NamedTupleImpl extends TupleImpl {
     
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
+        super.setCurrentScope(currentScope);
         for (NamedExpression namedExpression: this.getSelf().getNamedExpression()) {
             namedExpression.getImpl().setCurrentScope(currentScope);
         }

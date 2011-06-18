@@ -41,7 +41,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public String toString(boolean includeDerived) {
-        return "InternalElementReference " + this.getElement();
+        SyntaxElement element = this.getElement();
+        return "InternalElementReference " + 
+            (element==null? null: element.toString(includeDerived));
     }
 
     public SyntaxElement getElement() {

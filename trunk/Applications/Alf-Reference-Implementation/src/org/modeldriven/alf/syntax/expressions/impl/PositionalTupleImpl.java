@@ -141,6 +141,7 @@ public class PositionalTupleImpl extends TupleImpl {
 
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
+        super.setCurrentScope(currentScope);
         for (Expression expression: this.getSelf().getExpression()) {
             expression.getImpl().setCurrentScope(currentScope);
         }

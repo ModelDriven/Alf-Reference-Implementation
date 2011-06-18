@@ -32,6 +32,11 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
 		return (FeatureLeftHandSide) this.self;
 	}
 
+    @Override 
+    public String toString(boolean includeDerived) {
+        return super.toString(includeDerived) + " feature:(" + feature + ")";
+    }
+
 	public FeatureReference getFeature() {
 		return this.feature;
 	}

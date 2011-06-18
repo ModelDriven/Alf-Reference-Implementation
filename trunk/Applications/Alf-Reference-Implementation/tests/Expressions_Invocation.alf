@@ -23,7 +23,12 @@ class Expressions_Invocation specializes Super {
 
 	//**************************************************************************
 
-	test() {
+	test(inout status1: Status, out status2: Status, out statuses: Status[*]) {
+	
+	  ReadLine(status1);
+	  ReadLine(status2);
+	  ReadLine(statuses);
+	  ReadLine(s);  // Define local name "s" as an output argument.
 	
 	  A(1, true);
 	  A(x=>1, y=>true);
