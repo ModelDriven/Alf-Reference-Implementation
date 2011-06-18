@@ -33,6 +33,11 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	public NameLeftHandSide getSelf() {
 		return (NameLeftHandSide) this.self;
 	}
+	
+	@Override 
+	public String toString(boolean includeDerived) {
+	    return super.toString(includeDerived) + " target:" + target.getPathName();
+	}
 
 	public QualifiedName getTarget() {
 		return this.target;
@@ -41,6 +46,7 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	public void setTarget(QualifiedName target) {
 		this.target = target;
 	}
+	
 
 	/**
 	 * The assignments after a name left-hand side are the same as the

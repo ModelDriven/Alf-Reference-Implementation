@@ -35,7 +35,7 @@ class Expressions_Operator {
   	
 	//**************************************************************************
 
-	test(inout a: Integer[*]) {
+	test(in a: Integer, inout b: Integer, out c: Integer) {
 
 	  subtotals = (Integer)null;
 	  employee = new Employee();
@@ -48,6 +48,9 @@ class Expressions_Operator {
 	  j = 2;
 	  bit = BitString[] { 0, 1, 2 };
 	  mask = BitString[] { 0, 0, 0 };
+	  
+	  b = a;
+	  c = b;
 	  	  	  
 	  i++;
 	  i--;

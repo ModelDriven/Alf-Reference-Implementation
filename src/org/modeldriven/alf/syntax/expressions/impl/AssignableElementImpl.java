@@ -32,7 +32,7 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
 
         ElementReference sourceType = source.getType();
         ElementReference targetType = this.getType();
-
+        
         int targetUpper = this.getUpper();
         int sourceUpper = source.getUpper();
         boolean upperBoundsConform = targetUpper == -1 || targetUpper > 1 || 
