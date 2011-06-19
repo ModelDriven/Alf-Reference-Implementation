@@ -2,4 +2,25 @@ namespace FoundationalModelLibrary::PrimitiveBehaviors;
 
 package BooleanFunctions {
 
+  @primitive
+  public activity Or(in x: Boolean, in y: Boolean): Boolean { }
+
+  @primitive
+  public activity Xor(in x: Boolean, in y: Boolean): Boolean { }
+
+  @primitive
+  public activity And(in x: Boolean, in y: Boolean): Boolean { }
+
+  @primitive
+  public activity Not(in x: Boolean): Boolean { }
+
+  @primitive
+  public activity Implies(in x: Boolean, in y: Boolean): Boolean { }
+  
+  @primitive
+  public activity ToString(in x: Boolean): String { }
+  
+  @primitive
+  public activity ToBoolean(in x: String): Boolean[0..1] { }
+
 }

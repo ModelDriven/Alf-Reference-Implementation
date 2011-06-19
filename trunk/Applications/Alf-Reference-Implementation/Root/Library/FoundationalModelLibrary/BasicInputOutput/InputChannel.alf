@@ -1,8 +1,5 @@
 namespace FoundationalModelLibrary::BasicInputOutput;
 
-private import FoundationalModelLibrary::Common::*;
-private import UML::AuxiliaryConstructs::PrimitiveTypes::*;
-
 abstract class InputChannel specializes Channel {
 
   public abstract hasMore(): Boolean { }

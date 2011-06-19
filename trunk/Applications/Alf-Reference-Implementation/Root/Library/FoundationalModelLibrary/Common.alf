@@ -1,6 +1,6 @@
 namespace FoundationalModelLibrary;
 
-private import UML::AuxiliaryConstructs::PrimitiveTypes::*;
+public import UML::AuxiliaryConstructs::PrimitiveTypes::*;
 
 @ModelLibrary
 package Common {

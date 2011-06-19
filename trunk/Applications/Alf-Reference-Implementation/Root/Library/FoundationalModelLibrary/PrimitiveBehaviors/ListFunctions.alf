@@ -2,4 +2,10 @@ namespace FoundationalModelLibrary::PrimitiveBehaviors;
 
 package ListFunctions {
 
+  @primitive
+  public activity ListSize(in list: any[*] sequence): Integer { }
+  
+  @primitive
+  public activity ListGet(in list: any[*] sequence): any[0..1] { }
+
 }
