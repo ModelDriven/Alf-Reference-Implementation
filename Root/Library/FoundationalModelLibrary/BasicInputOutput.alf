@@ -1,7 +1,6 @@
 namespace FoundationalModelLibrary;
 
-private import FoundationalModelLibrary::Common::Status;
-private import UML::AuxiliaryConstructs::PrimitiveTypes::String;
+public import FoundationalModelLibrary::Common::*;
 
 @ModelLibrary
 package BasicInputOutput {
@@ -18,8 +17,8 @@ package BasicInputOutput {
   public abstract class TextOutputChannel specializes OutputChannel;
   public abstract class StandardOutputChannel specializes TextOutputChannel {}
   
-  public activity ReadLine(out result: String, out errorStatus: Status[0..1]) {
-    StandardInputChannel.allInstances().readLine(result, errorStatus);
+  public activity ReadLine(out errorStatus: Status[0..1]): String {
+    return StandardInputChannel.allInstances().readLine(errorStatus);
   }
   
   public activity WriteLine(in value: String, out errorStatus: Status[0..1]) {

@@ -1,8 +1,5 @@
 namespace FoundationalModelLibrary::BasicInputOutput;
 
-private import FoundationalModelLibrary::Common::*;
-private import UML::AuxiliaryConstructs::PrimitiveTypes::*;
-
 abstract class TextOutputChannel specializes OutputChannel {
 
   public writeString(in value: String, out errorStatus: Status[0..1]) { }

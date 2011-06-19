@@ -1,5 +1,44 @@
 namespace Alf::Library::PrimitiveBehaviors;
 
-@ModelLibrary
 package BitStringFunctions {
+
+  @primitive
+  public activity IsSet(in b: BitString, n: Integer): BitString { }
+  
+  @primitive
+  public activity BitLength(): Integer { }
+  
+  @primitive
+  public activity ToBitString(in n: Integer): BitString { }
+  
+  @primitive
+  public activity ToInteger(in b: BitString): Integer { }
+
+  @primitive
+  public activity ToString(in b: BitString): String { }
+
+  @primitive
+  public activity ToOctalString(in b: BitString): String { }
+
+  @primitive
+  public activity '~'(in b: BitString): BitString { }
+
+  @primitive
+  public activity '|'(in b1: BitString, in b2: BitString): BitString { }
+
+  @primitive
+  public activity '^'(in b1: BitString, in b2: BitString): BitString { }
+
+  @primitive
+  public activity '&'(in b1: BitString, in b2: BitString): BitString { }
+  
+  @primitive
+  public activity '<<'(in x: BitString, in n: Integer): BitString { }
+  
+  @primitive
+  public activity '>>'(in x: BitString, in n: Integer): BitString { }
+  
+  @primitive
+  public activity '>>>'(in x: BitString, in n: Integer): BitString): BitString[0..1] { }
+  
 }

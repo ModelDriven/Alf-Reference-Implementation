@@ -2,4 +2,31 @@ namespace FoundationalModelLibrary::PrimitiveBehaviors;
 
 package UnlimitedNaturalFunctions {
 
+  @primitive
+  public activity Max(in x: UnlimitedNatural, in y: UnlimitedNatural): UnlimitedNatural { }
+
+  @primitive
+  public activity Min(in x: UnlimitedNatural, in y: UnlimitedNatural): UnlimitedNatural { }
+
+  @primitive
+  public activity '<'(in x: UnlimitedNatural, in y: UnlimitedNatural): Boolean { }
+
+  @primitive
+  public activity '>'(in x: UnlimitedNatural, in y: UnlimitedNatural): Boolean { }
+
+  @primitive
+  public activity '<='(in x: UnlimitedNatural, in y: UnlimitedNatural): Boolean { }
+
+  @primitive
+  public activity '>='(in x: UnlimitedNatural, in y: UnlimitedNatural): Boolean { }
+
+  @primitive
+  public activity ToString(in x: UnlimitedNatural): String {}
+
+  @primitive
+  public activity ToInteger(in x: UnlimitedNatural): Integer[0..1] {}
+
+  @primitive
+  public activity ToUnlimitedNatural(in x: String): UnlimitedNatural[0..1] {}
+
 }

@@ -2,4 +2,14 @@ namespace FoundationalModelLibrary::PrimitiveBehaviors;
 
 package StringFunctions {
 
+  @primitive
+  public activity Concat(in x: String, in y: String): String { }
+  
+  @primitive
+  public activity Size(in x: String): Integer { }
+  
+  @primitive
+  public activity Substring(in x: String, 
+    in lower: Integer, in upper:Integer): String[0..1] { }
+
 }
