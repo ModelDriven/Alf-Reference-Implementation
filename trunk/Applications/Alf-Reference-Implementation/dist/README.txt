@@ -8,17 +8,24 @@ the 1.0 Beta 1 specification, see
 
 http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/doc/
 
-The Alf Parser reflects the Beta 1 specification, though the implementation of
-static semantic checking corrects a number of errors in the current
-specification. All errors uncovered will be submitted to OMG as issues, with
-the intent to resolve them before the spcecification is finalized.
+The Alf Parser reflects the Beta 1 specification. The parser is implemented 
+using JavaCC compiler-compiler technology and constructs an abstract syntax tree 
+for the parsed text. Base source Java classes for the abstract syntax tree 
+elements are generated from the Alf abstract syntax metamodel. Additional 
+manually coded implementation classes associated with each generated syntax 
+element class are used to implement static semantic checks.
 
-The parser is implemented using JavaCC compiler-compiler technology and
-constructs an abstract syntax tree for the parsed text. Base source Java classes
-for the abstract syntax tree elements are generated from the Alf abstract syntax
-metamodel. An additional manually coded implemention class association each
-generated syntax element class is used to implement static semantic checks for
-the represented syntax element.
+Licensing
+---------
+
+Data Access Technology, Inc., is the copyright owner of all Alf Parser source
+code and hereby licenses such software to you under the Academic Free License
+version 3.0, which may be found at
+
+http://www.opensource.org/licenses/afl-3.0.php
+
+Installation
+------------
 
 The parser source code and a compiled JAR file can be found at
 
@@ -33,14 +40,30 @@ The files alf-parser.jar and alfp.bat should be placed in the same directory.
 The archive Root.zip should also be unzipped into this directory (establishing a
 Root subdirectory).
 
-Licensing
----------
+Release Notes
+-------------
 
-Data Access Technology, Inc., is the copyright owner of all Alf Parser source
-code and hereby licenses such software to you under the Academic Free License
-version 3.0, which may be found at
+The Alf Parser implements the full Alf syntax at the Extended compliance level, 
+as given in the "Consolidated LL Grammar" annex to the Alf Specification.
 
-http://www.opensource.org/licenses/afl-3.0.php
+Static semantic checking is directly based on validating the constraints
+defined in Part III of the Alf Specification. However, as errors were
+discovered in these definitions, or inconsistencies with the descriptions in
+Part II were identified, these were corrected in the implementation. All such
+issues are being reported to the Alf Finalization Task Force for correction in
+the final specification.
+
+The following Alf features are NOT currently implemented:
+
+- Profile and stereotype application (other than application of the standard 
+stereotypes ModelLibrary, Create and Destroy)
+
+- Alternative constructor invocations
+
+- Limitation of super constructor invocation to occur in an expression statement 
+at the start of a constructor body
+
+- Overloading resolution.
 
 Unit Resolution
 ---------------
@@ -142,28 +165,32 @@ element. Search for this numeric code surrounded by square brackets (e.g.,
 syntax tree.]
 
 Some sample Alf code can be found in the tests.zip archive. These units should
-all parse successfully with no constraint violations, given assume that the
+all parse successfully with no constraint violations, assuming that the
 Root/Model directory contains the units provided in the Root.zip archive.
 
 Application Program Interface
 -----------------------------
 
+All AlfParser class are contained in subpackages of org.modeldriven.alf. In the
+following, it is assumed that an import has been done at this level, with
+explicit qualifications shown for any subpackages.
+
 An AlfParser is constructed with an input stream that provides the text to be
 parsed. For example, 
 
-AlfParser parser = new AlfParser(System.in);
+parser.AlfParser parser = new parser.AlfParser(System.in);
 
 constructs a parser of text from the system input. The AlfParser class has a
 method corresponding to each non-terminal in the Alf grammar (see Annex C of the
 specification document). Calling one of these methods parses the input text
 as the corresponding non-terminal. The most common uses are:
 
-UnitDefinition unit = parser.UnitDefinition();
-Block statements = parser.StatementSequence(); // Note: return type is Block
-Expression expr = parser.Expression();
+syntax.units.UnitDefinition unit = parser.UnitDefinition();
+syntax.statements.Block statements = parser.StatementSequence();
+syntax.expressions.Expression expr = parser.Expression();
 
-An unsuccessful parse results in the throwing of org.modeldriven.alf.parser.
-ParseException.
+(Note that the return type of StatementSequence() is Block.) An unsuccessful
+parse results in the throwing of parser.ParseException.
 
 The result of a successful parse is an instance of the corresponding abstract 
 syntax node class in the package org.modeldriven.alf.syntax. The abstract
@@ -179,7 +206,8 @@ element.print(true);
 
 Static semantic checking is done by calling the checkConstaint method:
 
-Collection<ConstraintViolation> violations = element.checkConstraints();
+Collection<syntax.common.ConstraintViolation> violations = 
+    element.checkConstraints();
 
 As shown, the method returns a collection of the constraint violations it has
 detected (if any). The ConstraintViolation object records the name of the
@@ -195,14 +223,14 @@ directly using the setCurrentScope method:
 
 element.getImpl().setCurrentScope(currentScope);
 
-where "currentScope" must be an Alf NamespaceDefinition.
+where "currentScope" must be an instance of syntax.units.NamespaceDefinition.
 
 A Unit defines its own current scope, so this does not need to be set
 explicitly. Instead, the following resolution needs to be carried out for a
 unit:
 
 // Get the subunit stub for this unit, if any.
-Member stub = unit.getImpl().getStub();
+syntax.units.Member stub = unit.getImpl().getStub();
 
 if (stub != null) {
    // If the unit is a subunit, resolve its stub.
@@ -216,4 +244,6 @@ if (stub != null) {
 
 (The Alf specification requires implicit imports NOT be added if the unit is a
 model library. This is not checked for in the above code, because the
-addImplicitImports methods checks for that itself.)
+addImplicitImports methods checks for that itself. Note also that imports are
+only added above for model units, since subunits can access the implicit imports
+from their enclosing model unit.)
