@@ -33,6 +33,7 @@ public class SequenceOperationExpressionImpl
 	private QualifiedName operation = null;
 	private Boolean isCollectionConversion = null; // DERIVED
 	private Boolean isBitStringConversion = null; // DERIVED
+	private LeftHandSide leftHandSide = null; // DERIVED
 	
 	private Expression expression = null;
 
@@ -82,6 +83,17 @@ public class SequenceOperationExpressionImpl
 	public void setIsBitStringConversion(Boolean isBitStringConversion) {
 		this.isBitStringConversion = isBitStringConversion;
 	}
+
+    public LeftHandSide getLeftHandSide() {
+        if (this.leftHandSide == null) {
+            this.setLeftHandSide(this.deriveLeftHandSide());
+        }
+        return this.leftHandSide;
+    }
+
+    public void setLeftHandSide(LeftHandSide leftHandSide) {
+        this.leftHandSide = leftHandSide;
+    }
 
     /**
      * Collection conversion is required if the type of the primary expression
@@ -147,6 +159,26 @@ public class SequenceOperationExpressionImpl
 	    return null;
 	}
 	
+	/**
+	 * The left-hand side for an "in-place" sequence operation expression is the
+	 * equivalent to the left-hand side for an argument to the initial inout
+	 * parameter of the operation. 
+	 */
+    public LeftHandSide deriveLeftHandSide() {
+        LeftHandSide lhs = null;
+        if (this.isInPlace()) {
+            Expression expression = this.getExpression();
+            FormalParameter parameter = this.getFirstParameter();
+            if (expression != null && parameter != null) {
+                OutputNamedExpression namedExpression = new OutputNamedExpression();
+                namedExpression.setName(parameter.getName());
+                namedExpression.setExpression(expression);
+                lhs = namedExpression.getLeftHandSide();
+            }
+        }
+        return lhs;
+    }
+
 	/*
 	 * Derivations
 	 */
@@ -379,19 +411,6 @@ public class SequenceOperationExpressionImpl
             
         }
         return this.expression;
-    }
-
-    public LeftHandSide getLeftHandSide() {
-        Expression expression = this.getExpression();
-        FormalParameter parameter = this.getFirstParameter();
-        if (expression == null || parameter == null) {
-            return null;
-        } else {
-            OutputNamedExpression namedExpression = new OutputNamedExpression();
-            namedExpression.setName(parameter.getName());
-            namedExpression.setExpression(expression);
-            return namedExpression.getLeftHandSide();
-        }
     }
 
 	@Override
