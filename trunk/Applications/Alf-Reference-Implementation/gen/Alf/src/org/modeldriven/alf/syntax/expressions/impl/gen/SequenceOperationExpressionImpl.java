@@ -36,6 +36,7 @@ public class SequenceOperationExpressionImpl
 	private QualifiedName operation = null;
 	private Boolean isCollectionConversion = null; // DERIVED
 	private Boolean isBitStringConversion = null; // DERIVED
+	private LeftHandSide leftHandSide = null; // DERIVED
 
 	public SequenceOperationExpressionImpl(SequenceOperationExpression self) {
 		super(self);
@@ -83,11 +84,26 @@ public class SequenceOperationExpressionImpl
 		this.isBitStringConversion = isBitStringConversion;
 	}
 
+	public LeftHandSide getLeftHandSide() {
+		if (this.leftHandSide == null) {
+			this.setLeftHandSide(this.deriveLeftHandSide());
+		}
+		return this.leftHandSide;
+	}
+
+	public void setLeftHandSide(LeftHandSide leftHandSide) {
+		this.leftHandSide = leftHandSide;
+	}
+
 	protected Boolean deriveIsCollectionConversion() {
 		return null; // STUB
 	}
 
 	protected Boolean deriveIsBitStringConversion() {
+		return null; // STUB
+	}
+
+	protected LeftHandSide deriveLeftHandSide() {
 		return null; // STUB
 	}
 

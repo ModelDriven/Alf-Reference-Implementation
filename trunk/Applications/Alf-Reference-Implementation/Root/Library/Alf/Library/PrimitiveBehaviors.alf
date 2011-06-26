@@ -1,6 +1,5 @@
 namespace Alf::Library;
 
-@ModelLibrary
 package PrimitiveBehaviors {
 
    public package BooleanFunctions;

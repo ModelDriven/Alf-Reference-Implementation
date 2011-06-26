@@ -241,6 +241,14 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         return importedMembers;
     }
     
+    public Member getStub() {
+        UnitDefinition self = this.getSelf();
+        ElementReference namespaceReference = self.getNamespace();
+        NamespaceDefinition namespace = namespaceReference == null? null: 
+            namespaceReference.getImpl().asNamespace();
+        return namespace == null? null: namespace.getImpl().getStubFor(self);
+    }
+    
     public void addImplicitImports() {
         UnitDefinition self = this.getSelf();
         if (!this.hasImplicitImports() && self.getNamespaceName() == null &&

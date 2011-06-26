@@ -10,9 +10,17 @@ public class ConstraintViolation {
         this.violatingElement = violatingElement;
     }
     
+    public String getConstraintName() {
+        return this.constraintName;
+    }
+    
+    public Object getViolatingElement() {
+        return this.violatingElement;
+    }
+    
     @Override
     public String toString() {
-        return this.constraintName + ": " + violatingElement;
+        return this.getConstraintName() + ": " + this.getViolatingElement();
     }
 
 }

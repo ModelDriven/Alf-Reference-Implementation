@@ -1,13 +1,13 @@
 activity Quicksort(in list: Integer[0..*] sequence):       
   Integer[0..*] sequence 
 {
-  x = list[1];                                          
+  x = list[1]; 
+  list1 = list->excludeAt(1);                                         
   if (list->isEmpty()) {                                  
     return null;                                          
   } else {
-    list->removeAt(1);
-    return Quicksort(list->select a (a < x))->           
+    return Quicksort(list1->select a (a < x))->           
            including(x)->
-           union(Quicksort(list->select b (b >= x)));
+           union(Quicksort(list1->select b (b >= x)));
   }
 }

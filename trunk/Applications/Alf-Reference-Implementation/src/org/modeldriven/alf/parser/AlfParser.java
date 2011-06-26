@@ -102,15 +102,10 @@ public class AlfParser implements AlfParserConstants {
       if (checkConstraints) {
         UnitDefinition unit = (UnitDefinition)element;
         unit.getImpl().addImplicitImports();
-        ElementReference namespaceReference = unit.getNamespace();
-        NamespaceDefinition namespace = namespaceReference == null? null:
-                                                                        namespaceReference.getImpl().asNamespace();
-        if (namespace != null) {
-          Member stub = namespace.getImpl().getStubFor(unit);
-          if (stub != null) {
-            System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
-            stub.setSubunit(unit);
-          }
+        Member stub = unit.getImpl().getStub();
+        if (stub != null) {
+          System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
+          stub.setSubunit(unit);
         }
         Collection<ConstraintViolation> violations = element.checkConstraints();
         if (violations.isEmpty()) {
@@ -5582,6 +5577,36 @@ public class AlfParser implements AlfParserConstants {
     finally { jj_save(44, xla); }
   }
 
+  private boolean jj_3R_96() {
+    if (jj_3R_122()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_95() {
+    if (jj_3R_121()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_79() {
+    if (jj_3R_110()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_94() {
+    if (jj_3R_120()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_88() {
+    if (jj_3R_114()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_87() {
+    if (jj_3R_113()) return true;
+    return false;
+  }
+
   private boolean jj_3R_58() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6543,6 +6568,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3_35() {
+    if (jj_3R_71()) return true;
+    return false;
+  }
+
   private boolean jj_3R_82() {
     Token xsp;
     if (jj_3_4()) return true;
@@ -6550,11 +6580,6 @@ public class AlfParser implements AlfParserConstants {
       xsp = jj_scanpos;
       if (jj_3_4()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  private boolean jj_3_35() {
-    if (jj_3R_71()) return true;
     return false;
   }
 
@@ -7298,36 +7323,6 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_97() {
     if (jj_3R_123()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_96() {
-    if (jj_3R_122()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_95() {
-    if (jj_3R_121()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_79() {
-    if (jj_3R_110()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_94() {
-    if (jj_3R_120()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_88() {
-    if (jj_3R_114()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_87() {
-    if (jj_3R_113()) return true;
     return false;
   }
 

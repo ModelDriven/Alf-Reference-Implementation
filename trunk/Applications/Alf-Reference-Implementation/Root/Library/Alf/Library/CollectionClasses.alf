@@ -1,7 +1,6 @@
 namespace Alf::Library;
 private import Alf::Library::PrimitiveTypes::*;
 
-@ModelLibrary
 package CollectionClasses {
 
   public abstract class Collection<T>;

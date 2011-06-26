@@ -158,6 +158,12 @@ public abstract class Tuple extends SyntaxElement {
 			violations.add(new ConstraintViolation("tupleAssignmentsAfter",
 					this));
 		}
+		for (Object _input : this.getInput().toArray()) {
+			((NamedExpression) _input).checkConstraints(violations);
+		}
+		for (Object _output : this.getOutput().toArray()) {
+			((OutputNamedExpression) _output).checkConstraints(violations);
+		}
 	}
 
 	public String toString() {
@@ -190,8 +196,11 @@ public abstract class Tuple extends SyntaxElement {
 				System.out.println(prefix + " /input:");
 				for (Object _object : input.toArray()) {
 					NamedExpression _input = (NamedExpression) _object;
-					System.out.println(prefix + "  "
-							+ _input.toString(includeDerived));
+					if (_input != null) {
+						_input.print(prefix + "  ", includeDerived);
+					} else {
+						System.out.println(prefix + "  null");
+					}
 				}
 			}
 		}
@@ -206,8 +215,11 @@ public abstract class Tuple extends SyntaxElement {
 				System.out.println(prefix + " /output:");
 				for (Object _object : output.toArray()) {
 					OutputNamedExpression _output = (OutputNamedExpression) _object;
-					System.out.println(prefix + "  "
-							+ _output.toString(includeDerived));
+					if (_output != null) {
+						_output.print(prefix + "  ", includeDerived);
+					} else {
+						System.out.println(prefix + "  null");
+					}
 				}
 			}
 		}
