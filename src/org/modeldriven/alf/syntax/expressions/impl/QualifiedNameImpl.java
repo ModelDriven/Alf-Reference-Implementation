@@ -845,7 +845,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             List<ElementReference> templateParameters,
             List<ElementReference> templateArguments) {
         QualifiedName qualifiedName = null;
-        // TODO: Allow template arguments other classifiers.
+        // TODO: Allow template arguments other than classifiers.
         ElementReference referent = this.getClassifierReferent();
         if (referent != null) {
             for (int i = 0; i < templateParameters.size(); i++) {
