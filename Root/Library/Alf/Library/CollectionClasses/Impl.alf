@@ -1,5 +1,4 @@
 namespace Alf::Library::CollectionClasses;
-@ModelLibrary
 package Impl {
 
   private abstract class CollectionImpl<T>;

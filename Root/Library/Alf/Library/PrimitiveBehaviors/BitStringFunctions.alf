@@ -3,7 +3,7 @@ namespace Alf::Library::PrimitiveBehaviors;
 package BitStringFunctions {
 
   @primitive
-  public activity IsSet(in b: BitString, n: Integer): BitString { }
+  public activity IsSet(in b: BitString, in n: Integer): BitString { }
   
   @primitive
   public activity BitLength(): Integer { }
@@ -39,6 +39,6 @@ package BitStringFunctions {
   public activity '>>'(in x: BitString, in n: Integer): BitString { }
   
   @primitive
-  public activity '>>>'(in x: BitString, in n: Integer): BitString): BitString[0..1] { }
+  public activity '>>>'(in x: BitString, in n: Integer): BitString[0..1] { }
   
 }

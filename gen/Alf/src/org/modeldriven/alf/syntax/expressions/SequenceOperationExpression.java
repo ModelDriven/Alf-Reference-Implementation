@@ -72,6 +72,14 @@ public class SequenceOperationExpression extends InvocationExpression {
 		this.getImpl().setIsBitStringConversion(isBitStringConversion);
 	}
 
+	public LeftHandSide getLeftHandSide() {
+		return this.getImpl().getLeftHandSide();
+	}
+
+	public void setLeftHandSide(LeftHandSide leftHandSide) {
+		this.getImpl().setLeftHandSide(leftHandSide);
+	}
+
 	/**
 	 * The referent for a sequence operation expression is the behavior named by
 	 * the operation for the expression.
@@ -211,6 +219,10 @@ public class SequenceOperationExpression extends InvocationExpression {
 		if (operation != null) {
 			operation.checkConstraints(violations);
 		}
+		LeftHandSide leftHandSide = this.getLeftHandSide();
+		if (leftHandSide != null) {
+			leftHandSide.checkConstraints(violations);
+		}
 	}
 
 	public String toString() {
@@ -258,6 +270,13 @@ public class SequenceOperationExpression extends InvocationExpression {
 		if (includeDerived) {
 		}
 		if (includeDerived) {
+		}
+		if (includeDerived) {
+			LeftHandSide leftHandSide = this.getLeftHandSide();
+			if (leftHandSide != null) {
+				System.out.println(prefix + " /leftHandSide:");
+				leftHandSide.print(prefix + "  ", includeDerived);
+			}
 		}
 	}
 } // SequenceOperationExpression

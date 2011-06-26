@@ -3,6 +3,5 @@ public import FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Con
 public import FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Concat as Size;
 public import FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Concat as Substring;
 
-@ModelLibrary
 package StringFunctions {
 }

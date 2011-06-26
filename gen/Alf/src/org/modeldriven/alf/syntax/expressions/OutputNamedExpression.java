@@ -93,6 +93,10 @@ public class OutputNamedExpression extends NamedExpression {
 			violations.add(new ConstraintViolation("outputNamedExpressionForm",
 					this));
 		}
+		LeftHandSide leftHandSide = this.getLeftHandSide();
+		if (leftHandSide != null) {
+			leftHandSide.checkConstraints(violations);
+		}
 	}
 
 	public String toString() {
@@ -122,8 +126,8 @@ public class OutputNamedExpression extends NamedExpression {
 		if (includeDerived) {
 			LeftHandSide leftHandSide = this.getLeftHandSide();
 			if (leftHandSide != null) {
-				System.out.println(prefix + " /leftHandSide:"
-						+ leftHandSide.toString(includeDerived));
+				System.out.println(prefix + " /leftHandSide:");
+				leftHandSide.print(prefix + "  ", includeDerived);
 			}
 		}
 	}

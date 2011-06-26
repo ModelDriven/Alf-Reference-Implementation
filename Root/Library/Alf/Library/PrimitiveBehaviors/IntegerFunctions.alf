@@ -16,7 +16,6 @@ public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::To
 public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToUnlimitedNatural;
 public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToInteger;
 
-@ModelLibrary
 package IntegerFunctions {
 
   @primitive
