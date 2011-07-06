@@ -313,12 +313,6 @@ public abstract class Member extends DocumentedElement {
 			}
 		}
 		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
 			UnitDefinition subunit = this.getSubunit();
 			if (subunit != null) {
 				System.out.println(prefix + " /subunit:"

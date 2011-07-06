@@ -264,9 +264,5 @@ public class SwitchStatement extends Statement {
 			System.out.println(prefix + " defaultClause:");
 			defaultClause.print(prefix + "  ", includeDerived);
 		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // SwitchStatement

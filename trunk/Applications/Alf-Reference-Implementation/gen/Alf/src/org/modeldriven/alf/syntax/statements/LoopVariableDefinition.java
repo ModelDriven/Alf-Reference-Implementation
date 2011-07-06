@@ -313,15 +313,11 @@ public class LoopVariableDefinition extends SyntaxElement {
 			typeName.print(prefix + "  ", includeDerived);
 		}
 		if (includeDerived) {
-		}
-		if (includeDerived) {
 			ElementReference type = this.getType();
 			if (type != null) {
 				System.out.println(prefix + " /type:"
 						+ type.toString(includeDerived));
 			}
-		}
-		if (includeDerived) {
 		}
 		if (includeDerived) {
 			Collection<AssignedSource> assignmentBefore = this

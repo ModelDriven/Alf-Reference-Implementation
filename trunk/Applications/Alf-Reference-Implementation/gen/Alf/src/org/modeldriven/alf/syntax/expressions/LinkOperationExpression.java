@@ -197,10 +197,6 @@ public class LinkOperationExpression extends InvocationExpression {
 
 	public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 		QualifiedName associationName = this.getAssociationName();
 		if (associationName != null) {
 			System.out.println(prefix + " associationName:");

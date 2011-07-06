@@ -216,7 +216,5 @@ public abstract class Statement extends DocumentedElement {
 						+ enclosingStatement.toString(includeDerived));
 			}
 		}
-		if (includeDerived) {
-		}
 	}
 } // Statement

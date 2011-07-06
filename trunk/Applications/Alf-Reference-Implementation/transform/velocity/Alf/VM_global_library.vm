@@ -339,13 +339,12 @@ public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 	#end	
 	#foreach( $attribute in ${class.ownedAttributes} )
-		#if( ${attribute.isDerived()} )
-			#set( $deriv = "/" )
-			if (includeDerived) {
-		#else
-			#set( $deriv = "" )
-		#end
+		#set( $deriv = "" )
  		#if( ${attribute.upper}!=1 )
+			#if( ${attribute.isDerived()} )
+				#set( $deriv = "/" )
+				if (includeDerived) {
+			#end
 		    #type($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
  			if (#name(${attribute.name}) != null && #name($attribute.name).size() > 0) {
      			System.out.println(prefix + " $deriv${attribute.name}:");
@@ -364,7 +363,14 @@ public void print(String prefix, boolean includeDerived) {
 	     			#end
 	 			}
  			}
+			#if( ${attribute.isDerived()} )
+				}
+			#end
  		#elseif( ${attribute.type.eClass().name}!="PrimitiveType" )
+			#if( ${attribute.isDerived()} )
+				#set( $deriv = "/" )
+				if (includeDerived) {
+			#end
 	    	#basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
 			if (#name(${attribute.name}) != null) {
 				#if( !${attribute.isComposite()} )
@@ -375,9 +381,9 @@ public void print(String prefix, boolean includeDerived) {
 					#name(${attribute.name}).print(prefix + "  ", includeDerived);
 				#end
 			}
-		#end
-		#if( ${attribute.isDerived()} )
-			}
+			#if( ${attribute.isDerived()} )
+				}
+			#end
 		#end
 	#end
 }

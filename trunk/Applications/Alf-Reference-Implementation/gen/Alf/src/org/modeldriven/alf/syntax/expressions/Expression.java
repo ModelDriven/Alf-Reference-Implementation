@@ -187,10 +187,6 @@ public abstract class Expression extends SyntaxElement {
 			}
 		}
 		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
 			ElementReference type = this.getType();
 			if (type != null) {
 				System.out.println(prefix + " /type:"

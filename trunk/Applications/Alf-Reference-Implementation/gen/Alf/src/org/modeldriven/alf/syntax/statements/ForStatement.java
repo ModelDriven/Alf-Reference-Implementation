@@ -261,7 +261,5 @@ public class ForStatement extends Statement {
 				}
 			}
 		}
-		if (includeDerived) {
-		}
 	}
 } // ForStatement

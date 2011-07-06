@@ -255,7 +255,5 @@ public class AcceptStatement extends Statement {
 						+ behavior.toString(includeDerived));
 			}
 		}
-		if (includeDerived) {
-		}
 	}
 } // AcceptStatement

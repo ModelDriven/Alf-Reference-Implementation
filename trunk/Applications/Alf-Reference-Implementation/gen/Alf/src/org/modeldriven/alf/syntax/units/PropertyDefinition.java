@@ -191,9 +191,5 @@ public class PropertyDefinition extends TypedElementDefinition {
 			System.out.println(prefix + " initializer:");
 			initializer.print(prefix + "  ", includeDerived);
 		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // PropertyDefinition

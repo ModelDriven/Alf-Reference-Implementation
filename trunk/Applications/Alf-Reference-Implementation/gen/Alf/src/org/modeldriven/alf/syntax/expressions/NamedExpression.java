@@ -168,9 +168,5 @@ public class NamedExpression extends SyntaxElement {
 			System.out.println(prefix + " index:");
 			index.print(prefix + "  ", includeDerived);
 		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // NamedExpression

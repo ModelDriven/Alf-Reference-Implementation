@@ -205,10 +205,6 @@ public class InstanceCreationExpression extends InvocationExpression {
 
 	public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 		QualifiedName constructor = this.getConstructor();
 		if (constructor != null) {
 			System.out.println(prefix + " constructor:");

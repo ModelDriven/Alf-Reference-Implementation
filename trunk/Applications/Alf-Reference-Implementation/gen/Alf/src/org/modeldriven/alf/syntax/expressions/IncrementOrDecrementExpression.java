@@ -340,11 +340,5 @@ public class IncrementOrDecrementExpression extends Expression {
 						+ feature.toString(includeDerived));
 			}
 		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // IncrementOrDecrementExpression

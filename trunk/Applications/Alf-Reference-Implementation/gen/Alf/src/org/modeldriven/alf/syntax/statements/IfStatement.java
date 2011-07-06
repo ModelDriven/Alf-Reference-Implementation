@@ -223,9 +223,5 @@ public class IfStatement extends Statement {
 			System.out.println(prefix + " finalClause:");
 			finalClause.print(prefix + "  ", includeDerived);
 		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // IfStatement

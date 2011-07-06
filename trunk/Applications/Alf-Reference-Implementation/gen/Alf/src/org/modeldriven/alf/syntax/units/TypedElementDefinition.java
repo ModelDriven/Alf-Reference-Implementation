@@ -215,9 +215,5 @@ public abstract class TypedElementDefinition extends Member {
 						+ type.toString(includeDerived));
 			}
 		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // TypedElementDefinition

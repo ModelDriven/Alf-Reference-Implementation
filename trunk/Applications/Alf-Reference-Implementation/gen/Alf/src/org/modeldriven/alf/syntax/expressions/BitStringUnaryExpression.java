@@ -141,7 +141,5 @@ public class BitStringUnaryExpression extends UnaryExpression {
 
 	public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
-		if (includeDerived) {
-		}
 	}
 } // BitStringUnaryExpression

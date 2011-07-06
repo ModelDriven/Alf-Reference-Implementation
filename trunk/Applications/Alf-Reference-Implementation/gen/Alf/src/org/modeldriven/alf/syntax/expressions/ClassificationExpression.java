@@ -193,8 +193,6 @@ public class ClassificationExpression extends UnaryExpression {
 						+ referent.toString(includeDerived));
 			}
 		}
-		if (includeDerived) {
-		}
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {
 			System.out.println(prefix + " typeName:");

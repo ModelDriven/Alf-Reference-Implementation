@@ -328,9 +328,5 @@ public class OperationDefinition extends NamespaceDefinition {
 				}
 			}
 		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // OperationDefinition

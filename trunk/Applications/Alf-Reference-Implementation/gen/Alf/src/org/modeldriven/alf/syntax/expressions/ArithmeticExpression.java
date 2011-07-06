@@ -145,7 +145,5 @@ public class ArithmeticExpression extends BinaryExpression {
 
 	public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
-		if (includeDerived) {
-		}
 	}
 } // ArithmeticExpression
