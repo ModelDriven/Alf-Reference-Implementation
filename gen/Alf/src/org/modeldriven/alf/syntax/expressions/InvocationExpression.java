@@ -335,10 +335,6 @@ public abstract class InvocationExpression extends Expression {
 	public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
 			FeatureReference feature = this.getFeature();
 			if (feature != null) {
 				System.out.println(prefix + " /feature:"
@@ -349,12 +345,6 @@ public abstract class InvocationExpression extends Expression {
 		if (tuple != null) {
 			System.out.println(prefix + " tuple:");
 			tuple.print(prefix + "  ", includeDerived);
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
 		}
 		if (includeDerived) {
 			ElementReference referent = this.getReferent();
@@ -373,8 +363,6 @@ public abstract class InvocationExpression extends Expression {
 							+ _parameter.toString(includeDerived));
 				}
 			}
-		}
-		if (includeDerived) {
 		}
 	}
 } // InvocationExpression

@@ -268,10 +268,6 @@ public class SequenceOperationExpression extends InvocationExpression {
 			operation.print(prefix + "  ", includeDerived);
 		}
 		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
 			LeftHandSide leftHandSide = this.getLeftHandSide();
 			if (leftHandSide != null) {
 				System.out.println(prefix + " /leftHandSide:");

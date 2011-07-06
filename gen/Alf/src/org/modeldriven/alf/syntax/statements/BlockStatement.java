@@ -170,7 +170,5 @@ public class BlockStatement extends Statement {
 			System.out.println(prefix + " block:");
 			block.print(prefix + "  ", includeDerived);
 		}
-		if (includeDerived) {
-		}
 	}
 } // BlockStatement

@@ -328,10 +328,6 @@ public class QualifiedName extends SyntaxElement {
 	public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
 			QualifiedName qualification = this.getQualification();
 			if (qualification != null) {
 				System.out.println(prefix + " /qualification:"

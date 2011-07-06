@@ -238,8 +238,6 @@ public class UnitDefinition extends DocumentedElement {
 			}
 		}
 		if (includeDerived) {
-		}
-		if (includeDerived) {
 			Collection<Profile> appliedProfile = this.getAppliedProfile();
 			if (appliedProfile != null && appliedProfile.size() > 0) {
 				System.out.println(prefix + " /appliedProfile:");

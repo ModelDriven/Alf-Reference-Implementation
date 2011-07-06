@@ -93,9 +93,5 @@ public abstract class SequenceElements extends SyntaxElement {
 
 	public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // SequenceElements

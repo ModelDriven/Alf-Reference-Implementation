@@ -192,11 +192,5 @@ public class LogicalExpression extends BinaryExpression {
 
 	public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
 	}
 } // LogicalExpression

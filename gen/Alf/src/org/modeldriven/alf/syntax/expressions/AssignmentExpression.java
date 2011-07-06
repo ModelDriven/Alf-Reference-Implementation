@@ -524,27 +524,11 @@ public class AssignmentExpression extends Expression {
 			}
 		}
 		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
 			Expression expression = this.getExpression();
 			if (expression != null) {
 				System.out.println(prefix + " /expression:"
 						+ expression.toString(includeDerived));
 			}
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
-		}
-		if (includeDerived) {
 		}
 	}
 } // AssignmentExpression
