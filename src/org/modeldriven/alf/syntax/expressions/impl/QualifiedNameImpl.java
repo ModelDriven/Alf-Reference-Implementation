@@ -854,13 +854,13 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
                     ElementReference templateArgument = 
                         i >= templateArguments.size()? null: 
                             templateArguments.get(i);
-                    qualifiedName = new QualifiedName();
                     if (templateArgument != null) {
+                        qualifiedName = new QualifiedName();
                         qualifiedName.setNameBinding(templateArgument.getImpl().
                                 asNamespace().getImpl().getQualifiedName().getNameBinding());
                         referents.add(templateArguments.get(i));
+                        qualifiedName.setReferent(referents);
                     }
-                    qualifiedName.setReferent(referents);
                     break;
                 }
             }
