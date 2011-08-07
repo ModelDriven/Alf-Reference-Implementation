@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
+import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.syntax.common.*;
 
 /**
@@ -19,7 +20,7 @@ import org.modeldriven.alf.syntax.common.*;
 public abstract class SyntaxElementImpl {
 
 	protected SyntaxElement self;
-
+	
 	public SyntaxElementImpl(SyntaxElement self) {
 		this.self = self;
 	}
@@ -27,7 +28,17 @@ public abstract class SyntaxElementImpl {
 	public SyntaxElement getSelf() {
 		return (SyntaxElement) this.self;
 	}
-	
+
+	private Mapping mapping = null;
+
+    public Mapping getMapping() {
+        return this.mapping;
+    }
+    
+    public void setMapping(Mapping mapping) {
+        this.mapping = mapping;
+    }
+
 	@Override
 	public String toString() {
 	    return this.toString(false);

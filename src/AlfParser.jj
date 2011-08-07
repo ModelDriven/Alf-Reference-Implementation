@@ -49,22 +49,48 @@ public class AlfParser {
   public static final char checkOption = 'c';
   public static final char derivationOption = 'd';
 	
-  private static boolean isUnit = false;
+  private static boolean isUnit = true;
   private static boolean isStatements = false;
   private static boolean isExpression = false;
   private static boolean checkConstraints = false;
   private static boolean includeDerived = false;
   	
   private static boolean optionsAreLegal = true;
+  private static SyntaxElement element = null;
+  private static Collection<ConstraintViolation> violations =
+  	new ArrayList<ConstraintViolation>();
   	
-  public static void parseOptions(String options) {
+  public static boolean optionsAreLegal() {
+    return optionsAreLegal;
+  }
   
-    if (options.length() < 2) {
-      optionsAreLegal = false;
-  	  return;
+  public static SyntaxElement getElement() {
+    return element;
+  }
+  
+  public static Collection<ConstraintViolation> getViolations() {
+    return violations;
+  }
+  
+  public static boolean constraintsCheck() {
+    return getViolations().isEmpty();
+  }
+  	
+  public static boolean parseOptions(String options) {
+  
+  	isUnit = false;
+  	isStatements = false;
+  	isExpression = false;
+  	checkConstraints = false;
+  	includeDerived = false;
+  	
+    if (options.length() == 0) {
+      isUnit = true;
+      optionsAreLegal = true;
+  	  return true; 
   	}
   	
-  	for (int i=1; i < options.length(); i++) {
+  	for (int i=0; i < options.length(); i++) {
   	  char option = options.charAt(i);
   	  if (option == unitOption) {
   	    isUnit = true;
@@ -78,7 +104,7 @@ public class AlfParser {
   	    includeDerived = true;
   	  } else {
   	    optionsAreLegal = false;
-  	    return;
+  	    return false;
   	  }
   	  
   	}
@@ -89,11 +115,14 @@ public class AlfParser {
   	    isExpression && (isUnit || isStatements));
   	    
     isUnit = !isStatements && !isExpression;
-
+    
+    return optionsAreLegal;
   }
   	
-  public static void parse(String fileName) {
+  public static SyntaxElement parse(String fileName) {
     AlfParser parser;
+    
+    element = null;
     
     if (fileName == null) {
       System.out.println("Reading from standard input...");
@@ -104,11 +133,9 @@ public class AlfParser {
         parser = new AlfParser(new java.io.FileInputStream(fileName));
       } catch (java.io.FileNotFoundException e) {
         System.out.println("File not found: " + fileName);
-        return;
+        return null;
       }
     }
-    
-    SyntaxElement element = null;
     
     try {
     
@@ -124,14 +151,16 @@ public class AlfParser {
 
       if (checkConstraints) {
       	UnitDefinition unit = (UnitDefinition)element;
-        unit.getImpl().addImplicitImports();
         Member stub = unit.getImpl().getStub();
         if (stub != null) {
           System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
           stub.setSubunit(unit);
+        } else {
+          unit.getImpl().addImplicitImports();
+          RootNamespace.getRootScope().addOwnedMember(unit.getDefinition());
         }
-        Collection<ConstraintViolation> violations = element.checkConstraints();
-        if (violations.isEmpty()) {
+        violations = element.checkConstraints();
+        if (constraintsCheck()) {
           System.out.println("No constraint violations.");
         } else {
           System.out.println("Constraint violations:");
@@ -141,41 +170,47 @@ public class AlfParser {
         }
       }
     
-      element.print(includeDerived);
-
-    } catch (Throwable e) {
-      if (!(e instanceof ParseException)) {
-        System.out.println("Failed.");
-        e.printStackTrace();
-      } else {
-        System.out.println("Parse failed.");
-        if (e.getMessage()!=null) {
-          System.out.println(e.getMessage());
-        }
+    } catch (ParseException e) {
+      System.out.println("Parse failed.");
+      if (e.getMessage()!=null) {
+        System.out.println(e.getMessage());
       }
+    } catch (Throwable e) {
+      System.out.println("Failed.");
+      e.printStackTrace();
     }
     
+    return element;
+    
+  }
+  
+  public static void printElement() {
+      SyntaxElement element = getElement();
+      if (element != null) {
+        element.print(includeDerived);
+      }
   }
   
   public static void main(String args[]) {
     System.out.println("Alf " + version + " Parser");
     
     String fileName = null;
+    String options = "";
     
-    if (args.length == 0) {
-      isUnit = true;
-    } else if (args[0].charAt(0) == '-') {
-         parseOptions(args[0]);
-         if (args.length > 1) {
-            fileName = args[1];
-         }
-     } else {
-       fileName = args[0];
-       isUnit = true;
+    if (args.length > 0) {
+      if (args[0].charAt(0) == '-') {
+        options = args[0].substring(1);
+        if (args.length > 1) {
+           fileName = args[1];
+        }
+      } else {
+         fileName = args[0];
+      }
     }
-    
-    if (args.length <= 2 && optionsAreLegal) {
+      
+    if (args.length <= 2 && parseOptions(options)) {
       parse(fileName);
+      printElement();
     } else {
       System.out.println("Usage is");
       System.out.println("         alfp [-options] < inputfile");
