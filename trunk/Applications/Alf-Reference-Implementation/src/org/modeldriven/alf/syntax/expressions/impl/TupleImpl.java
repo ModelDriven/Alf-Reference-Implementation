@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,9 +29,12 @@ import java.util.Set;
 
 public abstract class TupleImpl extends SyntaxElementImpl {
 
-	private Collection<NamedExpression> input = null; // DERIVED
 	private InvocationExpression invocation = null;
-	private Collection<OutputNamedExpression> output = null; // DERIVED
+	
+	// Inputs and outputs are listed in the same order as their corresponding
+	// parameters.
+    private List<NamedExpression> input = null; // DERIVED
+	private List<OutputNamedExpression> output = null; // DERIVED
 	
 	private Map<String, AssignedSource> assignmentsAfter = null;
 	
@@ -57,7 +61,8 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	}
 
 	public void setInput(Collection<NamedExpression> input) {
-		this.input = input;
+	    this.input = new ArrayList<NamedExpression>();
+		this.input.addAll(input);
 	}
 
 	public void addInput(NamedExpression input) {
@@ -80,7 +85,8 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	}
 
 	public void setOutput(Collection<OutputNamedExpression> output) {
-		this.output = output;
+	    this.output = new ArrayList<OutputNamedExpression>();
+		this.output.addAll(output);
 	}
 
 	public void addOutput(OutputNamedExpression output) {

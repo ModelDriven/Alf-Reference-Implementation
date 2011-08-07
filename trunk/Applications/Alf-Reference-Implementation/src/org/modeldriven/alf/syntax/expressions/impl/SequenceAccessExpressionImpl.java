@@ -160,5 +160,25 @@ public class SequenceAccessExpressionImpl extends ExpressionImpl {
 	        index.getImpl().setCurrentScope(currentScope);
 	    }
 	}
+	
+	/**
+	 * Returns the behavior invocation expression for the standard library At
+	 * behavior that is equivalent to this sequence access expression.
+	 */
+	public BehaviorInvocationExpression getInvocation() {
+	    SequenceAccessExpression self = this.getSelf();
+	    
+	    BehaviorInvocationExpression invocation = new BehaviorInvocationExpression();
+	    invocation.setTarget
+	        (RootNamespace.getSequenceFunctions().getImpl().copy().addName("At"));
+	    
+	    PositionalTuple tuple = new PositionalTuple();
+	    tuple.setInvocation(invocation);
+	    tuple.addExpression(self.getPrimary());
+	    tuple.addExpression(self.getIndex());
+	    invocation.setTuple(tuple);
+	    
+	    return invocation;
+	}
 
 } // SequenceAccessExpressionImpl

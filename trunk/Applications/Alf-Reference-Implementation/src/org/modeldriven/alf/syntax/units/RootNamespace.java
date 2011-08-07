@@ -16,10 +16,12 @@ public class RootNamespace extends NamespaceDefinition {
     }
     
     private static RootNamespace rootNamespace = new RootNamespace();
+    
     private static QualifiedName alfStandardLibrary = null;
     private static QualifiedName primitiveTypes = null;
     private static QualifiedName primitiveBehaviors = null;
     private static QualifiedName basicInputOutput = null;
+    private static QualifiedName sequenceFunctions = null;
     private static QualifiedName collectionFunctions = null;
     private static QualifiedName collectionClasses = null;
     
@@ -82,6 +84,14 @@ public class RootNamespace extends NamespaceDefinition {
             basicInputOutput.getImpl().setCurrentScope(getRootScope());
         }
         return basicInputOutput;
+    }
+    
+    public static QualifiedName getSequenceFunctions() {
+        if (sequenceFunctions == null) {
+            sequenceFunctions = getPrimitiveBehaviors().getImpl().copy().addName("SequenceFunctions");
+            sequenceFunctions.getImpl().setCurrentScope(getRootScope());
+        }
+        return sequenceFunctions;
     }
     
      public static QualifiedName getCollectionFunctions() {
@@ -162,5 +172,4 @@ public class RootNamespace extends NamespaceDefinition {
         }
         return collectionClassesPackage;
     }
-
 }

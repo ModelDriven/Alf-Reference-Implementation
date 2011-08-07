@@ -140,4 +140,11 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
         return returnParameter == null? 0: returnParameter.getUpper();
     }
     
+    public boolean isClassifierBehavior() {
+        ElementReference namespace =  this.getNamespaceReference();
+        return namespace != null && 
+            this.getReferent().getImpl().
+                equals(namespace.getImpl().getClassifierBehavior());
+    }
+    
 } // ActivityDefinitionImpl

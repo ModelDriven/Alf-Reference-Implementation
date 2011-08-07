@@ -40,7 +40,9 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
                     members.add(member);
                 }
             }
-            this.getSelf().addMember(member);
+            NamespaceDefinition self = this.getSelf();
+            self.addOwnedMember(member);
+            self.addMember(member);
         } else if (members.toArray()[0] instanceof MissingMember) {
             members = new ArrayList<Member>();
         }

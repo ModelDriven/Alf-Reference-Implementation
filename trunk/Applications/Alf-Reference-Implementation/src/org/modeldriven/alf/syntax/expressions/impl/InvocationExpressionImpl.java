@@ -525,6 +525,12 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             (referent, templateParameters, templateArguments);
     }
     
+    public boolean isSequenceFeatureInvocation() {
+        FeatureReference feature = this.getFeature();
+        Expression primary = feature == null? null: feature.getExpression();
+        return primary != null && primary.getUpper() != 1;
+    }
+    
     /**
      * If collection conversion would be required, return the toSequence
      * return type, rather than the collection type.

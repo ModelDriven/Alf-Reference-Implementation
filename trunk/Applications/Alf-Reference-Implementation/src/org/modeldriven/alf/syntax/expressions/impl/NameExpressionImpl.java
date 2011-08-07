@@ -328,5 +328,9 @@ public class NameExpressionImpl extends ExpressionImpl {
 	        name.getImpl().setCurrentScope(currentScope);
 	    }
 	}
+	
+	public NamespaceDefinition getCurrentScope() {
+	    return this.currentScope;
+	}
 
 } // NameExpressionImpl
