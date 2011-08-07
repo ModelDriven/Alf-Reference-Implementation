@@ -1,5 +1,7 @@
 namespace Ordering::Order;
 
+private import Ordering::CreditCardCharge::ChargeData;
+
 /**
 Entry behavior for State 2. Submitting Charge
 */
@@ -9,7 +11,7 @@ activity ProcessCharge()
   // to the credit card company
   creditCardCharge = new CreditCardCharge();
   creditCardCharge.MakeCharge(
-    new CreditCardCharge.ChargeData (
+    new ChargeData (
       accountNumber      => this.chargeSubmissionData.accountNumber,
       billingAddress     => this.chargeSubmissionData.billingAddress,
       cardExpirationDate => this.chargeSubmissionData.cardExpirationDate,
