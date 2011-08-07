@@ -221,6 +221,10 @@
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
 			<arg value="-ucd" />
+			<arg value="tests\Activity_HelloWorld.alf" />
+		</java>
+		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+			<arg value="-ucd" />
 			<arg value="tests\Activity_Order_Behavior.alf" />
 		</java>
 		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
