@@ -2,25 +2,25 @@ namespace FoundationalModelLibrary::PrimitiveBehaviors;
 
 package BooleanFunctions {
 
-  @primitive
+  @primitive(BooleanOrFunctionBehaviorExecution)
   public activity Or(in x: Boolean, in y: Boolean): Boolean { }
 
-  @primitive
+  @primitive(BooleanXorFunctionBehaviorExecution)
   public activity Xor(in x: Boolean, in y: Boolean): Boolean { }
 
-  @primitive
+  @primitive(BooleanAndFunctionBehaviorExecution)
   public activity And(in x: Boolean, in y: Boolean): Boolean { }
 
-  @primitive
+  @primitive(BooleanNotFunctionBehaviorExecution)
   public activity Not(in x: Boolean): Boolean { }
 
-  @primitive
+  @primitive(BooleanImpliesFunctionBehaviorExecution)
   public activity Implies(in x: Boolean, in y: Boolean): Boolean { }
   
-  @primitive
+  @primitive(BooleanToStringFunctionBehaviorExecution)
   public activity ToString(in x: Boolean): String { }
   
-  @primitive
+  @primitive(BooleanToBooleanFunctionBehaviorExecution)
   public activity ToBoolean(in x: String): Boolean[0..1] { }
 
 }

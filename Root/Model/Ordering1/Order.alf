@@ -12,30 +12,11 @@ active class Order
   public deliveryAddress: MailingAddress;
   public contactPhone:    TelephoneNumber;
 
-  public receive signal CheckOut
-  {
-    public cart:               ShoppingCart;
-    public accountNumber:      BankCardAccountNumber;
-    public billingAddress:     MailingAddress;
-    public cardExpirationDate: MonthYear;
-    public cardholderName:     PersonalName;
-    public customerEmail:      InternetEmailAddress;
-    public customerName:       PersonalName;
-    public customerPhone:      TelephoneNumber;
-    public shippingAddress:    MailingAddress;
-  }
-
-  public receive signal SubmitCharge
-  {
-    public accountNumber:      BankCardAccountNumber;
-    public billingAddress:     MailingAddress;
-    public cardExpirationDate: MonthYear;
-    public cardholderName:     PersonalName;
-  }
-
-  public receive signal PaymentDeclined{}
-  public receive signal PaymentApproved{}
-  public receive signal OrderDelivered{}
+  public receive CheckOut;                // Reception definitions
+  public receive SubmitCharge;
+  public receive PaymentDeclined;
+  public receive PaymentApproved;
+  public receive OrderDelivered;
 
   private establishCustomer(in rcvd_evt: CheckOut) { }
   private processCharge(in rcvd_evt: SubmitCharge) { }

@@ -50,11 +50,11 @@ active class Order
   public receive signal PaymentApproved{}
   public receive signal OrderDelivered{}
 
-  private activity EstablishCustomer();                    // See Note 2
-  private activity ProcessCharge();
-  private activity DeclineCharge();
-  private activity PackAndShip();
-  private activity NotifyOfDelivery();
+  private EstablishCustomer();                    // See Note 2
+  private ProcessCharge();
+  private DeclineCharge();
+  private PackAndShip();
+  private NotifyOfDelivery();
 
 } 
 do                                                         // See Note 3
@@ -65,7 +65,7 @@ do                                                         // See Note 3
   this.checkOutData = checkOut.data;
 
   /** 1. Establishing Customer and Verifying Payment */
-  EstablishCustomer();                                     // See Note 6
+  this.EstablishCustomer();                                     // See Note 6
 
   while (true) {                                           // See Note 7
 
@@ -73,11 +73,11 @@ do                                                         // See Note 3
     this.chargeSubmissionData = chargeSubmission.data;
 
     /** 2. Submitting Charge */
-    ProcessCharge();
+    this.ProcessCharge();
 
     accept (PaymentDeclined) {
       /** 3. Payment Not Approved */
-      DeclineCharge();
+      this.DeclineCharge();
 
     } or accept (PaymentApproved) {                        // See Note 8
       break;                                               // See Note 9
@@ -86,10 +86,10 @@ do                                                         // See Note 3
   }
 
   /** 4. Being Packed and Shipped */
-  PackAndShip();
+  this.PackAndShip();
   accept (OrderDelivered);
 
   /** 5. Delivered to Customer */
-  NotifyOfDelivery();
+  this.NotifyOfDelivery();
 
 }
