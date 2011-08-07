@@ -9,7 +9,7 @@ activity ProcessCharge()
   // to the credit card company
   creditCardCharge = new CreditCardCharge();
   creditCardCharge.MakeCharge(
-    new ChargeData (
+    new CreditCardCharge.ChargeData (
       accountNumber      => this.chargeSubmissionData.accountNumber,
       billingAddress     => this.chargeSubmissionData.billingAddress,
       cardExpirationDate => this.chargeSubmissionData.cardExpirationDate,

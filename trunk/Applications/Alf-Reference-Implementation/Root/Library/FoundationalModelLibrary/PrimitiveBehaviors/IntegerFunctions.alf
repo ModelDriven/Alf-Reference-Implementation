@@ -2,52 +2,52 @@ namespace FoundationalModelLibrary::PrimitiveBehaviors;
 
 package IntegerFunctions {
 
-  @primitive
+  @primitive(IntegerNegateFunctionBehaviorExecution)
   public activity Neg(in x: Integer): Integer { }
 
-  @primitive
+  @primitive(IntegerAbsFunctionBehaviorExecution)
   public activity Abs(in x: Integer): Integer { }
 
-  @primitive
+  @primitive(IntegerPlusFunctionBehaviorExecution)
   public activity '+'(in x: Integer, in y: Integer): Integer { }
 
-  @primitive
+  @primitive(IntegerMinusFunctionBehaviorExecution)
   public activity '-'(in x: Integer, in y: Integer): Integer { }
 
-  @primitive
+  @primitive(IntegerTimesFunctionBehaviorExecution)
   public activity '*'(in x: Integer, in y: Integer): Integer { }
 
-  @primitive
+  @primitive(IntegerDivFunctionBehaviorExecution)
   public activity Div(in x: Integer, in y: Integer): Integer[0..1] { }
 
-  @primitive
+  @primitive(IntegerModFunctionBehaviorExecution)
   public activity Mod(in x: Integer, in y: Integer): Integer { }
 
-  @primitive
+  @primitive(IntegerMaxFunctionBehaviorExecution)
   public activity Max(in x: Integer, in y: Integer): Integer { }
 
-  @primitive
+  @primitive(IntegerMinFunctionBehaviorExecution)
   public activity Min(in x: Integer, in y: Integer): Integer { }
 
-  @primitive
+  @primitive(IntegerLessThanFunctionBehaviorExecution)
   public activity '<'(in x: Integer, in y: Integer): Boolean { }
 
-  @primitive
+  @primitive(IntegerGreaterThanFunctionBehaviorExecution)
   public activity '>'(in x: Integer, in y: Integer): Boolean { }
 
-  @primitive
+  @primitive(IntegerLessThanEqualFunctionBehaviorExecution)
   public activity '<='(in x: Integer, in y: Integer): Boolean { }
 
-  @primitive
+  @primitive(IntegerGreaterThanEqualFunctionBehaviorExecution)
   public activity '>='(in x: Integer, in y: Integer): Boolean { }
 
-  @primitive
+  @primitive(IntegerToStringFunctionBehaviorExecution)
   public activity ToString(in x: Integer): String {}
 
-  @primitive
+  @primitive(IntegerToUnlimitedNaturalFunctionBehaviorExecution)
   public activity ToUnlimitedNatural(in x: Integer): UnlimitedNatural[0..1] {}
 
-  @primitive
+  @primitive(IntegerToIntegerFunctionBehaviorExecution)
   public activity ToInteger(in x: String): Integer[0..1] {}
 
 }

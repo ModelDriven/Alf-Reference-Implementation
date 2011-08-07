@@ -1,5 +1,6 @@
 namespace Alf::Library;
 
+private import Alf::Library::PrimitiveTypes::*;
 private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
 
 package CollectionFunctions {
@@ -112,7 +113,7 @@ package CollectionFunctions {
     return (T)Subsequence(seq, lower, upper);
   }
   
-  public activity toOrderedSet(in seq: T[*] sequence): T[*] ordered { 
+  public activity toOrderedSet<T>(in seq: T[*] sequence): T[*] ordered { 
     return (T)ToOrderedSet(seq);
   }
 
