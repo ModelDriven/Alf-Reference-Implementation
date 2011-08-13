@@ -463,7 +463,8 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	                    } else {
 	                        for (ElementReference constrainingClassifier:
 	                            templateParameter.getImpl().getConstrainingClassifiers()) {
-	                            if (!templateArgument.getImpl().conformsTo(constrainingClassifier)) {
+	                            if (templateArgument == null ||
+	                                    !templateArgument.getImpl().conformsTo(constrainingClassifier)) {
 	                                return false;
 	                            }
 	                        }

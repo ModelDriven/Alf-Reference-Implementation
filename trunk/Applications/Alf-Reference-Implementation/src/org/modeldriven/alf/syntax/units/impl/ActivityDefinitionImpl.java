@@ -9,7 +9,10 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -147,4 +150,18 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
                 equals(namespace.getImpl().getClassifierBehavior());
     }
     
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ActivityDefinition) {
+            Block body = ((ActivityDefinition)base).getImpl().getEffectiveBody();
+            if (body != null) {
+                this.getSelf().setBody((Block)body.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+
 } // ActivityDefinitionImpl

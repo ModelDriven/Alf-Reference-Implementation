@@ -251,6 +251,10 @@ public abstract class Member extends DocumentedElement {
 		for (Object _annotation : this.getAnnotation().toArray()) {
 			((StereotypeAnnotation) _annotation).checkConstraints(violations);
 		}
+		UnitDefinition subunit = this.getSubunit();
+		if (subunit != null) {
+			subunit.checkConstraints(violations);
+		}
 	}
 
 	public String toString() {
@@ -315,8 +319,8 @@ public abstract class Member extends DocumentedElement {
 		if (includeDerived) {
 			UnitDefinition subunit = this.getSubunit();
 			if (subunit != null) {
-				System.out.println(prefix + " /subunit:"
-						+ subunit.toString(includeDerived));
+				System.out.println(prefix + " /subunit:");
+				subunit.print(prefix + "  ", includeDerived);
 			}
 		}
 	}

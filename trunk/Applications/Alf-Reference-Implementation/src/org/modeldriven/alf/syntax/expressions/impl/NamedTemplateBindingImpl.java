@@ -63,7 +63,8 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
             s.append(separator);
             s.append(p.getParameterName());
             s.append("=>");
-            s.append(p.getArgumentName().getPathName());
+            QualifiedName argumentName = p.getArgumentName();
+            s.append(argumentName == null? "any": argumentName.getPathName());
             separator = ",";
         }
         s.append(">");
@@ -95,13 +96,17 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
                 String name = substitution.getParameterName();
                 if (name != null && name.equals(parameterName)) {
                     QualifiedName argumentName = substitution.getArgumentName();
-                    argumentName.getImpl().setCurrentScope(currentScope);
-                    ElementReference argumentReferent = 
-                        argumentName.getImpl().getClassifierReferent();
-                    if (argumentReferent != null) {
-                        argumentReferents.add(argumentReferent);
-                        break;
+                    if (argumentName == null) {
+                        argumentReferents.add(null);
+                    } else {
+                        argumentName.getImpl().setCurrentScope(currentScope);
+                        ElementReference argumentReferent = 
+                            argumentName.getImpl().getClassifierReferent();
+                        if (argumentReferent != null) {
+                            argumentReferents.add(argumentReferent);
+                        }
                     }
+                    break;
                 }
             }
         }
