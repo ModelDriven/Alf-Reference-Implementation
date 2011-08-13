@@ -425,7 +425,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     }
     
     @Override
-    protected void bindTo(Member base,
+    protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -54,5 +56,19 @@ public class BooleanLiteralExpressionImpl extends LiteralExpressionImpl {
 		this.getSelf().getType();
 		return true;
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	@Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof BooleanLiteralExpression) {
+            this.getSelf().setImage(((BooleanLiteralExpression)base).getImage());
+        }
+    }
 
 } // BooleanLiteralExpressionImpl

@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -113,15 +114,24 @@ public class NameBindingImpl extends SyntaxElementImpl {
     public NameBinding updateBinding(
             List<ElementReference> templateParameters,
             List<ElementReference> templateArguments) {
-        NameBinding self = this.getSelf();
-        NameBinding nameBinding = new NameBinding();
-        nameBinding.setName(self.getName());
-        TemplateBinding binding = self.getBinding();
-        if (binding != null) {
-            nameBinding.setBinding(binding.getImpl().
-                    update(templateParameters, templateArguments));
+        return (NameBinding)this.bind(templateParameters, templateArguments);
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof NameBinding) {
+            NameBinding self = this.getSelf();
+            NameBinding baseNameBinding = (NameBinding)base;
+            TemplateBinding binding = baseNameBinding.getBinding();
+            self.setName(baseNameBinding.getName());
+            if (binding != null) {
+                self.setBinding(binding.getImpl().
+                        update(templateParameters, templateArguments));
+            }
         }
-        return nameBinding;
     }
 
 } // NameBindingImpl

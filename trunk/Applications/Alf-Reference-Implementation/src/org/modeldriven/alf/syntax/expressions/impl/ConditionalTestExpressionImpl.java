@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -260,4 +261,31 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
         }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof BinaryExpression) {
+            ConditionalTestExpression self = this.getSelf();
+            ConditionalTestExpression baseExpression = 
+                (ConditionalTestExpression)base;
+            Expression operand1 = baseExpression.getOperand1();
+            Expression operand2 = baseExpression.getOperand2();
+            Expression operand3 = baseExpression.getOperand3();
+            if (operand1 != null) {
+                self.setOperand1((Expression)operand1.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (operand2 != null) {
+                self.setOperand2((Expression)operand1.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (operand3 != null) {
+                self.setOperand2((Expression)operand3.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // ConditionalTestExpressionImpl

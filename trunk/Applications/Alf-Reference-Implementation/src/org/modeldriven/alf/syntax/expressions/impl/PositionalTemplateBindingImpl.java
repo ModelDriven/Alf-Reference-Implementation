@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -89,14 +90,18 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
     }
 
     @Override
-    public TemplateBinding update(
-            List<ElementReference> templateParameters,
-            List<ElementReference> templateArguments)  {
-        PositionalTemplateBinding templateBinding = new PositionalTemplateBinding();
-        for (QualifiedName argumentName: this.getSelf().getArgumentName()) {
-            templateBinding.addArgumentName(argumentName.getImpl().
-                    updateForBinding(templateParameters, templateArguments));
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof PositionalTemplateBinding) {
+            PositionalTemplateBinding self = this.getSelf();
+            for (QualifiedName argumentName: 
+                ((PositionalTemplateBinding)base).getArgumentName()) {
+                self.addArgumentName(argumentName.getImpl().
+                        updateForBinding(templateParameters, templateArguments));
+            }
         }
-        return templateBinding;
     }
+    
 } // PositionalTemplateBindingImpl

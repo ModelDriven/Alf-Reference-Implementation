@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -157,4 +158,25 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof NonFinalClause) {
+            NonFinalClause self = this.getSelf();
+            NonFinalClause baseStatement = (NonFinalClause)base;
+            Expression condition = baseStatement.getCondition();
+            Block body = baseStatement.getBody();
+            if (condition != null) {
+                self.setCondition((Expression)condition.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (body != null) {
+                self.setBody((Block)body.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // NonFinalClauseImpl

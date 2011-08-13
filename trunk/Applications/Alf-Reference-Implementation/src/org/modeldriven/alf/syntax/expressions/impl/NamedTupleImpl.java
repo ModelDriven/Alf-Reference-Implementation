@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -22,7 +24,8 @@ import java.util.List;
 
 public class NamedTupleImpl extends TupleImpl {
 
-	private List<NamedExpression> namedExpression = new ArrayList<NamedExpression>();
+	private List<NamedExpression> namedExpression = 
+	    new ArrayList<NamedExpression>();
 
 	public NamedTupleImpl(NamedTuple self) {
 		super(self);
@@ -145,6 +148,22 @@ public class NamedTupleImpl extends TupleImpl {
         super.setCurrentScope(currentScope);
         for (NamedExpression namedExpression: this.getSelf().getNamedExpression()) {
             namedExpression.getImpl().setCurrentScope(currentScope);
+        }
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof NamedTuple) {
+            NamedTuple self = this.getSelf();
+            for (NamedExpression namedExpression: 
+                ((NamedTuple)base).getNamedExpression()) {
+                self.addNamedExpression
+                    ((NamedExpression)namedExpression.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
         }
     }
 

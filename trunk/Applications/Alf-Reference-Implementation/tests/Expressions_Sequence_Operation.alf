@@ -6,7 +6,7 @@ class Expressions_Sequence_Operation {
     // Supporting declarations *************************************************
     
   	class Customer { }
-
+  	
 	//**************************************************************************
 
 	test() {
@@ -21,5 +21,12 @@ class Expressions_Sequence_Operation {
 	  
 	  Customer->size();
 	  Customer.allInstances()->size();
+	  
+	  list = null; // Type is "any".
+	  list->size();
+	  list->notEmpty();
+	  list->includes(customer);
+	  list->including(customer);
+	  list->removeAll(customer);
 	}
 }

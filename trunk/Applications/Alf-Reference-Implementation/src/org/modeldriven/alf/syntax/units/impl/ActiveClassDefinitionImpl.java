@@ -9,6 +9,10 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.List;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.*;
 
 /**
@@ -54,6 +58,25 @@ public class ActiveClassDefinitionImpl extends ClassDefinitionImpl {
 	@Override
     public boolean isActive() {
         return true;
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ActiveClassDefinition) {
+            // Note: The classifier behavior will have been already bound at
+            // this point as a namespace owned member.
+            ActiveClassDefinition self = this.getSelf();
+            ActivityDefinition classifierBehavior = 
+                ((ActiveClassDefinition)base).getClassifierBehavior();
+            for (Member member: self.getOwnedMember()) {
+                if (member.getImpl().getBase() == classifierBehavior) {
+                    self.setClassifierBehavior((ActivityDefinition)member);
+                }
+            }
+        }
     }
 
 } // ActiveClassDefinitionImpl

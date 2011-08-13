@@ -35,7 +35,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 		super(self);
 	}
 
-	public org.modeldriven.alf.syntax.units.ClassifierDefinition getSelf() {
+	@Override
+	public ClassifierDefinition getSelf() {
 		return (ClassifierDefinition) this.self;
 	}
 
@@ -318,7 +319,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
-    protected void bindTo(Member base,
+    protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);
@@ -339,6 +340,5 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             }
         }
     }
-
 
 } // ClassifierDefinitionImpl

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -276,4 +277,30 @@ public class ClassifyStatementImpl extends
         }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ClassifyStatement) {
+            ClassifyStatement self = this.getSelf();
+            ClassifyStatement baseStatement = (ClassifyStatement)base;
+            Expression expression = baseStatement.getExpression();
+            QualifiedNameList fromList = baseStatement.getFromList();
+            QualifiedNameList toList = baseStatement.getToList();
+            if (expression != null) {
+                self.setExpression((Expression)expression.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (fromList != null) {
+                self.setFromList((QualifiedNameList)fromList.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (toList != null) {
+                self.setToList((QualifiedNameList)toList.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // ClassifyStatementImpl

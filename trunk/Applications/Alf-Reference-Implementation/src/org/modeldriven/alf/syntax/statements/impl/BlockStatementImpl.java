@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -166,6 +167,20 @@ public class BlockStatementImpl extends StatementImpl {
         Block block = this.getSelf().getBlock();
         if (block != null) {
             block.getImpl().setCurrentScope(currentScope);
+        }
+    }
+    
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof BlockStatement) {
+            Block block = ((BlockStatement)base).getBlock();
+            if (block != null) {
+                this.getSelf().setBlock((Block)block.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
         }
     }
     

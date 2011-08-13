@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.*;
@@ -161,6 +162,27 @@ public class SequenceAccessExpressionImpl extends ExpressionImpl {
 	    }
 	}
 	
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SequenceAccessExpression) {
+            SequenceAccessExpression self = this.getSelf();
+            SequenceAccessExpression baseExpression = (SequenceAccessExpression)base;
+            Expression primary = baseExpression.getPrimary();
+            Expression index = baseExpression.getIndex();
+             if (primary != null) {
+                self.setPrimary((Expression)primary.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (index != null) {
+                self.setIndex((Expression)index.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+
 	/**
 	 * Returns the behavior invocation expression for the standard library At
 	 * behavior that is equivalent to this sequence access expression.

@@ -219,4 +219,27 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	    }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SequenceReductionExpression) {
+            SequenceReductionExpression self = this.getSelf();
+            SequenceReductionExpression baseExpression = 
+                (SequenceReductionExpression)base;
+            ExtentOrExpression primary = baseExpression.getPrimary();
+            QualifiedName behaviorName = baseExpression.getBehaviorName();
+            self.setIsOrdered(baseExpression.getIsOrdered());
+            if (primary != null) {
+                self.setPrimary((ExtentOrExpression)primary.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (behaviorName != null) {
+                self.setBehaviorName(behaviorName.getImpl().
+                        updateBindings(templateParameters, templateArguments));
+            }
+        }
+    }
+
 } // SequenceReductionExpressionImpl

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -130,6 +132,7 @@ public class FeatureInvocationExpressionImpl
 	 * Helper Methods
 	 */
 	
+	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    super.setCurrentScope(currentScope);
 	    this.currentScope = currentScope;
@@ -138,5 +141,20 @@ public class FeatureInvocationExpressionImpl
             feature.getImpl().setCurrentScope(currentScope);
         }
 	}
+	
+	@Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof FeatureInvocationExpression) {
+            FeatureReference feature = 
+                ((FeatureInvocationExpression)base).getFeature();
+            if (feature != null) {
+                this.getSelf().setFeature((FeatureReference)feature.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
 
 } // FeatureInvocationExpressionImpl

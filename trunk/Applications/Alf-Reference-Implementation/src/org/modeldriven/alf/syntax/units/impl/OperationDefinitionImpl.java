@@ -408,15 +408,16 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     }
 
     @Override
-    protected void bindTo(Member base,
+    protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);
         if (base instanceof OperationDefinition) {
             OperationDefinition self = this.getSelf();
             OperationDefinition baseOperation = (OperationDefinition)base;
-            self.setIsAbstract(baseOperation.getIsAbstract());
             QualifiedNameList baseRedefinitions = baseOperation.getRedefinition();
+            Block body = baseOperation.getImpl().getEffectiveBody();
+            self.setIsAbstract(baseOperation.getIsAbstract());
             if (baseRedefinitions != null) {
                 QualifiedNameList redefinitions = new QualifiedNameList();
                 for (QualifiedName redefinition: baseRedefinitions.getName()) {
@@ -424,6 +425,10 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
                             updateBindings(templateParameters, templateArguments));
                 }
                 self.setRedefinition(redefinitions);
+            }
+            if (body != null) {
+                self.setBody((Block)body.getImpl().
+                        bind(templateParameters, templateArguments));
             }
         }
     }

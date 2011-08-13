@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A group of qualified names.
@@ -67,4 +68,18 @@ public class QualifiedNameListImpl extends SyntaxElementImpl {
         }
     }
 	
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof QualifiedNameList) {
+            QualifiedNameList self = this.getSelf();
+            for (QualifiedName name: ((QualifiedNameList)base).getName()) {
+                self.addName(name.getImpl().
+                        updateForBinding(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // QualifiedNameListImpl

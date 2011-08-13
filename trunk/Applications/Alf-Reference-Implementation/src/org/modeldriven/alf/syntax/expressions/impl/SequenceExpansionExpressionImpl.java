@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -213,5 +214,29 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
             argument.getImpl().setCurrentScope(currentScope);
         }
 	}
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SequenceExpansionExpression) {
+            SequenceExpansionExpression self = this.getSelf();
+            SequenceExpansionExpression baseExpression = 
+                (SequenceExpansionExpression)base;
+            Expression argument = baseExpression.getArgument();
+            ExtentOrExpression primary = baseExpression.getPrimary();
+            self.setOperation(baseExpression.getOperation());
+            self.setVariable(baseExpression.getVariable());
+            if (argument != null) {
+                self.setArgument((Expression)argument.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (primary != null) {
+                self.setPrimary((ExtentOrExpression)primary.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
 
 } // SequenceExpansionExpressionImpl

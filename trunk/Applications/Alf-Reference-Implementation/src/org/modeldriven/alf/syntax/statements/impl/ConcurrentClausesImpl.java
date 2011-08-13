@@ -18,6 +18,7 @@ import org.modeldriven.alf.syntax.units.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -116,4 +117,18 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
         return blocks;
     }
 	
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ConcurrentClauses) {
+            ConcurrentClauses self = this.getSelf();
+            for (NonFinalClause clause: ((ConcurrentClauses)base).getClause()) {
+                self.addClause((NonFinalClause)clause.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // ConcurrentClausesImpl

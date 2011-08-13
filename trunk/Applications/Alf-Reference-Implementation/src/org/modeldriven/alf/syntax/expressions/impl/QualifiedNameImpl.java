@@ -827,7 +827,18 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         name.append("_");
         return name.toString();
     }
+    
+    @Override
+    public SyntaxElement bind(
+            List<ElementReference> templateParameters,
+            List<ElementReference> templateArguments) {
+        return this.updateBindings(templateParameters, templateArguments);
+    }
 
+    /**
+     * Update the template bindings from this qualified name, replacing
+     * template parameter references with corresponding template arguments.
+     */
     public QualifiedName updateBindings(
             List<ElementReference> templateParameters,
             List<ElementReference> templateArguments) {
@@ -841,34 +852,40 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         return qualifiedName;
     }
     
+    /**
+     * Update this qualified name for the given template bindings. If the
+     * qualified name actually refers to one of the template parameters, then
+     * replace it with a qualified name the references the corresponding
+     * template argument (or null if the template argument is null). Otherwise 
+     * just update any template bindings in the original qualified name.
+     */
     public QualifiedName updateForBinding(
             List<ElementReference> templateParameters,
             List<ElementReference> templateArguments) {
-        QualifiedName qualifiedName = null;
         // TODO: Allow template arguments other than classifiers.
         ElementReference referent = this.getClassifierReferent();
         if (referent != null) {
             for (int i = 0; i < templateParameters.size(); i++) {
                 if (referent.getImpl().equals(templateParameters.get(i))) {
-                    Collection<ElementReference> referents = new ArrayList<ElementReference>(1);
+                    Collection<ElementReference> referents = 
+                        new ArrayList<ElementReference>(1);
                     ElementReference templateArgument = 
                         i >= templateArguments.size()? null: 
                             templateArguments.get(i);
+                    QualifiedName qualifiedName = null;
                     if (templateArgument != null) {
                         qualifiedName = new QualifiedName();
-                        qualifiedName.setNameBinding(templateArgument.getImpl().
-                                asNamespace().getImpl().getQualifiedName().getNameBinding());
+                        qualifiedName.setNameBinding
+                            (templateArgument.getImpl().asNamespace().getImpl().
+                                    getQualifiedName().getNameBinding());
                         referents.add(templateArguments.get(i));
                         qualifiedName.setReferent(referents);
                     }
-                    break;
+                    return qualifiedName;
                 }
             }
         }
-        if (qualifiedName == null) {
-            qualifiedName = this.updateBindings(templateParameters, templateArguments);
-        }
-        return qualifiedName;
+        return this.updateBindings(templateParameters, templateArguments);
     }
     
 } // QualifiedNameImpl

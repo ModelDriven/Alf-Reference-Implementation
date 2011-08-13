@@ -3,9 +3,16 @@
  **/
 package Expressions_Template {
 
-	public activity A<T>(in x: T): Integer { }
+	public activity A<T>(in x: T): Integer { 
+		y = (T)x;
+		return y->size();
+	}
 	public class B { }
 	public class C<T> {
+		p: T;
+		q: Boolean = this.p instanceof T; 
+		r(): T { return (T)this.p; }
+		
 		activity D() { }
 		activity E(in x: T) { }
 		activity F<U>(in x: U) { }
@@ -13,10 +20,12 @@ package Expressions_Template {
 	public class G { 
 		class G1 { }
 	}
-	public class H<T> {
+	public active class H<T> {
 		class I<U> {
 			activity J() { }
 		}
+	} do {
+		new C<T>().r();
 	}
 	
 	public class IntegerList specializes List<Integer> { }

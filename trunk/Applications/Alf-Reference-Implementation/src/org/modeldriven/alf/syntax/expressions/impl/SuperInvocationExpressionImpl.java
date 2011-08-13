@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * An invocation expression used to invoke an operation of a superclass.
@@ -64,8 +65,10 @@ public class SuperInvocationExpressionImpl
                 if (superclasses.size() != 1) {
                     return null;
                 }
-                Member superclass = ((ElementReference)superclasses.toArray()[0]).getImpl().asNamespace();
-                Member base = superclass.getImpl().getBase();
+                Member superclass = 
+                    ((ElementReference)superclasses.toArray()[0]).getImpl().
+                        asNamespace();
+                Member base = (Member)superclass.getImpl().getBase();
                 if (base != null) {
                     superclass = base;
                 }
@@ -231,4 +234,18 @@ public class SuperInvocationExpressionImpl
 	    return this.context;
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SuperInvocationExpression) {
+           QualifiedName target = ((SuperInvocationExpression)base).getTarget();
+            if (target != null) {
+                this.getSelf().setTarget(target.getImpl().
+                        updateBindings(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // SuperInvocationExpressionImpl

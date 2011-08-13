@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -168,4 +170,17 @@ public class ClassificationExpressionImpl extends UnaryExpressionImpl {
 	    }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ClassificationExpression) {
+            QualifiedName typeName = 
+                ((ClassificationExpression)base).getTypeName();
+            this.getSelf().setTypeName(typeName.getImpl().
+                    updateForBinding(templateParameters, templateArguments));
+        }
+    }
+    
 } // ClassificationExpressionImpl

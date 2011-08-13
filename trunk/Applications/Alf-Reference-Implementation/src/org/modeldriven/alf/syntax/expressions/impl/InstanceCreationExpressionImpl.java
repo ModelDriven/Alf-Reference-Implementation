@@ -274,4 +274,19 @@ public class InstanceCreationExpressionImpl
 	    }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof InstanceCreationExpression) {
+            QualifiedName constructor = 
+                ((InstanceCreationExpression)base).getConstructor();
+            if (constructor != null) {
+                this.getSelf().setConstructor(constructor.getImpl().
+                        updateForBinding(templateParameters, templateArguments));
+            }
+        }
+    }
+
 } // InstanceCreationExpressionImpl

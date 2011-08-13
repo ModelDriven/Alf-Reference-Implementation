@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.statements.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -136,4 +137,24 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
 	    }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SwitchClause) {
+            SwitchClause self = this.getSelf();
+            SwitchClause baseClause = (SwitchClause)base;
+            Block block = baseClause.getBlock();
+            for (Expression case_: baseClause.getCase()) {
+                self.addCase((Expression)case_.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (block != null) {
+                self.setBlock((Block)block.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // SwitchClauseImpl

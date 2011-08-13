@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -77,4 +78,22 @@ public class TemplateParameterSubstitutionImpl extends SyntaxElementImpl {
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof TemplateParameterSubstitution) {
+            TemplateParameterSubstitution self = this.getSelf();
+            TemplateParameterSubstitution baseSubstitution = 
+                (TemplateParameterSubstitution)base;
+            QualifiedName argumentName = baseSubstitution.getArgumentName();
+            self.setParameterName(baseSubstitution.getParameterName());
+            if (argumentName != null) {
+                self.setArgumentName(argumentName.getImpl().
+                        updateBindings(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // TemplateParameterSubstitutionImpl

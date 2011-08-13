@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -166,4 +167,25 @@ public class DoStatementImpl extends StatementImpl {
 	    return this.getSelf();
 	}
 	
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof DoStatement) {
+            DoStatement self = this.getSelf();
+            DoStatement baseStatement = (DoStatement)base;
+            Expression condition = baseStatement.getCondition();
+            Block body = baseStatement.getBody();
+            if (body != null) {
+                self.setBody((Block)body.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (condition != null) {
+                self.setCondition((Expression)condition.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // DoStatementImpl

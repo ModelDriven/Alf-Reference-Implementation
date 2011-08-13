@@ -15,6 +15,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -149,4 +150,26 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof BinaryExpression) {
+            BinaryExpression self = this.getSelf();
+            BinaryExpression baseExpression = (BinaryExpression)base;
+            Expression operand1 = baseExpression.getOperand1();
+            Expression operand2 = baseExpression.getOperand2();
+            if (operand1 != null) {
+                self.setOperand1((Expression)operand1.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (operand2 != null) {
+                self.setOperand2((Expression)operand2.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            self.setOperator(baseExpression.getOperator());
+        }
+    }
+    
 } // BinaryExpressionImpl

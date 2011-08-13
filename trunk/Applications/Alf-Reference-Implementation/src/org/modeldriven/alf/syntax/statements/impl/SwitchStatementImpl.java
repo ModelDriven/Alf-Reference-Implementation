@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -356,4 +357,29 @@ public class SwitchStatementImpl extends StatementImpl {
         return blocks;
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SwitchStatement) {
+            SwitchStatement self = this.getSelf();
+            SwitchStatement baseStatement = (SwitchStatement)base;
+            Expression expression = baseStatement.getExpression();
+            Block defaultClause = baseStatement.getDefaultClause();
+            for (SwitchClause clause: baseStatement.getNonDefaultClause()) {
+                self.addNonDefaultClause((SwitchClause)clause.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (expression != null) {
+                self.setExpression((Expression)expression.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (defaultClause != null) {
+                self.setDefaultClause((Block)defaultClause.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // SwitchStatementImpl

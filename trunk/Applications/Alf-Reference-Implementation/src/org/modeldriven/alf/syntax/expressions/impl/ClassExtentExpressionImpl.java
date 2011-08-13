@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -106,4 +108,17 @@ public class ClassExtentExpressionImpl extends ExpressionImpl {
 	    }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ClassExtentExpression) {
+            QualifiedName className = 
+                ((ClassExtentExpression)base).getClassName();
+            this.getSelf().setClassName(className.getImpl().
+                    updateForBinding(templateParameters, templateArguments));
+        }
+    }
+    
 } // ClassExtentExpressionImpl

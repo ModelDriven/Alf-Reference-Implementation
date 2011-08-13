@@ -558,4 +558,21 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         return false;
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof InvocationExpression) {
+            InvocationExpression self = this.getSelf();
+            Tuple tuple = ((InvocationExpression)base).getTuple();
+            if (tuple != null) {
+                tuple = (Tuple)tuple.getImpl().
+                    bind(templateParameters, templateArguments);
+                tuple.setInvocation(self);
+                self.setTuple(tuple);
+            }
+        }
+    }
+
 } // InvocationExpressionImpl
