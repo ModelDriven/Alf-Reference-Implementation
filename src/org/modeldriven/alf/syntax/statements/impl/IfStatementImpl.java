@@ -281,4 +281,26 @@ public class IfStatementImpl extends StatementImpl {
 	    return blocks;
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof IfStatement) {
+            IfStatement self = this.getSelf();
+            IfStatement baseStatement = (IfStatement)base;
+            Block finalClause = baseStatement.getFinalClause();
+            for (ConcurrentClauses nonFinalClauses:
+                baseStatement.getNonFinalClauses()) {
+                self.addNonFinalClauses
+                    ((ConcurrentClauses)nonFinalClauses.getImpl().
+                            bind(templateParameters, templateArguments));
+            }
+            if (finalClause != null) {
+                self.setFinalClause((Block)finalClause.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // IfStatementImpl

@@ -1,5 +1,6 @@
 namespace 'Property Management';
 
+private import 'Property Management'::'Basic Types'::*;
 private import 'Property Management'::'Data Model'::Properties::'Property Acquisition Data';
 private import 'Property Management'::'Data Model'::Properties::'Property Disposition Data';
 

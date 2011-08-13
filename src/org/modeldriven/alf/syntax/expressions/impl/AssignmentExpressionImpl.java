@@ -15,6 +15,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -653,6 +654,28 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         }
         if (rhs != null) {
             rhs.getImpl().setCurrentScope(currentScope);
+        }
+    }
+    
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof AssignmentExpression) {
+            AssignmentExpression self = this.getSelf();
+            AssignmentExpression baseExpression = (AssignmentExpression)base;
+            LeftHandSide lhs = baseExpression.getLeftHandSide();
+            Expression rhs = baseExpression.getRightHandSide();
+            self.setOperator(baseExpression.getOperator());
+            if (lhs != null) {
+                self.setLeftHandSide((LeftHandSide)lhs.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (rhs != null) {
+                self.setRightHandSide((Expression)rhs.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
         }
     }
 

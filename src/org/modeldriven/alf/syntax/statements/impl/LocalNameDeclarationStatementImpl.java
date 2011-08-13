@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -223,7 +224,8 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	public boolean localNameDeclarationStatementExpressionMultiplicity() {
 	    LocalNameDeclarationStatement self = this.getSelf();
 	    Expression expression = self.getExpression();
-	    return self.getHasMultiplicity() || expression == null || expression.getUpper() <= 1;
+	    return self.getHasMultiplicity() || expression == null || 
+	            expression.getUpper() <= 1;
 	}
 
 	/*
@@ -239,6 +241,28 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
         }
         if (expression != null) {
             expression.getImpl().setCurrentScope(currentScope);
+        }
+    }
+    
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof LocalNameDeclarationStatement) {
+            LocalNameDeclarationStatement self = this.getSelf();
+            LocalNameDeclarationStatement baseStatement = 
+                (LocalNameDeclarationStatement)base;
+            Expression expression = baseStatement.getExpression();
+            QualifiedName typeName = baseStatement.getTypeName();
+            self.setName(baseStatement.getName());
+            if (expression != null) {
+                self.setExpression((Expression)expression.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            self.setHasMultiplicity(baseStatement.getHasMultiplicity());
+            self.setTypeName(typeName.getImpl().
+                    updateForBinding(templateParameters, templateArguments));
         }
     }
     

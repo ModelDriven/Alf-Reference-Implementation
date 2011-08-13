@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.units.impl;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -209,12 +210,19 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	} // isSameKindAs
 
     @Override
-    protected void bindTo(Member base,
+    protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);
         if (base instanceof PropertyDefinition) {
-            this.getSelf().setIsComposite(((PropertyDefinition)base).getIsComposite());
+            PropertyDefinition self = this.getSelf();
+            PropertyDefinition baseDefinition = (PropertyDefinition)base;
+            Expression initializer = baseDefinition.getInitializer();
+            self.setIsComposite(baseDefinition.getIsComposite());
+            if (initializer != null) {
+                self.setInitializer((Expression)initializer.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
         }
     }
 

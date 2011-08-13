@@ -10,10 +10,12 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -134,6 +136,27 @@ public class SequenceRangeImpl extends SequenceElementsImpl {
                rangeLowerType != null && rangeLowerType.getImpl().isInteger() &&
                rangeUpper != null && rangeUpper.getUpper() == 1 && 
                rangeUpperType != null && rangeUpperType.getImpl().isInteger();
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SequenceRange) {
+            SequenceRange self = this.getSelf();
+            SequenceRange baseExpression = (SequenceRange)base;
+            Expression rangeLower = baseExpression.getRangeLower();
+            Expression rangeUpper = baseExpression.getRangeUpper();
+            if (rangeLower != null) {
+                self.setRangeLower((Expression)rangeLower.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (rangeUpper != null) {
+                self.setRangeUpper((Expression)rangeUpper.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
     }
 
 } // SequenceRangeImpl

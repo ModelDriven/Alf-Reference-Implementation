@@ -9,6 +9,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -124,4 +127,23 @@ public class ExtentOrExpressionImpl {
         }
 	}
 
+    public ExtentOrExpression bind(
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        ExtentOrExpression self = this.getSelf();
+        QualifiedName name = self.getName();
+        Expression nonNameExpression = self.getNonNameExpression();
+        ExtentOrExpression boundElement = new ExtentOrExpression();
+        if (name != null) {
+            boundElement.setName(name.getImpl().
+                    updateForBinding(templateParameters, templateArguments));
+        }
+        if (nonNameExpression != null) {
+            boundElement.setNonNameExpression
+                ((Expression)nonNameExpression.getImpl().
+                        bind(templateParameters, templateArguments));
+        }
+        return boundElement;
+    }
+    
 } // ExtentOrExpressionImpl

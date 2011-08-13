@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.*;
@@ -204,5 +205,28 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	        elements.getImpl().setCurrentScope(currentScope);
 	    }
 	}
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SequenceConstructionExpression) {
+            SequenceConstructionExpression self = this.getSelf();
+            SequenceConstructionExpression baseExpression = 
+                (SequenceConstructionExpression)base;
+            SequenceElements elements = baseExpression.getElements();
+            QualifiedName typeName = baseExpression.getTypeName();
+            if (elements != null) {
+                self.setElements((SequenceElements)elements.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            self.setHasMultiplicity(baseExpression.getHasMultiplicity());
+            if (typeName != null) {
+                self.setTypeName(typeName.getImpl().
+                        updateForBinding(templateParameters, templateArguments));
+            }
+        }
+    }
 
 } // SequenceConstructionExpressionImpl

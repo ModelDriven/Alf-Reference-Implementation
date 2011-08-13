@@ -139,11 +139,13 @@ public class ImportedMemberImpl extends MemberImpl {
         return importedMember;
     }
     
-    protected void bindTo(Member base, 
+    protected void bindTo(SyntaxElement base, 
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);
-        this.setReferent(base.getImpl().getReferent());
+        if (base instanceof Member) {
+            this.setReferent(((Member)base).getImpl().getReferent());
+        }
     }
     
 } // ImportedMemberImpl

@@ -13,6 +13,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -92,4 +93,21 @@ public abstract class UnaryExpressionImpl extends ExpressionImpl {
         }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof UnaryExpression) {
+            UnaryExpression self = this.getSelf();
+            UnaryExpression baseExpression = (UnaryExpression)base;
+            Expression operand = baseExpression.getOperand();
+            self.setOperator(baseExpression.getOperator());
+            if (operand != null) {
+                self.setOperand((Expression)operand.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // UnaryExpressionImpl

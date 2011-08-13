@@ -398,8 +398,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         if (!(element instanceof Member)) {
             return null;
         } else {
-            Member base = ((Member)element).getImpl().getBase();
-            return base == null? null: base.getImpl().getReferent();
+            SyntaxElement base = ((Member)element).getImpl().getBase();
+            return !(base instanceof Member)? null: 
+                ((Member)base).getImpl().getReferent();
         }
     }
     

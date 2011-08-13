@@ -11,11 +11,13 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -158,4 +160,19 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SequenceExpressionList) {
+            SequenceExpressionList self = this.getSelf();
+            for (Expression element: 
+                ((SequenceExpressionList)base).getElement()) {
+                self.addElement((Expression)element.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // SequenceExpressionListImpl

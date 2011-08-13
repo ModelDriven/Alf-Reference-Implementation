@@ -13,6 +13,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -185,5 +186,21 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 	        featureReference.getImpl().setCurrentScope(currentScope);
 	    }
 	}
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof PropertyAccessExpression) {
+            FeatureReference featureReference = 
+                ((PropertyAccessExpression)base).getFeatureReference();
+            if (featureReference != null) {
+                this.getSelf().setFeatureReference
+                    ((FeatureReference)featureReference.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
 
 } // PropertyAccessExpressionImpl

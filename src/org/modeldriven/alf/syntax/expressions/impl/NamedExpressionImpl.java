@@ -9,6 +9,10 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -147,6 +151,28 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
         output.setExpression(self.getExpression());
         output.setIndex(self.getIndex());
         return output;
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof NamedExpression) {
+            NamedExpression self = this.getSelf();
+            NamedExpression baseNamedExpression = (NamedExpression)base;
+            Expression expression = baseNamedExpression.getExpression();
+            Expression index = baseNamedExpression.getIndex();
+            self.setName(baseNamedExpression.getName());
+            if (expression != null) {
+                self.setExpression((Expression)expression.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (index != null) {
+                self.setIndex((Expression)index.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
     }
 
 } // NamedExpressionImpl

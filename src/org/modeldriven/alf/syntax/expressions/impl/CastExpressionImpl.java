@@ -13,6 +13,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -150,4 +151,25 @@ public class CastExpressionImpl extends ExpressionImpl {
         }
 	}
 
+	@Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof CastExpression) {
+            CastExpression self = this.getSelf();
+            CastExpression baseExpression = (CastExpression)base;
+            Expression operand = baseExpression.getOperand();
+            QualifiedName typeName = baseExpression.getTypeName();
+            if (operand != null) {
+                self.setOperand((Expression)operand.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (typeName != null) {
+                self.setTypeName(typeName.getImpl().
+                        updateForBinding(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // CastExpressionImpl

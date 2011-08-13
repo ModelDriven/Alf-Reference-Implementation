@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -148,7 +150,10 @@ public class BehaviorInvocationExpressionImpl
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    super.setCurrentScope(currentScope);
-	    this.getSelf().getTarget().getImpl().setCurrentScope(currentScope);
+	    QualifiedName target = this.getSelf().getTarget();
+	    if (target != null) {
+	        target.getImpl().setCurrentScope(currentScope);
+	    }
 	}
 	
 	@Override
@@ -159,5 +164,19 @@ public class BehaviorInvocationExpressionImpl
 	    return RootNamespace.getCollectionFunctionAdd().getImpl().
 	        equals(this.getSelf().getTarget().getImpl().getBehaviorReferent());
 	}
+
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof BehaviorInvocationExpression) {
+            QualifiedName target = 
+                ((BehaviorInvocationExpression)base).getTarget();
+            if (target != null) {
+                this.getSelf().setTarget(target.getImpl().
+                        updateBindings(templateParameters, templateArguments));
+            }
+        }
+    }
 
 } // BehaviorInvocationExpressionImpl

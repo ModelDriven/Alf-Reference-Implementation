@@ -211,4 +211,18 @@ public class BlockImpl extends SyntaxElementImpl {
                 this.getSelf().getAssignmentAfter());
     }
     
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof Block) {
+            Block self = this.getSelf();
+            for (Statement statement: ((Block)base).getStatement()) {
+                self.addStatement((Statement)statement.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // BlockImpl

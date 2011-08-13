@@ -15,6 +15,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -342,4 +343,22 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
         }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof IncrementOrDecrementExpression) {
+            IncrementOrDecrementExpression self = this.getSelf();
+            IncrementOrDecrementExpression baseExpression = 
+                (IncrementOrDecrementExpression)base;
+            LeftHandSide operand = baseExpression.getOperand();
+            if (operand != null) {
+                self.setOperand((LeftHandSide)operand.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            self.setOperator(baseExpression.getOperator());
+        }
+    }
+    
 } // IncrementOrDecrementExpressionImpl

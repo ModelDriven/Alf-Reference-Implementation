@@ -9,11 +9,14 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.statements.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * An identified modification to the behavior of an annotated statement.
@@ -53,4 +56,17 @@ public class AnnotationImpl extends SyntaxElementImpl {
 		this.argument.add(argument);
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof Annotation) {
+            Annotation self = this.getSelf();
+            Annotation baseAnnotation = (Annotation)base;
+            self.setIdentifier(baseAnnotation.getIdentifier());
+            self.setArgument(baseAnnotation.getArgument());
+        }
+    }
+    
 } // AnnotationImpl

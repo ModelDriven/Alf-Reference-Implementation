@@ -42,8 +42,10 @@ public abstract class TemplateBindingImpl extends SyntaxElementImpl {
 
     public abstract void setCurrentScope(NamespaceDefinition currentScope);
 
-    public abstract TemplateBinding update(
+    public TemplateBinding update(
             List<ElementReference> templateParameters,
-            List<ElementReference> templateArguments);
+            List<ElementReference> templateArguments) {
+        return (TemplateBinding)this.bind(templateParameters, templateArguments);
+    }
 
 } // TemplateBindingImpl

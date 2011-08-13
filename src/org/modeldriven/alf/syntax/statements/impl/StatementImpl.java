@@ -11,6 +11,7 @@ package org.modeldriven.alf.syntax.statements.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
+import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,8 +28,7 @@ import java.util.Set;
  * A model of an Alf statement.
  **/
 
-public abstract class StatementImpl extends
-		org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl {
+public abstract class StatementImpl extends DocumentedElementImpl {
 
 	private Collection<Annotation> annotation = new ArrayList<Annotation>();
 	private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
@@ -307,11 +308,22 @@ public abstract class StatementImpl extends
     public void setCurrentScope(NamespaceDefinition currentScope) {
     }
     
-    // This is redefined in loop statements (for, while, do) to return themselves.
+    // Note: This is redefined in loop statements (for, while, do) to return 
+    // themselves.
     protected Statement getLoopStatement() {
         Statement enclosingStatement = this.getSelf().getEnclosingStatement();
         return enclosingStatement == null? null:
                     enclosingStatement.getImpl().getLoopStatement();
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof Statement) {
+            this.getSelf().setAnnotation(((Statement)base).getAnnotation());
+        }
+    }
+    
 } // StatementImpl

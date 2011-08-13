@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A block of an accept statement that accepts one or more signals.
@@ -140,4 +141,26 @@ public class AcceptBlockImpl extends SyntaxElementImpl {
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof AcceptBlock) {
+            AcceptBlock self = this.getSelf();
+            AcceptBlock baseBlock = (AcceptBlock)base;
+            Block block = baseBlock.getBlock();
+            QualifiedNameList signalNames = baseBlock.getSignalNames();
+            self.setName(baseBlock.getName());
+            if (block != null) {
+                self.setBlock((Block)block.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (signalNames != null) {
+                self.setSignalNames((QualifiedNameList)signalNames.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // AcceptBlockImpl

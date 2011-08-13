@@ -37,9 +37,6 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     private Boolean isExternal = null; // DERIVED
     private UnitDefinition subunit = null; // DERIVED
     
-    // The base to which this member was bound due to a template binding.
-    private Member base = null;
-
     public MemberImpl(Member self) {
         super(self);
     }
@@ -138,14 +135,6 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 
     public void setSubunit(UnitDefinition subunit) {
         this.subunit = subunit;
-    }
-    
-    public Member getBase() {
-        return this.base;
-    }
-    
-    public void setBase(Member base) {
-        this.base = base;
     }
     
     protected Boolean deriveIsFeature() {
@@ -412,6 +401,13 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         }
     }
     
+    @Override
+    public SyntaxElement bind(
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        return this.bind("", null, false, templateParameters, templateArguments);
+    }
+    
     /**
      * Create a binding of this member to a given set of template arguments.
      */
@@ -440,16 +436,18 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         return boundElement;
     }
     
-    protected void bindTo(Member base,
+    @Override
+    protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
-        Member self = this.getSelf();
-        this.setBase(base);
-        self.setVisibility(base.getVisibility());
-        self.setIsStub(false);
-        self.setAnnotation(base.getAnnotation());
-        self.setIsPrimitive(base.getIsPrimitive());
-        self.setIsExternal(base.getIsExternal());
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof Member) {
+            Member self = this.getSelf();
+            Member member = (Member)base;
+            self.setVisibility(member.getVisibility());
+            self.setIsStub(false);
+            self.setAnnotation(member.getAnnotation());
+        }
     }
     
 } // MemberImpl

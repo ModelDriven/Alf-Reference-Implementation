@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -24,7 +25,8 @@ import java.util.List;
 
 public class NamedTemplateBindingImpl extends TemplateBindingImpl {
 
-    private Collection<TemplateParameterSubstitution> substitution = new ArrayList<TemplateParameterSubstitution>();
+    private Collection<TemplateParameterSubstitution> substitution = 
+        new ArrayList<TemplateParameterSubstitution>();
 
     public NamedTemplateBindingImpl(NamedTemplateBinding self) {
         super(self);
@@ -123,6 +125,22 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
                     update(templateParameters, templateArguments));
         }
         return templateBinding;
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof NamedTemplateBinding) {
+            NamedTemplateBinding self = this.getSelf();
+            for (TemplateParameterSubstitution substitution: 
+                ((NamedTemplateBinding)base).getSubstitution()) {
+                self.addSubstitution
+                    ((TemplateParameterSubstitution)substitution.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
     }
 
 } // NamedTemplateBindingImpl

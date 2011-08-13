@@ -18,6 +18,7 @@ import org.modeldriven.alf.syntax.units.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -385,4 +386,34 @@ public class LoopVariableDefinitionImpl extends
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof LoopVariableDefinition) {
+            LoopVariableDefinition self = this.getSelf();
+            LoopVariableDefinition baseStatement = (LoopVariableDefinition)base;
+            Expression expression1 = baseStatement.getExpression1();;
+            Expression expression2 = baseStatement.getExpression2();;
+            QualifiedName typeName = baseStatement.getTypeName();
+            boolean typeIsInferred = baseStatement.getTypeIsInferred();
+            
+            self.setVariable(baseStatement.getVariable());
+            if (expression1 != null) {
+                self.setExpression1((Expression)expression1.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (expression2 != null) {
+                self.setExpression2((Expression)expression2.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (typeName != null) {
+                self.setTypeName(typeName.getImpl().
+                        updateForBinding(templateParameters, templateArguments));
+            }
+            self.setTypeIsInferred(typeIsInferred);
+        }
+    }
+    
 } // LoopVariableDefinitionImpl

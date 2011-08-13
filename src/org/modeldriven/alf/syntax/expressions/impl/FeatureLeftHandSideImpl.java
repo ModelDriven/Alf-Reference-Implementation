@@ -13,6 +13,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -151,6 +152,21 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
         FeatureReference feature = self.getFeature();
         if (feature != null) {
             feature.getImpl().setCurrentScope(currentScope);
+        }
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof FeatureLeftHandSide) {
+            FeatureReference feature = 
+                ((FeatureLeftHandSide)base).getFeature();
+            if (feature != null) {
+                this.getSelf().setFeature((FeatureReference)feature.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
         }
     }
 

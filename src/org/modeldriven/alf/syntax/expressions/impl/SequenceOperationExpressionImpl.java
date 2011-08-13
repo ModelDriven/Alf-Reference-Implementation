@@ -240,12 +240,14 @@ public class SequenceOperationExpressionImpl
 	 **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
         Expression expression = this.getExpression();
+        ElementReference expressionType = this.getType();
         LeftHandSide lhs = this.getLeftHandSide();
         ElementReference type = this.getFirstParameterType();
         return expression == null || !this.isInPlace() ||
                     lhs != null && (lhs.getImpl().getLocalName() == null || 
                             this.getOldAssignment() != null) &&
-                    type != null && type.getImpl().equals(expression.getType());
+                    (type != null && type.getImpl().equals(expressionType) ||
+                            type == null && expressionType == null);
 	}
 
     /**
@@ -426,5 +428,28 @@ public class SequenceOperationExpressionImpl
             operation.getImpl().setCurrentScope(currentScope);
         }
 	}
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof SequenceOperationExpression) {
+            SequenceOperationExpression self = this.getSelf();
+            SequenceOperationExpression baseExpression = 
+                (SequenceOperationExpression)base;
+            ExtentOrExpression primary = baseExpression.getPrimary();
+            QualifiedName operation = baseExpression.getOperation();
+            self.setOperation(baseExpression.getOperation());
+            if (primary != null) {
+                self.setPrimary((ExtentOrExpression)primary.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (operation != null) {
+                self.setOperation(operation.getImpl().
+                        updateBindings(templateParameters, templateArguments));
+            }
+        }
+    }
 
 } // SequenceOperationExpressionImpl

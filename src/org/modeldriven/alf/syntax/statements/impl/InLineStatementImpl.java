@@ -9,6 +9,10 @@
 
 package org.modeldriven.alf.syntax.statements.impl;
 
+import java.util.List;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.statements.*;
 
 
@@ -59,4 +63,17 @@ public class InLineStatementImpl extends StatementImpl {
 		return true;
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof InLineStatement) {
+           InLineStatement self = this.getSelf();
+           InLineStatement baseStatement = (InLineStatement)base;
+           self.setLanguage(baseStatement.getLanguage());
+           self.setCode(baseStatement.getCode());
+        }
+    }
+    
 } // InLineStatementImpl

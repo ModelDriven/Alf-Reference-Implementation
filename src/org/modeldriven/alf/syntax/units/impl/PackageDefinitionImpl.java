@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.uml.Profile;
 
@@ -117,7 +118,7 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
-    protected void bindTo(Member base,
+    protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);

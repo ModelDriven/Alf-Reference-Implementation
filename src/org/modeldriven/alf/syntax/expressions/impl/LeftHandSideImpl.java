@@ -15,6 +15,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -221,6 +222,21 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
         Expression index = this.getSelf().getIndex();
         if (index != null) {
             index.getImpl().setCurrentScope(currentScope);
+        }
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof LeftHandSide) {
+            Expression index = 
+                ((LeftHandSide)base).getIndex();
+            if (index != null) {
+                this.getSelf().setIndex((Expression)index.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
         }
     }
 

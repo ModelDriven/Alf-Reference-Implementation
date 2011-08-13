@@ -370,4 +370,26 @@ public class ForStatementImpl extends StatementImpl {
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ForStatement) {
+            ForStatement self = this.getSelf();
+            ForStatement baseStatement = (ForStatement)base;
+            Block body = baseStatement.getBody();
+            if (body != null) {
+                self.setBody((Block)body.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            for (LoopVariableDefinition variableDefinition:
+                baseStatement.getVariableDefinition()) {
+                self.addVariableDefinition
+                    ((LoopVariableDefinition)variableDefinition.getImpl().
+                            bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // ForStatementImpl

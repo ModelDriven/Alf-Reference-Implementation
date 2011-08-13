@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,4 +88,18 @@ public class ExpressionStatementImpl extends StatementImpl {
 	    }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof ExpressionStatement) {
+           Expression expression = ((ExpressionStatement)base).getExpression();
+            if (expression != null) {
+                this.getSelf().setExpression((Expression)expression.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // ExpressionStatementImpl

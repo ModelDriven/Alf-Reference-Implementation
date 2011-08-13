@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.*;
@@ -333,4 +334,18 @@ public class NameExpressionImpl extends ExpressionImpl {
 	    return this.currentScope;
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof NameExpression) {
+            QualifiedName name = ((NameExpression)base).getName();
+            if (name != null) {
+                this.getSelf().setName(name.getImpl().
+                        updateBindings(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // NameExpressionImpl

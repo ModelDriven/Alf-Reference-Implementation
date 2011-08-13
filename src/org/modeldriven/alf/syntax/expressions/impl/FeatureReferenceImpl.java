@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -190,6 +191,27 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
         Expression expression = this.getSelf().getExpression();
         if (expression != null) {
             expression.getImpl().setAssignmentBefore(assignmentsBefore);
+        }
+    }
+
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof FeatureReference) {
+            FeatureReference self = this.getSelf();
+            FeatureReference baseFeature = (FeatureReference)base;
+            Expression expression = baseFeature.getExpression();
+            NameBinding nameBinding = baseFeature.getNameBinding();
+            if (expression != null) {
+                self.setExpression((Expression)expression.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (nameBinding != null) {
+                self.setNameBinding(nameBinding.getImpl().
+                        updateBinding(templateParameters, templateArguments));
+            }
         }
     }
 

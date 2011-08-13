@@ -202,4 +202,22 @@ public class LinkOperationExpressionImpl
 	    }
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof LinkOperationExpression) {
+            LinkOperationExpression self = this.getSelf();
+            LinkOperationExpression baseExpression = 
+                (LinkOperationExpression)base;
+            QualifiedName associationName = baseExpression.getAssociationName();
+            self.setOperation(baseExpression.getOperation());
+            if (associationName != null) {
+                self.setAssociationName(associationName.getImpl().
+                        updateForBinding(templateParameters, templateArguments));
+            }
+        }
+    }
+
 } // LinkOperationExpressionImpl

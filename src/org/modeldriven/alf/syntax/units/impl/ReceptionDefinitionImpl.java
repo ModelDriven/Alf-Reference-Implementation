@@ -125,7 +125,7 @@ public class ReceptionDefinitionImpl extends MemberImpl {
 	} // isSameKindAs
 	
     @Override
-    protected void bindTo(Member base,
+    protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);

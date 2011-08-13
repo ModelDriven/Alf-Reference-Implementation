@@ -18,6 +18,7 @@ import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -345,4 +346,18 @@ public class AcceptStatementImpl extends StatementImpl {
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof AcceptStatement) {
+            AcceptStatement self = this.getSelf();
+            for (AcceptBlock acceptBlock: ((AcceptStatement)base).getAcceptBlock()) {
+                self.addAcceptBlock((AcceptBlock)acceptBlock.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // AcceptStatementImpl

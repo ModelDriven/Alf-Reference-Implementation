@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -172,4 +173,25 @@ public class WhileStatementImpl extends StatementImpl {
         return this.getSelf();
     }
     
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof WhileStatement) {
+            WhileStatement self = this.getSelf();
+            WhileStatement baseStatement = (WhileStatement)base;
+            Expression condition = baseStatement.getCondition();
+            Block body = baseStatement.getBody();
+            if (body != null) {
+                self.setBody((Block)body.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+            if (condition != null) {
+                self.setCondition((Expression)condition.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+
 } // WhileStatementImpl

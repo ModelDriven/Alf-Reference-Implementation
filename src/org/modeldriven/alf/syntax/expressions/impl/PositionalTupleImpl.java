@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -147,4 +149,19 @@ public class PositionalTupleImpl extends TupleImpl {
         }
     }
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof PositionalTuple) {
+            PositionalTuple self = this.getSelf();
+            for (Expression expression: 
+                ((PositionalTuple)base).getExpression()) {
+                self.addExpression((Expression)expression.getImpl().
+                        bind(templateParameters, templateArguments));
+            }
+        }
+    }
+    
 } // PositionalTupleImpl

@@ -21,15 +21,30 @@ import java.util.List;
  **/
 
 public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
+    
+    private boolean isBound = false;
+    private ElementReference boundArgument = null;
 
 	public ClassifierTemplateParameterImpl(ClassifierTemplateParameter self) {
 		super(self);
 	}
 
 	@Override
-	public org.modeldriven.alf.syntax.units.ClassifierTemplateParameter getSelf() {
+	public ClassifierTemplateParameter getSelf() {
 		return (ClassifierTemplateParameter) this.self;
 	}
+	
+	public boolean isBound() {
+	    return this.isBound;
+	}
+	
+	public ElementReference getBoundArgument() {
+	    return this.boundArgument;
+	}
+	
+	/*
+	 * Helper Methods.
+	 */
 
 	/**
 	 * Annotations are not allowed on classifier template parameters.
