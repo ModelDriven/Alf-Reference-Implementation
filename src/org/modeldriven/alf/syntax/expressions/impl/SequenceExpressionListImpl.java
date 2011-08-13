@@ -134,6 +134,7 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
         for (Expression element: this.getSelf().getElement()) {
             ElementReference elementType = element.getType();
             if (element.getUpper() > 1 || elementType == null && type != null ||
+                    elementType != null && 
                     !elementType.getImpl().conformsTo(type) &&
                     !(elementType.getImpl().isInteger() && 
                             type.getImpl().isBitString())) {

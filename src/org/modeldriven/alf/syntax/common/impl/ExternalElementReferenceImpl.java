@@ -219,6 +219,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public boolean isClassifierTemplateParameter() {
         return this.getSelf().getElement() instanceof ClassifierTemplateParameter;
     }
+    
+    @Override
+    public boolean isCompletelyBound() {
+        return true;
+    }
 
     @Override
     public boolean isProperty() {

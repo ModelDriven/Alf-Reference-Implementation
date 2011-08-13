@@ -74,6 +74,11 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
 	 * Helper Methods
 	 */
 	
+	@Override
+	public boolean isCompletelyBound() {
+	    return false;
+	}
+	
 	/**
 	 * Two template parameters match if they have same names and the same 
 	 * specialization referents.
@@ -104,12 +109,14 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
 	    }
 	}
 	
+	/*
     @Override
     public Member bind(String name,
             NamespaceDefinition namespace,
             boolean isOwnedMember,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
+        
         if (this.getReferent().getImpl().isContainedIn(templateParameters)) {
             return null;
         } else {
@@ -117,6 +124,22 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
                     templateParameters, templateArguments);
         }
     }
+    */
+	
+	@Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        ElementReference referent = ((Member)base).getImpl().getReferent();
+        for (int i = 0; i < templateParameters.size(); i++) {
+            if (referent.getImpl().equals(templateParameters.get(i))) {
+                this.isBound = true;
+                this.boundArgument = templateArguments.get(i);
+                break;
+            }
+        }
+	}
 
 
 } // ClassifierTemplateParameterImpl

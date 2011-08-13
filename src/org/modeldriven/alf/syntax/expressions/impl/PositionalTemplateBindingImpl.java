@@ -55,7 +55,7 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
 	    String separator = "";
 	    for (QualifiedName q: self.getArgumentName()) {
 	        s.append(separator);
-	        s.append(q.getPathName());
+	        s.append(q == null? "any": q.getPathName());
 	        separator = ",";
 	    }
 	    s.append(">");
@@ -72,10 +72,15 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
             NamespaceDefinition currentScope) {
         List<ElementReference> argumentReferents = new ArrayList<ElementReference>();
         for (QualifiedName argumentName: this.getSelf().getArgumentName()) {
-            argumentName.getImpl().setCurrentScope(currentScope);
-            ElementReference argumentReferent = argumentName.getImpl().getClassifierReferent();
-            if (argumentReferent != null) {
-                argumentReferents.add(argumentReferent);
+            if (argumentName == null) {
+                argumentReferents.add(null);
+            } else {
+                argumentName.getImpl().setCurrentScope(currentScope);
+                ElementReference argumentReferent = argumentName == null? null:
+                    argumentName.getImpl().getClassifierReferent();
+                if (argumentReferent != null) {
+                    argumentReferents.add(argumentReferent);
+                }
             }
         }
         return argumentReferents;

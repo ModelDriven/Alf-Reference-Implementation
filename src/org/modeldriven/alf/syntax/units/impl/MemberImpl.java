@@ -333,6 +333,10 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     public boolean isTemplate() {
         return false;
     }
+    
+    public boolean isCompletelyBound() {
+        return true;
+    }
 
     public QualifiedName getQualifiedName() {
         return this.getNamespaceName().getImpl().addName(this.getSelf().getName());

@@ -190,6 +190,13 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     public boolean isClassifierTemplateParameter() {
         return this.getSelf().getElement() instanceof ClassifierTemplateParameter;
     }
+    
+    @Override
+    public boolean isCompletelyBound() {
+        return this.isClassifier() &&
+                ((ClassifierDefinition)this.getSelf().getElement()).getImpl().
+                    isCompletelyBound();
+    }
 
     @Override
     public boolean isProperty() {

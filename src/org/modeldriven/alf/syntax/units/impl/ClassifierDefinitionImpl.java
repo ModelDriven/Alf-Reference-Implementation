@@ -232,7 +232,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	@Override
     public boolean isTemplate() {
         for (Member member: this.getSelf().getOwnedMember()) {
-            if (member instanceof ClassifierTemplateParameter) {
+            if (member instanceof ClassifierTemplateParameter &&
+                    !((ClassifierTemplateParameter)member).getImpl().isBound()) {
                 return true;
             }
         }
@@ -240,13 +241,47 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     }
 	
 	public List<ClassifierTemplateParameter> getTemplateParameters() {
-	    List<ClassifierTemplateParameter> templateParameters = new ArrayList<ClassifierTemplateParameter>();
+	    List<ClassifierTemplateParameter> templateParameters = 
+	        new ArrayList<ClassifierTemplateParameter>();
         for (Member member: this.getSelf().getOwnedMember()) {
-            if (member instanceof ClassifierTemplateParameter) {
+            if (member instanceof ClassifierTemplateParameter &&
+                    !((ClassifierTemplateParameter)member).getImpl().isBound()) {
                 templateParameters.add((ClassifierTemplateParameter)member);
             }
         }
         return templateParameters;
+	}
+	
+	/**
+	 * A completely bound classifier is one that has no unbound template
+	 * parameters and all of whose bound template parameters are bound to
+	 * arguments that are themselves completely bound.
+	 */
+	@Override
+	public boolean isCompletelyBound() {
+	    ClassifierDefinition self = this.getSelf();
+	    NamespaceDefinition namespace = self.getNamespace();
+	    if (namespace != null && !namespace.getImpl().isCompletelyBound()){
+	        return false;
+	    } else {
+            for (Member member: this.getSelf().getOwnedMember()) {
+                if (member instanceof ClassifierTemplateParameter) {
+                    ClassifierTemplateParameterImpl parameter = 
+                        ((ClassifierTemplateParameter)member).getImpl();
+                    if (!parameter.isBound()) {
+                        return false;
+                    } else {
+                        ElementReference boundArgument = 
+                            parameter.getBoundArgument();
+                        if (boundArgument != null && 
+                                !boundArgument.getImpl().isCompletelyBound()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+	    }
 	}
 
 	public List<Member> getInheritableMembers() {
