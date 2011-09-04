@@ -160,7 +160,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	        for (int j = i+1; j < n; j++) {
 	            Member otherMember = members.get(j);
 	            if (!member.isDistinguishableFrom(otherMember) &&
-	                    !referent.equals(otherMember.getImpl().getReferent())) {
+	                    !referent.getImpl().equals(otherMember.getImpl().getReferent())) {
+	                System.out.println("[namespaceDefinitionMemberDistinguishability] member=" + member + 
+	                        " otherMember=" + otherMember);
 	                return false;
 	            }
 	        }
