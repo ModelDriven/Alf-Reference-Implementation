@@ -266,7 +266,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);
-        if (base instanceof BinaryExpression) {
+        if (base instanceof ConditionalTestExpression) {
             ConditionalTestExpression self = this.getSelf();
             ConditionalTestExpression baseExpression = 
                 (ConditionalTestExpression)base;
@@ -278,11 +278,11 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
                         bind(templateParameters, templateArguments));
             }
             if (operand2 != null) {
-                self.setOperand2((Expression)operand1.getImpl().
+                self.setOperand2((Expression)operand2.getImpl().
                         bind(templateParameters, templateArguments));
             }
             if (operand3 != null) {
-                self.setOperand2((Expression)operand3.getImpl().
+                self.setOperand3((Expression)operand3.getImpl().
                         bind(templateParameters, templateArguments));
             }
         }
