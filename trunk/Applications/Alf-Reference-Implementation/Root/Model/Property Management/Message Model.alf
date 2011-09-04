@@ -1,6 +1,7 @@
 namespace 'Property Management';
 
 private import 'Property Management'::'Basic Types'::*;
+private import 'Property Management'::'Data Model'::Properties::'Property Status';
 private import 'Property Management'::'Data Model'::Properties::'Property Acquisition Data';
 private import 'Property Management'::'Data Model'::Properties::'Property Disposition Data';
 
@@ -66,6 +67,7 @@ package 'Message Model' {
   public datatype 'Property Data' {
     public 'property identifier': String;
     public 'property name': String;
+    public 'property status': 'Property Status';
     public 'property value': 'Currency Amount'[0..1];
     public 'property type': 'Property Type';
     public 'property serial number': String[0..1];
