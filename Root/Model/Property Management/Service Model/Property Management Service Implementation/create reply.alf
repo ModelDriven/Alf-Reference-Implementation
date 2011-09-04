@@ -13,6 +13,9 @@ activity 'create reply'(in requestId: String, in property: Property):
     'property identifier'       => property.identifier,
     'property name'             => property.name,
     'property status'           => property.status,
+    'property type'             => property instanceof 'Personal Property'?
+        								'Property Type'::personal:
+        								'Property Type'::real,	
     'property acquisition data' => property.'acquisition data',
     'property disposition data' => property.'disposition data' );
 
