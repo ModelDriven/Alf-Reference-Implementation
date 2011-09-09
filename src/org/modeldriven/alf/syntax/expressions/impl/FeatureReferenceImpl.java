@@ -193,6 +193,12 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
             expression.getImpl().setAssignmentBefore(assignmentsBefore);
         }
     }
+    
+    public Map<String, AssignedSource> getAssignmentAfterMap() {
+        Expression expression = this.getSelf().getExpression();
+        return expression == null? null: 
+            expression.getImpl().getAssignmentAfterMap();
+    }
 
     @Override
     protected void bindTo(SyntaxElement base,

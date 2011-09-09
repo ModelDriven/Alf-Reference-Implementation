@@ -54,6 +54,7 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
 
 	public void setNamespaceName(QualifiedName namespaceName) {
 		this.namespaceName = namespaceName;
+        this.namespaceName.getImpl().setCurrentScope(RootNamespace.getRootScope());
 	}
 
 	public NamespaceDefinition getDefinition() {
@@ -130,7 +131,6 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
 	    ElementReference referent = null;
 	    QualifiedName namespaceName = self.getNamespaceName();
 	    if (namespaceName != null) {
-            namespaceName.getImpl().setCurrentScope(RootNamespace.getRootScope());
 	        referent = namespaceName.getImpl().getNamespaceReferent();
 	    }
 		return referent;

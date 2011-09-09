@@ -76,8 +76,12 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 
 	public void setMember(Collection<Member> members) {
 		this.member = members;
-        this.memberMap = new HashMap<String, Collection<Member>>();
-        addAllMembers(members, this.memberMap);
+		if (members == null) {
+		    this.memberMap = null;
+		} else {
+		    this.memberMap = new HashMap<String, Collection<Member>>();
+		    addAllMembers(members, this.memberMap);
+		}
 	}
 	
 	public void addMember(Member member) {
@@ -97,6 +101,19 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	        members.remove(member);
 	    }
 	}
+	
+	@Override
+	public void setSubunit(UnitDefinition subunit) {
+	    super.setSubunit(subunit);
+	    if (subunit != null) {
+	        NamespaceDefinition definition = subunit.getDefinition();
+	        if (definition != null) {
+	            NamespaceDefinition self = this.getSelf();
+	            self.setOwnedMember(definition.getOwnedMember());
+	            self.setMember(null);
+	        }
+	    }
+	}
 
     /**
      * The members of a namespace definition include references to all owned
@@ -111,14 +128,13 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
      **/
     protected Collection<Member> deriveMember() {
 	    NamespaceDefinition self = this.getSelf();
-
+	    
         if (self.getIsStub()) {
 	        UnitDefinition subunit = self.getSubunit();
 	        if (subunit != null) {
-	            subunit.getImpl().addImplicitImports();
 	            NamespaceDefinition definition = subunit.getDefinition();
 	            if (definition != null) {
-	                self = definition;
+	                return definition.getMember();
 	            }
 	        }
 	    }
@@ -378,12 +394,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     
     public Collection<Member> getSubunitOwnedMembers() {
         NamespaceDefinition self = this.getSelf();
-        UnitDefinition subunit = self.getSubunit();
-        NamespaceDefinition definition = subunit == null? null: 
-            subunit.getDefinition();
-        return definition == null? 
-                self.getOwnedMember(): 
-                definition.getOwnedMember();
+        self.getSubunit();
+        return self.getOwnedMember();
     }
     
     public List<FormalParameter> getFormalParameters() {
@@ -437,7 +449,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             Collection<Member> ownedMembers = baseNamespace.getImpl().getSubunitOwnedMembers();
             self.setOwnedMember(new ArrayList<Member>());
             self.setMember(new ArrayList<Member>());
-            for (Member member: ((NamespaceDefinition)base).getMember()) {
+            for (Member member: baseNamespace.getMember()) {
                 // Note: If a boundMember is created, it will be added to
                 // the given namespace.
                 member.getImpl().bind(member.getName(), self, 

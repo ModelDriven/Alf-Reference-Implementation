@@ -63,11 +63,11 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
 
         try {
             // System.out.println("Looking for Model" + path + "...");
-            parser = new AlfParser(new java.io.FileInputStream("Root/Model" + path));
+            parser = new AlfParser("Root/Model" + path);
         } catch (java.io.FileNotFoundException e0) {
             try {
                 // System.out.println("Looking for Library" + path + "...");
-                parser = new AlfParser(new java.io.FileInputStream("Root/Library" + path));
+                parser = new AlfParser("Root/Library" + path);
                 fromModel = false;
             } catch (java.io.FileNotFoundException e) {
                 System.out.println("Unit not found: " + qualifiedName.getPathName());

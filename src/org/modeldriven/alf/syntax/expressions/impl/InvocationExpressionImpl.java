@@ -47,7 +47,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	public InvocationExpression getSelf() {
 		return (InvocationExpression) this.self;
 	}
-
+	
 	public Boolean getIsBehavior() {
 		if (this.isBehavior == null) {
 			this.setIsBehavior(this.deriveIsBehavior());
@@ -413,11 +413,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	    Tuple tuple = self.getTuple();
 	    Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
 	    if (feature != null) {
-	        Expression expression = feature.getExpression();
-	        if (expression != null) {
-	            expression.getImpl().setAssignmentBefore(assignments);
-	            assignments = expression.getImpl().getAssignmentAfterMap();
-	        }
+	        feature.getImpl().setAssignmentBefore(assignments);
+	        assignments = feature.getImpl().getAssignmentAfterMap();
 	    }
 	    if (tuple != null) {
 	        assignments = tuple.getImpl().getAssignmentsAfterMap();

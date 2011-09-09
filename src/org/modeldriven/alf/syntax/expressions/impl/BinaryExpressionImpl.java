@@ -36,6 +36,21 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	public BinaryExpression getSelf() {
 		return (BinaryExpression) this.self;
 	}
+	
+	@Override
+	public void deriveAll() {
+	    BinaryExpression self = this.getSelf();
+	    Expression operand1 = self.getOperand1();
+	    Expression operand2 = self.getOperand2();
+	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+	    if (operand1 != null) {
+	        operand1.getImpl().setAssignmentBefore(assignmentsBefore);
+	    }
+	    if (operand2 != null) {
+	        operand2.getImpl().setAssignmentBefore(assignmentsBefore);
+	    }
+	    super.deriveAll();
+	}
 
 	public Expression getOperand1() {
 		return this.operand1;

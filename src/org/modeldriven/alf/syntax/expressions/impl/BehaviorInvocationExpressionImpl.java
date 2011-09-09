@@ -40,6 +40,9 @@ public class BehaviorInvocationExpressionImpl
 
 	public void setTarget(QualifiedName target) {
 		this.target = target;
+		if (this.target != null) {
+		    this.target.getImpl().setContainingExpression(this.getSelf());
+		}
 	}
 	
 	/**

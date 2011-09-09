@@ -62,6 +62,10 @@ public abstract class SyntaxElementImpl {
 	    return this.getSelf()._toString(includeDerived);
 	}
 	
+	public void deriveAll() {
+	    this.getSelf()._deriveAll();
+	}
+	
 	/*
 	 * Helper Methods
 	 */
