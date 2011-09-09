@@ -1,6 +1,6 @@
 namespace fUML::Syntax::Activities;
 
-public import fUML::Syntax::Activities::IntermediateActivities;
+public import fUML::Syntax::Activities::IntermediateActivities::*;
 
 package CompleteStructuredActivities {
 
