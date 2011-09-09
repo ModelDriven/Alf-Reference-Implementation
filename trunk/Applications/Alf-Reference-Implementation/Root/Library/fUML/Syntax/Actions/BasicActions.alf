@@ -1,7 +1,7 @@
 namespace fUML::Syntax::Actions;
 
-public import fUML::Syntax::IntermediateActivities::*;
-public import fUML::Syntax::CompleteStructuredActivities::*;
+public import fUML::Syntax::Activities::IntermediateActivities::*;
+public import fUML::Syntax::Activities::CompleteStructuredActivities::*;
 
 package BasicActions {
 
