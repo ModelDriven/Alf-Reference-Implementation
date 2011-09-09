@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.common;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -31,16 +33,50 @@ import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
  * name.
  **/
 
-public class AssignedSource {
+public class AssignedSource implements ParsedElement {
 
 	protected AssignedSourceImpl impl;
+
+	private String fileName = "";
+	private int line = 0;
+	private int column = 0;
 
 	public AssignedSource() {
 		this.impl = new AssignedSourceImpl(this);
 	}
 
+	public AssignedSource(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public AssignedSource(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
+
 	public AssignedSourceImpl getImpl() {
 		return (AssignedSourceImpl) this.impl;
+	}
+
+	public String getFileName() {
+		return this.fileName;
+	}
+
+	public int getLine() {
+		return this.line;
+	}
+
+	public int getColumn() {
+		return this.column;
+	}
+
+	public void setParserInfo(String fileName, int line, int column) {
+		this.fileName = fileName;
+		this.line = line;
+		this.column = column;
 	}
 
 	public String getName() {
@@ -81,6 +117,17 @@ public class AssignedSource {
 
 	public void setType(ElementReference type) {
 		this.getImpl().setType(type);
+	}
+
+	public void deriveAll() {
+		this.getImpl().deriveAll();
+	}
+
+	public void _deriveAll() {
+		ElementReference type = this.getType();
+		if (type != null) {
+			type.deriveAll();
+		}
 	}
 
 	public Collection<ConstraintViolation> checkConstraints() {

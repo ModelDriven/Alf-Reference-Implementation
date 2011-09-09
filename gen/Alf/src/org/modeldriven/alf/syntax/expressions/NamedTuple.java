@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -35,6 +37,18 @@ public class NamedTuple extends Tuple {
 		this.impl = new NamedTupleImpl(this);
 	}
 
+	public NamedTuple(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public NamedTuple(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
+
 	public NamedTupleImpl getImpl() {
 		return (NamedTupleImpl) this.impl;
 	}
@@ -51,26 +65,25 @@ public class NamedTuple extends Tuple {
 		this.getImpl().addNamedExpression(namedExpression);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		Collection<NamedExpression> namedExpression = this.getNamedExpression();
+		if (namedExpression != null) {
+			for (Object _namedExpression : namedExpression.toArray()) {
+				((NamedExpression) _namedExpression).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-		for (Object _namedExpression : this.getNamedExpression().toArray()) {
-			((NamedExpression) _namedExpression).checkConstraints(violations);
+		Collection<NamedExpression> namedExpression = this.getNamedExpression();
+		if (namedExpression != null) {
+			for (Object _namedExpression : namedExpression.toArray()) {
+				((NamedExpression) _namedExpression)
+						.checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

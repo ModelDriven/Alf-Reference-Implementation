@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -30,6 +32,21 @@ import org.modeldriven.alf.syntax.units.impl.TypedElementDefinitionImpl;
  **/
 
 public abstract class TypedElementDefinition extends Member {
+
+	public TypedElementDefinition() {
+	}
+
+	public TypedElementDefinition(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public TypedElementDefinition(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public TypedElementDefinitionImpl getImpl() {
 		return (TypedElementDefinitionImpl) this.impl;
@@ -133,10 +150,15 @@ public abstract class TypedElementDefinition extends Member {
 		return this.getImpl().typedElementDefinitionTypeName();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getType();
+		this.getLower();
+		this.getUpper();
+		super._deriveAll();
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -161,15 +183,6 @@ public abstract class TypedElementDefinition extends Member {
 		if (typeName != null) {
 			typeName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

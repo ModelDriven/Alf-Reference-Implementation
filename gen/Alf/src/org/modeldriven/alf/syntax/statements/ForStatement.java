@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class ForStatement extends Statement {
 
 	public ForStatement() {
 		this.impl = new ForStatementImpl(this);
+	}
+
+	public ForStatement(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public ForStatement(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public ForStatementImpl getImpl() {
@@ -164,10 +178,20 @@ public class ForStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsParallel();
+		super._deriveAll();
+		Block body = this.getBody();
+		if (body != null) {
+			body.deriveAll();
+		}
+		Collection<LoopVariableDefinition> variableDefinition = this
+				.getVariableDefinition();
+		if (variableDefinition != null) {
+			for (Object _variableDefinition : variableDefinition.toArray()) {
+				((LoopVariableDefinition) _variableDefinition).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -208,20 +232,14 @@ public class ForStatement extends Statement {
 		if (body != null) {
 			body.checkConstraints(violations);
 		}
-		for (Object _variableDefinition : this.getVariableDefinition()
-				.toArray()) {
-			((LoopVariableDefinition) _variableDefinition)
-					.checkConstraints(violations);
+		Collection<LoopVariableDefinition> variableDefinition = this
+				.getVariableDefinition();
+		if (variableDefinition != null) {
+			for (Object _variableDefinition : variableDefinition.toArray()) {
+				((LoopVariableDefinition) _variableDefinition)
+						.checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -31,6 +33,21 @@ import org.modeldriven.alf.syntax.expressions.impl.UnaryExpressionImpl;
  **/
 
 public abstract class UnaryExpression extends Expression {
+
+	public UnaryExpression() {
+	}
+
+	public UnaryExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public UnaryExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public UnaryExpressionImpl getImpl() {
 		return (UnaryExpressionImpl) this.impl;
@@ -68,10 +85,12 @@ public abstract class UnaryExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		Expression operand = this.getOperand();
+		if (operand != null) {
+			operand.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -84,15 +103,6 @@ public abstract class UnaryExpression extends Expression {
 		if (operand != null) {
 			operand.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

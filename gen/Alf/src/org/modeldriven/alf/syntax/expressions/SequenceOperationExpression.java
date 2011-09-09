@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class SequenceOperationExpression extends InvocationExpression {
 
 	public SequenceOperationExpression() {
 		this.impl = new SequenceOperationExpressionImpl(this);
+	}
+
+	public SequenceOperationExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public SequenceOperationExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public SequenceOperationExpressionImpl getImpl() {
@@ -167,10 +181,23 @@ public class SequenceOperationExpression extends InvocationExpression {
 		return this.getImpl().updateAssignments();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsCollectionConversion();
+		this.getIsBitStringConversion();
+		this.getLeftHandSide();
+		super._deriveAll();
+		ExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.deriveAll();
+		}
+		QualifiedName operation = this.getOperation();
+		if (operation != null) {
+			operation.deriveAll();
+		}
+		LeftHandSide leftHandSide = this.getLeftHandSide();
+		if (leftHandSide != null) {
+			leftHandSide.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -223,15 +250,6 @@ public class SequenceOperationExpression extends InvocationExpression {
 		if (leftHandSide != null) {
 			leftHandSide.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

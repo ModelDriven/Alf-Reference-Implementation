@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -35,6 +37,18 @@ public class EmptyStatement extends Statement {
 		this.impl = new EmptyStatementImpl(this);
 	}
 
+	public EmptyStatement(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public EmptyStatement(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
+
 	public EmptyStatementImpl getImpl() {
 		return (EmptyStatementImpl) this.impl;
 	}
@@ -54,10 +68,8 @@ public class EmptyStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -66,15 +78,6 @@ public class EmptyStatement extends Statement {
 			violations.add(new ConstraintViolation(
 					"emptyStatementAssignmentsAfter", this));
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

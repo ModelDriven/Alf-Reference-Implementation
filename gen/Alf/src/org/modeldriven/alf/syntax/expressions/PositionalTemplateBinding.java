@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -36,6 +38,18 @@ public class PositionalTemplateBinding extends TemplateBinding {
 		this.impl = new PositionalTemplateBindingImpl(this);
 	}
 
+	public PositionalTemplateBinding(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public PositionalTemplateBinding(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
+
 	public PositionalTemplateBindingImpl getImpl() {
 		return (PositionalTemplateBindingImpl) this.impl;
 	}
@@ -52,26 +66,24 @@ public class PositionalTemplateBinding extends TemplateBinding {
 		this.getImpl().addArgumentName(argumentName);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		Collection<QualifiedName> argumentName = this.getArgumentName();
+		if (argumentName != null) {
+			for (Object _argumentName : argumentName.toArray()) {
+				((QualifiedName) _argumentName).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-		for (Object _argumentName : this.getArgumentName().toArray()) {
-			((QualifiedName) _argumentName).checkConstraints(violations);
+		Collection<QualifiedName> argumentName = this.getArgumentName();
+		if (argumentName != null) {
+			for (Object _argumentName : argumentName.toArray()) {
+				((QualifiedName) _argumentName).checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

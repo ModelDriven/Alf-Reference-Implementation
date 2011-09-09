@@ -11,6 +11,8 @@
 #set( $packageDeclaration = "package #qualifiedPackageName(${object.owner})")
 
 #set( $commonImports = "
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;

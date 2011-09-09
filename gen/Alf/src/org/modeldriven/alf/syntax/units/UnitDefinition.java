@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class UnitDefinition extends DocumentedElement {
 
 	public UnitDefinition() {
 		this.impl = new UnitDefinitionImpl(this);
+	}
+
+	public UnitDefinition(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public UnitDefinition(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public UnitDefinitionImpl getImpl() {
@@ -139,10 +153,25 @@ public class UnitDefinition extends DocumentedElement {
 		return this.getImpl().unitDefinitionAppliedProfileDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getNamespace();
+		this.getIsModelLibrary();
+		this.getAppliedProfile();
+		super._deriveAll();
+		QualifiedName namespaceName = this.getNamespaceName();
+		if (namespaceName != null) {
+			namespaceName.deriveAll();
+		}
+		NamespaceDefinition definition = this.getDefinition();
+		if (definition != null) {
+			definition.deriveAll();
+		}
+		Collection<ImportReference> import_ = this.getImport();
+		if (import_ != null) {
+			for (Object _import_ : import_.toArray()) {
+				((ImportReference) _import_).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -175,18 +204,12 @@ public class UnitDefinition extends DocumentedElement {
 		if (definition != null) {
 			definition.checkConstraints(violations);
 		}
-		for (Object _import_ : this.getImport().toArray()) {
-			((ImportReference) _import_).checkConstraints(violations);
+		Collection<ImportReference> import_ = this.getImport();
+		if (import_ != null) {
+			for (Object _import_ : import_.toArray()) {
+				((ImportReference) _import_).checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

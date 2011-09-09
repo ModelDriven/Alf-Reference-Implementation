@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class StereotypeAnnotation extends SyntaxElement {
 
 	public StereotypeAnnotation() {
 		this.impl = new StereotypeAnnotationImpl(this);
+	}
+
+	public StereotypeAnnotation(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public StereotypeAnnotation(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public StereotypeAnnotationImpl getImpl() {
@@ -139,10 +153,21 @@ public class StereotypeAnnotation extends SyntaxElement {
 		return this.getImpl().stereotypeAnnotationNames();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getStereotype();
+		super._deriveAll();
+		TaggedValueList taggedValues = this.getTaggedValues();
+		if (taggedValues != null) {
+			taggedValues.deriveAll();
+		}
+		QualifiedNameList names = this.getNames();
+		if (names != null) {
+			names.deriveAll();
+		}
+		QualifiedName stereotypeName = this.getStereotypeName();
+		if (stereotypeName != null) {
+			stereotypeName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -187,15 +212,6 @@ public class StereotypeAnnotation extends SyntaxElement {
 		if (stereotypeName != null) {
 			stereotypeName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class IfStatement extends Statement {
 
 	public IfStatement() {
 		this.impl = new IfStatementImpl(this);
+	}
+
+	public IfStatement(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public IfStatement(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public IfStatementImpl getImpl() {
@@ -137,10 +151,21 @@ public class IfStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsAssured();
+		this.getIsDetermined();
+		super._deriveAll();
+		Collection<ConcurrentClauses> nonFinalClauses = this
+				.getNonFinalClauses();
+		if (nonFinalClauses != null) {
+			for (Object _nonFinalClauses : nonFinalClauses.toArray()) {
+				((ConcurrentClauses) _nonFinalClauses).deriveAll();
+			}
+		}
+		Block finalClause = this.getFinalClause();
+		if (finalClause != null) {
+			finalClause.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -165,22 +190,18 @@ public class IfStatement extends Statement {
 			violations.add(new ConstraintViolation(
 					"ifStatementIsDeterminedDerivation", this));
 		}
-		for (Object _nonFinalClauses : this.getNonFinalClauses().toArray()) {
-			((ConcurrentClauses) _nonFinalClauses).checkConstraints(violations);
+		Collection<ConcurrentClauses> nonFinalClauses = this
+				.getNonFinalClauses();
+		if (nonFinalClauses != null) {
+			for (Object _nonFinalClauses : nonFinalClauses.toArray()) {
+				((ConcurrentClauses) _nonFinalClauses)
+						.checkConstraints(violations);
+			}
 		}
 		Block finalClause = this.getFinalClause();
 		if (finalClause != null) {
 			finalClause.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

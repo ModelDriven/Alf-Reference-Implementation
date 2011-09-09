@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class AcceptBlock extends SyntaxElement {
 
 	public AcceptBlock() {
 		this.impl = new AcceptBlockImpl(this);
+	}
+
+	public AcceptBlock(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public AcceptBlock(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public AcceptBlockImpl getImpl() {
@@ -90,10 +104,17 @@ public class AcceptBlock extends SyntaxElement {
 		return this.getImpl().acceptBlockSignalNames();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getSignal();
+		super._deriveAll();
+		Block block = this.getBlock();
+		if (block != null) {
+			block.deriveAll();
+		}
+		QualifiedNameList signalNames = this.getSignalNames();
+		if (signalNames != null) {
+			signalNames.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -114,15 +135,6 @@ public class AcceptBlock extends SyntaxElement {
 		if (signalNames != null) {
 			signalNames.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

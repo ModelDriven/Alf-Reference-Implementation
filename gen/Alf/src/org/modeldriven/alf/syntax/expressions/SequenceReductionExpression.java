@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class SequenceReductionExpression extends Expression {
 
 	public SequenceReductionExpression() {
 		this.impl = new SequenceReductionExpressionImpl(this);
+	}
+
+	public SequenceReductionExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public SequenceReductionExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public SequenceReductionExpressionImpl getImpl() {
@@ -136,10 +150,17 @@ public class SequenceReductionExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getReferent();
+		super._deriveAll();
+		ExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.deriveAll();
+		}
+		QualifiedName behaviorName = this.getBehaviorName();
+		if (behaviorName != null) {
+			behaviorName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -180,15 +201,6 @@ public class SequenceReductionExpression extends Expression {
 		if (behaviorName != null) {
 			behaviorName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -29,6 +31,18 @@ public class ShiftExpression extends BinaryExpression {
 
 	public ShiftExpression() {
 		this.impl = new ShiftExpressionImpl(this);
+	}
+
+	public ShiftExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public ShiftExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public ShiftExpressionImpl getImpl() {
@@ -80,10 +94,9 @@ public class ShiftExpression extends BinaryExpression {
 		return this.getImpl().shiftExpressionIsBitStringConversionDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsBitStringConversion();
+		super._deriveAll();
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -108,15 +121,6 @@ public class ShiftExpression extends BinaryExpression {
 			violations.add(new ConstraintViolation(
 					"shiftExpressionIsBitStringConversionDerivation", this));
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

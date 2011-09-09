@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -31,6 +33,21 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionIm
  **/
 
 public abstract class SequenceExpansionExpression extends Expression {
+
+	public SequenceExpansionExpression() {
+	}
+
+	public SequenceExpansionExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public SequenceExpansionExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public SequenceExpansionExpressionImpl getImpl() {
 		return (SequenceExpansionExpressionImpl) this.impl;
@@ -129,10 +146,17 @@ public abstract class SequenceExpansionExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getVariableSource();
+		super._deriveAll();
+		Expression argument = this.getArgument();
+		if (argument != null) {
+			argument.deriveAll();
+		}
+		ExtentOrExpression primary = this.getPrimary();
+		if (primary != null) {
+			primary.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -170,15 +194,6 @@ public abstract class SequenceExpansionExpression extends Expression {
 		if (primary != null) {
 			primary.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

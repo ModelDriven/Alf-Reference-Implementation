@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class NamedExpression extends SyntaxElement {
 
 	public NamedExpression() {
 		this.impl = new NamedExpressionImpl(this);
+	}
+
+	public NamedExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public NamedExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public NamedExpressionImpl getImpl() {
@@ -98,10 +112,18 @@ public class NamedExpression extends SyntaxElement {
 		return this.getImpl().namedExpressionIsBitStringConversionDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsCollectionConversion();
+		this.getIsBitStringConversion();
+		super._deriveAll();
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.deriveAll();
+		}
+		Expression index = this.getIndex();
+		if (index != null) {
+			index.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -122,15 +144,6 @@ public class NamedExpression extends SyntaxElement {
 		if (index != null) {
 			index.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

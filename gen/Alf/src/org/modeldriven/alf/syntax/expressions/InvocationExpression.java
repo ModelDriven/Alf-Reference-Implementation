@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -31,6 +33,21 @@ import org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl;
  **/
 
 public abstract class InvocationExpression extends Expression {
+
+	public InvocationExpression() {
+	}
+
+	public InvocationExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public InvocationExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public InvocationExpressionImpl getImpl() {
 		return (InvocationExpressionImpl) this.impl;
@@ -228,10 +245,21 @@ public abstract class InvocationExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsBehavior();
+		this.getIsAssociationEnd();
+		this.getFeature();
+		this.getIsOperation();
+		this.getIsDestructor();
+		this.getIsImplicit();
+		this.getReferent();
+		this.getParameter();
+		this.getIsSignal();
+		super._deriveAll();
+		Tuple tuple = this.getTuple();
+		if (tuple != null) {
+			tuple.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -284,15 +312,6 @@ public abstract class InvocationExpression extends Expression {
 		if (tuple != null) {
 			tuple.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

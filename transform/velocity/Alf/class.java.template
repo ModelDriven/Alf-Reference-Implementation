@@ -17,6 +17,9 @@ import #qualifiedPackageName(${object.owner}).impl.${object.name}Impl;
 #foreach ( $superclass in ${object.superClasses} )
     extends #name(${superclass.name}) 
 #end 
+#if( ${object.superClasses.size()}==0 )
+	implements ParsedElement
+#end
 {
 ## #foreach( $behavior in ${object.ownedBehaviors} )
 ## #if( ${behavior.eClass().name}=="Activity" )
@@ -26,17 +29,51 @@ import #qualifiedPackageName(${object.owner}).impl.${object.name}Impl;
     
 #if( ${object.superClasses.size()}==0 )
   protected ${object.name}Impl impl;
+  
+  private String fileName = "";
+  private int line = 0;
+  private int column = 0;
 #end
 
-#if( !${object.isAbstract()} )
 public #name(${object.name})() {
+#if( !${object.isAbstract()} )
   this.impl = new ${object.name}Impl(this);
-}
 #end
+}
+
+public #name(${object.name})(AlfParser parser) {
+  this();
+  this.setParserInfo(parser.getFileName(), parser.getLine(), parser.getColumn());
+}
+
+public #name(${object.name})(ParsedElement element) {
+  this();
+  this.setParserInfo(element.getFileName(), element.getLine(), element.getColumn());
+}
 
 public ${object.name}Impl getImpl() {
   return (${object.name}Impl)this.impl;
 }
+
+#if( ${object.superClasses.size()}==0 )
+public String getFileName() {
+  return this.fileName;
+}
+
+public int getLine() {
+  return this.line;
+}
+
+public int getColumn() {
+  return this.column;
+}
+
+public void setParserInfo(String fileName, int line, int column) {
+  this.fileName = fileName;
+  this.line = line;
+  this.column = column;
+}
+#end
 
 #foreach ( $attribute in ${object.ownedAttributes} )
   #if( !${attribute.isStatic()} )
@@ -58,6 +95,7 @@ public ${object.name}Impl getImpl() {
   }
 #end
 
+#deriveAllOperation(${object})
 #checkOperations(${object})
 #printOperations(${object})
 } //${object.name}

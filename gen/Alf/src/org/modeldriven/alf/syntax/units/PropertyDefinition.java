@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class PropertyDefinition extends TypedElementDefinition {
 
 	public PropertyDefinition() {
 		this.impl = new PropertyDefinitionImpl(this);
+	}
+
+	public PropertyDefinition(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public PropertyDefinition(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public PropertyDefinitionImpl getImpl() {
@@ -120,10 +134,14 @@ public class PropertyDefinition extends TypedElementDefinition {
 		return this.getImpl().isSameKindAs(member);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsCollectionConversion();
+		this.getIsBitStringConversion();
+		super._deriveAll();
+		Expression initializer = this.getInitializer();
+		if (initializer != null) {
+			initializer.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -150,15 +168,6 @@ public class PropertyDefinition extends TypedElementDefinition {
 		if (initializer != null) {
 			initializer.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

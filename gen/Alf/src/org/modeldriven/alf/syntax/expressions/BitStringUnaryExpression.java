@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -29,6 +31,18 @@ public class BitStringUnaryExpression extends UnaryExpression {
 
 	public BitStringUnaryExpression() {
 		this.impl = new BitStringUnaryExpressionImpl(this);
+	}
+
+	public BitStringUnaryExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public BitStringUnaryExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public BitStringUnaryExpressionImpl getImpl() {
@@ -82,10 +96,9 @@ public class BitStringUnaryExpression extends UnaryExpression {
 				.bitStringUnaryExpressionIsBitStringConversionDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsBitStringConversion();
+		super._deriveAll();
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -111,15 +124,6 @@ public class BitStringUnaryExpression extends UnaryExpression {
 					"bitStringUnaryExpressionIsBitStringConversionDerivation",
 					this));
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

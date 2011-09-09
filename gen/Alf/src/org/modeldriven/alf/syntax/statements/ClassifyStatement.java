@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class ClassifyStatement extends Statement {
 
 	public ClassifyStatement() {
 		this.impl = new ClassifyStatementImpl(this);
+	}
+
+	public ClassifyStatement(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public ClassifyStatement(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public ClassifyStatementImpl getImpl() {
@@ -153,10 +167,22 @@ public class ClassifyStatement extends Statement {
 		return this.getImpl().classifyStatementToClassDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getFromClass();
+		this.getToClass();
+		super._deriveAll();
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.deriveAll();
+		}
+		QualifiedNameList fromList = this.getFromList();
+		if (fromList != null) {
+			fromList.deriveAll();
+		}
+		QualifiedNameList toList = this.getToList();
+		if (toList != null) {
+			toList.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -201,15 +227,6 @@ public class ClassifyStatement extends Statement {
 		if (toList != null) {
 			toList.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

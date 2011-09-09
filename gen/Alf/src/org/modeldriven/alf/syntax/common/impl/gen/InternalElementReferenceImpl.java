@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.common.impl.gen;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;

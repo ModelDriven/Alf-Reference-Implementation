@@ -93,6 +93,10 @@ public abstract class SyntaxElementImpl {
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         this.setBase(base);
+        this.getSelf().setParserInfo(
+                base.getFileName() + "<" + this.hashCode() + ">", 
+                base.getLine(), 
+                base.getColumn());
     }
     
 } // SyntaxElementImpl

@@ -43,6 +43,11 @@ ${packageDeclaration}.impl.gen;
   public String toString(boolean includeDerived) {
     return this.getSelf()._toString(includeDerived);
   }
+  
+  public void deriveAll() {
+  	this.getSelf()._deriveAll();
+  }
+  
 #else
   public #name(${object.name})Impl(#name(${object.name}) self) {
     super(self);

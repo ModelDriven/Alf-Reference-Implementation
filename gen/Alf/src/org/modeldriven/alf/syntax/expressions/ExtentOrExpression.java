@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -30,16 +32,50 @@ import org.modeldriven.alf.syntax.expressions.impl.ExtentOrExpressionImpl;
  * may be either a primary expression or a class name denoting the class extent.
  **/
 
-public class ExtentOrExpression {
+public class ExtentOrExpression implements ParsedElement {
 
 	protected ExtentOrExpressionImpl impl;
+
+	private String fileName = "";
+	private int line = 0;
+	private int column = 0;
 
 	public ExtentOrExpression() {
 		this.impl = new ExtentOrExpressionImpl(this);
 	}
 
+	public ExtentOrExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public ExtentOrExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
+
 	public ExtentOrExpressionImpl getImpl() {
 		return (ExtentOrExpressionImpl) this.impl;
+	}
+
+	public String getFileName() {
+		return this.fileName;
+	}
+
+	public int getLine() {
+		return this.line;
+	}
+
+	public int getColumn() {
+		return this.column;
+	}
+
+	public void setParserInfo(String fileName, int line, int column) {
+		this.fileName = fileName;
+		this.line = line;
+		this.column = column;
 	}
 
 	public QualifiedName getName() {
@@ -74,6 +110,26 @@ public class ExtentOrExpression {
 	 **/
 	public boolean extentOrExpressionExpressionDerivation() {
 		return this.getImpl().extentOrExpressionExpressionDerivation();
+	}
+
+	public void deriveAll() {
+		this.getImpl().deriveAll();
+	}
+
+	public void _deriveAll() {
+		this.getExpression();
+		QualifiedName name = this.getName();
+		if (name != null) {
+			name.deriveAll();
+		}
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.deriveAll();
+		}
+		Expression nonNameExpression = this.getNonNameExpression();
+		if (nonNameExpression != null) {
+			nonNameExpression.deriveAll();
+		}
 	}
 
 	public Collection<ConstraintViolation> checkConstraints() {

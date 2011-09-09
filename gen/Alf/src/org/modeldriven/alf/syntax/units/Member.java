@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -31,6 +33,21 @@ import org.modeldriven.alf.syntax.units.impl.MemberImpl;
  **/
 
 public abstract class Member extends DocumentedElement {
+
+	public Member() {
+	}
+
+	public Member(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public Member(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public MemberImpl getImpl() {
 		return (MemberImpl) this.impl;
@@ -212,10 +229,22 @@ public abstract class Member extends DocumentedElement {
 		return this.getImpl().isSameKindAs(member);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsFeature();
+		this.getIsPrimitive();
+		this.getIsExternal();
+		this.getSubunit();
+		super._deriveAll();
+		Collection<StereotypeAnnotation> annotation = this.getAnnotation();
+		if (annotation != null) {
+			for (Object _annotation : annotation.toArray()) {
+				((StereotypeAnnotation) _annotation).deriveAll();
+			}
+		}
+		UnitDefinition subunit = this.getSubunit();
+		if (subunit != null) {
+			subunit.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -248,22 +277,17 @@ public abstract class Member extends DocumentedElement {
 		if (!this.memberPrimitive()) {
 			violations.add(new ConstraintViolation("memberPrimitive", this));
 		}
-		for (Object _annotation : this.getAnnotation().toArray()) {
-			((StereotypeAnnotation) _annotation).checkConstraints(violations);
+		Collection<StereotypeAnnotation> annotation = this.getAnnotation();
+		if (annotation != null) {
+			for (Object _annotation : annotation.toArray()) {
+				((StereotypeAnnotation) _annotation)
+						.checkConstraints(violations);
+			}
 		}
 		UnitDefinition subunit = this.getSubunit();
 		if (subunit != null) {
 			subunit.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -30,6 +32,21 @@ import org.modeldriven.alf.syntax.expressions.impl.TupleImpl;
  **/
 
 public abstract class Tuple extends SyntaxElement {
+
+	public Tuple() {
+	}
+
+	public Tuple(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public Tuple(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public TupleImpl getImpl() {
 		return (TupleImpl) this.impl;
@@ -128,10 +145,22 @@ public abstract class Tuple extends SyntaxElement {
 		return this.getImpl().tupleAssignmentsAfter();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getInput();
+		this.getOutput();
+		super._deriveAll();
+		Collection<NamedExpression> input = this.getInput();
+		if (input != null) {
+			for (Object _input : input.toArray()) {
+				((NamedExpression) _input).deriveAll();
+			}
+		}
+		Collection<OutputNamedExpression> output = this.getOutput();
+		if (output != null) {
+			for (Object _output : output.toArray()) {
+				((OutputNamedExpression) _output).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -158,21 +187,18 @@ public abstract class Tuple extends SyntaxElement {
 			violations.add(new ConstraintViolation("tupleAssignmentsAfter",
 					this));
 		}
-		for (Object _input : this.getInput().toArray()) {
-			((NamedExpression) _input).checkConstraints(violations);
+		Collection<NamedExpression> input = this.getInput();
+		if (input != null) {
+			for (Object _input : input.toArray()) {
+				((NamedExpression) _input).checkConstraints(violations);
+			}
 		}
-		for (Object _output : this.getOutput().toArray()) {
-			((OutputNamedExpression) _output).checkConstraints(violations);
+		Collection<OutputNamedExpression> output = this.getOutput();
+		if (output != null) {
+			for (Object _output : output.toArray()) {
+				((OutputNamedExpression) _output).checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

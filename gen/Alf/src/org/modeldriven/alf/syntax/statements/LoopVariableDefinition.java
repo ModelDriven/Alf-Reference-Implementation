@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class LoopVariableDefinition extends SyntaxElement {
 
 	public LoopVariableDefinition() {
 		this.impl = new LoopVariableDefinitionImpl(this);
+	}
+
+	public LoopVariableDefinition(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public LoopVariableDefinition(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public LoopVariableDefinitionImpl getImpl() {
@@ -206,10 +220,25 @@ public class LoopVariableDefinition extends SyntaxElement {
 		return this.getImpl().loopVariableDefinitionVariable();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsCollectionConversion();
+		this.getType();
+		this.getIsFirst();
+		this.getAssignmentBefore();
+		this.getAssignmentAfter();
+		super._deriveAll();
+		Expression expression1 = this.getExpression1();
+		if (expression1 != null) {
+			expression1.deriveAll();
+		}
+		Expression expression2 = this.getExpression2();
+		if (expression2 != null) {
+			expression2.deriveAll();
+		}
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -259,15 +288,6 @@ public class LoopVariableDefinition extends SyntaxElement {
 		if (typeName != null) {
 			typeName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {
