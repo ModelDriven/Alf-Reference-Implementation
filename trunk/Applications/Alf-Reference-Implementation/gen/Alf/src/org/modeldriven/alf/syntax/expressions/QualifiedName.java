@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class QualifiedName extends SyntaxElement {
 
 	public QualifiedName() {
 		this.impl = new QualifiedNameImpl(this);
+	}
+
+	public QualifiedName(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public QualifiedName(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public QualifiedNameImpl getImpl() {
@@ -232,10 +246,25 @@ public class QualifiedName extends SyntaxElement {
 		return this.getImpl().qualifiedNameTemplateNameDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getPathName();
+		this.getIsFeatureReference();
+		this.getQualification();
+		this.getDisambiguation();
+		this.getReferent();
+		this.getUnqualifiedName();
+		this.getTemplateName();
+		super._deriveAll();
+		FeatureReference disambiguation = this.getDisambiguation();
+		if (disambiguation != null) {
+			disambiguation.deriveAll();
+		}
+		Collection<NameBinding> nameBinding = this.getNameBinding();
+		if (nameBinding != null) {
+			for (Object _nameBinding : nameBinding.toArray()) {
+				((NameBinding) _nameBinding).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -288,18 +317,12 @@ public class QualifiedName extends SyntaxElement {
 		if (disambiguation != null) {
 			disambiguation.checkConstraints(violations);
 		}
-		for (Object _nameBinding : this.getNameBinding().toArray()) {
-			((NameBinding) _nameBinding).checkConstraints(violations);
+		Collection<NameBinding> nameBinding = this.getNameBinding();
+		if (nameBinding != null) {
+			for (Object _nameBinding : nameBinding.toArray()) {
+				((NameBinding) _nameBinding).checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

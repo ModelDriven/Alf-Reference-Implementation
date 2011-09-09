@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -30,6 +32,21 @@ import org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl;
  **/
 
 public abstract class LiteralExpression extends Expression {
+
+	public LiteralExpression() {
+	}
+
+	public LiteralExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public LiteralExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public LiteralExpressionImpl getImpl() {
 		return (LiteralExpressionImpl) this.impl;
@@ -57,10 +74,8 @@ public abstract class LiteralExpression extends Expression {
 		return this.getImpl().literalExpressionLowerDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -77,15 +92,6 @@ public abstract class LiteralExpression extends Expression {
 			violations.add(new ConstraintViolation(
 					"literalExpressionLowerDerivation", this));
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

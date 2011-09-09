@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class NameLeftHandSide extends LeftHandSide {
 
 	public NameLeftHandSide() {
 		this.impl = new NameLeftHandSideImpl(this);
+	}
+
+	public NameLeftHandSide(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public NameLeftHandSide(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public NameLeftHandSideImpl getImpl() {
@@ -73,10 +87,12 @@ public class NameLeftHandSide extends LeftHandSide {
 		return this.getImpl().nameLeftHandSideAssignmentsBefore();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		QualifiedName target = this.getTarget();
+		if (target != null) {
+			target.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -97,15 +113,6 @@ public class NameLeftHandSide extends LeftHandSide {
 		if (target != null) {
 			target.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

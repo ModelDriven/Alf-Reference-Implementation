@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -36,6 +38,18 @@ public class PositionalTuple extends Tuple {
 		this.impl = new PositionalTupleImpl(this);
 	}
 
+	public PositionalTuple(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public PositionalTuple(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
+
 	public PositionalTupleImpl getImpl() {
 		return (PositionalTupleImpl) this.impl;
 	}
@@ -52,26 +66,24 @@ public class PositionalTuple extends Tuple {
 		this.getImpl().addExpression(expression);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		Collection<Expression> expression = this.getExpression();
+		if (expression != null) {
+			for (Object _expression : expression.toArray()) {
+				((Expression) _expression).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-		for (Object _expression : this.getExpression().toArray()) {
-			((Expression) _expression).checkConstraints(violations);
+		Collection<Expression> expression = this.getExpression();
+		if (expression != null) {
+			for (Object _expression : expression.toArray()) {
+				((Expression) _expression).checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

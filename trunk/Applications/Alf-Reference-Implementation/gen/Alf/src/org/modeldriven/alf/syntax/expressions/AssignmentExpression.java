@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class AssignmentExpression extends Expression {
 
 	public AssignmentExpression() {
 		this.impl = new AssignmentExpressionImpl(this);
+	}
+
+	public AssignmentExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public AssignmentExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public AssignmentExpressionImpl getImpl() {
@@ -336,10 +350,27 @@ public class AssignmentExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getAssignment();
+		this.getFeature();
+		this.getIsIndexed();
+		this.getIsArithmetic();
+		this.getIsDefinition();
+		this.getIsSimple();
+		this.getExpression();
+		this.getIsFeature();
+		this.getIsDataValueUpdate();
+		this.getIsCollectionConversion();
+		this.getIsBitStringConversion();
+		super._deriveAll();
+		LeftHandSide leftHandSide = this.getLeftHandSide();
+		if (leftHandSide != null) {
+			leftHandSide.deriveAll();
+		}
+		Expression rightHandSide = this.getRightHandSide();
+		if (rightHandSide != null) {
+			rightHandSide.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -439,15 +470,6 @@ public class AssignmentExpression extends Expression {
 		if (rightHandSide != null) {
 			rightHandSide.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

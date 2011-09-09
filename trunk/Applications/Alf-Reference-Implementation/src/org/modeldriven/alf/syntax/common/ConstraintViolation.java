@@ -3,9 +3,9 @@ package org.modeldriven.alf.syntax.common;
 public class ConstraintViolation {
     
     private String constraintName = null;
-    private Object violatingElement = null;
+    private ParsedElement violatingElement = null;
     
-    public ConstraintViolation(String constraintName, Object violatingElement) {
+    public ConstraintViolation(String constraintName, ParsedElement violatingElement) {
         this.constraintName = constraintName;
         this.violatingElement = violatingElement;
     }
@@ -14,13 +14,15 @@ public class ConstraintViolation {
         return this.constraintName;
     }
     
-    public Object getViolatingElement() {
+    public ParsedElement getViolatingElement() {
         return this.violatingElement;
     }
     
     @Override
     public String toString() {
-        return this.getConstraintName() + ": " + this.getViolatingElement();
+        ParsedElement element = this.getViolatingElement();
+        return this.getConstraintName() + " in " + element.getFileName() + 
+            " at line " + element.getLine() + ", column " + element.getColumn();
     }
 
 }

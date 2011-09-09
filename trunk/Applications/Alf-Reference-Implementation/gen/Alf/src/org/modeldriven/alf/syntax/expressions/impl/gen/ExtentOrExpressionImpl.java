@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl.gen;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -42,6 +44,10 @@ public class ExtentOrExpressionImpl {
 
 	public String toString(boolean includeDerived) {
 		return this.getSelf()._toString(includeDerived);
+	}
+
+	public void deriveAll() {
+		this.getSelf()._deriveAll();
 	}
 
 	public ExtentOrExpression getSelf() {

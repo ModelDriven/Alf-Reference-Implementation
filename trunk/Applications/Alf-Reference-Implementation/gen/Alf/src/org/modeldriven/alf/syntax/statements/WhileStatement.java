@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class WhileStatement extends Statement {
 
 	public WhileStatement() {
 		this.impl = new WhileStatementImpl(this);
+	}
+
+	public WhileStatement(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public WhileStatement(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public WhileStatementImpl getImpl() {
@@ -94,10 +108,16 @@ public class WhileStatement extends Statement {
 		return this.getImpl().whileStatementEnclosedStatements();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		Block body = this.getBody();
+		if (body != null) {
+			body.deriveAll();
+		}
+		Expression condition = this.getCondition();
+		if (condition != null) {
+			condition.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -126,15 +146,6 @@ public class WhileStatement extends Statement {
 		if (condition != null) {
 			condition.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class OperationDefinition extends NamespaceDefinition {
 
 	public OperationDefinition() {
 		this.impl = new OperationDefinitionImpl(this);
+	}
+
+	public OperationDefinition(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public OperationDefinition(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public OperationDefinitionImpl getImpl() {
@@ -214,10 +228,19 @@ public class OperationDefinition extends NamespaceDefinition {
 		return this.getImpl().isSameKindAs(member);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getRedefinedOperations();
+		this.getIsConstructor();
+		this.getIsDestructor();
+		super._deriveAll();
+		QualifiedNameList redefinition = this.getRedefinition();
+		if (redefinition != null) {
+			redefinition.deriveAll();
+		}
+		Block body = this.getBody();
+		if (body != null) {
+			body.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -270,15 +293,6 @@ public class OperationDefinition extends NamespaceDefinition {
 		if (body != null) {
 			body.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

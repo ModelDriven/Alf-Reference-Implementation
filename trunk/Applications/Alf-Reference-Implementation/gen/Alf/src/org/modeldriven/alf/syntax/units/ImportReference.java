@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -30,6 +32,21 @@ import org.modeldriven.alf.syntax.units.impl.ImportReferenceImpl;
  **/
 
 public abstract class ImportReference extends SyntaxElement {
+
+	public ImportReference() {
+	}
+
+	public ImportReference(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public ImportReference(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public ImportReferenceImpl getImpl() {
 		return (ImportReferenceImpl) this.impl;
@@ -83,10 +100,13 @@ public abstract class ImportReference extends SyntaxElement {
 		return this.getImpl().importReferenceReferent();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getReferent();
+		super._deriveAll();
+		QualifiedName referentName = this.getReferentName();
+		if (referentName != null) {
+			referentName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -103,15 +123,6 @@ public abstract class ImportReference extends SyntaxElement {
 		if (referentName != null) {
 			referentName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

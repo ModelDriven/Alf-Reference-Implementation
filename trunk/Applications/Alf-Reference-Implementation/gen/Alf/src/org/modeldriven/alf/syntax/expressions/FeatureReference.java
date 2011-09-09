@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -35,6 +37,18 @@ public class FeatureReference extends SyntaxElement {
 
 	public FeatureReference() {
 		this.impl = new FeatureReferenceImpl(this);
+	}
+
+	public FeatureReference(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public FeatureReference(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public FeatureReferenceImpl getImpl() {
@@ -87,10 +101,17 @@ public class FeatureReference extends SyntaxElement {
 		return this.getImpl().featureReferenceTargetType();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getReferent();
+		super._deriveAll();
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.deriveAll();
+		}
+		NameBinding nameBinding = this.getNameBinding();
+		if (nameBinding != null) {
+			nameBinding.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -111,15 +132,6 @@ public class FeatureReference extends SyntaxElement {
 		if (nameBinding != null) {
 			nameBinding.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

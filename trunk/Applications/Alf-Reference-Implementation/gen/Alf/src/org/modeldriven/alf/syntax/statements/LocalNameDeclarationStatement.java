@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class LocalNameDeclarationStatement extends Statement {
 
 	public LocalNameDeclarationStatement() {
 		this.impl = new LocalNameDeclarationStatementImpl(this);
+	}
+
+	public LocalNameDeclarationStatement(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public LocalNameDeclarationStatement(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public LocalNameDeclarationStatementImpl getImpl() {
@@ -138,10 +152,17 @@ public class LocalNameDeclarationStatement extends Statement {
 		return this.getImpl().localNameDeclarationStatementTypeDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getType();
+		super._deriveAll();
+		Expression expression = this.getExpression();
+		if (expression != null) {
+			expression.deriveAll();
+		}
+		QualifiedName typeName = this.getTypeName();
+		if (typeName != null) {
+			typeName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -180,15 +201,6 @@ public class LocalNameDeclarationStatement extends Statement {
 		if (typeName != null) {
 			typeName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

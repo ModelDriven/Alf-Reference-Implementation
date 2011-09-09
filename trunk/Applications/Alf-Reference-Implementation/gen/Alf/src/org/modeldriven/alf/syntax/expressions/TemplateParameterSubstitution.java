@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -36,6 +38,18 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 		this.impl = new TemplateParameterSubstitutionImpl(this);
 	}
 
+	public TemplateParameterSubstitution(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public TemplateParameterSubstitution(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
+
 	public TemplateParameterSubstitutionImpl getImpl() {
 		return (TemplateParameterSubstitutionImpl) this.impl;
 	}
@@ -56,10 +70,12 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 		this.getImpl().setArgumentName(argumentName);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		QualifiedName argumentName = this.getArgumentName();
+		if (argumentName != null) {
+			argumentName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -68,15 +84,6 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 		if (argumentName != null) {
 			argumentName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class LinkOperationExpression extends InvocationExpression {
 
 	public LinkOperationExpression() {
 		this.impl = new LinkOperationExpressionImpl(this);
+	}
+
+	public LinkOperationExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public LinkOperationExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public LinkOperationExpressionImpl getImpl() {
@@ -125,10 +139,14 @@ public class LinkOperationExpression extends InvocationExpression {
 		return this.getImpl().parameterElements();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsCreation();
+		this.getIsClear();
+		super._deriveAll();
+		QualifiedName associationName = this.getAssociationName();
+		if (associationName != null) {
+			associationName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -161,15 +179,6 @@ public class LinkOperationExpression extends InvocationExpression {
 		if (associationName != null) {
 			associationName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

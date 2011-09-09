@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class NonFinalClause extends SyntaxElement {
 
 	public NonFinalClause() {
 		this.impl = new NonFinalClauseImpl(this);
+	}
+
+	public NonFinalClause(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public NonFinalClause(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public NonFinalClauseImpl getImpl() {
@@ -97,10 +111,16 @@ public class NonFinalClause extends SyntaxElement {
 		return this.getImpl().assignmentsAfter();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		Expression condition = this.getCondition();
+		if (condition != null) {
+			condition.deriveAll();
+		}
+		Block body = this.getBody();
+		if (body != null) {
+			body.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -125,15 +145,6 @@ public class NonFinalClause extends SyntaxElement {
 		if (body != null) {
 			body.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

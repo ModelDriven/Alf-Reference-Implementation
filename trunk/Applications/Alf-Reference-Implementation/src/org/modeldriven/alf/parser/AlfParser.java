@@ -188,7 +188,7 @@ public class AlfParser implements AlfParserConstants {
       }
 
       if (print || printDerived) {
-              printElement(checkAllConstraints, printDerived);
+              printElement(printDerived);
           }
 
     } catch (ParseException e) {
@@ -205,15 +205,15 @@ public class AlfParser implements AlfParserConstants {
 
   }
 
-  public static void printElement(boolean fromRoot, boolean includeDerived) {
-      SyntaxElement element = getElement();
-      if (element != null) {
-        if (fromRoot) {
-          RootNamespace.getRootScope().print(includeDerived);
-        } else {
-          element.print(includeDerived);
-        }
-      }
+  public static void printElement(boolean includeDerived) {
+    SyntaxElement element = getElement();
+    if (element != null) {
+      element.print(includeDerived);
+    }
+  }
+
+  public static void printFromRoot() {
+    RootNamespace.getRootScope().print(true);
   }
 
   public static void main(String args[]) {
@@ -345,7 +345,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public QualifiedName DotQualifiedName() throws ParseException {
-  QualifiedName q = new QualifiedName();
+  QualifiedName q;
     q = UnqualifiedName();
     DotQualifiedNameCompletion(q);
     {if (true) return q;}
@@ -368,7 +368,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public QualifiedName UnqualifiedName() throws ParseException {
-  QualifiedName q = new QualifiedName();
+  QualifiedName q = new QualifiedName(this);
   NameBinding n;
     n = NameBinding();
     q.addNameBinding(n);
@@ -379,7 +379,7 @@ public class AlfParser implements AlfParserConstants {
   final public NameBinding NameBinding() throws ParseException {
   String n;
   TemplateBinding tb;
-  NameBinding nb = new NameBinding();
+  NameBinding nb = new NameBinding(this);
     n = Name();
                nb.setName(n);
     if (jj_2_5(2147483647)) {
@@ -449,7 +449,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public PositionalTemplateBinding PositionalTemplateBinding() throws ParseException {
   QualifiedName q;
-  PositionalTemplateBinding b = new PositionalTemplateBinding();
+  PositionalTemplateBinding b = new PositionalTemplateBinding(this);
     q = QualifiedName();
                         b.addArgumentName(q);
     label_3:
@@ -472,7 +472,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public NamedTemplateBinding NamedTemplateBinding() throws ParseException {
   TemplateParameterSubstitution s;
-  NamedTemplateBinding b = new NamedTemplateBinding();
+  NamedTemplateBinding b = new NamedTemplateBinding(this);
     s = TemplateParameterSubstitution();
                                         b.addSubstitution(s);
     label_4:
@@ -496,7 +496,7 @@ public class AlfParser implements AlfParserConstants {
   final public TemplateParameterSubstitution TemplateParameterSubstitution() throws ParseException {
   String n;
   QualifiedName q;
-  TemplateParameterSubstitution s = new TemplateParameterSubstitution();
+  TemplateParameterSubstitution s = new TemplateParameterSubstitution(this);
     n = Name();
     jj_consume_token(THICK_ARROW);
     q = QualifiedName();
@@ -526,7 +526,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public Expression NameToExpressionCompletion(QualifiedName q) throws ParseException {
-  Expression e = new NameExpression();
+  Expression e = new NameExpression(this);
     ((NameExpression) e).setName(q);
     if (jj_2_8(2)) {
       e = NameToPrimaryExpression(q);
@@ -680,7 +680,7 @@ public class AlfParser implements AlfParserConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case DOT:
         f = Feature(e);
-      e = new PropertyAccessExpression();
+      e = new PropertyAccessExpression(f);
       ((PropertyAccessExpression)e).setFeatureReference(f);
         if (jj_2_10(2)) {
           e = FeatureInvocation(f);
@@ -693,7 +693,7 @@ public class AlfParser implements AlfParserConstants {
         break;
       case LBRACKET:
         i = Index();
-      SequenceAccessExpression s = new SequenceAccessExpression();
+      SequenceAccessExpression s = new SequenceAccessExpression(e);
       s.setPrimary(e);
       s.setIndex(i);
       e = s;
@@ -715,31 +715,31 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOOLEAN_LITERAL:
       t = jj_consume_token(BOOLEAN_LITERAL);
-      e = new BooleanLiteralExpression(); ((BooleanLiteralExpression)e).setImage(t.image);
+      e = new BooleanLiteralExpression(this); ((BooleanLiteralExpression)e).setImage(t.image);
       break;
     case DECIMAL_LITERAL:
       t = jj_consume_token(DECIMAL_LITERAL);
-      e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image);
+      e = new NaturalLiteralExpression(this); ((NaturalLiteralExpression)e).setImage(t.image);
       break;
     case BINARY_LITERAL:
       t = jj_consume_token(BINARY_LITERAL);
-      e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image);
+      e = new NaturalLiteralExpression(this); ((NaturalLiteralExpression)e).setImage(t.image);
       break;
     case OCTAL_LITERAL:
       t = jj_consume_token(OCTAL_LITERAL);
-      e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image);
+      e = new NaturalLiteralExpression(this); ((NaturalLiteralExpression)e).setImage(t.image);
       break;
     case HEX_LITERAL:
       t = jj_consume_token(HEX_LITERAL);
-      e = new NaturalLiteralExpression(); ((NaturalLiteralExpression)e).setImage(t.image);
+      e = new NaturalLiteralExpression(this); ((NaturalLiteralExpression)e).setImage(t.image);
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-      e = new StringLiteralExpression(); ((StringLiteralExpression)e).setImage(t.image);
+      e = new StringLiteralExpression(this); ((StringLiteralExpression)e).setImage(t.image);
       break;
     case STAR:
       t = jj_consume_token(STAR);
-      e = new UnboundedLiteralExpression();
+      e = new UnboundedLiteralExpression(this);
       break;
     default:
       jj_la1[14] = jj_gen;
@@ -753,7 +753,7 @@ public class AlfParser implements AlfParserConstants {
 /* NAME EXPRESSIONS */
   final public Expression NameOrPrimaryExpression() throws ParseException {
   QualifiedName q;
-  NameExpression ne = new NameExpression();
+  NameExpression ne = new NameExpression(this);
   Expression e = ne;
     q = PotentiallyAmbiguousQualifiedName();
                                             ne.setName(q);
@@ -769,12 +769,12 @@ public class AlfParser implements AlfParserConstants {
 /* THIS EXPRESSIONS */
   final public Expression ThisExpression() throws ParseException {
   Tuple t;
-  Expression e = new ThisExpression();
+  Expression e = new ThisExpression(this);
     jj_consume_token(THIS);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
       t = Tuple();
-      e = new FeatureInvocationExpression();
+      e = new FeatureInvocationExpression(e);
       ((FeatureInvocationExpression) e).setTuple(t);
       t.setInvocation((FeatureInvocationExpression) e);
       break;
@@ -801,7 +801,7 @@ public class AlfParser implements AlfParserConstants {
   NameBinding n;
     jj_consume_token(DOT);
     n = NameBinding();
-    FeatureReference f = new FeatureReference();
+    FeatureReference f = new FeatureReference(p);
     f.setExpression(p);
     f.setNameBinding(n);
     {if (true) return f;}
@@ -810,7 +810,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* INVOCATION EXPRESSIONS */
   final public Tuple Tuple() throws ParseException {
-  Tuple t = new PositionalTuple();
+  Tuple t = new PositionalTuple(this);
     jj_consume_token(LPAREN);
     if (jj_2_12(2)) {
       t = NamedTupleExpressionList();
@@ -852,7 +852,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public PositionalTuple PositionalTupleExpressionList() throws ParseException {
   Expression e;
-  PositionalTuple t = new PositionalTuple();
+  PositionalTuple t = new PositionalTuple(this);
     e = Expression();
                      t.addExpression(e);
     PositionalTupleExpressionListCompletion(t);
@@ -879,7 +879,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public NamedTuple NamedTupleExpressionList() throws ParseException {
-  NamedTuple t = new NamedTuple();
+  NamedTuple t = new NamedTuple(this);
   NamedExpression n;
     n = NamedExpression();
                           t.addNamedExpression(n);
@@ -904,10 +904,10 @@ public class AlfParser implements AlfParserConstants {
   final public NamedExpression NamedExpression() throws ParseException {
   String n;
   Expression e;
+  NamedExpression ne = new NamedExpression(this);
     n = Name();
     jj_consume_token(THICK_ARROW);
     e = Expression();
-    NamedExpression ne = new NamedExpression();
     ne.setName(n);
     ne.setExpression(e);
     {if (true) return ne;}
@@ -917,7 +917,7 @@ public class AlfParser implements AlfParserConstants {
   final public Expression BehaviorInvocation(QualifiedName n) throws ParseException {
   Tuple t;
     t = Tuple();
-    BehaviorInvocationExpression e = new BehaviorInvocationExpression();
+    BehaviorInvocationExpression e = new BehaviorInvocationExpression(n);
     e.setTarget(n);
     e.setTuple(t);
     t.setInvocation(e);
@@ -928,7 +928,7 @@ public class AlfParser implements AlfParserConstants {
   final public Expression FeatureInvocation(FeatureReference f) throws ParseException {
   Tuple t;
     t = Tuple();
-    FeatureInvocationExpression e = new FeatureInvocationExpression();
+    FeatureInvocationExpression e = new FeatureInvocationExpression(f);
     e.setTarget(f);
     e.setTuple(t);
     t.setInvocation(e);
@@ -939,6 +939,7 @@ public class AlfParser implements AlfParserConstants {
   final public Expression SuperInvocationExpression() throws ParseException {
   QualifiedName n = null;
   Tuple t;
+  SuperInvocationExpression e = new SuperInvocationExpression(this);
     jj_consume_token(SUPER);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOT:
@@ -950,7 +951,6 @@ public class AlfParser implements AlfParserConstants {
       ;
     }
     t = Tuple();
-    SuperInvocationExpression e = new SuperInvocationExpression();
     e.setTarget(n);
     e.setTuple(t);
     t.setInvocation(e);
@@ -963,6 +963,7 @@ public class AlfParser implements AlfParserConstants {
   QualifiedName n;
   Tuple t;
   Expression e;
+  InstanceCreationExpression ice = new InstanceCreationExpression(this);
     jj_consume_token(NEW);
     n = QualifiedName();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -972,7 +973,6 @@ public class AlfParser implements AlfParserConstants {
       break;
     case LPAREN:
       t = Tuple();
-      InstanceCreationExpression ice = new InstanceCreationExpression();
       ice.setConstructor(n);
       ice.setTuple(t);
       t.setInvocation(ice);
@@ -993,7 +993,7 @@ public class AlfParser implements AlfParserConstants {
   Tuple t;
     op = LinkOperation();
     t = LinkOperationTuple();
-    LinkOperationExpression e = new LinkOperationExpression();
+    LinkOperationExpression e = new LinkOperationExpression(q);
     e.setAssociationName(q);
     e.setOperation(op);
     e.setTuple(t);
@@ -1029,7 +1029,7 @@ public class AlfParser implements AlfParserConstants {
   NameBinding b;
   Expression e;
   Expression i;
-  Tuple t = new PositionalTuple();
+  Tuple t = new PositionalTuple(this);
     jj_consume_token(LPAREN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ANY:
@@ -1056,7 +1056,8 @@ public class AlfParser implements AlfParserConstants {
     case STAR:
       if (jj_2_13(2147483647)) {
         n = Name();
-      b = new NameBinding(); q = new QualifiedName();
+      b = new NameBinding(t);
+      q = new QualifiedName(t);
       b.setName(n); q.addNameBinding(b);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case LBRACKET:
@@ -1068,9 +1069,9 @@ public class AlfParser implements AlfParserConstants {
             break;
           default:
             jj_la1[22] = jj_gen;
-          NameExpression ne = new NameExpression();
+          NameExpression ne = new NameExpression(q);
           ne.setName(q);
-          SequenceAccessExpression s = new SequenceAccessExpression();
+          SequenceAccessExpression s = new SequenceAccessExpression(ne);
           s.setPrimary(ne);
           s.setIndex(i);
             e = PrimaryToExpressionCompletion(s);
@@ -1130,11 +1131,11 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public NamedTuple IndexedNamedExpressionListCompletion(String n, Expression i) throws ParseException {
-  NamedTuple t = new NamedTuple();
+  NamedTuple t = new NamedTuple(this);
   Expression e;
   NamedExpression ne;
     e = Expression();
-    ne = new NamedExpression();
+    ne = new NamedExpression(t);
     ne.setName(n);
     ne.setIndex(i);
     ne.setExpression(e);
@@ -1161,6 +1162,7 @@ public class AlfParser implements AlfParserConstants {
   String n;
   Expression i = null;
   Expression e;
+  NamedExpression ne = new NamedExpression(this);
     n = Name();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LBRACKET:
@@ -1172,7 +1174,6 @@ public class AlfParser implements AlfParserConstants {
     }
     jj_consume_token(THICK_ARROW);
     e = Expression();
-    NamedExpression ne = new NamedExpression();
     ne.setName(n);
     ne.setIndex(i);
     ne.setExpression(e);
@@ -1185,7 +1186,7 @@ public class AlfParser implements AlfParserConstants {
     jj_consume_token(ALL_INSTANCES);
     jj_consume_token(LPAREN);
     jj_consume_token(RPAREN);
-    ClassExtentExpression e = new ClassExtentExpression();
+    ClassExtentExpression e = new ClassExtentExpression(q);
     e.setClassName(q);
     {if (true) return e;}
     throw new Error("Missing return statement in function");
@@ -1201,7 +1202,7 @@ public class AlfParser implements AlfParserConstants {
       break;
     case NULL:
       jj_consume_token(NULL);
-             e = new SequenceConstructionExpression(); e.setHasMultiplicity(true);
+             e = new SequenceConstructionExpression(this); e.setHasMultiplicity(true);
       break;
     default:
       jj_la1[28] = jj_gen;
@@ -1213,7 +1214,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public SequenceConstructionExpression SequenceConstructionExpressionCompletion(QualifiedName q) throws ParseException {
-  SequenceConstructionExpression e = new SequenceConstructionExpression();
+  SequenceConstructionExpression e = new SequenceConstructionExpression(this);
   SequenceElements c;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LBRACKET:
@@ -1277,7 +1278,7 @@ public class AlfParser implements AlfParserConstants {
       case DOUBLE_DOT:
         jj_consume_token(DOUBLE_DOT);
         e2 = Expression();
-        SequenceRange r = new SequenceRange();
+        SequenceRange r = new SequenceRange(e1);
         r.setRangeLower(e1);
         r.setRangeUpper(e2);
         c = r;
@@ -1304,7 +1305,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public SequenceElements SequenceElementListCompletion(Expression e1) throws ParseException {
-  SequenceExpressionList c = new SequenceExpressionList();
+  SequenceExpressionList c = new SequenceExpressionList(this);
   Expression e2;
     c.addElement(e1);
     label_9:
@@ -1351,7 +1352,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public Expression SequenceInitializationExpression() throws ParseException {
-  SequenceConstructionExpression e = new SequenceConstructionExpression();
+  SequenceConstructionExpression e = new SequenceConstructionExpression(this);
   SequenceElements c;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NEW:
@@ -1381,7 +1382,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* SEQUENCE OPERATION, REDUCTION AND EXPANSION EXPRESSIONS */
   final public Expression SequenceOperationOrReductionOrExpansion(Expression p) throws ParseException {
-  ExtentOrExpression ee = new ExtentOrExpression();
+  ExtentOrExpression ee = new ExtentOrExpression(p);
   QualifiedName q;
   Token op;
   String n;
@@ -1397,7 +1398,7 @@ public class AlfParser implements AlfParserConstants {
     if (jj_2_17(2)) {
       q = QualifiedName();
       t = Tuple();
-      SequenceOperationExpression soe = new SequenceOperationExpression();
+      SequenceOperationExpression soe = new SequenceOperationExpression(ee);
       soe.setPrimary(ee);
       soe.setOperation(q);
       soe.setTuple(t);
@@ -1417,7 +1418,7 @@ public class AlfParser implements AlfParserConstants {
           ;
         }
         q = QualifiedName();
-      SequenceReductionExpression sre = new SequenceReductionExpression();
+      SequenceReductionExpression sre = new SequenceReductionExpression(ee);
       sre.setPrimary(ee);
       sre.setBehaviorName(q);
       sre.setIsOrdered(ordered);
@@ -1427,13 +1428,13 @@ public class AlfParser implements AlfParserConstants {
         op = jj_consume_token(IDENTIFIER);
       SequenceExpansionExpression see;
       if (op.image.equals("select") || op.image.equals("reject")) {
-        see = new SelectOrRejectExpression();
+        see = new SelectOrRejectExpression(ee);
       } else if (op.image.equals("collect") || op.image.equals("iterate")) {
-        see = new CollectOrIterateExpression();
+        see = new CollectOrIterateExpression(ee);
       } else if (op.image.equals("forAll") || op.image.equals("exists") || op.image.equals("one")) {
-        see = new ForAllOrExistsOrOneExpression();
+        see = new ForAllOrExistsOrOneExpression(ee);
       } else if (op.image.equals("isUnique")) {
-        see = new IsUniqueExpression();
+        see = new IsUniqueExpression(ee);
       } else {
         {if (true) throw new ParseException(errorMessage("\u005c""+ op.image + "\u005c" is not a legal expansion operation."));}
       }
@@ -1485,17 +1486,17 @@ public class AlfParser implements AlfParserConstants {
     }
 
     if (p instanceof NameExpression) {
-      lhs = new NameLeftHandSide();
+      lhs = new NameLeftHandSide(p);
       ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
     } else if (p instanceof PropertyAccessExpression) {
-      lhs = new FeatureLeftHandSide();
+      lhs = new FeatureLeftHandSide(p);
       ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
       {if (true) throw new ParseException(errorMessage("Not a legal operand for increment or decrement."));}
     }
     lhs.setIndex(i);
 
-    IncrementOrDecrementExpression e = new IncrementOrDecrementExpression();
+    IncrementOrDecrementExpression e = new IncrementOrDecrementExpression(p);
     e.setOperator(op);
     e.setOperand(lhs);
     {if (true) return e;}
@@ -1507,26 +1508,26 @@ public class AlfParser implements AlfParserConstants {
   Expression p;
   Expression i = null;
   LeftHandSide lhs;
+  IncrementOrDecrementExpression e = new IncrementOrDecrementExpression(this);
     op = AffixOperator();
     p = PrimaryExpression();
     if (p instanceof SequenceAccessExpression) {
-      SequenceAccessExpression e = (SequenceAccessExpression)p;
-      i = (Expression)e.getIndex();
-      p = (Expression)e.getPrimary();
+      SequenceAccessExpression se = (SequenceAccessExpression)p;
+      i = (Expression)se.getIndex();
+      p = (Expression)se.getPrimary();
     }
 
     if (p instanceof NameExpression) {
-      lhs = new NameLeftHandSide();
+      lhs = new NameLeftHandSide(p);
       ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
     } else if (p instanceof PropertyAccessExpression) {
-      lhs = new FeatureLeftHandSide();
+      lhs = new FeatureLeftHandSide(p);
       ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
       {if (true) throw new ParseException(errorMessage("Not a legal operand for increment or decrement."));}
     }
     lhs.setIndex(i);
 
-    IncrementOrDecrementExpression e = new IncrementOrDecrementExpression();
     e.setOperator(op);
     e.setOperand(lhs);
     e.setIsPrefix(true);
@@ -1819,9 +1820,9 @@ public class AlfParser implements AlfParserConstants {
 
   final public Expression BooleanNegationExpression() throws ParseException {
   Expression e;
+  UnaryExpression u = new BooleanUnaryExpression(this);
     jj_consume_token(BANG);
     e = UnaryExpression();
-    UnaryExpression u = new BooleanUnaryExpression();
     u.setOperator("!");
     u.setOperand(e);
     {if (true) return u;}
@@ -1830,9 +1831,9 @@ public class AlfParser implements AlfParserConstants {
 
   final public Expression BitStringComplementExpression() throws ParseException {
   Expression e;
+  UnaryExpression u = new BitStringUnaryExpression(this);
     jj_consume_token(TILDE);
     e = UnaryExpression();
-    UnaryExpression u = new BitStringUnaryExpression();
     u.setOperator("~");
     u.setOperand(e);
     {if (true) return u;}
@@ -1842,9 +1843,9 @@ public class AlfParser implements AlfParserConstants {
   final public Expression NumericUnaryExpression() throws ParseException {
   String op;
   Expression e;
+  UnaryExpression u = new NumericUnaryExpression();
     op = NumericUnaryOperator();
     e = UnaryExpression();
-    UnaryExpression u = new NumericUnaryExpression();
     u.setOperator(op);
     u.setOperand(e);
     {if (true) return u;}
@@ -1871,9 +1872,9 @@ public class AlfParser implements AlfParserConstants {
 
   final public Expression IsolationExpression() throws ParseException {
   Expression e;
+  UnaryExpression u = new IsolationExpression();
     jj_consume_token(DOLLAR);
     e = UnaryExpression();
-    UnaryExpression u = new IsolationExpression();
     u.setOperator("$");
     u.setOperand(e);
     {if (true) return u;}
@@ -1893,6 +1894,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public Expression CastCompletion(QualifiedName q) throws ParseException {
   Expression e;
+  CastExpression c = q == null? new CastExpression(this): new CastExpression(q);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ANY:
     case NEW:
@@ -1925,7 +1927,6 @@ public class AlfParser implements AlfParserConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    CastExpression c = new CastExpression();
     c.setTypeName(q);
     c.setOperand(e);
     {if (true) return c;}
@@ -1960,7 +1961,7 @@ public class AlfParser implements AlfParserConstants {
       }
       op = MultiplicativeOperator();
       e2 = UnaryExpression();
-      BinaryExpression b = new ArithmeticExpression();
+      BinaryExpression b = new ArithmeticExpression(u);
       b.setOperand1(e1);
       b.setOperator(op);
       b.setOperand2(e2);
@@ -2018,7 +2019,7 @@ public class AlfParser implements AlfParserConstants {
       }
       op = AdditiveOperator();
       e2 = MultiplicativeExpression();
-      BinaryExpression b = new ArithmeticExpression();
+      BinaryExpression b = new ArithmeticExpression(u);
       b.setOperand1(e1);
       b.setOperator(op);
       b.setOperand2(e2);
@@ -2075,7 +2076,7 @@ public class AlfParser implements AlfParserConstants {
       }
       op = ShiftOperator();
       e2 = AdditiveExpression();
-      BinaryExpression b = new ShiftExpression();
+      BinaryExpression b = new ShiftExpression(u);
       b.setOperand1(e1);
       b.setOperator(op);
       b.setOperand2(e2);
@@ -2128,7 +2129,7 @@ public class AlfParser implements AlfParserConstants {
     case GE:
       op = RelationalOperator();
       e2 = ShiftExpression();
-      BinaryExpression b = new RelationalExpression();
+      BinaryExpression b = new RelationalExpression(u);
       b.setOperand1(e1);
       b.setOperator(op);
       b.setOperand2(e2);
@@ -2186,7 +2187,7 @@ public class AlfParser implements AlfParserConstants {
     case INSTANCEOF:
       op = ClassificationOperator();
       n = QualifiedName();
-      ClassificationExpression c = new ClassificationExpression();
+      ClassificationExpression c = new ClassificationExpression(u);
       c.setOperand(e);
       c.setOperator(op);
       c.setTypeName(n);
@@ -2246,7 +2247,7 @@ public class AlfParser implements AlfParserConstants {
       }
       op = EqualityOperator();
       e2 = ClassificationExpression();
-      BinaryExpression b = new EqualityExpression();
+      BinaryExpression b = new EqualityExpression(u);
       b.setOperand1(e1);
       b.setOperator(op);
       b.setOperand2(e2);
@@ -2300,7 +2301,7 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(LOGICAL_AND);
       e2 = EqualityExpression();
-       BinaryExpression b = new LogicalExpression();
+       BinaryExpression b = new LogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("&");
       b.setOperand2(e2);
@@ -2335,7 +2336,7 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(XOR);
       e2 = AndExpression();
-      BinaryExpression b = new LogicalExpression();
+      BinaryExpression b = new LogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("^");
       b.setOperand2(e2);
@@ -2370,7 +2371,7 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(LOGICAL_OR);
       e2 = ExclusiveOrExpression();
-      BinaryExpression b = new LogicalExpression();
+      BinaryExpression b = new LogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("|");
       b.setOperand2(e2);
@@ -2406,7 +2407,8 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(SC_AND);
       e2 = InclusiveOrExpression();
-      ConditionalLogicalExpression b = new ConditionalLogicalExpression();
+      ConditionalLogicalExpression b =
+                new ConditionalLogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("&&");
       b.setOperand2(e2);
@@ -2441,7 +2443,8 @@ public class AlfParser implements AlfParserConstants {
       }
       jj_consume_token(SC_OR);
       e2 = ConditionalAndExpression();
-      ConditionalLogicalExpression b = new ConditionalLogicalExpression();
+      ConditionalLogicalExpression b =
+                new ConditionalLogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("||");
       b.setOperand2(e2);
@@ -2472,7 +2475,8 @@ public class AlfParser implements AlfParserConstants {
       e2 = Expression();
       jj_consume_token(COLON);
       e3 = ConditionalExpression();
-      ConditionalTestExpression c = new ConditionalTestExpression();
+      ConditionalTestExpression c =
+        new ConditionalTestExpression(u);
       c.setOperand1(e1);
       c.setOperand2(e2);
       c.setOperand3(e3);
@@ -2500,17 +2504,18 @@ public class AlfParser implements AlfParserConstants {
     }
 
     if (p instanceof NameExpression) {
-      lhs = new NameLeftHandSide();
+      lhs = new NameLeftHandSide(p);
       ((NameLeftHandSide)lhs).setTarget(((NameExpression)p).getName());
     } else if (p instanceof PropertyAccessExpression) {
-      lhs = new FeatureLeftHandSide();
+      lhs = new FeatureLeftHandSide(p);
       ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
       {if (true) throw new ParseException(errorMessage("Not a legal left-hand side."));}
     }
     lhs.setIndex(i);
     e2 = Expression();
-    AssignmentExpression e = new AssignmentExpression();
+    AssignmentExpression e =
+                new AssignmentExpression(p);
     e.setLeftHandSide(lhs);
     e.setOperator(op);
     e.setRightHandSide(e2);
@@ -2571,7 +2576,7 @@ public class AlfParser implements AlfParserConstants {
  **************/
   final public Block StatementSequence() throws ParseException {
   Statement s;
-  Block b = new Block();
+  Block b = new Block(this);
     label_19:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2771,7 +2776,7 @@ public class AlfParser implements AlfParserConstants {
   final public Annotation Annotation() throws ParseException {
   Token t;
   String n;
-  Annotation a = new Annotation();
+  Annotation a = new Annotation(this);
     t = jj_consume_token(IDENTIFIER);
                      a.setIdentifier(t.image);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2808,7 +2813,7 @@ public class AlfParser implements AlfParserConstants {
   Token t;
   String n;
   Token d;
-  InLineStatement s = new InLineStatement();
+  InLineStatement s = new InLineStatement(this);
     jj_consume_token(SLASH_STAR_AT);
     t = jj_consume_token(IDENTIFIER);
     if (!t.image.equals("inline")) {
@@ -2829,7 +2834,7 @@ public class AlfParser implements AlfParserConstants {
   final public BlockStatement BlockStatement() throws ParseException {
   Block b;
     b = Block();
-    BlockStatement s = new BlockStatement();
+    BlockStatement s = new BlockStatement(b);
     s.setBlock(b);
     {if (true) return s;}
     throw new Error("Missing return statement in function");
@@ -2838,7 +2843,7 @@ public class AlfParser implements AlfParserConstants {
 /* EMPTY STATEMENTS */
   final public EmptyStatement EmptyStatement() throws ParseException {
     jj_consume_token(SEMICOLON);
-    {if (true) return new EmptyStatement();}
+    {if (true) return new EmptyStatement(this);}
     throw new Error("Missing return statement in function");
   }
 
@@ -2847,8 +2852,8 @@ public class AlfParser implements AlfParserConstants {
   QualifiedName q;
   String n;
   Expression e;
-  LocalNameDeclarationStatement s1 = new LocalNameDeclarationStatement();
-  ExpressionStatement s2 = new ExpressionStatement();
+  LocalNameDeclarationStatement s1 = new LocalNameDeclarationStatement(this);
+  ExpressionStatement s2 = new ExpressionStatement(this);
   Statement s;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
@@ -2961,7 +2966,7 @@ public class AlfParser implements AlfParserConstants {
   final public LocalNameDeclarationStatement LocalNameDeclarationStatement() throws ParseException {
   String n;
   QualifiedName q;
-  LocalNameDeclarationStatement s = new LocalNameDeclarationStatement();
+  LocalNameDeclarationStatement s = new LocalNameDeclarationStatement(this);
     jj_consume_token(LET);
     n = Name();
                      s.setName(n);
@@ -3013,9 +3018,9 @@ public class AlfParser implements AlfParserConstants {
 
   final public Expression InstanceInitializationExpression() throws ParseException {
   Tuple t;
+  InstanceCreationExpression e = new InstanceCreationExpression(this);
     jj_consume_token(NEW);
     t = Tuple();
-    InstanceCreationExpression e = new InstanceCreationExpression();
     e.setTuple(t);
     t.setInvocation(e);
     {if (true) return e;}
@@ -3024,7 +3029,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* IF STATEMENTS */
   final public IfStatement IfStatement() throws ParseException {
-  IfStatement s = new IfStatement();
+  IfStatement s = new IfStatement(this);
   Block b;
     jj_consume_token(IF);
     SequentialClauses(s);
@@ -3060,7 +3065,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public ConcurrentClauses ConcurrentClauses() throws ParseException {
-  ConcurrentClauses cs = new ConcurrentClauses();
+  ConcurrentClauses cs = new ConcurrentClauses(this);
   NonFinalClause c;
     c = NonFinalClause();
                          cs.addClause(c);
@@ -3086,11 +3091,11 @@ public class AlfParser implements AlfParserConstants {
   final public NonFinalClause NonFinalClause() throws ParseException {
   Expression e;
   Block b;
+  NonFinalClause c = new NonFinalClause(this);
     jj_consume_token(LPAREN);
     e = Expression();
     jj_consume_token(RPAREN);
     b = Block();
-    NonFinalClause c = new NonFinalClause();
     c.setCondition(e);
     c.setBody(b);
     {if (true) return c;}
@@ -3107,7 +3112,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* SWITCH STATEMENTS */
   final public SwitchStatement SwitchStatement() throws ParseException {
-  SwitchStatement s;
+  SwitchStatement s = new SwitchStatement(this);
   Expression e;
   SwitchClause c;
   Block b;
@@ -3115,7 +3120,7 @@ public class AlfParser implements AlfParserConstants {
     jj_consume_token(LPAREN);
     e = Expression();
     jj_consume_token(RPAREN);
-    s = new SwitchStatement(); s.setExpression(e);
+    s.setExpression(e);
     jj_consume_token(LBRACE);
     label_24:
     while (true) {
@@ -3145,7 +3150,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public SwitchClause SwitchClause() throws ParseException {
-  SwitchClause c = new SwitchClause();
+  SwitchClause c = new SwitchClause(this);
   Expression e;
   Block b;
     e = SwitchCase();
@@ -3186,7 +3191,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public Block NonEmptyStatementSequence() throws ParseException {
   Statement s;
-  Block b = new Block();
+  Block b = new Block(this);
     label_26:
     while (true) {
       s = DocumentedStatement();
@@ -3244,12 +3249,12 @@ public class AlfParser implements AlfParserConstants {
   final public WhileStatement WhileStatement() throws ParseException {
   Expression e;
   Block b;
+  WhileStatement s = new WhileStatement(this);
     jj_consume_token(WHILE);
     jj_consume_token(LPAREN);
     e = Expression();
     jj_consume_token(RPAREN);
     b = Block();
-    WhileStatement s = new WhileStatement();
     s.setCondition(e);
     s.setBody(b);
     {if (true) return s;}
@@ -3260,6 +3265,7 @@ public class AlfParser implements AlfParserConstants {
   final public DoStatement DoStatement() throws ParseException {
   Block b;
   Expression e;
+  DoStatement s = new DoStatement();
     jj_consume_token(DO);
     b = Block();
     jj_consume_token(WHILE);
@@ -3267,7 +3273,6 @@ public class AlfParser implements AlfParserConstants {
     e = Expression();
     jj_consume_token(RPAREN);
     jj_consume_token(SEMICOLON);
-    DoStatement s = new DoStatement();
     s.setCondition(e);
     s.setBody(b);
     {if (true) return s;}
@@ -3276,7 +3281,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* FOR STATEMENTS */
   final public ForStatement ForStatement() throws ParseException {
-  ForStatement s = new ForStatement();
+  ForStatement s = new ForStatement(this);
   Block b;
     jj_consume_token(FOR);
     jj_consume_token(LPAREN);
@@ -3314,7 +3319,7 @@ public class AlfParser implements AlfParserConstants {
   QualifiedName q = null;
   Expression e1;
   Expression e2 = null;
-  LoopVariableDefinition d = new LoopVariableDefinition();
+  LoopVariableDefinition d = new LoopVariableDefinition(this);
     if (jj_2_25(2)) {
       n = Name();
       jj_consume_token(IN);
@@ -3354,16 +3359,17 @@ public class AlfParser implements AlfParserConstants {
 
 /* BREAK STATEMENTS */
   final public BreakStatement BreakStatement() throws ParseException {
+  BreakStatement s = new BreakStatement(this);
     jj_consume_token(BREAK);
     jj_consume_token(SEMICOLON);
-    {if (true) return new BreakStatement();}
+    {if (true) return s;}
     throw new Error("Missing return statement in function");
   }
 
 /* RETURN STATEMENTS */
   final public ReturnStatement ReturnStatement() throws ParseException {
   Expression e;
-  ReturnStatement s = new ReturnStatement();
+  ReturnStatement s = new ReturnStatement(this);
     jj_consume_token(RETURN);
     e = Expression();
     jj_consume_token(SEMICOLON);
@@ -3394,7 +3400,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public AcceptStatement SimpleAcceptStatementCompletion(AcceptBlock b) throws ParseException {
-  AcceptStatement s = new AcceptStatement();
+  AcceptStatement s = new AcceptStatement(b);
     jj_consume_token(SEMICOLON);
     s.addAcceptBlock(b);
     {if (true) return s;}
@@ -3402,7 +3408,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public AcceptStatement CompoundAcceptStatementCompletion(AcceptBlock a1) throws ParseException {
-  AcceptStatement s = new AcceptStatement();
+  AcceptStatement s = new AcceptStatement(a1);
   Block b;
   AcceptBlock a;
     b = Block();
@@ -3438,6 +3444,7 @@ public class AlfParser implements AlfParserConstants {
   final public AcceptBlock AcceptClause() throws ParseException {
   String n = null;
   QualifiedNameList nl;
+  AcceptBlock b = new AcceptBlock(this);
     jj_consume_token(ACCEPT);
     jj_consume_token(LPAREN);
     if (jj_2_26(2)) {
@@ -3448,7 +3455,6 @@ public class AlfParser implements AlfParserConstants {
     }
     nl = QualifiedNameList();
     jj_consume_token(RPAREN);
-    AcceptBlock b = new AcceptBlock();
     b.setName(n);
     b.setSignalNames(nl);
     {if (true) return b;}
@@ -3457,11 +3463,11 @@ public class AlfParser implements AlfParserConstants {
 
 /* CLASSIFY STATEMENTS */
   final public ClassifyStatement ClassifyStatement() throws ParseException {
-  ClassifyStatement s;
+  ClassifyStatement s = new ClassifyStatement(this);
   Expression e;
     jj_consume_token(CLASSIFY);
     e = Expression();
-                                s = new ClassifyStatement(); s.setExpression(e);
+                                s.setExpression(e);
     ClassificationClause(s);
     jj_consume_token(SEMICOLON);
     {if (true) return s;}
@@ -3475,8 +3481,8 @@ public class AlfParser implements AlfParserConstants {
                                     s.setFromList(nl);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case TO:
-        ClassificationToClause();
-                               s.setToList(nl);
+        nl = ClassificationToClause();
+                                    s.setToList(nl);
         break;
       default:
         jj_la1[89] = jj_gen;
@@ -3489,7 +3495,7 @@ public class AlfParser implements AlfParserConstants {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case FROM:
           ReclassifyAllClause();
-                            s.setFromList(new QualifiedNameList());
+                            s.setFromList(new QualifiedNameList(this));
           break;
         default:
           jj_la1[90] = jj_gen;
@@ -3528,7 +3534,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public QualifiedNameList QualifiedNameList() throws ParseException {
-  QualifiedNameList nl = new QualifiedNameList();
+  QualifiedNameList nl = new QualifiedNameList(this);
   QualifiedName n;
     n = QualifiedName();
                         nl.addName(n);
@@ -3559,7 +3565,7 @@ public class AlfParser implements AlfParserConstants {
   Token t;
   ArrayList<StereotypeAnnotation> sl;
   NamespaceDefinition d;
-  UnitDefinition u = new UnitDefinition();
+  UnitDefinition u = new UnitDefinition(this);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NAMESPACE:
       n = NamespaceDeclaration();
@@ -3624,7 +3630,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public StereotypeAnnotation StereotypeAnnotation() throws ParseException {
   QualifiedName n;
-  StereotypeAnnotation s = new StereotypeAnnotation();
+  StereotypeAnnotation s = new StereotypeAnnotation(this);
     jj_consume_token(AT);
     n = QualifiedName();
                              s.setStereotypeName(n);
@@ -3665,7 +3671,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public TaggedValueList TaggedValueList() throws ParseException {
   TaggedValue v;
-  TaggedValueList tl = new TaggedValueList();
+  TaggedValueList tl = new TaggedValueList(this);
     v = TaggedValue();
                       tl.addTaggedValue(v);
     label_32:
@@ -3689,7 +3695,7 @@ public class AlfParser implements AlfParserConstants {
   final public TaggedValue TaggedValue() throws ParseException {
   String n;
   Token t;
-  TaggedValue v = new TaggedValue();
+  TaggedValue v = new TaggedValue(this);
     n = Name();
     jj_consume_token(THICK_ARROW);
                              v.setName(n);
@@ -3803,7 +3809,7 @@ public class AlfParser implements AlfParserConstants {
   String n;
   QualifiedName q;
   String a;
-  ImportReference i = new ElementImportReference();
+  ImportReference i = new ElementImportReference(this);
     if (jj_2_29(3)) {
       q = ColonQualifiedName();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -3813,7 +3819,7 @@ public class AlfParser implements AlfParserConstants {
         case DOUBLE_COLON:
           jj_consume_token(DOUBLE_COLON);
           jj_consume_token(STAR);
-                              i = new PackageImportReference();
+                              i = new PackageImportReference(i);
           break;
         case AS:
           a = AliasDefinition();
@@ -3838,7 +3844,7 @@ public class AlfParser implements AlfParserConstants {
         case DOT:
           jj_consume_token(DOT);
           jj_consume_token(STAR);
-                     i = new PackageImportReference();
+                     i = new PackageImportReference(i);
           break;
         case AS:
           a = AliasDefinition();
@@ -3859,7 +3865,7 @@ public class AlfParser implements AlfParserConstants {
       case IDENTIFIER:
       case UNRESTRICTED_NAME:
         n = Name();
-      NameBinding b = new NameBinding(); q = new QualifiedName();
+      NameBinding b = new NameBinding(); q = new QualifiedName(i);
       b.setName(n); q.addNameBinding(b);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case AS:
@@ -3881,7 +3887,7 @@ public class AlfParser implements AlfParserConstants {
               throw new ParseException();
             }
             jj_consume_token(STAR);
-                                          i = new PackageImportReference();
+                                          i = new PackageImportReference(i);
             break;
           case AS:
             a = AliasDefinition();
@@ -3975,7 +3981,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public PackageDefinition PackageDefinition() throws ParseException {
   String n;
-  PackageDefinition d = new PackageDefinition();
+  PackageDefinition d = new PackageDefinition(this);
     n = PackageDeclaration();
                              d.setName(n);
     PackageBody(d);
@@ -3985,7 +3991,7 @@ public class AlfParser implements AlfParserConstants {
 
   final public PackageDefinition PackageDefinitionOrStub() throws ParseException {
   String n;
-  PackageDefinition d = new PackageDefinition();
+  PackageDefinition d = new PackageDefinition(this);
     n = PackageDeclaration();
                              d.setName(n);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4203,7 +4209,7 @@ public class AlfParser implements AlfParserConstants {
   String n;
   QualifiedName q;
   QualifiedNameList nl;
-  ClassifierTemplateParameter p = new ClassifierTemplateParameter();
+  ClassifierTemplateParameter p = new ClassifierTemplateParameter(this);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOCUMENTATION_COMMENT:
       t = jj_consume_token(DOCUMENTATION_COMMENT);
@@ -4219,7 +4225,7 @@ public class AlfParser implements AlfParserConstants {
     case SPECIALIZES:
       jj_consume_token(SPECIALIZES);
       q = QualifiedName();
-      nl = new QualifiedNameList();
+      nl = new QualifiedNameList(q);
       nl.addName(q);
       p.setSpecialization(nl);
       break;
@@ -4243,7 +4249,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* CLASSES */
   final public ClassDefinition ClassDeclaration() throws ParseException {
-  ClassDefinition d = new ClassDefinition();
+  ClassDefinition d = new ClassDefinition(this);
   String n;
   QualifiedNameList nl;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4379,7 +4385,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* ACTIVE CLASSES */
   final public ActiveClassDefinition ActiveClassDeclaration() throws ParseException {
-  ActiveClassDefinition d = new ActiveClassDefinition();
+  ActiveClassDefinition d = new ActiveClassDefinition(this);
   String n;
   QualifiedNameList nl;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4472,7 +4478,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public ActivityDefinition BehaviorClause() throws ParseException {
-  ActivityDefinition a = new ActivityDefinition();
+  ActivityDefinition a = new ActivityDefinition(this);
   Block b;
   String n;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4559,7 +4565,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* DATA TYPES */
   final public DataTypeDefinition DataTypeDeclaration() throws ParseException {
-  DataTypeDefinition d = new DataTypeDefinition();
+  DataTypeDefinition d = new DataTypeDefinition(this);
   String n;
   QualifiedNameList nl;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4663,7 +4669,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* ASSOCIATIONS */
   final public AssociationDefinition AssociationDeclaration() throws ParseException {
-  AssociationDefinition d = new AssociationDefinition();
+  AssociationDefinition d = new AssociationDefinition(this);
   String n;
   QualifiedNameList nl;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4711,7 +4717,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* ENUMERATIONS */
   final public EnumerationDefinition EnumerationDeclaration() throws ParseException {
-  EnumerationDefinition d = new EnumerationDefinition();
+  EnumerationDefinition d = new EnumerationDefinition(this);
   String n;
   QualifiedNameList nl;
     jj_consume_token(ENUM);
@@ -4784,7 +4790,7 @@ public class AlfParser implements AlfParserConstants {
   Token t;
   String c = null;
   String n;
-  EnumerationLiteralName e = new EnumerationLiteralName();
+  EnumerationLiteralName e = new EnumerationLiteralName(this);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOCUMENTATION_COMMENT:
       t = jj_consume_token(DOCUMENTATION_COMMENT);
@@ -4802,7 +4808,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* SIGNALS */
   final public SignalDefinition SignalDeclaration() throws ParseException {
-  SignalDefinition d = new SignalDefinition();
+  SignalDefinition d = new SignalDefinition(this);
   String n;
   QualifiedNameList nl;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4850,8 +4856,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* ACTIVITIES */
   final public ActivityDefinition ActivityDeclaration() throws ParseException {
-  FormalParameter p = new FormalParameter();
-  ActivityDefinition d = new ActivityDefinition();
+  ActivityDefinition d = new ActivityDefinition(this);
   String n;
     jj_consume_token(ACTIVITY);
     n = Name();
@@ -4868,8 +4873,9 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COLON:
       jj_consume_token(COLON);
+              FormalParameter p = new FormalParameter(this);
       TypePart(p);
-                          p.setDirection("return"); p.setNamespace(d); d.addOwnedMember(p);
+                  p.setDirection("return"); p.setNamespace(d); d.addOwnedMember(p);
       break;
     default:
       jj_la1[156] = jj_gen;
@@ -4953,7 +4959,7 @@ public class AlfParser implements AlfParserConstants {
   ArrayList<StereotypeAnnotation> sl;
   String d;
   String n;
-  FormalParameter p = new FormalParameter();
+  FormalParameter p = new FormalParameter(this);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOCUMENTATION_COMMENT:
       t = jj_consume_token(DOCUMENTATION_COMMENT);
@@ -5076,7 +5082,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public PropertyDefinition PropertyDeclaration() throws ParseException {
-  PropertyDefinition d = new PropertyDefinition();
+  PropertyDefinition d = new PropertyDefinition(this);
   String n;
     n = Name();
                d.setName(n);
@@ -5222,8 +5228,7 @@ public class AlfParser implements AlfParserConstants {
 
 /* OPERATIONS */
   final public OperationDefinition OperationDeclaration() throws ParseException {
-  FormalParameter p = new FormalParameter();
-  OperationDefinition d = new OperationDefinition();
+  OperationDefinition d = new OperationDefinition(this);
   String n;
   QualifiedNameList nl;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -5241,8 +5246,9 @@ public class AlfParser implements AlfParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COLON:
       jj_consume_token(COLON);
+              FormalParameter p = new FormalParameter(this);
       TypePart(p);
-                                             p.setDirection("return"); p.setNamespace(d); d.addOwnedMember(p);
+                  p.setDirection("return"); p.setNamespace(d); d.addOwnedMember(p);
       break;
     default:
       jj_la1[175] = jj_gen;
@@ -5294,7 +5300,7 @@ public class AlfParser implements AlfParserConstants {
 /* RECEPTIONS */
   final public ReceptionDefinition ReceptionDefinition() throws ParseException {
   QualifiedName n;
-  ReceptionDefinition d = new ReceptionDefinition();
+  ReceptionDefinition d = new ReceptionDefinition(this);
     jj_consume_token(RECEIVE);
     n = QualifiedName();
     jj_consume_token(SEMICOLON);
@@ -5306,7 +5312,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public SignalReceptionDefinition SignalReceptionDeclaration() throws ParseException {
-  SignalReceptionDefinition d = new SignalReceptionDefinition();
+  SignalReceptionDefinition d = new SignalReceptionDefinition(this);
   String n;
   QualifiedNameList nl;
     jj_consume_token(RECEIVE);
@@ -5661,18 +5667,23 @@ public class AlfParser implements AlfParserConstants {
     finally { jj_save(44, xla); }
   }
 
+  private boolean jj_3R_72() {
+    if (jj_3R_102()) return true;
+    return false;
+  }
+
   private boolean jj_3R_157() {
     if (jj_3R_123()) return true;
     return false;
   }
 
-  private boolean jj_3R_194() {
-    if (jj_3R_208()) return true;
+  private boolean jj_3R_156() {
+    if (jj_3R_122()) return true;
     return false;
   }
 
-  private boolean jj_3R_156() {
-    if (jj_3R_122()) return true;
+  private boolean jj_3R_194() {
+    if (jj_3R_208()) return true;
     return false;
   }
 
@@ -5688,11 +5699,6 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_153() {
     if (jj_3R_163()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_72() {
-    if (jj_3R_102()) return true;
     return false;
   }
 
@@ -5715,6 +5721,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_67() {
+    if (jj_3R_102()) return true;
+    return false;
+  }
+
   private boolean jj_3_13() {
     if (jj_3R_52()) return true;
     Token xsp;
@@ -5726,9 +5737,19 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_101() {
+    if (jj_scan_token(COMMA)) return true;
+    return false;
+  }
+
   private boolean jj_3R_53() {
     if (jj_3R_90()) return true;
     if (jj_3R_91()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_133() {
+    if (jj_3R_148()) return true;
     return false;
   }
 
@@ -5737,8 +5758,18 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_67() {
-    if (jj_3R_102()) return true;
+  private boolean jj_3R_64() {
+    if (jj_3R_46()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_101()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_59() {
+    if (jj_3R_98()) return true;
     return false;
   }
 
@@ -5753,6 +5784,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_126() {
+    if (jj_scan_token(ABSTRACT)) return true;
+    return false;
+  }
+
   private boolean jj_3R_199() {
     if (jj_3R_212()) return true;
     Token xsp;
@@ -5763,39 +5799,9 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_101() {
-    if (jj_scan_token(COMMA)) return true;
-    return false;
-  }
-
   private boolean jj_3_18() {
     if (jj_scan_token(RPAREN)) return true;
     if (jj_3R_58()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_133() {
-    if (jj_3R_148()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_59() {
-    if (jj_3R_98()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_64() {
-    if (jj_3R_46()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_101()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_180() {
-    if (jj_3R_169()) return true;
     return false;
   }
 
@@ -5808,23 +5814,23 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_126() {
-    if (jj_scan_token(ABSTRACT)) return true;
-    return false;
-  }
-
-  private boolean jj_3_19() {
-    if (jj_scan_token(ANY)) return true;
-    if (jj_scan_token(RPAREN)) return true;
-    return false;
-  }
-
   private boolean jj_3R_102() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_126()) jj_scanpos = xsp;
     if (jj_scan_token(CLASS)) return true;
     if (jj_3R_127()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_180() {
+    if (jj_3R_169()) return true;
+    return false;
+  }
+
+  private boolean jj_3_19() {
+    if (jj_scan_token(ANY)) return true;
+    if (jj_scan_token(RPAREN)) return true;
     return false;
   }
 
@@ -5842,13 +5848,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_85() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(THICK_ARROW)) return true;
-    if (jj_3R_46()) return true;
-    return false;
-  }
-
   private boolean jj_3R_160() {
     Token xsp;
     xsp = jj_scanpos;
@@ -5859,9 +5858,28 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_85() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(THICK_ARROW)) return true;
+    if (jj_3R_46()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_148() {
+    if (jj_scan_token(ACTIVITY)) return true;
+    if (jj_3R_52()) return true;
+    return false;
+  }
+
   private boolean jj_3R_206() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_85()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_63() {
+    if (jj_scan_token(FROM)) return true;
+    if (jj_3R_64()) return true;
     return false;
   }
 
@@ -5872,12 +5890,6 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_223() {
     if (jj_3R_160()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_148() {
-    if (jj_scan_token(ACTIVITY)) return true;
-    if (jj_3R_52()) return true;
     return false;
   }
 
@@ -5901,6 +5913,16 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_208() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_223()) {
+    jj_scanpos = xsp;
+    if (jj_3R_224()) return true;
+    }
+    return false;
+  }
+
   private boolean jj_3R_151() {
     Token xsp;
     xsp = jj_scanpos;
@@ -5914,25 +5936,19 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_208() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_223()) {
-    jj_scanpos = xsp;
-    if (jj_3R_224()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_63() {
-    if (jj_scan_token(FROM)) return true;
-    if (jj_3R_64()) return true;
-    return false;
-  }
-
   private boolean jj_3R_207() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_46()) return true;
+    return false;
+  }
+
+  private boolean jj_3_27() {
+    if (jj_3R_63()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_76() {
+    if (jj_3R_106()) return true;
     return false;
   }
 
@@ -5962,8 +5978,9 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_136() {
-    if (jj_3R_151()) return true;
+  private boolean jj_3_26() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(COLON)) return true;
     return false;
   }
 
@@ -5977,16 +5994,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_27() {
-    if (jj_3R_63()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_76() {
-    if (jj_3R_106()) return true;
-    return false;
-  }
-
   private boolean jj_3R_212() {
     if (jj_3R_227()) return true;
     Token xsp;
@@ -5997,9 +6004,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_26() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(COLON)) return true;
+  private boolean jj_3R_136() {
+    if (jj_3R_151()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_71() {
+    if (jj_3R_106()) return true;
     return false;
   }
 
@@ -6018,8 +6029,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_71() {
-    if (jj_3R_106()) return true;
+  private boolean jj_3R_116() {
+    if (jj_3R_120()) return true;
     return false;
   }
 
@@ -6035,8 +6046,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_116() {
-    if (jj_3R_120()) return true;
+  private boolean jj_3R_131() {
+    if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
@@ -6050,20 +6061,39 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_131() {
-    if (jj_scan_token(ABSTRACT)) return true;
+  private boolean jj_3R_106() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_131()) jj_scanpos = xsp;
+    if (jj_scan_token(SIGNAL)) return true;
+    if (jj_3R_127()) return true;
     return false;
   }
 
-  private boolean jj_3R_83() {
+  private boolean jj_3R_108() {
+    if (jj_3R_133()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_107() {
+    if (jj_3R_132()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_127() {
     if (jj_3R_52()) return true;
-    if (jj_scan_token(THICK_ARROW)) return true;
     return false;
   }
 
   private boolean jj_3R_204() {
     if (jj_scan_token(NEW)) return true;
     if (jj_3R_46()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_83() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(THICK_ARROW)) return true;
     return false;
   }
 
@@ -6083,20 +6113,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_106() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_131()) jj_scanpos = xsp;
-    if (jj_scan_token(SIGNAL)) return true;
-    if (jj_3R_127()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_108() {
-    if (jj_3R_133()) return true;
-    return false;
-  }
-
   private boolean jj_3R_45() {
     if (jj_scan_token(LT)) return true;
     Token xsp;
@@ -6105,16 +6121,6 @@ public class AlfParser implements AlfParserConstants {
     jj_scanpos = xsp;
     if (jj_3R_83()) return true;
     }
-    return false;
-  }
-
-  private boolean jj_3R_107() {
-    if (jj_3R_132()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_127() {
-    if (jj_3R_52()) return true;
     return false;
   }
 
@@ -6143,8 +6149,23 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3_40() {
+    if (jj_3R_76()) return true;
+    return false;
+  }
+
   private boolean jj_3R_135() {
     if (jj_3R_150()) return true;
+    return false;
+  }
+
+  private boolean jj_3_39() {
+    if (jj_3R_75()) return true;
+    return false;
+  }
+
+  private boolean jj_3_38() {
+    if (jj_3R_74()) return true;
     return false;
   }
 
@@ -6156,13 +6177,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_40() {
-    if (jj_3R_76()) return true;
+  private boolean jj_3_37() {
+    if (jj_3R_73()) return true;
     return false;
   }
 
-  private boolean jj_3_39() {
-    if (jj_3R_75()) return true;
+  private boolean jj_3_36() {
+    if (jj_3R_72()) return true;
     return false;
   }
 
@@ -6172,34 +6193,6 @@ public class AlfParser implements AlfParserConstants {
     xsp = jj_scanpos;
     if (jj_3R_226()) jj_scanpos = xsp;
     if (jj_3R_57()) return true;
-    return false;
-  }
-
-  private boolean jj_3_38() {
-    if (jj_3R_74()) return true;
-    return false;
-  }
-
-  private boolean jj_3_37() {
-    if (jj_3R_73()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_230() {
-    if (jj_3R_234()) return true;
-    return false;
-  }
-
-  private boolean jj_3_36() {
-    if (jj_3R_72()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_227() {
-    if (jj_3R_229()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_230()) jj_scanpos = xsp;
     return false;
   }
 
@@ -6228,29 +6221,21 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_230() {
+    if (jj_3R_234()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_227() {
+    if (jj_3R_229()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_230()) jj_scanpos = xsp;
+    return false;
+  }
+
   private boolean jj_3R_84() {
     if (jj_3R_44()) return true;
-    return false;
-  }
-
-  private boolean jj_3_4() {
-    if (jj_scan_token(DOT)) return true;
-    if (jj_3R_44()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_50() {
-    if (jj_3R_57()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_82() {
-    Token xsp;
-    if (jj_3_4()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_4()) { jj_scanpos = xsp; break; }
-    }
     return false;
   }
 
@@ -6274,6 +6259,17 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3_4() {
+    if (jj_scan_token(DOT)) return true;
+    if (jj_3R_44()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_50() {
+    if (jj_3R_57()) return true;
+    return false;
+  }
+
   private boolean jj_3_31() {
     if (jj_3R_67()) return true;
     return false;
@@ -6281,6 +6277,16 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_132() {
     if (jj_3R_147()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_82() {
+    Token xsp;
+    if (jj_3_4()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_4()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
@@ -6307,13 +6313,9 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_81() {
-    Token xsp;
-    if (jj_3_3()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_3()) { jj_scanpos = xsp; break; }
-    }
+  private boolean jj_3R_147() {
+    if (jj_scan_token(ENUM)) return true;
+    if (jj_3R_52()) return true;
     return false;
   }
 
@@ -6338,21 +6340,30 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_81() {
+    Token xsp;
+    if (jj_3_3()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_3()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
   private boolean jj_3R_89() {
     if (jj_3R_52()) return true;
     if (jj_scan_token(THICK_ARROW)) return true;
     return false;
   }
 
-  private boolean jj_3R_147() {
-    if (jj_scan_token(ENUM)) return true;
-    if (jj_3R_52()) return true;
-    return false;
-  }
-
   private boolean jj_3R_65() {
     if (jj_3R_84()) return true;
     if (jj_3R_81()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_134() {
+    if (jj_3R_149()) return true;
     return false;
   }
 
@@ -6369,18 +6380,25 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_75() {
+    if (jj_3R_105()) return true;
+    return false;
+  }
+
   private boolean jj_3R_51() {
     if (jj_3R_89()) return true;
     return false;
   }
 
-  private boolean jj_3R_134() {
-    if (jj_3R_149()) return true;
+  private boolean jj_3R_43() {
+    if (jj_3R_82()) return true;
     return false;
   }
 
-  private boolean jj_3R_43() {
-    if (jj_3R_82()) return true;
+  private boolean jj_3R_149() {
+    if (jj_scan_token(RECEIVE)) return true;
+    if (jj_scan_token(SIGNAL)) return true;
+    if (jj_3R_52()) return true;
     return false;
   }
 
@@ -6399,11 +6417,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_75() {
-    if (jj_3R_105()) return true;
-    return false;
-  }
-
   private boolean jj_3R_169() {
     if (jj_3R_84()) return true;
     Token xsp;
@@ -6417,15 +6430,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_149() {
-    if (jj_scan_token(RECEIVE)) return true;
-    if (jj_scan_token(SIGNAL)) return true;
-    if (jj_3R_52()) return true;
+  private boolean jj_3R_70() {
+    if (jj_3R_105()) return true;
     return false;
   }
 
-  private boolean jj_3R_70() {
-    if (jj_3R_105()) return true;
+  private boolean jj_3R_130() {
+    if (jj_scan_token(ABSTRACT)) return true;
     return false;
   }
 
@@ -6434,8 +6445,24 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_80() {
+    if (jj_scan_token(RECEIVE)) return true;
+    if (jj_3R_46()) return true;
+    if (jj_scan_token(SEMICOLON)) return true;
+    return false;
+  }
+
   private boolean jj_3R_40() {
     if (jj_3R_81()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_105() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_130()) jj_scanpos = xsp;
+    if (jj_scan_token(ASSOC)) return true;
+    if (jj_3R_127()) return true;
     return false;
   }
 
@@ -6449,11 +6476,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_152() {
-    if (jj_3R_53()) return true;
-    return false;
-  }
-
   private boolean jj_3R_162() {
     if (jj_3R_171()) return true;
     Token xsp;
@@ -6462,16 +6484,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_46() {
-    if (jj_3R_84()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_1()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_130() {
-    if (jj_scan_token(ABSTRACT)) return true;
+  private boolean jj_3R_152() {
+    if (jj_3R_53()) return true;
     return false;
   }
 
@@ -6481,19 +6495,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_105() {
+  private boolean jj_3R_46() {
+    if (jj_3R_84()) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_130()) jj_scanpos = xsp;
-    if (jj_scan_token(ASSOC)) return true;
-    if (jj_3R_127()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_80() {
-    if (jj_scan_token(RECEIVE)) return true;
-    if (jj_3R_46()) return true;
-    if (jj_scan_token(SEMICOLON)) return true;
+    if (jj_3_1()) jj_scanpos = xsp;
     return false;
   }
 
@@ -6569,17 +6575,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_198() {
-    if (jj_scan_token(LPAREN)) return true;
-    return false;
-  }
-
-  private boolean jj_3_17() {
-    if (jj_3R_46()) return true;
-    if (jj_3R_57()) return true;
-    return false;
-  }
-
   private boolean jj_3R_49() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6620,6 +6615,22 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_198() {
+    if (jj_scan_token(LPAREN)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_74() {
+    if (jj_3R_104()) return true;
+    return false;
+  }
+
+  private boolean jj_3_17() {
+    if (jj_3R_46()) return true;
+    if (jj_3R_57()) return true;
+    return false;
+  }
+
   private boolean jj_3R_242() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6630,13 +6641,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_74() {
+  private boolean jj_3R_69() {
     if (jj_3R_104()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_225() {
-    if (jj_3R_57()) return true;
     return false;
   }
 
@@ -6645,31 +6651,16 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_225() {
+    if (jj_3R_57()) return true;
+    return false;
+  }
+
   private boolean jj_3R_202() {
     if (jj_scan_token(THIS)) return true;
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_225()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_69() {
-    if (jj_3R_104()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_239() {
-    if (jj_3R_242()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_235() {
-    if (jj_3R_238()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_239()) { jj_scanpos = xsp; break; }
-    }
     return false;
   }
 
@@ -6684,8 +6675,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_11() {
-    if (jj_3R_48()) return true;
+  private boolean jj_3R_239() {
+    if (jj_3R_242()) return true;
     return false;
   }
 
@@ -6698,16 +6689,31 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_161() {
-    if (jj_3R_169()) return true;
+  private boolean jj_3R_235() {
+    if (jj_3R_238()) return true;
     Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_11()) jj_scanpos = xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_239()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_11() {
+    if (jj_3R_48()) return true;
     return false;
   }
 
   private boolean jj_3R_211() {
     if (jj_scan_token(LBRACKET)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_161() {
+    if (jj_3R_169()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_11()) jj_scanpos = xsp;
     return false;
   }
 
@@ -6718,6 +6724,11 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3_42() {
     if (jj_3R_78()) return true;
+    return false;
+  }
+
+  private boolean jj_3_30() {
+    if (jj_3R_66()) return true;
     return false;
   }
 
@@ -6740,8 +6751,19 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3_29() {
+    if (jj_3R_65()) return true;
+    return false;
+  }
+
   private boolean jj_3R_218() {
     if (jj_scan_token(HEX_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_62() {
+    if (jj_scan_token(CASE)) return true;
+    if (jj_3R_53()) return true;
     return false;
   }
 
@@ -6763,39 +6785,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_30() {
-    if (jj_3R_66()) return true;
-    return false;
-  }
-
   private boolean jj_3R_216() {
     if (jj_scan_token(BINARY_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_62() {
-    if (jj_scan_token(CASE)) return true;
-    if (jj_3R_53()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_215() {
-    if (jj_scan_token(DECIMAL_LITERAL)) return true;
-    return false;
-  }
-
-  private boolean jj_3_29() {
-    if (jj_3R_65()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_93() {
-    if (jj_3R_61()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_214() {
-    if (jj_scan_token(BOOLEAN_LITERAL)) return true;
     return false;
   }
 
@@ -6804,8 +6795,36 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_215() {
+    if (jj_scan_token(DECIMAL_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_93() {
+    if (jj_3R_61()) return true;
+    return false;
+  }
+
   private boolean jj_3_16() {
     if (jj_3R_53()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_214() {
+    if (jj_scan_token(BOOLEAN_LITERAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_143() {
+    if (jj_3R_158()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_159()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3_24() {
+    if (jj_3R_62()) return true;
     return false;
   }
 
@@ -6844,19 +6863,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_143() {
-    if (jj_3R_158()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_159()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3_24() {
-    if (jj_3R_62()) return true;
-    return false;
-  }
-
   private boolean jj_3R_241() {
     if (jj_3R_243()) return true;
     return false;
@@ -6868,6 +6874,12 @@ public class AlfParser implements AlfParserConstants {
       xsp = jj_scanpos;
       if (jj_3R_241()) { jj_scanpos = xsp; break; }
     }
+    return false;
+  }
+
+  private boolean jj_3R_110() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(COLON)) return true;
     return false;
   }
 
@@ -6885,12 +6897,6 @@ public class AlfParser implements AlfParserConstants {
     }
     xsp = jj_scanpos;
     if (jj_scan_token(104)) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_110() {
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(COLON)) return true;
     return false;
   }
 
@@ -6914,6 +6920,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_125() {
+    if (jj_3R_61()) return true;
+    return false;
+  }
+
   private boolean jj_3R_195() {
     if (jj_3R_209()) return true;
     return false;
@@ -6932,11 +6943,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_125() {
-    if (jj_3R_61()) return true;
-    return false;
-  }
-
   private boolean jj_3R_171() {
     Token xsp;
     while (true) {
@@ -6946,13 +6952,28 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_166() {
+    if (jj_scan_token(SC_OR)) return true;
+    return false;
+  }
+
   private boolean jj_3R_54() {
     if (jj_scan_token(DOUBLE_DOT)) return true;
     return false;
   }
 
-  private boolean jj_3R_166() {
-    if (jj_scan_token(SC_OR)) return true;
+  private boolean jj_3R_79() {
+    if (jj_3R_110()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_158() {
+    if (jj_3R_165()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_166()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
@@ -6967,23 +6988,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_158() {
-    if (jj_3R_165()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_166()) { jj_scanpos = xsp; break; }
-    }
+  private boolean jj_3R_97() {
+    if (jj_3R_123()) return true;
     return false;
   }
 
   private boolean jj_3R_112() {
     if (jj_3R_137()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_111() {
-    if (jj_3R_136()) return true;
     return false;
   }
 
@@ -6997,23 +7008,18 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_97() {
-    if (jj_3R_123()) return true;
-    return false;
-  }
-
   private boolean jj_3R_96() {
     if (jj_3R_122()) return true;
     return false;
   }
 
-  private boolean jj_3R_95() {
-    if (jj_3R_121()) return true;
+  private boolean jj_3R_111() {
+    if (jj_3R_136()) return true;
     return false;
   }
 
-  private boolean jj_3R_79() {
-    if (jj_3R_110()) return true;
+  private boolean jj_3R_95() {
+    if (jj_3R_121()) return true;
     return false;
   }
 
@@ -7024,11 +7030,6 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_88() {
     if (jj_3R_114()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_87() {
-    if (jj_3R_113()) return true;
     return false;
   }
 
@@ -7048,6 +7049,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_87() {
+    if (jj_3R_113()) return true;
+    return false;
+  }
+
   private boolean jj_3R_139() {
     if (jj_3R_100()) return true;
     return false;
@@ -7061,6 +7067,11 @@ public class AlfParser implements AlfParserConstants {
     jj_scanpos = xsp;
     if (jj_3R_112()) return true;
     }
+    return false;
+  }
+
+  private boolean jj_3R_73() {
+    if (jj_3R_103()) return true;
     return false;
   }
 
@@ -7083,13 +7094,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_73() {
-    if (jj_3R_103()) return true;
+  private boolean jj_3R_138() {
+    if (jj_3R_98()) return true;
     return false;
   }
 
-  private boolean jj_3R_138() {
-    if (jj_3R_98()) return true;
+  private boolean jj_3R_68() {
+    if (jj_3R_103()) return true;
     return false;
   }
 
@@ -7104,8 +7115,18 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_109() {
+    if (jj_3R_134()) return true;
+    return false;
+  }
+
   private boolean jj_3R_193() {
     if (jj_3R_205()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_177() {
+    if (jj_scan_token(SC_AND)) return true;
     return false;
   }
 
@@ -7114,8 +7135,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_177() {
-    if (jj_scan_token(SC_AND)) return true;
+  private boolean jj_3_44() {
+    if (jj_3R_80()) return true;
     return false;
   }
 
@@ -7129,11 +7150,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_189() {
-    if (jj_3R_201()) return true;
-    return false;
-  }
-
   private boolean jj_3R_165() {
     if (jj_3R_176()) return true;
     Token xsp;
@@ -7144,13 +7160,29 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_68() {
-    if (jj_3R_103()) return true;
+  private boolean jj_3R_189() {
+    if (jj_3R_201()) return true;
     return false;
   }
 
-  private boolean jj_3R_109() {
-    if (jj_3R_134()) return true;
+  private boolean jj_3R_78() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_44()) {
+    jj_scanpos = xsp;
+    if (jj_3R_109()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_128() {
+    if (jj_scan_token(ABSTRACT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_123() {
+    if (jj_scan_token(DOLLAR)) return true;
+    if (jj_3R_90()) return true;
     return false;
   }
 
@@ -7173,14 +7205,18 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_123() {
-    if (jj_scan_token(DOLLAR)) return true;
-    if (jj_3R_90()) return true;
+  private boolean jj_3_23() {
+    if (jj_scan_token(ELSE)) return true;
+    if (jj_scan_token(IF)) return true;
     return false;
   }
 
-  private boolean jj_3_44() {
-    if (jj_3R_80()) return true;
+  private boolean jj_3R_103() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_128()) jj_scanpos = xsp;
+    if (jj_scan_token(ACTIVE)) return true;
+    if (jj_scan_token(CLASS)) return true;
     return false;
   }
 
@@ -7195,27 +7231,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_78() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_44()) {
-    jj_scanpos = xsp;
-    if (jj_3R_109()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3_23() {
-    if (jj_scan_token(ELSE)) return true;
-    if (jj_scan_token(IF)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_128() {
-    if (jj_scan_token(ABSTRACT)) return true;
-    return false;
-  }
-
   private boolean jj_3R_205() {
     Token xsp;
     xsp = jj_scanpos;
@@ -7226,12 +7241,8 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_103() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_128()) jj_scanpos = xsp;
-    if (jj_scan_token(ACTIVE)) return true;
-    if (jj_scan_token(CLASS)) return true;
+  private boolean jj_3_43() {
+    if (jj_3R_79()) return true;
     return false;
   }
 
@@ -7260,8 +7271,13 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_43() {
-    if (jj_3R_79()) return true;
+  private boolean jj_3_28() {
+    if (jj_3R_64()) return true;
+    return false;
+  }
+
+  private boolean jj_3_41() {
+    if (jj_3R_77()) return true;
     return false;
   }
 
@@ -7288,16 +7304,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3_28() {
-    if (jj_3R_64()) return true;
-    return false;
-  }
-
-  private boolean jj_3_41() {
-    if (jj_3R_77()) return true;
-    return false;
-  }
-
   private boolean jj_3R_188() {
     if (jj_scan_token(LOGICAL_OR)) return true;
     return false;
@@ -7319,6 +7325,11 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
+  private boolean jj_3R_146() {
+    if (jj_scan_token(NEW)) return true;
+    return false;
+  }
+
   private boolean jj_3R_119() {
     if (jj_3R_143()) return true;
     return false;
@@ -7336,11 +7347,6 @@ public class AlfParser implements AlfParserConstants {
     jj_scanpos = xsp;
     if (jj_3R_119()) return true;
     }
-    return false;
-  }
-
-  private boolean jj_3R_146() {
-    if (jj_scan_token(NEW)) return true;
     return false;
   }
 
@@ -7388,16 +7394,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_187() {
-    if (jj_3R_199()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_200()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
   private boolean jj_3R_121() {
     if (jj_scan_token(BANG)) return true;
     if (jj_3R_90()) return true;
@@ -7407,6 +7403,16 @@ public class AlfParser implements AlfParserConstants {
   private boolean jj_3R_60() {
     if (jj_scan_token(ASSIGN)) return true;
     if (jj_3R_99()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_187() {
+    if (jj_3R_199()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_200()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 

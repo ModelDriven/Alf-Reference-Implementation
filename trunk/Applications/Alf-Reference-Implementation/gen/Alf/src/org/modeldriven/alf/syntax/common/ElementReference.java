@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.common;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -31,12 +33,56 @@ import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
  * ElementReference are specific to its subclasses.)
  **/
 
-public abstract class ElementReference {
+public abstract class ElementReference implements ParsedElement {
 
 	protected ElementReferenceImpl impl;
 
+	private String fileName = "";
+	private int line = 0;
+	private int column = 0;
+
+	public ElementReference() {
+	}
+
+	public ElementReference(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public ElementReference(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
+
 	public ElementReferenceImpl getImpl() {
 		return (ElementReferenceImpl) this.impl;
+	}
+
+	public String getFileName() {
+		return this.fileName;
+	}
+
+	public int getLine() {
+		return this.line;
+	}
+
+	public int getColumn() {
+		return this.column;
+	}
+
+	public void setParserInfo(String fileName, int line, int column) {
+		this.fileName = fileName;
+		this.line = line;
+		this.column = column;
+	}
+
+	public void deriveAll() {
+		this.getImpl().deriveAll();
+	}
+
+	public void _deriveAll() {
 	}
 
 	public Collection<ConstraintViolation> checkConstraints() {

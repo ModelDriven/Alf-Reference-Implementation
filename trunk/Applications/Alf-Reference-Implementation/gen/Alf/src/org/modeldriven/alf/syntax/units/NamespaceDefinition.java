@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -30,6 +32,21 @@ import org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl;
  **/
 
 public abstract class NamespaceDefinition extends Member {
+
+	public NamespaceDefinition() {
+	}
+
+	public NamespaceDefinition(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public NamespaceDefinition(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public NamespaceDefinitionImpl getImpl() {
 		return (NamespaceDefinitionImpl) this.impl;
@@ -97,10 +114,15 @@ public abstract class NamespaceDefinition extends Member {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getMember();
+		super._deriveAll();
+		Collection<Member> ownedMember = this.getOwnedMember();
+		if (ownedMember != null) {
+			for (Object _ownedMember : ownedMember.toArray()) {
+				((Member) _ownedMember).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -113,18 +135,12 @@ public abstract class NamespaceDefinition extends Member {
 			violations.add(new ConstraintViolation(
 					"namespaceDefinitionMemberDistinguishaibility", this));
 		}
-		for (Object _ownedMember : this.getOwnedMember().toArray()) {
-			((Member) _ownedMember).checkConstraints(violations);
+		Collection<Member> ownedMember = this.getOwnedMember();
+		if (ownedMember != null) {
+			for (Object _ownedMember : ownedMember.toArray()) {
+				((Member) _ownedMember).checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

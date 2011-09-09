@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class ArithmeticExpression extends BinaryExpression {
 
 	public ArithmeticExpression() {
 		this.impl = new ArithmeticExpressionImpl(this);
+	}
+
+	public ArithmeticExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public ArithmeticExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public ArithmeticExpressionImpl getImpl() {
@@ -87,10 +101,9 @@ public class ArithmeticExpression extends BinaryExpression {
 		return this.getImpl().arithmeticExpressionOperandTypes();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getIsConcatenation();
+		super._deriveAll();
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -115,15 +128,6 @@ public class ArithmeticExpression extends BinaryExpression {
 			violations.add(new ConstraintViolation(
 					"arithmeticExpressionOperandTypes", this));
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

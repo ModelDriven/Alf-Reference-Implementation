@@ -259,12 +259,51 @@ ${comment.body}
 #end
 #end
 
+#macro( deriveAllOperation $class )
+#if( ${object.superClasses.size()}==0 )
+public void deriveAll() {
+	this.getImpl().deriveAll();
+}
+
+#end
+public void _deriveAll() {
+	#foreach( $attribute in ${class.ownedAttributes} )
+		#if ( ${attribute.isDerived()} )
+			this.get#upperCase(${attribute.name})();
+        #end
+    #end
+	#if( ${class.superClasses.size()} > 0 )
+		super._deriveAll();
+	#end
+	#foreach( $attribute in ${class.ownedAttributes} )
+        #if( ${attribute.isComposite()} )
+            #if( ${attribute.upper} == 1 )
+		        #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+  			    if (#name(${attribute.name})!=null) {
+                    #name(${attribute.name}).deriveAll();
+                }
+            #else
+		        Collection<#basicType($attribute)> #name($attribute.name) = this.get#upperCase(${attribute.name})();            
+  			    if (#name(${attribute.name})!=null) {
+	                for (Object _#name($attribute.name): #name($attribute.name).toArray()) {
+	                    ((#basicType($attribute))_#name($attribute.name)).deriveAll();
+	                }
+                }
+            #end
+        #end
+	#end
+}
+#end
+
 #macro( checkOperations $class )
+
+#if( ${class.superClasses.size()} == 0 )
 public Collection<ConstraintViolation> checkConstraints() {
     Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
     this.checkConstraints(violations);
     return violations;
 }
+#end
 
 public void checkConstraints(Collection<ConstraintViolation> violations) {
     #if ( ${class.superClasses.size()} > 0 )
@@ -283,8 +322,11 @@ public void checkConstraints(Collection<ConstraintViolation> violations) {
                     #name(${attribute.name}).checkConstraints(violations);
                 }
             #else
-                for (Object _#name($attribute.name): this.get#upperCase(${attribute.name})().toArray()) {
-                    ((#basicType($attribute))_#name($attribute.name)).checkConstraints(violations);
+		        Collection<#basicType($attribute)> #name($attribute.name) = this.get#upperCase(${attribute.name})();            
+  			    if (#name(${attribute.name})!=null) {
+	                for (Object _#name($attribute.name): #name($attribute.name).toArray()) {
+	                    ((#basicType($attribute))_#name($attribute.name)).checkConstraints(violations);
+	                }
                 }
             #end
         #end
@@ -293,6 +335,7 @@ public void checkConstraints(Collection<ConstraintViolation> violations) {
 #end
 
 #macro( printOperations $class )
+#if( ${object.superClasses.size()}==0 )
 public String toString() {
 	return this.toString(false);
 }
@@ -301,6 +344,7 @@ public String toString(boolean includeDerived) {
 	return "(" + this.hashCode() + ")" + this.getImpl().toString(includeDerived);
 }
 
+#end
 public String _toString(boolean includeDerived) {
 	#if( ${class.superClasses.size()}==0 )
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -34,6 +36,18 @@ public class FormalParameter extends TypedElementDefinition {
 
 	public FormalParameter() {
 		this.impl = new FormalParameterImpl(this);
+	}
+
+	public FormalParameter(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public FormalParameter(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public FormalParameterImpl getImpl() {
@@ -63,23 +77,12 @@ public class FormalParameter extends TypedElementDefinition {
 		return this.getImpl().isSameKindAs(member);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

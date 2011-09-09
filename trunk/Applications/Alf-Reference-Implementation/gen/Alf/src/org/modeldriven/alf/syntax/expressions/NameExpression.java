@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class NameExpression extends Expression {
 
 	public NameExpression() {
 		this.impl = new NameExpressionImpl(this);
+	}
+
+	public NameExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public NameExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public NameExpressionImpl getImpl() {
@@ -135,10 +149,19 @@ public class NameExpression extends Expression {
 		return this.getImpl().nameExpressionResolution();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getEnumerationLiteral();
+		this.getAssignment();
+		this.getPropertyAccess();
+		super._deriveAll();
+		PropertyAccessExpression propertyAccess = this.getPropertyAccess();
+		if (propertyAccess != null) {
+			propertyAccess.deriveAll();
+		}
+		QualifiedName name = this.getName();
+		if (name != null) {
+			name.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -179,15 +202,6 @@ public class NameExpression extends Expression {
 		if (name != null) {
 			name.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

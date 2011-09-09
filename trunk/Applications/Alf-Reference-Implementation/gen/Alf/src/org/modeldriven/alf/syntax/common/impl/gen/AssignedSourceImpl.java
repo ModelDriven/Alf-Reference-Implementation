@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.common.impl.gen;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -45,6 +47,10 @@ public class AssignedSourceImpl {
 
 	public String toString(boolean includeDerived) {
 		return this.getSelf()._toString(includeDerived);
+	}
+
+	public void deriveAll() {
+		this.getSelf()._deriveAll();
 	}
 
 	public AssignedSource getSelf() {

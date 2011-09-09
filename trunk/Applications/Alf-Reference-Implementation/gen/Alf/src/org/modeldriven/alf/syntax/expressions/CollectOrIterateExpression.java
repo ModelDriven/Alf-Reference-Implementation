@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class CollectOrIterateExpression extends SequenceExpansionExpression {
 
 	public CollectOrIterateExpression() {
 		this.impl = new CollectOrIterateExpressionImpl(this);
+	}
+
+	public CollectOrIterateExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public CollectOrIterateExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public CollectOrIterateExpressionImpl getImpl() {
@@ -63,10 +77,8 @@ public class CollectOrIterateExpression extends SequenceExpansionExpression {
 		return this.getImpl().collectOrIterateExpressionUpperDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -83,15 +95,6 @@ public class CollectOrIterateExpression extends SequenceExpansionExpression {
 			violations.add(new ConstraintViolation(
 					"collectOrIterateExpressionUpperDerivation", this));
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

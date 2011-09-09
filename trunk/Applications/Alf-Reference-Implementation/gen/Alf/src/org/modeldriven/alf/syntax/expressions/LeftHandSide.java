@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,21 @@ import org.modeldriven.alf.syntax.expressions.impl.LeftHandSideImpl;
  **/
 
 public abstract class LeftHandSide extends SyntaxElement {
+
+	public LeftHandSide() {
+	}
+
+	public LeftHandSide(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public LeftHandSide(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public LeftHandSideImpl getImpl() {
 		return (LeftHandSideImpl) this.impl;
@@ -78,10 +95,14 @@ public abstract class LeftHandSide extends SyntaxElement {
 		return this.getImpl().leftHandSideIndexExpression();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getAssignmentBefore();
+		this.getAssignmentAfter();
+		super._deriveAll();
+		Expression index = this.getIndex();
+		if (index != null) {
+			index.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -94,15 +115,6 @@ public abstract class LeftHandSide extends SyntaxElement {
 		if (index != null) {
 			index.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

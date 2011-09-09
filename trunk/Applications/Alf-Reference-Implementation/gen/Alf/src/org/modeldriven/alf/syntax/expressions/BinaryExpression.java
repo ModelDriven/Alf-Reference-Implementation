@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -30,6 +32,21 @@ import org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl;
  **/
 
 public abstract class BinaryExpression extends Expression {
+
+	public BinaryExpression() {
+	}
+
+	public BinaryExpression(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public BinaryExpression(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public BinaryExpressionImpl getImpl() {
 		return (BinaryExpressionImpl) this.impl;
@@ -96,10 +113,16 @@ public abstract class BinaryExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		Expression operand1 = this.getOperand1();
+		if (operand1 != null) {
+			operand1.deriveAll();
+		}
+		Expression operand2 = this.getOperand2();
+		if (operand2 != null) {
+			operand2.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -120,15 +143,6 @@ public abstract class BinaryExpression extends Expression {
 		if (operand2 != null) {
 			operand2.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

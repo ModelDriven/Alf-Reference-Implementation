@@ -97,10 +97,10 @@ public class Alf {
                 mapping.getModelElements();
                 System.out.println("Mapped successfully.");
                 SyntaxElement parsedElement = FumlMapping.getParsedElement();
-                System.out.println("[Alf] parsedElement=" + parsedElement);
+                // System.out.println("[Alf] parsedElement=" + parsedElement);
                 Mapping elementMapping = ((UnitDefinition)parsedElement).
                     getDefinition().getImpl().getMapping();
-                System.out.println("[Alf] elementMapping=" + elementMapping);
+                // System.out.println("[Alf] elementMapping=" + elementMapping);
                 Element behavior = ((FumlMapping)elementMapping).getElement();
                 if (behavior instanceof Behavior && 
                         ((Behavior)behavior).ownedParameter.isEmpty()) {

@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class SequenceExpressionList extends SequenceElements {
 
 	public SequenceExpressionList() {
 		this.impl = new SequenceExpressionListImpl(this);
+	}
+
+	public SequenceExpressionList(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public SequenceExpressionList(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public SequenceExpressionListImpl getImpl() {
@@ -71,10 +85,14 @@ public class SequenceExpressionList extends SequenceElements {
 		return this.getImpl().sequenceExpressionListUpperDerivation();
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		super._deriveAll();
+		Collection<Expression> element = this.getElement();
+		if (element != null) {
+			for (Object _element : element.toArray()) {
+				((Expression) _element).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -87,18 +105,12 @@ public class SequenceExpressionList extends SequenceElements {
 			violations.add(new ConstraintViolation(
 					"sequenceExpressionListUpperDerivation", this));
 		}
-		for (Object _element : this.getElement().toArray()) {
-			((Expression) _element).checkConstraints(violations);
+		Collection<Expression> element = this.getElement();
+		if (element != null) {
+			for (Object _element : element.toArray()) {
+				((Expression) _element).checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

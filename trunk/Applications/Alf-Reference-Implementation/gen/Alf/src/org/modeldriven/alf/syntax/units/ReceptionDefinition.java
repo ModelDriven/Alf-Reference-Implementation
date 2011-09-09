@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -33,6 +35,18 @@ public class ReceptionDefinition extends Member {
 
 	public ReceptionDefinition() {
 		this.impl = new ReceptionDefinitionImpl(this);
+	}
+
+	public ReceptionDefinition(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public ReceptionDefinition(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
 	}
 
 	public ReceptionDefinitionImpl getImpl() {
@@ -95,10 +109,13 @@ public class ReceptionDefinition extends Member {
 		return this.getImpl().isSameKindAs(member);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getSignal();
+		super._deriveAll();
+		QualifiedName signalName = this.getSignalName();
+		if (signalName != null) {
+			signalName.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -119,15 +136,6 @@ public class ReceptionDefinition extends Member {
 		if (signalName != null) {
 			signalName.checkConstraints(violations);
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {

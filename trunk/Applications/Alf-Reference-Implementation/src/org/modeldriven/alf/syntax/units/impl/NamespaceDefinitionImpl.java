@@ -109,7 +109,6 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	        NamespaceDefinition definition = subunit.getDefinition();
 	        if (definition != null) {
 	            NamespaceDefinition self = this.getSelf();
-	            self.setOwnedMember(definition.getOwnedMember());
 	            self.setMember(null);
 	        }
 	    }

@@ -97,17 +97,11 @@ public abstract class FumlMapping extends Mapping {
     public static FumlMapping parseAndMap(String fileName) {
         FumlMapping mapping = null;
         
-        AlfParser.parseOptions("ucd");
+        AlfParser.parseOptions("uC");
         parsedElement = AlfParser.parse(fileName);
         
-        if (parsedElement != null) {
-            if (!AlfParser.constraintsCheck()) {
-                AlfParser.printElement();
-            } else {
-                RootNamespace.getRootScope().checkConstraints();
-                // RootNamespace.getRootScope().print("", true);
-                mapping = getMapping(RootNamespace.getRootScope());
-            }
+        if (parsedElement != null && AlfParser.constraintsCheck()) {
+            mapping = getMapping(RootNamespace.getRootScope());
         }
         
         return mapping;

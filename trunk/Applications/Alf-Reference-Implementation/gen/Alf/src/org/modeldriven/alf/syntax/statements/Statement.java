@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.statements;
 
+import org.modeldriven.alf.parser.AlfParser;
+
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -30,6 +32,21 @@ import org.modeldriven.alf.syntax.statements.impl.StatementImpl;
  **/
 
 public abstract class Statement extends DocumentedElement {
+
+	public Statement() {
+	}
+
+	public Statement(AlfParser parser) {
+		this();
+		this.setParserInfo(parser.getFileName(), parser.getLine(), parser
+				.getColumn());
+	}
+
+	public Statement(ParsedElement element) {
+		this();
+		this.setParserInfo(element.getFileName(), element.getLine(), element
+				.getColumn());
+	}
 
 	public StatementImpl getImpl() {
 		return (StatementImpl) this.impl;
@@ -120,10 +137,18 @@ public abstract class Statement extends DocumentedElement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
-	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
-		this.checkConstraints(violations);
-		return violations;
+	public void _deriveAll() {
+		this.getAssignmentBefore();
+		this.getAssignmentAfter();
+		this.getEnclosingStatement();
+		this.getIsIsolated();
+		super._deriveAll();
+		Collection<Annotation> annotation = this.getAnnotation();
+		if (annotation != null) {
+			for (Object _annotation : annotation.toArray()) {
+				((Annotation) _annotation).deriveAll();
+			}
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -140,18 +165,12 @@ public abstract class Statement extends DocumentedElement {
 			violations.add(new ConstraintViolation(
 					"statementIsIsolatedDerivation", this));
 		}
-		for (Object _annotation : this.getAnnotation().toArray()) {
-			((Annotation) _annotation).checkConstraints(violations);
+		Collection<Annotation> annotation = this.getAnnotation();
+		if (annotation != null) {
+			for (Object _annotation : annotation.toArray()) {
+				((Annotation) _annotation).checkConstraints(violations);
+			}
 		}
-	}
-
-	public String toString() {
-		return this.toString(false);
-	}
-
-	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
-				+ this.getImpl().toString(includeDerived);
 	}
 
 	public String _toString(boolean includeDerived) {
