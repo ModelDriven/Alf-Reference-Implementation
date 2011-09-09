@@ -38,6 +38,17 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl {
 	public TypedElementDefinition getSelf() {
 		return (TypedElementDefinition) this.self;
 	}
+	
+	/*
+	@Override
+	public void deriveAll() {
+        QualifiedName typeName = this.getSelf().getTypeName();
+        if (typeName != null) {
+            typeName.getImpl().setCurrentScope(this.getOuterScope());
+        }
+        super.deriveAll();
+	}
+	*/
 
 	public String getLowerBound() {
 		return this.lowerBound;

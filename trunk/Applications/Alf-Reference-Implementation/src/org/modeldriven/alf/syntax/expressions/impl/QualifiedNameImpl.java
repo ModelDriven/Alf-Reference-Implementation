@@ -114,10 +114,18 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     }
 
     public Collection<ElementReference> getReferent() {
-        if (this.referent == null) {
-            this.setReferent(this.deriveReferent());
+        Collection<ElementReference> referents = this.referent;
+        if (referents == null) {
+            referents = this.deriveReferent();
+            
+            // Only set the derived value if the some referents were found, so
+            // that the derivation will be recomputed if tried again later
+            // after setting the namespace or expression context.
+            if (!referents.isEmpty()) {
+                this.setReferent(referents);
+            }
         }
-        return this.referent;
+        return referents;
     }
 
     public void setReferent(Collection<ElementReference> referent) {
@@ -775,7 +783,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         // TODO: Handle bindings of non-classifier templates.
         
         // Note: getClassifierOnlyReferent is used here to avoid infinite
-        // recursion due to type resolution during distinguisbibilty checking.
+        // recursion due to type resolution during distinguishablity checking.
         ElementReference templateReferent = 
             self.getTemplateName().getImpl().getClassifierOnlyReferent();
         
@@ -848,7 +856,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             qualifiedName.addNameBinding(nameBinding.getImpl().
                     updateBinding(templateParameters, templateArguments));
         }
-        qualifiedName.getImpl().setContainingExpression(this.getContainingExpression());
+        // qualifiedName.getImpl().setContainingExpression(this.getContainingExpression());
         qualifiedName.getImpl().setCurrentScope(this.getCurrentScope());
         return qualifiedName;
     }
@@ -856,7 +864,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     /**
      * Update this qualified name for the given template bindings. If the
      * qualified name actually refers to one of the template parameters, then
-     * replace it with a qualified name the references the corresponding
+     * replace it with a qualified name that references the corresponding
      * template argument (or null if the template argument is null). Otherwise 
      * just update any template bindings in the original qualified name.
      */
@@ -868,17 +876,21 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         if (referent != null) {
             for (int i = 0; i < templateParameters.size(); i++) {
                 if (referent.getImpl().equals(templateParameters.get(i))) {
-                    Collection<ElementReference> referents = 
-                        new ArrayList<ElementReference>(1);
                     ElementReference templateArgument = 
                         i >= templateArguments.size()? null: 
                             templateArguments.get(i);
                     QualifiedName qualifiedName = null;
                     if (templateArgument != null) {
+                        /*
                         qualifiedName = new QualifiedName();
                         qualifiedName.setNameBinding
                             (templateArgument.getImpl().asNamespace().getImpl().
                                     getQualifiedName().getNameBinding());
+                        */
+                        qualifiedName = templateArgument.getImpl().
+                            asNamespace().getImpl().getQualifiedName();
+                        Collection<ElementReference> referents = 
+                            new ArrayList<ElementReference>(1);
                         referents.add(templateArguments.get(i));
                         qualifiedName.setReferent(referents);
                     }

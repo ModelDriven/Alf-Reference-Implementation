@@ -34,6 +34,15 @@ public class FeatureInvocationExpressionImpl
 	public FeatureInvocationExpression getSelf() {
 		return (FeatureInvocationExpression) this.self;
 	}
+	
+	@Override
+	public void deriveAll() {
+	    FeatureReference target = this.getSelf().getTarget();
+	    if (target != null) {
+	        target.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
+	    }
+	    super.deriveAll();
+	}
 
 	public FeatureReference getTarget() {
 		return this.target;
@@ -148,10 +157,10 @@ public class FeatureInvocationExpressionImpl
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);
         if (base instanceof FeatureInvocationExpression) {
-            FeatureReference feature = 
-                ((FeatureInvocationExpression)base).getFeature();
-            if (feature != null) {
-                this.getSelf().setFeature((FeatureReference)feature.getImpl().
+            FeatureReference target = 
+                ((FeatureInvocationExpression)base).getTarget();
+            if (target != null) {
+                this.getSelf().setTarget((FeatureReference)target.getImpl().
                         bind(templateParameters, templateArguments));
             }
         }

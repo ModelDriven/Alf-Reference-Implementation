@@ -12,25 +12,47 @@ import java.util.List;
 
 public class AlfParser implements AlfParserConstants {
 
+  private String fileName = "";
+
+  public AlfParser(String fileName) throws java.io.FileNotFoundException {
+    this(fileName == null? System.in: new java.io.FileInputStream(fileName));
+    this.fileName = fileName == null? "System.in": fileName;
+  }
+
+  public String getFileName() {
+    return this.fileName;
+  }
+
+  public int getLine() {
+    return this.token.beginLine;
+  }
+
+  public int getColumn() {
+    return this.token.beginColumn;
+  }
+
   private String errorMessage(String message) {
-    return "Error at line " + token.beginLine + ", column " +
-           token.beginColumn + ". \u005cn" + message;
+    return "Error at line " + this.getLine() + ", column " +
+           this.getColumn() + ". \u005cn" + message;
   }
 
   public static final String version = "v1.0 Beta (rev 3)";
-
 
   public static final char unitOption = 'u';
   public static final char statementOption = 's';
   public static final char expressionOption = 'e';
   public static final char checkOption = 'c';
-  public static final char derivationOption = 'd';
+  public static final char checkAllOption = 'C';
+  public static final char printOption = 'p';
+  public static final char printDerivedOption = 'P';
 
   private static boolean isUnit = true;
   private static boolean isStatements = false;
   private static boolean isExpression = false;
   private static boolean checkConstraints = false;
-  private static boolean includeDerived = false;
+  private static boolean checkAllConstraints = false;
+  private static boolean print = false;
+  private static boolean printDerived = false;
 
   private static boolean optionsAreLegal = true;
   private static SyntaxElement element = null;
@@ -59,7 +81,8 @@ public class AlfParser implements AlfParserConstants {
         isStatements = false;
         isExpression = false;
         checkConstraints = false;
-        includeDerived = false;
+        print = false;
+        printDerived = false;
 
     if (options.length() == 0) {
       isUnit = true;
@@ -68,26 +91,37 @@ public class AlfParser implements AlfParserConstants {
         }
 
         for (int i=0; i < options.length(); i++) {
-          char option = options.charAt(i);
-          if (option == unitOption) {
-            isUnit = true;
-          } else if (option == statementOption) {
-            isStatements = true;
-          } else if (option == expressionOption) {
-            isExpression = true;
-          } else if (option == checkOption) {
-            checkConstraints = true;
-          } else if (option == derivationOption) {
-            includeDerived = true;
-          } else {
-            optionsAreLegal = false;
-            return false;
+          switch (options.charAt(i)) {
+                case unitOption:
+                  isUnit = true;
+                  break;
+                case statementOption:
+                  isStatements = true;
+                  break;
+                case expressionOption:
+                  isExpression = true;
+                  break;
+                case checkOption:
+                  checkConstraints = true;
+                  break;
+                case checkAllOption:
+                  checkAllConstraints = true;
+                  break;
+                case printOption:
+                  print = true;
+                  break;
+                case printDerivedOption:
+                  printDerived = true;
+                  break;
+                default:
+                  optionsAreLegal = false;
+                  return false;
           }
-
         }
 
     optionsAreLegal =
-      !((isUnit || checkConstraints || includeDerived) && (isStatements || isExpression) ||
+      !((isUnit || checkConstraints || checkAllConstraints || printDerived) &&
+                (isStatements || isExpression) ||
             isStatements && (isUnit || isExpression) ||
             isExpression && (isUnit || isStatements));
 
@@ -103,15 +137,15 @@ public class AlfParser implements AlfParserConstants {
 
     if (fileName == null) {
       System.out.println("Reading from standard input...");
-      parser = new AlfParser(System.in);
     } else {
       System.out.println("Parsing " + fileName + "...");
-      try {
-        parser = new AlfParser(new java.io.FileInputStream(fileName));
-      } catch (java.io.FileNotFoundException e) {
-        System.out.println("File not found: " + fileName);
-        return null;
-      }
+    }
+
+    try {
+      parser = new AlfParser(fileName);
+    } catch (java.io.FileNotFoundException e) {
+      System.out.println("File not found: " + fileName);
+      return null;
     }
 
     try {
@@ -126,7 +160,7 @@ public class AlfParser implements AlfParserConstants {
 
       System.out.println("Parsed successfully.");
 
-      if (checkConstraints) {
+      if (checkConstraints || checkAllConstraints) {
         UnitDefinition unit = (UnitDefinition)element;
         Member stub = unit.getImpl().getStub();
         if (stub != null) {
@@ -136,7 +170,13 @@ public class AlfParser implements AlfParserConstants {
           unit.getImpl().addImplicitImports();
           RootNamespace.getRootScope().addOwnedMember(unit.getDefinition());
         }
-        violations = element.checkConstraints();
+        if (checkAllConstraints) {
+                SyntaxElement root = RootNamespace.getRootScope();
+                root.deriveAll();
+                violations = root.checkConstraints();
+        } else {
+                violations = element.checkConstraints();
+        }
         if (constraintsCheck()) {
           System.out.println("No constraint violations.");
         } else {
@@ -146,6 +186,10 @@ public class AlfParser implements AlfParserConstants {
           }
         }
       }
+
+      if (print || printDerived) {
+              printElement(checkAllConstraints, printDerived);
+          }
 
     } catch (ParseException e) {
       System.out.println("Parse failed.");
@@ -161,10 +205,14 @@ public class AlfParser implements AlfParserConstants {
 
   }
 
-  public static void printElement() {
+  public static void printElement(boolean fromRoot, boolean includeDerived) {
       SyntaxElement element = getElement();
       if (element != null) {
-        element.print(includeDerived);
+        if (fromRoot) {
+          RootNamespace.getRootScope().print(includeDerived);
+        } else {
+          element.print(includeDerived);
+        }
       }
   }
 
@@ -187,7 +235,6 @@ public class AlfParser implements AlfParserConstants {
 
     if (args.length <= 2 && parseOptions(options)) {
       parse(fileName);
-      printElement();
     } else {
       System.out.println("Usage is");
       System.out.println("         alfp [-options] < inputfile");
@@ -197,10 +244,12 @@ public class AlfParser implements AlfParserConstants {
       System.out.println("  u   Parse as a unit (default)");
       System.out.println("  s   Parse as a statement sequence");
       System.out.println("  e   Parse as an expression");
+      System.out.println("  p   Print abstract syntax tree");
       System.out.println();
       System.out.println("Additional options for units:");
-      System.out.println("  c   Perform static semantic checking.");
-      System.out.println("  d   Include derived properties in syntax tree.");
+      System.out.println("  P   Print with derived properties");
+      System.out.println("  c   Perform static semantic checking)");
+      System.out.println("  C   Perform static semantic checking from root");
     }
   }
 
@@ -273,7 +322,7 @@ public class AlfParser implements AlfParserConstants {
   }
 
   final public QualifiedName ColonQualifiedName() throws ParseException {
-  QualifiedName q = new QualifiedName();
+  QualifiedName q;
     q = UnqualifiedName();
     ColonQualifiedNameCompletion(q);
     {if (true) return q;}
@@ -5612,181 +5661,6 @@ public class AlfParser implements AlfParserConstants {
     finally { jj_save(44, xla); }
   }
 
-  private boolean jj_3R_186() {
-    if (jj_3R_198()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_185() {
-    if (jj_3R_178()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_184() {
-    if (jj_3R_161()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_175() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(127)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(128)) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3_43() {
-    if (jj_3R_79()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_174() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_184()) {
-    jj_scanpos = xsp;
-    if (jj_3R_185()) {
-    jj_scanpos = xsp;
-    if (jj_3R_186()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_137() {
-    if (jj_scan_token(ALL_INSTANCES)) return true;
-    return false;
-  }
-
-  private boolean jj_3_9() {
-    if (jj_3R_49()) return true;
-    return false;
-  }
-
-  private boolean jj_3_28() {
-    if (jj_3R_64()) return true;
-    return false;
-  }
-
-  private boolean jj_3_41() {
-    if (jj_3R_77()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_188() {
-    if (jj_scan_token(LOGICAL_OR)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_176() {
-    if (jj_3R_187()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_188()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_164() {
-    if (jj_3R_175()) return true;
-    if (jj_3R_90()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_119() {
-    if (jj_3R_143()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_118() {
-    if (jj_3R_142()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_91() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_118()) {
-    jj_scanpos = xsp;
-    if (jj_3R_119()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_146() {
-    if (jj_scan_token(NEW)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_122() {
-    if (jj_scan_token(TILDE)) return true;
-    if (jj_3R_90()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_124() {
-    if (jj_3R_146()) return true;
-    return false;
-  }
-
-  private boolean jj_3_22() {
-    if (jj_3R_61()) return true;
-    return false;
-  }
-
-  private boolean jj_3_21() {
-    if (jj_3R_53()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_99() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_21()) {
-    jj_scanpos = xsp;
-    if (jj_3_22()) {
-    jj_scanpos = xsp;
-    if (jj_3R_124()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_200() {
-    if (jj_scan_token(XOR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_8() {
-    if (jj_3R_48()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_187() {
-    if (jj_3R_199()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_200()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_121() {
-    if (jj_scan_token(BANG)) return true;
-    if (jj_3R_90()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_60() {
-    if (jj_scan_token(ASSIGN)) return true;
-    if (jj_3R_99()) return true;
-    return false;
-  }
-
   private boolean jj_3R_157() {
     if (jj_3R_123()) return true;
     return false;
@@ -7358,6 +7232,181 @@ public class AlfParser implements AlfParserConstants {
     if (jj_3R_128()) jj_scanpos = xsp;
     if (jj_scan_token(ACTIVE)) return true;
     if (jj_scan_token(CLASS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_186() {
+    if (jj_3R_198()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_185() {
+    if (jj_3R_178()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_184() {
+    if (jj_3R_161()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_175() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(127)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(128)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_43() {
+    if (jj_3R_79()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_174() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_184()) {
+    jj_scanpos = xsp;
+    if (jj_3R_185()) {
+    jj_scanpos = xsp;
+    if (jj_3R_186()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_137() {
+    if (jj_scan_token(ALL_INSTANCES)) return true;
+    return false;
+  }
+
+  private boolean jj_3_9() {
+    if (jj_3R_49()) return true;
+    return false;
+  }
+
+  private boolean jj_3_28() {
+    if (jj_3R_64()) return true;
+    return false;
+  }
+
+  private boolean jj_3_41() {
+    if (jj_3R_77()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_188() {
+    if (jj_scan_token(LOGICAL_OR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_176() {
+    if (jj_3R_187()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_188()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_164() {
+    if (jj_3R_175()) return true;
+    if (jj_3R_90()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_119() {
+    if (jj_3R_143()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_118() {
+    if (jj_3R_142()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_91() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_118()) {
+    jj_scanpos = xsp;
+    if (jj_3R_119()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_146() {
+    if (jj_scan_token(NEW)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_122() {
+    if (jj_scan_token(TILDE)) return true;
+    if (jj_3R_90()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_124() {
+    if (jj_3R_146()) return true;
+    return false;
+  }
+
+  private boolean jj_3_22() {
+    if (jj_3R_61()) return true;
+    return false;
+  }
+
+  private boolean jj_3_21() {
+    if (jj_3R_53()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_99() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_21()) {
+    jj_scanpos = xsp;
+    if (jj_3_22()) {
+    jj_scanpos = xsp;
+    if (jj_3R_124()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_200() {
+    if (jj_scan_token(XOR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_8() {
+    if (jj_3R_48()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_187() {
+    if (jj_3R_199()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_200()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_121() {
+    if (jj_scan_token(BANG)) return true;
+    if (jj_3R_90()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_60() {
+    if (jj_scan_token(ASSIGN)) return true;
+    if (jj_3R_99()) return true;
     return false;
   }
 

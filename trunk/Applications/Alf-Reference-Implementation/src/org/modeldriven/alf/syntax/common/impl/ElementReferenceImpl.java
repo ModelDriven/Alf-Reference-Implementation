@@ -42,6 +42,10 @@ public abstract class ElementReferenceImpl {
 	    return this.toString(false);
 	}
 	
+    public void deriveAll() {
+        this.getSelf()._deriveAll();
+    }
+
 	public abstract String toString(boolean includeDerived);
 	
 	/*

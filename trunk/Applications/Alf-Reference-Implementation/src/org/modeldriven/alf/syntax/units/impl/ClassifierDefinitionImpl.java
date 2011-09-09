@@ -98,36 +98,39 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	protected Collection<Member> deriveMember() {
 	    Collection<Member> members = super.deriveMember();
 	    
-        // Note: The members field is set here in order to avoid the possibility
-        // of an infinite loop in name resolution of names in the specialization
-	    // clause.
-	    this.setMember(members);
-	    
-	    List<Member> inheritedMembers = new ArrayList<Member>();
-	    for (ElementReference parent: this.getSelf().getSpecializationReferent()) {
-	        inheritedMembers.addAll(parent.getImpl().getInheritableMembers());
-	    }
-	    MemberImpl.removeDuplicates(inheritedMembers);
-	    
-	    // Eliminate duplicates with imported members
-        for (int i = 0; i < inheritedMembers.size(); i++) {
-            ElementReferenceImpl inheritedMember = 
-                inheritedMembers.get(i).getImpl().getReferent().getImpl();
-            for (Object otherMember: members.toArray()) {
-                if (inheritedMember.equals
-                        (((Member)otherMember).getImpl().getReferent())) {
-                    this.removeMember((Member)otherMember);
+	    if (!this.getSelf().getIsStub()) {  	    
+            // Note: The members field is set here in order to avoid the possibility
+            // of an infinite loop in name resolution of names in the specialization
+    	    // clause.
+    	    this.setMember(members);
+    	    
+    	    List<Member> inheritedMembers = new ArrayList<Member>();
+    	    for (ElementReference parent: this.getSelf().getSpecializationReferent()) {
+    	        inheritedMembers.addAll(parent.getImpl().getInheritableMembers());
+    	    }
+    	    MemberImpl.removeDuplicates(inheritedMembers);
+    	    
+    	    // Eliminate duplicates with imported members
+            for (int i = 0; i < inheritedMembers.size(); i++) {
+                ElementReferenceImpl inheritedMember = 
+                    inheritedMembers.get(i).getImpl().getReferent().getImpl();
+                for (Object otherMember: members.toArray()) {
+                    if (inheritedMember.equals
+                            (((Member)otherMember).getImpl().getReferent())) {
+                        this.removeMember((Member)otherMember);
+                    }
                 }
             }
-        }
-        
-	    // Note: Inherited members are added here so inherited type names may be
-	    // used in the resolution of parameter types for the distinguishibility
-	    // test used in the inherit method for class definitions.
-        members = new ArrayList<Member>(this.getMember());
-	    this.addAllMembers(inheritedMembers);
-	           
-        members.addAll(this.inherit(inheritedMembers));
+            
+    	    // Note: Inherited members are added here so inherited type names may be
+    	    // used in the resolution of parameter types for the distinguishibility
+    	    // test used in the inherit method for class definitions.
+            members = new ArrayList<Member>(this.getMember());
+    	    this.addAllMembers(inheritedMembers);
+    	           
+            members.addAll(this.inherit(inheritedMembers));
+	    }
+	    
 	    return members;
 	}
 	

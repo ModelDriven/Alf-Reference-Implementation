@@ -46,6 +46,10 @@ public class SuperInvocationExpressionImpl
 	public void setTarget(QualifiedName target) {
 		this.target = target;
 	}
+	
+	public NamespaceDefinition getCurrentScope() {
+	    return this.currentScope;
+	}
 
 	/**
 	 * The referent of a super invocation expression is the method behavior of
@@ -146,6 +150,14 @@ public class SuperInvocationExpressionImpl
 	    } else {
 	        ElementReference superclass = qualification.getImpl().getClassifierReferent();
 	        ElementReferenceImpl context = this.getContext();
+	        if (!(superclass != null && context != null &&
+                    superclass.getImpl().isContainedIn(context.parents()))) {
+    	        // System.out.println("[superInvocationExpressionQualification] superclass=" + superclass);
+    	        // System.out.println("[superInvocationExpressionQualification] context=" + context);
+    	        for (ElementReference parent: context.parents()) {
+    	            System.out.println("[superInvocationExpressionQualification] parent=" + parent);
+    	        }
+	        }
 	        return superclass != null && context != null &&
 	                    superclass.getImpl().isContainedIn(context.parents());
         }
@@ -240,8 +252,17 @@ public class SuperInvocationExpressionImpl
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);
         if (base instanceof SuperInvocationExpression) {
-           QualifiedName target = ((SuperInvocationExpression)base).getTarget();
+            SuperInvocationExpression baseExpression = 
+                (SuperInvocationExpression)base;
+            QualifiedName target = baseExpression.getTarget();
+            NamespaceDefinition currentScope = 
+                baseExpression.getImpl().getCurrentScope();
             if (target != null) {
+                
+                // Note: This is to ensure that all referents for all bindings
+                // are fully computed.
+                target.deriveAll();
+                
                 this.getSelf().setTarget(target.getImpl().
                         updateBindings(templateParameters, templateArguments));
             }

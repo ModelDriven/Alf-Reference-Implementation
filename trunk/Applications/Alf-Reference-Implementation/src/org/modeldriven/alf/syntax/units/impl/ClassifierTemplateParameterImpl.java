@@ -135,7 +135,8 @@ public class ClassifierTemplateParameterImpl extends ClassifierDefinitionImpl {
         for (int i = 0; i < templateParameters.size(); i++) {
             if (referent.getImpl().equals(templateParameters.get(i))) {
                 this.isBound = true;
-                this.boundArgument = templateArguments.get(i);
+                this.boundArgument = i >= templateArguments.size()? null: 
+                    templateArguments.get(i);
                 break;
             }
         }

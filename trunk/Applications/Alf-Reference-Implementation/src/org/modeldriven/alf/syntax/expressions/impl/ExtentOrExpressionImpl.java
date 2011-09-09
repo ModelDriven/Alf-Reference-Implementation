@@ -45,6 +45,10 @@ public class ExtentOrExpressionImpl {
 	    return this.getSelf()._toString(includeDerived);
 	}
 
+    public void deriveAll() {
+        this.getSelf()._deriveAll();
+    }
+
 	public QualifiedName getName() {
 		return this.name;
 	}

@@ -55,6 +55,10 @@ public class AssignedSourceImpl {
 	                " source:(" + this.getSource() + ")";
 	}
 
+    public void deriveAll() {
+        this.getSelf()._deriveAll();
+    }
+
     public String getName() {
         return this.name;
     }
