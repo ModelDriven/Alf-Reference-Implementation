@@ -2,7 +2,7 @@ namespace fUML::Semantics::Actions;
 
 public import fUML::Syntax::Actions::BasicActions::*;
 
-public import fUML::Semantics::IntermediateActivities::*;
+public import fUML::Semantics::Activities::IntermediateActivities::*;
 
 package BasicActions {
 
