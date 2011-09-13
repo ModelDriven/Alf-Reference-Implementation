@@ -49,8 +49,8 @@ public class AssignedSourceImpl {
 	    return this.toString(false);
 	}
 	
-	public String toString(boolean includeString) {
-	    return this.getSelf()._toString(includeString) + 
+	public String toString(boolean includeDerived) {
+	    return this.getSelf()._toString(includeDerived) + 
 	                " type:(" + this.getType() + ")" +
 	                " source:(" + this.getSource() + ")";
 	}
