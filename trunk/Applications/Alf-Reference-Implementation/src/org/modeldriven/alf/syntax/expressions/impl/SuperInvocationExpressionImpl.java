@@ -27,7 +27,6 @@ public class SuperInvocationExpressionImpl
 
 	private QualifiedName target = null;
 	
-	private NamespaceDefinition currentScope = null;
 	private ElementReferenceImpl context = null;
 
 	public SuperInvocationExpressionImpl(SuperInvocationExpression self) {
@@ -47,10 +46,6 @@ public class SuperInvocationExpressionImpl
 		this.target = target;
 	}
 	
-	public NamespaceDefinition getCurrentScope() {
-	    return this.currentScope;
-	}
-
 	/**
 	 * The referent of a super invocation expression is the method behavior of
 	 * the operation identified using the overloading resolution rules.
@@ -107,7 +102,10 @@ public class SuperInvocationExpressionImpl
 	                }
 	            }
 	        }
-	        // Note: This returns the operation, not the method.
+	        
+	        // Note: This returns the operation, not the method. This is because
+	        // if the feature is an Alf operation definition, there will not be
+	        // a method for it yet.
 	        return referent;
 	    }
 	}
@@ -186,8 +184,9 @@ public class SuperInvocationExpressionImpl
 	    // TODO: Check that a super constructor invocation occurs within an
 	    // expression statement at the start of a constructor operation.
 	    ElementReference referent = this.getSelf().getReferent();
-        ElementReference operation = this.currentScope == null? null:
-            this.currentScope.getImpl().getReferent();
+	    NamespaceDefinition currentScope = this.getCurrentScope();
+        ElementReference operation = currentScope == null? null:
+            currentScope.getImpl().getReferent();
         return referent == null || !referent.getImpl().isConstructor() ||
                     operation != null && operation.getImpl().isConstructor();
 	}
@@ -199,8 +198,9 @@ public class SuperInvocationExpressionImpl
 	 **/
 	public boolean superInvocationExpressionDestructorCall() {
         ElementReference referent = this.getSelf().getReferent();
-        ElementReference operation = this.currentScope == null? null:
-            this.currentScope.getImpl().getReferent();
+        NamespaceDefinition currentScope = this.getCurrentScope();
+        ElementReference operation = currentScope == null? null:
+            currentScope.getImpl().getReferent();
 	    return referent == null || !referent.getImpl().isDestructor() ||
                     operation != null && operation.getImpl().isDestructor();
 	}
@@ -225,14 +225,15 @@ public class SuperInvocationExpressionImpl
 	    if (target != null) {
 	        target.getImpl().setCurrentScope(currentScope);
 	    }
-	    this.currentScope = currentScope;
+	    // this.currentScope = currentScope;
 	}
 	
 	private ElementReferenceImpl getContext() {
-	    if (this.context == null && this.currentScope != null) {
+        NamespaceDefinition currentScope = this.getCurrentScope();
+	    if (this.context == null && currentScope != null) {
 	        this.context = currentScope.getImpl().getReferent().getImpl();
             if (!context.isClassifier()) {
-                NamespaceDefinition outerScope = this.currentScope.getImpl().getOuterScope();
+                NamespaceDefinition outerScope = currentScope.getImpl().getOuterScope();
                 if (outerScope == null) {
                     this.context = null;
                 } else {
@@ -255,8 +256,6 @@ public class SuperInvocationExpressionImpl
             SuperInvocationExpression baseExpression = 
                 (SuperInvocationExpression)base;
             QualifiedName target = baseExpression.getTarget();
-            NamespaceDefinition currentScope = 
-                baseExpression.getImpl().getCurrentScope();
             if (target != null) {
                 
                 // Note: This is to ensure that all referents for all bindings
