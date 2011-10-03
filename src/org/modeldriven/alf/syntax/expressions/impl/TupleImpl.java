@@ -250,11 +250,6 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                     Expression expression = output.getExpression();
                     expressions.add(expression);
                                         
-                    // Note: The assignments before the expression must be set
-                    // in order to determine whether the output is a local name
-                    // without a previous assignment.
-                    // expression.getImpl().setAssignmentBefore(assignmentsBefore);
-                    
                     LeftHandSide lhs = output.getLeftHandSide();
                     
                     if (lhs != null) {
@@ -271,7 +266,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                         // assigned for the first time as an output argument.
                         if ("out".equals(direction)) {
                             String localName = lhs.getImpl().getLocalName();
-                            if (localName != null) {
+                            if (localName != null && lhs.getIndex() == null) {
                                 ElementReference referent = lhs.getImpl().getReferent();
                                 AssignedSource assignment = null;
                                 if (referent == null) {
@@ -313,10 +308,10 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                         LeftHandSide lhs = output.getLeftHandSide();
                         if (lhs != null) {
                             lhs.getImpl().setAssignmentBefore(assignmentsBefore);
-                            String localName = lhs == null? null: lhs.getImpl().getLocalName();
-                            if (localName != null) {
+                            String assignedName = lhs == null? null: lhs.getImpl().getAssignedName();
+                            if (assignedName != null) {
                                 AssignedSource assignmentBefore = 
-                                    assignmentsBefore.get(localName);
+                                    assignmentsBefore.get(assignedName);
                                 if (assignmentBefore != null && 
                                         !assignmentBefore.getImpl().getIsParallelLocalName()){
                                     // Update the assignment of an already existing
@@ -325,7 +320,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                                     AssignedSource assignment = AssignedSourceImpl.
                                         makeAssignment(assignmentBefore);
                                     assignment.setSource(self.getInvocation());
-                                    this.assignmentsAfter.put(localName, assignment);
+                                    this.assignmentsAfter.put(assignedName, assignment);
                                 }
                             }
                         }
