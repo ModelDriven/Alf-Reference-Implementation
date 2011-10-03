@@ -38,6 +38,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	private ElementReference referent = null; // DERIVED
 	private List<ElementReference> parameter = null; // DERIVED
 	private Boolean isSignal = null; // DERIVED
+	
+	private NamespaceDefinition currentScope = null;
 
 	public InvocationExpressionImpl(InvocationExpression self) {
 		super(self);
@@ -463,6 +465,23 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         Tuple tuple = this.getSelf().getTuple();
         if (tuple != null) {
             tuple.getImpl().setCurrentScope(currentScope);
+        }
+        this.currentScope = currentScope;
+    }
+    
+    public NamespaceDefinition getCurrentScope() {
+        return this.currentScope;
+    }
+    
+    public boolean isContainedInDestructor() {
+        NamespaceDefinition namespace = this.getCurrentScope();
+        if (namespace == null) {
+            return false;
+        } else {
+            UnitDefinition unit = namespace.getUnit();
+            Member member = unit == null? namespace: unit.getImpl().getStub();
+            return member instanceof OperationDefinition && 
+                ((OperationDefinition)member).getIsDestructor();
         }
     }
     
