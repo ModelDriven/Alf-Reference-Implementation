@@ -201,12 +201,16 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      * multiplicity lower bound is 0. Otherwise, the type and multiplicity are
      * the same as the left hand side.
      **/
+	/*
+	 * NOTE: This also needs to account for data value updates and indexed left
+	 * hand sides.
+	 */
 	protected AssignedSource deriveAssignment() {
 	    AssignmentExpression self = this.getSelf();
-	    String name = this.getLocalName();
 	    LeftHandSide lhs = self.getLeftHandSide();
         Expression rhs = self.getRightHandSide();
-	    if (name == null || lhs == null || rhs == null) {
+	    String name = lhs == null? null: lhs.getImpl().getAssignedName();
+	    if (name == null || rhs == null) {
 	        return null;
 	    } else if (self.getIsDefinition()) {
 	        int upper = rhs.getUpper() == 1? 1: -1;
@@ -215,7 +219,8 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	        AssignedSource oldAssignment = this.getAssignmentBefore(name);
 	        if (oldAssignment == null) {
 	            ElementReference referent = lhs.getImpl().getReferent();
-	            if (referent != null && referent.getImpl().isParameter()) {
+	            if (referent != null && referent.getImpl().isParameter() &&
+	                    !self.getIsIndexed()) {
 	                return AssignedSourceImpl.makeAssignment
 	                        (referent.getImpl().getName(), self, 
 	                         referent.getImpl().getType(), 
@@ -281,9 +286,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	protected Boolean deriveIsDefinition() {
 	    AssignmentExpression self = this.getSelf();
 	    LeftHandSide lhs = self.getLeftHandSide();
-		return self.getIsSimple() && 
+		return self.getIsSimple() && !self.getIsIndexed() &&
 		        lhs != null && lhs.getImpl().getReferent() == null &&
-		        this.getLocalName() != null;    
+		        lhs.getImpl().getLocalName() != null;    
 	}
 
     /**
@@ -606,12 +611,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         }
         return assignments;
 	} // updateAssignments
-	
-	private String getLocalName() {
-	    LeftHandSide lhs = this.getSelf().getLeftHandSide();
-	    return lhs == null? null: lhs.getImpl().getLocalName();
-	}
-	
+		
     private boolean isArithmeticOperator() {
         String operator = this.getSelf().getOperator();
         return operator != null && (

@@ -230,21 +230,21 @@ public class SequenceOperationExpressionImpl
     }
 	}
 
-	/**
-	 * If the first parameter of the referent has direction inout, then the
-	 * parameter type must have the same type as the primary expression.
-	 * 
-	 * Note: This constraint also needs to require that the primary expression
-	 * has the form of a left-hand side and, if for a local name, the local
-	 * name must already exist.
-	 **/
+    /**
+     * If the first parameter of the referent has direction inout, then the
+     * parameter type must have the same type as the primary expression.
+     * 
+     * Note: This constraint also needs to require that the primary expression
+     * has the form of a left-hand side and, if for a local name or data value
+     * update, the assigned name must already exist.
+     **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
         Expression expression = this.getExpression();
         ElementReference expressionType = this.getType();
         LeftHandSide lhs = this.getLeftHandSide();
         ElementReference type = this.getFirstParameterType();
         return expression == null || !this.isInPlace() ||
-                    lhs != null && (lhs.getImpl().getLocalName() == null || 
+                    lhs != null && (lhs.getImpl().getAssignedName() == null || 
                             this.getOldAssignment() != null) &&
                     (type != null && type.getImpl().equals(expressionType) ||
                             type == null && expressionType == null);
@@ -346,7 +346,7 @@ public class SequenceOperationExpressionImpl
 	
 	private AssignedSource getOldAssignment() {
         LeftHandSide lhs = this.getLeftHandSide();
-        String name = lhs == null? null: lhs.getImpl().getLocalName();
+        String name = lhs == null? null: lhs.getImpl().getAssignedName();
         return name == null? null: this.getAssignmentBefore(name);
     }
 	

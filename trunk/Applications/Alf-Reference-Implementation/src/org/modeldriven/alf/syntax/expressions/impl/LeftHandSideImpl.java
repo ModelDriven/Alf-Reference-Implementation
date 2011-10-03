@@ -30,6 +30,9 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
 	private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
 	private Expression index = null;
+	
+	private Boolean isDataValueUpdate = null;
+	private String assignedName = null;
 
 	public LeftHandSideImpl(LeftHandSide self) {
 		super(self);
@@ -174,19 +177,61 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
      * An assignment expression is a data value update if its left hand side is
      * an attribute of a data value held in a local name or parameter.
      **/
+    /*
+     * NOTE: This is generalized to account for the case in which the primary
+     * expression of the feature is itself, recursively, a feature reference
+     * for a data value.
+     */
     public Boolean isDataValueUpdate() {
-        FeatureReference feature = this.getFeature();
-        Expression expression = feature == null? null: feature.getExpression();
-        return expression != null && expression instanceof NameExpression &&
-                    this.hasLocalName(((NameExpression)expression).getName());
+        if (this.isDataValueUpdate == null) {
+            this.getAssignedName();
+        }
+        return this.isDataValueUpdate;
     }
-
+    
+    public String getAssignedName() {
+        if (this.isDataValueUpdate == null) {
+            this.assignedName = this.getLocalName();
+            this.isDataValueUpdate = false;
+            if (this.assignedName == null) {
+                FeatureReference feature = this.getFeature();
+                while (feature != null) {
+                    Expression expression = feature.getExpression();
+                    if (expression instanceof NameExpression) {
+                        PropertyAccessExpression propertyAccess = 
+                            ((NameExpression)expression).getPropertyAccess();
+                        if (propertyAccess == null) {
+                            QualifiedName name = 
+                                ((NameExpression)expression).getName();
+                            if (this.hasLocalName(name)) {
+                                this.assignedName = 
+                                    name.getUnqualifiedName().getName();
+                                this.isDataValueUpdate = true;
+                            }
+                            feature = null;
+                        } else {
+                            feature = propertyAccess.getFeatureReference();
+                        }
+                    } else if (expression instanceof PropertyAccessExpression) {
+                        feature = ((PropertyAccessExpression)expression).
+                        getFeatureReference();
+                    } else {
+                        feature = null;
+                    }
+                }
+            }
+        }
+        return this.assignedName;
+    }
+    
     private boolean hasLocalName(QualifiedName name) {
         Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
         NameBinding unqualifiedName = name == null? null: name.getUnqualifiedName();
         return unqualifiedName != null && assignmentsBefore != null &&
                     assignmentsBefore.containsKey(unqualifiedName.getName());
     }
+    
+    public abstract String getLocalName();
     
     @Override
     public ElementReference getType() {
@@ -215,8 +260,6 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
     }
     
     protected abstract ElementReference getReferent();
-    
-    public abstract String getLocalName();
     
     public void setCurrentScope(NamespaceDefinition currentScope) {
         Expression index = this.getSelf().getIndex();
