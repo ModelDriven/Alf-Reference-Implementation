@@ -1,7 +1,7 @@
 namespace Alf::Library::CollectionClasses;
 abstract class OrderedSet<T> specializes Set<T> {
   
-  @Create public abstract OrderedSet (in seq: T[0..*] sequence);
+  @Create public OrderedSet (in seq: T[0..*] sequence) { }
   @Destroy public abstract destroy ();
   
   public abstract add (in element: T): Boolean;

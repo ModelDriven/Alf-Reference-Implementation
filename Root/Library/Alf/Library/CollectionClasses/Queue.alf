@@ -1,7 +1,7 @@
 namespace Alf::Library::CollectionClasses;
 abstract class Queue<T> specializes Collection<T> {
 
-  @Create public abstract Queue (in seq: T[0..*] sequence);
+  @Create public Queue (in seq: T[0..*] sequence) { }
   @Destroy public abstract destroy ();
 
   public abstract add (in element: T): Boolean;
