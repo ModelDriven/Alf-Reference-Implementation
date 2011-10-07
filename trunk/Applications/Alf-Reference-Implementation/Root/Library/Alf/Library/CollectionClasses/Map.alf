@@ -6,7 +6,7 @@ abstract class Map<Key, Value> {
     public value: Value;
   }
 
-  @Create public abstract Map (in entries: Entry[0..*]);
+  @Create public Map (in entries: Entry[0..*]) { }
   @Destroy public abstract destroy ();
   
   public abstract clear ();

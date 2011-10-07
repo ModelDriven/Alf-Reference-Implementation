@@ -1,7 +1,7 @@
 namespace Alf::Library::CollectionClasses;
 abstract class List<T> specializes Bag<T> {
   
-  @Create public abstract List (in seq: T[0..*] sequence): List<T>;
+  @Create public List (in seq: T[0..*] sequence) { }
   @Destroy public abstract destroy () ;
 
   public abstract add (in element: T): Boolean;
@@ -21,6 +21,6 @@ abstract class List<T> specializes Bag<T> {
   public abstract replaceAt (in index: Integer, in element: T): T[0..1];
   public abstract replaceOne (in element: T, in newElement: T): Boolean;
   public abstract retainAll (in seq: T[0..*] sequence): Boolean;
-  public abstract subList (in lower: Integer, in upper: Integer): OrderedSet<T>;
+  public abstract subList (in lower: Integer, in upper: Integer): List<T>;
   
 }

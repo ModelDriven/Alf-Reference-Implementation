@@ -1,7 +1,7 @@
 namespace Alf::Library::CollectionClasses;
 abstract class Deque<T> specializes Queue<T> {
 
-  @Create public abstract Deque (in seq: T[0..*] sequence);
+  @Create public Deque (in seq: T[0..*] sequence) { }
   @Destroy public abstract destroy ();
 
   public abstract addFirst (in element: T): Boolean;
