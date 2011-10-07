@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -106,16 +107,54 @@ public class InstanceCreationExpressionImpl
 	        } else {
     	        if (classReferent != null) {
     	            String name = constructor.getUnqualifiedName().getName();
-    	            constructor = constructor.getImpl().copy().getSelf();
- 	                constructor.getImpl().addName(name);
+    	            constructor = constructor.getImpl().copy().addName(name);
     	        }
                 // TODO: Handle overloading resolution.
                 ElementReference operationReferent = 
                     constructor.getImpl().getOperationReferent();
-                return operationReferent == null || 
-                            !operationReferent.getImpl().isConstructor()? 
-                            classReferent:
-                            operationReferent;
+                if (operationReferent == null || 
+                        !operationReferent.getImpl().isConstructor()) {
+                    return classReferent;
+                } else {
+                    classReferent = operationReferent.getImpl().getNamespace();
+                    if (classReferent.getImpl().isAbstractClassifier()) {
+                        QualifiedName implName = classReferent.getImpl().
+                            getNamespace().getImpl().asNamespace().getImpl().
+                            getQualifiedName().getImpl().copy().addName("Impl");
+                        ElementReference implPackageReferent = 
+                            implName.getImpl().getNamespaceReferent();
+                        if (implPackageReferent.getImpl().isPackage()) {
+                            Collection<Member> members =
+                                implPackageReferent.getImpl().asNamespace().getImpl().
+                                    resolve(classReferent.getImpl().getName(), true);
+                            for (Member member: members) {
+                                ElementReference referent = 
+                                    member.getImpl().getReferent();
+                                if (referent.getImpl().isClass()) {
+                                    for (ElementReference feature: 
+                                        referent.getImpl().getFeatures()) {
+                                        if (feature.getImpl().isConstructor()) {
+                                            Collection<ElementReference> redefinedElements =
+                                                feature.getImpl().getRedefinedElements();
+                                            if (operationReferent.getImpl().
+                                                    isContainedIn(redefinedElements)) {
+                                                operationReferent = feature;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    /*
+                    System.out.println("[deriveReferent] constructor.currentScope=" + 
+                            constructor.getImpl().getCurrentScope().getImpl().getQualifiedName().getPathName());
+                    System.out.println("[deriveReferent] constructor=" + constructor.getPathName());
+                    System.out.println("[deriveReferent] classReferent=" + classReferent);
+                    System.out.println("[deriveReferent] operationReferent=" + operationReferent);
+                    */
+                    return operationReferent;
+                }
 	        }
 	    }
 	}
@@ -206,8 +245,18 @@ public class InstanceCreationExpressionImpl
      * compatible with the tuple argument expressions), a class or a data type,
      * but not both a class and a data type.
      **/
+	/* 
+	 * Also, if the referent is a class, then it must not be abstract, or if it
+	 * is an operation, then it must not be owned by an abstract class.
+	 */
 	public boolean instanceCreationExpressionConstructor() {
-		return this.getSelf().getReferent() != null;
+	    ElementReference referent = this.getSelf().getReferent();
+	    return referent.getImpl().isDataType() ||
+	           referent.getImpl().isClass() &&
+	               !referent.getImpl().isAbstractClassifier() ||
+	           referent.getImpl().isOperation() &&
+	               !referent.getImpl().getNamespace().getImpl().
+	                    isAbstractClassifier();
 	}
 	
 	/**

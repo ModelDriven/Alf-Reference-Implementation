@@ -300,6 +300,13 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	 * Returns true if this member is of the same kind as the given member.
 	 **/
 	public abstract Boolean isSameKindAs(Member member);
+	
+	/**
+	 * Returns true if this is imported.
+	 */
+	public boolean isImported() {
+	    return false;
+	}
 
     public boolean hasNoVisibility() {
         String visibility = this.getSelf().getVisibility();
@@ -409,7 +416,8 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     public SyntaxElement bind(
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
-        return this.bind("", null, false, templateParameters, templateArguments);
+        return this.bind(this.getSelf().getName(), null, true, 
+                templateParameters, templateArguments);
     }
     
     /**
@@ -428,7 +436,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
             System.out.println("Error binding " + name + ": " + e);
             return null;
         }
-        boundElement.setName(name);
+        boundElement.getImpl().setExactName(name);
         boundElement.setNamespace(namespace);
         if (namespace != null) {
             namespace.addMember(boundElement);

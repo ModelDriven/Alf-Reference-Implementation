@@ -39,13 +39,32 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	 * class definition may not have any referents that are active classes
 	 * unless this is an active class definition.
 	 **/
+	/*
+	 * Also checks that no inherited operations are abstract.
+	 */
 	public boolean classDefinitionSpecializationReferent() {
-        for (ElementReference referent: this.getSelf().getSpecializationReferent()) {
+	    ClassDefinition self = this.getSelf();
+	    
+        for (ElementReference referent: self.getSpecializationReferent()) {
             if (!referent.getImpl().isClassOnly() || 
                     referent.getImpl().isActiveClass() && !this.isActive()) {
                 return false;
             }
         }
+        
+        //NOTE: The following should be a separate check.
+        if (!self.getIsAbstract()) {
+            Collection<Member> ownedMembers = self.getOwnedMember();
+            for (Member member: this.getSelf().getMember()) {
+                if (member instanceof OperationDefinition && 
+                        !ownedMembers.contains(member) &&
+                        !member.getImpl().isImported() &&
+                        ((OperationDefinition)member).getIsAbstract()) {
+                    return false;
+                }
+            }
+        }
+        
         return true;
 	}
 	

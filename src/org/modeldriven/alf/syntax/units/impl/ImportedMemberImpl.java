@@ -18,6 +18,8 @@ import org.modeldriven.alf.uml.NamedElement;
 public class ImportedMemberImpl extends MemberImpl {
 
     private ElementReference referent = null;
+    
+    private boolean isImported = true;
 
 	public ImportedMemberImpl(ImportedMember self) {
 		super(self);
@@ -35,6 +37,15 @@ public class ImportedMemberImpl extends MemberImpl {
 
     public void setReferent(ElementReference referent) {
         this.referent = referent;
+    }
+    
+    @Override
+    public boolean isImported() {
+        return this.isImported;
+    }
+    
+    public void setIsImported(boolean isImported) {
+        this.isImported = isImported;
     }
 
     /**
@@ -136,6 +147,7 @@ public class ImportedMemberImpl extends MemberImpl {
         reference.setElement(element);
         ImportedMember importedMember = makeImportedMember(reference);
         importedMember.getImpl().setExactName(name);
+        importedMember.getImpl().setIsImported(false);
         return importedMember;
     }
     
@@ -144,7 +156,9 @@ public class ImportedMemberImpl extends MemberImpl {
             List<ElementReference> templateArguments) {
         super.bindTo(base, templateParameters, templateArguments);
         if (base instanceof Member) {
-            this.setReferent(((Member)base).getImpl().getReferent());
+            ImportedMember baseMember = (ImportedMember)base;
+            this.setReferent(baseMember.getImpl().getReferent());
+            this.setIsImported(baseMember.getImpl().isImported());
         }
     }
     

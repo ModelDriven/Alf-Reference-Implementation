@@ -30,7 +30,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     private Boolean isAbstract = false;
     private QualifiedNameList specialization = null;
     private Collection<ElementReference> specializationReferent = null; // DERIVED
-
+    
 	public ClassifierDefinitionImpl(ClassifierDefinition self) {
 		super(self);
 	}
@@ -73,7 +73,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             ElementReference specializationReferent) {
         this.specializationReferent.add(specializationReferent);
     }
-
+    
     /**
      * The specialization referents of a classifier definition are the
      * classifiers denoted by the names in the specialization list for the
@@ -98,7 +98,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	protected Collection<Member> deriveMember() {
 	    Collection<Member> members = super.deriveMember();
 	    
-	    if (!this.getSelf().getIsStub()) {  	    
+	    if (!this.getSelf().getIsStub()) {
             // Note: The members field is set here in order to avoid the possibility
             // of an infinite loop in name resolution of names in the specialization
     	    // clause.
@@ -111,11 +111,11 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     	    MemberImpl.removeDuplicates(inheritedMembers);
     	    
     	    // Eliminate duplicates with imported members
-            for (int i = 0; i < inheritedMembers.size(); i++) {
-                ElementReferenceImpl inheritedMember = 
-                    inheritedMembers.get(i).getImpl().getReferent().getImpl();
+            for (Member inheritedMember: inheritedMembers) {
+                ElementReferenceImpl referent = 
+                    inheritedMember.getImpl().getReferent().getImpl();
                 for (Object otherMember: members.toArray()) {
-                    if (inheritedMember.equals
+                    if (referent.equals
                             (((Member)otherMember).getImpl().getReferent())) {
                         this.removeMember((Member)otherMember);
                     }
@@ -127,7 +127,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     	    // test used in the inherit method for class definitions.
             members = new ArrayList<Member>(this.getMember());
     	    this.addAllMembers(inheritedMembers);
-    	           
+    	    
             members.addAll(this.inherit(inheritedMembers));
 	    }
 	    
@@ -176,6 +176,10 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 		return true;
 	}
 
+    /*
+     * Helper Methods
+     */
+    
 	/**
 	 * The namespace definition associated with the given unit definition must
 	 * be a classifier definition. The subunit classifier definition may be
@@ -228,10 +232,6 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
  	    }
 	} // matchForStub
 
-	/*
-	 * Helper Methods
-	 */
-	
 	@Override
     public boolean isTemplate() {
         for (Member member: this.getSelf().getOwnedMember()) {
@@ -376,6 +376,23 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
                 }
                 self.setSpecialization(specialization);
             }
+            
+            // NOTE: The following fixes up the inherited members in case this
+            // class definition was bound before the proper inheritance
+            // filtering was performed on the base.
+            
+            Collection<Member> ownedMembers = self.getOwnedMember();
+            Collection<Member> members = new ArrayList<Member>(self.getMember());
+            List<Member> inheritedMembers = new ArrayList<Member>();
+            for (Member member: self.getMember()) {
+                if (!ownedMembers.contains(member) &&
+                        !member.getImpl().isImported()) {
+                    inheritedMembers.add(member);
+                    members.remove(member);
+                }
+            }
+            members.addAll(this.inherit(inheritedMembers));
+            self.setMember(members);
         }
     }
 

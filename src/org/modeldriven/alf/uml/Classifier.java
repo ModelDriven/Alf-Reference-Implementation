@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface Classifier extends 
-    Type, Namespace, TemplateableElement, ParameterableElement {
+    Type, Namespace, RedefinableElement, 
+    TemplateableElement, ParameterableElement {
     
     public boolean getIsAbstract();
     public List<Feature> getFeature();

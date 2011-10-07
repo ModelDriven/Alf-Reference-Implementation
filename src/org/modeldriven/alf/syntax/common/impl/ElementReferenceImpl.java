@@ -115,7 +115,8 @@ public abstract class ElementReferenceImpl {
     public abstract Integer getUpper();
     public abstract ElementReference getClassifierBehavior();
     public abstract ElementReference getNamespace();
-    
+    public abstract Collection<ElementReference> getRedefinedElements();
+        
     /**
      * Return the active class corresponding to an activity, if any.
      * This is either the activity itself, if it is active, or the class that
@@ -222,5 +223,5 @@ public abstract class ElementReferenceImpl {
         }
         return false;
     }
-    
+
 } // ElementReferenceImpl

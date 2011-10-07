@@ -45,6 +45,7 @@ import org.modeldriven.alf.uml.Primitive;
 import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Property;
 import org.modeldriven.alf.uml.Reception;
+import org.modeldriven.alf.uml.RedefinableElement;
 import org.modeldriven.alf.uml.Signal;
 import org.modeldriven.alf.uml.Stereotype;
 import org.modeldriven.alf.uml.TemplateBinding;
@@ -600,6 +601,25 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
     }
+    
+    @Override
+    public Collection<ElementReference> getRedefinedElements() {
+        Element element = this.getSelf().getElement();
+        if (!(element instanceof RedefinableElement)) {
+            return new ArrayList<ElementReference>();
+        } else {
+            Collection<ElementReference> redefinableElements = 
+                new ArrayList<ElementReference>();
+            for (RedefinableElement redefinableElement: 
+                ((RedefinableElement)element).getRedefinedElement()) {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(redefinableElement);
+                redefinableElements.add(reference);
+            }
+            return redefinableElements;
+        }
+    }
+    
     
     @Override
     public ElementReference getActiveClass() {

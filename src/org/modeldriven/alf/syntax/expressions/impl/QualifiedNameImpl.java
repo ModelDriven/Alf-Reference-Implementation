@@ -807,18 +807,21 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         if (namespaceReference == null) {
             return null;
         } else {
-            NamespaceDefinition templateNamespace = namespaceReference==null? null: 
+            NamespaceDefinition templateNamespace = 
                 namespaceReference.getImpl().asNamespace();
-            Collection<Member> members = templateNamespace.getImpl().resolve(name);
-            if (!members.isEmpty()) {
-                return ((Member)members.toArray()[0]).getImpl().getReferent();
-            } else {
-                Member boundElement = templateReferent.getImpl().asNamespace().
-                    getImpl().bind(name, templateNamespace, true,
-                            templateParameters, templateArguments);
-                return boundElement == null? null: 
-                    boundElement.getImpl().getReferent();
+            Collection<Member> members = 
+                templateNamespace.getImpl().resolve(name);
+            for (Member member: members) {
+                if (member.getImpl().getNamespaceReference().getImpl().
+                        equals(namespaceReference)) {
+                    return member.getImpl().getReferent();
+                }
             }
+            Member boundElement = templateReferent.getImpl().asNamespace().
+                getImpl().bind(name, templateNamespace, true,
+                        templateParameters, templateArguments);
+            return boundElement == null? null: 
+                boundElement.getImpl().getReferent();
         }
     }
     
@@ -881,17 +884,11 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
                             templateArguments.get(i);
                     QualifiedName qualifiedName = null;
                     if (templateArgument != null) {
-                        /*
-                        qualifiedName = new QualifiedName();
-                        qualifiedName.setNameBinding
-                            (templateArgument.getImpl().asNamespace().getImpl().
-                                    getQualifiedName().getNameBinding());
-                        */
                         qualifiedName = templateArgument.getImpl().
                             asNamespace().getImpl().getQualifiedName();
                         Collection<ElementReference> referents = 
                             new ArrayList<ElementReference>(1);
-                        referents.add(templateArguments.get(i));
+                        referents.add(templateArgument);
                         qualifiedName.setReferent(referents);
                     }
                     return qualifiedName;
