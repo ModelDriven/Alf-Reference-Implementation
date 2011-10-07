@@ -179,6 +179,12 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 		return assignments;
 	} // updateAssignments
 	
+    public boolean isSequencePropertyAccess() {
+        FeatureReference feature = this.getSelf().getFeatureReference();
+        Expression primary = feature == null? null: feature.getExpression();
+        return primary != null && primary.getUpper() != 1;
+    }
+
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    FeatureReference featureReference = this.getSelf().getFeatureReference();

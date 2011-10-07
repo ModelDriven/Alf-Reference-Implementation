@@ -493,6 +493,14 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public Collection<ElementReference> getRedefinedElements() {
+        return this.isOperation()?
+                ((OperationDefinition)this.getSelf().getElement()).getImpl().
+                    getRedefinedOperations():
+                new ArrayList<ElementReference>();
+    }
+    
+    @Override
     public ElementReference getActiveClass() {
         SyntaxElement element = this.getSelf().getElement();
         if (!(element instanceof ActivityDefinition)) {

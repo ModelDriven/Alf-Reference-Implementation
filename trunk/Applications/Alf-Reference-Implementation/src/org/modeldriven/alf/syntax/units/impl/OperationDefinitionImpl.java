@@ -420,6 +420,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
             self.setIsAbstract(baseOperation.getIsAbstract());
             if (baseRedefinitions != null) {
                 QualifiedNameList redefinitions = new QualifiedNameList();
+                
                 for (QualifiedName redefinition: baseRedefinitions.getName()) {
                     redefinitions.addName(redefinition.getImpl().
                             updateBindings(templateParameters, templateArguments));

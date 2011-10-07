@@ -176,8 +176,6 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	            Member otherMember = members.get(j);
 	            if (!member.isDistinguishableFrom(otherMember) &&
 	                    !referent.getImpl().equals(otherMember.getImpl().getReferent())) {
-	                System.out.println("[namespaceDefinitionMemberDistinguishability] member=" + member + 
-	                        " otherMember=" + otherMember);
 	                return false;
 	            }
 	        }
@@ -257,7 +255,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return members;
     }
     
-    private List<Member> resolveInScope(String name, boolean classifierOnly) {
+    public List<Member> resolveInScope(String name, boolean classifierOnly) {
         Collection<Member> namedMembers = this.getMemberMap().get(name);
         ArrayList<Member> members = new ArrayList<Member>();
         
@@ -269,7 +267,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                 }
             }
         }
-       
+              
         return members;
     }
     
