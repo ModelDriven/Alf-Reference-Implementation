@@ -84,7 +84,7 @@ public class InstanceCreationExpressionImpl
 	protected Boolean deriveIsObjectCreation() {
         InstanceCreationExpression self = this.getSelf();
         ElementReference referent = self.getReferent();
-        return referent != null && referent.getImpl().isDataType();
+        return referent == null || !referent.getImpl().isDataType();
 	}
 	
 	/**
