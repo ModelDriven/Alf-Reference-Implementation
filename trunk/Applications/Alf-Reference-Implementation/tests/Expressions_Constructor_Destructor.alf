@@ -19,16 +19,16 @@ class Expressions_Constructor_Destructor {
 
 	test() {
 	
-	  i = 100;
-	  name = "Fred";
+      i = 100;
+      name = "Fred";
 
-	  employee = new Employee(i, name);
-	  new Employee::transferred(employee);
-	  customer = new Customer();
-	  monitor = new Monitor();
+      employee = new Employee(i, name);
+      new Employee::transferred(employee);
+      customer = new Customer();
+      monitor = new Monitor();
 	  
-	  customer.destroy();
-	  monitor.destroy(new Log());
+      customer.destroy();
+      monitor.destroy(new Log());
 	  
 	}
 
