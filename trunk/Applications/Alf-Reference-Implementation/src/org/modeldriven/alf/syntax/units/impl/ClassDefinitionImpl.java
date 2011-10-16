@@ -10,8 +10,11 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,14 +24,47 @@ import java.util.List;
  **/
 
 public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
+    
+    private boolean needsDefaultConstructor = true;
+    // private OperationDefinition defaultConstructor = null;
+    
+    private boolean needsDefaultDestructor = true;
+    // private OperationDefinition defaultDestructor = null;
 
 	public ClassDefinitionImpl(ClassDefinition self) {
 		super(self);
 	}
 
+	@Override
 	public ClassDefinition getSelf() {
 		return (ClassDefinition) this.self;
 	}
+	
+	@Override
+	public Collection<Member> getOwnedMember() {
+	    ClassDefinition self = this.getSelf();
+	    if (!self.getIsStub()) {
+            if (this.needsDefaultConstructor()) {
+                self.addOwnedMember(this.createDefaultConstructor());
+            }
+            if (this.needsDefaultDestructor()) {
+                self.addOwnedMember(this.createDefaultDestructor());
+            }
+	    }
+	    return super.getOwnedMember();
+	}
+	
+	/*
+	@Override
+	public Collection<Member> deriveMember() {
+        Collection<Member> members = super.deriveMember();
+	    if (!this.getSelf().getIsStub()) {
+	        members = new ArrayList<Member>(members);
+    	    this.addDefaultMembers(members);
+	    }
+        return members;
+	}
+	*/
 	
 	/*
 	 * Constraints
@@ -77,6 +113,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	 * class definition allows an annotation for any stereotype whose metaclass
 	 * is consistent with Class.
 	 **/
+	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 	    // TODO: Allow stereotypes consistent with classes.
 		return super.annotationAllowed(annotation);
@@ -87,6 +124,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	 * considered as a classifier definition and the subunit is for a class
 	 * definition.
 	 **/
+	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
 		return unit.getDefinition() instanceof ClassDefinition &&
 		    super.matchForStub(unit);
@@ -104,7 +142,10 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	@Override
 	// Removes redefined members from inheritableMembers.
     protected List<Member> inherit(List<Member> inheritableMembers) {
-	    Collection<Member> ownedMembers = this.getSubunitOwnedMembers();
+	    Collection<Member> ownedMembers = 
+	        new ArrayList<Member>(this.getSubunitOwnedMembers());
+	    // this.addDefaultMembers(ownedMembers);
+	    
 	    int i = 0;
 	    while (i < inheritableMembers.size()) {
 	        Member inheritableMember = inheritableMembers.get(i);
@@ -134,5 +175,117 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
     public boolean isActive() {
         return false;
     }
+    
+    public boolean needsDefaultConstructor() {
+        if (this.needsDefaultConstructor) {
+            for (Member ownedMember: super.getOwnedMember()) {
+                if (ownedMember instanceof OperationDefinition &&
+                        ((OperationDefinition)ownedMember).getIsConstructor()) {
+                    this.needsDefaultConstructor = false;
+                    break;
+                }
+            }
+        }
+        return this.needsDefaultConstructor;
+    }
+    
+    /*
+    public OperationDefinition getDefaultConstructor() {
+        if (!this.getIsStub() && this.defaultConstructor == null && 
+                this.needsDefaultConstructor) {
+            ClassDefinition self = this.getSelf();
+            for (Member ownedMember: self.getOwnedMember()) {
+                if (ownedMember instanceof OperationDefinition &&
+                        ((OperationDefinition)ownedMember).getIsConstructor()) {
+                    this.needsDefaultConstructor = false;
+                    break;
+                }
+            }
+            if (this.needsDefaultConstructor) {
+                this.defaultConstructor = this.createDefaultConstructor();
+                this.needsDefaultConstructor = false;
+            }
+        }
+        return this.defaultConstructor;
+    }
+    */
 
+    private OperationDefinition createDefaultConstructor() {
+        ClassDefinition self = this.getSelf();
+        
+        OperationDefinition operation = new OperationDefinition();
+        operation.setName(self.getName());
+        operation.setNamespace(self);
+        operation.setBody(new Block());
+        
+        StereotypeAnnotation annotation = new StereotypeAnnotation();
+        annotation.setStereotypeName(new QualifiedName().getImpl().addName("Create"));
+        operation.addAnnotation(annotation);
+        
+        return operation;
+    }
+
+    public boolean needsDefaultDestructor() {
+        if (this.needsDefaultDestructor) {
+            for (Member ownedMember: super.getOwnedMember()) {
+                if (ownedMember instanceof OperationDefinition &&
+                        ((OperationDefinition)ownedMember).getIsDestructor()) {
+                    this.needsDefaultDestructor = false;
+                    break;
+                }
+            }
+        }
+        return this.needsDefaultDestructor;
+    }
+    
+    /*
+    public OperationDefinition getDefaultDestructor() {
+        if (!this.getIsStub() && this.defaultDestructor == null && 
+                this.needsDefaultDestructor) {
+            ClassDefinition self = this.getSelf();
+            for (Member ownedMember: self.getOwnedMember()) {
+                if (ownedMember instanceof OperationDefinition &&
+                        ((OperationDefinition)ownedMember).getIsDestructor()) {
+                    this.needsDefaultDestructor = false;
+                    break;
+                }
+            }
+            if (this.needsDefaultDestructor) {
+                this.defaultDestructor = this.createDefaultDestructor();
+                this.needsDefaultDestructor = false;
+            }
+        }
+        return this.defaultDestructor;
+    }
+    */
+
+    private OperationDefinition createDefaultDestructor() {
+        ClassDefinition self = this.getSelf();
+        
+        OperationDefinition operation = new OperationDefinition();
+        operation.setName("destroy");
+        operation.setNamespace(self);
+        operation.setBody(new Block());
+        
+        StereotypeAnnotation annotation = new StereotypeAnnotation();
+        annotation.setStereotypeName(new QualifiedName().getImpl().addName("Destroy"));
+        operation.addAnnotation(annotation);
+        
+        return operation;
+    }
+    
+    /*
+    private void addDefaultMembers(Collection<Member> members) {
+        Member defaultMember = this.getDefaultConstructor();
+        if (defaultMember != null) {
+            members.add(defaultMember);
+        }
+        
+        defaultMember = this.getDefaultDestructor();
+        if (defaultMember != null) {
+            members.add(defaultMember);
+        }
+    }
+    */
+    
 } // ClassDefinitionImpl
