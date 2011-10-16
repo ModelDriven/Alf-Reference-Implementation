@@ -390,9 +390,15 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     }
     
     public Collection<Member> getSubunitOwnedMembers() {
+        /*
         NamespaceDefinition self = this.getSelf();
         self.getSubunit();
         return self.getOwnedMember();
+        */
+        NamespaceDefinition self = this.getSelf();
+        UnitDefinition subunit = self.getSubunit();
+        NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
+        return definition == null? self.getOwnedMember(): definition.getOwnedMember();
     }
     
     public List<FormalParameter> getFormalParameters() {
