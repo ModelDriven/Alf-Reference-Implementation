@@ -525,13 +525,13 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             Collection<ElementReference> types = new ArrayList<ElementReference>();
             if (firstParameter != null) {
                 if (templateParameter.getImpl().equals(firstParameter.getType())) {
-                    types.add(effectiveType(firstParameter, primary.getType()));
+                    types.add(effectiveType(firstParameter, primary));
                 }
             }
             for (NamedExpression input: self.getTuple().getInput()) {
                 FormalParameter parameter = this.parameterNamed(input.getName());
                 if (templateParameter.getImpl().equals(parameter.getType())) {
-                    types.add(effectiveType(parameter, input.getExpression().getType()));                             
+                    types.add(effectiveType(parameter, input.getExpression()));                             
                 }
             }
             templateArguments.add(ClassifierDefinitionImpl.commonAncestor(types));
@@ -549,13 +549,16 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     
     /**
      * If collection conversion would be required, return the toSequence
-     * return type, rather than the collection type.
+     * return type, rather than the expression type.
      */
     private static ElementReference effectiveType(
             FormalParameter parameter, 
-            ElementReference type) {
-        int upper = parameter.getUpper();
-        if ((upper == -1 || upper > 1) && 
+            Expression expression) {
+        ElementReference type = expression.getType();
+        int expressionUpper = expression.getUpper();
+        int paremeterUpper = parameter.getUpper();
+        if ((paremeterUpper == -1 || paremeterUpper > 1) && 
+                expressionUpper == 1 &&
                 type != null && type.getImpl().isCollectionClass()) {
             return type.getImpl().getCollectionArgument();
         } else {
