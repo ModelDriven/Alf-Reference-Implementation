@@ -35,6 +35,11 @@ public class RootNamespace extends NamespaceDefinition {
     private static ElementReference collectionFunctionAdd = null;
     private static ElementReference collectionClassesPackage = null;
     
+    private static QualifiedName listFunctions = null;
+    
+    private static ElementReference listFunctionGet = null;
+    private static ElementReference listFunctionSize = null;
+      
     public static RootNamespace getRootScope() {
         return rootNamespace;
     }
@@ -171,5 +176,31 @@ public class RootNamespace extends NamespaceDefinition {
             collectionClassesPackage = getCollectionClasses().getImpl().getNamespaceReferent();
         }
         return collectionClassesPackage;
+    }
+    
+    public static QualifiedName getListFunctions() {
+        if (listFunctions == null) {
+            listFunctions = new QualifiedName();
+            listFunctions.getImpl().addName("FoundationModelLibrary").getImpl().
+                addName("PrimitiveBehaviors").getImpl().addName("ListFunctions");
+            listFunctions.getImpl().setCurrentScope(getRootScope());
+        }
+        return listFunctions;
+    }
+    
+    public static ElementReference getListFunctionGet() {
+        if (listFunctionGet == null) {
+            listFunctionGet = getListFunctions().getImpl().copy().
+                            addName("ListGet").getImpl().getBehaviorReferent();
+        }
+        return listFunctionGet;
+    }
+
+    public static ElementReference getListFunctionSize() {
+        if (listFunctionSize == null) {
+            listFunctionSize = getListFunctions().getImpl().copy().
+                            addName("ListSize").getImpl().getBehaviorReferent();
+        }
+        return listFunctionSize;
     }
 }
