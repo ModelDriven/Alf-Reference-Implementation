@@ -854,8 +854,10 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     public QualifiedName updateBindings(
             List<ElementReference> templateParameters,
             List<ElementReference> templateArguments) {
+        QualifiedName self = this.getSelf();
         QualifiedName qualifiedName = new QualifiedName();
-        for (NameBinding nameBinding: this.getSelf().getNameBinding()) {
+        qualifiedName.setIsAmbiguous(self.getIsAmbiguous());
+        for (NameBinding nameBinding: self.getNameBinding()) {
             qualifiedName.addNameBinding(nameBinding.getImpl().
                     updateBinding(templateParameters, templateArguments));
         }
