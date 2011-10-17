@@ -14,7 +14,6 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -118,41 +117,60 @@ public class InstanceCreationExpressionImpl
                 } else {
                     classReferent = operationReferent.getImpl().getNamespace();
                     if (classReferent.getImpl().isAbstractClassifier()) {
-                        QualifiedName implName = classReferent.getImpl().
-                            getNamespace().getImpl().asNamespace().getImpl().
-                            getQualifiedName().getImpl().copy().addName("Impl");
+                        
+                        // Check for an "Impl" package.
+                        NamespaceDefinition classDefinition = 
+                            classReferent.getImpl().getNamespace().getImpl().
+                                asNamespace();
+                        QualifiedName className = classDefinition.getImpl().
+                            getQualifiedName();
+                        QualifiedName implPackageName = 
+                            className.getImpl().copy().addName("Impl");
                         ElementReference implPackageReferent = 
-                            implName.getImpl().getNamespaceReferent();
-                        if (implPackageReferent.getImpl().isPackage()) {
-                            Collection<Member> members =
-                                implPackageReferent.getImpl().asNamespace().getImpl().
-                                    resolve(classReferent.getImpl().getName(), true);
-                            for (Member member: members) {
-                                ElementReference referent = 
-                                    member.getImpl().getReferent();
-                                if (referent.getImpl().isClass()) {
-                                    for (ElementReference feature: 
-                                        referent.getImpl().getFeatures()) {
-                                        if (feature.getImpl().isConstructor()) {
-                                            Collection<ElementReference> redefinedElements =
-                                                feature.getImpl().getRedefinedElements();
-                                            if (operationReferent.getImpl().
-                                                    isContainedIn(redefinedElements)) {
-                                                operationReferent = feature;
-                                            }
-                                        }
-                                    }
+                            implPackageName.getImpl().getNamespaceReferent();
+                        if (implPackageReferent != null &&
+                                implPackageReferent.getImpl().isPackage()) {
+                            QualifiedName qualification = 
+                                constructor.getQualification();
+                            NameBinding unqualifiedName = 
+                                constructor.getUnqualifiedName();
+                            QualifiedName implConstructor;
+                            
+                            if (qualification == null) {
+                                // Note: If there is no qualification at this
+                                // point, then the constructor operation cannot
+                                // be for a template binding.
+                                implConstructor = new QualifiedName().getImpl().
+                                    addName("Impl").getImpl().
+                                        addName(classDefinition.getName());
+                                implConstructor.getImpl().
+                                    setCurrentScope(classDefinition);
+                                
+                            } else {                           
+                                // Note: Constructing a qualified name with 
+                                // "Impl" inserted and resolving it makes sure
+                                // that all template bindings are handled 
+                                // correctly.
+                                implConstructor = qualification.getQualification();
+                                if (implConstructor == null) {
+                                    implConstructor = new QualifiedName();
+                                    implConstructor.getImpl().
+                                        setCurrentScope(classDefinition);
                                 }
+                                implConstructor.getImpl().addName("Impl").
+                                    addNameBinding(qualification.getUnqualifiedName());
                             }
+                            
+                            implConstructor.addNameBinding(unqualifiedName);
+                            ElementReference implOperationReferent = 
+                                implConstructor.getImpl().getOperationReferent();
+                            
+                            if (implOperationReferent != null) {
+                                operationReferent = implOperationReferent;
+                            }                            
                         }
                     }
-                    /*
-                    System.out.println("[deriveReferent] constructor.currentScope=" + 
-                            constructor.getImpl().getCurrentScope().getImpl().getQualifiedName().getPathName());
-                    System.out.println("[deriveReferent] constructor=" + constructor.getPathName());
-                    System.out.println("[deriveReferent] classReferent=" + classReferent);
-                    System.out.println("[deriveReferent] operationReferent=" + operationReferent);
-                    */
+                    
                     return operationReferent;
                 }
 	        }
