@@ -406,8 +406,12 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             return null;
         } else {
             SyntaxElement base = ((Member)element).getImpl().getBase();
-            return !(base instanceof Member)? null: 
-                ((Member)base).getImpl().getReferent();
+            if (!(base instanceof Member)) {
+                return null;
+            } else {
+                ElementReference referent = ((Member)base).getImpl().getReferent();
+                return referent.getImpl().isTemplate()? referent: null;
+            }
         }
     }
     
