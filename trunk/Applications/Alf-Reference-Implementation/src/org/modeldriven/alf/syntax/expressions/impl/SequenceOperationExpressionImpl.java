@@ -99,10 +99,19 @@ public class SequenceOperationExpressionImpl
      * Collection conversion is required if the type of the primary expression
      * of a sequence operation expression is a collection class.
      **/
+    /*
+     * And the multiplicity upper bound must be 1.
+     */
 	protected Boolean deriveIsCollectionConversion() {
 	    Expression expression = this.getExpression();
-	    ElementReference type = expression == null? null: expression.getType();
-		return type != null && type.getImpl().isCollectionClass();
+	    if (expression == null) {
+	        return false;
+	    } else {
+    	    ElementReference type = expression.getType();
+    	    int upper = expression.getUpper();
+    		return upper == 1 && 
+    		    type != null && type.getImpl().isCollectionClass();
+	    }
 	}
 
     /**
