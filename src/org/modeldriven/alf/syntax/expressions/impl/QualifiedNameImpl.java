@@ -306,8 +306,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         	        }
         	    } else if (n > 0) {
         	        // Resolve as a qualified name
-        	        ElementReference namespaceReference = self.getQualification().getImpl().getNamespaceReferent();
-        	        if (namespaceReference != null) {
+        	        for (ElementReference namespaceReference: self.getQualification().getImpl().getReferent()) {
         	            NamespaceDefinition namespace = namespaceReference.getImpl().asNamespace();
         	            if (namespace != null) {
         	                this.addReferentsTo(referents, 
