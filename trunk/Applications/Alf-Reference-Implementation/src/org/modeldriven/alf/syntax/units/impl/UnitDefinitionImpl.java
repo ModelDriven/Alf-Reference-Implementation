@@ -276,5 +276,26 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         importReference.setUnit(self);
         self.addImport(importReference);
     }
+    
+    @Override
+    public void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof UnitDefinition) {
+            UnitDefinition self = this.getSelf();
+            UnitDefinition baseUnit = (UnitDefinition)base;
+            
+            self.setNamespaceName(baseUnit.getNamespaceName());
+            self.setImport(baseUnit.getImport());
+            self.setNamespace(baseUnit.getNamespace());
+            self.setIsModelLibrary(baseUnit.getIsModelLibrary());
+            
+            this.setHasImplicitImports(baseUnit.getImpl().hasImplicitImports());
+            
+            // Note: The bound unit definition namespace is set in the binding 
+            // of the definition.
+        }
+    }
 
 } // UnitDefinitionImpl

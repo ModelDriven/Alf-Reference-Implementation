@@ -416,7 +416,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     public SyntaxElement bind(
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
-        return this.bind(this.getSelf().getName(), null, true, 
+        return this.bind(this.getSelf().getName(), null, false, 
                 templateParameters, templateArguments);
     }
     
@@ -425,7 +425,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
      */
     public Member bind(String name,
             NamespaceDefinition namespace,
-            boolean isOwnedMember,
+            boolean addAsMember,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
         Member self = this.getSelf();
@@ -439,9 +439,9 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         boundElement.getImpl().setExactName(name);
         boundElement.setNamespace(namespace);
         if (namespace != null) {
-            namespace.addMember(boundElement);
-            if (isOwnedMember) {
-                namespace.addOwnedMember(boundElement);
+            namespace.addOwnedMember(boundElement);
+            if (addAsMember) {
+                namespace.addMember(boundElement);
             }
         }
         boundElement.getImpl().bindTo(self, templateParameters, templateArguments);

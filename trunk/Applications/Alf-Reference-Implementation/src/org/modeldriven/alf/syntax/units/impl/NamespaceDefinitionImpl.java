@@ -449,14 +449,23 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         if (base instanceof NamespaceDefinition) {
             NamespaceDefinition self = this.getSelf();
             NamespaceDefinition baseNamespace = (NamespaceDefinition)base;
-            Collection<Member> ownedMembers = baseNamespace.getImpl().getSubunitOwnedMembers();
+            
+            // Note: The unit for the bound namespace, if any, is bound before
+            // adding owned members so imported members are available during
+            // the resolution of types for operation distinguishibility testing.
+            UnitDefinition baseUnit = baseNamespace.getUnit();
+            if (baseUnit != null) {
+                UnitDefinition unit = (UnitDefinition)baseUnit.getImpl().
+                    bind(templateParameters, templateArguments);
+                self.setUnit(unit);
+                unit.setDefinition(self);
+            }
+            
             self.setOwnedMember(new ArrayList<Member>());
-            self.setMember(new ArrayList<Member>());
-            for (Member member: baseNamespace.getMember()) {
+            for (Member ownedMember: baseNamespace.getOwnedMember()) {
                 // Note: If a boundMember is created, it will be added to
                 // the given namespace.
-                member.getImpl().bind(member.getName(), self, 
-                        ownedMembers.contains(member),
+                ownedMember.getImpl().bind(ownedMember.getName(), self, false,
                         templateParameters, templateArguments);
             }
         }
