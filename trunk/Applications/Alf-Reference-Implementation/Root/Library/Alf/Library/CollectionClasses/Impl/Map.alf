@@ -69,9 +69,9 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
   }
 
   public remove (in key: Key): Value[0..1] { 
-	result = this.get(key);
-	this.entries = this.entries->reject e (e.key == key);
-	return result;
+    result = this.get(key);
+    this.entries = this.entries->reject e (e.key == key);
+    return result;
   }
 
   public removeAll (in keys: Key[0..*]) { 
