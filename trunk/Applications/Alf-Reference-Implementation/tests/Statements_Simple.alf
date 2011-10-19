@@ -18,7 +18,6 @@ class Statements_Simple {
       	public name: String;
       	public address: String;
   	}
-  	class IntegerList specializes List<Integer> { }
   	
   	datatype Point { public x: Integer; public y: Integer; }
   	
