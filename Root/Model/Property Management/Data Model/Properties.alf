@@ -9,10 +9,18 @@ package Properties {
   
   public class 'Personal Property' specializes Property {
     public 'serial number': String[0..1];
+    
+    @Create public 'create property'(in identifier: String, in name: String) { 
+      super.'create property'(identifier, name);
+    }    
   }
   
   public class 'Real Property' specializes Property {
     public 'size': Area[0..1];
+    
+    @Create public 'create property'(in identifier: String, in name: String) { 
+      super.'create property'(identifier, name);
+    }    
   }
   
   public datatype 'Property Acquisition Data' {
