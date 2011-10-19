@@ -7,7 +7,7 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
 
   private entries: Entry[0..*];
 
-  @Create public Map (in entries: Entry[0..*]): Map<Key,Value> { 
+  @Create public Map (in entries: Entry[0..*]) { 
     this.putAll(entries);
   }
 
@@ -18,7 +18,7 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
     return this.entries.key->indexOf(key);
   }
   
-  public entries (): Set<Entry> { 
+  public entries (): CollectionClasses::Set<Entry> { 
     return new Set<Entry>(this.entries);
   }
 
@@ -50,7 +50,7 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
     return this.entries->isEmpty();
   }
 
-  public keys (): Set<Key> { 
+  public keys (): CollectionClasses::Set<Key> { 
     return new Set<Key>(this.entries.key);
   }
 
@@ -86,7 +86,7 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
     return this.entries;
   }
 
-  public values (): Bag<Value> { 
+  public values (): CollectionClasses::Bag<Value> { 
     return new Bag<Value>(this.entries.value);
   }
 }

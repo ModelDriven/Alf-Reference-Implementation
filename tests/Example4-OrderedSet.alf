@@ -128,7 +128,7 @@ class OrderedSet<T>
     return super.OrderedCollectionImpl<T>::size();
   }
   
-  public subOrderedSet (in lower: Integer, in upper: Integer): OrderedSet<T> {
+  public subOrderedSet (in lower: Integer, in upper: Integer): CollectionClasses::OrderedSet<T> {
     return new OrderedSet<T>(this.toSequence()->subsequence(lower, upper));
   }
   
