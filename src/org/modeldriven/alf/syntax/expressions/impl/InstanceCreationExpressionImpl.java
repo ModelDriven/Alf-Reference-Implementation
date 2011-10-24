@@ -269,12 +269,13 @@ public class InstanceCreationExpressionImpl
 	 */
 	public boolean instanceCreationExpressionConstructor() {
 	    ElementReference referent = this.getSelf().getReferent();
-	    return referent.getImpl().isDataType() ||
-	           referent.getImpl().isClass() &&
-	               !referent.getImpl().isAbstractClassifier() ||
-	           referent.getImpl().isOperation() &&
-	               !referent.getImpl().getNamespace().getImpl().
-	                    isAbstractClassifier();
+	    return referent != null &&
+    	          (referent.getImpl().isDataType() ||
+    	           referent.getImpl().isClass() &&
+    	               !referent.getImpl().isAbstractClassifier() ||
+    	           referent.getImpl().isOperation() &&
+    	               !referent.getImpl().getNamespace().getImpl().
+    	                    isAbstractClassifier());
 	}
 	
 	/**
