@@ -544,7 +544,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     public boolean isSequenceFeatureInvocation() {
         FeatureReference feature = this.getFeature();
         Expression primary = feature == null? null: feature.getExpression();
-        return primary != null && primary.getUpper() != 1;
+        return primary != null && 
+                (primary.getLower() !=1 || primary.getUpper() != 1);
     }
     
     /**
