@@ -17,7 +17,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 import fUML.Syntax.Classes.Kernel.Element;
 
-import java.util.List;
+import java.util.Collection;
 
 public class UnitDefinitionMapping extends DocumentedElementMapping {
     
@@ -36,7 +36,8 @@ public class UnitDefinitionMapping extends DocumentedElementMapping {
         return this.getMapping().getElement();
     }
     
-	public List<Element> getModelElements() throws MappingError {
+    @Override
+	public Collection<Element> getModelElements() throws MappingError {
 		return this.getMapping().getModelElements();
 	}
 

@@ -14,19 +14,13 @@ import org.modeldriven.alf.mapping.fuml.expressions.LeftHandSideMapping;
 
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.NameLeftHandSide;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Element;
-
-import java.util.List;
 
 public class NameLeftHandSideMapping extends LeftHandSideMapping {
     
     private ActivityNode assignmentTarget = null;
-    private CallBehaviorAction action = null;
-    private List<Element> modelElements = null;
     
     /*
     private static QualifiedNameImpl sequenceFunctions = null;    
@@ -52,16 +46,16 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
     */
     
     @Override
-    public void mapTo(ForkNode resultSource) throws MappingError {
-        super.mapTo(resultSource);
-        
+    public void mapTo(ActivityNode node) throws MappingError {
+        super.mapTo(node);
         NameLeftHandSide lhs = this.getNameLeftHandSide();
+
         if (lhs.getImpl().getFeature() == null) {
-            resultSource.setName("Fork(" + lhs.getTarget().getPathName() + ")");
+            this.resultSource.setName("Fork(" + lhs.getTarget().getPathName() + ")");
             
             Expression index = lhs.getIndex();
             if (index == null) {
-                this.assignmentTarget = resultSource;
+                this.assignmentTarget = this.resultSource;
             } else {
                 this.throwError("Index mapping not yet implemented.");
                 /*
@@ -101,35 +95,21 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
             }
         }
     }
-    
-    
 
+    @Override
+    public ActivityNode getAssignedValueSource(String name) throws MappingError {
+        NameLeftHandSide lhs = this.getNameLeftHandSide();
+        QualifiedName target = lhs.getTarget();
+        return target == null || target.getIsFeatureReference() ||
+            !target.getUnqualifiedName().getName().equals(name)? null:
+                this.getAssignedValueSource();
+    }
+    
 	@Override
     public ActivityNode getAssignmentTarget() throws MappingError {
 	    this.getResultSource();
 	    return this.assignmentTarget;
     }
-
-	@Override
-	public Element getElement() {
-	    if (this.action == null) {
-	        return super.getElement();
-	    } else {
-	        return this.action;
-	    }
-	}
-	
-	@Override
-	public List<Element> getModelElements() throws MappingError {
-		List<Element> elements = super.getModelElements();
-		if (this.action != null) {
-		    elements.add(this.action);
-		}
-		if (this.modelElements != null) {
-		    elements.addAll(this.modelElements);
-		}
-		return elements;
-	}
 
 	public NameLeftHandSide getNameLeftHandSide() {
 		return (NameLeftHandSide) this.getSource();
@@ -138,10 +118,6 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
 	@Override
 	public void print(String prefix) {
 	    super.print(prefix);
-	    
-	    if (this.action != null) {
-	        System.out.println(prefix + " action: " + this.action);
-	    }
 	    
 	    if (this.assignmentTarget != null) {
 	        System.out.println(prefix + " assignmentTarget: " + 

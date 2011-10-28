@@ -11,12 +11,16 @@ package org.modeldriven.alf.mapping.fuml.units;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.units.NamespaceDefinitionMapping;
 
 import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 
+import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
+import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.Activity;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
@@ -24,8 +28,10 @@ import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Operation;
 import fUML.Syntax.Classes.Kernel.Parameter;
+import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
@@ -37,17 +43,28 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
         OperationDefinition definition = this.getOperationDefinition();
 
+        // NOTE: Using getReturnParameter ensures that a constructor gets
+        // a return parameter even if one is not given explicitly in the
+        // operation definition.
+        FormalParameter returnFormalParameter = definition.getImpl().getReturnParameter();
+        if (returnFormalParameter != null) {
+            FumlMapping returnParameterMapping = this.fumlMap(returnFormalParameter);
+            if (!(returnParameterMapping instanceof FormalParameterMapping)) {
+                this.throwError("Error mapping return parameter: " + 
+                        returnParameterMapping.getErrorMessage());
+            } else  {
+                operation.addOwnedParameter(((FormalParameterMapping)
+                        returnParameterMapping).getParameter());
+            }
+        }
+
         if (definition.getIsAbstract()) {
             operation.setIsAbstract(true);
         } else {
-            Block body = definition.getImpl().getEffectiveBody();
-            
-            FumlMapping bodyMapping = this.fumlMap(body);
-            List<Element> elements = bodyMapping.getModelElements();
-
             Activity activity = new Activity();
             operation.addMethod(activity);
-
+            
+            Parameter returnParameter = null;
             for (Parameter parameter: operation.ownedParameter) {
                 Parameter copy = new Parameter();
                 copy.setName(parameter.name);
@@ -58,8 +75,35 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 copy.setIsOrdered(parameter.multiplicityElement.isOrdered);
                 copy.setIsUnique(parameter.multiplicityElement.isUnique);
                 activity.addOwnedParameter(copy);
+                ActivityDefinitionMapping.addParameterNodes(activity, copy);
+                if (parameter.direction == ParameterDirectionKind.return_) {
+                    returnParameter = copy;
+                }
             }
 
+            Block body = definition.getImpl().getEffectiveBody();
+            
+            FumlMapping bodyMapping = this.fumlMap(body);
+            Collection<Element> elements = bodyMapping.getModelElements();
+            
+            if (definition.getIsConstructor()) {
+                ActivityGraph subgraph = new ActivityGraph();
+                StructuredActivityNode node = 
+                    subgraph.addStructuredActivityNode("Body", elements);
+                
+                // TODO: Add default constructor behavior.
+                
+                // Return context object as the constructor result.
+                ReadSelfAction readSelfAction = 
+                    subgraph.addReadSelfAction(returnParameter.type);
+                subgraph.addControlFlow(node, readSelfAction);
+                subgraph.addObjectFlow(readSelfAction.result,
+                        ActivityDefinitionMapping.getOutputParameterNode(
+                                activity, returnParameter));
+                
+                elements = subgraph.getModelElements();
+            }
+                        
             for (Element element: elements) {
                 if (element instanceof ActivityNode) {
                     activity.addNode((ActivityNode)element);
@@ -76,7 +120,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
     public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
         if (!(element instanceof Parameter)) {
             this.throwError("Member not a parameter: " + element);
-        } else {
+        } else if (((Parameter)element).direction != ParameterDirectionKind.return_) {
             // Note: An operation is a namespace in full UML, but not in fUML, so the "namespace"
             // parameter actually has the type "NamedElement".
             ((Operation)namespace).addOwnedParameter((Parameter)element);
@@ -98,7 +142,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
     public Operation getOperation() throws MappingError {
         if (this.operation == null) {
             this.operation = new Operation();
-            this.mapTo(operation);
+            this.mapTo(this.operation);
         }
         return this.operation;
     }

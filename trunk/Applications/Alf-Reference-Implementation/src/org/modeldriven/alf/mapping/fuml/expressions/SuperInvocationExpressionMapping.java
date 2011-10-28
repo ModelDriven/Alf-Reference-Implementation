@@ -9,50 +9,58 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.InvocationExpressionMapping;
+import org.modeldriven.alf.mapping.fuml.units.OperationDefinitionMapping;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.SuperInvocationExpression;
 
 import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Parameter;
-
-import java.util.ArrayList;
-import java.util.List;
+import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
+import fUML.Syntax.Classes.Kernel.Operation;
+import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
 public class SuperInvocationExpressionMapping extends
 		InvocationExpressionMapping {
 
-	public SuperInvocationExpressionMapping() {
-		this
-				.setErrorMessage("SuperInvocationExpressionMapping not yet implemented.");
-	}
+    /**
+     * Once the target operation a super invocation expression is determined,
+     * the expression is mapped as a behavior invocation to the method of that
+     * operation.
+     */
+    
+    public Action mapAction() throws MappingError {
+        return new CallBehaviorAction();
+    }
 
-	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
-		return new ArrayList<Element>();
-	}
+    @Override
+    public void mapTargetTo(Action action) throws MappingError {
+        InvocationExpression expression = this.getInvocationExpression();
+        ElementReference referent = expression.getReferent();
+        FumlMapping mapping = this.fumlMap(referent);
+        if (mapping instanceof ElementReferenceMapping) {
+            mapping = ((ElementReferenceMapping) mapping).getMapping();
+        }
+        if (mapping instanceof OperationDefinitionMapping) {
+            Operation operation =
+                ((OperationDefinitionMapping)mapping).getOperation();
+            Behavior method = operation.method.get(0);
+            if (method == null) {
+                this.throwError("No method for: " + operation);
+            } else {
+                ((CallBehaviorAction)action).setBehavior(method);
+            }
+        } else {
+            this.throwError("Unknown referent mapping: " + mapping);
+        }
+    }
 
 	public SuperInvocationExpression getSuperInvocationExpression() {
 		return (SuperInvocationExpression) this.getSource();
 	}
-
-    @Override
-    public List<Parameter> getParameters(Action action) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Action mapAction() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void mapTargetTo(Action action) {
-        // TODO Auto-generated method stub
-        
-    }
 
 } // SuperInvocationExpressionMapping

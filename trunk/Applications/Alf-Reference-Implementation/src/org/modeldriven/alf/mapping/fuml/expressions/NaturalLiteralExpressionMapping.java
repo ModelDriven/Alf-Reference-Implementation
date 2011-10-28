@@ -9,24 +9,19 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.expressions.LiteralExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.NaturalLiteralExpression;
 
-import fUML.Syntax.Classes.Kernel.LiteralInteger;
-import fUML.Syntax.Classes.Kernel.ValueSpecification;
+import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
 
 public class NaturalLiteralExpressionMapping extends LiteralExpressionMapping {
 
     @Override
-    public ValueSpecification mapValueSpecification() {
+    public ValueSpecificationAction mapValueSpecificationAction() throws MappingError {
         String image = this.getNaturalLiteralExpression().getImage();
-
-        LiteralInteger literal = new LiteralInteger();
-        literal.setName("Value(" + image + ")");
-        literal.setValue(Integer.parseInt(image));
-
-        return literal;
+        return this.graph.addNaturalValueSpecificationAction(Integer.parseInt(image));
     }
 
 	public NaturalLiteralExpression getNaturalLiteralExpression() {

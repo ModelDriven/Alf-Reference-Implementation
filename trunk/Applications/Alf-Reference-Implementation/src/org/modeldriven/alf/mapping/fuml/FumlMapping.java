@@ -1,31 +1,34 @@
 package org.modeldriven.alf.mapping.fuml;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
+import org.modeldriven.alf.mapping.fuml.units.ActivityDefinitionMapping;
+import org.modeldriven.alf.mapping.fuml.units.DataTypeDefinitionMapping;
 import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Semantics.Loci.LociL1.ExecutionFactory;
 import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ControlFlow;
-import fUML.Syntax.Activities.IntermediateActivities.ObjectFlow;
 import fUML.Syntax.Classes.Kernel.Element;
+import fUML.Syntax.Classes.Kernel.PrimitiveType;
+import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
 public abstract class FumlMapping extends Mapping {
     
-    static private FumlMappingFactory fumlFactory = new FumlMappingFactory();
-    static private ExecutionFactory executionFactory = null;
-    static private SyntaxElement parsedElement = null;
+    private static FumlMappingFactory fumlFactory = new FumlMappingFactory();
+    private static ExecutionFactory executionFactory = null;
+    private static SyntaxElement parsedElement = null;
     
-    public FumlMapping() {
-        this.setFactory(fumlFactory);
-    }
+    private static PrimitiveType booleanType = null;
+    private static PrimitiveType integerType = null;
+    private static PrimitiveType unlimitedNaturalType = null;
+    private static PrimitiveType naturalType = null;
+    private static PrimitiveType stringType = null;
     
     public static ExecutionFactory getExecutionFactory() {
         return executionFactory;
@@ -39,35 +42,89 @@ public abstract class FumlMapping extends Mapping {
         return parsedElement;
     }
     
-    public static void addTo(
-            StructuredActivityNode node, 
-            List<Element> nestedElements,
-            List<Element> outerElements) {
-        for (Element element: nestedElements) {
-            if (element instanceof ActivityNode) {
-                node.addNode((ActivityNode)element);
-            } else if (element instanceof ControlFlow) {
-                node.addEdge((ActivityEdge)element);
+    public static PrimitiveType getBooleanType() {
+        if (booleanType == null) {
+            try {
+                booleanType = getPrimitiveType(RootNamespace.getBooleanType());
+            } catch (Exception e) {
+                System.out.println("Error mapping primitive type Boolean: " +
+                        e.getMessage());
             }
         }
-        for (Element element: nestedElements) {
-            if (element instanceof ObjectFlow) {
-                ActivityEdge edge = (ActivityEdge)element;
-                if (edge.source.inStructuredNode != node ||
-                        edge.target.inStructuredNode != node) {
-                    outerElements.add(edge);
-                } else {
-                    node.addEdge(edge);
-                }
+        return booleanType;
+    }
+    
+    public static PrimitiveType getIntegerType() {
+        if (integerType == null) {
+            try {
+                integerType = getPrimitiveType(RootNamespace.getIntegerType());
+            } catch (Exception e) {
+                System.out.println("Error mapping primitive type Integer: " +
+                        e.getMessage());
             }
         }
+        return integerType;
+    }
+    
+    public static PrimitiveType getUnlimitedNaturalType() {
+        if (unlimitedNaturalType == null) {
+            try {
+                unlimitedNaturalType = getPrimitiveType(RootNamespace.getUnlimitedNaturalType());
+            } catch (Exception e) {
+                System.out.println("Error mapping primitive type UnlimitedNatural: " +
+                        e.getMessage());
+            }
+        }
+        return unlimitedNaturalType;
+    }
+    
+    public static PrimitiveType getNaturalType() {
+        if (naturalType == null) {
+            try {
+                naturalType = getPrimitiveType(RootNamespace.getNaturalType());
+            } catch (Exception e) {
+                System.out.println("Error mapping primitive type Integer: " +
+                        e.getMessage());
+            }
+        }
+        return naturalType;
+    }
+    
+    public static PrimitiveType getStringType() {
+        if (stringType == null) {
+            try {
+                stringType = getPrimitiveType(RootNamespace.getStringType());
+            } catch (Exception e) {
+                System.out.println("Error mapping primitive type UnlimitedNatural: " +
+                        e.getMessage());
+            }
+        }
+        return stringType;
+    }
+    
+    public static PrimitiveType getPrimitiveType(ElementReference typeReference) 
+    throws MappingError {
+        DataTypeDefinitionMapping mapping = (DataTypeDefinitionMapping)
+        ((ElementReferenceMapping)fumlFactory.getMapping(typeReference)).getMapping();
+        return (PrimitiveType)mapping.getClassifier();
+    }
+
+    public static Behavior getBehavior(ElementReference behaviorReference)
+    throws MappingError {
+        ActivityDefinitionMapping mapping = (ActivityDefinitionMapping)
+        ((ElementReferenceMapping)fumlFactory.getMapping(behaviorReference)).getMapping();
+        return (Behavior)mapping.getClassifier();
+    }
+    
+    public FumlMapping() {
+        this.setFactory(fumlFactory);
     }
     
     public Element getElement() {
         return null;
     }
     
-    public abstract List<Element> getModelElements() throws MappingError;
+    public abstract Collection<Element> getModelElements() throws MappingError;
     
     public FumlMapping fumlMap(Object source) {
         return (FumlMapping)this.map(source);
@@ -83,11 +140,6 @@ public abstract class FumlMapping extends Mapping {
             System.out.println("***" + source);
         }
         */
-    }
-    
-    protected void throwError(String errorMessage) throws MappingError {
-        this.setErrorMessage(errorMessage);
-        throw new MappingError(this, errorMessage);
     }
     
     public static FumlMapping getMapping(Object source) {
@@ -129,4 +181,5 @@ public abstract class FumlMapping extends Mapping {
             mapping.print();
         }
     }
+    
 }

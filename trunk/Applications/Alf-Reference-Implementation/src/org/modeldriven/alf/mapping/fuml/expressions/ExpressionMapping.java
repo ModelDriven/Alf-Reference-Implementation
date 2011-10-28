@@ -9,7 +9,10 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import java.util.Collection;
+
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
@@ -25,15 +28,21 @@ import fUML.Syntax.Classes.Kernel.Element;
 public abstract class ExpressionMapping extends SyntaxElementMapping {
     
     private Classifier type = null;
+    protected ActivityGraph graph = new ActivityGraph();
 
     public ActivityNode getResultSource() throws MappingError {
         return null;
     }
     
     @Override
+    public ActivityNode getAssignedValueSource(String name) throws MappingError {
+        return this.getResultSource();
+    }
+    
+    @Override
     public void mapTo(Element element) throws MappingError {
         super.mapTo(element);
-        this.type = this.getType();
+        this.getType();
     }
     
     public Classifier getType() throws MappingError {
@@ -51,6 +60,15 @@ public abstract class ExpressionMapping extends SyntaxElementMapping {
             }
         }
         return this.type;
+    }
+    
+    public ActivityGraph getGraph() throws MappingError {
+        return this.graph;
+    }
+    
+    @Override
+    public Collection<Element> getModelElements() throws MappingError {
+        return this.getGraph().getModelElements();
     }
     
 	public Expression getExpression() {

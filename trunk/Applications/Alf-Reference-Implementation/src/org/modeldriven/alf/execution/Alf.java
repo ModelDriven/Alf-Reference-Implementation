@@ -14,13 +14,15 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
-import org.modeldriven.alf.mapping.fuml.units.ClassDefinitionMapping;
+import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
+import org.modeldriven.fuml.library.channel.StandardInputChannelObject;
 import org.modeldriven.fuml.library.channel.StandardOutputChannelObject;
+import org.modeldriven.fuml.library.common.Status;
 import org.modeldriven.fuml.library.libraryclass.ImplementationObject;
 
 import fUML.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
@@ -31,6 +33,8 @@ import fUML.Semantics.Loci.LociL1.FirstChoiceStrategy;
 import fUML.Semantics.Loci.LociL1.Locus;
 import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
 import fUML.Syntax.Classes.Kernel.Class_;
+import fUML.Syntax.Classes.Kernel.Classifier;
+import fUML.Syntax.Classes.Kernel.DataType;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
@@ -53,30 +57,53 @@ public class Alf {
                 addName("StandardOutputChannel");
         createSystemService
             (standardOutputChannel, new StandardOutputChannelObject());
+        
+        QualifiedName standardInputChannel = 
+            RootNamespace.getBasicInputOutput().getImpl().copy().
+                addName("StandardInputChannel");
+        createSystemService
+            (standardInputChannel, new StandardInputChannelObject());
+        
+        QualifiedName status = 
+            RootNamespace.getBasicInputOutput().getImpl().copy().
+                addName("Status");
+        Classifier statusType = getClassifier(status);
+        if (statusType instanceof DataType) {
+            Status.setStatusType((DataType)statusType);
+        } else {
+            System.out.println("Cannot find Status datatype.");
+        }
     }
     
     private static void createSystemService (
             QualifiedName name,
             ImplementationObject object) {
+        Classifier type = getClassifier(name);
+        if (type instanceof Class_) {
+            object.types.addValue((Class_)type);
+            locus.add(object);
+            System.out.println("Instantiated " + name.getPathName() + 
+                    " as " + type.name + "(" + type + ")");
+        }
+    }
+    
+    private static Classifier getClassifier(QualifiedName name) {
+        Classifier classifier = null;
         ElementReference referent = 
             name.getImpl().getClassifierReferent();
         FumlMapping mapping = FumlMapping.getMapping(referent);
         if (mapping instanceof ElementReferenceMapping) {
             mapping = ((ElementReferenceMapping)mapping).getMapping();
-            if (mapping instanceof ClassDefinitionMapping) {
-                try {
-                    Class_ type = (Class_)((ClassDefinitionMapping)mapping).
-                        getClassifier();
-                    object.types.addValue(type);
-                    locus.add(object);
-                    System.out.println("Instantiated " + name.getPathName() + 
-                            " as " + type.name + "(" + type + ")");
-                } catch (MappingError e) {
-                    System.out.println("Cannot map " + name.getPathName());
-                    System.out.println(" error: " + e.getMessage());
-                }
+        }
+        if (mapping instanceof ClassifierDefinitionMapping) {
+            try {
+                classifier = ((ClassifierDefinitionMapping)mapping).getClassifier();
+            } catch (MappingError e) {
+                System.out.println("Cannot map " + name.getPathName());
+                System.out.println(" error: " + e.getMessage());
             }
         }
+        return classifier;
     }
 
     public static void main(String[] args) {
@@ -101,15 +128,21 @@ public class Alf {
                 Mapping elementMapping = ((UnitDefinition)parsedElement).
                     getDefinition().getImpl().getMapping();
                 // System.out.println("[Alf] elementMapping=" + elementMapping);
-                Element behavior = ((FumlMapping)elementMapping).getElement();
-                if (behavior instanceof Behavior && 
-                        ((Behavior)behavior).ownedParameter.isEmpty()) {
+                Element element = ((FumlMapping)elementMapping).getElement();
+                if (element instanceof Behavior && 
+                        ((Behavior)element).ownedParameter.isEmpty() ||
+                    element instanceof Class_ && ((Class_)element).isActive) {
                     createSystemServices();
                     System.out.println("Executing...");
-                    locus.executor.execute
-                        ((Behavior)behavior, null, new ParameterValueList());
+                    if (element instanceof Behavior) {
+                        locus.executor.execute
+                            ((Behavior)element, null, new ParameterValueList());
+                    } else {
+                        locus.executor.start
+                            ((Class_)element, new ParameterValueList());
+                    }
                 } else {
-                    System.out.println("Cannot execute: " + behavior);
+                    System.out.println("Cannot execute: " + element);
                 }
             } catch (MappingError e) {
                 System.out.println("Mapping failed.");

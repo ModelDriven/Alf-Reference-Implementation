@@ -15,7 +15,6 @@ import org.modeldriven.alf.syntax.expressions.LinkOperationExpression;
 
 import fUML.Syntax.Actions.BasicActions.Action;
 import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Parameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +34,6 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
 	public LinkOperationExpression getLinkOperationExpression() {
 		return (LinkOperationExpression) this.getSource();
 	}
-
-    @Override
-    public List<Parameter> getParameters(Action action) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     @Override
     public Action mapAction() {

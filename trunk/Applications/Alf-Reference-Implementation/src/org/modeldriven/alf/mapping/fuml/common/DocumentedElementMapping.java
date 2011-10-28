@@ -9,15 +9,19 @@
 package org.modeldriven.alf.mapping.fuml.common;
 
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.syntax.common.DocumentedElement;
 
 import fUML.Syntax.Classes.Kernel.Comment;
 import fUML.Syntax.Classes.Kernel.CommentList;
 import fUML.Syntax.Classes.Kernel.Element;
 
-public abstract class DocumentedElementMapping extends FumlMapping {
+public abstract class DocumentedElementMapping extends SyntaxElementMapping {
     
+    /**
+     * If an element includes documentation, then each documentation string maps
+     * to a comment element attached to mapping of the documented element, with
+     * the comment body given by the documentation text.
+     */
     @Override
     public void mapTo(Element element) throws MappingError {
         super.mapTo(element);

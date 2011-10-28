@@ -13,8 +13,10 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.FumlMappingFactory;
+import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 
@@ -34,7 +36,7 @@ import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.OpaqueBehavior;
 
-import java.util.List;
+import java.util.Collection;
 
 public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     
@@ -70,7 +72,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             Block body = definition.getImpl().getEffectiveBody();
             if (body != null) {
                 FumlMapping bodyMapping = this.fumlMap(body);
-                List<Element> elements = bodyMapping.getModelElements();
+                Collection<Element> elements = bodyMapping.getModelElements();
     
                 for (Element element: elements) {
                     if (element instanceof ActivityNode) {
@@ -79,6 +81,30 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                         activity.addEdge((ActivityEdge)element);
                     } else {
                         this.throwError("Element not an activity node or edge: " + element);
+                    }
+                }
+                
+                for (Parameter parameter: activity.ownedParameter) {
+                    if (parameter.direction == ParameterDirectionKind.out ||
+                            parameter.direction == ParameterDirectionKind.inout) {
+                        String name = parameter.name;
+                        AssignedSource assignment = 
+                            body.getImpl().getAssignmentAfter(name);
+                        if (assignment != null) {
+                            FumlMapping mapping = 
+                                this.fumlMap(assignment.getSource());
+                            if (!(mapping instanceof SyntaxElementMapping)) {
+                                this.throwError("Error mapping parameter " + 
+                                        name + ": " + mapping.getErrorMessage());
+                            } else {
+                                ActivityNode source = ((SyntaxElementMapping)mapping).
+                                        getAssignedValueSource(name);
+                                ObjectFlow flow = new ObjectFlow();
+                                flow.setSource(source);
+                                flow.setTarget(getOutputParameterNode(activity, parameter));
+                                activity.addEdge(flow);
+                            }
+                        }
                     }
                 }
             }
@@ -96,37 +122,40 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             ((Behavior)namespace).addOwnedParameter(parameter);
 
             if (namespace instanceof Activity) {
+                addParameterNodes((Activity)namespace, parameter);
+            }
+        }
+    }
+    
+    public static void addParameterNodes(Activity activity, Parameter parameter) {
+        ActivityParameterNode node = new ActivityParameterNode();
+        node.setParameter(parameter);
+        activity.addNode(node);
 
-                Activity activity = (Activity)namespace;
-                ActivityParameterNode node = new ActivityParameterNode();
+        if (parameter.direction == ParameterDirectionKind.in || 
+                parameter.direction == ParameterDirectionKind.inout) {
+            node.setName("Input(" + parameter.name + ")");
+
+            ForkNode fork = new ForkNode();
+            fork.setName("Fork(" + parameter.name + ")");
+            activity.addNode(fork);
+
+            ObjectFlow flow = new ObjectFlow();
+            flow.setSource(node);
+            flow.setTarget(fork);
+            activity.addEdge(flow);
+
+            if (parameter.direction == ParameterDirectionKind.inout) {
+                node = new ActivityParameterNode();
                 node.setParameter(parameter);
                 activity.addNode(node);
-
-                if (parameter.direction == ParameterDirectionKind.in || parameter.direction == ParameterDirectionKind.inout) {
-                    node.setName("Input(" + parameter.name + ")");
-
-                    ForkNode fork = new ForkNode();
-                    fork.setName("Fork(" + parameter.name + ")");
-                    activity.addNode(fork);
-
-                    ObjectFlow flow = new ObjectFlow();
-                    flow.setSource(node);
-                    flow.setTarget(fork);
-                    activity.addEdge(flow);
-
-                    if (parameter.direction == ParameterDirectionKind.inout) {
-                        node = new ActivityParameterNode();
-                        node.setParameter(parameter);
-                        activity.addNode(node);
-                    }
-                }
-
-                if (parameter.direction == ParameterDirectionKind.inout || parameter.direction == ParameterDirectionKind.out) {
-                    node.setName("Output(" + parameter.name + ")");
-                } else if (parameter.direction == ParameterDirectionKind.return_) {
-                    node.setName("Return");
-                }
             }
+        }
+
+        if (parameter.direction == ParameterDirectionKind.inout || parameter.direction == ParameterDirectionKind.out) {
+            node.setName("Output(" + parameter.name + ")");
+        } else if (parameter.direction == ParameterDirectionKind.return_) {
+            node.setName("Return");
         }
     }
     
@@ -138,12 +167,27 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 		return (ActivityDefinition)this.getSource();
 	}
 
-    public ActivityParameterNode getParameterNode(Parameter parameter) {
-        Activity activity = (Activity)this.getElement();
+    public static ForkNode getInputParameterFork(
+            Activity activity, Parameter parameter) {
         if (activity != null) {
             for (ActivityNode node: activity.node) {
                 if (node instanceof ActivityParameterNode && 
-                        ((ActivityParameterNode)node).parameter == parameter) {
+                        ((ActivityParameterNode)node).parameter == parameter &&
+                        node.outgoing.size() > 0) {
+                    return (ForkNode)node.outgoing.get(0).target;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public static ActivityParameterNode getOutputParameterNode(
+            Activity activity, Parameter parameter) {
+        if (activity != null) {
+            for (ActivityNode node: activity.node) {
+                if (node instanceof ActivityParameterNode && 
+                        ((ActivityParameterNode)node).parameter == parameter &&
+                        node.outgoing.size() == 0) {
                     return (ActivityParameterNode)node;
                 }
             }
@@ -151,8 +195,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         return null;
     }
     
-    public ActivityFinalNode getFinalNode() {
-        Activity activity = (Activity)this.getElement();
+    public static ActivityFinalNode getFinalNode(Activity activity) {
         if (activity != null) {
             for (ActivityNode node: activity.node) {
                 if (node instanceof ActivityFinalNode) {

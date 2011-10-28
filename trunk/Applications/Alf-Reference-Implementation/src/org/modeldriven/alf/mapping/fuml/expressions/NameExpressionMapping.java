@@ -10,32 +10,21 @@
 package org.modeldriven.alf.mapping.fuml.expressions;
 
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.mapping.fuml.common.AssignedSourceMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
-import org.modeldriven.alf.mapping.fuml.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.mapping.fuml.units.EnumerationLiteralNameMapping;
-import org.modeldriven.alf.mapping.fuml.units.FormalParameterMapping;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.NameExpression;
 import org.modeldriven.alf.syntax.expressions.PropertyAccessExpression;
-import org.modeldriven.alf.syntax.units.ActivityDefinition;
-import org.modeldriven.alf.syntax.units.FormalParameter;
-import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
-import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode;
 import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.InstanceValue;
-import fUML.Syntax.Classes.Kernel.Parameter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NameExpressionMapping extends ExpressionMapping {
     
@@ -43,10 +32,34 @@ public class NameExpressionMapping extends ExpressionMapping {
     private ValueSpecificationAction action = null;
     private PropertyAccessExpressionMapping propertyAccessMapping = null;
 
-    public FormalParameter getFormalParameter() {
-        return null;
-    }
-    
+    /**
+     * 1. A name expression maps to an activity graph depending on the kind of
+     * name referenced.
+     * 
+     * 2. A name expression for a local name or parameter name is mapped to an
+     * object flow. The source of the object flow is given by the assigned
+     * source for the name before the name expression. The target of the object
+     * flow is determined by the context of the use of the name expression. The
+     * assigned source of the name effectively also acts as the result source
+     * element for the expression. Note that, if this source is never connected
+     * (for example, if the name expression is used by itself as an expression
+     * statement), there can be no object flow and the name expression will
+     * actually not map to anything (since it will have no effect). If there is
+     * a structured activity node that owns (directly or indirectly) both the
+     * source and target of the object flow, then the most deeply nested such
+     * node owns the object flow. Otherwise it is owned by the enclosing
+     * activity.
+     * 
+     * 3. A name expression for an enumeration literal name is mapped to a value
+     * specification action whose value is given by an instance literal
+     * specifying the given enumeration literal. The result pin of the value
+     * specification action is the result source element for the expression.
+     * 
+     * 4. A name expression for a name that disambiguates to a feature reference
+     * is mapped as a property access expression consisting of that feature
+     * reference.
+     */
+
     public ActivityNode getResultSource() throws MappingError {
         if (this.activityNode == null) {
             this.mapTo(null);
@@ -60,40 +73,18 @@ public class NameExpressionMapping extends ExpressionMapping {
                 nameExpression.getPropertyAccess();
 
             if (assignment != null) {
-                SyntaxElement source = assignment.getSource();
-                FumlMapping mapping = this.fumlMap(source);
-                if (mapping instanceof ExpressionMapping) {
-                    this.activityNode = 
-                        ((ExpressionMapping)mapping).getResultSource();
-                } else if (mapping instanceof FormalParameterMapping) {
-                    Parameter parameter = 
-                        ((FormalParameterMapping)mapping).getParameter();
-
-                    NamespaceDefinition context = 
-                        this.getNameExpression().getImpl().getCurrentScope();
-                    if (!(context instanceof ActivityDefinition)) {
-                        this.throwError("Formal parameter not for an activity: " + 
-                                source);
-                    } else {
-                        ActivityDefinitionMapping activityMapping = 
-                            (ActivityDefinitionMapping)this.map(context);
-                        ActivityParameterNode parameterNode = 
-                            activityMapping.getParameterNode(parameter);
-
-                        if (parameterNode == null) {
-                            this.throwError("Activity does not contain parameter: " + 
-                                    parameter);
-                        } else if (parameterNode.outgoing.size() == 0) {
-                            this.throwError("Reference to output parameter: " + 
-                                    parameter);
-                        } else {
-                            this.activityNode = 
-                                parameterNode.outgoing.getValue(0).target;
-                        }
-                    }
+                FumlMapping mapping = this.fumlMap(assignment);
+                if (!(mapping instanceof AssignedSourceMapping)) {
+                    this.throwError("Error mapping assigned source: " + 
+                            mapping.getErrorMessage());
                 } else {
-                    this.setErrorMessage
-                        ("Assigned source mapping not yet implemented:" + source);
+                    this.activityNode = 
+                        ((AssignedSourceMapping)mapping).getActivityNode();
+                    if (this.activityNode == null) {
+                        this.throwError("Invalid assigned source: " + assignment);
+                    } else {
+                        this.graph.add(this.activityNode);
+                    }
                 }
             } else if (enumerationLiteralReference != null) {
                 FumlMapping mapping = this.fumlMap(enumerationLiteralReference);
@@ -101,24 +92,10 @@ public class NameExpressionMapping extends ExpressionMapping {
                     mapping = ((ElementReferenceMapping)mapping).getMapping();
                 }
                 if (mapping instanceof EnumerationLiteralNameMapping) {
-                    InstanceValue value = new InstanceValue();
-                    value.setInstance(((EnumerationLiteralNameMapping)mapping).
+                    this.action = this.graph.addDataValueSpecificationAction(
+                            ((EnumerationLiteralNameMapping)mapping).
                             getEnumerationLiteral());
-                    value.setName("Value(" + value.instance.name + ")");
-                    
-                    this.action = new ValueSpecificationAction();
-                    this.action.setName(value.name);
-                    this.action.setValue(value);
-                    
-
-                    OutputPin result = new OutputPin();
-                    result.setName(action.name+".result");
-                    result.setType(value.type);
-                    result.setLower(1);
-                    result.setUpper(1);
-                    action.setResult(result);
-                    
-                    this.activityNode = result;
+                    this.activityNode = this.action.result;
                 } else {
                     this.throwError("Error mapping enumeration literal:" + 
                             enumerationLiteralReference);
@@ -132,7 +109,7 @@ public class NameExpressionMapping extends ExpressionMapping {
                         this.propertyAccessMapping.getResultSource();
                 } else {
                     this.throwError("Error mapping property access expression:" +
-                            propertyAccess);
+                            mapping.getErrorMessage());
                 }
             } else {
                this.throwError("Name expression has no referent.");
@@ -148,16 +125,13 @@ public class NameExpressionMapping extends ExpressionMapping {
                this.action != null? this.action: this.activityNode;
     }
     
-    public List<Element> getModelElements() throws MappingError {
+    @Override
+    public ActivityGraph getGraph() throws MappingError {
         this.getResultSource();
         if (this.propertyAccessMapping != null) {
-            return this.propertyAccessMapping.getModelElements();
+            return this.propertyAccessMapping.getGraph();
         } else {
-            List<Element> elements = new ArrayList<Element>();
-            if (this.action != null) {
-                elements.add(this.action);
-            }
-            return elements;	
+            return super.getGraph();	
         }
     }
 

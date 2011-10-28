@@ -17,6 +17,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
 import org.modeldriven.alf.mapping.fuml.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.mapping.fuml.units.FormalParameterMapping;
+import org.modeldriven.alf.mapping.fuml.units.OperationDefinitionMapping;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
@@ -25,12 +26,15 @@ import org.modeldriven.alf.syntax.units.FormalParameter;
 
 import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
+import fUML.Syntax.Activities.IntermediateActivities.Activity;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode;
 import fUML.Syntax.Activities.IntermediateActivities.ControlFlow;
 import fUML.Syntax.Activities.IntermediateActivities.ObjectFlow;
+import fUML.Syntax.Classes.Kernel.Operation;
 import fUML.Syntax.Classes.Kernel.Parameter;
+import fUML.Syntax.CommonBehaviors.BasicBehaviors.BehaviorList;
 
 public class ReturnStatementMapping extends StatementMapping {
     
@@ -77,29 +81,46 @@ public class ReturnStatementMapping extends StatementMapping {
                     if (mapping instanceof ElementReferenceMapping) {
                         mapping = ((ElementReferenceMapping)mapping).getMapping();
                     }
-                    if (!(mapping instanceof ActivityDefinitionMapping)) {
-                        this.throwError("Error mapping enclosing behavior: " + behavior);
-                    } else {
-                        ActivityDefinitionMapping activityMapping = 
-                            (ActivityDefinitionMapping)mapping;
-                        Parameter parameter = 
-                            ((FormalParameterMapping)parameterMapping).getParameter();
-                        ActivityParameterNode parameterNode = activityMapping.
-                                getParameterNode(parameter);
-                        if (parameterNode == null) {
-                            this.throwError("Activity does not contain parameter: " + 
-                                    parameter);
+                    Activity activity = null;
+                    Parameter parameter = 
+                        ((FormalParameterMapping)parameterMapping).getParameter();
+                    
+                    if (mapping instanceof ActivityDefinitionMapping) {
+                        activity = (Activity)((ActivityDefinitionMapping)mapping).getBehavior();
+                    } else if (mapping instanceof OperationDefinitionMapping) {
+                        Operation operation = 
+                            ((OperationDefinitionMapping)mapping).getOperation();
+                        BehaviorList methods = operation.method;
+                        if (methods.size() > 0) {
+                            activity = (Activity)methods.get(0);
+                            parameter = activity.ownedParameter.
+                                get(operation.ownedParameter.indexOf(parameter));
                         } else {
-                            flow = new ObjectFlow();
-                            flow.setSource(pin);
-                            flow.setTarget(parameterNode);
-                            this.addModelElement(flow);
-                            
-                            flow = new ControlFlow();
-                            flow.setSource(node);
-                            flow.setTarget(activityMapping.getFinalNode());
-                            this.addModelElement(flow);
+                            this.throwError("Operation has no method: " + operation);
                         }
+                    } else {
+                        this.throwError("Error mapping behavior: " + 
+                                mapping.getErrorMessage());
+                    }
+                    
+                    ActivityParameterNode parameterNode = 
+                        ActivityDefinitionMapping.getOutputParameterNode(
+                                activity, parameter);
+                    
+                    if (parameterNode == null) {
+                        this.throwError("Activity does not contain parameter: " + 
+                                parameter);
+                    } else {
+                        flow = new ObjectFlow();
+                        flow.setSource(pin);
+                        flow.setTarget(parameterNode);
+                        this.addModelElement(flow);
+                        
+                        flow = new ControlFlow();
+                        flow.setSource(node);
+                        flow.setTarget(ActivityDefinitionMapping.
+                                getFinalNode(activity));
+                        this.addModelElement(flow);
                     }
                 }
             }
@@ -119,6 +140,7 @@ public class ReturnStatementMapping extends StatementMapping {
 	    if (expression != null) {
 	        Mapping mapping = expression.getImpl().getMapping();
 	        if (mapping != null) {
+	            System.out.println(prefix + " expression:");
 	            mapping.printChild(prefix);
 	        }
 	    }

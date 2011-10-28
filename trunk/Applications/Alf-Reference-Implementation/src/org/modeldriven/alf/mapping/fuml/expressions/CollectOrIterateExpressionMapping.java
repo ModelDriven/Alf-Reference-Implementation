@@ -34,5 +34,5 @@ public class CollectOrIterateExpressionMapping extends
 	public CollectOrIterateExpression getCollectOrIterateExpression() {
 		return (CollectOrIterateExpression) this.getSource();
 	}
-
+	
 } // CollectOrIterateExpressionMapping
