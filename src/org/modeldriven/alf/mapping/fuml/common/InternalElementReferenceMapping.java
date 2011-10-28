@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
  *
@@ -16,9 +15,13 @@ import org.modeldriven.alf.syntax.common.InternalElementReference;
 
 public class InternalElementReferenceMapping extends ElementReferenceMapping {
 
-	FumlMapping mapping = null;
-	
-	public FumlMapping getMapping() {
+    FumlMapping mapping = null;
+
+    /**
+     * An internal element reference maps to model element mapped from its
+     * identified syntax element.
+     */
+    public FumlMapping getMapping() {
         if (this.mapping == null) {
             Object element = this.getInternalElementReference().getElement();
             if (element != null) {
@@ -26,18 +29,18 @@ public class InternalElementReferenceMapping extends ElementReferenceMapping {
             }
         }
         return this.mapping;
-	}
+    }
 
-	public InternalElementReference getInternalElementReference() {
-		return (InternalElementReference) this.getSource();
-	}
-	
-	@Override
-	public void print(String prefix) {
-	    super.print(prefix);
-	    if (this.mapping != null) {
-	        System.out.println(prefix + " target:" + mapping.getElement());
-	    }
-	}
+    public InternalElementReference getInternalElementReference() {
+        return (InternalElementReference) this.getSource();
+    }
+
+    @Override
+    public void print(String prefix) {
+        super.print(prefix);
+        if (this.mapping != null) {
+            System.out.println(prefix + " target:" + mapping.getElement());
+        }
+    }
 
 } // InternalElementReferenceMapping

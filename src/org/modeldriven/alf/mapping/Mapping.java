@@ -39,6 +39,11 @@ public abstract class Mapping {
         return this.getFactory().getMapping(source);
     }
     
+    protected void throwError(String errorMessage) throws MappingError {
+        this.setErrorMessage(errorMessage);
+        throw new MappingError(this, errorMessage);
+    }
+    
     public String toString() {
         return this.getClass().getSimpleName();
     }

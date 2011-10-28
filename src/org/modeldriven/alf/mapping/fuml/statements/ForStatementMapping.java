@@ -13,6 +13,8 @@ import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
 
 import org.modeldriven.alf.syntax.statements.ForStatement;
 
+import fUML.Syntax.Actions.BasicActions.OutputPin;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Classes.Kernel.Element;
 
 import java.util.ArrayList;
@@ -22,6 +24,11 @@ public class ForStatementMapping extends StatementMapping {
 
 	public ForStatementMapping() {
 		this.setErrorMessage("ForStatementMapping not yet implemented.");
+	}
+	
+	@Override
+	public ActivityNode getAssignedValueSource(String name) {
+	    return new OutputPin();
 	}
 
 	public List<Element> getModelElements() {

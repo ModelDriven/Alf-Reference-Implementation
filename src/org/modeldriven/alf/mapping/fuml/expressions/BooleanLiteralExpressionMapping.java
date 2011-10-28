@@ -9,24 +9,19 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.expressions.LiteralExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.BooleanLiteralExpression;
 
-import fUML.Syntax.Classes.Kernel.LiteralBoolean;
-import fUML.Syntax.Classes.Kernel.ValueSpecification;
+import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
 
 public class BooleanLiteralExpressionMapping extends LiteralExpressionMapping {
 
     @Override
-    public ValueSpecification mapValueSpecification() {
-        String image = this.getBooleanLiteralExpression().getImage();
-
-        LiteralBoolean literal = new LiteralBoolean();
-        literal.setName("Value(" + image + ")");
-        literal.setValue(image.equals("true"));
-
-        return literal;
+    public ValueSpecificationAction mapValueSpecificationAction() throws MappingError {
+        String image = this.getBooleanLiteralExpression().getImage();        
+        return this.graph.addBooleanValueSpecificationAction(image.equals("true"));
     }
 
 	public BooleanLiteralExpression getBooleanLiteralExpression() {

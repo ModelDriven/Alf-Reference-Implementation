@@ -22,6 +22,7 @@ import fUML.Syntax.Classes.Kernel.ElementImport;
 import fUML.Syntax.Classes.Kernel.PackageableElement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ElementImportReferenceMapping extends ImportReferenceMapping {
@@ -35,12 +36,12 @@ public class ElementImportReferenceMapping extends ImportReferenceMapping {
         FumlMapping mapping = 
             ((ElementReferenceMapping)this.fumlMap(importReference.getReferent())).
                 getMapping();
-        List<Element> modelElements = mapping.getModelElements();
+        Collection<Element> modelElements = mapping.getModelElements();
         if (modelElements.size() != 1 || 
-                !(modelElements.get(0) instanceof PackageableElement)) {
+                !(mapping.getElement() instanceof PackageableElement)) {
             this.throwError("Invalid imported element mapping: " + mapping);
         } else {
-            elementImport.setImportedElement((PackageableElement)modelElements.get(0));
+            elementImport.setImportedElement((PackageableElement)mapping.getElement());
         }
     }
     

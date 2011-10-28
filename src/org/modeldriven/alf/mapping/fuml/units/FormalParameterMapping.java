@@ -10,15 +10,22 @@
 package org.modeldriven.alf.mapping.fuml.units;
 
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.units.TypedElementDefinitionMapping;
 
 import org.modeldriven.alf.syntax.units.FormalParameter;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
+import fUML.Syntax.Activities.IntermediateActivities.Activity;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.MultiplicityElement;
+import fUML.Syntax.Classes.Kernel.Operation;
 import fUML.Syntax.Classes.Kernel.Parameter;
 import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 import fUML.Syntax.Classes.Kernel.TypedElement;
+import fUML.Syntax.CommonBehaviors.BasicBehaviors.BehaviorList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +61,42 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
     
 	public FormalParameter getFormalParameter() {
 		return (FormalParameter) this.getSource();
+	}
+	
+	@Override
+	public ActivityNode getAssignedValueSource(String name) throws MappingError {
+        FormalParameter formalParameter = this.getFormalParameter();
+        NamespaceDefinition context = formalParameter.getNamespace();
+        ActivityNode activityNode = null;
+        Activity activity = null;
+        Parameter parameter = this.getParameter();        
+        
+        FumlMapping mapping = this.fumlMap(context);
+        if (mapping instanceof OperationDefinitionMapping) {
+            Operation operation = 
+                ((OperationDefinitionMapping)mapping).getOperation();
+            BehaviorList methods = operation.method;
+            if (methods.size() > 0) {
+                activity = (Activity)methods.get(0);
+                parameter = activity.ownedParameter.
+                    get(operation.ownedParameter.indexOf(parameter));
+            } else {
+                this.throwError("Operation has no method: " + operation);
+            }
+        } else if (mapping instanceof ActivityDefinitionMapping) {
+            activity = (Activity)((ActivityDefinitionMapping)mapping).getBehavior();
+        } else {
+            this.throwError("Error mapping context: " + mapping.getErrorMessage());
+        }
+        
+        activityNode = 
+            ActivityDefinitionMapping.getInputParameterFork(activity, parameter);
+        
+        if (activityNode == null) {
+            this.throwError("No input parameter node: " + parameter);
+        }
+        
+        return activityNode;
 	}
 
     @Override

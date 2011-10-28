@@ -10,7 +10,7 @@
 package org.modeldriven.alf.mapping.fuml.common;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
@@ -23,7 +23,8 @@ public abstract class ElementReferenceMapping extends FumlMapping {
     
     public abstract FumlMapping getMapping();
 
-    public List<Element> getModelElements() throws MappingError {
+    @Override
+    public Collection<Element> getModelElements() throws MappingError {
         FumlMapping mapping = this.getMapping();
         return mapping == null? new ArrayList<Element>(): 
             mapping.getModelElements();

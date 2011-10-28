@@ -10,9 +10,11 @@
 package org.modeldriven.alf.mapping.fuml.statements;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.common.DocumentedElementMapping;
 
 import org.modeldriven.alf.syntax.statements.Statement;
@@ -35,15 +37,16 @@ public abstract class StatementMapping extends DocumentedElementMapping {
 
         Statement statement = this.getStatement();
         String s = statement.getClass().getName();
-        node.setName(s.substring(s.lastIndexOf(".")+1) + "@" + Integer.toHexString(statement.hashCode()));
+        node.setName(s.substring(s.lastIndexOf(".")+1) + "@" + 
+                Integer.toHexString(statement.hashCode()));
     }
     
     public void addModelElement(Element element) {
         this.modelElements.add(element);
     }
     
-    public void addToNode(ActivityNode node, List<Element> elements) {
-        addTo((StructuredActivityNode)node, elements, this.modelElements);
+    public void addToNode(ActivityNode node, Collection<Element> elements) {
+        ActivityGraph.addTo((StructuredActivityNode)node, elements, this.modelElements);
     }
     
     public ActivityNode getNode() throws MappingError {
@@ -68,6 +71,11 @@ public abstract class StatementMapping extends DocumentedElementMapping {
 	    elements.add(this.getNode());
 	    elements.addAll(this.modelElements);
 	    return elements;
+	}
+	
+	@Override
+	public String toString() {
+	    return super.toString() + " node:" + this.node;
 	}
 
 } // StatementMapping
