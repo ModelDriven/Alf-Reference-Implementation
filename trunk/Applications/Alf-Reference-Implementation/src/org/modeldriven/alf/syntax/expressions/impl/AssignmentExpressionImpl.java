@@ -485,6 +485,10 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 * untyped or have a type that conforms to the type of the right-hand side
 	 * expression.
 	 **/
+    /*
+     * It should actually be the right-hand side that conforms to the left-hand
+     * side.
+     */
 	public boolean assignmentExpressionSimpleAssignmentTypeConformance() {
 	    AssignmentExpression self = this.getSelf();
 	    LeftHandSide lhs = self.getLeftHandSide();
@@ -494,7 +498,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	        return true;
 	    } else {
 	        ElementReference lhsType = lhs.getImpl().getType();
-	        return lhsType == null || lhsType.getImpl().conformsTo(rhs.getType());
+	        ElementReference rhsType = rhs.getImpl().getType();
+	        return lhsType == null || 
+	            rhsType != null && rhsType.getImpl().conformsTo(lhsType);
 	    }
 	}
 
