@@ -94,12 +94,16 @@ public abstract class ElementReference implements ParsedElement {
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 	}
 
+	public String getId() {
+		return Integer.toHexString(this.hashCode());
+	}
+
 	public String toString() {
 		return this.toString(false);
 	}
 
 	public String toString(boolean includeDerived) {
-		return "(" + this.hashCode() + ")"
+		return "(" + this.getId() + ")"
 				+ this.getImpl().toString(includeDerived);
 	}
 
@@ -117,7 +121,7 @@ public abstract class ElementReference implements ParsedElement {
 	}
 
 	public void print(String prefix, boolean includeDerived) {
-		System.out.println(prefix + "[" + this.hashCode() + "]"
+		System.out.println(prefix + "[" + this.getId() + "]"
 				+ this._toString(includeDerived));
 	}
 } // ElementReference

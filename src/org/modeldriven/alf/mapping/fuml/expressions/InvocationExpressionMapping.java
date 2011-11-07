@@ -46,7 +46,6 @@ import fUML.Syntax.Actions.IntermediateActions.TestIdentityAction;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionNode;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
 import fUML.Syntax.Classes.Kernel.Class_;
@@ -100,9 +99,9 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
     }
 
     /*
-     * NOTE: The mapping for all kinds of invocation actions is handled here, to
-     * easily handle the case of qualified names disambiguated to feature
-     * references.
+     * NOTE: The mapping for both feature and behavior invocation actions is
+     * handled here, to easily handle the case of qualified names disambiguated
+     * to feature references.
      */
 
     /**
@@ -516,8 +515,11 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
             Element invocationAction = this.action;
             if (action instanceof ExpansionRegion) {
                 ExpansionNode inputNode = ((ExpansionRegion) action).inputElement.get(0);
-                ActivityEdge flow = inputNode.outgoing.get(0);
-                invocationAction = ((InputPin) flow.target).owner;
+                ActivityNode target = inputNode.outgoing.get(0).target;
+                if (target instanceof ForkNode) {
+                    target = target.outgoing.get(0).target;
+                }
+                invocationAction = ((InputPin) target).owner;
             }
             if (invocationAction instanceof CallOperationAction) {
                 System.out.println(prefix + " operation: "

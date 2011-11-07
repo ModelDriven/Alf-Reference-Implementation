@@ -82,8 +82,6 @@ public class NameExpressionMapping extends ExpressionMapping {
                         ((AssignedSourceMapping)mapping).getActivityNode();
                     if (this.activityNode == null) {
                         this.throwError("Invalid assigned source: " + assignment);
-                    } else {
-                        this.graph.add(this.activityNode);
                     }
                 }
             } else if (enumerationLiteralReference != null) {

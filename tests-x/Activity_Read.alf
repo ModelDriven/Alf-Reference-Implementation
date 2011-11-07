@@ -1,0 +1,19 @@
+activity Read() {
+	WriteLine("Read Line:");
+	WriteLine(ReadLine(status));
+	WriteLine("Status:");
+    WriteLine(status.description);
+    
+    WriteLine(StandardInputChannel.allInstances()[1].getStatus().description);
+    
+    WriteLine("read Integer, Boolean, UnlimitedNatural:");
+    
+    WriteLine(IntegerFunctions::ToString(StandardInputChannel.allInstances()[1].readInteger(status)));
+    WriteLine(status.description);
+    
+    WriteLine(BooleanFunctions::ToString(StandardInputChannel.allInstances()[1].readBoolean(status)));
+    WriteLine(status.description);
+    
+    WriteLine(UnlimitedNaturalFunctions::ToString(StandardInputChannel.allInstances()[1].readUnlimitedNatural(status)));
+    WriteLine(status.description);
+}

@@ -1,7 +1,7 @@
 /**
  * Test constructor and destructor expressions.
  **/
-class Expressions_Constructor_Destructor {
+active class Expressions_Constructor_Destructor {
 
     // Supporting declarations *************************************************
     
@@ -28,8 +28,10 @@ class Expressions_Constructor_Destructor {
       monitor = new Monitor();
 	  
       customer.destroy();
-      monitor.destroy(new Log());
+      new Monitor().destroy(new Log());
 	  
 	}
 
+} do {
+    this.test();
 }

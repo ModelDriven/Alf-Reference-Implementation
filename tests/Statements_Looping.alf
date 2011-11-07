@@ -41,13 +41,13 @@ class Statements_Looping {
     
       // Setup
 	  file = new File();
-	  checksum = 0;
+	  checksum = +0; // Use "+" to ensure type Integer instead of Natural
 	  endMarker = new FileRecord();
 	  sensor = new Sensor();
 	  memberList = Member[]{};
 	  names = String[]{};
 	  addresses = String[]{};
-	  reading = 0;
+	  reading = +0;
 	  readings = Integer[]{};
 	  noiseLimit = 50;
 	  sensors = Sensor[]{};

@@ -1,0 +1,25 @@
+private import Alf::Library::BasicInputOutput;
+
+active class InputOutput {
+    activity Input(): StandardInputChannel {
+        return StandardInputChannel.allInstances()[1];
+    }
+    
+    activity Output(): StandardOutputChannel {
+        return StandardOutputChannel.allInstances()[1];
+    }
+    
+    activity A(out x: any[0..1], out y: any[0..1], 
+               out status1: Status[0..1], out status2: Status[0..1] ) {
+        Input().read(x, status1);
+        Input().read(y, status2);
+    }
+} do {
+    WriteLine("Ready");
+    A(a, b, s1, s2);
+    Output().write(a);
+    Output().write(b);
+    WriteLine("");
+    WriteLine(s1.description);
+    WriteLine(s2.description);
+}

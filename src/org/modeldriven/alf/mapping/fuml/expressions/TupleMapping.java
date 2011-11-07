@@ -111,10 +111,11 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 i++;
             }
             
-            this.node = this.graph.addStructuredActivityNode(
-                    "Tuple@" + Integer.toHexString(tuple.hashCode()), 
-                    nestedElements);
-            this.graph.addControlFlow(node, action);
+            if (!nestedElements.isEmpty()) {
+                this.node = this.graph.addStructuredActivityNode(
+                        "Tuple@" + tuple.getId(), nestedElements);
+                this.graph.addControlFlow(node, action);
+            }
         }
 
         int i = 0;
