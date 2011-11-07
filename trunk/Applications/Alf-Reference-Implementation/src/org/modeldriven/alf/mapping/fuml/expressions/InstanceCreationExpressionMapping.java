@@ -115,8 +115,8 @@ public class InstanceCreationExpressionMapping extends
                 Collection<Element> elements = this.graph.getModelElements();
                 this.graph = new ActivityGraph();
                 this.action = this.graph.addStructuredActivityNode(
-                        "InstanceCreationExpression@" + Integer.toHexString(
-                                this.getInstanceCreationExpression().hashCode()),
+                        "InstanceCreationExpression@" +
+                                this.getInstanceCreationExpression().getId(),
                         elements);
             }
         }

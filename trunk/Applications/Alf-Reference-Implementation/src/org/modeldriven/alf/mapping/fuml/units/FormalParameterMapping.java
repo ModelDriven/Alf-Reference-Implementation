@@ -18,7 +18,6 @@ import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
 import fUML.Syntax.Activities.IntermediateActivities.Activity;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.MultiplicityElement;
 import fUML.Syntax.Classes.Kernel.Operation;

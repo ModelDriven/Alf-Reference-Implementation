@@ -42,7 +42,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
     
     protected ActivityNode mapNode() throws MappingError {
         this.resultSource = this.graph.addForkNode("Fork(LeftHandSide@" + 
-                Integer.toHexString(this.getLeftHandSide().hashCode()) + ")");
+                this.getLeftHandSide().getId() + ")");
         return this.resultSource;
     }
     

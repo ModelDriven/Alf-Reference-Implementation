@@ -36,6 +36,10 @@ public class ActivityGraph {
         return new ArrayList<Element>(this.modelElements);
     }
     
+    public boolean isEmpty() {
+        return this.modelElements.isEmpty();
+    }
+    
     // Activity Edges
     
     public ObjectFlow addObjectFlow(ActivityNode source, ActivityNode target) {

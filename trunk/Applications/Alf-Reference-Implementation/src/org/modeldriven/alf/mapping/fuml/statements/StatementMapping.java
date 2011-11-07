@@ -37,8 +37,7 @@ public abstract class StatementMapping extends DocumentedElementMapping {
 
         Statement statement = this.getStatement();
         String s = statement.getClass().getName();
-        node.setName(s.substring(s.lastIndexOf(".")+1) + "@" + 
-                Integer.toHexString(statement.hashCode()));
+        node.setName(s.substring(s.lastIndexOf(".")+1) + "@" + statement.getId());
     }
     
     public void addModelElement(Element element) {

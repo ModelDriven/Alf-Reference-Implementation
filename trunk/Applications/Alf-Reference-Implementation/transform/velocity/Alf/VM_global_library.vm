@@ -336,12 +336,16 @@ public void checkConstraints(Collection<ConstraintViolation> violations) {
 
 #macro( printOperations $class )
 #if( ${object.superClasses.size()}==0 )
+public String getId() {
+    return Integer.toHexString(this.hashCode());
+}
+
 public String toString() {
 	return this.toString(false);
 }
 
 public String toString(boolean includeDerived) {
-	return "(" + this.hashCode() + ")" + this.getImpl().toString(includeDerived);
+	return "(" + this.getId() + ")" + this.getImpl().toString(includeDerived);
 }
 
 #end
@@ -378,7 +382,7 @@ public void print(boolean includeDerived) {
 
 public void print(String prefix, boolean includeDerived) {
 	#if( ${class.superClasses.size()}==0 )
-		System.out.println(prefix + "[" + this.hashCode() + "]" + this._toString(includeDerived));
+		System.out.println(prefix + "[" + this.getId() + "]" + this._toString(includeDerived));
 	#else
 		super.print(prefix, includeDerived);
 	#end	
