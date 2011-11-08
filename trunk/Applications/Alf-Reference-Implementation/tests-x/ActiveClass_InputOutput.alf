@@ -1,6 +1,6 @@
 private import Alf::Library::BasicInputOutput;
 
-active class InputOutput {
+active class Interactive_InputOutput {
     activity Input(): StandardInputChannel {
         return StandardInputChannel.allInstances()[1];
     }
