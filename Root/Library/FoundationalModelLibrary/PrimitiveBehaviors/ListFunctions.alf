@@ -9,7 +9,7 @@ package ListFunctions {
   public activity ListGet(in list: any[*] sequence, in index: Integer): any[0..1] { }
   
   // The following function is not actually defined in the fUML 1.0 spec.
-  @primitive
+  @primitive(ListConcatFunctionBehaviorExecution)
   public activity ListConcat(in list1: any[*] sequence, in list2: any[*] sequence): any[*] sequence { }
 
 }

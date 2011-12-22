@@ -147,6 +147,12 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
         this.getAction();
         return this.resultSource;
     }
+    
+    @Override
+    public ActivityGraph getGraph() throws MappingError {
+        this.getAction();
+        return super.getGraph();
+    }
 
     @Override
     public Collection<Element> getModelElements() throws MappingError {
