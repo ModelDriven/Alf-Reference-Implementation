@@ -20,12 +20,21 @@ import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 
+import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
+import org.modeldriven.alf.syntax.expressions.LinkOperationExpression;
 import org.modeldriven.alf.syntax.expressions.NamedExpression;
 import org.modeldriven.alf.syntax.expressions.OutputNamedExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
+import org.modeldriven.alf.syntax.expressions.UnboundedLiteralExpression;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Syntax.Actions.BasicActions.Action;
+import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
+import fUML.Syntax.Actions.BasicActions.InputPin;
+import fUML.Syntax.Actions.BasicActions.InputPinList;
+import fUML.Syntax.Actions.BasicActions.InvocationAction;
+import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Classes.Kernel.Element;
@@ -33,7 +42,8 @@ import fUML.Syntax.Classes.Kernel.Element;
 public abstract class TupleMapping extends SyntaxElementMapping {
 
     private StructuredActivityNode node = null;
-    private ActivityGraph graph = new ActivityGraph();
+    private ActivityGraph tupleGraph = new ActivityGraph();
+    private ActivityGraph lhsGraph = new ActivityGraph();
     private Map<String, ActivityNode> assignedValueSourceMap = 
         new HashMap<String, ActivityNode>();
 
@@ -91,6 +101,9 @@ public abstract class TupleMapping extends SyntaxElementMapping {
             // implemented in TupleImpl.
             
             Collection<Element> nestedElements = new ArrayList<Element>();
+            InputPinList inputPins = action instanceof InvocationAction? 
+                    ((InvocationAction)action).argument: 
+                    action.input;
             int i = 0;
             for (NamedExpression input: inputs) {
                 FumlMapping mapping = this.fumlMap(input.getExpression());
@@ -104,21 +117,63 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                     if (resultSource == null) {
                         this.setErrorMessage("No result source: " + mapping);
                     } else {
-                        this.graph.addObjectFlow(
-                                resultSource, action.input.getValue(i));
+                        InputPin inputPin = inputPins.get(i);
+                        this.tupleGraph.addObjectFlow(
+                                resultSource, inputPin);
+                        Expression index = input.getIndex();
+                        if (index == null && 
+                                tuple.getInvocation() instanceof LinkOperationExpression &&
+                                inputPin.multiplicityElement.isOrdered) {
+                            index = new UnboundedLiteralExpression();
+                        }
+                        if (index != null) {
+                            mapping = this.fumlMap(index);
+                            if (!(mapping instanceof ExpressionMapping)) {
+                                this.throwError("Error mapping index expression" +
+                                        mapping.getErrorMessage());
+                            } else {
+                                nestedElements.addAll(mapping.getModelElements());
+                                resultSource =
+                                    ((ExpressionMapping)mapping).getResultSource();
+                                if (resultSource == null) {
+                                    this.throwError("No result Source: " + mapping);
+                                } else {
+                                    if (index.getType().getImpl().conformsTo(
+                                            RootNamespace.getIntegerType())) {
+                                        ActivityGraph subgraph = new ActivityGraph();
+                                        CallBehaviorAction callAction = 
+                                            subgraph.addCallBehaviorAction(
+                                            getBehavior(RootNamespace.
+                                            getIntegerFunctionToUnlimitedNatural()));
+                                        subgraph.addObjectFlow(
+                                                resultSource, 
+                                                callAction.argument.get(0));
+                                        resultSource = callAction.result.get(0);
+                                        nestedElements.addAll(
+                                                subgraph.getModelElements());
+                                    }
+                                    // NOTE: This presumes that the "insertAt"
+                                    // or "destroyAt" pin comes directly after
+                                    // the value pin in the list of input pins.
+                                    this.tupleGraph.addObjectFlow(
+                                            resultSource, inputPins.get(++i));
+                                }
+                            }
+                        }
                     }
                 }
                 i++;
             }
             
             if (!nestedElements.isEmpty()) {
-                this.node = this.graph.addStructuredActivityNode(
+                this.node = this.tupleGraph.addStructuredActivityNode(
                         "Tuple@" + tuple.getId(), nestedElements);
-                this.graph.addControlFlow(node, action);
+                this.tupleGraph.addControlFlow(this.node, action);
             }
         }
 
         int i = 0;
+        OutputPin returnPin = ActivityGraph.getReturnPin(action);
         for (OutputNamedExpression output: outputs) {
             if (!output.getExpression().getImpl().isNull()) {
                 LeftHandSide lhs = output.getLeftHandSide();
@@ -129,15 +184,26 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 } else {
                     LeftHandSideMapping lhsMapping = 
                         (LeftHandSideMapping)mapping;
-                    this.graph.addAll(lhsMapping.getGraph());
-
-                    this.graph.addObjectFlow(
-                            action.output.getValue(i), 
+                    this.lhsGraph.addAll(lhsMapping.getGraph()); 
+                    
+                    OutputPin outputPin = action.output.get(i);
+                    if (outputPin == returnPin) {
+                        i++;
+                        outputPin = action.output.get(i);
+                    }
+                   
+                    // NOTE: The object flow is part of the tuple graph, NOT the
+                    // LHS graph.
+                    this.tupleGraph.addObjectFlow(
+                            outputPin, 
                             lhsMapping.getAssignmentTarget());
 
-                    this.getAssignedValueSourceMap().put(
-                            lhs.getImpl().getAssignedName(), 
-                            lhsMapping.getAssignedValueSource());
+                    String assignedName = lhs.getImpl().getAssignedName();
+                    if (assignedName != null) {
+                        this.getAssignedValueSourceMap().put(
+                                assignedName, 
+                                lhsMapping.getAssignedValueSource());
+                    }
                 }
             }
             i++;
@@ -158,14 +224,22 @@ public abstract class TupleMapping extends SyntaxElementMapping {
         return this.node;
     }
 
-    public ActivityGraph getGraph() {
-        return this.graph;
+    public ActivityGraph getTupleGraph() {
+        return this.tupleGraph;
     }
+    
+    public ActivityGraph getLhsGraph() {
+        return this.lhsGraph;
+    }
+    
     @Override
     public Collection<Element> getModelElements() {
-        return this.getGraph().getModelElements();
+        Collection<Element> elements = 
+            new ArrayList<Element>(this.getTupleGraph().getModelElements());
+        elements.addAll(this.getLhsGraph().getModelElements());
+        return elements;
     }
-
+    
     public Tuple getTuple() {
         return (Tuple) this.getSource();
     }

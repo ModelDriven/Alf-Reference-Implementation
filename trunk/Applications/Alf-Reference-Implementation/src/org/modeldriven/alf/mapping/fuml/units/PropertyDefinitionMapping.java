@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.units.PropertyDefinition;
 import fUML.Syntax.Classes.Kernel.AggregationKind;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.MultiplicityElement;
+import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Property;
 import fUML.Syntax.Classes.Kernel.TypedElement;
 
@@ -34,6 +35,11 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
         property.setAggregation(definition.getIsComposite()? 
                 AggregationKind.composite: AggregationKind.none);
         property.setName(property.typedElement.name);
+    }
+    
+    @Override
+    public NamedElement getNamedElement() throws MappingError {
+        return this.getProperty();
     }
     
     public Property getProperty() throws MappingError {
@@ -75,7 +81,7 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
     
      @Override
     public String toString() {
-        return super.toString() + "aggregation:" + this.property.aggregation;
+        return super.toString() + " aggregation:" + this.property.aggregation;
     }
 
 } // PropertyDefinitionMapping

@@ -1,0 +1,67 @@
+/**
+ * Test association-related expressions.
+ **/
+active class Expressions_Association {
+
+    // Supporting declarations *************************************************
+    
+    class Person { }
+  	class House { }
+  	class Player { }
+  	class Team { }
+  	class Season { }
+  	
+  	assoc Owns {
+  		owner: Person;
+  		house: House;
+  	}
+  	
+  	assoc Owns1 {
+  		owner1: Person;
+  		house1: House[*] ordered;
+  	}
+  	
+  	assoc Roster {
+  		player: Player;
+  		team: Team;
+  		season: Season;
+    }
+  	
+	//**************************************************************************
+
+	test(out owner1: Person, out owner2: Person, out house1: House, out house2: House) 
+	{
+	  
+	  jack = new Person();
+	  t = new Team();
+	  y = new Season();
+	  
+	  newHouse = new House();
+	  oldHouse = new House();
+	  
+	  Roster::player(team=>t, season=>y);
+	  Roster.player(t,y);
+	  
+	  Owns.createLink(jack, oldHouse);
+	  Owns.createLink(owner=>jack, house=>oldHouse);
+	  
+	  house1 = jack.house;
+	  owner1 = Owns::owner(oldHouse);
+	  
+	  Owns1.createLink(owner1=>jack, house1[1]=>newHouse);
+	  Owns1.createLink(owner1=>jack, house1[2]=>newHouse);
+	  Owns.destroyLink(owner=>jack, house=>newHouse);
+	  
+	  Owns.createLink(oldHouse.owner, newHouse);
+	  Owns.createLink(Owns.owner(oldHouse), newHouse);
+	  
+	  house2 = jack.house;
+	  owner2 = Owns::owner(newHouse);
+
+	  Owns.clearAssoc(jack);
+	  
+	}
+
+} do {
+    this.test(owner1, owner2, house1, house2);
+}

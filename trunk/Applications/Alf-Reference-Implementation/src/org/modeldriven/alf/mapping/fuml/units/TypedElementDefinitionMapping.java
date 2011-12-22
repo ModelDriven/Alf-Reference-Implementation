@@ -46,8 +46,12 @@ public abstract class TypedElementDefinitionMapping extends MemberMapping {
             if (!(mapping instanceof ClassifierDefinitionMapping)) {
                 this.throwError("Error mapping type: " + type);
             } else {
+                // NOTE: If this typed element is within an operation, then the
+                // use of getClassifierOnly here avoids problems with mapping
+                // the classifier before the mapping of the operation is
+                // complete, if the type is the class that owns the operations.
                 Classifier classifier = 
-                    ((ClassifierDefinitionMapping)mapping).getClassifier();
+                    ((ClassifierDefinitionMapping)mapping).getClassifierOnly();
                 typedElement.setType(classifier);                   
             }
         }

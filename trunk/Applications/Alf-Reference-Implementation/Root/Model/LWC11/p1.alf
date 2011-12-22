@@ -1,0 +1,16 @@
+namespace LWC11;
+private import LWC11::Primitives::Date;
+private import LWC11::p2::Car;
+
+@apply(DataDefinition)
+package p1 {
+
+    @Entity
+    public datatype Person {
+        public name: String;
+        public firstName: String;
+        public birthdate: Date;
+        public ownedCar: Car [0..1];
+    }
+    
+}

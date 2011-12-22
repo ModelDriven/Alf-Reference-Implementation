@@ -20,6 +20,7 @@ import fUML.Syntax.Activities.IntermediateActivities.Activity;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.MultiplicityElement;
+import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Operation;
 import fUML.Syntax.Classes.Kernel.Parameter;
 import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
@@ -48,6 +49,11 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
         }
     }
     
+    @Override
+    public NamedElement getNamedElement() throws MappingError {
+        return this.getParameter();
+    }
+
     public Parameter getParameter() throws MappingError {
         if (this.parameter == null) {
             this.parameter = new Parameter();

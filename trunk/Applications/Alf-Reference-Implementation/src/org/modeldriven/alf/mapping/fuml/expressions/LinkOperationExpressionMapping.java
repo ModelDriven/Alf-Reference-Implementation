@@ -9,18 +9,16 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.InvocationExpressionMapping;
+import org.modeldriven.alf.mapping.fuml.units.AssociationDefinitionMapping;
 
 import org.modeldriven.alf.syntax.expressions.LinkOperationExpression;
 
 import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.IntermediateActions.ClearAssociationAction;
-import fUML.Syntax.Actions.IntermediateActions.CreateLinkAction;
-import fUML.Syntax.Actions.IntermediateActions.DestroyLinkAction;
-import fUML.Syntax.Classes.Kernel.Element;
-
-import java.util.ArrayList;
-import java.util.List;
+import fUML.Syntax.Classes.Kernel.Association;
 
 public class LinkOperationExpressionMapping extends InvocationExpressionMapping {
 
@@ -53,17 +51,26 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
      */
 
     @Override
-    public Action mapAction() {
+    public Action mapTarget() throws MappingError {
         LinkOperationExpression expression = this.getLinkOperationExpression();
-        return expression.getIsClear()? new ClearAssociationAction():
-               expression.getIsCreation()? new CreateLinkAction():
-                   new DestroyLinkAction();
-    }
-
-    @Override
-    public void mapTargetTo(Action action) {
-        // TODO Auto-generated method stub
-        
+        Action action = null;
+        FumlMapping mapping = this.fumlMap(expression.getReferent());
+        if (mapping instanceof ElementReferenceMapping) {
+            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        }
+        if (!(mapping instanceof AssociationDefinitionMapping)) {
+            this.throwError("Error mapping association: " + mapping.getErrorMessage());
+        } else {
+            Association association = (Association)
+                ((AssociationDefinitionMapping)mapping).getClassifier();
+            action = 
+                expression.getIsClear()?
+                    this.graph.addClearAssociationAction(association):
+                expression.getIsCreation()?
+                    this.graph.addCreateLinkAction(association):
+                    this.graph.addDestroyLinkAction(association);
+        }
+        return action;
     }
 
     public LinkOperationExpression getLinkOperationExpression() {

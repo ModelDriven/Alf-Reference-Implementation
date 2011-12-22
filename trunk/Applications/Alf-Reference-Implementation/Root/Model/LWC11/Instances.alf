@@ -1,0 +1,18 @@
+namespace LWC11;
+private import LWC11::Primitives::Date;
+private import LWC11::p1::Person;
+private import LWC11::p2::Car;
+
+activity Instances() {
+
+    c = new Car (
+        make => "VW",
+        model => "Touran" );
+
+    p = new Person (
+        firstName => "Markus",
+        name => "Voelter",
+        birthdate => new Date (14, 2, 1972),
+        ownedCar => c );
+        
+}

@@ -23,6 +23,12 @@ import fUML.Syntax.Classes.Kernel.Element;
 public class ClassExtentExpressionMapping extends ExpressionMapping {
 
     private ReadExtentAction action = null;
+
+    /**
+     * 1. A class extent expression maps to a read extent action for the named
+     * class. The result output pin of the read extent action is the result
+     * source element for the class extent expression.
+     */
     
     public ReadExtentAction mapAction() throws MappingError {
         return this.graph.addReadExtentAction((Class_)this.getType());

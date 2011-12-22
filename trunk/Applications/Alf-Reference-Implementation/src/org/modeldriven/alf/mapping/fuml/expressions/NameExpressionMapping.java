@@ -110,7 +110,7 @@ public class NameExpressionMapping extends ExpressionMapping {
                             mapping.getErrorMessage());
                 }
             } else {
-               this.throwError("Name expression has no referent.");
+                this.throwError("Name expression has no referent.");
             }
         }
 

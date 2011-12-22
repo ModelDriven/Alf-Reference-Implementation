@@ -69,6 +69,10 @@ public abstract class SequenceElementsImpl extends SyntaxElementImpl {
 
     public abstract void setCurrentScope(NamespaceDefinition currentScope);
     
+    public boolean isEmpty() {
+        return false;
+    }
+    
     // This is overridden by SequenceExpressionListImpl. It has no effect for
     // a sequence range.
     public void setCollectionTypeName(QualifiedName typeName) {        

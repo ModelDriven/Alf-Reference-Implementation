@@ -116,6 +116,11 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
             element.getImpl().setCurrentScope(currentScope);
         }
     }
+    
+    @Override
+    public boolean isEmpty() {
+        return element.isEmpty();
+    }
 
     /**
      * Each expression in the list must have a multiplicity upper bound of no 

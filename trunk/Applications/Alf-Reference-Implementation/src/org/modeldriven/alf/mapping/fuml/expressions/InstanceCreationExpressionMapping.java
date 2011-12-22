@@ -36,6 +36,7 @@ import fUML.Syntax.Classes.Kernel.Property;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class InstanceCreationExpressionMapping extends
 		InvocationExpressionMapping {
@@ -92,13 +93,13 @@ public class InstanceCreationExpressionMapping extends
      */
     
     @Override
-    public void mapTo(Action action) throws MappingError {
-        super.mapTo(action);
+    public Action mapAction() throws MappingError {
+        Action action = super.mapAction();
         
         // Add a start behavior action if creating an instance of an active
         // class.
-        if (action instanceof CreateObjectAction) {
-            Class_ class_ = (Class_)((CreateObjectAction)action).classifier;
+        if (action instanceof CallOperationAction) {
+            Class_ class_ = ((CallOperationAction)action).operation.class_;
             
             if (class_.isActive) {            
                 ForkNode fork = 
@@ -114,35 +115,21 @@ public class InstanceCreationExpressionMapping extends
                 
                 Collection<Element> elements = this.graph.getModelElements();
                 this.graph = new ActivityGraph();
-                this.action = this.graph.addStructuredActivityNode(
+                action = this.graph.addStructuredActivityNode(
                         "InstanceCreationExpression@" +
                                 this.getInstanceCreationExpression().getId(),
                         elements);
             }
         }
+        
+        return action;
     }
     
     @Override
-    public Action mapAction() {
+    public Action mapTarget() throws MappingError {
         InstanceCreationExpression instanceCreationExpression =
             this.getInstanceCreationExpression();
-        
-        if (instanceCreationExpression.getIsObjectCreation()) {
-            return new CallOperationAction();
-        } else {
-            // Note: The mapping for a data value creation is placed inside
-            // a structured activity node so that can act as the action with
-            // input pins to which the results of mapping the tuple are
-            // connected.
-            return new StructuredActivityNode();
-        }
-    }
-    
-    @Override
-    public void mapTargetTo(Action action) throws MappingError {
-        InstanceCreationExpression instanceCreationExpression =
-            this.getInstanceCreationExpression();
-        
+        Action action = null;
         if (!instanceCreationExpression.getIsObjectCreation()) {
             ElementReference referent = instanceCreationExpression.getReferent();
             FumlMapping mapping = this.fumlMap(referent);
@@ -167,7 +154,13 @@ public class InstanceCreationExpressionMapping extends
                 // activity node. Create input pins on the structured activity 
                 // node connected to property assignments for each attribute of 
                 // the data type.
-                Collection<InputPin> inputPins = new ArrayList<InputPin>();
+                //
+                // Note: The mapping for a data value creation is placed inside
+                // a structured activity node so that it can act as the action
+                // with input pins to which the results of mapping the tuple are
+                // connected.
+
+                List<InputPin> inputPins = new ArrayList<InputPin>();
                 for (Property attribute: dataType.attribute) {
                     InputPin valuePin = new InputPin();
                     inputPins.add(valuePin);
@@ -178,18 +171,21 @@ public class InstanceCreationExpressionMapping extends
                 }
                 StructuredActivityNode structuredNode =
                     this.graph.addStructuredActivityNode(
-                            "Create(" + dataType.name +")", 
+                            "Create(" + dataType.qualifiedName +")", 
                             subgraph.getModelElements());
                 for (InputPin inputPin: inputPins) {
                     structuredNode.addStructuredNodeInput(inputPin);
                 }
+                action = structuredNode;
             }
             
         } else if (!instanceCreationExpression.getImpl().getIsConstructorless()) {
             // Map the constructor call as a normal call operation action.
-            super.mapTargetTo(action);                
+            action = super.mapTarget();                
             CallOperationAction callAction = (CallOperationAction)action;
 
+            // this.getInstanceCreationExpression().getReferent().getImpl().getAlf().print(">>>>", true);
+            
             if (this.resultSource == null) {
                 this.throwError("Constructor has no return result: " + 
                         callAction.operation.qualifiedName);
@@ -197,22 +193,16 @@ public class InstanceCreationExpressionMapping extends
 
             // Add a create object action to provide the target input to the
             // constructor call.
-            
-            Class_ class_ = callAction.operation.class_;
-
-            InputPin targetPin = ActivityGraph.createInputPin(
-                    callAction.name + ".target", class_, 1, 1);
-            callAction.setTarget(targetPin);
-            
             CreateObjectAction createAction = 
-                this.graph.addCreateObjectAction(class_);
-            this.graph.addObjectFlow(createAction.result, targetPin);
+                this.graph.addCreateObjectAction(callAction.operation.class_);
+            this.graph.addObjectFlow(createAction.result, callAction.target);
             
         } else {
             // NOTE: Instance creation expressions for classes defined in
             // Alf notation should never be constructorless.
             this.throwError("Constructorless instance creation expression mapping not implemented.");
         }
+        return action;
     }
 
 	public InstanceCreationExpression getInstanceCreationExpression() {

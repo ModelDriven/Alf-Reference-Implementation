@@ -16,6 +16,7 @@ import org.modeldriven.alf.syntax.units.EnumerationLiteralName;
 
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.EnumerationLiteral;
+import fUML.Syntax.Classes.Kernel.NamedElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,11 @@ public class EnumerationLiteralNameMapping extends MemberMapping {
 		return elements;
 	}
 	
+    @Override
+    public NamedElement getNamedElement() throws MappingError {
+        return getEnumerationLiteral();
+    }
+
 	public EnumerationLiteral getEnumerationLiteral() throws MappingError {
 	    if (this.enumerationLiteral == null) {
 	        this.enumerationLiteral = new EnumerationLiteral();

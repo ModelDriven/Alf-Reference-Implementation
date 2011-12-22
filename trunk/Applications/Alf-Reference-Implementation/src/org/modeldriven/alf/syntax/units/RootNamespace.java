@@ -32,8 +32,16 @@ public class RootNamespace extends NamespaceDefinition {
     private static ElementReference bitStringType = null;
     private static ElementReference naturalType = null;
     
+    private static ElementReference sequenceFunctionIncluding = null;
+    
     private static ElementReference collectionFunctionAdd = null;
     private static ElementReference collectionClassesPackage = null;
+    
+    private static QualifiedName integerFunctions = null;
+    
+    private static ElementReference integerFunctionPlus = null;
+    private static ElementReference integerFunctionLessThanOrEqual = null;
+    private static ElementReference integerFunctionToUnlimitedNatural = null;
     
     private static QualifiedName listFunctions = null;
     
@@ -163,6 +171,14 @@ public class RootNamespace extends NamespaceDefinition {
         return naturalType;
     }
 
+    public static ElementReference getSequenceFunctionIncluding() {
+        if (sequenceFunctionIncluding == null) {
+            sequenceFunctionIncluding = getSequenceFunctions().getImpl().copy().
+                            addName("Including").getImpl().getBehaviorReferent();
+        }
+        return sequenceFunctionIncluding;
+    }
+
     public static ElementReference getCollectionFunctionAdd() {
         if (collectionFunctionAdd == null) {
             collectionFunctionAdd = getCollectionFunctions().getImpl().copy().
@@ -181,7 +197,7 @@ public class RootNamespace extends NamespaceDefinition {
     public static QualifiedName getListFunctions() {
         if (listFunctions == null) {
             listFunctions = new QualifiedName();
-            listFunctions.getImpl().addName("FoundationModelLibrary").getImpl().
+            listFunctions.getImpl().addName("FoundationalModelLibrary").getImpl().
                 addName("PrimitiveBehaviors").getImpl().addName("ListFunctions");
             listFunctions.getImpl().setCurrentScope(getRootScope());
         }
@@ -203,4 +219,38 @@ public class RootNamespace extends NamespaceDefinition {
         }
         return listFunctionSize;
     }
+    public static QualifiedName getIntegerFunctions() {
+        if (integerFunctions == null) {
+            integerFunctions = new QualifiedName();
+            integerFunctions.getImpl().addName("FoundationalModelLibrary").getImpl().
+                addName("PrimitiveBehaviors").getImpl().addName("IntegerFunctions");
+            integerFunctions.getImpl().setCurrentScope(getRootScope());
+        }
+        return integerFunctions;
+    }
+    
+    public static ElementReference getIntegerFunctionPlus() {
+        if (integerFunctionPlus == null) {
+            integerFunctionPlus = getIntegerFunctions().getImpl().copy().
+                            addName("+").getImpl().getBehaviorReferent();
+        }
+        return integerFunctionPlus;
+    }
+
+    public static ElementReference getIntegerFunctionLessThanOrEqual() {
+        if (integerFunctionLessThanOrEqual == null) {
+            integerFunctionLessThanOrEqual = getIntegerFunctions().getImpl().copy().
+                            addName("<=").getImpl().getBehaviorReferent();
+        }
+        return integerFunctionLessThanOrEqual;
+    }
+
+    public static ElementReference getIntegerFunctionToUnlimitedNatural() {
+        if (integerFunctionToUnlimitedNatural == null) {
+            integerFunctionToUnlimitedNatural = getIntegerFunctions().getImpl().copy().
+                            addName("ToUnlimitedNatural").getImpl().getBehaviorReferent();
+        }
+        return integerFunctionToUnlimitedNatural;
+    }
+
 }

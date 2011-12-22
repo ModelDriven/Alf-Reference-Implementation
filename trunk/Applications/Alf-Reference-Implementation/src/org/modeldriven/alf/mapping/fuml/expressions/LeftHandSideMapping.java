@@ -87,13 +87,14 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
         return this.getGraph().getModelElements();
     }
 
-	public LeftHandSide getLeftHandSide() {
-		return (LeftHandSide) this.getSource();
-	}
     public ActivityGraph getGraph() throws MappingError {
         this.getNode();
         return this.graph;
     }
+	
+	public LeftHandSide getLeftHandSide() {
+		return (LeftHandSide) this.getSource();
+	}
 	
 	@Override
 	public void print(String prefix) {

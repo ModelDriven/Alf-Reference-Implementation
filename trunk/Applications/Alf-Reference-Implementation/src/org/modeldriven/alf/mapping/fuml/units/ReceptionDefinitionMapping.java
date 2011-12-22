@@ -18,6 +18,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.ReceptionDefinition;
 
 import fUML.Syntax.Classes.Kernel.Element;
+import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.CommonBehaviors.Communications.Reception;
 import fUML.Syntax.CommonBehaviors.Communications.Signal;
 
@@ -43,6 +44,11 @@ public class ReceptionDefinitionMapping extends MemberMapping {
                 reception.setSignal(signal);
             }
         }
+    }
+    
+    @Override
+    public NamedElement getNamedElement() throws MappingError {
+        return this.getReception();
     }
     
     public Reception getReception() throws MappingError {

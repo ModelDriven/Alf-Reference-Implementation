@@ -9,7 +9,6 @@
 package org.modeldriven.alf.mapping.fuml.expressions;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.mapping.Mapping;
@@ -30,17 +29,11 @@ import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
 
 import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.BasicActions.CallAction;
 import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
 import fUML.Syntax.Actions.BasicActions.CallOperationAction;
 import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Actions.BasicActions.InvocationAction;
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Actions.BasicActions.Pin;
 import fUML.Syntax.Actions.BasicActions.SendSignalAction;
 import fUML.Syntax.Actions.IntermediateActions.DestroyObjectAction;
-import fUML.Syntax.Actions.IntermediateActions.LinkEndData;
-import fUML.Syntax.Actions.IntermediateActions.ReadLinkAction;
 import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
 import fUML.Syntax.Actions.IntermediateActions.TestIdentityAction;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
@@ -48,13 +41,9 @@ import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionNode;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Class_;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.Operation;
-import fUML.Syntax.Classes.Kernel.Parameter;
-import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 import fUML.Syntax.Classes.Kernel.Property;
-import fUML.Syntax.Classes.Kernel.PropertyList;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 import fUML.Syntax.CommonBehaviors.Communications.Signal;
 
@@ -62,6 +51,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
 
     protected Action action = null;
     protected ActivityNode resultSource = null;
+    private ActivityGraph lhsGraph = new ActivityGraph();
     private Map<String, ActivityNode> assignedValueSourceMap = null;
 
     /**
@@ -77,11 +67,8 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
      * assignment mapping.)
      */
 
-    public void mapTo(Action action) throws MappingError {
-        this.graph.add(action);
-        
-        super.mapTo(action);
-        this.mapTargetTo(action);
+    public Action mapAction() throws MappingError {
+        Action action = this.mapTarget();
         
         InvocationExpression expression = this.getInvocationExpression();
         Tuple tuple = expression.getTuple();
@@ -89,13 +76,17 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         if (mapping instanceof TupleMapping) {
             TupleMapping tupleMapping = (TupleMapping)mapping;
             tupleMapping.mapTo(action);
-            this.graph.addAll(tupleMapping.getGraph());
+            this.graph.addAll(tupleMapping.getTupleGraph());
+            this.lhsGraph = tupleMapping.getLhsGraph();
             this.assignedValueSourceMap = tupleMapping.getAssignedValueSourceMap();
         } else {
             this.throwError("Error mapping tuple:" + tuple);
         }
 
-        this.mapFeature(action);
+        action = this.mapFeature(action);
+        
+        this.graph.addAll(this.lhsGraph);
+        return action;
     }
 
     /*
@@ -202,216 +193,109 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
      * signal send has no result source element.
      */
 
-    public Action mapAction() throws MappingError {
-        InvocationExpression invocationExpression = this.getInvocationExpression();
-        if (invocationExpression.getIsOperation()) {
-            return new CallOperationAction();
-        } else if (invocationExpression.getIsSignal()) {
-            return new SendSignalAction();
-        } else if (invocationExpression.getIsBehavior()) {
-            return new CallBehaviorAction();
-        } else if (invocationExpression.getIsAssociationEnd()) {
-            return new ReadLinkAction();
-        } else if (invocationExpression.getIsImplicit()) {
-            return new DestroyObjectAction();
+    public Action mapTarget() throws MappingError {
+        InvocationExpression expression = this.getInvocationExpression();
+        Action action = null;
+        if (expression.getIsImplicit()) {
+            action = this.graph.addDestroyObjectAction(null);
         } else {
-            this.throwError("Error mapping invocation action: "
-                    + invocationExpression.getReferent());
-            return null;
-        }
-    }
-
-    public void mapTargetTo(Action action) throws MappingError {
-        if (action instanceof DestroyObjectAction) {
-            action.setName("DestroyObject");
-            ((DestroyObjectAction)action).setIsDestroyLinks(true);
-            ((DestroyObjectAction)action).setIsDestroyOwnedObjects(true);
-        } else {
-            InvocationExpression expression = this.getInvocationExpression();
             ElementReference referent = expression.getReferent();
             FumlMapping mapping = this.fumlMap(referent);
             if (mapping instanceof ElementReferenceMapping) {
                 mapping = ((ElementReferenceMapping) mapping).getMapping();
-            }
-            
+            }            
             if (mapping instanceof OperationDefinitionMapping) {
                 Operation operation = 
                     ((OperationDefinitionMapping) mapping).getOperation();
-                action.setName("CallOperation(" + operation.qualifiedName + ")");
-                ((CallOperationAction) action).setOperation(operation);
-                this.addPinsFromParameters(action, operation.ownedParameter);
-                
+                action = this.graph.addCallOperationAction(operation);
+                this.resultSource = ActivityGraph.getReturnPin(action);
+
             } else if (mapping instanceof SignalDefinitionMapping) {
                 Signal signal = ((SignalDefinitionMapping) mapping).getSignal();
-                action.setName("SendSignal(" + signal.qualifiedName + ")");
-                ((SendSignalAction) action).setSignal(signal);
-                this.addPinsFromProperties(action, signal.attribute);
+                action = this.graph.addSendSignalAction(signal);
                 
             } else if (mapping instanceof ActivityDefinitionMapping) {
                 Behavior behavior = 
                     ((ActivityDefinitionMapping) mapping).getBehavior();
-                action.setName("CallBehavior(" + behavior.qualifiedName + ")");
-                ((CallBehaviorAction) action).setBehavior(behavior);
-                this.addPinsFromParameters(action, behavior.ownedParameter);
-                
+                action = this.graph.addCallBehaviorAction(behavior);
+                this.resultSource = ActivityGraph.getReturnPin(action);
+                 
             } else if (mapping instanceof PropertyDefinitionMapping) {
                 Property associationEnd = 
                     ((PropertyDefinitionMapping) mapping).getProperty();
-                action.setName("ReadLink(" + associationEnd.qualifiedName + ")");
-                PropertyList otherEnds = associationEnd.association.attribute;
-                otherEnds.remove(associationEnd);
-                this.addPinsFromProperties(action, otherEnds);
-                this.resultSource = new OutputPin();
-                this.addPin(action, (Pin)this.resultSource, associationEnd);
+                action = this.graph.addReadLinkAction(associationEnd);
+                this.resultSource = action.output.get(0);
                 
             } else {
                 this.throwError("Unknown referent mapping: " + 
                         mapping.getErrorMessage());
             }
         }
+        return action;
     }
 
-    private void addPinsFromParameters(Action action, List<Parameter> parameters)
-            throws MappingError {
-
-        Parameter returnParameter = null;
-        for (Parameter parameter : parameters) {
-            ParameterDirectionKind direction = parameter.direction;
-            if (direction == ParameterDirectionKind.in || direction == ParameterDirectionKind.inout) {
-                this.addPin(action, new InputPin(), parameter);
-            }
-            if (direction == ParameterDirectionKind.out
-                    || direction == ParameterDirectionKind.inout
-                    || direction == ParameterDirectionKind.return_) {
-                if (direction == ParameterDirectionKind.return_) {
-                    returnParameter = parameter;
-                } else {
-                    this.addPin(action, new OutputPin(), parameter);
-                }
-            }
-        }
-        
-        // Make sure that the pin for the return parameter, if any, is the
-        // last pin.
-        if (returnParameter != null) {
-            this.resultSource = new OutputPin();
-            this.addPin(action, (Pin)this.resultSource, returnParameter);
-        }
-    }
-
-    private void addPinsFromProperties(Action action, List<Property> properties)
-            throws MappingError {
-        for (Property property : properties) {
-            this.addPin(action, new InputPin(), property);
-        }
-    }
-
-    private void addPin(Action action, Pin pin, Parameter parameter) throws MappingError {
-        pin.setLower(parameter.multiplicityElement.lower);
-        pin.setUpper(parameter.multiplicityElement.upper.naturalValue);
-        pin.setType(parameter.type);
-
-        if (pin instanceof InputPin) {
-            InputPin inputPin = (InputPin) pin;
-            if (action instanceof InvocationAction) {
-                pin.setName(action.name + ".argument(" + parameter.name + ")");
-                ((InvocationAction) action).addArgument(inputPin);
-            } else {
-                this.throwError("Error adding input pin from parameter to action: " + action);
-            }
-        } else if (action instanceof CallAction) {
-            pin.setName(action.name + ".result(" + parameter.name + ")");
-            ((CallAction) action).addResult((OutputPin) pin);
-        } else {
-            this.throwError("Error adding output pin from parameter to action: " + action);
-        }
-    }
-
-    private void addPin(Action action, Pin pin, Property property) throws MappingError {
-        pin.setLower(property.multiplicityElement.lower);
-        pin.setLower(property.multiplicityElement.upper.naturalValue);
-        pin.setType(property.typedElement.type);
-
-        if (pin instanceof InputPin) {
-            InputPin inputPin = new InputPin();
-            if (action instanceof SendSignalAction) {
-                inputPin.setName(action.name + ".argument(" + property.name + ")");
-                ((InvocationAction) action).addArgument(inputPin);
-            } else if (action instanceof ReadLinkAction) {
-                inputPin.setName(action.name + ".inputValue(" + property.name + ")");
-                LinkEndData endData = new LinkEndData();
-                endData.setValue(inputPin);
-                ((ReadLinkAction) action).addInputValue(inputPin);
-                ((ReadLinkAction) action).addEndData(endData);
-            } else {
-                this.throwError("Error adding input pin from property to action: " + action);
-            }
-        } else if (action instanceof ReadLinkAction) {
-            pin.setName(action.name + ".result");
-            ((ReadLinkAction) action).setResult((OutputPin) pin);
-        } else {
-            this.throwError("Error adding output pin from property to action: " + action);
-        }
-    }
-
-    public void mapFeature(Action action) throws MappingError {
+    public Action mapFeature(Action action) throws MappingError {
         InvocationExpression expression = this.getInvocationExpression();
         FeatureReference feature = expression.getFeature();
+        Action thisAction = action;
         if (feature != null) {
-            InputPin targetPin = 
-                ActivityGraph.createInputPin(action.name + ".target", null, 1, 1);
-            ActivityNode targetNode = targetPin;
-            if (action instanceof CallOperationAction) {
-                CallOperationAction callAction = (CallOperationAction) action;
-                callAction.setTarget(targetPin);
-                
-                Class_ class_ = callAction.operation.class_;
-                targetPin.setType(class_);
-                
-                if (expression.getIsDestructor()) {
-                    targetNode = this.graph.addForkNode("Fork");
-                    
-                    this.graph.addObjectFlow(targetNode, targetPin);
-                    
-                    DestroyObjectAction destroyAction = 
-                        this.graph.addDestroyObjectAction(class_);                    
-                    targetPin = destroyAction.target;
-                    
-                    this.graph.addControlFlow(action, destroyAction);
-                    
-                    if (expression.getImpl().isContainedInDestructor()) {
-                        this.addDestroyCheck(targetNode, targetPin);
-                    } else {
-                         this.graph.addObjectFlow(targetNode, targetPin);
-                    }
-                }
-                
-            } else if (action instanceof SendSignalAction){
-                SendSignalAction sendAction = (SendSignalAction) action;
-                sendAction.setTarget(targetPin);
-                targetPin.setType(sendAction.signal);
-                
-            } else if (action instanceof DestroyObjectAction) {
-                DestroyObjectAction destroyAction = (DestroyObjectAction) action;
-                destroyAction.setTarget(targetPin);
-                if (expression.getImpl().isContainedInDestructor()) {
-                    targetNode = new ForkNode();
-                    targetNode.setName("Fork");
-                    this.addDestroyCheck(targetNode, targetPin);
-                }
-            }
-
-            Expression primary = feature == null ? null : feature.getExpression();
+            Expression primary = feature.getExpression();
             FumlMapping mapping = this.fumlMap(primary);
             if (!(mapping instanceof ExpressionMapping)) {
                 this.throwError("Error mapping expression: " + primary);
             } else {
+                ActivityNode targetNode = null;
+                if (action instanceof CallOperationAction) {
+                    CallOperationAction callAction = (CallOperationAction) action;
+                    targetNode = callAction.target;
+                    
+                    if (expression.getIsDestructor()) {
+                        ActivityNode targetPin = targetNode;
+                        targetNode = this.graph.addForkNode("Fork");
+                        
+                        this.graph.addObjectFlow(targetNode, targetPin);
+                        
+                        DestroyObjectAction destroyAction = 
+                            this.graph.addDestroyObjectAction(
+                                    callAction.operation.class_);                    
+                        targetPin = destroyAction.target;
+                        
+                        this.graph.addControlFlow(action, destroyAction);
+                        
+                        if (expression.getImpl().isContainedInDestructor()) {
+                            this.addDestroyCheck(targetNode, targetPin);
+                        } else {
+                            this.graph.addObjectFlow(targetNode, targetPin);
+                        }
+                    }
+                    
+                } else if (action instanceof SendSignalAction){
+                    SendSignalAction sendAction = (SendSignalAction) action;
+                    
+                    // NOTE: The type of the target pin must be properly set to
+                    // satisfy the fUML constraint that the type of this pin has a
+                    // reception for the signal being sent.
+                    sendAction.target.setType(((ExpressionMapping)mapping).getType());
+                    
+                    targetNode = sendAction.target;
+                    
+                } else if (action instanceof DestroyObjectAction) {
+                    DestroyObjectAction destroyAction = (DestroyObjectAction) action;
+                    if (expression.getImpl().isContainedInDestructor()) {
+                        targetNode = new ForkNode();
+                        targetNode.setName("Fork");
+                        this.addDestroyCheck(targetNode, destroyAction.target);
+                    } else {
+                        targetNode = destroyAction.target;
+                    }
+                }
+    
                 ActivityNode featureResult = 
                     ((ExpressionMapping) mapping).getResultSource();
                 if (expression.getImpl().isSequenceFeatureInvocation()) {
                     
-                    // Wrap the invocation action and tuple mapping in an
-                    // expansion region.
+                    // Wrap the invocation action and input arguments mapping
+                    // in an expansion region.
                     Collection<Element> elements = this.graph.getModelElements();
                     this.graph = new ActivityGraph();
                     ExpansionRegion region = this.graph.addExpansionRegion(
@@ -420,12 +304,18 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                             elements, featureResult, targetNode, 
                             this.resultSource);
                     if (this.resultSource != null) {
-                        this.resultSource = region.outputElement.get(0);
+                        for (ExpansionNode expansionNode: region.outputElement) {
+                            if (expansionNode.incoming.get(0).source == 
+                                this.resultSource) {
+                                this.resultSource = expansionNode;
+                                break;
+                            }
+                        }
                     }
 
                     // Make the expansion region the new primary action for the
                     // mapping.
-                    this.action = region;
+                    thisAction = region;
                     
                 } else if (featureResult != null) {
                     // Connect the feature mapping result source directly to
@@ -435,13 +325,14 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                 this.graph.addAll(((ExpressionMapping)mapping).getGraph());
             }
         }
+        return thisAction;
     }
 
     /**
      * Add the logic to test whether the context object is the object being
      * destroyed (from targetNode) and conditioning the destroy action on that.
      */
-    private void addDestroyCheck(ActivityNode targetNode, InputPin targetPin)
+    private void addDestroyCheck(ActivityNode targetNode, ActivityNode targetPin)
         throws MappingError {
         ReadSelfAction readSelf = this.graph.addReadSelfAction(null);        
         TestIdentityAction testAction = 
@@ -525,9 +416,11 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                 System.out.println(prefix + " operation: "
                         + ((CallOperationAction) invocationAction).operation);
             } else if (invocationAction instanceof SendSignalAction) {
-                System.out.println(prefix + " signal: " + ((SendSignalAction) action).signal);
+                System.out.println(prefix + " signal: " + 
+                        ((SendSignalAction) invocationAction).signal);
             } else if (invocationAction instanceof CallBehaviorAction) {
-                System.out.println(prefix + " behavior: " + ((CallBehaviorAction) action).behavior);
+                System.out.println(prefix + " behavior: " + 
+                        ((CallBehaviorAction) invocationAction).behavior);
             }
         }
     }
