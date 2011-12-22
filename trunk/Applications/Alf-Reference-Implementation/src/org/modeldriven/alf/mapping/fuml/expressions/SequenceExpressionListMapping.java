@@ -44,6 +44,7 @@ public class SequenceExpressionListMapping extends SequenceElementsMapping {
         StructuredActivityNode previousNode = null;
         SequenceExpressionList expressionList = this.getSequenceExpressionList();
         Collection<Expression> elements = expressionList.getElement();
+        int i = 1;
         for (Expression element: elements) {
             FumlMapping mapping = this.fumlMap(element);
             if (!(mapping instanceof ExpressionMapping)) {
@@ -57,7 +58,8 @@ public class SequenceExpressionListMapping extends SequenceElementsMapping {
                 } else {
                     StructuredActivityNode node = 
                         this.graph.addStructuredActivityNode(
-                                "SequenceExpressionList@" + expressionList.getId(), 
+                                "SequenceExpressionList@" + 
+                                    expressionList.getId() + "#" + i++, 
                                 expressionMapping.getModelElements());
                     if (previousNode != null) {
                         this.graph.addControlFlow(previousNode, node);
