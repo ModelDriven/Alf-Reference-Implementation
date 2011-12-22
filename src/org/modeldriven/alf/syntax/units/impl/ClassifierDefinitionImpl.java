@@ -255,6 +255,23 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
         return templateParameters;
 	}
 	
+	public List<ElementReference> getTemplateActuals() {
+	    List<ElementReference> templateActuals = new ArrayList<ElementReference>();
+        for (Member member: this.getSelf().getOwnedMember()) {
+            if (member instanceof ClassifierTemplateParameter) {
+                ClassifierTemplateParameterImpl parameter = 
+                    ((ClassifierTemplateParameter)member).getImpl();
+                if (parameter.isBound()) {
+                    ElementReference boundArgument = parameter.getBoundArgument();
+                    if (boundArgument != null) {
+                        templateActuals.add(boundArgument);
+                    }
+                }
+            }
+        }
+        return templateActuals;
+	}
+	
 	/**
 	 * A completely bound classifier is one that has no unbound template
 	 * parameters and all of whose bound template parameters are bound to

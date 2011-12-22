@@ -31,7 +31,9 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	// collection type, then this is the collection type name for that outer
 	// sequence construction expression.
 	private QualifiedName collectionTypeName = null;
-
+	
+	private InstanceCreationExpression instanceCreationExpression = null;
+	
 	public SequenceConstructionExpressionImpl(
 			SequenceConstructionExpression self) {
 		super(self);
@@ -40,6 +42,16 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	@Override
 	public SequenceConstructionExpression getSelf() {
 		return (SequenceConstructionExpression) this.self;
+	}
+	
+	@Override
+	public void deriveAll() {
+	    super.deriveAll();
+	    InstanceCreationExpression instanceCreationExpression = 
+	        this.getInstanceCreationExpression();
+	    if (instanceCreationExpression != null) {
+	        instanceCreationExpression.deriveAll();
+	    }
 	}
 
 	public SequenceElements getElements() {
@@ -186,6 +198,50 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	    return assignments;
 	}
 	
+	/**
+	 * For a sequence construction expression without multiplicity, return the
+	 * equivalent collection class instance creation expression.
+	 */
+	public InstanceCreationExpression getInstanceCreationExpression() {
+	    if (this.instanceCreationExpression == null && 
+	            !this.getSelf().getHasMultiplicity()) {
+	        this.instanceCreationExpression = 
+	            this.deriveInstanceCreationExpression();
+	    }
+	    return this.instanceCreationExpression;
+	}
+	
+	protected InstanceCreationExpression deriveInstanceCreationExpression() {
+	    SequenceConstructionExpression self = this.getSelf();
+	    SequenceConstructionExpression argument = 
+	        new SequenceConstructionExpression();
+	    argument.setElements(self.getElements());
+	    argument.setHasMultiplicity(true);
+
+	    ElementReference type = self.getType();
+	    QualifiedName typeName = self.getTypeName();
+	    if (type != null) {
+	        argument.setType(type.getImpl().getCollectionArgument());
+	        if (typeName == null) {
+	            typeName = type.getImpl().getQualifiedName();
+	            // NOTE: Root scope is used here because the typeName
+	            // generated above will be fully qualified.
+	            typeName.getImpl().setCurrentScope(RootNamespace.getRootScope());
+	        }
+	    }
+
+	    PositionalTuple tuple = new PositionalTuple();
+	    tuple.addExpression(argument);
+
+	    InstanceCreationExpression instanceCreation = 
+	        new InstanceCreationExpression();
+	    instanceCreation.setConstructor(typeName);
+	    instanceCreation.setTuple(tuple);
+	    tuple.setInvocation(instanceCreation);
+
+	    return instanceCreation;
+	}
+	
 	public static SequenceConstructionExpression makeNull() {
 	    SequenceConstructionExpression nullExpression = 
 	        new SequenceConstructionExpression();
@@ -196,7 +252,7 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    SequenceConstructionExpression self = this.getSelf();
-	    QualifiedName typeName =self.getTypeName();
+	    QualifiedName typeName = self.getTypeName();
 	    SequenceElements elements = self.getElements();
 	    if (typeName != null) {
 	        typeName.getImpl().setCurrentScope(currentScope);

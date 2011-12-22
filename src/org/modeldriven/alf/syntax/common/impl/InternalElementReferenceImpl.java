@@ -308,7 +308,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         SyntaxElement element = this.getSelf().getElement();
         return element instanceof Member? ((Member)element).getName(): null;
     }
-
+    
     @Override
     public String getVisibility() {
         SyntaxElement element = this.getSelf().getElement();
@@ -392,6 +392,13 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
         return members;
+    }
+    
+    @Override
+    public List<ElementReference> getTemplateActuals() {
+        return !this.isClassifier()? new ArrayList<ElementReference>():
+            ((ClassifierDefinition)this.getSelf().getElement()).getImpl().
+                getTemplateActuals();
     }
     
     @Override

@@ -54,6 +54,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     @Override
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);
+        // System.out.println("[mapTo] activity=" + classifier.name);
 
         ActivityDefinition definition = this.getActivityDefinition();
         if (classifier instanceof OpaqueBehavior) {
@@ -68,48 +69,29 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             }
         } else {
             Activity activity = (Activity)classifier;
-
+            /*
             Block body = definition.getImpl().getEffectiveBody();
             if (body != null) {
                 FumlMapping bodyMapping = this.fumlMap(body);
                 Collection<Element> elements = bodyMapping.getModelElements();
-    
-                for (Element element: elements) {
-                    if (element instanceof ActivityNode) {
-                        activity.addNode((ActivityNode)element);
-                    } else if (element instanceof ActivityEdge) {
-                        activity.addEdge((ActivityEdge)element);
-                    } else {
-                        this.throwError("Element not an activity node or edge: " + element);
-                    }
-                }
-                
-                for (Parameter parameter: activity.ownedParameter) {
-                    if (parameter.direction == ParameterDirectionKind.out ||
-                            parameter.direction == ParameterDirectionKind.inout) {
-                        String name = parameter.name;
-                        AssignedSource assignment = 
-                            body.getImpl().getAssignmentAfter(name);
-                        if (assignment != null) {
-                            FumlMapping mapping = 
-                                this.fumlMap(assignment.getSource());
-                            if (!(mapping instanceof SyntaxElementMapping)) {
-                                this.throwError("Error mapping parameter " + 
-                                        name + ": " + mapping.getErrorMessage());
-                            } else {
-                                ActivityNode source = ((SyntaxElementMapping)mapping).
-                                        getAssignedValueSource(name);
-                                ObjectFlow flow = new ObjectFlow();
-                                flow.setSource(source);
-                                flow.setTarget(getOutputParameterNode(activity, parameter));
-                                activity.addEdge(flow);
-                            }
-                        }
-                    }
-                }
+                addElements(activity, elements, body, this);
             }
-            
+            */
             activity.setIsActive(definition.getImpl().isClassifierBehavior());
+        }
+    }
+    
+    @Override
+    public void mapBody() throws MappingError {
+        Classifier classifier = this.getClassifier();
+        if (!(classifier instanceof OpaqueBehavior)) {
+            Block body = 
+                this.getActivityDefinition().getImpl().getEffectiveBody();
+            if (body != null) {
+                FumlMapping bodyMapping = this.fumlMap(body);
+                Collection<Element> elements = bodyMapping.getModelElements();
+                addElements((Activity)classifier, elements, body, this);
+            }
         }
     }
 
@@ -119,6 +101,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             this.throwError("Member that is not a parameter: " + element);
         } else {
             Parameter parameter = (Parameter)element;
+            // System.out.println("[addMemberTo] activity=" + namespace.name + " parameter=" + parameter.name);
             ((Behavior)namespace).addOwnedParameter(parameter);
 
             if (namespace instanceof Activity) {
@@ -166,6 +149,49 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 	public ActivityDefinition getActivityDefinition() {
 		return (ActivityDefinition)this.getSource();
 	}
+	
+	public static void addElements(
+	        Activity activity, 
+	        Collection<Element> elements,
+	        Block body,
+	        FumlMapping mapping) throws MappingError {
+	    
+        for (Element element: elements) {
+            if (element instanceof ActivityNode) {
+                activity.addNode((ActivityNode)element);
+            } else if (element instanceof ActivityEdge) {
+                activity.addEdge((ActivityEdge)element);
+            } else {
+                mapping.throwError("Element not an activity node or edge: " + element);
+            }
+        }
+        
+        // Connect final output parameter assigned sources to corresponding 
+        // output parameter nodes.
+        for (Parameter parameter: activity.ownedParameter) {
+            if (parameter.direction == ParameterDirectionKind.out ||
+                    parameter.direction == ParameterDirectionKind.inout) {
+                String name = parameter.name;
+                AssignedSource assignment = 
+                    body.getImpl().getAssignmentAfter(name);
+                if (assignment != null) {
+                    FumlMapping sourceMapping = 
+                        mapping.fumlMap(assignment.getSource());
+                    if (!(sourceMapping instanceof SyntaxElementMapping)) {
+                        mapping.throwError("Error mapping parameter " + 
+                                name + ": " + mapping.getErrorMessage());
+                    } else {
+                        ActivityNode source = ((SyntaxElementMapping)sourceMapping).
+                                getAssignedValueSource(name);
+                        ObjectFlow flow = new ObjectFlow();
+                        flow.setSource(source);
+                        flow.setTarget(getOutputParameterNode(activity, parameter));
+                        activity.addEdge(flow);
+                    }
+                }
+            }
+        }
+    }
 
     public static ForkNode getInputParameterFork(
             Activity activity, Parameter parameter) {

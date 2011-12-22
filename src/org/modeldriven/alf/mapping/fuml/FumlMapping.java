@@ -132,7 +132,10 @@ public abstract class FumlMapping extends Mapping {
     
     public void mapTo(Element element) throws MappingError {
         /*
-        System.out.println("[mapTo] " + element);
+        System.out.println("[mapTo] source = " + this.getSource() + 
+                " element=" + element);
+        */
+        /*
         Object source = this.getSource();
         if (source instanceof SyntaxElement) {
             ((SyntaxElement) source).print("***", true);
@@ -175,8 +178,19 @@ public abstract class FumlMapping extends Mapping {
                 System.out.println("Mapped successfully.");
             } catch (MappingError e) {
                 System.out.println("Mapping failed.");
-                System.out.println(e.getMapping());                    
+                Mapping errorMapping = e.getMapping();
+                System.out.println(errorMapping);
                 System.out.println(" error: " + e.getMessage());
+                Object source = errorMapping.getSource();
+                if (source != null) {
+                    System.out.println(" source: " + source);
+                    if (source instanceof SyntaxElement) {
+                        SyntaxElement element = (SyntaxElement)source;
+                        System.out.println(" file: " + element.getFileName() + 
+                                " at line " + element.getLine() + 
+                                " column " + element.getColumn());
+                    }
+                }
             }
             mapping.print();
         }

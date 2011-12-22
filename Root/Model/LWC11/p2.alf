@@ -1,0 +1,12 @@
+namespace LWC11;
+
+@apply(DataDefinition)
+package p2 {
+
+    @Entity
+    public datatype Car {
+        make: String;
+        model: String;
+    }
+    
+}

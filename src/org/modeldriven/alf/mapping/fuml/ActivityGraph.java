@@ -2,6 +2,7 @@ package org.modeldriven.alf.mapping.fuml;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import fUML.Syntax.Actions.BasicActions.*;
 import fUML.Syntax.Actions.CompleteActions.*;
@@ -11,6 +12,7 @@ import fUML.Syntax.Activities.ExtraStructuredActivities.*;
 import fUML.Syntax.Activities.IntermediateActivities.*;
 import fUML.Syntax.Classes.Kernel.*;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.*;
+import fUML.Syntax.CommonBehaviors.Communications.*;
 
 public class ActivityGraph {
     
@@ -30,6 +32,10 @@ public class ActivityGraph {
     
     public void remove(Element element) {
         this.modelElements.remove(element);
+    }
+    
+    public void removeAll(Collection<Element> elements) {
+        this.modelElements.removeAll(elements);
     }
     
     public Collection<Element> getModelElements() {
@@ -116,30 +122,59 @@ public class ActivityGraph {
     
     public CallBehaviorAction addCallBehaviorAction(Behavior behavior) {
         CallBehaviorAction callAction = new CallBehaviorAction();
-        callAction.setName("Call(" + behavior.name + ")");
+        callAction.setName("Call(" + behavior.qualifiedName + ")");
         callAction.setBehavior(behavior);
-        
-        for (Parameter parameter: behavior.ownedParameter) {
-            if (parameter.direction == ParameterDirectionKind.in ||
-                    parameter.direction == ParameterDirectionKind.inout) {
-                callAction.addArgument(createInputPin(
-                        callAction.name + ".argument(" + parameter.name + ")", 
-                        parameter.type, 
-                        parameter.multiplicityElement.lower, 
-                        parameter.multiplicityElement.upper.naturalValue));
-            } else if (parameter.direction == ParameterDirectionKind.inout ||
-                    parameter.direction == ParameterDirectionKind.out ||
-                    parameter.direction == ParameterDirectionKind.return_) {
-                callAction.addResult(createOutputPin(
-                        callAction.name + ".result(" + parameter.name + ")", 
-                        parameter.type, 
-                        parameter.multiplicityElement.lower, 
-                        parameter.multiplicityElement.upper.naturalValue));
-            }
-        }
-        
+        addPinsFromParameters(callAction, behavior.ownedParameter);
         this.add(callAction);
         return callAction;
+    }
+    
+    public CallOperationAction addCallOperationAction(Operation operation) {
+        CallOperationAction callAction = new CallOperationAction();
+        callAction.setName("Call(" + operation.qualifiedName + ")");
+        callAction.setOperation(operation);
+        callAction.setTarget(createInputPin(
+                callAction.name + ".target", operation.class_, 1, 1));
+        addPinsFromParameters(callAction, operation.ownedParameter);
+        this.add(callAction);
+        return callAction;
+    }
+    
+    public ClearAssociationAction addClearAssociationAction(Association association) {
+        ClearAssociationAction clearAction = new ClearAssociationAction();
+        clearAction.setName("Clear(" + association.qualifiedName + ")");
+        clearAction.setAssociation(association);
+        clearAction.setObject(createInputPin(
+                clearAction.name + ".object", null, 1, 1));
+        clearAction.object.multiplicityElement.isOrdered = false;
+        this.add(clearAction);
+        return clearAction;
+    }
+    
+    public CreateLinkAction addCreateLinkAction(Association association) {
+        CreateLinkAction createAction = new CreateLinkAction();
+        createAction.setName("Create(" + association.qualifiedName + ")");
+        for (Property end: association.ownedEnd) {
+            InputPin valuePin = createInputPin(
+                    createAction.name + ".value(" + end.name + ")", 
+                    end.typedElement.type, 1, 1);
+            valuePin.setIsOrdered(end.multiplicityElement.isOrdered);
+            createAction.addInputValue(valuePin);
+            LinkEndCreationData endData = new LinkEndCreationData();
+            endData.setEnd(end);
+            endData.setValue(valuePin);
+            endData.setIsReplaceAll(false);
+            if (end.multiplicityElement.isOrdered) {
+                InputPin insertAtPin = createInputPin(
+                        createAction.name + ".insertAt(" + end.name + ")", 
+                        FumlMapping.getUnlimitedNaturalType(), 1, 1);
+                createAction.addInputValue(insertAtPin);
+                endData.setInsertAt(insertAtPin);
+            }
+            createAction.addEndData(endData);
+        }
+        this.add(createAction);
+        return createAction;
     }
     
     public CreateObjectAction addCreateObjectAction(Class_ class_) {
@@ -152,6 +187,31 @@ public class ActivityGraph {
         return createAction;
     }
     
+    public DestroyLinkAction addDestroyLinkAction(Association association) {
+        DestroyLinkAction destroyAction = new DestroyLinkAction();
+        destroyAction.setName("Destroy(" + association.qualifiedName + ")");
+        for (Property end: association.ownedEnd) {
+            InputPin valuePin = createInputPin(
+                    destroyAction.name + ".value(" + end.name + ")", 
+                    end.typedElement.type, 1, 1);
+            valuePin.setIsOrdered(end.multiplicityElement.isOrdered);
+            destroyAction.addInputValue(valuePin);
+            LinkEndDestructionData endData = new LinkEndDestructionData();
+            endData.setEnd(end);
+            endData.setValue(valuePin);
+            endData.setIsDestroyDuplicates(!end.multiplicityElement.isOrdered);
+            if (end.multiplicityElement.isOrdered) {
+                InputPin destroyAtPin = createInputPin(
+                        destroyAction.name + ".destroyAt(" + end.name + ")", 
+                        FumlMapping.getUnlimitedNaturalType(), 1, 1);
+                destroyAction.addInputValue(destroyAtPin);
+                endData.setDestroyAt(destroyAtPin);
+            }
+            destroyAction.addEndData(endData);
+        }
+        this.add(destroyAction);
+        return destroyAction;
+    }
     public DestroyObjectAction addDestroyObjectAction(Class_ class_) {
         DestroyObjectAction destroyAction = new DestroyObjectAction();
         destroyAction.setName("DestroyObject");
@@ -161,6 +221,53 @@ public class ActivityGraph {
                 destroyAction.name + ".target", class_, 1, 1));
         this.add(destroyAction);
         return destroyAction;
+    }
+    
+    public LoopNode addLoopNode(
+            String name, boolean isTestedFirst, InputPin... inputs) {
+        LoopNode loopNode = new LoopNode();
+        loopNode.setName(name);
+        loopNode.setIsTestedFirst(isTestedFirst);
+        for (InputPin input: inputs) {
+            input.setName(loopNode.name + ".loopVariableInput(" + input.name + ")");
+            loopNode.addLoopVariableInput(input);
+            loopNode.addLoopVariable(createOutputPin(
+                    loopNode.name + ".loopVariable(" + input.name + ")", 
+                    input.typedElement.type, 
+                    input.multiplicityElement.lower, 
+                    input.multiplicityElement.upper.naturalValue));
+            loopNode.addResult(createOutputPin(
+                    loopNode.name + ".result(" + input.name + ")", 
+                    input.typedElement.type, 
+                    input.multiplicityElement.lower, 
+                    input.multiplicityElement.upper.naturalValue));
+        }
+        this.add(loopNode);
+        return loopNode;
+    }
+    
+    public void addLoopTest(
+            LoopNode loopNode, Collection<Element> test, OutputPin decider) {
+        addTo(loopNode, test, this.modelElements);
+        for (Element element: test) {
+            if (element instanceof ExecutableNode) {
+                loopNode.test.add((ExecutableNode)element);
+            }
+        }
+        loopNode.setDecider(decider);
+    }
+    
+    public void addLoopBodyPart(
+            LoopNode loopNode, Collection<Element> bodyPart, OutputPin... bodyOutputs) {
+        addTo(loopNode, bodyPart, this.modelElements);
+        for (Element element: bodyPart) {
+            if (element instanceof ExecutableNode) {
+                loopNode.bodyPart.add((ExecutableNode)element);
+            }
+        }
+        for (OutputPin bodyOutput: bodyOutputs) {
+            loopNode.bodyOutput.add(bodyOutput);
+        }
     }
     
     public ReadExtentAction addReadExtentAction(Class_ class_) {
@@ -173,6 +280,24 @@ public class ActivityGraph {
         }
         this.add(readExtentAction);
         return readExtentAction;
+    }
+    
+    public ReadLinkAction addReadLinkAction(Property associationEnd) {
+        ReadLinkAction readAction = new ReadLinkAction();
+        readAction.setName("ReadLink(" + associationEnd.qualifiedName + ")");
+        
+        LinkEndData openEnd = new LinkEndData();
+        openEnd.setEnd(associationEnd);
+        readAction.addEndData(openEnd);
+        
+        List<Property> otherEnds = 
+            new ArrayList<Property>(associationEnd.association.ownedEnd);
+        otherEnds.remove(associationEnd);
+        addPinsFromProperties(readAction, otherEnds);
+        
+        addPin(readAction, new OutputPin(), associationEnd);
+        this.add(readAction);
+        return readAction;
     }
     
     public ReadSelfAction addReadSelfAction(Type type) {
@@ -197,6 +322,17 @@ public class ActivityGraph {
         this.add(readAction);
         return readAction;
 
+    }
+    
+    public SendSignalAction addSendSignalAction(Signal signal) {
+        SendSignalAction sendAction = new SendSignalAction();
+        sendAction.setName("SendSignal(" + signal.qualifiedName + ")");
+        sendAction.setSignal(signal);
+        sendAction.setTarget(createInputPin(
+                sendAction.name + ".target", null, 1, 1));
+        addPinsFromProperties(sendAction, signal.attribute);
+        this.add(sendAction);
+        return sendAction;
     }
     
     public StartObjectBehaviorAction addStartObjectBehaviorAction(Class_ class_) {
@@ -231,6 +367,10 @@ public class ActivityGraph {
                 valueAction.name + ".result", value.type, 1, 1));
         this.add(valueAction);        
         return valueAction;
+    }
+    
+    public ValueSpecificationAction addNullValueSpecificationAction() {
+        return this.addValueSpecificationAction(new LiteralNull(), "null");
     }
     
     public ValueSpecificationAction addBooleanValueSpecificationAction(
@@ -306,7 +446,8 @@ public class ActivityGraph {
         region.setMode(mode);
         this.add(region);
 
-        // Add nodes to expansion region.
+        // Add nodes and control flows to expansion region.
+        // NOTE: Control flows must be between nested elements.
         for (Element element : nestedElements) {
             if (element instanceof ActivityNode) {
                 region.addNode((ActivityNode) element);
@@ -315,24 +456,54 @@ public class ActivityGraph {
             }
         }
         
-        // Add edges to expansion region.
+        // Add object flows to expansion region. If an incoming object flow
+        // crosses into the region, add an input pin at the boundary. If an
+        // outgoing object flow crosses out of the region, add an output
+        // expansion node at the boundary.
         for (Element element : nestedElements) {
-            if (element instanceof ObjectFlow ||
-                    element instanceof ControlFlow) {
+            if (element instanceof ObjectFlow) {
                 ActivityEdge edge = (ActivityEdge) element;
-                if (edge instanceof ControlFlow ||
-                        isContainedIn(edge.source, region)) {
+                ActivityNode source = edge.source;
+                ActivityNode target = edge.target;
+                boolean sourceIsContained = isContainedIn(source, region);
+                boolean targetIsContained = isContainedIn(target, region);
+                if (sourceIsContained && targetIsContained) {
                     region.addEdge(edge);
-                } else {
-                    edge.source.outgoing.remove(edge);
-                    edge.target.incoming.remove(edge);
-                    
+                } else if (!sourceIsContained && targetIsContained){
+                    source.outgoing.remove(edge);
+                    target.incoming.remove(edge);
+
+                    int lower = 0;
+                    int upper = -1;
+                    Type type = null;
+                    if (target instanceof ObjectNode) {
+                        type = ((ObjectNode)target).typedElement.type;
+                        if (target instanceof Pin) {
+                            Pin targetPin = (Pin)target;
+                            lower = targetPin.multiplicityElement.lower;
+                            upper = targetPin.multiplicityElement.upper.naturalValue;
+                        }
+                    }
+
                     InputPin pin = createInputPin(
-                            region.name + ".input(" + edge.source.name + ")",
-                            null, 0, -1);
-                    region.input.add(pin);
-                    region.addEdge(createObjectFlow(pin, edge.target));
+                            region.name + ".input(" + source.name + ")",
+                            type, lower, upper);
+                    region.addStructuredNodeInput(pin);
+                    region.addEdge(createObjectFlow(pin, target));
                     this.addObjectFlow(edge.source, pin);
+                } else if (sourceIsContained && !targetIsContained) {
+                    source.outgoing.remove(edge);
+                    target.incoming.remove(edge);
+
+                    ExpansionNode outputNode = new ExpansionNode();
+                    outputNode.setName(region.name + 
+                            ".outputElement(" + edge.source.name + ")");
+                    region.addOutputElement(outputNode);
+                    region.addEdge(createObjectFlow(edge.source, outputNode));
+                    this.add(outputNode);
+                    this.addObjectFlow(outputNode, edge.target);
+                } else {
+                    this.add(edge);
                 }
             }
         }
@@ -366,7 +537,9 @@ public class ActivityGraph {
         pin.setName(name);
         pin.setType(type);
         pin.setLower(lower);
-        pin.setUpper(upper);        
+        pin.setUpper(upper);
+        pin.setIsOrdered(true);
+        pin.setIsUnique(false);
     }
     
     public static InputPin createInputPin(String name, Type type, int lower, int upper) {
@@ -419,6 +592,97 @@ public class ActivityGraph {
         }
     }
 
+    private static void addPinsFromParameters(
+            Action action, List<Parameter> parameters) {
+
+        for (Parameter parameter : parameters) {
+            ParameterDirectionKind direction = parameter.direction;
+            
+            // NOTE: Both an input pin AND and output pin are added for an inout
+            // parameter.
+            if (direction == ParameterDirectionKind.in || 
+                    direction == ParameterDirectionKind.inout) {
+                addPin(action, new InputPin(), parameter);
+            }
+            if (direction == ParameterDirectionKind.out
+                    || direction == ParameterDirectionKind.inout
+                    || direction == ParameterDirectionKind.return_) {
+                addPin(action, new OutputPin(), parameter);
+            }
+        }
+    }
+
+    private static void addPin(Action action, Pin pin, Parameter parameter) {
+        pin.setLower(parameter.multiplicityElement.lower);
+        pin.setUpper(parameter.multiplicityElement.upper.naturalValue);
+        pin.setIsOrdered(parameter.multiplicityElement.isOrdered);
+        pin.setIsUnique(parameter.multiplicityElement.isUnique);
+        pin.setType(parameter.type);
+
+        if (pin instanceof InputPin) {
+            if (action instanceof InvocationAction) {
+                pin.setName(action.name + ".argument(" + parameter.name + ")");
+                ((InvocationAction) action).addArgument((InputPin)pin);
+            }
+        } else if (action instanceof CallAction) {
+            pin.setName(action.name + ".result(" + parameter.name + ")");
+            ((CallAction) action).addResult((OutputPin)pin);
+        }
+    }
+    
+    private static void addPinsFromProperties(
+            Action action, List<Property> properties) {
+        for (Property property : properties) {
+            addPin(action, new InputPin(), property);
+        }
+    }
+
+    private static void addPin(Action action, Pin pin, Property property) {
+        pin.setLower(property.multiplicityElement.lower);
+        pin.setLower(property.multiplicityElement.upper.naturalValue);
+        pin.setIsOrdered(property.multiplicityElement.isOrdered);
+        pin.setIsUnique(property.multiplicityElement.isUnique);
+        pin.setType(property.typedElement.type);
+
+        if (pin instanceof InputPin) {
+            InputPin inputPin = new InputPin();
+            if (action instanceof SendSignalAction) {
+                inputPin.setName(action.name + ".argument(" + property.name + ")");
+                ((InvocationAction) action).addArgument(inputPin);
+            } else if (action instanceof ReadLinkAction) {
+                inputPin.setName(action.name + ".inputValue(" + property.name + ")");
+                LinkEndData endData = new LinkEndData();
+                endData.setEnd(property);
+                endData.setValue(inputPin);
+                ((ReadLinkAction) action).addInputValue(inputPin);
+                ((ReadLinkAction) action).addEndData(endData);
+            }
+        } else if (action instanceof ReadLinkAction) {
+            pin.setName(action.name + ".result");
+            ((ReadLinkAction) action).setResult((OutputPin) pin);
+        }
+    }
+
+    public static OutputPin getReturnPin(Action action) {
+        List<Parameter> parameters =
+            action instanceof CallOperationAction? 
+                    ((CallOperationAction)action).operation.ownedParameter:
+            action instanceof CallBehaviorAction?
+                    ((CallBehaviorAction)action).behavior.ownedParameter:
+            new ArrayList<Parameter>();
+        int i = 0;
+        for (Parameter parameter: parameters) {
+            ParameterDirectionKind direction = parameter.direction;
+            if (direction == ParameterDirectionKind.return_) {
+                return action.output.get(i);
+            } else if (direction == ParameterDirectionKind.out ||
+                    direction == ParameterDirectionKind.inout) {
+                i++;
+            }
+        }
+        return null;
+    }
+
     /**
      * Checks that an activity node is contained directly within a structured 
      * activity node or indirectly within another structured activity node 
@@ -426,13 +690,20 @@ public class ActivityGraph {
      */
     public static boolean isContainedIn(
             ActivityNode node, StructuredActivityNode container) {
-        if (node instanceof Pin) {
-            node = (ActivityNode)node.owner;
-        }
-        ActivityNode inStructuredNode = node.inStructuredNode;
-        return inStructuredNode != null && (
-                inStructuredNode == container || 
-                isContainedIn(inStructuredNode, container));
+        // NOTE: A special check is necessary for loop variables, because the
+        // loopVariable association is not an ownership association.
+        if (container instanceof LoopNode && 
+                ((LoopNode)container).loopVariable.contains(node)) {
+            return true;
+        } else {
+            if (node instanceof Pin) {
+                node = (ActivityNode)node.owner;
+            }
+            ActivityNode inStructuredNode = node.inStructuredNode;
+            return inStructuredNode != null && (
+                    inStructuredNode == container || 
+                    isContainedIn(inStructuredNode, container));
+            }
     }
 
 }

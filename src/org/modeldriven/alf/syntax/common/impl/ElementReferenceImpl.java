@@ -13,6 +13,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.expressions.NameBinding;
+import org.modeldriven.alf.syntax.expressions.PositionalTemplateBinding;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -106,6 +109,7 @@ public abstract class ElementReferenceImpl {
     public abstract List<FormalParameter> getParameters();
     public abstract FormalParameter getReturnParameter();
     public abstract List<ElementReference> getTemplateParameters();
+    public abstract List<ElementReference> getTemplateActuals();
     public abstract ElementReference getParameteredElement();
     public abstract ElementReference getTemplate();
     public abstract Collection<ElementReference> getConstrainingClassifiers();
@@ -116,7 +120,37 @@ public abstract class ElementReferenceImpl {
     public abstract ElementReference getClassifierBehavior();
     public abstract ElementReference getNamespace();
     public abstract Collection<ElementReference> getRedefinedElements();
-        
+    
+    public QualifiedName getQualifiedName() {
+        ElementReference namespace = this.getNamespace();
+        String name = this.getName();
+        QualifiedName qualifiedName = 
+            namespace != null? namespace.getImpl().getQualifiedName():
+            name != null? new QualifiedName(): null;
+        if (qualifiedName != null) {
+            ElementReference template = this.getTemplate();
+            if (template != null) {
+                name = template.getImpl().getName();
+            }
+            if (name == null) {
+                name = "";
+            }
+            NameBinding nameBinding = new NameBinding();
+            nameBinding.setName(name);
+            if (template != null) {
+                PositionalTemplateBinding templateBinding = 
+                    new PositionalTemplateBinding();
+                for (ElementReference templateActual: this.getTemplateActuals()) {
+                    templateBinding.addArgumentName(
+                            templateActual.getImpl().getQualifiedName());
+                    nameBinding.setBinding(templateBinding);
+                }                
+            }
+            qualifiedName.addNameBinding(nameBinding);
+        }
+        return qualifiedName;
+    }
+
     /**
      * Return the active class corresponding to an activity, if any.
      * This is either the activity itself, if it is active, or the class that

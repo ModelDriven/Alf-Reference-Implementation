@@ -15,6 +15,7 @@ import org.modeldriven.alf.mapping.fuml.units.MemberMapping;
 import org.modeldriven.alf.syntax.units.ImportedMember;
 
 import fUML.Syntax.Classes.Kernel.Element;
+import fUML.Syntax.Classes.Kernel.NamedElement;
 
 import java.util.List;
 
@@ -26,6 +27,11 @@ public class ImportedMemberMapping extends MemberMapping {
 
 	public List<Element> getModelElements() throws MappingError {
         throw new MappingError(this, this.getErrorMessage());
+	}
+	
+	@Override
+	public NamedElement getNamedElement() {
+	    return null;
 	}
 
 	public ImportedMember getImportedMember() {

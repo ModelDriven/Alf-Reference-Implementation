@@ -17,22 +17,20 @@ import org.modeldriven.alf.mapping.fuml.units.NamespaceDefinitionMapping;
 
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.FormalParameter;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 
 import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.Activity;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import fUML.Syntax.Classes.Kernel.Class_;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Operation;
 import fUML.Syntax.Classes.Kernel.Parameter;
 import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
@@ -57,6 +55,19 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                         returnParameterMapping).getParameter());
             }
         }
+        
+        // NOTE: The following ensures that the class property is set for an
+        // operation, even if it has not been added as a member to its class
+        // yet.
+        NamespaceDefinition namespace = definition.getNamespace();
+        FumlMapping mapping = this.fumlMap(namespace);
+        if (!(mapping instanceof ClassDefinitionMapping)) {
+            this.throwError("Error mapping class for operation: " + 
+                    mapping.getErrorMessage());
+        } else {
+            operation.class_ = 
+                (Class_)((ClassDefinitionMapping)mapping).getClassifierOnly();
+        }
 
         if (definition.getIsAbstract()) {
             operation.setIsAbstract(true);
@@ -64,7 +75,6 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
             Activity activity = new Activity();
             operation.addMethod(activity);
             
-            Parameter returnParameter = null;
             for (Parameter parameter: operation.ownedParameter) {
                 Parameter copy = new Parameter();
                 copy.setName(parameter.name);
@@ -76,11 +86,8 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 copy.setIsUnique(parameter.multiplicityElement.isUnique);
                 activity.addOwnedParameter(copy);
                 ActivityDefinitionMapping.addParameterNodes(activity, copy);
-                if (parameter.direction == ParameterDirectionKind.return_) {
-                    returnParameter = copy;
-                }
             }
-
+            /*
             Block body = definition.getImpl().getEffectiveBody();
             
             FumlMapping bodyMapping = this.fumlMap(body);
@@ -103,16 +110,51 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 
                 elements = subgraph.getModelElements();
             }
-                        
-            for (Element element: elements) {
-                if (element instanceof ActivityNode) {
-                    activity.addNode((ActivityNode)element);
-                } else if (element instanceof ActivityEdge) {
-                    activity.addEdge((ActivityEdge)element);
-                } else {
-                    this.throwError("Element not an activity node or edge: " + element);
+            
+            ActivityDefinitionMapping.addElements(activity, elements, body, this);
+            */
+        }
+    }
+    
+    @Override
+    public void mapBody() throws MappingError {
+        OperationDefinition definition = this.getOperationDefinition();
+        
+        if (!definition.getIsAbstract()) {
+            Operation operation = this.getOperation();
+            Activity activity = (Activity)operation.method.get(0);
+
+            Block body = definition.getImpl().getEffectiveBody();
+            FumlMapping bodyMapping = this.fumlMap(body);
+            Collection<Element> elements = bodyMapping.getModelElements();
+
+            if (definition.getIsConstructor()) {
+                Parameter returnParameter = null;
+                for (Parameter parameter: activity.ownedParameter) {
+                    if (parameter.direction == ParameterDirectionKind.return_) {
+                        returnParameter = parameter;
+                        break;
+                    }
                 }
+                
+                ActivityGraph subgraph = new ActivityGraph();
+                StructuredActivityNode node = 
+                    subgraph.addStructuredActivityNode("Body", elements);
+
+                // TODO: Add default constructor behavior.
+
+                // Return context object as the constructor result.
+                ReadSelfAction readSelfAction = 
+                    subgraph.addReadSelfAction(returnParameter.type);
+                subgraph.addControlFlow(node, readSelfAction);
+                subgraph.addObjectFlow(readSelfAction.result,
+                        ActivityDefinitionMapping.getOutputParameterNode(
+                                activity, returnParameter));
+
+                elements = subgraph.getModelElements();
             }
+
+            ActivityDefinitionMapping.addElements(activity, elements, body, this);
         }
     }
     
@@ -133,10 +175,8 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
     }
     
     @Override
-	public List<Element> getModelElements() throws MappingError {
-	    ArrayList<Element> elements = new ArrayList<Element>();
-	    elements.add(this.getOperation());
-	    return elements;
+	public NamedElement getNamedElement() throws MappingError {
+        return this.getOperation();
 	}
 
     public Operation getOperation() throws MappingError {

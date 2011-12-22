@@ -9,9 +9,7 @@
 
 package org.modeldriven.alf.mapping.fuml.units;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
@@ -24,11 +22,13 @@ import org.modeldriven.alf.syntax.units.ClassifierDefinition;
 import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.Generalization;
+import fUML.Syntax.Classes.Kernel.NamedElement;
 
 public abstract class ClassifierDefinitionMapping extends
 		NamespaceDefinitionMapping {
     
     private Classifier classifier = null;
+    private boolean notFullyMapped = true;
     
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);
@@ -66,12 +66,27 @@ public abstract class ClassifierDefinitionMapping extends
     
     public abstract Classifier mapClassifier();
     
-    public Classifier getClassifier() throws MappingError {
+    /**
+     * This operation creates a new classifier, but does not fully map it.
+     * This allows, e.g., a parameter of an operation of a class to have the
+     * class as its type without causing the entire class to be mapped before
+     * the mapping of the operation is finished. 
+     * @return
+     */
+    public Classifier getClassifierOnly() {
         if (this.classifier == null) {
             this.classifier = this.mapClassifier();
-            this.mapTo(classifier);
         }
-
+        // System.out.println("[getClassifierOnly] classifier=" + this.classifier);
+        return this.classifier;
+    }
+    
+    public Classifier getClassifier() throws MappingError {
+        if (this.notFullyMapped) {
+            this.notFullyMapped = false;
+            this.mapTo(this.getClassifierOnly());
+        }
+        // System.out.println("[getClassifier] classifier=" + this.classifier);
         return this.classifier;
     }
     
@@ -84,13 +99,8 @@ public abstract class ClassifierDefinitionMapping extends
 	}
 	
 	@Override
-	public List<Element> getModelElements() throws MappingError {
-	    ArrayList<Element> elements = new ArrayList<Element>();
-        Classifier classifier = this.getClassifier();
-        if (classifier != null) {
-            elements.add(this.getClassifier());
-        }
-	    return elements;
+	public NamedElement getNamedElement() throws MappingError {
+	    return this.getClassifier();
 	}
 	
 	@Override

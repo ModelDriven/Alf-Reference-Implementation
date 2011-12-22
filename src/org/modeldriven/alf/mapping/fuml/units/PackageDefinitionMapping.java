@@ -19,19 +19,9 @@ import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Package;
 import fUML.Syntax.Classes.Kernel.PackageableElement;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 
     private Package package_ = null;
-    
-    @Override
-    public List<Element> getModelElements() throws MappingError {
-        ArrayList<Element> elements = new ArrayList<Element>();
-        elements.add(this.getPackage());
-        return elements;
-	}
     
     @Override
     public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
@@ -41,6 +31,11 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
             ((Package)namespace).addPackagedElement((PackageableElement)element);
         }
     }
+    
+    @Override
+    public NamedElement getNamedElement() throws MappingError {
+        return this.getPackage();
+	}
     
     @Override
     public Element getElement() {

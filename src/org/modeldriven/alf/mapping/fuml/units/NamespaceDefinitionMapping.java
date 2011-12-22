@@ -29,7 +29,7 @@ import fUML.Syntax.Classes.Kernel.Namespace;
 import fUML.Syntax.Classes.Kernel.PackageImport;
 
 public abstract class NamespaceDefinitionMapping extends MemberMapping {
-
+    
     // Note: An operation is a namespace in full UML, but not in fUML, 
     // so the "namespace" parameter has the type "NamedElement" to accommodate
     // this.
@@ -69,6 +69,19 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
                     }
                     
                 }
+            }
+        }
+        
+        /**
+         * Map any statements nested in members of the namespace as a
+         * second pass, to avoid possible circular mapping due to internal
+         * references between members and between members and the namespace
+         * itself.
+         */
+        for (Member member: definition.getOwnedMember()) {
+            Mapping mapping = member.getImpl().getMapping();
+            if (mapping instanceof MemberMapping) {
+                ((MemberMapping)mapping).mapBody();
             }
         }
     }

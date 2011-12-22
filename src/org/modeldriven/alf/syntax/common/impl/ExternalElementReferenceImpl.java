@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.expressions.NamedTemplateBinding;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.ExternalParameter;
 import org.modeldriven.alf.syntax.units.FormalParameter;
@@ -50,6 +51,7 @@ import org.modeldriven.alf.uml.Signal;
 import org.modeldriven.alf.uml.Stereotype;
 import org.modeldriven.alf.uml.TemplateBinding;
 import org.modeldriven.alf.uml.TemplateParameter;
+import org.modeldriven.alf.uml.TemplateParameterSubstitution;
 import org.modeldriven.alf.uml.TemplateSignature;
 import org.modeldriven.alf.uml.TemplateableElement;
 import org.modeldriven.alf.uml.TypedElement;
@@ -324,7 +326,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         return element instanceof NamedElement?
                     ((NamedElement)element).getName(): null;
     }
-
+    
     @Override
     public String getVisibility() {
         Element element = this.getSelf().getElement();
@@ -449,6 +451,38 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
         return templateParameters;
+    }
+    
+    @Override
+    public List<ElementReference> getTemplateActuals() {
+        ArrayList<ElementReference> templateActuals = 
+            new ArrayList<ElementReference>();
+        Element element = this.getSelf().getElement();
+        if (element instanceof TemplateableElement) {
+            TemplateBinding templateBinding = 
+                ((TemplateableElement)element).getTemplateBinding();
+            Collection<TemplateParameterSubstitution> parameterSubstitutions =
+                templateBinding.getParameterSubstitution();
+            for (TemplateParameter formal: 
+                templateBinding.getSignature().getParameter()) {
+                ExternalElementReference templateActual = null;
+                for (TemplateParameterSubstitution parameterSubstitution: 
+                    parameterSubstitutions) {
+                    if (parameterSubstitution.getFormal() == formal) {
+                        Collection<ParameterableElement> actuals = 
+                            parameterSubstitution.getActual();
+                        if (actuals != null && !actuals.isEmpty()) {
+                            templateActual = new ExternalElementReference();
+                            templateActual.setElement(
+                                    (Element) actuals.toArray()[0]);
+                        }
+                    }
+                }
+                templateActuals.add(templateActual);
+            }
+            
+        }
+        return templateActuals;
     }
     
     @Override
