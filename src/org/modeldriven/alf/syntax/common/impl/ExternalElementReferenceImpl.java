@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.NamedTemplateBinding;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.ExternalParameter;
 import org.modeldriven.alf.syntax.units.FormalParameter;

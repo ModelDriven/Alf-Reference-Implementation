@@ -13,8 +13,10 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.units.NamespaceDefinitionMapping;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -27,6 +29,7 @@ import fUML.Syntax.Classes.Kernel.Class_;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Operation;
+import fUML.Syntax.Classes.Kernel.OperationList;
 import fUML.Syntax.Classes.Kernel.Parameter;
 import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 
@@ -56,63 +59,54 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
             }
         }
         
-        // NOTE: The following ensures that the class property is set for an
-        // operation, even if it has not been added as a member to its class
-        // yet.
         NamespaceDefinition namespace = definition.getNamespace();
         FumlMapping mapping = this.fumlMap(namespace);
         if (!(mapping instanceof ClassDefinitionMapping)) {
             this.throwError("Error mapping class for operation: " + 
                     mapping.getErrorMessage());
         } else {
+            // NOTE: The following ensures that the class property is set for an
+            // operation, even if it has not been added as a member to its class
+            // yet.
             operation.class_ = 
                 (Class_)((ClassDefinitionMapping)mapping).getClassifierOnly();
-        }
 
-        if (definition.getIsAbstract()) {
-            operation.setIsAbstract(true);
-        } else {
-            Activity activity = new Activity();
-            operation.addMethod(activity);
-            
-            for (Parameter parameter: operation.ownedParameter) {
-                Parameter copy = new Parameter();
-                copy.setName(parameter.name);
-                copy.setDirection(parameter.direction);
-                copy.setLower(parameter.multiplicityElement.lower);
-                copy.setUpper(parameter.multiplicityElement.upper.naturalValue);
-                copy.setType(parameter.type);
-                copy.setIsOrdered(parameter.multiplicityElement.isOrdered);
-                copy.setIsUnique(parameter.multiplicityElement.isUnique);
-                activity.addOwnedParameter(copy);
-                ActivityDefinitionMapping.addParameterNodes(activity, copy);
+            if (definition.getIsAbstract()) {
+                operation.setIsAbstract(true);
+            } else {
+                Activity activity = new Activity();
+                operation.class_.addOwnedBehavior(activity);
+                operation.addMethod(activity);
+                
+                for (Parameter parameter: operation.ownedParameter) {
+                    Parameter copy = new Parameter();
+                    copy.setName(parameter.name);
+                    copy.setDirection(parameter.direction);
+                    copy.setLower(parameter.multiplicityElement.lower);
+                    copy.setUpper(parameter.multiplicityElement.upper.naturalValue);
+                    copy.setType(parameter.type);
+                    copy.setIsOrdered(parameter.multiplicityElement.isOrdered);
+                    copy.setIsUnique(parameter.multiplicityElement.isUnique);
+                    activity.addOwnedParameter(copy);
+                    ActivityDefinitionMapping.addParameterNodes(activity, copy);
+                }
             }
-            /*
-            Block body = definition.getImpl().getEffectiveBody();
-            
-            FumlMapping bodyMapping = this.fumlMap(body);
-            Collection<Element> elements = bodyMapping.getModelElements();
-            
-            if (definition.getIsConstructor()) {
-                ActivityGraph subgraph = new ActivityGraph();
-                StructuredActivityNode node = 
-                    subgraph.addStructuredActivityNode("Body", elements);
-                
-                // TODO: Add default constructor behavior.
-                
-                // Return context object as the constructor result.
-                ReadSelfAction readSelfAction = 
-                    subgraph.addReadSelfAction(returnParameter.type);
-                subgraph.addControlFlow(node, readSelfAction);
-                subgraph.addObjectFlow(readSelfAction.result,
-                        ActivityDefinitionMapping.getOutputParameterNode(
-                                activity, returnParameter));
-                
-                elements = subgraph.getModelElements();
+        }
+        
+        for (ElementReference redefinedOperation: 
+            definition.getRedefinedOperations()) {
+            mapping = this.fumlMap(redefinedOperation);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
             }
-            
-            ActivityDefinitionMapping.addElements(activity, elements, body, this);
-            */
+            if (!(mapping instanceof OperationDefinitionMapping)) {
+                this.throwError("Error mapping redefined operation " + 
+                        redefinedOperation.getImpl().getQualifiedName() + ": " +
+                        mapping.getErrorMessage());
+            } else {
+                operation.addRedefinedOperation(
+                        ((OperationDefinitionMapping)mapping).getOperation());
+            }
         }
     }
     
@@ -202,6 +196,14 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 	    
 	    if (this.operation != null) {
 	        System.out.println(prefix + " operation: " + operation);
+	        OperationList redefinedOperations = 
+	            this.operation.redefinedOperation;
+	        if (!redefinedOperations.isEmpty()) {
+	            System.out.println(prefix + " redefinedOperation:");
+	            for (Operation redefinedOperation: redefinedOperations) {
+	                System.out.println(prefix + "  " + redefinedOperation);
+	            }
+	        }
 	    }
 	    
         OperationDefinition definition = this.getOperationDefinition();
