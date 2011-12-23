@@ -184,8 +184,6 @@ public class InstanceCreationExpressionMapping extends
             action = super.mapTarget();                
             CallOperationAction callAction = (CallOperationAction)action;
 
-            // this.getInstanceCreationExpression().getReferent().getImpl().getAlf().print(">>>>", true);
-            
             if (this.resultSource == null) {
                 this.throwError("Constructor has no return result: " + 
                         callAction.operation.qualifiedName);
