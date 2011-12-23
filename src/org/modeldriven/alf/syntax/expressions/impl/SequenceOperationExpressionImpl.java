@@ -36,6 +36,8 @@ public class SequenceOperationExpressionImpl
 	private LeftHandSide leftHandSide = null; // DERIVED
 	
 	private Expression expression = null;
+	
+	private BehaviorInvocationExpression invocation = null;
 
 	public SequenceOperationExpressionImpl(SequenceOperationExpression self) {
 		super(self);
@@ -44,6 +46,12 @@ public class SequenceOperationExpressionImpl
 	@Override
 	public SequenceOperationExpression getSelf() {
 		return (SequenceOperationExpression) this.self;
+	}
+	
+	@Override
+	public void deriveAll() {
+	    super.deriveAll();
+	    this.getInvocation().deriveAll();
 	}
 
 	public ExtentOrExpression getPrimary() {
@@ -459,6 +467,44 @@ public class SequenceOperationExpressionImpl
                         updateBindings(templateParameters, templateArguments));
             }
         }
+    }
+    
+    /**
+     * Returns the behavior invocation expression for that is equivalent to this 
+     * sequence operation expression.
+     */
+    public BehaviorInvocationExpression getInvocation() {
+        if (this.invocation == null) {
+            this.invocation = this.deriveInvocation();
+        }
+        return this.invocation;
+    }
+
+    private BehaviorInvocationExpression deriveInvocation() {
+        SequenceOperationExpression self = this.getSelf();
+        
+        FormalParameter firstParameter = this.getFirstParameter();
+        NamedExpression namedExpression = new NamedExpression();
+        namedExpression.setName(firstParameter.getName());
+        namedExpression.setExpression(this.getExpression());
+        
+        Tuple tuple = self.getTuple();
+        List<NamedExpression> namedExpressions = new ArrayList<NamedExpression>();
+        namedExpressions.add(namedExpression);
+        namedExpressions.addAll(tuple.getInput());
+        namedExpressions.addAll(tuple.getOutput());
+        
+        NamedTuple namedTuple = new NamedTuple();
+        namedTuple.setNamedExpression(namedExpressions);
+        
+        BehaviorInvocationExpression behaviorInvocationExpression = 
+            new BehaviorInvocationExpression();
+        behaviorInvocationExpression.setTarget(self.getOperation());
+        behaviorInvocationExpression.setReferent(self.getReferent());
+        behaviorInvocationExpression.setTuple(namedTuple);
+        namedTuple.setInvocation(behaviorInvocationExpression);
+        
+        return behaviorInvocationExpression;
     }
 
 } // SequenceOperationExpressionImpl
