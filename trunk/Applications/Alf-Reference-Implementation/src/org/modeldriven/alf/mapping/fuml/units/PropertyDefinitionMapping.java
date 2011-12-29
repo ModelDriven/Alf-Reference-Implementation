@@ -79,9 +79,18 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
         return elements;
 	}
     
-     @Override
+    @Override
     public String toString() {
         return super.toString() + " aggregation:" + this.property.aggregation;
+    }
+    
+    @Override
+    public void print(String prefix) {
+        super.print(prefix);
+        
+        if (this.property != null) {
+            System.out.println(prefix + " property: " + this.property);
+        }
     }
 
 } // PropertyDefinitionMapping
