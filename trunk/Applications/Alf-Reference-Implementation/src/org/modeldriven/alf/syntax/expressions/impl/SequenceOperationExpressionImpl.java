@@ -502,7 +502,9 @@ public class SequenceOperationExpressionImpl
         behaviorInvocationExpression.setTarget(self.getOperation());
         behaviorInvocationExpression.setReferent(self.getReferent());
         behaviorInvocationExpression.setTuple(namedTuple);
-        namedTuple.setInvocation(behaviorInvocationExpression);
+        namedTuple.setInvocation(behaviorInvocationExpression);       
+        behaviorInvocationExpression.getImpl().setAssignmentBefore(
+                this.getAssignmentBeforeMap());
         
         return behaviorInvocationExpression;
     }
