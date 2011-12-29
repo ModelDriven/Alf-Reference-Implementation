@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
@@ -135,6 +136,42 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
 
 	public PropertyAccessExpression getPropertyAccessExpression() {
 		return (PropertyAccessExpression) this.getSource();
+	}
+	
+	@Override
+	public void print(String prefix) {
+	    super.print(prefix);
+	    
+	    if (this.action != null) {
+	        System.out.println(prefix + " action: " + this.action);
+	        
+	        ReadStructuralFeatureAction readAction = null;
+	        if (this.action instanceof ReadStructuralFeatureAction) {
+	            readAction = (ReadStructuralFeatureAction)this.action;
+	        } else if (this.action instanceof ExpansionRegion) {
+	            for (ActivityNode node: ((ExpansionRegion)this.action).node) {
+	                if (node instanceof ReadStructuralFeatureAction) {
+	                    readAction = (ReadStructuralFeatureAction)node;
+	                    break;
+	                }
+	            }
+	        }
+	        
+	        if (readAction != null) {
+	            System.out.println(prefix + " structuralFeature: " + 
+	                    readAction.structuralFeature);
+	        }
+	    }
+	    
+	    PropertyAccessExpression expression = this.getPropertyAccessExpression();
+	    Expression primary = expression.getFeatureReference().getExpression();
+	    if (primary != null) {
+	        System.out.println(prefix + " expression:");
+	        Mapping mapping = primary.getImpl().getMapping();
+	        if (mapping != null) {
+	            mapping.printChild(prefix);
+	        }
+	    }
 	}
 
 } // PropertyAccessExpressionMapping
