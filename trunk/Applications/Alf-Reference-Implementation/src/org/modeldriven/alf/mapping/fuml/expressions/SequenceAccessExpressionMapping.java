@@ -9,8 +9,15 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.SequenceAccessExpression;
+
+import fUML.Syntax.Actions.BasicActions.InputPin;
+import fUML.Syntax.Actions.BasicActions.InvocationAction;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
 
 public class SequenceAccessExpressionMapping extends BehaviorInvocationExpressionMapping {
     
@@ -36,6 +43,23 @@ public class SequenceAccessExpressionMapping extends BehaviorInvocationExpressio
                 this.getSequenceAccessExpression().getImpl().getInvocation();
         }
         return this.invocation;        
+    }
+    
+    /**
+     * Add a fork node that allows the result of the index expression to also
+     * be used in the mapping of a left-hand side corresponding to this
+     * sequence access expression, as in an inout argument, increment/decrement
+     * expression or compound assignment.
+     */
+    public ActivityNode addIndexSource() throws MappingError {
+        InvocationAction action = (InvocationAction)this.getAction();
+        InputPin inputPin = action.input.get(1);
+        ForkNode forkNode = this.graph.addForkNode("Fork(" + inputPin.name + ")");
+        ActivityEdge flow = inputPin.incoming.get(0);
+        inputPin.incoming.remove(flow);
+        flow.setTarget(forkNode);
+        this.graph.addObjectFlow(forkNode, inputPin);
+        return forkNode;
     }
 
     public SequenceAccessExpression getSequenceAccessExpression() {

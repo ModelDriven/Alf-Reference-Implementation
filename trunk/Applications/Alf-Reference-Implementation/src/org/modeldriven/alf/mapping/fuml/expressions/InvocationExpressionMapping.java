@@ -341,7 +341,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         this.graph.addObjectFlow(readSelf.result, testAction.first);
         this.graph.addObjectFlow(targetNode, testAction.second);
 
-        this.graph.addDecisionNode("destroy check", 
+        this.graph.addObjectDecisionNode("destroy check", 
                 targetNode, testAction.result, targetPin, null);
     }
 

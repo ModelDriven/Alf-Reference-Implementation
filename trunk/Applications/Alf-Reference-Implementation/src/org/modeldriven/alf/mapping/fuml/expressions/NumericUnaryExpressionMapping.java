@@ -13,22 +13,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.UnaryExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.NumericUnaryExpression;
 
-import fUML.Syntax.Classes.Kernel.Element;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class NumericUnaryExpressionMapping extends UnaryExpressionMapping {
-
-	public NumericUnaryExpressionMapping() {
-		this
-				.setErrorMessage("NumericUnaryExpressionMapping not yet implemented.");
-	}
-
-	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
-		return new ArrayList<Element>();
-	}
 
 	public NumericUnaryExpression getNumericUnaryExpression() {
 		return (NumericUnaryExpression) this.getSource();

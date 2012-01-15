@@ -18,6 +18,13 @@ public class ActivityGraph {
     
     private Collection<Element> modelElements = new ArrayList<Element>();
     
+    public ActivityGraph() {
+    }
+    
+    public ActivityGraph(ActivityGraph graph) {
+        this.addAll(graph);
+    }
+    
     public void add(ActivityNode node) {
         this.modelElements.add(node);
     }
@@ -62,34 +69,72 @@ public class ActivityGraph {
     
     // Control Nodes
     
+    public ActivityFinalNode addActivityFinalNode(String name) {
+        ActivityFinalNode finalNode = new ActivityFinalNode();
+        finalNode.setName(name);
+        this.add(finalNode);
+        return finalNode;
+    }
+    
     public DecisionNode addDecisionNode(
-            String label,
+            String label, boolean isObjectFlow,
             ActivityNode inputSource, ActivityNode decisionSource,
             ActivityNode trueTarget, ActivityNode falseTarget) {
         DecisionNode decision = new DecisionNode();
         decision.setName("Decision(" + label + ")");
-        decision.setDecisionInputFlow(createObjectFlow(decisionSource, decision));
         this.add(decision);
+        
+        if (inputSource != null) {
+            if (isObjectFlow) {
+                this.addObjectFlow(inputSource, decision);
+            } else {
+                this.addControlFlow(inputSource, decision);
+            }
+        }
+        
+        if (decisionSource != null) {
+            decision.setDecisionInputFlow(createObjectFlow(decisionSource, decision));
+            this.add(decision.decisionInputFlow);
+        }
 
-        this.addObjectFlow(inputSource, decision);
-        this.add(decision.decisionInputFlow);
-
-        if (trueTarget != null) {
+        if (trueTarget != null) {                    
             LiteralBoolean literalTrue = new LiteralBoolean();
             literalTrue.setName("Value(true)");
             literalTrue.setValue(true);
             
-            this.addObjectFlow(decision, trueTarget).setGuard(literalTrue);    
+            ActivityEdge flow = isObjectFlow? 
+                    this.addObjectFlow(decision, trueTarget):
+                    this.addControlFlow(decision, trueTarget);
+            flow.setGuard(literalTrue);    
         }
         
-        if (falseTarget != null) {
+        if (falseTarget != null) {                    
             LiteralBoolean literalFalse = new LiteralBoolean();
             literalFalse.setName("Value(false)");
             literalFalse.setValue(false);
             
-            this.addObjectFlow(decision, falseTarget).setGuard(literalFalse);    
+            ActivityEdge flow = isObjectFlow? 
+                    this.addObjectFlow(decision, falseTarget):
+                    this.addControlFlow(decision, falseTarget);
+            flow.setGuard(literalFalse);    
         }
         return decision;
+    }
+    
+    public DecisionNode addObjectDecisionNode(
+            String label,
+            ActivityNode inputSource, ActivityNode decisionSource,
+            ActivityNode trueTarget, ActivityNode falseTarget) {
+        return this.addDecisionNode(label, true, 
+                inputSource, decisionSource, trueTarget, falseTarget);
+    }
+    
+    public DecisionNode addControlDecisionNode(
+            String label,
+            ActivityNode inputSource, ActivityNode decisionSource,
+            ActivityNode trueTarget, ActivityNode falseTarget) {
+        return this.addDecisionNode(label, false, 
+                inputSource, decisionSource, trueTarget, falseTarget);
     }
     
     public ForkNode addForkNode(String name) {
@@ -97,6 +142,20 @@ public class ActivityGraph {
         fork.setName(name);
         this.add(fork);
         return fork;
+    }
+    
+    public InitialNode addInitialNode(String name) {
+        InitialNode initialNode = new InitialNode();
+        initialNode.setName(name);
+        this.add(initialNode);
+        return initialNode;
+    }
+    
+    public MergeNode addMergeNode(String name) {
+        MergeNode mergeNode = new MergeNode();
+        mergeNode.setName(name);
+        this.add(mergeNode);
+        return mergeNode;
     }
     
     // Actions
@@ -272,14 +331,27 @@ public class ActivityGraph {
     
     public ReadExtentAction addReadExtentAction(Class_ class_) {
         ReadExtentAction readExtentAction = new ReadExtentAction();
-        if (class_ != null) {
-            readExtentAction.setName("ReadExtent(" + class_.name + ")");
-            readExtentAction.setClassifier(class_);
-            readExtentAction.setResult(createOutputPin(
-                    readExtentAction.name + ".result", class_, 0, -1));
-        }
+        readExtentAction.setName(
+                "ReadExtent(" + (class_ == null? "": class_.name) + ")");
+        readExtentAction.setClassifier(class_);
+        readExtentAction.setResult(createOutputPin(
+                readExtentAction.name + ".result", class_, 0, -1));
         this.add(readExtentAction);
         return readExtentAction;
+    }
+    
+    public ReadIsClassifiedObjectAction addReadIsClassifiedObjectAction(
+            Classifier classifier, boolean isDirect) {
+        ReadIsClassifiedObjectAction action = new ReadIsClassifiedObjectAction();
+        action.setName("ReadIsClassifiedObject(" + 
+                (classifier == null? "": classifier.name) + ")");
+        action.setClassifier(classifier);
+        action.setIsDirect(isDirect);
+        action.setObject(createInputPin(action.name + ".object", null, 1, 1));
+        action.setResult(createOutputPin(
+                action.name + ".result", FumlMapping.getBooleanType(), 1, 1));
+        this.add(action);
+        return action;
     }
     
     public ReadLinkAction addReadLinkAction(Property associationEnd) {
@@ -321,7 +393,20 @@ public class ActivityGraph {
                 readAction.name + ".result", property.typedElement.type, 1, 1));
         this.add(readAction);
         return readAction;
-
+    }
+    
+    public ReduceAction addReduceAction(
+            Behavior behavior, Type type, boolean isOrdered) {
+        ReduceAction reduceAction = new ReduceAction();
+        reduceAction.setName("Reduce(" + behavior.name + ")");
+        reduceAction.setReducer(behavior);
+        reduceAction.setIsOrdered(isOrdered);
+        reduceAction.setCollection(ActivityGraph.createInputPin(
+                reduceAction.name + ".collection", type, 0, -1));
+        reduceAction.setResult(ActivityGraph.createOutputPin(
+                reduceAction.name + ".result", type, 0, 1));
+        this.add(reduceAction);
+        return reduceAction;
     }
     
     public SendSignalAction addSendSignalAction(Signal signal) {
@@ -508,15 +593,20 @@ public class ActivityGraph {
             }
         }
 
-        // Connect external input source to region input node.
         ExpansionNode inputNode = new ExpansionNode();
         inputNode.setName(region.name + ".inputElement");
         region.addInputElement(inputNode);
         this.add(inputNode);
-        this.addObjectFlow(inputSource, inputNode);
+        
+        // Connect external input source (if any) to region input node.
+        if (inputSource != null) {
+            this.addObjectFlow(inputSource, inputNode);
+        }
 
-        // Connect region input node to internal input target.
-        region.addEdge(createObjectFlow(inputNode, inputTarget));
+        // Connect region input node to internal input target (if any).
+        if (inputTarget != null) {
+            region.addEdge(createObjectFlow(inputNode, inputTarget));
+        }
 
         // Connect internal result source (if any) to region output node.
         if (resultSource != null) {

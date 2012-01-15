@@ -155,13 +155,16 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
         LeftHandSide self = this.getSelf();
         Expression index = self.getIndex();
         Expression expression = this.getPrimaryExpression();
+        expression.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
+        
+        // NOTE: Assignments before the index expression will have been set
+        // previously.
         if (index != null) {
             SequenceAccessExpression sequenceAccess = new SequenceAccessExpression();
             sequenceAccess.setPrimary(expression);
             sequenceAccess.setIndex(index);
             expression = sequenceAccess;
         }
-        expression.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
         return expression;
     }
     

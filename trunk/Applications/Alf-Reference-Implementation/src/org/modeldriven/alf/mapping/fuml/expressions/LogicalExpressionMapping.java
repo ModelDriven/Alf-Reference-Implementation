@@ -11,23 +11,18 @@ package org.modeldriven.alf.mapping.fuml.expressions;
 
 import org.modeldriven.alf.mapping.fuml.expressions.BinaryExpressionMapping;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.LogicalExpression;
-
-import fUML.Syntax.Classes.Kernel.Element;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 public class LogicalExpressionMapping extends BinaryExpressionMapping {
 
-	public LogicalExpressionMapping() {
-		this.setErrorMessage("LogicalExpressionMapping not yet implemented.");
-	}
-
-	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
-		return new ArrayList<Element>();
-	}
+    @Override
+    protected ElementReference getOperatorFunction(String operator) {
+        return this.getLogicalExpression().getIsBitWise()?
+                RootNamespace.getBitStringFunction(operator):
+                RootNamespace.getBooleanFunction(operator);
+    }
 
 	public LogicalExpression getLogicalExpression() {
 		return (LogicalExpression) this.getSource();

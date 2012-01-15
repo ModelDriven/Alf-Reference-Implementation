@@ -15,6 +15,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.LiteralExpressionMapping;
 import org.modeldriven.alf.syntax.expressions.BooleanLiteralExpression;
 
 import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
+import fUML.Syntax.Classes.Kernel.LiteralBoolean;
 
 public class BooleanLiteralExpressionMapping extends LiteralExpressionMapping {
 
@@ -27,5 +28,13 @@ public class BooleanLiteralExpressionMapping extends LiteralExpressionMapping {
 	public BooleanLiteralExpression getBooleanLiteralExpression() {
 		return (BooleanLiteralExpression) this.getSource();
 	}
+
+    @Override
+    public String toString() {
+        ValueSpecificationAction action = 
+            (ValueSpecificationAction)this.getElement();
+        return super.toString() + (action == null? "": " value:" + 
+                ((LiteralBoolean)action.value).value);
+    }
 
 } // BooleanLiteralExpressionMapping

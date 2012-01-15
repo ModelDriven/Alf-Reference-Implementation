@@ -29,6 +29,7 @@ public abstract class FumlMapping extends Mapping {
     private static PrimitiveType unlimitedNaturalType = null;
     private static PrimitiveType naturalType = null;
     private static PrimitiveType stringType = null;
+    private static PrimitiveType bitStringType = null;
     
     public static ExecutionFactory getExecutionFactory() {
         return executionFactory;
@@ -95,11 +96,23 @@ public abstract class FumlMapping extends Mapping {
             try {
                 stringType = getPrimitiveType(RootNamespace.getStringType());
             } catch (Exception e) {
-                System.out.println("Error mapping primitive type UnlimitedNatural: " +
+                System.out.println("Error mapping primitive type String: " +
                         e.getMessage());
             }
         }
         return stringType;
+    }
+    
+    public static PrimitiveType getBitStringType() {
+        if (bitStringType == null) {
+            try {
+                bitStringType = getPrimitiveType(RootNamespace.getBitStringType());
+            } catch (Exception e) {
+                System.out.println("Error mapping primitive type BitString: " +
+                        e.getMessage());
+            }
+        }
+        return bitStringType;
     }
     
     public static PrimitiveType getPrimitiveType(ElementReference typeReference) 
