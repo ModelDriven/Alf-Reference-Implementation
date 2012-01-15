@@ -18,7 +18,7 @@ public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::To
 
 package IntegerFunctions {
 
-  @primitive
+  @primitive(IntegerToNaturalFunctionBehaviorExecution)
   public activity ToNatural(in x: String): Integer[0..1] {}
   
 }
