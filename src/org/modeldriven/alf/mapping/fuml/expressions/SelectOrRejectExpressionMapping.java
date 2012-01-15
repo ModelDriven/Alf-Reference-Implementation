@@ -13,24 +13,33 @@ import org.modeldriven.alf.mapping.fuml.expressions.SequenceExpansionExpressionM
 
 import org.modeldriven.alf.syntax.expressions.SelectOrRejectExpression;
 
-import fUML.Syntax.Classes.Kernel.Element;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class SelectOrRejectExpressionMapping extends
 		SequenceExpansionExpressionMapping {
 
-	public SelectOrRejectExpressionMapping() {
-		this
-				.setErrorMessage("SelectOrRejectExpressionMapping not yet implemented.");
-	}
-
-	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
-		return new ArrayList<Element>();
-	}
-
+    /**
+     * 1. A select or reject expression is mapped as a sequence expansion
+     * expression. The expansion region from this mapping has an output
+     * expansion node of the same type as the primary expression of the sequence
+     * expansion expression. This node is the result source element for the
+     * overall sequence expansion expression.
+     * 
+     * 2. The result source element of the mapping of the argument expression is
+     * the source of the decision input flow for a decision node inside the
+     * expansion region. The decision node also has an incoming object flow from
+     * the expansion variable fork node and an outgoing object flow to the
+     * output expansion node. For a select operation, the guard on the outgoing
+     * object flow is true. For a reject operation, it is false.
+     */
+    
+    // NOTE: Uses the default behavior inherited from 
+    // SequenceExpansionExpressionMapping.
+    
+    @Override
+    protected boolean isSelectLike(String operation) {
+        return "select".equals(operation);
+    }
+    
+    
 	public SelectOrRejectExpression getSelectOrRejectExpression() {
 		return (SelectOrRejectExpression) this.getSource();
 	}

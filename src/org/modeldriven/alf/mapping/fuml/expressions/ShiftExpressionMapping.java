@@ -11,23 +11,16 @@ package org.modeldriven.alf.mapping.fuml.expressions;
 
 import org.modeldriven.alf.mapping.fuml.expressions.BinaryExpressionMapping;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.ShiftExpression;
-
-import fUML.Syntax.Classes.Kernel.Element;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 public class ShiftExpressionMapping extends BinaryExpressionMapping {
 
-	public ShiftExpressionMapping() {
-		this.setErrorMessage("ShiftExpressionMapping not yet implemented.");
-	}
-
-	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
-		return new ArrayList<Element>();
-	}
+    @Override
+    protected ElementReference getOperatorFunction(String operator) {
+        return RootNamespace.getBitStringFunction(operator);
+    }
 
 	public ShiftExpression getShiftExpression() {
 		return (ShiftExpression) this.getSource();

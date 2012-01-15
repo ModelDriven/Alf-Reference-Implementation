@@ -1,5 +1,8 @@
 package org.modeldriven.alf.syntax.units;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -20,6 +23,11 @@ public class RootNamespace extends NamespaceDefinition {
     private static QualifiedName alfStandardLibrary = null;
     private static QualifiedName primitiveTypes = null;
     private static QualifiedName primitiveBehaviors = null;
+    private static QualifiedName booleanFunctions = null;
+    private static QualifiedName integerFunctions = null;
+    private static QualifiedName stringFunctions = null;
+    private static QualifiedName unlimitedNaturalFunctions = null;
+    private static QualifiedName bitStringFunctions = null;
     private static QualifiedName basicInputOutput = null;
     private static QualifiedName sequenceFunctions = null;
     private static QualifiedName collectionFunctions = null;
@@ -32,16 +40,24 @@ public class RootNamespace extends NamespaceDefinition {
     private static ElementReference bitStringType = null;
     private static ElementReference naturalType = null;
     
+    private static Map<String, ElementReference> booleanFunctionMap = 
+        new HashMap<String, ElementReference>();    
+    private static Map<String, ElementReference> integerFunctionMap = 
+        new HashMap<String, ElementReference>();    
+    private static Map<String, ElementReference> stringFunctionMap = 
+        new HashMap<String, ElementReference>();    
+    private static Map<String, ElementReference> unlimitedNaturalFunctionMap = 
+        new HashMap<String, ElementReference>();    
+    private static Map<String, ElementReference> bitStringFunctionMap = 
+        new HashMap<String, ElementReference>();
+    
     private static ElementReference sequenceFunctionIncluding = null;
+    private static ElementReference sequenceFunctionIsEmpty = null;
+    private static ElementReference sequenceFunctionNotEmpty = null;
+    private static ElementReference sequenceFunctionCount = null;
     
     private static ElementReference collectionFunctionAdd = null;
     private static ElementReference collectionClassesPackage = null;
-    
-    private static QualifiedName integerFunctions = null;
-    
-    private static ElementReference integerFunctionPlus = null;
-    private static ElementReference integerFunctionLessThanOrEqual = null;
-    private static ElementReference integerFunctionToUnlimitedNatural = null;
     
     private static QualifiedName listFunctions = null;
     
@@ -179,6 +195,30 @@ public class RootNamespace extends NamespaceDefinition {
         return sequenceFunctionIncluding;
     }
 
+    public static ElementReference getSequenceFunctionIsEmpty() {
+        if (sequenceFunctionIsEmpty == null) {
+            sequenceFunctionIsEmpty = getSequenceFunctions().getImpl().copy().
+                            addName("IsEmpty").getImpl().getBehaviorReferent();
+        }
+        return sequenceFunctionIsEmpty;
+    }
+
+    public static ElementReference getSequenceFunctionNotEmpty() {
+        if (sequenceFunctionNotEmpty == null) {
+            sequenceFunctionNotEmpty = getSequenceFunctions().getImpl().copy().
+                            addName("NotEmpty").getImpl().getBehaviorReferent();
+        }
+        return sequenceFunctionNotEmpty;
+    }
+
+    public static ElementReference getSequenceFunctionCount() {
+        if (sequenceFunctionCount == null) {
+            sequenceFunctionCount = getSequenceFunctions().getImpl().copy().
+                            addName("Count").getImpl().getBehaviorReferent();
+        }
+        return sequenceFunctionCount;
+    }
+
     public static ElementReference getCollectionFunctionAdd() {
         if (collectionFunctionAdd == null) {
             collectionFunctionAdd = getCollectionFunctions().getImpl().copy().
@@ -189,7 +229,8 @@ public class RootNamespace extends NamespaceDefinition {
 
     public static ElementReference getCollectionClassesPackage() {
         if (collectionClassesPackage == null) {
-            collectionClassesPackage = getCollectionClasses().getImpl().getNamespaceReferent();
+            collectionClassesPackage = getCollectionClasses().getImpl().
+                getNamespaceReferent();
         }
         return collectionClassesPackage;
     }
@@ -219,38 +260,141 @@ public class RootNamespace extends NamespaceDefinition {
         }
         return listFunctionSize;
     }
+    
+    public static QualifiedName getBooleanFunctions() {
+        if (booleanFunctions == null) {
+            booleanFunctions = getPrimitiveBehaviors().getImpl().copy().
+                addName("BooleanFunctions");
+            booleanFunctions.getImpl().setCurrentScope(getRootScope());
+        }
+        return booleanFunctions;
+    }
+    
+    public static ElementReference getBooleanFunction(String name) {
+        ElementReference booleanFunction = booleanFunctionMap.get(name);
+        if (booleanFunction == null) {
+            booleanFunction = getBooleanFunctions().getImpl().copy().
+                addName(name).getImpl().getBehaviorReferent();
+            booleanFunctionMap.put(name, booleanFunction);
+        }
+        return booleanFunction;
+    }
+
+    public static ElementReference getBooleanFunctionNot() {
+        return getBooleanFunction("!");
+    }
+    
     public static QualifiedName getIntegerFunctions() {
         if (integerFunctions == null) {
-            integerFunctions = new QualifiedName();
-            integerFunctions.getImpl().addName("FoundationalModelLibrary").getImpl().
-                addName("PrimitiveBehaviors").getImpl().addName("IntegerFunctions");
+            integerFunctions = getPrimitiveBehaviors().getImpl().copy().
+                addName("IntegerFunctions");
             integerFunctions.getImpl().setCurrentScope(getRootScope());
         }
         return integerFunctions;
     }
     
-    public static ElementReference getIntegerFunctionPlus() {
-        if (integerFunctionPlus == null) {
-            integerFunctionPlus = getIntegerFunctions().getImpl().copy().
-                            addName("+").getImpl().getBehaviorReferent();
+    public static ElementReference getIntegerFunction(String name) {
+        ElementReference integerFunction = integerFunctionMap.get(name);
+        if (integerFunction == null) {
+            integerFunction = getIntegerFunctions().getImpl().copy().
+                addName(name).getImpl().getBehaviorReferent();
+            integerFunctionMap.put(name, integerFunction);
         }
-        return integerFunctionPlus;
+        return integerFunction;
+    }
+
+    public static ElementReference getIntegerFunctionNeg() {
+        return getIntegerFunction("Neg");
+    }
+
+    public static ElementReference getIntegerFunctionPlus() {
+        return getIntegerFunction("+");
+    }
+
+    public static ElementReference getIntegerFunctionMinus() {
+        return getIntegerFunction("-");
     }
 
     public static ElementReference getIntegerFunctionLessThanOrEqual() {
-        if (integerFunctionLessThanOrEqual == null) {
-            integerFunctionLessThanOrEqual = getIntegerFunctions().getImpl().copy().
-                            addName("<=").getImpl().getBehaviorReferent();
-        }
-        return integerFunctionLessThanOrEqual;
+        return getIntegerFunction("<=");
     }
 
     public static ElementReference getIntegerFunctionToUnlimitedNatural() {
-        if (integerFunctionToUnlimitedNatural == null) {
-            integerFunctionToUnlimitedNatural = getIntegerFunctions().getImpl().copy().
-                            addName("ToUnlimitedNatural").getImpl().getBehaviorReferent();
+        return getIntegerFunction("ToUnlimitedNatural");
+    }
+
+    public static QualifiedName getStringFunctions() {
+        if (stringFunctions == null) {
+            stringFunctions = getPrimitiveBehaviors().getImpl().copy().
+                addName("StringFunctions");
+            stringFunctions.getImpl().setCurrentScope(getRootScope());
         }
-        return integerFunctionToUnlimitedNatural;
+        return stringFunctions;
+    }
+    
+    public static ElementReference getStringFunction(String name) {
+        ElementReference stringFunction = stringFunctionMap.get(name);
+        if (stringFunction == null) {
+            stringFunction = getStringFunctions().getImpl().copy().
+                addName(name).getImpl().getBehaviorReferent();
+            stringFunctionMap.put(name, stringFunction);
+        }
+        return stringFunction;
+    }
+
+    public static QualifiedName getUnlimitedNaturalFunctions() {
+        if (unlimitedNaturalFunctions == null) {
+            unlimitedNaturalFunctions = getPrimitiveBehaviors().getImpl().copy().
+                addName("UnlimitedNaturalFunctions");
+            unlimitedNaturalFunctions.getImpl().setCurrentScope(getRootScope());
+        }
+        return unlimitedNaturalFunctions;
+    }
+    
+    public static ElementReference getUnlimitedNaturalFunction(String name) {
+        ElementReference unlimitedNaturalFunction = 
+            unlimitedNaturalFunctionMap.get(name);
+        if (unlimitedNaturalFunction == null) {
+            unlimitedNaturalFunction = getUnlimitedNaturalFunctions().getImpl().copy().
+                addName(name).getImpl().getBehaviorReferent();
+            unlimitedNaturalFunctionMap.put(name, unlimitedNaturalFunction);
+        }
+        return unlimitedNaturalFunction;
+    }
+    
+    public static ElementReference getUnlimitedNaturalFunctionToInteger() {
+        return getUnlimitedNaturalFunction("ToInteger");
+    }
+    
+    public static QualifiedName getBitStringFunctions() {
+        if (bitStringFunctions == null) {
+            bitStringFunctions = getPrimitiveBehaviors().getImpl().copy().
+                addName("BitStringFunctions");
+            bitStringFunctions.getImpl().setCurrentScope(getRootScope());
+        }
+        return bitStringFunctions;
+    }
+    
+    public static ElementReference getBitStringFunction(String name) {
+        ElementReference bitStringFunction = bitStringFunctionMap.get(name);
+        if (bitStringFunction == null) {
+            bitStringFunction = getBitStringFunctions().getImpl().copy().
+                addName(name).getImpl().getBehaviorReferent();
+            bitStringFunctionMap.put(name, bitStringFunction);
+        }
+        return bitStringFunction;
+    }
+
+    public static ElementReference getBitStringFunctionComplement() {
+        return getBitStringFunction("~");
+    }
+
+    public static ElementReference getBitStringFunctionToBitString() {
+        return getBitStringFunction("ToBitString");
+    }
+
+    public static ElementReference getBitStringFunctionToInteger() {
+        return getBitStringFunction("ToInteger");
     }
 
 }

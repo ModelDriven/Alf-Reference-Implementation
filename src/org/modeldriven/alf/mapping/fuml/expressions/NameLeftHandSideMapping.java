@@ -22,29 +22,6 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
     
     private ActivityNode assignmentTarget = null;
     
-    /*
-    private static QualifiedNameImpl sequenceFunctions = null;    
-    private static ElementReference sequenceFunctionReplacingAll = null;
-    
-    public static QualifiedNameImpl getSequenceFunctions() {
-        if (sequenceFunctions == null) {
-            sequenceFunctions = 
-                RootNamespace.getAlfStandardLibrary().getImpl().copy().
-                    addName("SequenceFunctions").getImpl();
-            sequenceFunctions.setCurrentScope(RootNamespace.getRootScope());
-        }
-        return sequenceFunctions.copy();
-    }
-    
-    public static ElementReference getSequenceFunctionReplacingAll() {
-        if (sequenceFunctionReplacingAll == null) {
-            sequenceFunctionReplacingAll = getSequenceFunctions().
-                addName("ReplacingAt").getImpl().getBehaviorReferent();
-        }
-        return sequenceFunctionReplacingAll;
-    }
-    */
-    
     @Override
     public void mapTo(ActivityNode node) throws MappingError {
         super.mapTo(node);
@@ -57,7 +34,8 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
             if (index == null) {
                 this.assignmentTarget = this.resultSource;
             } else {
-                this.throwError("Index mapping not yet implemented.");
+                this.assignmentTarget = this.resultSource;
+                this.setErrorMessage("Index mapping not yet implemented.");
                 /*
                 FumlMapping indexMapping = this.fumlMap(index);
                 if (!(indexMapping instanceof ExpressionMapping)) {
@@ -122,7 +100,12 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
 	    if (this.assignmentTarget != null) {
 	        System.out.println(prefix + " assignmentTarget: " + 
 	                this.assignmentTarget);
-	    }	    
+	    }
+	    
+	    if (this.resultSource != null) {
+	        System.out.println(prefix + " assignedValueSource: " + 
+	                this.resultSource);
+	    }
 	}
 
 } // NameLeftHandSideMapping

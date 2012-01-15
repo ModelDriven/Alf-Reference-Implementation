@@ -20,13 +20,16 @@ import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
 import org.modeldriven.alf.syntax.expressions.LinkOperationExpression;
 import org.modeldriven.alf.syntax.expressions.NamedExpression;
 import org.modeldriven.alf.syntax.expressions.OutputNamedExpression;
+import org.modeldriven.alf.syntax.expressions.SequenceAccessExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
 import org.modeldriven.alf.syntax.expressions.UnboundedLiteralExpression;
+import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Syntax.Actions.BasicActions.Action;
@@ -44,6 +47,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
     private StructuredActivityNode node = null;
     private ActivityGraph tupleGraph = new ActivityGraph();
     private ActivityGraph lhsGraph = new ActivityGraph();
+    private Map<String, ActivityNode> indexSourceMap =
+        new HashMap<String, ActivityNode>();
     private Map<String, ActivityNode> assignedValueSourceMap = 
         new HashMap<String, ActivityNode>();
 
@@ -106,20 +111,57 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                     action.input;
             int i = 0;
             for (NamedExpression input: inputs) {
-                FumlMapping mapping = this.fumlMap(input.getExpression());
+                Expression expression = input.getExpression();
+                FumlMapping mapping = this.fumlMap(expression);
                 if (!(mapping instanceof ExpressionMapping)) {
                     this.throwError("Error mapping expression: " + mapping);
                 } else {
                     // TODO: Implement collection and bit string conversion.                    
+                    
+                    // If this argument is for an inout parameter whose
+                    // expression is a sequence access expression, then add
+                    // a fork node, so the result of the expression mapping
+                    // can be used for output as well as input.
+                    FormalParameter parameter = this.getTuple().getInvocation().getImpl().
+                        parameterNamed(input.getName());
+                    if (parameter != null && 
+                            parameter.getDirection().equals("inout") &&
+                            expression instanceof SequenceAccessExpression) {
+                        this.indexSourceMap.put(input.getName(), 
+                            ((SequenceAccessExpressionMapping)mapping).
+                                addIndexSource());
+                    }
+
                     nestedElements.addAll(mapping.getModelElements());
                     ActivityNode resultSource = 
                         ((ExpressionMapping)mapping).getResultSource();
                     if (resultSource == null) {
                         this.setErrorMessage("No result source: " + mapping);
                     } else {
+                        
+                        // If the expression has type Natural, but the parameter
+                        // has type UnlimitedNatural, then a conversion is
+                        // required, because the representations are different.
+                        ElementReference expressionType = expression.getType();
+                        ElementReference parameterType = parameter.getType();
+                        
+                        if (expressionType != null && parameterType != null &&
+                                expressionType.getImpl().isNatural() &&
+                                parameter.getType().getImpl().isUnlimitedNatural()) {
+                            CallBehaviorAction callAction =
+                                this.tupleGraph.addCallBehaviorAction(getBehavior(
+                                    RootNamespace.getIntegerFunctionToUnlimitedNatural()));
+                            this.tupleGraph.addObjectFlow(
+                                    resultSource, callAction.argument.get(0));
+                            resultSource = callAction.result.get(0);
+                        }
+                        
                         InputPin inputPin = inputPins.get(i);
                         this.tupleGraph.addObjectFlow(
                                 resultSource, inputPin);
+                        
+                        // Check for an index on the argument name (as opposed
+                        // to the argument expression itself).
                         Expression index = input.getIndex();
                         if (index == null && 
                                 tuple.getInvocation() instanceof LinkOperationExpression &&
@@ -175,7 +217,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
         int i = 0;
         OutputPin returnPin = ActivityGraph.getReturnPin(action);
         for (OutputNamedExpression output: outputs) {
-            if (!output.getExpression().getImpl().isNull()) {
+            Expression expression = output.getExpression();
+            if (!expression.getImpl().isNull()) {
                 LeftHandSide lhs = output.getLeftHandSide();
                 FumlMapping mapping = this.fumlMap(lhs);
                 if (!(mapping instanceof LeftHandSideMapping)) {
@@ -183,9 +226,13 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                             mapping.getErrorMessage());
                 } else {
                     LeftHandSideMapping lhsMapping = 
-                        (LeftHandSideMapping)mapping;
+                        (LeftHandSideMapping)mapping;                    
+                    lhsMapping.setIndexSource(
+                            this.indexSourceMap.get(output.getName()));
                     this.lhsGraph.addAll(lhsMapping.getGraph()); 
                     
+                    // Skip return pin. Return parameter never has an output
+                    // argument.
                     OutputPin outputPin = action.output.get(i);
                     if (outputPin == returnPin) {
                         i++;

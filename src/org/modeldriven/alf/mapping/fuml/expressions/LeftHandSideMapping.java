@@ -29,6 +29,8 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
     protected ActivityGraph graph = new ActivityGraph();
     protected ForkNode resultSource;
     protected ActivityNode node = null;
+    
+    protected ActivityNode indexSource = null;
 
     public void mapTo(ActivityNode node) throws MappingError {
         super.mapTo(node);
@@ -77,6 +79,19 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
         return this.getResultSource();
     }
     
+    /**
+     * Set the source to be used for an index expression in this left-hand
+     * side that has been mapped previously as for an inout parameter,
+     * increment/decrement expression or compound assignment.
+     */
+    public void setIndexSource(ActivityNode indexSource) {
+        this.indexSource = indexSource;        
+    }
+    
+    public ActivityNode getIndexSource() {
+        return this.indexSource;
+    }
+
     @Override
     public Element getElement() {
         return this.node;
@@ -103,6 +118,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
 	    LeftHandSide source = this.getLeftHandSide();
 	    Expression index = source.getIndex();
 	    if (index != null) {
+	        System.out.println(prefix + " index:");
 	        Mapping indexMapping = index.getImpl().getMapping();
 	        if (indexMapping != null) {
 	            indexMapping.printChild(prefix);

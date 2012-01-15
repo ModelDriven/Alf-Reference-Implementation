@@ -23,6 +23,8 @@ import java.util.Map;
  **/
 
 public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
+    
+    private ConditionalTestExpression conditionalTestExpression = null;
 
 	public ConditionalLogicalExpressionImpl(ConditionalLogicalExpression self) {
 		super(self);
@@ -145,5 +147,38 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
         }
         return assignmentsAfter;
 	} // updateAssignments
+	
+	/**
+     * A conditional-and expression is equivalent to a conditional-test
+     * expression whose first two operand expressions are the same as those of
+     * the conditional-and expression and whose third operand expression is
+     * false.
+     * 
+     * A conditional-or operator expression is equivalent to a conditional-test
+     * expression whose first and third operand expressions are the same as the
+     * two operand expressions of the conditional-or expression and whose second
+     * operand expression is true.
+	 */
+	public ConditionalTestExpression getConditionalTestExpression() {
+	    if (this.conditionalTestExpression == null) {
+	        ConditionalLogicalExpression self = this.getSelf();
+
+	        boolean isAnd = "&&".equals(self.getOperator());
+	        BooleanLiteralExpression literalExpression = 
+	            new BooleanLiteralExpression();
+	        literalExpression.setImage(isAnd? "false": "true");
+
+	        this.conditionalTestExpression = new ConditionalTestExpression();
+	        this.conditionalTestExpression.setOperand1(self.getOperand1());
+	        if (isAnd) {
+	            this.conditionalTestExpression.setOperand2(self.getOperand2());
+	            this.conditionalTestExpression.setOperand3(literalExpression);
+	        } else {
+	            this.conditionalTestExpression.setOperand2(literalExpression);
+	            this.conditionalTestExpression.setOperand3(self.getOperand2());
+	        }
+	    }
+        return this.conditionalTestExpression;
+	}
 
 } // ConditionalLogicalExpressionImpl

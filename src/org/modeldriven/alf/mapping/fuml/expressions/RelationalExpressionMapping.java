@@ -9,26 +9,40 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.expressions.BinaryExpressionMapping;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.RelationalExpression;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Classes.Kernel.Element;
-
-import java.util.ArrayList;
-import java.util.List;
+import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 
 public class RelationalExpressionMapping extends BinaryExpressionMapping {
+    
+    @Override
+    protected ActivityNode mapOperand(Expression operand) throws MappingError {
+        ActivityNode resultSource = super.mapOperand(operand);
+        
+        if (this.getRelationalExpression().getIsUnlimitedNatural() && 
+                operand.getType().getImpl().isInteger()) {
+            CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
+                    getBehavior(RootNamespace.getIntegerFunctionToUnlimitedNatural()));
+            this.graph.addObjectFlow(resultSource, callAction.argument.get(0));
+            resultSource = callAction.result.get(0);
+        }
+        
+        return resultSource;
+    }
 
-	public RelationalExpressionMapping() {
-		this
-				.setErrorMessage("RelationalExpressionMapping not yet implemented.");
-	}
-
-	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
-		return new ArrayList<Element>();
-	}
+    @Override
+    protected ElementReference getOperatorFunction(String operator) {
+        return this.getRelationalExpression().getIsUnlimitedNatural()?
+                RootNamespace.getUnlimitedNaturalFunction(operator):
+                RootNamespace.getIntegerFunction(operator);
+    }
 
 	public RelationalExpression getRelationalExpression() {
 		return (RelationalExpression) this.getSource();

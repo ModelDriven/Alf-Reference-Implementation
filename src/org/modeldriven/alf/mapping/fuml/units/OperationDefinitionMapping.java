@@ -75,6 +75,9 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 operation.setIsAbstract(true);
             } else {
                 Activity activity = new Activity();
+                // Give the method activity a name to aid in execution tracing.
+                activity.setName(makeDistinguishableActivityName(
+                        namespace, operation.name + "$method"));
                 operation.class_.addOwnedBehavior(activity);
                 operation.addMethod(activity);
                 
