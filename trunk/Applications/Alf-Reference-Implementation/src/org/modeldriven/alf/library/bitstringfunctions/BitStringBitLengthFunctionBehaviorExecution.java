@@ -6,32 +6,36 @@
  *
  */
 
-
-
 package org.modeldriven.alf.library.bitstringfunctions;
 
 import org.modeldriven.fuml.library.LibraryFunctions;
 
 import fUML.Debug;
 import fUML.Semantics.Classes.Kernel.IntegerValue;
+import fUML.Semantics.Classes.Kernel.Value;
+import fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
+import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 
-public class BitStringBitLengthrFunctionBehaviorExecution extends
-        fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution {
+public class BitStringBitLengthFunctionBehaviorExecution extends
+        OpaqueBehaviorExecution {
 
+    @Override
     public void doBody(
-            fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList inputParameters,
-            fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList outputParameters) {
+            ParameterValueList inputParameters,
+            ParameterValueList outputParameters) {
 
     	IntegerValue result = new IntegerValue();
     	result.value = Integer.SIZE;
+    	result.type = this.locus.factory.getBuiltInType("Integer");
 
         Debug.println("[doBody] BitString BitLength result = " + result.value);
 
 		LibraryFunctions.addValueToOutputList(result, outputParameters);
     }
     
-    public fUML.Semantics.Classes.Kernel.Value new_() {
-        return new BitStringBitLengthrFunctionBehaviorExecution();
+    @Override
+    public Value new_() {
+        return new BitStringBitLengthFunctionBehaviorExecution();
     }   
 
 }

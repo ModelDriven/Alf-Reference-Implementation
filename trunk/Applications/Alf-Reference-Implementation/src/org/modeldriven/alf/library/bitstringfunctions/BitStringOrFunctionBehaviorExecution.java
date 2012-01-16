@@ -11,21 +11,20 @@ package org.modeldriven.alf.library.bitstringfunctions;
 import UMLPrimitiveTypes.intList;
 
 import fUML.Debug;
-import fUML.Semantics.Classes.Kernel.IntegerValue;
+import fUML.Semantics.Classes.Kernel.Value;
 
 public class BitStringOrFunctionBehaviorExecution extends
         BitStringFunctionBehaviorExecution {
 
     @Override
-    public IntegerValue doBitStringFunction(intList arguments) {
-        IntegerValue result = new IntegerValue();
-        result.value = arguments.get(0) | arguments.get(1);
-
-        Debug.println("[doBitStringFunction] Or result = " + result.value);
+    public int doBitStringFunction(intList arguments) {
+        int result = arguments.get(0) | arguments.get(1);
+        Debug.println("[doBitStringFunction] Or result = " + result);
         return result;
     }   
 
-    public fUML.Semantics.Classes.Kernel.Value new_() {
+    @Override
+    public Value new_() {
         return new BitStringOrFunctionBehaviorExecution();
     }
 

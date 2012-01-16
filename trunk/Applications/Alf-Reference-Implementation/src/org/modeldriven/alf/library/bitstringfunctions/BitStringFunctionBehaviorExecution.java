@@ -13,15 +13,18 @@ import org.modeldriven.fuml.library.LibraryFunctions;
 import UMLPrimitiveTypes.intList;
 import fUML.Debug;
 import fUML.Semantics.Classes.Kernel.IntegerValue;
+import fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
+import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 
 public abstract class BitStringFunctionBehaviorExecution extends
-        fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution {
+        OpaqueBehaviorExecution {
 
+    @Override
     public void doBody(
-            fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList inputParameters,
-            fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList outputParameters) {
-        // Extract bit string arguments (represented as integers) and perform an 
-        // integer function on them.
+            ParameterValueList inputParameters,
+            ParameterValueList outputParameters) {
+        // Extract bit string arguments (represented as integers) and perform a 
+        // bit string function on them.
 
         intList integerArguments = new intList();
 
@@ -31,19 +34,13 @@ public abstract class BitStringFunctionBehaviorExecution extends
             integerArguments.addValue(value);
         }
 
-        // Call the method specific to the integer function
-        IntegerValue value = this.doBitStringFunction(integerArguments);
+        int value = this.doBitStringFunction(integerArguments);
         
-        if (value == null) {
-            // if null, then there is an invalid input argument, so return
-            // an empty list
-            LibraryFunctions.addEmptyValueListToOutputList(outputParameters);     
-        } else {
-            // Add output to the outputParameters list
-            value.type = this.locus.factory.getBuiltInType("BitString");
-            LibraryFunctions.addValueToOutputList(value, outputParameters);
-        }             
+        IntegerValue result = new IntegerValue();
+        result.value = value;
+        result.type = this.locus.factory.getBuiltInType("BitString");
+        LibraryFunctions.addValueToOutputList(result, outputParameters);
     }
 
-    public abstract IntegerValue doBitStringFunction(UMLPrimitiveTypes.intList arguments);
+    public abstract int doBitStringFunction(intList arguments);
 }

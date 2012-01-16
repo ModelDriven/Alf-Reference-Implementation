@@ -49,6 +49,7 @@ public class IntegerToNaturalFunctionBehaviorExecution extends
     	
     	IntegerValue result = new IntegerValue();
     	result.value = resultInt;
+    	result.type = this.locus.factory.getBuiltInType("Integer");
 
         Debug.println("[doBody] Integer ToInteger result = " + result.value);
 

@@ -11,20 +11,18 @@ package org.modeldriven.alf.library.bitstringfunctions;
 import UMLPrimitiveTypes.intList;
 
 import fUML.Debug;
-import fUML.Semantics.Classes.Kernel.IntegerValue;
 
 public class BitStringXorFunctionBehaviorExecution extends
         BitStringFunctionBehaviorExecution {
 
     @Override
-    public IntegerValue doBitStringFunction(intList arguments) {
-        IntegerValue result = new IntegerValue();
-        result.value = arguments.get(0) ^ arguments.get(1);
-
-        Debug.println("[doBitStringFunction] Xor result = " + result.value);
+    public int doBitStringFunction(intList arguments) {
+        int result = arguments.get(0) ^ arguments.get(1);
+        Debug.println("[doBitStringFunction] Xor result = " + result);
         return result;
     }   
 
+    @Override
     public fUML.Semantics.Classes.Kernel.Value new_() {
         return new BitStringXorFunctionBehaviorExecution();
     }
