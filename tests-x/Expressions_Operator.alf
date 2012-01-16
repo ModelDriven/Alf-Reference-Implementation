@@ -1,0 +1,119 @@
+/**
+ * Test various operator expressions.
+ **/
+active class Expressions_Operator {
+
+    // Supporting declarations *************************************************
+    
+  	offers: Offer[*];
+	principal: Integer;
+	rate: Integer;
+	list: Integer[1..*];
+	flag: Boolean;
+	monitor: Monitor;
+	
+    class Offer { }
+    class Member { 
+      	public isActive: Boolean;
+      	public name: String;
+      	public address: String;
+  	}
+    class Monitor {
+        public getActiveSensor(): Sensor { }
+    }
+    class Sensor {
+    	public getReading(): Integer { }
+    }
+  	class Person { }
+  	class Employee specializes Person {
+  		public id: Integer;
+    	public name: String;
+    }
+  	
+  	getList(): Integer[1..*] { return this.list; }
+  	getByte(): BitString { return 0; }
+  	
+	//**************************************************************************
+
+	test() {
+	  subtotals = (Integer)null;
+	  employee = new Employee();
+	  member = new Member();
+	  monitor = new Monitor();
+	  f = true;
+	  g = false;
+	  h = (BitString)0xAB;
+	  i = 1;
+	  j = 2;
+	  bit = BitString[] { 0, 1, 2 };
+	  mask = BitString[] { 0, 0, 0 };
+	  
+      
+	  !f;
+	  !this.flag;
+	  !member.isActive;
+	
+	  ~h;
+	  ~this.getByte();
+	  +1234;
+	  -42;
+	  +(i*i);
+	  -i;
+      -(employee).id;
+	  
+	  $this.monitor.getActiveSensor().getReading();
+	  
+	  (Expressions_Operator::Offer)i;
+	  (Person)employee;
+	  (any)this;
+	  (Integer)any[]{1,"banana",2};
+	  
+	  i * j;
+	  i / j;
+	  i % j;
+	  i + j;
+	  i - j;
+	  
+	  h & 0xF0;
+	  h | 0360;
+	  h << i;
+	  h >> i;
+	  h >>> i;
+	  (h & 0xF0) >>> 8;
+	  
+	  i > j;
+	  i < j;
+	  i >= j;
+	  i <= j;
+	  
+	  3 < * ;	  
+	  (UnlimitedNatural)(+3) < *;
+	  
+	  (Integer)* * 1;
+	  
+	  employee instanceof Person;
+	  i hastype Employee;
+	  
+	  i==0;
+	  monitor!=monitor;
+	  employee.name==null;
+	  null!=employee.name;
+	  null==null;
+	  
+	  f | g;
+	  i > j & i < j | f;
+	  
+	  bit[i]^mask[i];
+	  h ^ h;
+	  h & 0x00FF;
+      
+	
+	  i > 0 && subtotals[i] < j;
+	  i == 0 || subtotals[i] >= j;
+	  !f? 1: +2;
+	  f? this.getList(): this.getByte();
+	  
+	}
+} do {
+    this.test();
+}

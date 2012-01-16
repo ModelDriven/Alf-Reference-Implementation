@@ -1,0 +1,36 @@
+/**
+ * Test increment and decrement expressions.
+ **/
+active class Expressions_Increment_Decrement {
+
+    private x: Integer;
+    private list: Integer[];
+
+    public test() {
+      s = Integer[]{1,2};
+      i = 1;
+      this.x = 2;
+      this.list = s;
+
+      i++;
+      i--;
+      s[i]++;
+      s[i]--;
+      this.x++;
+      this.x--;
+      this.list[i]++;
+      this.list[i]--;      
+    
+      ++i;
+      --i;
+      ++s[i];
+      --s[i];      
+      ++this.x;
+      --this.x;
+      ++this.list[i];
+      --this.list[i];
+    }
+    
+} do {
+    this.test();
+}

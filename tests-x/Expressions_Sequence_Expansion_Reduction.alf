@@ -1,0 +1,55 @@
+private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::*;
+/**
+ * Test sequence expansion and reduction expressions.
+ **/
+active class Expressions_Sequence_Expansion_Reduction {
+
+    // Supporting declarations *************************************************
+    
+  	public class Customer {
+  		public name: String;
+  		public email: String;
+  		public address: String[*] sequence;
+    }
+    public class Person { }
+  	public class Employee specializes Person {
+    	public age: Integer;
+    	public isMarried: Boolean;
+    	public birthDate: Integer;
+    	public name: String;
+    	public title: String;
+    	public id: Integer;
+    	
+    	public process() { }
+    }
+
+	//**************************************************************************
+
+	public activity test() {
+	
+	  subtotals = Integer[]{1,2,3};
+	  subtotals->reduce '+';
+	  subtotals->reduce ordered '%'; // Also tests import of alias
+	  Integer[]{1, 2, 3} -> reduce '+';
+	  Integer[]{1, 2, 3} -> reduce ordered '+';
+	
+	  name = "Fred";
+	  subtotals->select x (x>1);
+	  Customer->select c (c.name == name);
+	  Customer.allInstances()->select c (c.name == name);
+	
+	  employees = Employee[]{new Employee()};
+	  employees->select e (e.age>50);
+	  employees->reject e (e.isMarried);
+	  employees->collect e (e.birthDate);
+	  employees->collect a (a.name);
+	  employees->iterate e (e.process());
+	  employees->forAll e (e.age<=65);
+	  employees->exists e (e.name=="Jack");
+	  employees->one e (e.title=="President");
+	  employees->isUnique e (e.id);
+	  
+	}
+} do {
+    test();
+}
