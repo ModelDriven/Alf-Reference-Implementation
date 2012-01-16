@@ -1,0 +1,23 @@
+/**
+ * Test literal and name expressions.
+ **/
+active class Expressions_Literal_Name {
+    test(in a: Integer) {
+    
+      1234;
+      0;
+      0b1010111000010000;
+      0B0100_1010_0101_1011;
+      0xAE10;
+      0X4a_5b;
+      057410;
+      0_045_133;
+      
+      a;
+      Expressions_Literal_Name::test::a;
+      Expressions_Literal_Name.test.a;
+    
+    }
+} do {
+    this.test(1);
+}
