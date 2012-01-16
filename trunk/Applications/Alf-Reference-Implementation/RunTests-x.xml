@@ -20,7 +20,28 @@
                 <pathelement location="${classpath}"/>
                 <pathelement location="..\fUML-Reference-Implementation/target/fuml/classes"/>
             </classpath>   
+            <arg value="tests-x\Expressions_Increment_Decrement.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
+            <classpath>
+                <pathelement location="${classpath}"/>
+                <pathelement location="..\fUML-Reference-Implementation/target/fuml/classes"/>
+            </classpath>   
             <arg value="tests-x\Expressions_Invocation.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
+            <classpath>
+                <pathelement location="${classpath}"/>
+                <pathelement location="..\fUML-Reference-Implementation/target/fuml/classes"/>
+            </classpath>   
+            <arg value="tests-x\Expressions_Literal_Name.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
+            <classpath>
+                <pathelement location="${classpath}"/>
+                <pathelement location="..\fUML-Reference-Implementation/target/fuml/classes"/>
+            </classpath>   
+            <arg value="tests-x\Expressions_Operator.alf" />
         </java>
         <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
             <classpath>
