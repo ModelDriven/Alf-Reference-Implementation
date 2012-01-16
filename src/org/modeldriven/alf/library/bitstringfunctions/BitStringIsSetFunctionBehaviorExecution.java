@@ -15,27 +15,34 @@ import org.modeldriven.fuml.library.LibraryFunctions;
 import fUML.Debug;
 import fUML.Semantics.Classes.Kernel.BooleanValue;
 import fUML.Semantics.Classes.Kernel.IntegerValue;
+import fUML.Semantics.Classes.Kernel.Value;
+import fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
+import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 
 public class BitStringIsSetFunctionBehaviorExecution extends
-        fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution {
+        OpaqueBehaviorExecution {
 
+    @Override
     public void doBody(
-            fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList inputParameters,
-            fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList outputParameters) {
+            ParameterValueList inputParameters,
+            ParameterValueList outputParameters) {
 
-        Integer b = ((IntegerValue)inputParameters.getValue(0).values.getValue(0)).value;
-        Integer n = ((IntegerValue)inputParameters.getValue(1).values.getValue(0)).value;        
-		Debug.println("[doBody] arguments = " + b + ", " + n);
+        int b = ((IntegerValue)inputParameters.getValue(0).values.getValue(0)).value;
+        int n = ((IntegerValue)inputParameters.getValue(1).values.getValue(0)).value;        
+        Debug.println("[doBody] argument = " + b);
+        Debug.println("[doBody] argument = " + n);
     	
     	BooleanValue result = new BooleanValue();
     	result.value = ((b >> n) & 1) == 1;
+    	result.type = this.locus.factory.getBuiltInType("Boolean");
 
         Debug.println("[doBody] BitString IsSet result = " + result.value);
 
 		LibraryFunctions.addValueToOutputList(result, outputParameters);
     }
     
-    public fUML.Semantics.Classes.Kernel.Value new_() {
+    @Override
+    public Value new_() {
         return new BitStringIsSetFunctionBehaviorExecution();
     }   
 
