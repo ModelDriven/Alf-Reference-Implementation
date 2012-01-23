@@ -33,7 +33,7 @@ public class BitStringIsSetFunctionBehaviorExecution extends
         Debug.println("[doBody] argument = " + n);
     	
     	BooleanValue result = new BooleanValue();
-    	result.value = ((b >> n) & 1) == 1;
+    	result.value = n >= 0 && ((b >> n) & 1) == 1;
     	result.type = this.locus.factory.getBuiltInType("Boolean");
 
         Debug.println("[doBody] BitString IsSet result = " + result.value);

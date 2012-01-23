@@ -18,7 +18,11 @@ public class BitStringShiftRightFunctionBehaviorExecution extends
 
     @Override
     public int doBitStringFunction(intList arguments) {
-        int result = arguments.get(0) >> arguments.get(1);
+        int n = arguments.get(1);
+        int result = arguments.get(0);
+        if (n > 0) {
+            result = result >> n;
+        }
         Debug.println("[doBitStringFunction] Shift right result = " + result);
         return result;
     }   
