@@ -377,8 +377,15 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 **/
 	@Override
 	protected ElementReference deriveType() {
-	    Expression rhs = this.getSelf().getRightHandSide();
-	    return rhs == null? null: rhs.getType();
+	    AssignmentExpression self = this.getSelf();
+	    if (self.getIsSimple()) {
+    	    Expression rhs = self.getRightHandSide();
+    	    return rhs == null? null: rhs.getType();
+	    } else {
+	        // Correction for the case of a compound assignment.
+	        LeftHandSide lhs = self.getLeftHandSide();
+	        return lhs == null? null: lhs.getImpl().getType();
+	    }
 	}
 	
     /**
@@ -387,8 +394,15 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      **/
 	@Override
 	protected Integer deriveUpper() {
-        Expression rhs = this.getSelf().getRightHandSide();
-        return rhs == null? null: rhs.getUpper();
+        AssignmentExpression self = this.getSelf();
+        if (self.getIsSimple()) {
+            Expression rhs = this.getSelf().getRightHandSide();
+            return rhs == null? null: rhs.getUpper();
+        } else {
+            // Correction for the case of a compound assignment.
+            LeftHandSide lhs = self.getLeftHandSide();
+            return lhs == null? null: lhs.getImpl().getUpper();
+        }
 	}
 	
     /**
@@ -397,8 +411,15 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      **/
 	@Override
 	protected Integer deriveLower() {
-        Expression rhs = this.getSelf().getRightHandSide();
-        return rhs == null? null: rhs.getLower();
+        AssignmentExpression self = this.getSelf();
+        if (self.getIsSimple()) {
+            Expression rhs = this.getSelf().getRightHandSide();
+            return rhs == null? null: rhs.getLower();
+        } else {
+            // Correction for the case of a compound assignment.
+            LeftHandSide lhs = self.getLeftHandSide();
+            return lhs == null? null: lhs.getImpl().getLower();
+        }
 	}
 	
 	/*
@@ -618,7 +639,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         return assignments;
 	} // updateAssignments
 		
-    private boolean isArithmeticOperator() {
+    public boolean isArithmeticOperator() {
         String operator = this.getSelf().getOperator();
         return operator != null && (
                 operator.equals("+=") ||
@@ -628,7 +649,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                 operator.equals("%="));
     }
 
-    private boolean isLogicalOperator() {
+    public boolean isLogicalOperator() {
         String operator = this.getSelf().getOperator();
         return operator != null && (
                 operator.equals("&=") ||
@@ -636,7 +657,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                 operator.equals("^="));
     }
 
-    private boolean isBitstringOperator() {
+    public boolean isBitstringOperator() {
         String operator = this.getSelf().getOperator();
         return operator != null && (
                 this.isLogicalOperator() ||
@@ -645,7 +666,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                 operator.equals(">>>="));
     }
     
-    private boolean isStringOperator() {
+    public boolean isStringOperator() {
         String operator = this.getSelf().getOperator();
         return operator != null && operator.equals("+=");
     }

@@ -31,6 +31,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
     protected ActivityNode node = null;
     
     protected ActivityNode indexSource = null;
+    protected ActivityNode objectSource = null;
 
     public void mapTo(ActivityNode node) throws MappingError {
         super.mapTo(node);
@@ -92,6 +93,19 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
         return this.indexSource;
     }
 
+    /**
+     * Set the source to be used for a feature object expression in this
+     * left-hand side that has been mapped previously as for an inout parameter,
+     * increment/decrement expression or compound assignment.
+     */
+    public void setObjectSource(ActivityNode indexSource) {
+        this.objectSource = indexSource;        
+    }
+    
+    public ActivityNode getObjectSource() {
+        return this.objectSource;
+    }
+
     @Override
     public Element getElement() {
         return this.node;
@@ -115,14 +129,18 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
 	public void print(String prefix) {
 	    super.print(prefix);
 	    
-	    LeftHandSide source = this.getLeftHandSide();
-	    Expression index = source.getIndex();
-	    if (index != null) {
-	        System.out.println(prefix + " index:");
-	        Mapping indexMapping = index.getImpl().getMapping();
-	        if (indexMapping != null) {
-	            indexMapping.printChild(prefix);
-	        }
+	    if (this.indexSource != null) {
+	        System.out.println(prefix + " indexSource: " + this.indexSource);
+	    } else {
+    	    LeftHandSide source = this.getLeftHandSide();
+    	    Expression index = source.getIndex();
+    	    if (index != null) {
+    	        System.out.println(prefix + " index:");
+    	        Mapping indexMapping = index.getImpl().getMapping();
+    	        if (indexMapping != null) {
+    	            indexMapping.printChild(prefix);
+    	        }
+    	    }
 	    }
 	}
 

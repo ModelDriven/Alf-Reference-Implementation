@@ -75,6 +75,22 @@ public abstract class ExpressionMapping extends SyntaxElementMapping {
 		return (Expression) this.getSource();
 	}
 	
+	/**
+	 * Return the source node for the value of an index of this expression, if
+	 * any.
+	 */
+	public ActivityNode getIndexSource() throws MappingError {
+	    return null;
+	}
+	
+	/**
+	 * Return the source node for the value of the feature object of this
+	 * expression, if any.
+	 */
+	public ActivityNode getObjectSource() throws MappingError {
+	    return null;
+	}
+	
 	@Override
 	public String toString() {
 	    return super.toString() + " type:" + this.type;  

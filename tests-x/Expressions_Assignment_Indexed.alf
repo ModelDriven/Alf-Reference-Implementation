@@ -1,0 +1,23 @@
+/**
+ * Test indexed assignment expressions.
+ **/
+active class Expressions_Assignment_Indexed {
+
+    public test(out a: Integer[]) {
+    
+        i = Integer[]{1..4};
+        i[1] = 0;
+        i[2] += i[3];
+        a = i;
+        a[3] = 5;
+        test::a[3] = 5;
+        test.a[3] = 5;
+        a[4] += 1;
+        test::a[4] += 1;
+        test.a[4] += 1;
+ 
+    }
+    
+} do {
+    this.test(x);
+}

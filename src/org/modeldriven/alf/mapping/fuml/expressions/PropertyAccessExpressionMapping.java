@@ -36,6 +36,7 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
 
     private Action action = null;
     private ActivityNode resultSource = null;
+    private ActivityNode objectSource = null;
 
     /**
      * 1. A property access expression is mapped as either a single instance
@@ -84,6 +85,18 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
                 ActivityNode expressionResult = 
                     expressionMapping.getResultSource();
                 
+                // Add a fork node that may be used as the source of the feature
+                // expression to avoid recomputing it for inout parameters,
+                // increment or decrement expressions and compound assignments.
+                // Add a fork node that allows the result of the feature 
+                // expression to also be used in the mapping of a left-hand side 
+                // corresponding to this property access expression, as in an 
+                // inout argument, increment/decrement expression or 
+                // compound assignment.
+                this.objectSource = this.graph.addForkNode(
+                        "Fork(" + expressionResult.name + ")");
+                this.graph.addObjectFlow(expressionResult, this.objectSource);
+                
                 if (!propertyAccess.getImpl().isSequencePropertyAccess()) {
                     action = readAction;
                     this.graph.addObjectFlow(expressionResult, readAction.object);
@@ -107,6 +120,12 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
             }
         }
         return action;
+    }
+
+    @Override
+    public ActivityNode getObjectSource() throws MappingError {
+        this.getAction();
+        return this.objectSource;
     }
 
     @Override
@@ -161,6 +180,10 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
 	            System.out.println(prefix + " structuralFeature: " + 
 	                    readAction.structuralFeature);
 	        }
+	    }
+	    
+	    if (this.objectSource != null) {
+	        System.out.println(prefix + " objectSource: " + this.objectSource);
 	    }
 	    
 	    PropertyAccessExpression expression = this.getPropertyAccessExpression();

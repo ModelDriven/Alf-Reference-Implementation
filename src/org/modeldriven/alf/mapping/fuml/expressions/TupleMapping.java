@@ -26,7 +26,6 @@ import org.modeldriven.alf.syntax.expressions.LeftHandSide;
 import org.modeldriven.alf.syntax.expressions.LinkOperationExpression;
 import org.modeldriven.alf.syntax.expressions.NamedExpression;
 import org.modeldriven.alf.syntax.expressions.OutputNamedExpression;
-import org.modeldriven.alf.syntax.expressions.SequenceAccessExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
 import org.modeldriven.alf.syntax.expressions.UnboundedLiteralExpression;
 import org.modeldriven.alf.syntax.units.FormalParameter;
@@ -47,8 +46,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
     private StructuredActivityNode node = null;
     private ActivityGraph tupleGraph = new ActivityGraph();
     private ActivityGraph lhsGraph = new ActivityGraph();
-    private Map<String, ActivityNode> indexSourceMap =
-        new HashMap<String, ActivityNode>();
+    private Map<String, ExpressionMapping> inoutExpressionMap =
+        new HashMap<String, ExpressionMapping>();
     private Map<String, ActivityNode> assignedValueSourceMap = 
         new HashMap<String, ActivityNode>();
 
@@ -118,18 +117,12 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 } else {
                     // TODO: Implement collection and bit string conversion.                    
                     
-                    // If this argument is for an inout parameter whose
-                    // expression is a sequence access expression, then add
-                    // a fork node, so the result of the expression mapping
-                    // can be used for output as well as input.
                     FormalParameter parameter = this.getTuple().getInvocation().getImpl().
                         parameterNamed(input.getName());
                     if (parameter != null && 
-                            parameter.getDirection().equals("inout") &&
-                            expression instanceof SequenceAccessExpression) {
-                        this.indexSourceMap.put(input.getName(), 
-                            ((SequenceAccessExpressionMapping)mapping).
-                                addIndexSource());
+                            "inout".equals(parameter.getDirection())) {
+                        this.inoutExpressionMap.put(input.getName(), 
+                            (ExpressionMapping)mapping);
                     }
 
                     nestedElements.addAll(mapping.getModelElements());
@@ -226,9 +219,13 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                             mapping.getErrorMessage());
                 } else {
                     LeftHandSideMapping lhsMapping = 
-                        (LeftHandSideMapping)mapping;                    
-                    lhsMapping.setIndexSource(
-                            this.indexSourceMap.get(output.getName()));
+                        (LeftHandSideMapping)mapping;
+                    ExpressionMapping inputMapping = 
+                        this.inoutExpressionMap.get(output.getName());
+                    if (inputMapping != null) {
+                        lhsMapping.setIndexSource(inputMapping.getIndexSource());
+                        lhsMapping.setObjectSource(inputMapping.getObjectSource());
+                    }
                     this.lhsGraph.addAll(lhsMapping.getGraph()); 
                     
                     // Skip return pin. Return parameter never has an output
