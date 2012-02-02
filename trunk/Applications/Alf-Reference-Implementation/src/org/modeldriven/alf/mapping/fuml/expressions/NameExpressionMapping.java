@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
@@ -130,6 +131,19 @@ public class NameExpressionMapping extends ExpressionMapping {
             return this.propertyAccessMapping.getGraph();
         } else {
             return super.getGraph();	
+        }
+    }
+    
+    @Override
+    public ActivityNode getObjectSource() throws MappingError {
+        PropertyAccessExpression propertyAccess = 
+            this.getNameExpression().getPropertyAccess();
+        if (propertyAccess == null) {
+            return null;
+        } else {
+            Mapping mapping = propertyAccess.getImpl().getMapping();
+            return mapping instanceof ExpressionMapping?
+                    ((ExpressionMapping)mapping).getObjectSource(): null;
         }
     }
 

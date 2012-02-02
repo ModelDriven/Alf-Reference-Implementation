@@ -1,0 +1,43 @@
+/**
+ * Test non-indexed assignment expressions.
+ **/
+active class Expressions_Assignment {
+
+    public test(out a: Integer) {
+    
+      i = 1;
+      i += 4;
+      i += 1;
+      i -= 1;
+      i *= 1;
+      i %= 1;
+      i /= 1;
+      
+      f = true;
+      f &= true;
+      f |= true;
+      f ^= true;
+      
+      h = (BitString)0xab;
+      h &= 1;
+      h |= 1;
+      h ^= 1;
+      h <<= 1;
+      h >>= 1;
+      h >>>= 1;
+    
+      filename = "xyz";
+      filename += ".doc";
+      
+      a = 1;
+      a += 1;
+      test::a = 1;
+      test::a += i;
+      test.a = 1;
+      test.a += 1;
+    
+    }
+    
+} do {
+    this.test(x);
+}

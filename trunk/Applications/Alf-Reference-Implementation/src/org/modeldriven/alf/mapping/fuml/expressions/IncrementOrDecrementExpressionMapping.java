@@ -18,7 +18,6 @@ import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.IncrementOrDecrementExpression;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
-import org.modeldriven.alf.syntax.expressions.SequenceAccessExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
@@ -86,13 +85,7 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
             this.throwError("Error mapping operand as expression: " + 
                     mapping.getErrorMessage());
         } else {
-            ActivityNode indexSource = null;
-            if (this.operandExpression instanceof SequenceAccessExpression) {
-                indexSource = 
-                    ((SequenceAccessExpressionMapping)mapping).addIndexSource();
-            }
-            
-            ExpressionMapping operandMapping = (ExpressionMapping)mapping;            
+            ExpressionMapping operandMapping = (ExpressionMapping)mapping;
             this.graph.addAll(operandMapping.getGraph());
 
             mapping = this.fumlMap(operand);
@@ -101,7 +94,8 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
                         mapping.getErrorMessage());
             } else {
                 LeftHandSideMapping lhsMapping = (LeftHandSideMapping)mapping;
-                lhsMapping.setIndexSource(indexSource);
+                lhsMapping.setIndexSource(operandMapping.getIndexSource());
+                lhsMapping.setObjectSource(operandMapping.getObjectSource());
                 this.graph.addAll(lhsMapping.getGraph());
                 this.graph.addObjectFlow(
                         this.action.result.get(0),

@@ -10,6 +10,7 @@
 package org.modeldriven.alf.mapping.fuml.expressions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,9 @@ import fUML.Syntax.Actions.BasicActions.InputPin;
 import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import fUML.Syntax.Activities.IntermediateActivities.MergeNode;
 import fUML.Syntax.Classes.Kernel.Classifier;
+import fUML.Syntax.Classes.Kernel.Element;
 
 public class ConditionalTestExpressionMapping extends ExpressionMapping {
     
@@ -97,9 +100,27 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
             String label,
             List<AssignedSource> assignments,
             ExpressionMapping operandMapping) throws MappingError {
+        
+        Collection<Element> modelElements = operandMapping.getModelElements();
+        ActivityNode resultSource = operandMapping.getResultSource();
+        if (modelElements.isEmpty()) {
+            // This ensures that, even if the operand mapping is empty, there is
+            // something by which to control the flow through the operand node.
+            MergeNode mergeNode = new MergeNode();
+            mergeNode.setName("Merge(" + resultSource.name + ")");
+            modelElements = new ArrayList<Element>();
+            modelElements.add(mergeNode);
+            modelElements.add(
+                    ActivityGraph.createObjectFlow(resultSource, mergeNode));
+            resultSource = mergeNode;
+        }
+        
         StructuredActivityNode operandNode =
-            this.graph.addStructuredActivityNode(
-                    label, operandMapping.getModelElements());
+            this.graph.addStructuredActivityNode(label, modelElements);
+        OutputPin outputPin = ActivityGraph.createOutputPin(
+                label + ".result", null, 0, -1);
+        operandNode.addStructuredNodeOutput(outputPin);
+        operandNode.addEdge(ActivityGraph.createObjectFlow(resultSource, outputPin));
         
         // Map local name assignments.
         for (AssignedSource assignment: assignments) {
@@ -117,7 +138,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
                 Classifier classifier = ((ClassifierDefinitionMapping)mapping).
                     getClassifierOnly();
                 
-                OutputPin outputPin = ActivityGraph.createOutputPin(
+                outputPin = ActivityGraph.createOutputPin(
                             assignment.getName(), classifier, lower, upper);
                 operandNode.addStructuredNodeOutput(outputPin);
                 mapping = this.fumlMap(source);
@@ -184,7 +205,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         Expression operand3 = expression.getOperand3();
         
         // NOTE: The use of getExpression here gets the original expression,
-        // even when getConditionalTestExpression is overriden in
+        // even when getConditionalTestExpression is overridden in
         // ConditionalLogicalExpressionMapping.
         String label = 
             this.getExpression().getClass().getSimpleName() + "@" + expression.getId();
@@ -205,7 +226,8 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         // Map the operands.
         ExpressionMapping operand1Mapping = this.mapOperand(operand1);
         ExpressionMapping operand2Mapping = this.mapOperand(operand2);
-        ExpressionMapping operand3Mapping = this.mapOperand(operand3);       
+        ExpressionMapping operand3Mapping = this.mapOperand(operand3);
+        
         this.graph.addAll(operand1Mapping.getGraph());
         StructuredActivityNode operand2Node =
             mapOperandNode(label + ".operand2", assignments, operand2Mapping);
@@ -220,8 +242,8 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
                 operand1Mapping.getResultSource(), operand2Node, operand3Node);        
         
         // Create the merge of the operand results.
-        ActivityNode operand2Result = operand2Mapping.getResultSource();
-        ActivityNode operand3Result = operand3Mapping.getResultSource();
+        ActivityNode operand2Result = operand2Node.structuredNodeOutput.get(0);
+        ActivityNode operand3Result = operand3Node.structuredNodeOutput.get(0);
         this.resultSource = this.graph.addMergeNode("Merge(" + label + ".result)");
         this.graph.addObjectFlow(operand2Result, this.resultSource);
         this.graph.addObjectFlow(operand3Result, this.resultSource);
@@ -234,9 +256,9 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
             ActivityNode mergeNode = 
                 this.graph.addMergeNode("Merge(" + label + "." + name + ")");
             this.graph.addObjectFlow(
-                    operand2Node.structuredNodeOutput.get(i), mergeNode);
+                    operand2Node.structuredNodeOutput.get(i+1), mergeNode);
             this.graph.addObjectFlow(
-                    operand3Node.structuredNodeOutput.get(i), mergeNode);
+                    operand3Node.structuredNodeOutput.get(i+1), mergeNode);
             this.assignedValueSourceMap.put(name, mergeNode);
         }
     }

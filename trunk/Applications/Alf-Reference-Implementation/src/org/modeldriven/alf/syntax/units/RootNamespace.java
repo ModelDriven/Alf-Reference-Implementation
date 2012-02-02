@@ -55,6 +55,7 @@ public class RootNamespace extends NamespaceDefinition {
     private static ElementReference sequenceFunctionIsEmpty = null;
     private static ElementReference sequenceFunctionNotEmpty = null;
     private static ElementReference sequenceFunctionCount = null;
+    private static ElementReference sequenceFunctionReplacingAt = null;
     
     private static ElementReference collectionFunctionAdd = null;
     private static ElementReference collectionClassesPackage = null;
@@ -217,6 +218,14 @@ public class RootNamespace extends NamespaceDefinition {
                             addName("Count").getImpl().getBehaviorReferent();
         }
         return sequenceFunctionCount;
+    }
+
+    public static ElementReference getSequenceFunctionReplacingAt() {
+        if (sequenceFunctionReplacingAt == null) {
+            sequenceFunctionReplacingAt = getSequenceFunctions().getImpl().copy().
+                            addName("ReplacingAt").getImpl().getBehaviorReferent();
+        }
+        return sequenceFunctionReplacingAt;
     }
 
     public static ElementReference getCollectionFunctionAdd() {
