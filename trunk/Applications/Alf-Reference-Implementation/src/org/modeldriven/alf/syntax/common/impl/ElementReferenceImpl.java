@@ -82,6 +82,7 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isCompletelyBound();
 
     public abstract boolean isFeature();
+    public abstract boolean isOrdered();
     public abstract boolean isOperation();
     public abstract boolean isConstructor();
     public abstract boolean isDestructor();

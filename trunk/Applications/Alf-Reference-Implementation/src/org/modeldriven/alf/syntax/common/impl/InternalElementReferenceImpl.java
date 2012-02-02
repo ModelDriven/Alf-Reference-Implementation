@@ -152,6 +152,13 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         return element != null && element instanceof Member && 
                 ((Member)element).getIsFeature();
     }
+    
+    @Override
+    public boolean isOrdered() {
+        SyntaxElement element = this.getSelf().getElement();
+        return element instanceof TypedElementDefinition &&
+            ((TypedElementDefinition)element).getIsOrdered();
+    }
 
     @Override
     public boolean isOperation() {
