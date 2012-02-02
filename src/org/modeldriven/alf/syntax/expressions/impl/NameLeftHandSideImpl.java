@@ -139,7 +139,8 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	 **/
 	public boolean nameLeftHandSideAssignmentsBefore() {
 	    NameLeftHandSide self = this.getSelf();
-	    return self.getIndex() == null || this.getReferent() != null;
+	    return self.getIndex() == null || this.getFeature() != null || 
+	        this.getOldAssignment() != null;
 	}
 	
 	/*
@@ -165,13 +166,15 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
     }
 
     /**
-     * The effective expression is the name left-hand side treated as a name 
-     * expression.
+     * If the target does not have a disambiguation, the effective expression is
+     * the name left-hand side treated as a name expression.
      */
-    protected Expression getPrimaryExpression() {
+    public Expression getPrimaryExpression() {
         QualifiedName target = this.getSelf().getTarget();
         if (target == null) {
             return null;
+        } else if (target.getIsFeatureReference()) {
+            return super.getPrimaryExpression();
         } else {
             NameExpression nameExpression = new NameExpression();
             nameExpression.setName(target);

@@ -33,6 +33,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	
 	private Boolean isDataValueUpdate = null;
 	private String assignedName = null;
+	private NamespaceDefinition currentScope = null;
 
 	public LeftHandSideImpl(LeftHandSide self) {
 		super(self);
@@ -138,7 +139,10 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	 **/
 	public boolean leftHandSideIndexExpression() {
 	    Expression index = this.getSelf().getIndex();
-		return index == null || index.getUpper() <= 1;
+		return index == null || index.getUpper() <= 1 &&
+		    // NOTE: This checks that a feature with an index is ordered.
+		    // It needs to be added to the spec as a separate constraint.
+		    (this.getFeature() == null || this.getReferent().getImpl().isOrdered());
 	}
 	
 	/*
@@ -165,14 +169,22 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
             sequenceAccess.setIndex(index);
             expression = sequenceAccess;
         }
+        
+        expression.getImpl().setCurrentScope(this.currentScope);
         return expression;
     }
     
     /**
-     * The effective expression is the left-hand side treated as a name 
-     * expression or property access expression, disregarding any index.
-     */
-    protected abstract Expression getPrimaryExpression();
+     * The primary expression is, by default, the left-hand side treated as a 
+     * property access expression. (This is overridden for a name left-hand side
+     * that has a name without a disambiguation.)
+     **/
+    public Expression getPrimaryExpression() {
+        PropertyAccessExpression propertyAccess = new PropertyAccessExpression();
+        propertyAccess.setFeatureReference(this.getFeature());
+        return propertyAccess;
+    }
+
 
     public abstract FeatureReference getFeature();
     
@@ -265,6 +277,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
     protected abstract ElementReference getReferent();
     
     public void setCurrentScope(NamespaceDefinition currentScope) {
+        this.currentScope = currentScope;
         Expression index = this.getSelf().getIndex();
         if (index != null) {
             index.getImpl().setCurrentScope(currentScope);

@@ -35,6 +35,7 @@ import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Enumeration;
 import org.modeldriven.alf.uml.EnumerationLiteral;
 import org.modeldriven.alf.uml.Feature;
+import org.modeldriven.alf.uml.MultiplicityElement;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
 import org.modeldriven.alf.uml.Operation;
@@ -181,6 +182,13 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isFeature() {
         return this.getSelf().getElement() instanceof Feature;
+    }
+    
+    @Override
+    public boolean isOrdered() {
+        Element element = this.getSelf().getElement();
+        return element instanceof MultiplicityElement &&
+            ((MultiplicityElement)element).getIsOrdered();
     }
 
     @Override

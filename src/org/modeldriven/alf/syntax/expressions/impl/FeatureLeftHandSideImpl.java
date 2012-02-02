@@ -128,18 +128,6 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
                     feature.getImpl().getStructuralFeatureReferent();
     }
 
-    /**
-     * The primary expression is the feature left-hand side treated as a 
-     * property access expression.
-     **/
-    @Override
-    public Expression getPrimaryExpression() {
-        FeatureLeftHandSide self = this.getSelf();
-        PropertyAccessExpression propertyAccess = new PropertyAccessExpression();
-        propertyAccess.setFeatureReference(self.getFeature());
-        return propertyAccess;
-    }
-
     @Override
     public String getLocalName() {
         return null;
