@@ -8,7 +8,7 @@ class Expressions_Operator {
   	offers: Offer[*];
 	principal: Integer;
 	rate: Integer;
-	list: Integer[1..*];
+	list: Integer[1..*] ordered;
 	flag: Boolean;
 	monitor: Monitor;
 	
