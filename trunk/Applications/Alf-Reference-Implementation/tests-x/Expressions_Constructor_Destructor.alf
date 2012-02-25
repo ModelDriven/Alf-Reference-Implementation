@@ -14,11 +14,16 @@ active class Expressions_Constructor_Destructor {
    	    @Create public Employee(in id: Integer, in name: String) { }
   		@Create public transferred(in employeeInfo: Employee) { }
    	}
+   	
+   	datatype D {
+   	    public x: String;
+   	    public y: Integer[];
+   	}
   	
 	//**************************************************************************
 
 	test() {
-	
+	  
       i = 100;
       name = "Fred";
 
@@ -29,6 +34,8 @@ active class Expressions_Constructor_Destructor {
 	  
       customer.destroy();
       new Monitor().destroy(new Log());
+      
+      new D("test", Integer[]{1,2});
 	  
 	}
 

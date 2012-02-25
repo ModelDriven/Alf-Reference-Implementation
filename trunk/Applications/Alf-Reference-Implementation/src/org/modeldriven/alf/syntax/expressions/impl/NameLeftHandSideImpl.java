@@ -148,7 +148,7 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	 */
     
 	@Override
-    protected ElementReference getReferent() {
+    public ElementReference getReferent() {
 	    FeatureReference feature = this.getFeature();
 	    ElementReference parameter = this.getParameter();
 	    AssignedSource oldAssignment = this.getOldAssignment();

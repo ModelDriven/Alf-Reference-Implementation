@@ -17,16 +17,12 @@ import org.modeldriven.alf.mapping.fuml.expressions.LeftHandSideMapping;
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.NameLeftHandSide;
-import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 
 public class NameLeftHandSideMapping extends LeftHandSideMapping {
-    
-    private ActivityNode assignedValueSource = null;
-    private CallBehaviorAction callAction = null;
     
     /**
     * 1. If the left-hand side is a name without an index, then a simple
@@ -50,17 +46,20 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
     */
     
     @Override
-    public void mapTo(ActivityNode node) throws MappingError {
-        super.mapTo(node);
+    public void map() throws MappingError {
         NameLeftHandSide lhs = this.getNameLeftHandSide();
-
-        if (lhs.getImpl().getFeature() == null) {
-            
+        if (lhs.getImpl().getFeature() != null) {
+            super.map();
+        } else {            
             Expression index = lhs.getIndex();
             if (index == null) {
-                this.resultSource.setName("Fork(" + lhs.getTarget().getPathName() + ")");
+                this.resultSource = this.graph.addForkNode(
+                        "Fork(" + lhs.getTarget().getPathName() + ")");
                 this.assignedValueSource = this.resultSource;
+                this.node = this.resultSource;
             } else {
+                this.resultSource = this.graph.addForkNode("Fork(LeftHandSide@" + 
+                        this.getLeftHandSide().getId() + ")");
                 ActivityNode indexSource = this.getIndexSource();
                 if (indexSource == null) {
                     FumlMapping mapping = this.fumlMap(index);
@@ -87,66 +86,34 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
                             if (activityNode == null) {
                                 this.throwError("Invalid assigned source: " + assignment);
                             } else {
-                                this.callAction = 
+                                CallBehaviorAction callAction = 
                                     this.graph.addCallBehaviorAction(getBehavior(
                                             RootNamespace.getSequenceFunctionReplacingAt()));
                                 this.graph.addObjectFlow(
-                                        activityNode, this.callAction.argument.get(0));
+                                        activityNode, callAction.argument.get(0));
                                 this.graph.addObjectFlow(
-                                        indexSource, this.callAction.argument.get(1));
+                                        indexSource, callAction.argument.get(1));
                                 this.graph.addObjectFlow(
-                                        this.resultSource, this.callAction.argument.get(2));
+                                        this.resultSource, callAction.argument.get(2));
                                 
                                 this.assignedValueSource =
                                     this.graph.addForkNode(
                                         "Fork(" + lhs.getTarget().getPathName() + ")");
                                 this.graph.addObjectFlow(
-                                        this.callAction.result.get(0), this.assignedValueSource);
+                                        callAction.result.get(0), this.assignedValueSource);
+                                
+                                this.node = callAction;
                             }
                         }
                     }
                 }
             }
+            this.assignmentTarget = this.resultSource;
         }
-    }
-
-    @Override
-    public ActivityNode getAssignedValueSource(String name) throws MappingError {
-        NameLeftHandSide lhs = this.getNameLeftHandSide();
-        QualifiedName target = lhs.getTarget();
-        return target == null || target.getIsFeatureReference() ||
-            !target.getUnqualifiedName().getName().equals(name)? null:
-                this.getAssignedValueSource();
-    }
-    
-	@Override
-    public ActivityNode getAssignedValueSource() throws MappingError {
-	    this.getResultSource();
-	    return this.assignedValueSource;
     }
 
 	public NameLeftHandSide getNameLeftHandSide() {
 		return (NameLeftHandSide) this.getSource();
 	}
 	
-	@Override
-	public void print(String prefix) {
-	    super.print(prefix);
-	    
-	    if (this.callAction != null) {
-	        System.out.println(prefix + " action: " + this.callAction);
-	    }
-	    
-	    if (this.assignedValueSource != null) {
-	        System.out.println(prefix + " assigedValueSource: " + 
-	                this.assignedValueSource);
-	    }
-	    
-	    if (this.resultSource != null) {
-	        System.out.println(prefix + " resultSource: " + 
-	                this.resultSource);
-	    }
-	    
-	}
-
 } // NameLeftHandSideMapping

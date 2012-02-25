@@ -121,7 +121,7 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
 	 */
 
 	@Override
-    protected ElementReference getReferent() {
+    public ElementReference getReferent() {
         FeatureLeftHandSide self = this.getSelf();
         FeatureReference feature = self.getFeature();
         return feature == null? null: 

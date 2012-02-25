@@ -1,3 +1,11 @@
+/*
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
+
 package org.modeldriven.alf.mapping.fuml;
 
 import java.util.ArrayList;
@@ -161,11 +169,12 @@ public class ActivityGraph {
     // Actions
     
     public AddStructuralFeatureValueAction addAddStructuralFeatureValueAction(
-            Property property) {
+            Property property, boolean isReplaceAll) {
         AddStructuralFeatureValueAction writeAction = 
             new AddStructuralFeatureValueAction();
         writeAction.setName("Write(" + property.qualifiedName + ")");
         writeAction.setStructuralFeature(property);
+        writeAction.setIsReplaceAll(isReplaceAll);
         this.add(writeAction);
         
         Classifier featuringClassifier = property.featuringClassifier.get(0);
@@ -207,6 +216,22 @@ public class ActivityGraph {
                 clearAction.name + ".object", null, 1, 1));
         clearAction.object.multiplicityElement.isOrdered = false;
         this.add(clearAction);
+        return clearAction;
+    }
+    
+    public ClearStructuralFeatureAction addClearStructuralFeatureAction(
+            Property property) {
+        ClearStructuralFeatureAction clearAction = new ClearStructuralFeatureAction();
+        clearAction.setName("Clear(" + property.qualifiedName + ")");
+        clearAction.setStructuralFeature(property);
+        this.add(clearAction);
+
+        Classifier featuringClassifier = property.featuringClassifier.get(0);
+        clearAction.setObject(createInputPin(
+                clearAction.name + ".object", featuringClassifier, 1, 1));
+        clearAction.object.multiplicityElement.isOrdered = false;
+        clearAction.setResult(createOutputPin(
+                clearAction.name + ".result", featuringClassifier, 1, 1));
         return clearAction;
     }
     
@@ -307,7 +332,7 @@ public class ActivityGraph {
     
     public void addLoopTest(
             LoopNode loopNode, Collection<Element> test, OutputPin decider) {
-        addTo(loopNode, test, this.modelElements);
+        this.addToStructuredNode(loopNode, test);
         for (Element element: test) {
             if (element instanceof ExecutableNode) {
                 loopNode.test.add((ExecutableNode)element);
@@ -318,7 +343,7 @@ public class ActivityGraph {
     
     public void addLoopBodyPart(
             LoopNode loopNode, Collection<Element> bodyPart, OutputPin... bodyOutputs) {
-        addTo(loopNode, bodyPart, this.modelElements);
+        this.addToStructuredNode(loopNode, bodyPart);
         for (Element element: bodyPart) {
             if (element instanceof ExecutableNode) {
                 loopNode.bodyPart.add((ExecutableNode)element);
@@ -515,7 +540,7 @@ public class ActivityGraph {
         StructuredActivityNode node = new StructuredActivityNode();
         node.setName(name);        
         this.add(node);
-        addTo(node, nestedElements, this.modelElements);
+        this.addToStructuredNode(node, nestedElements);
         return node;
     }
     
@@ -575,7 +600,7 @@ public class ActivityGraph {
                             type, lower, upper);
                     region.addStructuredNodeInput(pin);
                     region.addEdge(createObjectFlow(pin, target));
-                    this.addObjectFlow(edge.source, pin);
+                    this.addObjectFlow(source, pin);
                 } else if (sourceIsContained && !targetIsContained) {
                     source.outgoing.remove(edge);
                     target.incoming.remove(edge);
@@ -584,9 +609,9 @@ public class ActivityGraph {
                     outputNode.setName(region.name + 
                             ".outputElement(" + edge.source.name + ")");
                     region.addOutputElement(outputNode);
-                    region.addEdge(createObjectFlow(edge.source, outputNode));
+                    region.addEdge(createObjectFlow(source, outputNode));
                     this.add(outputNode);
-                    this.addObjectFlow(outputNode, edge.target);
+                    this.addObjectFlow(outputNode, target);
                 } else {
                     this.add(edge);
                 }
@@ -621,6 +646,47 @@ public class ActivityGraph {
         return region;
     }
     
+    public ExpansionNode addInputExpansionNode(
+            String label, ExpansionRegion region) {
+        ExpansionNode node = new ExpansionNode();
+        node.setName(region.name + ".inputElement(" + label + ")");
+        region.addInputElement(node);
+        this.add(node);
+        return node;
+    }
+    
+    public ExpansionNode addOutputExpansionNode(
+            String label, ExpansionRegion region) {
+        ExpansionNode node = new ExpansionNode();
+        node.setName(region.name + ".outputElement(" + label + ")");
+        region.addOutputElement(node);
+        this.add(node);
+        return node;
+    }
+    
+    public void addToStructuredNode(
+            StructuredActivityNode node, 
+            Collection<Element> nestedElements) {
+        for (Element element: nestedElements) {
+            if (element instanceof ActivityNode) {
+                node.addNode((ActivityNode)element);
+            } else if (element instanceof ControlFlow) {
+                node.addEdge((ActivityEdge)element);
+            }
+        }
+        for (Element element: nestedElements) {
+            if (element instanceof ObjectFlow) {
+                ActivityEdge edge = (ActivityEdge)element;
+                if (isContainedIn(edge.source, node) &&
+                        isContainedIn(edge.target, node)) {
+                    node.addEdge(edge);
+                } else {
+                    this.add(edge);
+                }
+            }
+        }
+    }
+
     // Static Helper Methods
     
     public static void setPin(Pin pin, String name, Type type, int lower, int upper) {
@@ -662,24 +728,9 @@ public class ActivityGraph {
             StructuredActivityNode node, 
             Collection<Element> nestedElements,
             Collection<Element> outerElements) {
-        for (Element element: nestedElements) {
-            if (element instanceof ActivityNode) {
-                node.addNode((ActivityNode)element);
-            } else if (element instanceof ControlFlow) {
-                node.addEdge((ActivityEdge)element);
-            }
-        }
-        for (Element element: nestedElements) {
-            if (element instanceof ObjectFlow) {
-                ActivityEdge edge = (ActivityEdge)element;
-                if (isContainedIn(edge.source, node) &&
-                        isContainedIn(edge.target, node)) {
-                    node.addEdge(edge);
-                } else {
-                    outerElements.add(edge);
-                }
-            }
-        }
+        ActivityGraph graph = new ActivityGraph();
+        graph.addToStructuredNode(node, nestedElements);
+        outerElements.addAll(graph.getModelElements());
     }
 
     private static void addPinsFromParameters(
@@ -788,6 +839,12 @@ public class ActivityGraph {
         } else {
             if (node instanceof Pin) {
                 node = (ActivityNode)node.owner;
+                
+                // A pin that is owned by a structured activity node is
+                // considered to be "contained in" that node.
+                if (node == container) {
+                    return true;
+                }
             }
             ActivityNode inStructuredNode = node.inStructuredNode;
             return inStructuredNode != null && (
