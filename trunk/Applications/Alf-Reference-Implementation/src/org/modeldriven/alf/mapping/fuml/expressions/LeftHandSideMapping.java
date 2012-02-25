@@ -232,6 +232,9 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         }
                     } else {
                         this.setErrorMessage("Indexed FeatureLeftHandSide mapping not yet implemented.");
+                        this.resultSource = this.graph.addForkNode("Fork(LeftHandSide@" + 
+                                this.getLeftHandSide().getId() + ")");
+                        this.assignmentTarget = this.resultSource;
                     }
                 }
             }

@@ -183,29 +183,34 @@ public abstract class FumlMapping extends Mapping {
         }
         
         setExecutionFactory(new ExecutionFactoryL3());       
-        FumlMapping mapping = parseAndMap(fileName);
-        
-        if (mapping != null) {
-            try {
+        try {
+            FumlMapping mapping = parseAndMap(fileName);
+
+            if (mapping == null) {
+                System.out.println("Mapping failed");
+            } else {
                 mapping.getModelElements();
                 System.out.println("Mapped successfully.");
-            } catch (MappingError e) {
-                System.out.println("Mapping failed.");
-                Mapping errorMapping = e.getMapping();
-                System.out.println(errorMapping);
-                System.out.println(" error: " + e.getMessage());
-                Object source = errorMapping.getSource();
-                if (source != null) {
-                    System.out.println(" source: " + source);
-                    if (source instanceof SyntaxElement) {
-                        SyntaxElement element = (SyntaxElement)source;
-                        System.out.println(" file: " + element.getFileName() + 
-                                " at line " + element.getLine() + 
-                                " column " + element.getColumn());
-                    }
+                mapping.print();
+            }
+        } catch (MappingError e) {
+            System.out.println("Mapping failed.");
+            Mapping errorMapping = e.getMapping();
+            System.out.println(errorMapping);
+            System.out.println(" error: " + e.getMessage());
+            Object source = errorMapping.getSource();
+            if (source != null) {
+                System.out.println(" source: " + source);
+                if (source instanceof SyntaxElement) {
+                    SyntaxElement element = (SyntaxElement)source;
+                    System.out.println(" file: " + element.getFileName() + 
+                            " at line " + element.getLine() + 
+                            " column " + element.getColumn());
                 }
             }
-            mapping.print();
+        } catch (Exception e) {
+            System.out.println("Mapping failed.");
+            e.printStackTrace();
         }
     }
     
