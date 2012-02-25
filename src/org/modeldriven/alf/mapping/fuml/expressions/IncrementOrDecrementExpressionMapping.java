@@ -94,6 +94,7 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
                         mapping.getErrorMessage());
             } else {
                 LeftHandSideMapping lhsMapping = (LeftHandSideMapping)mapping;
+                lhsMapping.setRhsUpper(1);
                 lhsMapping.setIndexSource(operandMapping.getIndexSource());
                 lhsMapping.setObjectSource(operandMapping.getObjectSource());
                 this.graph.addAll(lhsMapping.getGraph());
