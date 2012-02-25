@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -36,7 +36,6 @@ import fUML.Syntax.Classes.Kernel.Property;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class InstanceCreationExpressionMapping extends
 		InvocationExpressionMapping {
@@ -160,22 +159,28 @@ public class InstanceCreationExpressionMapping extends
                 // with input pins to which the results of mapping the tuple are
                 // connected.
 
-                List<InputPin> inputPins = new ArrayList<InputPin>();
+                StructuredActivityNode structuredNode =
+                    this.graph.addStructuredActivityNode(
+                            "Create(" + dataType.qualifiedName +")", 
+                            new ArrayList<Element>());
+                
                 for (Property attribute: dataType.attribute) {
-                    InputPin valuePin = new InputPin();
-                    inputPins.add(valuePin);
+                    InputPin valuePin = ActivityGraph.createInputPin(
+                            structuredNode.name + 
+                                ".input(" + attribute.qualifiedName + ")", 
+                            attribute.typedElement.type, 
+                            attribute.multiplicityElement.lower, 
+                            attribute.multiplicityElement.upper.naturalValue);
+                    structuredNode.addStructuredNodeInput(valuePin);
                     this.resultSource = 
                         AssignmentExpressionMapping.mapPropertyAssignment(
                                 attribute, subgraph, 
                                 this.resultSource, valuePin);
                 }
-                StructuredActivityNode structuredNode =
-                    this.graph.addStructuredActivityNode(
-                            "Create(" + dataType.qualifiedName +")", 
-                            subgraph.getModelElements());
-                for (InputPin inputPin: inputPins) {
-                    structuredNode.addStructuredNodeInput(inputPin);
-                }
+                
+                graph.addToStructuredNode(
+                        structuredNode, 
+                        subgraph.getModelElements());
                 action = structuredNode;
             }
             

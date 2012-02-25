@@ -218,9 +218,16 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
                         if (propertyAccess == null) {
                             QualifiedName name = 
                                 ((NameExpression)expression).getName();
-                            if (this.hasLocalName(name)) {
-                                this.assignedName = 
-                                    name.getUnqualifiedName().getName();
+                            Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+                            String unqualifiedName = name == null? null: 
+                                name.getUnqualifiedName().getName();
+                            AssignedSource assignment = 
+                                unqualifiedName == null || 
+                                    assignmentsBefore == null? null:
+                                assignmentsBefore.get(unqualifiedName);                            
+                            if (assignment != null && 
+                                    assignment.getType().getImpl().isDataType()) {
+                                this.assignedName = unqualifiedName;
                                 this.isDataValueUpdate = true;
                             }
                             feature = null;
@@ -229,7 +236,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
                         }
                     } else if (expression instanceof PropertyAccessExpression) {
                         feature = ((PropertyAccessExpression)expression).
-                        getFeatureReference();
+                                                        getFeatureReference();
                     } else {
                         feature = null;
                     }
@@ -237,13 +244,6 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
             }
         }
         return this.assignedName;
-    }
-    
-    private boolean hasLocalName(QualifiedName name) {
-        Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
-        NameBinding unqualifiedName = name == null? null: name.getUnqualifiedName();
-        return unqualifiedName != null && assignmentsBefore != null &&
-                    assignmentsBefore.containsKey(unqualifiedName.getName());
     }
     
     public abstract String getLocalName();
@@ -274,7 +274,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
         }
     }
     
-    protected abstract ElementReference getReferent();
+    public abstract ElementReference getReferent();
     
     public void setCurrentScope(NamespaceDefinition currentScope) {
         this.currentScope = currentScope;

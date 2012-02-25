@@ -4,7 +4,7 @@
 active class Expressions_Increment_Decrement {
 
     private x: Integer;
-    private list: Integer[];
+    private list: Integer[] ordered;
 
     public test() {
       s = Integer[]{1,2};

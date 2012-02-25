@@ -61,7 +61,7 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
         EqualityExpression expression = this.getEqualityExpression();
         
         TestIdentityAction testAction = 
-            this.graph.addTestIdentityAction("Test(==)");
+            this.graph.addTestIdentityAction("==");
         this.action = testAction;
         this.resultSource = testAction.result;
         
@@ -87,6 +87,13 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
             ActivityNode test2Result = 
                 this.mapNonEmptyTest(testAction.second, operand2Result);
             this.mapDoubleEmptyResult(testAction, test1Result, test2Result);
+        } else {
+            this.graph.addObjectFlow(
+                    operand1Result, 
+                    testAction.first);
+            this.graph.addObjectFlow(
+                    operand2Result, 
+                    testAction.second);
         }
         
         if (expression.getIsNegated()) {

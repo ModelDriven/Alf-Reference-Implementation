@@ -19,15 +19,19 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.AssignmentExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
+import org.modeldriven.alf.syntax.expressions.SequenceConstructionExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
+import fUML.Syntax.Actions.BasicActions.InputPin;
 import fUML.Syntax.Actions.IntermediateActions.AddStructuralFeatureValueAction;
 import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
+import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
+import fUML.Syntax.Activities.IntermediateActivities.MergeNode;
 import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.DataType;
 import fUML.Syntax.Classes.Kernel.Property;
@@ -198,6 +202,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                     mapping.getErrorMessage());
         } else {
             this.lhsMapping = (LeftHandSideMapping)mapping;
+            this.lhsMapping.setRhsUpper(rhs.getUpper());
             
             mapping = this.fumlMap(rhs);
             if (!(mapping instanceof ExpressionMapping)) {
@@ -205,8 +210,6 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                         mapping.getErrorMessage());
             } else {    
                 ExpressionMapping rhsMapping = (ExpressionMapping)mapping;
-                this.graph.addAll(rhsMapping.getGraph());                    
-                
                 ActivityNode rhsResultSource = rhsMapping.getResultSource();                    
                 if (rhsResultSource != null) {
                     // TODO: Implement collection and bit string conversion.
@@ -240,9 +243,20 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                     }
 
                     this.graph.addAll(this.lhsMapping.getGraph());
-                    this.graph.addObjectFlow(
-                            rhsResultSource,
-                            this.lhsMapping.getAssignmentTarget());
+                    ActivityNode assignmentTarget = 
+                        this.lhsMapping.getAssignmentTarget();
+                    if (assignmentTarget != null) {
+                        this.graph.addAll(rhsMapping.getGraph());
+                        this.graph.addObjectFlow(
+                                rhsResultSource,
+                                this.lhsMapping.getAssignmentTarget());
+                    } else if (!(rhs instanceof SequenceConstructionExpression)) {
+                        StructuredActivityNode rhsNode = 
+                            this.graph.addStructuredActivityNode(
+                                "RightHandSide@" + rhs.getId(), 
+                                rhsMapping.getModelElements());
+                        this.graph.addControlFlow(rhsNode, lhsMapping.getNode());
+                    }
                 }
             }
         }
@@ -337,11 +351,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 	    
 	    // Create write action for the property.  
         AddStructuralFeatureValueAction writeAction = 
-            subgraph.addAddStructuralFeatureValueAction(property);
+            subgraph.addAddStructuralFeatureValueAction(property, false);
 
-        // Connect the action object pin to the objectSource.
-        subgraph.addObjectFlow(objectSource, writeAction.object);
-        
         // For an ordered property, add an insertAt pin with a "*" input.
         if (property.multiplicityElement.isOrdered) {
             ValueSpecificationAction valueAction = 
@@ -360,7 +371,11 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
             // If the property multiplicity is 1..1, connect the valueSource to
             // the write action value input pin.
             subgraph.addObjectFlow(valueSource, writeAction.value);        
-            writeAction.setIsReplaceAll(true);           
+            writeAction.setIsReplaceAll(true);   
+            
+            // Connect the action object pin to the objectSource.
+            subgraph.addObjectFlow(objectSource, writeAction.object);
+            
             graph.addAll(subgraph);
             return writeAction.result;
             
@@ -368,14 +383,24 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
             // Otherwise, create an expansion region to iteratively add
             // possibly multiple values to the property.
             Classifier featuringClassifier = property.featuringClassifier.get(0);
+            ForkNode valueForkNode = graph.addForkNode(
+                    "Fork(" + valueSource.name + ")");
+            graph.addObjectFlow(valueSource, valueForkNode);
+            writeAction.setIsReplaceAll(false);
             ExpansionRegion region = graph.addExpansionRegion(
                     "Iterate(" + writeAction.name + ")", 
                     ExpansionKind.iterative, 
                     subgraph.getModelElements(), 
-                    valueSource, writeAction.value, 
+                    valueForkNode, writeAction.value, 
                     featuringClassifier instanceof DataType? 
                             writeAction.result: null);
-            writeAction.setIsReplaceAll(false);            
+            
+            InputPin objectInputPin = ActivityGraph.createInputPin(
+                    region.name + ".input(" + objectSource.name + ")", 
+                    featuringClassifier, 1, 1);
+            region.addStructuredNodeInput(objectInputPin);
+            region.addEdge(ActivityGraph.createObjectFlow(
+                    objectInputPin, writeAction.object));
             
             // If the property is a feature of a data type, then connect
             // the result output pin of the action to an output expansion
@@ -383,8 +408,26 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
             // node.
             
             if (!(featuringClassifier instanceof DataType)) {
-                return region.outputElement.get(0);                
+                graph.addObjectFlow(objectSource, objectInputPin);
+                return null;
             } else {
+                // Add check so that data value is routed around the expansion
+                // region in the case of an empty list.
+                CallBehaviorAction callAction = graph.addCallBehaviorAction(
+                        getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
+                graph.addObjectFlow(valueForkNode, callAction.argument.get(0));
+                // NOTE: Add initial node to ensure that the call action fires
+                // even if the value input is empty.
+                ActivityNode initialNode = graph.addInitialNode("Initial(IsEmpty)");                
+                graph.addControlFlow(initialNode, callAction);
+                MergeNode mergeNode = graph.addMergeNode(
+                        "Merge(" + objectSource.name + ")");
+                graph.addObjectDecisionNode(
+                        "IsEmpty", objectSource, callAction.result.get(0), 
+                        mergeNode, objectInputPin);
+
+                // Add logic to get last updated data value from expansion
+                // region.
                 ForkNode fork = 
                     graph.addForkNode("Fork(" + writeAction.result.name + " list)");
                 CallBehaviorAction callSizeAction = 
@@ -400,8 +443,14 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 graph.addObjectFlow(
                         callSizeAction.result.get(0), 
                         callGetAction.argument.get(1));
+                graph.addObjectFlow(callGetAction.result.get(0), mergeNode);
                 
-                return callGetAction.result.get(0);
+                // Set the lower bound of the list argument pin for the call to
+                // ListGet to 1, in order to prevent the call from firing 
+                // before the list tokens get offered to the pin.
+                callGetAction.argument.get(0).multiplicityElement.setLower(1);
+                
+                return mergeNode;
             }
         }        
 	}
