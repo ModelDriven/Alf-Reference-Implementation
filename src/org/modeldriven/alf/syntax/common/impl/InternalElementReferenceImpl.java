@@ -161,6 +161,13 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public boolean isUnique() {
+        SyntaxElement element = this.getSelf().getElement();
+        return element instanceof TypedElementDefinition &&
+            !((TypedElementDefinition)element).getIsNonunique();
+    }
+
+    @Override
     public boolean isOperation() {
         return this.getSelf().getElement() instanceof OperationDefinition;
     }

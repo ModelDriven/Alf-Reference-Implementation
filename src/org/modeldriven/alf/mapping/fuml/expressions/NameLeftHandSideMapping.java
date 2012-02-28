@@ -68,7 +68,10 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
                                 mapping.getErrorMessage());
                     } else {
                         ExpressionMapping indexMapping = (ExpressionMapping)mapping;
-                        this.graph.addAll(indexMapping.getGraph());
+                        this.controlTarget = 
+                            this.graph.addStructuredActivityNode(
+                                    "Index(LeftHandSide@" + lhs.getId() +")", 
+                                    indexMapping.getModelElements());
                         indexSource = indexMapping.getResultSource();
                     }
                 }

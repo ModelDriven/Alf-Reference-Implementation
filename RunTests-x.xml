@@ -22,6 +22,13 @@
             </classpath>
             <arg value="tests-x\Expressions_Assignment_Indexed.alf" />
         </java>
+        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
+            <classpath>
+                <pathelement location="${classpath}"/>
+                <pathelement location="..\fUML-Reference-Implementation/target/fuml/classes"/>
+            </classpath>
+            <arg value="tests-x\Expressions_Assignment_Feature_Indexed.alf" />
+        </java>
 		<java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
 			<classpath>
 				<pathelement location="${classpath}"/>

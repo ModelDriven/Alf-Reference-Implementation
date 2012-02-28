@@ -4,31 +4,40 @@
 active class Expressions_Increment_Decrement {
 
     private x: Integer;
-    private list: Integer[] ordered;
+    private list: Integer[] sequence;
 
-    public test() {
+    public test(
+      out s: Integer[] sequence, out i: Integer, 
+      out x: Integer, out list: Integer[] sequence,
+      out j: Integer, out k: Integer) {
       s = Integer[]{1,2};
       i = 1;
       this.x = 2;
       this.list = s;
-
+      
       i++;
-      i--;
+      i++;
+      j = i--;
+      s[i]++;
       s[i]++;
       s[i]--;
       this.x++;
+      this.x++;
       this.x--;
       this.list[i]++;
-      this.list[i]--;      
-    
+      this.list[i]++;
+      this.list[i]--;
+      
       ++i;
-      --i;
+      k = --i;
       ++s[i];
       --s[i];      
       ++this.x;
       --this.x;
       ++this.list[i];
       --this.list[i];
+      x = this.x;
+      list = this.list;
     }
     
 } do {

@@ -298,7 +298,8 @@ public class InstanceCreationExpressionImpl
 	    // be for data value creation.
         InstanceCreationExpression self = this.getSelf();
         Tuple tuple = self.getTuple();
-        if (tuple == null) {
+        if (tuple == null || 
+                tuple.getImpl().size() > this.parameters().size()) {
             return false;
         } else {
             for (NamedExpression input: tuple.getInput()) {

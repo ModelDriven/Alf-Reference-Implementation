@@ -185,6 +185,12 @@ public class ActivityGraph {
         writeAction.setResult(createOutputPin(
                 writeAction.name + ".result", featuringClassifier, 1, 1));
         
+        if (property.multiplicityElement.isOrdered && !isReplaceAll) {
+            writeAction.setInsertAt(ActivityGraph.createInputPin(
+                    writeAction + ".insertAt", 
+                    FumlMapping.getUnlimitedNaturalType(), 1, 1));
+        }
+        
         return writeAction;
     }
     
@@ -432,6 +438,34 @@ public class ActivityGraph {
                 reduceAction.name + ".result", type, 0, 1));
         this.add(reduceAction);
         return reduceAction;
+    }
+    
+    public RemoveStructuralFeatureValueAction addRemoveStructuralFeatureValueAction(
+            Property property, boolean isRemoveDuplicates) {
+        RemoveStructuralFeatureValueAction removeAction = 
+            new RemoveStructuralFeatureValueAction();
+        removeAction.setName("Remove(" + property.qualifiedName + ")");
+        removeAction.setStructuralFeature(property);
+        removeAction.setIsRemoveDuplicates(isRemoveDuplicates);
+        this.add(removeAction);
+        
+        Classifier featuringClassifier = property.featuringClassifier.get(0);
+        removeAction.setObject(createInputPin(
+                removeAction.name + ".object", featuringClassifier, 1, 1));
+        removeAction.setResult(createOutputPin(
+                removeAction.name + ".result", featuringClassifier, 1, 1));
+        
+        if (!property.multiplicityElement.isOrdered || 
+                property.multiplicityElement.isUnique || 
+                isRemoveDuplicates) {
+            removeAction.setValue(createInputPin(
+                    removeAction.name + ".value", property.typedElement.type, 1, 1));
+        } else {
+            removeAction.setRemoveAt(createInputPin(
+                    removeAction.name + ".removeAt", property.typedElement.type, 1, 1));
+        }
+        
+        return removeAction;
     }
     
     public SendSignalAction addSendSignalAction(Signal signal) {

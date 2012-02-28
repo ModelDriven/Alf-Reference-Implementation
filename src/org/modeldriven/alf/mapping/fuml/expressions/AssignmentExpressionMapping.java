@@ -242,20 +242,27 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                         }
                     }
 
-                    this.graph.addAll(this.lhsMapping.getGraph());
+                    this.graph.addAll(this.lhsMapping.getGraph());                    
                     ActivityNode assignmentTarget = 
                         this.lhsMapping.getAssignmentTarget();
+                    ActivityNode controlTarget =
+                        this.lhsMapping.getControlTarget();
+                    
+                    StructuredActivityNode rhsNode = 
+                        assignmentTarget == null && 
+                            rhs instanceof SequenceConstructionExpression ? null: 
+                        this.graph.addStructuredActivityNode(
+                            "RightHandSide@" + rhs.getId(), 
+                            rhsMapping.getModelElements());
+                    
                     if (assignmentTarget != null) {
-                        this.graph.addAll(rhsMapping.getGraph());
                         this.graph.addObjectFlow(
                                 rhsResultSource,
                                 this.lhsMapping.getAssignmentTarget());
-                    } else if (!(rhs instanceof SequenceConstructionExpression)) {
-                        StructuredActivityNode rhsNode = 
-                            this.graph.addStructuredActivityNode(
-                                "RightHandSide@" + rhs.getId(), 
-                                rhsMapping.getModelElements());
-                        this.graph.addControlFlow(rhsNode, lhsMapping.getNode());
+                    }
+                    
+                    if (rhsNode != null && controlTarget != null) {
+                        this.graph.addControlFlow(rhsNode, controlTarget);
                     }
                 }
             }
@@ -353,15 +360,10 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
         AddStructuralFeatureValueAction writeAction = 
             subgraph.addAddStructuralFeatureValueAction(property, false);
 
-        // For an ordered property, add an insertAt pin with a "*" input.
+        // For an ordered property, provide insertAt pin with a "*" input.
         if (property.multiplicityElement.isOrdered) {
             ValueSpecificationAction valueAction = 
                 subgraph.addUnlimitedNaturalValueSpecificationAction(-1);
-            
-            writeAction.setInsertAt(ActivityGraph.createInputPin(
-                    writeAction + ".insertAt", 
-                    FumlMapping.getUnlimitedNaturalType(), 1, 1));
-            
             subgraph.addObjectFlow(valueAction.result, writeAction.insertAt);
         }
         
