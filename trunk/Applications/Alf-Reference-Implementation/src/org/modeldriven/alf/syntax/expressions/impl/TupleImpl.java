@@ -224,6 +224,8 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 */
 
     public abstract boolean isEmpty();
+    
+    public abstract int size();
 
     public Map<String, AssignedSource> getAssignmentsAfterMap() {
         Tuple self = this.getSelf();

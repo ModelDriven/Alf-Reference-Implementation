@@ -192,6 +192,13 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public boolean isUnique() {
+        Element element = this.getSelf().getElement();
+        return element instanceof MultiplicityElement &&
+            ((MultiplicityElement)element).getIsUnique();
+    }
+
+    @Override
     public boolean isOperation() {
         return this.getSelf().getElement() instanceof Operation;
     }

@@ -140,9 +140,11 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	public boolean leftHandSideIndexExpression() {
 	    Expression index = this.getSelf().getIndex();
 		return index == null || index.getUpper() <= 1 &&
-		    // NOTE: This checks that a feature with an index is ordered.
+		    // NOTE: This checks that a feature with an index is ordered, non-unique..
 		    // It needs to be added to the spec as a separate constraint.
-		    (this.getFeature() == null || this.getReferent().getImpl().isOrdered());
+		    (this.getFeature() == null || 
+		            this.getReferent().getImpl().isOrdered() && 
+		            !this.getReferent().getImpl().isUnique());
 	}
 	
 	/*

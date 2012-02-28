@@ -140,6 +140,11 @@ public class PositionalTupleImpl extends TupleImpl {
     public boolean isEmpty() {
         return this.getSelf().getExpression().isEmpty();
     }
+    
+    @Override
+    public int size() {
+        return this.getSelf().getExpression().size();
+    }
 
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
