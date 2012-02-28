@@ -21,12 +21,10 @@ import java.util.List;
 public class PositionalTemplateBindingMapping extends TemplateBindingMapping {
 
 	public PositionalTemplateBindingMapping() {
-		this
-				.setErrorMessage("PositionalTemplateBindingMapping not yet implemented.");
+		this.setErrorMessage("No mapping for PositionalTemplateBindingMapping.");
 	}
 
 	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
 		return new ArrayList<Element>();
 	}
 
