@@ -21,12 +21,10 @@ import java.util.List;
 public class OutputNamedExpressionMapping extends NamedExpressionMapping {
 
 	public OutputNamedExpressionMapping() {
-		this
-				.setErrorMessage("OutputNamedExpressionMapping not yet implemented.");
+		this.setErrorMessage("No mapping for OutputNamedExpressionMapping.");
 	}
 
 	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
 		return new ArrayList<Element>();
 	}
 

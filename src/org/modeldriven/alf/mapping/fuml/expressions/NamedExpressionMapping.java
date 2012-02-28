@@ -21,11 +21,10 @@ import java.util.List;
 public class NamedExpressionMapping extends SyntaxElementMapping {
 
 	public NamedExpressionMapping() {
-		this.setErrorMessage("NamedExpressionMapping not yet implemented.");
+		this.setErrorMessage("No mapping for NamedExpressionMapping.");
 	}
 
 	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
 		return new ArrayList<Element>();
 	}
 

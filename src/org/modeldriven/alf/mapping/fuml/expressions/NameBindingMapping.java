@@ -21,11 +21,10 @@ import java.util.List;
 public class NameBindingMapping extends SyntaxElementMapping {
 
 	public NameBindingMapping() {
-		this.setErrorMessage("NameBindingMapping not yet implemented.");
+		this.setErrorMessage("No mapping for NameBindingMapping.");
 	}
 
 	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
 		return new ArrayList<Element>();
 	}
 

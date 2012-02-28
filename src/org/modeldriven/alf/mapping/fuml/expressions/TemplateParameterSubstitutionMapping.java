@@ -21,12 +21,10 @@ import java.util.List;
 public class TemplateParameterSubstitutionMapping extends SyntaxElementMapping {
 
 	public TemplateParameterSubstitutionMapping() {
-		this
-				.setErrorMessage("TemplateParameterSubstitutionMapping not yet implemented.");
+		this.setErrorMessage("No mapping for TemplateParameterSubstitutionMapping.");
 	}
 
 	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
 		return new ArrayList<Element>();
 	}
 
