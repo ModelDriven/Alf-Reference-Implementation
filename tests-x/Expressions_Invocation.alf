@@ -17,6 +17,7 @@ active class Expressions_Invocation specializes Super {
   	activity ComputeInterest(in amount: Integer) { }
   	activity Start(in monitor: Monitor) { }
   	activity B(out s: String) { s = "Hello"; }
+  	activity C(in b: BitString, out c: Integer) { c = 5; }
   	
   	createReply(): Reply { }
   	
@@ -26,11 +27,16 @@ active class Expressions_Invocation specializes Super {
 
 	test(inout status1: String, out status2: String, out statuses: String[*]) {
 	
+        c = +0;
+        b = (BitString)c;
+        C(b, c);
+        C(c, b); // Bit string conversion
+        
         B(status1);
         B(status2);
         B(statuses);
         B(s);  // Define local name "s" as an output argument.
-        /*
+        
         A(1, true);
         A(x=>1, y=>true);
         A(y=>true, x=>1);
@@ -50,7 +56,7 @@ active class Expressions_Invocation specializes Super {
         monitors = (Monitor)null;
         including(monitors, monitor);
         size(Monitor.allInstances());
-	    */
+	    
 	}
 } do {
     a = "a";

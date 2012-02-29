@@ -42,7 +42,8 @@ active class Expressions_Operator {
 	  monitor = new Monitor();
 	  f = true;
 	  g = false;
-	  h = (BitString)0xAB;
+	  h = 0xAB;
+	  b = (BitString)h;
 	  i = 1;
 	  j = 2;
 	  bit = BitString[] { 0, 1, 2 };
@@ -53,6 +54,7 @@ active class Expressions_Operator {
 	  !this.flag;
 	  !member.isActive;
 	
+      ~b;
 	  ~h;
 	  ~this.getByte();
 	  +1234;
@@ -74,13 +76,20 @@ active class Expressions_Operator {
 	  i + j;
 	  i - j;
 	  
-	  h & 0xF0;
-	  h | 0360;
-	  h << i;
-	  h >> i;
-	  h >>> i;
-	  (h & 0xF0) >>> 8;
-	  
+      b & 0xF0;
+      b | 0360;
+      b << i;
+      b >> i;
+      b >>> i;
+      (b & 0xF0) >>> 8;
+      
+      h & 0xF0;
+      h | 0360;
+      h << i;
+      h >> i;
+      h >>> i;
+      (h & 0xF0) >>> 8;
+      
 	  i > j;
 	  i < j;
 	  i >= j;

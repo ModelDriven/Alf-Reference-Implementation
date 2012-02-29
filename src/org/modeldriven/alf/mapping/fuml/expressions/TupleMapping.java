@@ -22,6 +22,7 @@ import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
+import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
 import org.modeldriven.alf.syntax.expressions.LinkOperationExpression;
 import org.modeldriven.alf.syntax.expressions.NamedExpression;
@@ -95,6 +96,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
 
     public void mapTo(Action action) throws MappingError {
         Tuple tuple = this.getTuple();
+        // System.out.println("[mapTo] tuple=" + tuple);
+        InvocationExpression invocation = tuple.getInvocation();
         Collection<NamedExpression> inputs = tuple.getInput();
         Collection<OutputNamedExpression> outputs = tuple.getOutput();
         
@@ -104,32 +107,35 @@ public abstract class TupleMapping extends SyntaxElementMapping {
             // in the same order as their corresponding parameters, as 
             // implemented in TupleImpl.
             
-            Collection<Element> nestedElements = new ArrayList<Element>();
+            ActivityGraph subgraph = new ActivityGraph();
             InputPinList inputPins = action instanceof InvocationAction? 
                     ((InvocationAction)action).argument: 
                     action.input;
             int i = 0;
             for (NamedExpression input: inputs) {
+                String name = input.getName();
                 Expression expression = input.getExpression();
                 FumlMapping mapping = this.fumlMap(expression);
                 if (!(mapping instanceof ExpressionMapping)) {
-                    this.throwError("Error mapping expression: " + mapping);
+                    this.throwError("Error mapping input expression for " + 
+                            name +": " + mapping.getErrorMessage());
                 } else {
-                    // TODO: Implement collection and bit string conversion.                    
-                    
-                    FormalParameter parameter = this.getTuple().getInvocation().getImpl().
-                        parameterNamed(input.getName());
+                    ExpressionMapping expressionMapping = 
+                        (ExpressionMapping)mapping;
+                    FormalParameter parameter = 
+                        invocation.getImpl().parameterNamed(name);
                     if (parameter != null && 
                             "inout".equals(parameter.getDirection())) {
-                        this.inoutExpressionMap.put(input.getName(), 
-                            (ExpressionMapping)mapping);
+                        this.inoutExpressionMap.put(
+                                name, expressionMapping);
                     }
 
-                    nestedElements.addAll(mapping.getModelElements());
+                    subgraph.addAll(expressionMapping.getGraph());
                     ActivityNode resultSource = 
-                        ((ExpressionMapping)mapping).getResultSource();
+                        expressionMapping.getResultSource();
                     if (resultSource == null) {
-                        this.setErrorMessage("No result source: " + mapping);
+                        this.setErrorMessage("No result source for input expression for " 
+                                + name + ": " + mapping);
                     } else {
                         
                         // If the expression has type Natural, but the parameter
@@ -149,9 +155,16 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                             resultSource = callAction.result.get(0);
                         }
                         
+                        // Add collection and bit string conversions, if
+                        // required.
+                        resultSource = AssignmentExpressionMapping.mapConversions(
+                                this, subgraph, 
+                                resultSource, expressionType, 
+                                input.getImpl().getIsCollectionConversion(parameter), 
+                                input.getImpl().getIsBitStringConversion(parameter));
+                        
                         InputPin inputPin = inputPins.get(i);
-                        this.tupleGraph.addObjectFlow(
-                                resultSource, inputPin);
+                        this.tupleGraph.addObjectFlow(resultSource, inputPin);
                         
                         // Check for an index on the argument name (as opposed
                         // to the argument expression itself).
@@ -164,10 +177,11 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         if (index != null) {
                             mapping = this.fumlMap(index);
                             if (!(mapping instanceof ExpressionMapping)) {
-                                this.throwError("Error mapping index expression" +
-                                        mapping.getErrorMessage());
+                                this.throwError("Error mapping index expression for " 
+                                        + name + ": " + mapping.getErrorMessage());
                             } else {
-                                nestedElements.addAll(mapping.getModelElements());
+                                subgraph.addAll(
+                                        ((ExpressionMapping)mapping).getGraph());
                                 resultSource =
                                     ((ExpressionMapping)mapping).getResultSource();
                                 if (resultSource == null) {
@@ -175,7 +189,6 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                 } else {
                                     if (index.getType().getImpl().conformsTo(
                                             RootNamespace.getIntegerType())) {
-                                        ActivityGraph subgraph = new ActivityGraph();
                                         CallBehaviorAction callAction = 
                                             subgraph.addCallBehaviorAction(
                                             getBehavior(RootNamespace.
@@ -184,8 +197,6 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                                 resultSource, 
                                                 callAction.argument.get(0));
                                         resultSource = callAction.result.get(0);
-                                        nestedElements.addAll(
-                                                subgraph.getModelElements());
                                     }
                                     // NOTE: This presumes that the "insertAt"
                                     // or "destroyAt" pin comes directly after
@@ -200,9 +211,10 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 i++;
             }
             
-            if (!nestedElements.isEmpty()) {
+            if (!subgraph.isEmpty()) {
                 this.node = this.tupleGraph.addStructuredActivityNode(
-                        "Tuple@" + tuple.getId(), nestedElements);
+                        "Tuple@" + tuple.getId(), 
+                        subgraph.getModelElements());
                 this.tupleGraph.addControlFlow(this.node, action);
             }
         }
@@ -210,18 +222,20 @@ public abstract class TupleMapping extends SyntaxElementMapping {
         int i = 0;
         OutputPin returnPin = ActivityGraph.getReturnPin(action);
         for (OutputNamedExpression output: outputs) {
+            String name = output.getName();
             Expression expression = output.getExpression();
             if (!expression.getImpl().isNull()) {
                 LeftHandSide lhs = output.getLeftHandSide();
                 FumlMapping mapping = this.fumlMap(lhs);
                 if (!(mapping instanceof LeftHandSideMapping)) {
-                    this.throwError("Error mapping output as left hand side: " +
+                    this.throwError("Error mapping output for " + 
+                            name + " as left hand side: " + 
                             mapping.getErrorMessage());
                 } else {
                     LeftHandSideMapping lhsMapping = 
                         (LeftHandSideMapping)mapping;
                     ExpressionMapping inputMapping = 
-                        this.inoutExpressionMap.get(output.getName());
+                        this.inoutExpressionMap.get(name);
                     if (inputMapping != null) {
                         lhsMapping.setIndexSource(inputMapping.getIndexSource());
                         lhsMapping.setObjectSource(inputMapping.getObjectSource());
@@ -230,11 +244,20 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                     
                     // Skip return pin. Return parameter never has an output
                     // argument.
-                    OutputPin outputPin = action.output.get(i);
+                    ActivityNode outputPin = action.output.get(i);
                     if (outputPin == returnPin) {
-                        i++;
-                        outputPin = action.output.get(i);
+                        outputPin = action.output.get(++i);
                     }
+                    
+                    // Add collection and bit string conversions, if
+                    // required.
+                    FormalParameter parameter = 
+                        invocation.getImpl().parameterNamed(name);
+                    outputPin = AssignmentExpressionMapping.mapConversions(
+                            this, this.tupleGraph, 
+                            outputPin, parameter.getType(), 
+                            output.getImpl().getIsCollectionConversion(parameter), 
+                            output.getImpl().getIsBitStringConversion(parameter));
                    
                     // NOTE: The object flow is part of the tuple graph, NOT the
                     // LHS graph.

@@ -13,7 +13,9 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
+import org.modeldriven.alf.mapping.fuml.units.OperationDefinitionMapping;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.AssignmentExpression;
@@ -23,6 +25,7 @@ import org.modeldriven.alf.syntax.expressions.SequenceConstructionExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
+import fUML.Syntax.Actions.BasicActions.CallOperationAction;
 import fUML.Syntax.Actions.BasicActions.InputPin;
 import fUML.Syntax.Actions.IntermediateActions.AddStructuralFeatureValueAction;
 import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
@@ -63,7 +66,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * string conversion is required, then either the result source element of
      * the argument expression or the result of the toSequence invocation, if
      * collection conversion was required, is connected by an object flow to an
-     * invocation of the BitStringFunctions::toBitString function, and the
+     * invocation of the BitStringFunctions::ToBitString function, and the
      * result of that invocation acts as the result source element for the
      * right-hand side.
      * 
@@ -203,17 +206,16 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
         } else {
             this.lhsMapping = (LeftHandSideMapping)mapping;
             this.lhsMapping.setRhsUpper(rhs.getUpper());
-            
+
             mapping = this.fumlMap(rhs);
             if (!(mapping instanceof ExpressionMapping)) {
                 this.throwError("Error mapping right hand side: " + 
                         mapping.getErrorMessage());
-            } else {    
+            } else {
                 ExpressionMapping rhsMapping = (ExpressionMapping)mapping;
-                ActivityNode rhsResultSource = rhsMapping.getResultSource();                    
+                ActivityGraph rhsSubgraph = new ActivityGraph(rhsMapping.getGraph());
+                ActivityNode rhsResultSource = rhsMapping.getResultSource();
                 if (rhsResultSource != null) {
-                    // TODO: Implement collection and bit string conversion.
-
                     if (!assignmentExpression.getIsSimple()) {
                         Expression expression = lhs.getImpl().getExpression();
                         mapping = this.fumlMap(expression);
@@ -235,32 +237,51 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                             this.graph.addObjectFlow(
                                     this.lhsExpressionMapping.getResultSource(), 
                                     this.callAction.argument.get(0));
+
+                            // Apply bit string conversion to the right-hand
+                            // side, if necessary.
+                            ElementReference rhsType = rhs.getType();
+                            rhsResultSource = mapConversions(
+                                    this, this.graph, 
+                                    rhsResultSource, 
+                                    null, false, 
+                                    rhsType != null && rhsType.getImpl().isInteger() && 
+                                    this.callAction.argument.get(1).
+                                        typedElement.type == getBitStringType());
+                            
                             this.graph.addObjectFlow(
                                     rhsResultSource,
                                     this.callAction.argument.get(1));
+                            
                             rhsResultSource = this.callAction.result.get(0);                                
                         }
                     }
+                    
+                    rhsResultSource = mapConversions(
+                            this, rhsSubgraph, rhsResultSource, 
+                            assignmentExpression.getType(), 
+                            assignmentExpression.getIsCollectionConversion(), 
+                            assignmentExpression.getIsBitStringConversion());
 
                     this.graph.addAll(this.lhsMapping.getGraph());                    
                     ActivityNode assignmentTarget = 
                         this.lhsMapping.getAssignmentTarget();
                     ActivityNode controlTarget =
                         this.lhsMapping.getControlTarget();
-                    
+
                     StructuredActivityNode rhsNode = 
                         assignmentTarget == null && 
-                            rhs instanceof SequenceConstructionExpression ? null: 
-                        this.graph.addStructuredActivityNode(
-                            "RightHandSide@" + rhs.getId(), 
-                            rhsMapping.getModelElements());
-                    
+                        rhs instanceof SequenceConstructionExpression ? null: 
+                            this.graph.addStructuredActivityNode(
+                                    "RightHandSide@" + rhs.getId(), 
+                                    rhsSubgraph.getModelElements());
+
                     if (assignmentTarget != null) {
                         this.graph.addObjectFlow(
                                 rhsResultSource,
                                 this.lhsMapping.getAssignmentTarget());
                     }
-                    
+
                     if (rhsNode != null && controlTarget != null) {
                         this.graph.addControlFlow(rhsNode, controlTarget);
                     }
@@ -346,6 +367,51 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
     	    System.out.println(prefix + " rightHandSide:");
     	    mapping.printChild(prefix);
 	    }
+	}
+	
+	// Static helper methods
+	
+	public static ActivityNode mapConversions(
+	        FumlMapping outerMapping,
+	        ActivityGraph subgraph,
+	        ActivityNode rhsResultSource, 
+	        ElementReference rhsType,
+	        boolean isCollectionConversion, 
+	        boolean isBitStringConversion) throws MappingError {
+        if (rhsResultSource != null) {
+            if (isCollectionConversion) {
+                ElementReference toSequenceOperation = rhsType == null? null: 
+                    rhsType.getImpl().getToSequenceOperation();
+                if (toSequenceOperation == null) {
+                    outerMapping.throwError("No toSequence operation: " + rhsType);
+                } else {
+                    FumlMapping mapping = outerMapping.fumlMap(toSequenceOperation);
+                    if (mapping instanceof ElementReferenceMapping) {
+                        mapping = ((ElementReferenceMapping)mapping).getMapping();
+                    }
+                    if (!(mapping instanceof OperationDefinitionMapping)) {
+                        outerMapping.throwError("Error mapping toSequence operation: " + 
+                                mapping.getErrorMessage());
+                    } else {
+                        CallOperationAction callAction = 
+                            subgraph.addCallOperationAction(
+                                    ((OperationDefinitionMapping)mapping).
+                                        getOperation());
+                        subgraph.addObjectFlow(
+                                rhsResultSource, callAction.argument.get(0));
+                        rhsResultSource = callAction.result.get(0);
+                    }
+                }
+            }
+            if (isBitStringConversion) {
+                CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
+                        getBehavior(RootNamespace.getBitStringFunctionToBitString()));
+                subgraph.addObjectFlow(
+                        rhsResultSource, callAction.argument.get(0));
+                rhsResultSource = callAction.result.get(0);
+            }
+        }
+        return rhsResultSource;
 	}
 	
 	public static ActivityNode mapPropertyAssignment(

@@ -85,7 +85,11 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
 
         action = this.mapFeature(action);
         
+        // NOTE: Add left-hand side elements here prevents them from being
+        // wrapped in the expansion region mapped from a sequence feature
+        // invocation.
         this.graph.addAll(this.lhsGraph);
+        
         return action;
     }
 

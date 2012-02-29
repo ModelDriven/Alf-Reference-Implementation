@@ -18,7 +18,8 @@ active class Expressions_Assignment {
       f |= true;
       f ^= true;
       
-      h = (BitString)0xab;
+      h = (BitString)0;
+      h = 0xab; // Bit string conversion
       h &= 1;
       h |= 1;
       h ^= 1;

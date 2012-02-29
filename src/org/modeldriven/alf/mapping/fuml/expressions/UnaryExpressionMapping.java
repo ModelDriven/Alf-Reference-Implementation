@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -57,29 +57,34 @@ public abstract class UnaryExpressionMapping extends ExpressionMapping {
     // Cast and isolation expressions are handled in separate classes.
     // ClassificationExpressionMapping is also a subclass of UnaryExpressionMapping.
     
-    protected void map() throws MappingError {
+    // NOTE: This is overridden in BitStringUnaryExpressionMapping to implement
+    // bit string conversion.
+    protected ActivityNode mapOperand() throws MappingError {
         UnaryExpression expression = this.getUnaryExpression();
         FumlMapping mapping = this.fumlMap(expression.getOperand());
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping operand expression: " + 
                     mapping.getErrorMessage());
+        } 
+        ExpressionMapping operandMapping = (ExpressionMapping)mapping;
+        this.graph.addAll(operandMapping.getGraph());
+        return operandMapping.getResultSource();
+    }
+    
+    protected void map() throws MappingError {
+        UnaryExpression expression = this.getUnaryExpression();
+        ActivityNode operandResultSource = this.mapOperand();
+        ElementReference operatorFunction =
+            this.getOperatorFunction(expression.getOperator());
+        if (operatorFunction == null) {
+            this.resultSource = operandResultSource;
         } else {
-            // TODO: Implement bit string conversion for BitString unary expressions.
-            ExpressionMapping operandMapping = (ExpressionMapping)mapping;
-            this.graph.addAll(operandMapping.getGraph());
-            ElementReference operatorFunction =
-                this.getOperatorFunction(expression.getOperator());
-            if (operatorFunction == null) {
-                this.resultSource = operandMapping.getResultSource();
-            } else {
-                CallBehaviorAction callAction = 
-                    this.graph.addCallBehaviorAction(getBehavior(operatorFunction));
-                this.graph.addObjectFlow(
-                        operandMapping.getResultSource(), 
-                        callAction.argument.get(0));
-                this.action = callAction;
-                this.resultSource = callAction.result.get(0);
-            }
+            CallBehaviorAction callAction = 
+                this.graph.addCallBehaviorAction(getBehavior(operatorFunction));
+            this.graph.addObjectFlow(
+                    operandResultSource, callAction.argument.get(0));
+            this.action = callAction;
+            this.resultSource = callAction.result.get(0);
         }
     }
     

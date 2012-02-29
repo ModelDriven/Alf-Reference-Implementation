@@ -18,6 +18,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.BinaryExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Syntax.Actions.BasicActions.Action;
 import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
@@ -82,6 +83,8 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
         return resultSource;
     }
     
+    // NOTE: This is overridden in LogicalExpressionMapping and
+    // ShiftExpressionMapping to implement bit string conversion.
     protected void mapOperator(
             String operator,
             ActivityNode operand1Result, 
@@ -103,6 +106,15 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
         }
     }
     
+    // Used by subclasses.
+    protected ActivityNode addBitStringConversion(ActivityNode operandResult) 
+        throws MappingError {
+        CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
+                getBehavior(RootNamespace.getBitStringFunctionToBitString()));
+        this.graph.addObjectFlow(operandResult, callAction.argument.get(0));
+        return callAction.result.get(0);
+    }
+
     protected ElementReference getOperatorFunction(String operator) {
         return null;
     }

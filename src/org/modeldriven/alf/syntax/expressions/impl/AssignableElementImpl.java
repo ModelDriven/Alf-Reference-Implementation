@@ -4,7 +4,6 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.Expression;
-import org.modeldriven.alf.syntax.units.RootNamespace;
 
 public abstract class AssignableElementImpl extends SyntaxElementImpl {
 
@@ -21,62 +20,50 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
     }
     
     public boolean isAssignableFrom(AssignableElementImpl source) {
-        if (source == null) {
-            return false;
-        }
-
-        // Null conversion
-        if (source.isNull()) {
-            return true;
-        } 
-
+        return source == null ||
+            this.isTypeConformantWith(source) && 
+            this.isMultiplicityConformantWith(source);
+    }
+    
+    public boolean isTypeConformantWith(AssignableElementImpl source) {
         ElementReference sourceType = source.getType();
-        ElementReference targetType = this.getType();
+        int sourceUpper = source.getUpper();
+        int targetUpper = this.getUpper();
         
+        return
+            // Null conversion
+            source.isNull() ||
+            
+            // Type conformance
+            this.isTypeConformantWith(sourceType) ||
+            
+            // Collection conversion
+            sourceType.getImpl().isCollectionClass() && sourceUpper == 1 && 
+            (targetUpper == -1 || targetUpper > 1) &&
+            this.isTypeConformantWith(sourceType.getImpl().getCollectionArgument());
+    }
+    
+    public boolean isTypeConformantWith(ElementReference sourceType) {
+        ElementReference targetType = this.getType();
+        return
+            // Untyped target is conformant with anything.
+            targetType == null ||
+            
+            // Untyped source is only assignable to untyped target.
+            sourceType != null && (
+            
+            // Basic type conformance
+            sourceType.getImpl().conformsTo(targetType) ||
+            
+            // Bit string conversion
+            sourceType.getImpl().isInteger() && targetType.getImpl().isBitString());
+    }
+    
+    public boolean isMultiplicityConformantWith(AssignableElementImpl source) {
         int targetUpper = this.getUpper();
         int sourceUpper = source.getUpper();
-        boolean upperBoundsConform = targetUpper == -1 || targetUpper > 1 || 
-                    sourceUpper != -1 && sourceUpper <= targetUpper;
-        
-        // Conformance
-        if (targetType == null) {
-            return upperBoundsConform;
-        }
-        if (sourceType == null) {
-            return false; // Untyped source is only assignable to untyped target.
-        }
-        if (sourceType.getImpl().conformsTo(targetType)) {
-            return upperBoundsConform;
-        }
-        
-        // Bit string conversion
-        if (sourceType.getImpl().conformsTo(RootNamespace.getIntegerType()) &&
-                targetType.getImpl().isBitString()) {
-            return upperBoundsConform;
-        }
-        
-        // Collection conversion
-        if (sourceType.getImpl().isCollectionClass() && source.getUpper() == 1) {
-            final ElementReference collectionType = 
-                sourceType.getImpl().getCollectionArgument();
-             AssignableElementImpl effectiveSource = new AssignableElementImpl(null) {
-                public String toString(boolean includeDerived) {
-                    return "AssignableElementImpl";
-                }
-                public ElementReference getType() {
-                    return collectionType;
-                }
-                public Integer getLower() {
-                    return 0;
-                }
-                public Integer getUpper() {
-                    return -1;
-                }
-            };
-            return this.isAssignableFrom(effectiveSource);
-        }
-        
-        return false;
+        return targetUpper == -1 || targetUpper > 1 || 
+               sourceUpper != -1 && sourceUpper <= targetUpper;
     }
     
     /**
