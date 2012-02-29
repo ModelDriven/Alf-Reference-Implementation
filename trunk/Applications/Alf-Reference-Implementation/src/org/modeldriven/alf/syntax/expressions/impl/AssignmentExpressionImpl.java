@@ -358,17 +358,17 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	protected Boolean deriveIsBitStringConversion() {
         AssignmentExpression self = this.getSelf();
         LeftHandSide lhs = self.getLeftHandSide();
-        Expression rhs = self.getRightHandSide();
-        if (lhs == null || rhs == null) {
-            return false;
-        } else {
-            ElementReference lhsType = lhs.getImpl().getType();
-            ElementReference rhsType = rhs.getType();
-            return rhsType != null && lhsType != null && 
-                   rhsType.getImpl().isBitString() &&
-                   (lhsType.getImpl().isInteger() ||
-                           lhsType.getImpl().isIntegerCollection());
-        }
+        ElementReference lhsType = lhs == null? null: lhs.getImpl().getType();
+        
+        // NOTE: Using self.getType() as the rhsType works for both simple and
+        // compound assignments.
+        ElementReference rhsType = self.getType();
+        
+        return rhsType != null && lhsType != null && 
+                lhsType.getImpl().isBitString() &&
+                (rhsType.getImpl().isInteger() ||
+                        self.getIsCollectionConversion() &&
+                        rhsType.getImpl().isIntegerCollection());
 	}
 	
 	/**
@@ -514,15 +514,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	    AssignmentExpression self = this.getSelf();
 	    LeftHandSide lhs = self.getLeftHandSide();
 	    Expression rhs = self.getRightHandSide();
-	    if (!self.getIsSimple() || lhs == null || self.getIsDefinition() || 
-	            rhs == null || rhs.getImpl().isNull()) {
-	        return true;
-	    } else {
-	        ElementReference lhsType = lhs.getImpl().getType();
-	        ElementReference rhsType = rhs.getImpl().getType();
-	        return lhsType == null || 
-	            rhsType != null && rhsType.getImpl().conformsTo(lhsType);
-	    }
+	    return !self.getIsSimple() || lhs == null || rhs == null ||
+	            self.getIsDefinition() || 
+	            lhs.getImpl().isTypeConformantWith(rhs.getImpl());
 	}
 
 	/**
@@ -535,14 +529,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         AssignmentExpression self = this.getSelf();
         LeftHandSide lhs = self.getLeftHandSide();
         Expression rhs = self.getRightHandSide();
-        if (!self.getIsSimple() || lhs == null || self.getIsDefinition()) {
-            return true;
-        } else {
-            int lhsUpper = lhs.getImpl().getUpper();
-            int rhsUpper = rhs.getUpper();
-            return lhsUpper > 1 || lhsUpper == -1 || 
-                        rhsUpper != -1 && rhsUpper <= lhsUpper;
-        }
+        return !self.getIsSimple() || lhs == null || rhs == null || 
+               self.getIsDefinition() ||
+               lhs.getImpl().isMultiplicityConformantWith(rhs.getImpl());
 	}
 
 	/**

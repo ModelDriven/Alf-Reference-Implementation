@@ -99,7 +99,8 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	 * is not.
 	 **/
 	protected Boolean deriveIsCollectionConversion() {
-	    // This needs to be set externally.
+	    // This needs to be set externally using 
+	    // setIsCollectionConversion(FormalParameter).
 		return null;
 	}
 
@@ -110,7 +111,8 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	 * BitString.
 	 **/
 	protected Boolean deriveIsBitStringConversion() {
-	    // This needs to be set externally.
+	    // This needs to be set externally using
+	    // setIsBitStringConversion(FormalParameter).
 		return null;
 	}
 	
@@ -151,6 +153,41 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
         output.setExpression(self.getExpression());
         output.setIndex(self.getIndex());
         return output;
+    }
+    
+    // Derives isCollectionConversion for this named expression as an input for
+    // the given parameter.
+    public boolean getIsCollectionConversion(FormalParameter parameter) {
+        NamedExpression self = this.getSelf();
+        Expression expression = self.getExpression();
+        return isCollectionConversion(
+                parameter.getType(), expression.getType(), expression.getUpper());
+    }
+
+    protected static boolean isCollectionConversion(
+            ElementReference lhsType, 
+            ElementReference rhsType, 
+            int rhsUpper) {
+        return rhsType != null && lhsType != null && 
+            rhsType.getImpl().isCollectionClass() && rhsUpper == 1 &&
+            !lhsType.getImpl().isCollectionClass();
+    }
+    
+    // Derives isBitStringConversion for this named expression as an input for
+    // the given parameter.
+    public boolean getIsBitStringConversion(FormalParameter parameter) {
+        NamedExpression self = this.getSelf();
+        return isBitStringConversion(
+                parameter.getType(), self.getExpression().getType());
+    }
+    
+    protected static boolean isBitStringConversion(
+            ElementReference lhsType, 
+            ElementReference rhsType) {
+        return rhsType != null && lhsType != null && 
+            lhsType.getImpl().isBitString() &&
+            (rhsType.getImpl().isInteger() ||
+                    rhsType.getImpl().isIntegerCollection());
     }
 
     @Override

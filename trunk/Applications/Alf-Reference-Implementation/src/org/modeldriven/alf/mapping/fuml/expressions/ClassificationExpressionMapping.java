@@ -39,7 +39,6 @@ public class ClassificationExpressionMapping extends UnaryExpressionMapping {
             this.throwError("Error mapping operand expression: " + 
                     mapping.getErrorMessage());
         } else {
-            // TODO: Implement bit string conversion for BitString unary expressions.
             ExpressionMapping operandMapping = (ExpressionMapping)mapping;
             this.graph.addAll(operandMapping.getGraph());
             

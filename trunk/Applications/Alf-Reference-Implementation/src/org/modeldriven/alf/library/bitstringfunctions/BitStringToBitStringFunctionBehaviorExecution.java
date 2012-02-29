@@ -30,7 +30,7 @@ public class BitStringToBitStringFunctionBehaviorExecution extends
     	result.value = value;
     	result.type = this.locus.factory.getBuiltInType("BitString");
 
-        Debug.println("[doBody] BitString ToInteger result = " + result.value);
+        Debug.println("[doBody] BitString ToBitString result = " + result.value);
 
 		LibraryFunctions.addValueToOutputList(result, outputParameters);
     }

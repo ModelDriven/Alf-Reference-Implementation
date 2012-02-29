@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.units.FormalParameter;
 
 /**
  * A named argument expression for an output parameter.
@@ -122,5 +123,30 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	               expression instanceof PropertyAccessExpression;
 	    }
 	}
+	
+	// Helper methods
+	
+    /**
+     * Derives isCollectionConversion for this output named expression as an
+     * output from the given parameter.
+     */
+	@Override
+    public boolean getIsCollectionConversion(FormalParameter parameter) {
+        OutputNamedExpression self = this.getSelf();
+        Expression expression = self.getExpression();
+        return isCollectionConversion(
+                expression.getType(), parameter.getType(), parameter.getUpper());
+    }
+
+	/**
+     * Derives isBitStringConversion for this output named expression as an 
+     * output from the given parameter.
+     */
+	@Override
+    public boolean getIsBitStringConversion(FormalParameter parameter) {
+        OutputNamedExpression self = this.getSelf();
+        return isBitStringConversion(
+                self.getExpression().getType(), parameter.getType());
+    }
 
 } // OutputNamedExpressionImpl
