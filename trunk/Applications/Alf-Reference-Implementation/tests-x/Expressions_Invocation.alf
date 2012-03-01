@@ -61,7 +61,4 @@ active class Expressions_Invocation specializes Super {
 } do {
     a = "a";
     this.test(a, b, c);
-    WriteLine(a);
-    WriteLine(b);
-    WriteLine(c[1]);
 }
