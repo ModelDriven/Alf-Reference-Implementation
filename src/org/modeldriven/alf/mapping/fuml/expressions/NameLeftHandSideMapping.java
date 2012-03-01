@@ -54,7 +54,7 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
             Expression index = lhs.getIndex();
             if (index == null) {
                 this.resultSource = this.graph.addForkNode(
-                        "Fork(" + lhs.getTarget().getPathName() + ")");
+                        "Fork(" + lhs.getTarget().getPathName() + ")@" + lhs.getId());
                 this.assignedValueSource = this.resultSource;
                 this.node = this.resultSource;
             } else {
@@ -78,35 +78,33 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
                 String name = lhs.getTarget().getUnqualifiedName().getName();
                 AssignedSource assignment = lhs.getImpl().getAssignmentBefore(name);
                 if (assignment != null) {
-                    if (assignment != null) {
-                        FumlMapping mapping = this.fumlMap(assignment);
-                        if (!(mapping instanceof AssignedSourceMapping)) {
-                            this.throwError("Error mapping assigned source: " + 
-                                    mapping.getErrorMessage());
+                    FumlMapping mapping = this.fumlMap(assignment);
+                    if (!(mapping instanceof AssignedSourceMapping)) {
+                        this.throwError("Error mapping assigned source: " + 
+                                mapping.getErrorMessage());
+                    } else {
+                        ActivityNode activityNode = 
+                            ((AssignedSourceMapping)mapping).getActivityNode();
+                        if (activityNode == null) {
+                            this.throwError("Invalid assigned source: " + assignment);
                         } else {
-                            ActivityNode activityNode = 
-                                ((AssignedSourceMapping)mapping).getActivityNode();
-                            if (activityNode == null) {
-                                this.throwError("Invalid assigned source: " + assignment);
-                            } else {
-                                CallBehaviorAction callAction = 
-                                    this.graph.addCallBehaviorAction(getBehavior(
-                                            RootNamespace.getSequenceFunctionReplacingAt()));
-                                this.graph.addObjectFlow(
-                                        activityNode, callAction.argument.get(0));
-                                this.graph.addObjectFlow(
-                                        indexSource, callAction.argument.get(1));
-                                this.graph.addObjectFlow(
-                                        this.resultSource, callAction.argument.get(2));
-                                
-                                this.assignedValueSource =
-                                    this.graph.addForkNode(
+                            CallBehaviorAction callAction = 
+                                this.graph.addCallBehaviorAction(getBehavior(
+                                        RootNamespace.getSequenceFunctionReplacingAt()));
+                            this.graph.addObjectFlow(
+                                    activityNode, callAction.argument.get(0));
+                            this.graph.addObjectFlow(
+                                    indexSource, callAction.argument.get(1));
+                            this.graph.addObjectFlow(
+                                    this.resultSource, callAction.argument.get(2));
+
+                            this.assignedValueSource =
+                                this.graph.addForkNode(
                                         "Fork(" + lhs.getTarget().getPathName() + ")");
-                                this.graph.addObjectFlow(
-                                        callAction.result.get(0), this.assignedValueSource);
-                                
-                                this.node = callAction;
-                            }
+                            this.graph.addObjectFlow(
+                                    callAction.result.get(0), this.assignedValueSource);
+
+                            this.node = callAction;
                         }
                     }
                 }
