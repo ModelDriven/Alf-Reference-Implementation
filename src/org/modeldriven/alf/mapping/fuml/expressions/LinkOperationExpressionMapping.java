@@ -67,6 +67,7 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
                 expression.getIsClear()?
                     this.graph.addClearAssociationAction(association):
                 expression.getIsCreation()?
+                    // TODO: Handle association ends with multiplicity upper bound of 1.
                     this.graph.addCreateLinkAction(association):
                     this.graph.addDestroyLinkAction(association);
         }
