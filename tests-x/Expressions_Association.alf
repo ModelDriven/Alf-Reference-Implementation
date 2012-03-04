@@ -29,7 +29,11 @@ active class Expressions_Association {
   	
 	//**************************************************************************
 
-	test(out owner1: Person, out owner2: Person, out house1: House, out house2: House) 
+	test(
+	   out owner: Person, out house: House, 
+	   out house_a: House, out house_b: House[0..1], 
+	   out owner1_a: Person, out house1_a: House[*],
+	   out owner1_b: Person, out house1_b: House[*], out house1_c: House[*]) 
 	{
 	  
 	  jack = new Person();
@@ -45,23 +49,38 @@ active class Expressions_Association {
 	  Owns.createLink(jack, oldHouse);
 	  Owns.createLink(owner=>jack, house=>oldHouse);
 	  
-	  house1 = jack.house;
-	  owner1 = Owns::owner(oldHouse);
-	  
-	  Owns1.createLink(owner1=>jack, house1[1]=>newHouse);
-	  Owns1.createLink(owner1=>jack, house1[2]=>newHouse);
-	  Owns.destroyLink(owner=>jack, house=>newHouse);
+	  house = jack.house;
+	  owner = Owns::owner(oldHouse);
 	  
 	  Owns.createLink(oldHouse.owner, newHouse);
 	  Owns.createLink(Owns.owner(oldHouse), newHouse);
 	  
-	  house2 = jack.house;
-	  owner2 = Owns::owner(newHouse);
+	  house_a = jack.house;
+	  
+      Owns.destroyLink(owner=>jack, house=>newHouse);
+	  
+	  house_b = jack.house;
+	  
+      Owns1.createLink(owner1=>jack, house1[1]=>oldHouse);
+	  Owns1.createLink(owner1=>jack, house1[2]=>newHouse);
+	  Owns1.createLink(owner1=>jack, house1[1]=>newHouse);
+	  
+	  house1_a = jack.house1;
+      owner1_a = Owns1::owner1(newHouse);
+	  
+	  Owns1.createLink(owner1=>new Person(), house1[1]=>newHouse);
+	  
+      house1_b = jack.house1;
+	  owner1_b = Owns1::owner1(newHouse);
+	  
+	  Owns1.createLink(owner1=>jack, house1[2]=>new House());
+	  
+	  house1_c = jack.house1;
 
 	  Owns.clearAssoc(jack);
 	  
 	}
 
 } do {
-    this.test(owner1, owner2, house1, house2);
+    this.test();
 }
