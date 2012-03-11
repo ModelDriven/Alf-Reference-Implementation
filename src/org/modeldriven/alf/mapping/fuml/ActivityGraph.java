@@ -758,6 +758,22 @@ public class ActivityGraph {
         return flow;
     }
     
+    public static StructuredActivityNode createPassthruNode(
+            String name, Type type, int lower, int upper) {
+        StructuredActivityNode structuredNode = new StructuredActivityNode();
+        structuredNode.setName("Passthru(" + name + ")");
+        
+        InputPin inputPin = 
+            createInputPin(structuredNode.name + ".input", type, lower, upper);
+        OutputPin outputPin = 
+            createOutputPin(structuredNode.name + ".output", type, lower, upper);
+        structuredNode.addStructuredNodeInput(inputPin);
+        structuredNode.addStructuredNodeOutput(outputPin);
+        structuredNode.addEdge(createObjectFlow(inputPin, outputPin));
+        
+        return structuredNode;
+    }
+    
     public static void addTo(
             StructuredActivityNode node, 
             Collection<Element> nestedElements,

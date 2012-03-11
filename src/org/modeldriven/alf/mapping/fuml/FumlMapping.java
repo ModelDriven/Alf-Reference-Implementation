@@ -182,9 +182,10 @@ public abstract class FumlMapping extends Mapping {
             fileName = args[0];
         }
         
-        setExecutionFactory(new ExecutionFactoryL3());       
+        setExecutionFactory(new ExecutionFactoryL3());
+        FumlMapping mapping = null;
         try {
-            FumlMapping mapping = parseAndMap(fileName);
+            mapping = parseAndMap(fileName);
 
             if (mapping == null) {
                 System.out.println("Mapping failed");
@@ -207,6 +208,9 @@ public abstract class FumlMapping extends Mapping {
                             " at line " + element.getLine() + 
                             " column " + element.getColumn());
                 }
+            }
+            if (mapping != null) {
+                mapping.print();
             }
         } catch (Exception e) {
             System.out.println("Mapping failed.");
