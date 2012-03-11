@@ -11,6 +11,7 @@ package org.modeldriven.alf.mapping.fuml.expressions;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.SequenceElementsMapping;
 
@@ -52,15 +53,24 @@ public class SequenceExpressionListMapping extends SequenceElementsMapping {
                         mapping.getErrorMessage());
             } else {
                 ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
-                this.resultSources.add(expressionMapping.getResultSource());
+                ActivityNode resultSource = expressionMapping.getResultSource();
+                ActivityGraph subgraph = expressionMapping.getGraph();
+                if (subgraph.isEmpty()) {
+                    subgraph = new ActivityGraph();
+                    ActivityNode mergeNode = 
+                        subgraph.addMergeNode("Merge(" + resultSource.name +")");
+                    subgraph.addObjectFlow(resultSource, mergeNode);
+                    resultSource = mergeNode;
+                }
+                this.resultSources.add(resultSource);
                 if (elements.size() == 1) {
-                    this.graph.addAll(expressionMapping.getGraph());
+                    this.graph.addAll(subgraph);
                 } else {
                     StructuredActivityNode node = 
                         this.graph.addStructuredActivityNode(
                                 "SequenceExpressionList@" + 
                                     expressionList.getId() + "#" + i++, 
-                                expressionMapping.getModelElements());
+                                subgraph.getModelElements());
                     if (previousNode != null) {
                         this.graph.addControlFlow(previousNode, node);
                     }
