@@ -1,0 +1,61 @@
+/** 
+ * Test block, empty and local name declaration statements.
+ **/
+active class Statements_Simple {
+
+    // Supporting declarations *************************************************
+    
+  	offers: Offer[*];
+	principal: Integer;
+	rate: Integer;
+	
+    class Offer { }
+    class Member { 
+      	public isActive: Boolean;
+      	public name: String;
+      	public address: String;
+  	}
+  	
+  	class RealProperty { 
+        @Create public RealProperty() { }
+  	}
+  	
+  	datatype Point { public x: Integer; public y: Integer; }
+    datatype Money { public amount: Integer; }
+  	
+	//**************************************************************************
+
+	test() {
+      // Setup
+	  e1 = 0;
+	  e2 = 0;
+	  /*
+	  period = 1;
+	  members = Member[]{};
+	  assets = null;
+	  land = new RealProperty();
+	  home = new RealProperty();
+	  condominium = new RealProperty();
+	  */
+	  // *****
+	  
+	  //parallel 
+	  //{ 
+	    i = e1;
+	    last = e2;
+	    collection = Integer[]{i, last};
+	  //}
+	  /*
+	  ;
+	  
+	  let currentOffer : Offer = this.offers[1];
+	  Money interest = new (this.principal * this.rate * period);
+	  let inactiveMembers : Member[] = members -> select member (!member.isActive);
+	  RealProperty[] realProperties = (RealProperty)assets;
+	  let fixedAssets: RealProperty[] = new { land, home, condominium };
+	  let origin : Point = new(0,0);
+	  */
+	}
+} do {
+    this.test();
+}

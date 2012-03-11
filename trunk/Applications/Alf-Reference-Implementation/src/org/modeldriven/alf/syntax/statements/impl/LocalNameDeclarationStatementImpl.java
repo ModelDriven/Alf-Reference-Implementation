@@ -232,6 +232,33 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	 * Helper Methods
 	 */
 	
+	/**
+	 * Return the assignment expression equivalent to this local name
+	 * declaration statement.
+	 */
+    public AssignmentExpression getAssignmentExpression() {
+        LocalNameDeclarationStatement self = this.getSelf();
+        String name = self.getName();
+        Expression expression = self.getExpression();
+        
+        QualifiedName target = new QualifiedName();
+        target.getImpl().addName(name);
+        
+        NameLeftHandSide lhs = new NameLeftHandSide();
+        lhs.setTarget(target);
+        
+        AssignmentExpression assignmentExpression = new AssignmentExpression();
+        assignmentExpression.setOperator("=");
+        assignmentExpression.setLeftHandSide(lhs);
+        assignmentExpression.setRightHandSide(expression);
+        
+        assignmentExpression.getImpl().setAssignmentBefore(
+                this.getAssignmentBeforeMap());
+        assignmentExpression.deriveAll();
+        
+        return assignmentExpression;
+    }
+
     public void setCurrentScope(NamespaceDefinition currentScope) {
         LocalNameDeclarationStatement self = this.getSelf();
         QualifiedName typeName = self.getTypeName();

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -11,6 +11,7 @@ package org.modeldriven.alf.mapping.fuml.statements;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
@@ -27,11 +28,8 @@ import org.modeldriven.alf.syntax.units.FormalParameter;
 import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.Activity;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode;
-import fUML.Syntax.Activities.IntermediateActivities.ControlFlow;
-import fUML.Syntax.Activities.IntermediateActivities.ObjectFlow;
 import fUML.Syntax.Classes.Kernel.Operation;
 import fUML.Syntax.Classes.Kernel.Parameter;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.BehaviorList;
@@ -39,15 +37,15 @@ import fUML.Syntax.CommonBehaviors.BasicBehaviors.BehaviorList;
 public class ReturnStatementMapping extends StatementMapping {
     
     @Override
-    public void mapTo(ActivityNode node) throws MappingError {
-        super.mapTo(node);
+    public void map() throws MappingError {
+        super.map();
         
         ReturnStatement returnStatement = this.getReturnStatement();
         FumlMapping mapping = this.fumlMap(returnStatement.getExpression());
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping expression: " + mapping);
         } else {
-            this.addToNode(node, mapping.getModelElements());
+            this.addToNode(mapping.getModelElements());
             
             ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
             ActivityNode resultSource = expressionMapping.getResultSource();
@@ -56,18 +54,15 @@ public class ReturnStatementMapping extends StatementMapping {
                 this.setErrorMessage("No result source: " + expressionMapping);
             } else {
                 Expression expression = expressionMapping.getExpression();
+                StructuredActivityNode node = 
+                    (StructuredActivityNode)this.getElement();
                 
-                OutputPin pin = new OutputPin();
-                pin.setName(node.name + ".output");
-                pin.setType(expressionMapping.getType());
-                pin.setLower(expression.getLower());
-                pin.setUpper(expression.getUpper());
-                ((StructuredActivityNode)node).output.add(pin);
-                
-                ActivityEdge flow = new ObjectFlow();
-                flow.setSource(expressionMapping.getResultSource());
-                flow.setTarget(pin);
-                ((StructuredActivityNode)node).addEdge(flow);
+                OutputPin pin = ActivityGraph.createOutputPin(
+                        node.name + ".output", expressionMapping.getType(), 
+                        expression.getLower(), expression.getUpper());
+                node.addStructuredNodeOutput(pin);
+                node.addEdge(ActivityGraph.createObjectFlow(
+                        expressionMapping.getResultSource(), pin));
                 
                 ElementReference behavior = this.getReturnStatement().getBehavior();
                 FormalParameter returnParameter = behavior == null? null:
@@ -111,16 +106,10 @@ public class ReturnStatementMapping extends StatementMapping {
                         this.throwError("Activity does not contain parameter: " + 
                                 parameter);
                     } else {
-                        flow = new ObjectFlow();
-                        flow.setSource(pin);
-                        flow.setTarget(parameterNode);
-                        this.addModelElement(flow);
-                        
-                        flow = new ControlFlow();
-                        flow.setSource(node);
-                        flow.setTarget(ActivityDefinitionMapping.
-                                getFinalNode(activity));
-                        this.addModelElement(flow);
+                        this.add(ActivityGraph.createObjectFlow(pin, parameterNode));
+                        this.add(ActivityGraph.createControlFlow(
+                                node, 
+                                ActivityDefinitionMapping.getFinalNode(activity)));
                     }
                 }
             }

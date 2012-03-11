@@ -26,7 +26,7 @@ active class Expressions_Sequence_Construction {
 	
 	  i = 1;
 	  customers = Customer[]{ new Customer() };
-	  // customers[i] = new Customer();
+	  customers[i] = new Customer();
 	  
       new Set<Integer>(Integer[]{1,2,3});
       Set<Integer>{1, 3, 45, 2, 3};

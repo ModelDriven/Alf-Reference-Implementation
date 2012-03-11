@@ -1,6 +1,5 @@
-
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -17,24 +16,26 @@ import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.ExpressionStatement;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-
 public class ExpressionStatementMapping extends StatementMapping {
 
+    /**
+     * An expression statement maps to a structured activity node containing the
+     * activity nodes and edges mapped from its expression.
+     */
+
     @Override
-    public void mapTo(ActivityNode node) throws MappingError {
-        super.mapTo(node);
+    public void map() throws MappingError {
+        super.map();
 
         ExpressionStatement statement = this.getExpressionStatement();
         FumlMapping mapping = this.fumlMap(statement.getExpression());
-        // mapping.setContext(this.getContext());
-        this.addToNode(node, mapping.getModelElements());
-   }
-    
+        this.addToNode(mapping.getModelElements());
+    }
+
     public ExpressionStatement getExpressionStatement() {
-		return (ExpressionStatement) this.getSource();
-	}
-    
+        return (ExpressionStatement) this.getSource();
+    }
+
     @Override
     public void print(String prefix) {
         super.print(prefix);

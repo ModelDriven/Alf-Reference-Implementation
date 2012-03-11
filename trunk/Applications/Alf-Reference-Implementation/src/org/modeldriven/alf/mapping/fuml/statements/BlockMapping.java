@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -36,6 +36,13 @@ public class BlockMapping extends SyntaxElementMapping {
         return this.isParallel;
     }
 
+    /**
+     * A block maps to the union of the nodes mapped from the statements in it.
+     * In addition, unless the block is in a block statement annotated as being
+     * parallel, the node mapped from each statement other than the last has a
+     * control flow targeted to the node mapped from the next statement.
+     */
+    
     public void mapTo(List<Element> elements) throws MappingError {
         super.mapTo(null);
 
@@ -45,7 +52,6 @@ public class BlockMapping extends SyntaxElementMapping {
         for (Statement statement: statements) {
             FumlMapping mapping = (StatementMapping)this.fumlMap(statement);
             if (mapping instanceof StatementMapping) {
-                // mapping.setContext(this.getContext());          
                 ActivityNode node = 
                     ((StatementMapping)mapping).getNode();
 
