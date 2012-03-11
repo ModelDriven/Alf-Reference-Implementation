@@ -99,7 +99,7 @@ public class IfStatementImpl extends StatementImpl {
      * An if statement is determined if it has an @determined annotation.
      **/
 	protected Boolean deriveIsDetermined() {
-		return this.hasAnnotation("derived");
+		return this.hasAnnotation("determined");
 	}
 	
     /**
