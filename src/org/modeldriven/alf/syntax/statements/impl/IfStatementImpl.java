@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.statements.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -30,6 +31,8 @@ public class IfStatementImpl extends StatementImpl {
 	private Block finalClause = null;
 	private Boolean isAssured = null; // DERIVED
 	private Boolean isDetermined = null; // DERIVED
+	
+	private NamespaceDefinition currentScope = null;
 
 	public IfStatementImpl(IfStatement self) {
 		super(self);
@@ -140,7 +143,8 @@ public class IfStatementImpl extends StatementImpl {
         assignmentsAfter.putAll(this.mergeAssignments(blocks));
         if (finalClause == null) {
             for (Object name: assignmentsAfter.keySet().toArray()) {
-                if (!assignmentsBefore.containsKey(name)) {
+                if (!(assignmentsBefore.containsKey(name) ||
+                        this.isParameter((String)name))) {
                     assignmentsAfter.remove(name);
                 }
             }
@@ -200,7 +204,8 @@ public class IfStatementImpl extends StatementImpl {
 	    Map<String, AssignedSource> assignmentsAfter = this.getAssignmentAfterMap();
 	    if (self.getFinalClause() == null) {
 	        for (String name: assignmentsAfter.keySet()) {
-	            if (!assignmentsBefore.containsKey(name)) {
+	            if (!(assignmentsBefore.containsKey(name) || 
+	                    this.isParameter(name))) {
 	                return false;
 	            }
 	        }
@@ -258,6 +263,7 @@ public class IfStatementImpl extends StatementImpl {
 	} // annotationAllowed
 	
 	public void setCurrentScope(NamespaceDefinition currentScope) {
+	    this.currentScope = currentScope;
 	    IfStatement self = this.getSelf();
 	    for (ConcurrentClauses clause: self.getNonFinalClauses()) {
 	        clause.getImpl().setCurrentScope(currentScope);
@@ -266,6 +272,13 @@ public class IfStatementImpl extends StatementImpl {
 	    if (finalClause != null) {
 	        finalClause.getImpl().setCurrentScope(currentScope);
 	    }
+	}
+	
+	private boolean isParameter(String name) {
+	    QualifiedName qualifiedName = new QualifiedName();
+	    qualifiedName.getImpl().addName(name);
+	    qualifiedName.getImpl().setCurrentScope(currentScope);
+	    return qualifiedName.getImpl().getParameterReferent() != null;
 	}
 	
 	private Collection<Block> getAllBlocks() {
