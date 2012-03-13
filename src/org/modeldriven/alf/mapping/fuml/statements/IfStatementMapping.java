@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.mapping.fuml.statements;
 
+import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
@@ -35,6 +36,7 @@ import fUML.Syntax.Classes.Kernel.Element;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class IfStatementMapping extends StatementMapping {
@@ -92,12 +94,14 @@ public class IfStatementMapping extends StatementMapping {
         ConditionalNode node = (ConditionalNode)this.getElement();
         IfStatement statement = this.getIfStatement();
         
-        Collection<AssignedSource> assignments = new ArrayList<AssignedSource>();
+        Collection<String> assignedNames = new ArrayList<String>();
         for (AssignedSource assignment: statement.getAssignmentAfter()) {
             if (assignment.getSource() == statement) {
-                assignments.add(assignment);
+                System.out.println("[map] assignment=" + assignment);
                 String name = assignment.getName();
                 ElementReference type = assignment.getType();
+                assignedNames.add(name);
+                
                 Classifier classifier = null;
                 if (type != null) {
                     FumlMapping mapping = this.fumlMap(type);
@@ -111,6 +115,7 @@ public class IfStatementMapping extends StatementMapping {
                     classifier = 
                         ((ClassifierDefinitionMapping)mapping).getClassifier();
                 }
+                
                 OutputPin outputPin = ActivityGraph.createOutputPin(
                         ((StructuredActivityNode)this.getNode()).name + 
                         ".result(" + name + ")", 
@@ -136,7 +141,7 @@ public class IfStatementMapping extends StatementMapping {
             } else {
                 ConcurrentClausesMapping clausesMapping =
                     (ConcurrentClausesMapping)mapping;
-                clausesMapping.setAssignments(assignments);
+                clausesMapping.setAssignedNames(assignedNames);
                 Collection<Clause> clauses = clausesMapping.getClauses();
                 for (Clause clause: clauses) {
                     for (Clause predecessorClause: predecessorClauses) {
@@ -160,7 +165,8 @@ public class IfStatementMapping extends StatementMapping {
             Clause clause = NonFinalClauseMapping.createClause(
                     subgraph.getModelElements(), valueAction.result, 
                     mapping.getModelElements(), 
-                    assignments, 
+                    finalClause.getImpl().getAssignmentAfterMap(),
+                    assignedNames, 
                     modelElements, this);
             this.addToNode(modelElements);
             for (Clause predecessorClause: predecessorClauses) {
@@ -180,6 +186,42 @@ public class IfStatementMapping extends StatementMapping {
     
 	public IfStatement getIfStatement() {
 		return (IfStatement) this.getSource();
+	}
+	
+	@Override
+	public String toString() {
+	    ConditionalNode node = (ConditionalNode)this.getElement();
+	    return super.toString() + 
+	        (node == null? "": 
+	            " isDeterminate:" + node.isDeterminate + 
+	            " isAssured:" + node.isAssured);
+	}
+	
+	@Override
+	public void print(String prefix) {
+	    super.print(prefix);
+	    
+	    IfStatement statement = this.getIfStatement();
+	    
+	    List<ConcurrentClauses> nonFinalClauses = statement.getNonFinalClauses();
+	    if (!nonFinalClauses.isEmpty()) {
+            System.out.println(prefix + " nonFinalClauses:");
+    	    for (ConcurrentClauses clauses: statement.getNonFinalClauses()) {
+    	        Mapping mapping = clauses.getImpl().getMapping();
+    	        if (mapping != null) {
+    	            mapping.printChild(prefix);
+    	        }
+    	    }
+	    }
+	    
+	    Block finalClause = statement.getFinalClause();
+	    if (finalClause != null) {
+	        System.out.println(prefix + " finalClause:");
+	        Mapping mapping = finalClause.getImpl().getMapping();
+	        if (mapping != null) {
+	            mapping.printChild(prefix);
+	        }
+	    }
 	}
 
 } // IfStatementMapping
