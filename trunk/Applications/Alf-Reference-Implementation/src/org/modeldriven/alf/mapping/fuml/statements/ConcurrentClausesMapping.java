@@ -9,11 +9,11 @@
 
 package org.modeldriven.alf.mapping.fuml.statements;
 
+import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 
-import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.statements.ConcurrentClauses;
 import org.modeldriven.alf.syntax.statements.NonFinalClause;
 
@@ -27,10 +27,11 @@ public class ConcurrentClausesMapping extends SyntaxElementMapping {
     
     Collection<Clause> clauses = null;
     Collection<Element> modelElements = null;
-    Collection<AssignedSource> assignments = null;
+    Collection<String> assignedNames = null;
     
-    public void setAssignments(Collection<AssignedSource> assignments) {
-        this.assignments = assignments;
+    // NOTE: This should be called before mapping.
+    public void setAssignedNames(Collection<String> assignedNames) {
+        this.assignedNames = assignedNames;
     }
     
     public void map() throws MappingError {
@@ -47,7 +48,7 @@ public class ConcurrentClausesMapping extends SyntaxElementMapping {
             } else {
                 NonFinalClauseMapping nonFinalClauseMapping =
                     (NonFinalClauseMapping)mapping;
-                nonFinalClauseMapping.setAssignments(this.assignments);
+                nonFinalClauseMapping.setAssignedNames(this.assignedNames);
                 this.clauses.add(nonFinalClauseMapping.getClause());
                 this.modelElements.addAll(mapping.getModelElements());
             }
@@ -68,6 +69,23 @@ public class ConcurrentClausesMapping extends SyntaxElementMapping {
 
 	public ConcurrentClauses getConcurrentClauses() {
 		return (ConcurrentClauses) this.getSource();
+	}
+	
+	@Override
+	public void print(String prefix) {
+	    super.print(prefix);
+	    
+	    ConcurrentClauses clauses = this.getConcurrentClauses();
+	    Collection<NonFinalClause> nonFinalClauses = clauses.getClause();
+	    if (!nonFinalClauses.isEmpty()) {
+	        System.out.println(prefix + " clause:");
+	        for (NonFinalClause clause: nonFinalClauses) {
+	            Mapping mapping = clause.getImpl().getMapping();
+	            if (mapping != null) {
+	                mapping.printChild(prefix);
+	            }
+	        }
+	    }
 	}
 
 } // ConcurrentClausesMapping

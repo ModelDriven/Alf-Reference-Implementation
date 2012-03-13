@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.mapping.fuml.statements;
 
+import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
@@ -35,12 +36,13 @@ import fUML.Syntax.Classes.Kernel.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 public class NonFinalClauseMapping extends SyntaxElementMapping {
 
     private Clause clause = null;
     private Collection<Element> modelElements = null;
-    private Collection<AssignedSource> assignments = null;
+    private Collection<String> assignedNames = null;
 
     /**
      * 1. Each if clause maps to a clause of the conditional node.
@@ -61,8 +63,8 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
      */
     
     // NOTE: This should be called before mapping.
-    public void setAssignments(Collection<AssignedSource> assignments) {
-        this.assignments = assignments;
+    public void setAssignedNames(Collection<String> assignedNames) {
+        this.assignedNames = assignedNames;
     }
     
     public void mapClause() 
@@ -81,7 +83,8 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                     mapping.getModelElements(), 
                     ((ExpressionMapping)mapping).getResultSource(), 
                     this.fumlMap(body).getModelElements(), 
-                    this.assignments, 
+                    body.getImpl().getAssignmentAfterMap(),
+                    this.assignedNames, 
                     this.modelElements, this);
         }            
      }
@@ -108,7 +111,8 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	public static Clause createClause(
 	        Collection<Element> testElements, ActivityNode decider,
 	        Collection<Element> bodyElements,
-	        Collection<AssignedSource> assignments,
+	        Map<String, AssignedSource> assignments,
+	        Collection<String> assignedNames,
 	        Collection<Element> modelElements,
 	        FumlMapping parentMapping) throws MappingError {
         Clause clause = new Clause();
@@ -140,9 +144,9 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
             }
         }
         
-        if (assignments != null) {
-            for (AssignedSource assignment: assignments) {
-                String name = assignment.getName();
+        if (assignedNames != null) {
+            for (String name: assignedNames) {
+                AssignedSource assignment = assignments.get(name);
                 SyntaxElement source = assignment.getSource();
                 ElementReference type = assignment.getType();
                 FumlMapping mapping = parentMapping.fumlMap(source);
@@ -178,9 +182,10 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                                     classifier, 
                                     assignment.getLower(), 
                                     assignment.getUpper());
+                        clause.addBody(passthruNode);
                         modelElements.add(passthruNode);
                         modelElements.add(ActivityGraph.createObjectFlow(
-                                decider, passthruNode.structuredNodeInput.get(0)));
+                                bodyOutput, passthruNode.structuredNodeInput.get(0)));
                         bodyOutput = passthruNode.structuredNodeOutput.get(0);
                     }
                     
@@ -200,6 +205,31 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	        }
 	    }
 	    return false;
+	}
+	
+	@Override
+	public void print(String prefix) {
+	    super.print(prefix);
+	    
+	    NonFinalClause nonFinalClause = this.getNonFinalClause();
+	    
+	    Expression condition = nonFinalClause.getCondition();
+	    if (condition != null) {
+	        System.out.println(prefix + " condition:");
+	        Mapping mapping = condition.getImpl().getMapping();
+	        if (mapping != null) {
+	            mapping.printChild(prefix);
+	        }
+	    }
+	    
+	    Block body = nonFinalClause.getBody();
+	    if (body != null) {
+	        System.out.println(prefix + " body:");
+	        Mapping mapping = body.getImpl().getMapping();
+	        if (mapping != null) {
+	            mapping.printChild(prefix);
+	        }
+	    }
 	}
 
 } // NonFinalClauseMapping
