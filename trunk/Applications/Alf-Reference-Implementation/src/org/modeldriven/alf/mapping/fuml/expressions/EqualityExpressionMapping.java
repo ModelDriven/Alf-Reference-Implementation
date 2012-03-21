@@ -138,6 +138,7 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
             ActivityNode operandResult) throws MappingError {
         ActivityNode forkNode = 
             this.graph.addForkNode("Fork(" + operandResult.name + ")");
+        this.graph.addObjectFlow(operandResult, forkNode);
         this.graph.addObjectFlow(forkNode, inputPin);
         
         CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
