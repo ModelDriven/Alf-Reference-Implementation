@@ -13,7 +13,8 @@ active class Statements_Conditional {
     
 	//**************************************************************************
 
-    test(out condition1: Condition, out condition2: Condition, out condition3: Condition ) {
+    test(out condition1: Condition, out condition2: Condition, out condition3: Condition,
+    	 out year: Integer, out month: Integer, out numDays: Integer ) {
     
       // Setup
 	  reading = 150;
@@ -23,7 +24,6 @@ active class Statements_Conditional {
 	  errorLimit = 1000;
 	  sensorId = 1;
 	  monitor = new Monitor();
-	  month = 6;
 	  year = 2011;
 	  // *****
 	  
@@ -59,7 +59,14 @@ active class Statements_Conditional {
 	    condition3 = Condition::critical; }
 	  else {
 	    condition3 = Condition::error; }
-	  /*
+	  
+	  switch (year) {
+	  	case 2012:
+	  	  month = 2;
+  		default:
+  		  month = 3;
+	  }
+	  
 	  switch (month) {
 	    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
 	      numDays = 31; 
@@ -77,7 +84,7 @@ active class Statements_Conditional {
 	      WriteLine("Invalid month.");
 	      numDays = 0;
 	  }
-	  */
+	  
     }
 } do {
 	this.test();

@@ -293,6 +293,10 @@ public class RootNamespace extends NamespaceDefinition {
         return getBooleanFunction("!");
     }
     
+    public static ElementReference getBooleanFunctionOr() {
+        return getBooleanFunction("|");
+    }
+    
     public static QualifiedName getIntegerFunctions() {
         if (integerFunctions == null) {
             integerFunctions = getPrimitiveBehaviors().getImpl().copy().

@@ -67,8 +67,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         this.assignedNames = assignedNames;
     }
     
-    public void mapClause() 
-        throws MappingError {
+    public void mapClause() throws MappingError {
         NonFinalClause nonFinalClause = this.getNonFinalClause();
         Expression condition = nonFinalClause.getCondition();
         Block body = nonFinalClause.getBody();
@@ -89,8 +88,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         }            
      }
     
-    public Clause getClause() 
-        throws MappingError {
+    public Clause getClause() throws MappingError {
         if (this.clause == null) {
             this.mapClause();
             this.map(clause);

@@ -11,39 +11,22 @@ package org.modeldriven.alf.mapping.fuml.statements;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
-import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
-import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
-import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
-import org.modeldriven.alf.syntax.common.AssignedSource;
-import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ConcurrentClauses;
 import org.modeldriven.alf.syntax.statements.IfStatement;
 
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
 import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
 import fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class IfStatementMapping extends StatementMapping {
+public class IfStatementMapping extends ConditionalStatementMapping {
     
-    Map<String, ActivityNode> assignedValueSourceMap = 
-        new HashMap<String, ActivityNode>();
-
     /**
      * Clauses
      * 
@@ -80,7 +63,9 @@ public class IfStatementMapping extends StatementMapping {
      * is then used as the clause body output pin corresponding to the name.
      */
     
-    // NOTE: See also ConcurrentClausesMapping and NonFinalClauseMapping.
+    // NOTE: See ConditionalStatementMapping for implementation of mapping
+    // common to if and switch statements. See also ConcurrentClausesMapping and 
+    // NonFinalClauseMapping.
     
     @Override
     public StructuredActivityNode mapNode() {
@@ -94,44 +79,9 @@ public class IfStatementMapping extends StatementMapping {
         ConditionalNode node = (ConditionalNode)this.getElement();
         IfStatement statement = this.getIfStatement();
         
-        Collection<String> assignedNames = new ArrayList<String>();
-        for (AssignedSource assignment: statement.getAssignmentAfter()) {
-            if (assignment.getSource() == statement) {
-                System.out.println("[map] assignment=" + assignment);
-                String name = assignment.getName();
-                ElementReference type = assignment.getType();
-                assignedNames.add(name);
-                
-                Classifier classifier = null;
-                if (type != null) {
-                    FumlMapping mapping = this.fumlMap(type);
-                    if (mapping instanceof ElementReferenceMapping) {
-                        mapping = ((ElementReferenceMapping)mapping).getMapping();
-                    }
-                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                        this.throwError("Error mapping type " + type + ": " + 
-                                mapping.getErrorMessage());
-                    }
-                    classifier = 
-                        ((ClassifierDefinitionMapping)mapping).getClassifier();
-                }
-                
-                OutputPin outputPin = ActivityGraph.createOutputPin(
-                        ((StructuredActivityNode)this.getNode()).name + 
-                        ".result(" + name + ")", 
-                        classifier,
-                        assignment.getLower(),
-                        assignment.getUpper());
-                node.addResult(outputPin);
-
-                ForkNode forkNode = new ForkNode();
-                forkNode.setName("Fork(" + name + ")");
-                this.assignedValueSourceMap.put(name, forkNode);
-                this.add(forkNode);
-                this.add(ActivityGraph.createObjectFlow(outputPin, forkNode));                
-            }
-        }
-
+        Collection<String> assignedNames = 
+            this.mapConditionalNode(node, this.graph);
+        
         Collection<Clause> predecessorClauses = new ArrayList<Clause>();
         for (ConcurrentClauses nonFinalClauses: statement.getNonFinalClauses()) {
             FumlMapping mapping = this.fumlMap(nonFinalClauses);
@@ -154,47 +104,16 @@ public class IfStatementMapping extends StatementMapping {
             }
         }
         
-        Block finalClause = statement.getFinalClause();
-        if (finalClause != null) {
-            Collection<Element> modelElements = new ArrayList<Element>();
-            FumlMapping mapping = this.fumlMap(finalClause);
-            this.addToNode(mapping.getModelElements());
-            ActivityGraph subgraph = new ActivityGraph();
-            ValueSpecificationAction valueAction = 
-                subgraph.addBooleanValueSpecificationAction(true);
-            Clause clause = NonFinalClauseMapping.createClause(
-                    subgraph.getModelElements(), valueAction.result, 
-                    mapping.getModelElements(), 
-                    finalClause.getImpl().getAssignmentAfterMap(),
-                    assignedNames, 
-                    modelElements, this);
-            this.addToNode(modelElements);
-            for (Clause predecessorClause: predecessorClauses) {
-                clause.addPredecessorClause(predecessorClause);
-            }
-            node.addClause(clause);
-        }
+        this.mapFinalClause(
+                statement.getFinalClause(), node, 
+                assignedNames, predecessorClauses, this.graph);
         
         node.setIsAssured(statement.getIsAssured());
         node.setIsDeterminate(statement.getIsDetermined());
     }
     
-    @Override
-    public ActivityNode getAssignedValueSource(String name) {
-        return this.assignedValueSourceMap.get(name);
-    }
-    
 	public IfStatement getIfStatement() {
 		return (IfStatement) this.getSource();
-	}
-	
-	@Override
-	public String toString() {
-	    ConditionalNode node = (ConditionalNode)this.getElement();
-	    return super.toString() + 
-	        (node == null? "": 
-	            " isDeterminate:" + node.isDeterminate + 
-	            " isAssured:" + node.isAssured);
 	}
 	
 	@Override
@@ -206,7 +125,7 @@ public class IfStatementMapping extends StatementMapping {
 	    List<ConcurrentClauses> nonFinalClauses = statement.getNonFinalClauses();
 	    if (!nonFinalClauses.isEmpty()) {
             System.out.println(prefix + " nonFinalClauses:");
-    	    for (ConcurrentClauses clauses: statement.getNonFinalClauses()) {
+    	    for (ConcurrentClauses clauses: nonFinalClauses) {
     	        Mapping mapping = clauses.getImpl().getMapping();
     	        if (mapping != null) {
     	            mapping.printChild(prefix);

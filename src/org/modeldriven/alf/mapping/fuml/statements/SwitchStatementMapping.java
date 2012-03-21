@@ -9,28 +9,134 @@
 
 package org.modeldriven.alf.mapping.fuml.statements;
 
-import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
+import org.modeldriven.alf.mapping.Mapping;
+import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
+import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 
+import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.SwitchClause;
 import org.modeldriven.alf.syntax.statements.SwitchStatement;
 
-import fUML.Syntax.Classes.Kernel.Element;
+import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
+import fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-public class SwitchStatementMapping extends StatementMapping {
+public class SwitchStatementMapping extends ConditionalStatementMapping {
+    
+    /**
+     * Clauses 
+     * 
+     * 1. A switch statement maps to a structured activity node that
+     * contains a conditional node and the mapping for the switch expression.
+     * The switch clauses map to concurrent clauses of the conditional node.
+     * Each clause tests whether the result of the switch expression equals the
+     * result of one of the case expressions.
+     * 
+     * 2. A switch default clause is mapped to a conditional node clause with a
+     * condition of true and with all other clauses as predecessor clauses.
+     * 
+     * 3. The isAssured and/or isDetermined properties of the conditional node
+     * are set according to whether the switch statement is assured or
+     * determined..
+     * 
+     * Output Pins
+     * 
+     * 4. The result and clause body output pins of the conditional node are
+     * mapped as for an if statement.
+     */
+    
+    // NOTE: See ConditionalStatementMapping for implementation of mapping
+    // common to if and switch statements. See also SwitchClausesMapping.
+    
+    @Override
+    public void map()throws MappingError {
+        super.map();
+        
+        SwitchStatement statement = this.getSwitchStatement();
 
-	public SwitchStatementMapping() {
-		this.setErrorMessage("SwitchStatementMapping not yet implemented.");
-	}
-
-	public List<Element> getModelElements() {
-		// TODO: Auto-generated stub
-		return new ArrayList<Element>();
-	}
+        ActivityGraph graph = new ActivityGraph();
+        ConditionalNode node = new ConditionalNode();
+        node.setName("Conditional(SwitchStatement@" + statement.getId() + ")");
+        graph.add(node);
+        
+        Collection<String> assignedNames = this.mapConditionalNode(node, graph);
+        
+        Collection<Clause> clauses = new ArrayList<Clause>();        
+        FumlMapping mapping = this.fumlMap(statement.getExpression());
+        if (!(mapping instanceof ExpressionMapping)) {
+            this.throwError("Error mapping switch expression: " + 
+                    mapping.getErrorMessage());
+        } else {
+            ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
+            ActivityNode resultSource = expressionMapping.getResultSource();
+            graph.addAll(expressionMapping.getGraph());
+            ActivityNode forkNode = 
+                graph.addForkNode("Fork(" + resultSource.name + ")");
+            graph.addObjectFlow(resultSource, forkNode);
+            
+            for (SwitchClause switchClause: statement.getNonDefaultClause()) {
+                mapping = this.fumlMap(switchClause);
+                if (!(mapping instanceof SwitchClauseMapping)) {
+                    this.throwError("Error mapping switch clause " + 
+                            switchClause + ": " + mapping.getErrorMessage());
+                } else {
+                    SwitchClauseMapping clauseMapping = 
+                        (SwitchClauseMapping)mapping;
+                    clauseMapping.setSwitchSource(resultSource);
+                    clauseMapping.setAssignedNames(assignedNames);
+                    graph.addToStructuredNode(
+                            node, clauseMapping.getModelElements());
+                    Clause clause = clauseMapping.getClause();
+                    node.addClause(clause);
+                    clauses.add(clause);
+                }
+            }
+        }
+        
+        this.mapFinalClause(
+                statement.getDefaultClause(), node, 
+                assignedNames, clauses, graph);
+        this.addToNode(graph.getModelElements());
+        
+        node.setIsAssured(statement.getIsAssured());
+        node.setIsDeterminate(statement.getIsDetermined());
+    }
 
 	public SwitchStatement getSwitchStatement() {
 		return (SwitchStatement) this.getSource();
 	}
+
+    @Override
+    public void print(String prefix) {
+        super.print(prefix);
+        
+        SwitchStatement statement = this.getSwitchStatement();
+        
+        Collection<SwitchClause> nonDefaultClauses = 
+            statement.getNonDefaultClause();
+        if (!nonDefaultClauses.isEmpty()) {
+            System.out.println(prefix + " nonDefaultClause:");
+            for (SwitchClause clause: nonDefaultClauses) {
+                Mapping mapping = clause.getImpl().getMapping();
+                if (mapping != null) {
+                    mapping.printChild(prefix);
+                }
+            }
+        }
+        
+        Block defaultClause = statement.getDefaultClause();
+        if (defaultClause != null) {
+            System.out.println(prefix + " defaultClause:");
+            Mapping mapping = defaultClause.getImpl().getMapping();
+            if (mapping != null) {
+                mapping.printChild(prefix);
+            }
+        }
+    }
 
 } // SwitchStatementMapping
