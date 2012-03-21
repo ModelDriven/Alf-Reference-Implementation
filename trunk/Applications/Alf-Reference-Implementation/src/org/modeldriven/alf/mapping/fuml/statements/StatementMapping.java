@@ -17,21 +17,15 @@ import org.modeldriven.alf.mapping.fuml.common.DocumentedElementMapping;
 
 import org.modeldriven.alf.syntax.statements.Statement;
 
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.LoopNode;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Activities.IntermediateActivities.ObjectFlow;
 import fUML.Syntax.Classes.Kernel.Element;
 
 public abstract class StatementMapping extends DocumentedElementMapping {
 
     private StructuredActivityNode node = null;
-    private ActivityGraph graph = new ActivityGraph();
+    protected ActivityGraph graph = new ActivityGraph();
     
     /**
      * 1. Every statement is mapped to a single activity node (which may be a
@@ -81,7 +75,13 @@ public abstract class StatementMapping extends DocumentedElementMapping {
     
     public void addToNode(Collection<Element> elements) {
         this.graph.addToStructuredNode(this.node, elements);
-
+        
+        // NOTE: Adding input pins to structured activity nodes is removed.
+        // This is not a good idea, because it is not possible in general to set
+        // the input pin multiplicities properly, and setting them to 0..*
+        // allows the structured activity node to fire even when an input that
+        // is really required is not yet available.
+        /*
         if (!(this.node instanceof ConditionalNode ||
                 this.node instanceof LoopNode ||
                 this.node instanceof ExpansionRegion)) {
@@ -91,18 +91,26 @@ public abstract class StatementMapping extends DocumentedElementMapping {
                     if (!ActivityGraph.isContainedIn(flow.source, this.node) &&
                             ActivityGraph.isContainedIn(flow.target, this.node)) {
                         
+                        System.out.println("[addToNode] flow.source=" + flow.source.name +
+                                " flow.target=" + flow.target.name);
+                        
                         // Check if there already is an input pin corresponding
                         // to the source of the flow.
                         InputPin pin = null;
                         search: 
-                        for (InputPin input: node.structuredNodeInput) {
+                        for (InputPin input: this.node.structuredNodeInput) {
+                            System.out.println("[addToNode] input=" + input.name);
                             for (ActivityEdge incoming: input.incoming) {
+                                System.out.println("[addToNode] incoming.source=" + 
+                                        incoming.source.name);
                                 if (incoming.source == flow.source) {
                                     pin = input;
                                     break search;
                                 }
                             }
                         }
+                        
+                        ActivityNode target = flow.target;
                         
                         // If not, create an input pin for the new source.
                         if (pin == null) {
@@ -116,19 +124,19 @@ public abstract class StatementMapping extends DocumentedElementMapping {
                             this.node.addNode(fork);
                             this.node.addEdge(
                                     ActivityGraph.createObjectFlow(pin, fork));
+                            target.incoming.remove(flow);
+                            flow.setTarget(pin);
                         }
                         
-                        // Redirect the flow through the input pin.
-                        ObjectFlow internalFlow = 
+                        ActivityEdge internalFlow = 
                             ActivityGraph.createObjectFlow(
-                                    pin.outgoing.get(0).target, flow.target);
+                                pin.outgoing.get(0).target, target);
                         this.node.addEdge(internalFlow);
-                        flow.target.incoming.remove(flow);
-                        flow.setTarget(pin);
                     }
                 }
             }
         }
+        */
     }
     
     public ActivityNode getNode() throws MappingError {
