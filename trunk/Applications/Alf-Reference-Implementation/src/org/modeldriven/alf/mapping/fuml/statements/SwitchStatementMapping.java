@@ -21,6 +21,7 @@ import org.modeldriven.alf.syntax.statements.SwitchStatement;
 
 import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
 import fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode;
+import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 
 import java.util.ArrayList;
@@ -111,6 +112,23 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
 		return (SwitchStatement) this.getSource();
 	}
 
+    @Override
+    public String toString() {
+        StructuredActivityNode structuredNode = 
+            (StructuredActivityNode)this.getElement();
+        ConditionalNode conditionalNode = null;
+        for (ActivityNode node: structuredNode.node) {
+            if (node instanceof ConditionalNode) {
+                conditionalNode = (ConditionalNode)node;
+                break;
+            }
+        }
+        return super.toString() + 
+            (conditionalNode == null? "": 
+                " isDeterminate:" + conditionalNode.isDeterminate + 
+                " isAssured:" + conditionalNode.isAssured);
+    }
+    
     @Override
     public void print(String prefix) {
         super.print(prefix);

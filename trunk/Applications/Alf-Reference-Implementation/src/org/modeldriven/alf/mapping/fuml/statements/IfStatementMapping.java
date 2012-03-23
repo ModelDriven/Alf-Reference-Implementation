@@ -116,6 +116,15 @@ public class IfStatementMapping extends ConditionalStatementMapping {
 		return (IfStatement) this.getSource();
 	}
 	
+    @Override
+    public String toString() {
+        ConditionalNode node = (ConditionalNode)this.getElement();
+        return super.toString() + 
+            (node == null? "": 
+                " isDeterminate:" + node.isDeterminate + 
+                " isAssured:" + node.isAssured);
+    }
+    
 	@Override
 	public void print(String prefix) {
 	    super.print(prefix);
