@@ -121,13 +121,4 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
         return this.assignedValueSourceMap.get(name);
     }
     
-	@Override
-	public String toString() {
-	    ConditionalNode node = (ConditionalNode)this.getElement();
-	    return super.toString() + 
-	        (node == null? "": 
-	            " isDeterminate:" + node.isDeterminate + 
-	            " isAssured:" + node.isAssured);
-	}
-	
 } // IfStatementMapping
