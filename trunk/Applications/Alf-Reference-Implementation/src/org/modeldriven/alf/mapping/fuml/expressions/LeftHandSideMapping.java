@@ -204,6 +204,9 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         this.graph.addObjectFlow(
                                 objectSource, 
                                 clearAction.object);
+                        if (this.controlTarget == null) {
+                            this.controlTarget = clearAction;
+                        }
                         this.resultSource = this.graph.addForkNode(
                                 "Fork(LeftHandSide@" + lhs.getId() + ")");
                         this.assignmentTarget = this.resultSource;
@@ -223,7 +226,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                                 property.multiplicityElement.lower, 
                                 property.multiplicityElement.upper.naturalValue);
                         ((StructuredActivityNode)this.node).
-                        addStructuredNodeInput(valuePin);
+                            addStructuredNodeInput(valuePin);
                         this.graph.addObjectFlow(this.resultSource, valuePin);
 
                         ActivityGraph subgraph = new ActivityGraph();
@@ -385,8 +388,8 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
      * left-hand side that has been mapped previously as for an inout parameter,
      * increment/decrement expression or compound assignment.
      */
-    public void setObjectSource(ActivityNode indexSource) {
-        this.objectSource = indexSource;        
+    public void setObjectSource(ActivityNode objectSource) {
+        this.objectSource = objectSource;        
     }
     
     public ActivityNode getObjectSource() {

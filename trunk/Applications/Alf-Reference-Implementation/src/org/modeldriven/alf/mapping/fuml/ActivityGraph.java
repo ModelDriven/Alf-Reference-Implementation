@@ -590,22 +590,16 @@ public class ActivityGraph {
         region.setMode(mode);
         this.add(region);
 
-        // Add nodes and control flows to expansion region.
-        // NOTE: Control flows must be between nested elements.
+        // Add nodes to expansion region.
         for (Element element : nestedElements) {
             if (element instanceof ActivityNode) {
                 region.addNode((ActivityNode) element);
-            } else if (element instanceof ControlFlow) {
-                region.addEdge((ActivityEdge) element);
             }
         }
         
-        // Add object flows to expansion region. If an incoming object flow
-        // crosses into the region, add an input pin at the boundary. If an
-        // outgoing object flow crosses out of the region, add an output
-        // expansion node at the boundary.
+        // Add activity edges to expansion region. 
         for (Element element : nestedElements) {
-            if (element instanceof ObjectFlow) {
+            if (element instanceof ActivityEdge) {
                 ActivityEdge edge = (ActivityEdge) element;
                 ActivityNode source = edge.source;
                 ActivityNode target = edge.target;
@@ -616,36 +610,55 @@ public class ActivityGraph {
                 } else if (!sourceIsContained && targetIsContained){
                     source.outgoing.remove(edge);
                     target.incoming.remove(edge);
-
-                    int lower = 0;
-                    int upper = -1;
-                    Type type = null;
-                    if (target instanceof ObjectNode) {
-                        type = ((ObjectNode)target).typedElement.type;
-                        if (target instanceof Pin) {
-                            Pin targetPin = (Pin)target;
-                            lower = targetPin.multiplicityElement.lower;
-                            upper = targetPin.multiplicityElement.upper.naturalValue;
+                    
+                    if (edge instanceof ControlFlow) {
+                        // If an incoming control flow crosses into the region,
+                        // redirect it to target the region itself.
+                        this.addControlFlow(source, region);
+                        
+                    } else {
+                        // If an incoming object flow crosses into the region, 
+                        // add an input pin at the boundary. 
+                        
+                        int lower = 0;
+                        int upper = -1;
+                        Type type = null;
+                        if (target instanceof ObjectNode) {
+                            type = ((ObjectNode)target).typedElement.type;
+                            if (target instanceof Pin) {
+                                Pin targetPin = (Pin)target;
+                                lower = targetPin.multiplicityElement.lower;
+                                upper = targetPin.multiplicityElement.upper.naturalValue;
+                            }
                         }
-                    }
 
-                    InputPin pin = createInputPin(
-                            region.name + ".input(" + source.name + ")",
-                            type, lower, upper);
-                    region.addStructuredNodeInput(pin);
-                    region.addEdge(createObjectFlow(pin, target));
-                    this.addObjectFlow(source, pin);
+                        InputPin pin = createInputPin(
+                                region.name + ".input(" + source.name + ")",
+                                type, lower, upper);
+                        region.addStructuredNodeInput(pin);
+                        region.addEdge(createObjectFlow(pin, target));
+                        this.addObjectFlow(source, pin);
+                    }
                 } else if (sourceIsContained && !targetIsContained) {
                     source.outgoing.remove(edge);
                     target.incoming.remove(edge);
-
-                    ExpansionNode outputNode = new ExpansionNode();
-                    outputNode.setName(region.name + 
-                            ".outputElement(" + edge.source.name + ")");
-                    region.addOutputElement(outputNode);
-                    region.addEdge(createObjectFlow(source, outputNode));
-                    this.add(outputNode);
-                    this.addObjectFlow(outputNode, target);
+                    
+                    if (edge instanceof ControlFlow) {
+                        // If an outgoing control flow crosses out of the region,
+                        // redirect it to have the region as its source.
+                        this.addControlFlow(region, target);
+                        
+                    } else {
+                        // If an outgoing object flow crosses out of the region, 
+                        // add an output expansion node at the boundary.
+                        ExpansionNode outputNode = new ExpansionNode();
+                        outputNode.setName(region.name + 
+                                ".outputElement(" + edge.source.name + ")");
+                        region.addOutputElement(outputNode);
+                        region.addEdge(createObjectFlow(source, outputNode));
+                        this.add(outputNode);
+                        this.addObjectFlow(outputNode, target);
+                    }
                 } else {
                     this.add(edge);
                 }
@@ -701,15 +714,15 @@ public class ActivityGraph {
     public void addToStructuredNode(
             StructuredActivityNode node, 
             Collection<Element> nestedElements) {
+        // NOTE: Add nested activity nodes first, before checking on activity
+        // edge source and target containment.
         for (Element element: nestedElements) {
             if (element instanceof ActivityNode) {
                 node.addNode((ActivityNode)element);
-            } else if (element instanceof ControlFlow) {
-                node.addEdge((ActivityEdge)element);
             }
         }
         for (Element element: nestedElements) {
-            if (element instanceof ObjectFlow) {
+            if (element instanceof ActivityEdge) {
                 ActivityEdge edge = (ActivityEdge)element;
                 if (isContainedIn(edge.source, node) &&
                         isContainedIn(edge.target, node)) {
@@ -901,6 +914,22 @@ public class ActivityGraph {
                     inStructuredNode == container || 
                     isContainedIn(inStructuredNode, container));
             }
+    }
+    
+    /**
+     * Checks that an activity node is contained directly within a a given 
+     * collection of element or indirectly within a structured activity node 
+     * that is one of those elements.
+     */
+    public static boolean isContainedIn(Pin pin, Collection<Element> elements) {
+        for (Element element: elements) {
+            if (pin.owner == element || 
+                    element instanceof StructuredActivityNode && 
+                    isContainedIn(pin, (StructuredActivityNode)element)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

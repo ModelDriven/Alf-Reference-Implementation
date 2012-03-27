@@ -1,0 +1,98 @@
+/**
+ * Test while and do statements.
+ **/
+active class Statements_While_Do_Looping {
+
+    // Supporting declarations *************************************************
+    
+    list: Monitor[*] sequence;
+    
+    class Member { 
+      	public isActive: Boolean;
+      	public name: String;
+      	public address: String;
+  	}
+  	
+    class Monitor { 
+    	public raiseAlarm(in sensorId: Integer) { }
+    	public cleanUp() { }
+	}
+	
+	class File { 
+		private more: Boolean;
+		public endMarker: FileRecord;
+		@Create public File() { 
+			this.more = true; 
+			this.endMarker = new FileRecord();
+		}
+		public hasMore(): Boolean { 
+			return this.more;
+		}
+		public readNext(): FileRecord[0..1] { 
+			if (this.hasMore()) {
+				this.more = false;
+				return new FileRecord(); 
+			} else {
+				return this.endMarker;
+			}
+		}
+	}
+	
+	class FileRecord { public toString():String { } }
+	
+	class Sensor {
+		public getNextReading(): Reading[0..1] { return new Reading(); }
+    }
+    
+    class Reading {
+    	public isFinal(): Boolean { return true; }
+    	public getValue(): Integer { return 3; }
+    }
+	
+    activity ComputeChecksum(in checksum: Integer, in record: FileRecord): Integer { return 100; }
+    activity Record(in reading: Reading) { }
+    activity processRecord(in index: Integer) { }
+    
+	//**************************************************************************
+
+    test(
+    	out checksum: Integer, out nextRecord: FileRecord, out file: File, 
+    	out self: Statements_While_Do_Looping) {
+    
+      // Setup
+      this.list = Monitor[]{new Monitor(), new Monitor()};
+	  file = new File();
+	  checksum = 0;
+	  endMarker = file.endMarker;
+	  sensor = new Sensor();
+	  recordCount = 10;
+	  // *****
+	      
+	  while ((last = this.list->size()) > 0) {
+	    this.list[last].cleanUp();
+	    this.list->removeAt(last);
+	  }
+	  /*
+	  while (file.hasMore()) {
+	    nextRecord = file.readNext();
+	    if (!nextRecord->isEmpty()) {
+	      checksum = ComputeChecksum(checksum, nextRecord);
+	    }
+	  }
+	  
+	  do {
+	    line = file.readNext();
+	    WriteLine(line.toString());
+	  } while (line != endMarker);
+	  
+	  do {
+	    nextReading = sensor.getNextReading();
+	    Record(nextReading);
+	  } while (!nextReading.isFinal());
+	  */
+	  
+	  self = this;
+    }
+} do {
+	this.test();
+}
