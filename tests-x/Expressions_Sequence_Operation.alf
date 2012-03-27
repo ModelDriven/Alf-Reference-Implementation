@@ -5,28 +5,37 @@ active class Expressions_Sequence_Operation {
 
     // Supporting declarations *************************************************
     
-  	class Customer { }
+  	class Customer { 
+  		public name: String;
+  		@Create Customer(in name: String) { this.name = name; }
+	}
   	
 	//**************************************************************************
 
-	test() {
+	test(
+		out notEmpty: Boolean, out includes: Boolean, out n: Integer,
+		out customers: Customer[*], out list: any[*]) {
 	
-	  customer = new Customer();
+	  customer = new Customer("A");
 	  customers = Customer[]{};
 	  
-	  customers->notEmpty();
-	  customers->includes(customer);
-	  customers->including(customer);
-	  customers->removeAll(customer);
+	  notEmpty = customers->notEmpty();
+	  includes = customers->includes(customer);
+	  customers = customers->including(customer);
+	  customers->add(new Customer("B"));
+	  customers->add(new Customer("C"));
+	  customers->add(customer);
+	  customers->removeAt(2);
+	  customers->remove(customer);
 	  
-	  Customer->size();
+	  n = Customer->size();
 	  Customer.allInstances()->size();
 	  
 	  list = null; // Type is "any".
-	  list->size();
-	  list->notEmpty();
-	  list->includes(customer);
-	  list->including(customer);
+	  list = list->including(customer);
+	  list->add(customer);
+	  list->add("Blah");
+	  list->add(1);
 	  list->removeAll(customer);
 	}
 	

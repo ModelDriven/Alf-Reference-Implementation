@@ -88,18 +88,13 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
                 // Add a fork node that may be used as the source of the feature
                 // expression to avoid recomputing it for inout parameters,
                 // increment or decrement expressions and compound assignments.
-                // Add a fork node that allows the result of the feature 
-                // expression to also be used in the mapping of a left-hand side 
-                // corresponding to this property access expression, as in an 
-                // inout argument, increment/decrement expression or 
-                // compound assignment.
                 this.objectSource = this.graph.addForkNode(
                         "Fork(" + expressionResult.name + ")");
                 this.graph.addObjectFlow(expressionResult, this.objectSource);
                 
                 if (!propertyAccess.getImpl().isSequencePropertyAccess()) {
                     action = readAction;
-                    this.graph.addObjectFlow(expressionResult, readAction.object);
+                    this.graph.addObjectFlow(this.objectSource, readAction.object);
                     this.resultSource = readAction.result;
                     
                 } else {
@@ -110,7 +105,7 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
                             "Collect(" + readAction.name + ")", 
                             ExpansionKind.parallel, 
                             elements, 
-                            expressionResult, 
+                            this.objectSource, 
                             readAction.object, 
                             readAction.result);
 

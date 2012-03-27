@@ -240,8 +240,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         lhsMapping.setIndexSource(inputMapping.getIndexSource());
                         lhsMapping.setObjectSource(inputMapping.getObjectSource());
                     }
-                    this.lhsGraph.addAll(lhsMapping.getGraph()); 
-                    
+                    this.lhsGraph.addAll(lhsMapping.getGraph());
+                                        
                     // Skip return pin. Return parameter never has an output
                     // argument.
                     ActivityNode outputPin = action.output.get(i);
@@ -259,11 +259,15 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                             output.getImpl().getIsCollectionConversion(parameter), 
                             output.getImpl().getIsBitStringConversion(parameter));
                    
-                    // NOTE: The object flow is part of the tuple graph, NOT the
-                    // LHS graph.
+                    // NOTE: These activity edges are part of the tuple graph, 
+                    // NOT the LHS graph.
                     this.tupleGraph.addObjectFlow(
                             outputPin, 
                             lhsMapping.getAssignmentTarget());
+                    ActivityNode controlTarget = lhsMapping.getControlTarget();
+                    if (controlTarget != null) {
+                        this.tupleGraph.addControlFlow(action, controlTarget);
+                    }
 
                     String assignedName = lhs.getImpl().getAssignedName();
                     if (assignedName != null) {
