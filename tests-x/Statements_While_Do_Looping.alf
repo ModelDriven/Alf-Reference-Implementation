@@ -23,73 +23,89 @@ active class Statements_While_Do_Looping {
 		public endMarker: FileRecord;
 		@Create public File() { 
 			this.more = true; 
-			this.endMarker = new FileRecord();
+			this.endMarker = new FileRecord("End");
 		}
 		public hasMore(): Boolean { 
 			return this.more;
 		}
 		public readNext(): FileRecord[0..1] { 
-			if (this.hasMore()) {
+			if (this.more) {
 				this.more = false;
-				return new FileRecord(); 
+				return new FileRecord("Record"); 
 			} else {
 				return this.endMarker;
 			}
 		}
+		public reset() {
+			this.more = true;
+		}
 	}
 	
-	class FileRecord { public toString():String { } }
+	class FileRecord { 
+		private label: String;
+		@Create public FileRecord(in label: String) { this.label = label; }
+		public toString():String { return this.label; } 
+	}
 	
 	class Sensor {
-		public getNextReading(): Reading[0..1] { return new Reading(); }
+		public count: Integer;
+		@Create public Sensor(in count: Integer) { 
+			this.count = count; 
+		}
+		public getNextReading(): Reading[0..1] { 
+			return new Reading(this.count--); 
+		}
     }
     
     class Reading {
-    	public isFinal(): Boolean { return true; }
-    	public getValue(): Integer { return 3; }
+    	private value: Integer;
+    	@Create public Reading(in value: Integer) { this.value = value; }
+    	public isFinal(): Boolean { return this.value <= 0; }
+    	public getValue(): Integer { return this.value; }
     }
 	
-    activity ComputeChecksum(in checksum: Integer, in record: FileRecord): Integer { return 100; }
-    activity Record(in reading: Reading) { }
-    activity processRecord(in index: Integer) { }
-    
-	//**************************************************************************
+ 	//**************************************************************************
 
     test(
-    	out checksum: Integer, out nextRecord: FileRecord, out file: File, 
+    	out count: Integer, out checksum: Integer, 
+    	out nextRecord: FileRecord, out file: File, 
+    	out lines: String[*], out readings: Reading[*],
     	out self: Statements_While_Do_Looping) {
     
       // Setup
       this.list = Monitor[]{new Monitor(), new Monitor()};
-	  file = new File();
+	  count = 0;
 	  checksum = 0;
+	  file = new File();
 	  endMarker = file.endMarker;
-	  sensor = new Sensor();
-	  recordCount = 10;
+	  sensor = new Sensor(2);
+	  lines = null;
+	  readings = null;
 	  // *****
-	      
+	  
 	  while ((last = this.list->size()) > 0) {
 	    this.list[last].cleanUp();
 	    this.list->removeAt(last);
+	    count++;
 	  }
-	  /*
+	  
 	  while (file.hasMore()) {
 	    nextRecord = file.readNext();
 	    if (!nextRecord->isEmpty()) {
-	      checksum = ComputeChecksum(checksum, nextRecord);
+	      checksum = checksum + 1;
 	    }
 	  }
 	  
+	  file.reset();
 	  do {
 	    line = file.readNext();
-	    WriteLine(line.toString());
+	    lines->add(line.toString());
 	  } while (line != endMarker);
 	  
 	  do {
 	    nextReading = sensor.getNextReading();
-	    Record(nextReading);
+	    readings->add(nextReading.getValue());
 	  } while (!nextReading.isFinal());
-	  */
 	  
 	  self = this;
     }

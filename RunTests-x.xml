@@ -113,5 +113,12 @@
 			</classpath>
 			<arg value="tests-x\Statements_Simple.alf" />
 		</java>
+		<java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
+			<classpath>
+				<pathelement location="${classpath}"/>
+				<pathelement location="..\fUML-Reference-Implementation/target/fuml/classes"/>
+			</classpath>
+			<arg value="tests-x\Statements_While_Do_Looping.alf" />
+		</java>
 	</target>
 </project>

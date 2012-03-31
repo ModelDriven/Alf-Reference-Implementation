@@ -26,7 +26,6 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.NonFinalClause;
 
 import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Actions.BasicActions.Pin;
 import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
 import fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
@@ -135,6 +134,14 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         
         clause.setDecider((OutputPin)decider);
         
+        // NOTE: Call to mapBodyOutputs must come before adding bodyElements
+        // to modelElements, because mapping body outputs may add passthru nodes
+        // to bodyElements.
+        for (OutputPin bodyOutput: mapBodyOutputs(
+                bodyElements, assignments, assignedNames, parentMapping)) {
+            clause.addBodyOutput(bodyOutput);
+        }
+        
         modelElements.addAll(bodyElements);
         for (Element element: bodyElements) {
             if (element instanceof ExecutableNode) {
@@ -142,6 +149,15 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
             }
         }
         
+        return clause;
+	}
+	
+	public static Collection<OutputPin> mapBodyOutputs(
+            Collection<Element> bodyElements,
+            Map<String, AssignedSource> assignments,
+            Collection<String> assignedNames,
+            FumlMapping parentMapping) throws MappingError {
+	    Collection<OutputPin> bodyOutputs = new ArrayList<OutputPin>();
         if (assignedNames != null) {
             for (String name: assignedNames) {
                 AssignedSource assignment = assignments.get(name);
@@ -157,7 +173,8 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                         getAssignedValueSource(name);
                     
                     if (!(bodyOutput instanceof OutputPin && 
-                            containedIn(bodyOutput, bodyElements))) {
+                            ActivityGraph.isContainedIn(
+                                    (OutputPin)bodyOutput, bodyElements))) {
                         Classifier classifier = null;
                         if (type != null) {
                             mapping = parentMapping.fumlMap(type);
@@ -180,29 +197,18 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                                     classifier, 
                                     assignment.getLower(), 
                                     assignment.getUpper());
-                        clause.addBody(passthruNode);
-                        modelElements.add(passthruNode);
-                        modelElements.add(ActivityGraph.createObjectFlow(
+                        bodyElements.add(passthruNode);
+                        bodyElements.add(ActivityGraph.createObjectFlow(
                                 bodyOutput, passthruNode.structuredNodeInput.get(0)));
                         bodyOutput = passthruNode.structuredNodeOutput.get(0);
                     }
                     
-                    clause.addBodyOutput((OutputPin)bodyOutput);
+                    bodyOutputs.add((OutputPin)bodyOutput);
                 }
             }
         }
         
-        return clause;
-	}
-	
-	public static boolean containedIn(ActivityNode node, Collection<Element> elements) {
-	    for (Element element: elements) {
-	        if (element == node || 
-	                node instanceof Pin || ((Pin)node).owner == element) {
-	            return true;
-	        }
-	    }
-	    return false;
+	    return bodyOutputs;
 	}
 	
 	@Override

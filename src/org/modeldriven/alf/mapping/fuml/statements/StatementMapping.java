@@ -9,23 +9,37 @@
 
 package org.modeldriven.alf.mapping.fuml.statements;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
+import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.DocumentedElementMapping;
+import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
+import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Statement;
 
+import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
+import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.Element;
 
 public abstract class StatementMapping extends DocumentedElementMapping {
 
     private StructuredActivityNode node = null;
     protected ActivityGraph graph = new ActivityGraph();
+    
+    private Map<String, ActivityNode> assignedValueSourceMap = 
+        new HashMap<String, ActivityNode>();
     
     /**
      * 1. Every statement is mapped to a single activity node (which may be a
@@ -65,6 +79,56 @@ public abstract class StatementMapping extends DocumentedElementMapping {
         this.graph.add(this.node);
     }
     
+    protected Collection<String> mapAssignedValueSources(
+            StructuredActivityNode node,
+            ActivityGraph graph, 
+            boolean mapAll) throws MappingError {
+        Statement statement = this.getStatement();
+        
+        Collection<String> assignedNames = new ArrayList<String>();
+        for (AssignedSource assignment: statement.getAssignmentAfter()) {
+            boolean statementIsSource = assignment.getSource() == statement;
+            if (mapAll || statementIsSource) {
+                String name = assignment.getName();
+                ElementReference type = assignment.getType();
+                assignedNames.add(name);
+                
+                Classifier classifier = null;
+                if (type != null) {
+                    FumlMapping mapping = this.fumlMap(type);
+                    if (mapping instanceof ElementReferenceMapping) {
+                        mapping = ((ElementReferenceMapping)mapping).getMapping();
+                    }
+                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                        this.throwError("Error mapping type " + type + ": " + 
+                                mapping.getErrorMessage());
+                    }
+                    classifier = 
+                        ((ClassifierDefinitionMapping)mapping).getClassifier();
+                }
+                
+                OutputPin outputPin = this.mapAssignment(
+                        node, name, classifier, 
+                        assignment.getLower(), assignment.getUpper());
+                
+                if (statementIsSource) {
+                    ForkNode forkNode = new ForkNode();
+                    forkNode.setName("Fork(" + name + ")");
+                    this.assignedValueSourceMap.put(name, forkNode);
+                    graph.add(forkNode);
+                    graph.add(ActivityGraph.createObjectFlow(outputPin, forkNode));
+                }
+            }
+        }
+        return assignedNames;
+    }
+
+    protected OutputPin mapAssignment(
+            StructuredActivityNode node, String name, Classifier classifier, 
+            int lower, int upper) throws MappingError {
+        return null;
+    }
+
     public void add(ActivityEdge edge) {
         this.graph.add(edge);
     }
@@ -151,6 +215,15 @@ public abstract class StatementMapping extends DocumentedElementMapping {
 		return (Statement) this.getSource();
 	}
 	
+    @Override
+    public ActivityNode getAssignedValueSource(String name) throws MappingError {
+        if (this.assignedValueSourceMap == null) {
+            return super.getAssignedValueSource(name);
+        } else {
+            return this.assignedValueSourceMap.get(name);
+        }
+    }
+	
 	public Element getElement() {
 	    return this.node;
 	}
@@ -169,5 +242,5 @@ public abstract class StatementMapping extends DocumentedElementMapping {
 	public String toString() {
 	    return super.toString() + " node:" + this.node;
 	}
-
+	
 } // StatementMapping
