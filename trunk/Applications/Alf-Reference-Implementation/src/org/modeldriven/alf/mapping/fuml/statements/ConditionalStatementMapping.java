@@ -12,35 +12,23 @@ package org.modeldriven.alf.mapping.fuml.statements;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
-import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
-import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
-import org.modeldriven.alf.syntax.common.AssignedSource;
-import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Block;
-import org.modeldriven.alf.syntax.statements.Statement;
 
 import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
 import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
 import fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
 import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class ConditionalStatementMapping extends StatementMapping {
     
-    private Map<String, ActivityNode> assignedValueSourceMap = 
-        new HashMap<String, ActivityNode>();
-
     /** 
      * Common mapping for if and switch statements
      */
@@ -48,45 +36,20 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
     protected Collection<String> mapConditionalNode(
             ConditionalNode node,
             ActivityGraph graph) throws MappingError {
-        Statement statement = this.getStatement();
-        
-        Collection<String> assignedNames = new ArrayList<String>();
-        for (AssignedSource assignment: statement.getAssignmentAfter()) {
-            if (assignment.getSource() == statement) {
-                String name = assignment.getName();
-                ElementReference type = assignment.getType();
-                assignedNames.add(name);
-                
-                Classifier classifier = null;
-                if (type != null) {
-                    FumlMapping mapping = this.fumlMap(type);
-                    if (mapping instanceof ElementReferenceMapping) {
-                        mapping = ((ElementReferenceMapping)mapping).getMapping();
-                    }
-                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                        this.throwError("Error mapping type " + type + ": " + 
-                                mapping.getErrorMessage());
-                    }
-                    classifier = 
-                        ((ClassifierDefinitionMapping)mapping).getClassifier();
-                }
-                
-                OutputPin outputPin = ActivityGraph.createOutputPin(
-                        ((StructuredActivityNode)this.getNode()).name + 
-                        ".result(" + name + ")", 
-                        classifier,
-                        assignment.getLower(),
-                        assignment.getUpper());
-                node.addResult(outputPin);
-
-                ForkNode forkNode = new ForkNode();
-                forkNode.setName("Fork(" + name + ")");
-                this.assignedValueSourceMap.put(name, forkNode);
-                graph.add(forkNode);
-                graph.add(ActivityGraph.createObjectFlow(outputPin, forkNode));                
-            }
-        }
-        return assignedNames;
+        return super.mapAssignedValueSources(node, graph, false);
+    }
+    
+    protected OutputPin mapAssignment(
+            StructuredActivityNode node, String name, Classifier classifier, 
+            int lower, int upper) {
+        OutputPin outputPin = ActivityGraph.createOutputPin(
+                node.name + 
+                ".result(" + name + ")", 
+                classifier,
+                lower,
+                upper);
+        ((ConditionalNode)node).addResult(outputPin);
+        return outputPin;
     }
     
     protected void mapFinalClause(
@@ -114,11 +77,6 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
             node.addClause(clause);
             graph.addToStructuredNode(node, modelElements);
         }
-    }
-    
-    @Override
-    public ActivityNode getAssignedValueSource(String name) {
-        return this.assignedValueSourceMap.get(name);
     }
     
 } // IfStatementMapping

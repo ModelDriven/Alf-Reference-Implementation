@@ -24,7 +24,7 @@ active class Statements_Conditional {
 	  errorLimit = 1000;
 	  sensorId = 1;
 	  monitor = new Monitor();
-	  year = 2011;
+	  year = 2012;
 	  // *****
 	  
 	  if (reading > threshold) {
