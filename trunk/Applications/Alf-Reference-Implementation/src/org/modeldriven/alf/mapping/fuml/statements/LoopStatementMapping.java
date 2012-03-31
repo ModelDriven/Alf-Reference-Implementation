@@ -171,6 +171,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
                 ObjectFlow flow = (ObjectFlow)element;
                 if (!ActivityGraph.isContainedIn(flow.source, node) &&
                         ActivityGraph.isContainedIn(flow.target, node)) {
+                    Search:
                     for (int i = 0; i < node.loopVariableInput.size(); i++) {
                         InputPin inputPin = node.loopVariableInput.get(i);
                         for (ActivityEdge incoming: inputPin.incoming) {
@@ -180,7 +181,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
                                         outgoing.get(0).target);
                                 this.graph.remove(flow);
                                 node.addEdge(flow);
-                                break;
+                                break Search;
                             }
                         }
                     }
