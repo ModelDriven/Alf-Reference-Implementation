@@ -131,8 +131,10 @@ public class Alf {
                 Element element = ((FumlMapping)elementMapping).getElement();
                 if (element instanceof Behavior && 
                         ((Behavior)element).ownedParameter.isEmpty() ||
-                    element instanceof Class_ && ((Class_)element).isActive && 
-                        !((Class_)element).isAbstract) {
+                    element instanceof Class_ && 
+                        ((Class_)element).isActive && 
+                        !((Class_)element).isAbstract && 
+                        ((Class_)element).classifierBehavior != null) {
                     createSystemServices();
                     System.out.println("Executing...");
                     if (element instanceof Behavior) {
