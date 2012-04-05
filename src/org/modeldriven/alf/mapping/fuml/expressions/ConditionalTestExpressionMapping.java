@@ -130,7 +130,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
             int lower = assignment.getLower();
             int upper = assignment.getUpper();
             SyntaxElement source = assignment.getSource();
-            System.out.println("[mapOperandNode] assignment=" + assignment);
+
             Classifier classifier = null;
             if (type != null) {
                 FumlMapping mapping = this.fumlMap(type);
@@ -188,7 +188,6 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
             List<String> assignedNames, 
             Expression operand) {
         for (AssignedSource assignment: operand.getImpl().getNewAssignments()) {
-            System.out.println("[addToAssignedNames] assignment=" + assignment);
             String name = assignment.getName();
             if (!assignedNames.contains(name)) {
                 assignedNames.add(name);                
