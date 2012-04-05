@@ -83,7 +83,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
      * the name after the conditional-test expression.
      */
     
-    protected ExpressionMapping mapOperand(Expression operand) 
+    private ExpressionMapping mapOperand(Expression operand) 
         throws MappingError {
         ExpressionMapping operandMapping = null;
         FumlMapping mapping = this.fumlMap(operand);
@@ -96,11 +96,12 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         return operandMapping;
     }
     
-    protected StructuredActivityNode mapOperandNode (
+    private StructuredActivityNode mapOperandNode (
             String label,
             List<String> assignments,
-            ExpressionMapping operandMapping) throws MappingError {
+            Expression operand) throws MappingError {
         
+        ExpressionMapping operandMapping = this.mapOperand(operand);
         Collection<Element> modelElements = operandMapping.getModelElements();
         ActivityNode resultSource = operandMapping.getResultSource();
         if (modelElements.isEmpty()) {
@@ -123,8 +124,6 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         operandNode.addEdge(ActivityGraph.createObjectFlow(resultSource, outputPin));
         
         // Map local name assignments.
-        Expression operand = operandMapping.getExpression();
-        System.out.println("[mapOperandNode] operand=" + operand);
         for (String name: assignments) {
             AssignedSource assignment = operand.getImpl().getAssignmentAfter(name);
             ElementReference type = assignment.getType();
@@ -157,7 +156,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
             } else {
                 ActivityNode sourceNode = ((SyntaxElementMapping)mapping).
                         getAssignedValueSource(name);
-                System.out.println("[mapOperand] sourceNode=" + sourceNode);
+                
                 if (sourceNode != null) {
 
                     // Check if the local name was assigned within the
@@ -185,7 +184,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         return operandNode;
     }
     
-    protected static void addToAssignedNames(
+    private static void addToAssignedNames(
             List<String> assignedNames, 
             Expression operand) {
         for (AssignedSource assignment: operand.getImpl().getNewAssignments()) {
@@ -218,14 +217,12 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         
         // Map the operands.
         ExpressionMapping operand1Mapping = this.mapOperand(operand1);
-        ExpressionMapping operand2Mapping = this.mapOperand(operand2);
-        ExpressionMapping operand3Mapping = this.mapOperand(operand3);
-        
         this.graph.addAll(operand1Mapping.getGraph());
+        
         StructuredActivityNode operand2Node =
-            mapOperandNode(label + ".operand2", assignedNames, operand2Mapping);
+            mapOperandNode(label + ".operand2", assignedNames, operand2);
         StructuredActivityNode operand3Node =
-            mapOperandNode(label + ".operand3", assignedNames, operand3Mapping);
+            mapOperandNode(label + ".operand3", assignedNames, operand3);
         
         // Map the decision.
         ActivityNode initialNode = 
