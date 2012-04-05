@@ -236,7 +236,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	        if (oldAssignment != null) {
 	            ElementReference oldType = oldAssignment.getType();
 	            ElementReference newType = newAssignment.getType();
-	            if (!oldType.getImpl().equals(newType)) {
+	            if (newType != null && !newType.getImpl().equals(oldType)) {
 	                assignment.setType(ClassifierDefinitionImpl.commonAncestor(oldType, newType));
 	            }
 	        }
