@@ -20,6 +20,7 @@ import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
+import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
@@ -29,7 +30,6 @@ import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.ConditionalTestExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 
-import fUML.Syntax.Actions.BasicActions.InputPin;
 import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
@@ -98,7 +98,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
     
     protected StructuredActivityNode mapOperandNode (
             String label,
-            List<AssignedSource> assignments,
+            List<String> assignments,
             ExpressionMapping operandMapping) throws MappingError {
         
         Collection<Element> modelElements = operandMapping.getModelElements();
@@ -123,61 +123,61 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         operandNode.addEdge(ActivityGraph.createObjectFlow(resultSource, outputPin));
         
         // Map local name assignments.
-        for (AssignedSource assignment: assignments) {
-            String name = assignment.getName();
+        Expression operand = operandMapping.getExpression();
+        System.out.println("[mapOperandNode] operand=" + operand);
+        for (String name: assignments) {
+            AssignedSource assignment = operand.getImpl().getAssignmentAfter(name);
             ElementReference type = assignment.getType();
             int lower = assignment.getLower();
             int upper = assignment.getUpper();
             SyntaxElement source = assignment.getSource();
-            
-            FumlMapping mapping = this.fumlMap(type);
-            if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                this.throwError("Error mapping type for " + name + ": " +
-                        mapping.getErrorMessage());
-            } else {
-                Classifier classifier = ((ClassifierDefinitionMapping)mapping).
-                    getClassifierOnly();
-                
-                outputPin = ActivityGraph.createOutputPin(
-                            assignment.getName(), classifier, lower, upper);
-                operandNode.addStructuredNodeOutput(outputPin);
-                mapping = this.fumlMap(source);
-                if (!(mapping instanceof SyntaxElementMapping)) {
-                    this.throwError("Error mapping source for " + name + ": " + 
+            System.out.println("[mapOperandNode] assignment=" + assignment);
+            Classifier classifier = null;
+            if (type != null) {
+                FumlMapping mapping = this.fumlMap(type);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping) mapping).getMapping();
+                }
+                if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                    this.throwError("Error mapping type for " + name + ": " +
                             mapping.getErrorMessage());
                 } else {
-                    ActivityNode sourceNode = ((SyntaxElementMapping)mapping).
+                    classifier = ((ClassifierDefinitionMapping)mapping).
+                            getClassifierOnly();
+                }
+            }
+            outputPin = ActivityGraph.createOutputPin(
+                    label + ".output(" + assignment.getName() + ")", 
+                    classifier, lower, upper);
+            operandNode.addStructuredNodeOutput(outputPin);
+            FumlMapping mapping = this.fumlMap(source);
+            if (!(mapping instanceof SyntaxElementMapping)) {
+                this.throwError("Error mapping source for " + name + ": " + 
+                        mapping.getErrorMessage());
+            } else {
+                ActivityNode sourceNode = ((SyntaxElementMapping)mapping).
                         getAssignedValueSource(name);
-                    
-                    if (sourceNode != null) {
-                        
-                        // Check if the local name was assigned within the
-                        // operand expression.
-                        // NOTE: If the name was assigned in the operand, then
-                        // the source node for the name will be one of the
-                        // elements mapped from the operand.
-                        if (!ActivityGraph.isContainedIn(sourceNode, operandNode)) {
-                            StructuredActivityNode dummyNode = 
-                                new StructuredActivityNode();
-                            dummyNode.setName("StructuredNode(" + name + ")");
-                            InputPin input = ActivityGraph.createInputPin(
-                                    dummyNode.name + ".input", 
-                                    classifier, lower, upper);
-                            dummyNode.addStructuredNodeInput(input);
-                            OutputPin output = ActivityGraph.createOutputPin(
-                                    dummyNode.name + ".output", 
-                                    classifier, lower, upper);
-                            dummyNode.addStructuredNodeOutput(output);
-                            dummyNode.addEdge(ActivityGraph.createObjectFlow(
-                                    input, output));
-                            operandNode.addNode(dummyNode);
-                            this.graph.addObjectFlow(sourceNode, input);
-                            sourceNode = output;
-                        }
-                        
-                        operandNode.addEdge(ActivityGraph.createObjectFlow(
-                                sourceNode, outputPin));
+                System.out.println("[mapOperand] sourceNode=" + sourceNode);
+                if (sourceNode != null) {
+
+                    // Check if the local name was assigned within the
+                    // operand expression.
+                    // NOTE: If the name was assigned in the operand, then
+                    // the source node for the name will be one of the
+                    // elements mapped from the operand.
+                    if (!ActivityGraph.isContainedIn(sourceNode, operandNode)) {
+                        StructuredActivityNode passthruNode = 
+                                ActivityGraph.createPassthruNode(
+                                        name, classifier, lower, upper);
+                        operandNode.addNode(passthruNode);
+                        this.graph.addObjectFlow(
+                                sourceNode, passthruNode.structuredNodeInput.get(0));
+                        sourceNode = passthruNode.structuredNodeOutput.get(0);
                     }
+
+                    operandNode.addEdge(ActivityGraph.createObjectFlow(
+                            sourceNode, outputPin));
+
                 }
             }
         }
@@ -185,15 +185,14 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         return operandNode;
     }
     
-    protected static void addToNewAssignments(
-            Map<String, AssignedSource> newAssignments, 
-            Map<String, AssignedSource> assignmentsAfter,
+    protected static void addToAssignedNames(
+            List<String> assignedNames, 
             Expression operand) {
         for (AssignedSource assignment: operand.getImpl().getNewAssignments()) {
+            System.out.println("[addToAssignedNames] assignment=" + assignment);
             String name = assignment.getName();
-            AssignedSource assignmentAfter = assignmentsAfter.get(name);
-            if (assignmentAfter != null && !newAssignments.containsKey(name)) {
-                newAssignments.put(name, assignmentAfter);
+            if (!assignedNames.contains(name)) {
+                assignedNames.add(name);                
             }
         }
     }
@@ -210,18 +209,12 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         String label = 
             this.getExpression().getClass().getSimpleName() + "@" + expression.getId();
         
-        // Get assigned sources for local names assigned in the second or third
-        // operands.
-        Map<String, AssignedSource> newAssignments = 
-            new HashMap<String, AssignedSource>();
-        Map<String, AssignedSource> assignmentsAfter = 
-            expression.getImpl().getAssignmentAfterMap();
-        addToNewAssignments(newAssignments, assignmentsAfter, operand2);
-        addToNewAssignments(newAssignments, assignmentsAfter, operand3);
-        
-        // Create an ordered list of the new assignments
-        List<AssignedSource> assignments = 
-            new ArrayList<AssignedSource>(newAssignments.values());
+        // Create an ordered list of local names assigned in the second or third
+        // operands (so the ordering is consistent for the mappings of the 
+        // second and third operands).
+        List<String> assignedNames = new ArrayList<String>();
+        addToAssignedNames(assignedNames, operand2);
+        addToAssignedNames(assignedNames, operand3);
         
         // Map the operands.
         ExpressionMapping operand1Mapping = this.mapOperand(operand1);
@@ -230,9 +223,9 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         
         this.graph.addAll(operand1Mapping.getGraph());
         StructuredActivityNode operand2Node =
-            mapOperandNode(label + ".operand2", assignments, operand2Mapping);
+            mapOperandNode(label + ".operand2", assignedNames, operand2Mapping);
         StructuredActivityNode operand3Node =
-            mapOperandNode(label + ".operand3", assignments, operand3Mapping);
+            mapOperandNode(label + ".operand3", assignedNames, operand3Mapping);
         
         // Map the decision.
         ActivityNode initialNode = 
@@ -250,9 +243,8 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         
         // Create merge nodes as assigned value sources for names assigned in
         // the second or third operands.
-        for (int i=0; i < assignments.size(); i++) {
-            AssignedSource assignment = assignments.get(i);
-            String name = assignment.getName();
+        for (int i=0; i < assignedNames.size(); i++) {
+            String name = assignedNames.get(i);
             ActivityNode mergeNode = 
                 this.graph.addMergeNode("Merge(" + label + "." + name + ")");
             this.graph.addObjectFlow(
