@@ -219,7 +219,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
         
         if (operand3 != null) {
             operand3.getImpl().setAssignmentBefore(assignmentsBefore);
-            this.putAssignments(assignmentsAfter, operand2.getImpl().getNewAssignments());
+            this.putAssignments(assignmentsAfter, operand3.getImpl().getNewAssignments());
         }
         
 		return assignmentsAfter;
