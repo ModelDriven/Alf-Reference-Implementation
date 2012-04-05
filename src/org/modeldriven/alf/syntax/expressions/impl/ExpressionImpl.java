@@ -94,7 +94,7 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
     }
 
     public AssignedSource getAssignmentAfter(String name) {
-        return this.getAssignmentBeforeMap().get(name);
+        return this.getAssignmentAfterMap().get(name);
     }
 
     public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
