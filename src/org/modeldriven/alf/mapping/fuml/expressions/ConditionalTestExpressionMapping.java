@@ -243,11 +243,14 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
             String name = assignedNames.get(i);
             ActivityNode mergeNode = 
                 this.graph.addMergeNode("Merge(" + label + "." + name + ")");
+            ActivityNode forkNode =
+                    this.graph.addForkNode("Fork(" + mergeNode.name + ")");
             this.graph.addObjectFlow(
                     operand2Node.structuredNodeOutput.get(i+1), mergeNode);
             this.graph.addObjectFlow(
                     operand3Node.structuredNodeOutput.get(i+1), mergeNode);
-            this.assignedValueSourceMap.put(name, mergeNode);
+            this.graph.addObjectFlow(mergeNode, forkNode);
+            this.assignedValueSourceMap.put(name, forkNode);
         }
     }
     
