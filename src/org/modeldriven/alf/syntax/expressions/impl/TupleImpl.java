@@ -226,6 +226,15 @@ public abstract class TupleImpl extends SyntaxElementImpl {
     public abstract boolean isEmpty();
     
     public abstract int size();
+    
+    public Expression getInput(String name) {
+        for (NamedExpression namedExpression: this.getSelf().getInput()) {
+            if (namedExpression.getName().equals(name)) {
+                return namedExpression.getExpression();
+            }
+        }
+        return null;
+    }
 
     public Map<String, AssignedSource> getAssignmentsAfterMap() {
         Tuple self = this.getSelf();

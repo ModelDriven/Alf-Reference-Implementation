@@ -52,7 +52,8 @@ public class AssignedSourceImpl {
 	public String toString(boolean includeDerived) {
 	    return this.getSelf()._toString(includeDerived) + 
 	                " type:(" + this.getType() + ")" +
-	                " source:(" + this.getSource() + ")";
+	                " source:(" + this.getSource() + ")" +
+	                " isParallelLocalName:" + this.isParallelLocalName;
 	}
 
     public void deriveAll() {

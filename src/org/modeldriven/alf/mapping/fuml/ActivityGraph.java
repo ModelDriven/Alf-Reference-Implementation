@@ -590,81 +590,10 @@ public class ActivityGraph {
         region.setMode(mode);
         this.add(region);
 
-        // Add nodes to expansion region.
-        for (Element element : nestedElements) {
-            if (element instanceof ActivityNode) {
-                region.addNode((ActivityNode) element);
-            }
-        }
-        
-        // Add activity edges to expansion region. 
-        for (Element element : nestedElements) {
-            if (element instanceof ActivityEdge) {
-                ActivityEdge edge = (ActivityEdge) element;
-                ActivityNode source = edge.source;
-                ActivityNode target = edge.target;
-                boolean sourceIsContained = isContainedIn(source, region);
-                boolean targetIsContained = isContainedIn(target, region);
-                if (sourceIsContained && targetIsContained) {
-                    region.addEdge(edge);
-                } else if (!sourceIsContained && targetIsContained){
-                    source.outgoing.remove(edge);
-                    target.incoming.remove(edge);
-                    
-                    if (edge instanceof ControlFlow) {
-                        // If an incoming control flow crosses into the region,
-                        // redirect it to target the region itself.
-                        this.addControlFlow(source, region);
-                        
-                    } else {
-                        // If an incoming object flow crosses into the region, 
-                        // add an input pin at the boundary. 
-                        
-                        int lower = 0;
-                        int upper = -1;
-                        Type type = null;
-                        if (target instanceof ObjectNode) {
-                            type = ((ObjectNode)target).typedElement.type;
-                            if (target instanceof Pin) {
-                                Pin targetPin = (Pin)target;
-                                lower = targetPin.multiplicityElement.lower;
-                                upper = targetPin.multiplicityElement.upper.naturalValue;
-                            }
-                        }
+        // Add elements to expansion region.
+        this.addToExpansionRegion(region, nestedElements);
 
-                        InputPin pin = createInputPin(
-                                region.name + ".input(" + source.name + ")",
-                                type, lower, upper);
-                        region.addStructuredNodeInput(pin);
-                        region.addEdge(createObjectFlow(pin, target));
-                        this.addObjectFlow(source, pin);
-                    }
-                } else if (sourceIsContained && !targetIsContained) {
-                    source.outgoing.remove(edge);
-                    target.incoming.remove(edge);
-                    
-                    if (edge instanceof ControlFlow) {
-                        // If an outgoing control flow crosses out of the region,
-                        // redirect it to have the region as its source.
-                        this.addControlFlow(region, target);
-                        
-                    } else {
-                        // If an outgoing object flow crosses out of the region, 
-                        // add an output expansion node at the boundary.
-                        ExpansionNode outputNode = new ExpansionNode();
-                        outputNode.setName(region.name + 
-                                ".outputElement(" + edge.source.name + ")");
-                        region.addOutputElement(outputNode);
-                        region.addEdge(createObjectFlow(source, outputNode));
-                        this.add(outputNode);
-                        this.addObjectFlow(outputNode, target);
-                    }
-                } else {
-                    this.add(edge);
-                }
-            }
-        }
-
+        // Add input expansion node.
         ExpansionNode inputNode = new ExpansionNode();
         inputNode.setName(region.name + ".inputElement");
         region.addInputElement(inputNode);
@@ -734,6 +663,89 @@ public class ActivityGraph {
         }
     }
 
+    public void addToExpansionRegion(
+            ExpansionRegion region,
+            Collection<Element> nestedElements) {
+        // Add nodes to expansion region.
+        for (Element element : nestedElements) {
+            if (element instanceof ActivityNode) {
+                region.addNode((ActivityNode) element);
+            }
+        }
+        
+        // Add activity edges to expansion region. 
+        for (Element element : nestedElements) {
+            if (element instanceof ActivityEdge) {
+                ActivityEdge edge = (ActivityEdge) element;
+                ActivityNode source = edge.source;
+                ActivityNode target = edge.target;
+                boolean sourceIsContained = isContainedIn(source, region);
+                boolean targetIsContained = isContainedIn(target, region);
+                if (sourceIsContained && targetIsContained ||
+                        source instanceof ExpansionNode && 
+                            ((ExpansionNode)source).regionAsInput == region ||
+                        target instanceof ExpansionNode && 
+                            ((ExpansionNode)target).regionAsOutput == region) {
+                    region.addEdge(edge);
+                } else if (!sourceIsContained && targetIsContained){
+                    source.outgoing.remove(edge);
+                    target.incoming.remove(edge);
+                    
+                    if (edge instanceof ControlFlow) {
+                        // If an incoming control flow crosses into the region,
+                        // redirect it to target the region itself.
+                        this.addControlFlow(source, region);
+                        
+                    } else {
+                        // If an incoming object flow crosses into the region, 
+                        // add an input pin at the boundary. 
+                        
+                        int lower = 0;
+                        int upper = -1;
+                        Type type = null;
+                        if (target instanceof ObjectNode) {
+                            type = ((ObjectNode)target).typedElement.type;
+                            if (target instanceof Pin) {
+                                Pin targetPin = (Pin)target;
+                                lower = targetPin.multiplicityElement.lower;
+                                upper = targetPin.multiplicityElement.upper.naturalValue;
+                            }
+                        }
+
+                        InputPin pin = createInputPin(
+                                region.name + ".input(" + source.name + ")",
+                                type, lower, upper);
+                        region.addStructuredNodeInput(pin);
+                        region.addEdge(createObjectFlow(pin, target));
+                        this.addObjectFlow(source, pin);
+                    }
+                } else if (sourceIsContained && !targetIsContained) {
+                    source.outgoing.remove(edge);
+                    target.incoming.remove(edge);
+                    
+                    if (edge instanceof ControlFlow) {
+                        // If an outgoing control flow crosses out of the region,
+                        // redirect it to have the region as its source.
+                        this.addControlFlow(region, target);
+                        
+                    } else {
+                        // If an outgoing object flow crosses out of the region, 
+                        // add an output expansion node at the boundary.
+                        ExpansionNode outputNode = new ExpansionNode();
+                        outputNode.setName(region.name + 
+                                ".outputElement(" + edge.source.name + ")");
+                        region.addOutputElement(outputNode);
+                        region.addEdge(createObjectFlow(source, outputNode));
+                        this.add(outputNode);
+                        this.addObjectFlow(outputNode, target);
+                    }
+                } else {
+                    this.add(edge);
+                }
+            }
+        }
+    }
+    
     // Static Helper Methods
     
     public static void setPin(Pin pin, String name, Type type, int lower, int upper) {

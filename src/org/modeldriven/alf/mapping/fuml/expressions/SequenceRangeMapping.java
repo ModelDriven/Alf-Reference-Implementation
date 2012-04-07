@@ -26,6 +26,7 @@ import fUML.Syntax.Actions.BasicActions.InputPin;
 import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
 import fUML.Syntax.Activities.CompleteStructuredActivities.LoopNode;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
 import fUML.Syntax.Classes.Kernel.Element;
 
@@ -64,93 +65,13 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
                 ExpressionMapping rangeUpperMapping = (ExpressionMapping)mapping;
                 this.graph.addAll(rangeUpperMapping.getGraph());
                 
-                InputPin rangeLowerInputPin = ActivityGraph.createInputPin(
-                        "rangeLower", getIntegerType(), 1, 1);
-                InputPin rangeUpperInputPin = ActivityGraph.createInputPin(
-                        "rangeUpper", getIntegerType(), 1, 1);
-                InputPin accumulatorInputPin = ActivityGraph.createInputPin(
-                        "rangeLower", getIntegerType(), 0, -1);
-                
-                this.graph.addObjectFlow(
+                ActivityNode resultSource = mapSequenceRangeLoop(
+                        this.graph, 
                         rangeLowerMapping.getResultSource(), 
-                        rangeLowerInputPin);
-                this.graph.addObjectFlow(
                         rangeUpperMapping.getResultSource(), 
-                        rangeUpperInputPin);
-
-                LoopNode loopNode = this.graph.addLoopNode(
-                        "SequenceRange@" + sequenceRange.getId(), true, 
-                        rangeLowerInputPin, rangeUpperInputPin, accumulatorInputPin);
+                        "SequenceRange@" + sequenceRange.getId());
                 
-                // Test if counter is still less than the range upper limit.
-                ActivityGraph loopGraph = new ActivityGraph();
-                ForkNode fork0 = loopGraph.addForkNode(
-                        "Fork(" + loopNode.loopVariable.get(0).name + ")");
-                ForkNode fork1 = loopGraph.addForkNode(
-                        "Fork(" + loopNode.loopVariable.get(1).name + ")");
-                ForkNode fork2 = loopGraph.addForkNode(
-                        "Fork(" + loopNode.loopVariable.get(2).name + ")");
-                loopGraph.addObjectFlow(loopNode.loopVariable.get(0), fork0);
-                loopGraph.addObjectFlow(loopNode.loopVariable.get(1), fork1);
-                loopGraph.addObjectFlow(loopNode.loopVariable.get(2), fork2);
-                
-                CallBehaviorAction testCall = 
-                    loopGraph.addCallBehaviorAction(getBehavior(
-                            RootNamespace.getIntegerFunctionLessThanOrEqual()));
-                loopGraph.addObjectFlow(
-                        fork0, testCall.argument.get(0));
-                loopGraph.addObjectFlow(
-                        fork1, testCall.argument.get(1));
-                
-                this.graph.addLoopTest(
-                        loopNode, 
-                        loopGraph.getModelElements(), 
-                        testCall.result.get(0));
-                
-                loopGraph = new ActivityGraph();
-                
-                // Increment the counter.
-                ValueSpecificationAction valueOne =
-                    loopGraph.addNaturalValueSpecificationAction(1);
-                CallBehaviorAction incrementCall =
-                    loopGraph.addCallBehaviorAction(getBehavior(
-                            RootNamespace.getIntegerFunctionPlus()));
-                loopGraph.addObjectFlow(
-                        fork0, incrementCall.argument.get(0));
-                loopGraph.addObjectFlow(
-                        valueOne.result, incrementCall.argument.get(1));
-                
-                // Preserve the range upper bound.
-                StructuredActivityNode node =
-                    loopGraph.addStructuredActivityNode(
-                            "Node(" + loopNode.loopVariable.get(1).name, 
-                            new ArrayList<Element>());
-                node.addStructuredNodeInput(ActivityGraph.createInputPin(
-                        node.name + ".input", getIntegerType(), 1, 1));
-                node.addStructuredNodeOutput(ActivityGraph.createOutputPin(
-                        node.name + ".output", getIntegerType(), 1, 1));
-                node.addEdge(ActivityGraph.createObjectFlow(
-                        node.structuredNodeInput.get(0), 
-                        node.structuredNodeOutput.get(0)));
-                loopGraph.addObjectFlow(fork1, node.structuredNodeInput.get(0));
-                
-                // Append the counter to the list.
-                CallBehaviorAction appendCall =
-                    loopGraph.addCallBehaviorAction(getBehavior(
-                            RootNamespace.getSequenceFunctionIncluding()));
-                loopGraph.addObjectFlow(
-                        loopNode.loopVariable.get(2), appendCall.argument.get(0));
-                loopGraph.addObjectFlow(
-                        fork0, appendCall.argument.get(1));
-                
-                this.graph.addLoopBodyPart(
-                        loopNode, 
-                        loopGraph.getModelElements(), 
-                        incrementCall.result.get(0), 
-                        node.structuredNodeOutput.get(0), 
-                        appendCall.result.get(0));
-                
-                this.resultSources.add(loopNode.result.get(2));
+                this.resultSources.add(resultSource);
             }
         }
     }
@@ -182,6 +103,102 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
 	            mapping.printChild(prefix);
 	        }
 	    }
+	}
+	
+	// Static helper methods
+	
+	public static ActivityNode mapSequenceRangeLoop(
+	        ActivityGraph graph,
+	        ActivityNode resultSource1,
+	        ActivityNode resultSource2,
+	        String label) throws MappingError {
+        InputPin rangeLowerInputPin = ActivityGraph.createInputPin(
+                "rangeLower", getIntegerType(), 1, 1);
+        InputPin rangeUpperInputPin = ActivityGraph.createInputPin(
+                "rangeUpper", getIntegerType(), 1, 1);
+        InputPin accumulatorInputPin = ActivityGraph.createInputPin(
+                "range", getIntegerType(), 0, -1);
+        
+        graph.addObjectFlow(
+                resultSource1, 
+                rangeLowerInputPin);
+        graph.addObjectFlow(
+                resultSource2, 
+                rangeUpperInputPin);
+
+        LoopNode loopNode = graph.addLoopNode(
+                label, true, 
+                rangeLowerInputPin, rangeUpperInputPin, accumulatorInputPin);
+        
+        // Test if counter is still less than the range upper limit.
+        ActivityGraph loopGraph = new ActivityGraph();
+        ForkNode fork0 = loopGraph.addForkNode(
+                "Fork(" + loopNode.loopVariable.get(0).name + ")");
+        ForkNode fork1 = loopGraph.addForkNode(
+                "Fork(" + loopNode.loopVariable.get(1).name + ")");
+        ForkNode fork2 = loopGraph.addForkNode(
+                "Fork(" + loopNode.loopVariable.get(2).name + ")");
+        loopGraph.addObjectFlow(loopNode.loopVariable.get(0), fork0);
+        loopGraph.addObjectFlow(loopNode.loopVariable.get(1), fork1);
+        loopGraph.addObjectFlow(loopNode.loopVariable.get(2), fork2);
+        
+        CallBehaviorAction testCall = 
+            loopGraph.addCallBehaviorAction(getBehavior(
+                    RootNamespace.getIntegerFunctionLessThanOrEqual()));
+        loopGraph.addObjectFlow(
+                fork0, testCall.argument.get(0));
+        loopGraph.addObjectFlow(
+                fork1, testCall.argument.get(1));
+        
+        graph.addLoopTest(
+                loopNode, 
+                loopGraph.getModelElements(), 
+                testCall.result.get(0));
+        
+        loopGraph = new ActivityGraph();
+        
+        // Increment the counter.
+        ValueSpecificationAction valueOne =
+            loopGraph.addNaturalValueSpecificationAction(1);
+        CallBehaviorAction incrementCall =
+            loopGraph.addCallBehaviorAction(getBehavior(
+                    RootNamespace.getIntegerFunctionPlus()));
+        loopGraph.addObjectFlow(
+                fork0, incrementCall.argument.get(0));
+        loopGraph.addObjectFlow(
+                valueOne.result, incrementCall.argument.get(1));
+        
+        // Preserve the range upper bound.
+        StructuredActivityNode node =
+            loopGraph.addStructuredActivityNode(
+                    "Node(" + loopNode.loopVariable.get(1).name, 
+                    new ArrayList<Element>());
+        node.addStructuredNodeInput(ActivityGraph.createInputPin(
+                node.name + ".input", getIntegerType(), 1, 1));
+        node.addStructuredNodeOutput(ActivityGraph.createOutputPin(
+                node.name + ".output", getIntegerType(), 1, 1));
+        node.addEdge(ActivityGraph.createObjectFlow(
+                node.structuredNodeInput.get(0), 
+                node.structuredNodeOutput.get(0)));
+        loopGraph.addObjectFlow(fork1, node.structuredNodeInput.get(0));
+        
+        // Append the counter to the list.
+        CallBehaviorAction appendCall =
+            loopGraph.addCallBehaviorAction(getBehavior(
+                    RootNamespace.getSequenceFunctionIncluding()));
+        loopGraph.addObjectFlow(
+                loopNode.loopVariable.get(2), appendCall.argument.get(0));
+        loopGraph.addObjectFlow(
+                fork0, appendCall.argument.get(1));
+        
+        graph.addLoopBodyPart(
+                loopNode, 
+                loopGraph.getModelElements(), 
+                incrementCall.result.get(0), 
+                node.structuredNodeOutput.get(0), 
+                appendCall.result.get(0));
+        
+        return loopNode.result.get(2);
 	}
 
 } // SequenceRangeMapping
