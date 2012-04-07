@@ -13,6 +13,7 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.mapping.fuml.common.AssignedSourceMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
@@ -20,7 +21,6 @@ import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.NonFinalClause;
@@ -161,49 +161,48 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         if (assignedNames != null) {
             for (String name: assignedNames) {
                 AssignedSource assignment = assignments.get(name);
-                SyntaxElement source = assignment.getSource();
-                ElementReference type = assignment.getType();
-                FumlMapping mapping = parentMapping.fumlMap(source);
-                if (!(mapping instanceof SyntaxElementMapping)) {
-                    parentMapping.throwError("Error mapping source " + 
-                            source + ": " + mapping.getErrorMessage());
-                } else {
-                    ActivityNode bodyOutput = 
-                        ((SyntaxElementMapping)mapping).
-                        getAssignedValueSource(name);
-                    
-                    if (!(bodyOutput instanceof OutputPin && 
-                            ActivityGraph.isContainedIn(
-                                    (OutputPin)bodyOutput, bodyElements))) {
-                        Classifier classifier = null;
-                        if (type != null) {
-                            mapping = parentMapping.fumlMap(type);
-                            if (mapping instanceof ElementReferenceMapping) {
-                                mapping = ((ElementReferenceMapping)mapping).
-                                    getMapping();
+                if (assignment != null) {
+                    ElementReference type = assignment.getType();
+                    FumlMapping mapping = parentMapping.fumlMap(assignment);
+                    if (!(mapping instanceof AssignedSourceMapping)) {
+                        parentMapping.throwError("Error mapping source for " + 
+                                name + ": " + mapping.getErrorMessage());
+                    } else {
+                        ActivityNode bodyOutput = 
+                            ((AssignedSourceMapping)mapping).getActivityNode();
+                        if (!(bodyOutput instanceof OutputPin && 
+                                ActivityGraph.isContainedIn(
+                                        (OutputPin)bodyOutput, bodyElements))) {
+                            Classifier classifier = null;
+                            if (type != null) {
+                                mapping = parentMapping.fumlMap(type);
+                                if (mapping instanceof ElementReferenceMapping) {
+                                    mapping = ((ElementReferenceMapping)mapping).
+                                        getMapping();
+                                }
+                                if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                                    parentMapping.throwError("Error mapping type " + 
+                                            type + ": " + mapping.getErrorMessage());
+                                }
+                                classifier = 
+                                    ((ClassifierDefinitionMapping)mapping).
+                                        getClassifier();
                             }
-                            if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                                parentMapping.throwError("Error mapping type " + 
-                                        type + ": " + mapping.getErrorMessage());
-                            }
-                            classifier = 
-                                ((ClassifierDefinitionMapping)mapping).
-                                    getClassifier();
+        
+                            StructuredActivityNode passthruNode = 
+                                ActivityGraph.createPassthruNode(
+                                        bodyOutput.name, 
+                                        classifier, 
+                                        assignment.getLower(), 
+                                        assignment.getUpper());
+                            bodyElements.add(passthruNode);
+                            bodyElements.add(ActivityGraph.createObjectFlow(
+                                    bodyOutput, passthruNode.structuredNodeInput.get(0)));
+                            bodyOutput = passthruNode.structuredNodeOutput.get(0);
                         }
-    
-                        StructuredActivityNode passthruNode = 
-                            ActivityGraph.createPassthruNode(
-                                    bodyOutput.name, 
-                                    classifier, 
-                                    assignment.getLower(), 
-                                    assignment.getUpper());
-                        bodyElements.add(passthruNode);
-                        bodyElements.add(ActivityGraph.createObjectFlow(
-                                bodyOutput, passthruNode.structuredNodeInput.get(0)));
-                        bodyOutput = passthruNode.structuredNodeOutput.get(0);
+                        
+                        bodyOutputs.add((OutputPin)bodyOutput);
                     }
-                    
-                    bodyOutputs.add((OutputPin)bodyOutput);
                 }
             }
         }

@@ -46,6 +46,34 @@ public abstract class LoopStatementMapping extends StatementMapping {
         return new LoopNode();
     }
     
+    protected OutputPin addLoopVariable(
+            LoopNode loopNode, String name, Classifier classifier,
+            int lower, int upper, ActivityNode sourceNode) throws MappingError {
+        InputPin inputPin = ActivityGraph.createInputPin(
+                loopNode.name + ".loopVariableInput(" + name + ")", 
+                classifier, lower, upper);
+        loopNode.addLoopVariableInput(inputPin);
+        if (sourceNode != null) {
+                    this.graph.addObjectFlow(sourceNode, inputPin);
+        }
+        
+        OutputPin loopVariablePin = ActivityGraph.createOutputPin(
+                loopNode.name + ".loopVariable(" + name + ")", 
+                classifier, lower, upper);
+        loopNode.addStructuredNodeOutput(loopVariablePin);
+        loopNode.addLoopVariable(loopVariablePin);
+        ForkNode forkNode = new ForkNode();
+        forkNode.setName("Fork(" + loopVariablePin.name + ")");
+        loopNode.addNode(forkNode);
+        loopNode.addEdge(ActivityGraph.createObjectFlow(loopVariablePin, forkNode));
+        
+        OutputPin outputPin = ActivityGraph.createOutputPin(
+                loopNode.name + ".result(" + name + ")", 
+                classifier, lower, upper);
+        loopNode.addResult(outputPin);
+        return outputPin;
+    }
+    
     @Override
     protected OutputPin mapAssignment(
             StructuredActivityNode node, String name, Classifier classifier,
@@ -53,9 +81,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
         LoopNode loopNode = (LoopNode)node;
         Statement statement = this.getStatement();
         
-        InputPin inputPin = ActivityGraph.createInputPin(
-                node.name + ".input(" + name + ")", classifier, lower, upper);
-        loopNode.addLoopVariableInput(inputPin);
+        ActivityNode sourceNode = null;
         AssignedSource assignment = 
             statement.getImpl().getAssignmentBefore(name);
         if (assignment != null) {
@@ -64,34 +90,19 @@ public abstract class LoopStatementMapping extends StatementMapping {
                 this.throwError("Error mapping assigned source for " + name + 
                         ": " + this.getErrorMessage());
             } else {
-                ActivityNode sourceNode = 
+                sourceNode = 
                     ((SyntaxElementMapping)mapping).getAssignedValueSource(name);
                 if (sourceNode == null) {
                     this.throwError("No assigned value source for: " + name);
-                } else {
-                    this.graph.addObjectFlow(sourceNode, inputPin);
                 }
             }
         }
-        
-        OutputPin loopVariablePin = ActivityGraph.createOutputPin(
-                node.name + ".variable(" + name + ")", classifier, lower, upper);
-        loopNode.addLoopVariable(loopVariablePin);
-        ForkNode forkNode = new ForkNode();
-        forkNode.setName("Fork(" + loopVariablePin.name + ")");
-        node.addNode(forkNode);
-        node.addEdge(ActivityGraph.createObjectFlow(loopVariablePin, forkNode));
-        
-        OutputPin outputPin = ActivityGraph.createOutputPin(
-                node.name + ".result(" + name + ")", classifier, lower, upper);
-        loopNode.addResult(outputPin);
-        return outputPin;
+            
+        return this.addLoopVariable(
+                loopNode, name, classifier, lower, upper, sourceNode);
     }
     
-    @Override
-    public void map() throws MappingError {
-        super.map();
-        
+    public void mapLoop() throws MappingError {
         LoopNode node = (LoopNode)this.getElement();
         node.setIsTestedFirst(this.isTestedFirst());
         
@@ -160,6 +171,12 @@ public abstract class LoopStatementMapping extends StatementMapping {
     }
     
     @Override
+    public void map() throws MappingError {
+        super.map();
+        this.mapLoop();
+    }
+    
+    @Override
     public void addToNode(Collection<Element> elements) {
         super.addToNode(elements);
 
@@ -197,8 +214,9 @@ public abstract class LoopStatementMapping extends StatementMapping {
     
     @Override
     public String toString() {
-        LoopNode node = (LoopNode)this.getElement();
-        return super.toString() + " isTestedFirst:" + node.isTestedFirst;
+        return super.toString() + 
+                (this.node instanceof LoopNode? 
+                        " isTestedFirst:" + ((LoopNode)node).isTestedFirst: "");
     }
     
     @Override

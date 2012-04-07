@@ -83,6 +83,13 @@ public class NameExpressionMapping extends ExpressionMapping {
                         ((AssignedSourceMapping)mapping).getActivityNode();
                     if (this.activityNode == null) {
                         this.throwError("Invalid assigned source: " + assignment);
+                    } else if (assignment.getImpl().getIsParallelLocalName()) {
+                        // If the assignment is for an @parallel local name
+                        // within a for statement, then the assigned source node 
+                        // must be a fork node attached to an output expansion 
+                        // node for the expansion region mapped from the for
+                        // statement. Get the expansion node as the result source.
+                        this.activityNode = this.activityNode.incoming.get(0).source;
                     }
                 }
             } else if (enumerationLiteralReference != null) {

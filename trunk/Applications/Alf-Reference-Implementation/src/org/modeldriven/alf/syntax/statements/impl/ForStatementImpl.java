@@ -351,7 +351,7 @@ public class ForStatementImpl extends StatementImpl {
         return null;
     }
     
-    private Collection<String> getParallelNames() {
+    public Collection<String> getParallelNames() {
         Annotation annotation = this.getParallelAnnotation();
         return annotation == null? new ArrayList<String>():
             annotation.getArgument();

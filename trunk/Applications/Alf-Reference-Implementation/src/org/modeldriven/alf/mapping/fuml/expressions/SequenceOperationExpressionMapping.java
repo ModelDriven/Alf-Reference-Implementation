@@ -9,14 +9,12 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
-import org.modeldriven.alf.mapping.fuml.expressions.InvocationExpressionMapping;
-
 import org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.SequenceOperationExpression;
 
 public class SequenceOperationExpressionMapping extends
-		InvocationExpressionMapping {
+		BehaviorInvocationExpressionMapping {
     
     /**
      * A sequence operation expression is mapped as a behavior invocation

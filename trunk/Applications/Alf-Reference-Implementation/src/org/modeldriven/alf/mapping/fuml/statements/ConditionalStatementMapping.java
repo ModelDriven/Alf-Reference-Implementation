@@ -11,7 +11,6 @@ package org.modeldriven.alf.mapping.fuml.statements;
 
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
-import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
 
 import org.modeldriven.alf.syntax.statements.Block;
@@ -59,16 +58,22 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
             Collection<Clause> predecessorClauses,
             ActivityGraph graph
             ) throws MappingError {
-        if (block != null) {
+        // NOTE: Even if the block is empty, a final clause is still needed
+        // in order to pass through values of any names that may be assigned
+        // in other clauses.
+        if (block != null || assignedNames != null) {
             Collection<Element> modelElements = new ArrayList<Element>();
-            FumlMapping mapping = this.fumlMap(block);
             ActivityGraph subgraph = new ActivityGraph();
             ValueSpecificationAction valueAction = 
                 subgraph.addBooleanValueSpecificationAction(true);
             Clause clause = NonFinalClauseMapping.createClause(
                     subgraph.getModelElements(), valueAction.result, 
-                    mapping.getModelElements(), 
-                    block.getImpl().getAssignmentAfterMap(),
+                    block == null? 
+                        new ArrayList<Element>():
+                        this.fumlMap(block).getModelElements(), 
+                    block == null? 
+                        this.getStatement().getImpl().getAssignmentBeforeMap(): 
+                        block.getImpl().getAssignmentAfterMap(),
                     assignedNames, 
                     modelElements, this);
             for (Clause predecessorClause: predecessorClauses) {

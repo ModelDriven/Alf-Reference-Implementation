@@ -35,10 +35,10 @@ import fUML.Syntax.Classes.Kernel.Element;
 
 public abstract class StatementMapping extends DocumentedElementMapping {
 
-    private StructuredActivityNode node = null;
+    protected StructuredActivityNode node = null;
     protected ActivityGraph graph = new ActivityGraph();
     
-    private Map<String, ActivityNode> assignedValueSourceMap = 
+    protected Map<String, ActivityNode> assignedValueSourceMap = 
         new HashMap<String, ActivityNode>();
     
     /**
