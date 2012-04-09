@@ -36,7 +36,8 @@ active class Expressions_Operator {
 	//**************************************************************************
 
 	test() {
-	  subtotals = (Integer)null;
+	  
+	  subtotals = Integer[]{2};
 	  employee = new Employee();
 	  member = new Member();
 	  monitor = new Monitor();
@@ -48,7 +49,6 @@ active class Expressions_Operator {
 	  j = 2;
 	  bit = BitString[] { 0, 1, 2 };
 	  mask = BitString[] { 0, 0, 0 };
-	  
       
 	  !f;
 	  !this.flag;
@@ -116,7 +116,6 @@ active class Expressions_Operator {
 	  h ^ h;
 	  h & 0x00FF;
       
-	
 	  i > 0 && subtotals[i] < j;
 	  i == 0 || subtotals[i] >= j;
 	  !f? 1: +2;
