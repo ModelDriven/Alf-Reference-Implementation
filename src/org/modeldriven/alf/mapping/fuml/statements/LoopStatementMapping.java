@@ -29,6 +29,7 @@ import fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode;
 import fUML.Syntax.Activities.CompleteStructuredActivities.LoopNode;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityFinalNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
 import fUML.Syntax.Activities.IntermediateActivities.ObjectFlow;
@@ -36,6 +37,8 @@ import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.Element;
 
 public abstract class LoopStatementMapping extends StatementMapping {
+    
+    private ActivityFinalNode finalNode = null;
     
     /**
      * Common mapping for while and do statements.
@@ -205,6 +208,22 @@ public abstract class LoopStatementMapping extends StatementMapping {
                 }
             }
         }    
+    }
+    
+    /**
+     * Add a final node to be used as the control target in the mapping of
+     * a break statement within the body of the statement for this mapping. 
+     * (This method should only be called if that statement is a loop
+     * statement.)
+     */
+    public ActivityFinalNode getFinalNode() throws MappingError {
+        if (this.finalNode == null) {
+            StructuredActivityNode node = (StructuredActivityNode) this.getNode();
+            this.finalNode = new ActivityFinalNode();
+            this.finalNode.setName("Final(" + node.name + ")");
+            node.addNode(this.finalNode);
+        }
+        return this.finalNode;
     }
     
     public abstract boolean isTestedFirst();

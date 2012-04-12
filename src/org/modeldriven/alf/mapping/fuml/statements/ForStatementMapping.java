@@ -93,6 +93,7 @@ public class ForStatementMapping extends LoopStatementMapping {
         ForStatement statement = this.getForStatement();
         boolean isParallel = statement.getIsParallel();
         
+        // Map loop variable definitions, bit don't add to loop mapping yet.
         List<LoopVariableDefinitionMapping> variableDefinitionMappings = 
                 new ArrayList<LoopVariableDefinitionMapping>();
         ActivityGraph setupSubgraph = new ActivityGraph();
@@ -119,15 +120,23 @@ public class ForStatementMapping extends LoopStatementMapping {
         if (isParallel || 
                 resultSource2 == null && 
                     statement.getImpl().getNewAssignments().isEmpty()) {
+            // If this is a parallel for statement, or the first loop variable
+            // definition is not a sequence construction shortcut and there
+            // are no new assignments in the body, map as an expansion region.
             ExpansionRegion region = new ExpansionRegion();
             region.setName(this.node.name);
             region.setMode(
                     isParallel? ExpansionKind.parallel: ExpansionKind.iterative);
             
+            // Replace the default mapping to a loop node with the expansion
+            // region.
             this.graph.remove(this.node);
             this.node = region;
             this.graph.add(region);
             
+            // For each loop variable definition, create an input expansion
+            // node with a corresponding fork node (that becomes the assigned
+            // value source for the loop variable within the body).
             for (LoopVariableDefinitionMapping variableDefinitionMapping: 
                 variableDefinitionMappings) {
                 String name = 
@@ -146,6 +155,12 @@ public class ForStatementMapping extends LoopStatementMapping {
                 variableDefinitionMapping.setAssignedValueSource(forkNode);
             }
             
+            // For each @parallel name, create an output expansion node with
+            // a corresponding fork node (that becomes the assigned value
+            // source for the name after the for statement).
+            // (Note: This must be done before mapping the body, so the output
+            // expansion nodes are also available for mapping @parallel names
+            // used as targets of add calls within the body.)
             for (String name: statement.getImpl().getParallelNames()) {
                 ExpansionNode outputNode =
                         this.graph.addOutputExpansionNode(name, region);
@@ -154,15 +169,25 @@ public class ForStatementMapping extends LoopStatementMapping {
                 this.assignedValueSourceMap.put(name, forkNode);
             }
             
+            // Map the for statement body within the expansion region.
             FumlMapping mapping = this.fumlMap(this.getBody());
             this.graph.addToExpansionRegion(region, mapping.getModelElements());
         } else {
+            // If not mapped as an expansion region, map as a loop node.
             LoopNode node = (LoopNode)this.node;
             node.setIsTestedFirst(true);
             
+            // Create output pins for all names assigned after the for
+            // statement.
+            // NOTE: Output pins are created even for names that are not
+            // assigned within the for statement, so they can be made available
+            // as loop variables for access within the body of the for 
+            // statement.
             Collection<String> assignedNames = 
                 this.mapAssignedValueSources(node, this.graph, true);
             
+            // Create a loop variable pin for corresponding to each loop
+            // variable definition.
             int n = node.loopVariable.size();            
             for (LoopVariableDefinitionMapping variableDefinitionMapping: 
                 variableDefinitionMappings) {
@@ -174,20 +199,29 @@ public class ForStatementMapping extends LoopStatementMapping {
                         variableDefinitionMapping.getResultSource1());
             }
             
+            // Redirect the flow into the first loop variable input pin though a
+            // fork node.
             ActivityNode forkNode = 
                     setupSubgraph.addForkNode("Fork(" + resultSource1.name + ")");
             InputPin inputPin = node.loopVariableInput.get(n);
             ActivityEdge flow = inputPin.incoming.get(0);
             flow.target.incoming.remove(flow);
             flow.setTarget(forkNode);
-            setupSubgraph.addObjectFlow(forkNode, inputPin);            
+            setupSubgraph.addObjectFlow(forkNode, inputPin);
 
             CallBehaviorAction callAction;
             if (resultSource2 == null) {
+                // Unless the first loop variable definition is a sequence
+                // construction shortcut, the number of iterations of the
+                // loop is determined by the list size of the first loop
+                // variable input.
                 callAction = setupSubgraph.addCallBehaviorAction(
                         getBehavior(RootNamespace.getListFunctionSize()));
                 setupSubgraph.addObjectFlow(forkNode, callAction.argument.get(0));                
             } else {
+                // If the first loop variable definition is a sequence
+                // construction shortcut of the form m..n, then the number of
+                // iterations of the loop is n-m+1.
                 inputPin.multiplicityElement.setLower(1);
                 inputPin.multiplicityElement.setUpper(1);
                 CallBehaviorAction minusAction = setupSubgraph.addCallBehaviorAction(
@@ -202,6 +236,8 @@ public class ForStatementMapping extends LoopStatementMapping {
                 setupSubgraph.addObjectFlow(valueAction.result, callAction.argument.get(1));
             }
             
+            // Set up loop variables for counting loop iterations and 
+            // for the iteration count upper bound.
             int i = node.loopVariable.size();
             ValueSpecificationAction valueAction = 
                     setupSubgraph.addNaturalValueSpecificationAction(1);
@@ -212,6 +248,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             ActivityNode counterFork = node.loopVariable.get(i).outgoing.get(0).target;
             ActivityNode upperFork = node.loopVariable.get(i+1).outgoing.get(0).target;
             
+            // Map the test count <= upper.
             ActivityGraph subgraph = new ActivityGraph();
             CallBehaviorAction testCall = 
                 subgraph.addCallBehaviorAction(getBehavior(
@@ -231,6 +268,8 @@ public class ForStatementMapping extends LoopStatementMapping {
             
             node.setDecider(testCall.result.get(0));
             
+            // Determine the assigned value source for each loop variable
+            // within the body of the for statement.
             i = n;
             subgraph = new ActivityGraph();
             for (LoopVariableDefinitionMapping variableDefinitionMapping: 
@@ -242,8 +281,14 @@ public class ForStatementMapping extends LoopStatementMapping {
                                 getLoopVariableDefinition().getVariable() + ")");
                 if (i == n && 
                         variableDefinitionMapping.getResultSource2() != null) {
+                    // If this is the first loop variable, and its definition
+                    // is a sequence construction shorthand, then its assigned
+                    // value is just the value of the loop variable pin
                     subgraph.addObjectFlow(loopVariable, forkNode);
                 } else {
+                    // Otherwise, the assigned value of the loop variable is
+                    // the value at the position in the loop variable input list
+                    // given by the current iteration count.
                     ActivityNode variableFork = 
                             subgraph.addForkNode("Fork(" + loopVariable.name + ")");
                     callAction = subgraph.addCallBehaviorAction(
@@ -263,9 +308,11 @@ public class ForStatementMapping extends LoopStatementMapping {
                     bodyGraph.addStructuredActivityNode(
                             "Values(" + name + ")", subgraph.getModelElements());
 
+            // Map the body of the for statement.
             Block body = this.getBody();
             FumlMapping mapping = this.fumlMap(body);
             Collection<Element>  bodyElements = mapping.getModelElements();
+            
             // NOTE: Call to mapBodyOutputs must come before adding bodyElements
             // to the node, because mapping body outputs may add passthru nodes
             // to bodyElements.
@@ -274,11 +321,17 @@ public class ForStatementMapping extends LoopStatementMapping {
                 node.addBodyOutput(bodyOutput);
             }
             
+            // NOTE: The loop variable value model elements and the body model
+            // elements are mapped into separate structured activity nodes,
+            // with the former having a control flow to the latter, to ensure
+            // all the loop variables have the proper values before the main
+            // body executes.
             StructuredActivityNode bodyNode = 
                     bodyGraph.addStructuredActivityNode(
                             "Body(" + name + ")", bodyElements);
             bodyGraph.addControlFlow(valuesNode, bodyNode);
             
+            // Identify the body output corresponding to each loop variable.
             i = n;
             for (LoopVariableDefinitionMapping variableDefinitionMapping:
                 variableDefinitionMappings) {
@@ -286,6 +339,9 @@ public class ForStatementMapping extends LoopStatementMapping {
                 forkNode = loopVariable.outgoing.get(0).target;
                 if (i == n && 
                         variableDefinitionMapping.getResultSource2() != null) {
+                    // If the this is the first loop variable, and its
+                    // definition is a sequence construction shorthand, then
+                    // its value must be incremented for the next iteration.
                     callAction = bodyGraph.addCallBehaviorAction(
                             getBehavior(RootNamespace.getIntegerFunctionPlus()));
                     valueAction = bodyGraph.addNaturalValueSpecificationAction(1);
@@ -293,6 +349,8 @@ public class ForStatementMapping extends LoopStatementMapping {
                     bodyGraph.addObjectFlow(valueAction.result, callAction.argument.get(1));
                     node.addBodyOutput(callAction.result.get(0));
                 } else {
+                    // Otherwise, the loop variable input list must simple be
+                    // passed through to the next iteration unchanged.
                     StructuredActivityNode passthruNode = 
                             ActivityGraph.createPassthruNode(
                                     "Passthru(" + loopVariable.name + ")", 
@@ -305,6 +363,7 @@ public class ForStatementMapping extends LoopStatementMapping {
                 i++;
             }
             
+            // Map the incrementing of the loop iteration count.
             callAction = bodyGraph.addCallBehaviorAction(
                     getBehavior(RootNamespace.getIntegerFunctionPlus()));
             valueAction = bodyGraph.addNaturalValueSpecificationAction(1);
@@ -312,6 +371,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             bodyGraph.addObjectFlow(valueAction.result, callAction.argument.get(1));
             node.addBodyOutput(callAction.result.get(0));
             
+            // Map the passing through of the upper bound value.
             StructuredActivityNode passthruNode = 
                     ActivityGraph.createPassthruNode(
                             "Passthru(upper)", getIntegerType(), 1, 1);
@@ -330,6 +390,9 @@ public class ForStatementMapping extends LoopStatementMapping {
         }
         
         if (!setupSubgraph.isEmpty()) {
+            // Unless there are no setup model elements, map the setup elements
+            // into their own structured activity node that must complete
+            // before execution of the loop node/expansion region.
             ActivityGraph subgraph = new ActivityGraph();
             String name = this.node.name;
             this.node.setName("Loop(" + name + ")");

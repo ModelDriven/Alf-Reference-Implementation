@@ -79,6 +79,12 @@ public abstract class StatementMapping extends DocumentedElementMapping {
         this.graph.add(this.node);
     }
     
+    /**
+     * Create an output pin for each assignment for which this statement
+     * will be the assigned value source. Return the collection of names
+     * from those assignments. (If mapAll is try, then map all assignments after
+     * the statement, not just those with the statement as the source.)
+     */
     protected Collection<String> mapAssignedValueSources(
             StructuredActivityNode node,
             ActivityGraph graph, 
