@@ -69,7 +69,7 @@ active class Statements_While_Do_Looping {
     test(
     	out count: Integer, out checksum: Integer, 
     	out nextRecord: FileRecord, out file: File, 
-    	out lines: String[*], out readings: Reading[*],
+    	out lines: String[*], out readings: Reading[*], out i: Integer,
     	out self: Statements_While_Do_Looping) {
     
       // Setup
@@ -81,6 +81,7 @@ active class Statements_While_Do_Looping {
 	  sensor = new Sensor(2);
 	  lines = null;
 	  readings = null;
+	  i = 4;
 	  // *****
 	  
 	  while ((last = this.list->size()) > 0) {
@@ -106,6 +107,13 @@ active class Statements_While_Do_Looping {
 	    nextReading = sensor.getNextReading();
 	    readings->add(nextReading.getValue());
 	  } while (!nextReading.isFinal());
+	  
+	  do {
+	  	if (i <= 2) {
+	  		break;
+  		}
+  		i--;
+	  } while(true);
 	  
 	  self = this;
     }

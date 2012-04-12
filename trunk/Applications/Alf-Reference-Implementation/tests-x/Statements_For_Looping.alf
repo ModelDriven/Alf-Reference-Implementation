@@ -29,8 +29,8 @@ active class Statements_Looping {
     	out SnEven: Integer[*], out SnOdd: Integer[*]) {
     
       // Setup
-	  noiseLimit = 1;
-	  sensors = Sensor[]{new Sensor(1), new Sensor(2), new Sensor(null)};
+	  noiseLimit = 0;
+	  sensors = Sensor[]{new Sensor(1), new Sensor(2), new Sensor(null), new Sensor(3)};
 	  reading = +0;
 	  readings = null;
 	  recordCount = 10;
@@ -47,26 +47,20 @@ active class Statements_Looping {
 	      
 	  for (s in sensors) {
         reading = s.getNextReading();
-	  	if (reading->notEmpty()) {
-		  	readings->add(reading);
-	  	}
-	  	/*
 	    if (reading->isEmpty()) {
 	      break;
 	    }
 	    if (reading > noiseLimit) {
 	      readings->add(reading);
 	    }
-	    */
 	  }
 	  
 	  for (j in 1..recordCount) {
 	    sum = sum + j;
 	  }
 	  
-	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges) {
-	    outgoingEdge.sendOffer(tokens->at(i));
-	    i++;
+	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges, Token token: tokens) {
+	    outgoingEdge.sendOffer(token);
 	  }
 	  
 	  //@parallel 
