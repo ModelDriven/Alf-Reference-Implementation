@@ -221,7 +221,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	    List<NameBinding> bindings = self.getNameBinding();
 	    int n = bindings.size()-1;
 	    if (n > 0) {
-	        qualification = new QualifiedName();
+	        qualification = new QualifiedName(self);
 	        for (int i=0; i<n; i++) {
 	            qualification.addNameBinding(bindings.get(i));
 	        }
@@ -243,9 +243,9 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	    FeatureReference disambiguation = null;
 	    QualifiedName self = this.getSelf();
         QualifiedName qualification = self.getQualification();
-	    if (self.getIsAmbiguous() && 
-	            (qualification == null || !qualification.getImpl().isNamespaceReferent())) {
-	        disambiguation = new FeatureReference();
+	    if (self.getIsAmbiguous() && qualification != null && 
+	            !qualification.getImpl().isNamespaceReferent()) {
+	        disambiguation = new FeatureReference(self);
 	        disambiguation.setNameBinding(self.getUnqualifiedName());
 	        FeatureReference featureReference = qualification.getDisambiguation();
 	        NamespaceDefinition currentScope = this.getCurrentScope();
@@ -254,11 +254,12 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
                 containingExpression == null? new HashMap<String, AssignedSource>(): 
                     containingExpression.getImpl().getAssignmentBeforeMap();
 	        if (featureReference==null) {
-	            NameExpression nameExpression = new NameExpression();
+	            NameExpression nameExpression = new NameExpression(self);
 	            nameExpression.setName(qualification);
 	            disambiguation.setExpression(nameExpression);
 	        } else {
-	            PropertyAccessExpression featureExpression = new PropertyAccessExpression();
+	            PropertyAccessExpression featureExpression = 
+	                    new PropertyAccessExpression(self);
 	            featureExpression.setFeatureReference(featureReference);
 	            disambiguation.setExpression(featureExpression);
 	        }
