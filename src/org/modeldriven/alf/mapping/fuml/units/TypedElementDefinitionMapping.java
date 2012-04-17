@@ -49,7 +49,7 @@ public abstract class TypedElementDefinitionMapping extends MemberMapping {
                 // NOTE: If this typed element is within an operation, then the
                 // use of getClassifierOnly here avoids problems with mapping
                 // the classifier before the mapping of the operation is
-                // complete, if the type is the class that owns the operations.
+                // complete, if the type is the class that owns the operation.
                 Classifier classifier = 
                     ((ClassifierDefinitionMapping)mapping).getClassifierOnly();
                 typedElement.setType(classifier);                   
