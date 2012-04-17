@@ -7,14 +7,7 @@ active class Statements_While_Do_Looping {
     
     list: Monitor[*] sequence;
     
-    class Member { 
-      	public isActive: Boolean;
-      	public name: String;
-      	public address: String;
-  	}
-  	
     class Monitor { 
-    	public raiseAlarm(in sensorId: Integer) { }
     	public cleanUp() { }
 	}
 	

@@ -1,0 +1,53 @@
+/**
+ * Test accept statements.
+ **/
+active class Statements_Accept {
+
+	private active class Test {
+	
+		private sig: any;
+		private sig1: any;
+		private name: String;
+		private terminate: Boolean;
+		private arrival: SignalNewArrival;
+
+		receive signal SignalNewArrival { public name: String; }
+		receive signal SignalTermination { }
+	
+	} do {
+	
+	  accept (sig: SignalNewArrival, SignalTermination);	  
+	  this.sig = sig;
+	  
+	  accept (arrival1: SignalNewArrival) {
+        this.name = arrival1.name;
+	    this.terminate = false;
+	  } or accept (SignalTermination) {
+	    this.terminate = true;
+	  }
+	  
+	  accept (SignalNewArrival);
+	  
+	  accept (arrival3: SignalNewArrival);
+	  this.arrival = arrival3;
+	  
+	  accept (sig1: SignalTermination);
+	  this.sig1 = sig1;
+	  
+	}
+	
+	private test(out test: Test) {
+		test = new Test();
+		
+		test.SignalTermination();
+		test.SignalNewArrival("Arrival1");
+		test.SignalNewArrival("Arrival2");
+		test.SignalNewArrival("Arrival3");
+		test.SignalNewArrival("Arrival4");
+	}
+
+} do {
+
+	this.test();
+
+}

@@ -132,7 +132,14 @@ public abstract class StatementMapping extends DocumentedElementMapping {
     protected OutputPin mapAssignment(
             StructuredActivityNode node, String name, Classifier classifier, 
             int lower, int upper) throws MappingError {
-        return null;
+        OutputPin outputPin = ActivityGraph.createOutputPin(
+                node.name + 
+                ".output(" + name + ")", 
+                classifier,
+                lower,
+                upper);
+        node.addStructuredNodeOutput(outputPin);
+        return outputPin;
     }
 
     public void add(ActivityEdge edge) {

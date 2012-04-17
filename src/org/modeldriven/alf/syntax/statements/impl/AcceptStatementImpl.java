@@ -340,7 +340,8 @@ public class AcceptStatementImpl extends StatementImpl {
         block.setAssignmentBefore(self.getAssignmentBefore());
         String name = acceptBlock.getName();
         if (name != null) {
-            block.addAssignmentBefore(AssignedSourceImpl.makeAssignment(name, self,
+            block.addAssignmentBefore(AssignedSourceImpl.makeAssignment(
+                    name, acceptBlock,
                     ClassifierDefinitionImpl.commonAncestor(acceptBlock.getSignal()),
                     1, 1));
         }
