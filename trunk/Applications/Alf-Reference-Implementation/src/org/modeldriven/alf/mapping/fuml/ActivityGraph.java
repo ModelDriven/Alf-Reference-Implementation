@@ -447,13 +447,53 @@ public class ActivityGraph {
         ReadStructuralFeatureAction readAction = new ReadStructuralFeatureAction();
         readAction.setName("ReadStructuralFeature(" + property.name + ")");
         readAction.setStructuralFeature(property);
-        readAction.setObject(ActivityGraph.createInputPin(
+        readAction.setObject(createInputPin(
                 readAction.name + ".object", 
                 property.featuringClassifier.get(0), 1, 1));
-        readAction.setResult(ActivityGraph.createOutputPin(
+        readAction.setResult(createOutputPin(
                 readAction.name + ".result", property.typedElement.type, 1, 1));
         this.add(readAction);
         return readAction;
+    }
+    
+    public ReclassifyObjectAction addReclassifyObjectAction(
+            Classifier type,
+            Collection<Classifier> oldClassifiers, 
+            Collection<Classifier> newClassifiers,
+            boolean isReplaceAll) {
+        ReclassifyObjectAction reclassifyAction = new ReclassifyObjectAction();
+        
+        StringBuffer oldClassifierList = new StringBuffer();
+        for (Classifier oldClassifier: oldClassifiers) {
+            reclassifyAction.addOldClassifier(oldClassifier);
+            if (oldClassifierList.length() > 0) {
+                oldClassifierList.append(",");
+            }
+            oldClassifierList.append(oldClassifier.name);
+        }
+        
+        if (oldClassifierList.length() == 0 && isReplaceAll) {
+            oldClassifierList = new StringBuffer("*");
+        }
+        
+        StringBuffer newClassifierList = new StringBuffer();
+        for (Classifier newClassifier: newClassifiers) {
+            reclassifyAction.addNewClassifier(newClassifier);
+            if (newClassifierList.length() > 0) {
+                newClassifierList.append(",");
+            }
+            newClassifierList.append(newClassifier.name);
+        }
+        
+        reclassifyAction.setName(
+                "Reclassify(" + oldClassifierList + 
+                " to " + newClassifierList + ")");
+        reclassifyAction.setObject(createInputPin(
+                reclassifyAction.name + ".object", type, 1, 1));
+        reclassifyAction.setIsReplaceAll(isReplaceAll);
+        
+        this.add(reclassifyAction);
+        return reclassifyAction;
     }
     
     public ReduceAction addReduceAction(
