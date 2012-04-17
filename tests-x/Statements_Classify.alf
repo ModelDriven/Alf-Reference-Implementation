@@ -1,0 +1,43 @@
+/**
+ * Test classify statements.
+ **/
+active class Statements_Classify {
+
+    // Supporting declarations *************************************************
+    
+    private monitor: Monitor;
+	
+    class Monitor { }
+	class InActiveMonitor specializes Monitor { }
+	class ActiveMonitor specializes Monitor { }
+    class Principal { }
+    class Administrator specializes Principal { }
+    class Issue { }
+    class Pending specializes Issue { }
+    class InProcess specializes Issue { }
+    class Overdue specializes Issue { }
+    class Resolved specializes Issue { }
+    
+	//**************************************************************************
+
+    test(out principal: Principal, out monitor: Monitor, out issue: Issue) {
+    
+      // Setup
+	  principal = new Principal();
+	  this.monitor = new InActiveMonitor();
+	  issue = new Pending();
+	  // ***
+	  	  
+	  classify principal from * to Administrator;
+	  classify principal from Administrator;
+	  classify this.monitor from InActiveMonitor to ActiveMonitor;
+	  classify issue 
+	    from Pending, Overdue 
+	    to Resolved, InProcess;
+	    
+	  monitor = this.monitor;
+	
+    }
+} do {
+	this.test();
+}
