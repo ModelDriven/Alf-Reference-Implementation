@@ -32,7 +32,7 @@ public class AssociationDefinitionMapping extends ClassifierDefinitionMapping {
         if (element instanceof Property) {
             ((Association)namespace).addOwnedEnd((Property)element);
           } else {
-            this.throwError("Member not allowed for a data type: " + element);
+            this.throwError("Member not allowed for an association: " + element);
           }
     }
 
