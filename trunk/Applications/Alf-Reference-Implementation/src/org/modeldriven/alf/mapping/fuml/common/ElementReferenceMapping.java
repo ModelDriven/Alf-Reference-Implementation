@@ -22,6 +22,11 @@ import fUML.Syntax.Classes.Kernel.Element;
 public abstract class ElementReferenceMapping extends FumlMapping {
     
     public abstract FumlMapping getMapping();
+    
+    @Override
+    public Element getElement() {
+        return this.getMapping().getElement();
+    }
 
     @Override
     public Collection<Element> getModelElements() throws MappingError {

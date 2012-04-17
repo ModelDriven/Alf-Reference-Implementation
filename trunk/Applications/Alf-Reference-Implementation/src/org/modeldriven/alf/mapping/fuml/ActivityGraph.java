@@ -168,6 +168,36 @@ public class ActivityGraph {
     
     // Actions
     
+    public AcceptEventAction addAcceptEventAction(
+            Collection<Signal> signals, boolean hasOutput) {
+        AcceptEventAction acceptAction = new AcceptEventAction();
+        acceptAction.setIsUnmarshall(false);
+        
+        StringBuffer signalNames = new StringBuffer();
+        for (Signal signal: signals) {
+            if (signalNames.length() > 0) {
+                signalNames.append(",");
+            }
+            signalNames.append(signal.name);
+            SignalEvent event = new SignalEvent();
+            event.setName("Event(" + signal.name + ")");
+            event.setSignal(signal);
+            Trigger trigger = new Trigger();
+            trigger.setEvent(event);
+            acceptAction.addTrigger(trigger);
+        }
+        
+        acceptAction.setName("Accept(" + signalNames + ")");
+        
+        if (hasOutput) {
+            acceptAction.addResult(createOutputPin(
+                    acceptAction.name + ".result", null, 1, 1));
+        }
+        
+        this.add(acceptAction);
+        return acceptAction;
+    }
+    
     public AddStructuralFeatureValueAction addAddStructuralFeatureValueAction(
             Property property, boolean isReplaceAll) {
         AddStructuralFeatureValueAction writeAction = 
