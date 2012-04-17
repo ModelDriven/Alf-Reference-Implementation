@@ -2625,7 +2625,9 @@ void ClassificationClause(ClassifyStatement s):
   LOOKAHEAD(2) 
   nl = ClassificationFromClause() { s.setFromList(nl); }
   [ nl = ClassificationToClause() { s.setToList(nl); } ]
-| [ ReclassifyAllClause() { s.setFromList(new QualifiedNameList(this)); }] 
+| [ ReclassifyAllClause()
+	{ s.setFromList(new QualifiedNameList(this)); 
+	  s.setIsReclassifyAll(true); }] 
   nl = ClassificationToClause() { s.setToList(nl); }
 }
 
