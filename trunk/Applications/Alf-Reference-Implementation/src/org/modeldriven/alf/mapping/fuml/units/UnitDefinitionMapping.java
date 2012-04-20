@@ -23,6 +23,22 @@ public class UnitDefinitionMapping extends DocumentedElementMapping {
     
     FumlMapping mapping = null;
     
+    /**
+     * 1. A unit definition maps to a specific kind of namespace according to
+     * the namespace definition for the unit definition, as given in the
+     * appropriate subsequent subclause. If a namespace declaration is given,
+     * the namespace mapped from the unit is an owned member of the declared
+     * namespace. If no namespace declaration is given, then the unit must be a
+     * model unit and what namespace owns it, if any, is not defined by the Alf
+     * specification.
+     * 
+     * 2. If the unit is a model unit, then it has empty visibility. Otherwise,
+     * the unit visibility is given by the stub declaration for it in the
+     * definition of its owning namespace.
+     */
+    
+    // The mapping for a unit is handled through the mapping for its definition.
+
     public FumlMapping getMapping() {
         if (this.mapping == null) {
             UnitDefinition unit = this.getUnitDefinition();

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,6 +21,16 @@ import fUML.Syntax.Classes.Kernel.EnumerationLiteral;
 import fUML.Syntax.Classes.Kernel.NamedElement;
 
 public class EnumerationDefinitionMapping extends ClassifierDefinitionMapping {
+    
+    /**
+     * 1. An enumeration definition maps to an enumeration.
+     * 
+     * 2. An enumeration literal name maps to an enumeration literal that is an
+     * owned literal of the enumeration and has the given unqualified name.
+     */
+    
+    // Visibility is handled in MemberMapping.
+    // See also EnumerationLiteralNameMapping.
 
 	public EnumerationDefinition getEnumerationDefinition() {
 		return (EnumerationDefinition) this.getSource();

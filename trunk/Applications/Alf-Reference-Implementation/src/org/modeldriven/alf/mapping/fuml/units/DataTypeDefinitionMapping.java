@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -23,6 +23,21 @@ import fUML.Syntax.Classes.Kernel.PrimitiveType;
 import fUML.Syntax.Classes.Kernel.Property;
 
 public class DataTypeDefinitionMapping extends ClassifierDefinitionMapping {
+    
+    /**
+     * 1. A data type definition that is not primitive maps to a data type (that
+     * is not an enumeration or a primitive type).
+     * 
+     * 2. A data type definition that is primitive maps to a primitive type.
+     * This primitive type is registered as a built-in type with the execution
+     * factory at the execution locus for the unit.
+     * 
+     * Data Type Members
+     * 
+     * 3. A property definition maps to an owned attribute of the data type.
+     */
+    
+    // Visibility is handled in MemberMapping.
 
     @Override
     public Classifier mapClassifier() {
@@ -36,6 +51,7 @@ public class DataTypeDefinitionMapping extends ClassifierDefinitionMapping {
     @Override
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);
+        
         if (classifier instanceof PrimitiveType) {
             DataTypeDefinition dataTypeDefinition = this.getDataTypeDefinition();
             ExecutionFactory executionFactory = getExecutionFactory();

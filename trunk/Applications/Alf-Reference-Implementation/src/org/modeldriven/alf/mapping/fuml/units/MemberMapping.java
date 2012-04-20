@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -19,12 +19,27 @@ import org.modeldriven.alf.syntax.units.Member;
 
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.NamedElement;
+import fUML.Syntax.Classes.Kernel.VisibilityKind;
 
 public abstract class MemberMapping extends DocumentedElementMapping {
     
+    /**
+     * Members are mapped to named elements with the name and visibility given
+     * for the member.
+     */
+    
     public void mapTo(NamedElement namedElement) throws MappingError {
         super.mapTo(namedElement);
-        namedElement.setName(this.getMember().getName());
+        
+        Member member = this.getMember();
+        String visibility = member.getVisibility();
+        
+        namedElement.setName(member.getName());
+        namedElement.setVisibility(
+                "private".equals(visibility)? VisibilityKind.private_:
+                "public".equals(visibility)? VisibilityKind.public_:
+                    VisibilityKind.package_);
+            
     }
     
     /**

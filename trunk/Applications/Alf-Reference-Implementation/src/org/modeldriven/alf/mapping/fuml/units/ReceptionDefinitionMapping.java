@@ -29,6 +29,13 @@ public class ReceptionDefinitionMapping extends MemberMapping {
 
     private Reception reception = null;
     
+    /**
+     * A reception definition maps to an reception with the given name and
+     * signal that is an owned reception of the active class mapped from the
+     * active class definition that is the namespace of the reception
+     * definition.
+     */
+    
     public void mapTo(Reception reception) throws MappingError {
         super.mapTo(reception);
 

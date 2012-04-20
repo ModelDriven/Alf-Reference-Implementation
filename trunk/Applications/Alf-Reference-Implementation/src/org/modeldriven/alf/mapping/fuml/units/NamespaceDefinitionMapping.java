@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -31,6 +31,18 @@ import fUML.Syntax.Classes.Kernel.PackageImport;
 
 public abstract class NamespaceDefinitionMapping extends MemberMapping {
     
+    /**
+     * 1. A namespace definition maps to a namespace and its owned members, as
+     * specified for each kind of namespace definition in the appropriate
+     * subsequent subclause.
+     * 
+     * 2. A visibility indicator maps to the visibility of the named element
+     * mapped from the definition containing the visibility indicator, with an
+     * empty visibility indicator mapping to a visibility kind of “package”.
+     */
+    
+    // Visibility mapping is handled by MemberMapping.
+    
     // Note: An operation is a namespace in full UML, but not in fUML, 
     // so the "namespace" parameter has the type "NamedElement" to accommodate
     // this.
@@ -39,6 +51,7 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
         
         NamespaceDefinition definition = this.getNamespaceDefinition();
 
+        // Map owned members of the namespace.
         for (Member member: definition.getOwnedMember()) {
             // Note: Ignore classifiers that are not completely bound and 
             // classifier template parameters.
@@ -58,6 +71,8 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
             }
         }
         
+        // If the namespace is the definition of a unit, then map the import
+        // references for that unit.
         UnitDefinition unit = definition.getUnit();
         if (unit != null) {
             for (ImportReference importReference: unit.getImport()) {
@@ -73,7 +88,7 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
             }
         }
         
-        /**
+        /*
          * Map any statements nested in members of the namespace as a
          * second pass, to avoid possible circular mapping due to internal
          * references between members and between members and the namespace
