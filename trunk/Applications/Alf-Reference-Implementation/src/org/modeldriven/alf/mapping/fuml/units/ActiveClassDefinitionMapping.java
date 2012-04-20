@@ -41,7 +41,7 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
      * subunit definition.
      */
     
-    // Stubs are handled in NamespaceDefinitionMapping.
+    // Subunits are handled by NamespaceDefinitionMapping.
 
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);
