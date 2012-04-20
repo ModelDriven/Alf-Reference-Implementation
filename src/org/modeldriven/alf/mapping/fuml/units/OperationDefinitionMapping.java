@@ -70,7 +70,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
      */
     
     // For the mapping of formal parameters, see FormalParameterMapping.
-    // Stubs are handled by MemberMapping.
+    // Subunits are handled by NamespaceDefinitionMapping.
     
     public void mapTo(Operation operation) throws MappingError {
         super.mapTo(operation);
