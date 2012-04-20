@@ -25,6 +25,23 @@ import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 import fUML.Syntax.CommonBehaviors.Communications.Reception;
 
 public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
+    
+    /**
+     * 1. An active class is mapped like a passive class, except an active class
+     * has isActive=true and the following additional rules for mapping the
+     * classifier behavior and receptions.
+     * 
+     * 2. If the behavior clause for an active class is a name, then the
+     * classifier behavior for the class is the named activity. If the behavior
+     * clause is a block, then the classifier behavior is an activity with the
+     * activity nodes and edges mapped from the block.
+     * 
+     * 3. An active feature definition maps to an owned reception of the class.
+     * An active feature stub declaration is mapped according to the associated
+     * subunit definition.
+     */
+    
+    // Stubs are handled in NamespaceDefinitionMapping.
 
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);

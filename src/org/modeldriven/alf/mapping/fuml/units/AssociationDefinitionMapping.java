@@ -21,6 +21,17 @@ import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Property;
 
 public class AssociationDefinitionMapping extends ClassifierDefinitionMapping {
+    
+    /**
+     * 1. An association definition maps to an association.
+     * 
+     * Association Members
+     * 
+     * 2. A property definition maps to an owned end of the association as All
+     * ends are navigable owned ends of the association.
+     */
+    
+    // Visibility is handled in MemberMapping.
 
     @Override
     public Classifier mapClassifier() {

@@ -28,6 +28,20 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
 
     private Property property = null;
     
+    /**
+     * 1. A property definition maps to a property with the given name that is a
+     * structural feature of the classifier mapped from the classifier
+     * definition that is the namespace of the property definition. Its type and
+     * multiplicity are mapped as a typed element definition.
+     * 
+     * 2. If the property definition is composite, then the property has
+     * aggregation=composite. Otherwise it has aggregation = none.
+     * 
+     * 3. An initializer expression is not mapped as part of the property
+     * definition, but, rather, as part of the mapping of the constructor(s) for
+     * the owning class.
+     */
+    
     public void mapTo(Property property) throws MappingError {
         super.mapTo(property.typedElement, property.multiplicityElement);
 

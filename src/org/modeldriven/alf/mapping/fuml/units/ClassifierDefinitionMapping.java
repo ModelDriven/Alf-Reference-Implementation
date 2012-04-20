@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -30,6 +30,21 @@ public abstract class ClassifierDefinitionMapping extends
     private Classifier classifier = null;
     private boolean notFullyMapped = true;
     
+    /**
+     * 1. A classifier definition (other than a classifier template parameter)
+     * maps to a classifier and its features, as specified for each kind of
+     * classifier in the appropriate subsequent subclause. If the classifier
+     * definition is a stub, then it is mapped according to its associated
+     * subunit definition.
+     * 
+     * Specialization
+     * 
+     * 2. If the classifier definition has specialization referents, then the
+     * classifier being defined has generalization relationships with each of
+     * the referents. If the classifier definition is abstract, then the
+     * classifer has isAbstract=true. Otherwise isAbstract=false.
+     */
+    
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);
 
@@ -55,13 +70,6 @@ public abstract class ClassifierDefinitionMapping extends
             }
         }
 
-        /*
-        System.out.println("mapTo: " + classifier.name + " members:");
-        for (int i = 0; i < classifier.member.size(); i++) {
-          System.out.println(classifier.member.getValue(i).name);
-        }
-        */
-
     }
     
     public abstract Classifier mapClassifier();
@@ -77,7 +85,6 @@ public abstract class ClassifierDefinitionMapping extends
         if (this.classifier == null) {
             this.classifier = this.mapClassifier();
         }
-        // System.out.println("[getClassifierOnly] classifier=" + this.classifier);
         return this.classifier;
     }
     
@@ -86,7 +93,6 @@ public abstract class ClassifierDefinitionMapping extends
             this.notFullyMapped = false;
             this.mapTo(this.getClassifierOnly());
         }
-        // System.out.println("[getClassifier] classifier=" + this.classifier);
         return this.classifier;
     }
     

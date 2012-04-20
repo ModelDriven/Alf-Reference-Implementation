@@ -39,6 +39,39 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
     private Operation operation = null;
     
+    /**
+     * 1. An operation definition maps to an operation with the given name and
+     * isAbstract value that is an owned operation of the class mapped from the
+     * class definition that is the namespace of the operation definition.
+     * 
+     * 2. A formal parameter that is a member of an operation definition maps to
+     * an owned parameter of the operation.
+     * 
+     * 3. If an operation declaration has redefined operations, then the
+     * operation has the these redefined operations.
+     * 
+     * 4. If an operation definition has a body, then the operation has an
+     * associated activity (owned by the class of the operation) as its method,
+     * with the body mapped as if it was the body of an activity definition for
+     * this activity. The activity has an owned parameter corresponding, in
+     * order, to each owned parameter of the operation, with the same name,
+     * type, multiplicity and direction as the operation parameter.
+     * 
+     * 5. If an operation definition is a stub, then its associated subunit maps
+     * to an activity. This activity becomes the method of the operation mapped
+     * from the operation definition.
+     * 
+     * Constructors
+     * 
+     * 6. If the operation definition is a constructor, then it has an implicit
+     * return parameter with the owning class as its type. Further, the default
+     * constructor behavior is included in the mapping of the operation body,
+     * sequentially before the explicit behavior defined for the constructor.
+     */
+    
+    // For the mapping of formal parameters, see FormalParameterMapping.
+    // Stubs are handled by MemberMapping.
+    
     public void mapTo(Operation operation) throws MappingError {
         super.mapTo(operation);
 
@@ -160,8 +193,8 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
         if (!(element instanceof Parameter)) {
             this.throwError("Member not a parameter: " + element);
         } else if (((Parameter)element).direction != ParameterDirectionKind.return_) {
-            // Note: An operation is a namespace in full UML, but not in fUML, so the "namespace"
-            // parameter actually has the type "NamedElement".
+            // Note: An operation is a namespace in full UML, but not in fUML,
+            // so the "namespace" parameter actually has the type "NamedElement".
             ((Operation)namespace).addOwnedParameter((Parameter)element);
         }
     }

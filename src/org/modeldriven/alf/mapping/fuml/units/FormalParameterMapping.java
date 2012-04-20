@@ -34,6 +34,12 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
 
     private Parameter parameter = null;
     
+    /**
+     * A formal parameter maps to a parameter of an activity or an operation
+     * with the given name and direction. Its type and multiplicity are mapped
+     * as for a typed element definition.
+     */
+    
     public void mapTo(Parameter parameter) throws MappingError {
         super.mapTo(parameter, parameter.multiplicityElement);
 

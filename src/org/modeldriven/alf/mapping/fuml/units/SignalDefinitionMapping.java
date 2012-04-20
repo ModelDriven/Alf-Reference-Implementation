@@ -21,6 +21,19 @@ import fUML.Syntax.Classes.Kernel.Property;
 import fUML.Syntax.CommonBehaviors.Communications.Signal;
 
 public class SignalDefinitionMapping extends ClassifierDefinitionMapping {
+    
+    /**
+     * 1. A signal definition maps to a signal.
+     * 
+     * Signal Members
+     * 
+     * 2. A property definition maps to an owned attribute of the signal.
+     * 
+     */
+    
+    // For signal reception definition mapping, see the
+    // SignalReceptionDefinitionMapping subclass.
+    // Visibility is handled in MemberMapping.
 
 	public SignalDefinition getSignalDefinition() {
 		return (SignalDefinition) this.getSource();

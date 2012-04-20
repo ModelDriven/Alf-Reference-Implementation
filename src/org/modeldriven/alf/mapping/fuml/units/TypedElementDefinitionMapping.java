@@ -23,11 +23,35 @@ import fUML.Syntax.Classes.Kernel.Type;
 import fUML.Syntax.Classes.Kernel.TypedElement;
 
 public abstract class TypedElementDefinitionMapping extends MemberMapping {
+    
+    /**
+     * 1. A typed element definition maps to an element that is both a typed
+     * element and a multiplicity element, as given for the specific kind of
+     * typed element definition.
+     * 
+     * Typed Element
+     * 
+     * 2. The type of the typed element definition maps to the type of the typed
+     * element.
+     * 
+     * Multiplicity Element
+     * 
+     * 3. The lower attribute of the multiplicity element is a literal integer
+     * for the value given by the lower attribute of the typed element
+     * definition.
+     * 
+     * 4. The upper attribute of the multiplicity element is a literal unlimited
+     * natural for the value given by the upper attribute of the typed element
+     * definition.
+     * 
+     * 5. The isUnique and isOrdered attributes of the multiplicity element are
+     * set according to the isNonUnique (with opposite sense) and isOrdered
+     * attributes of the typed element definition
+     */
 
     public void mapTo(
             TypedElement typedElement, 
-            MultiplicityElement multiplicityElement
-            ) throws MappingError {
+            MultiplicityElement multiplicityElement) throws MappingError {
         super.mapTo(typedElement);
 
         TypedElementDefinition definition = this.getTypedElementDefinition();

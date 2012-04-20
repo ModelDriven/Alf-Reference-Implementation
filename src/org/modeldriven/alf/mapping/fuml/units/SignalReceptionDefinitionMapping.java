@@ -24,6 +24,15 @@ public class SignalReceptionDefinitionMapping extends SignalDefinitionMapping {
     
     private Reception reception = null;
     
+    /**
+     * A signal reception definition maps to a signal and a reception for the
+     * signal. The signal is mapped as if the signal reception definition was a
+     * signal definition and the signal becomes a nested classifier of the class
+     * mapped from the class definition that is the namespace of the signal
+     * reception definition. The reception becomes an owned reception of the
+     * same class.
+     */
+    
     public Reception getReception() throws MappingError {
         if (this.reception == null) {
             Signal signal = (Signal)this.getClassifier();

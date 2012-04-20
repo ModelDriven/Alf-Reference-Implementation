@@ -23,10 +23,35 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 
     private Package package_ = null;
     
+    /**
+     * 1. A package definition maps to a package. If the package definition is a
+     * stub, then it is mapped according to the associated subunit definition.
+     * 
+     * 2. The applied profiles of a package definition map to profile
+     * application relationships from the package to each of the applied
+     * profiles.
+     * 
+     * 3. Each package member is mapped according to its kind. The resulting
+     * elements are a packaged elements of the package.
+     */
+    
+    // The mapping of visibility is handled in MemberMapping.
+    // Stubs are handled in NamespaceDefinitionMapping. 
+    
+    public void mapTo(Package package_) throws MappingError {
+        PackageDefinition packageDefinition = this.getPackageDefinition();
+        if (!packageDefinition.getAppliedProfile().isEmpty()) {
+            this.throwError("Cannot map profile application to fUML for package " + 
+                    packageDefinition.getName());
+        }
+        
+        super.mapTo(package_);
+    }
+    
     @Override
     public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
         if (!(element instanceof PackageableElement)) {
-            this.throwError("Member is not packageable:" + element);
+            this.throwError("Member is not packageable: " + element);
         } else {
             ((Package)namespace).addPackagedElement((PackageableElement)element);
         }

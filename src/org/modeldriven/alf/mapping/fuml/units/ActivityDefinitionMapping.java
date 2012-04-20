@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -11,6 +11,7 @@ package org.modeldriven.alf.mapping.fuml.units;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.FumlMappingFactory;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
@@ -27,7 +28,6 @@ import fUML.Syntax.Activities.IntermediateActivities.ActivityFinalNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode;
 import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Activities.IntermediateActivities.ObjectFlow;
 import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.NamedElement;
@@ -41,6 +41,35 @@ import java.util.Collection;
 public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     
     OpaqueBehaviorExecution execution = null;
+    
+    /**
+     * 1. An activity definition that is not primitive maps to an activity. If
+     * the activity is a classifier behavior, it is mapped as active
+     * (isActive=true). Otherwise, it is mapped as passive (isActive=false). The
+     * body of an activity maps as a block.
+     * 
+     * 2. An activity definition that is primitive maps to an opaque behavior.
+     * An execution prototype for the opaque behavior is registered as a
+     * primitive behavior with the execution factory at the execution locus for
+     * the unit.
+     * 
+     * Activity Members (Formal Parameters)
+     * 
+     * 3. A formal parameter maps to an owned parameter of the activity.
+     * 
+     * 4. Each in and inout parameter of the activity maps to an input activity
+     * parameter node for the parameter. Each such node is connected by an
+     * outgoing object flow to a fork node. This fork node acts as the (initial)
+     * assigned source for the values of the parameter within the activity.
+     * 
+     * 5. Each inout, out and return parameter of the activity maps to an output
+     * activity parameter node for the parameter. For each inout and out
+     * parameter, the activity includes an object flow from the assigned source,
+     * if any, for the parameter name after the activity block.
+     */
+    
+    // For the mapping of formal parameters, see FormalParameterMapping.
+    // For the mappping of return parameters, see also ReturnStatementMapping.
 
     @Override
     public Classifier mapClassifier() {
@@ -54,7 +83,6 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     @Override
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);
-        // System.out.println("[mapTo] activity=" + classifier.name);
 
         ActivityDefinition definition = this.getActivityDefinition();
         if (classifier instanceof OpaqueBehavior) {
@@ -69,14 +97,6 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             }
         } else {
             Activity activity = (Activity)classifier;
-            /*
-            Block body = definition.getImpl().getEffectiveBody();
-            if (body != null) {
-                FumlMapping bodyMapping = this.fumlMap(body);
-                Collection<Element> elements = bodyMapping.getModelElements();
-                addElements(activity, elements, body, this);
-            }
-            */
             activity.setIsActive(definition.getImpl().isClassifierBehavior());
         }
     }
@@ -101,7 +121,6 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             this.throwError("Member that is not a parameter: " + element);
         } else {
             Parameter parameter = (Parameter)element;
-            // System.out.println("[addMemberTo] activity=" + namespace.name + " parameter=" + parameter.name);
             ((Behavior)namespace).addOwnedParameter(parameter);
 
             if (namespace instanceof Activity) {
@@ -123,10 +142,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             fork.setName("Fork(" + parameter.name + ")");
             activity.addNode(fork);
 
-            ObjectFlow flow = new ObjectFlow();
-            flow.setSource(node);
-            flow.setTarget(fork);
-            activity.addEdge(flow);
+            activity.addEdge(ActivityGraph.createObjectFlow(node, fork));
 
             if (parameter.direction == ParameterDirectionKind.inout) {
                 node = new ActivityParameterNode();
@@ -135,7 +151,8 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             }
         }
 
-        if (parameter.direction == ParameterDirectionKind.inout || parameter.direction == ParameterDirectionKind.out) {
+        if (parameter.direction == ParameterDirectionKind.inout || 
+                parameter.direction == ParameterDirectionKind.out) {
             node.setName("Output(" + parameter.name + ")");
         } else if (parameter.direction == ParameterDirectionKind.return_) {
             node.setName("Return");
@@ -183,10 +200,9 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                     } else {
                         ActivityNode source = ((SyntaxElementMapping)sourceMapping).
                                 getAssignedValueSource(name);
-                        ObjectFlow flow = new ObjectFlow();
-                        flow.setSource(source);
-                        flow.setTarget(getOutputParameterNode(activity, parameter));
-                        activity.addEdge(flow);
+                        activity.addEdge(ActivityGraph.createObjectFlow(
+                                source, 
+                                getOutputParameterNode(activity, parameter)));
                     }
                 }
             }
