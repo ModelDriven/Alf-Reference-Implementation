@@ -189,26 +189,21 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         return this.needsDefaultConstructor;
     }
     
-    /*
+    /**
+     * Get the default constructor or an equivalent explicit constructor (with
+     * the same name as the class and no arguments).
+     */
     public OperationDefinition getDefaultConstructor() {
-        if (!this.getIsStub() && this.defaultConstructor == null && 
-                this.needsDefaultConstructor) {
-            ClassDefinition self = this.getSelf();
-            for (Member ownedMember: self.getOwnedMember()) {
-                if (ownedMember instanceof OperationDefinition &&
-                        ((OperationDefinition)ownedMember).getIsConstructor()) {
-                    this.needsDefaultConstructor = false;
-                    break;
-                }
-            }
-            if (this.needsDefaultConstructor) {
-                this.defaultConstructor = this.createDefaultConstructor();
-                this.needsDefaultConstructor = false;
+        OperationDefinition constructor = null;
+        for (Member member: this.resolveInScope(this.getSelf().getName(), false)) {
+            if (member instanceof OperationDefinition && 
+                    ((OperationDefinition)member).getImpl().getFormalParameters().isEmpty()) {
+                constructor = (OperationDefinition)member;
+                break;
             }
         }
-        return this.defaultConstructor;
+        return constructor;
     }
-    */
 
     private OperationDefinition createDefaultConstructor() {
         ClassDefinition self = this.getSelf();
