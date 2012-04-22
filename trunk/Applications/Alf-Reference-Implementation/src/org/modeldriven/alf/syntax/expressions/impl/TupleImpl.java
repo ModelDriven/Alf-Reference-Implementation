@@ -36,6 +36,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
     private List<NamedExpression> input = null; // DERIVED
 	private List<OutputNamedExpression> output = null; // DERIVED
 	
+	private Map<String, AssignedSource> assignmentsBefore = new HashMap<String, AssignedSource>();
 	private Map<String, AssignedSource> assignmentsAfter = null;
 	
 	private NamespaceDefinition currentScope = null;
@@ -235,6 +236,14 @@ public abstract class TupleImpl extends SyntaxElementImpl {
         }
         return null;
     }
+    
+    public void setAssignmentsBefore(Map<String, AssignedSource> assignmentsBefore) {
+        this.assignmentsBefore = assignmentsBefore;
+    }
+    
+    public Map<String, AssignedSource> getAssignmentsBeforeMap() {
+        return this.assignmentsBefore;
+    }
 
     public Map<String, AssignedSource> getAssignmentsAfterMap() {
         Tuple self = this.getSelf();
@@ -244,7 +253,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
         } else {
             if (this.assignmentsAfter == null) {
                 Map<String, AssignedSource> assignmentsBefore = 
-                    invocation.getImpl().getAssignmentBeforeMap();
+                    this.getAssignmentsBeforeMap();
                 Collection<NamedExpression> inputs = self.getInput();
                 Collection<OutputNamedExpression> outputs = self.getOutput();
                 Set<Expression> expressions = new HashSet<Expression>();
@@ -349,7 +358,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
             return new ArrayList<AssignedSource>();
         } else {
             return AssignedSourceImpl.selectNewAssignments(
-                    invocation.getImpl().getAssignmentBeforeMap(), 
+                    this.getAssignmentsBeforeMap(), 
                     this.getAssignmentsAfterMap().values());
         }
     }

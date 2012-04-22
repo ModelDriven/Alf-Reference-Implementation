@@ -339,12 +339,14 @@ public class SequenceOperationExpressionImpl
 	    SequenceOperationExpression self = this.getSelf();
 	    Expression expression = this.getExpression();
 	    Tuple tuple = self.getTuple();
+	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
 	    Map<String, AssignedSource> assignments = new HashMap<String, AssignedSource>();
 	    if (expression != null) {
-	        expression.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
+	        expression.getImpl().setAssignmentBefore(assignmentsBefore);
 	        assignments.putAll(expression.getImpl().getAssignmentAfterMap());
 	    }
 	    if (tuple != null) {
+	        tuple.getImpl().setAssignmentsBefore(assignmentsBefore);
 	        assignments.putAll(tuple.getImpl().getAssignmentsAfterMap());
 	    }
 	    if (this.isInPlace()) {
