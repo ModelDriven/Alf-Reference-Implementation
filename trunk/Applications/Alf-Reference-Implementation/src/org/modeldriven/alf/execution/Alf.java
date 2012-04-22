@@ -14,10 +14,15 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
+import org.modeldriven.alf.mapping.fuml.units.ClassDefinitionMapping;
 import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
+import org.modeldriven.alf.mapping.fuml.units.OperationDefinitionMapping;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.units.ClassDefinition;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.fuml.library.channel.StandardInputChannelObject;
@@ -25,7 +30,10 @@ import org.modeldriven.fuml.library.channel.StandardOutputChannelObject;
 import org.modeldriven.fuml.library.common.Status;
 import org.modeldriven.fuml.library.libraryclass.ImplementationObject;
 
+import fUML.Semantics.Classes.Kernel.BooleanValue;
+import fUML.Semantics.Classes.Kernel.Object_;
 import fUML.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
+import fUML.Semantics.Classes.Kernel.ValueList;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 import fUML.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import fUML.Semantics.Loci.LociL1.Executor;
@@ -36,6 +44,8 @@ import fUML.Syntax.Classes.Kernel.Class_;
 import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.DataType;
 import fUML.Syntax.Classes.Kernel.Element;
+import fUML.Syntax.Classes.Kernel.Operation;
+import fUML.Syntax.Classes.Kernel.Property;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
 public class Alf {
@@ -125,8 +135,9 @@ public class Alf {
                 System.out.println("Mapped successfully.");
                 SyntaxElement parsedElement = FumlMapping.getParsedElement();
                 // System.out.println("[Alf] parsedElement=" + parsedElement);
-                Mapping elementMapping = ((UnitDefinition)parsedElement).
-                    getDefinition().getImpl().getMapping();
+                NamespaceDefinition definition = 
+                        ((UnitDefinition)parsedElement).getDefinition();
+                Mapping elementMapping = definition.getImpl().getMapping();
                 // System.out.println("[Alf] elementMapping=" + elementMapping);
                 Element element = ((FumlMapping)elementMapping).getElement();
                 if (element instanceof Behavior && 
@@ -141,8 +152,37 @@ public class Alf {
                         locus.executor.execute
                             ((Behavior)element, null, new ParameterValueList());
                     } else {
-                        locus.executor.start
-                            ((Class_)element, new ParameterValueList());
+                        ClassDefinition classDefinition = 
+                                (ClassDefinition)definition;
+                        OperationDefinition constructorDefinition = 
+                                classDefinition.getImpl().getDefaultConstructor();
+                        if (constructorDefinition == null) {
+                            System.out.println("Cannot instantiate: " + 
+                                    classDefinition.getName());
+                        } else {
+                            // Instantiate active class.
+                            Class_ class_ = (Class_)element;
+                            Object_ object = locus.instantiate(class_);
+                            
+                            // Initialize object using the default constructor.
+                            ClassDefinitionMapping classMapping =
+                                    (ClassDefinitionMapping)elementMapping;
+                            Property property = classMapping.getInitializationFlag();
+                            BooleanValue booleanValue = new BooleanValue();
+                            booleanValue.value = false;
+                            ValueList values = new ValueList();
+                            values.add(booleanValue);
+                            object.setFeatureValue(property, values, 0);
+                            Operation constructor = 
+                                    ((OperationDefinitionMapping)constructorDefinition.
+                                            getImpl().getMapping()).getOperation();
+                            locus.executor.execute(
+                                    constructor.method.get(0), object, 
+                                    new ParameterValueList());
+                            
+                            // Execute the classifier behavior.
+                            object.startBehavior(class_, new ParameterValueList());
+                        }
                     }
                 } else {
                     System.out.println("Cannot execute: " + element);
