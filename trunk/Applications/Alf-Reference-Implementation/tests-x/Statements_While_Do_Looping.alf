@@ -4,8 +4,8 @@
 active class Statements_While_Do_Looping {
 
     // Supporting declarations *************************************************
-    
-    list: Monitor[*] sequence;
+
+    list: Monitor[*] sequence = {new Monitor(), new Monitor()};
     
     class Monitor { 
     	public cleanUp() { }
@@ -66,7 +66,7 @@ active class Statements_While_Do_Looping {
     	out self: Statements_While_Do_Looping) {
     
       // Setup
-      this.list = Monitor[]{new Monitor(), new Monitor()};
+      // this.list = Monitor[]{new Monitor(), new Monitor()};
 	  count = 0;
 	  checksum = 0;
 	  file = new File();

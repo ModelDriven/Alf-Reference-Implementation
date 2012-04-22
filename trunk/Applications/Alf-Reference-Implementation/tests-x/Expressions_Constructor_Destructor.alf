@@ -5,14 +5,33 @@ active class Expressions_Constructor_Destructor {
 
     // Supporting declarations *************************************************
     
-  	class Customer { }
+  	class Initialization { 
+  		public a: Integer = this.b -> size();
+  		public b: Integer = 1;
+  	}
+  	class Initialization2 specializes Initialization {
+  		public c: Integer = this.a + 2;
+  	}
     class Monitor { 
        	@Destroy public destroy(in recoveryLog: Log) { }
     }
-    class Log { }
+    class Log { 
+    	public name: String = "Default";
+    }
    	class Employee { 
-   	    @Create public Employee(in id: Integer, in name: String) { }
-  		@Create public transferred(in employeeInfo: Employee) { }
+   		private id: Integer;
+   		private name: String;
+   		private transferred: Boolean = false;
+   		
+   	    @Create public Employee(in id: Integer, in name: String) { 
+   	    	this.id = id;
+   	    	this.name = name;
+   	    }
+  		@Create public transferred(in employeeInfo: Employee) { 
+  			this.id = employeeInfo.id;
+  			this.name = employeeInfo.name;
+  			this.transferred = true;
+  		}
    	}
    	
    	datatype D {
@@ -22,20 +41,25 @@ active class Expressions_Constructor_Destructor {
   	
 	//**************************************************************************
 
-	test() {
+	test(
+		out employee1: Employee, out employee2: Employee, out init: Initialization, 
+		out log: Log, out monitor1: Monitor, out monitor2: Monitor,
+		out d: D) {
 	  
       i = 100;
       name = "Fred";
 
-      employee = new Employee(i, name);
-      new Employee::transferred(employee);
-      customer = new Customer();
-      monitor = new Monitor();
+      employee1 = new Employee(i, name);
+      employee2 = new Employee::transferred(employee1);
+      init = new Initialization2();
+      log = new Log();
+      monitor1 = new Monitor();
 	  
-      customer.destroy();
-      new Monitor().destroy(new Log());
+      init.destroy();
       
-      new D("test", Integer[]{1,2});
+      (monitor2 = new Monitor()).destroy(new Log());
+      
+      d = new D("test", Integer[]{1,2});
 	  
 	}
 

@@ -8,19 +8,43 @@
 
 package org.modeldriven.alf.mapping.fuml.units;
 
+import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
+import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
+import org.modeldriven.alf.mapping.fuml.expressions.AssignmentExpressionMapping;
+import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.units.ClassDefinition;
+import org.modeldriven.alf.syntax.units.Member;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.PropertyDefinition;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
+import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
+import fUML.Syntax.Actions.BasicActions.CallOperationAction;
+import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
+import fUML.Syntax.Actions.IntermediateActions.ReadStructuralFeatureAction;
+import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
+import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
+import fUML.Syntax.Activities.IntermediateActivities.Activity;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Classes.Kernel.Class_;
 import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Operation;
 import fUML.Syntax.Classes.Kernel.Property;
+import fUML.Syntax.Classes.Kernel.VisibilityKind;
 
 public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
+    
+    private Property initializationFlag = null;
+    private Operation initializationOperation = null;
 
     /**
      * 1. A non-active class definition maps to a class with isActive=false.
@@ -55,19 +79,154 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
      * behavior of the class with the default behavior.
      */
 
-    // For mapping of active class definitions, see
-    // ActiveClassDefinitionMapping.
+    // For mapping of active class definitions, see ActiveClassDefinitionMapping.
+    // For default constructor behavior mapping, see OperationDefinitionMapping.
     // Subunits are handled by NamespaceDefinitionMapping.
 
     @Override
     public Classifier mapClassifier() {
-        return new Class_();
+        ClassDefinition definition = this.getClassDefinition();
+        Class_ class_ = new Class_();
+        
+        // Create initialization flag.
+        this.initializationFlag = new Property();
+        this.initializationFlag.setName(
+                makeDistinguishableName(definition, definition.getName() + 
+                        "$initializationFlag"));
+        this.initializationFlag.setType(getBooleanType());
+        this.initializationFlag.setLower(1);
+        this.initializationFlag.setUpper(1);        
+        class_.addOwnedAttribute(this.initializationFlag);
+
+        // Create initialization operation.
+        this.initializationOperation = new Operation();
+        this.initializationOperation.setName(
+                makeDistinguishableName(definition, definition.getName() + 
+                        "$initialization"));
+        this.initializationOperation.setVisibility(VisibilityKind.protected_);
+        class_.addOwnedOperation(this.initializationOperation);
+        
+        return class_;
     }
 
     @Override
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);
-        // TODO: Implement default constructor mapping.
+        Class_ class_ = (Class_)classifier;
+        
+        // Add method for initialization operation.
+        ActivityGraph graph = new ActivityGraph();
+        ActivityGraph initializationGraph = new ActivityGraph();
+
+        ReadSelfAction readSelfAction = 
+                graph.addReadSelfAction(class_);
+        ActivityNode selfFork = graph.addForkNode(
+                "Fork(" + readSelfAction.result + ")");
+        graph.addObjectFlow(readSelfAction.result, selfFork);
+
+        NamespaceDefinition classDefinition = this.getClassDefinition();
+        Property initializationFlag = this.getInitializationFlag();
+                
+        // Add action to set initialization to true.
+        ActivityGraph subgraph = new ActivityGraph();
+        ValueSpecificationAction valueAction = 
+                subgraph.addBooleanValueSpecificationAction(true);
+        AssignmentExpressionMapping.mapPropertyAssignment(
+                initializationFlag, subgraph, 
+                selfFork, valueAction.result);
+        ActivityNode previousNode = 
+                initializationGraph.addStructuredActivityNode(
+                        "Set(initializationFlag)", 
+                        subgraph.getModelElements());
+
+        // Add initialization of superclass properties.
+        for (ElementReference superclassReference: 
+            this.getClassDefinition().getSpecializationReferent()) {
+            FumlMapping mapping = this.fumlMap(superclassReference);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
+            if (!(mapping instanceof ClassDefinitionMapping)) {
+                this.throwError("Error mapping superclass reference for " + 
+                        superclassReference.getImpl().getName() + ": " + 
+                        mapping.getErrorMessage());
+            } else {
+                CallOperationAction callAction = initializationGraph.addCallOperationAction(
+                        ((ClassDefinitionMapping)mapping).getInitializationOperation());
+                initializationGraph.addObjectFlow(selfFork, callAction.target);
+                initializationGraph.addControlFlow(previousNode, callAction);
+                previousNode = callAction;
+            }
+        }
+        
+        // Add initialization of each property that has an initializer.
+        for (Member member: classDefinition.getOwnedMember()) {
+            if (member instanceof PropertyDefinition) {
+                PropertyDefinition propertyDefinition =
+                        (PropertyDefinition)member;
+                Expression initializer = 
+                        propertyDefinition.getInitializer();
+                if (initializer != null) {
+                    Mapping mapping = this.fumlMap(propertyDefinition);
+                    if (!(mapping instanceof PropertyDefinitionMapping)) {
+                        this.throwError("Error mapping property " + 
+                                propertyDefinition.getName() + ": " + 
+                                mapping.getErrorMessage());
+                    } else {
+                        Property property = 
+                                ((PropertyDefinitionMapping)mapping).
+                                getProperty();
+                        mapping = this.fumlMap(initializer);
+                        if (!(mapping instanceof ExpressionMapping)) {
+                            this.throwError("Error mapping initializer for " + 
+                                    propertyDefinition.getName() + ": " + 
+                                    mapping.getErrorMessage());
+                        } else {
+                            ExpressionMapping expressionMapping =
+                                    (ExpressionMapping)mapping;
+                            subgraph = new ActivityGraph();
+                            subgraph.addAll(expressionMapping.getGraph());
+                            AssignmentExpressionMapping.mapPropertyAssignment(
+                                    property, subgraph, selfFork, 
+                                    expressionMapping.getResultSource());
+                            StructuredActivityNode node = 
+                                    initializationGraph.addStructuredActivityNode(
+                                            "Initialize(" + property.name + ")", 
+                                            subgraph.getModelElements());
+                            initializationGraph.addControlFlow(
+                                    previousNode, node);
+                            previousNode = node;
+                        }
+                    }
+                }
+            }
+        }
+        
+        StructuredActivityNode initializationNode = 
+                graph.addStructuredActivityNode(
+                        "Initialization", initializationGraph.getModelElements());
+
+        // Use decision node to skip initialization if this object is already
+        // initialized.
+        // Add actions to read initialization flag.
+        ActivityNode initialNode = graph.addInitialNode("InitialNode");
+        ReadStructuralFeatureAction readAction = 
+                graph.addReadStructuralFeatureAction(initializationFlag);
+        CallBehaviorAction callAction = graph.addCallBehaviorAction(
+                getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
+        graph.addObjectFlow(selfFork, readAction.object);
+        graph.addObjectFlow(readAction.result, callAction.argument.get(0));
+        graph.addControlDecisionNode(
+                "Test(" + initializationFlag.name + ")", 
+                initialNode, callAction.result.get(0), 
+                initializationNode, null);
+
+        // Add method to initialization operation.
+        Activity initializationMethod = new Activity();
+        initializationMethod.setName(this.initializationOperation.name);
+        ActivityDefinitionMapping.addElements(
+                initializationMethod, graph.getModelElements(), null, this);
+        this.initializationOperation.addMethod(initializationMethod);
     }
 
     @Override
@@ -83,6 +242,16 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         } else {
             this.throwError("Member not legal for a class: " + element);
         }
+    }
+    
+    public Property getInitializationFlag() throws MappingError {
+        this.getClassifier();
+        return this.initializationFlag;
+    }
+    
+    public Operation getInitializationOperation() throws MappingError {
+        this.getClassifier();
+        return this.initializationOperation;
     }
 
     public ClassDefinition getClassDefinition() {

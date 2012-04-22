@@ -40,7 +40,8 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
     
     public void mapTo(Package package_) throws MappingError {
         PackageDefinition packageDefinition = this.getPackageDefinition();
-        if (!packageDefinition.getAppliedProfile().isEmpty()) {
+        if (packageDefinition != null && 
+                !packageDefinition.getAppliedProfile().isEmpty()) {
             this.throwError("Cannot map profile application to fUML for package " + 
                     packageDefinition.getName());
         }
