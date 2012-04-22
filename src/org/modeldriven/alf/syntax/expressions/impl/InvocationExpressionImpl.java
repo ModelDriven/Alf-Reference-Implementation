@@ -419,6 +419,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	        assignments = feature.getImpl().getAssignmentAfterMap();
 	    }
 	    if (tuple != null) {
+	        tuple.getImpl().setAssignmentsBefore(assignments);
 	        assignments = tuple.getImpl().getAssignmentsAfterMap();
 	    }
 	    return assignments;

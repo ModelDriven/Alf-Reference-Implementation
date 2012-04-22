@@ -38,8 +38,8 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
             this.isTypeConformantWith(sourceType) ||
             
             // Collection conversion
-            sourceType.getImpl().isCollectionClass() && sourceUpper == 1 && 
-            (targetUpper == -1 || targetUpper > 1) &&
+            sourceType != null && sourceType.getImpl().isCollectionClass() && 
+            sourceUpper == 1 && (targetUpper == -1 || targetUpper > 1) &&
             this.isTypeConformantWith(sourceType.getImpl().getCollectionArgument());
     }
     
