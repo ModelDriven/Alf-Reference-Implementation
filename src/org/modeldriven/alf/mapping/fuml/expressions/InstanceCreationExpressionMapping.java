@@ -129,12 +129,12 @@ public class InstanceCreationExpressionMapping extends
         InstanceCreationExpression instanceCreationExpression =
             this.getInstanceCreationExpression();
         Action action = null;
+        ElementReference referent = instanceCreationExpression.getReferent();
+        FumlMapping mapping = this.fumlMap(referent);
+        if (mapping instanceof ElementReferenceMapping) {
+            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        }
         if (!instanceCreationExpression.getIsObjectCreation()) {
-            ElementReference referent = instanceCreationExpression.getReferent();
-            FumlMapping mapping = this.fumlMap(referent);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
-            }
             if (!(mapping instanceof DataTypeDefinitionMapping)) {
                 this.throwError("Error mapping data type referent: " + 
                         mapping.getErrorMessage());
@@ -199,7 +199,7 @@ public class InstanceCreationExpressionMapping extends
             CreateObjectAction createAction = 
                 this.graph.addCreateObjectAction(callAction.operation.class_);
             this.graph.addObjectFlow(createAction.result, callAction.target);
-            
+
         } else {
             // NOTE: Instance creation expressions for classes defined in
             // Alf notation should never be constructorless.
@@ -216,7 +216,9 @@ public class InstanceCreationExpressionMapping extends
 	public void print(String prefix) {
 	    super.print(prefix);
 	    
-	    if (this.action instanceof StructuredActivityNode) {
+	    InstanceCreationExpression expression = this.getInstanceCreationExpression();
+	    if (!expression.getIsObjectCreation() &&
+	            this.action instanceof StructuredActivityNode) {
 	        for (ActivityNode node: ((StructuredActivityNode)this.action).node) {
 	            if (node instanceof ValueSpecificationAction) {
 	                System.out.println(prefix + " data type: " + 

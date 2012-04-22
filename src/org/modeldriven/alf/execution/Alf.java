@@ -16,7 +16,6 @@ import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.units.ClassDefinitionMapping;
 import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
-import org.modeldriven.alf.mapping.fuml.units.OperationDefinitionMapping;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
@@ -30,10 +29,8 @@ import org.modeldriven.fuml.library.channel.StandardOutputChannelObject;
 import org.modeldriven.fuml.library.common.Status;
 import org.modeldriven.fuml.library.libraryclass.ImplementationObject;
 
-import fUML.Semantics.Classes.Kernel.BooleanValue;
 import fUML.Semantics.Classes.Kernel.Object_;
 import fUML.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
-import fUML.Semantics.Classes.Kernel.ValueList;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 import fUML.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import fUML.Semantics.Loci.LociL1.Executor;
@@ -45,7 +42,6 @@ import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.DataType;
 import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.Operation;
-import fUML.Syntax.Classes.Kernel.Property;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
 public class Alf {
@@ -164,20 +160,13 @@ public class Alf {
                             Class_ class_ = (Class_)element;
                             Object_ object = locus.instantiate(class_);
                             
-                            // Initialize object using the default constructor.
+                            // Initialize the object.
                             ClassDefinitionMapping classMapping =
                                     (ClassDefinitionMapping)elementMapping;
-                            Property property = classMapping.getInitializationFlag();
-                            BooleanValue booleanValue = new BooleanValue();
-                            booleanValue.value = false;
-                            ValueList values = new ValueList();
-                            values.add(booleanValue);
-                            object.setFeatureValue(property, values, 0);
-                            Operation constructor = 
-                                    ((OperationDefinitionMapping)constructorDefinition.
-                                            getImpl().getMapping()).getOperation();
+                            Operation initializer = 
+                                    classMapping.getInitializationOperation();
                             locus.executor.execute(
-                                    constructor.method.get(0), object, 
+                                    initializer.method.get(0), object, 
                                     new ParameterValueList());
                             
                             // Execute the classifier behavior.

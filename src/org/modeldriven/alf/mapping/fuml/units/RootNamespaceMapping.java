@@ -8,6 +8,13 @@
 
 package org.modeldriven.alf.mapping.fuml.units;
 
+import org.modeldriven.alf.syntax.units.PackageDefinition;
+
 public class RootNamespaceMapping extends PackageDefinitionMapping {
+    
+    @Override
+    public PackageDefinition getPackageDefinition() {
+        return null;
+    }
 
 }

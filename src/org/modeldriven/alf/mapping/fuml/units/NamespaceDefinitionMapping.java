@@ -16,7 +16,6 @@ import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.units.MemberMapping;
 
-import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.ClassifierTemplateParameter;
 import org.modeldriven.alf.syntax.units.ImportReference;
 import org.modeldriven.alf.syntax.units.Member;
@@ -146,24 +145,14 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
 	    }
 	}
 	
-	public static String makeDistinguishableActivityName(
+	public static String makeDistinguishableName(
 	        NamespaceDefinition namespace,
 	        String name) {
 	    int i = 1;
 	    String distinguishableName;
 	    do {
 	        distinguishableName = name + "$" + i++;
-	    } while (includesActivity(namespace.getImpl().resolve(distinguishableName)));
+	    } while (!namespace.getImpl().resolve(distinguishableName).isEmpty());
 	    return distinguishableName;
 	}
-	
-	private static boolean includesActivity(Collection<Member> members) {
-	    for (Member member: members) {
-	        if (member instanceof ActivityDefinition) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-
 } // NamespaceDefinitionMapping
