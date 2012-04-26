@@ -13,7 +13,7 @@ class Deque<T> specializes Queue<T>, CollectionClasses::Deque<T> {
     super.Queue<T>::destroy();
   }
   
-  private Queue (in seq: T[0..*] sequence) {
+  @Create private Queue (in seq: T[0..*] sequence) {
     this.Deque(seq);
   }
 
