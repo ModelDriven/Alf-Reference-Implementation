@@ -26,10 +26,7 @@ import java.util.List;
 public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
     
     private boolean needsDefaultConstructor = true;
-    // private OperationDefinition defaultConstructor = null;
-    
     private boolean needsDefaultDestructor = true;
-    // private OperationDefinition defaultDestructor = null;
 
 	public ClassDefinitionImpl(ClassDefinition self) {
 		super(self);
@@ -53,18 +50,6 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	    }
 	    return super.getOwnedMember();
 	}
-	
-	/*
-	@Override
-	public Collection<Member> deriveMember() {
-        Collection<Member> members = super.deriveMember();
-	    if (!this.getSelf().getIsStub()) {
-	        members = new ArrayList<Member>(members);
-    	    this.addDefaultMembers(members);
-	    }
-        return members;
-	}
-	*/
 	
 	/*
 	 * Constraints
@@ -233,27 +218,6 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         return this.needsDefaultDestructor;
     }
     
-    /*
-    public OperationDefinition getDefaultDestructor() {
-        if (!this.getIsStub() && this.defaultDestructor == null && 
-                this.needsDefaultDestructor) {
-            ClassDefinition self = this.getSelf();
-            for (Member ownedMember: self.getOwnedMember()) {
-                if (ownedMember instanceof OperationDefinition &&
-                        ((OperationDefinition)ownedMember).getIsDestructor()) {
-                    this.needsDefaultDestructor = false;
-                    break;
-                }
-            }
-            if (this.needsDefaultDestructor) {
-                this.defaultDestructor = this.createDefaultDestructor();
-                this.needsDefaultDestructor = false;
-            }
-        }
-        return this.defaultDestructor;
-    }
-    */
-
     private OperationDefinition createDefaultDestructor() {
         ClassDefinition self = this.getSelf();
         
@@ -268,19 +232,5 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         
         return operation;
     }
-    
-    /*
-    private void addDefaultMembers(Collection<Member> members) {
-        Member defaultMember = this.getDefaultConstructor();
-        if (defaultMember != null) {
-            members.add(defaultMember);
-        }
-        
-        defaultMember = this.getDefaultDestructor();
-        if (defaultMember != null) {
-            members.add(defaultMember);
-        }
-    }
-    */
     
 } // ClassDefinitionImpl
