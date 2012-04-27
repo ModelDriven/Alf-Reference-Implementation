@@ -240,7 +240,9 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	 * superclasses.
 	 **/
 	public boolean operationDefinitionConstructor() {
-	    // TODO: Allow alternative constructor invocations.
+	    // NOTE: The constraints on alternative and super constructors
+	    // are handled by the constraints on feature invocation expressions
+	    // and super invocation expressions related to constructor invocation.
 	    OperationDefinition self = this.getSelf();
 	    if (self.getIsConstructor()) {
     		for (ElementReference redefinedOperation: self.getRedefinedOperations()) {
@@ -391,6 +393,66 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         return referent;
     }
 
+    public boolean hasAlternativeConstructorCall() {
+        Block body = this.getEffectiveBody();
+        if (body == null) {
+            return false;
+        } else {
+            List<Statement> statements = body.getStatement();
+            if (statements.size() == 0) {
+                return false;
+            } else {
+                Statement statement = statements.get(0);
+                if (!(statement instanceof ExpressionStatement)) {
+                    return false;
+                } else {
+                    Expression expression = 
+                            ((ExpressionStatement)statement).getExpression();
+                    return expression instanceof FeatureInvocationExpression &&
+                            ((FeatureInvocationExpression)expression).
+                                getReferent().getImpl().isConstructor();
+                }
+            }
+        }
+    }
+    
+    public Block getSuperInvocationSegment() {
+        Block body = this.getEffectiveBody();
+        if (body == null) {
+            return null;
+        } else {
+            Block superInvocationSegment = new Block();
+            for (Statement statement: body.getStatement()) {
+                if (statement.getImpl().isSuperConstructorInvocation()) {
+                    superInvocationSegment.addStatement(statement);
+                } else {
+                    break;
+                }
+            }            
+            return superInvocationSegment;
+        }
+    }
+    
+    public Block getBodySegement() {
+        Block body = this.getEffectiveBody();
+        if (body == null) {
+            return null;
+        } else {
+            Block bodySegment = new Block();
+            List<Statement> statements = body.getStatement();
+            int i;
+            for (i = 0; i < statements.size(); i++) {
+                if (!statements.get(i).getImpl().isSuperConstructorInvocation()) {
+                    break;
+                }
+            }
+            for (; i < statements.size(); i++) {
+                bodySegment.addStatement(statements.get(i));
+            }            
+            return bodySegment;
+        }
+    }
+    
     public Block getEffectiveBody() {
         return this.getEffectiveBody(this.getSelf().getSubunit());
     }

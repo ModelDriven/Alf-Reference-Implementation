@@ -315,6 +315,17 @@ public abstract class StatementImpl extends DocumentedElementImpl {
         return enclosingStatement == null? null:
                     enclosingStatement.getImpl().getLoopStatement();
     }
+    
+    // Note: This is redefined to set the enclosing block in the expression of
+    // an expression statement.
+    public void setEnclosingBlock(Block enclosingBlock) {
+    }
+    
+    // Note: This is redefined to test for a super constructor invocation in an
+    // expression statement.
+    public boolean isSuperConstructorInvocation() {
+        return false;
+    }
 
     @Override
     protected void bindTo(SyntaxElement base,

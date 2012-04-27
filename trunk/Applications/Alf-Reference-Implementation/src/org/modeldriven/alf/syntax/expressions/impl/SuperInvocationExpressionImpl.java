@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0
  * (http://www.opensource.org/licenses/afl-3.0.php)
@@ -12,6 +12,9 @@ package org.modeldriven.alf.syntax.expressions.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.ExpressionStatement;
+import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ public class SuperInvocationExpressionImpl
 	private QualifiedName target = null;
 	
 	private ElementReferenceImpl context = null;
+	private Block enclosingBlock = null;
 
 	public SuperInvocationExpressionImpl(SuperInvocationExpression self) {
 		super(self);
@@ -181,14 +185,45 @@ public class SuperInvocationExpressionImpl
 	 * any statements preceding it are also super constructor invocations.
 	 **/
 	public boolean superInvocationExpressionConstructorCall() {
-	    // TODO: Check that a super constructor invocation occurs within an
-	    // expression statement at the start of a constructor operation.
-	    ElementReference referent = this.getSelf().getReferent();
-	    NamespaceDefinition currentScope = this.getCurrentScope();
-        ElementReference operation = currentScope == null? null:
-            currentScope.getImpl().getReferent();
-        return referent == null || !referent.getImpl().isConstructor() ||
-                    operation != null && operation.getImpl().isConstructor();
+	    SuperInvocationExpression self = this.getSelf();
+        ElementReference referent = self.getReferent();
+        NamespaceDefinition currentScope = this.getCurrentScope();
+        if (referent == null || !referent.getImpl().isConstructor() || 
+                currentScope == null) {
+            return true;
+        } else {
+            // Note: This will work, even it the operation definition is not an
+            // Alf unit.
+            ElementReference operation = currentScope.getImpl().getReferent();
+            if (!operation.getImpl().isConstructor() || this.enclosingBlock == null) {
+                return false;
+            } else {
+                ElementReference classReference = referent.getImpl().getNamespace();
+                List<Statement> statements = this.enclosingBlock.getStatement();
+                for (int i = 0; i < statements.size(); i++) {
+                    Statement statement = statements.get(i);
+                    if (!(statement instanceof ExpressionStatement)) {
+                        return false;
+                    } else {
+                        ExpressionStatement expressionStatement = 
+                                (ExpressionStatement)statement;
+                        Expression expression = expressionStatement.getExpression();
+                        if (expression == self) {
+                            return true;
+                        } else if (!(expression instanceof SuperInvocationExpression) || 
+                                // Note: This checks to ensure that no previous
+                                // super constructor invocation is for the same
+                                // superclass.
+                                classReference.getImpl().equals(
+                                        ((SuperInvocationExpression)expression).
+                                            getReferent().getImpl().getNamespace())) {
+                            return false;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
 	}
 
 	/**
@@ -211,7 +246,31 @@ public class SuperInvocationExpressionImpl
 	 * resolution rules.
 	 **/
 	public boolean superInvocationExpressionOperation() {
-		return this.getSelf().getReferent() != null;
+		// return this.getSelf().getReferent() != null;
+	    SuperInvocationExpression self = this.getSelf();
+        if (self.getReferent() == null) {
+            return false;
+        } else {
+            // TODO: Remove this check once overloading resolution is implemented.
+            Tuple tuple = self.getTuple();
+            if (tuple == null || 
+                    tuple.getImpl().size() > this.parameters().size()) {
+                return false;
+            } else {
+                this.getAssignmentAfterMap(); // Force computation of assignments.
+                for (NamedExpression input: tuple.getInput()) {
+                    if (!this.parameterIsAssignableFrom(input)) {
+                       return false;
+                    }
+                }
+                for (NamedExpression output: tuple.getOutput()) {
+                    if (!this.parameterIsAssignableTo(output)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 	}
 	
 	/*
@@ -245,6 +304,11 @@ public class SuperInvocationExpressionImpl
             }
 	    }
 	    return this.context;
+	}
+	
+	@Override
+	public void setEnclosingBlock(Block enclosingBlock) {
+	    this.enclosingBlock = enclosingBlock;
 	}
 
     @Override

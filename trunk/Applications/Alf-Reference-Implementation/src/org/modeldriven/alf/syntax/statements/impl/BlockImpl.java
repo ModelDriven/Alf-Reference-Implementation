@@ -52,6 +52,9 @@ public class BlockImpl extends SyntaxElementImpl {
 
     public void addStatement(Statement statement) {
         this.statement.add(statement);
+        if (statement != null) {
+            statement.getImpl().setEnclosingBlock(this.getSelf());
+        }
     }
 
     public Collection<AssignedSource> getAssignmentBefore() {
