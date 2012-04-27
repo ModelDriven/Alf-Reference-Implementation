@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -21,9 +21,12 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
+import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
 import fUML.Syntax.Actions.BasicActions.CallOperationAction;
 import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
+import fUML.Syntax.Actions.IntermediateActions.ReadStructuralFeatureAction;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.Activity;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
@@ -34,6 +37,7 @@ import fUML.Syntax.Classes.Kernel.Operation;
 import fUML.Syntax.Classes.Kernel.OperationList;
 import fUML.Syntax.Classes.Kernel.Parameter;
 import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
+import fUML.Syntax.Classes.Kernel.Property;
 
 import java.util.Collection;
 
@@ -156,49 +160,92 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
             Operation operation = this.getOperation();
             Activity activity = (Activity)operation.method.get(0);
 
-            Block body = definition.getImpl().getEffectiveBody();
-            FumlMapping bodyMapping = this.fumlMap(body);
-            Collection<Element> elements = bodyMapping.getModelElements();
+            Collection<Element> elements;
 
-            if (definition.getIsConstructor()) {
+            Block body = definition.getImpl().getEffectiveBody();
+            if (!definition.getIsConstructor()) {
+                FumlMapping bodyMapping = this.fumlMap(body);
+                elements = bodyMapping.getModelElements();
+            } else {
                 ActivityGraph graph = new ActivityGraph();
                 
-                // Add default constructor behavior.
+                // Add constructor body.
+                Block bodySegment =
+                        definition.getImpl().getBodySegement();
+                FumlMapping bodyMapping = this.fumlMap(bodySegment);
+                StructuredActivityNode bodyNode = 
+                    graph.addStructuredActivityNode(
+                            "Body", bodyMapping.getModelElements());
+
+                // Return context object as the constructor result.
                 ReadSelfAction readSelfAction = 
                         graph.addReadSelfAction(operation.class_);
                 ActivityNode selfFork = graph.addForkNode(
                         "Fork(" + readSelfAction.result.name + ")");
                 graph.addObjectFlow(readSelfAction.result, selfFork);
-                FumlMapping mapping = this.fumlMap(definition.getNamespace());
-                if (!(mapping instanceof ClassDefinitionMapping)) {
-                    this.throwError("Error mapping class: " + 
-                            mapping.getErrorMessage());
-                } else {
-                    ClassDefinitionMapping classMapping = 
-                            (ClassDefinitionMapping)mapping;
-                    CallOperationAction callAction = graph.addCallOperationAction(
-                            classMapping.getInitializationOperation());
-                    graph.addObjectFlow(selfFork, callAction.target);
+                
+                Parameter returnParameter = null;
+                for (Parameter parameter: activity.ownedParameter) {
+                    if (parameter.direction == ParameterDirectionKind.return_) {
+                        returnParameter = parameter;
+                        break;
+                    }
+                }                
+                graph.addObjectFlow(selfFork,
+                        ActivityDefinitionMapping.getOutputParameterNode(
+                                activity, returnParameter));
+
+                // Add default constructor behavior.
+                if (!definition.getImpl().hasAlternativeConstructorCall()) {
                     
-                    // Add constructor body.
-                    StructuredActivityNode bodyNode = 
-                        graph.addStructuredActivityNode("Body", elements);
-                    graph.addControlFlow(callAction, bodyNode);
-    
-                    // Return context object as the constructor result.
-                    Parameter returnParameter = null;
-                    for (Parameter parameter: activity.ownedParameter) {
-                        if (parameter.direction == ParameterDirectionKind.return_) {
-                            returnParameter = parameter;
-                            break;
+                    // Add super constructor invocations.
+                    Block superInvocationSegment = 
+                            definition.getImpl().getSuperInvocationSegment();
+                    ActivityNode node = null;
+                    if (!superInvocationSegment.getStatement().isEmpty()) {
+                        FumlMapping mapping = this.fumlMap(superInvocationSegment);
+                        node = graph.addStructuredActivityNode(
+                                "Super", mapping.getModelElements());
+                    }
+
+                    // Add call to local initialization operation.
+                    FumlMapping mapping = this.fumlMap(definition.getNamespace());
+                    if (!(mapping instanceof ClassDefinitionMapping)) {
+                        this.throwError("Error mapping class: " + 
+                                mapping.getErrorMessage());
+                    } else {
+                        ClassDefinitionMapping classMapping = 
+                                (ClassDefinitionMapping)mapping;
+                        CallOperationAction callAction = 
+                                graph.addCallOperationAction(
+                                        classMapping.getInitializationOperation());
+                        graph.addObjectFlow(selfFork, callAction.target);
+                        graph.addControlFlow(callAction, bodyNode);
+                        if (node == null) {
+                            node = callAction;
+                        } else {
+                            graph.addControlFlow(node, callAction);                        
                         }
-                    }                
-                    graph.addObjectFlow(selfFork,
-                            ActivityDefinitionMapping.getOutputParameterNode(
-                                    activity, returnParameter));
-    
-                    elements = graph.getModelElements();
+                        
+                        // Use decision node to skip constructor if this object is
+                        // already initialized.
+                        Property initializationFlag = classMapping.getInitializationFlag();
+                        ActivityNode initialNode = graph.addInitialNode("InitialNode");
+                        ReadStructuralFeatureAction readAction = 
+                                graph.addReadStructuralFeatureAction(initializationFlag);
+                        CallBehaviorAction testAction = graph.addCallBehaviorAction(
+                                getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
+                        graph.addObjectFlow(selfFork, readAction.object);
+                        graph.addObjectFlow(readAction.result, testAction.argument.get(0));
+                        graph.addControlDecisionNode(
+                                "Test(" + initializationFlag.name + ")", 
+                                initialNode, testAction.result.get(0), 
+                                node, null);
+                    }
+                    
                 }
+                
+                elements = graph.getModelElements();
             }
 
             ActivityDefinitionMapping.addElements(activity, elements, body, this);
