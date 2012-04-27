@@ -1,0 +1,88 @@
+/**
+ * Test super constructor invocation expressions.
+ **/
+active class Expressions_Constructor_Destructor {
+
+    // Supporting declarations *************************************************
+    class Super1 {
+    
+      protected x: Integer = 0;
+
+      @Create public Super1() { }
+      @Create public create(in x: Integer) { 
+        this.x = x;
+      }
+    }
+    
+    class Sub1 specializes Super1 {
+    
+      private z1: Integer = this.x + 1;
+      
+      @Create public Sub1() {
+        super();
+      }
+      @Create public a() {
+        this.b(1);
+      }
+      @Create public b(in x: Integer) {
+        super.create(x);
+      }
+    }
+    
+    class Super2 {
+    
+      protected y: Integer = 0;
+        
+      @Create public Super2() { }
+      @Create public create(in y: Integer) {
+        this.y = y;
+      }
+    }
+    
+    class Sub2 specializes Super1, Super2 {
+    
+      private z2: Integer = this.x + this.y;
+    
+      @Create public Sub2() { }
+      @Create public create1(in x: Integer) {
+        super.Super1::create(x);
+      }
+      @Create public create2(in x: Integer, in y: Integer) {
+        super.Super1::create(x);
+        super.Super2::create(y);
+      }
+    }
+    
+    class Sub3 specializes Sub1, Sub2 {  
+      @Create public Sub3() {
+        super.Sub1::b(3);
+        super.Sub2::create2(1,2);
+      }
+    }
+    
+    //**************************************************************************
+
+    test(
+      out super0: Super1, out super1: Super1, 
+      out s0: Sub1, out s1: Sub1, out s2: Sub1,
+      out s00: Sub2, out s10: Sub2, out s11: Sub2,
+      out s3: Sub3) {
+    
+      super0 = new Super1();
+      super1 = new Super1::create(1);
+      
+      s0 = new Sub1();
+      s1 = new Sub1::a();
+      s2 = new Sub1::b(2);
+      
+      s00 = new Sub2();
+      s10 = new Sub2::create1(1);
+      s11 = new Sub2::create2(1,1);
+      
+      s3 = new Sub3();
+    }
+      
+} do {
+  this.test();
+}
+    

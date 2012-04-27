@@ -5,52 +5,58 @@ active class Expressions_Constructor_Destructor {
 
     // Supporting declarations *************************************************
     
-  	class Initialization { 
-  		public a: Integer = this.b -> size();
-  		public b: Integer = 1;
-  	}
-  	class Initialization2 specializes Initialization {
-  		public c: Integer = this.a + 2;
-  	}
+    class Initialization { 
+  	public a: Integer = this.b -> size();
+  	public b: Integer = 1;
+    }
+    class Initialization2 specializes Initialization {
+  	public c: Integer = this.a + 2;
+    }
     class Monitor { 
        	@Destroy public destroy(in recoveryLog: Log) { }
     }
     class Log { 
     	public name: String = "Default";
     }
-   	class Employee { 
-   		private id: Integer;
-   		private name: String;
-   		private transferred: Boolean = false;
+    class Employee { 
+        private id: Integer;
+   	private name: String;
+   	private transferred: Boolean = false;
+   	private relocated: Boolean = false;
    		
-   	    @Create public Employee(in id: Integer, in name: String) { 
-   	    	this.id = id;
-   	    	this.name = name;
-   	    }
-  		@Create public transferred(in employeeInfo: Employee) { 
-  			this.id = employeeInfo.id;
-  			this.name = employeeInfo.name;
-  			this.transferred = true;
-  		}
+        @Create public Employee(in id: Integer, in name: String) { 
+            this.id = id;
+   	    this.name = name;
    	}
+  	@Create public transferred(in employeeInfo: Employee) { 
+  	    this(employeeInfo.id, employeeInfo.name);
+  	    this.transferred = true;
+  	}
+        @Create public relocated(in employeeInfo: Employee) {
+            this.transferred(employeeInfo);
+            this.relocated = true;
+        }
+    }
    	
-   	datatype D {
-   	    public x: String;
-   	    public y: Integer[];
-   	}
+    datatype D {
+        public x: String;
+   	public y: Integer[];
+    }
   	
-	//**************************************************************************
+    //**************************************************************************
 
-	test(
-		out employee1: Employee, out employee2: Employee, out init: Initialization, 
-		out log: Log, out monitor1: Monitor, out monitor2: Monitor,
-		out d: D) {
+    test(
+	out employee1: Employee, out employee2: Employee, out employee3: Employee,
+	out init: Initialization, 
+	out log: Log, out monitor1: Monitor, out monitor2: Monitor,
+	out d: D) {
 	  
       i = 100;
       name = "Fred";
 
       employee1 = new Employee(i, name);
       employee2 = new Employee::transferred(employee1);
+      employee3 = new Employee::relocated(employee2);
       init = new Initialization2();
       log = new Log();
       monitor1 = new Monitor();
@@ -61,7 +67,7 @@ active class Expressions_Constructor_Destructor {
       
       d = new D("test", Integer[]{1,2});
 	  
-	}
+    }
 
 } do {
     this.test();

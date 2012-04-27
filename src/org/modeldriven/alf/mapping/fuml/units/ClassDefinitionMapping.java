@@ -126,19 +126,9 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
 
         NamespaceDefinition classDefinition = this.getClassDefinition();
         Property initializationFlag = this.getInitializationFlag();
-                
-        // Add action to set initialization to true.
         ActivityGraph subgraph = new ActivityGraph();
-        ValueSpecificationAction valueAction = 
-                subgraph.addBooleanValueSpecificationAction(true);
-        AssignmentExpressionMapping.mapPropertyAssignment(
-                initializationFlag, subgraph, 
-                selfFork, valueAction.result);
-        ActivityNode previousNode = 
-                initializationGraph.addStructuredActivityNode(
-                        "Set(initializationFlag)", 
-                        subgraph.getModelElements());
-
+        ActivityNode previousNode = null;
+                
         // Add initialization of superclass properties.
         for (ElementReference superclassReference: 
             this.getClassDefinition().getSpecializationReferent()) {
@@ -154,7 +144,9 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                 CallOperationAction callAction = initializationGraph.addCallOperationAction(
                         ((ClassDefinitionMapping)mapping).getInitializationOperation());
                 initializationGraph.addObjectFlow(selfFork, callAction.target);
-                initializationGraph.addControlFlow(previousNode, callAction);
+                if (previousNode != null) {
+                    initializationGraph.addControlFlow(previousNode, callAction);
+                }
                 previousNode = callAction;
             }
         }
@@ -193,8 +185,9 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                                     initializationGraph.addStructuredActivityNode(
                                             "Initialize(" + property.name + ")", 
                                             subgraph.getModelElements());
-                            initializationGraph.addControlFlow(
-                                    previousNode, node);
+                            if (previousNode != null) {
+                                initializationGraph.addControlFlow(previousNode, node);
+                            }
                             previousNode = node;
                         }
                     }
@@ -202,6 +195,20 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
             }
         }
         
+        // Add action to set initialization to true.
+        ValueSpecificationAction valueAction = 
+                subgraph.addBooleanValueSpecificationAction(true);
+        AssignmentExpressionMapping.mapPropertyAssignment(
+                initializationFlag, subgraph, 
+                selfFork, valueAction.result);
+        ActivityNode node = 
+                initializationGraph.addStructuredActivityNode(
+                        "Set(initializationFlag)", 
+                        subgraph.getModelElements());
+        if (previousNode != null) {
+            initializationGraph.addControlFlow(previousNode, node);
+        }
+
         StructuredActivityNode initializationNode = 
                 graph.addStructuredActivityNode(
                         "Initialization", initializationGraph.getModelElements());
