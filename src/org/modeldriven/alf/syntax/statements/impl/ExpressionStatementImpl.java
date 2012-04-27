@@ -87,6 +87,22 @@ public class ExpressionStatementImpl extends StatementImpl {
 	        expression.getImpl().setCurrentScope(currentScope);
 	    }
 	}
+	
+	@Override
+	public void setEnclosingBlock(Block enclosingBlock) {
+	    Expression expression = this.getSelf().getExpression();
+	    if (expression != null) {
+	        expression.getImpl().setEnclosingBlock(enclosingBlock);
+	    }
+	}
+	
+	@Override
+	public boolean isSuperConstructorInvocation() {
+	    Expression expression = this.getSelf().getExpression();
+	    return expression instanceof SuperInvocationExpression &&
+	            ((SuperInvocationExpression)expression).getReferent().getImpl().
+	                isConstructor();
+	}
 
     @Override
     protected void bindTo(SyntaxElement base,

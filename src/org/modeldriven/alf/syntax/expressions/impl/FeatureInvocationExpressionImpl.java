@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -13,6 +13,9 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.ExpressionStatement;
+import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.*;
 
 /**
@@ -25,6 +28,7 @@ public class FeatureInvocationExpressionImpl
 	private FeatureReference target = null;
 	
 	private NamespaceDefinition currentScope = null;
+	private Block enclosingBlock = null;
 
 	public FeatureInvocationExpressionImpl(FeatureInvocationExpression self) {
 		super(self);
@@ -113,7 +117,30 @@ public class FeatureInvocationExpressionImpl
 	 **/
 	public boolean featureInvocationExpressionReferentExists() {
         FeatureInvocationExpression self = this.getSelf();
-		return self.getIsImplicit() || self.getReferent() != null;
+		// return self.getIsImplicit() || self.getReferent() != null;
+        if (self.getReferent() == null) {
+            return self.getIsImplicit();
+        } else {
+            // TODO: Remove this check once overloading resolution is implemented.
+            Tuple tuple = self.getTuple();
+            if (tuple == null || 
+                    tuple.getImpl().size() > this.parameters().size()) {
+                return false;
+            } else {
+                this.getAssignmentAfterMap(); // Force computation of assignments.
+                for (NamedExpression input: tuple.getInput()) {
+                    if (!this.parameterIsAssignableFrom(input)) {
+                       return false;
+                    }
+                }
+                for (NamedExpression output: tuple.getOutput()) {
+                    if (!this.parameterIsAssignableTo(output)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 	}
 
 	/**
@@ -122,8 +149,38 @@ public class FeatureInvocationExpressionImpl
 	 * constructor operation.
 	 **/
 	public boolean featureInvocationExpressionAlternativeConstructor() {
-	    // TODO Check the constraint on alternative constructors.
-		return true;
+	    FeatureInvocationExpression self = this.getSelf();
+        ElementReference referent = self.getReferent();
+        NamespaceDefinition currentScope = this.getCurrentScope();
+        if (referent == null || !referent.getImpl().isConstructor() || 
+                currentScope == null) {
+            return true;
+        } else {
+            // Note: This will work, even it the operation definition is not an
+            // Alf unit.
+            ElementReference operation = currentScope.getImpl().getReferent();
+            if (!operation.getImpl().isConstructor() || this.enclosingBlock == null) {
+                return false;
+            } else {
+                List<Statement> statements = this.enclosingBlock.getStatement();
+                if (statements.size() == 0) {
+                    return false;
+                } else {
+                    Statement statement = statements.get(0);
+                    return statement instanceof ExpressionStatement &&
+                            ((ExpressionStatement)statement).getExpression() == self &&
+                            statement.getImpl().getEnclosingStatement() == null &&
+                            // NOTE: This ensures that the invoked constructor
+                            // the is from the same class as the containing
+                            // constructor.
+                            operation.getImpl().getNamespace().getImpl().
+                                equals(referent.getImpl().getNamespace()) &&
+                            // NOTE: An alternative constructor invocation should
+                            // only be allowed on "this".
+                            self.getFeature().getExpression() instanceof ThisExpression;
+                }
+            }
+        }
 	}
 
 	/**
@@ -149,6 +206,11 @@ public class FeatureInvocationExpressionImpl
         if (feature != null) {
             feature.getImpl().setCurrentScope(currentScope);
         }
+	}
+	
+	@Override
+	public void setEnclosingBlock(Block enclosingBlock) {
+	    this.enclosingBlock = enclosingBlock;
 	}
 	
 	@Override

@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.Collection;
@@ -242,6 +243,13 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
         return AssignedSourceImpl.selectNewAssignments(
                 this.getAssignmentBeforeMap(), 
                 this.getSelf().getAssignmentAfter());
+    }
+    
+    /**
+     * Called when this expression is used in an expression statement, if that
+     * statement is contained in a block.
+     */
+    public void setEnclosingBlock(Block enclosingBlock) {
     }
 
 } // ExpressionImpl

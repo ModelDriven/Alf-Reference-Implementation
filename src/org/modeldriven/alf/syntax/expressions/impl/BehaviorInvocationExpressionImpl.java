@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -113,7 +113,11 @@ public class BehaviorInvocationExpressionImpl
 	 **/
 	public boolean behaviorInvocationExpressionReferentConstraint() {
 	    BehaviorInvocationExpression self = this.getSelf();
-		return self.getIsImplicit() || self.getReferent() != null;
+	    ElementReference referent = self.getReferent();
+		return self.getIsImplicit() || referent != null && 
+		        // NOTE: This prevents behavior invocation expression from
+		        // disambiguating to an illegal constructor invocation.
+		        !referent.getImpl().isConstructor();
 	}
 
 	/**
@@ -125,7 +129,9 @@ public class BehaviorInvocationExpressionImpl
 	 **/
 	public boolean behaviorInvocationExpressionArgumentCompatibility() {
         BehaviorInvocationExpression self = this.getSelf();
-        if (self.getFeature() == null) {
+        // TODO: Once overloading resolution is implemented, change this to only
+        // be for non-feature invocations.
+        // if (self.getFeature() == null) {
             Tuple tuple = self.getTuple();
             if (tuple == null || 
                     tuple.getImpl().size() > this.parameters().size()) {
@@ -143,7 +149,7 @@ public class BehaviorInvocationExpressionImpl
                     }
                 }
             }
-        }
+        // }
 		return true;
 	}
 	
