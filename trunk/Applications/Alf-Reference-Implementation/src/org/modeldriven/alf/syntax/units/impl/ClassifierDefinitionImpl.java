@@ -351,11 +351,11 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             for (Object ancestor: commonAncestors.toArray()) {
                 Collection<ElementReference> parents = ((ElementReference)ancestor).getImpl().parents();
                 for (ElementReference parent: parents) {
-                    commonAncestors.remove(parent.getImpl());
+                    commonAncestors.remove(parent);
                 }
 
             }
-             
+            
             classifiers = commonAncestors;
         }
         if (classifiers.size() == 0) {
