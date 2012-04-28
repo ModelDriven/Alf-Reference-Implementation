@@ -513,7 +513,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         this.updateAssignmentMap(); // Force computation of assignments.
         
         
-        // This is included to handle the primary expression in an sequence
+        // This is included to handle the primary expression in a sequence
         // operation expression.
         FormalParameter firstParameter = null;
         if (primary != null) {
