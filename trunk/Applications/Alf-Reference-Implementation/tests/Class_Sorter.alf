@@ -9,7 +9,7 @@ class Sorter<T specializes Comparable> {
   }
 
   public append(in elements: List<T>) { 
-    this.list.add(elements);
+    this.list.addAll(elements);
   }
   public sort() { }
   public getList(): List<T> {

@@ -8,7 +8,7 @@ class SuperConstructors specializes Super {
     this.B1(0);
   }
   @Create public B1(in x: Integer) {
-    super(x);
+    super();
   }
 
   @Create public B2() {
