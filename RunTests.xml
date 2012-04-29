@@ -1,295 +1,299 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests" default="run" basedir=".">
-	<target name="run">
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Basic.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Object.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Association.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Invocation.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Constructor_Destructor.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Sequence_Construction.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Sequence_Operation.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Sequence_Expansion_Reduction.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Operator.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Expressions_Template.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Statements_Simple.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Statements_Conditional.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-				<arg value="-uC" />
-			<arg value="tests\Statements_Looping.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Statements_Return.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Statements_Classify.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Statements_Accept.alf" />
-		</java>
-		
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example0a.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example0b.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example1a.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example1b.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example2a.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example2b.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example2c.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example2d.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example2e.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example2f.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example2g.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example2h.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3a.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3b.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3c.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3d.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3e.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3f.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3g.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3h.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3i.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example3j.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-CollectionClasses-Impl.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-CollectionImpl.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-OrderedCollectionImpl.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-Set.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-OrderedSet.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-Bag.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-List.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-Queue.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-Deque.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Example4-Map.alf" />
-		</java>
-		
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\ActiveClass_Order.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\ActiveClass_ProcessQueue.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\ActiveClass_ProcessQueueImpl.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\ActiveClass_Receptions.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Activity_execute.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Activity_getNodeActivations.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Activity_HelloWorld.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Activity_Order_Behavior.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Assoc_Selection.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Collection.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Constructors.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Destructors.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Initialization.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_MapToString.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Operations.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Properties.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Redefinitions.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Singleton.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_Sorter.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Class_SuperConstructors.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Datatype_Complex.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Enum_TrafficLightColor.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Package_Ordering.alf" />
-		</java>
-		<java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
-			<arg value="-uC" />
-			<arg value="tests\Signal_SubmitCharge.alf" />
-		</java>
-	</target>
+    <target name="run">
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Basic.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Object.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Association.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Invocation.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Constructor_Destructor.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Sequence_Construction.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Sequence_Operation.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Sequence_Expansion_Reduction.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Operator.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Expressions_Template.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Statements_Simple.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Statements_Conditional.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Statements_Looping.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Statements_Return.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Statements_Classify.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Statements_Accept.alf" />
+        </java>
+
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example0a.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example0b.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example1a.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example1b.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example2a.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example2b.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example2c.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example2d.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example2e.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example2f.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example2g.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example2h.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3a.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3b.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3c.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3d.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3e.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3f.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3g.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3h.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3i.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example3j.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-CollectionClasses-Impl.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-CollectionImpl.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-OrderedCollectionImpl.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-Set.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-OrderedSet.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-Bag.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-List.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-Queue.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-Deque.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Example4-Map.alf" />
+        </java>
+
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/ActiveClass_Order.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/ActiveClass_ProcessQueue.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/ActiveClass_ProcessQueueImpl.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/ActiveClass_Receptions.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Activity_execute.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Activity_getNodeActivations.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Activity_HelloWorld.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Activity_Order_Behavior.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Assoc_Selection.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Collection.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Constructors.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Destructors.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Initialization.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_MapToString.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Operations.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Properties.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Redefinitions.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Singleton.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Sorter.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_SuperConstructors.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Class_Templates.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Datatype_Complex.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Enum_TrafficLightColor.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Package_Ordering.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/Signal_SubmitCharge.alf" />
+        </java>
+    </target>
 </project>

@@ -1,46 +1,46 @@
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Basic.alf...
+Parsing tests/Expressions_Basic.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Object.alf...
+Parsing tests/Expressions_Object.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Association.alf...
+Parsing tests/Expressions_Association.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Invocation.alf...
+Parsing tests/Expressions_Invocation.alf...
 Parsed successfully.
 Parsed Model/Super.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Constructor_Destructor.alf...
+Parsing tests/Expressions_Constructor_Destructor.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Sequence_Construction.alf...
+Parsing tests/Expressions_Sequence_Construction.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Sequence_Operation.alf...
+Parsing tests/Expressions_Sequence_Operation.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Sequence_Expansion_Reduction.alf...
+Parsing tests/Expressions_Sequence_Expansion_Reduction.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Operator.alf...
+Parsing tests/Expressions_Operator.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Expressions_Template.alf...
+Parsing tests/Expressions_Template.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Statements_Simple.alf...
+Parsing tests/Statements_Simple.alf...
 Parsed successfully.
 Parsed Model/DomainDataTypes.alf
 Parsed Model/Property Management.alf
@@ -67,45 +67,45 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Statements_Conditional.alf...
+Parsing tests/Statements_Conditional.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Statements_Looping.alf...
+Parsing tests/Statements_Looping.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Statements_Return.alf...
+Parsing tests/Statements_Return.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Statements_Classify.alf...
+Parsing tests/Statements_Classify.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Statements_Accept.alf...
+Parsing tests/Statements_Accept.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example0a.alf...
-Parsed successfully.
-Resolving stub for fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup::run
-No constraint violations.
-Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example0b.alf...
+Parsing tests/Example0a.alf...
 Parsed successfully.
 Resolving stub for fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup::run
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example1a.alf...
+Parsing tests/Example0b.alf...
+Parsed successfully.
+Resolving stub for fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup::run
+No constraint violations.
+Alf v1.0 Beta (rev 3) Parser
+Parsing tests/Example1a.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example1b.alf...
+Parsing tests/Example1b.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example2a.alf...
+Parsing tests/Example2a.alf...
 Parsed successfully.
 Parsed Model/Ordering1.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -119,7 +119,7 @@ Parsed Model/Ordering1/ProductSelection.alf
 Resolving stub for Ordering1::Order::Order_Behavior
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example2b.alf...
+Parsing tests/Example2b.alf...
 Parsed successfully.
 Parsed Model/EE_OnlineCustomer.alf
 Parsed Model/ProductSpecification.alf
@@ -138,7 +138,7 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example2c.alf...
+Parsing tests/Example2c.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Resolving stub for Ordering::Order
@@ -158,7 +158,7 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example2d.alf...
+Parsing tests/Example2d.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -178,7 +178,7 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example2e.alf...
+Parsing tests/Example2e.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -198,7 +198,7 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example2f.alf...
+Parsing tests/Example2f.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -218,7 +218,7 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example2g.alf...
+Parsing tests/Example2g.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -238,7 +238,7 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example2h.alf...
+Parsing tests/Example2h.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -258,7 +258,7 @@ Parsed Model/Ordering/Order/PackAndShip.alf
 Parsed Model/Shipping.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3a.alf...
+Parsing tests/Example3a.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -285,7 +285,7 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3b.alf...
+Parsing tests/Example3b.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -311,7 +311,7 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3c.alf...
+Parsing tests/Example3c.alf...
 Parsed successfully.
 Parsed Model/Identifiers.alf
 Parsed Model/Identifiers/Identifier Factory.alf
@@ -319,7 +319,7 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Resolving stub for Identifiers::Identifier Factory::get next identifier
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3d.alf...
+Parsing tests/Example3d.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -346,7 +346,7 @@ Parsed Model/Property Management/Data Model/Properties/Property/update status.al
 Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3e.alf...
+Parsing tests/Example3e.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -373,7 +373,7 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3f.alf...
+Parsing tests/Example3f.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -400,7 +400,7 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3g.alf...
+Parsing tests/Example3g.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -427,7 +427,7 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3h.alf...
+Parsing tests/Example3h.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -454,7 +454,7 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3i.alf...
+Parsing tests/Example3i.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -481,7 +481,7 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example3j.alf...
+Parsing tests/Example3j.alf...
 Parsed successfully.
 Parsed Model/Property Management.alf
 Parsed Model/Property Management/Basic Types.alf
@@ -508,57 +508,57 @@ Parsed Model/Identifiers/Identifier Factory/get next identifier.alf
 Parsed Model/Property Management/Service Model/Property Management Service Implementation/create reply.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-CollectionClasses-Impl.alf...
+Parsing tests/Example4-CollectionClasses-Impl.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-CollectionImpl.alf...
+Parsing tests/Example4-CollectionImpl.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::CollectionImpl
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-OrderedCollectionImpl.alf...
+Parsing tests/Example4-OrderedCollectionImpl.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::OrderedCollectionImpl
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-Set.alf...
+Parsing tests/Example4-Set.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::Set
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-OrderedSet.alf...
+Parsing tests/Example4-OrderedSet.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::OrderedSet
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-Bag.alf...
+Parsing tests/Example4-Bag.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::Bag
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-List.alf...
+Parsing tests/Example4-List.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::List
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-Queue.alf...
+Parsing tests/Example4-Queue.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::Queue
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-Deque.alf...
+Parsing tests/Example4-Deque.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::Deque
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Example4-Map.alf...
+Parsing tests/Example4-Map.alf...
 Parsed successfully.
 Resolving stub for Alf::Library::CollectionClasses::Impl::Map
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\ActiveClass_Order.alf...
+Parsing tests/ActiveClass_Order.alf...
 Parsed successfully.
 Parsed Model/Ordering1.alf
 Resolving stub for Ordering1::Order
@@ -572,18 +572,18 @@ Parsed Model/Ordering1/ProductSelection.alf
 Parsed Model/Ordering1/Order/Order_Behavior.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\ActiveClass_ProcessQueue.alf...
+Parsing tests/ActiveClass_ProcessQueue.alf...
 Parsed successfully.
 Parsed Model/Process.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\ActiveClass_ProcessQueueImpl.alf...
+Parsing tests/ActiveClass_ProcessQueueImpl.alf...
 Parsed successfully.
 Parsed Model/ProcessQueue.alf
 Parsed Model/Process.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\ActiveClass_Receptions.alf...
+Parsing tests/ActiveClass_Receptions.alf...
 Parsed successfully.
 Parsed Model/Ordering1.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -597,21 +597,21 @@ Parsed Model/Ordering1/ProductSelection.alf
 Parsed Model/Ordering1/Order/Order_Behavior.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Activity_execute.alf...
+Parsing tests/Activity_execute.alf...
 Parsed successfully.
 Resolving stub for fUML::Semantics::Activities::IntermediateActivities::ActivityExecution::execute
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Activity_getNodeActivations.alf...
+Parsing tests/Activity_getNodeActivations.alf...
 Parsed successfully.
 Resolving stub for fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup::getNodeActivations
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Activity_HelloWorld.alf...
+Parsing tests/Activity_HelloWorld.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Activity_Order_Behavior.alf...
+Parsing tests/Activity_Order_Behavior.alf...
 Parsed successfully.
 Parsed Model/Ordering1.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -625,7 +625,7 @@ Parsed Model/Ordering1/ProductSelection.alf
 Resolving stub for Ordering1::Order::Order_Behavior
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Assoc_Selection.alf...
+Parsing tests/Assoc_Selection.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -645,11 +645,11 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Collection.alf...
+Parsing tests/Class_Collection.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Constructors.alf...
+Parsing tests/Class_Constructors.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -669,20 +669,20 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Destructors.alf...
+Parsing tests/Class_Destructors.alf...
 Parsed successfully.
 Parsed Model/Super.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Initialization.alf...
+Parsing tests/Class_Initialization.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_MapToString.alf...
+Parsing tests/Class_MapToString.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Operations.alf...
+Parsing tests/Class_Operations.alf...
 Parsed successfully.
 Parsed Model/Ordering.alf
 Parsed Model/EE_OnlineCustomer.alf
@@ -702,44 +702,48 @@ Parsed Model/Shipping.alf
 Parsed Model/Ordering/Order/NotifyOfDelivery.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Properties.alf...
+Parsing tests/Class_Properties.alf...
 Parsed successfully.
 Parsed Model/DomainDataTypes.alf
 Parsed Model/ProductSpecification.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Redefinitions.alf...
+Parsing tests/Class_Redefinitions.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Singleton.alf...
+Parsing tests/Class_Singleton.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_Sorter.alf...
+Parsing tests/Class_Sorter.alf...
 Parsed successfully.
 Parsed Model/Comparable.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Class_SuperConstructors.alf...
+Parsing tests/Class_SuperConstructors.alf...
 Parsed successfully.
 Parsed Model/Super.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Datatype_Complex.alf...
+Parsing tests/Class_Templates.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Enum_TrafficLightColor.alf...
+Parsing tests/Datatype_Complex.alf...
 Parsed successfully.
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Package_Ordering.alf...
+Parsing tests/Enum_TrafficLightColor.alf...
+Parsed successfully.
+No constraint violations.
+Alf v1.0 Beta (rev 3) Parser
+Parsing tests/Package_Ordering.alf...
 Parsed successfully.
 Parsed Model/Ordering/ShoppingCart.alf
 No constraint violations.
 Alf v1.0 Beta (rev 3) Parser
-Parsing tests\Signal_SubmitCharge.alf...
+Parsing tests/Signal_SubmitCharge.alf...
 Parsed successfully.
 Parsed Model/DomainDataTypes.alf
 No constraint violations.
