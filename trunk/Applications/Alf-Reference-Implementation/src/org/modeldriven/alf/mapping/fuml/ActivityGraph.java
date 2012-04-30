@@ -293,6 +293,19 @@ public class ActivityGraph {
             }
             createAction.addEndData(endData);
         }
+        /*
+        // NOTE: Setting isReplaceAll=true on opposite ends maintains the
+        // upper bound for an end with multiplicity upper bound of 1.
+        for (LinkEndCreationData endData: createAction.endData) {
+            if (endData.end.multiplicityElement.upper.naturalValue == 1) {
+                for (LinkEndCreationData otherEndData: createAction.endData) {
+                    if (otherEndData != endData) {
+                        otherEndData.setIsReplaceAll(true);
+                    }
+                }
+            }
+        }
+        */
         this.add(createAction);
         return createAction;
     }
@@ -644,7 +657,9 @@ public class ActivityGraph {
         StructuredActivityNode node = new StructuredActivityNode();
         node.setName(name);        
         this.add(node);
-        this.addToStructuredNode(node, nestedElements);
+        if (nestedElements != null) {
+            this.addToStructuredNode(node, nestedElements);
+        }
         return node;
     }
     
