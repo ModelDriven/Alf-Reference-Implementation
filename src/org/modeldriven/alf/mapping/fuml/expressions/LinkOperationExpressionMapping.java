@@ -10,6 +10,7 @@
 package org.modeldriven.alf.mapping.fuml.expressions;
 
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.InvocationExpressionMapping;
@@ -18,7 +19,16 @@ import org.modeldriven.alf.mapping.fuml.units.AssociationDefinitionMapping;
 import org.modeldriven.alf.syntax.expressions.LinkOperationExpression;
 
 import fUML.Syntax.Actions.BasicActions.Action;
+import fUML.Syntax.Actions.BasicActions.InputPin;
+import fUML.Syntax.Actions.IntermediateActions.CreateLinkAction;
+import fUML.Syntax.Actions.IntermediateActions.DestroyLinkAction;
+import fUML.Syntax.Actions.IntermediateActions.LinkEndCreationData;
+import fUML.Syntax.Actions.IntermediateActions.LinkEndCreationDataList;
+import fUML.Syntax.Actions.IntermediateActions.ReadLinkAction;
+import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Classes.Kernel.Association;
+import fUML.Syntax.Classes.Kernel.Property;
 
 public class LinkOperationExpressionMapping extends InvocationExpressionMapping {
 
@@ -67,9 +77,104 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
                 expression.getIsClear()?
                     this.graph.addClearAssociationAction(association):
                 expression.getIsCreation()?
-                    // TODO: Handle association ends with multiplicity upper bound of 1.
                     this.graph.addCreateLinkAction(association):
                     this.graph.addDestroyLinkAction(association);
+            if (expression.getIsCreation()) {
+                LinkEndCreationDataList endDataList = 
+                        ((CreateLinkAction)action).endData;
+                if (association.memberEnd.size() == 2) {
+                    // For a binary association, setting isReplaceAll=true on 
+                    // the opposite end of an end with multiplicity upper bound of 1
+                    // ensures that the upper bound is maintained.
+                    LinkEndCreationData endData1 = endDataList.get(0);
+                    LinkEndCreationData endData2 = endDataList.get(1);
+                    if (endData1.end.multiplicityElement.upper.naturalValue == 1) {
+                        endData2.setIsReplaceAll(true);
+                    }
+                    if (endData2.end.multiplicityElement.upper.naturalValue == 1) {
+                        endData1.setIsReplaceAll(true);
+                    }
+                } else {
+                    // For a non-binary association, specific links need to be
+                    // found and destroyed to maintain any upper bound
+                    // multiplicities of 1.
+                    boolean hasUpperBound1 = false;
+                    for (LinkEndCreationData endData: endDataList) {
+                        if (endData.end.multiplicityElement.upper.naturalValue == 1) {
+                            hasUpperBound1 = true;
+                            break;
+                        }
+                    }
+                    if (hasUpperBound1) {
+                        StructuredActivityNode node = 
+                                this.graph.addStructuredActivityNode(
+                                        "CreateLink(" + association.name + ")", null);
+                        this.graph.remove(action);
+                        ActivityGraph subgraph = new ActivityGraph();
+                        subgraph.add(action);
+                        for (LinkEndCreationData endData: endDataList) {
+                            Property end = endData.end;
+                            InputPin inputPin = ActivityGraph.createInputPin(
+                                    node.name + ".input(" + end.name + ")", 
+                                    end.typedElement.type, 
+                                    end.multiplicityElement.lower, 
+                                    end.multiplicityElement.upper.naturalValue);
+                            inputPin.setIsOrdered(end.multiplicityElement.isOrdered);
+                            node.addStructuredNodeInput(inputPin);
+                            ActivityNode forkNode = 
+                                    subgraph.addForkNode("Fork" + end.name + ")");
+                            subgraph.addObjectFlow(inputPin, forkNode);
+                            subgraph.addObjectFlow(forkNode, endData.value);
+                            if (end.multiplicityElement.isOrdered) {
+                                inputPin = ActivityGraph.createInputPin(
+                                        "Index(" + end.name + ")", 
+                                        getUnlimitedNaturalType(), 1, 1);
+                                node.addStructuredNodeInput(inputPin);
+                                subgraph.addObjectFlow(inputPin, endData.insertAt);
+                            }
+                        }
+                        ActivityGraph destroyGraph = new ActivityGraph();
+                        for (int i = 0; i < endDataList.size(); i++) {
+                            Property end = endDataList.get(i).end;
+                            if (end.multiplicityElement.upper.naturalValue == 1) {
+                                ReadLinkAction readAction = 
+                                        destroyGraph.addReadLinkAction(end);
+                                DestroyLinkAction destroyAction = 
+                                        destroyGraph.addDestroyLinkAction(association);
+                                for (int j = 0, k = 0; j < endDataList.size(); j++, k++) {
+                                    if (j == i) {
+                                        destroyGraph.addObjectFlow(
+                                                readAction.result, 
+                                                destroyAction.inputValue.get(j));
+                                    } else {
+                                        InputPin inputPin = 
+                                                node.structuredNodeInput.get(k);
+                                        ActivityNode forkNode = 
+                                                inputPin.outgoing.get(0).target;
+                                        destroyGraph.addObjectFlow(
+                                                forkNode, 
+                                                readAction.inputValue.get(j < i? j: j-1));
+                                        destroyGraph.addObjectFlow(
+                                                forkNode, 
+                                                destroyAction.inputValue.get(j));
+                                    }
+                                    if (endDataList.get(j).end.multiplicityElement.isOrdered) {
+                                        k++;
+                                    }
+                                }
+                            }
+                        }
+                        ActivityNode destroyNode = 
+                                subgraph.addStructuredActivityNode(
+                                        "DestroyLinks", 
+                                        destroyGraph.getModelElements());
+                        subgraph.addControlFlow(destroyNode, action);
+                        this.graph.addToStructuredNode(
+                                node, subgraph.getModelElements());
+                        action = node;
+                    }
+                }
+            }
         }
         return action;
     }
