@@ -55,6 +55,7 @@ import org.modeldriven.alf.uml.TemplateParameterSubstitution;
 import org.modeldriven.alf.uml.TemplateSignature;
 import org.modeldriven.alf.uml.TemplateableElement;
 import org.modeldriven.alf.uml.TypedElement;
+import org.modeldriven.alf.uml.VisibilityKind;
 
 /**
  * A direct reference to a UML model element.
@@ -347,8 +348,13 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (!(element instanceof NamedElement)) {
             return null;
         } else {
-            String visibility = ((NamedElement)element).getVisibility().toString();
-            return visibility.substring(0,visibility.length()-1);
+            VisibilityKind visibilityKind = ((NamedElement)element).getVisibility();
+            if (visibilityKind == null) {
+                return null;
+            } else {
+                String visibility = visibilityKind.toString();
+                return visibility.substring(0,visibility.length()-1);
+            }
         }
     }
 
