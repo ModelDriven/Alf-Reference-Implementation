@@ -104,13 +104,9 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 		    return false;
 		} else {
 		    ElementReference referent = this.getSelf().getReferent();
-		    Member member = (Member)referent.getImpl().getAlf();
-		    if (member != null) {
-		        return member.getImpl().isPublic() || member.getImpl().hasNoVisibility();
-		    } else {
-		        // TODO: Handle visibility check for external import references.
-		        return true;
-		    }
+		    String visibility = referent.getImpl().getVisibility();
+		    return visibility == null || 
+		            visibility.equals("") || visibility.equals("public");
 		}
 	}
 	
