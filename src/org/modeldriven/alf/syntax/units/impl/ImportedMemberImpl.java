@@ -13,7 +13,9 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Namespace;
 
 public class ImportedMemberImpl extends MemberImpl {
 
@@ -115,8 +117,18 @@ public class ImportedMemberImpl extends MemberImpl {
     	        } else if (otherElement != null) {
     	            return otherElement instanceof Member && ((Member)otherElement).isSameKindAs(self);
     	        } else {
-    	            // TODO: Handle isSameKindOf check for external element references.
-    	            return false;
+    	            Element umlElement = referent.getImpl().getUml();
+    	            Element otherUmlElement = referent.getImpl().getUml();
+    	            if (!(umlElement instanceof NamedElement && 
+    	                    otherUmlElement instanceof NamedElement)) {
+    	                return false;
+    	            } else {
+    	                NamedElement namedElement = (NamedElement)umlElement;
+    	                Namespace namespace = namedElement.getNamespace();
+    	                return namespace != null && 
+    	                        namedElement.isDistinguishableFrom(
+    	                                (NamedElement)otherUmlElement, namespace);
+    	            }
     	        }
 	        }
 	    }
