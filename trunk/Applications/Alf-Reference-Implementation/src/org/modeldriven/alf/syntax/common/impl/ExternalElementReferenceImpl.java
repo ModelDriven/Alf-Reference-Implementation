@@ -206,14 +206,14 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean isConstructor() {
-        // TODO: Check for external constructors.
-        return false;
+        return this.isOperation() && 
+                ((Operation)this.getSelf().getElement()).isConstructor();
     }
     
     @Override
     public boolean isDestructor() {
-        // TODO: Check for external destructors.
-        return false;
+        return this.isOperation() && 
+                ((Operation)this.getSelf().getElement()).isDestructor();
     }
     
     @Override
