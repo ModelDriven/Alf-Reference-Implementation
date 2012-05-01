@@ -124,6 +124,15 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	        return true;
 	    } else if (referent.getImpl().isParameter()) {
 	        return !"in".equals(referent.getImpl().asParameter().getDirection());
+	    } else if (referent.getImpl().isProperty()) {
+            // Note: This constraint ensures that there will be an
+            // assigned name for an assignment to an attribute of a
+            // data type.
+	        FeatureReference feature = this.getFeature();
+	        Expression expression = feature == null? null: feature.getExpression();
+	        return expression != null &&
+                    (!expression.getType().getImpl().isDataType() ||
+                            this.isDataValueUpdate());
 	    } else {
 	        SyntaxElement source = referent.getImpl().getAlf();
             return !(source instanceof LoopVariableDefinition ||

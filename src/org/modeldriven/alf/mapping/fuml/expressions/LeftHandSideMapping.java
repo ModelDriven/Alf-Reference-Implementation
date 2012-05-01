@@ -312,7 +312,6 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         resultNode = writeAction.result;
                     }
                 }
-                // TODO: Properly handle data value updates in all cases.
                 if (lhs.getImpl().isDataValueUpdate()) {
                     this.assignedValueSource = this.graph.addForkNode(
                             "Fork(" + resultNode.name + ")");
