@@ -1,7 +1,7 @@
 /**
  * Test indexed feature assignment expressions
  **/
-active class Expressions_Assignment_Feature {
+active class Expressions_Assignment_Feature_Indexed {
 
     private y: Integer[] sequence;
     
@@ -23,7 +23,8 @@ active class Expressions_Assignment_Feature {
         public m: Integer[] sequence;
     }
 
-    public test(out c: C, out d: D, out n: Integer, out m: Integer) {      
+    public test(out c: C, out d: D, out n: Integer, out m: Integer, 
+        out self: Expressions_Assignment_Feature_Indexed) {      
       c = new C();
       c.y = Integer[]{1,2,3};
       c.y[2] = 4;
@@ -43,6 +44,7 @@ active class Expressions_Assignment_Feature {
       this.y = Integer[]{1,2};
       this.y[2] = 4;
       this.y[1] = null;
+      self = this;
      }
   
 } do {

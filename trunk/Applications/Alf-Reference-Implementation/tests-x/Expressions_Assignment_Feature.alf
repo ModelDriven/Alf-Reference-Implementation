@@ -26,7 +26,8 @@ active class Expressions_Assignment_Feature {
         public m: Integer;
     }
 
-    public test(out c: C, out d: D, out n: Integer, out m: Integer) {  
+    public test(out c: C, out d: D, out n: Integer, out m: Integer,
+        out self: Expressions_Assignment_Feature) {  
       c = new C();
       c.x = 2;
       c.y = 1;
@@ -49,6 +50,7 @@ active class Expressions_Assignment_Feature {
       this.y = 1;
       this.y = null;
       this.y = Integer[]{1,2};
+      self = this;
     }
   
 } do {

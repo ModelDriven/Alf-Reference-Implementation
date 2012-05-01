@@ -362,15 +362,16 @@ public class ActivityGraph {
         loopNode.setName(name);
         loopNode.setIsTestedFirst(isTestedFirst);
         for (InputPin input: inputs) {
-            input.setName(loopNode.name + ".loopVariableInput(" + input.name + ")");
+            String variableName = input.name;
+            input.setName(loopNode.name + ".loopVariableInput(" + variableName + ")");
             loopNode.addLoopVariableInput(input);
             loopNode.addLoopVariable(createOutputPin(
-                    loopNode.name + ".loopVariable(" + input.name + ")", 
+                    loopNode.name + ".loopVariable(" + variableName + ")", 
                     input.typedElement.type, 
                     input.multiplicityElement.lower, 
                     input.multiplicityElement.upper.naturalValue));
             loopNode.addResult(createOutputPin(
-                    loopNode.name + ".result(" + input.name + ")", 
+                    loopNode.name + ".result(" + variableName + ")", 
                     input.typedElement.type, 
                     input.multiplicityElement.lower, 
                     input.multiplicityElement.upper.naturalValue));
