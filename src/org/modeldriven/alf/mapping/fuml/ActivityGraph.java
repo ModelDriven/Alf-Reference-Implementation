@@ -173,7 +173,7 @@ public class ActivityGraph {
         AcceptEventAction acceptAction = new AcceptEventAction();
         acceptAction.setIsUnmarshall(false);
         
-        StringBuffer signalNames = new StringBuffer();
+        StringBuilder signalNames = new StringBuilder();
         for (Signal signal: signals) {
             if (signalNames.length() > 0) {
                 signalNames.append(",");
@@ -477,7 +477,7 @@ public class ActivityGraph {
             boolean isReplaceAll) {
         ReclassifyObjectAction reclassifyAction = new ReclassifyObjectAction();
         
-        StringBuffer oldClassifierList = new StringBuffer();
+        StringBuilder oldClassifierList = new StringBuilder();
         for (Classifier oldClassifier: oldClassifiers) {
             reclassifyAction.addOldClassifier(oldClassifier);
             if (oldClassifierList.length() > 0) {
@@ -487,10 +487,10 @@ public class ActivityGraph {
         }
         
         if (oldClassifierList.length() == 0 && isReplaceAll) {
-            oldClassifierList = new StringBuffer("*");
+            oldClassifierList = new StringBuilder("*");
         }
         
-        StringBuffer newClassifierList = new StringBuffer();
+        StringBuilder newClassifierList = new StringBuilder();
         for (Classifier newClassifier: newClassifiers) {
             reclassifyAction.addNewClassifier(newClassifier);
             if (newClassifierList.length() > 0) {

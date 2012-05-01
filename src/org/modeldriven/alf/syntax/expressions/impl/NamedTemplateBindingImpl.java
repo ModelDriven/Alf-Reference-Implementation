@@ -56,7 +56,7 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
 
     @Override
     public String toString(boolean includeDerived) {
-        StringBuffer s = new StringBuffer("<");
+        StringBuilder s = new StringBuilder("<");
         NamedTemplateBinding self = this.getSelf();
         String separator = "";
         for (TemplateParameterSubstitution p: self.getSubstitution()) {

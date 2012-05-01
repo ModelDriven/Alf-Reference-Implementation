@@ -38,12 +38,8 @@ public class NameBindingImpl extends SyntaxElementImpl {
 	@Override
 	public String toString(boolean includesDerived) {
 	    NameBinding self = this.getSelf();
-	    StringBuffer s = new StringBuffer(self.getName());
 	    TemplateBinding b = self.getBinding();
-	    if (b!=null) {
-	        s.append(b.getImpl());
-	    }
-	    return s.toString();
+	    return self.getName() + (b == null? "": b.getImpl());
 	}
 	
     public TemplateBinding getBinding() {

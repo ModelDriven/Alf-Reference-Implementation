@@ -50,7 +50,7 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
 
     @Override
 	public String toString(boolean includeDerived) {
-	    StringBuffer s = new StringBuffer("<");
+        StringBuilder s = new StringBuilder("<");
 	    PositionalTemplateBinding self = this.getSelf();
 	    String separator = "";
 	    for (QualifiedName q: self.getArgumentName()) {

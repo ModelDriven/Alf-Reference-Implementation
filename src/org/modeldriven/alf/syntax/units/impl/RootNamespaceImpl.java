@@ -52,7 +52,7 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
         // System.out.println("Resolving unit " + qualifiedName.getPathName());
 
-        StringBuffer path = new StringBuffer();
+        StringBuilder path = new StringBuilder();
          for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
             path.append("/" + nameBinding.getName());
         }

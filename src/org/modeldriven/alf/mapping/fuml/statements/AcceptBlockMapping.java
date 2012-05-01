@@ -84,7 +84,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                     "", mapping.getModelElements());
             
             ActivityNode signalSourceNode = parentMapping.getSignalSourceNode();
-            StringBuffer signalNames = new StringBuffer();
+            StringBuilder signalNames = new StringBuilder();
             for (Signal signal: this.signals) {
                 if (signalNames.length() > 0) {
                     signalNames.append(",");
