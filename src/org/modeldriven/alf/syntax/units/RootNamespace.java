@@ -70,6 +70,14 @@ public class RootNamespace extends NamespaceDefinition {
         return rootNamespace;
     }
     
+    public static void setModelDirectory(String modelDirectory) {
+        getRootScope().getImpl().setModelDirectory(modelDirectory);
+    }
+    
+    public static void setLibraryDirectory(String libraryDirectory) {
+        getRootScope().getImpl().setLibraryDirectory(libraryDirectory);
+    }
+    
     public static NamespaceDefinition getModelScope(UnitDefinition unit) {
         // The default model scope for a unit consists of just the unit itself,
         // so that it can refer to itself recursively.
