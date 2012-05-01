@@ -190,7 +190,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
      **/
 	protected String derivePathName() {
 	    QualifiedName self = this.getSelf();
-	    StringBuffer pathName = new StringBuffer();
+	    StringBuilder pathName = new StringBuilder();
 	    String separator = "";
 	    for(NameBinding nameBinding: self.getNameBinding()){
 	        pathName.append(separator);
@@ -827,7 +827,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     
     private String makeBoundElementName(List<ElementReference> templateArguments) {
         QualifiedName self = this.getSelf();
-        StringBuffer name = new StringBuffer("$$");
+        StringBuilder name = new StringBuilder("$$");
         name.append(self.getUnqualifiedName().getName());
         name.append("__");
         for (ElementReference argument: templateArguments) {
