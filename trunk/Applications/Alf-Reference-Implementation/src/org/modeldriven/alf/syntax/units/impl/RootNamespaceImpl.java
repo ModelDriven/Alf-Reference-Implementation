@@ -9,6 +9,9 @@ import org.modeldriven.alf.syntax.units.*;
 
 public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     
+    private String modelDirectory = "Root/Models";
+    private String libraryDirectory = "Root/Library";
+    
     public RootNamespaceImpl(RootNamespace self) {
         super(self);
     }
@@ -21,6 +24,14 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     @Override
     public Boolean isSameKindAs(Member member) {
         return false;
+    }
+    
+    public void setModelDirectory(String modelDirectory) {
+        this.modelDirectory = modelDirectory;
+    }
+    
+    public void setLibraryDirectory(String libraryDirectory) {
+        this.libraryDirectory = libraryDirectory;
     }
     
     @Override
@@ -53,7 +64,7 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
         // System.out.println("Resolving unit " + qualifiedName.getPathName());
 
         StringBuilder path = new StringBuilder();
-         for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
+        for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
             path.append("/" + nameBinding.getName());
         }
         path.append(".alf");
@@ -62,12 +73,12 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
         boolean fromModel = true;
 
         try {
-            // System.out.println("Looking for Model" + path + "...");
-            parser = new AlfParser("Root/Model" + path);
+            // System.out.println("Looking for " + this.modelDirectory + path + "...");
+            parser = new AlfParser(this.modelDirectory + path);
         } catch (java.io.FileNotFoundException e0) {
             try {
-                // System.out.println("Looking for Library" + path + "...");
-                parser = new AlfParser("Root/Library" + path);
+                // System.out.println("Looking for " + this.libraryDirectory + path + "...");
+                parser = new AlfParser(this.libraryDirectory + path);
                 fromModel = false;
             } catch (java.io.FileNotFoundException e) {
                 System.out.println("Unit not found: " + qualifiedName.getPathName());
@@ -78,13 +89,13 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
         try {
             UnitDefinition subunit = parser.UnitDefinition();
             if (fromModel) {
-                System.out.println("Parsed Model" + path);
+                System.out.println("Parsed " + this.modelDirectory + path);
             }
             subunit.getImpl().addImplicitImports();
             return subunit;           
         } catch (ParseException e) {
             System.out.println("Parse failed: " + 
-                    (fromModel? "Model": "Library") + path);
+                    (fromModel? this.modelDirectory: this.libraryDirectory) + path);
             System.out.println(e.getMessage());
             return new MissingUnit(qualifiedName);
         }

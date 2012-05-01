@@ -8,6 +8,8 @@
 
 package org.modeldriven.alf.execution;
 
+import java.util.Collection;
+
 import org.apache.log4j.PropertyConfigurator;
 
 import org.modeldriven.alf.mapping.Mapping;
@@ -16,10 +18,12 @@ import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
 import org.modeldriven.alf.mapping.fuml.units.ClassDefinitionMapping;
 import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ClassDefinition;
+import org.modeldriven.alf.syntax.units.Member;
+import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -88,8 +92,8 @@ public class Alf {
         if (type instanceof Class_) {
             object.types.addValue((Class_)type);
             locus.add(object);
-            System.out.println("Instantiated " + name.getPathName() + 
-                    " as " + type.name + "(" + type + ")");
+            // System.out.println("Instantiated " + name.getPathName() + 
+            //        " as " + type.name + "(" + type + ")");
         }
     }
     
@@ -114,75 +118,117 @@ public class Alf {
 
     public static void main(String[] args) {
         PropertyConfigurator.configure("log4j.properties");
-        
-        String fileName = null;
-        
-        if (args.length > 0) {
-            fileName = args[0];
+
+        String unitName = "";
+
+        int i = 0;
+        while (i < args.length) {
+            String arg = args[i];
+            if (arg.charAt(0) != '-') {
+                break;
+            }
+            String option = arg.substring(1);
+            i++;
+            if (i < args.length) {
+                arg = args[i];
+                i++;
+                if (option.equals("m")) {
+                    RootNamespace.setModelDirectory(arg);
+                } else if (option.equals("l")) {
+                    RootNamespace.setLibraryDirectory(arg);
+                }
+            }
         }
         
-        createLocus();
-        FumlMapping.setExecutionFactory(locus.factory);       
-        FumlMapping mapping = FumlMapping.parseAndMap(fileName);
-        
-        if (mapping != null) {
-            try {
-                mapping.getModelElements();
-                System.out.println("Mapped successfully.");
-                SyntaxElement parsedElement = FumlMapping.getParsedElement();
-                // System.out.println("[Alf] parsedElement=" + parsedElement);
-                NamespaceDefinition definition = 
-                        ((UnitDefinition)parsedElement).getDefinition();
-                Mapping elementMapping = definition.getImpl().getMapping();
-                // System.out.println("[Alf] elementMapping=" + elementMapping);
-                Element element = ((FumlMapping)elementMapping).getElement();
-                if (element instanceof Behavior && 
-                        ((Behavior)element).ownedParameter.isEmpty() ||
-                    element instanceof Class_ && 
-                        ((Class_)element).isActive && 
-                        !((Class_)element).isAbstract && 
-                        ((Class_)element).classifierBehavior != null) {
-                    createSystemServices();
-                    System.out.println("Executing...");
-                    if (element instanceof Behavior) {
-                        locus.executor.execute
-                            ((Behavior)element, null, new ParameterValueList());
-                    } else {
-                        ClassDefinition classDefinition = 
-                                (ClassDefinition)definition;
-                        OperationDefinition constructorDefinition = 
-                                classDefinition.getImpl().getDefaultConstructor();
-                        if (constructorDefinition == null) {
-                            System.out.println("Cannot instantiate: " + 
-                                    classDefinition.getName());
-                        } else {
-                            // Instantiate active class.
-                            Class_ class_ = (Class_)element;
-                            Object_ object = locus.instantiate(class_);
-                            
-                            // Initialize the object.
-                            ClassDefinitionMapping classMapping =
-                                    (ClassDefinitionMapping)elementMapping;
-                            Operation initializer = 
-                                    classMapping.getInitializationOperation();
-                            locus.executor.execute(
-                                    initializer.method.get(0), object, 
-                                    new ParameterValueList());
-                            
-                            // Execute the classifier behavior.
-                            object.startBehavior(class_, new ParameterValueList());
-                        }
-                    }
-                } else {
-                    System.out.println("Cannot execute: " + element);
+        if (i == args.length - 1) {
+            unitName = args[i];
+        }
+
+        String[] names = unitName.replace(".","::").split("::");
+        QualifiedName qualifiedName = new QualifiedName();
+        for (String name: names) {
+            qualifiedName.getImpl().addName(name);
+        }
+
+        RootNamespace root = RootNamespace.getRootScope();
+        UnitDefinition unit = RootNamespace.resolveUnit(qualifiedName);
+        if (!(unit instanceof MissingUnit)) {
+            Member stub = unit.getImpl().getStub();
+            if (stub != null) {
+                System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
+                stub.setSubunit(unit);
+            } else {
+                root.addOwnedMember(unit.getDefinition());
+            }
+            
+            root.deriveAll();
+            Collection<ConstraintViolation> violations = root.checkConstraints();
+            if (!violations.isEmpty()) {
+                System.out.println("Constraint violations:");
+                for (ConstraintViolation violation: violations) {
+                    System.out.println("  " + violation);
                 }
-            } catch (MappingError e) {
-                System.out.println("Mapping failed.");
-                System.out.println(e.getMapping());                    
-                System.out.println(" error: " + e.getMessage());
-                mapping.print();
+                
+            } else {
+                // System.out.println("No constraint violations.");
+                createLocus();
+                FumlMapping.setExecutionFactory(locus.factory);       
+                FumlMapping mapping = FumlMapping.getMapping(root);
+                try {
+                    mapping.getModelElements();
+                    // System.out.println("Mapped successfully.");
+                    // System.out.println("[Alf] parsedElement=" + parsedElement);
+                    NamespaceDefinition definition = unit.getDefinition();
+                    Mapping elementMapping = definition.getImpl().getMapping();
+                    // System.out.println("[Alf] elementMapping=" + elementMapping);
+                    Element element = ((FumlMapping)elementMapping).getElement();
+                    if (element instanceof Behavior && 
+                            ((Behavior)element).ownedParameter.isEmpty() ||
+                            element instanceof Class_ && 
+                            ((Class_)element).isActive && 
+                            !((Class_)element).isAbstract && 
+                            ((Class_)element).classifierBehavior != null) {
+                        createSystemServices();
+                        // System.out.println("Executing...");
+                        if (element instanceof Behavior) {
+                            locus.executor.execute(
+                                    (Behavior)element, null, new ParameterValueList());
+                        } else {
+                            ClassDefinition classDefinition = 
+                                    (ClassDefinition)definition;
+                            OperationDefinition constructorDefinition = 
+                                    classDefinition.getImpl().getDefaultConstructor();
+                            if (constructorDefinition == null) {
+                                System.out.println("Cannot instantiate: " + 
+                                        classDefinition.getName());
+                            } else {
+                                // Instantiate active class.
+                                Class_ class_ = (Class_)element;
+                                Object_ object = locus.instantiate(class_);
+
+                                // Initialize the object.
+                                ClassDefinitionMapping classMapping =
+                                        (ClassDefinitionMapping)elementMapping;
+                                Operation initializer = 
+                                        classMapping.getInitializationOperation();
+                                locus.executor.execute(
+                                        initializer.method.get(0), object, 
+                                        new ParameterValueList());
+
+                                // Execute the classifier behavior.
+                                object.startBehavior(class_, new ParameterValueList());
+                            }
+                        }
+                    } else {
+                        System.out.println("Cannot execute: " + element);
+                    }
+                } catch (MappingError e) {
+                    System.out.println("Mapping failed.");
+                    System.out.println(e.getMapping());                    
+                    System.out.println(" error: " + e.getMessage());
+                    mapping.print();
+                }
             }
         }
     }
-
 }
