@@ -194,11 +194,6 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
      * An assignment expression is a data value update if its left hand side is
      * an attribute of a data value held in a local name or parameter.
      **/
-    /*
-     * NOTE: This is generalized to account for the case in which the primary
-     * expression of the feature is itself, recursively, a feature reference
-     * for a data value.
-     */
     public Boolean isDataValueUpdate() {
         if (this.isDataValueUpdate == null) {
             this.getAssignedName();
@@ -212,15 +207,14 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
             this.isDataValueUpdate = false;
             if (this.assignedName == null) {
                 FeatureReference feature = this.getFeature();
-                while (feature != null) {
+                if (feature != null) {
                     Expression expression = feature.getExpression();
                     if (expression instanceof NameExpression) {
-                        PropertyAccessExpression propertyAccess = 
-                            ((NameExpression)expression).getPropertyAccess();
-                        if (propertyAccess == null) {
+                        if (((NameExpression)expression).getPropertyAccess() == null) {
                             QualifiedName name = 
                                 ((NameExpression)expression).getName();
-                            Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+                            Map<String, AssignedSource> assignmentsBefore = 
+                                    this.getAssignmentBeforeMap();
                             String unqualifiedName = name == null? null: 
                                 name.getUnqualifiedName().getName();
                             AssignedSource assignment = 
@@ -232,16 +226,8 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
                                 this.assignedName = unqualifiedName;
                                 this.isDataValueUpdate = true;
                             }
-                            feature = null;
-                        } else {
-                            feature = propertyAccess.getFeatureReference();
                         }
-                    } else if (expression instanceof PropertyAccessExpression) {
-                        feature = ((PropertyAccessExpression)expression).
-                                                        getFeatureReference();
-                    } else {
-                        feature = null;
-                    }
+                   }
                 }
             }
         }
