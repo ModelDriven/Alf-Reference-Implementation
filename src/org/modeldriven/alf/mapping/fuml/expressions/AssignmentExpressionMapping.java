@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -29,12 +29,11 @@ import fUML.Syntax.Actions.BasicActions.CallOperationAction;
 import fUML.Syntax.Actions.BasicActions.InputPin;
 import fUML.Syntax.Actions.IntermediateActions.AddStructuralFeatureValueAction;
 import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
+import fUML.Syntax.Activities.CompleteStructuredActivities.LoopNode;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Activities.IntermediateActivities.MergeNode;
 import fUML.Syntax.Classes.Kernel.Classifier;
 import fUML.Syntax.Classes.Kernel.DataType;
 import fUML.Syntax.Classes.Kernel.Property;
@@ -448,77 +447,75 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
             return writeAction.result;
             
         } else {
-            // Otherwise, create an expansion region to iteratively add
-            // possibly multiple values to the property.
+            // Otherwise, create a node to iteratively add possibly 
+            // multiple values to the property.
             Classifier featuringClassifier = property.featuringClassifier.get(0);
-            ForkNode valueForkNode = graph.addForkNode(
-                    "Fork(" + valueSource.name + ")");
-            graph.addObjectFlow(valueSource, valueForkNode);
             writeAction.setIsReplaceAll(false);
-            ExpansionRegion region = graph.addExpansionRegion(
-                    "Iterate(" + writeAction.name + ")", 
-                    ExpansionKind.iterative, 
-                    subgraph.getModelElements(), 
-                    valueForkNode, writeAction.value, 
-                    featuringClassifier instanceof DataType? 
-                            writeAction.result: null);
-            
-            InputPin objectInputPin = ActivityGraph.createInputPin(
-                    region.name + ".input(" + objectSource.name + ")", 
-                    featuringClassifier, 1, 1);
-            region.addStructuredNodeInput(objectInputPin);
-            region.addEdge(ActivityGraph.createObjectFlow(
-                    objectInputPin, writeAction.object));
-            
-            // If the property is a feature of a data type, then connect
-            // the result output pin of the action to an output expansion
-            // node and obtain the correct final data value from that
-            // node.
-            
             if (!(featuringClassifier instanceof DataType)) {
+                // If the property is a feature of a class, use an iterative
+                // expansion region.
+                ExpansionRegion region = graph.addExpansionRegion(
+                        "Iterate(" + writeAction.name + ")", 
+                        ExpansionKind.iterative, 
+                        subgraph.getModelElements(), 
+                        valueSource, writeAction.value, 
+                        null);
+
+                InputPin objectInputPin = ActivityGraph.createInputPin(
+                        region.name + ".input(" + objectSource.name + ")", 
+                        featuringClassifier, 1, 1);
+                region.addStructuredNodeInput(objectInputPin);
+                region.addEdge(ActivityGraph.createObjectFlow(
+                        objectInputPin, writeAction.object));
+
                 graph.addObjectFlow(objectSource, objectInputPin);
                 return null;
             } else {
-                // Add check so that data value is routed around the expansion
-                // region in the case of an empty list.
-                CallBehaviorAction callAction = graph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
-                graph.addObjectFlow(valueForkNode, callAction.argument.get(0));
-                // NOTE: Add initial node to ensure that the call action fires
-                // even if the value input is empty.
-                ActivityNode initialNode = graph.addInitialNode("Initial(IsEmpty)");                
-                graph.addControlFlow(initialNode, callAction);
-                MergeNode mergeNode = graph.addMergeNode(
-                        "Merge(" + objectSource.name + ")");
-                graph.addObjectDecisionNode(
-                        "IsEmpty", objectSource, callAction.result.get(0), 
-                        mergeNode, objectInputPin);
+                // If the property is a feature of a data type, then use
+                // a loop node to iteratively update the data value, rather than
+                // an expansion region.
+                InputPin objectInputPin = ActivityGraph.createInputPin(
+                        objectSource.name, featuringClassifier, 1, 1);
+                InputPin valueInputPin = ActivityGraph.createInputPin(
+                        "value", property.typedElement.type, 0, -1);
+                LoopNode loopNode = graph.addLoopNode(
+                        "Iterate(" + writeAction.name + ")", true, 
+                        objectInputPin, valueInputPin);
+                graph.addObjectFlow(objectSource, loopNode.loopVariableInput.get(0));
+                graph.addObjectFlow(valueSource, loopNode.loopVariableInput.get(1));
+                
+                ActivityNode valueFork = subgraph.addForkNode("Fork(value)");
+                ValueSpecificationAction value1Action = 
+                        subgraph.addNaturalValueSpecificationAction(1);
+                ActivityNode value1Fork = subgraph.addForkNode(
+                        "Fork(" + value1Action.result.name + ")");
+                CallBehaviorAction getAction = subgraph.addCallBehaviorAction(
+                        getBehavior(RootNamespace.getListFunctionGet()));
+                CallBehaviorAction removeAction = subgraph.addCallBehaviorAction(
+                        getBehavior(RootNamespace.getSequenceFunctionExcludeAt()));
+                subgraph.addObjectFlow(loopNode.loopVariable.get(0), writeAction.object);
+                subgraph.addObjectFlow(loopNode.loopVariable.get(1), valueFork);
+                subgraph.addObjectFlow(value1Action.result, value1Fork);
+                subgraph.addObjectFlow(valueFork, getAction.argument.get(0));
+                subgraph.addObjectFlow(value1Fork, getAction.argument.get(1));
+                subgraph.addObjectFlow(getAction.result.get(0), writeAction.value);
+                subgraph.addObjectFlow(valueFork, removeAction.argument.get(0));
+                subgraph.addObjectFlow(value1Fork, removeAction.argument.get(1));
+                
+                graph.addLoopBodyPart(
+                        loopNode, subgraph.getModelElements(), 
+                        writeAction.result, removeAction.result.get(0));
+                
+                subgraph = new ActivityGraph();
+                CallBehaviorAction testAction = subgraph.addCallBehaviorAction(
+                        getBehavior(RootNamespace.getSequenceFunctionNotEmpty()));
+                subgraph.addObjectFlow(valueFork, testAction.argument.get(0));
+                
+                graph.addLoopTest(
+                        loopNode, subgraph.getModelElements(), 
+                        testAction.result.get(0));
 
-                // Add logic to get last updated data value from expansion
-                // region.
-                ForkNode fork = 
-                    graph.addForkNode("Fork(" + writeAction.result.name + " list)");
-                CallBehaviorAction callSizeAction = 
-                    graph.addCallBehaviorAction(
-                            getBehavior(RootNamespace.getListFunctionSize()));
-                CallBehaviorAction callGetAction = 
-                    graph.addCallBehaviorAction(
-                            getBehavior(RootNamespace.getListFunctionGet()));
-                
-                graph.addObjectFlow(region.outputElement.get(0), fork);                
-                graph.addObjectFlow(fork, callSizeAction.argument.get(0));
-                graph.addObjectFlow(fork, callGetAction.argument.get(0));
-                graph.addObjectFlow(
-                        callSizeAction.result.get(0), 
-                        callGetAction.argument.get(1));
-                graph.addObjectFlow(callGetAction.result.get(0), mergeNode);
-                
-                // Set the lower bound of the list argument pin for the call to
-                // ListGet to 1, in order to prevent the call from firing 
-                // before the list tokens get offered to the pin.
-                callGetAction.argument.get(0).multiplicityElement.setLower(1);
-                
-                return mergeNode;
+                return loopNode.result.get(0);
             }
         }        
 	}

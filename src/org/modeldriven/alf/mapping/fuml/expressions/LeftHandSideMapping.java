@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2012 Data Access Technologies, Inc. (Model Driven Solutions)
  *
  * Licensed under the Academic Free License version 3.0 
  * (http://www.opensource.org/licenses/afl-3.0.php) 
@@ -173,7 +173,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                 Expression index = lhs.getIndex();
                 ActivityNode resultNode;
                 if (index == null) {
-                    if (rhsUpper == 0) {
+                    if (this.rhsUpper == 0) {
                         ClearStructuralFeatureAction clearAction =
                             this.graph.addClearStructuralFeatureAction(property);
                         this.node = clearAction;
@@ -184,7 +184,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                             this.controlTarget = clearAction;
                         }
                         resultNode = clearAction.result;
-                    } else if (rhsUpper == 1) {
+                    } else if (this.rhsUpper == 1) {
                         AddStructuralFeatureValueAction writeAction =
                             this.graph.addAddStructuralFeatureValueAction(
                                     property, true);
@@ -269,7 +269,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                     this.graph.addObjectFlow(
                             indexSource, indexConversionAction.argument.get(0));
                     
-                    if (rhsUpper == 0) {
+                    if (this.rhsUpper == 0) {
                         RemoveStructuralFeatureValueAction removeAction =
                             this.graph.addRemoveStructuralFeatureValueAction(
                                     property, false);
