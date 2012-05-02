@@ -59,24 +59,35 @@ public class AlfParser {
            this.getColumn() + ". \n" + message;
   } 
   
-  public static final String version = "v1.0 Beta (rev 4)";
+  public static final String version = "v1.0 Beta (rev 3)";
   
+  public static final char unitOption = 'u';
+  public static final char statementOption = 's';
+  public static final char expressionOption = 'e';
   public static final char checkOption = 'c';
   public static final char checkAllOption = 'C';
   public static final char printOption = 'p';
   public static final char printDerivedOption = 'P';
-    
+	
+  private static boolean isUnit = true;
+  private static boolean isStatements = false;
+  private static boolean isExpression = false;
   private static boolean checkConstraints = false;
   private static boolean checkAllConstraints = false;
   private static boolean print = false;
   private static boolean printDerived = false;
-      
+  	
   private static boolean optionsAreLegal = true;
+  private static SyntaxElement element = null;
   private static Collection<ConstraintViolation> violations =
-      new ArrayList<ConstraintViolation>();
-      
+  	new ArrayList<ConstraintViolation>();
+  	
   public static boolean optionsAreLegal() {
     return optionsAreLegal;
+  }
+  
+  public static SyntaxElement getElement() {
+    return element;
   }
   
   public static Collection<ConstraintViolation> getViolations() {
@@ -86,93 +97,142 @@ public class AlfParser {
   public static boolean constraintsCheck() {
     return getViolations().isEmpty();
   }
-      
+  	
   public static boolean parseOptions(String options) {
   
-    checkConstraints = false;
-    checkAllConstraints = false;
-    print = false;
-    printDerived = false;
-    optionsAreLegal = true;
-      
-    for (int i=0; i < options.length(); i++) {
-      switch (options.charAt(i)) {
-        case checkOption:
-          checkConstraints = true;
-          break;
-        case checkAllOption:
-          checkAllConstraints = true;
-          break;
-        case printOption:
-          print = true;
-          break;
-        case printDerivedOption:
-          printDerived = true;
-          break;
-        default:
-          optionsAreLegal = false;
-          return false;
-      }
-    }
-      
-    return true;
+  	isUnit = false;
+  	isStatements = false;
+  	isExpression = false;
+  	checkConstraints = false;
+  	print = false;
+  	printDerived = false;
+  	
+    if (options.length() == 0) {
+      isUnit = true;
+      optionsAreLegal = true;
+  	  return true; 
+  	}
+  	
+  	for (int i=0; i < options.length(); i++) {
+  	  switch (options.charAt(i)) {
+  	  	case unitOption:
+  	  	  isUnit = true;
+  	  	  break;
+  		case statementOption:
+  		  isStatements = true;
+  		  break;
+		case expressionOption:
+		  isExpression = true;
+		  break;
+		case checkOption:
+		  checkConstraints = true;
+		  break;
+		case checkAllOption:
+		  checkAllConstraints = true;
+		  break;
+		case printOption:
+		  print = true;
+		  break;
+		case printDerivedOption:
+		  printDerived = true;
+		  break;
+		default:
+		  optionsAreLegal = false;
+		  return false;
+	  }  	  
+  	}
+  	
+    optionsAreLegal =
+      !((isUnit || checkConstraints || checkAllConstraints || printDerived) && 
+      		(isStatements || isExpression) ||
+  	    isStatements && (isUnit || isExpression) ||
+  	    isExpression && (isUnit || isStatements));
+  	    
+    isUnit = !isStatements && !isExpression;
+    
+    return optionsAreLegal;
   }
-      
-  public static SyntaxElement parse(String unitName) {
-  
-    String[] names = unitName.replace(".","::").split("::");
-    QualifiedName qualifiedName = new QualifiedName();
-    for (String name: names) {
-        qualifiedName.addName(name);
+  	
+  public static SyntaxElement parse(String fileName) {
+    AlfParser parser;
+    
+    element = null;
+    
+    if (fileName == null) {
+      System.out.println("Reading from standard input...");
+    } else {
+      System.out.println("Parsing " + fileName + "...");
     }
     
-    UnitDefinition unit = null;
-
     try {
-      UnitDefinition unit = RootNamespace.resolveUnit(qualifiedName);    
+      parser = new AlfParser(fileName);
+    } catch (java.io.FileNotFoundException e) {
+      System.out.println("File not found: " + fileName);
+      return null;
+    }
+    
+    try {
+    
+      if (isUnit) {
+        element = parser.UnitDefinition();
+      } else if (isStatements) {
+        element = parser.StatementSequence();
+      } else if (isExpression) {
+        element = parser.Expression();
+      }
+      
+      System.out.println("Parsed successfully.");
 
-      if (unit instanceof MissingUnit) {
-        unit = null;
-      } else {
-        if (checkConstraints || checkAllConstraints) {
-          Member stub = unit.getImpl().getStub();
-          if (stub != null) {
-            System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
-            stub.setSubunit(unit);
-          } else {
-            RootNamespace.getRootScope().addOwnedMember(unit.getDefinition());
-          }
-          if (checkAllConstraints) {
-            SyntaxElement root = RootNamespace.getRootScope();
-            root.deriveAll();
-            violations = root.checkConstraints();
-          } else {
-            violations = element.checkConstraints();
-          }
-          if (constraintsCheck()) {
-            System.out.println("No constraint violations.");
-          } else {
-            System.out.println("Constraint violations:");
-            for (ConstraintViolation violation: violations) {
-              System.out.println("  " + violation);
-            }
-          }
+      if (checkConstraints || checkAllConstraints) {
+      	UnitDefinition unit = (UnitDefinition)element;
+        Member stub = unit.getImpl().getStub();
+        if (stub != null) {
+          System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
+          stub.setSubunit(unit);
+        } else {
+          unit.getImpl().addImplicitImports();
+          RootNamespace.getRootScope().addOwnedMember(unit.getDefinition());
         }
-        if (print || printDerived) {
-          unit.print(includeDerived);
+        if (checkAllConstraints) {
+        	SyntaxElement root = RootNamespace.getRootScope();
+	        root.deriveAll();
+	        violations = root.checkConstraints();
+        } else {
+        	violations = element.checkConstraints();
+    	}
+        if (constraintsCheck()) {
+          System.out.println("No constraint violations.");
+        } else {
+          System.out.println("Constraint violations:");
+          for (ConstraintViolation violation: violations) {
+            System.out.println("  " + violation);
+          }
         }
       }
-          
+    
+      if (print || printDerived) {
+	      printElement(printDerived);
+	  }
+	  
+    } catch (ParseException e) {
+      System.out.println("Parse failed.");
+      if (e.getMessage()!=null) {
+        System.out.println(e.getMessage());
+      }
     } catch (Throwable e) {
       System.out.println("Failed.");
       e.printStackTrace();
     }
     
-    return unit;    
+    return element;
+    
   }
   
   public static void printElement(boolean includeDerived) {
     SyntaxElement element = getElement();
+    if (element != null) {
+      element.print(includeDerived);
+    }
   }
   
   public static void printFromRoot() {
@@ -182,27 +242,34 @@ public class AlfParser {
   public static void main(String args[]) {
     System.out.println("Alf " + version + " Parser");
     
-    String unitName = null;
+    String fileName = null;
     String options = "";
     
     if (args.length > 0) {
       if (args[0].charAt(0) == '-') {
         options = args[0].substring(1);
         if (args.length > 1) {
-           unitName = args[1];
+           fileName = args[1];
         }
       } else {
-         unitName = args[0];
+         fileName = args[0];
       }
     }
       
-    if (unitName != null && args.length <= 2 && parseOptions(options)) {
-      parse(unitName);
+    if (args.length <= 2 && parseOptions(options)) {
+      parse(fileName);
     } else {
       System.out.println("Usage is");
-      System.out.println("  alfp [-options] inputfile");
+      System.out.println("         alfp [-options] < inputfile");
+      System.out.println("OR");
+      System.out.println("         alfp [-options] inputfile");
       System.out.println("Options:");
+      System.out.println("  u   Parse as a unit (default)");
+      System.out.println("  s   Parse as a statement sequence");
+      System.out.println("  e   Parse as an expression");
       System.out.println("  p   Print abstract syntax tree");
+      System.out.println();
+      System.out.println("Additional options for units:");
       System.out.println("  P   Print with derived properties");
       System.out.println("  c   Perform static semantic checking)");
       System.out.println("  C   Perform static semantic checking from root");
@@ -1262,13 +1329,13 @@ Expression SequenceOperationOrReductionOrExpansion(Expression p):
   | op = <IDENTIFIER> 
     { SequenceExpansionExpression see;
       if (op.image.equals("select") || op.image.equals("reject")) { 
-          see = new SelectOrRejectExpression(ee);
+      	see = new SelectOrRejectExpression(ee);
       } else if (op.image.equals("collect") || op.image.equals("iterate")) { 
-          see = new CollectOrIterateExpression(ee);
+      	see = new CollectOrIterateExpression(ee);
       } else if (op.image.equals("forAll") || op.image.equals("exists") || op.image.equals("one")) { 
-          see = new ForAllOrExistsOrOneExpression(ee);
+      	see = new ForAllOrExistsOrOneExpression(ee);
       } else if (op.image.equals("isUnique")) { 
-          see = new IsUniqueExpression(ee);
+      	see = new IsUniqueExpression(ee);
       } else {
         throw new ParseException(errorMessage("\""+ op.image + "\" is not a legal expansion operation."));
       }
@@ -1507,7 +1574,7 @@ String NumericUnaryOperator():
     t = <PLUS>
   | t = <MINUS>
   )
-    
+	
   { return t.image; }
 }
 
@@ -1906,7 +1973,7 @@ Expression ConditionalAndExpressionCompletion(Expression u):
   e1 = InclusiveOrExpressionCompletion(u) 
   ( <SC_AND> e2 = InclusiveOrExpression() 
     { ConditionalLogicalExpression b = 
-            new ConditionalLogicalExpression(u);
+    		new ConditionalLogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("&&");
       b.setOperand2(e2);
@@ -1933,7 +2000,7 @@ Expression ConditionalOrExpressionCompletion(Expression u):
   e1 = ConditionalAndExpressionCompletion(u) 
   ( <SC_OR> e2 = ConditionalAndExpression() 
     { ConditionalLogicalExpression b = 
-            new ConditionalLogicalExpression(u);
+    		new ConditionalLogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("||");
       b.setOperand2(e2);
@@ -1963,7 +2030,7 @@ Expression ConditionalExpressionCompletion(Expression u):
   e1 = ConditionalOrExpressionCompletion(u) 
   [ <HOOK> e2 = Expression() <COLON> e3 = ConditionalExpression() 
     { ConditionalTestExpression c = 
-        new ConditionalTestExpression(u);
+    	new ConditionalTestExpression(u);
       c.setOperand1(e1);
       c.setOperand2(e2);
       c.setOperand3(e3);
@@ -2005,7 +2072,7 @@ Expression AssignmentExpressionCompletion(Expression p):
 
   e2 = Expression() 
   { AssignmentExpression e = 
-          new AssignmentExpression(p);
+  		new AssignmentExpression(p);
     e.setLeftHandSide(lhs);
     e.setOperator(op);
     e.setRightHandSide(e2);
@@ -2151,9 +2218,9 @@ InLineStatement InLineStatement():
   <SLASH_STAR_AT> t = <IDENTIFIER> 
   
   { if (!t.image.equals("inline")) { 
-        throw new ParseException(errorMessage("Encountered \"" + t.image 
-          + "\". Expected \"inline\".")); 
-      }
+  	  throw new ParseException(errorMessage("Encountered \"" + t.image 
+  	    + "\". Expected \"inline\".")); 
+  	}
   }
   
   <LPAREN> n = Name() <RPAREN> d = <DOCUMENTATION_COMMENT> 
@@ -2559,8 +2626,8 @@ void ClassificationClause(ClassifyStatement s):
   nl = ClassificationFromClause() { s.setFromList(nl); }
   [ nl = ClassificationToClause() { s.setToList(nl); } ]
 | [ ReclassifyAllClause()
-    { s.setFromList(new QualifiedNameList(this)); 
-      s.setIsReclassifyAll(true); }] 
+	{ s.setFromList(new QualifiedNameList(this)); 
+	  s.setIsReclassifyAll(true); }] 
   nl = ClassificationToClause() { s.setToList(nl); }
 }
 
@@ -3095,13 +3162,13 @@ ActivityDefinition BehaviorClause():
   String n;
 }
 {
-    (
-      b = Block() { a.setBody(b); }
-    | n = Name() { a.setName(n); a.setIsStub(true); }
-    )
-    
-    { a.setVisibility("private");
-      return a; }
+	(
+	  b = Block() { a.setBody(b); }
+	| n = Name() { a.setName(n); a.setIsStub(true); }
+	)
+	
+	{ a.setVisibility("private");
+	  return a; }
 }
 
 Member ActiveClassMember():
