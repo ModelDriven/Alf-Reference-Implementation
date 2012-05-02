@@ -12,6 +12,8 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     private String modelDirectory = "Models";
     private String libraryDirectory = "Library";
     
+    private boolean isVerbose = true;
+    
     public RootNamespaceImpl(RootNamespace self) {
         super(self);
     }
@@ -32,6 +34,10 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     
     public void setLibraryDirectory(String libraryDirectory) {
         this.libraryDirectory = libraryDirectory;
+    }
+    
+    public void setIsVerbose(boolean isVerbose) {
+        this.isVerbose = isVerbose;
     }
     
     @Override
@@ -88,7 +94,7 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
 
         try {
             UnitDefinition subunit = parser.UnitDefinition();
-            if (fromModel) {
+            if (fromModel && isVerbose) {
                 System.out.println("Parsed " + this.modelDirectory + path);
             }
             subunit.getImpl().addImplicitImports();

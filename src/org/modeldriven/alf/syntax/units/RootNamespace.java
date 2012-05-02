@@ -78,6 +78,10 @@ public class RootNamespace extends NamespaceDefinition {
         getRootScope().getImpl().setLibraryDirectory(libraryDirectory);
     }
     
+    public static void setIsVerbose(boolean isVerbose) {
+        getRootScope().getImpl().setIsVerbose(isVerbose);
+    }
+    
     public static NamespaceDefinition getModelScope(UnitDefinition unit) {
         // The default model scope for a unit consists of just the unit itself,
         // so that it can refer to itself recursively.
