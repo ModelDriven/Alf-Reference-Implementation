@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 /** Token Manager. */
+@SuppressWarnings("all")
 public class AlfParserTokenManager implements AlfParserConstants
 {
 
