@@ -88,10 +88,10 @@ public class ExtentOrExpressionImpl {
 	    Expression expression = self.getNonNameExpression();
 	    if (expression == null && name != null) {
 	        if (name.getImpl().getClassReferent() != null) {
-	            expression = new ClassExtentExpression();
+	            expression = new ClassExtentExpression(self);
 	            ((ClassExtentExpression)expression).setClassName(name);
 	        } else {
-	            expression = new NameExpression();
+	            expression = new NameExpression(self);
 	            ((NameExpression)expression).setName(name);
 	        }
 	    }
