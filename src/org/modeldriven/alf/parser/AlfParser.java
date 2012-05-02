@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@SuppressWarnings("all")
 public class AlfParser implements AlfParserConstants {
 
   private String fileName = "";

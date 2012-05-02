@@ -3,6 +3,7 @@
 package org.modeldriven.alf.parser;
 
 /** Token Manager Error. */
+@SuppressWarnings("all")
 public class TokenMgrError extends Error
 {
 
