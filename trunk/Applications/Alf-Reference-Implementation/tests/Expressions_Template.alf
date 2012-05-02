@@ -36,7 +36,7 @@ package Expressions_Template {
       
       x = 1;
       
-      A<B>(g);
+      A<B>(b);
       C<B>.D();
       C<B>.E(b);
       C<B>.F<G>(g);
