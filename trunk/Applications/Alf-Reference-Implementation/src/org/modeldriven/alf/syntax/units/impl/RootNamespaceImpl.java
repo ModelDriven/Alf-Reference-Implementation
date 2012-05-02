@@ -9,8 +9,8 @@ import org.modeldriven.alf.syntax.units.*;
 
 public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     
-    private String modelDirectory = "Root/Models";
-    private String libraryDirectory = "Root/Library";
+    private String modelDirectory = "Models";
+    private String libraryDirectory = "Library";
     
     public RootNamespaceImpl(RootNamespace self) {
         super(self);
