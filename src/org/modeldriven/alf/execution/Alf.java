@@ -117,12 +117,10 @@ public class Alf {
         }
         return classifier;
     }
-
-    public static void main(String[] args) {
-        PropertyConfigurator.configure("log4j.properties");
+    
+    public static String parseArgs(String[] args) {
         Logger logger = Logger.getLogger(fUML.Debug.class);
-
-        String unitName = "";
+        Level level = logger.getLevel();
 
         int i = 0;
         while (i < args.length) {
@@ -134,23 +132,39 @@ public class Alf {
             i++;
             if (i < args.length) {
                 arg = args[i];
+                if (arg.charAt(0) == '-') {
+                    return null;
+                }
                 i++;
                 if (option.equals("m")) {
                     RootNamespace.setModelDirectory(arg);
                 } else if (option.equals("l")) {
                     RootNamespace.setLibraryDirectory(arg);
                 } else if (option.equals("d")) {
-                    logger.setLevel(Level.toLevel(arg, Level.OFF));
+                    logger.setLevel(Level.toLevel(arg, level));
                 }
             }
         }
-        
         RootNamespace.setIsVerbose(logger.getLevel() != Level.OFF);
-        
-        if (i == args.length - 1) {
-            unitName = args[i];
-        }
+        return i == args.length - 1? args[i]: null;
+    }
 
+    public static void main(String[] args) {
+        PropertyConfigurator.configure("log4j.properties");
+
+        String unitName = parseArgs(args);
+        
+        if (unitName == null) {
+            System.out.println("Usage is");
+            System.out.println("  alf [options] inputfile");
+            System.out.println("Options:");
+            System.out.println("  -m path   Set model directory path (default is \"Models\")");
+            System.out.println("  -l path   Set library directory path (default is \"Library\")");
+            System.out.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
+            System.out.println("            Set debug logging level (default is as configured)");
+            return;
+        }
+        
         String[] names = unitName.replace(".","::").split("::");
         QualifiedName qualifiedName = new QualifiedName();
         for (String name: names) {
