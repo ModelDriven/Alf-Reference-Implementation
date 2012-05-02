@@ -216,7 +216,8 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
             QualifiedName target = this.getSelf().getTarget();
             return (target == null || 
                     target.getQualification() != null && 
-                    this.getParameter() == null)? null: 
+                    this.getParameter() == null ||
+                    target.getUnqualifiedName().getBinding() != null)? null: 
                         target.getUnqualifiedName().getName();
         }
     }
