@@ -195,6 +195,14 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	 *  Helper methods
 	 */
 	
+	@Override
+	public boolean hasAnnotation(String name) {
+	    UnitDefinition unit = this.getSelf().getUnit();
+	    Member stub = unit == null? null: unit.getImpl().getStub();
+	    return stub == null? super.hasAnnotation(name): 
+	        stub.getImpl().hasAnnotation(name);
+	}
+	
     public Collection<Member> resolveVisible(String name, 
             NamespaceDefinition namespace, boolean classifierOnly) {
         Collection<Member> members = this.resolveInScope(name, classifierOnly);

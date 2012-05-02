@@ -152,7 +152,9 @@ public abstract class MemberImpl extends DocumentedElementImpl {
      * A member is external if it has an @external derivation.
      **/
     protected Boolean deriveIsExternal() {
-		return this.hasAnnotation("external");
+        // NOTE: The following avoids an infinite recursion trying to get
+        // annotations from the stub of an external subunit.
+		return hasAnnotation("external", this.getSelf().getAnnotation());
 	}
 
 	/**
@@ -329,7 +331,15 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     }
     
     public boolean hasAnnotation(String name) {
-        for (StereotypeAnnotation annotation: this.getSelf().getAnnotation()) {
+        Member self = this.getSelf();
+        UnitDefinition subunit = self.getSubunit();
+        NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
+        return hasAnnotation(name, this.getSelf().getAnnotation()) ||
+                definition != null && hasAnnotation(name, definition.getAnnotation());
+    }
+    
+    private static boolean hasAnnotation(String name, Collection<StereotypeAnnotation> annotations) {
+        for (StereotypeAnnotation annotation: annotations) {
             if (annotation.getStereotypeName().getImpl().equals(name)) {
                 return true;
             }
