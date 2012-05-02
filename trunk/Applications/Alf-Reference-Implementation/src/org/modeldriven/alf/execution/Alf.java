@@ -10,6 +10,8 @@ package org.modeldriven.alf.execution;
 
 import java.util.Collection;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import org.modeldriven.alf.mapping.Mapping;
@@ -92,8 +94,8 @@ public class Alf {
         if (type instanceof Class_) {
             object.types.addValue((Class_)type);
             locus.add(object);
-            // System.out.println("Instantiated " + name.getPathName() + 
-            //        " as " + type.name + "(" + type + ")");
+            fUML.Debug.println("[event] Instantiated " + name.getPathName() + 
+                    " as " + type.name + "(" + type + ")");
         }
     }
     
@@ -118,6 +120,7 @@ public class Alf {
 
     public static void main(String[] args) {
         PropertyConfigurator.configure("log4j.properties");
+        Logger logger = Logger.getLogger(fUML.Debug.class);
 
         String unitName = "";
 
@@ -136,9 +139,13 @@ public class Alf {
                     RootNamespace.setModelDirectory(arg);
                 } else if (option.equals("l")) {
                     RootNamespace.setLibraryDirectory(arg);
+                } else if (option.equals("d")) {
+                    logger.setLevel(Level.toLevel(arg, Level.OFF));
                 }
             }
         }
+        
+        RootNamespace.setIsVerbose(logger.getLevel() != Level.OFF);
         
         if (i == args.length - 1) {
             unitName = args[i];
@@ -155,7 +162,7 @@ public class Alf {
         if (!(unit instanceof MissingUnit)) {
             Member stub = unit.getImpl().getStub();
             if (stub != null) {
-                System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
+                // System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
                 stub.setSubunit(unit);
             } else {
                 root.addOwnedMember(unit.getDefinition());
