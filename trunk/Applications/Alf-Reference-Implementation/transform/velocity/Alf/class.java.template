@@ -43,7 +43,11 @@ public #name(${object.name})() {
 
 public #name(${object.name})(AlfParser parser) {
   this();
-  this.setParserInfo(parser.getFileName(), parser.getLine(), parser.getColumn());
+  Token token = parser.getToken(0);
+  if (token.next != null) {
+    token = token.next;
+  }
+  this.setParserInfo(parser.getFileName(), token.beginLine, token.beginColumn);
 }
 
 public #name(${object.name})(ParsedElement element) {

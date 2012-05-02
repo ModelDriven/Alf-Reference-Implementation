@@ -12,6 +12,7 @@
 
 #set( $commonImports = "
 import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
 import org.modeldriven.alf.syntax.common.*;
