@@ -1,10 +1,11 @@
-/*
- * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
- *
- * Licensed under the Academic Free License version 3.0 
- * (http://www.opensource.org/licenses/afl-3.0.php) 
- *
- */
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved. This program and the accompanying materials
+ * are made available for non-commercial use under the terms of the 
+ * GNU General Public License (GPL) version 3 that accompanies this
+ * distribution and is available at http://www.gnu.org/licenses/gpl-3.0.html.
+ * For other licensing terms, contact Model Driven Solutions.
+ *******************************************************************************/
 
 package org.modeldriven.alf.execution;
 
@@ -52,7 +53,8 @@ import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
 public class Alf {
     
-    private static Locus locus = null;
+    private static boolean isVerbose = false;
+    private static Locus locus = null;    
     
     private static void createLocus() {
         locus = new Locus();
@@ -94,7 +96,7 @@ public class Alf {
         if (type instanceof Class_) {
             object.types.addValue((Class_)type);
             locus.add(object);
-            fUML.Debug.println("[event] Instantiated " + name.getPathName() + 
+            printVerbose("Instantiated " + name.getPathName() + 
                     " as " + type.name + "(" + type + ")");
         }
     }
@@ -118,6 +120,30 @@ public class Alf {
         return classifier;
     }
     
+    public static void setModelDirectory(String modelDirectory) {
+        RootNamespace.setModelDirectory(modelDirectory);
+    }
+    
+    public static void setLibraryDirectory(String libraryDirectory) {
+        RootNamespace.setLibraryDirectory(libraryDirectory);
+    }
+    
+    public static void setDebugLevel(Level level) {
+        Logger logger = Logger.getLogger(fUML.Debug.class);
+        logger.setLevel(level);
+    }
+    
+    public static void setIsVerbose(boolean verbose) {
+        isVerbose = verbose;
+        RootNamespace.setIsVerbose(isVerbose);
+    }
+    
+    private static void printVerbose(String message) {
+        if (isVerbose) {
+            System.out.println(message);
+        }
+    }
+    
     public static String parseArgs(String[] args) {
         Logger logger = Logger.getLogger(fUML.Debug.class);
         Level level = logger.getLevel();
@@ -137,15 +163,17 @@ public class Alf {
                 }
                 i++;
                 if (option.equals("m")) {
-                    RootNamespace.setModelDirectory(arg);
+                    setModelDirectory(arg);
                 } else if (option.equals("l")) {
-                    RootNamespace.setLibraryDirectory(arg);
+                    setLibraryDirectory(arg);
                 } else if (option.equals("d")) {
-                    logger.setLevel(Level.toLevel(arg, level));
+                    setDebugLevel(Level.toLevel(arg, level));
+                    level = logger.getLevel();
                 }
             }
         }
-        RootNamespace.setIsVerbose(logger.getLevel() != Level.OFF);
+        setIsVerbose(
+                level == Level.INFO || level == Level.DEBUG || level == Level.ALL);
         return i == args.length - 1? args[i]: null;
     }
 
@@ -176,7 +204,7 @@ public class Alf {
         if (!(unit instanceof MissingUnit)) {
             Member stub = unit.getImpl().getStub();
             if (stub != null) {
-                // System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
+                printVerbose("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
                 stub.setSubunit(unit);
             } else {
                 root.addOwnedMember(unit.getDefinition());
@@ -191,17 +219,15 @@ public class Alf {
                 }
                 
             } else {
-                // System.out.println("No constraint violations.");
+                printVerbose("No constraint violations.");
                 createLocus();
                 FumlMapping.setExecutionFactory(locus.factory);       
                 FumlMapping mapping = FumlMapping.getMapping(root);
                 try {
                     mapping.getModelElements();
-                    // System.out.println("Mapped successfully.");
-                    // System.out.println("[Alf] parsedElement=" + parsedElement);
+                    printVerbose("Mapped successfully.");
                     NamespaceDefinition definition = unit.getDefinition();
                     Mapping elementMapping = definition.getImpl().getMapping();
-                    // System.out.println("[Alf] elementMapping=" + elementMapping);
                     Element element = ((FumlMapping)elementMapping).getElement();
                     if (element instanceof Behavior && 
                             ((Behavior)element).ownedParameter.isEmpty() ||
@@ -210,7 +236,7 @@ public class Alf {
                             !((Class_)element).isAbstract && 
                             ((Class_)element).classifierBehavior != null) {
                         createSystemServices();
-                        // System.out.println("Executing...");
+                        printVerbose("Executing...");
                         if (element instanceof Behavior) {
                             locus.executor.execute(
                                     (Behavior)element, null, new ParameterValueList());
@@ -247,7 +273,7 @@ public class Alf {
                     System.out.println("Mapping failed.");
                     System.out.println(e.getMapping());                    
                     System.out.println(" error: " + e.getMessage());
-                    mapping.print();
+                    // mapping.print();
                 }
             }
         }
