@@ -16,17 +16,17 @@ import java.util.List;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.NamedExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
+import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import fUML.Syntax.Actions.BasicActions.Action;
 import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Parameter;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
 public class BehaviorInvocationExpressionMapping extends
 		InvocationExpressionMapping {
@@ -37,35 +37,38 @@ public class BehaviorInvocationExpressionMapping extends
     public Action mapAction() throws MappingError {
         InvocationExpression invocation = this.getInvocationExpression();
         if (invocation.getImpl().isAddInvocation()) {
-            Behavior addBehavior = 
-                    getBehavior(RootNamespace.getCollectionFunctionAdd());
-            List<Parameter> parameters = addBehavior.ownedParameter;
-            Tuple tuple = invocation.getTuple();
-            FumlMapping mapping = this.fumlMap(
-                    tuple.getImpl().getInput(parameters.get(0).name));
-            if (mapping instanceof NameExpressionMapping) {
-                ActivityNode resultSource = 
-                        ((NameExpressionMapping)mapping).getResultSource();
-                if (resultSource instanceof ExpansionNode) {
-                    mapping = this.fumlMap(
-                            tuple.getImpl().getInput(parameters.get(1).name));
-                    if (!(mapping instanceof ExpressionMapping)) {
-                        this.throwError("Error mapping parallel add expression: " + 
-                                mapping.getErrorMessage());
-                    } else {
-                        ExpressionMapping expressionMapping = 
-                                (ExpressionMapping)mapping;
-                        this.graph.addAll(expressionMapping.getGraph());
-                        this.graph.addObjectFlow(
-                                expressionMapping.getResultSource(), 
-                                resultSource);
-                        this.isParallelAdd = true;
-                        return null;
+            ElementReference collectionFunctionAdd = 
+                    RootNamespace.getCollectionFunctionAdd();
+            if (collectionFunctionAdd != null) {
+                List<FormalParameter> parameters = 
+                        collectionFunctionAdd.getImpl().getParameters();
+                Tuple tuple = invocation.getTuple();
+                FumlMapping mapping = this.fumlMap(
+                        tuple.getImpl().getInput(parameters.get(0).getName()));
+                if (mapping instanceof NameExpressionMapping) {
+                    ActivityNode resultSource = 
+                            ((NameExpressionMapping)mapping).getResultSource();
+                    if (resultSource instanceof ExpansionNode) {
+                        mapping = this.fumlMap(
+                                tuple.getImpl().getInput(parameters.get(1).getName()));
+                        if (!(mapping instanceof ExpressionMapping)) {
+                            this.throwError("Error mapping parallel add expression: " + 
+                                    mapping.getErrorMessage());
+                        } else {
+                            ExpressionMapping expressionMapping = 
+                                    (ExpressionMapping)mapping;
+                            this.graph.addAll(expressionMapping.getGraph());
+                            this.graph.addObjectFlow(
+                                    expressionMapping.getResultSource(), 
+                                    resultSource);
+                            this.isParallelAdd = true;
+                            return null;
+                        }
                     }
                 }
             }
         }
-        
+
         return super.mapAction();
     }
     
