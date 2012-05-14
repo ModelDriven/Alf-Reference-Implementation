@@ -425,8 +425,11 @@ public class SequenceOperationExpressionImpl
             // Note: The behavior referent of the operation is used here to
             // avoid having to deal with the implicit template binding of the
             // invocation referent.
+            ElementReference collectionFunctionAdd = 
+                    RootNamespace.getCollectionFunctionAdd();
             if (operation != null && this.expression != null &&
-                    RootNamespace.getCollectionFunctionAdd().getImpl().
+                    collectionFunctionAdd != null && 
+                    collectionFunctionAdd.getImpl().
                         equals(operation.getImpl().getBehaviorReferent())) {
                 this.expression.getImpl().setIsAddTarget();
             }
@@ -488,7 +491,9 @@ public class SequenceOperationExpressionImpl
         
         FormalParameter firstParameter = this.getFirstParameter();
         NamedExpression namedExpression = new NamedExpression();
-        namedExpression.setName(firstParameter.getName());
+        if (firstParameter != null) {
+            namedExpression.setName(firstParameter.getName());
+        }
         namedExpression.setExpression(this.getExpression());
         
         Tuple tuple = self.getTuple();

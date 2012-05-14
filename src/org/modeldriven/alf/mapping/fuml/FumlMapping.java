@@ -132,9 +132,16 @@ public abstract class FumlMapping extends Mapping {
 
     public static Behavior getBehavior(ElementReference behaviorReference)
     throws MappingError {
-        ActivityDefinitionMapping mapping = (ActivityDefinitionMapping)
-        ((ElementReferenceMapping)fumlFactory.getMapping(behaviorReference)).getMapping();
-        return (Behavior)mapping.getClassifier();
+        Mapping mapping = fumlFactory.getMapping(behaviorReference);
+        if (mapping instanceof ElementReferenceMapping) {
+            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        }
+        if (mapping instanceof ActivityDefinitionMapping) {
+            return (Behavior)((ActivityDefinitionMapping)mapping).getClassifier();
+        } else {
+            throw new MappingError(mapping,
+                    "Error mapping behavior: " +mapping.getErrorMessage());
+        }
     }
     
     public FumlMapping() {
