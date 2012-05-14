@@ -172,7 +172,9 @@ public class BehaviorInvocationExpressionImpl
 	    // Note: The behavior referent of the target is used here to avoid
 	    // having to deal with the implicit template binding of the invocation
 	    // referent.
-	    return RootNamespace.getCollectionFunctionAdd().getImpl().
+	    ElementReference collectionFunctionAdd = 
+	            RootNamespace.getCollectionFunctionAdd();
+	    return collectionFunctionAdd != null && collectionFunctionAdd.getImpl().
 	        equals(this.getSelf().getTarget().getImpl().getBehaviorReferent());
 	}
 

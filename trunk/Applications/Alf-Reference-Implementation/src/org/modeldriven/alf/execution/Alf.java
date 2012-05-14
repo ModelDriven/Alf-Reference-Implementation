@@ -169,11 +169,15 @@ public class Alf {
                 } else if (option.equals("d")) {
                     setDebugLevel(Level.toLevel(arg, level));
                     level = logger.getLevel();
+                } else {
+                    break;
                 }
             }
         }
+        
         setIsVerbose(
                 level == Level.INFO || level == Level.DEBUG || level == Level.ALL);
+        
         return i == args.length - 1? args[i]: null;
     }
 
@@ -184,8 +188,9 @@ public class Alf {
         
         if (unitName == null) {
             System.out.println("Usage is");
-            System.out.println("  alf [options] inputfile");
-            System.out.println("Options:");
+            System.out.println("  alf [options] qualifiedName");
+            System.out.println("where qualifiedName identifies an Alf unit and");
+            System.out.println("allowable options are:");
             System.out.println("  -m path   Set model directory path (default is \"Models\")");
             System.out.println("  -l path   Set library directory path (default is \"Library\")");
             System.out.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");

@@ -60,7 +60,8 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
                 if (member.getIsStub()) {
                     UnitDefinition subunit = member.getSubunit();
                     if (subunit == null) {
-                        this.throwError("Cannot resolve subunit.");
+                        this.throwError("Cannot resolve subunit for " + 
+                                member.getImpl().getQualifiedName().getPathName());
                     }
                     member = subunit.getDefinition();
                 }
