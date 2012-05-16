@@ -153,11 +153,12 @@ public class NameExpressionImpl extends ExpressionImpl {
 	 * expression are the same as those before the name expression.
 	 **/
 	protected PropertyAccessExpression derivePropertyAccess() {
-        QualifiedName name = this.getSelf().getName();
+	    NameExpression self = this.getSelf();
+        QualifiedName name = self.getName();
         if (!name.getIsFeatureReference()) {
             return null;
         } else {
-            PropertyAccessExpression propertyAccess = new PropertyAccessExpression();
+            PropertyAccessExpression propertyAccess = new PropertyAccessExpression(self);
             propertyAccess.setFeatureReference(name.getDisambiguation());
             // Note: Setting the assignments before is handled in updateAssignments.
             return propertyAccess;
