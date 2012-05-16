@@ -18,7 +18,7 @@ import org.modeldriven.alf.syntax.units.*;
 public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     
     private String modelDirectory = "Models";
-    private String libraryDirectory = "Library";
+    private String libraryDirectory = "Libraries";
     
     private boolean isVerbose = true;
     
