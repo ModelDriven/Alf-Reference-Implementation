@@ -8,10 +8,13 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.units;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.RootNamespaceImpl;
@@ -24,6 +27,24 @@ public class RootNamespace extends NamespaceDefinition {
     
     public RootNamespaceImpl getImpl() {
         return (RootNamespaceImpl)this.impl;
+    }
+    
+    @Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
+        Collection<Member> ownedMember = this.getOwnedMember();
+        if (ownedMember != null) {
+            for (Object _ownedMember : ownedMember.toArray()) {
+                // The owned members of the root namespace should all be units,
+                // so check the constraints for them as units.
+                if (_ownedMember instanceof NamespaceDefinition) {
+                    UnitDefinition unit = ((NamespaceDefinition)_ownedMember).getUnit();
+                    if (unit != null) {
+                        _ownedMember = unit;
+                    }
+                }
+                ((SyntaxElement) _ownedMember).checkConstraints(violations);
+            }
+        }
     }
     
     private static RootNamespace rootNamespace = new RootNamespace();
