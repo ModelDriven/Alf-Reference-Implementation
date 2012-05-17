@@ -317,6 +317,15 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                             }
                         }
                     }
+                    
+                    // Wrap the feature expression in a structured activity
+                    // node as the source of a control flow to the expansion
+                    // region.
+                    ActivityNode featureNode = 
+                            this.graph.addStructuredActivityNode(
+                                    "Feature(" + featureResult.name + ")", 
+                                    mapping.getModelElements());
+                    this.graph.addControlFlow(featureNode, region);
 
                     // Make the expansion region the new primary action for the
                     // mapping.
@@ -326,8 +335,8 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                     // Connect the feature mapping result source directly to
                     // the action target pin.
                     this.graph.addObjectFlow(featureResult, targetNode);
+                    this.graph.addAll(((ExpressionMapping)mapping).getGraph());
                 }
-                this.graph.addAll(((ExpressionMapping)mapping).getGraph());
             }
         }
         return thisAction;
