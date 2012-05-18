@@ -34,7 +34,7 @@ public class StringLiteralExpressionImpl extends LiteralExpressionImpl {
 	}
 
 	public String getImage() {
-		return this.image;
+		return NameBindingImpl.replaceEscapes(this.image);
 	}
 
 	public void setImage(String image) {

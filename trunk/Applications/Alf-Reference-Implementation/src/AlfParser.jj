@@ -66,7 +66,7 @@ public class AlfParser {
            this.getColumn() + ". \n" + message;
   } 
   
-  public static final String version = "v1.0 Beta (rev 3)";
+  public static final String version = "v1.0 Beta (rev 4)";
   
   public static final char unitOption = 'u';
   public static final char statementOption = 's';
@@ -481,7 +481,7 @@ TOKEN:
 |
   < STRING_LITERAL: "\"" ( <STRING_CHARACTER> )* "\"" >
 |
-  < #STRING_CHARACTER: ~["\"", "\\"] >
+  < #STRING_CHARACTER: ~["\"", "\\"] | <ESCAPE_CHARACTER> >
 }
 
 /* NAMES */

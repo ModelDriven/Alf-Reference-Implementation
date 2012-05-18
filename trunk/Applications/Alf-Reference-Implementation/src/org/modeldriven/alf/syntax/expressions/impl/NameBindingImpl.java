@@ -71,7 +71,7 @@ public class NameBindingImpl extends SyntaxElementImpl {
         }
     }
 
-    private static String replaceEscapes(String original) {
+    public static String replaceEscapes(String original) {
         String s = new String(original);
 
         int i = s.indexOf("\\");
@@ -93,7 +93,7 @@ public class NameBindingImpl extends SyntaxElementImpl {
             replacement = Character.toString(escape);
           }
 
-          s = s.substring(0, i) + replacement + s.substring(i+1,s.length());
+          s = s.substring(0, i) + replacement + s.substring(i+2,s.length());
           i = s.indexOf("\\", i+1);
 
         }
