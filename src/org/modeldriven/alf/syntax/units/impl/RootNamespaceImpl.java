@@ -11,46 +11,19 @@ package org.modeldriven.alf.syntax.units.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.modeldriven.alf.parser.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
-public class RootNamespaceImpl extends NamespaceDefinitionImpl {
-    
-    private String modelDirectory = "Models";
-    private String libraryDirectory = "Libraries";
-    
-    private boolean isVerbose = true;
+public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     public RootNamespaceImpl(RootNamespace self) {
         super(self);
+        this.setModelDirectory("Libraries");
     }
 
-    @Override
-    public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-        return false;
-    }
-
-    @Override
-    public Boolean isSameKindAs(Member member) {
-        return false;
-    }
-    
-    public void setModelDirectory(String modelDirectory) {
-        this.modelDirectory = modelDirectory;
-    }
-    
-    public void setLibraryDirectory(String libraryDirectory) {
-        this.libraryDirectory = libraryDirectory;
-    }
-    
-    public void setIsVerbose(boolean isVerbose) {
-        this.isVerbose = isVerbose;
-    }
-    
     @Override
     public Collection<Member> resolve(String name, boolean classifierOnly) {
-        Collection<Member> members = super.resolve(name, classifierOnly);
+        Collection<Member> members = super.resolveInScope(name, classifierOnly);
         if (members.size() == 0) {
             QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
             UnitDefinition unit = this.resolveUnit(qualifiedName);
@@ -75,44 +48,22 @@ public class RootNamespaceImpl extends NamespaceDefinitionImpl {
     }
 
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-        // System.out.println("Resolving unit " + qualifiedName.getPathName());
-
-        StringBuilder path = new StringBuilder();
-        for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
-            path.append("/" + nameBinding.getName());
+        ModelNamespace modelScope = RootNamespace.getModelScope();
+        
+        // Look for the unit in the model first.
+        UnitDefinition unit = modelScope.getImpl().resolveUnit(qualifiedName);
+        
+        // If not found in the model, look for the unit in the library.
+        if (unit == null) {
+            unit = super.resolveUnit(qualifiedName);
         }
-        path.append(".alf");
-
-        AlfParser parser;
-        boolean fromModel = true;
-
-        try {
-            // System.out.println("Looking for " + this.modelDirectory + path + "...");
-            parser = new AlfParser(this.modelDirectory + path);
-        } catch (java.io.FileNotFoundException e0) {
-            try {
-                // System.out.println("Looking for " + this.libraryDirectory + path + "...");
-                parser = new AlfParser(this.libraryDirectory + path);
-                fromModel = false;
-            } catch (java.io.FileNotFoundException e) {
-                System.out.println("Unit not found: " + qualifiedName.getPathName());
-                return new MissingUnit(qualifiedName);
-            }
+        
+        if (unit == null) {
+            System.out.println("Unit not found: " + qualifiedName.getPathName());
+            unit = new MissingUnit(qualifiedName);
         }
-
-        try {
-            UnitDefinition subunit = parser.UnitDefinition();
-            if (fromModel && isVerbose) {
-                System.out.println("Parsed " + this.modelDirectory + path);
-            }
-            subunit.getImpl().addImplicitImports();
-            return subunit;           
-        } catch (ParseException e) {
-            System.out.println("Parse failed: " + 
-                    (fromModel? this.modelDirectory: this.libraryDirectory) + path);
-            System.out.println(e.getMessage());
-            return new MissingUnit(qualifiedName);
-        }
+        
+        return unit;
     }
 
 }

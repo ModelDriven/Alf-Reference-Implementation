@@ -250,6 +250,24 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         return namespace == null? null: namespace.getImpl().getStubFor(self);
     }
     
+    /**
+     * Resolves the ownership of this unit as by its stub or, if the unit is not
+     * a subunit, by the model scope namespace.
+     * 
+     * @return True if the unit was resolved as a subunit, false otherwise.
+     */
+    public Boolean resolveStub() {
+        UnitDefinition self = this.getSelf();
+        Member stub = self.getImpl().getStub();
+        if (stub != null) {
+            stub.setSubunit(self);
+            return true;
+        } else {
+            RootNamespace.getModelScope(self).addOwnedMember(self.getDefinition());
+            return false;
+        }
+    }
+    
     public void addImplicitImports() {
         UnitDefinition self = this.getSelf();
         if (!this.hasImplicitImports() && self.getNamespaceName() == null &&

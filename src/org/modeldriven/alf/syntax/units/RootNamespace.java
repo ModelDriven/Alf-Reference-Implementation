@@ -8,46 +8,30 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.units;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.RootNamespaceImpl;
 
-public class RootNamespace extends NamespaceDefinition {
+public class RootNamespace extends ModelNamespace {
+    
+    private ModelNamespace modelScope = new ModelNamespace();
     
     private RootNamespace() {
         this.impl = new RootNamespaceImpl(this);
+        this.addOwnedMember(this.modelScope);
     }
     
+    @Override
     public RootNamespaceImpl getImpl() {
         return (RootNamespaceImpl)this.impl;
     }
     
-    @Override
-    public void checkConstraints(Collection<ConstraintViolation> violations) {
-        Collection<Member> ownedMember = this.getOwnedMember();
-        if (ownedMember != null) {
-            for (Object _ownedMember : ownedMember.toArray()) {
-                // The owned members of the root namespace should all be units,
-                // so check the constraints for them as units.
-                if (_ownedMember instanceof NamespaceDefinition) {
-                    UnitDefinition unit = ((NamespaceDefinition)_ownedMember).getUnit();
-                    if (unit != null) {
-                        _ownedMember = unit;
-                    }
-                }
-                ((SyntaxElement) _ownedMember).checkConstraints(violations);
-            }
-        }
-    }
-    
     private static RootNamespace rootNamespace = new RootNamespace();
+    private static ModelNamespace modelNamespace = rootNamespace.modelScope;
     
     private static QualifiedName alfStandardLibrary = null;
     private static QualifiedName primitiveTypes = null;
@@ -99,26 +83,34 @@ public class RootNamespace extends NamespaceDefinition {
         return rootNamespace;
     }
     
-    public static void setModelDirectory(String modelDirectory) {
-        getRootScope().getImpl().setModelDirectory(modelDirectory);
-    }
-    
-    public static void setLibraryDirectory(String libraryDirectory) {
-        getRootScope().getImpl().setLibraryDirectory(libraryDirectory);
-    }
-    
-    public static void setIsVerbose(boolean isVerbose) {
-        getRootScope().getImpl().setIsVerbose(isVerbose);
+    public static ModelNamespace getModelScope() {
+        return modelNamespace;
     }
     
     public static NamespaceDefinition getModelScope(UnitDefinition unit) {
-        // The default model scope for a unit consists of just the unit itself,
-        // so that it can refer to itself recursively.
         NamespaceDefinition definition = unit.getDefinition();
-        NamespaceDefinition modelScope = new PackageDefinition();
-        modelScope.addOwnedMember(definition);
-        definition.setNamespace(modelScope);
+        NamespaceDefinition modelScope = definition.getNamespace();
+        if (modelScope == null) {
+            // NOTE: The model scope for a unit must include the unit itself,
+            // so that it can refer to itself recursively.
+            modelScope = getModelScope();
+            modelScope.getMember(); // To ensure computation of derived attribute.
+            modelScope.addMember(definition);
+            definition.setNamespace(modelScope);
+        }
         return modelScope;
+    }
+    
+    public static void setModelDirectory(String modelDirectory) {
+        getModelScope().getImpl().setModelDirectory(modelDirectory);
+    }
+    
+    public static void setLibraryDirectory(String libraryDirectory) {
+        getRootScope().getImpl().setModelDirectory(libraryDirectory);
+    }
+    
+    public static void setIsVerbose(boolean isVerbose) {
+        getModelScope().getImpl().setIsVerbose(isVerbose);
     }
     
     public static UnitDefinition resolveUnit(QualifiedName qualifiedName) {

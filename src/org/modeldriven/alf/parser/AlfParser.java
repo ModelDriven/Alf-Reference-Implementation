@@ -163,13 +163,9 @@ public class AlfParser implements AlfParserConstants {
 
       if (checkConstraints || checkAllConstraints) {
         UnitDefinition unit = (UnitDefinition)element;
-        Member stub = unit.getImpl().getStub();
-        if (stub != null) {
-          System.out.println("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
-          stub.setSubunit(unit);
-        } else {
-          unit.getImpl().addImplicitImports();
-          RootNamespace.getRootScope().addOwnedMember(unit.getDefinition());
+        if (unit.getImpl().resolveStub()) {
+            System.out.println("Resolved stub for " +
+                unit.getDefinition().getImpl().getQualifiedName().getPathName());
         }
         if (checkAllConstraints) {
                 SyntaxElement root = RootNamespace.getRootScope();
