@@ -199,6 +199,11 @@ public class Alf {
             return;
         }
         
+        int len = unitName.length();
+        if (len > 4 && unitName.substring(len - 4, len).equals(".alf")) {
+            unitName = unitName.substring(0, len - 4);
+        }
+        
         String[] names = unitName.replace(".","::").split("::");
         QualifiedName qualifiedName = new QualifiedName();
         for (String name: names) {
