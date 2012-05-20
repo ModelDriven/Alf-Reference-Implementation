@@ -25,7 +25,6 @@ import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ClassDefinition;
-import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
@@ -157,26 +156,27 @@ public class Alf {
             String option = arg.substring(1);
             i++;
             if (i < args.length) {
-                arg = args[i];
-                if (arg.charAt(0) == '-') {
-                    return null;
-                }
-                i++;
-                if (option.equals("m")) {
-                    setModelDirectory(arg);
-                } else if (option.equals("l")) {
-                    setLibraryDirectory(arg);
-                } else if (option.equals("d")) {
-                    setDebugLevel(Level.toLevel(arg, level));
-                    level = logger.getLevel();
+                if (option.equals("v")) {
+                    setIsVerbose(true);
+                } else if (option.matches("[mld]")) {
+                    arg = args[i];
+                    if (arg.charAt(0) == '-') {
+                        break;
+                    }
+                    i++;
+                    if (option.equals("m")) {
+                        setModelDirectory(arg);
+                    } else if (option.equals("l")) {
+                        setLibraryDirectory(arg);
+                    } else if (option.equals("d")) {
+                        setDebugLevel(Level.toLevel(arg, level));
+                        level = logger.getLevel();
+                    }
                 } else {
                     break;
                 }
             }
         }
-        
-        setIsVerbose(
-                level == Level.INFO || level == Level.DEBUG || level == Level.ALL);
         
         return i == args.length - 1? args[i]: null;
     }
@@ -191,10 +191,11 @@ public class Alf {
             System.out.println("  alf [options] qualifiedName");
             System.out.println("where qualifiedName identifies an Alf unit and");
             System.out.println("allowable options are:");
-            System.out.println("  -m path   Set model directory path (default is \"Models\")");
-            System.out.println("  -l path   Set library directory path (default is \"Library\")");
             System.out.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
             System.out.println("            Set debug logging level (default is as configured)");
+            System.out.println("  -l path   Set library directory path (default is \"Library\")");
+            System.out.println("  -m path   Set model directory path (default is \"Models\")");
+            System.out.println("  -v        Set verbose mode");
             return;
         }
         
@@ -207,12 +208,8 @@ public class Alf {
         RootNamespace root = RootNamespace.getRootScope();
         UnitDefinition unit = RootNamespace.resolveUnit(qualifiedName);
         if (!(unit instanceof MissingUnit)) {
-            Member stub = unit.getImpl().getStub();
-            if (stub != null) {
-                printVerbose("Resolving stub for " + stub.getImpl().getQualifiedName().getPathName());
-                stub.setSubunit(unit);
-            } else {
-                root.addOwnedMember(unit.getDefinition());
+            if (unit.getImpl().resolveStub()) {
+                printVerbose("Resolved stub for " + qualifiedName.getPathName());
             }
             
             root.deriveAll();
