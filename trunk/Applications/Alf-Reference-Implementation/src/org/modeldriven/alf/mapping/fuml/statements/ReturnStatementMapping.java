@@ -62,8 +62,23 @@ public class ReturnStatementMapping extends StatementMapping {
                         node.name + ".output", expressionMapping.getType(), 
                         expression.getLower(), expression.getUpper());
                 node.addStructuredNodeOutput(pin);
+                
+                if (!ActivityGraph.isContainedIn(resultSource, node)) {
+                    StructuredActivityNode passThruNode =
+                            ActivityGraph.createPassthruNode(
+                                resultSource.name, 
+                                pin.typedElement.type, 
+                                pin.multiplicityElement.lower, 
+                                pin.multiplicityElement.upper.naturalValue);
+                    node.addNode(passThruNode);
+                    this.graph.addObjectFlow(
+                            resultSource, 
+                            passThruNode.structuredNodeInput.get(0));
+                    resultSource = passThruNode.structuredNodeOutput.get(0);
+                }
+                
                 node.addEdge(ActivityGraph.createObjectFlow(
-                        expressionMapping.getResultSource(), pin));
+                        resultSource, pin));
                 
                 ElementReference behavior = this.getReturnStatement().getBehavior();
                 FormalParameter returnParameter = behavior == null? null:
