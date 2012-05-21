@@ -240,7 +240,7 @@ public class Alf {
             } else {
                 printVerbose("No constraint violations.");
                 NamespaceDefinition definition = unit.getDefinition();
-                if (definition.getImpl().isTemplate()) {
+                if (definition.getImpl().isTemplate()) { 
                     System.out.println(definition.getName() + " is a template.");
                 } else {
                     createLocus();
