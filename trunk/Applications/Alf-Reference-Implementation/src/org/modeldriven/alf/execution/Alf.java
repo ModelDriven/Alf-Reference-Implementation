@@ -52,6 +52,7 @@ import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
 public class Alf {
     
+    private static boolean isFileName = false;
     private static boolean isVerbose = false;
     private static Locus locus = null;    
     
@@ -132,8 +133,12 @@ public class Alf {
         logger.setLevel(level);
     }
     
-    public static void setIsVerbose(boolean verbose) {
-        isVerbose = verbose;
+    public static void setIsFileName(boolean isFileName) {
+        Alf.isFileName = isFileName;
+    }
+    
+    public static void setIsVerbose(boolean isVerbose) {
+        Alf.isVerbose = isVerbose;
         RootNamespace.setIsVerbose(isVerbose);
     }
     
@@ -158,10 +163,12 @@ public class Alf {
             if (i < args.length) {
                 if (option.equals("v")) {
                     setIsVerbose(true);
+                } else if (option.equals("f")) {
+                    setIsFileName(true);
                 } else if (option.matches("[mld]")) {
                     arg = args[i];
                     if (arg.charAt(0) == '-') {
-                        break;
+                        return null;
                     }
                     i++;
                     if (option.equals("m")) {
@@ -173,7 +180,7 @@ public class Alf {
                         level = logger.getLevel();
                     }
                 } else {
-                    break;
+                    return null;
                 }
             }
         }
@@ -188,26 +195,31 @@ public class Alf {
         
         if (unitName == null) {
             System.out.println("Usage is");
-            System.out.println("  alf [options] qualifiedName");
-            System.out.println("where qualifiedName identifies an Alf unit and");
+            System.out.println("  alf [options] unit");
+            System.out.println("where unit is the qualified name of an Alf unit and");
             System.out.println("allowable options are:");
             System.out.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
             System.out.println("            Set debug logging level (default is as configured)");
+            System.out.println("  -f        Treat unit as a file name rather than a qualifed name");
             System.out.println("  -l path   Set library directory path (default is \"Library\")");
             System.out.println("  -m path   Set model directory path (default is \"Models\")");
             System.out.println("  -v        Set verbose mode");
             return;
         }
         
-        int len = unitName.length();
-        if (len > 4 && unitName.substring(len - 4, len).equals(".alf")) {
-            unitName = unitName.substring(0, len - 4);
-        }
-        
-        String[] names = unitName.replace(".","::").split("::");
         QualifiedName qualifiedName = new QualifiedName();
-        for (String name: names) {
-            qualifiedName.getImpl().addName(name);
+        
+        if (isFileName) {
+            int len = unitName.length();
+            if (len > 4 && unitName.substring(len - 4, len).equals(".alf")) {
+                unitName = unitName.substring(0, len - 4);
+            }
+            qualifiedName.getImpl().addName(unitName);
+        } else {        
+            String[] names = unitName.replace(".","::").split("::");
+            for (String name: names) {
+                qualifiedName.getImpl().addName(name);
+            }
         }
 
         RootNamespace root = RootNamespace.getRootScope();
@@ -227,60 +239,72 @@ public class Alf {
                 
             } else {
                 printVerbose("No constraint violations.");
-                createLocus();
-                FumlMapping.setExecutionFactory(locus.factory);       
-                FumlMapping mapping = FumlMapping.getMapping(root);
-                try {
-                    mapping.getModelElements();
-                    printVerbose("Mapped successfully.");
-                    NamespaceDefinition definition = unit.getDefinition();
-                    Mapping elementMapping = definition.getImpl().getMapping();
-                    Element element = ((FumlMapping)elementMapping).getElement();
-                    if (element instanceof Behavior && 
-                            ((Behavior)element).ownedParameter.isEmpty() ||
-                            element instanceof Class_ && 
-                            ((Class_)element).isActive && 
-                            !((Class_)element).isAbstract && 
-                            ((Class_)element).classifierBehavior != null) {
-                        createSystemServices();
-                        printVerbose("Executing...");
-                        if (element instanceof Behavior) {
-                            locus.executor.execute(
-                                    (Behavior)element, null, new ParameterValueList());
-                        } else {
-                            ClassDefinition classDefinition = 
-                                    (ClassDefinition)definition;
-                            OperationDefinition constructorDefinition = 
-                                    classDefinition.getImpl().getDefaultConstructor();
-                            if (constructorDefinition == null) {
-                                System.out.println("Cannot instantiate: " + 
-                                        classDefinition.getName());
-                            } else {
-                                // Instantiate active class.
-                                Class_ class_ = (Class_)element;
-                                Object_ object = locus.instantiate(class_);
-
-                                // Initialize the object.
-                                ClassDefinitionMapping classMapping =
-                                        (ClassDefinitionMapping)elementMapping;
-                                Operation initializer = 
-                                        classMapping.getInitializationOperation();
+                NamespaceDefinition definition = unit.getDefinition();
+                if (definition.getImpl().isTemplate()) {
+                    System.out.println(definition.getName() + " is a template.");
+                } else {
+                    createLocus();
+                    FumlMapping.setExecutionFactory(locus.factory);       
+                    FumlMapping mapping = FumlMapping.getMapping(root);
+                    try {
+                        mapping.getModelElements();
+                        Mapping elementMapping = definition.getImpl().getMapping();
+                        printVerbose("Mapped successfully.");
+                        Element element = ((FumlMapping)elementMapping).getElement();
+                        if (element instanceof Behavior && 
+                                ((Behavior)element).ownedParameter.isEmpty() ||
+                                element instanceof Class_ && 
+                                ((Class_)element).isActive && 
+                                !((Class_)element).isAbstract && 
+                                ((Class_)element).classifierBehavior != null) {
+                            createSystemServices();
+                            printVerbose("Executing...");
+                            if (element instanceof Behavior) {
                                 locus.executor.execute(
-                                        initializer.method.get(0), object, 
-                                        new ParameterValueList());
-
-                                // Execute the classifier behavior.
-                                object.startBehavior(class_, new ParameterValueList());
+                                        (Behavior)element, null, new ParameterValueList());
+                            } else {
+                                ClassDefinition classDefinition = 
+                                        (ClassDefinition)definition;
+                                OperationDefinition constructorDefinition = 
+                                        classDefinition.getImpl().getDefaultConstructor();
+                                if (constructorDefinition == null) {
+                                    System.out.println("Cannot instantiate: " + 
+                                            classDefinition.getName());
+                                } else {
+                                    // Instantiate active class.
+                                    Class_ class_ = (Class_)element;
+                                    Object_ object = locus.instantiate(class_);
+    
+                                    // Initialize the object.
+                                    ClassDefinitionMapping classMapping =
+                                            (ClassDefinitionMapping)elementMapping;
+                                    Operation initializer = 
+                                            classMapping.getInitializationOperation();
+                                    locus.executor.execute(
+                                            initializer.method.get(0), object, 
+                                            new ParameterValueList());
+    
+                                    // Execute the classifier behavior.
+                                    object.startBehavior(class_, new ParameterValueList());
+                                }
                             }
-                        }
-                    } else {
-                        System.out.println("Cannot execute: " + element);
+                            } else if (element instanceof Behavior) {
+                                System.out.println("Cannot execute a behavior with parameters.");
+                            } else if (element instanceof Class_) {
+                                Class_ class_ = (Class_)element;
+                                if (!class_.isActive) {
+                                    System.out.println("Cannot execute a class that is not active.");
+                                } else if (class_.isAbstract) {
+                                    System.out.println("Cannot execute an abstract class.");
+                                } else {
+                                    System.out.println("Cannot execute a class without a classifier behavior.");
+                                }
+                            }
+                    } catch (MappingError e) {
+                        System.out.println("Mapping failed.");
+                        System.out.println(e.getMapping());                    
+                        System.out.println(" error: " + e.getMessage());
                     }
-                } catch (MappingError e) {
-                    System.out.println("Mapping failed.");
-                    System.out.println(e.getMapping());                    
-                    System.out.println(" error: " + e.getMessage());
-                    // mapping.print();
                 }
             }
         }
