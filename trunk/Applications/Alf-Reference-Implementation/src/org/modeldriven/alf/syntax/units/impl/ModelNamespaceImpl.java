@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.modeldriven.alf.parser.AlfParser;
 import org.modeldriven.alf.parser.ParseException;
+import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.Member;
@@ -88,6 +89,10 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
             }
             subunit.getImpl().addImplicitImports();
             return subunit;           
+        } catch (TokenMgrError e) {
+            System.out.println("Parse failed: " + this.modelDirectory + path);
+            System.out.println(e.getMessage());
+            return null;
         } catch (ParseException e) {
             System.out.println("Parse failed: " + this.modelDirectory + path);
             System.out.println(e.getMessage());
