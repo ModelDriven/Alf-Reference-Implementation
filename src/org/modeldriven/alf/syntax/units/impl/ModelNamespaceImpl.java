@@ -78,7 +78,7 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
             // System.out.println("Looking for " + this.modelDirectory + path + "...");
             parser = new AlfParser(this.modelDirectory + path);
         } catch (java.io.FileNotFoundException e) {
-            return null;
+            return new MissingUnit(qualifiedName);
         }
 
         try {
