@@ -54,16 +54,15 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         UnitDefinition unit = modelScope.getImpl().resolveUnit(qualifiedName);
         
         // If not found in the model, look for the unit in the library.
-        if (unit == null) {
+        if (unit instanceof MissingUnit) {
             unit = super.resolveUnit(qualifiedName);
+            if (unit instanceof MissingUnit) {
+                System.out.println("Unit not found: " + qualifiedName.getPathName());
+            } 
         }
         
-        if (unit == null) {
-            System.out.println("Unit not found: " + qualifiedName.getPathName());
-            unit = new MissingUnit(qualifiedName);
-        }
-        
-        return unit;
+        // Return a MissingUnit rather than null if parsing failed.
+        return unit == null? new MissingUnit(qualifiedName): unit;
     }
 
 }
