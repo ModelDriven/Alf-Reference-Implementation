@@ -214,9 +214,10 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	
 	protected InstanceCreationExpression deriveInstanceCreationExpression() {
 	    SequenceConstructionExpression self = this.getSelf();
+	    SequenceElements elements = self.getElements();
 	    SequenceConstructionExpression argument = 
-	        new SequenceConstructionExpression();
-	    argument.setElements(self.getElements());
+	        new SequenceConstructionExpression(elements);
+	    argument.setElements(elements);
 	    argument.setHasMultiplicity(true);
 
 	    ElementReference type = self.getType();
@@ -231,11 +232,11 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	        }
 	    }
 
-	    PositionalTuple tuple = new PositionalTuple();
+	    PositionalTuple tuple = new PositionalTuple(argument);
 	    tuple.addExpression(argument);
 
 	    InstanceCreationExpression instanceCreation = 
-	        new InstanceCreationExpression();
+	        new InstanceCreationExpression(self);
 	    instanceCreation.setConstructor(typeName);
 	    instanceCreation.setTuple(tuple);
 	    tuple.setInvocation(instanceCreation);
