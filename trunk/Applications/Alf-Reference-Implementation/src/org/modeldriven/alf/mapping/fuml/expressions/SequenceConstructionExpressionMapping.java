@@ -24,9 +24,6 @@ import fUML.Syntax.Actions.BasicActions.OutputPin;
 import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
 import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
-
-import java.util.Collection;
 
 public class SequenceConstructionExpressionMapping extends ExpressionMapping {
     
@@ -87,7 +84,6 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
      * 7. The keyword null is mapped as any[]{}.
      */
     
-    // This is only called if the expression has multiplicity.
     private void mapToAction() throws MappingError {
         SequenceConstructionExpression expression = 
             this.getSequenceConstructionExpression();
@@ -102,6 +98,7 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
                     (InstanceCreationExpressionMapping)mapping;
                 this.action = this.instanceCreationMapping.getAction();
                 this.resultSource = this.instanceCreationMapping.getResultSource();
+                this.graph = this.instanceCreationMapping.getGraph();
             }
         } else {
             SequenceElements elements = expression.getElements();
@@ -154,16 +151,6 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
         this.getAction();
         return super.getGraph();
     }
-
-    @Override
-    public Collection<Element> getModelElements() throws MappingError {
-        this.getAction();
-		if (this.instanceCreationMapping == null) {
-		    return super.getModelElements();
-		} else {
-		    return this.instanceCreationMapping.getModelElements();
-		}
-	}
 
 	public SequenceConstructionExpression getSequenceConstructionExpression() {
 		return (SequenceConstructionExpression) this.getSource();
