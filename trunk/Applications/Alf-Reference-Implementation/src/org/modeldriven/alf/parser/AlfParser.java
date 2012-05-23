@@ -166,6 +166,8 @@ public class AlfParser implements AlfParserConstants {
         if (unit.getImpl().resolveStub()) {
             System.out.println("Resolved stub for " +
                 unit.getDefinition().getImpl().getQualifiedName().getPathName());
+        } else {
+            unit.getImpl().addImplicitImports();
         }
         if (checkAllConstraints) {
                 SyntaxElement root = RootNamespace.getRootScope();
