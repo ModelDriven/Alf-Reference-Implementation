@@ -57,39 +57,48 @@ public class IsUniqueExpressionMapping extends
     @Override
     public void map() throws MappingError {
         super.map();
-        ForkNode forkNode = 
-            this.graph.addForkNode("Fork(" + this.resultSource.name + ")");
+
+        ActivityGraph nestedGraph = new ActivityGraph();
+        ActivityNode forkNode = 
+            nestedGraph.addForkNode("Fork(" + this.resultSource.name + ")");
+        // NOTE: A structured activity node is used here as the source of a
+        // control flow to the next expansion region, in order to allow tokens
+        // to be offered on both outgoing flows of the fork node before the
+        // expansion region fires.
+        ActivityNode forkStructureNode = this.graph.addStructuredActivityNode(
+                "Node(" + forkNode.name + ")", nestedGraph.getModelElements());
+        this.graph.addObjectFlow(this.resultSource, forkNode);
         
         // Map the test for count = 1.
-        ActivityGraph nestedGraph = new ActivityGraph();
+        nestedGraph = new ActivityGraph();
         ForkNode variableSource = nestedGraph.addForkNode("Fork(each)");
         CallBehaviorAction callAction = nestedGraph.addCallBehaviorAction(
                 getBehavior(RootNamespace.getSequenceFunctionCount()));
         ValueSpecificationAction valueAction = 
             nestedGraph.addNaturalValueSpecificationAction(1);
-        TestIdentityAction testAction = 
-            nestedGraph.addTestIdentityAction("Test(=1)");
+        TestIdentityAction testAction = nestedGraph.addTestIdentityAction("=1");
         
-        nestedGraph.addObjectFlow(variableSource, callAction.argument.get(0));
-        nestedGraph.addObjectFlow(forkNode, callAction.argument.get(1));
+        nestedGraph.addObjectFlow(forkNode, callAction.argument.get(0));
+        nestedGraph.addObjectFlow(variableSource, callAction.argument.get(1));
         nestedGraph.addObjectFlow(callAction.result.get(0), testAction.first);
         nestedGraph.addObjectFlow(valueAction.result, testAction.second);
         
-        super.mapNestedGraph(
+        ActivityNode node = super.mapNestedGraph(
                 "uniqueness", variableSource, nestedGraph, testAction.result);
         ActivityNode nestedResult = 
-            this.addTermination(nestedGraph, testAction.result);
+            this.addTermination(nestedGraph, node);
         
         // Create the expansion region for testing the count on each element.
-        // NOTE: Object flow from forkNode to second callAction.argument will
+        // NOTE: Object flow from forkNode to the first callAction.argument will
         // result in an input pin at the expansion region boundary.
         IsUniqueExpression expression = this.getIsUniqueExpression();
         ExpansionRegion region = this.graph.addExpansionRegion(
                 "Uniqueness(" + expression.getClass().getSimpleName()+ 
                             "@" + expression.getId() + ")", 
                 ExpansionKind.parallel, 
-                this.graph.getModelElements(), 
+                nestedGraph.getModelElements(), 
                 forkNode, variableSource, nestedResult);
+        this.graph.addControlFlow(forkStructureNode, region);
         this.resultSource = region.outputElement.get(0);
         
         // Add the final check that there are no elements with a count != 1.
