@@ -10,6 +10,8 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
+import java.util.Collection;
+
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
@@ -27,6 +29,7 @@ import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
 import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
 import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
 import fUML.Syntax.Activities.IntermediateActivities.MergeNode;
+import fUML.Syntax.Classes.Kernel.Element;
 
 public abstract class SequenceExpansionExpressionMapping extends
 		ExpressionMapping {
@@ -160,11 +163,25 @@ public abstract class SequenceExpansionExpressionMapping extends
             ActivityGraph nestedGraph, ActivityNode resultSource) {
         ForkNode forkNode = 
             nestedGraph.addForkNode("Fork(" + resultSource.name + ")");
-        ActivityNode finalNode = 
-            nestedGraph.addActivityFinalNode(
-                    "ActivityFinal(" + resultSource.name + ")");
         nestedGraph.addObjectFlow(resultSource, forkNode);
-        nestedGraph.addObjectFlow(forkNode, finalNode);
+        
+        // NOTE: The use of an enclosing structured activity node here is to
+        // allow the value produced by the computation be offered to the
+        // output expansion node before the termination of the expansion region
+        // by the activity final node.
+        Collection<Element> elements = nestedGraph.getModelElements();
+        nestedGraph.clear();
+        ActivityNode structuredNode = nestedGraph.addStructuredActivityNode(
+                "Compute(" + resultSource.name + ")", elements);
+        ActivityNode joinNode = nestedGraph.addJoinNode(
+                "Join(" + resultSource.name + ")");
+        ActivityNode finalNode = 
+            nestedGraph.addMergeNode(
+                    "ActivityFinal(" + resultSource.name + ")");
+        nestedGraph.addObjectFlow(forkNode, joinNode);
+        nestedGraph.addControlFlow(structuredNode, joinNode);
+        nestedGraph.addObjectFlow(joinNode, finalNode);
+        
         return forkNode;
     }
     
