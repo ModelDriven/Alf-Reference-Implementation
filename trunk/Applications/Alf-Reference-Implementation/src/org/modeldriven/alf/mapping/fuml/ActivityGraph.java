@@ -54,6 +54,10 @@ public class ActivityGraph {
         this.modelElements.removeAll(elements);
     }
     
+    public void clear() {
+        this.modelElements.clear();
+    }
+    
     public Collection<Element> getModelElements() {
         return new ArrayList<Element>(this.modelElements);
     }
@@ -158,6 +162,13 @@ public class ActivityGraph {
         initialNode.setName(name);
         this.add(initialNode);
         return initialNode;
+    }
+    
+    public JoinNode addJoinNode(String name) {
+        JoinNode join = new JoinNode();
+        join.setName(name);
+        this.add(join);
+        return join;
     }
     
     public MergeNode addMergeNode(String name) {
