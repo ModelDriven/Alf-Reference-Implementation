@@ -25,7 +25,9 @@ import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 
@@ -91,7 +93,7 @@ public abstract class SyntaxElement implements ParsedElement {
 	}
 
 	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		Collection<ConstraintViolation> violations = new HashSet<ConstraintViolation>();
 		this.checkConstraints(violations);
 		return violations;
 	}

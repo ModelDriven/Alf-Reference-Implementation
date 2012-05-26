@@ -25,6 +25,7 @@ import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
@@ -137,7 +138,7 @@ public class AssignedSource implements ParsedElement {
 	}
 
 	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		Collection<ConstraintViolation> violations = new HashSet<ConstraintViolation>();
 		this.checkConstraints(violations);
 		return violations;
 	}

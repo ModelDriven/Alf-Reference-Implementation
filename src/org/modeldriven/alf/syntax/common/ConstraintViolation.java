@@ -32,5 +32,26 @@ public class ConstraintViolation {
         return this.getConstraintName() + " in " + element.getFileName() + 
             " at line " + element.getLine() + ", column " + element.getColumn();
     }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof ConstraintViolation)) {
+            return false;
+        } else {
+            ConstraintViolation violation = (ConstraintViolation)other;
+            String constraintName = this.getConstraintName();
+            String otherConstraintName = violation.getConstraintName();
+            ParsedElement violatingElement = this.getViolatingElement();
+            ParsedElement otherViolatingElement = violation.getViolatingElement();
+            return (constraintName == null && otherConstraintName == null ||
+                    constraintName != null && constraintName.equals(otherConstraintName)) &&
+                   violatingElement == otherViolatingElement;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+        return this.getViolatingElement().hashCode();
+    }
 
 }

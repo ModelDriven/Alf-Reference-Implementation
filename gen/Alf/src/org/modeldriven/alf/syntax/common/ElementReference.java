@@ -92,7 +92,7 @@ public abstract class ElementReference implements ParsedElement {
 	}
 
 	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+		Collection<ConstraintViolation> violations = new HashSet<ConstraintViolation>();
 		this.checkConstraints(violations);
 		return violations;
 	}
