@@ -61,6 +61,9 @@ public class SequenceOperationExpressionImpl
 
 	public void setPrimary(ExtentOrExpression primary) {
 		this.primary = primary;
+		if (primary != null) {
+		    primary.getImpl().setContainingExpression(this.getSelf());
+		}
 	}
 
 	public QualifiedName getOperation() {
