@@ -81,6 +81,9 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 
 	public void setPrimary(ExtentOrExpression primary) {
 		this.primary = primary;
+		if (primary != null) {
+		    primary.getImpl().setContainingExpression(this.getSelf());
+		}
 	}
 
 	/**
