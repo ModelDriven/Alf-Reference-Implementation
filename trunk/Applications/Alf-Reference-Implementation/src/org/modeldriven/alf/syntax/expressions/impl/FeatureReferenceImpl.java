@@ -97,12 +97,10 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 	    if (targetType != null && nameBinding != null) {
 	        String name = nameBinding.getName();
 	        if (name != null) {
-    	        for (ElementReference feature: targetType.getImpl().getFeatures()) {
-    	            String featureName = feature.getImpl().getName();
-    	            if (name.equals(featureName)) {
-    	                referents.add(feature);
-    	            }
-    	        }
+	            for (Member member: targetType.getImpl().asNamespace().
+	                    getImpl().resolveVisible(name, this.currentScope, false)) {
+	                referents.add(member.getImpl().getReferent());
+	            }
     	        if (this.currentScope != null) {
     	            referents.addAll(this.currentScope.getImpl().
     	                    resolveAssociationEnd(targetType, name));
