@@ -146,7 +146,7 @@ public class ClassificationExpressionImpl extends UnaryExpressionImpl {
 	 * classifier.
 	 **/
 	public boolean classificationExpressionTypeName() {
-		return this.getSelf().getType() != null;
+		return this.getSelf().getReferent() != null;
 	}
 
 	/**
