@@ -210,7 +210,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             
         // Note: If this namespace is the same as or a containing scope of the 
         // given namespace, then all members of this namespace are visible.
-        if (this.getSelf() != namespace && !this.containsMember(namespace)) {
+        if (!this.getReferent().getImpl().equals(namespace.getImpl().getReferent()) &&
+                !this.containsMember(namespace)) {
             boolean allowPackageOnly = this.allowPackageOnly();
             for (Object member: members.toArray()) {
                 MemberImpl memberImpl = ((Member)member).getImpl();
@@ -230,7 +231,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         } else {
             NamespaceDefinition namespace = member.getNamespace();
             return namespace != null && 
-                    (namespace.getImpl().getReferent() == this.getReferent() || 
+                    (namespace.getImpl().getReferent().getImpl().
+                            equals(this.getReferent()) || 
                     this.containsMember(namespace));
         }
     }
