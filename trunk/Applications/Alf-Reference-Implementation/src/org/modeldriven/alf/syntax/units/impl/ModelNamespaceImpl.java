@@ -59,6 +59,7 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
                 NamespaceDefinition self = this.getSelf();
                 self.addOwnedMember(member);
                 self.addMember(member);
+                member.setNamespace(self);
             }
         }
         return members;
