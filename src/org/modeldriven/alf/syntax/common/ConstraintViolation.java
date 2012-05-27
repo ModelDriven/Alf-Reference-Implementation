@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.common;
 
-public class ConstraintViolation {
+public class ConstraintViolation implements Comparable<ConstraintViolation> {
     
     private String constraintName = null;
     private ParsedElement violatingElement = null;
@@ -52,6 +52,22 @@ public class ConstraintViolation {
     @Override
     public int hashCode() {
         return this.getViolatingElement().hashCode();
+    }
+
+    @Override
+    public int compareTo(ConstraintViolation other) {
+        ParsedElement element = this.getViolatingElement();
+        int line = element.getLine();
+        int column = element.getColumn();
+        
+        element = other.getViolatingElement();
+        int otherLine = element.getLine();
+        int otherColumn = element.getColumn();
+        
+        return line < otherLine? -1:
+               line > otherLine? 1:
+               column < otherColumn? -1:
+               column > otherColumn? 1: 0;
     }
 
 }

@@ -25,7 +25,7 @@ import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
@@ -93,7 +93,7 @@ public abstract class ElementReference implements ParsedElement {
 	}
 
 	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new HashSet<ConstraintViolation>();
+		Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
 		this.checkConstraints(violations);
 		return violations;
 	}
