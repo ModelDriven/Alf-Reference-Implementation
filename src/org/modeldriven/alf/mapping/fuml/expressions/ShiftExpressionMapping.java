@@ -28,7 +28,7 @@ public class ShiftExpressionMapping extends BinaryExpressionMapping {
             ActivityNode operand2Result) throws MappingError {
         ShiftExpression expression = this.getShiftExpression();
         if (expression.getIsBitStringConversion()) {
-            operand2Result = this.addBitStringConversion(operand1Result);
+            operand1Result = this.addBitStringConversion(operand1Result);
         }
         super.mapOperator(operator, operand1Result, operand2Result);
     }
