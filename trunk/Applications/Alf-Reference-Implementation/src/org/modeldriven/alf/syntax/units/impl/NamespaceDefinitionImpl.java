@@ -210,7 +210,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             
         // Note: If this namespace is the same as or a containing scope of the 
         // given namespace, then all members of this namespace are visible.
-        if (!this.getReferent().getImpl().equals(namespace.getImpl().getReferent()) &&
+        if (namespace != null && !this.getReferent().getImpl().equals(namespace.getImpl().getReferent()) &&
                 !this.containsMember(namespace)) {
             boolean allowPackageOnly = this.allowPackageOnly();
             for (Object member: members.toArray()) {
