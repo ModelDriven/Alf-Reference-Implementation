@@ -93,7 +93,7 @@ public abstract class SyntaxElement implements ParsedElement {
 	}
 
 	public Collection<ConstraintViolation> checkConstraints() {
-		Collection<ConstraintViolation> violations = new HashSet<ConstraintViolation>();
+		Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
 		this.checkConstraints(violations);
 		return violations;
 	}

@@ -299,7 +299,7 @@ public void _deriveAll() {
 
 #if( ${class.superClasses.size()} == 0 )
 public Collection<ConstraintViolation> checkConstraints() {
-    Collection<ConstraintViolation> violations = new ArrayList<ConstraintViolation>();
+    Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
     this.checkConstraints(violations);
     return violations;
 }
