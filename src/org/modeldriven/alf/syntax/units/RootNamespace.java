@@ -22,6 +22,9 @@ public class RootNamespace extends ModelNamespace {
     
     private RootNamespace() {
         this.impl = new RootNamespaceImpl(this);
+        // NOTE: The root namespace is NOT set as the namespace of the model
+        // scope namespace, so that name resolution does not propagate out of
+        // model scope into root scope.
         this.addOwnedMember(this.modelScope);
     }
     
@@ -95,6 +98,7 @@ public class RootNamespace extends ModelNamespace {
             // so that it can refer to itself recursively.
             modelScope = getModelScope();
             modelScope.getMember(); // To ensure computation of derived attribute.
+            modelScope.addOwnedMember(definition);
             modelScope.addMember(definition);
             definition.setNamespace(modelScope);
         }

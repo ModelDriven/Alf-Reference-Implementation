@@ -263,7 +263,8 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
             stub.setSubunit(self);
             return true;
         } else {
-            RootNamespace.getModelScope(self).addOwnedMember(self.getDefinition());
+            // Ensures that a model unit is made a member of its model scope.
+            RootNamespace.getModelScope(self);
             return false;
         }
     }
