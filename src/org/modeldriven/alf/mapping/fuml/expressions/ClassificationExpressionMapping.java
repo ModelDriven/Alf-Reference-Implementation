@@ -49,7 +49,7 @@ public class ClassificationExpressionMapping extends UnaryExpressionMapping {
             }
             if (!(mapping instanceof ClassifierDefinitionMapping)) {
                 this.throwError("Error mapping referent for " + 
-                        expression.getTypeName() + 
+                        expression.getTypeName().getPathName() + 
                         ": " + mapping.getErrorMessage());
             } else {
                 ClassifierDefinitionMapping referentMapping = 
