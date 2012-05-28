@@ -87,5 +87,12 @@ active class Statements_Conditional {
 	  
     }
 } do {
-	this.test();
+	this.test(condition1, condition2, condition3, year, month, numDays);
+	
+	AssertEqual("condition1", condition1, Condition::alert);
+	AssertEqual("condition2", condition2, Condition::critical);
+	AssertEqual("condition3", condition3, Condition::critical);
+	AssertEqual("year", year, 2012);
+	AssertEqual("month", month, 2);
+	AssertEqual("numDays", numDays, 29);
 }

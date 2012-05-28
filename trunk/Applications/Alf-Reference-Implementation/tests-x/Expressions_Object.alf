@@ -6,9 +6,9 @@ active class Expressions_Object {
     // Supporting declarations *************************************************
     
   	members: Member[*] sequence;
-	principal: Integer;
-	rate: Integer;
-	interest: Integer;
+	  principal: Integer;
+	  rate: Integer;
+	  interest: Integer;
 	
     class Member { 
       	public isActive: Boolean;
@@ -16,9 +16,9 @@ active class Expressions_Object {
       	public address: String;
   	}
   	datatype Customer {
-  		public name: String;
-  		public email: String;
-  		public address: String[*] sequence;
+  		  public name: String;
+  		  public email: String;
+  		  public address: String[*] sequence;
     }
   	
 	//**************************************************************************
@@ -46,5 +46,23 @@ active class Expressions_Object {
 	  self = this;
 	}
 } do {
-	this.test();
+	this.test(member, customer0, customer1, names, self);
+	
+	AssertEqual("member.name", member.name, "A");
+	AssertTrue("member.isActive", member.isActive);
+	AssertEqual("member.address", member.address, "Easy Street");
+	
+	AssertEqual("customer0.name", customer0.name, "Fred");
+	AssertEqual("customer0.email", customer0.email, "fred@blah.com");
+	AssertList("customer0.address", customer0.address, "Unknown");
+	
+  AssertEqual("customer1.name", customer1.name, "Fred");
+  AssertEqual("customer1.email", customer1.email, "fred@blah.com");
+  AssertList("customer1.address", customer1.address, "Easy Street");
+	
+	AssertEqual("self.principal", self.principal, 1000);
+	AssertEqual("self.rate", self.rate, 5);
+	AssertEqual("self.interest", self.interest, 500);
+	
+	AssertList("names", names, String[]{"A", "B"});
 }

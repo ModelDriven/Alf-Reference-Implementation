@@ -6,32 +6,35 @@ active class Expressions_Constructor_Destructor {
     // Supporting declarations *************************************************
     
     class Initialization { 
-  	public a: Integer = this.b -> size();
-  	public b: Integer = 1;
+  	    public a: Integer = this.b -> size();
+  	    public b: Integer = 1;
     }
     class Initialization2 specializes Initialization {
-  	public c: Integer = this.a + 2;
+  	    public c: Integer = this.a + 2;
     }
     class Monitor { 
-       	@Destroy public destroy(in recoveryLog: Log) { }
+        @Destroy public destroy(in recoveryLog: Log) { 
+            recoveryLog.logged = true; 
+        }
     }
     class Log { 
-    	public name: String = "Default";
+    	  public name: String = "Default";
+    	  public logged: Boolean = false;
     }
     class Employee { 
-        private id: Integer;
-   	private name: String;
-   	private transferred: Boolean = false;
-   	private relocated: Boolean = false;
+        public id: Integer;
+     	  public name: String;
+   	    public transferred: Boolean = false;
+   	    public relocated: Boolean = false;
    		
         @Create public Employee(in id: Integer, in name: String) { 
             this.id = id;
-   	    this.name = name;
-   	}
-  	@Create public transferred(in employeeInfo: Employee) { 
-  	    this(employeeInfo.id, employeeInfo.name);
-  	    this.transferred = true;
-  	}
+   	        this.name = name;
+   	    }
+  	    @Create public transferred(in employeeInfo: Employee) { 
+  	        this(employeeInfo.id, employeeInfo.name);
+  	        this.transferred = true;
+  	    }
         @Create public relocated(in employeeInfo: Employee) {
             this.transferred(employeeInfo);
             this.relocated = true;
@@ -40,16 +43,16 @@ active class Expressions_Constructor_Destructor {
    	
     datatype D {
         public x: String;
-   	public y: Integer[];
+   	    public y: Integer[] sequence;
     }
   	
     //**************************************************************************
 
     test(
-	out employee1: Employee, out employee2: Employee, out employee3: Employee,
-	out init: Initialization, 
-	out log: Log, out monitor1: Monitor, out monitor2: Monitor,
-	out d: D) {
+    	out employee1: Employee, out employee2: Employee, out employee3: Employee,
+    	out init: Initialization, 
+    	out log: Log, out monitor1: Monitor, out monitor2: Monitor,
+    	out d: D) {
 	  
       i = 100;
       name = "Fred";
@@ -63,12 +66,36 @@ active class Expressions_Constructor_Destructor {
 	  
       init.destroy();
       
-      (monitor2 = new Monitor()).destroy(new Log());
+      (monitor2 = new Monitor()).destroy(log);
       
-      d = new D("test", Integer[]{1,2});
-	  
+      d = new D("test", Integer[]{1,2});	  
     }
 
 } do {
-    this.test();
+    this.test(employee1, employee2, employee3, init, log, monitor1, monitor2, d);
+    
+    AssertEqual("employee1.id", employee1.id, 100);
+    AssertEqual("employee1.name", employee1.name, "Fred");
+    AssertFalse("employee1.transferred", employee1.transferred);
+    AssertFalse("employee1.relocated", employee1.relocated);
+    
+    AssertEqual("employee2.id", employee2.id, 100);
+    AssertEqual("employee2.name", employee2.name, "Fred");
+    AssertTrue("employee2.transferred", employee2.transferred);
+    AssertFalse("employee2.relocated", employee2.relocated);
+    
+    AssertEqual("employee3.id", employee3.id, 100);
+    AssertEqual("employee3.name", employee3.name, "Fred");
+    AssertTrue("employee3.transferred", employee3.transferred);
+    AssertTrue("employee3.relocated", employee3.relocated);
+    
+    AssertFalse("init instanceof Initialization", init instanceof Initialization);
+    
+    AssertTrue("monitor1 instanceof Monitor", monitor1 instanceof Monitor);
+    AssertFalse("monitor2 instanceof Monitor", monitor2 instanceof Monitor);
+    AssertEqual("log.name", log.name, "Default");
+    AssertTrue("log.logged", log.logged);
+    
+    AssertEqual("d.x", d.x, "test");
+    AssertList("d.y", d.y, Integer[]{1,2});
 }

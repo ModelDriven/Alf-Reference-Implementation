@@ -1,0 +1,3 @@
+activity Write(in value: any) {
+  StandardOutputChannel.allInstances()[1].write(value);
+}

@@ -118,5 +118,27 @@ active class Expressions_Association {
     }
 
 } do {
-    this.test();
+    this.test(owner, house, house_a, house_b,
+        owner1_a, house1_a, owner1_b, house1_b, house1_c,
+        players1_a, players2_a, players1_b, players2_b);
+    
+    AssertEqual("owner.name", owner.name, "Jack");
+    AssertEqual("house.id", house.id, 1);
+    AssertEqual("house_a.id", house_a.id, 2);
+    AssertTrue("house_b->isEmpty()", house_b->isEmpty());
+    AssertEqual("owner1_a.name", owner1_a.name, "Jack");
+    AssertEqual("house1_a->size()", house1_a->size(), 2);
+    AssertEqual("house1_a[1].id", house1_a[1].id, 2);
+    AssertEqual("house1_a[2].id", house1_a[2].id, 1);
+    AssertEqual("owner1_b.name", owner1_b.name, "Jane");
+    AssertEqual("house1_b->size()", house1_b->size(), 1);
+    AssertEqual("house1_b[1].id", house1_b[1].id, 1);
+    AssertEqual("house1_c->size()", house1_c->size(), 2);
+    AssertEqual("house1_c[1].id", house1_c[1].id, 1);
+    AssertEqual("house1_c[2].id", house1_c[2].id, 3);
+    WriteLine("");
+    AssertList("players1_a.name", players1_a.name, String[]{"Fred","Marvin"});
+    AssertTrue("players2_a->isEmpty()", players2_a->isEmpty());
+    AssertList("players1_b.name", players1_b.name, "Marvin");
+    AssertList("players2_b.name", players2_b.name, "Fred");
 }

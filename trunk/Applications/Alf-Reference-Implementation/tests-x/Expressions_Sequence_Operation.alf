@@ -13,7 +13,7 @@ active class Expressions_Sequence_Operation {
 	//**************************************************************************
 
 	test(
-		out notEmpty: Boolean, out includes: Boolean, out n: Integer,
+		out notEmpty: Boolean, out includes: Boolean, out m: Integer, out n: Integer,
 		out customers: Customer[*], out list: any[*]) {
 	
 	  customer = new Customer("A");
@@ -28,8 +28,8 @@ active class Expressions_Sequence_Operation {
 	  customers->removeAt(2);
 	  customers->remove(customer);
 	  
-	  n = Customer->size();
-	  Customer.allInstances()->size();
+	  m = Customer->size();
+	  n = Customer.allInstances()->size();
 	  
 	  list = null; // Type is "any".
 	  list = list->including(customer);
@@ -40,5 +40,13 @@ active class Expressions_Sequence_Operation {
 	}
 	
 } do {
-    this.test();
+    this.test(notEmpty, includes, n, m, customers, list);
+    
+    AssertFalse("notEmpty", notEmpty);
+    AssertFalse("includes", includes);
+    AssertEqual("n", n, 3);
+    AssertEqual("m", m, 3);
+    
+    AssertList("customers.name", customers.name, "C");
+    AssertList("list", list, any[]{"Blah", 1});
 }

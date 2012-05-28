@@ -24,60 +24,65 @@ active class Statements_Looping {
 	//**************************************************************************
 
     public test(
-    	out readings: Integer[*], out sum: Integer, out i: Integer,
+    	out readings: Integer[*], out sum: Integer,
     	out outgoingEdges: ActivityEdgeInstance[*],
     	out SnEven: Integer[*], out SnOdd: Integer[*]) {
     
       // Setup
-	  noiseLimit = 0;
-	  sensors = Sensor[]{new Sensor(1), new Sensor(2), new Sensor(null), new Sensor(3)};
-	  reading = +0;
-	  readings = null;
-	  recordCount = 10;
-	  sum = 0;
-	  i = 1;
-	  outgoingEdges = ActivityEdgeInstance[]{new ActivityEdgeInstance(), new ActivityEdgeInstance()};
-	  tokens = Integer[]{1, 2, 3};
-	  SLower = Integer[]{4, 5, 6};
-	  SUpper = Integer[]{1, 2, 3};
-	  SnEven = null;
-	  SnOdd = null;
-	  V = Integer[]{10, 20, 30};
-	  // *****
+  	  noiseLimit = 0;
+  	  sensors = Sensor[]{new Sensor(1), new Sensor(2), new Sensor(null), new Sensor(3)};
+  	  reading = +0;
+  	  readings = null;
+  	  recordCount = 10;
+  	  sum = 0;
+  	  outgoingEdges = ActivityEdgeInstance[]{new ActivityEdgeInstance(), new ActivityEdgeInstance()};
+  	  tokens = Integer[]{1, 2, 3};
+  	  SLower = Integer[]{4, 5, 6};
+  	  SUpper = Integer[]{1, 2, 3};
+  	  SnEven = null;
+  	  SnOdd = null;
+  	  V = Integer[]{10, 20, 30};
+	    // *****
 	      
-	  for (s in sensors) {
+  	  for (s in sensors) {
         reading = s.getNextReading();
-	    if (reading->isEmpty()) {
-	      break;
-	    }
-	    if (reading > noiseLimit) {
-	      readings->add(reading);
-	    }
-	  }
-	  
-	  for (j in 1..recordCount) {
-	    sum = sum + j;
-	  }
-	  
-	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges, Token token: tokens) {
-	    outgoingEdge.sendOffer(token);
-	  }
-	  
-	  //@parallel 
-	  for (outgoingEdge in outgoingEdges, token in tokens) {
-	    outgoingEdge.sendOffer(outgoingEdge.token + token);
-	  }
-	  
-	  //@parallel(SnEven,SnOdd)
-	  for (lower in SLower, upper in SUpper, root in V) {
-	    //@parallel 
-	    {
-	      add(SnEven, lower+upper);
-	      SnOdd->add((lower-upper)*root);
-	    }
-	  }
-	  
+  	    if (reading->isEmpty()) {
+  	      break;
+  	    }
+  	    if (reading > noiseLimit) {
+  	      readings->add(reading);
+  	    }
+  	  }
+  	  
+  	  for (j in 1..recordCount) {
+  	    sum = sum + j;
+  	  }
+  	  
+  	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges, Token token: tokens) {
+  	    outgoingEdge.sendOffer(token);
+  	  }
+  	  
+  	  //@parallel 
+  	  for (outgoingEdge in outgoingEdges, token in tokens) {
+  	    outgoingEdge.sendOffer(outgoingEdge.token + token);
+  	  }
+  	  
+  	  //@parallel(SnEven,SnOdd)
+  	  for (lower in SLower, upper in SUpper, root in V) {
+  	    //@parallel 
+  	    {
+  	      add(SnEven, lower+upper);
+  	      SnOdd->add((lower-upper)*root);
+  	    }
+  	  }
+  	  
     }
 } do {
-	this.test();
+	this.test(readings, sum, outgoingEdges, SnEven, SnOdd);
+	
+	AssertList("readings", readings, Integer[]{1,2});
+	AssertEqual("sum", sum, 55);
+	AssertList("outgoingEdges.token", outgoingEdges.token, Integer[]{2,4});
+	AssertList("SnEven", SnEven, Integer[]{5,7,9});
+	AssertList("SnOdd", SnOdd, Integer[]{30,60,90});
 }
