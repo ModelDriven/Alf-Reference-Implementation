@@ -41,5 +41,12 @@ active class Expressions_Increment_Decrement {
     }
     
 } do {
-    this.test();
+    this.test(s,i,x,list,j,k);
+    
+    AssertList("s", s, Integer[]{1,3});
+    AssertEqual("i", i, 2);
+    AssertEqual("x", x, 3);
+    AssertList("list", list, Integer[]{1,3});
+    AssertEqual("j", j, 3);
+    AssertEqual("k", k, 2);
 }

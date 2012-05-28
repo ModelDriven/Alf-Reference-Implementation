@@ -15,11 +15,14 @@ active class Interactive_InputOutput {
         Input().read(y, status2);
     }
 } do {
-    WriteLine("Ready");
-    A(a, b, s1, s2);
-    Output().write(a);
-    Output().write(b);
-    WriteLine("");
-    WriteLine(s1.description);
-    WriteLine(s2.description);
+    WriteLine("Enter two characters.");
+    A(char1, char2, s1, s2);
+    Output().write("char1=");
+    Output().write(char1);
+    Output().write(" status1=" + s1.description);
+    Output().writeNewLine();
+    Output().write("char2=");
+    Output().write(char2);
+    Output().write(" status2=" + s2.description);
+    Output().writeNewLine();
 }

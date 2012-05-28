@@ -2,22 +2,37 @@
  * Test literal and name expressions.
  **/
 active class Expressions_Literal_Name {
-    test(in a: Integer) {
+    test(in a: Integer,
+      out i: any, out j: any, out k: any, out l: any, out m: any, out n: any, out x: any, out y: any,
+      out b: Integer, out c: Integer, out d: Integer) {
     
-      1234;
-      0;
-      0b1010111000010000;
-      0B0100_1010_0101_1011;
-      0xAE10;
-      0X4a_5b;
-      057410;
-      0_045_133;
+      i = 1234;
+      j = 0;
+      k = 0b1010111000010000;
+      l = 0B0100_1010_0101_1011;
+      m = 0xAE10;
+      n = 0X4a_5b;
+      x = 057410;
+      y = 0_045_133;
       
-      a;
-      Expressions_Literal_Name::test::a;
-      Expressions_Literal_Name.test.a;
+      b = a;
+      c = Expressions_Literal_Name::test::a;
+      d = Expressions_Literal_Name.test.a;
     
     }
 } do {
-    this.test(1);
+    this.test(1,i,j,k,l,m,n,x,y,b,c,d);
+    
+    AssertEqual("i", i, 1234);
+    AssertEqual("j", j, 0);
+    AssertEqual("k", k, 44_560);
+    AssertEqual("l", l, 19_035);
+    AssertEqual("m", m, 44_560);
+    AssertEqual("n", n, 19_035);
+    AssertEqual("x", x, 24_328);
+    AssertEqual("y", y, 19_035);
+    
+    AssertEqual("b", b, 1);
+    AssertEqual("c", c, 1);
+    AssertEqual("d", d, 1);
 }

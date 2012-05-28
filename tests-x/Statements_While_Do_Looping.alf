@@ -3,12 +3,12 @@
  **/
 active class Statements_While_Do_Looping {
 
-    // Supporting declarations *************************************************
+  // Supporting declarations *************************************************
 
-    list: Monitor[*] sequence = {new Monitor(), new Monitor()};
-    
-    class Monitor { 
-    	public cleanUp() { }
+  list: Monitor[*] sequence = {new Monitor(), new Monitor()};
+  
+  class Monitor { 
+  	public cleanUp() { }
 	}
 	
 	class File { 
@@ -35,7 +35,7 @@ active class Statements_While_Do_Looping {
 	}
 	
 	class FileRecord { 
-		private label: String;
+		public label: String;
 		@Create public FileRecord(in label: String) { this.label = label; }
 		public toString():String { return this.label; } 
 	}
@@ -48,25 +48,24 @@ active class Statements_While_Do_Looping {
 		public getNextReading(): Reading[0..1] { 
 			return new Reading(this.count--); 
 		}
-    }
-    
-    class Reading {
-    	private value: Integer;
-    	@Create public Reading(in value: Integer) { this.value = value; }
-    	public isFinal(): Boolean { return this.value <= 0; }
-    	public getValue(): Integer { return this.value; }
-    }
+  }
+  
+  class Reading {
+  	private value: Integer;
+  	@Create public Reading(in value: Integer) { this.value = value; }
+  	public isFinal(): Boolean { return this.value <= 0; }
+  	public getValue(): Integer { return this.value; }
+  }
 	
  	//**************************************************************************
 
-    test(
-    	out count: Integer, out checksum: Integer, 
-    	out nextRecord: FileRecord, out file: File, 
-    	out lines: String[*], out readings: Reading[*], out i: Integer,
-    	out self: Statements_While_Do_Looping) {
-    
-      // Setup
-      // this.list = Monitor[]{new Monitor(), new Monitor()};
+  test(
+  	out count: Integer, out checksum: Integer, 
+  	out nextRecord: FileRecord[0..1], out file: File, 
+  	out lines: String[*] sequence, out readings: Reading[*] sequence, out i: Integer,
+  	out self: Statements_While_Do_Looping) {
+  
+    // Setup
 	  count = 0;
 	  checksum = 0;
 	  file = new File();
@@ -109,7 +108,15 @@ active class Statements_While_Do_Looping {
 	  } while(true);
 	  
 	  self = this;
-    }
+  }
 } do {
-	this.test();
+	this.test(count, checksum, nextRecord, file, lines, readings, i, self);
+	
+	AssertEqual("count", count, 2);
+	AssertEqual("checksum", checksum, 1);
+	AssertEqual("nextRecord.label", nextRecord.label, "Record");
+	AssertList("lines", lines, String[]{"Record","End"});
+	AssertList("readings", readings, Integer[]{2,1,0});
+	AssertEqual("i", i, 2);
+	AssertTrue("self.list->isEmpty()", self.list->isEmpty());
 }

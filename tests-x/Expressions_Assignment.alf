@@ -3,14 +3,14 @@
  **/
 active class Expressions_Assignment {
 
-    public test(out a: Integer) {
+    public test(out i: Integer, out f: Boolean, out h: BitString, out filename: String, out a: Integer) {
     
       i = 1;
       i += 4;
       i += 1;
       i -= 1;
       i *= 1;
-      i %= 1;
+      i %= 6;
       i /= 1;
       
       f = true;
@@ -20,7 +20,7 @@ active class Expressions_Assignment {
       
       h = (BitString)0;
       h = 0xab; // Bit string conversion
-      h &= 1;
+      h &= 0xff;
       h |= 1;
       h ^= 1;
       h <<= 1;
@@ -40,5 +40,11 @@ active class Expressions_Assignment {
     }
     
 } do {
-    this.test(x);
+    this.test(i,f,h,filename,a);
+    
+    AssertEqual("i", i, 5);
+    AssertFalse("f", f);
+    AssertEqual("h", h, 0x55);
+    AssertEqual("filename", filename, "xyz.doc");
+    AssertEqual("a", a, 2);
 }

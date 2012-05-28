@@ -1,7 +1,7 @@
 activity Interactive_Read() {
-	WriteLine("Read Line:");
-	WriteLine(ReadLine(status));
-	WriteLine("Status:");
+  	WriteLine("Read Line:");
+  	WriteLine(ReadLine(status));
+  	WriteLine("Status:");
     WriteLine(status.description);
     
     WriteLine(StandardInputChannel.allInstances().getStatus().description);

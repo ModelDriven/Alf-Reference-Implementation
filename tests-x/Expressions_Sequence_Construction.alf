@@ -5,33 +5,72 @@ active class Expressions_Sequence_Construction {
 
     // Supporting declarations *************************************************
 
-    class Customer { }
-    getList(): Integer[1..*] { }
+    class Customer { 
+      public name: String;
+      @Create Customer(in name: String) { this.name = name; }
+    }
+    getList(): Integer[1..*] { return Integer[]{4,5,6}; }
   	
     //**************************************************************************
 	
-    test() {
+    test(
+      out seq1: String[] sequence, 
+      out seq2: String[] sequence,
+      out seq3: any[] sequence,
+      out seq4: Integer[] sequence,
+      out seq5: Integer[] sequence,
+      out seq6: Integer[] sequence,
+      out seq7: Integer[] sequence,
+      out x: Integer,
+      out customers: Customer[] sequence,
+      out set1: Set<Integer>,
+      out set2: Set<Integer>,
+      out list: List< List<String> >
+    ) {
 	  
-	String[]{"apple","orange","strawberry"};
-	new String[]{"apple","orange","strawberry",};
-	any[]{1, true, "blah"};
-	Integer[]{1, 2, 3, 4};
-	Integer[]{1..10};
-	Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-	Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, };
-	null;
+	    seq1 = String[]{"apple","orange","strawberry"};
+	    seq2 = new String[]{"apple","orange","strawberry",};
+      seq3 = any[]{1, true, "blah"};
+      seq4 = Integer[]{1, 2, 3,};
+	    seq5 = Integer[]{1, 2, 3};
+	    seq6 = Integer[]{1..3};
+	    seq7 = null;
 	  
-	this.getList()[1];
-	a = Integer[]{10, 20, 30, 40};
+	    x = this.getList()[2];
 	
-	i = 1;
-	customers = Customer[]{ new Customer() };
-	customers[i] = new Customer();
+	    i = 2;
+	    customers = Customer[]{ new Customer("A"), new Customer("B") };
+	    customers[i] = new Customer("C");
 	  
-        new Set<Integer>(Integer[]{1,2,3});
-        Set<Integer>{1, 3, 45, 2, 3};
-        new List< List<String> >{{"apple","orange"},{"strawberry","raspberry"}};
+      set1 = new Set<Integer>(Integer[]{1,3,45});
+      set2 = Set<Integer>{1, 3, 45};
+      list = new List< List<String> >{{"apple","orange"},{"strawberry","raspberry"}};
     }	  
 } do {
-    this.test();
+    this.test(seq1,seq2,seq3,seq4,seq5,seq6,seq7,x,customers,set1,set2,list);
+    
+    
+    AssertList("seq1", seq1, any[]{"apple","orange","strawberry"});
+    AssertList("seq2", seq2, any[]{"apple","orange","strawberry"});
+    AssertList("seq3", seq3, any[]{1, true, "blah"});
+    AssertList("seq4", seq4, any[]{1,2,3});
+    AssertList("seq5", seq5, any[]{1,2,3});
+    AssertList("seq6", seq6, any[]{1,2,3});
+    AssertTrue("seq7->isEmpty()", seq7->isEmpty());
+    
+    AssertEqual("x5", x, 5);
+    
+    AssertList("customers.name", customers.name, String[]{"A", "C"});
+    
+    AssertTrue("set1.includes(1)", set1.includes(1));
+    AssertTrue("set1.includes(3)", set1.includes(3));
+    AssertTrue("set1.includes(45)", set1.includes(45));
+    
+    AssertTrue("set2.includes(1)", set2.includes(1));
+    AssertTrue("set2.includes(3)", set2.includes(3));
+    AssertTrue("set2.includes(45)", set2.includes(45));
+    
+    AssertEqual("list.size()", list.size(), 2);
+    AssertList("list.at(1)", list.at(1).toSequence(), any[]{"apple","orange"});
+    AssertList("list.at(2)", list.at(2).toSequence(), any[]{"strawberry","raspberry"});
 }

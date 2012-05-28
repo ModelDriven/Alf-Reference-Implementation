@@ -6,50 +6,77 @@ active class Expressions_Sequence_Expansion_Reduction {
 
     // Supporting declarations *************************************************
     
-  	public class Customer {
-  		public name: String;
-  		public email: String;
-  		public address: String[*] sequence;
+  	public class Employee {
+    	public age: Integer = 51;
+    	public isMarried: Boolean = true;
+    	public name: String = "Joan";
+    	public title: String = "President";
+    	public id: Integer = 1;
     }
-    public class Person { }
-  	public class Employee specializes Person {
-    	public age: Integer;
-    	public isMarried: Boolean;
-    	public birthDate: Integer;
-    	public name: String;
-    	public title: String;
-    	public id: Integer;
-    	
-    	public process() { }
-    }
+    
+    activity Bad(in x: Integer, in y: Integer): Integer { return x/y; }
 
 	//**************************************************************************
 
-	public activity test() {
-	
+	public activity test(
+	  out sum: Integer,
+	  out remainder: Integer,
+	  out bad: Integer,
+	  out select: Employee[*] sequence, 
+	  out reject: Employee[*] sequence,
+	  out collect: String[*] sequence,
+	  out iterate: String[*] sequence,
+	  out forAll: Boolean,
+	  out exists: Boolean,
+	  out one: Boolean,
+	  out unique: Boolean,
+	  out jack: Employee,
+	  out joan: Employee) {
+	  
 	  subtotals = Integer[]{1,2,3};
-	  subtotals->reduce '+';
-	  subtotals->reduce ordered '%'; // Also tests import of alias
-	  Integer[]{1, 2, 3} -> reduce '+';
-	  Integer[]{1, 2, 3} -> reduce ordered '+';
-	
-	  name = "Fred";
-	  subtotals->select x (x>1);
-	  Customer->select c (c.name == name);
-	  Customer.allInstances()->select c (c.name == name);
-	
-	  employees = Employee[]{new Employee()};
-	  employees->select e (e.age>50);
-	  employees->reject e (e.isMarried);
-	  employees->collect e (e.birthDate);
-	  employees->collect a (a.name);
-	  employees->iterate e (e.process());
-	  employees->forAll e (e.age<=65);
-	  employees->exists e (e.name=="Jack");
-	  employees->one e (e.title=="President");
-	  employees->isUnique e (e.id);
+	  sum = subtotals->reduce '+';
+	  remainder = subtotals->reduce ordered '%';
+	  bad = Integer[]{1,0,4,2}->reduce Bad;
+	  
+	  e1 = new Employee();
+	  e2 = new Employee();
+	  e2.name = "Jack";
+	  e2.age = 30;
+	  e2.isMarried = false;
+	  e2.title = "Director";
+	  e2.id = 1;
+	  
+	  employees = Employee[]{e1, e2};
+	  
+	  select = employees->select e (e.age>50);
+	  reject = employees->reject e (e.isMarried);
+	  collect = employees->collect a (a.name);
+	  iterate = employees->iterate e (e.name);
+	  forAll = employees->forAll e (e.age<=65);
+	  exists = employees->exists e (e.name=="Joan");
+	  one = employees->one e (e.title=="President");
+	  unique = employees->isUnique e (e.id);
+	  
+	  jack = Employee->select e (e.name=="Jack")[1];
+	  joan = Employee.allInstances()->select e (e.name=="Joan")[1];
 	  
 	}
 } do {
-    test();
+    test(sum, remainder, bad, select, reject, collect, iterate, forAll, exists, one, unique, jack, joan);
+    
+    AssertEqual("sum",sum, 6);
+    AssertEqual("remainder", remainder, 1);
+    AssertEqual("bad", bad, 2);
+    
+    AssertList("select.name", select.name, String[]{"Joan"});
+    AssertList("reject.name", reject.name, String[]{"Jack"});
+    AssertList("collect.name", collect, String[]{"Joan","Jack"});
+    AssertList("iterate.name", iterate, String[]{"Joan","Jack"});
+    AssertTrue("forAll", forAll);
+    AssertTrue("exists", exists);
+    AssertTrue("one", one);
+    AssertFalse("unique", unique);
+    
+    AssertEqual("jack.name", jack.name, "Jack");
+    AssertEqual("joan.name", joan.name, "Joan");
 }

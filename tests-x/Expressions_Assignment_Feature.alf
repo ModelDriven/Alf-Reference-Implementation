@@ -54,6 +54,22 @@ active class Expressions_Assignment_Feature {
     }
   
 } do {
-    this.test(c,d,n);
+    this.test(c,d,n,m,self);
+    
+    AssertEqual("c.x", c.x, 2);
+    AssertEqual("c.y[1]", c.y[1], 1);
+    AssertEqual("c.y[2]", c.y[2], 2);
+    AssertEqual("c.n", c.n, 3);
+    AssertEqual("n", n, 3);    
+    
+    AssertEqual("d.x", d.x, 2);
+    AssertEqual("d.y[1]", d.y[1], 1);
+    AssertEqual("d.y[2]", d.y[2], 2);
+    AssertEqual("d.m", d.m, 3);
+    AssertEqual("m", m, 3); 
+    
+    AssertEqual("self.x", self.x, 2);
+    AssertEqual("self.y[1]", self.y[1], 1);
+    AssertEqual("self.y[2]", self.y[2], 2);
 }
       
