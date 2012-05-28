@@ -26,7 +26,7 @@ import java.util.Map;
  * before the first iteration.
  **/
 
-public class WhileStatementImpl extends StatementImpl {
+public class WhileStatementImpl extends LoopStatementImpl {
 
 	private Block body = null;
 	private Expression condition = null;
@@ -92,7 +92,7 @@ public class WhileStatementImpl extends StatementImpl {
                     assignmentsAfter = new HashMap<String,AssignedSource>(assignmentsAfter);
                     for (AssignedSource assignment: newAssignments) {
                         String name = assignment.getName();
-                        if (assignmentsAfter.containsKey(name)) {
+                        if (assignmentsAfter.containsKey(name) || this.isParameter(name)) {
                             AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
                             assignmentAfter.setSource(self);
                             assignmentsAfter.put(name, assignmentAfter);
@@ -158,6 +158,7 @@ public class WhileStatementImpl extends StatementImpl {
 
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
+        super.setCurrentScope(currentScope);
         WhileStatement self = this.getSelf();
         Block body = self.getBody();
         Expression condition = self.getCondition();
