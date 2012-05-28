@@ -1,152 +1,195 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests-x" default="run" basedir=".">
+    <path id="cp">
+        <pathelement location="${classpath}" />
+        <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
+        <pathelement location="../fUML-Reference-Implementation/lib/commons-logging.jar" />
+        <pathelement location="../fUML-Reference-Implementation/lib/log4j.jar" />
+     </path>
     <target name="run">
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Assignment.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Assignment" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Assignment_Feature.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Assignment_Feature" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Assignment_Indexed.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Assignment_Indexed" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Assignment_Feature_Indexed.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Assignment_Feature_Indexed" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Association.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Association" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Constructor_Destructor.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Constructor_Destructor" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Increment_Decrement.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Increment_Decrement" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Invocation.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Invocation" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Literal_Name.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Literal_Name" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Object.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Object" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Operator.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Operator" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Sequence_Construction.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Sequence_Construction" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Sequence_Expansion_Reduction.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Sequence_Expansion_Reduction" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_Sequence_Operation.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_Sequence_Operation" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Expressions_SuperConstructors.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Expressions_SuperConstructors" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Statements_Accept.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Statements_Accept" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Statements_Classify.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Statements_Classify" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}" />
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-            </classpath>
-            <arg value="tests-x/Statements_Conditional.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Statements_Conditional" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}"/>
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes"/>
-            </classpath>
-            <arg value="tests-x/Statements_For_Looping.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="Statements_For_Looping" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}"/>
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes"/>
-            </classpath>
-            <arg value="tests-x/Statements_Simple.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Statements_Simple" />
         </java>
-        <java classname="org.modeldriven.alf.mapping.fuml.FumlMapping" classpath="bin" output="tests-x.txt" append="true">
-            <classpath>
-                <pathelement location="${classpath}"/>
-                <pathelement location="../fUML-Reference-Implementation/target/fuml/classes"/>
-            </classpath>
-            <arg value="tests-x/Statements_While_Do_Looping.alf" />
+        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-v"/>
+            <arg value="-m"/>
+            <arg value="tests-x"/>
+            <arg value="-d"/>
+            <arg value="OFF"/>
+            <arg value="Statements_While_Do_Looping" />
         </java>
     </target>
 </project>
