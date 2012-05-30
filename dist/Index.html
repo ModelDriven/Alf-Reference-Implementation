@@ -1,0 +1,250 @@
+<html>
+<header>
+<title>Alf Open Source Implementation</title>
+</header>
+<body>
+<h1>Action Language for UML (Alf) Open Source Implementation<br>
+Version 0.1.0</h1>
+<em>Copyright &copy; 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)</em>
+<p>
+Alf is an action language for UML developed in response to the OMG <em>Concrete 
+Syntax for a UML Action Language</em> Request for Proposals. The current
+version of the Alf specification document can be found at
+<a href="http://www.omg.org/spec/ALF/Current">http://www.omg.org/spec/ALF/Current</a>.
+<p>
+This implementation is based on the Alf 1.0 Beta 1 specification but corrects a number
+of issues that are currently being addressed by the Alf 1.0 Finalization Task
+Force at OMG. (For the current list of formally submitted issues, see
+<a href="http://www.omg.org/issues/alf-ftf.html">http://www.omg.org/issues/alf-ftf.html</a>.)
+It uses the head revision of the fUML Reference Implementation execution 
+engine (see <a href="http://fuml.modeldriven.org">http://fuml.modeldriven.org</a>), 
+which is the released version 1.0.1, with some additional updates (to be included
+in v1.0.2).
+
+<h2>Licensing</h2>
+<p>
+Data Access Technology, Inc., is the copyright owner of all source code for this
+implementation. For licensing terms, see
+<a href="http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/LICENSING.txt">
+http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/LICENSING.txt</a>.
+
+<h2>Installation</h2>
+<p>
+Download <tt>Alf.zip</tt> from
+<p>
+<a href="http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/">
+http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/</a>.
+<p>
+This archive unzips into the installation directory for Alf. This directory
+includes a Unix (BASH) shell script and a DOS batch file for running Alf. By
+default, the <tt>Libraries</tt> subdirectory is expected to be in the same directory as
+the scripts. If you move it, set the environment variable ALF_LIB to its path.
+<p>
+The file <tt>Alf-src.zip</tt> unzips into an Eclipse project the includes the
+full source of the implementation. However, the project requires the head
+revision of the fUML Reference Implementation source project in order to build.
+
+<h2>Release Notes</h2>
+<p>
+This implementation handles the full Alf syntax at the Extended compliance 
+level, as given in the <em>Consolidated LL Grammar</em> annex to the Alf 
+Specification.
+<p>
+Static semantic checking is directly based on validating the constraints
+defined in Part III of the Alf Specification. However, as errors were
+discovered in these definitions, or inconsistencies with the descriptions in
+Part II were identified, these were corrected in the implementation. All such
+issues are being reported to the Alf Finalization Task Force for correction in
+the final specification.
+<p>
+The following Alf features are NOT currently implemented:
+<ul>
+<li>Profile and stereotype application (other than application of the standard 
+stereotypes ModelLibrary, Create and Destroy)</li>
+<li>Overloading resolution</li>
+</ul>
+
+<h2>Unit Resolution</h2>
+<p>
+Since this implementation is not embedded in a UML tool, Alf units are managed
+as files. During the static semantic analysis of a unit, if an element of
+another unit is referenced, then that unit is parsed into memory on demand from
+the file corresponding to the unit in order to continue the checking of the
+original unit.
+<p>
+Each Alf unit is expected to be contained in a single file, and each such file
+must contain exactly one Alf unit. The files are contained in a directory
+structure based on the qualified names of the units.
+<p>
+The <em>library directory</em> contains Alf unit definitions for the fUML
+Foundational Model Library and the Alf Standard Model Library. These units
+should not be moved from the library directory structured or changed. By default, 
+the library directory is the <tt>Libraries</tt> subdirectory of the installation 
+directory, but this may be changed using a command line option or by setting the 
+ALF_LIB environment variable.
+<p>
+For example, with the default location for the library directory, the standard 
+package <tt>Alf::Library::PrimitiveBehaviors</tt> is found in
+the file 
+<p>
+<tt>Libraries/Alf/Library/PrimitiveBehaviors.alf</tt>
+<p>
+Subunits of <tt>PrimitiveBehaviors</tt> are then found in the corresponding 
+subdirectory
+<p>
+<tt>Libraries/Alf/Library/PrimitiveBehaviors</tt>
+<p>
+Note that the <em>file</em> <tt>PrimitiveBehaviors.alf</tt> contains the Alf 
+definition for the <tt>PrimitiveBehaviors</tt> package, while the 
+<em>subdirectory</em> <tt>PrimitiveBehaviors</tt> groups the files for subunits 
+of that package (i.e., <tt>BooleanFunctions.alf</tt>, 
+<tt>IntegerFunctions.alf</tt>, etc.).
+<p>
+All user unit files corresponding to a single "user model" should be placed in
+a similarly structured <em>model directory</em>. By default, the model directory
+is the <tt>Models</tt> subdirectory of the installation directory, but this
+may be overridden using a command line option.
+<p>
+For example, with the default location for the model directory, a unit with the 
+qualified name
+<p>
+<tt>'Property Management'::'Data Model'::Properties::Property</tt>
+<p>
+is expected to be found in the file
+<p>
+<tt>Models/Property Management/Data Model/Properties/Property.alf</tt>
+<p>
+<em>Note that all characters in an unrestricted name (but not the surrounding 
+quote characters) are currently carried over to the file path without change. 
+Thus, characters that cannot be supported in file names must be avoided in unit
+names.</em>
+<p>
+All namespace declarations are currently expected to resolve to Alf units.
+Therefore, only units without namespace declarations are considered to be model
+units. However, the effective "model scope" for such units is empty. References
+from one unit to elements of another unit always requires an import from the
+other unit (implicitly or explicitly). Note, however, that any elements imported
+into a unit are also available to all subunits without those subunits having to
+also import them.
+
+<h2>Command Line Execution</h2>
+<p>
+A model can be executed from the command line using the alf shell script (for
+Unix) or the alf.bat batch file (for Windows/DOS). Usage is
+<p>
+<tt>alf [<em>options</em>] <em>unitName</em></tt>
+<p>
+where <tt><em>unitName</em></tt> is the fully qualified name of a unit to be executed.
+To be executable, this unit must be either the definition of an activity with no 
+parameters or of a non-abstract active class with a classifier behavior. The allowable
+<tt><em>options</em></tt> are
+<p>
+<tt>-d <em>level</em></tt>
+<br>
+Sets the debug level for trace output from the fUML execution engine. Useful
+levels are:
+<ul>
+<li><tt>OFF</tt> turns off trace output.</li>
+<li><tt>INFO</tt> outputs basic trace information on the execution of activities
+and actions.</li>
+<li><tt>DEBUG</tt> outputs detailed trace information on activity execution.</li>
+</ul>
+The default is as configured in the <tt>log4j.properties</tt> file in the
+installation directory.
+<p>
+<tt>-f</tt>
+<br>
+Treat the <tt><em>unitName</em></tt> as a file name, rather than as a qualified
+name. The named file is expected to be found directly in the model directory
+and the unit must have the same name as the file name (with any <tt>.alf</tt>
+extension removed).  
+<p>
+<tt>-l <em>path</em></tt>
+<br>
+Sets the library directory location to <tt><em>path</em></tt>. If this option is not
+given and the ALF_LIB environment variable is set, then the value of ALF_LIB is 
+used as the library directory location. Otherwise, the default of <tt>Libraries</tt>
+is used.
+<p>
+<tt>-m <em>path</em></tt>
+<br>
+Sets the model directory location to <tt><em>path</em></tt>. Qualified name resolution to
+unit file paths is relative to the root of the model directory. If this option
+is not given, the default of <tt>Models</tt> is used.
+<p>
+<tt>-p</tt>
+<br>
+Parse and constraint check the identified unit, but do not execute it. This is
+useful for syntactic and static semantic validation of units that are not
+executable by themselves.
+<p>
+<tt>-P</tt>
+<br>
+Parse and constraint check, as for the <tt>-p</tt>, and then print out the
+resulting abstract syntax tree. Note that the print out will occur even if there
+are constraint violations.
+<p>
+<tt>-v</tt>
+<br>
+Sets verbose mode, in which status messages are printed about parsing and other
+processing steps leading up to execution.
+
+<h2>Execution</h2>
+<p>
+Execution of a unit proceeds as follows:
+
+<ol>
+
+<li>The specified unit is parsed into an abstract syntax representation in
+memory. Since units cannot currently be "pre-compiled", any units imported by 
+the specified unit are also, recursively, parsed into memory. <em>(Note: This
+means that the entire content of the library directory are parsed and loaded on
+each execution.)</em> If there is a syntax error, this is reported and processing
+ends.</li>
+
+<li>All parsed units are checked for violations of the abstract syntax
+constraints defined in the Alf specification. If there are any constraint
+violations, they are reported and processing ends. Constraint violation messages 
+take the form 
+<br><br>
+<tt><em>constraintName</em> in <em>fileName</em> at line <em>m</em>, column <em>n</em></tt>
+<br><br>
+The <tt><em>constraintName</em></tt> is the name of the violated constraint, as given in
+the Alf specification. <em>(Note 1: Some constraints have additional conditions
+implemented over what is currently given in the specification. Note 2: If the
+fileName has a suffix of the form <tt>&lt;...&gt;</tt>, then the constraint
+violation happened in a template instantiation. This should never happen, so,
+if it does, it indicates an implementation error.)</em></li>
+
+<li>All parsed units are mapped to the in-memory representation used by the
+fUML Reference Implementation. <em>(Note: If a mapping error occurs, processing
+ends. However, if there are no constrain violations, mapping should always
+succeed, so a mapping failure indicates an implementation error.)</em></li>
+
+<li>An execution environment is created at a fUML locus, and the unit mapping is
+executed in this environment. The console is used for standard input and output.
+Execution tracing is at the specified debug level, to the console and the 
+file <tt>alf.log</tt> (unless this configuration is changed in 
+<tt>log4j.properties</tt>).</li>
+
+</ol>
+
+<h2>Sample Code</h2>
+<p>
+The archive <tt>tests-x.zip</tt> unzips into a directory containing a set of simple 
+execution tests. These can be run with a command of the following form
+<p>
+<tt>alf -m tests-x <em>testUnitName</em></tt>
+<p>
+Replace <tt>tests-x</tt> with the complete path to the directory, as
+necessary. To run with trace output, use either the <tt>-d INFO</tt> or 
+<tt>-d DEBUG</tt> option.
+<p>
+Note that the <tt><em>testUnitName</em></tt> is the same as the file
+name, but without the <tt>.alf</tt> extension. I.e., the file 
+<tt>Expressions_Assignment.alf</tt> contains the unit named
+<tt>Expressions_Assignment</tt>. However, the units <tt>AssertTrue</tt>, 
+<tt>AssertFalse</tt>, <tt>AssertList</tt> and <tt>Write</tt> are helper
+activities, not tests, and are not individually executable.
+</body>
+</html>

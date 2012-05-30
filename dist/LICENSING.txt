@@ -1,0 +1,23 @@
+Action Language for UML (Alf) Open Source Implementation
+Licensing Information
+
+Data Access Technologies Inc.(Model Driven Solutions) is the copyright owner of
+all source code in this software entitled the Action Language for UML (Alf)
+Open Source Implementation (the "Software"). Data Access Technologies hereby
+licenses such Software to you for non-commercial use under the GNU General
+Public License (GPL) version 3 (at http://www.gnu.org/licenses/gpl-3.0.html and
+attached hereto as gpl-3.0.txt). For license terms for any other use, contact
+Model Driven Solutions at info@modeldriven.com.
+
+The Software uses the following software programs licensed under the Apache
+License version 2.0 (at http://www.opensource.org/licenses/afl-3.0.php and
+attached hereto as Apache-License-2.0.txt):
+
+Apache log4j, http://logging.apache.org/
+Apache commons logging, http://commons.apache.org/logging/
+
+The Software also uses the Foundational UML Reference Implementation
+(http://fuml.modeldriven.org) under the Academic Free License version 3.0
+(at http://www.opensource.org/licenses/afl-3.0.php and attached hereto as 
+afl-3.0.txt). For further licensing information on the Foundation UML
+Reference Implementation, see the file fUML-LICENSING.txt.
