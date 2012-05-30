@@ -54,6 +54,9 @@ public class Alf {
     
     private static boolean isFileName = false;
     private static boolean isVerbose = false;
+    private static boolean isParseOnly = false;
+    private static boolean isPrint = false;
+    
     private static Locus locus = null;    
     
     private static void createLocus() {
@@ -142,6 +145,14 @@ public class Alf {
         RootNamespace.setIsVerbose(isVerbose);
     }
     
+    public static void setIsParseOnly(boolean isParseOnly) {
+        Alf.isParseOnly = isParseOnly;
+    }
+    
+    public static void setIsPrint(boolean isPrint) {
+        Alf.isPrint = isPrint;
+    }
+
     private static void printVerbose(String message) {
         if (isVerbose) {
             System.out.println(message);
@@ -165,6 +176,10 @@ public class Alf {
                     setIsVerbose(true);
                 } else if (option.equals("f")) {
                     setIsFileName(true);
+                } else if (option.equals("p")) {
+                    setIsParseOnly(true);
+                } else if (option.equals("P")) {
+                    setIsPrint(true);
                 } else if (option.matches("[mld]")) {
                     arg = args[i];
                     if (arg.charAt(0) == '-') {
@@ -187,26 +202,8 @@ public class Alf {
         
         return i == args.length - 1? args[i]: null;
     }
-
-    public static void main(String[] args) {
-        PropertyConfigurator.configure("log4j.properties");
-
-        String unitName = parseArgs(args);
-        
-        if (unitName == null) {
-            System.out.println("Usage is");
-            System.out.println("  alf [options] unit");
-            System.out.println("where unit is the qualified name of an Alf unit and");
-            System.out.println("allowable options are:");
-            System.out.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
-            System.out.println("            Set debug logging level (default is as configured)");
-            System.out.println("  -f        Treat unit as a file name rather than a qualifed name");
-            System.out.println("  -l path   Set library directory path (default is \"Library\")");
-            System.out.println("  -m path   Set model directory path (default is \"Models\")");
-            System.out.println("  -v        Set verbose mode");
-            return;
-        }
-        
+    
+    public static void executeUnit(String unitName) {
         QualifiedName qualifiedName = new QualifiedName();
         
         if (isFileName) {
@@ -239,6 +236,11 @@ public class Alf {
                 
             } else {
                 printVerbose("No constraint violations.");
+            }
+            
+            if (isPrint) {
+                unit.print(true);
+            } else if (!isParseOnly && violations.isEmpty()) {
                 NamespaceDefinition definition = unit.getDefinition();
                 if (definition.getImpl().isTemplate()) { 
                     System.out.println(definition.getName() + " is a template.");
@@ -308,5 +310,28 @@ public class Alf {
                 }
             }
         }
+    }
+    
+    public static void main(String[] args) {
+        PropertyConfigurator.configure("log4j.properties");
+
+        String unitName = parseArgs(args);
+        
+        if (unitName != null) {
+            executeUnit(unitName);
+        } else {
+            System.out.println("Usage is");
+            System.out.println("  alf [options] unit");
+            System.out.println("where unit is the qualified name of an Alf unit and");
+            System.out.println("allowable options are:");
+            System.out.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
+            System.out.println("            Set debug logging level (default is as configured)");
+            System.out.println("  -f        Treat unit as a file name rather than a qualifed name");
+            System.out.println("  -l path   Set library directory path (default is \"Library\")");
+            System.out.println("  -m path   Set model directory path (default is \"Models\")");
+            System.out.println("  -p        Parse and constraint check only");
+            System.out.println("  -P        Parse, constraint check and print abstract syntax tree");
+            System.out.println("  -v        Set verbose mode");
+        }         
     }
 }
