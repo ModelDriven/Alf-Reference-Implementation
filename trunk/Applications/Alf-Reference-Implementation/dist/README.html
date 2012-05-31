@@ -128,7 +128,49 @@ other unit (implicitly or explicitly). Note, however, that any elements imported
 into a unit are also available to all subunits without those subunits having to
 also import them.
 
-<h2>Command Line Execution</h2>
+<h2>Unit Execution</h2>
+<p>
+To be executable, a unit must be either the definition of an activity with no 
+parameters or of a non-abstract active class with a classifier behavior. 
+Execution of such a unit proceeds as follows:
+
+<ol>
+
+<li>The specified unit is parsed into an abstract syntax representation in
+memory. Since units cannot currently be "pre-compiled", any units imported by 
+the specified unit are also, recursively, parsed into memory. <em>(Note: This
+means that the entire content of the library directory are parsed and loaded on
+each execution.)</em> If there is a syntax error, this is reported and processing
+ends.</li>
+
+<li>All parsed units are checked for violations of the abstract syntax
+constraints defined in the Alf specification. If there are any constraint
+violations, they are reported and processing ends. Constraint violation messages 
+take the form 
+<br><br>
+<tt><em>constraintName</em> in <em>fileName</em> at line <em>m</em>, column <em>n</em></tt>
+<br><br>
+The <tt><em>constraintName</em></tt> is the name of the violated constraint, as given in
+the Alf specification. <em>(Note 1: Some constraints have additional conditions
+implemented over what is currently given in the specification. Note 2: If the
+fileName has a suffix of the form <tt>&lt;...&gt;</tt>, then the constraint
+violation happened in a template instantiation. This should never happen, so,
+if it does, it indicates an implementation error.)</em></li>
+
+<li>All parsed units are mapped to the in-memory representation used by the
+fUML Reference Implementation. <em>(Note: If a mapping error occurs, processing
+ends. However, if there are no constrain violations, mapping should always
+succeed, so a mapping failure indicates an implementation error.)</em></li>
+
+<li>An execution environment is created at a fUML locus, and the unit mapping is
+executed in this environment. The console is used for standard input and output.
+Execution tracing is at the specified debug level, to the console and the 
+file <tt>alf.log</tt> (unless this configuration is changed in 
+<tt>log4j.properties</tt>).</li>
+
+</ol>
+
+<h2>Command Line Script</h2>
 <p>
 A model can be executed from the command line using the alf shell script (for
 Unix) or the alf.bat batch file (for Windows/DOS). Usage is
@@ -136,9 +178,7 @@ Unix) or the alf.bat batch file (for Windows/DOS). Usage is
 <tt>alf [<em>options</em>] <em>unitName</em></tt>
 <p>
 where <tt><em>unitName</em></tt> is the fully qualified name of a unit to be executed.
-To be executable, this unit must be either the definition of an activity with no 
-parameters or of a non-abstract active class with a classifier behavior. The allowable
-<tt><em>options</em></tt> are
+The allowable <tt><em>options</em></tt> are
 <p>
 <tt>-d <em>level</em></tt>
 <br>
@@ -189,46 +229,6 @@ are constraint violations.
 <br>
 Sets verbose mode, in which status messages are printed about parsing and other
 processing steps leading up to execution.
-
-<h2>Execution</h2>
-<p>
-Execution of a unit proceeds as follows:
-
-<ol>
-
-<li>The specified unit is parsed into an abstract syntax representation in
-memory. Since units cannot currently be "pre-compiled", any units imported by 
-the specified unit are also, recursively, parsed into memory. <em>(Note: This
-means that the entire content of the library directory are parsed and loaded on
-each execution.)</em> If there is a syntax error, this is reported and processing
-ends.</li>
-
-<li>All parsed units are checked for violations of the abstract syntax
-constraints defined in the Alf specification. If there are any constraint
-violations, they are reported and processing ends. Constraint violation messages 
-take the form 
-<br><br>
-<tt><em>constraintName</em> in <em>fileName</em> at line <em>m</em>, column <em>n</em></tt>
-<br><br>
-The <tt><em>constraintName</em></tt> is the name of the violated constraint, as given in
-the Alf specification. <em>(Note 1: Some constraints have additional conditions
-implemented over what is currently given in the specification. Note 2: If the
-fileName has a suffix of the form <tt>&lt;...&gt;</tt>, then the constraint
-violation happened in a template instantiation. This should never happen, so,
-if it does, it indicates an implementation error.)</em></li>
-
-<li>All parsed units are mapped to the in-memory representation used by the
-fUML Reference Implementation. <em>(Note: If a mapping error occurs, processing
-ends. However, if there are no constrain violations, mapping should always
-succeed, so a mapping failure indicates an implementation error.)</em></li>
-
-<li>An execution environment is created at a fUML locus, and the unit mapping is
-executed in this environment. The console is used for standard input and output.
-Execution tracing is at the specified debug level, to the console and the 
-file <tt>alf.log</tt> (unless this configuration is changed in 
-<tt>log4j.properties</tt>).</li>
-
-</ol>
 
 <h2>Sample Code</h2>
 <p>
