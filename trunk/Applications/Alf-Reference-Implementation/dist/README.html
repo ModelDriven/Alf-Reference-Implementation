@@ -122,9 +122,12 @@ names.</em>
 <p>
 All namespace declarations are currently expected to resolve to Alf units.
 Therefore, only units without namespace declarations are considered to be model
-units. However, the effective "model scope" for such units is empty. References
-from one unit to elements of another unit always requires an import from the
-other unit (implicitly or explicitly). Note, however, that any elements imported
+units. The model scope for such units is all the model units within the same
+model directory (i.e., "in the same model"). Thus, one model unit may refer to 
+another model unit located in the same model directory, without the need for
+explicitly importing the other unit. References to any other elements of another
+unit requires an import from the other unit (which is done implicitly for
+units from the Alf library). Note, however, that any elements imported
 into a unit are also available to all subunits without those subunits having to
 also import them.
 
