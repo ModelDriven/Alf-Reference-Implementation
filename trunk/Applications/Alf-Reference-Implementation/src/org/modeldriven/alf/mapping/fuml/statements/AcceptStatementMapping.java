@@ -134,6 +134,7 @@ public class AcceptStatementMapping extends StatementMapping {
         }
         
         this.addToNode(subgraph.getModelElements());
+        
     }
     
     public ActivityNode getSignalSourceNode() {
@@ -146,9 +147,12 @@ public class AcceptStatementMapping extends StatementMapping {
     
     @Override
     public ActivityNode getAssignedValueSource(String name) throws MappingError {
-        return this.getAcceptStatement().getIsSimple()?
-                this.signalSourceNode:
-                super.getAssignedValueSource(name);
+        if (this.getAcceptStatement().getIsSimple()) {
+            this.getNode();
+            return this.signalSourceNode;
+        } else {
+            return super.getAssignedValueSource(name);
+        }
     }
     
     public AcceptStatement getAcceptStatement() {
