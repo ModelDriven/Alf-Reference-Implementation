@@ -11,6 +11,7 @@
 package org.modeldriven.alf.mapping.fuml.common;
 
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.mapping.fuml.ErrorMapping;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
@@ -34,6 +35,8 @@ public class AssignedSourceMapping extends FumlMapping {
             if (mapping instanceof SyntaxElementMapping) {
                 this.activityNode = ((SyntaxElementMapping)mapping).
                         getAssignedValueSource(assignment.getName());
+            } else if (mapping instanceof ErrorMapping) {
+                this.throwError("Error mapping source: " + mapping.getErrorMessage());
             }
         }
         return this.activityNode;
