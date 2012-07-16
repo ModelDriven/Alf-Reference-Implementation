@@ -1,4 +1,4 @@
 private import Alf::Library::PrimitiveBehaviors::BooleanFunctions::ToString;
 activity AssertFalse(in label: String, in condition: Boolean) {
-    WriteLine("Not " + label + ": " + ToString(!condition));
+    WriteLine("! " + label + ": " + ToString(!condition));
 }
