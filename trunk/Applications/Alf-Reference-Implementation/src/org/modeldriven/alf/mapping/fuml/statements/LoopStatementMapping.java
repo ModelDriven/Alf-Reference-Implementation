@@ -58,7 +58,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
                 classifier, lower, upper);
         loopNode.addLoopVariableInput(inputPin);
         if (sourceNode != null) {
-                    this.graph.addObjectFlow(sourceNode, inputPin);
+            this.graph.addObjectFlow(sourceNode, inputPin);
         }
         
         OutputPin loopVariablePin = ActivityGraph.createOutputPin(
@@ -88,7 +88,9 @@ public abstract class LoopStatementMapping extends StatementMapping {
         ActivityNode sourceNode = null;
         AssignedSource assignment = 
             statement.getImpl().getAssignmentBefore(name);
-        if (assignment != null) {
+        if (assignment == null) {
+            lower = 0;
+        } else {
             FumlMapping mapping = this.fumlMap(assignment.getSource());
             if (!(mapping instanceof SyntaxElementMapping)) {
                 this.throwError("Error mapping assigned source for " + name + 
