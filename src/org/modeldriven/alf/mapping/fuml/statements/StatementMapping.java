@@ -231,6 +231,7 @@ public abstract class StatementMapping extends DocumentedElementMapping {
 	
     @Override
     public ActivityNode getAssignedValueSource(String name) throws MappingError {
+        this.getNode();
         if (this.assignedValueSourceMap == null) {
             return super.getAssignedValueSource(name);
         } else {
