@@ -264,7 +264,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         super.print(prefix);
         
         ActivityDefinition source = this.getActivityDefinition();
-        Block body = source.getBody();
+        Block body = source.getImpl().getEffectiveBody();
         if (body != null) {
             System.out.println(prefix + " body:");
             Mapping mapping = body.getImpl().getMapping();
