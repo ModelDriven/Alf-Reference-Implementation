@@ -123,6 +123,8 @@ public abstract class ElementReferenceImpl {
     public abstract ElementReference getClassifierBehavior();
     public abstract ElementReference getNamespace();
     public abstract Collection<ElementReference> getRedefinedElements();
+    public abstract ElementReference getSignal();
+
     
     public QualifiedName getQualifiedName() {
         ElementReference namespace = this.getNamespace();

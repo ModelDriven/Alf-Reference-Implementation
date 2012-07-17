@@ -675,6 +675,16 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         }
     }
     
+    @Override
+    public ElementReference getSignal() {
+        if (!this.isReception()) {
+            return null;
+        } else {
+            ExternalElementReference reference = new ExternalElementReference();
+            reference.setElement(((Reception)this.getElement()).getSignal());
+            return reference;
+        }
+    }
     
     @Override
     public ElementReference getActiveClass() {
