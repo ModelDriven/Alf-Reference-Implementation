@@ -65,14 +65,8 @@ public class FeatureInvocationExpressionImpl
 	protected ElementReference deriveReferent() {
 	    FeatureInvocationExpression self = this.getSelf();
         FeatureReference feature = self.getFeature();
-        ElementReference referent = feature == null? null:
+        return feature == null? null:
             feature.getImpl().getBehavioralFeatureReferent(self);
-        // NOTE: If the feature referent is to a reception, then the invocation
-        // referent should be the signal being received, not the reception.
-        if (referent.getImpl().isReception()) {
-            referent = referent.getImpl().getSignal();
-        }
-        return referent;
 	}
 	
 	/**
