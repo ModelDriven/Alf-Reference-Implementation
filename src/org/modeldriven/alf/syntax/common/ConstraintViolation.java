@@ -57,14 +57,18 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
     @Override
     public int compareTo(ConstraintViolation other) {
         ParsedElement element = this.getViolatingElement();
+        String fileName = element.getFileName();
         int line = element.getLine();
         int column = element.getColumn();
         
         element = other.getViolatingElement();
+        String otherFileName = element.getFileName();
         int otherLine = element.getLine();
         int otherColumn = element.getColumn();
         
-        return line < otherLine? -1:
+        int compare = fileName.compareTo(otherFileName);
+        return compare != 0? compare:
+               line < otherLine? -1:
                line > otherLine? 1:
                column < otherColumn? -1:
                column > otherColumn? 1: 0;
