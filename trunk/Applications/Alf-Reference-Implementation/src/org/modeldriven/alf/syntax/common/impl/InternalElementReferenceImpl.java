@@ -527,6 +527,12 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public ElementReference getSignal() {
+        return !this.isReception()? null:
+            ((ReceptionDefinition)this.getElement()).getSignal();
+    }
+    
+    @Override
     public ElementReference getActiveClass() {
         SyntaxElement element = this.getSelf().getElement();
         if (!(element instanceof ActivityDefinition)) {
