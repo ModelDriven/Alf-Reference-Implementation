@@ -164,13 +164,12 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
                 if (feature != null) {
                     return null;
                 }
-                feature = referent;
+                // NOTE: If the feature is a reception, then the referent should be the
+                // signal being received, not the reception itself.
+                feature = referent.getImpl().isReception()? 
+                        referent.getImpl().getSignal(): 
+                        referent;
             }
-        }
-        // NOTE: If the feature is a reception, then the referent should be the
-        // signal being received, not the reception itself.
-        if (feature.getImpl().isReception()) {
-            feature = feature.getImpl().getSignal();
         }
         return feature;
     }
