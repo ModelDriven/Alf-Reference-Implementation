@@ -1,0 +1,15 @@
+namespace Classes::CreditCardCharge;
+
+activity CreditCardCharge_Behavior() {
+
+  count = this.order.charge->size();
+  WriteLine("Attempt " + IntegerFunctions::ToString(count));
+
+  if (count <= 1) {
+    this.order.ChargeDenied(this);
+  } else {
+    this.authorizationCode = "123456";
+    this.order.ChargeApproved(this);
+  }
+  
+}

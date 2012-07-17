@@ -1,0 +1,16 @@
+namespace Classes;
+
+active class Customer {
+
+  public name: String;
+  public shippingAddress: Address[0..1];
+  
+  @Create public Customer(in name: String, in shippingAddress: Address[0..1]) {
+    this.name = name;
+    this.shippingAddress = shippingAddress;
+  }
+  
+  public receive ChargeApproved;
+  public receive ChargeDenied;
+  
+} do Customer_Behavior
