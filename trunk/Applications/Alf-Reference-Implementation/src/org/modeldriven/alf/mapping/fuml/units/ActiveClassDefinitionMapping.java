@@ -45,8 +45,6 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
     // Subunits are handled by NamespaceDefinitionMapping.
 
     public void mapTo(Classifier classifier) throws MappingError {
-        super.mapTo(classifier);
-
         Class_ class_ = (Class_)classifier;
         class_.setIsActive(true);
 
@@ -54,10 +52,11 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
         ActiveClassDefinition base = 
             (ActiveClassDefinition)definition.getImpl().getBase();
         ActivityDefinition classifierBehavior = 
-            (base == null? definition: base).getClassifierBehavior();
+            (base == null? definition: base).getImpl().getClassifierBehavior();
         
         if (classifierBehavior != null) {
             FumlMapping mapping = this.fumlMap(classifierBehavior);
+            
             if (!(mapping instanceof ActivityDefinitionMapping)) {
                 this.throwError("Error mapping classifier behavior: " + mapping);
             } else {
@@ -73,16 +72,20 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
                 class_.setClassifierBehavior(behavior);
             }
         }
-
+        
+        // NOTE: The classifier behavior (if any) is mapped first so that it can
+        // then be skipped by addMemberTo, so it is not also added as a
+        // nested classifier.
+        super.mapTo(classifier);
     }
     
     @Override
     public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
         Class_ class_ = (Class_)namespace;
-
+        
         if (element instanceof Reception) {
           class_.addOwnedReception((Reception)element);
-        } else {
+        } else if (element != class_.classifierBehavior){
           super.addMemberTo(element, namespace);
         }
     }
