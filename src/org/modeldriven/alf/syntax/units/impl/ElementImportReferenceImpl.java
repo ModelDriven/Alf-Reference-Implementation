@@ -53,7 +53,7 @@ public class ElementImportReferenceImpl extends ImportReferenceImpl {
             Member importedMember = ImportedMemberImpl.makeImportedMember(referent);
             importedMember.setVisibility(this.getSelf().getVisibility());
             String alias = this.getSelf().getAlias();
-            if (alias != null && alias !="") {
+            if (alias != null && !alias.equals("")) {
                 importedMember.setName(alias);
             } else {
                 QualifiedName referentName = self.getReferentName();
