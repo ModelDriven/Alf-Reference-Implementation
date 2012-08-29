@@ -127,28 +127,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
      * not imported.
      **/
     protected Collection<Member> deriveMember() {
-	    NamespaceDefinition self = this.getSelf();
-	    
-        if (self.getIsStub()) {
-	        UnitDefinition subunit = self.getSubunit();
-	        if (subunit != null) {
-	            NamespaceDefinition definition = subunit.getDefinition();
-	            if (definition != null) {
-	                return definition.getMember();
-	            }
-	        }
-	    }
-        
-        List<Member> members = new ArrayList<Member>();
-        members.addAll(self.getOwnedMember());
-        
-        UnitDefinition unit = self.getUnit();	    
-	    if (unit != null) {
-	      members.addAll(unit.getImpl().getImportedMembers());
-	    }
-	    
-		return members;
-	}
+        return this.deriveMember(new ArrayList<ElementReference>());
+    }
 
     /*
 	 * Derivations
@@ -196,6 +176,41 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	 *  Helper methods
 	 */
 	
+	public Collection<Member> getMember(Collection<ElementReference> excluded) {
+	    if (excluded == null || excluded.isEmpty()) {
+	        return this.getSelf().getMember();
+	    } else {
+	        return this.deriveMember(excluded);
+	    }
+	}
+	
+	// Derive the members of this namespace, but exclude the further importing
+	// of any of the excluded elements, in order to prevent infinite looping
+	// due to circular references.
+    private Collection<Member> deriveMember(Collection<ElementReference> excluded) {
+        NamespaceDefinition self = this.getSelf();
+        
+        if (self.getIsStub()) {
+            UnitDefinition subunit = self.getSubunit();
+            if (subunit != null) {
+                NamespaceDefinition definition = subunit.getDefinition();
+                if (definition != null) {
+                    return definition.getImpl().getMember(excluded);
+                }
+            }
+        }
+        
+        List<Member> members = new ArrayList<Member>();
+        members.addAll(self.getOwnedMember());
+        
+        UnitDefinition unit = self.getUnit();       
+        if (unit != null) {
+          members.addAll(unit.getImpl().getImportedMembers(excluded));
+        }
+        
+        return members;
+    }
+
 	@Override
 	public boolean hasAnnotation(String name) {
 	    UnitDefinition unit = this.getSelf().getUnit();
@@ -210,8 +225,11 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             
         // Note: If this namespace is the same as or a containing scope of the 
         // given namespace, then all members of this namespace are visible.
-        if (namespace != null && !this.getReferent().getImpl().equals(namespace.getImpl().getReferent()) &&
-                !this.containsMember(namespace)) {
+        ElementReference namespaceReferent = 
+                namespace == null? null: namespace.getImpl().getReferent();
+        if (namespaceReferent != null && 
+                !this.getReferent().getImpl().equals(namespaceReferent) &&
+                !this.containsMember(namespaceReferent)) {
             boolean allowPackageOnly = this.allowPackageOnly();
             for (Object member: members.toArray()) {
                 MemberImpl memberImpl = ((Member)member).getImpl();
@@ -225,15 +243,14 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return members;
     }
     
-    private boolean containsMember(Member member) {
+    private boolean containsMember(ElementReference member) {
         if (member == null) {
             return false;
         } else {
-            NamespaceDefinition namespace = member.getNamespace();
+            ElementReference namespace = member.getImpl().getNamespace();
             return namespace != null && 
-                    (namespace.getImpl().getReferent().getImpl().
-                            equals(this.getReferent()) || 
-                    this.containsMember(namespace));
+                    (namespace.getImpl().equals(this.getReferent()) || 
+                     this.containsMember(namespace));
         }
     }
 

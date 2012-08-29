@@ -1,17 +1,17 @@
-// private import Classes::*;
+private import Classes::*;
 
 package Signals {
 
   public signal SubmitCharge {
-    public card: Classes::CreditCard;
+    public card: CreditCard;
   }
 
   public signal ChargeApproved {
-    public charge: Classes::CreditCardCharge;
+    public charge: CreditCardCharge;
   }
   
   public signal ChargeDenied {
-    public charge: Classes::CreditCardCharge;
+    public charge: CreditCardCharge;
   }
 
 }

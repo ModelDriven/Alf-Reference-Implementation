@@ -360,7 +360,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public List<Member> getPublicMembers() {
+    public List<Member> getPublicMembers(Collection<ElementReference> excluded) {
         List<Member> members = new ArrayList<Member>();
         if (this.isPackage()) {
             Package element = (Package)this.getSelf().getElement();
@@ -370,8 +370,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                 }
             }
         }
-        return members;
-        
+        return members;       
     }
 
     @Override

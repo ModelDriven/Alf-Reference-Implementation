@@ -15,6 +15,7 @@ import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * An import reference to a single element to be imported into a unit.
@@ -45,11 +46,11 @@ public class ElementImportReferenceImpl extends ImportReferenceImpl {
 	 */
 
     @Override
-    public ArrayList<Member> getImportedMembers() {
+    public ArrayList<Member> getImportedMembers(Collection<ElementReference> excluded) {
         ElementImportReference self = this.getSelf();
         ArrayList<Member> members = new ArrayList<Member>();
         ElementReference referent = self.getReferent();
-        if (referent != null) {
+        if (referent != null && !referent.getImpl().isContainedIn(excluded)) {
             Member importedMember = ImportedMemberImpl.makeImportedMember(referent);
             importedMember.setVisibility(this.getSelf().getVisibility());
             String alias = this.getSelf().getAlias();
