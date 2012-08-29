@@ -293,6 +293,10 @@
         </java>
         <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
             <arg value="-uC" />
+            <arg value="tests/Package_CyclicImport.alf" />
+        </java>
+        <java classname="org.modeldriven.alf.parser.AlfParser" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
             <arg value="tests/Signal_SubmitCharge.alf" />
         </java>
     </target>

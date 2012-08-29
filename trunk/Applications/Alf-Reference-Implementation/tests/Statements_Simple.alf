@@ -1,4 +1,3 @@
-private import DomainDataTypes;
 private import 'Property Management'::'Data Model'::Properties::*;
 
 /** 
@@ -9,8 +8,8 @@ class Statements_Simple {
     // Supporting declarations *************************************************
     
   	offers: Offer[*];
-	principal: Integer;
-	rate: Integer;
+	  principal: Integer;
+	  rate: Integer;
 	
     class Offer { }
     class Member { 
@@ -24,7 +23,7 @@ class Statements_Simple {
 	//**************************************************************************
 
 	test() {
-      // Setup
+    // Setup
 	  e1 = 0;
 	  e2 = 0;
 	  period = 1;

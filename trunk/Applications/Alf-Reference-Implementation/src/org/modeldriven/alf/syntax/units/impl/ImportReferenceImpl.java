@@ -125,7 +125,7 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 	    }
 	}
 	
-	public abstract ArrayList<Member> getImportedMembers();
+	public abstract ArrayList<Member> getImportedMembers(Collection<ElementReference> excluded);
 	
     @Override
     public boolean equals(Object other) {

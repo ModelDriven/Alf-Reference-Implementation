@@ -213,12 +213,12 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
      * Helper Methods
      */
 
-    public List<Member> getImportedMembers() {
+    public List<Member> getImportedMembers(Collection<ElementReference> excluded) {
         UnitDefinition self = this.getSelf();
         
         ArrayList<Member> importedMembers = new ArrayList<Member>();
         for (ImportReference importReference: self.getImport()) {
-            importedMembers.addAll(importReference.getImpl().getImportedMembers());
+            importedMembers.addAll(importReference.getImpl().getImportedMembers(excluded));
         }
         MemberImpl.removeDuplicates(importedMembers);
         

@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * An import reference to a package all of whose public members are to be
@@ -47,15 +48,21 @@ public class PackageImportReferenceImpl extends ImportReferenceImpl {
      */
 
     @Override
-    public ArrayList<Member> getImportedMembers() {
+    public ArrayList<Member> getImportedMembers(Collection<ElementReference> excluded) {
+        PackageImportReference self = this.getSelf();
         ArrayList<Member> members = new ArrayList<Member>();
-        ElementReference referent = this.getSelf().getReferent();
-        if (referent != null) {
-            for (Member member: referent.getImpl().getPublicMembers()) {
+        ElementReference referent = self.getReferent();
+        if (referent != null && !referent.getImpl().isContainedIn(excluded)) {
+            // Collection<ElementReference> excluded2 = new ArrayList<ElementReference>(excluded);
+            ElementReference definition = 
+                    self.getUnit().getDefinition().getImpl().getReferent();
+            excluded.add(definition);
+            for (Member member: referent.getImpl().getPublicMembers(excluded)) {
                 ImportedMember importedMember = ImportedMemberImpl.makeImportedMember(member);
-                importedMember.setVisibility(this.getSelf().getVisibility());
+                importedMember.setVisibility(self.getVisibility());
                 members.add(importedMember);
             }
+            excluded.remove(definition);
         }
         return members;
     }

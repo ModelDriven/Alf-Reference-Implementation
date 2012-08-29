@@ -1,0 +1,10 @@
+public import Package_CyclicImport1::*;
+
+package Package_CyclicImport2 {
+
+  public class B {
+    public a: A;
+    public y: String;
+  }
+  
+}

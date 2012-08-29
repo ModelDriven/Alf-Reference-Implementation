@@ -108,9 +108,9 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
         return false;
     }
 
-    public List<Member> getPublicMembers() {
+    public List<Member> getPublicMembers(Collection<ElementReference> excluded) {
         ArrayList<Member> publicMembers = new ArrayList<Member>();
-        for (Member member: this.getSelf().getMember()) {
+        for (Member member: this.getMember(excluded)) {
             if (member.getImpl().isPublic()) {
                 publicMembers.add(member);
             }

@@ -335,9 +335,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public List<Member> getPublicMembers() {
+    public List<Member> getPublicMembers(Collection<ElementReference> excluded) {
         return !this.isPackage()? new ArrayList<Member>():
-            ((PackageDefinition)this.getSelf().getElement()).getImpl().getPublicMembers();
+            ((PackageDefinition)this.getSelf().getElement()).getImpl().getPublicMembers(excluded);
     }
 
     @Override

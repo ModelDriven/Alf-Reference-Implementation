@@ -1,0 +1,11 @@
+public import Package_CyclicImport1::*;
+
+package Package_CyclicImport {
+
+  public class C {
+    public a: A;
+    public b: B;
+    public z: Boolean;
+  }
+  
+}
