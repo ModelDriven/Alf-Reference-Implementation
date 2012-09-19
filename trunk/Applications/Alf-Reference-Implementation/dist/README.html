@@ -4,7 +4,7 @@
 </header>
 <body>
 <h1>Action Language for UML (Alf) Open Source Implementation<br>
-Version 0.1.0</h1>
+Version 0.2.0</h1>
 <em>Copyright &copy; 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)</em>
 <p>
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
@@ -16,10 +16,8 @@ This implementation is based on the Alf 1.0 Beta 1 specification but corrects a 
 of issues that are currently being addressed by the Alf 1.0 Finalization Task
 Force at OMG. (For the current list of formally submitted issues, see
 <a href="http://www.omg.org/issues/alf-ftf.html">http://www.omg.org/issues/alf-ftf.html</a>.)
-It uses the head revision of the fUML Reference Implementation execution 
-engine (see <a href="http://fuml.modeldriven.org">http://fuml.modeldriven.org</a>), 
-which is the released version 1.0.1, with some additional updates (to be included
-in v1.0.2).
+It uses version 1.0.2 of the fUML Reference Implementation execution 
+engine (see <a href="http://fuml.modeldriven.org">http://fuml.modeldriven.org</a>).
 
 <h2>Licensing</h2>
 <p>
@@ -57,7 +55,15 @@ discovered in these definitions, or inconsistencies with the descriptions in
 Part II were identified, these were corrected in the implementation. All such
 issues are being reported to the Alf Finalization Task Force for correction in
 the final specification.
-<p>
+
+<h3>Version 0.2.0</h3>
+<ul>
+<li>Implemented the proper handling of cyclic imports.</li>
+<li>Corrected errors in the mapping of loop statements, accept statements and
+classifier behaviors.</li>
+</ul>
+
+<h3>Version 0.1.0</h3>
 The following Alf features are NOT currently implemented:
 <ul>
 <li>Profile and stereotype application (other than application of the standard 
@@ -133,8 +139,8 @@ also import them.
 
 <h2>Unit Execution</h2>
 <p>
-To be executable, a unit must be either the definition of an activity with no 
-parameters or of a non-abstract active class with a classifier behavior. 
+To be executable, a unit must be the definition of either an activity with no 
+parameters or a non-abstract active class with a classifier behavior. 
 Execution of such a unit proceeds as follows:
 
 <ol>
@@ -175,8 +181,8 @@ file <tt>alf.log</tt> (unless this configuration is changed in
 
 <h2>Command Line Script</h2>
 <p>
-A model can be executed from the command line using the alf shell script (for
-Unix) or the alf.bat batch file (for Windows/DOS). Usage is
+A model can be executed from the command line using the <tt>alf</tt> shell 
+script (for Unix) or the <tt>alf.bat</tt> batch file (for Windows/DOS). Usage is
 <p>
 <tt>alf [<em>options</em>] <em>unitName</em></tt>
 <p>
