@@ -2,9 +2,6 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.alf.uml.InvocationAction;
-import org.modeldriven.alf.uml.OutputPin;
-
 public interface CallAction extends InvocationAction {
 	public boolean getIsSynchronous();
 

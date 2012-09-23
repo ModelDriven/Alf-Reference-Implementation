@@ -1,9 +1,5 @@
 package org.modeldriven.alf.uml;
 
-import java.util.List;
-
-import org.modeldriven.uml.Classifier;
-import org.modeldriven.uml.Element;
 
 public interface Generalization extends Element {
 	public boolean getIsSubstitutable();

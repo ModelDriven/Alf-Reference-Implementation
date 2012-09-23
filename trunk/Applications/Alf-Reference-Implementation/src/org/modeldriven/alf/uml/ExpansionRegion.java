@@ -2,9 +2,6 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.alf.uml.ExpansionNode;
-import org.modeldriven.alf.uml.StructuredActivityNode;
-
 public interface ExpansionRegion extends StructuredActivityNode {
 	public String getMode();
 

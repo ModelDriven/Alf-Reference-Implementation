@@ -1,10 +1,5 @@
 package org.modeldriven.alf.uml;
 
-import java.util.List;
-
-import org.modeldriven.uml.Element;
-import org.modeldriven.uml.Namespace;
-import org.modeldriven.uml.PackageableElement;
 
 public interface ElementImport extends Element {
 	public String getVisibility();
