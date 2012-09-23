@@ -10,8 +10,8 @@ package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.syntax.units.impl.ExternalNamespaceImpl;
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
-import org.modeldriven.alf.uml.NamedElement;
-import org.modeldriven.alf.uml.Namespace;
+import org.modeldriven.uml.NamedElement;
+import org.modeldriven.uml.Namespace;
 
 import java.util.ArrayList;
 

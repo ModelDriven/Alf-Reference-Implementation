@@ -19,15 +19,15 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.EnumerationLiteralNameImpl;
+import org.modeldriven.uml.Element;
+import org.modeldriven.uml.Profile;
+import org.modeldriven.uml.Stereotype;
 
 /**
  * The definition of an enumeration literal, as a member of an enumeration

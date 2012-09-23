@@ -19,9 +19,6 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +26,9 @@ import java.util.TreeSet;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
+import org.modeldriven.uml.Element;
+import org.modeldriven.uml.Profile;
+import org.modeldriven.uml.Stereotype;
 
 /**
  * A reference to a model element, either directly or via its Alf abstract
