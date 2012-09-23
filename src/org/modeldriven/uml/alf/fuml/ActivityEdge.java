@@ -1,7 +1,15 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 
-public class ActivityEdge extends RedefinableElement implements
+public abstract class ActivityEdge extends RedefinableElement implements
 		org.modeldriven.alf.uml.ActivityEdge {
 
 	public ActivityEdge(
@@ -14,11 +22,11 @@ public class ActivityEdge extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {
-		return new Activity(this.getBase().activity);
+		return (Activity)this.wrap(this.getBase().activity);
 	}
 
 	public org.modeldriven.alf.uml.ActivityNode getSource() {
-		return new ActivityNode(this.getBase().source);
+		return (ActivityNode)this.wrap(this.getBase().source);
 	}
 
 	public void setSource(org.modeldriven.alf.uml.ActivityNode source) {
@@ -26,7 +34,7 @@ public class ActivityEdge extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.ActivityNode getTarget() {
-		return new ActivityNode(this.getBase().target);
+		return (ActivityNode)this.wrap(this.getBase().target);
 	}
 
 	public void setTarget(org.modeldriven.alf.uml.ActivityNode target) {
@@ -34,7 +42,7 @@ public class ActivityEdge extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getGuard() {
-		return new ValueSpecification(this.getBase().guard);
+		return (ValueSpecification)this.wrap(this.getBase().guard);
 	}
 
 	public void setGuard(org.modeldriven.alf.uml.ValueSpecification guard) {

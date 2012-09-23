@@ -1,9 +1,17 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Behavior extends Class_ implements org.modeldriven.alf.uml.Behavior {
+public abstract class Behavior extends Class_ implements org.modeldriven.alf.uml.Behavior {
 
 	public Behavior(fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior base) {
 		super(base);
@@ -22,7 +30,7 @@ public class Behavior extends Class_ implements org.modeldriven.alf.uml.Behavior
 	}
 
 	public org.modeldriven.alf.uml.BehavioralFeature getSpecification() {
-		return new BehavioralFeature(this.getBase().specification);
+		return (BehavioralFeature)this.wrap(this.getBase().specification);
 	}
 
 	public void setSpecification(
@@ -44,7 +52,7 @@ public class Behavior extends Class_ implements org.modeldriven.alf.uml.Behavior
 	}
 
 	public org.modeldriven.alf.uml.BehavioredClassifier getContext() {
-		return new BehavioredClassifier(this.getBase().context);
+		return (BehavioredClassifier)this.wrap(this.getBase().context);
 	}
 
 }

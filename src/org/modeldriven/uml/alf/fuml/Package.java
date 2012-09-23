@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 import java.util.ArrayList;
@@ -20,7 +28,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (fUML.Syntax.Classes.Kernel.PackageableElement element : this
 				.getBase().packagedElement) {
-			list.add(new PackageableElement(element));
+			list.add((PackageableElement)this.wrap(element));
 		}
 		return list;
 	}
@@ -34,7 +42,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 	public List<org.modeldriven.alf.uml.Type> getOwnedType() {
 		List<org.modeldriven.alf.uml.Type> list = new ArrayList<org.modeldriven.alf.uml.Type>();
 		for (fUML.Syntax.Classes.Kernel.Type element : this.getBase().ownedType) {
-			list.add(new Type(element));
+			list.add((Type)this.wrap(element));
 		}
 		return list;
 	}
@@ -80,7 +88,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
                     }
                 }
                 if (addMember) {
-                    visibleMembers.add(new NamedElement(member));
+                    visibleMembers.add((NamedElement)this.wrap(member));
                 }
             }
         }

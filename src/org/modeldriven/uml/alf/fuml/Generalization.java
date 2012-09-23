@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 
@@ -24,11 +32,11 @@ public class Generalization extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.Classifier getSpecific() {
-		return new Classifier(this.getBase().specific);
+		return (Classifier)this.wrap(this.getBase().specific);
 	}
 
 	public org.modeldriven.alf.uml.Classifier getGeneral() {
-		return new Classifier(this.getBase().general);
+		return (Classifier)this.wrap(this.getBase().general);
 	}
 
 	public void setGeneral(org.modeldriven.alf.uml.Classifier general) {

@@ -1,14 +1,15 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.alf.uml;
 
-public abstract class ElementFactory {
+public interface ElementFactory {
     
-    public abstract <T extends Element> T newInstance(Class<T> class_) 
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException;
-    
-    @SuppressWarnings("unchecked")
-    public <T extends Element> T newInstance(T element) 
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        return (T) this.newInstance(element.getClass());
-    }
+    public <T extends Element> T newInstance(Class<T> class_);
 
 }

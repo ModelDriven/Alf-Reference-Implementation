@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 import java.util.ArrayList;
@@ -38,7 +46,7 @@ public class LoopNode extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode element : this
 				.getBase().test) {
-			list.add(new ExecutableNode(element));
+			list.add((ExecutableNode)this.wrap(element));
 		}
 		return list;
 	}
@@ -78,7 +86,7 @@ public class LoopNode extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode element : this
 				.getBase().bodyPart) {
-			list.add(new ExecutableNode(element));
+			list.add((ExecutableNode)this.wrap(element));
 		}
 		return list;
 	}
@@ -117,7 +125,7 @@ public class LoopNode extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode element : this
 				.getBase().setupPart) {
-			list.add(new ExecutableNode(element));
+			list.add((ExecutableNode)this.wrap(element));
 		}
 		return list;
 	}
