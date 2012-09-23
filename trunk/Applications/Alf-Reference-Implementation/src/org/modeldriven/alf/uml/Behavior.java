@@ -2,9 +2,9 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.uml.BehavioralFeature;
-import org.modeldriven.uml.BehavioredClassifier;
-import org.modeldriven.uml.Parameter;
+import org.modeldriven.alf.uml.BehavioralFeature;
+import org.modeldriven.alf.uml.BehavioredClassifier;
+import org.modeldriven.alf.uml.Parameter;
 
 public interface Behavior extends Class {
 	public boolean getIsReentrant();

@@ -1,6 +1,6 @@
 package org.modeldriven.alf.uml;
 
-import org.modeldriven.uml.Package;
+import org.modeldriven.alf.uml.Package;
 
 public interface Profile extends Package {
 

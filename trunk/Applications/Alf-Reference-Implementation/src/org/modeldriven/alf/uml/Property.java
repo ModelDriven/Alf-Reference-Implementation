@@ -2,10 +2,10 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.uml.Association;
-import org.modeldriven.uml.DataType;
-import org.modeldriven.uml.Property;
-import org.modeldriven.uml.StructuralFeature;
+import org.modeldriven.alf.uml.Association;
+import org.modeldriven.alf.uml.DataType;
+import org.modeldriven.alf.uml.Property;
+import org.modeldriven.alf.uml.StructuralFeature;
 
 public interface Property extends StructuralFeature {
 	public boolean getIsDerived();

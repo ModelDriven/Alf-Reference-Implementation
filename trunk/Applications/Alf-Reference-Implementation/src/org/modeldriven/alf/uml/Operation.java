@@ -2,10 +2,10 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.uml.BehavioralFeature;
-import org.modeldriven.uml.Operation;
-import org.modeldriven.uml.Parameter;
-import org.modeldriven.uml.Type;
+import org.modeldriven.alf.uml.BehavioralFeature;
+import org.modeldriven.alf.uml.Operation;
+import org.modeldriven.alf.uml.Parameter;
+import org.modeldriven.alf.uml.Type;
 
 public interface Operation extends BehavioralFeature {
 	public boolean getIsQuery();

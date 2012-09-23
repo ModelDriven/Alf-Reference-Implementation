@@ -2,9 +2,9 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.uml.Element;
-import org.modeldriven.uml.NamedElement;
-import org.modeldriven.uml.Namespace;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Namespace;
 
 public interface NamedElement extends Element {
 	public String getName();

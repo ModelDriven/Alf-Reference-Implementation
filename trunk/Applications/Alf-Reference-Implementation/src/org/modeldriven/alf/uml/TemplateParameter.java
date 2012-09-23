@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
-import org.modeldriven.uml.Element;
+import org.modeldriven.alf.uml.Element;
 
 public interface TemplateParameter extends Element {
     
