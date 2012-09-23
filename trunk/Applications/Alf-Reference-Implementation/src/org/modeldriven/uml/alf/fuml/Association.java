@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 import java.util.ArrayList;
@@ -40,7 +48,7 @@ public class Association extends Classifier implements
 	public List<org.modeldriven.alf.uml.Type> getEndType() {
 		List<org.modeldriven.alf.uml.Type> list = new ArrayList<org.modeldriven.alf.uml.Type>();
 		for (fUML.Syntax.Classes.Kernel.Type element : this.getBase().endType) {
-			list.add(new Type(element));
+			list.add((Type)this.wrap(element));
 		}
 		return list;
 	}
@@ -48,7 +56,7 @@ public class Association extends Classifier implements
 	public List<org.modeldriven.alf.uml.Property> getMemberEnd() {
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (fUML.Syntax.Classes.Kernel.Property element : this.getBase().memberEnd) {
-			list.add(new Property(element));
+			list.add((Property)this.wrap(element));
 		}
 		return list;
 	}
@@ -56,7 +64,7 @@ public class Association extends Classifier implements
 	public List<org.modeldriven.alf.uml.Property> getNavigableOwnedEnd() {
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (fUML.Syntax.Classes.Kernel.Property element : this.getBase().navigableOwnedEnd) {
-			list.add(new Property(element));
+			list.add((Property)this.wrap(element));
 		}
 		return list;
 	}

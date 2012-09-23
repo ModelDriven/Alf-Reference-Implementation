@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 import java.util.ArrayList;
@@ -29,7 +37,7 @@ public class ReclassifyObjectAction extends Action implements
 	public List<org.modeldriven.alf.uml.Classifier> getOldClassifier() {
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (fUML.Syntax.Classes.Kernel.Classifier element : this.getBase().oldClassifier) {
-			list.add(new Classifier(element));
+			list.add((Classifier)this.wrap(element));
 		}
 		return list;
 	}
@@ -49,7 +57,7 @@ public class ReclassifyObjectAction extends Action implements
 	public List<org.modeldriven.alf.uml.Classifier> getNewClassifier() {
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (fUML.Syntax.Classes.Kernel.Classifier element : this.getBase().newClassifier) {
-			list.add(new Classifier(element));
+			list.add((Classifier)this.wrap(element));
 		}
 		return list;
 	}

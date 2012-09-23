@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 import java.util.ArrayList;
@@ -6,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Classifier extends Type implements org.modeldriven.alf.uml.Classifier {
+public abstract class Classifier extends Type implements org.modeldriven.alf.uml.Classifier {
 
 	public Classifier(fUML.Syntax.Classes.Kernel.Classifier base) {
 		super(base);
@@ -41,7 +49,7 @@ public class Classifier extends Type implements org.modeldriven.alf.uml.Classifi
 	public List<org.modeldriven.alf.uml.Feature> getFeature() {
 		List<org.modeldriven.alf.uml.Feature> list = new ArrayList<org.modeldriven.alf.uml.Feature>();
 		for (fUML.Syntax.Classes.Kernel.Feature element : this.getBase().feature) {
-			list.add(new Feature(element));
+			list.add((Feature)this.wrap(element));
 		}
 		return list;
 	}
@@ -49,7 +57,7 @@ public class Classifier extends Type implements org.modeldriven.alf.uml.Classifi
 	public List<org.modeldriven.alf.uml.NamedElement> getInheritedMember() {
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (fUML.Syntax.Classes.Kernel.NamedElement element : this.getBase().inheritedMember) {
-			list.add(new NamedElement(element));
+			list.add((NamedElement)this.wrap(element));
 		}
 		return list;
 	}
@@ -65,7 +73,7 @@ public class Classifier extends Type implements org.modeldriven.alf.uml.Classifi
 	public List<org.modeldriven.alf.uml.Classifier> getGeneral() {
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (fUML.Syntax.Classes.Kernel.Classifier element : this.getBase().general) {
-			list.add(new Classifier(element));
+			list.add((Classifier)this.wrap(element));
 		}
 		return list;
 	}
@@ -81,7 +89,7 @@ public class Classifier extends Type implements org.modeldriven.alf.uml.Classifi
 	public List<org.modeldriven.alf.uml.NamedElement> getMember() {
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (fUML.Syntax.Classes.Kernel.NamedElement element : this.getBase().namespace.member) {
-			list.add(new NamedElement(element));
+			list.add((NamedElement)this.wrap(element));
 		}
 		return list;
 	}
@@ -89,7 +97,7 @@ public class Classifier extends Type implements org.modeldriven.alf.uml.Classifi
 	public List<org.modeldriven.alf.uml.NamedElement> getOwnedMember() {
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (fUML.Syntax.Classes.Kernel.NamedElement element : this.getBase().namespace.ownedMember) {
-			list.add(new NamedElement(element));
+			list.add((NamedElement)this.wrap(element));
 		}
 		return list;
 	}
@@ -124,7 +132,7 @@ public class Classifier extends Type implements org.modeldriven.alf.uml.Classifi
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (fUML.Syntax.Classes.Kernel.PackageableElement element : this
 				.getBase().namespace.importedMember) {
-			list.add(new PackageableElement(element));
+			list.add((PackageableElement)this.wrap(element));
 		}
 		return list;
 	}
@@ -175,6 +183,6 @@ public class Classifier extends Type implements org.modeldriven.alf.uml.Classifi
 
     @Override
     public List<String> getNamesOfMember(org.modeldriven.alf.uml.NamedElement member) {
-        return new Namespace(this.getBase().namespace).getNamesOfMember(member);
+        return ((Namespace)this.wrap(this.getBase().namespace)).getNamesOfMember(member);
     }
 }

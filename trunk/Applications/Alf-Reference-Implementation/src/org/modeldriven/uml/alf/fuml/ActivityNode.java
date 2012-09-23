@@ -1,9 +1,17 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.uml.alf.fuml;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityNode extends RedefinableElement implements
+public abstract class ActivityNode extends RedefinableElement implements
 		org.modeldriven.alf.uml.ActivityNode {
 
 	public ActivityNode(
@@ -20,14 +28,14 @@ public class ActivityNode extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {
-		return new Activity(this.getBase().activity);
+		return (Activity)this.wrap(this.getBase().activity);
 	}
 
 	public List<org.modeldriven.alf.uml.ActivityEdge> getOutgoing() {
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (fUML.Syntax.Activities.IntermediateActivities.ActivityEdge element : this
 				.getBase().outgoing) {
-			list.add(new ActivityEdge(element));
+			list.add((ActivityEdge)this.wrap(element));
 		}
 		return list;
 	}
@@ -40,7 +48,7 @@ public class ActivityNode extends RedefinableElement implements
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (fUML.Syntax.Activities.IntermediateActivities.ActivityEdge element : this
 				.getBase().incoming) {
-			list.add(new ActivityEdge(element));
+			list.add((ActivityEdge)this.wrap(element));
 		}
 		return list;
 	}
