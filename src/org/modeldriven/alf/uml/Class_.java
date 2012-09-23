@@ -2,7 +2,7 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-public interface Class extends BehavioredClassifier {
+public interface Class_ extends BehavioredClassifier {
 	public boolean getIsAbstract();
 
 	public void setIsAbstract(boolean isAbstract);
@@ -11,7 +11,7 @@ public interface Class extends BehavioredClassifier {
 
 	public void addOwnedOperation(Operation ownedOperation);
 
-	public List<Class> getSuperClass();
+	public List<Class_> getSuperClass();
 
 	public boolean getIsActive();
 

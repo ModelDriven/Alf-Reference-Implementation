@@ -8,6 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
-public interface Stereotype extends Class {
+public interface Stereotype extends Class_ {
 
 }

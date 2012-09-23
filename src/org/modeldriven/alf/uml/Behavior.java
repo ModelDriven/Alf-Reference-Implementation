@@ -2,7 +2,7 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-public interface Behavior extends Class {
+public interface Behavior extends Class_ {
 	public boolean getIsReentrant();
 
 	public void setIsReentrant(boolean isReentrant);
