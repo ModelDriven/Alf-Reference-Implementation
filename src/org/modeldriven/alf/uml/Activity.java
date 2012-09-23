@@ -2,10 +2,10 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.uml.ActivityEdge;
-import org.modeldriven.uml.ActivityNode;
-import org.modeldriven.uml.Behavior;
-import org.modeldriven.uml.StructuredActivityNode;
+import org.modeldriven.alf.uml.ActivityEdge;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Behavior;
+import org.modeldriven.alf.uml.StructuredActivityNode;
 
 public interface Activity extends Behavior {
 	public List<StructuredActivityNode> getStructuredNode();

@@ -2,10 +2,10 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.uml.ElementImport;
-import org.modeldriven.uml.NamedElement;
-import org.modeldriven.uml.PackageImport;
-import org.modeldriven.uml.PackageableElement;
+import org.modeldriven.alf.uml.ElementImport;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.PackageImport;
+import org.modeldriven.alf.uml.PackageableElement;
 
 public interface Namespace extends NamedElement {
 	public List<NamedElement> getMember();

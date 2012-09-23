@@ -3,13 +3,13 @@ package org.modeldriven.alf.uml;
 import java.util.List;
 import java.util.Set;
 
-import org.modeldriven.uml.Classifier;
-import org.modeldriven.uml.Feature;
-import org.modeldriven.uml.Generalization;
-import org.modeldriven.uml.NamedElement;
-import org.modeldriven.uml.Namespace;
-import org.modeldriven.uml.Property;
-import org.modeldriven.uml.Type;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Feature;
+import org.modeldriven.alf.uml.Generalization;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Namespace;
+import org.modeldriven.alf.uml.Property;
+import org.modeldriven.alf.uml.Type;
 
 public interface Classifier extends Type, Namespace {
 	public boolean getIsAbstract();
