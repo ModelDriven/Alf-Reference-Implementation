@@ -1,11 +1,5 @@
 package org.modeldriven.alf.uml;
 
-import java.util.List;
-
-import org.modeldriven.alf.uml.Action;
-import org.modeldriven.alf.uml.InputPin;
-import org.modeldriven.alf.uml.OutputPin;
-import org.modeldriven.uml.Behavior;
 
 public interface ReduceAction extends Action {
 	public Behavior getReducer();

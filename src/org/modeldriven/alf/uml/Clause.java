@@ -2,11 +2,6 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.alf.uml.Clause;
-import org.modeldriven.alf.uml.ExecutableNode;
-import org.modeldriven.alf.uml.OutputPin;
-import org.modeldriven.uml.Element;
-
 public interface Clause extends Element {
 	public List<ExecutableNode> getTest();
 

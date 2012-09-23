@@ -2,10 +2,6 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.alf.uml.Behavior;
-import org.modeldriven.alf.uml.Feature;
-import org.modeldriven.alf.uml.Parameter;
-
 public interface BehavioralFeature extends Feature {
 	public List<Parameter> getOwnedParameter();
 

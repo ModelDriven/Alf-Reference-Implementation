@@ -1,13 +1,5 @@
 package org.modeldriven.alf.uml;
 
-import java.util.List;
-
-import org.modeldriven.alf.uml.ActivityNode;
-import org.modeldriven.alf.uml.StructuredActivityNode;
-import org.modeldriven.alf.uml.ValueSpecification;
-import org.modeldriven.uml.Activity;
-import org.modeldriven.uml.RedefinableElement;
-
 public interface ActivityEdge extends RedefinableElement {
 	public Activity getActivity();
 

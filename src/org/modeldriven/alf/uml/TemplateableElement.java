@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
-import org.modeldriven.alf.uml.Element;
 
 public interface TemplateableElement extends Element {
     

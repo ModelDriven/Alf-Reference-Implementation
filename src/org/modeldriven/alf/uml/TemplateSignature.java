@@ -10,8 +10,6 @@ package org.modeldriven.alf.uml;
 
 import java.util.List;
 
-import org.modeldriven.alf.uml.Element;
-
 public interface TemplateSignature extends Element {
     
     public List<TemplateParameter> getParameter();

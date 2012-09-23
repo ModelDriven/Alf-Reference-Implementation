@@ -1,10 +1,5 @@
 package org.modeldriven.alf.uml;
 
-import java.util.List;
-
-import org.modeldriven.alf.uml.Action;
-import org.modeldriven.alf.uml.OutputPin;
-import org.modeldriven.uml.Classifier;
 
 public interface ReadExtentAction extends Action {
 	public OutputPin getResult();

@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
-import org.modeldriven.alf.uml.DataType;
 
 public interface Primitive extends DataType {
 
