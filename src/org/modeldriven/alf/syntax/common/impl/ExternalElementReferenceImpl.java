@@ -24,39 +24,38 @@ import org.modeldriven.alf.syntax.units.ImportedMember;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
-import org.modeldriven.alf.uml.Activity;
-import org.modeldriven.alf.uml.Association;
-import org.modeldriven.alf.uml.Behavior;
-import org.modeldriven.alf.uml.BehavioredClassifier;
-import org.modeldriven.alf.uml.Class;
-import org.modeldriven.alf.uml.Classifier;
-import org.modeldriven.alf.uml.ClassifierTemplateParameter;
-import org.modeldriven.alf.uml.DataType;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Enumeration;
-import org.modeldriven.alf.uml.EnumerationLiteral;
-import org.modeldriven.alf.uml.Feature;
-import org.modeldriven.alf.uml.MultiplicityElement;
-import org.modeldriven.alf.uml.NamedElement;
-import org.modeldriven.alf.uml.Namespace;
-import org.modeldriven.alf.uml.Operation;
-import org.modeldriven.alf.uml.Package;
-import org.modeldriven.alf.uml.Parameter;
-import org.modeldriven.alf.uml.ParameterableElement;
-import org.modeldriven.alf.uml.Primitive;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Property;
-import org.modeldriven.alf.uml.Reception;
-import org.modeldriven.alf.uml.RedefinableElement;
-import org.modeldriven.alf.uml.Signal;
-import org.modeldriven.alf.uml.Stereotype;
-import org.modeldriven.alf.uml.TemplateBinding;
-import org.modeldriven.alf.uml.TemplateParameter;
-import org.modeldriven.alf.uml.TemplateParameterSubstitution;
-import org.modeldriven.alf.uml.TemplateSignature;
-import org.modeldriven.alf.uml.TemplateableElement;
-import org.modeldriven.alf.uml.TypedElement;
-import org.modeldriven.alf.uml.VisibilityKind;
+import org.modeldriven.uml.Activity;
+import org.modeldriven.uml.Association;
+import org.modeldriven.uml.Behavior;
+import org.modeldriven.uml.BehavioredClassifier;
+import org.modeldriven.uml.Class;
+import org.modeldriven.uml.Classifier;
+import org.modeldriven.uml.ClassifierTemplateParameter;
+import org.modeldriven.uml.DataType;
+import org.modeldriven.uml.Element;
+import org.modeldriven.uml.Enumeration;
+import org.modeldriven.uml.EnumerationLiteral;
+import org.modeldriven.uml.Feature;
+import org.modeldriven.uml.MultiplicityElement;
+import org.modeldriven.uml.NamedElement;
+import org.modeldriven.uml.Namespace;
+import org.modeldriven.uml.Operation;
+import org.modeldriven.uml.Package;
+import org.modeldriven.uml.Parameter;
+import org.modeldriven.uml.ParameterableElement;
+import org.modeldriven.uml.Primitive;
+import org.modeldriven.uml.Profile;
+import org.modeldriven.uml.Property;
+import org.modeldriven.uml.Reception;
+import org.modeldriven.uml.RedefinableElement;
+import org.modeldriven.uml.Signal;
+import org.modeldriven.uml.Stereotype;
+import org.modeldriven.uml.TemplateBinding;
+import org.modeldriven.uml.TemplateParameter;
+import org.modeldriven.uml.TemplateParameterSubstitution;
+import org.modeldriven.uml.TemplateSignature;
+import org.modeldriven.uml.TemplateableElement;
+import org.modeldriven.uml.TypedElement;
 
 /**
  * A direct reference to a UML model element.
@@ -349,12 +348,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (!(element instanceof NamedElement)) {
             return null;
         } else {
-            VisibilityKind visibilityKind = ((NamedElement)element).getVisibility();
+            String visibilityKind = ((NamedElement)element).getVisibility();
             if (visibilityKind == null) {
                 return null;
             } else {
-                String visibility = visibilityKind.toString();
-                return visibility.substring(0,visibility.length()-1);
+                return visibilityKind.substring(0,visibilityKind.length()-1);
             }
         }
     }

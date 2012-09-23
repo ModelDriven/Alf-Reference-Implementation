@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.alf.uml.Element;
+import org.modeldriven.uml.Element;
 
 
 /**
@@ -304,15 +304,15 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     // This will work even if there are (illegal) cyclic generalization relationships.
-    private Collection<ElementReference> allParents(Collection<ElementReference> allReadySeen) {
+    private Collection<ElementReference> allParents(Collection<ElementReference> alreadySeen) {
         Collection<ElementReference> parents = this.parents();
-        parents.removeAll(allReadySeen);
+        parents.removeAll(alreadySeen);
         Set<ElementReference> allParents = new HashSet<ElementReference>(parents);
         for (ElementReference parent: parents) {
-            allReadySeen.add(parent);
+            alreadySeen.add(parent);
             allParents.addAll(
                     parent instanceof InternalElementReference?
-                            ((InternalElementReferenceImpl)parent.getImpl()).allParents(allReadySeen):
+                            ((InternalElementReferenceImpl)parent.getImpl()).allParents(alreadySeen):
                             parent.getImpl().allParents());
         }
         return allParents;
