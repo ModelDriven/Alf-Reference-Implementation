@@ -25,9 +25,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.SignalReceptionDefinitionImpl;
-import org.modeldriven.uml.Element;
-import org.modeldriven.uml.Profile;
-import org.modeldriven.uml.Stereotype;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * The definition of both a signal and a reception of that signal as a feature

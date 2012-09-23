@@ -21,7 +21,7 @@ import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
-import org.modeldriven.uml.Element;
+import org.modeldriven.alf.uml.Element;
 
 /**
  * A reference to a model element, either directly or via its Alf abstract

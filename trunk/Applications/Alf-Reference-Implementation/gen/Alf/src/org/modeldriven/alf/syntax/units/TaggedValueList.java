@@ -25,9 +25,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.units.impl.TaggedValueListImpl;
-import org.modeldriven.uml.Element;
-import org.modeldriven.uml.Profile;
-import org.modeldriven.uml.Stereotype;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A set of tagged values for a stereotype application.

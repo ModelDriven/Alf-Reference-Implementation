@@ -25,9 +25,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.statements.impl.SwitchClauseImpl;
-import org.modeldriven.uml.Element;
-import org.modeldriven.uml.Profile;
-import org.modeldriven.uml.Stereotype;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A clause in a switch statement with a set of cases and a sequence of
