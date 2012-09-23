@@ -15,7 +15,7 @@ import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.uml.Stereotype;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.Collection;
 

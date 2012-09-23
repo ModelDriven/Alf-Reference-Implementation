@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.uml.Element;
+import org.modeldriven.alf.uml.Element;
 
 
 /**

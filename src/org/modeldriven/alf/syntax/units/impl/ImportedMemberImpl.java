@@ -14,9 +14,9 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.uml.Element;
-import org.modeldriven.uml.NamedElement;
-import org.modeldriven.uml.Namespace;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Namespace;
 
 public class ImportedMemberImpl extends MemberImpl {
 
