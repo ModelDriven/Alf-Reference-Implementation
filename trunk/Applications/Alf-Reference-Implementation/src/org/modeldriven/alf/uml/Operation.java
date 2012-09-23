@@ -15,7 +15,7 @@ public interface Operation extends BehavioralFeature {
 
 	public int getUpper();
 
-	public Class getClass_();
+	public Class_ getClass_();
 
 	public List<Operation> getRedefinedOperation();
 

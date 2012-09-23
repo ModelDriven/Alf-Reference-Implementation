@@ -28,7 +28,7 @@ import org.modeldriven.alf.uml.Activity;
 import org.modeldriven.alf.uml.Association;
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.BehavioredClassifier;
-import org.modeldriven.alf.uml.Class;
+import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.ClassifierTemplateParameter;
 import org.modeldriven.alf.uml.DataType;
@@ -132,17 +132,17 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean isClass() {
-        return this.getSelf().getElement() instanceof Class;
+        return this.getSelf().getElement() instanceof Class_;
     }
 
     @Override
     public boolean isClassOnly() {
-        return this.getSelf().getElement().getClass() == Class.class;
+        return this.getSelf().getElement().getClass() == Class_.class;
     }
 
     @Override
     public boolean isActiveClass() {
-        return this.isClass() && ((Class)this.getSelf().getElement()).getIsActive();
+        return this.isClass() && ((Class_)this.getSelf().getElement()).getIsActive();
     }
 
     @Override
@@ -293,7 +293,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                 || !this.isClass()) {
             return false;
         } else {
-            Class class_ = (Class)this.getUml();
+            Class_ class_ = (Class_)this.getUml();
             for (Feature feature: class_.getFeature()) {
                 if (feature instanceof Reception &&
                         ((Reception)feature).getSignal() == umlSignal) {

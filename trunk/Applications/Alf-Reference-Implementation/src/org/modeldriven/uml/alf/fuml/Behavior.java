@@ -3,7 +3,7 @@ package org.modeldriven.uml.alf.fuml;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Behavior extends Class implements org.modeldriven.alf.uml.Behavior {
+public class Behavior extends Class_ implements org.modeldriven.alf.uml.Behavior {
 
 	public Behavior(fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior base) {
 		super(base);

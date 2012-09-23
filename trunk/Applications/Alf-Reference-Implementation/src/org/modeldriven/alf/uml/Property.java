@@ -26,7 +26,7 @@ public interface Property extends StructuralFeature {
 
 	public Association getAssociation();
 
-	public Class getClass_();
+	public Class_ getClass_();
 
 	public Property getOpposite();
 }

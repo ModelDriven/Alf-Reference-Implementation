@@ -3,13 +3,13 @@ package org.modeldriven.uml.alf.fuml;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Class extends BehavioredClassifier implements
-		org.modeldriven.alf.uml.Class {
-	public Class() {
+public class Class_ extends BehavioredClassifier implements
+		org.modeldriven.alf.uml.Class_ {
+	public Class_() {
 		this(new fUML.Syntax.Classes.Kernel.Class_());
 	}
 
-	public Class(fUML.Syntax.Classes.Kernel.Class_ base) {
+	public Class_(fUML.Syntax.Classes.Kernel.Class_ base) {
 		super(base);
 	}
 
@@ -38,10 +38,10 @@ public class Class extends BehavioredClassifier implements
 				.addOwnedOperation(((Operation) ownedOperation).getBase());
 	}
 
-	public List<org.modeldriven.alf.uml.Class> getSuperClass() {
-		List<org.modeldriven.alf.uml.Class> list = new ArrayList<org.modeldriven.alf.uml.Class>();
+	public List<org.modeldriven.alf.uml.Class_> getSuperClass() {
+		List<org.modeldriven.alf.uml.Class_> list = new ArrayList<org.modeldriven.alf.uml.Class_>();
 		for (fUML.Syntax.Classes.Kernel.Class_ element : this.getBase().superClass) {
-			list.add(new Class(element));
+			list.add(new Class_(element));
 		}
 		return list;
 	}
