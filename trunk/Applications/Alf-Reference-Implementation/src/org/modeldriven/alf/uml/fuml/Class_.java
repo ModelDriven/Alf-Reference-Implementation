@@ -43,7 +43,7 @@ public class Class_ extends BehavioredClassifier implements
 
 	public void addOwnedOperation(org.modeldriven.alf.uml.Operation ownedOperation) {
 		this.getBase()
-				.addOwnedOperation(((Operation) ownedOperation).getBase());
+				.addOwnedOperation(ownedOperation==null? null: ((Operation) ownedOperation).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.Class_> getSuperClass() {
@@ -73,7 +73,7 @@ public class Class_ extends BehavioredClassifier implements
 
 	public void addOwnedReception(org.modeldriven.alf.uml.Reception ownedReception) {
 		this.getBase()
-				.addOwnedReception(((Reception) ownedReception).getBase());
+				.addOwnedReception(ownedReception==null? null: ((Reception) ownedReception).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.Property> getOwnedAttribute() {
@@ -85,7 +85,7 @@ public class Class_ extends BehavioredClassifier implements
 	}
 
 	public void addOwnedAttribute(org.modeldriven.alf.uml.Property ownedAttribute) {
-		this.getBase().addOwnedAttribute(((Property) ownedAttribute).getBase());
+		this.getBase().addOwnedAttribute(ownedAttribute==null? null: ((Property) ownedAttribute).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.Classifier> getNestedClassifier() {

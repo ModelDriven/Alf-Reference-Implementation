@@ -26,11 +26,11 @@ public class ActivityParameterNode extends ObjectNode implements
 	}
 
 	public org.modeldriven.alf.uml.Parameter getParameter() {
-		return new Parameter(this.getBase().parameter);
+		return (Parameter)this.wrap(this.getBase().parameter);
 	}
 
 	public void setParameter(org.modeldriven.alf.uml.Parameter parameter) {
-		this.getBase().setParameter(((Parameter) parameter).getBase());
+		this.getBase().setParameter(parameter==null? null: ((Parameter) parameter).getBase());
 	}
 
 }

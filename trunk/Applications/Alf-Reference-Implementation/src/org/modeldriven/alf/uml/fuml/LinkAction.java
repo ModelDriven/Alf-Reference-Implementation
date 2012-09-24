@@ -32,7 +32,7 @@ public abstract class LinkAction extends Action implements
 	}
 
 	public void addEndData(org.modeldriven.alf.uml.LinkEndData endData) {
-		this.getBase().addEndData(((LinkEndData) endData).getBase());
+		this.getBase().addEndData(endData==null? null: ((LinkEndData) endData).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.InputPin> getInputValue() {
@@ -44,7 +44,7 @@ public abstract class LinkAction extends Action implements
 	}
 
 	public void addInputValue(org.modeldriven.alf.uml.InputPin inputValue) {
-		this.getBase().addInputValue(((InputPin) inputValue).getBase());
+		this.getBase().addInputValue(inputValue==null? null: ((InputPin) inputValue).getBase());
 	}
 
 }

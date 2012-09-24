@@ -348,12 +348,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (!(element instanceof NamedElement)) {
             return null;
         } else {
-            String visibilityKind = ((NamedElement)element).getVisibility();
-            if (visibilityKind == null) {
-                return null;
-            } else {
-                return visibilityKind.substring(0,visibilityKind.length()-1);
-            }
+             return ((NamedElement)element).getVisibility();
         }
     }
 

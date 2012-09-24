@@ -24,11 +24,12 @@ public class PackageImport extends Element implements
 	}
 
 	public String getVisibility() {
-		return this.getBase().visibility.toString();
+        String visibility = this.getBase().visibility.toString();
+        return visibility == null? null: visibility;
 	}
 
 	public void setVisibility(String visibility) {
-		this.getBase().setVisibility(
+		this.getBase().setVisibility(visibility == null? null:
 				fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility));
 	}
 
@@ -37,12 +38,12 @@ public class PackageImport extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.Package getImportedPackage() {
-		return new Package(this.getBase().importedPackage);
+		return (Package)this.wrap(this.getBase().importedPackage);
 	}
 
 	public void setImportedPackage(org.modeldriven.alf.uml.Package importedPackage) {
 		this.getBase()
-				.setImportedPackage(((Package) importedPackage).getBase());
+				.setImportedPackage(importedPackage==null? null: ((Package) importedPackage).getBase());
 	}
 
 }

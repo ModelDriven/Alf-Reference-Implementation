@@ -25,11 +25,11 @@ public class SignalEvent extends MessageEvent implements
 	}
 
 	public org.modeldriven.alf.uml.Signal getSignal() {
-		return new Signal(this.getBase().signal);
+		return (Signal)this.wrap(this.getBase().signal);
 	}
 
 	public void setSignal(org.modeldriven.alf.uml.Signal signal) {
-		this.getBase().setSignal(((Signal) signal).getBase());
+		this.getBase().setSignal(signal==null? null: ((Signal) signal).getBase());
 	}
 
 }

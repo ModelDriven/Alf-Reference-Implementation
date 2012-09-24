@@ -35,11 +35,11 @@ public class LoopNode extends StructuredActivityNode implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getDecider() {
-		return new OutputPin(this.getBase().decider);
+		return (OutputPin)this.wrap(this.getBase().decider);
 	}
 
 	public void setDecider(org.modeldriven.alf.uml.OutputPin decider) {
-		this.getBase().setDecider(((OutputPin) decider).getBase());
+		this.getBase().setDecider(decider==null? null: ((OutputPin) decider).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.ExecutableNode> getTest() {
@@ -52,7 +52,7 @@ public class LoopNode extends StructuredActivityNode implements
 	}
 
 	public void addTest(org.modeldriven.alf.uml.ExecutableNode test) {
-		this.getBase().addTest(((ExecutableNode) test).getBase());
+		this.getBase().addTest(test==null? null: ((ExecutableNode) test).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.OutputPin> getBodyOutput() {
@@ -65,7 +65,7 @@ public class LoopNode extends StructuredActivityNode implements
 	}
 
 	public void addBodyOutput(org.modeldriven.alf.uml.OutputPin bodyOutput) {
-		this.getBase().addBodyOutput(((OutputPin) bodyOutput).getBase());
+		this.getBase().addBodyOutput(bodyOutput==null? null: ((OutputPin) bodyOutput).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.InputPin> getLoopVariableInput() {
@@ -92,7 +92,7 @@ public class LoopNode extends StructuredActivityNode implements
 	}
 
 	public void addBodyPart(org.modeldriven.alf.uml.ExecutableNode bodyPart) {
-		this.getBase().addBodyPart(((ExecutableNode) bodyPart).getBase());
+		this.getBase().addBodyPart(bodyPart==null? null: ((ExecutableNode) bodyPart).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.OutputPin> getResult() {
@@ -105,7 +105,7 @@ public class LoopNode extends StructuredActivityNode implements
 	}
 
 	public void addResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().addResult(((OutputPin) result).getBase());
+		this.getBase().addResult(result==null? null: ((OutputPin) result).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.OutputPin> getLoopVariable() {
@@ -118,7 +118,7 @@ public class LoopNode extends StructuredActivityNode implements
 	}
 
 	public void addLoopVariable(org.modeldriven.alf.uml.OutputPin loopVariable) {
-		this.getBase().addLoopVariable(((OutputPin) loopVariable).getBase());
+		this.getBase().addLoopVariable(loopVariable==null? null: ((OutputPin) loopVariable).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.ExecutableNode> getSetupPart() {

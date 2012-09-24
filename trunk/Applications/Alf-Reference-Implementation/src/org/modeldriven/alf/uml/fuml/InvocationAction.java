@@ -32,7 +32,7 @@ public abstract class InvocationAction extends Action implements
 	}
 
 	public void addArgument(org.modeldriven.alf.uml.InputPin argument) {
-		this.getBase().addArgument(((InputPin) argument).getBase());
+		this.getBase().addArgument(argument==null? null: ((InputPin) argument).getBase());
 	}
 
 }

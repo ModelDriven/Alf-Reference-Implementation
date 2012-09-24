@@ -239,7 +239,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                     // Skip return pin. Return parameter never has an output
                     // argument.
                     ActivityNode outputPin = action.getOutput().get(i);
-                    if (outputPin == returnPin) {
+                    if (outputPin.equals(returnPin)) {
                         outputPin = action.getOutput().get(++i);
                     }
                     

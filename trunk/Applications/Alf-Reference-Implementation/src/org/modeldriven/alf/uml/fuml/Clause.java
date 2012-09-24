@@ -35,7 +35,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 	}
 
 	public void addTest(org.modeldriven.alf.uml.ExecutableNode test) {
-		this.getBase().addTest(((ExecutableNode) test).getBase());
+		this.getBase().addTest(test==null? null: ((ExecutableNode) test).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.ExecutableNode> getBody() {
@@ -48,7 +48,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 	}
 
 	public void addBody(org.modeldriven.alf.uml.ExecutableNode body) {
-		this.getBase().addBody(((ExecutableNode) body).getBase());
+		this.getBase().addBody(body==null? null: ((ExecutableNode) body).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.Clause> getPredecessorClause() {
@@ -80,11 +80,11 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getDecider() {
-		return new OutputPin(this.getBase().decider);
+		return (OutputPin)this.wrap(this.getBase().decider);
 	}
 
 	public void setDecider(org.modeldriven.alf.uml.OutputPin decider) {
-		this.getBase().setDecider(((OutputPin) decider).getBase());
+		this.getBase().setDecider(decider==null? null: ((OutputPin) decider).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.OutputPin> getBodyOutput() {
@@ -97,7 +97,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 	}
 
 	public void addBodyOutput(org.modeldriven.alf.uml.OutputPin bodyOutput) {
-		this.getBase().addBodyOutput(((OutputPin) bodyOutput).getBase());
+		this.getBase().addBodyOutput(bodyOutput==null? null: ((OutputPin) bodyOutput).getBase());
 	}
 
 }

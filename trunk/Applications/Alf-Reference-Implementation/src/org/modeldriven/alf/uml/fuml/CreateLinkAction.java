@@ -36,7 +36,7 @@ public class CreateLinkAction extends WriteLinkAction implements
 	}
 
 	public void addEndData(org.modeldriven.alf.uml.LinkEndCreationData endData) {
-		this.getBase().addEndData(((LinkEndCreationData) endData).getBase());
+		this.getBase().addEndData(endData==null? null: ((LinkEndCreationData) endData).getBase());
 	}
 
 }

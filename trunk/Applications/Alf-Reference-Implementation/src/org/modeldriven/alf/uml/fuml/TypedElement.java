@@ -28,7 +28,7 @@ public abstract class TypedElement extends NamedElement implements
 	}
 
 	public void setType(org.modeldriven.alf.uml.Type type) {
-		this.getBase().setType(((Type) type).getBase());
+		this.getBase().setType(type==null? null: ((Type) type).getBase());
 	}
 
 }

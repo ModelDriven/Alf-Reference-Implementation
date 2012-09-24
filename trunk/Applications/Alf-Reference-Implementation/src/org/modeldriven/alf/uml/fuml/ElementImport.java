@@ -24,11 +24,12 @@ public class ElementImport extends Element implements
 	}
 
 	public String getVisibility() {
-		return this.getBase().visibility.toString();
+	    String visibility = this.getBase().visibility.toString();
+		return visibility == null? null: visibility;
 	}
 
 	public void setVisibility(String visibility) {
-		this.getBase().setVisibility(
+		this.getBase().setVisibility(visibility == null? null:
 				fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility));
 	}
 

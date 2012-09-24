@@ -25,7 +25,7 @@ public class Slot extends Element implements org.modeldriven.alf.uml.Slot {
 	}
 
 	public org.modeldriven.alf.uml.InstanceSpecification getOwningInstance() {
-		return new InstanceSpecification(this.getBase().owningInstance);
+		return (InstanceSpecification)this.wrap(this.getBase().owningInstance);
 	}
 
 	public org.modeldriven.alf.uml.StructuralFeature getDefiningFeature() {
@@ -48,7 +48,7 @@ public class Slot extends Element implements org.modeldriven.alf.uml.Slot {
 	}
 
 	public void addValue(org.modeldriven.alf.uml.ValueSpecification value) {
-		this.getBase().addValue(((ValueSpecification) value).getBase());
+		this.getBase().addValue(value==null? null: ((ValueSpecification) value).getBase());
 	}
 
 }

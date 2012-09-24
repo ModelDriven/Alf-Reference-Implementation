@@ -40,7 +40,7 @@ public abstract class CallAction extends InvocationAction implements
 	}
 
 	public void addResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().addResult(((OutputPin) result).getBase());
+		this.getBase().addResult(result==null? null: ((OutputPin) result).getBase());
 	}
 
 }

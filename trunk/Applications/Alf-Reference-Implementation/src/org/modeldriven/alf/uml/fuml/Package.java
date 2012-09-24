@@ -56,7 +56,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 	}
 
 	public org.modeldriven.alf.uml.Package getNestingPackage() {
-		return new Package(this.getBase().nestingPackage);
+		return (Package)this.wrap(this.getBase().nestingPackage);
 	}
 
     @Override

@@ -90,7 +90,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         this.initializationOperation.setName(
                 makeDistinguishableName(definition, definition.getName() + 
                         "$initialization"));
-        this.initializationOperation.setVisibility("protected_");
+        this.initializationOperation.setVisibility("protected");
         class_.addOwnedOperation(this.initializationOperation);
         
         return class_;

@@ -63,23 +63,23 @@ public class Property extends StructuralFeature implements
 	}
 
 	public org.modeldriven.alf.uml.Association getOwningAssociation() {
-		return new Association(this.getBase().owningAssociation);
+		return (Association)this.wrap(this.getBase().owningAssociation);
 	}
 
 	public org.modeldriven.alf.uml.DataType getDatatype() {
-		return new DataType(this.getBase().datatype);
+		return (DataType)this.wrap(this.getBase().datatype);
 	}
 
 	public org.modeldriven.alf.uml.Association getAssociation() {
-		return new Association(this.getBase().association);
+		return (Association)this.wrap(this.getBase().association);
 	}
 
 	public org.modeldriven.alf.uml.Class_ getClass_() {
-		return new Class_(this.getBase().class_);
+		return (Class_)this.wrap(this.getBase().class_);
 	}
 
 	public org.modeldriven.alf.uml.Property getOpposite() {
-		return new Property(this.getBase().opposite);
+		return (Property)this.wrap(this.getBase().opposite);
 	}
 
 }

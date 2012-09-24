@@ -161,6 +161,9 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
 
     @Override
     public boolean conformsTo(org.modeldriven.alf.uml.Classifier classifier) {
+        if (classifier == null) {
+            return true;
+        }
         for (org.modeldriven.alf.uml.Classifier parent: this.allParents()) {
             if (((Classifier)parent).getBase() == ((Classifier)classifier).getBase()) {
                 return true;

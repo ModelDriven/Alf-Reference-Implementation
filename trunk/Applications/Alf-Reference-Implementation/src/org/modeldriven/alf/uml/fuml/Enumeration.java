@@ -36,8 +36,7 @@ public class Enumeration extends DataType implements
 
 	public void addOwnedLiteral(
 			org.modeldriven.alf.uml.EnumerationLiteral ownedLiteral) {
-		this.getBase().addOwnedLiteral(
-				((EnumerationLiteral) ownedLiteral).getBase());
+		this.getBase().addOwnedLiteral(ownedLiteral==null? null: ((EnumerationLiteral) ownedLiteral).getBase());
 	}
 
 }

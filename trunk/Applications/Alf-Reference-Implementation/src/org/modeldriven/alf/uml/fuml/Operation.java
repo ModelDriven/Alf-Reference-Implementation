@@ -50,7 +50,7 @@ public class Operation extends BehavioralFeature implements
 	}
 
 	public org.modeldriven.alf.uml.Class_ getClass_() {
-		return new Class_(this.getBase().class_);
+		return (Class_)this.wrap(this.getBase().class_);
 	}
 
     public void setClass_(org.modeldriven.alf.uml.Class_ class_) {
@@ -85,7 +85,7 @@ public class Operation extends BehavioralFeature implements
 
 	public void addOwnedParameter(org.modeldriven.alf.uml.Parameter ownedParameter) {
 		this.getBase()
-				.addOwnedParameter(((Parameter) ownedParameter).getBase());
+				.addOwnedParameter(ownedParameter==null? null: ((Parameter) ownedParameter).getBase());
 	}
 	
     @Override

@@ -28,11 +28,12 @@ public class ExpansionRegion extends StructuredActivityNode implements
 	}
 
 	public String getMode() {
-		return this.getBase().mode.toString();
+        String mode = this.getBase().mode.toString();
+        return mode == null? null: mode;
 	}
 
 	public void setMode(String mode) {
-		this.getBase().setMode(
+		this.getBase().setMode(mode == null? null:
 				fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind
 						.valueOf(mode));
 	}
@@ -62,7 +63,7 @@ public class ExpansionRegion extends StructuredActivityNode implements
 
 	public void addInputElement(org.modeldriven.alf.uml.ExpansionNode inputElement) {
 		this.getBase()
-				.addInputElement(((ExpansionNode) inputElement).getBase());
+				.addInputElement(inputElement==null? null: ((ExpansionNode) inputElement).getBase());
 	}
 
 }

@@ -17,7 +17,6 @@ public class Parameter extends TypedElement implements
 
 	public Parameter(fUML.Syntax.Classes.Kernel.Parameter base) {
 		super(base);
-		base.multiplicityElement = new fUML.Syntax.Classes.Kernel.MultiplicityElement();
 	}
 
 	public fUML.Syntax.Classes.Kernel.Parameter getBase() {
@@ -25,17 +24,18 @@ public class Parameter extends TypedElement implements
 	}
 
 	public String getDirection() {
-		return this.getBase().direction.toString();
+		String direction = this.getBase().direction.toString();
+		return direction == null? null: "return_".equals(direction)? "return": direction;
 	}
 
 	public void setDirection(String direction) {
-		this.getBase().setDirection(
+		this.getBase().setDirection(direction == null? null:
 				fUML.Syntax.Classes.Kernel.ParameterDirectionKind
-						.valueOf(direction));
+						.valueOf("return".equals(direction)? "return_": direction));
 	}
 
 	public org.modeldriven.alf.uml.Operation getOperation() {
-		return new Operation(this.getBase().operation);
+		return (Operation)this.wrap(this.getBase().operation);
 	}
 
 	public boolean getIsOrdered() {

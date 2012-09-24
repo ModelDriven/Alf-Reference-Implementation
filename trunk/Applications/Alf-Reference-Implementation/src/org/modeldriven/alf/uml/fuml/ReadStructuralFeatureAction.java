@@ -26,11 +26,11 @@ public class ReadStructuralFeatureAction extends StructuralFeatureAction
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return new OutputPin(this.getBase().result);
+		return (OutputPin)this.wrap(this.getBase().result);
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().setResult(((OutputPin) result).getBase());
+		this.getBase().setResult(result==null? null: ((OutputPin) result).getBase());
 	}
 
 }

@@ -42,7 +42,7 @@ public class Association extends Classifier implements
 	}
 
 	public void addOwnedEnd(org.modeldriven.alf.uml.Property ownedEnd) {
-		this.getBase().addOwnedEnd(((Property) ownedEnd).getBase());
+		this.getBase().addOwnedEnd(ownedEnd==null? null: ((Property) ownedEnd).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.Type> getEndType() {

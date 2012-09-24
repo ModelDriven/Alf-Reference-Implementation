@@ -43,15 +43,15 @@ public class ReclassifyObjectAction extends Action implements
 	}
 
 	public void addOldClassifier(org.modeldriven.alf.uml.Classifier oldClassifier) {
-		this.getBase().addOldClassifier(((Classifier) oldClassifier).getBase());
+		this.getBase().addOldClassifier(oldClassifier==null? null: ((Classifier) oldClassifier).getBase());
 	}
 
 	public org.modeldriven.alf.uml.InputPin getObject() {
-		return new InputPin(this.getBase().object);
+		return (InputPin)this.wrap(this.getBase().object);
 	}
 
 	public void setObject(org.modeldriven.alf.uml.InputPin object) {
-		this.getBase().setObject(((InputPin) object).getBase());
+		this.getBase().setObject(object==null? null: ((InputPin) object).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.Classifier> getNewClassifier() {
@@ -63,7 +63,7 @@ public class ReclassifyObjectAction extends Action implements
 	}
 
 	public void addNewClassifier(org.modeldriven.alf.uml.Classifier newClassifier) {
-		this.getBase().addNewClassifier(((Classifier) newClassifier).getBase());
+		this.getBase().addNewClassifier(newClassifier==null? null: ((Classifier) newClassifier).getBase());
 	}
 
 }

@@ -11,7 +11,7 @@ package org.modeldriven.alf.uml.fuml;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Activity extends Behavior implements org.modeldriven.alf.uml.Activity {
+public class Activity extends Behavior implements org.modeldriven.alf.uml.Activity {
 	public Activity() {
 		this(new fUML.Syntax.Activities.IntermediateActivities.Activity());
 	}
@@ -43,7 +43,7 @@ public abstract class Activity extends Behavior implements org.modeldriven.alf.u
 	}
 
 	public void addNode(org.modeldriven.alf.uml.ActivityNode node) {
-		this.getBase().addNode(((ActivityNode) node).getBase());
+		this.getBase().addNode(node==null? null: ((ActivityNode) node).getBase());
 	}
 
 	public boolean getIsReadOnly() {
@@ -64,7 +64,7 @@ public abstract class Activity extends Behavior implements org.modeldriven.alf.u
 	}
 
 	public void addEdge(org.modeldriven.alf.uml.ActivityEdge edge) {
-		this.getBase().addEdge(((ActivityEdge) edge).getBase());
+		this.getBase().addEdge(edge==null? null: ((ActivityEdge) edge).getBase());
 	}
 
 }

@@ -40,7 +40,7 @@ public class Generalization extends Element implements
 	}
 
 	public void setGeneral(org.modeldriven.alf.uml.Classifier general) {
-		this.getBase().setGeneral(((Classifier) general).getBase());
+		this.getBase().setGeneral(general==null? null: ((Classifier) general).getBase());
 	}
 
 }
