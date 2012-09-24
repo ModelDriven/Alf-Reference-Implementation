@@ -12,7 +12,6 @@ package org.modeldriven.alf.mapping.fuml.units;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.FumlMappingFactory;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
@@ -22,20 +21,9 @@ import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 
+import org.modeldriven.alf.uml.*;
+
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
-import fUML.Syntax.Activities.IntermediateActivities.Activity;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityFinalNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.Parameter;
-import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.OpaqueBehavior;
 
 import java.util.Collection;
 
@@ -75,9 +63,9 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     @Override
     public Classifier mapClassifier() {
         if (this.getActivityDefinition().getIsPrimitive()) {
-            return new OpaqueBehavior();
+            return this.create(OpaqueBehavior.class);
         } else {
-            return new Activity();
+            return this.create(Activity.class);
         }
     }
     
@@ -92,7 +80,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                     instantiatePrimitiveBehaviorPrototype
                         (definition, (OpaqueBehavior)classifier);
             if (this.execution == null) {
-                this.throwError("Primitive behavior not implemented: " + classifier.name);
+                this.throwError("Primitive behavior not implemented: " + classifier.getName());
             } else {
                 getExecutionFactory().addPrimitiveBehaviorPrototype(this.execution);
             }
@@ -125,37 +113,40 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             ((Behavior)namespace).addOwnedParameter(parameter);
 
             if (namespace instanceof Activity) {
-                addParameterNodes((Activity)namespace, parameter);
+                addParameterNodes((Activity)namespace, parameter, this);
             }
         }
     }
     
-    public static void addParameterNodes(Activity activity, Parameter parameter) {
-        ActivityParameterNode node = new ActivityParameterNode();
+    public static void addParameterNodes(
+            Activity activity, 
+            Parameter parameter,
+            FumlMapping mapping) {
+        ActivityParameterNode node = mapping.create(ActivityParameterNode.class);
         node.setParameter(parameter);
         activity.addNode(node);
 
-        if (parameter.direction == ParameterDirectionKind.in || 
-                parameter.direction == ParameterDirectionKind.inout) {
-            node.setName("Input(" + parameter.name + ")");
+        if (parameter.getDirection().equals("in") || 
+                parameter.getDirection().equals("inout")) {
+            node.setName("Input(" + parameter.getName() + ")");
 
-            ForkNode fork = new ForkNode();
-            fork.setName("Fork(" + parameter.name + ")");
+            ForkNode fork = mapping.create(ForkNode.class);
+            fork.setName("Fork(" + parameter.getName() + ")");
             activity.addNode(fork);
 
-            activity.addEdge(ActivityGraph.createObjectFlow(node, fork));
+            activity.addEdge(mapping.createActivityGraph().createObjectFlow(node, fork));
 
-            if (parameter.direction == ParameterDirectionKind.inout) {
-                node = new ActivityParameterNode();
+            if (parameter.getDirection().equals("inout")) {
+                node = mapping.create(ActivityParameterNode.class);
                 node.setParameter(parameter);
                 activity.addNode(node);
             }
         }
 
-        if (parameter.direction == ParameterDirectionKind.inout || 
-                parameter.direction == ParameterDirectionKind.out) {
-            node.setName("Output(" + parameter.name + ")");
-        } else if (parameter.direction == ParameterDirectionKind.return_) {
+        if (parameter.getDirection().equals("inout") || 
+                parameter.getDirection().equals("out")) {
+            node.setName("Output(" + parameter.getName() + ")");
+        } else if (parameter.getDirection().equals("return_")) {
             node.setName("Return");
         }
     }
@@ -186,10 +177,10 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         
         // Connect final output parameter assigned sources to corresponding 
         // output parameter nodes.
-        for (Parameter parameter: activity.ownedParameter) {
-            if (parameter.direction == ParameterDirectionKind.out ||
-                    parameter.direction == ParameterDirectionKind.inout) {
-                String name = parameter.name;
+        for (Parameter parameter: activity.getOwnedParameter()) {
+            if (parameter.getDirection().equals("out") ||
+                    parameter.getDirection().equals("inout")) {
+                String name = parameter.getName();
                 AssignedSource assignment = 
                     body.getImpl().getAssignmentAfter(name);
                 if (assignment != null) {
@@ -201,7 +192,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                     } else {
                         ActivityNode source = ((SyntaxElementMapping)sourceMapping).
                                 getAssignedValueSource(name);
-                        activity.addEdge(ActivityGraph.createObjectFlow(
+                        activity.addEdge(mapping.createActivityGraph().createObjectFlow(
                                 source, 
                                 getOutputParameterNode(activity, parameter)));
                     }
@@ -213,11 +204,11 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     public static ForkNode getInputParameterFork(
             Activity activity, Parameter parameter) {
         if (activity != null) {
-            for (ActivityNode node: activity.node) {
+            for (ActivityNode node: activity.getNode()) {
                 if (node instanceof ActivityParameterNode && 
-                        ((ActivityParameterNode)node).parameter == parameter &&
-                        node.outgoing.size() > 0) {
-                    return (ForkNode)node.outgoing.get(0).target;
+                        ((ActivityParameterNode)node).getParameter() == parameter &&
+                        node.getOutgoing().size() > 0) {
+                    return (ForkNode)node.getOutgoing().get(0).getTarget();
                 }
             }
         }
@@ -227,10 +218,10 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     public static ActivityParameterNode getOutputParameterNode(
             Activity activity, Parameter parameter) {
         if (activity != null) {
-            for (ActivityNode node: activity.node) {
+            for (ActivityNode node: activity.getNode()) {
                 if (node instanceof ActivityParameterNode && 
-                        ((ActivityParameterNode)node).parameter == parameter &&
-                        node.outgoing.size() == 0) {
+                        ((ActivityParameterNode)node).getParameter() == parameter &&
+                        node.getOutgoing().size() == 0) {
                     return (ActivityParameterNode)node;
                 }
             }
@@ -238,15 +229,17 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         return null;
     }
     
-    public static ActivityFinalNode getFinalNode(Activity activity) {
+    public static ActivityFinalNode getFinalNode(
+            Activity activity,
+            FumlMapping mapping) {
         if (activity != null) {
-            for (ActivityNode node: activity.node) {
+            for (ActivityNode node: activity.getNode()) {
                 if (node instanceof ActivityFinalNode) {
                     return (ActivityFinalNode)node;
                 }
             }
         }
-        ActivityFinalNode node = new ActivityFinalNode();
+        ActivityFinalNode node = mapping.create(ActivityFinalNode.class);
         node.setName("Final");
         activity.addNode(node);
         return node;
@@ -256,7 +249,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     public String toString() {
         Behavior behavior = (Behavior)this.getElement();
         return super.toString() + 
-            (behavior == null? "": " isActive:" + behavior.isActive);
+            (behavior == null? "": " isActive:" + behavior.getIsActive());
     }
     
     @Override

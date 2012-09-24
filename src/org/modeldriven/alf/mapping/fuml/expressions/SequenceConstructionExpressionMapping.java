@@ -19,11 +19,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 import org.modeldriven.alf.syntax.expressions.SequenceConstructionExpression;
 import org.modeldriven.alf.syntax.expressions.SequenceElements;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.*;
 
 public class SequenceConstructionExpressionMapping extends ExpressionMapping {
     
@@ -104,7 +100,7 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
             SequenceElements elements = expression.getElements();
             if (elements == null || elements.getImpl().isEmpty()) {
                 this.action = this.graph.addNullValueSpecificationAction();
-                this.resultSource = ((ValueSpecificationAction)this.action).result;
+                this.resultSource = ((ValueSpecificationAction)this.action).getResult();
             } else {
                 FumlMapping mapping = this.fumlMap(elements);
                 if (!(mapping instanceof SequenceElementsMapping)) {
@@ -115,14 +111,14 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
                         this.graph.addStructuredActivityNode(
                             "SequenceConstructionExpression@" + expression.getId(), 
                             mapping.getModelElements());
-                    OutputPin outputPin = ActivityGraph.createOutputPin(
-                            node.name + ".output", 
+                    OutputPin outputPin = this.graph.createOutputPin(
+                            node.getName() + ".output", 
                             this.getType(), 
                             expression.getLower(), expression.getUpper());
                     node.addStructuredNodeOutput(outputPin);
                     for (ActivityNode resultSource: 
                         ((SequenceElementsMapping)mapping).getResultSources()) {
-                        node.addEdge(ActivityGraph.createObjectFlow(
+                        node.addEdge(this.graph.createObjectFlow(
                                 resultSource, outputPin));
                     }
                     this.action = node;

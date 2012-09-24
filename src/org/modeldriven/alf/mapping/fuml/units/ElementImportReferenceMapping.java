@@ -17,9 +17,9 @@ import org.modeldriven.alf.mapping.fuml.units.ImportReferenceMapping;
 
 import org.modeldriven.alf.syntax.units.ElementImportReference;
 
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.ElementImport;
-import fUML.Syntax.Classes.Kernel.PackageableElement;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.ElementImport;
+import org.modeldriven.alf.uml.PackageableElement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,7 +68,7 @@ public class ElementImportReferenceMapping extends ImportReferenceMapping {
 
     public ElementImport getElementImport() throws MappingError {
         if (this.elementImport == null) {
-            this.elementImport = new ElementImport();
+            this.elementImport = this.create(ElementImport.class);
             this.mapTo(elementImport);
         }
         return this.elementImport;

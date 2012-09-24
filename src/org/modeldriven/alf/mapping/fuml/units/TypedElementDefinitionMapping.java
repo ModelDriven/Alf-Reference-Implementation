@@ -18,10 +18,10 @@ import org.modeldriven.alf.mapping.fuml.units.MemberMapping;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.TypedElementDefinition;
 
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.MultiplicityElement;
-import fUML.Syntax.Classes.Kernel.Type;
-import fUML.Syntax.Classes.Kernel.TypedElement;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.MultiplicityElement;
+import org.modeldriven.alf.uml.Type;
+import org.modeldriven.alf.uml.TypedElement;
 
 public abstract class TypedElementDefinitionMapping extends MemberMapping {
     
@@ -93,17 +93,17 @@ public abstract class TypedElementDefinitionMapping extends MemberMapping {
 	public String toString() {
 	    MultiplicityElement multiplicityElement = this.getMultiplicityElement();
 	    return super.toString() + 
-	        " lower:" + multiplicityElement.lower +
-	        " upper:" + multiplicityElement.upper.naturalValue +
-	        " isOrdered:" + multiplicityElement.isOrdered +
-	        " isNonUnique:" + multiplicityElement.isUnique;
+	        " lower:" + multiplicityElement.getLower() +
+	        " upper:" + multiplicityElement.getUpper() +
+	        " isOrdered:" + multiplicityElement.getIsOrdered() +
+	        " isNonUnique:" + multiplicityElement.getIsUnique();
 	}
 	
 	@Override
 	public void print(String prefix) {
 	    super.print(prefix);
 	    
-	    Type type = this.getTypedElement().type;
+	    Type type = this.getTypedElement().getType();
 	    if (type != null) {
 	        System.out.println(prefix + " type: " + type);
 	    }

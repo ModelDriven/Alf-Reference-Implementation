@@ -19,8 +19,8 @@ import org.modeldriven.alf.mapping.fuml.expressions.SequenceElementsMapping;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.SequenceExpressionList;
 
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.StructuredActivityNode;
+import org.modeldriven.alf.uml.ActivityNode;
 
 import java.util.Collection;
 import java.util.List;
@@ -57,9 +57,9 @@ public class SequenceExpressionListMapping extends SequenceElementsMapping {
                 ActivityNode resultSource = expressionMapping.getResultSource();
                 ActivityGraph subgraph = expressionMapping.getGraph();
                 if (subgraph.isEmpty()) {
-                    subgraph = new ActivityGraph();
+                    subgraph = this.createActivityGraph();
                     ActivityNode mergeNode = 
-                        subgraph.addMergeNode("Merge(" + resultSource.name +")");
+                        subgraph.addMergeNode("Merge(" + resultSource.getName() +")");
                     subgraph.addObjectFlow(resultSource, mergeNode);
                     resultSource = mergeNode;
                 }

@@ -20,7 +20,7 @@ import org.modeldriven.alf.syntax.expressions.AssignmentExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.LocalNameDeclarationStatement;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class LocalNameDeclarationStatementMapping extends StatementMapping {
     

@@ -13,6 +13,7 @@ package org.modeldriven.alf.mapping.fuml.expressions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.mapping.Mapping;
@@ -33,21 +34,13 @@ import org.modeldriven.alf.syntax.expressions.UnboundedLiteralExpression;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Actions.BasicActions.InputPinList;
-import fUML.Syntax.Actions.BasicActions.InvocationAction;
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 public abstract class TupleMapping extends SyntaxElementMapping {
 
     private StructuredActivityNode node = null;
-    private ActivityGraph tupleGraph = new ActivityGraph();
-    private ActivityGraph lhsGraph = new ActivityGraph();
+    private ActivityGraph tupleGraph = this.createActivityGraph();
+    private ActivityGraph lhsGraph = this.createActivityGraph();
     private Map<String, ExpressionMapping> inoutExpressionMap =
         new HashMap<String, ExpressionMapping>();
     private Map<String, ActivityNode> assignedValueSourceMap = 
@@ -108,10 +101,10 @@ public abstract class TupleMapping extends SyntaxElementMapping {
             // in the same order as their corresponding parameters, as 
             // implemented in TupleImpl.
             
-            ActivityGraph subgraph = new ActivityGraph();
-            InputPinList inputPins = action instanceof InvocationAction? 
-                    ((InvocationAction)action).argument: 
-                    action.input;
+            ActivityGraph subgraph = this.createActivityGraph();
+            List<InputPin> inputPins = action instanceof InvocationAction? 
+                    ((InvocationAction)action).getArgument(): 
+                    action.getInput();
             int i = 0;
             for (NamedExpression input: inputs) {
                 String name = input.getName();
@@ -152,8 +145,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                 this.tupleGraph.addCallBehaviorAction(getBehavior(
                                     RootNamespace.getIntegerFunctionToUnlimitedNatural()));
                             this.tupleGraph.addObjectFlow(
-                                    resultSource, callAction.argument.get(0));
-                            resultSource = callAction.result.get(0);
+                                    resultSource, callAction.getArgument().get(0));
+                            resultSource = callAction.getResult().get(0);
                         }
                         
                         // Add collection and bit string conversions, if
@@ -172,7 +165,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         Expression index = input.getIndex();
                         if (index == null && 
                                 tuple.getInvocation() instanceof LinkOperationExpression &&
-                                inputPin.multiplicityElement.isOrdered) {
+                                inputPin.getIsOrdered()) {
                             index = new UnboundedLiteralExpression();
                         }
                         if (index != null) {
@@ -196,8 +189,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                             getIntegerFunctionToUnlimitedNatural()));
                                         subgraph.addObjectFlow(
                                                 resultSource, 
-                                                callAction.argument.get(0));
-                                        resultSource = callAction.result.get(0);
+                                                callAction.getArgument().get(0));
+                                        resultSource = callAction.getResult().get(0);
                                     }
                                     // NOTE: This presumes that the "insertAt"
                                     // or "destroyAt" pin comes directly after
@@ -245,9 +238,9 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                         
                     // Skip return pin. Return parameter never has an output
                     // argument.
-                    ActivityNode outputPin = action.output.get(i);
+                    ActivityNode outputPin = action.getOutput().get(i);
                     if (outputPin == returnPin) {
-                        outputPin = action.output.get(++i);
+                        outputPin = action.getOutput().get(++i);
                     }
                     
                     // Add collection and bit string conversions, if

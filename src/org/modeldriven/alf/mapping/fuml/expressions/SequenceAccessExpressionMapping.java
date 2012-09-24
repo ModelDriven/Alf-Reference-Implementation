@@ -16,10 +16,7 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.SequenceAccessExpression;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.*;
 
 public class SequenceAccessExpressionMapping extends BehaviorInvocationExpressionMapping {
     
@@ -47,10 +44,10 @@ public class SequenceAccessExpressionMapping extends BehaviorInvocationExpressio
          * sequence access expression, as in an inout argument, increment/decrement
          * expression or compound assignment.
          */
-        InputPin inputPin = action.input.get(1);
-        this.indexSource = this.graph.addForkNode("Fork(" + inputPin.name + ")");
-        ActivityEdge flow = inputPin.incoming.get(0);
-        inputPin.incoming.remove(flow);
+        InputPin inputPin = action.getInput().get(1);
+        this.indexSource = this.graph.addForkNode("Fork(" + inputPin.getName() + ")");
+        ActivityEdge flow = inputPin.getIncoming().get(0);
+        inputPin.getIncoming().remove(flow);
         flow.setTarget(this.indexSource);
         this.graph.addObjectFlow(this.indexSource, inputPin);
         

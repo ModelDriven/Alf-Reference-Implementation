@@ -20,8 +20,8 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.NameLeftHandSide;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class NameLeftHandSideMapping extends LeftHandSideMapping {
     
@@ -93,17 +93,17 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
                                 this.graph.addCallBehaviorAction(getBehavior(
                                         RootNamespace.getSequenceFunctionReplacingAt()));
                             this.graph.addObjectFlow(
-                                    activityNode, callAction.argument.get(0));
+                                    activityNode, callAction.getArgument().get(0));
                             this.graph.addObjectFlow(
-                                    indexSource, callAction.argument.get(1));
+                                    indexSource, callAction.getArgument().get(1));
                             this.graph.addObjectFlow(
-                                    this.resultSource, callAction.argument.get(2));
+                                    this.resultSource, callAction.getArgument().get(2));
 
                             this.assignedValueSource =
                                 this.graph.addForkNode(
                                         "Fork(" + lhs.getTarget().getPathName() + ")");
                             this.graph.addObjectFlow(
-                                    callAction.result.get(0), this.assignedValueSource);
+                                    callAction.getResult().get(0), this.assignedValueSource);
 
                             this.node = callAction;
                         }

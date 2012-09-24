@@ -26,13 +26,7 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.NonFinalClause;
 
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
-import fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -113,7 +107,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	        Collection<String> assignedNames,
 	        Collection<Element> modelElements,
 	        FumlMapping parentMapping) throws MappingError {
-        Clause clause = new Clause();
+        Clause clause = parentMapping.create(Clause.class);
         
         modelElements.addAll(testElements);
         for (Element element: testElements) {
@@ -124,13 +118,13 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         
         if (testElements.isEmpty() || !(decider instanceof OutputPin)) {
             StructuredActivityNode passthruNode = 
-                ActivityGraph.createPassthruNode(
-                        decider.name, getBooleanType(), 1, 1);
+                    parentMapping.createActivityGraph().createPassthruNode(
+                        decider.getName(), getBooleanType(), 1, 1);
             clause.addTest(passthruNode);
             modelElements.add(passthruNode);
-            modelElements.add(ActivityGraph.createObjectFlow(
-                    decider, passthruNode.structuredNodeInput.get(0)));
-            decider = passthruNode.structuredNodeOutput.get(0);
+            modelElements.add(parentMapping.createActivityGraph().createObjectFlow(
+                    decider, passthruNode.getStructuredNodeInput().get(0)));
+            decider = passthruNode.getStructuredNodeOutput().get(0);
         }
         
         clause.setDecider((OutputPin)decider);
@@ -191,15 +185,15 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                             }
         
                             StructuredActivityNode passthruNode = 
-                                ActivityGraph.createPassthruNode(
-                                        bodyOutput.name, 
-                                        classifier, 
-                                        assignment.getLower(), 
-                                        assignment.getUpper());
+                                    parentMapping.createActivityGraph().createPassthruNode(
+                                            bodyOutput.getName(), 
+                                            classifier, 
+                                            assignment.getLower(), 
+                                            assignment.getUpper());
                             bodyElements.add(passthruNode);
-                            bodyElements.add(ActivityGraph.createObjectFlow(
-                                    bodyOutput, passthruNode.structuredNodeInput.get(0)));
-                            bodyOutput = passthruNode.structuredNodeOutput.get(0);
+                            bodyElements.add(parentMapping.createActivityGraph().createObjectFlow(
+                                    bodyOutput, passthruNode.getStructuredNodeInput().get(0)));
+                            bodyOutput = passthruNode.getStructuredNodeOutput().get(0);
                         }
                         
                         bodyOutputs.add((OutputPin)bodyOutput);

@@ -18,7 +18,7 @@ import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
 import org.modeldriven.alf.syntax.expressions.ClassificationExpression;
 
-import fUML.Syntax.Actions.CompleteActions.ReadIsClassifiedObjectAction;
+import org.modeldriven.alf.uml.ReadIsClassifiedObjectAction;
 
 public class ClassificationExpressionMapping extends UnaryExpressionMapping {
 
@@ -61,10 +61,10 @@ public class ClassificationExpressionMapping extends UnaryExpressionMapping {
                             expression.getIsDirect());
                 this.graph.addObjectFlow(
                         operandMapping.getResultSource(), 
-                        action.object);
+                        action.getObject());
                 
                 this.action = action;
-                this.resultSource = action.result;
+                this.resultSource = action.getResult();
             }
         }
     }
@@ -79,9 +79,9 @@ public class ClassificationExpressionMapping extends UnaryExpressionMapping {
 	    
 	    if (this.action instanceof ReadIsClassifiedObjectAction) {
 	        System.out.println(prefix + " classifier: " + 
-	                ((ReadIsClassifiedObjectAction)action).classifier);
+	                ((ReadIsClassifiedObjectAction)action).getClassifier());
 	        System.out.println(prefix + " isDirect: " +
-                    ((ReadIsClassifiedObjectAction)action).isDirect);
+                    ((ReadIsClassifiedObjectAction)action).getIsDirect());
 	    }
 	}
 

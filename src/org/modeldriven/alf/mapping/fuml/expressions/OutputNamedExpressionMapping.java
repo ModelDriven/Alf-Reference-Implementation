@@ -14,7 +14,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.NamedExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.OutputNamedExpression;
 
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.List;

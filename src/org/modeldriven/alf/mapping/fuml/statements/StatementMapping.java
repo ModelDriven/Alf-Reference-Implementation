@@ -26,18 +26,12 @@ import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Statement;
 
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 public abstract class StatementMapping extends DocumentedElementMapping {
 
     protected StructuredActivityNode node = null;
-    protected ActivityGraph graph = new ActivityGraph();
+    protected ActivityGraph graph = this.createActivityGraph();
     
     protected Map<String, ActivityNode> assignedValueSourceMap = 
         new HashMap<String, ActivityNode>();
@@ -65,7 +59,7 @@ public abstract class StatementMapping extends DocumentedElementMapping {
     // NOTE: Block mapping is handled in the BlockMapping class.
     
     public StructuredActivityNode mapNode() {
-        return new StructuredActivityNode();
+        return this.create(StructuredActivityNode.class);
     }
     
     public void map() throws MappingError {
@@ -119,11 +113,11 @@ public abstract class StatementMapping extends DocumentedElementMapping {
                         assignment.getLower(), assignment.getUpper());
                 
                 if (statementIsSource) {
-                    ForkNode forkNode = new ForkNode();
+                    ForkNode forkNode = create(ForkNode.class);
                     forkNode.setName("Fork(" + name + ")");
                     this.assignedValueSourceMap.put(name, forkNode);
                     graph.add(forkNode);
-                    graph.add(ActivityGraph.createObjectFlow(outputPin, forkNode));
+                    graph.add(this.graph.createObjectFlow(outputPin, forkNode));
                 }
             }
         }
@@ -133,8 +127,8 @@ public abstract class StatementMapping extends DocumentedElementMapping {
     protected OutputPin mapAssignment(
             StructuredActivityNode node, String name, Classifier classifier, 
             int lower, int upper) throws MappingError {
-        OutputPin outputPin = ActivityGraph.createOutputPin(
-                node.name + 
+        OutputPin outputPin = this.graph.createOutputPin(
+                node.getName() + 
                 ".output(" + name + ")", 
                 classifier,
                 lower,

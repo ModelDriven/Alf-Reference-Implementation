@@ -15,10 +15,10 @@ import org.modeldriven.alf.mapping.fuml.units.NamespaceDefinitionMapping;
 
 import org.modeldriven.alf.syntax.units.PackageDefinition;
 
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.Package;
-import fUML.Syntax.Classes.Kernel.PackageableElement;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Package;
+import org.modeldriven.alf.uml.PackageableElement;
 
 public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 
@@ -71,7 +71,7 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 
     public Package getPackage() throws MappingError {
         if (this.package_ == null) {
-            this.package_ = new Package();
+            this.package_ = this.create(Package.class);
             this.mapTo(this.package_);
           }
 

@@ -15,9 +15,9 @@ import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
 import org.modeldriven.alf.syntax.units.ClassifierTemplateParameter;
 
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
 
 import java.util.List;
 

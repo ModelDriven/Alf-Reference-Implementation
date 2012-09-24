@@ -23,11 +23,11 @@ import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.ElementImport;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.Namespace;
-import fUML.Syntax.Classes.Kernel.PackageImport;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.ElementImport;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Namespace;
+import org.modeldriven.alf.uml.PackageImport;
 
 public abstract class NamespaceDefinitionMapping extends MemberMapping {
     

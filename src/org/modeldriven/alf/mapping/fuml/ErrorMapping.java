@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.modeldriven.alf.mapping.MappingError;
 
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Element;
 
 public class ErrorMapping extends FumlMapping {
 

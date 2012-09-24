@@ -9,12 +9,13 @@
 
 package org.modeldriven.alf.mapping.fuml.common;
 
+import java.util.List;
+
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.DocumentedElement;
 
-import fUML.Syntax.Classes.Kernel.Comment;
-import fUML.Syntax.Classes.Kernel.CommentList;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Comment;
+import org.modeldriven.alf.uml.Element;
 
 public abstract class DocumentedElementMapping extends SyntaxElementMapping {
     
@@ -30,9 +31,9 @@ public abstract class DocumentedElementMapping extends SyntaxElementMapping {
         DocumentedElement documentedElement = this.getDocumentedElement();
 
         for (String documentation: documentedElement.getDocumentation()) {
-          Comment comment = new Comment();
-          comment.body = documentation;
-          element.ownedComment.addValue(comment);
+          Comment comment = this.create(Comment.class);
+          comment.setBody(documentation);
+          element.addOwnedComment(comment);
         }
     }
 
@@ -45,12 +46,12 @@ public abstract class DocumentedElementMapping extends SyntaxElementMapping {
         super.print(prefix);
         Element element = this.getElement();
         if (element != null) {
-            CommentList comments = element.ownedComment;
+            List<Comment> comments = element.getOwnedComment();
             if (!comments.isEmpty()) {
                 System.out.println("ownedComment:");
                 for (Comment comment: comments) {
                     System.out.println(prefix + " Comment");
-                    System.out.println(comment.body);
+                    System.out.println(comment.getBody());
                 }
             }
         }

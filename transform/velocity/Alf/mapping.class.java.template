@@ -21,7 +21,7 @@ package #mappingPackageName($object);
 import #qualifiedName($object);
 
 #if ( !${object.isAbstract()} )
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.List;

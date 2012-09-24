@@ -18,8 +18,8 @@ import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 import org.modeldriven.alf.syntax.statements.ConcurrentClauses;
 import org.modeldriven.alf.syntax.statements.NonFinalClause;
 
-import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Clause;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;

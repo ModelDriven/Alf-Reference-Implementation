@@ -15,9 +15,9 @@ import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.ThisExpression;
 
-import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.ReadSelfAction;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Element;
 
 public class ThisExpressionMapping extends ExpressionMapping {
     
@@ -34,7 +34,7 @@ public class ThisExpressionMapping extends ExpressionMapping {
 
     @Override
     public ActivityNode getResultSource() throws MappingError {
-        return this.getAction().result;
+        return this.getAction().getResult();
     }
     
     public ReadSelfAction getAction() throws MappingError {

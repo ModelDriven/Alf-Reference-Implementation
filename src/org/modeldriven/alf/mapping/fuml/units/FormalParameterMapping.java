@@ -17,16 +17,7 @@ import org.modeldriven.alf.mapping.fuml.units.TypedElementDefinitionMapping;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
-import fUML.Syntax.Activities.IntermediateActivities.Activity;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.MultiplicityElement;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.Operation;
-import fUML.Syntax.Classes.Kernel.Parameter;
-import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
-import fUML.Syntax.Classes.Kernel.TypedElement;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.BehaviorList;
+import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,18 +33,8 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
      */
     
     public void mapTo(Parameter parameter) throws MappingError {
-        super.mapTo(parameter, parameter.multiplicityElement);
-
-        String direction = this.getFormalParameter().getDirection();
-        if (direction.equals("in")) {
-            parameter.setDirection(ParameterDirectionKind.in);
-        } else if (direction.equals("out")) {
-            parameter.setDirection(ParameterDirectionKind.out);
-        } else if (direction.equals("inout")) {
-            parameter.setDirection(ParameterDirectionKind.inout);
-        } else if (direction.equals("return")) {
-            parameter.setDirection(ParameterDirectionKind.return_);
-        }
+        super.mapTo(parameter, parameter);
+        parameter.setDirection(this.getFormalParameter().getDirection());
     }
     
     @Override
@@ -63,8 +44,7 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
 
     public Parameter getParameter() throws MappingError {
         if (this.parameter == null) {
-            this.parameter = new Parameter();
-            this.parameter.multiplicityElement = new MultiplicityElement();
+            this.parameter = this.create(Parameter.class);
             this.mapTo(this.parameter);
         }
 
@@ -87,11 +67,11 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
         if (mapping instanceof OperationDefinitionMapping) {
             Operation operation = 
                 ((OperationDefinitionMapping)mapping).getOperation();
-            BehaviorList methods = operation.method;
+            List<Behavior> methods = operation.getMethod();
             if (methods.size() > 0) {
                 activity = (Activity)methods.get(0);
-                parameter = activity.ownedParameter.
-                    get(operation.ownedParameter.indexOf(parameter));
+                parameter = activity.getOwnedParameter().
+                    get(operation.getOwnedParameter().indexOf(parameter));
             } else {
                 this.throwError("Operation has no method: " + operation);
             }
@@ -118,12 +98,12 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
 
     @Override
     public MultiplicityElement getMultiplicityElement() {
-        return this.parameter == null? null: this.parameter.multiplicityElement;
+        return this.parameter;
     }
 
     @Override
     public TypedElement getTypedElement() {
-        return this.parameter == null? null: this.parameter;
+        return this.parameter;
     }
 
 	public List<Element> getModelElements() throws MappingError {
@@ -134,7 +114,7 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
 	
 	@Override
 	public String toString() {
-	    return super.toString() + " direction:" + this.parameter.direction;
+	    return super.toString() + " direction:" + this.parameter.getDirection();
 	}
 	
 	@Override

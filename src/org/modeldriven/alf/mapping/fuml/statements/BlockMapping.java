@@ -18,9 +18,9 @@ import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.Statement;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ControlFlow;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.ControlFlow;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class BlockMapping extends SyntaxElementMapping {
                 elements.addAll(mapping.getModelElements());
 
                 if (!this.isParallel() && previousNode != null) {
-                    ControlFlow flow = new ControlFlow();
+                    ControlFlow flow = this.create(ControlFlow.class);
                     flow.setSource(previousNode);
                     flow.setTarget(node);
                     elements.add(flow);

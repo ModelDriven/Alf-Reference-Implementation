@@ -24,9 +24,9 @@ import org.modeldriven.alf.syntax.expressions.Tuple;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.Action;
+import org.modeldriven.alf.uml.ExpansionNode;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class BehaviorInvocationExpressionMapping extends
 		InvocationExpressionMapping {

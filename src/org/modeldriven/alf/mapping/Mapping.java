@@ -12,12 +12,12 @@ import org.modeldriven.alf.syntax.common.SyntaxElement;
 
 public abstract class Mapping {
     
-    private MappingFactory factory = null;    
+    private MappingFactory factory = null;
     private String errorMessage = null;
     private Object source = null;
     
     public MappingFactory getFactory() {
-        return factory;
+        return this.factory;
     }
     
     public void setFactory(MappingFactory factory) {

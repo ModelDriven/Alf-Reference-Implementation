@@ -26,20 +26,11 @@ import org.modeldriven.alf.syntax.expressions.FeatureReference;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Actions.IntermediateActions.AddStructuralFeatureValueAction;
-import fUML.Syntax.Actions.IntermediateActions.ClearStructuralFeatureAction;
-import fUML.Syntax.Actions.IntermediateActions.RemoveStructuralFeatureValueAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Property;
+import org.modeldriven.alf.uml.*;
 
 public abstract class LeftHandSideMapping extends SyntaxElementMapping {
     
-    protected ActivityGraph graph = new ActivityGraph();
+    protected ActivityGraph graph = this.createActivityGraph();
     protected ForkNode resultSource;
     protected ActivityNode node = null;
     protected ActivityNode assignedValueSource = null;
@@ -180,11 +171,11 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         this.node = clearAction;
                         this.graph.addObjectFlow(
                                 objectSource, 
-                                clearAction.object);
+                                clearAction.getObject());
                         if (this.controlTarget == null) {
                             this.controlTarget = clearAction;
                         }
-                        resultNode = clearAction.result;
+                        resultNode = clearAction.getResult();
                     } else if (this.rhsUpper == 1) {
                         AddStructuralFeatureValueAction writeAction =
                             this.graph.addAddStructuralFeatureValueAction(
@@ -195,16 +186,16 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         this.assignmentTarget = this.resultSource;
                         this.graph.addObjectFlow(
                                 objectSource, 
-                                writeAction.object);
+                                writeAction.getObject());
                         this.graph.addObjectFlow(
-                                this.resultSource, writeAction.value);
-                        resultNode = writeAction.result;
+                                this.resultSource, writeAction.getValue());
+                        resultNode = writeAction.getResult();
                     } else {
                         ClearStructuralFeatureAction clearAction =
                             this.graph.addClearStructuralFeatureAction(property);
                         this.graph.addObjectFlow(
                                 objectSource, 
-                                clearAction.object);
+                                clearAction.getObject());
                         if (this.controlTarget == null) {
                             this.controlTarget = clearAction;
                         }
@@ -217,24 +208,24 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         // test within it does start executing too soon.
                         this.node =
                             this.graph.addStructuredActivityNode(
-                                    "WriteAll(" + property.qualifiedName +")", 
+                                    "WriteAll(" + property.getQualifiedName() +")", 
                                     new ArrayList<Element>());
 
-                        InputPin valuePin = ActivityGraph.createInputPin(
-                                this.node.name + 
-                                ".input(" + property.qualifiedName + ")", 
-                                property.typedElement.type, 
-                                property.multiplicityElement.lower, 
-                                property.multiplicityElement.upper.naturalValue);
+                        InputPin valuePin = this.graph.createInputPin(
+                                this.node.getName() + 
+                                ".input(" + property.getQualifiedName() + ")", 
+                                property.getType(), 
+                                property.getLower(), 
+                                property.getUpper());
                         ((StructuredActivityNode)this.node).
                             addStructuredNodeInput(valuePin);
                         this.graph.addObjectFlow(this.resultSource, valuePin);
 
-                        ActivityGraph subgraph = new ActivityGraph();
+                        ActivityGraph subgraph = this.createActivityGraph();
                         resultNode = 
                             AssignmentExpressionMapping.mapPropertyAssignment(
                                     property, subgraph, 
-                                    clearAction.result, valuePin);
+                                    clearAction.getResult(), valuePin, this);
 
                         graph.addToStructuredNode(
                                 (StructuredActivityNode)this.node, 
@@ -268,7 +259,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         this.graph.addCallBehaviorAction(getBehavior(
                                 RootNamespace.getIntegerFunctionToUnlimitedNatural()));
                     this.graph.addObjectFlow(
-                            indexSource, indexConversionAction.argument.get(0));
+                            indexSource, indexConversionAction.getArgument().get(0));
                     
                     if (this.rhsUpper == 0) {
                         RemoveStructuralFeatureValueAction removeAction =
@@ -277,24 +268,24 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         this.node = removeAction;
                         this.graph.addObjectFlow(
                                 objectSource, 
-                                removeAction.object);
+                                removeAction.getObject());
                         this.graph.addObjectFlow(
-                                indexConversionAction.result.get(0),
-                                removeAction.removeAt);
-                        resultNode = removeAction.result;                                
+                                indexConversionAction.getResult().get(0),
+                                removeAction.getRemoveAt());
+                        resultNode = removeAction.getResult();                                
                     } else {
                         ForkNode indexFork = this.graph.addForkNode(
-                                "Fork(" + indexSource.name + ")");
+                                "Fork(" + indexSource.getName() + ")");
                         this.graph.addObjectFlow(
-                                indexConversionAction.result.get(0), indexFork);
+                                indexConversionAction.getResult().get(0), indexFork);
                         
                         RemoveStructuralFeatureValueAction removeAction =
                             this.graph.addRemoveStructuralFeatureValueAction(
                                     property, false);
                         this.graph.addObjectFlow(
-                                objectSource, removeAction.object);
+                                objectSource, removeAction.getObject());
                         this.graph.addObjectFlow(
-                                indexFork, removeAction.removeAt);
+                                indexFork, removeAction.getRemoveAt());
                         
                         AddStructuralFeatureValueAction writeAction =
                             this.graph.addAddStructuralFeatureValueAction(
@@ -304,18 +295,18 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                                 "Fork(LeftHandSide@" + lhs.getId() + ")");
                         this.assignmentTarget = this.resultSource;
                         this.graph.addObjectFlow(
-                                removeAction.result, 
-                                writeAction.object);
+                                removeAction.getResult(), 
+                                writeAction.getObject());
                         this.graph.addObjectFlow(
-                                indexFork, writeAction.insertAt);
+                                indexFork, writeAction.getInsertAt());
                         this.graph.addObjectFlow(
-                                this.resultSource, writeAction.value);
-                        resultNode = writeAction.result;
+                                this.resultSource, writeAction.getValue());
+                        resultNode = writeAction.getResult();
                     }
                 }
                 if (lhs.getImpl().isDataValueUpdate()) {
                     this.assignedValueSource = this.graph.addForkNode(
-                            "Fork(" + resultNode.name + ")");
+                            "Fork(" + resultNode.getName() + ")");
                     this.graph.addObjectFlow(
                             resultNode, this.assignedValueSource);
                 }

@@ -22,14 +22,14 @@ import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
 
 public abstract class ExpressionMapping extends SyntaxElementMapping {
     
     private Classifier type = null;
-    protected ActivityGraph graph = new ActivityGraph();
+    protected ActivityGraph graph = this.createActivityGraph();
 
     public ActivityNode getResultSource() throws MappingError {
         return null;

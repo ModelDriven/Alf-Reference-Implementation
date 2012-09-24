@@ -15,11 +15,11 @@ import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
 import org.modeldriven.alf.syntax.units.AssociationDefinition;
 
-import fUML.Syntax.Classes.Kernel.Association;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.Property;
+import org.modeldriven.alf.uml.Association;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Property;
 
 public class AssociationDefinitionMapping extends ClassifierDefinitionMapping {
     
@@ -36,7 +36,7 @@ public class AssociationDefinitionMapping extends ClassifierDefinitionMapping {
 
     @Override
     public Classifier mapClassifier() {
-        return new Association();
+        return this.create(Association.class);
     }
 
     @Override

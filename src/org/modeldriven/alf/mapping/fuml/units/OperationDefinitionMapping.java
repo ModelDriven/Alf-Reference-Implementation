@@ -24,23 +24,10 @@ import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.BasicActions.CallOperationAction;
-import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
-import fUML.Syntax.Actions.IntermediateActions.ReadStructuralFeatureAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.Activity;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Class_;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.Operation;
-import fUML.Syntax.Classes.Kernel.OperationList;
-import fUML.Syntax.Classes.Kernel.Parameter;
-import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
-import fUML.Syntax.Classes.Kernel.Property;
+import org.modeldriven.alf.uml.*;
 
 import java.util.Collection;
+import java.util.List;
 
 public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
@@ -108,30 +95,30 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
             // NOTE: The following ensures that the class property is set for an
             // operation, even if it has not been added as a member to its class
             // yet.
-            operation.class_ = 
-                (Class_)((ClassDefinitionMapping)mapping).getClassifierOnly();
+            operation.setClass_( 
+                (Class_)((ClassDefinitionMapping)mapping).getClassifierOnly());
 
             if (definition.getIsAbstract()) {
                 operation.setIsAbstract(true);
             } else {
-                Activity activity = new Activity();
+                Activity activity = this.create(Activity.class);
                 // Give the method activity a name to aid in execution tracing.
                 activity.setName(makeDistinguishableName(
-                        namespace, operation.name + "$method"));
-                operation.class_.addOwnedBehavior(activity);
+                        namespace, operation.getName() + "$method"));
+                operation.getClass_().addOwnedBehavior(activity);
                 operation.addMethod(activity);
                 
-                for (Parameter parameter: operation.ownedParameter) {
-                    Parameter copy = new Parameter();
-                    copy.setName(parameter.name);
-                    copy.setDirection(parameter.direction);
-                    copy.setLower(parameter.multiplicityElement.lower);
-                    copy.setUpper(parameter.multiplicityElement.upper.naturalValue);
-                    copy.setType(parameter.type);
-                    copy.setIsOrdered(parameter.multiplicityElement.isOrdered);
-                    copy.setIsUnique(parameter.multiplicityElement.isUnique);
+                for (Parameter parameter: operation.getOwnedParameter()) {
+                    Parameter copy = this.create(Parameter.class);
+                    copy.setName(parameter.getName());
+                    copy.setDirection(parameter.getDirection());
+                    copy.setLower(parameter.getLower());
+                    copy.setUpper(parameter.getUpper());
+                    copy.setType(parameter.getType());
+                    copy.setIsOrdered(parameter.getIsOrdered());
+                    copy.setIsUnique(parameter.getIsUnique());
                     activity.addOwnedParameter(copy);
-                    ActivityDefinitionMapping.addParameterNodes(activity, copy);
+                    ActivityDefinitionMapping.addParameterNodes(activity, copy, this);
                 }
             }
         }
@@ -159,7 +146,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
         
         if (!definition.getIsAbstract()) {
             Operation operation = this.getOperation();
-            Activity activity = (Activity)operation.method.get(0);
+            Activity activity = (Activity)operation.getMethod().get(0);
 
             Collection<Element> elements;
 
@@ -168,7 +155,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 FumlMapping bodyMapping = this.fumlMap(body);
                 elements = bodyMapping.getModelElements();
             } else {
-                ActivityGraph graph = new ActivityGraph();
+                ActivityGraph graph = this.createActivityGraph();
                 
                 // Add constructor body.
                 Block bodySegment =
@@ -180,14 +167,14 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
                 // Return context object as the constructor result.
                 ReadSelfAction readSelfAction = 
-                        graph.addReadSelfAction(operation.class_);
+                        graph.addReadSelfAction(operation.getClass_());
                 ActivityNode selfFork = graph.addForkNode(
-                        "Fork(" + readSelfAction.result.name + ")");
-                graph.addObjectFlow(readSelfAction.result, selfFork);
+                        "Fork(" + readSelfAction.getResult().getName() + ")");
+                graph.addObjectFlow(readSelfAction.getResult(), selfFork);
                 
                 Parameter returnParameter = null;
-                for (Parameter parameter: activity.ownedParameter) {
-                    if (parameter.direction == ParameterDirectionKind.return_) {
+                for (Parameter parameter: activity.getOwnedParameter()) {
+                    if (parameter.getDirection().equals("return_")) {
                         returnParameter = parameter;
                         break;
                     }
@@ -220,7 +207,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                         CallOperationAction callAction = 
                                 graph.addCallOperationAction(
                                         classMapping.getInitializationOperation());
-                        graph.addObjectFlow(selfFork, callAction.target);
+                        graph.addObjectFlow(selfFork, callAction.getTarget());
                         graph.addControlFlow(callAction, bodyNode);
                         if (node == null) {
                             node = callAction;
@@ -236,11 +223,11 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                                 graph.addReadStructuralFeatureAction(initializationFlag);
                         CallBehaviorAction testAction = graph.addCallBehaviorAction(
                                 getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
-                        graph.addObjectFlow(selfFork, readAction.object);
-                        graph.addObjectFlow(readAction.result, testAction.argument.get(0));
+                        graph.addObjectFlow(selfFork, readAction.getObject());
+                        graph.addObjectFlow(readAction.getResult(), testAction.getArgument().get(0));
                         graph.addControlDecisionNode(
-                                "Test(" + initializationFlag.name + ")", 
-                                initialNode, testAction.result.get(0), 
+                                "Test(" + initializationFlag.getName() + ")", 
+                                initialNode, testAction.getResult().get(0), 
                                 node, null);
                     }
                     
@@ -257,7 +244,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
     public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
         if (!(element instanceof Parameter)) {
             this.throwError("Member not a parameter: " + element);
-        } else if (((Parameter)element).direction != ParameterDirectionKind.return_) {
+        } else if (!((Parameter)element).getDirection().equals("return_")) {
             // Note: An operation is a namespace in full UML, but not in fUML,
             // so the "namespace" parameter actually has the type "NamedElement".
             ((Operation)namespace).addOwnedParameter((Parameter)element);
@@ -276,7 +263,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
     public Operation getOperation() throws MappingError {
         if (this.operation == null) {
-            this.operation = new Operation();
+            this.operation = this.create(Operation.class);
             this.mapTo(this.operation);
         }
         return this.operation;
@@ -288,7 +275,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 	
 	@Override
 	public String toString() {
-	    return super.toString() + " isAbstract:" + this.operation.isAbstract;
+	    return super.toString() + " isAbstract:" + this.operation.getIsAbstract();
 	}
 	
 	@Override
@@ -297,8 +284,8 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 	    
 	    if (this.operation != null) {
 	        System.out.println(prefix + " operation: " + operation);
-	        OperationList redefinedOperations = 
-	            this.operation.redefinedOperation;
+	        List<Operation> redefinedOperations = 
+	            this.operation.getRedefinedOperation();
 	        if (!redefinedOperations.isEmpty()) {
 	            System.out.println(prefix + " redefinedOperation:");
 	            for (Operation redefinedOperation: redefinedOperations) {

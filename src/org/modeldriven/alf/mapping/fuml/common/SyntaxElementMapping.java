@@ -15,7 +15,7 @@ import org.modeldriven.alf.mapping.fuml.FumlMapping;
 
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public abstract class SyntaxElementMapping extends FumlMapping {
     

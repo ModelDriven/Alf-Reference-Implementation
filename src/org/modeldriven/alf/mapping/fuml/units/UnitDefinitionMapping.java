@@ -16,7 +16,7 @@ import org.modeldriven.alf.mapping.fuml.common.DocumentedElementMapping;
 
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.Collection;
 

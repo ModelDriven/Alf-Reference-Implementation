@@ -10,6 +10,8 @@
 
 package org.modeldriven.alf.mapping.fuml.statements;
 
+import java.util.List;
+
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
@@ -26,14 +28,7 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.Activity;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode;
-import fUML.Syntax.Classes.Kernel.Operation;
-import fUML.Syntax.Classes.Kernel.Parameter;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.BehaviorList;
+import org.modeldriven.alf.uml.*;
 
 public class ReturnStatementMapping extends StatementMapping {
     
@@ -58,26 +53,26 @@ public class ReturnStatementMapping extends StatementMapping {
                 StructuredActivityNode node = 
                     (StructuredActivityNode)this.getElement();
                 
-                OutputPin pin = ActivityGraph.createOutputPin(
-                        node.name + ".output", expressionMapping.getType(), 
+                OutputPin pin = this.graph.createOutputPin(
+                        node.getName() + ".output", expressionMapping.getType(), 
                         expression.getLower(), expression.getUpper());
                 node.addStructuredNodeOutput(pin);
                 
                 if (!ActivityGraph.isContainedIn(resultSource, node)) {
                     StructuredActivityNode passThruNode =
-                            ActivityGraph.createPassthruNode(
-                                resultSource.name, 
-                                pin.typedElement.type, 
-                                pin.multiplicityElement.lower, 
-                                pin.multiplicityElement.upper.naturalValue);
+                            this.graph.createPassthruNode(
+                                resultSource.getName(), 
+                                pin.getType(), 
+                                pin.getLower(), 
+                                pin.getUpper());
                     node.addNode(passThruNode);
                     this.graph.addObjectFlow(
                             resultSource, 
-                            passThruNode.structuredNodeInput.get(0));
-                    resultSource = passThruNode.structuredNodeOutput.get(0);
+                            passThruNode.getStructuredNodeInput().get(0));
+                    resultSource = passThruNode.getStructuredNodeOutput().get(0);
                 }
                 
-                node.addEdge(ActivityGraph.createObjectFlow(
+                node.addEdge(this.graph.createObjectFlow(
                         resultSource, pin));
                 
                 ElementReference behavior = this.getReturnStatement().getBehavior();
@@ -101,11 +96,11 @@ public class ReturnStatementMapping extends StatementMapping {
                     } else if (mapping instanceof OperationDefinitionMapping) {
                         Operation operation = 
                             ((OperationDefinitionMapping)mapping).getOperation();
-                        BehaviorList methods = operation.method;
+                        List<Behavior> methods = operation.getMethod();
                         if (methods.size() > 0) {
                             activity = (Activity)methods.get(0);
-                            parameter = activity.ownedParameter.
-                                get(operation.ownedParameter.indexOf(parameter));
+                            parameter = activity.getOwnedParameter().
+                                get(operation.getOwnedParameter().indexOf(parameter));
                         } else {
                             this.throwError("Operation has no method: " + operation);
                         }
@@ -122,10 +117,10 @@ public class ReturnStatementMapping extends StatementMapping {
                         this.throwError("Activity does not contain parameter: " + 
                                 parameter);
                     } else {
-                        this.add(ActivityGraph.createObjectFlow(pin, parameterNode));
-                        this.add(ActivityGraph.createControlFlow(
+                        this.add(this.graph.createObjectFlow(pin, parameterNode));
+                        this.add(this.graph.createControlFlow(
                                 node, 
-                                ActivityDefinitionMapping.getFinalNode(activity)));
+                                ActivityDefinitionMapping.getFinalNode(activity, this)));
                     }
                 }
             }

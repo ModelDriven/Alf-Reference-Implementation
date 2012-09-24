@@ -25,6 +25,10 @@ public interface Operation extends BehavioralFeature {
 
 	public Class_ getClass_();
 
+    // NOTE: This is needed for mapping an OperationDefinition, even though it 
+    // is the opposite of the composite property Class::ownedOperation.
+    public void setClass_(Class_ class_);
+    
 	public List<Operation> getRedefinedOperation();
 
 	public void addRedefinedOperation(Operation redefinedOperation);

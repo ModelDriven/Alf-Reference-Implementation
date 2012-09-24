@@ -15,9 +15,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.LiteralExpression;
 
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 public abstract class LiteralExpressionMapping extends ExpressionMapping {
 
@@ -37,7 +35,7 @@ public abstract class LiteralExpressionMapping extends ExpressionMapping {
     @Override
     public ActivityNode getResultSource() throws MappingError {
         ValueSpecificationAction action = this.getAction();
-        return action == null ? null : action.result;
+        return action == null ? null : action.getResult();
     }
 
     public ValueSpecificationAction getAction() throws MappingError {

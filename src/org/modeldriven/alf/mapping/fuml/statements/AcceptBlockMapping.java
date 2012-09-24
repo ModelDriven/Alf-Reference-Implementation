@@ -25,12 +25,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.AcceptBlock;
 import org.modeldriven.alf.syntax.statements.Block;
 
-import fUML.Syntax.Actions.CompleteActions.ReadIsClassifiedObjectAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.CommonBehaviors.Communications.Signal;
+import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +53,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
     }
     
     private void map() throws MappingError {
-        this.graph = new ActivityGraph();
+        this.graph = this.createActivityGraph();
         
         AcceptBlock acceptBlock = this.getAcceptBlock();
         Collection<ElementReference> signalReferences = acceptBlock.getSignal();
@@ -90,17 +85,17 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                 if (signalNames.length() > 0) {
                     signalNames.append(",");
                 }
-                signalNames.append(signal.name);
+                signalNames.append(signal.getName());
 
                 ReadIsClassifiedObjectAction testAction = 
                         graph.addReadIsClassifiedObjectAction(
                                 signal, false);
-                graph.addObjectFlow(signalSourceNode, testAction.object);
+                graph.addObjectFlow(signalSourceNode, testAction.getObject());
 
                 this.decisionNode = 
                         graph.addControlDecisionNode(
-                                "Test(" + signal.name + ")", 
-                                null, testAction.result, 
+                                "Test(" + signal.getName() + ")", 
+                                null, testAction.getResult(), 
                                 this.blockNode, this.decisionNode);
             }
             
@@ -128,21 +123,21 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                                         ((ClassifierDefinitionMapping)mapping).
                                             getClassifier();
                                 StructuredActivityNode passthruNode =
-                                        ActivityGraph.createPassthruNode(
+                                        this.graph.createPassthruNode(
                                                 name, type,
                                                 assignment.getLower(), 
                                                 assignment.getUpper());
                                 blockNode.addNode(passthruNode);
-                                blockNode.addEdge(ActivityGraph.createObjectFlow(
+                                blockNode.addEdge(this.graph.createObjectFlow(
                                         source, 
-                                        passthruNode.structuredNodeInput.get(0)));
-                                source = passthruNode.structuredNodeOutput.get(0);
+                                        passthruNode.getStructuredNodeInput().get(0)));
+                                source = passthruNode.getStructuredNodeOutput().get(0);
                             }
                         }
                         graph.addObjectFlow(
                                 source, 
                                 parentMapping.getAssignedValueSource(name).
-                                    incoming.get(0).source);
+                                    getIncoming().get(0).getSource());
                     }
                 }
             }

@@ -19,10 +19,10 @@ import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
 import org.modeldriven.alf.syntax.statements.AcceptBlock;
 import org.modeldriven.alf.syntax.statements.AcceptStatement;
 
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Actions.CompleteActions.AcceptEventAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.CommonBehaviors.Communications.Signal;
+import org.modeldriven.alf.uml.OutputPin;
+import org.modeldriven.alf.uml.AcceptEventAction;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Signal;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -84,7 +84,7 @@ public class AcceptStatementMapping extends StatementMapping {
         AcceptStatement statement = this.getAcceptStatement();
         Collection<AcceptBlock> acceptBlocks = statement.getAcceptBlock();
         
-        ActivityGraph subgraph = new ActivityGraph();
+        ActivityGraph subgraph = this.createActivityGraph();
         boolean hasOutput = !statement.getIsSimple() || 
                 ((AcceptBlock)acceptBlocks.toArray()[0]).getName() != null;
         Set<Signal> signals = new HashSet<Signal>();
@@ -120,7 +120,7 @@ public class AcceptStatementMapping extends StatementMapping {
         // NOTE: This prevents the accept event action from re-registering itself
         // after it has completed.
         ActivityNode initialNode = subgraph.addInitialNode(
-                "Initial(" + acceptAction.name + ")");
+                "Initial(" + acceptAction.getName() + ")");
         subgraph.addControlFlow(initialNode, acceptAction);
 
         if (decisionNode != null) {
@@ -128,8 +128,8 @@ public class AcceptStatementMapping extends StatementMapping {
         }
 
         if (hasOutput) {
-            OutputPin outputPin = acceptAction.result.get(0);
-            this.signalSourceNode.setName("Fork(" + outputPin.name + ")");
+            OutputPin outputPin = acceptAction.getResult().get(0);
+            this.signalSourceNode.setName("Fork(" + outputPin.getName() + ")");
             subgraph.addObjectFlow(outputPin, this.signalSourceNode);
         }
         

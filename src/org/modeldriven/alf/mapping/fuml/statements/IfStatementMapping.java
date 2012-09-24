@@ -18,9 +18,9 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ConcurrentClauses;
 import org.modeldriven.alf.syntax.statements.IfStatement;
 
-import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
-import fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
+import org.modeldriven.alf.uml.Clause;
+import org.modeldriven.alf.uml.ConditionalNode;
+import org.modeldriven.alf.uml.StructuredActivityNode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,7 +70,7 @@ public class IfStatementMapping extends ConditionalStatementMapping {
     
     @Override
     public StructuredActivityNode mapNode() {
-        return new ConditionalNode();
+        return this.create(ConditionalNode.class);
     }
     
     @Override
@@ -122,8 +122,8 @@ public class IfStatementMapping extends ConditionalStatementMapping {
         ConditionalNode node = (ConditionalNode)this.getElement();
         return super.toString() + 
             (node == null? "": 
-                " isDeterminate:" + node.isDeterminate + 
-                " isAssured:" + node.isAssured);
+                " isDeterminate:" + node.getIsDeterminate() + 
+                " isAssured:" + node.getIsAssured());
     }
     
 	@Override

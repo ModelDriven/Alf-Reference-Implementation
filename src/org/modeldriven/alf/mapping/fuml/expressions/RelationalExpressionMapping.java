@@ -18,8 +18,8 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.RelationalExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class RelationalExpressionMapping extends BinaryExpressionMapping {
     
@@ -31,8 +31,8 @@ public class RelationalExpressionMapping extends BinaryExpressionMapping {
                 operand.getType().getImpl().isInteger()) {
             CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
                     getBehavior(RootNamespace.getIntegerFunctionToUnlimitedNatural()));
-            this.graph.addObjectFlow(resultSource, callAction.argument.get(0));
-            resultSource = callAction.result.get(0);
+            this.graph.addObjectFlow(resultSource, callAction.getArgument().get(0));
+            resultSource = callAction.getResult().get(0);
         }
         
         return resultSource;

@@ -18,11 +18,12 @@ import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.StereotypeAnnotation;
 import org.modeldriven.fuml.library.LibraryFunctions;
 
+import org.modeldriven.alf.uml.OpaqueBehavior;
+
 import fUML.Debug;
 import fUML.Semantics.Classes.Kernel.Value;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.OpaqueBehavior;
 
 public class FumlMappingFactory extends MappingFactory {
 
@@ -89,7 +90,7 @@ public class FumlMappingFactory extends MappingFactory {
                 }
             }
         }
-        execution.types.addValue(behavior);
+        execution.types.add(((org.modeldriven.alf.uml.fuml.Behavior)behavior).getBase());
         return execution;
     }
     

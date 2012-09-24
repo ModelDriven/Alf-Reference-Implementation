@@ -16,13 +16,7 @@ import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
 
 import org.modeldriven.alf.syntax.statements.Block;
 
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
-import fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,8 +36,8 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
     protected OutputPin mapAssignment(
             StructuredActivityNode node, String name, Classifier classifier, 
             int lower, int upper) {
-        OutputPin outputPin = ActivityGraph.createOutputPin(
-                node.name + 
+        OutputPin outputPin = this.graph.createOutputPin(
+                node.getName() + 
                 ".result(" + name + ")", 
                 classifier,
                 lower,
@@ -64,11 +58,11 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
         // in other clauses.
         if (block != null || assignedNames != null) {
             Collection<Element> modelElements = new ArrayList<Element>();
-            ActivityGraph subgraph = new ActivityGraph();
+            ActivityGraph subgraph = this.createActivityGraph();
             ValueSpecificationAction valueAction = 
                 subgraph.addBooleanValueSpecificationAction(true);
             Clause clause = NonFinalClauseMapping.createClause(
-                    subgraph.getModelElements(), valueAction.result, 
+                    subgraph.getModelElements(), valueAction.getResult(), 
                     block == null? 
                         new ArrayList<Element>():
                         this.fumlMap(block).getModelElements(), 

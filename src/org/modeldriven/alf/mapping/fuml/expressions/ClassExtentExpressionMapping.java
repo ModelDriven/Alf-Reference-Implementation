@@ -16,10 +16,10 @@ import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.ClassExtentExpression;
 
-import fUML.Syntax.Actions.CompleteActions.ReadExtentAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Class_;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.ReadExtentAction;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Class_;
+import org.modeldriven.alf.uml.Element;
 
 public class ClassExtentExpressionMapping extends ExpressionMapping {
 
@@ -37,7 +37,7 @@ public class ClassExtentExpressionMapping extends ExpressionMapping {
     
     @Override
     public ActivityNode getResultSource() throws MappingError {
-        ActivityNode result = this.getAction().result;
+        ActivityNode result = this.getAction().getResult();
         return result == null? null: result;
     }
     

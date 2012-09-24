@@ -16,12 +16,12 @@ import java.util.List;
 
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
-import org.modeldriven.alf.mapping.fuml.common.gen.SyntaxElementMapping;
+import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 
 import org.modeldriven.alf.syntax.expressions.SequenceElements;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Element;
 
 public abstract class SequenceElementsMapping extends SyntaxElementMapping {
 
@@ -33,7 +33,7 @@ public abstract class SequenceElementsMapping extends SyntaxElementMapping {
     @Override
     public Collection<Element> getModelElements() throws MappingError {
         if (this.graph == null) {
-            this.graph = new ActivityGraph();
+            this.graph = this.createActivityGraph();
             this.resultSources = new ArrayList<ActivityNode>();
             this.map();
         }

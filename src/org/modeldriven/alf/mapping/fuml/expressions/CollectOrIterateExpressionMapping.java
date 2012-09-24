@@ -16,8 +16,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.SequenceExpansionExpressionM
 
 import org.modeldriven.alf.syntax.expressions.CollectOrIterateExpression;
 
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class CollectOrIterateExpressionMapping extends
 		SequenceExpansionExpressionMapping {
@@ -46,7 +45,7 @@ public class CollectOrIterateExpressionMapping extends
     public void map() throws MappingError {
         super.map();
         if ("iterate".equals(this.getCollectOrIterateExpression().getOperation())) {
-            this.region.setMode(ExpansionKind.iterative);
+            this.region.setMode("iterative");
         }
     }
 

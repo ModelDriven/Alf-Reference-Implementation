@@ -17,8 +17,8 @@ import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.List;

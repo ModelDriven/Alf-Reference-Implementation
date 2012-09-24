@@ -14,7 +14,7 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.ActivityGraph;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
-import org.modeldriven.alf.mapping.fuml.common.gen.SyntaxElementMapping;
+import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 import org.modeldriven.alf.mapping.fuml.expressions.ExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.Expression;
@@ -22,11 +22,7 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.SwitchClause;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.IntermediateActions.TestIdentityAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +54,7 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
         SwitchClause switchClause = this.getSwitchClause();
         Block block = switchClause.getBlock();
         
-        ActivityGraph testGraph = new ActivityGraph();
+        ActivityGraph testGraph = this.createActivityGraph();
         ActivityNode testSource = null;
         for (Expression switchCase: switchClause.getCase()) {
             FumlMapping mapping = this.fumlMap(switchCase);
@@ -71,20 +67,20 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
                 ActivityNode resultSource = caseMapping.getResultSource();
                 testGraph.addAll(caseMapping.getGraph());
                 TestIdentityAction testAction = testGraph.addTestIdentityAction(
-                        "Case(" + resultSource.name + ")");
-                testGraph.addObjectFlow(this.switchSource, testAction.first);
-                testGraph.addObjectFlow(resultSource, testAction.second);
+                        "Case(" + resultSource.getName() + ")");
+                testGraph.addObjectFlow(this.switchSource, testAction.getFirst());
+                testGraph.addObjectFlow(resultSource, testAction.getSecond());
                 if (testSource == null) {
-                    testSource = testAction.result;
+                    testSource = testAction.getResult();
                 } else {
                     CallBehaviorAction callAction = 
                         testGraph.addCallBehaviorAction(
                                 getBehavior(RootNamespace.getBooleanFunctionOr()));
                     testGraph.addObjectFlow(
-                            testSource, callAction.argument.get(0));
+                            testSource, callAction.getArgument().get(0));
                     testGraph.addObjectFlow(
-                            testAction.result, callAction.argument.get(1));
-                    testSource = callAction.result.get(0);
+                            testAction.getResult(), callAction.getArgument().get(1));
+                    testSource = callAction.getResult().get(0);
                 }
             }
         }

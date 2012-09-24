@@ -20,10 +20,10 @@ import org.modeldriven.alf.mapping.fuml.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.ClassifierDefinition;
 
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Generalization;
-import fUML.Syntax.Classes.Kernel.NamedElement;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Generalization;
+import org.modeldriven.alf.uml.NamedElement;
 
 public abstract class ClassifierDefinitionMapping extends
 		NamespaceDefinitionMapping {
@@ -65,7 +65,7 @@ public abstract class ClassifierDefinitionMapping extends
             } else {
                 Classifier general = 
                     ((ClassifierDefinitionMapping)mapping).getClassifier();        
-                Generalization generalization = new Generalization();
+                Generalization generalization = this.create(Generalization.class);
                 generalization.setGeneral(general);
                 classifier.addGeneralization(generalization);                   
             }
@@ -113,16 +113,16 @@ public abstract class ClassifierDefinitionMapping extends
 	@Override
 	public String toString() {
 	    return super.toString() + (this.classifier == null? "":
-	        " isAbstract:" + this.classifier.isAbstract);
+	        " isAbstract:" + this.classifier.getIsAbstract());
 	}
 	
 	@Override
 	public void print(String prefix) {
 	    super.print(prefix);
 	    System.out.println(prefix + " classifier: " + this.classifier);
-	    if (this.classifier != null && !this.classifier.general.isEmpty()) {
+	    if (this.classifier != null && !this.classifier.getGeneral().isEmpty()) {
 	        System.out.println(prefix + " general:");
-    	    for (Classifier general: this.classifier.general) {
+    	    for (Classifier general: this.classifier.getGeneral()) {
     	        System.out.println(prefix + "  " + general);
     	    }
 	    }

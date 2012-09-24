@@ -11,4 +11,6 @@ package org.modeldriven.alf.uml;
 
 public interface EnumerationLiteral extends InstanceSpecification {
 	public Enumeration getEnumeration();
+	
+	public void setEnumeration(Enumeration enumeration);
 }
