@@ -236,7 +236,7 @@ public class ActivityGraph {
         
         Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
         writeAction.setObject(createInputPin(
-                writeAction.getName() + ".getObject()", featuringClassifier, 1, 1));
+                writeAction.getName() + ".object", featuringClassifier, 1, 1));
         writeAction.setValue(createInputPin(
                 writeAction.getName() + ".value", property.getType(), 1, 1));
         writeAction.setResult(createOutputPin(
@@ -276,7 +276,7 @@ public class ActivityGraph {
         clearAction.setName("Clear(" + association.getQualifiedName() + ")");
         clearAction.setAssociation(association);
         clearAction.setObject(createInputPin(
-                clearAction.getName() + ".getObject()", null, 1, 1));
+                clearAction.getName() + ".object", null, 1, 1));
         clearAction.getObject().setIsOrdered(false);
         this.add(clearAction);
         return clearAction;
@@ -291,7 +291,7 @@ public class ActivityGraph {
 
         Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
         clearAction.setObject(createInputPin(
-                clearAction.getName() + ".getObject()", featuringClassifier, 1, 1));
+                clearAction.getName() + ".object", featuringClassifier, 1, 1));
         clearAction.getObject().setIsOrdered(false);
         clearAction.setResult(createOutputPin(
                 clearAction.getName() + ".result", featuringClassifier, 1, 1));
@@ -390,10 +390,10 @@ public class ActivityGraph {
         loopNode.setIsTestedFirst(isTestedFirst);
         for (InputPin input: inputs) {
             String variableName = input.getName();
-            input.setName(loopNode.getName() + ".getLoopVariable()Input(" + variableName + ")");
+            input.setName(loopNode.getName() + ".loopVariableInput(" + variableName + ")");
             loopNode.addLoopVariableInput(input);
             loopNode.addLoopVariable(createOutputPin(
-                    loopNode.getName() + ".getLoopVariable()(" + variableName + ")", 
+                    loopNode.getName() + ".loopVariable()(" + variableName + ")", 
                     input.getType(), 
                     input.getLower(), 
                     input.getUpper()));
@@ -449,7 +449,7 @@ public class ActivityGraph {
                 (classifier == null? "": classifier.getName()) + ")");
         action.setClassifier(classifier);
         action.setIsDirect(isDirect);
-        action.setObject(createInputPin(action.getName() + ".getObject()", null, 1, 1));
+        action.setObject(createInputPin(action.getName() + ".object", null, 1, 1));
         action.setResult(createOutputPin(
                 action.getName() + ".result", FumlMapping.getBooleanType(), 1, 1));
         this.add(action);
@@ -489,7 +489,7 @@ public class ActivityGraph {
         readAction.setName("ReadStructuralFeature(" + property.getName() + ")");
         readAction.setStructuralFeature(property);
         readAction.setObject(createInputPin(
-                readAction.getName() + ".getObject()", 
+                readAction.getName() + ".object", 
                 property.getFeaturingClassifier().get(0), 1, 1));
         readAction.setResult(createOutputPin(
                 readAction.getName() + ".result", property.getType(), 1, 1));
@@ -530,7 +530,7 @@ public class ActivityGraph {
                 "Reclassify(" + oldClassifierList + 
                 " to " + newClassifierList + ")");
         reclassifyAction.setObject(createInputPin(
-                reclassifyAction.getName() + ".getObject()", type, 1, 1));
+                reclassifyAction.getName() + ".object", type, 1, 1));
         reclassifyAction.setIsReplaceAll(isReplaceAll);
         
         this.add(reclassifyAction);
@@ -562,7 +562,7 @@ public class ActivityGraph {
         
         Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
         removeAction.setObject(createInputPin(
-                removeAction.getName() + ".getObject()", featuringClassifier, 1, 1));
+                removeAction.getName() + ".object", featuringClassifier, 1, 1));
         removeAction.setResult(createOutputPin(
                 removeAction.getName() + ".result", featuringClassifier, 1, 1));
         
@@ -796,9 +796,9 @@ public class ActivityGraph {
                 boolean targetIsContained = isContainedIn(target, region);
                 if (sourceIsContained && targetIsContained ||
                         source instanceof ExpansionNode && 
-                            ((ExpansionNode)source).getRegionAsInput() == region ||
+                            ((ExpansionNode)source).getRegionAsInput().equals(region) ||
                         target instanceof ExpansionNode && 
-                            ((ExpansionNode)target).getRegionAsOutput() == region) {
+                            ((ExpansionNode)target).getRegionAsOutput().equals(region)) {
                     region.addEdge(edge);
                 } else if (!sourceIsContained && targetIsContained){
                     source.getOutgoing().remove(edge);
@@ -933,7 +933,7 @@ public class ActivityGraph {
                 addPin(action, this.create(InputPin.class), parameter);
             }
             if (direction.equals("out") || direction.equals("inout")
-                    || direction.equals("return_")) {
+                    || direction.equals("return")) {
                 addPin(action, this.create(OutputPin.class), parameter);
             }
         }
@@ -1000,7 +1000,7 @@ public class ActivityGraph {
         int i = 0;
         for (Parameter parameter: parameters) {
             String direction = parameter.getDirection();
-            if (direction.equals("return_")) {
+            if (direction.equals("return")) {
                 return action.getOutput().get(i);
             } else if (direction.equals("out") || direction.equals("inout")) {
                 i++;
@@ -1027,15 +1027,15 @@ public class ActivityGraph {
                 
                 // A pin that is owned by a structured activity node is
                 // considered to be "contained in" that node.
-                if (node == container) {
+                if (node.equals(container)) {
                     return true;
                 }
             }
             ActivityNode inStructuredNode = node.getInStructuredNode();
             return inStructuredNode != null && (
-                    inStructuredNode == container || 
+                    inStructuredNode.equals(container) || 
                     isContainedIn(inStructuredNode, container));
-            }
+        }
     }
     
     /**
@@ -1045,7 +1045,7 @@ public class ActivityGraph {
      */
     public static boolean isContainedIn(Pin pin, Collection<Element> elements) {
         for (Element element: elements) {
-            if (pin.getOwner() == element || 
+            if (pin.getOwner().equals(element) || 
                     element instanceof StructuredActivityNode && 
                     isContainedIn(pin, (StructuredActivityNode)element)) {
                 return true;

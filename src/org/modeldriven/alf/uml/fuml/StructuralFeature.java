@@ -14,8 +14,6 @@ public abstract class StructuralFeature extends Feature implements
 
 	public StructuralFeature(fUML.Syntax.Classes.Kernel.StructuralFeature base) {
 		super(base);
-        base.typedElement = new fUML.Syntax.Classes.Kernel.TypedElement();
-        base.multiplicityElement = new fUML.Syntax.Classes.Kernel.MultiplicityElement();
 	}
 
 	public fUML.Syntax.Classes.Kernel.StructuralFeature getBase() {
@@ -35,7 +33,7 @@ public abstract class StructuralFeature extends Feature implements
 	}
 
 	public void setType(org.modeldriven.alf.uml.Type type) {
-		this.getBase().setType(((Type) type).getBase());
+		this.getBase().setType(type==null? null: ((Type) type).getBase());
 	}
 
 	public boolean getIsOrdered() {

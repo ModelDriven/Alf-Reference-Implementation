@@ -33,7 +33,7 @@ public class Comment extends Element implements org.modeldriven.alf.uml.Comment 
 	}
 
 	public void addAnnotatedElement(org.modeldriven.alf.uml.Element annotatedElement) {
-		this.getBase().annotatedElement.add(((Element) annotatedElement).getBaseAsElement());
+		this.getBase().annotatedElement.add(annotatedElement==null? null: ((Element) annotatedElement).getBaseAsElement());
 	}
 
 	public String getBody() {

@@ -20,8 +20,10 @@ public class ElementFactory implements org.modeldriven.alf.uml.ElementFactory {
     
     public static Element newInstance(String className) {
         try {
-            return (Element)Class.forName(packageName + className).newInstance();
+            return (Element)Class.forName(packageName + "." + className).newInstance();
         } catch (Exception e) {
+            System.out.println("Could not instantiate " + 
+                    packageName + "." + className + ": " + e);
             return null;
         }
     }

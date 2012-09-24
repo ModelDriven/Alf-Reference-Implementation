@@ -32,7 +32,7 @@ public abstract class BehavioralFeature extends Feature implements
 
 	public void addOwnedParameter(org.modeldriven.alf.uml.Parameter ownedParameter) {
 		this.getBase()
-				.addOwnedParameter(((Parameter) ownedParameter).getBase());
+				.addOwnedParameter(ownedParameter==null? null: ((Parameter) ownedParameter).getBase());
 	}
 
 	public boolean getIsAbstract() {
@@ -53,7 +53,7 @@ public abstract class BehavioralFeature extends Feature implements
 	}
 
 	public void addMethod(org.modeldriven.alf.uml.Behavior method) {
-		this.getBase().addMethod(((Behavior) method).getBase());
+		this.getBase().addMethod(method==null? null: ((Behavior) method).getBase());
 	}
 
 	public String getConcurrency() {

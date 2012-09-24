@@ -37,7 +37,7 @@ public class StructuredActivityNode extends Action implements
 	}
 
 	public void addNode(org.modeldriven.alf.uml.ActivityNode node) {
-		this.getBase().addNode(((ActivityNode) node).getBase());
+		this.getBase().addNode(node==null? null: ((ActivityNode) node).getBase());
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {
@@ -62,7 +62,7 @@ public class StructuredActivityNode extends Action implements
 	}
 
 	public void addEdge(org.modeldriven.alf.uml.ActivityEdge edge) {
-		this.getBase().addEdge(((ActivityEdge) edge).getBase());
+		this.getBase().addEdge(edge==null? null: ((ActivityEdge) edge).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.OutputPin> getStructuredNodeOutput() {

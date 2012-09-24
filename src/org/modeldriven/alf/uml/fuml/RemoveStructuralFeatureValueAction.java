@@ -35,11 +35,11 @@ public class RemoveStructuralFeatureValueAction extends
 	}
 
 	public org.modeldriven.alf.uml.InputPin getRemoveAt() {
-		return new InputPin(this.getBase().removeAt);
+		return (InputPin)this.wrap(this.getBase().removeAt);
 	}
 
 	public void setRemoveAt(org.modeldriven.alf.uml.InputPin removeAt) {
-		this.getBase().setRemoveAt(((InputPin) removeAt).getBase());
+		this.getBase().setRemoveAt(removeAt==null? null: ((InputPin) removeAt).getBase());
 	}
 
 }

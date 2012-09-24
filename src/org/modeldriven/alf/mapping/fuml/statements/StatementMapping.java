@@ -175,7 +175,7 @@ public abstract class StatementMapping extends DocumentedElementMapping {
                             for (ActivityEdge incoming: input.incoming) {
                                 System.out.println("[addToNode] incoming.source=" + 
                                         incoming.source.name);
-                                if (incoming.source == flow.source) {
+                                if (incoming.source.equals(flow.source)) {
                                     pin = input;
                                     break search;
                                 }

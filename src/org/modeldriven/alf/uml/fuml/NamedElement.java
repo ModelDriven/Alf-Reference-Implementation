@@ -30,12 +30,13 @@ public abstract class NamedElement extends Element implements
 	}
 
 	public String getVisibility() {
-		return this.getBase().visibility.toString();
+		String visibility = this.getBase().visibility.toString();
+		return visibility == null? null: visibility.substring(0, visibility.length() - 1);
 	}
 
 	public void setVisibility(String visibility) {
-		this.getBase().setVisibility(
-				fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility));
+		this.getBase().setVisibility(visibility == null? null:
+				fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility + "_"));
 	}
 
 	public String getQualifiedName() {

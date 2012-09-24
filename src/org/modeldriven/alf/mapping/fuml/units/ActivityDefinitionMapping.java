@@ -146,7 +146,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         if (parameter.getDirection().equals("inout") || 
                 parameter.getDirection().equals("out")) {
             node.setName("Output(" + parameter.getName() + ")");
-        } else if (parameter.getDirection().equals("return_")) {
+        } else if (parameter.getDirection().equals("return")) {
             node.setName("Return");
         }
     }
@@ -206,7 +206,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         if (activity != null) {
             for (ActivityNode node: activity.getNode()) {
                 if (node instanceof ActivityParameterNode && 
-                        ((ActivityParameterNode)node).getParameter() == parameter &&
+                        ((ActivityParameterNode)node).getParameter().equals(parameter) &&
                         node.getOutgoing().size() > 0) {
                     return (ForkNode)node.getOutgoing().get(0).getTarget();
                 }
@@ -220,7 +220,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         if (activity != null) {
             for (ActivityNode node: activity.getNode()) {
                 if (node instanceof ActivityParameterNode && 
-                        ((ActivityParameterNode)node).getParameter() == parameter &&
+                        ((ActivityParameterNode)node).getParameter().equals(parameter) &&
                         node.getOutgoing().size() == 0) {
                     return (ActivityParameterNode)node;
                 }

@@ -293,8 +293,8 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                             this.resultSource);
                     if (this.resultSource != null) {
                         for (ExpansionNode expansionNode: region.getOutputElement()) {
-                            if (expansionNode.getIncoming().get(0).getSource() == 
-                                this.resultSource) {
+                            if (expansionNode.getIncoming().get(0).getSource().
+                                    equals(this.resultSource)) {
                                 this.resultSource = expansionNode;
                                 break;
                             }

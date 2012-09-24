@@ -24,19 +24,19 @@ public class LinkEndData extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getValue() {
-		return new InputPin(this.getBase().value);
+		return (InputPin)this.wrap(this.getBase().value);
 	}
 
 	public void setValue(org.modeldriven.alf.uml.InputPin value) {
-		this.getBase().setValue(((InputPin) value).getBase());
+		this.getBase().setValue(value==null? null: ((InputPin) value).getBase());
 	}
 
 	public org.modeldriven.alf.uml.Property getEnd() {
-		return new Property(this.getBase().end);
+		return (Property)this.wrap(this.getBase().end);
 	}
 
 	public void setEnd(org.modeldriven.alf.uml.Property end) {
-		this.getBase().setEnd(((Property) end).getBase());
+		this.getBase().setEnd(end==null? null: ((Property) end).getBase());
 	}
 
 }

@@ -5,8 +5,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@5e33d4)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@9cd7cd)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@15714c8d)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@4158c7fa)
 Executing...
 i==5: true
 ! f: true
@@ -19,8 +19,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@1a01125)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@1c59c26)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@7b1cf43)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@2a9e3ba7)
 Executing...
 c.x==2: true
 c.y[1]==1: true
@@ -41,8 +41,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@3aee8d)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@1037d90)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@787527fc)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@53944f2c)
 Executing...
 i[1]==0: true
 i[2]==5: true
@@ -58,8 +58,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@90858d)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@2ff580)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@5a9e6fe)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@557c3099)
 Executing...
 c.y[1]==4: true
 c.n[1]==4: true
@@ -75,8 +75,8 @@ Parsed tests-x/AssertList.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@1900624)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@83567f)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@2c5153e)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@58f59add)
 Executing...
 owner.name=="Jack": true
 house.id==1: true
@@ -109,8 +109,8 @@ Parsed tests-x/AssertList.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@9fad9c)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@13f199b)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@105c6e01)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@243a0c0b)
 Executing...
 employee1.id==100: true
 employee1.name=="Fred": true
@@ -140,8 +140,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@10c0251)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@16c187a)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@57148683)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@48b2f1f)
 Executing...
 s->size()==2: true
 s[1]==1: true
@@ -160,8 +160,8 @@ Parsed tests-x/AssertTrue.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@153cdfe)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@f8f3e4)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@5cb67bab)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@5071471a)
 Executing...
 b==5: true
 c==5: true
@@ -187,8 +187,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@488417)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@d81082)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@68d4d381)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@6c89efeb)
 Executing...
 i==1234: true
 j==0: true
@@ -208,8 +208,8 @@ Parsed tests-x/AssertList.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@4a2a51)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@1204187)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@12b22682)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@6dfe2a64)
 Executing...
 member.name=="A": true
 member.isActive: true
@@ -236,8 +236,8 @@ Parsed tests-x/AssertList.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@fbed37)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@192eab3)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@6117ae4e)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@59b4b4ae)
 Executing...
 i==-1: true
 j==2: true
@@ -274,8 +274,8 @@ Parsed tests-x/AssertEqual.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@8a6639)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@3d4321)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@42b556a)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@38f4a449)
 Executing...
 seq1->size()==3: true
 seq1[1]=="apple": true
@@ -327,8 +327,8 @@ Parsed tests-x/AssertFalse.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@14d3938)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@e7a6de)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@540fea97)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@60f28a9e)
 Executing...
 sum==6: true
 remainder==1: true
@@ -357,8 +357,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@105e0cf)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@ea4a0c)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@49347af5)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@1474905f)
 Executing...
 ! notEmpty: true
 ! includes: true
@@ -375,8 +375,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@17612e6)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@d2fa63)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@bceca4a)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@3542c654)
 Executing...
 super0.x==0: true
 super1.x==1: true
@@ -406,8 +406,8 @@ Parsed tests-x/AssertFalse.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@1decc3b)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@323c9a)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@13bc040)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@79caaa61)
 Executing...
 test.sig instanceof SignalTermination: true
 test.name=="Arrival1": true
@@ -423,8 +423,8 @@ Parsed tests-x/AssertTrue.alf
 Parsed tests-x/AssertFalse.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@1e2bd37)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@f49608)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@4e875fa6)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@1998b391)
 Executing...
 employee instanceof Employee: true
 ! employee hastype Staff: true
@@ -444,8 +444,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@ccf7c0)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@9d7954)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@45089c33)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@3846fbad)
 Executing...
 condition1==alert: true
 condition2==critical: true
@@ -461,8 +461,8 @@ Parsed tests-x/Write.alf
 Parsed tests-x/AssertTrue.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@1cfe2b5)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@12cfbdb)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@62df3606)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@2c53f6a0)
 Executing...
 i==1: true
 last==2: true
@@ -487,8 +487,8 @@ Parsed tests-x/AssertTrue.alf
 Parsed tests-x/Write.alf
 No constraint violations.
 Mapped successfully.
-Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(fUML.Syntax.Classes.Kernel.Class_@1c60633)
-Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(fUML.Syntax.Classes.Kernel.Class_@1c1065c)
+Instantiated Alf::Library::BasicInputOutput::StandardOutputChannel as StandardOutputChannel(org.modeldriven.alf.uml.fuml.Class_@7aa9fdfd)
+Instantiated Alf::Library::BasicInputOutput::StandardInputChannel as StandardInputChannel(org.modeldriven.alf.uml.fuml.Class_@2e622bf5)
 Executing...
 count==2: true
 checksum==1: true

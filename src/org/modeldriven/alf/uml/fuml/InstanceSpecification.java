@@ -35,7 +35,7 @@ public class InstanceSpecification extends NamedElement implements
 	}
 
 	public void addClassifier(org.modeldriven.alf.uml.Classifier classifier) {
-		this.getBase().addClassifier(((Classifier) classifier).getBase());
+		this.getBase().addClassifier(classifier==null? null: ((Classifier) classifier).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.Slot> getSlot() {
@@ -47,7 +47,7 @@ public class InstanceSpecification extends NamedElement implements
 	}
 
 	public void addSlot(org.modeldriven.alf.uml.Slot slot) {
-		this.getBase().addSlot(((Slot) slot).getBase());
+		this.getBase().addSlot(slot==null? null: ((Slot) slot).getBase());
 	}
 
 }

@@ -10,6 +10,7 @@ package org.modeldriven.alf.uml;
 
 
 public interface Parameter extends TypedElement, MultiplicityElement {
+    // Legal directions values: "in", "out", "inout" or "return"
 	public String getDirection();
 
 	public void setDirection(String direction);

@@ -13,7 +13,6 @@ public abstract class Pin extends ObjectNode implements org.modeldriven.alf.uml.
 
 	public Pin(fUML.Syntax.Actions.BasicActions.Pin base) {
 		super(base);
-        base.multiplicityElement = new fUML.Syntax.Classes.Kernel.MultiplicityElement();
 	}
 
 	public fUML.Syntax.Actions.BasicActions.Pin getBase() {

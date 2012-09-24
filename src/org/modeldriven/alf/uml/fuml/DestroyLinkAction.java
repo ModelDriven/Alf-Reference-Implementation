@@ -36,7 +36,7 @@ public class DestroyLinkAction extends WriteLinkAction implements
 	}
 
 	public void addEndData(org.modeldriven.alf.uml.LinkEndDestructionData endData) {
-		this.getBase().addEndData(((LinkEndDestructionData) endData).getBase());
+		this.getBase().addEndData(endData==null? null: ((LinkEndDestructionData) endData).getBase());
 	}
 
 }

@@ -40,11 +40,19 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
     }
 
     public Element wrap(Object base) {
+        if (base == null) {
+            return null;
+        }
         Element newInstance = ElementFactory.newInstance(base.getClass().getSimpleName());
         if (newInstance != null) {
             newInstance.setBase(base);
         }
         return newInstance;
+    }
+    
+    public boolean equals(Object other) {
+        return other instanceof Element && 
+                ((Element)other).getBase() == this.getBase();
     }
 
 	public List<org.modeldriven.alf.uml.Element> getOwnedElement() {
@@ -75,7 +83,7 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
 
 	public void addOwnedComment(org.modeldriven.alf.uml.Comment ownedComment) {
 	    if (this.isElement()) {
-	        this.getBaseAsElement().ownedComment.add(((Comment) ownedComment).getBase());
+	        this.getBaseAsElement().ownedComment.add(ownedComment==null? null: ((Comment) ownedComment).getBase());
 	    }
 	}
 

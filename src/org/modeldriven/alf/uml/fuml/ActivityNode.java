@@ -24,7 +24,7 @@ public abstract class ActivityNode extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.StructuredActivityNode getInStructuredNode() {
-		return new StructuredActivityNode(this.getBase().inStructuredNode);
+		return (StructuredActivityNode)this.wrap(this.getBase().inStructuredNode);
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {

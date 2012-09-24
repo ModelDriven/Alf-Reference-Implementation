@@ -53,7 +53,7 @@ public class ConditionalNode extends StructuredActivityNode implements
 	}
 
 	public void addClause(org.modeldriven.alf.uml.Clause clause) {
-		this.getBase().addClause(((Clause) clause).getBase());
+		this.getBase().addClause(clause==null? null: ((Clause) clause).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.OutputPin> getResult() {
@@ -66,7 +66,7 @@ public class ConditionalNode extends StructuredActivityNode implements
 	}
 
 	public void addResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().addResult(((OutputPin) result).getBase());
+		this.getBase().addResult(result==null? null: ((OutputPin) result).getBase());
 	}
 
 }

@@ -48,7 +48,7 @@ public abstract class Behavior extends Class_ implements org.modeldriven.alf.uml
 
 	public void addOwnedParameter(org.modeldriven.alf.uml.Parameter ownedParameter) {
 		this.getBase()
-				.addOwnedParameter(((Parameter) ownedParameter).getBase());
+				.addOwnedParameter(ownedParameter==null? null: ((Parameter) ownedParameter).getBase());
 	}
 
 	public org.modeldriven.alf.uml.BehavioredClassifier getContext() {

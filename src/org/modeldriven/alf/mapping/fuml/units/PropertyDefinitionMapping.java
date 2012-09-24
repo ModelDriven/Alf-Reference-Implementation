@@ -42,8 +42,7 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
         super.mapTo(property, property);
 
         PropertyDefinition definition = this.getPropertyDefinition();
-        property.setAggregation(definition.getIsComposite()? 
-                "composite": "none");
+        property.setAggregation(definition.getIsComposite()? "composite": "none");
         property.setName(property.getName());
     }
     

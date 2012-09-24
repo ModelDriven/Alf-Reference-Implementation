@@ -11,7 +11,7 @@ package org.modeldriven.alf.uml.fuml;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Namespace extends NamedElement implements
+public abstract class Namespace extends PackageableElement implements
 		org.modeldriven.alf.uml.Namespace {
 
 	public Namespace(fUML.Syntax.Classes.Kernel.Namespace base) {

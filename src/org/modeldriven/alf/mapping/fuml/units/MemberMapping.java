@@ -33,7 +33,10 @@ public abstract class MemberMapping extends DocumentedElementMapping {
         
         Member member = this.getMember();        
         namedElement.setName(member.getName());
-        namedElement.setVisibility(member.getVisibility());
+        
+        String visibility = member.getVisibility();
+        namedElement.setVisibility(
+                visibility == null || visibility.equals("")? "package": visibility);
             
     }
     

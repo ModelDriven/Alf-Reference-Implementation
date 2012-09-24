@@ -26,7 +26,7 @@ public abstract class ObjectNode extends ActivityNode implements
 	}
 
 	public void setType(org.modeldriven.alf.uml.Type type) {
-		this.getBase().setType(((Type) type).getBase());
+		this.getBase().setType(type==null? null: ((Type) type).getBase());
 	}
 
 }

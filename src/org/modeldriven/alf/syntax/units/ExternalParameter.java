@@ -16,11 +16,7 @@ public class ExternalParameter extends FormalParameter {
     public ExternalParameter(Parameter parameter) {
         super();
         
-        String direction = parameter.getDirection().toString();
-        if (direction.equals("return_")) {
-            direction = "return";
-        }
-        this.setDirection(direction);
+        this.setDirection(parameter.getDirection());
         
         ExternalElementReference typeReference = new ExternalElementReference();
         typeReference.setElement(parameter.getType());

@@ -24,12 +24,12 @@ public class InstanceValue extends ValueSpecification implements
 	}
 
 	public org.modeldriven.alf.uml.InstanceSpecification getInstance() {
-		return new InstanceSpecification(this.getBase().instance);
+		return (InstanceSpecification)this.wrap(this.getBase().instance);
 	}
 
 	public void setInstance(org.modeldriven.alf.uml.InstanceSpecification instance) {
 		this.getBase()
-				.setInstance(((InstanceSpecification) instance).getBase());
+				.setInstance(instance==null? null: ((InstanceSpecification) instance).getBase());
 	}
 
 }

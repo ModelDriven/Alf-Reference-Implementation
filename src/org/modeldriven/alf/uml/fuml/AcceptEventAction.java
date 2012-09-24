@@ -44,7 +44,7 @@ public class AcceptEventAction extends Action implements
 	}
 
 	public void addResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().addResult(((OutputPin) result).getBase());
+		this.getBase().addResult(result==null? null: ((OutputPin) result).getBase());
 	}
 
 	public List<org.modeldriven.alf.uml.Trigger> getTrigger() {
@@ -57,7 +57,7 @@ public class AcceptEventAction extends Action implements
 	}
 
 	public void addTrigger(org.modeldriven.alf.uml.Trigger trigger) {
-		this.getBase().addTrigger(((Trigger) trigger).getBase());
+		this.getBase().addTrigger(trigger==null? null: ((Trigger) trigger).getBase());
 	}
 
 }

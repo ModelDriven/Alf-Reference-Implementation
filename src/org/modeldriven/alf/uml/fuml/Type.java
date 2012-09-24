@@ -9,7 +9,7 @@
 package org.modeldriven.alf.uml.fuml;
 
 
-public abstract class Type extends PackageableElement implements
+public abstract class Type extends Namespace implements
 		org.modeldriven.alf.uml.Type {
 
 	public Type(fUML.Syntax.Classes.Kernel.Type base) {
@@ -21,7 +21,7 @@ public abstract class Type extends PackageableElement implements
 	}
 
 	public org.modeldriven.alf.uml.Package getPackage() {
-		return new Package(this.getBase().package_);
+		return (Package)this.wrap(this.getBase().package_);
 	}
 
 }

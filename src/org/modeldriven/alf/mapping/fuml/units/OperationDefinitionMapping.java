@@ -174,7 +174,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 
                 Parameter returnParameter = null;
                 for (Parameter parameter: activity.getOwnedParameter()) {
-                    if (parameter.getDirection().equals("return_")) {
+                    if (parameter.getDirection().equals("return")) {
                         returnParameter = parameter;
                         break;
                     }
@@ -244,7 +244,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
     public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
         if (!(element instanceof Parameter)) {
             this.throwError("Member not a parameter: " + element);
-        } else if (!((Parameter)element).getDirection().equals("return_")) {
+        } else if (!((Parameter)element).getDirection().equals("return")) {
             // Note: An operation is a namespace in full UML, but not in fUML,
             // so the "namespace" parameter actually has the type "NamedElement".
             ((Operation)namespace).addOwnedParameter((Parameter)element);

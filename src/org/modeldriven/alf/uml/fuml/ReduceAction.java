@@ -28,23 +28,23 @@ public class ReduceAction extends Action implements
 	}
 
 	public void setReducer(org.modeldriven.alf.uml.Behavior reducer) {
-		this.getBase().setReducer(((Behavior) reducer).getBase());
+		this.getBase().setReducer(reducer==null? null: ((Behavior) reducer).getBase());
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return new OutputPin(this.getBase().result);
+		return (OutputPin)this.wrap(this.getBase().result);
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().setResult(((OutputPin) result).getBase());
+		this.getBase().setResult(result==null? null: ((OutputPin) result).getBase());
 	}
 
 	public org.modeldriven.alf.uml.InputPin getCollection() {
-		return new InputPin(this.getBase().collection);
+		return (InputPin)this.wrap(this.getBase().collection);
 	}
 
 	public void setCollection(org.modeldriven.alf.uml.InputPin collection) {
-		this.getBase().setCollection(((InputPin) collection).getBase());
+		this.getBase().setCollection(collection==null? null: ((InputPin) collection).getBase());
 	}
 
 	public boolean getIsOrdered() {

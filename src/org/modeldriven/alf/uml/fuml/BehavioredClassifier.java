@@ -33,7 +33,7 @@ public abstract class BehavioredClassifier extends Classifier implements
 	}
 
 	public void addOwnedBehavior(org.modeldriven.alf.uml.Behavior ownedBehavior) {
-		this.getBase().addOwnedBehavior(((Behavior) ownedBehavior).getBase());
+		this.getBase().addOwnedBehavior(ownedBehavior==null? null: ((Behavior) ownedBehavior).getBase());
 	}
 
 	public org.modeldriven.alf.uml.Behavior getClassifierBehavior() {

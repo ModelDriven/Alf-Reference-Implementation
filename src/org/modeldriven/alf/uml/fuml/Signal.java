@@ -33,7 +33,7 @@ public class Signal extends Classifier implements org.modeldriven.alf.uml.Signal
 	}
 
 	public void addOwnedAttribute(org.modeldriven.alf.uml.Property ownedAttribute) {
-		this.getBase().addOwnedAttribute(((Property) ownedAttribute).getBase());
+		this.getBase().addOwnedAttribute(ownedAttribute==null? null: ((Property) ownedAttribute).getBase());
 	}
 
 }

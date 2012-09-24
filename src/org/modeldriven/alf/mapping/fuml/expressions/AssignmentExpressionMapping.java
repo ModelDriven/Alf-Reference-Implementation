@@ -418,9 +418,9 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 	        ActivityGraph graph,
 	        ActivityNode objectSource,
 	        ActivityNode valueSource,
-	        FumlMapping self)
+	        FumlMapping mapping)
 	    throws MappingError {
-	    ActivityGraph subgraph = self.createActivityGraph();
+	    ActivityGraph subgraph = mapping.createActivityGraph();
 	    
 	    // Create write action for the property.  
         AddStructuralFeatureValueAction writeAction = 
@@ -481,8 +481,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 LoopNode loopNode = graph.addLoopNode(
                         "Iterate(" + writeAction.getName() + ")", true, 
                         objectInputPin, valueInputPin);
-                graph.addObjectFlow(objectSource, loopNode.getLoopVariable().get(0));
-                graph.addObjectFlow(valueSource, loopNode.getLoopVariable().get(1));
+                graph.addObjectFlow(objectSource, loopNode.getLoopVariableInput().get(0));
+                graph.addObjectFlow(valueSource, loopNode.getLoopVariableInput().get(1));
                 
                 ActivityNode valueFork = subgraph.addForkNode("Fork(value)");
                 ValueSpecificationAction value1Action = 
@@ -506,7 +506,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                         loopNode, subgraph.getModelElements(), 
                         writeAction.getResult(), removeAction.getResult().get(0));
                 
-                subgraph = self.createActivityGraph();
+                subgraph = mapping.createActivityGraph();
                 CallBehaviorAction testAction = subgraph.addCallBehaviorAction(
                         getBehavior(RootNamespace.getSequenceFunctionNotEmpty()));
                 subgraph.addObjectFlow(valueFork, testAction.getArgument().get(0));

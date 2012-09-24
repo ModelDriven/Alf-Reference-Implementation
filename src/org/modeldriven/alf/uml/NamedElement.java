@@ -14,6 +14,7 @@ public interface NamedElement extends Element {
 
 	public void setName(String name);
 
+	// Legal visibility values: "public", "private", "protected", "package"
 	public String getVisibility();
 
 	public void setVisibility(String visibility);
