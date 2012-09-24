@@ -15,11 +15,11 @@ import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
 import org.modeldriven.alf.syntax.units.EnumerationDefinition;
 
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Enumeration;
-import fUML.Syntax.Classes.Kernel.EnumerationLiteral;
-import fUML.Syntax.Classes.Kernel.NamedElement;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Enumeration;
+import org.modeldriven.alf.uml.EnumerationLiteral;
+import org.modeldriven.alf.uml.NamedElement;
 
 public class EnumerationDefinitionMapping extends ClassifierDefinitionMapping {
     
@@ -39,7 +39,7 @@ public class EnumerationDefinitionMapping extends ClassifierDefinitionMapping {
 
     @Override
     public Classifier mapClassifier() {
-        return new Enumeration();
+        return this.create(Enumeration.class);
     }
 
     @Override

@@ -21,11 +21,11 @@ import org.modeldriven.alf.syntax.expressions.IncrementOrDecrementExpression;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
+import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.ValueSpecificationAction;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.ForkNode;
+import org.modeldriven.alf.uml.Behavior;
 
 public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
     
@@ -77,8 +77,8 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
         ValueSpecificationAction valueAction = 
             this.graph.addNaturalValueSpecificationAction(1);
         this.graph.addObjectFlow(
-                valueAction.result, 
-                this.action.argument.get(1));
+                valueAction.getResult(), 
+                this.action.getArgument().get(1));
 
         this.operandExpression = operand.getImpl().getExpression();
         FumlMapping mapping = this.fumlMap(operandExpression);
@@ -100,20 +100,20 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
                 lhsMapping.setObjectSource(operandMapping.getObjectSource());
                 this.graph.addAll(lhsMapping.getGraph());
                 this.graph.addObjectFlow(
-                        this.action.result.get(0),
+                        this.action.getResult().get(0),
                         lhsMapping.getAssignmentTarget());
                 
                 ActivityNode operandResultSource = operandMapping.getResultSource();
                 if (expression.getIsPrefix()) {
                     this.graph.addObjectFlow(
-                            operandResultSource, this.action.argument.get(0));
+                            operandResultSource, this.action.getArgument().get(0));
                     this.resultSource = lhsMapping.getResultSource();
                 } else {
                     ForkNode forkNode = this.graph.addForkNode(
-                            "Fork(" + operandResultSource.name + ")");
+                            "Fork(" + operandResultSource.getName() + ")");
                     this.graph.addObjectFlow(operandResultSource, forkNode);
                     this.graph.addObjectFlow(
-                            forkNode, this.action.argument.get(0));
+                            forkNode, this.action.getArgument().get(0));
                     this.resultSource = forkNode;
                 }
                 

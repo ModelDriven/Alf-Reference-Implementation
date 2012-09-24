@@ -22,14 +22,7 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.SequenceRange;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.LoopNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 public class SequenceRangeMapping extends SequenceElementsMapping {
 
@@ -113,11 +106,11 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
 	        ActivityNode resultSource1,
 	        ActivityNode resultSource2,
 	        String label) throws MappingError {
-        InputPin rangeLowerInputPin = ActivityGraph.createInputPin(
+        InputPin rangeLowerInputPin = graph.createInputPin(
                 "rangeLower", getIntegerType(), 1, 1);
-        InputPin rangeUpperInputPin = ActivityGraph.createInputPin(
+        InputPin rangeUpperInputPin = graph.createInputPin(
                 "rangeUpper", getIntegerType(), 1, 1);
-        InputPin accumulatorInputPin = ActivityGraph.createInputPin(
+        InputPin accumulatorInputPin = graph.createInputPin(
                 "range", getIntegerType(), 0, -1);
         
         graph.addObjectFlow(
@@ -132,31 +125,31 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
                 rangeLowerInputPin, rangeUpperInputPin, accumulatorInputPin);
         
         // Test if counter is still less than the range upper limit.
-        ActivityGraph loopGraph = new ActivityGraph();
+        ActivityGraph loopGraph = new ActivityGraph(graph.getElementFactory());
         ForkNode fork0 = loopGraph.addForkNode(
-                "Fork(" + loopNode.loopVariable.get(0).name + ")");
+                "Fork(" + loopNode.getLoopVariable().get(0).getName() + ")");
         ForkNode fork1 = loopGraph.addForkNode(
-                "Fork(" + loopNode.loopVariable.get(1).name + ")");
+                "Fork(" + loopNode.getLoopVariable().get(1).getName() + ")");
         ForkNode fork2 = loopGraph.addForkNode(
-                "Fork(" + loopNode.loopVariable.get(2).name + ")");
-        loopGraph.addObjectFlow(loopNode.loopVariable.get(0), fork0);
-        loopGraph.addObjectFlow(loopNode.loopVariable.get(1), fork1);
-        loopGraph.addObjectFlow(loopNode.loopVariable.get(2), fork2);
+                "Fork(" + loopNode.getLoopVariable().get(2).getName() + ")");
+        loopGraph.addObjectFlow(loopNode.getLoopVariable().get(0), fork0);
+        loopGraph.addObjectFlow(loopNode.getLoopVariable().get(1), fork1);
+        loopGraph.addObjectFlow(loopNode.getLoopVariable().get(2), fork2);
         
         CallBehaviorAction testCall = 
             loopGraph.addCallBehaviorAction(getBehavior(
                     RootNamespace.getIntegerFunctionLessThanOrEqual()));
         loopGraph.addObjectFlow(
-                fork0, testCall.argument.get(0));
+                fork0, testCall.getArgument().get(0));
         loopGraph.addObjectFlow(
-                fork1, testCall.argument.get(1));
+                fork1, testCall.getArgument().get(1));
         
         graph.addLoopTest(
                 loopNode, 
                 loopGraph.getModelElements(), 
-                testCall.result.get(0));
+                testCall.getResult().get(0));
         
-        loopGraph = new ActivityGraph();
+        loopGraph = new ActivityGraph(graph.getElementFactory());
         
         // Increment the counter.
         ValueSpecificationAction valueOne =
@@ -165,41 +158,41 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
             loopGraph.addCallBehaviorAction(getBehavior(
                     RootNamespace.getIntegerFunctionPlus()));
         loopGraph.addObjectFlow(
-                fork0, incrementCall.argument.get(0));
+                fork0, incrementCall.getArgument().get(0));
         loopGraph.addObjectFlow(
-                valueOne.result, incrementCall.argument.get(1));
+                valueOne.getResult(), incrementCall.getArgument().get(1));
         
         // Preserve the range upper bound.
         StructuredActivityNode node =
             loopGraph.addStructuredActivityNode(
-                    "Node(" + loopNode.loopVariable.get(1).name, 
+                    "Node(" + loopNode.getLoopVariable().get(1).getName(), 
                     new ArrayList<Element>());
-        node.addStructuredNodeInput(ActivityGraph.createInputPin(
-                node.name + ".input", getIntegerType(), 1, 1));
-        node.addStructuredNodeOutput(ActivityGraph.createOutputPin(
-                node.name + ".output", getIntegerType(), 1, 1));
-        node.addEdge(ActivityGraph.createObjectFlow(
-                node.structuredNodeInput.get(0), 
-                node.structuredNodeOutput.get(0)));
-        loopGraph.addObjectFlow(fork1, node.structuredNodeInput.get(0));
+        node.addStructuredNodeInput(graph.createInputPin(
+                node.getName() + ".input", getIntegerType(), 1, 1));
+        node.addStructuredNodeOutput(graph.createOutputPin(
+                node.getName() + ".output", getIntegerType(), 1, 1));
+        node.addEdge(graph.createObjectFlow(
+                node.getStructuredNodeInput().get(0), 
+                node.getStructuredNodeOutput().get(0)));
+        loopGraph.addObjectFlow(fork1, node.getStructuredNodeInput().get(0));
         
         // Append the counter to the list.
         CallBehaviorAction appendCall =
             loopGraph.addCallBehaviorAction(getBehavior(
                     RootNamespace.getSequenceFunctionIncluding()));
         loopGraph.addObjectFlow(
-                loopNode.loopVariable.get(2), appendCall.argument.get(0));
+                loopNode.getLoopVariable().get(2), appendCall.getArgument().get(0));
         loopGraph.addObjectFlow(
-                fork0, appendCall.argument.get(1));
+                fork0, appendCall.getArgument().get(1));
         
         graph.addLoopBodyPart(
                 loopNode, 
                 loopGraph.getModelElements(), 
-                incrementCall.result.get(0), 
-                node.structuredNodeOutput.get(0), 
-                appendCall.result.get(0));
+                incrementCall.getResult().get(0), 
+                node.getStructuredNodeOutput().get(0), 
+                appendCall.getResult().get(0));
         
-        return loopNode.result.get(2);
+        return loopNode.getResult().get(2);
 	}
 
 } // SequenceRangeMapping

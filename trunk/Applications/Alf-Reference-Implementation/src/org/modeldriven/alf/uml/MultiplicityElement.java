@@ -19,8 +19,12 @@ public interface MultiplicityElement extends Element {
 	public void setIsUnique(boolean isUnique);
 
 	public int getUpper();
+	
+	public void setUpper(int upper);
 
 	public int getLower();
+	
+	public void setLower(int lower);
 
 	public ValueSpecification getUpperValue();
 

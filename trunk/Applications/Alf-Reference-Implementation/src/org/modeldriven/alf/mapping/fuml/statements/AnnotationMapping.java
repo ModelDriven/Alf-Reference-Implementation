@@ -14,7 +14,7 @@ import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 
 import org.modeldriven.alf.syntax.statements.Annotation;
 
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.List;

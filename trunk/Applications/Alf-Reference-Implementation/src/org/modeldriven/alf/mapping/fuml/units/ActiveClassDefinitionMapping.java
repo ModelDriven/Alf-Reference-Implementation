@@ -18,12 +18,7 @@ import org.modeldriven.alf.mapping.fuml.units.ClassDefinitionMapping;
 import org.modeldriven.alf.syntax.units.ActiveClassDefinition;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 
-import fUML.Syntax.Classes.Kernel.Class_;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
-import fUML.Syntax.CommonBehaviors.Communications.Reception;
+import org.modeldriven.alf.uml.*;
 
 public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
     
@@ -63,9 +58,9 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
                 Behavior behavior = ((ActivityDefinitionMapping)mapping).getBehavior();
     
                 // Give the classifier behavior a name to aid in execution tracing.
-                if (behavior.name == null || behavior.name.equals("")) {
+                if (behavior.getName() == null || behavior.getName().equals("")) {
                     behavior.setName(makeDistinguishableName(
-                            definition, class_.name + "$classifierBehavior"));
+                            definition, class_.getName() + "$classifierBehavior"));
                 }
 
                 class_.addOwnedBehavior(behavior);
@@ -85,7 +80,7 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
         
         if (element instanceof Reception) {
           class_.addOwnedReception((Reception)element);
-        } else if (element != class_.classifierBehavior){
+        } else if (element != class_.getClassifierBehavior()){
           super.addMemberTo(element, namespace);
         }
     }

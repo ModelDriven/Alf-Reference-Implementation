@@ -21,9 +21,9 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.SuperInvocationExpression;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Classes.Kernel.Operation;
+import org.modeldriven.alf.uml.Action;
+import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.Operation;
 
 public class SuperInvocationExpressionMapping extends
 		InvocationExpressionMapping {
@@ -46,10 +46,10 @@ public class SuperInvocationExpressionMapping extends
         if (mapping instanceof OperationDefinitionMapping) {
             Operation operation =
                 ((OperationDefinitionMapping)mapping).getOperation();
-            if (operation.method.isEmpty()) {
+            if (operation.getMethod().isEmpty()) {
                 this.throwError("No method for: " + operation);
             } else {
-                action = this.graph.addCallBehaviorAction(operation.method.get(0));
+                action = this.graph.addCallBehaviorAction(operation.getMethod().get(0));
                 this.resultSource = ActivityGraph.getReturnPin(action);
             }
         } else {

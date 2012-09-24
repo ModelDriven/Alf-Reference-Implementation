@@ -22,8 +22,8 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.ExtentOrExpression;
 import org.modeldriven.alf.syntax.expressions.SequenceReductionExpression;
 
-import fUML.Syntax.Actions.CompleteActions.ReduceAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.ReduceAction;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class SequenceReductionExpressionMapping extends ExpressionMapping {
     
@@ -63,7 +63,7 @@ public class SequenceReductionExpressionMapping extends ExpressionMapping {
                 this.graph.addAll(expressionMapping.getGraph());
                 this.graph.addObjectFlow(
                         expressionMapping.getResultSource(), 
-                        this.action.collection);
+                        this.action.getCollection());
             }
         }
     }
@@ -78,7 +78,7 @@ public class SequenceReductionExpressionMapping extends ExpressionMapping {
     
     @Override
     public ActivityNode getResultSource() throws MappingError {
-        return this.getAction().result;
+        return this.getAction().getResult();
     }
 
     @Override
@@ -97,8 +97,8 @@ public class SequenceReductionExpressionMapping extends ExpressionMapping {
 	    
 	    if (this.action != null) {
 	        System.out.println(prefix + " action: " + this.action);
-	        System.out.println(prefix + " isOrdered: " + this.action.isOrdered);
-	        System.out.println(prefix + " reducer:" + this.action.reducer);
+	        System.out.println(prefix + " isOrdered: " + this.action.getIsOrdered());
+	        System.out.println(prefix + " reducer:" + this.action.getReducer());
 	    }
 	    
 	    SequenceReductionExpression expression = 

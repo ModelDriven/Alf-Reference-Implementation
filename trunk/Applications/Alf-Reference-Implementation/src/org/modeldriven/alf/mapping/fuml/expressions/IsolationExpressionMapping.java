@@ -18,8 +18,8 @@ import org.modeldriven.alf.mapping.fuml.expressions.UnaryExpressionMapping;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.IsolationExpression;
 
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
+import org.modeldriven.alf.uml.OutputPin;
+import org.modeldriven.alf.uml.StructuredActivityNode;
 
 public class IsolationExpressionMapping extends UnaryExpressionMapping {
 
@@ -48,11 +48,11 @@ public class IsolationExpressionMapping extends UnaryExpressionMapping {
                     "IsolationExpression@" + expression.getId(), 
                     operandMapping.getModelElements());
             node.setMustIsolate(true);
-            OutputPin outputPin = ActivityGraph.createOutputPin(
-                    node.name + ".output", operandMapping.getType(), 
+            OutputPin outputPin = this.graph.createOutputPin(
+                    node.getName() + ".output", operandMapping.getType(), 
                     operand.getLower(), operand.getUpper());
             node.addStructuredNodeOutput(outputPin);
-            node.addEdge(ActivityGraph.createObjectFlow(
+            node.addEdge(this.graph.createObjectFlow(
                     operandMapping.getResultSource(), outputPin));
             
             this.action = node;

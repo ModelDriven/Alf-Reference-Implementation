@@ -29,30 +29,13 @@ import org.modeldriven.alf.syntax.expressions.FeatureReference;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.BasicActions.CallOperationAction;
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Actions.BasicActions.SendSignalAction;
-import fUML.Syntax.Actions.IntermediateActions.DestroyObjectAction;
-import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
-import fUML.Syntax.Actions.IntermediateActions.TestIdentityAction;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionNode;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Operation;
-import fUML.Syntax.Classes.Kernel.Property;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
-import fUML.Syntax.CommonBehaviors.Communications.Signal;
+import org.modeldriven.alf.uml.*;
 
 public abstract class InvocationExpressionMapping extends ExpressionMapping {
 
     protected Action action = null;
     protected ActivityNode resultSource = null;
-    private ActivityGraph lhsGraph = new ActivityGraph();
+    private ActivityGraph lhsGraph = this.createActivityGraph();
     private Map<String, ActivityNode> assignedValueSourceMap = null;
 
     /**
@@ -229,7 +212,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                 Property associationEnd = 
                     ((PropertyDefinitionMapping) mapping).getProperty();
                 action = this.graph.addReadLinkAction(associationEnd);
-                this.resultSource = action.output.get(0);
+                this.resultSource = action.getOutput().get(0);
                 
             } else {
                 this.throwError("Unknown referent mapping: " + 
@@ -252,7 +235,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                 ActivityNode targetNode = null;
                 if (action instanceof CallOperationAction) {
                     CallOperationAction callAction = (CallOperationAction) action;
-                    targetNode = callAction.target;
+                    targetNode = callAction.getTarget();
                     
                     if (expression.getIsDestructor()) {
                         ActivityNode targetPin = targetNode;
@@ -262,8 +245,8 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                         
                         DestroyObjectAction destroyAction = 
                             this.graph.addDestroyObjectAction(
-                                    callAction.operation.class_);                    
-                        targetPin = destroyAction.target;
+                                    callAction.getOperation().getClass_());                    
+                        targetPin = destroyAction.getTarget();
                         
                         this.graph.addControlFlow(action, destroyAction);
                         
@@ -280,18 +263,18 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                     // NOTE: The type of the target pin must be properly set to
                     // satisfy the fUML constraint that the type of this pin has a
                     // reception for the signal being sent.
-                    sendAction.target.setType(((ExpressionMapping)mapping).getType());
+                    sendAction.getTarget().setType(((ExpressionMapping)mapping).getType());
                     
-                    targetNode = sendAction.target;
+                    targetNode = sendAction.getTarget();
                     
                 } else if (action instanceof DestroyObjectAction) {
                     DestroyObjectAction destroyAction = (DestroyObjectAction) action;
                     if (expression.getImpl().isContainedInDestructor()) {
-                        targetNode = new ForkNode();
+                        targetNode = this.create(ForkNode.class);
                         targetNode.setName("Fork");
-                        this.addDestroyCheck(targetNode, destroyAction.target);
+                        this.addDestroyCheck(targetNode, destroyAction.getTarget());
                     } else {
-                        targetNode = destroyAction.target;
+                        targetNode = destroyAction.getTarget();
                     }
                 }
     
@@ -302,15 +285,15 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                     // Wrap the invocation action and input arguments mapping
                     // in an expansion region.
                     Collection<Element> elements = this.graph.getModelElements();
-                    this.graph = new ActivityGraph();
+                    this.graph = this.createActivityGraph();
                     ExpansionRegion region = this.graph.addExpansionRegion(
-                            "Collect(" + action.name + ")", 
-                            ExpansionKind.parallel, 
+                            "Collect(" + action.getName() + ")", 
+                            "parallel", 
                             elements, featureResult, targetNode, 
                             this.resultSource);
                     if (this.resultSource != null) {
-                        for (ExpansionNode expansionNode: region.outputElement) {
-                            if (expansionNode.incoming.get(0).source == 
+                        for (ExpansionNode expansionNode: region.getOutputElement()) {
+                            if (expansionNode.getIncoming().get(0).getSource() == 
                                 this.resultSource) {
                                 this.resultSource = expansionNode;
                                 break;
@@ -323,7 +306,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                     // region.
                     ActivityNode featureNode = 
                             this.graph.addStructuredActivityNode(
-                                    "Feature(" + featureResult.name + ")", 
+                                    "Feature(" + featureResult.getName() + ")", 
                                     mapping.getModelElements());
                     this.graph.addControlFlow(featureNode, region);
 
@@ -350,13 +333,13 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         throws MappingError {
         ReadSelfAction readSelf = this.graph.addReadSelfAction(null);        
         TestIdentityAction testAction = 
-            this.graph.addTestIdentityAction("self==" + targetNode.name);
+            this.graph.addTestIdentityAction("self==" + targetNode.getName());
         
-        this.graph.addObjectFlow(readSelf.result, testAction.first);
-        this.graph.addObjectFlow(targetNode, testAction.second);
+        this.graph.addObjectFlow(readSelf.getResult(), testAction.getFirst());
+        this.graph.addObjectFlow(targetNode, testAction.getSecond());
 
         this.graph.addObjectDecisionNode("destroy check", 
-                targetNode, testAction.result, targetPin, null);
+                targetNode, testAction.getResult(), targetPin, null);
     }
 
     public Action getAction() throws MappingError {
@@ -419,22 +402,22 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
             System.out.println(prefix + " action: " + action);
             Element invocationAction = this.action;
             if (action instanceof ExpansionRegion) {
-                ExpansionNode inputNode = ((ExpansionRegion) action).inputElement.get(0);
-                ActivityNode target = inputNode.outgoing.get(0).target;
+                ExpansionNode inputNode = ((ExpansionRegion) action).getInputElement().get(0);
+                ActivityNode target = inputNode.getOutgoing().get(0).getTarget();
                 if (target instanceof ForkNode) {
-                    target = target.outgoing.get(0).target;
+                    target = target.getOutgoing().get(0).getTarget();
                 }
-                invocationAction = ((InputPin) target).owner;
+                invocationAction = ((InputPin) target).getOwner();
             }
             if (invocationAction instanceof CallOperationAction) {
                 System.out.println(prefix + " operation: "
-                        + ((CallOperationAction) invocationAction).operation);
+                        + ((CallOperationAction) invocationAction).getOperation());
             } else if (invocationAction instanceof SendSignalAction) {
                 System.out.println(prefix + " signal: " + 
-                        ((SendSignalAction) invocationAction).signal);
+                        ((SendSignalAction) invocationAction).getSignal());
             } else if (invocationAction instanceof CallBehaviorAction) {
                 System.out.println(prefix + " behavior: " + 
-                        ((CallBehaviorAction) invocationAction).behavior);
+                        ((CallBehaviorAction) invocationAction).getBehavior());
             }
         }
     }

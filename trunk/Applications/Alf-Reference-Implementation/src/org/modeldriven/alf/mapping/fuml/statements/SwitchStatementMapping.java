@@ -20,10 +20,7 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.SwitchClause;
 import org.modeldriven.alf.syntax.statements.SwitchStatement;
 
-import fUML.Syntax.Activities.CompleteStructuredActivities.Clause;
-import fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,8 +58,8 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         
         SwitchStatement statement = this.getSwitchStatement();
 
-        ActivityGraph graph = new ActivityGraph();
-        ConditionalNode node = new ConditionalNode();
+        ActivityGraph graph = this.createActivityGraph();
+        ConditionalNode node = this.create(ConditionalNode.class);
         node.setName("Conditional(SwitchStatement@" + statement.getId() + ")");
         graph.add(node);
         
@@ -78,7 +75,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
             ActivityNode resultSource = expressionMapping.getResultSource();
             graph.addAll(expressionMapping.getGraph());
             ActivityNode forkNode = 
-                graph.addForkNode("Fork(" + resultSource.name + ")");
+                graph.addForkNode("Fork(" + resultSource.getName() + ")");
             graph.addObjectFlow(resultSource, forkNode);
             
             for (SwitchClause switchClause: statement.getNonDefaultClause()) {
@@ -118,7 +115,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         StructuredActivityNode structuredNode = 
             (StructuredActivityNode)this.getElement();
         ConditionalNode conditionalNode = null;
-        for (ActivityNode node: structuredNode.node) {
+        for (ActivityNode node: structuredNode.getNode()) {
             if (node instanceof ConditionalNode) {
                 conditionalNode = (ConditionalNode)node;
                 break;
@@ -126,8 +123,8 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         }
         return super.toString() + 
             (conditionalNode == null? "": 
-                " isDeterminate:" + conditionalNode.isDeterminate + 
-                " isAssured:" + conditionalNode.isAssured);
+                " isDeterminate:" + conditionalNode.getIsDeterminate() + 
+                " isAssured:" + conditionalNode.getIsAssured());
     }
     
     @Override

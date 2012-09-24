@@ -34,7 +34,7 @@ public class BreakStatementMapping extends StatementMapping {
             this.throwError("Error mapping target statement: " + 
                     mapping.getErrorMessage());
         } else {
-            this.add(ActivityGraph.createControlFlow(
+            this.add(this.graph.createControlFlow(
                     this.node, 
                     ((LoopStatementMapping)mapping).getFinalNode()));
         }

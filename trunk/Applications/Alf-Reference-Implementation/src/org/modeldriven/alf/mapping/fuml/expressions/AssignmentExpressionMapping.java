@@ -25,20 +25,19 @@ import org.modeldriven.alf.syntax.expressions.LeftHandSide;
 import org.modeldriven.alf.syntax.expressions.SequenceConstructionExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.BasicActions.CallOperationAction;
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Actions.IntermediateActions.AddStructuralFeatureValueAction;
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.LoopNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.DataType;
-import fUML.Syntax.Classes.Kernel.Property;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
+import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.CallOperationAction;
+import org.modeldriven.alf.uml.InputPin;
+import org.modeldriven.alf.uml.AddStructuralFeatureValueAction;
+import org.modeldriven.alf.uml.ValueSpecificationAction;
+import org.modeldriven.alf.uml.LoopNode;
+import org.modeldriven.alf.uml.StructuredActivityNode;
+import org.modeldriven.alf.uml.ExpansionRegion;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.DataType;
+import org.modeldriven.alf.uml.Property;
+import org.modeldriven.alf.uml.Behavior;
 
 public class AssignmentExpressionMapping extends ExpressionMapping {
     
@@ -64,7 +63,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * and the result of that invocation acts as the result source element for
      * the right-hand side, unless bit string conversion is also require. If bit
      * string conversion is required, then either the result source element of
-     * the argument expression or the result of the toSequence invocation, if
+     * the.getArgument() expression or the result of the toSequence invocation, if
      * collection conversion was required, is connected by an object flow to an
      * invocation of the BitStringFunctions::ToBitString function, and the
      * result of that invocation acts as the result source element for the
@@ -84,10 +83,10 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * assignment maps to a call behavior action for the library behavior
      * Alf::Library::SequenceFunctions::ReplaceAt. The assigned source for the
      * name from the left-hand side is connected by an object flow to the seq
-     * argument input pin of the call behavior action. The result source element
+     *.getArgument() input pin of the call behavior action. The result source element
      * from the mapping of the right-hand side is connected to the element
-     * argument input pin and the result source element from the mapping of the
-     * index expression is connected to the index argument input pin. The seq
+     *.getArgument() input pin and the result source element from the mapping of the
+     * index expression is connected to the index.getArgument() input pin. The seq
      * output pin of the call behavior action is connected by an object flow to
      * a fork node, which is the result source element for the assignment
      * expression and also the source for the assigned value for the name after
@@ -185,7 +184,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * 14. A compound assignment is mapped like a simple assignment expression
      * for which the assigned value is the result of a call behavior action for
      * the primitive behavior corresponding to the compound assignment operator.
-     * The arguments to the call behavior action come from the result source
+     * The.getArgument()s to the call behavior action come from the result source
      * elements of the mapping of the effective expression for the left-hand
      * side and the right-hand side expression. However, if the left-hand side
      * is a property reference, then the primary expression for the reference
@@ -213,7 +212,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                         mapping.getErrorMessage());
             } else {
                 ExpressionMapping rhsMapping = (ExpressionMapping)mapping;
-                ActivityGraph rhsSubgraph = new ActivityGraph(rhsMapping.getGraph());
+                ActivityGraph rhsSubgraph = this.createActivityGraph(rhsMapping.getGraph());
                 ActivityNode rhsResultSource = rhsMapping.getResultSource();
                 if (rhsResultSource != null) {
                     if (!assignmentExpression.getIsSimple()) {
@@ -236,7 +235,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                                         this.getCompoundExpressionBehavior());
                             this.graph.addObjectFlow(
                                     this.lhsExpressionMapping.getResultSource(), 
-                                    this.callAction.argument.get(0));
+                                    this.callAction.getArgument().get(0));
 
                             // Apply bit string conversion to the right-hand
                             // side, if necessary.
@@ -246,14 +245,14 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                                     rhsResultSource, 
                                     null, false, 
                                     rhsType != null && rhsType.getImpl().isInteger() && 
-                                    this.callAction.argument.get(1).
-                                        typedElement.type == getBitStringType());
+                                    this.callAction.getArgument().get(1).getType() 
+                                        == getBitStringType());
                             
                             this.graph.addObjectFlow(
                                     rhsResultSource,
-                                    this.callAction.argument.get(1));
+                                    this.callAction.getArgument().get(1));
                             
-                            rhsResultSource = this.callAction.result.get(0);                                
+                            rhsResultSource = this.callAction.getResult().get(0);                                
                         }
                     }
                     
@@ -356,7 +355,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 	    }
 	    
 	    if (this.callAction != null) {
-	        System.out.println(prefix + " behavior: " + callAction.behavior);
+	        System.out.println(prefix + " behavior: " + callAction.getBehavior());
 	    }
 	    
 	    AssignmentExpression assignmentExpression = this.getAssignmentExpression();
@@ -398,8 +397,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                                     ((OperationDefinitionMapping)mapping).
                                         getOperation());
                         subgraph.addObjectFlow(
-                                rhsResultSource, callAction.argument.get(0));
-                        rhsResultSource = callAction.result.get(0);
+                                rhsResultSource, callAction.getArgument().get(0));
+                        rhsResultSource = callAction.getResult().get(0);
                     }
                 }
             }
@@ -407,8 +406,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
                         getBehavior(RootNamespace.getBitStringFunctionToBitString()));
                 subgraph.addObjectFlow(
-                        rhsResultSource, callAction.argument.get(0));
-                rhsResultSource = callAction.result.get(0);
+                        rhsResultSource, callAction.getArgument().get(0));
+                rhsResultSource = callAction.getResult().get(0);
             }
         }
         return rhsResultSource;
@@ -418,56 +417,56 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 	        Property property,
 	        ActivityGraph graph,
 	        ActivityNode objectSource,
-	        ActivityNode valueSource)
+	        ActivityNode valueSource,
+	        FumlMapping self)
 	    throws MappingError {
-	    ActivityGraph subgraph = new ActivityGraph();
+	    ActivityGraph subgraph = self.createActivityGraph();
 	    
 	    // Create write action for the property.  
         AddStructuralFeatureValueAction writeAction = 
             subgraph.addAddStructuralFeatureValueAction(property, false);
 
         // For an ordered property, provide insertAt pin with a "*" input.
-        if (property.multiplicityElement.isOrdered) {
+        if (property.getIsOrdered()) {
             ValueSpecificationAction valueAction = 
                 subgraph.addUnlimitedNaturalValueSpecificationAction(-1);
-            subgraph.addObjectFlow(valueAction.result, writeAction.insertAt);
+            subgraph.addObjectFlow(valueAction.getResult(), writeAction.getInsertAt());
         }
         
         
-        if (property.multiplicityElement.lower == 1 && 
-                property.multiplicityElement.upper.naturalValue == 1) {
+        if (property.getLower() == 1 && property.getUpper() == 1) {
             // If the property multiplicity is 1..1, connect the valueSource to
             // the write action value input pin.
-            subgraph.addObjectFlow(valueSource, writeAction.value);        
+            subgraph.addObjectFlow(valueSource, writeAction.getValue());        
             writeAction.setIsReplaceAll(true);   
             
             // Connect the action object pin to the objectSource.
-            subgraph.addObjectFlow(objectSource, writeAction.object);
+            subgraph.addObjectFlow(objectSource, writeAction.getObject());
             
             graph.addAll(subgraph);
-            return writeAction.result;
+            return writeAction.getResult();
             
         } else {
             // Otherwise, create a node to iteratively add possibly 
             // multiple values to the property.
-            Classifier featuringClassifier = property.featuringClassifier.get(0);
+            Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
             writeAction.setIsReplaceAll(false);
             if (!(featuringClassifier instanceof DataType)) {
                 // If the property is a feature of a class, use an iterative
                 // expansion region.
                 ExpansionRegion region = graph.addExpansionRegion(
-                        "Iterate(" + writeAction.name + ")", 
-                        ExpansionKind.iterative, 
+                        "Iterate(" + writeAction.getName() + ")", 
+                        "iterative", 
                         subgraph.getModelElements(), 
-                        valueSource, writeAction.value, 
+                        valueSource, writeAction.getValue(), 
                         null);
 
-                InputPin objectInputPin = ActivityGraph.createInputPin(
-                        region.name + ".input(" + objectSource.name + ")", 
+                InputPin objectInputPin = graph.createInputPin(
+                        region.getName() + ".input(" + objectSource.getName() + ")", 
                         featuringClassifier, 1, 1);
                 region.addStructuredNodeInput(objectInputPin);
-                region.addEdge(ActivityGraph.createObjectFlow(
-                        objectInputPin, writeAction.object));
+                region.addEdge(graph.createObjectFlow(
+                        objectInputPin, writeAction.getObject()));
 
                 graph.addObjectFlow(objectSource, objectInputPin);
                 return null;
@@ -475,48 +474,48 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 // If the property is a feature of a data type, then use
                 // a loop node to iteratively update the data value, rather than
                 // an expansion region.
-                InputPin objectInputPin = ActivityGraph.createInputPin(
-                        objectSource.name, featuringClassifier, 1, 1);
-                InputPin valueInputPin = ActivityGraph.createInputPin(
-                        "value", property.typedElement.type, 0, -1);
+                InputPin objectInputPin = graph.createInputPin(
+                        objectSource.getName(), featuringClassifier, 1, 1);
+                InputPin valueInputPin = graph.createInputPin(
+                        "value", property.getType(), 0, -1);
                 LoopNode loopNode = graph.addLoopNode(
-                        "Iterate(" + writeAction.name + ")", true, 
+                        "Iterate(" + writeAction.getName() + ")", true, 
                         objectInputPin, valueInputPin);
-                graph.addObjectFlow(objectSource, loopNode.loopVariableInput.get(0));
-                graph.addObjectFlow(valueSource, loopNode.loopVariableInput.get(1));
+                graph.addObjectFlow(objectSource, loopNode.getLoopVariable().get(0));
+                graph.addObjectFlow(valueSource, loopNode.getLoopVariable().get(1));
                 
                 ActivityNode valueFork = subgraph.addForkNode("Fork(value)");
                 ValueSpecificationAction value1Action = 
                         subgraph.addNaturalValueSpecificationAction(1);
                 ActivityNode value1Fork = subgraph.addForkNode(
-                        "Fork(" + value1Action.result.name + ")");
+                        "Fork(" + value1Action.getResult().getName() + ")");
                 CallBehaviorAction getAction = subgraph.addCallBehaviorAction(
                         getBehavior(RootNamespace.getListFunctionGet()));
                 CallBehaviorAction removeAction = subgraph.addCallBehaviorAction(
                         getBehavior(RootNamespace.getSequenceFunctionExcludeAt()));
-                subgraph.addObjectFlow(loopNode.loopVariable.get(0), writeAction.object);
-                subgraph.addObjectFlow(loopNode.loopVariable.get(1), valueFork);
-                subgraph.addObjectFlow(value1Action.result, value1Fork);
-                subgraph.addObjectFlow(valueFork, getAction.argument.get(0));
-                subgraph.addObjectFlow(value1Fork, getAction.argument.get(1));
-                subgraph.addObjectFlow(getAction.result.get(0), writeAction.value);
-                subgraph.addObjectFlow(valueFork, removeAction.argument.get(0));
-                subgraph.addObjectFlow(value1Fork, removeAction.argument.get(1));
+                subgraph.addObjectFlow(loopNode.getLoopVariable().get(0), writeAction.getObject());
+                subgraph.addObjectFlow(loopNode.getLoopVariable().get(1), valueFork);
+                subgraph.addObjectFlow(value1Action.getResult(), value1Fork);
+                subgraph.addObjectFlow(valueFork, getAction.getArgument().get(0));
+                subgraph.addObjectFlow(value1Fork, getAction.getArgument().get(1));
+                subgraph.addObjectFlow(getAction.getResult().get(0), writeAction.getValue());
+                subgraph.addObjectFlow(valueFork, removeAction.getArgument().get(0));
+                subgraph.addObjectFlow(value1Fork, removeAction.getArgument().get(1));
                 
                 graph.addLoopBodyPart(
                         loopNode, subgraph.getModelElements(), 
-                        writeAction.result, removeAction.result.get(0));
+                        writeAction.getResult(), removeAction.getResult().get(0));
                 
-                subgraph = new ActivityGraph();
+                subgraph = self.createActivityGraph();
                 CallBehaviorAction testAction = subgraph.addCallBehaviorAction(
                         getBehavior(RootNamespace.getSequenceFunctionNotEmpty()));
-                subgraph.addObjectFlow(valueFork, testAction.argument.get(0));
+                subgraph.addObjectFlow(valueFork, testAction.getArgument().get(0));
                 
                 graph.addLoopTest(
                         loopNode, subgraph.getModelElements(), 
-                        testAction.result.get(0));
+                        testAction.getResult().get(0));
 
-                return loopNode.result.get(0);
+                return loopNode.getResult().get(0);
             }
         }        
 	}

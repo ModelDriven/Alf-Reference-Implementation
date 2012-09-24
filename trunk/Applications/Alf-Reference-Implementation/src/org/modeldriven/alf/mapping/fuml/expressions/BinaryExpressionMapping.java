@@ -21,9 +21,9 @@ import org.modeldriven.alf.syntax.expressions.BinaryExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.Action;
+import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public abstract class BinaryExpressionMapping extends ExpressionMapping {
     
@@ -98,12 +98,12 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
                 this.graph.addCallBehaviorAction(getBehavior(operatorFunction));
             this.graph.addObjectFlow(
                     operand1Result, 
-                    callAction.argument.get(0));
+                    callAction.getArgument().get(0));
             this.graph.addObjectFlow(
                     operand2Result, 
-                    callAction.argument.get(1));
+                    callAction.getArgument().get(1));
             this.action = callAction;
-            this.resultSource = callAction.result.get(0);
+            this.resultSource = callAction.getResult().get(0);
         }
     }
     
@@ -112,8 +112,8 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
         throws MappingError {
         CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
                 getBehavior(RootNamespace.getBitStringFunctionToBitString()));
-        this.graph.addObjectFlow(operandResult, callAction.argument.get(0));
-        return callAction.result.get(0);
+        this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
+        return callAction.getResult().get(0);
     }
 
     protected ElementReference getOperatorFunction(String operator) {
@@ -159,7 +159,7 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
             System.out.println(prefix + " action:" + this.action);
             if (this.action instanceof CallBehaviorAction) {
                 System.out.println(prefix + " behavior:" + 
-                        ((CallBehaviorAction)this.action).behavior);
+                        ((CallBehaviorAction)this.action).getBehavior());
             }
         }
         

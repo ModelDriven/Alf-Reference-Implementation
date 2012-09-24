@@ -21,9 +21,9 @@ import org.modeldriven.alf.mapping.fuml.expressions.SequenceRangeMapping;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.LoopVariableDefinition;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.Collection;
 
@@ -60,7 +60,7 @@ public class LoopVariableDefinitionMapping extends SyntaxElementMapping {
                     this.graph = expression1Mapping.getGraph();
                     this.resultSource1 = expression1Mapping.getResultSource();
                 } else {
-                    this.graph = new ActivityGraph();
+                    this.graph = this.createActivityGraph();
                     this.graph.addAll(expression1Mapping.getGraph());
                     this.resultSource1 = AssignmentExpressionMapping.mapConversions(
                             this, this.graph, 
@@ -69,7 +69,7 @@ public class LoopVariableDefinitionMapping extends SyntaxElementMapping {
                             true, false);
                 }
             } else {
-                this.graph = new ActivityGraph();
+                this.graph = this.createActivityGraph();
                 this.graph.addAll(expression1Mapping.getGraph());
                 this.resultSource1 = expression1Mapping.getResultSource();
                 

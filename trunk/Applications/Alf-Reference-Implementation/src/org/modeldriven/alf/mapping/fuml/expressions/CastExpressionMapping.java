@@ -21,15 +21,14 @@ import org.modeldriven.alf.syntax.expressions.CastExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Actions.BasicActions.Pin;
-import fUML.Syntax.Actions.CompleteActions.ReadIsClassifiedObjectAction;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionNode;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Classifier;
+import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.Pin;
+import org.modeldriven.alf.uml.ReadIsClassifiedObjectAction;
+import org.modeldriven.alf.uml.ExpansionNode;
+import org.modeldriven.alf.uml.ExpansionRegion;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.ForkNode;
+import org.modeldriven.alf.uml.Classifier;
 
 public class CastExpressionMapping extends ExpressionMapping {
     
@@ -59,19 +58,19 @@ public class CastExpressionMapping extends ExpressionMapping {
             graph.addReadIsClassifiedObjectAction(type, false);
         
         ForkNode forkNode = 
-            graph.addForkNode("Fork(" + isClassifiedAction.object.name + ")");        
-        graph.addObjectFlow(forkNode, isClassifiedAction.object);
+            graph.addForkNode("Fork(" + isClassifiedAction.getObject().getName() + ")");        
+        graph.addObjectFlow(forkNode, isClassifiedAction.getObject());
         
         if (conversionFunction != null) {
             CallBehaviorAction callAction = 
                 graph.addCallBehaviorAction(getBehavior(conversionFunction));
-            graph.addObjectFlow(callAction.result.get(0), trueTarget);
-            trueTarget = callAction.argument.get(0);
+            graph.addObjectFlow(callAction.getResult().get(0), trueTarget);
+            trueTarget = callAction.getArgument().get(0);
         }
         
         graph.addObjectDecisionNode(
-                isClassifiedAction.result.name, 
-                forkNode, isClassifiedAction.result, 
+                isClassifiedAction.getResult().getName(), 
+                forkNode, isClassifiedAction.getResult(), 
                 trueTarget, falseTarget);
         
         return forkNode;
@@ -196,7 +195,7 @@ public class CastExpressionMapping extends ExpressionMapping {
                 String label = expression.getClass().getSimpleName()+ 
                     "@" + expression.getId();
                 
-                ActivityGraph nestedGraph = new ActivityGraph();
+                ActivityGraph nestedGraph = this.createActivityGraph();
                 
                 ActivityNode inputSource = operandMapping.getResultSource();
                 ActivityNode nestedResultSource = nestedGraph.addMergeNode(
@@ -207,15 +206,15 @@ public class CastExpressionMapping extends ExpressionMapping {
                 
                 this.region = this.graph.addExpansionRegion(
                         label, 
-                        ExpansionKind.parallel, 
+                        "parallel", 
                         nestedGraph.getModelElements(), 
                         inputSource, 
                         inputTarget, 
                         nestedResultSource);
-                this.region.inputElement.get(0).setType(operandMapping.getType());
-                this.region.outputElement.get(0).setType(this.getType());
+                this.region.getInputElement().get(0).setType(operandMapping.getType());
+                this.region.getOutputElement().get(0).setType(this.getType());
                 
-                this.resultSource = this.region.outputElement.get(0);
+                this.resultSource = this.region.getOutputElement().get(0);
                 
                 this.mapTo(this.region);
             }

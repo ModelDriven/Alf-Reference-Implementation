@@ -16,11 +16,11 @@ import org.modeldriven.alf.mapping.fuml.units.MemberMapping;
 
 import org.modeldriven.alf.syntax.units.EnumerationLiteralName;
 
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Enumeration;
-import fUML.Syntax.Classes.Kernel.EnumerationLiteral;
-import fUML.Syntax.Classes.Kernel.NamedElement;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Enumeration;
+import org.modeldriven.alf.uml.EnumerationLiteral;
+import org.modeldriven.alf.uml.NamedElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class EnumerationLiteralNameMapping extends MemberMapping {
             Classifier classifier = 
                 ((ClassifierDefinitionMapping)mapping).getClassifier();
             enumerationLiteral.addClassifier(classifier);
-            enumerationLiteral.enumeration = (Enumeration)classifier;
+            enumerationLiteral.setEnumeration((Enumeration)classifier);
         }
     }
 
@@ -72,7 +72,7 @@ public class EnumerationLiteralNameMapping extends MemberMapping {
 
 	public EnumerationLiteral getEnumerationLiteral() throws MappingError {
 	    if (this.enumerationLiteral == null) {
-	        this.enumerationLiteral = new EnumerationLiteral();
+	        this.enumerationLiteral = this.create(EnumerationLiteral.class);
 	        this.mapTo(enumerationLiteral);
 	    }
 	    return this.enumerationLiteral;

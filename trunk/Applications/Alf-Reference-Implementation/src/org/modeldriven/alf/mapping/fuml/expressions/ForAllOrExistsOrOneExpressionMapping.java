@@ -17,9 +17,9 @@ import org.modeldriven.alf.mapping.fuml.expressions.SequenceExpansionExpressionM
 import org.modeldriven.alf.syntax.expressions.ForAllOrExistsOrOneExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.IntermediateActions.TestIdentityAction;
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.TestIdentityAction;
+import org.modeldriven.alf.uml.ValueSpecificationAction;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class ForAllOrExistsOrOneExpressionMapping extends
 		SequenceExpansionExpressionMapping {
@@ -98,9 +98,9 @@ public class ForAllOrExistsOrOneExpressionMapping extends
                 this.graph.addNaturalValueSpecificationAction(1);
             TestIdentityAction testAction = 
                 this.graph.addTestIdentityAction("Test(=1)");
-            this.graph.addObjectFlow(this.resultSource, testAction.first);
-            this.graph.addObjectFlow(valueAction.result, testAction.second);
-            this.resultSource = testAction.result;
+            this.graph.addObjectFlow(this.resultSource, testAction.getFirst());
+            this.graph.addObjectFlow(valueAction.getResult(), testAction.getSecond());
+            this.resultSource = testAction.getResult();
         }
     }
     

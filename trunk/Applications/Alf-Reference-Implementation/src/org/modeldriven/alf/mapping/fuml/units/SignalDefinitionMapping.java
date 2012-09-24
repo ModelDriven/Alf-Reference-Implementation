@@ -15,11 +15,11 @@ import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
 import org.modeldriven.alf.syntax.units.SignalDefinition;
 
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.Property;
-import fUML.Syntax.CommonBehaviors.Communications.Signal;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Property;
+import org.modeldriven.alf.uml.Signal;
 
 public class SignalDefinitionMapping extends ClassifierDefinitionMapping {
     
@@ -42,7 +42,7 @@ public class SignalDefinitionMapping extends ClassifierDefinitionMapping {
 
     @Override
     public Classifier mapClassifier() {
-        return new Signal();
+        return this.create(Signal.class);
     }
 
     @Override

@@ -19,16 +19,20 @@ import org.modeldriven.alf.parser.AlfParser;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.RootNamespace;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.PrimitiveType;
+import org.modeldriven.alf.uml.Behavior;
+import org.modeldriven.alf.uml.ElementFactory;
 
 import fUML.Semantics.Loci.LociL1.ExecutionFactory;
 import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.PrimitiveType;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 
 public abstract class FumlMapping extends Mapping {
     
+    private ElementFactory elementFactory = null;
+
     private static FumlMappingFactory fumlFactory = new FumlMappingFactory();
+    private static ElementFactory fumlElementFactory = new org.modeldriven.alf.uml.fuml.ElementFactory();
     private static ExecutionFactory executionFactory = null;
     private static SyntaxElement parsedElement = null;
     
@@ -45,6 +49,14 @@ public abstract class FumlMapping extends Mapping {
 
     public static void setExecutionFactory(ExecutionFactory executionFactory) {
         FumlMapping.executionFactory = executionFactory;
+    }
+    
+    public ElementFactory getElementFactory() {
+        return this.elementFactory;
+    }
+    
+    public void setElementFactory(ElementFactory elementFactory) {
+        this.elementFactory = elementFactory;
     }
     
     public static SyntaxElement getParsedElement() {
@@ -146,6 +158,7 @@ public abstract class FumlMapping extends Mapping {
     
     public FumlMapping() {
         this.setFactory(fumlFactory);
+        this.setElementFactory(fumlElementFactory);
     }
     
     public Element getElement() {
@@ -156,6 +169,18 @@ public abstract class FumlMapping extends Mapping {
     
     public FumlMapping fumlMap(Object source) {
         return (FumlMapping)this.map(source);
+    }
+    
+    public <T extends Element> T create(Class<T> class_) {
+        return this.getElementFactory().newInstance(class_);
+    }
+    
+    public ActivityGraph createActivityGraph() {
+        return new ActivityGraph(this.getElementFactory());
+    }
+    
+    public ActivityGraph createActivityGraph(ActivityGraph graph) {
+        return new ActivityGraph(graph);
     }
     
     public void mapTo(Element element) throws MappingError {

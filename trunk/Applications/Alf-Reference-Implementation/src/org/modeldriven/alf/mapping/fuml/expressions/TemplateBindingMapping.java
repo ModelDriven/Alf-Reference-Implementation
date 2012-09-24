@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.mapping.fuml.expressions;
 
-import org.modeldriven.alf.mapping.fuml.common.gen.SyntaxElementMapping;
+import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
 
 import org.modeldriven.alf.syntax.expressions.TemplateBinding;
 

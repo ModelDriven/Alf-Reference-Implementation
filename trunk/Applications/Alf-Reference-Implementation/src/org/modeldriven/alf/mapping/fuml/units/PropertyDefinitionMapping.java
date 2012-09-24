@@ -15,12 +15,7 @@ import org.modeldriven.alf.mapping.fuml.units.TypedElementDefinitionMapping;
 
 import org.modeldriven.alf.syntax.units.PropertyDefinition;
 
-import fUML.Syntax.Classes.Kernel.AggregationKind;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.MultiplicityElement;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.Property;
-import fUML.Syntax.Classes.Kernel.TypedElement;
+import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +39,12 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
      */
     
     public void mapTo(Property property) throws MappingError {
-        super.mapTo(property.typedElement, property.multiplicityElement);
+        super.mapTo(property, property);
 
         PropertyDefinition definition = this.getPropertyDefinition();
         property.setAggregation(definition.getIsComposite()? 
-                AggregationKind.composite: AggregationKind.none);
-        property.setName(property.typedElement.name);
+                "composite": "none");
+        property.setName(property.getName());
     }
     
     @Override
@@ -59,9 +54,7 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
     
     public Property getProperty() throws MappingError {
         if (this.property == null) {
-            this.property = new Property();
-            this.property.typedElement = new TypedElement();
-            this.property.multiplicityElement = new MultiplicityElement();
+            this.property = this.create(Property.class);
             this.mapTo(property);
         }
 
@@ -74,12 +67,12 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
 
     @Override
     public MultiplicityElement getMultiplicityElement() {
-        return this.property == null? null: this.property.multiplicityElement;
+        return this.property;
     }
 
     @Override
     public TypedElement getTypedElement() {
-        return this.property == null? null: this.property.typedElement;
+        return this.property;
     }
 
     @Override
@@ -96,7 +89,7 @@ public class PropertyDefinitionMapping extends TypedElementDefinitionMapping {
     
     @Override
     public String toString() {
-        return super.toString() + " aggregation:" + this.property.aggregation;
+        return super.toString() + " aggregation:" + this.property.getAggregation();
     }
     
     @Override

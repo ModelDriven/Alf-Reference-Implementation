@@ -17,7 +17,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.ShiftExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class ShiftExpressionMapping extends BinaryExpressionMapping {
 

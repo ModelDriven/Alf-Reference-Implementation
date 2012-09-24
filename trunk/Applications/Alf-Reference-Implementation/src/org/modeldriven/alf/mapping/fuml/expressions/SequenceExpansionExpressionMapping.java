@@ -23,13 +23,7 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.ExtentOrExpression;
 import org.modeldriven.alf.syntax.expressions.SequenceExpansionExpression;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Activities.IntermediateActivities.MergeNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 public abstract class SequenceExpansionExpressionMapping extends
 		ExpressionMapping {
@@ -110,13 +104,13 @@ public abstract class SequenceExpansionExpressionMapping extends
         this.region = this.graph.addExpansionRegion(
                 expression.getClass().getSimpleName()+ 
                     "@" + expression.getId(), 
-                ExpansionKind.parallel, 
+                "parallel", 
                 nestedGraph.getModelElements(), 
                 primarySource, 
                 variableSource, 
                 nestedResultSource);
         
-        this.resultSource = this.region.outputElement.get(0);
+        this.resultSource = this.region.getOutputElement().get(0);
         
         this.mapTo(this.region);
     }
@@ -134,7 +128,7 @@ public abstract class SequenceExpansionExpressionMapping extends
         } else {
             ExpressionMapping primaryMapping = (ExpressionMapping)mapping;
             this.graph.addAll(primaryMapping.getGraph());
-            ActivityGraph nestedGraph = new ActivityGraph();
+            ActivityGraph nestedGraph = this.createActivityGraph();
             this.variableSource = nestedGraph.addForkNode(
                     "Fork(" + expression.getVariable() + ")");
             
@@ -152,8 +146,8 @@ public abstract class SequenceExpansionExpressionMapping extends
                         argumentMapping.getResultSource(), 
                         primaryMapping.getResultSource(), 
                         this.variableSource);
-                this.region.inputElement.get(0).setType(primaryMapping.getType());
-                this.region.outputElement.get(0).setType(primaryMapping.getType());
+                this.region.getInputElement().get(0).setType(primaryMapping.getType());
+                this.region.getOutputElement().get(0).setType(primaryMapping.getType());
             }
         }
     }
@@ -162,7 +156,7 @@ public abstract class SequenceExpansionExpressionMapping extends
     protected ActivityNode addTermination(
             ActivityGraph nestedGraph, ActivityNode resultSource) {
         ForkNode forkNode = 
-            nestedGraph.addForkNode("Fork(" + resultSource.name + ")");
+            nestedGraph.addForkNode("Fork(" + resultSource.getName() + ")");
         nestedGraph.addObjectFlow(resultSource, forkNode);
         
         // NOTE: The use of an enclosing structured activity node here is to
@@ -172,12 +166,12 @@ public abstract class SequenceExpansionExpressionMapping extends
         Collection<Element> elements = nestedGraph.getModelElements();
         nestedGraph.clear();
         ActivityNode structuredNode = nestedGraph.addStructuredActivityNode(
-                "Compute(" + resultSource.name + ")", elements);
+                "Compute(" + resultSource.getName() + ")", elements);
         ActivityNode joinNode = nestedGraph.addJoinNode(
-                "Join(" + resultSource.name + ")");
+                "Join(" + resultSource.getName() + ")");
         ActivityNode finalNode = 
             nestedGraph.addMergeNode(
-                    "ActivityFinal(" + resultSource.name + ")");
+                    "ActivityFinal(" + resultSource.getName() + ")");
         nestedGraph.addObjectFlow(forkNode, joinNode);
         nestedGraph.addControlFlow(structuredNode, joinNode);
         nestedGraph.addObjectFlow(joinNode, finalNode);
@@ -190,8 +184,8 @@ public abstract class SequenceExpansionExpressionMapping extends
         throws MappingError {
         CallBehaviorAction callAction = 
             this.graph.addCallBehaviorAction(getBehavior(behaviorReference));
-        this.graph.addObjectFlow(this.resultSource, callAction.argument.get(0));
-        this.resultSource = callAction.result.get(0);
+        this.graph.addObjectFlow(this.resultSource, callAction.getArgument().get(0));
+        this.resultSource = callAction.getResult().get(0);
     }
     
     public ExpansionRegion getRegion() throws MappingError {

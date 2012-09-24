@@ -15,8 +15,8 @@ import org.modeldriven.alf.mapping.fuml.units.MemberMapping;
 
 import org.modeldriven.alf.syntax.units.ImportedMember;
 
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
 
 import java.util.List;
 

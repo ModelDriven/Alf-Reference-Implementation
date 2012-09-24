@@ -15,7 +15,7 @@ import org.modeldriven.alf.mapping.fuml.expressions.LiteralExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.UnboundedLiteralExpression;
 
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
+import org.modeldriven.alf.uml.ValueSpecificationAction;
 
 public class UnboundedLiteralExpressionMapping extends LiteralExpressionMapping {
 

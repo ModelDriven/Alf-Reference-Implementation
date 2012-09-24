@@ -24,18 +24,7 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.Statement;
 
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Actions.BasicActions.OutputPin;
-import fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.LoopNode;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityEdge;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityFinalNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Activities.IntermediateActivities.ObjectFlow;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.*;
 
 public abstract class LoopStatementMapping extends StatementMapping {
     
@@ -47,32 +36,32 @@ public abstract class LoopStatementMapping extends StatementMapping {
     
     @Override
     public StructuredActivityNode mapNode() {
-        return new LoopNode();
+        return this.create(LoopNode.class);
     }
     
     protected OutputPin addLoopVariable(
             LoopNode loopNode, String name, Classifier classifier,
             int lower, int upper, ActivityNode sourceNode) throws MappingError {
-        InputPin inputPin = ActivityGraph.createInputPin(
-                loopNode.name + ".loopVariableInput(" + name + ")", 
+        InputPin inputPin = this.graph.createInputPin(
+                loopNode.getName() + ".getLoopVariableInput()(" + name + ")", 
                 classifier, lower, upper);
         loopNode.addLoopVariableInput(inputPin);
         if (sourceNode != null) {
             this.graph.addObjectFlow(sourceNode, inputPin);
         }
         
-        OutputPin loopVariablePin = ActivityGraph.createOutputPin(
-                loopNode.name + ".loopVariable(" + name + ")", 
+        OutputPin loopVariablePin = this.graph.createOutputPin(
+                loopNode.getName() + ".loopVariable(" + name + ")", 
                 classifier, lower, upper);
         loopNode.addStructuredNodeOutput(loopVariablePin);
         loopNode.addLoopVariable(loopVariablePin);
-        ForkNode forkNode = new ForkNode();
-        forkNode.setName("Fork(" + loopVariablePin.name + ")");
+        ForkNode forkNode = this.create(ForkNode.class);
+        forkNode.setName("Fork(" + loopVariablePin.getName() + ")");
         loopNode.addNode(forkNode);
-        loopNode.addEdge(ActivityGraph.createObjectFlow(loopVariablePin, forkNode));
+        loopNode.addEdge(this.graph.createObjectFlow(loopVariablePin, forkNode));
         
-        OutputPin outputPin = ActivityGraph.createOutputPin(
-                loopNode.name + ".result(" + name + ")", 
+        OutputPin outputPin = this.graph.createOutputPin(
+                loopNode.getName() + ".result(" + name + ")", 
                 classifier, lower, upper);
         loopNode.addResult(outputPin);
         return outputPin;
@@ -126,7 +115,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
             mapping = this.fumlMap(this.getBody());
             Collection<Element> bodyElements = mapping.getModelElements();
             
-            if (node.isTestedFirst) {
+            if (node.getIsTestedFirst()) {
                 this.addToNode(conditionElements);
                 for (Element element: conditionElements) {
                     if (element instanceof ExecutableNode) {
@@ -134,11 +123,11 @@ public abstract class LoopStatementMapping extends StatementMapping {
                     }
                 }
             } else {
-                ActivityGraph subgraph = new ActivityGraph();
+                ActivityGraph subgraph = this.createActivityGraph();
                 ActivityNode bodyNode = subgraph.addStructuredActivityNode(
-                        "Body(" + node.name + ")", bodyElements);
+                        "Body(" + node.getName() + ")", bodyElements);
                 ActivityNode conditionNode = subgraph.addStructuredActivityNode(
-                        "Condition(" + node.name + ")", conditionElements);
+                        "Condition(" + node.getName() + ")", conditionElements);
                 subgraph.addControlFlow(bodyNode, conditionNode);
                 bodyElements = subgraph.getModelElements();
                 conditionElements = new ArrayList<Element>();
@@ -148,13 +137,13 @@ public abstract class LoopStatementMapping extends StatementMapping {
             
             if (conditionElements.isEmpty() || !(decider instanceof OutputPin)) {
                 StructuredActivityNode passthruNode = 
-                    ActivityGraph.createPassthruNode(
-                            decider.name, getBooleanType(), 1, 1);
+                    this.graph.createPassthruNode(
+                            decider.getName(), getBooleanType(), 1, 1);
                 node.addTest(passthruNode);
                 node.addNode(passthruNode);
-                node.addEdge(ActivityGraph.createObjectFlow(
-                        decider, passthruNode.structuredNodeInput.get(0)));
-                decider = passthruNode.structuredNodeOutput.get(0);
+                node.addEdge(this.graph.createObjectFlow(
+                        decider, passthruNode.getStructuredNodeInput().get(0)));
+                decider = passthruNode.getStructuredNodeOutput().get(0);
             }
             
             node.setDecider((OutputPin)decider);
@@ -192,16 +181,16 @@ public abstract class LoopStatementMapping extends StatementMapping {
         for (Element element: elements) {
             if (element instanceof ObjectFlow) {
                 ObjectFlow flow = (ObjectFlow)element;
-                if (!ActivityGraph.isContainedIn(flow.source, node) &&
-                        ActivityGraph.isContainedIn(flow.target, node)) {
+                if (!ActivityGraph.isContainedIn(flow.getSource(), node) &&
+                        ActivityGraph.isContainedIn(flow.getTarget(), node)) {
                     Search:
-                    for (int i = 0; i < node.loopVariableInput.size(); i++) {
-                        InputPin inputPin = node.loopVariableInput.get(i);
-                        for (ActivityEdge incoming: inputPin.incoming) {
-                            if (incoming.source == flow.source) {
-                                flow.source.outgoing.remove(flow);
-                                flow.setSource(node.loopVariable.get(i).
-                                        outgoing.get(0).target);
+                    for (int i = 0; i < node.getLoopVariableInput().size(); i++) {
+                        InputPin inputPin = node.getLoopVariableInput().get(i);
+                        for (ActivityEdge incoming: inputPin.getIncoming()) {
+                            if (incoming.getSource() == flow.getSource()) {
+                                flow.getSource().getOutgoing().remove(flow);
+                                flow.setSource(node.getLoopVariable().get(i).
+                                        getOutgoing().get(0).getTarget());
                                 this.graph.remove(flow);
                                 node.addEdge(flow);
                                 break Search;
@@ -222,8 +211,8 @@ public abstract class LoopStatementMapping extends StatementMapping {
     public ActivityFinalNode getFinalNode() throws MappingError {
         if (this.finalNode == null) {
             StructuredActivityNode node = (StructuredActivityNode) this.getNode();
-            this.finalNode = new ActivityFinalNode();
-            this.finalNode.setName("Final(" + node.name + ")");
+            this.finalNode = this.create(ActivityFinalNode.class);
+            this.finalNode.setName("Final(" + node.getName() + ")");
             node.addNode(this.finalNode);
         }
         return this.finalNode;
@@ -238,7 +227,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
     public String toString() {
         return super.toString() + 
                 (this.node instanceof LoopNode? 
-                        " isTestedFirst:" + ((LoopNode)node).isTestedFirst: "");
+                        " isTestedFirst:" + ((LoopNode)node).getIsTestedFirst(): "");
     }
     
     @Override

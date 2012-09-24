@@ -43,12 +43,12 @@ import fUML.Semantics.Loci.LociL1.Executor;
 import fUML.Semantics.Loci.LociL1.FirstChoiceStrategy;
 import fUML.Semantics.Loci.LociL1.Locus;
 import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
-import fUML.Syntax.Classes.Kernel.Class_;
-import fUML.Syntax.Classes.Kernel.Classifier;
-import fUML.Syntax.Classes.Kernel.DataType;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Operation;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
+import org.modeldriven.alf.uml.Class_;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.DataType;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Operation;
+import org.modeldriven.alf.uml.Behavior;
 
 public class Alf {
     
@@ -86,7 +86,7 @@ public class Alf {
                 addName("Status");
         Classifier statusType = getClassifier(status);
         if (statusType instanceof DataType) {
-            Status.setStatusType((DataType)statusType);
+            Status.setStatusType(((org.modeldriven.alf.uml.fuml.DataType)statusType).getBase());
         } else {
             System.out.println("Cannot find Status datatype.");
         }
@@ -97,10 +97,10 @@ public class Alf {
             ImplementationObject object) {
         Classifier type = getClassifier(name);
         if (type instanceof Class_) {
-            object.types.addValue((Class_)type);
+            object.types.addValue(((org.modeldriven.alf.uml.fuml.Class_)type).getBase());
             locus.add(object);
             printVerbose("Instantiated " + name.getPathName() + 
-                    " as " + type.name + "(" + type + ")");
+                    " as " + type.getName() + "(" + type + ")");
         }
     }
     
@@ -254,16 +254,17 @@ public class Alf {
                         printVerbose("Mapped successfully.");
                         Element element = ((FumlMapping)elementMapping).getElement();
                         if (element instanceof Behavior && 
-                                ((Behavior)element).ownedParameter.isEmpty() ||
+                                ((Behavior)element).getOwnedParameter().isEmpty() ||
                                 element instanceof Class_ && 
-                                ((Class_)element).isActive && 
-                                !((Class_)element).isAbstract && 
-                                ((Class_)element).classifierBehavior != null) {
+                                ((Class_)element).getIsActive() && 
+                                !((Class_)element).getIsAbstract() && 
+                                ((Class_)element).getClassifierBehavior() != null) {
                             createSystemServices();
                             printVerbose("Executing...");
                             if (element instanceof Behavior) {
                                 locus.executor.execute(
-                                        (Behavior)element, null, new ParameterValueList());
+                                        ((org.modeldriven.alf.uml.fuml.Behavior)element).getBase(), 
+                                        null, new ParameterValueList());
                             } else {
                                 ClassDefinition classDefinition = 
                                         (ClassDefinition)definition;
@@ -275,7 +276,7 @@ public class Alf {
                                 } else {
                                     // Instantiate active class.
                                     Class_ class_ = (Class_)element;
-                                    Object_ object = locus.instantiate(class_);
+                                    Object_ object = locus.instantiate(((org.modeldriven.alf.uml.fuml.Class_)class_).getBase());
     
                                     // Initialize the object.
                                     ClassDefinitionMapping classMapping =
@@ -283,20 +284,21 @@ public class Alf {
                                     Operation initializer = 
                                             classMapping.getInitializationOperation();
                                     locus.executor.execute(
-                                            initializer.method.get(0), object, 
+                                            ((org.modeldriven.alf.uml.fuml.Behavior)initializer.getMethod().get(0)).getBase(), 
+                                            object, 
                                             new ParameterValueList());
     
                                     // Execute the classifier behavior.
-                                    object.startBehavior(class_, new ParameterValueList());
+                                    object.startBehavior(((org.modeldriven.alf.uml.fuml.Class_)class_).getBase(), new ParameterValueList());
                                 }
                             }
                             } else if (element instanceof Behavior) {
                                 System.out.println("Cannot execute a behavior with parameters.");
                             } else if (element instanceof Class_) {
                                 Class_ class_ = (Class_)element;
-                                if (!class_.isActive) {
+                                if (!class_.getIsActive()) {
                                     System.out.println("Cannot execute a class that is not active.");
-                                } else if (class_.isAbstract) {
+                                } else if (class_.getIsAbstract()) {
                                     System.out.println("Cannot execute an abstract class.");
                                 } else {
                                     System.out.println("Cannot execute a class without a classifier behavior.");

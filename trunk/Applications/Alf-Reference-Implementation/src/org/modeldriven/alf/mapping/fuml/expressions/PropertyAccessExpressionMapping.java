@@ -22,13 +22,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.PropertyAccessExpression;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.IntermediateActions.ReadStructuralFeatureAction;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind;
-import fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionRegion;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.Property;
+import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -90,28 +84,28 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
                 // expression to avoid recomputing it for inout parameters,
                 // increment or decrement expressions and compound assignments.
                 this.objectSource = this.graph.addForkNode(
-                        "Fork(" + expressionResult.name + ")");
+                        "Fork(" + expressionResult.getName() + ")");
                 this.graph.addObjectFlow(expressionResult, this.objectSource);
                 
                 if (!propertyAccess.getImpl().isSequencePropertyAccess()) {
                     action = readAction;
-                    this.graph.addObjectFlow(this.objectSource, readAction.object);
-                    this.resultSource = readAction.result;
+                    this.graph.addObjectFlow(this.objectSource, readAction.getObject());
+                    this.resultSource = readAction.getResult();
                     
                 } else {
                     Collection<Element> elements = new ArrayList<Element>();
                     elements.add(readAction);
                     
                     ExpansionRegion region = this.graph.addExpansionRegion(
-                            "Collect(" + readAction.name + ")", 
-                            ExpansionKind.parallel, 
+                            "Collect(" + readAction.getName() + ")", 
+                            "parallel", 
                             elements, 
                             this.objectSource, 
-                            readAction.object, 
-                            readAction.result);
+                            readAction.getObject(), 
+                            readAction.getResult());
 
                     action = region;
-                    this.resultSource = region.outputElement.get(0);                    
+                    this.resultSource = region.getOutputElement().get(0);                    
                 }
             }
         }
@@ -164,7 +158,7 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
 	        if (this.action instanceof ReadStructuralFeatureAction) {
 	            readAction = (ReadStructuralFeatureAction)this.action;
 	        } else if (this.action instanceof ExpansionRegion) {
-	            for (ActivityNode node: ((ExpansionRegion)this.action).node) {
+	            for (ActivityNode node: ((ExpansionRegion)this.action).getNode()) {
 	                if (node instanceof ReadStructuralFeatureAction) {
 	                    readAction = (ReadStructuralFeatureAction)node;
 	                    break;
@@ -174,7 +168,7 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
 	        
 	        if (readAction != null) {
 	            System.out.println(prefix + " structuralFeature: " + 
-	                    readAction.structuralFeature);
+	                    readAction.getStructuralFeature());
 	        }
 	    }
 	    

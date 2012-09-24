@@ -15,7 +15,7 @@ import org.modeldriven.alf.mapping.fuml.statements.StatementMapping;
 
 import org.modeldriven.alf.syntax.statements.InLineStatement;
 
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;

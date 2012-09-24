@@ -20,20 +20,20 @@ import org.modeldriven.alf.mapping.fuml.units.DataTypeDefinitionMapping;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.InstanceCreationExpression;
 
-import fUML.Syntax.Actions.BasicActions.Action;
-import fUML.Syntax.Actions.BasicActions.CallOperationAction;
-import fUML.Syntax.Actions.BasicActions.InputPin;
-import fUML.Syntax.Actions.CompleteActions.StartObjectBehaviorAction;
-import fUML.Syntax.Actions.IntermediateActions.CreateObjectAction;
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.CompleteStructuredActivities.StructuredActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Activities.IntermediateActivities.ForkNode;
-import fUML.Syntax.Classes.Kernel.Class_;
-import fUML.Syntax.Classes.Kernel.DataType;
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.InstanceValue;
-import fUML.Syntax.Classes.Kernel.Property;
+import org.modeldriven.alf.uml.Action;
+import org.modeldriven.alf.uml.CallOperationAction;
+import org.modeldriven.alf.uml.InputPin;
+import org.modeldriven.alf.uml.StartObjectBehaviorAction;
+import org.modeldriven.alf.uml.CreateObjectAction;
+import org.modeldriven.alf.uml.ValueSpecificationAction;
+import org.modeldriven.alf.uml.StructuredActivityNode;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.ForkNode;
+import org.modeldriven.alf.uml.Class_;
+import org.modeldriven.alf.uml.DataType;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.InstanceValue;
+import org.modeldriven.alf.uml.Property;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -99,11 +99,11 @@ public class InstanceCreationExpressionMapping extends
         // Add a start behavior action if creating an instance of an active
         // class.
         if (action instanceof CallOperationAction) {
-            Class_ class_ = ((CallOperationAction)action).operation.class_;
+            Class_ class_ = ((CallOperationAction)action).getOperation().getClass_();
             
-            if (class_.isActive) {            
+            if (class_.getIsActive()) {            
                 ForkNode fork = 
-                    this.graph.addForkNode("Fork(" + this.resultSource.name + ")");
+                    this.graph.addForkNode("Fork(" + this.resultSource.getName() + ")");
                 
                 this.graph.addObjectFlow(this.resultSource, fork);
                 this.resultSource = fork;
@@ -111,10 +111,10 @@ public class InstanceCreationExpressionMapping extends
                 StartObjectBehaviorAction startAction = 
                     this.graph.addStartObjectBehaviorAction(class_);
                 
-                this.graph.addObjectFlow(fork, startAction.object);
+                this.graph.addObjectFlow(fork, startAction.getObject());
                 
                 Collection<Element> elements = this.graph.getModelElements();
-                this.graph = new ActivityGraph();
+                this.graph = this.createActivityGraph();
                 action = this.graph.addStructuredActivityNode(
                         "InstanceCreationExpression@" +
                                 this.getInstanceCreationExpression().getId(),
@@ -142,13 +142,13 @@ public class InstanceCreationExpressionMapping extends
             } else {
                 DataType dataType = (DataType)
                     ((DataTypeDefinitionMapping)mapping).getClassifier();
-                ActivityGraph subgraph = new ActivityGraph();
+                ActivityGraph subgraph = this.createActivityGraph();
                 
                 // Create a value specification action to create an instance
                 // of the data type.
                 ValueSpecificationAction valueAction = 
                     subgraph.addDataValueSpecificationAction(dataType);
-                this.resultSource = valueAction.result;
+                this.resultSource = valueAction.getResult();
                 
                 // Place the value specification action inside the structured
                 // activity node. Create input pins on the structured activity 
@@ -162,21 +162,21 @@ public class InstanceCreationExpressionMapping extends
 
                 StructuredActivityNode structuredNode =
                     this.graph.addStructuredActivityNode(
-                            "Create(" + dataType.qualifiedName +")", 
+                            "Create(" + dataType.getQualifiedName() +")", 
                             new ArrayList<Element>());
                 
-                for (Property attribute: dataType.attribute) {
-                    InputPin valuePin = ActivityGraph.createInputPin(
-                            structuredNode.name + 
-                                ".input(" + attribute.qualifiedName + ")", 
-                            attribute.typedElement.type, 
-                            attribute.multiplicityElement.lower, 
-                            attribute.multiplicityElement.upper.naturalValue);
+                for (Property attribute: dataType.getAttribute()) {
+                    InputPin valuePin = this.graph.createInputPin(
+                            structuredNode.getName() + 
+                                ".input(" + attribute.getQualifiedName() + ")", 
+                            attribute.getType(), 
+                            attribute.getLower(), 
+                            attribute.getUpper());
                     structuredNode.addStructuredNodeInput(valuePin);
                     this.resultSource = 
                         AssignmentExpressionMapping.mapPropertyAssignment(
                                 attribute, subgraph, 
-                                this.resultSource, valuePin);
+                                this.resultSource, valuePin, this);
                 }
                 
                 graph.addToStructuredNode(
@@ -192,14 +192,14 @@ public class InstanceCreationExpressionMapping extends
 
             if (this.resultSource == null) {
                 this.throwError("Constructor has no return result: " + 
-                        callAction.operation.qualifiedName);
+                        callAction.getOperation().getQualifiedName());
             }
 
             // Add a create object action to provide the target input to the
             // constructor call.
             CreateObjectAction createAction = 
-                this.graph.addCreateObjectAction(callAction.operation.class_);
-            this.graph.addObjectFlow(createAction.result, callAction.target);
+                this.graph.addCreateObjectAction(callAction.getOperation().getClass_());
+            this.graph.addObjectFlow(createAction.getResult(), callAction.getTarget());
 
         } else {
             // NOTE: Instance creation expressions for classes defined in
@@ -220,11 +220,11 @@ public class InstanceCreationExpressionMapping extends
 	    InstanceCreationExpression expression = this.getInstanceCreationExpression();
 	    if (!expression.getIsObjectCreation() &&
 	            this.action instanceof StructuredActivityNode) {
-	        for (ActivityNode node: ((StructuredActivityNode)this.action).node) {
+	        for (ActivityNode node: ((StructuredActivityNode)this.action).getNode()) {
 	            if (node instanceof ValueSpecificationAction) {
 	                System.out.println(prefix + " data type: " + 
-	                        ((InstanceValue)((ValueSpecificationAction)node).value).
-	                            instance.classifier.get(0));
+	                        ((InstanceValue)((ValueSpecificationAction)node).getValue()).
+	                            getInstance().getClassifier().get(0));
 	            }
 	        }
 	    }

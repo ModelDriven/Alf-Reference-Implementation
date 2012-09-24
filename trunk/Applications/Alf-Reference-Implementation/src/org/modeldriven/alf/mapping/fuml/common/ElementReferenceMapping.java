@@ -18,7 +18,7 @@ import org.modeldriven.alf.mapping.fuml.FumlMapping;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.Element;
 
 public abstract class ElementReferenceMapping extends FumlMapping {
     

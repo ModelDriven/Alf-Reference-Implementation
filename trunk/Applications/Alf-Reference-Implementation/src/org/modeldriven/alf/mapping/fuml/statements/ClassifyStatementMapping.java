@@ -23,8 +23,8 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.ClassifyStatement;
 
-import fUML.Syntax.Actions.CompleteActions.ReclassifyObjectAction;
-import fUML.Syntax.Classes.Kernel.Classifier;
+import org.modeldriven.alf.uml.ReclassifyObjectAction;
+import org.modeldriven.alf.uml.Classifier;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,7 +73,7 @@ public class ClassifyStatementMapping extends StatementMapping {
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping expression: " + mapping.getErrorMessage());
         } else {
-            ActivityGraph subgraph = new ActivityGraph();
+            ActivityGraph subgraph = this.createActivityGraph();
             
             ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
             subgraph.addAll(expressionMapping.getGraph());
@@ -87,7 +87,7 @@ public class ClassifyStatementMapping extends StatementMapping {
             
             subgraph.addObjectFlow(
                     expressionMapping.getResultSource(), 
-                    this.reclassifyAction.object);
+                    this.reclassifyAction.getObject());
             
             this.addToNode(subgraph.getModelElements());
         }
@@ -100,7 +100,7 @@ public class ClassifyStatementMapping extends StatementMapping {
 	public String toString() {
 	    return super.toString() + 
 	            (this.reclassifyAction == null? "": 
-	                " isReplaceAll:" + this.reclassifyAction.isReplaceAll);
+	                " isReplaceAll:" + this.reclassifyAction.getIsReplaceAll());
 	}
 	
 	public void print(String prefix) {
@@ -108,7 +108,7 @@ public class ClassifyStatementMapping extends StatementMapping {
 	    
 	    if (this.reclassifyAction != null) {
             Collection<Classifier> oldClassifiers = 
-                    this.reclassifyAction.oldClassifier;
+                    this.reclassifyAction.getOldClassifier();
             if (!oldClassifiers.isEmpty()) {
                 System.out.println(prefix + " oldClassifier:");
                 for (Classifier oldClassifier: oldClassifiers) {
@@ -116,7 +116,7 @@ public class ClassifyStatementMapping extends StatementMapping {
                 }
             }
             Collection<Classifier> newClassifiers = 
-                    this.reclassifyAction.newClassifier;
+                    this.reclassifyAction.getNewClassifier();
             if (!newClassifiers.isEmpty()) {
                 System.out.println(prefix + " newClassifier:");
                 for (Classifier newClassifier: newClassifiers) {

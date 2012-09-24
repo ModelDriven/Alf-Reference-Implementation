@@ -16,8 +16,8 @@ import org.modeldriven.alf.mapping.fuml.expressions.UnaryExpressionMapping;
 import org.modeldriven.alf.syntax.expressions.BitStringUnaryExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
-import fUML.Syntax.Actions.BasicActions.CallBehaviorAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
+import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class BitStringUnaryExpressionMapping extends UnaryExpressionMapping {
     
@@ -29,8 +29,8 @@ public class BitStringUnaryExpressionMapping extends UnaryExpressionMapping {
                 this.graph.addCallBehaviorAction(getBehavior(
                         RootNamespace.getBitStringFunctionToBitString()));
             this.graph.addObjectFlow(
-                    operandResultSource, callAction.argument.get(0));
-            operandResultSource = callAction.result.get(0);
+                    operandResultSource, callAction.getArgument().get(0));
+            operandResultSource = callAction.getResult().get(0);
         }
         return operandResultSource;
     }

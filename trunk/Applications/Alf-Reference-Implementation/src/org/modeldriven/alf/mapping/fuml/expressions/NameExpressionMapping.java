@@ -24,9 +24,9 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.NameExpression;
 import org.modeldriven.alf.syntax.expressions.PropertyAccessExpression;
 
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Activities.IntermediateActivities.ActivityNode;
-import fUML.Syntax.Classes.Kernel.Element;
+import org.modeldriven.alf.uml.ValueSpecificationAction;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Element;
 
 public class NameExpressionMapping extends ExpressionMapping {
     
@@ -90,7 +90,7 @@ public class NameExpressionMapping extends ExpressionMapping {
                         // must be a fork node attached to an output expansion 
                         // node for the expansion region mapped from the for
                         // statement. Get the expansion node as the result source.
-                        this.activityNode = this.activityNode.incoming.get(0).source;
+                        this.activityNode = this.activityNode.getIncoming().get(0).getSource();
                     }
                 }
             } else if (enumerationLiteralReference != null) {
@@ -102,7 +102,7 @@ public class NameExpressionMapping extends ExpressionMapping {
                     this.action = this.graph.addDataValueSpecificationAction(
                             ((EnumerationLiteralNameMapping)mapping).
                             getEnumerationLiteral());
-                    this.activityNode = this.action.result;
+                    this.activityNode = this.action.getResult();
                 } else {
                     this.throwError("Error mapping enumeration literal:" + 
                             enumerationLiteralReference);

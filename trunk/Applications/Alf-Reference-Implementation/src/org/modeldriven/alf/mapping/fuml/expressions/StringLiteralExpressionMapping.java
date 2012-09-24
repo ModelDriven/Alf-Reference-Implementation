@@ -15,8 +15,8 @@ import org.modeldriven.alf.mapping.fuml.expressions.LiteralExpressionMapping;
 
 import org.modeldriven.alf.syntax.expressions.StringLiteralExpression;
 
-import fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction;
-import fUML.Syntax.Classes.Kernel.LiteralString;
+import org.modeldriven.alf.uml.ValueSpecificationAction;
+import org.modeldriven.alf.uml.LiteralString;
 
 public class StringLiteralExpressionMapping extends LiteralExpressionMapping {
 
@@ -36,7 +36,7 @@ public class StringLiteralExpressionMapping extends LiteralExpressionMapping {
         ValueSpecificationAction action = 
             (ValueSpecificationAction)this.getElement();
         return super.toString() + (action == null? "": " value:" + 
-                ((LiteralString)action.value).value);
+                ((LiteralString)action.getValue()).getValue());
     }
 
 } // StringLiteralExpressionMapping

@@ -18,9 +18,8 @@ import org.modeldriven.alf.mapping.fuml.common.DocumentedElementMapping;
 
 import org.modeldriven.alf.syntax.units.Member;
 
-import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
-import fUML.Syntax.Classes.Kernel.VisibilityKind;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
 
 public abstract class MemberMapping extends DocumentedElementMapping {
     
@@ -32,14 +31,9 @@ public abstract class MemberMapping extends DocumentedElementMapping {
     public void mapTo(NamedElement namedElement) throws MappingError {
         super.mapTo(namedElement);
         
-        Member member = this.getMember();
-        String visibility = member.getVisibility();
-        
+        Member member = this.getMember();        
         namedElement.setName(member.getName());
-        namedElement.setVisibility(
-                "private".equals(visibility)? VisibilityKind.private_:
-                "public".equals(visibility)? VisibilityKind.public_:
-                    VisibilityKind.package_);
+        namedElement.setVisibility(member.getVisibility());
             
     }
     
@@ -68,7 +62,7 @@ public abstract class MemberMapping extends DocumentedElementMapping {
 	
 	public String toString() {
 	    NamedElement element = (NamedElement)this.getElement();
-	    return super.toString() + (element == null? "": " name:" + element.name);
+	    return super.toString() + (element == null? "": " name:" + element.getName());
 	}
 	
 } // MemberMapping
