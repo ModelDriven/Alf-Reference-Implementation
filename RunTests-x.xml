@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests-x" default="run" basedir=".">
+    <property name="classname" value="org.modeldriven.alf.execution.fumlri.Alf"/>
     <path id="cp">
         <pathelement location="${classpath}" />
         <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
         <pathelement location="../fUML-Reference-Implementation/lib/commons-logging.jar" />
         <pathelement location="../fUML-Reference-Implementation/lib/log4j.jar" />
-     </path>
+    </path>
     <target name="run">
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -16,7 +17,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Assignment" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -25,7 +26,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Assignment_Feature" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -34,7 +35,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Assignment_Indexed" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -43,7 +44,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Assignment_Feature_Indexed" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -52,7 +53,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Association" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -61,7 +62,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Constructor_Destructor" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -70,7 +71,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Increment_Decrement" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -79,7 +80,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Invocation" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -88,7 +89,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Literal_Name" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -97,7 +98,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Object" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -106,7 +107,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Operator" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -115,7 +116,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Sequence_Construction" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -124,7 +125,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Sequence_Expansion_Reduction" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -133,7 +134,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_Sequence_Operation" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -142,7 +143,7 @@
             <arg value="OFF"/>
             <arg value="Expressions_SuperConstructors" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -151,7 +152,7 @@
             <arg value="OFF"/>
             <arg value="Statements_Accept" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -160,7 +161,7 @@
             <arg value="OFF"/>
             <arg value="Statements_Classify" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -169,11 +170,11 @@
             <arg value="OFF"/>
             <arg value="Statements_Conditional" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="Statements_For_Looping" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>
@@ -182,7 +183,7 @@
             <arg value="OFF"/>
             <arg value="Statements_Simple" />
         </java>
-        <java classname="org.modeldriven.alf.execution.Alf" classpath="bin" output="tests-x.txt" append="true">
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
             <classpath refid="cp" />
             <arg value="-v"/>
             <arg value="-m"/>

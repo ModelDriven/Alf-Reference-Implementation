@@ -65,7 +65,7 @@ public class DataTypeDefinitionMapping extends ClassifierDefinitionMapping {
                     this.throwError("Duplicate primitive type: " + dataTypeDefinition);
                 }
             }
-            executionFactory.addBuiltInType(((org.modeldriven.alf.uml.fuml.PrimitiveType)classifier).getBase());           
+            executionFactory.addBuiltInType(((org.modeldriven.alf.uml.fumlri.PrimitiveType)classifier).getBase());           
         }
     }
 

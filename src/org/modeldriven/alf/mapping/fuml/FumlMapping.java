@@ -29,10 +29,8 @@ import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
 
 public abstract class FumlMapping extends Mapping {
     
-    private ElementFactory elementFactory = null;
-
     private static FumlMappingFactory fumlFactory = new FumlMappingFactory();
-    private static ElementFactory fumlElementFactory = new org.modeldriven.alf.uml.fuml.ElementFactory();
+    private static ElementFactory fumlElementFactory = null;
     private static ExecutionFactory executionFactory = null;
     private static SyntaxElement parsedElement = null;
     
@@ -51,12 +49,12 @@ public abstract class FumlMapping extends Mapping {
         FumlMapping.executionFactory = executionFactory;
     }
     
-    public ElementFactory getElementFactory() {
-        return this.elementFactory;
+    public static ElementFactory getElementFactory() {
+        return fumlElementFactory;
     }
     
-    public void setElementFactory(ElementFactory elementFactory) {
-        this.elementFactory = elementFactory;
+    public static void setElementFactory(ElementFactory elementFactory) {
+        fumlElementFactory = elementFactory;
     }
     
     public static SyntaxElement getParsedElement() {
@@ -158,7 +156,6 @@ public abstract class FumlMapping extends Mapping {
     
     public FumlMapping() {
         this.setFactory(fumlFactory);
-        this.setElementFactory(fumlElementFactory);
     }
     
     public Element getElement() {
@@ -172,11 +169,11 @@ public abstract class FumlMapping extends Mapping {
     }
     
     public <T extends Element> T create(Class<T> class_) {
-        return this.getElementFactory().newInstance(class_);
+        return getElementFactory().newInstance(class_);
     }
     
     public ActivityGraph createActivityGraph() {
-        return new ActivityGraph(this.getElementFactory());
+        return new ActivityGraph(getElementFactory());
     }
     
     public ActivityGraph createActivityGraph(ActivityGraph graph) {

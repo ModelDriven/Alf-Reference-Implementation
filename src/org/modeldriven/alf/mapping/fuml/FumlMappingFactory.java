@@ -90,7 +90,7 @@ public class FumlMappingFactory extends MappingFactory {
                 }
             }
         }
-        execution.types.add(((org.modeldriven.alf.uml.fuml.Behavior)behavior).getBase());
+        execution.types.add(((org.modeldriven.alf.uml.fumlri.Behavior)behavior).getBase());
         return execution;
     }
     
