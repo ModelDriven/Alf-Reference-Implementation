@@ -15,113 +15,19 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import org.modeldriven.alf.mapping.Mapping;
-import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.mapping.fuml.FumlMapping;
-import org.modeldriven.alf.mapping.fuml.common.ElementReferenceMapping;
-import org.modeldriven.alf.mapping.fuml.units.ClassDefinitionMapping;
-import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
-import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
-import org.modeldriven.alf.syntax.units.ClassDefinition;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
-import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
-import org.modeldriven.fuml.library.channel.StandardInputChannelObject;
-import org.modeldriven.fuml.library.channel.StandardOutputChannelObject;
-import org.modeldriven.fuml.library.common.Status;
-import org.modeldriven.fuml.library.libraryclass.ImplementationObject;
 
-import fUML.Semantics.Classes.Kernel.Object_;
-import fUML.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
-import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
-import fUML.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
-import fUML.Semantics.Loci.LociL1.Executor;
-import fUML.Semantics.Loci.LociL1.FirstChoiceStrategy;
-import fUML.Semantics.Loci.LociL1.Locus;
-import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
-import org.modeldriven.alf.uml.Class_;
-import org.modeldriven.alf.uml.Classifier;
-import org.modeldriven.alf.uml.DataType;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Operation;
-import org.modeldriven.alf.uml.Behavior;
-
-public class Alf {
+public abstract class Alf {
     
-    private static boolean isFileName = false;
-    private static boolean isVerbose = false;
-    private static boolean isParseOnly = false;
-    private static boolean isPrint = false;
-    
-    private static Locus locus = null;    
-    
-    private static void createLocus() {
-        locus = new Locus();
-        locus.setExecutor(new Executor());
-        locus.setFactory(new ExecutionFactoryL3());
-        locus.factory.setStrategy(new RedefinitionBasedDispatchStrategy());
-        locus.factory.setStrategy(new FIFOGetNextEventStrategy());
-        locus.factory.setStrategy(new FirstChoiceStrategy());
-    }
-    
-    private static void createSystemServices() {
-        QualifiedName standardOutputChannel = 
-            RootNamespace.getBasicInputOutput().getImpl().copy().
-                addName("StandardOutputChannel");
-        createSystemService
-            (standardOutputChannel, new StandardOutputChannelObject());
-        
-        QualifiedName standardInputChannel = 
-            RootNamespace.getBasicInputOutput().getImpl().copy().
-                addName("StandardInputChannel");
-        createSystemService
-            (standardInputChannel, new StandardInputChannelObject());
-        
-        QualifiedName status = 
-            RootNamespace.getBasicInputOutput().getImpl().copy().
-                addName("Status");
-        Classifier statusType = getClassifier(status);
-        if (statusType instanceof DataType) {
-            Status.setStatusType(((org.modeldriven.alf.uml.fuml.DataType)statusType).getBase());
-        } else {
-            System.out.println("Cannot find Status datatype.");
-        }
-    }
-    
-    private static void createSystemService (
-            QualifiedName name,
-            ImplementationObject object) {
-        Classifier type = getClassifier(name);
-        if (type instanceof Class_) {
-            object.types.addValue(((org.modeldriven.alf.uml.fuml.Class_)type).getBase());
-            locus.add(object);
-            printVerbose("Instantiated " + name.getPathName() + 
-                    " as " + type.getName() + "(" + type + ")");
-        }
-    }
-    
-    private static Classifier getClassifier(QualifiedName name) {
-        Classifier classifier = null;
-        ElementReference referent = 
-            name.getImpl().getClassifierReferent();
-        FumlMapping mapping = FumlMapping.getMapping(referent);
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
-        }
-        if (mapping instanceof ClassifierDefinitionMapping) {
-            try {
-                classifier = ((ClassifierDefinitionMapping)mapping).getClassifier();
-            } catch (MappingError e) {
-                System.out.println("Cannot map " + name.getPathName());
-                System.out.println(" error: " + e.getMessage());
-            }
-        }
-        return classifier;
-    }
+    protected static boolean isFileName = false;
+    protected static boolean isVerbose = false;
+    protected static boolean isParseOnly = false;
+    protected static boolean isPrint = false;
     
     public static void setModelDirectory(String modelDirectory) {
         RootNamespace.setModelDirectory(modelDirectory);
@@ -153,7 +59,7 @@ public class Alf {
         Alf.isPrint = isPrint;
     }
 
-    private static void printVerbose(String message) {
+    protected static void printVerbose(String message) {
         if (isVerbose) {
             System.out.println(message);
         }
@@ -203,7 +109,7 @@ public class Alf {
         return i == args.length - 1? args[i]: null;
     }
     
-    public static void executeUnit(String unitName) {
+    public void executeUnit(String unitName) {
         QualifiedName qualifiedName = new QualifiedName();
         
         if (isFileName) {
@@ -219,13 +125,13 @@ public class Alf {
             }
         }
 
-        RootNamespace root = RootNamespace.getRootScope();
         UnitDefinition unit = RootNamespace.resolveUnit(qualifiedName);
         if (!(unit instanceof MissingUnit)) {
             if (unit.getImpl().resolveStub()) {
                 printVerbose("Resolved stub for " + qualifiedName.getPathName());
             }
             
+            RootNamespace root = RootNamespace.getRootScope();
             root.deriveAll();
             Collection<ConstraintViolation> violations = root.checkConstraints();
             if (!violations.isEmpty()) {
@@ -245,82 +151,21 @@ public class Alf {
                 if (definition.getImpl().isTemplate()) { 
                     System.out.println(definition.getName() + " is a template.");
                 } else {
-                    createLocus();
-                    FumlMapping.setExecutionFactory(locus.factory);       
-                    FumlMapping mapping = FumlMapping.getMapping(root);
-                    try {
-                        mapping.getModelElements();
-                        Mapping elementMapping = definition.getImpl().getMapping();
-                        printVerbose("Mapped successfully.");
-                        Element element = ((FumlMapping)elementMapping).getElement();
-                        if (element instanceof Behavior && 
-                                ((Behavior)element).getOwnedParameter().isEmpty() ||
-                                element instanceof Class_ && 
-                                ((Class_)element).getIsActive() && 
-                                !((Class_)element).getIsAbstract() && 
-                                ((Class_)element).getClassifierBehavior() != null) {
-                            createSystemServices();
-                            printVerbose("Executing...");
-                            if (element instanceof Behavior) {
-                                locus.executor.execute(
-                                        ((org.modeldriven.alf.uml.fuml.Behavior)element).getBase(), 
-                                        null, new ParameterValueList());
-                            } else {
-                                ClassDefinition classDefinition = 
-                                        (ClassDefinition)definition;
-                                OperationDefinition constructorDefinition = 
-                                        classDefinition.getImpl().getDefaultConstructor();
-                                if (constructorDefinition == null) {
-                                    System.out.println("Cannot instantiate: " + 
-                                            classDefinition.getName());
-                                } else {
-                                    // Instantiate active class.
-                                    Class_ class_ = (Class_)element;
-                                    Object_ object = locus.instantiate(((org.modeldriven.alf.uml.fuml.Class_)class_).getBase());
-    
-                                    // Initialize the object.
-                                    ClassDefinitionMapping classMapping =
-                                            (ClassDefinitionMapping)elementMapping;
-                                    Operation initializer = 
-                                            classMapping.getInitializationOperation();
-                                    locus.executor.execute(
-                                            ((org.modeldriven.alf.uml.fuml.Behavior)initializer.getMethod().get(0)).getBase(), 
-                                            object, 
-                                            new ParameterValueList());
-    
-                                    // Execute the classifier behavior.
-                                    object.startBehavior(((org.modeldriven.alf.uml.fuml.Class_)class_).getBase(), new ParameterValueList());
-                                }
-                            }
-                            } else if (element instanceof Behavior) {
-                                System.out.println("Cannot execute a behavior with parameters.");
-                            } else if (element instanceof Class_) {
-                                Class_ class_ = (Class_)element;
-                                if (!class_.getIsActive()) {
-                                    System.out.println("Cannot execute a class that is not active.");
-                                } else if (class_.getIsAbstract()) {
-                                    System.out.println("Cannot execute an abstract class.");
-                                } else {
-                                    System.out.println("Cannot execute a class without a classifier behavior.");
-                                }
-                            }
-                    } catch (MappingError e) {
-                        System.out.println("Mapping failed.");
-                        System.out.println(e.getMapping());                    
-                        System.out.println(" error: " + e.getMessage());
-                    }
+                    this.execute(definition);
                 }
             }
         }
     }
     
-    public static void main(String[] args) {
+    protected abstract void execute(NamespaceDefinition definition);
+    
+    public Alf(String[] args) {
         PropertyConfigurator.configure("log4j.properties");
 
         String unitName = parseArgs(args);
         
         if (unitName != null) {
-            executeUnit(unitName);
+            this.executeUnit(unitName);
         } else {
             System.out.println("Usage is");
             System.out.println("  alf [options] unit");
@@ -336,4 +181,5 @@ public class Alf {
             System.out.println("  -v        Set verbose mode");
         }         
     }
+    
 }
