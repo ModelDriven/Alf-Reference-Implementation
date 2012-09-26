@@ -15,7 +15,7 @@ import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
 
 import org.modeldriven.alf.syntax.units.DataTypeDefinition;
 
-import fUML.Semantics.Loci.LociL1.ExecutionFactory;
+import org.modeldriven.alf.execution.fuml.ExecutionFactory;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.DataType;
 import org.modeldriven.alf.uml.Element;
@@ -60,12 +60,12 @@ public class DataTypeDefinitionMapping extends ClassifierDefinitionMapping {
             if (name == null) {
                 this.throwError("Unnamed primitive type: " + dataTypeDefinition);
             }
-            for (fUML.Syntax.Classes.Kernel.PrimitiveType builtInType: executionFactory.builtInTypes) {
-                if (builtInType.name != null && builtInType.name.equals(name)) {
+            for (PrimitiveType builtInType: executionFactory.getBuiltInTypes()) {
+                if (builtInType.getName() != null && builtInType.getName().equals(name)) {
                     this.throwError("Duplicate primitive type: " + dataTypeDefinition);
                 }
             }
-            executionFactory.addBuiltInType(((org.modeldriven.alf.uml.fumlri.PrimitiveType)classifier).getBase());           
+            executionFactory.addBuiltInType((PrimitiveType)classifier);           
         }
     }
 

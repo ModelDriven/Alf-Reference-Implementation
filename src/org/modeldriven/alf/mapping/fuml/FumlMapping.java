@@ -24,12 +24,11 @@ import org.modeldriven.alf.uml.PrimitiveType;
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.ElementFactory;
 
-import fUML.Semantics.Loci.LociL1.ExecutionFactory;
-import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
+import org.modeldriven.alf.execution.fuml.ExecutionFactory;
 
 public abstract class FumlMapping extends Mapping {
-    
-    private static FumlMappingFactory fumlFactory = new FumlMappingFactory();
+
+    private static FumlMappingFactory fumlFactory = null;
     private static ElementFactory fumlElementFactory = null;
     private static ExecutionFactory executionFactory = null;
     private static SyntaxElement parsedElement = null;
@@ -40,6 +39,16 @@ public abstract class FumlMapping extends Mapping {
     private static PrimitiveType naturalType = null;
     private static PrimitiveType stringType = null;
     private static PrimitiveType bitStringType = null;
+    
+    public static FumlMappingFactory getFumlFactory() {
+        if (fumlFactory == null) {
+            fumlFactory = new FumlMappingFactory();
+        }
+        return fumlFactory;
+    }
+    public static void setFumlFactory(FumlMappingFactory fumlFactory) {
+        FumlMapping.fumlFactory = fumlFactory;
+    }
     
     public static ExecutionFactory getExecutionFactory() {
         return executionFactory;
@@ -136,13 +145,13 @@ public abstract class FumlMapping extends Mapping {
     public static PrimitiveType getPrimitiveType(ElementReference typeReference) 
     throws MappingError {
         DataTypeDefinitionMapping mapping = (DataTypeDefinitionMapping)
-        ((ElementReferenceMapping)fumlFactory.getMapping(typeReference)).getMapping();
+        ((ElementReferenceMapping)getFumlFactory().getMapping(typeReference)).getMapping();
         return (PrimitiveType)mapping.getClassifier();
     }
 
     public static Behavior getBehavior(ElementReference behaviorReference)
     throws MappingError {
-        Mapping mapping = fumlFactory.getMapping(behaviorReference);
+        Mapping mapping = getFumlFactory().getMapping(behaviorReference);
         if (mapping instanceof ElementReferenceMapping) {
             mapping = ((ElementReferenceMapping)mapping).getMapping();
         }
@@ -155,7 +164,7 @@ public abstract class FumlMapping extends Mapping {
     }
     
     public FumlMapping() {
-        this.setFactory(fumlFactory);
+        this.setFactory(getFumlFactory());
     }
     
     public Element getElement() {
@@ -181,18 +190,6 @@ public abstract class FumlMapping extends Mapping {
     }
     
     public void mapTo(Element element) throws MappingError {
-        /*
-        System.out.println("[mapTo] source = " + this.getSource() + 
-                " element=" + element);
-        */
-        /*
-        Object source = this.getSource();
-        if (source instanceof SyntaxElement) {
-            ((SyntaxElement) source).print("***", true);
-        } else {
-            System.out.println("***" + source);
-        }
-        */
     }
     
     public static FumlMapping getMapping(Object source) {
@@ -210,49 +207,6 @@ public abstract class FumlMapping extends Mapping {
         }
         
         return mapping;
-    }
-
-    public static void main(String[] args) {
-        String fileName = null;
-        
-        if (args.length > 0) {
-            fileName = args[0];
-        }
-        
-        setExecutionFactory(new ExecutionFactoryL3());
-        FumlMapping mapping = null;
-        try {
-            mapping = parseAndMap(fileName);
-
-            if (mapping == null) {
-                System.out.println("Mapping failed");
-            } else {
-                mapping.getModelElements();
-                System.out.println("Mapped successfully.");
-                mapping.print();
-            }
-        } catch (MappingError e) {
-            System.out.println("Mapping failed.");
-            Mapping errorMapping = e.getMapping();
-            System.out.println(errorMapping);
-            System.out.println(" error: " + e.getMessage());
-            Object source = errorMapping.getSource();
-            if (source != null) {
-                System.out.println(" source: " + source);
-                if (source instanceof SyntaxElement) {
-                    SyntaxElement element = (SyntaxElement)source;
-                    System.out.println(" file: " + element.getFileName() + 
-                            " at line " + element.getLine() + 
-                            " column " + element.getColumn());
-                }
-            }
-            if (mapping != null) {
-                mapping.print();
-            }
-        } catch (Exception e) {
-            System.out.println("Mapping failed.");
-            e.printStackTrace();
-        }
     }
     
 }

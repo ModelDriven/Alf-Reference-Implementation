@@ -10,22 +10,31 @@
 
 package org.modeldriven.alf.mapping.fuml.units;
 
+import java.util.Collection;
+
+import org.modeldriven.alf.execution.fuml.OpaqueBehaviorExecution;
+
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.mapping.fuml.FumlMapping;
 import org.modeldriven.alf.mapping.fuml.FumlMappingFactory;
 import org.modeldriven.alf.mapping.fuml.common.SyntaxElementMapping;
-import org.modeldriven.alf.mapping.fuml.units.ClassifierDefinitionMapping;
-
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 
-import org.modeldriven.alf.uml.*;
-
-import fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
-
-import java.util.Collection;
+import org.modeldriven.alf.uml.Activity;
+import org.modeldriven.alf.uml.ActivityEdge;
+import org.modeldriven.alf.uml.ActivityFinalNode;
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.ActivityParameterNode;
+import org.modeldriven.alf.uml.Behavior;
+import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.ForkNode;
+import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.OpaqueBehavior;
+import org.modeldriven.alf.uml.Parameter;
 
 public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     
