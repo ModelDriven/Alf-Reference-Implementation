@@ -8,22 +8,11 @@
  *******************************************************************************/
 package org.modeldriven.alf.mapping.fuml;
 
-import java.util.Collection;
-
+import org.modeldriven.alf.execution.fuml.OpaqueBehaviorExecution;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingFactory;
-import org.modeldriven.alf.syntax.expressions.QualifiedName;
-import org.modeldriven.alf.syntax.statements.QualifiedNameList;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
-import org.modeldriven.alf.syntax.units.StereotypeAnnotation;
-import org.modeldriven.fuml.library.LibraryFunctions;
-
 import org.modeldriven.alf.uml.OpaqueBehavior;
-
-import fUML.Debug;
-import fUML.Semantics.Classes.Kernel.Value;
-import fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
-import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 
 public class FumlMappingFactory extends MappingFactory {
 
@@ -43,64 +32,10 @@ public class FumlMappingFactory extends MappingFactory {
         }
     }
     
-    private class UnimplementedBehaviorExecution extends OpaqueBehaviorExecution {
-        
-        @Override
-        public void doBody(ParameterValueList inputParameters,
-                ParameterValueList outputParameters) {
-            /*
-            throw new Error("Primitive behavior" + 
-                    (this.types.size() == 0? "": " " + this.types.get(0).name) + 
-                    " not implemented.") ;
-            */
-            Debug.println("[error] Primitive behavior" + 
-                    (this.types.size() == 0? "": " " + this.types.get(0).name) + 
-                    " not implemented.");
-            LibraryFunctions.addEmptyValueListToOutputList(outputParameters);
-        }
-
-        @Override
-        public Value new_() {
-            return new UnimplementedBehaviorExecution();
-        }
-        
-    }
-
     public OpaqueBehaviorExecution instantiatePrimitiveBehaviorPrototype(
             ActivityDefinition definition, 
-            final OpaqueBehavior behavior) {
-        OpaqueBehaviorExecution execution = new UnimplementedBehaviorExecution();
-        for (StereotypeAnnotation annotation: definition.getAnnotation()) {
-            if (annotation.getStereotypeName().getPathName().equals("primitive")) {
-                QualifiedNameList nameList = annotation.getNames();
-                if (nameList != null) {
-                    Collection<QualifiedName> names = nameList.getName();
-                    if (!names.isEmpty()) {
-                        String name = 
-                            ((QualifiedName)names.toArray()[0]).getPathName();
-                        try {
-                            execution = 
-                                (OpaqueBehaviorExecution)Class.forName
-                                    (classNameFor(definition, name)).
-                                        newInstance();
-                        } catch (Exception e) {
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        execution.types.add(((org.modeldriven.alf.uml.fumlri.Behavior)behavior).getBase());
-        return execution;
+            OpaqueBehavior behavior) {
+        return null;
     }
     
-    private static String classNameFor(ActivityDefinition definition, String name) {
-        QualifiedName definitionName = definition.getImpl().getQualifiedName();
-        String rootName = definitionName.getNameBinding().get(0).getName();
-        return "org.modeldriven." + 
-            (rootName.equals("FoundationalModelLibrary")? "fuml": "alf") +
-            ".library." + 
-            definition.getNamespace().getName().toLowerCase() + "." + name;
-    }
-
 }
