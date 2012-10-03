@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests-x" default="run" basedir=".">
-    <property name="classname" value="org.modeldriven.alf.fumlri.execution.Alf"/>
+    <property name="classname" value="org.modeldriven.alf.fuml.impl.execution.Alf"/>
     <path id="cp">
         <pathelement location="${classpath}" />
         <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
