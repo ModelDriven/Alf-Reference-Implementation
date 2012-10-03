@@ -10,11 +10,11 @@
 package org.modeldriven.alf.execution.fuml;
 
 import org.modeldriven.alf.uml.ElementFactory;
+import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
+import org.modeldriven.alf.fuml.mapping.units.ClassDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.mapping.fuml.FumlMapping;
-import org.modeldriven.alf.mapping.fuml.FumlMappingFactory;
-import org.modeldriven.alf.mapping.fuml.units.ClassDefinitionMapping;
 import org.modeldriven.alf.syntax.units.ClassDefinition;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
