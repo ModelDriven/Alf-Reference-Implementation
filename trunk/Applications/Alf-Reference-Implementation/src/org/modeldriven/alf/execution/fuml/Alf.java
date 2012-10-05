@@ -59,7 +59,7 @@ public abstract class Alf extends org.modeldriven.alf.execution.Alf {
                     !((Class_)element).getIsAbstract() && 
                     ((Class_)element).getClassifierBehavior() != null) {
                 createSystemServices();
-                printVerbose("Executing...");
+                this.printVerbose("Executing...");
                 if (element instanceof Behavior) {
                     locus.getExecutor().execute((Behavior)element, null);
                 } else {
@@ -68,7 +68,7 @@ public abstract class Alf extends org.modeldriven.alf.execution.Alf {
                     OperationDefinition constructorDefinition = 
                             classDefinition.getImpl().getDefaultConstructor();
                     if (constructorDefinition == null) {
-                        System.out.println("Cannot instantiate: " + 
+                        this.println("Cannot instantiate: " + 
                                 classDefinition.getName());
                     } else {
                         // Instantiate active class.
@@ -89,26 +89,22 @@ public abstract class Alf extends org.modeldriven.alf.execution.Alf {
                     }
                 }
             } else if (element instanceof Behavior) {
-                System.out.println("Cannot execute a behavior with parameters.");
+                this.println("Cannot execute a behavior with parameters.");
             } else if (element instanceof Class_) {
                 Class_ class_ = (Class_)element;
                 if (!class_.getIsActive()) {
-                    System.out.println("Cannot execute a class that is not active.");
+                    this.println("Cannot execute a class that is not active.");
                 } else if (class_.getIsAbstract()) {
-                    System.out.println("Cannot execute an abstract class.");
+                    this.println("Cannot execute an abstract class.");
                 } else {
-                    System.out.println("Cannot execute a class without a classifier behavior.");
+                    this.println("Cannot execute a class without a classifier behavior.");
                 }
             }
         } catch (MappingError e) {
-            System.out.println("Mapping failed.");
-            System.out.println(e.getMapping());                    
-            System.out.println(" error: " + e.getMessage());
+            this.println("Mapping failed.");
+            this.println(e.getMapping().toString());                  
+            this.println(" error: " + e.getMessage());
         }
-    }
-    
-    public Alf(String[] args){
-        super(args);
     }
     
 }

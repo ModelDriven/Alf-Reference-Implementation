@@ -6,19 +6,26 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-package org.modeldriven.alf.syntax.units.impl;
+package org.modeldriven.alf.fuml.impl.units;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.units.Member;
+import org.modeldriven.alf.syntax.units.MissingMember;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     public RootNamespaceImpl(RootNamespace self) {
         super(self);
         this.setModelDirectory("Libraries");
+    }
+    
+    public RootNamespace getSelf() {
+        return (RootNamespace)this.self;
     }
 
     @Override
@@ -46,23 +53,10 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         }
         return members;
     }
-
+    
+    @Override
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-        ModelNamespace modelScope = RootNamespace.getModelScope();
-        
-        // Look for the unit in the model first.
-        UnitDefinition unit = modelScope.getImpl().resolveUnit(qualifiedName);
-        
-        // If not found in the model, look for the unit in the library.
-        if (unit instanceof MissingUnit) {
-            unit = super.resolveUnit(qualifiedName);
-            if (unit instanceof MissingUnit) {
-                System.out.println("Unit not found: " + qualifiedName.getPathName());
-            } 
-        }
-        
-        // Return a MissingUnit rather than null if parsing failed.
-        return unit == null? new MissingUnit(qualifiedName): unit;
+        return this.getSelf().getModelScope().resolveUnit(qualifiedName);
     }
 
 }
