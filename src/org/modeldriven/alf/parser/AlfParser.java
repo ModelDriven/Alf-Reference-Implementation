@@ -6,6 +6,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -132,8 +134,6 @@ public class AlfParser implements AlfParserConstants {
   }
 
   public static SyntaxElement parse(String fileName) {
-    RootNamespace root = new org.modeldriven.alf.fuml.impl.units.RootNamespace();
-    RootNamespace.setRootScope(root);
     AlfParser parser;
 
     element = null;
@@ -164,6 +164,9 @@ public class AlfParser implements AlfParserConstants {
       System.out.println("Parsed successfully.");
 
       if (checkConstraints || checkAllConstraints) {
+        new RootNamespaceImpl();
+        RootNamespace root = RootNamespace.getRootScope();
+
         UnitDefinition unit = (UnitDefinition)element;
         if (unit.getImpl().resolveStub()) {
           System.out.println("Resolved stub for " +
@@ -5668,30 +5671,6 @@ public class AlfParser implements AlfParserConstants {
     finally { jj_save(44, xla); }
   }
 
-  private boolean jj_3R_67() {
-    if (jj_3R_102()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_141() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_153()) {
-    jj_scanpos = xsp;
-    if (jj_3R_154()) {
-    jj_scanpos = xsp;
-    if (jj_3R_155()) {
-    jj_scanpos = xsp;
-    if (jj_3R_156()) {
-    jj_scanpos = xsp;
-    if (jj_3R_157()) return true;
-    }
-    }
-    }
-    }
-    return false;
-  }
-
   private boolean jj_3R_101() {
     if (jj_scan_token(COMMA)) return true;
     return false;
@@ -5713,12 +5692,6 @@ public class AlfParser implements AlfParserConstants {
     return false;
   }
 
-  private boolean jj_3R_53() {
-    if (jj_3R_90()) return true;
-    if (jj_3R_91()) return true;
-    return false;
-  }
-
   private boolean jj_3R_64() {
     if (jj_3R_46()) return true;
     Token xsp;
@@ -5726,6 +5699,12 @@ public class AlfParser implements AlfParserConstants {
       xsp = jj_scanpos;
       if (jj_3R_101()) { jj_scanpos = xsp; break; }
     }
+    return false;
+  }
+
+  private boolean jj_3R_53() {
+    if (jj_3R_90()) return true;
+    if (jj_3R_91()) return true;
     return false;
   }
 
@@ -7414,6 +7393,30 @@ public class AlfParser implements AlfParserConstants {
 
   private boolean jj_3R_153() {
     if (jj_3R_163()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_67() {
+    if (jj_3R_102()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_141() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_153()) {
+    jj_scanpos = xsp;
+    if (jj_3R_154()) {
+    jj_scanpos = xsp;
+    if (jj_3R_155()) {
+    jj_scanpos = xsp;
+    if (jj_3R_156()) {
+    jj_scanpos = xsp;
+    if (jj_3R_157()) return true;
+    }
+    }
+    }
+    }
     return false;
   }
 

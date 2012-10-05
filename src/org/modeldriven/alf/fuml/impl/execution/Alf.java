@@ -19,7 +19,8 @@ import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
-import org.modeldriven.alf.fuml.impl.units.RootNamespace;
+import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
@@ -37,19 +38,19 @@ import fUML.Semantics.Loci.LociL1.FirstChoiceStrategy;
 
 public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
     
-    protected RootNamespace rootScope = new RootNamespace();    
+    protected RootNamespaceImpl rootScopeImpl = null;    
     protected boolean isFileName = false;
     
-    public RootNamespace getRootScope() {
-        return this.rootScope;
+    public RootNamespaceImpl getRootScopeImpl() {
+        return this.rootScopeImpl;
     }
     
     public void setModelDirectory(String modelDirectory) {
-        this.getRootScope().setModelDirectory(modelDirectory);
+        this.getRootScopeImpl().setModelDirectory(modelDirectory);
     }
     
     public void setLibraryDirectory(String libraryDirectory) {
-        this.getRootScope().setLibraryDirectory(libraryDirectory);
+        this.getRootScopeImpl().setLibraryDirectory(libraryDirectory);
     }
     
     public static void setDebugLevel(Level level) {
@@ -64,7 +65,7 @@ public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
     @Override
     public void setIsVerbose(boolean isVerbose) {
         super.setIsVerbose(isVerbose);
-        this.getRootScope().setIsVerbose(isVerbose);
+        this.getRootScopeImpl().setIsVerbose(isVerbose);
     }
     
     @Override
@@ -121,7 +122,7 @@ public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
             object.types.addValue(class_);
             ((Locus)this.getLocus()).add(object);
             printVerbose("Instantiated " + name.getPathName() + 
-                    " as " + type.getName() + "(" + class_ + ")");
+                    " as " + object.getClass().getName());
         }
     }
     
@@ -189,7 +190,9 @@ public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
     }
     
     public Alf(String[] args) {
-        super();        
+        super();
+        this.rootScopeImpl = new RootNamespaceImpl();
+        
         PropertyConfigurator.configure("log4j.properties");
         
         String unitName = this.parseArgs(args);
@@ -210,8 +213,7 @@ public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
                 }
             }
 
-            RootNamespace.setRootScope(this.getRootScope());
-            UnitDefinition unit = this.getRootScope().getModelScope().resolveUnit(qualifiedName);
+            UnitDefinition unit = RootNamespace.resolve(qualifiedName);
             this.executeUnit(unit);
         } else {
             this.println("Usage is");
