@@ -14,10 +14,11 @@ import java.util.Map;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
 
-public abstract class RootNamespace extends ModelNamespace {
+public class RootNamespace extends ModelNamespace {
     
-    private static RootNamespace rootNamespace = null;
+    private static RootNamespace rootNamespace = new RootNamespace();
     
     private static QualifiedName alfStandardLibrary = null;
     private static QualifiedName primitiveTypes = null;
@@ -69,14 +70,16 @@ public abstract class RootNamespace extends ModelNamespace {
         return rootNamespace;
     }
     
-    public static void setRootScope(RootNamespace root) {
-        rootNamespace = root;
+    public static void setRootImpl(ModelNamespaceImpl impl) {
+        rootNamespace.setImpl(impl);
     }
-    
-    public abstract NamespaceDefinition getModelNamespace(UnitDefinition unit);
     
     public static NamespaceDefinition getModelScope(UnitDefinition unit) {
         return getRootScope().getModelNamespace(unit);
+    }
+    
+    public static UnitDefinition resolve(QualifiedName qualifiedName) {
+        return getRootScope().resolveUnit(qualifiedName);
     }
     
     public static QualifiedName getAlfStandardLibrary() {

@@ -36,6 +36,8 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -161,8 +163,6 @@ public class AlfParser {
   }
   	
   public static SyntaxElement parse(String fileName) {
-    RootNamespace root = new org.modeldriven.alf.fuml.impl.units.RootNamespace();
-    RootNamespace.setRootScope(root);
     AlfParser parser;
     
     element = null;
@@ -193,6 +193,9 @@ public class AlfParser {
       System.out.println("Parsed successfully.");
 
       if (checkConstraints || checkAllConstraints) {
+        new RootNamespaceImpl();
+        RootNamespace root = RootNamespace.getRootScope();
+        
       	UnitDefinition unit = (UnitDefinition)element;
         if (unit.getImpl().resolveStub()) {
           System.out.println("Resolved stub for " +

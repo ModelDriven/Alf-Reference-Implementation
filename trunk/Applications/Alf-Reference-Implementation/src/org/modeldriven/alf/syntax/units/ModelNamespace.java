@@ -14,10 +14,29 @@ import java.util.List;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
 
-public abstract class ModelNamespace extends PackageDefinition {
+public class ModelNamespace extends PackageDefinition {
     
-    @Override
+    public ModelNamespace() {
+    }
+    
+    public ModelNamespaceImpl getImpl() {
+        if (this.impl == null) {
+            this.impl = new ModelNamespaceImpl(this);
+        }
+        return (ModelNamespaceImpl)this.impl;
+    }
+    
+    public void setImpl(ModelNamespaceImpl impl) {
+        this.impl = impl;
+    }
+    
+    public NamespaceDefinition getModelNamespace(UnitDefinition unit) {
+        return this.getImpl().getModelNamespace(unit);
+    }
+
+        @Override
     public void _deriveAll() {
         List<Member> ownedMembers = (List<Member>)this.getOwnedMember();
         int i = ownedMembers.size();

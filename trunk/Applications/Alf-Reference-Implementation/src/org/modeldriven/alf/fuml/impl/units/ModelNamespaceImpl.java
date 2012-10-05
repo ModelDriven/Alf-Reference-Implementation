@@ -19,17 +19,16 @@ import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
-import org.modeldriven.alf.syntax.units.PackageDefinition;
 import org.modeldriven.alf.syntax.units.StereotypeAnnotation;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
-import org.modeldriven.alf.syntax.units.impl.PackageDefinitionImpl;
 
-public class ModelNamespaceImpl extends PackageDefinitionImpl {
+public class ModelNamespaceImpl extends 
+    org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl {
     
     private String modelDirectory = "Models";
     private boolean isVerbose = false;
     
-    public ModelNamespaceImpl(PackageDefinition self) {
+    public ModelNamespaceImpl(ModelNamespace self) {
         super(self);
     }
     
@@ -118,7 +117,8 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
         
         // If not found in the model, look for the unit in the library.
         if (unit instanceof MissingUnit) {
-            unit = ((RootNamespace)this.getSelf().getNamespace()).getImpl().resolveModelUnit(qualifiedName);
+            unit = ((RootNamespaceImpl)this.getSelf().getNamespace().getImpl()).
+                    resolveModelUnit(qualifiedName);
             // unit = RootNamespace.getRootScope().getImpl().resolveModelUnit(qualifiedName);
             if (unit instanceof MissingUnit) {
                 System.out.println("Unit not found: " + qualifiedName.getPathName());
