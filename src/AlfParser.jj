@@ -161,6 +161,8 @@ public class AlfParser {
   }
   	
   public static SyntaxElement parse(String fileName) {
+    RootNamespace root = new org.modeldriven.alf.fuml.impl.units.RootNamespace();
+    RootNamespace.setRootScope(root);
     AlfParser parser;
     
     element = null;
@@ -199,7 +201,6 @@ public class AlfParser {
             unit.getImpl().addImplicitImports();
         }
         if (checkAllConstraints) {
-        	SyntaxElement root = RootNamespace.getRootScope();
 	        root.deriveAll();
 	        violations = root.checkConstraints();
         } else {

@@ -119,7 +119,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         if (referents == null) {
             referents = this.deriveReferent();
             
-            // Only set the derived value if the some referents were found, so
+            // Only set the derived value if some referents were found, so
             // that the derivation will be recomputed if tried again later
             // after setting the namespace or expression context.
             if (!referents.isEmpty()) {

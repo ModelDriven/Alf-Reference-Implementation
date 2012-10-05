@@ -9,6 +9,9 @@
 
 package org.modeldriven.alf.fuml.impl.execution;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
@@ -16,7 +19,8 @@ import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
-import org.modeldriven.alf.syntax.units.RootNamespace;
+import org.modeldriven.alf.fuml.impl.units.RootNamespace;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.DataType;
@@ -33,14 +37,43 @@ import fUML.Semantics.Loci.LociL1.FirstChoiceStrategy;
 
 public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
     
+    protected RootNamespace rootScope = new RootNamespace();    
+    protected boolean isFileName = false;
+    
+    public RootNamespace getRootScope() {
+        return this.rootScope;
+    }
+    
+    public void setModelDirectory(String modelDirectory) {
+        this.getRootScope().setModelDirectory(modelDirectory);
+    }
+    
+    public void setLibraryDirectory(String libraryDirectory) {
+        this.getRootScope().setLibraryDirectory(libraryDirectory);
+    }
+    
+    public static void setDebugLevel(Level level) {
+        Logger logger = Logger.getLogger(fUML.Debug.class);
+        logger.setLevel(level);
+    }
+    
+    public void setIsFileName(boolean isFileName) {
+        this.isFileName = isFileName;
+    }
+    
+    @Override
+    public void setIsVerbose(boolean isVerbose) {
+        super.setIsVerbose(isVerbose);
+        this.getRootScope().setIsVerbose(isVerbose);
+    }
+    
     @Override
     protected Locus createLocus() {
         Locus locus = new Locus();
         fUML.Semantics.Loci.LociL1.ExecutionFactory factory = locus.getFactory().getBase(); 
         factory.setStrategy(new RedefinitionBasedDispatchStrategy());
         factory.setStrategy(new FIFOGetNextEventStrategy());
-        factory.setStrategy(new FirstChoiceStrategy());
-        
+        factory.setStrategy(new FirstChoiceStrategy());       
         
         return locus;
     }
@@ -111,8 +144,89 @@ public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
         return classifier;
     }
     
-    public Alf(String[] args){
-        super(args);
+    public String parseArgs(String[] args) {
+        Logger logger = Logger.getLogger(fUML.Debug.class);
+        Level level = logger.getLevel();
+
+        int i = 0;
+        while (i < args.length) {
+            String arg = args[i];
+            if (arg.charAt(0) != '-') {
+                break;
+            }
+            String option = arg.substring(1);
+            i++;
+            if (i < args.length) {
+                if (option.equals("v")) {
+                    this.setIsVerbose(true);
+                } else if (option.equals("f")) {
+                    this.setIsFileName(true);
+                } else if (option.equals("p")) {
+                    this.setIsParseOnly(true);
+                } else if (option.equals("P")) {
+                    this.setIsPrint(true);
+                } else if (option.matches("[mld]")) {
+                    arg = args[i];
+                    if (arg.charAt(0) == '-') {
+                        return null;
+                    }
+                    i++;
+                    if (option.equals("m")) {
+                        this.setModelDirectory(arg);
+                    } else if (option.equals("l")) {
+                        this.setLibraryDirectory(arg);
+                    } else if (option.equals("d")) {
+                        setDebugLevel(Level.toLevel(arg, level));
+                        level = logger.getLevel();
+                    }
+                } else {
+                    return null;
+                }
+            }
+        }
+        
+        return i == args.length - 1? args[i]: null;
+    }
+    
+    public Alf(String[] args) {
+        super();        
+        PropertyConfigurator.configure("log4j.properties");
+        
+        String unitName = this.parseArgs(args);
+        
+        if (unitName != null) {
+            QualifiedName qualifiedName = new QualifiedName();
+            
+            if (this.isFileName) {
+                int len = unitName.length();
+                if (len > 4 && unitName.substring(len - 4, len).equals(".alf")) {
+                    unitName = unitName.substring(0, len - 4);
+                }
+                qualifiedName.getImpl().addName(unitName);
+            } else {        
+                String[] names = unitName.replace(".","::").split("::");
+                for (String name: names) {
+                    qualifiedName.getImpl().addName(name);
+                }
+            }
+
+            RootNamespace.setRootScope(this.getRootScope());
+            UnitDefinition unit = this.getRootScope().getModelScope().resolveUnit(qualifiedName);
+            this.executeUnit(unit);
+        } else {
+            this.println("Usage is");
+            this.println("  alf [options] unit");
+            this.println("where unit is the qualified name of an Alf unit and");
+            this.println("allowable options are:");
+            this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
+            this.println("            Set debug logging level (default is as configured)");
+            this.println("  -f        Treat unit as a file name rather than a qualifed name");
+            this.println("  -l path   Set library directory path (default is \"Library\")");
+            this.println("  -m path   Set model directory path (default is \"Models\")");
+            this.println("  -p        Parse and constraint check only");
+            this.println("  -P        Parse, constraint check and print abstract syntax tree");
+            this.println("  -v        Set verbose mode");
+        }         
     }
     
     public static void main(String[] args) {

@@ -168,7 +168,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	    if (!self.getIsStub() || self.getIsExternal()) {
 	        return null;
 	    } else {
-	        return RootNamespace.resolveUnit(this.getQualifiedName());
+	        return this.resolveUnit(this.getQualifiedName());
 	    }	    
 	}
 
@@ -309,6 +309,10 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	 */
 	public boolean isImported() {
 	    return false;
+	}
+	
+	public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+	    return this.getOuterScope().getImpl().resolveUnit(qualifiedName);
 	}
 
     public boolean hasNoVisibility() {

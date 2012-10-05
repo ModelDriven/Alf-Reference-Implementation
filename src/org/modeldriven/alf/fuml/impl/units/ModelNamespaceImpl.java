@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-package org.modeldriven.alf.syntax.units.impl;
+package org.modeldriven.alf.fuml.impl.units;
 
 import java.util.Collection;
 
@@ -22,6 +22,7 @@ import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.PackageDefinition;
 import org.modeldriven.alf.syntax.units.StereotypeAnnotation;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
+import org.modeldriven.alf.syntax.units.impl.PackageDefinitionImpl;
 
 public class ModelNamespaceImpl extends PackageDefinitionImpl {
     
@@ -60,7 +61,7 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
         Collection<Member> members = super.resolveInScope(name, classifierOnly);
         if (members.size() == 0) {
             QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
-            UnitDefinition unit = this.resolveUnit(qualifiedName);
+            UnitDefinition unit = this.resolveModelUnit(qualifiedName);
             if (unit != null && !(unit instanceof MissingUnit)) {
                 Member member = unit.getDefinition();
                 members.add(member);
@@ -73,7 +74,7 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
         return members;
     }
     
-    public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+    public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
         // System.out.println("Resolving unit " + qualifiedName.getPathName());
 
         StringBuilder path = new StringBuilder();
@@ -107,5 +108,24 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+    
+    public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+        // ModelNamespace modelScope = RootNamespace.getModelScope();
+        
+        // Look for the unit in the model first.
+        UnitDefinition unit = this.resolveModelUnit(qualifiedName);
+        
+        // If not found in the model, look for the unit in the library.
+        if (unit instanceof MissingUnit) {
+            unit = ((RootNamespace)this.getSelf().getNamespace()).getImpl().resolveModelUnit(qualifiedName);
+            // unit = RootNamespace.getRootScope().getImpl().resolveModelUnit(qualifiedName);
+            if (unit instanceof MissingUnit) {
+                System.out.println("Unit not found: " + qualifiedName.getPathName());
+            } 
+        }
+        
+        // Return a MissingUnit rather than null if parsing failed.
+        return unit == null? new MissingUnit(qualifiedName): unit;
     }
 }

@@ -13,17 +13,9 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
-import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 
-public class ModelNamespace extends PackageDefinition {
-    
-    public ModelNamespace() {
-        this.impl = new ModelNamespaceImpl(this);
-    }
-    
-    public ModelNamespaceImpl getImpl() {
-        return (ModelNamespaceImpl)this.impl;
-    }
+public abstract class ModelNamespace extends PackageDefinition {
     
     @Override
     public void _deriveAll() {
@@ -57,6 +49,10 @@ public class ModelNamespace extends PackageDefinition {
                 _ownedMember.checkConstraints(violations);
             }
         }
+    }
+    
+    public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+        return this.getImpl().resolveUnit(qualifiedName);
     }
     
 }

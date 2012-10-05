@@ -14,27 +14,10 @@ import java.util.Map;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
-import org.modeldriven.alf.syntax.units.impl.RootNamespaceImpl;
 
-public class RootNamespace extends ModelNamespace {
+public abstract class RootNamespace extends ModelNamespace {
     
-    private ModelNamespace modelScope = new ModelNamespace();
-    
-    private RootNamespace() {
-        this.impl = new RootNamespaceImpl(this);
-        // NOTE: The root namespace is NOT set as the namespace of the model
-        // scope namespace, so that name resolution does not propagate out of
-        // model scope into root scope.
-        this.addOwnedMember(this.modelScope);
-    }
-    
-    @Override
-    public RootNamespaceImpl getImpl() {
-        return (RootNamespaceImpl)this.impl;
-    }
-    
-    private static RootNamespace rootNamespace = new RootNamespace();
-    private static ModelNamespace modelNamespace = rootNamespace.modelScope;
+    private static RootNamespace rootNamespace = null;
     
     private static QualifiedName alfStandardLibrary = null;
     private static QualifiedName primitiveTypes = null;
@@ -86,39 +69,14 @@ public class RootNamespace extends ModelNamespace {
         return rootNamespace;
     }
     
-    public static ModelNamespace getModelScope() {
-        return modelNamespace;
+    public static void setRootScope(RootNamespace root) {
+        rootNamespace = root;
     }
+    
+    public abstract NamespaceDefinition getModelNamespace(UnitDefinition unit);
     
     public static NamespaceDefinition getModelScope(UnitDefinition unit) {
-        NamespaceDefinition definition = unit.getDefinition();
-        NamespaceDefinition modelScope = definition.getNamespace();
-        if (modelScope == null) {
-            // NOTE: The model scope for a unit must include the unit itself,
-            // so that it can refer to itself recursively.
-            modelScope = getModelScope();
-            modelScope.getMember(); // To ensure computation of derived attribute.
-            modelScope.addOwnedMember(definition);
-            modelScope.addMember(definition);
-            definition.setNamespace(modelScope);
-        }
-        return modelScope;
-    }
-    
-    public static void setModelDirectory(String modelDirectory) {
-        getModelScope().getImpl().setModelDirectory(modelDirectory);
-    }
-    
-    public static void setLibraryDirectory(String libraryDirectory) {
-        getRootScope().getImpl().setModelDirectory(libraryDirectory);
-    }
-    
-    public static void setIsVerbose(boolean isVerbose) {
-        getModelScope().getImpl().setIsVerbose(isVerbose);
-    }
-    
-    public static UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-        return getRootScope().getImpl().resolveUnit(qualifiedName);
+        return getRootScope().getModelNamespace(unit);
     }
     
     public static QualifiedName getAlfStandardLibrary() {
