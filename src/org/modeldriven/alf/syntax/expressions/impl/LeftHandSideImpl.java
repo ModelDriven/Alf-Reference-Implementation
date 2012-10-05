@@ -221,8 +221,8 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
                             AssignedSource assignment = 
                                 unqualifiedName == null || 
                                     assignmentsBefore == null? null:
-                                assignmentsBefore.get(unqualifiedName);                            
-                            if (assignment != null && 
+                                        assignmentsBefore.get(unqualifiedName);                            
+                            if (assignment != null && assignment.getType() != null &&
                                     assignment.getType().getImpl().isDataType()) {
                                 this.assignedName = unqualifiedName;
                                 this.isDataValueUpdate = true;
