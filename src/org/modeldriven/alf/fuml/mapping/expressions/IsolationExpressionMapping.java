@@ -10,7 +10,6 @@
 
 package org.modeldriven.alf.fuml.mapping.expressions;
 
-import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.UnaryExpressionMapping;
 import org.modeldriven.alf.mapping.MappingError;
