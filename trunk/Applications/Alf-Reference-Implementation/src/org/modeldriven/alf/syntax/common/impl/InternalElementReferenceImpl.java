@@ -271,7 +271,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             return false;
         } else {
             ClassDefinition class_ = (ClassDefinition)this.getAlf();
-            for (Member member: class_.getImpl().getSubunitOwnedMembers()) {
+            for (Member member: class_.getMember()) {
                 if (member instanceof ReceptionDefinition &&
                         ((ReceptionDefinition)member).getSignal().getImpl().getAlf() == alfSignal ||
                     member instanceof SignalReceptionDefinition && member == alfSignal) {

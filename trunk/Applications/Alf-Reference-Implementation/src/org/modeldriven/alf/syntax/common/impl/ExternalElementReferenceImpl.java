@@ -294,9 +294,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             return false;
         } else {
             Class_ class_ = (Class_)this.getUml();
-            for (Feature feature: class_.getFeature()) {
-                if (feature instanceof Reception &&
-                        ((Reception)feature).getSignal() == umlSignal) {
+            for (NamedElement member: class_.getMember()) {
+                if (member instanceof Reception &&
+                        ((Reception)member).getSignal() == umlSignal) {
                     return true;
                 }
             }

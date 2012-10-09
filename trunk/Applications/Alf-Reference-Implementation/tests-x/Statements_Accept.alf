@@ -3,7 +3,12 @@
  **/
 active class Statements_Accept {
 
-  private active class Test {
+  private abstract active class Super {
+    public signal SignalNewArrival { public name: String; }
+    public receive signal SignalTermination { }
+  }
+
+  private active class Test specializes Super {
   
     public sig: any;
     public sig1: any;
@@ -16,8 +21,7 @@ active class Statements_Accept {
     
     public flag: Boolean;
 
-    public receive signal SignalNewArrival { public name: String; }
-    public receive signal SignalTermination { }
+    public receive SignalNewArrival;
   
   } do {
   
