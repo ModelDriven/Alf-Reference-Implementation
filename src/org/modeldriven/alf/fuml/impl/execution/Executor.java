@@ -25,7 +25,8 @@ public class Executor implements org.modeldriven.alf.execution.fuml.Executor {
     public void execute(Behavior behavior, Object_ context) {
         this.base.execute(
                 ((org.modeldriven.alf.fuml.impl.uml.Behavior)behavior).getBase(), 
-                ((org.modeldriven.alf.fuml.impl.execution.Object_)context).getBase(),
+                context == null? null:
+                    ((org.modeldriven.alf.fuml.impl.execution.Object_)context).getBase(),
                 new ParameterValueList());
     }
 
