@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen/Alf/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/fUML-Reference-Implementation"/>
-	<classpathentry kind="lib" path="/fUML-Reference-Implementation/lib/commons-logging.jar"/>
-	<classpathentry kind="lib" path="/fUML-Reference-Implementation/lib/log4j.jar"/>
+	<classpathentry kind="lib" path="dist/alf/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="dist/alf/lib/log4j.jar"/>
+	<classpathentry kind="lib" path="dist/alf/lib/fuml.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
