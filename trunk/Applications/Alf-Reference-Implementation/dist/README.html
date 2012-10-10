@@ -4,7 +4,7 @@
 </header>
 <body>
 <h1>Action Language for UML (Alf) Open Source Implementation<br>
-Version 0.2.0</h1>
+Version 0.3.0</h1>
 <em>Copyright &copy; 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)</em>
 <p>
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
@@ -40,8 +40,8 @@ default, the <tt>Libraries</tt> subdirectory is expected to be in the same direc
 the scripts. If you move it, set the environment variable ALF_LIB to its path.
 <p>
 The file <tt>alf-src.zip</tt> unzips into an Eclipse project the includes the
-full source of the implementation. However, the project requires the head
-revision of the fUML Reference Implementation source project in order to build.
+full source of the implementation. The project may be built using the regular
+Java builder.
 
 <h2>Release Notes</h2>
 <p>
@@ -55,6 +55,15 @@ discovered in these definitions, or inconsistencies with the descriptions in
 Part II were identified, these were corrected in the implementation. All such
 issues are being reported to the Alf Finalization Task Force for correction in
 the final specification.
+
+<h3>Version 0.3.0</h3>
+<ul>
+<li>Refactored to more easily accommodate integration with other tooling.</li>
+<li>Corrected acceptStatementSignals constraint check to include inherited
+receptions.</li>
+<li>Updated classpath to use fuml.jar to build project, rather than depending on
+the fUML-Reference-Implementation project.</li>
+</ul>
 
 <h3>Version 0.2.0</h3>
 <ul>
