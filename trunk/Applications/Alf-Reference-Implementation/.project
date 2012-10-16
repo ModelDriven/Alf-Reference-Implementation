@@ -3,7 +3,6 @@
 	<name>Alf-Reference-Implementation</name>
 	<comment></comment>
 	<projects>
-		<project>fUML-Reference-Implementation</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
