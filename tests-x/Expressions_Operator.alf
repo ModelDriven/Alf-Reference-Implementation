@@ -5,19 +5,6 @@ active class Expressions_Operator {
 
     // Supporting declarations *************************************************
     
-    offers: Offer[*];
-    principal: Integer;
-    rate: Integer;
-    list: Integer[1..*];
-    flag: Boolean;
-    monitor: Monitor;
-  
-    class Offer { }
-    class Member { 
-        public isActive: Boolean;
-        public name: String;
-        public address: String;
-    }
     class Monitor {
         public getActiveSensor(): Sensor { return new Sensor(); }
     }
@@ -29,9 +16,6 @@ active class Expressions_Operator {
       public id: Integer;
       public name: String;
     }
-    
-    getList(): Integer[1..*] { return this.list; }
-    getByte(): BitString { return 0; }
     
   //**************************************************************************
 
@@ -109,7 +93,7 @@ active class Expressions_Operator {
     y = f? Integer[]{1,2}: 0;    
     z = (Integer)any[]{1,"banana",2};
     
-    r = $this.monitor.getActiveSensor().getReading();    
+    r = $monitor.getActiveSensor().getReading();    
   }
 } do {
     this.test(i, j, bs, h, a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, e9,
