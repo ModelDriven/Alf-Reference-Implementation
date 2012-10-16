@@ -267,6 +267,7 @@ y[2]==2: true
 z->size()==2: true
 z[1]==1: true
 z[2]==2: true
+r==2: true
 Parsed tests-x/Expressions_Sequence_Construction.alf
 Parsed tests-x/AssertList.alf
 Parsed tests-x/AssertTrue.alf

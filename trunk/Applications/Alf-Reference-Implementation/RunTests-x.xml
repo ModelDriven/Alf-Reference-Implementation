@@ -3,9 +3,9 @@
     <property name="classname" value="org.modeldriven.alf.fuml.impl.execution.Alf"/>
     <path id="cp">
         <pathelement location="${classpath}" />
-        <pathelement location="../fUML-Reference-Implementation/target/fuml/classes" />
-        <pathelement location="../fUML-Reference-Implementation/lib/commons-logging.jar" />
-        <pathelement location="../fUML-Reference-Implementation/lib/log4j.jar" />
+        <pathelement location="../Alf-Reference-Implementation/lib/fuml.jar" />
+        <pathelement location="../Alf-Reference-Implementation/lib/commons-logging.jar" />
+        <pathelement location="../Alf-Reference-Implementation/lib/log4j.jar" />
     </path>
     <target name="run">
         <java classname="${classname}" classpath="bin" output="tests-x.txt">
