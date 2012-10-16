@@ -1,4 +1,4 @@
-activity AssertEqual(in label: String, in value1: any, in value2: any) {
+activity AssertEqual(in label: String, in value1: any[0..1], in value2: any[0..1]) {
   Write(label + "==");
   Write(value2 instanceof String? "\"" + (String)value2 + "\"": value2);
   AssertTrue("", value1==value2);
