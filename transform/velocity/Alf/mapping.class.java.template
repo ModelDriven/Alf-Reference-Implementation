@@ -1,6 +1,6 @@
 #**
 *mapping.class.java template for Alf project
-@projectPath /src/org/modeldriven/alf/mapping/fuml/${object.owner.qualifiedName.substring(13).toLowerCase().replace("::","/")}/gen/${object.name}Mapping.java 
+@projectPath /src/org/modeldriven/alf/fuml/mapping/${object.owner.qualifiedName.substring(13).toLowerCase().replace("::","/")}/gen/${object.name}Mapping.java 
 @artifactContext GenClass 
 *#
 #macro( mappingPackageName $object )
