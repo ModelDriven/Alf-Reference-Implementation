@@ -4,14 +4,14 @@
 @artifactContext GenClass 
 *#
 #macro( mappingPackageName $object )
-org.modeldriven.alf.mapping.fuml.${object.owner.qualifiedName.substring(13).toLowerCase().replace("::",".")}.gen
+org.modeldriven.alf.fuml.mapping.${object.owner.qualifiedName.substring(13).toLowerCase().replace("::",".")}.gen
 #end
 #parse( "uml.fragment" )
 ${copyrightBoilerPlate}
 package #mappingPackageName($object);
 
 #if( ${object.superClasses.size()}==0 )
-	import org.modeldriven.alf.mapping.fuml.FumlMapping;
+	import org.modeldriven.alf.fuml.mapping.FumlMapping;
 #else
 #foreach ( $superclass in ${object.superClasses} )
     import #mappingPackageName($superclass).#name(${superclass.name})Mapping; 
