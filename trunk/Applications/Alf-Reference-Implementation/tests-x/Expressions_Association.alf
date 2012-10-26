@@ -136,7 +136,7 @@ active class Expressions_Association {
     AssertEqual("house1_c->size()", house1_c->size(), 2);
     AssertEqual("house1_c[1].id", house1_c[1].id, 1);
     AssertEqual("house1_c[2].id", house1_c[2].id, 3);
-    WriteLine("");
+
     AssertList("players1_a.name", players1_a.name, String[]{"Fred","Marvin"});
     AssertTrue("players2_a->isEmpty()", players2_a->isEmpty());
     AssertList("players1_b.name", players1_b.name, "Marvin");
