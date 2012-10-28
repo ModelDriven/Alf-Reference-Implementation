@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions.impl.gen;
 
@@ -18,14 +17,15 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Stereotype;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * A specification of the elements of a sequence using a list of expressions.
@@ -34,7 +34,7 @@ import java.util.List;
 public class SequenceExpressionListImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.SequenceElementsImpl {
 
-	private Collection<Expression> element = new ArrayList<Expression>();
+	private List<Expression> element = new ArrayList<Expression>();
 
 	public SequenceExpressionListImpl(SequenceExpressionList self) {
 		super(self);
@@ -44,11 +44,11 @@ public class SequenceExpressionListImpl extends
 		return (SequenceExpressionList) this.self;
 	}
 
-	public Collection<Expression> getElement() {
+	public List<Expression> getElement() {
 		return this.element;
 	}
 
-	public void setElement(Collection<Expression> element) {
+	public void setElement(List<Expression> element) {
 		this.element = element;
 	}
 
@@ -67,8 +67,8 @@ public class SequenceExpressionListImpl extends
 	}
 
 	/**
-	 * The multiplicity lower bound of the elements of a sequence expression
-	 * list is given by the sum of the lower bounds of each of the expressions
+	 * The multiplicity upper bound of the elements of a sequence expression
+	 * list is given by the sum of the upper bounds of each of the expressions
 	 * in the list. If any of the expressions in the list have an unbounded
 	 * upper bound, then the sequence expression list also has an unbounded
 	 * upper bound.

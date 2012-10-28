@@ -46,6 +46,19 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
 	public void setFeature(FeatureReference feature) {
 		this.feature = feature;
 	}
+	
+    /**
+     * The referent of a feature left-hand side is the structural feature to
+     * which the feature reference of the left-hand side resolves.
+     **/
+   @Override
+    public ElementReference deriveReferent() {
+        FeatureLeftHandSide self = this.getSelf();
+        FeatureReference feature = self.getFeature();
+        return feature == null? null: 
+                    feature.getImpl().getStructuralFeatureReferent();
+    }
+
 
 	/**
 	 * The assignments before the expression of the feature reference of a
@@ -90,6 +103,26 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
 		return true;
 	}
 	
+    public boolean featureLeftHandSideReferentDerivation() {
+        this.getSelf().getReferent();
+        return true;
+    }
+
+    public boolean featureLeftHandSideTypeDerivation() {
+        this.getSelf().getType();
+        return true;
+    }
+
+    public boolean featureLeftHandSideLowerDerivation() {
+        this.getSelf().getLower();
+        return true;
+    }
+
+    public boolean featureLeftHandSideUpperDerivation() {
+        this.getSelf().getUpper();
+        return true;
+    }
+
 	/*
 	 * Constraints
 	 */
@@ -103,8 +136,6 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
         FeatureReference feature = self.getFeature();
         Expression expression = feature == null? null: feature.getExpression();
 		return expression != null && expression.getUpper() == 1 &&
-		            // Note: This referent constraint needs to be added to the spec.
-		            this.getReferent() != null &&
 		            // Note: This constraint ensures that there will be an
 		            // assigned name for an assignment to an attribute of a
 		            // data type.
@@ -122,17 +153,32 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
 		return true;
 	}
 	
+    /**
+     * The feature of a feature-left hand side must have a single referent that
+     * is a structural feature.
+     **/
+    public boolean featureLeftHandSideReferentConstraint() {
+        return this.getSelf().getReferent() != null;
+    }
+
+    /**
+     * If a feature left-hand side has an index, then the referent of the
+     * feature must be ordered and non-unique.
+     **/
+    public boolean featureLeftHandSideIndexedFeature() {
+        FeatureLeftHandSide self = this.getSelf();
+        if (self.getIndex() == null) {
+            return true;
+        } else {
+            ElementReference referent = self.getReferent();
+            return referent == null || 
+                referent.getImpl().isOrdered() && referent.getImpl().isUnique();
+        }
+    }
+
 	/*
 	 * Helper Methods
 	 */
-
-	@Override
-    public ElementReference getReferent() {
-        FeatureLeftHandSide self = this.getSelf();
-        FeatureReference feature = self.getFeature();
-        return feature == null? null: 
-                    feature.getImpl().getStructuralFeatureReferent();
-    }
 
     @Override
     public String getLocalName() {

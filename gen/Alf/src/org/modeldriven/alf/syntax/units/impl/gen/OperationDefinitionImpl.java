@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.units.impl.gen;
 
@@ -18,14 +17,15 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Stereotype;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * The definition of an operation, with any formal parameters defined as owned
@@ -38,7 +38,7 @@ public class OperationDefinitionImpl extends
 	private QualifiedNameList redefinition = null;
 	private Boolean isAbstract = false;
 	private Block body = null;
-	private Collection<ElementReference> redefinedOperations = null; // DERIVED
+	private Collection<ElementReference> redefinedOperation = null; // DERIVED
 	private Boolean isConstructor = null; // DERIVED
 	private Boolean isDestructor = null; // DERIVED
 
@@ -74,20 +74,20 @@ public class OperationDefinitionImpl extends
 		this.body = body;
 	}
 
-	public Collection<ElementReference> getRedefinedOperations() {
-		if (this.redefinedOperations == null) {
-			this.setRedefinedOperations(this.deriveRedefinedOperations());
+	public Collection<ElementReference> getRedefinedOperation() {
+		if (this.redefinedOperation == null) {
+			this.setRedefinedOperation(this.deriveRedefinedOperation());
 		}
-		return this.redefinedOperations;
+		return this.redefinedOperation;
 	}
 
-	public void setRedefinedOperations(
-			Collection<ElementReference> redefinedOperations) {
-		this.redefinedOperations = redefinedOperations;
+	public void setRedefinedOperation(
+			Collection<ElementReference> redefinedOperation) {
+		this.redefinedOperation = redefinedOperation;
 	}
 
-	public void addRedefinedOperations(ElementReference redefinedOperations) {
-		this.redefinedOperations.add(redefinedOperations);
+	public void addRedefinedOperation(ElementReference redefinedOperation) {
+		this.redefinedOperation.add(redefinedOperation);
 	}
 
 	public Boolean getIsConstructor() {
@@ -112,7 +112,7 @@ public class OperationDefinitionImpl extends
 		this.isDestructor = isDestructor;
 	}
 
-	protected Collection<ElementReference> deriveRedefinedOperations() {
+	protected Collection<ElementReference> deriveRedefinedOperation() {
 		return null; // STUB
 	}
 
@@ -125,9 +125,7 @@ public class OperationDefinitionImpl extends
 	}
 
 	/**
-	 * The namespace for an operation definition must be a class definition. If
-	 * the operation definition is abstract, then the class definition must be
-	 * abstract.
+	 * The namespace for an operation definition must be a class definition.
 	 **/
 	public boolean operationDefinitionNamespace() {
 		return true;
@@ -140,14 +138,14 @@ public class OperationDefinitionImpl extends
 	 * are any operations that would otherwise be indistinguishable from the
 	 * operation being defined in this operation definition.
 	 **/
-	public boolean operationDefinitionRedefinedOperationsDerivation() {
-		this.getSelf().getRedefinedOperations();
+	public boolean operationDefinitionRedefinedOperationDerivation() {
+		this.getSelf().getRedefinedOperation();
 		return true;
 	}
 
 	/**
 	 * Each name in the redefinition list of an operation definition must have a
-	 * signal referent that is an operation. This operation must be a
+	 * single referent that is an operation. This operation must be a
 	 * non-private operation that is a member of a specialization referent of
 	 * the class definition of the operation definition.
 	 **/
@@ -177,14 +175,16 @@ public class OperationDefinitionImpl extends
 	/**
 	 * An operation definition is a constructor if it has a @Create annotation.
 	 **/
-	public boolean operationDefinitionIsConstructorDefinition() {
+	public boolean operationDefinitionIsConstructorDerivation() {
+		this.getSelf().getIsConstructor();
 		return true;
 	}
 
 	/**
 	 * An operation definition is a destructor if it has a @Destroy annotation.
 	 **/
-	public boolean operationDefinitionIsDestructorDefinition() {
+	public boolean operationDefinitionIsDestructorDerivation() {
+		this.getSelf().getIsDestructor();
 		return true;
 	}
 
@@ -228,7 +228,10 @@ public class OperationDefinitionImpl extends
 	 * subunit definition must have formal parameters that match each of the
 	 * formal parameters of the stub definition, in order. Two formal parameters
 	 * match if they have the same direction, name, multiplicity bounds,
-	 * ordering, uniqueness and type reference.
+	 * ordering, uniqueness and type reference If this operation definition is a
+	 * constructor, then it is considered to have an implicit return parameter,
+	 * following any other formal parameters, with the same type as the class of
+	 * the operation definition and a multiplicity of 1..1.
 	 **/
 	public Boolean matchForStub(UnitDefinition unit) {
 		return false; // STUB
@@ -240,7 +243,10 @@ public class OperationDefinitionImpl extends
 	 * and the formal parameters of this operation definition match, in order,
 	 * the parameters of the other operation definition or operation. In this
 	 * context, matching means the same name and type (per UML Superstructure,
-	 * Subclause 7.3.5).
+	 * Subclause 7.3.5). A constructor operation without an explicit return
+	 * parameter is considered to implicitly have a return parameter, following
+	 * any other formal parameters, of the same type as the owner of the
+	 * constructor operation.
 	 **/
 	public Boolean isSameKindAs(Member member) {
 		return false; // STUB

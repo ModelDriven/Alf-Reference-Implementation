@@ -155,8 +155,8 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	 * Derivations
 	 */
 
-    public boolean operationDefinitionRedefinedOperationsDerivation() {
-        this.getSelf().getRedefinedOperations();
+    public boolean operationDefinitionRedefinedOperationDerivation() {
+        this.getSelf().getRedefinedOperation();
         return true;
     }
 
@@ -217,7 +217,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	 * reference.
 	 **/
 	public boolean operationDefinitionRedefinedOperations() {
-	    for (ElementReference operation: this.getSelf().getRedefinedOperations()) {
+	    for (ElementReference operation: this.getSelf().getRedefinedOperation()) {
 	        if (!this.equateParameters(operation)) {
 	            return false;
 	        }
@@ -246,7 +246,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	    // and super invocation expressions related to constructor invocation.
 	    OperationDefinition self = this.getSelf();
 	    if (self.getIsConstructor()) {
-    		for (ElementReference redefinedOperation: self.getRedefinedOperations()) {
+    		for (ElementReference redefinedOperation: self.getRedefinedOperation()) {
     		    if (!redefinedOperation.getImpl().isConstructor()) {
     		        return false;
     		    }
@@ -262,7 +262,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	public boolean operationDefinitionDestructor() {
         OperationDefinition self = this.getSelf();
         if (self.getIsDestructor()) {
-            for (ElementReference redefinedOperation: self.getRedefinedOperations()) {
+            for (ElementReference redefinedOperation: self.getRedefinedOperation()) {
                 if (!redefinedOperation.getImpl().isDestructor()) {
                     return false;
                 }

@@ -104,8 +104,9 @@ public abstract class ElementReferenceImpl {
 
     public abstract String getName();
     public abstract String getVisibility();
+    public abstract List<ElementReference> getOwnedMembers();
+    public abstract List<ElementReference> getMembers();
     public abstract List<Member> getPublicMembers(Collection<ElementReference> excluded);
-    public abstract List<ElementReference> getFeatures();
     public abstract List<ElementReference> getAttributes();
     public abstract List<ElementReference> getAssociationEnds();
     public abstract List<Member> getInheritableMembers();

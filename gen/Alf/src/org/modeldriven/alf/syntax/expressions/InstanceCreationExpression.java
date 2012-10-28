@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.expressions.impl.InstanceCreationExpressionImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * An expression used to create a new instance of a class or data type.
@@ -102,8 +102,12 @@ public class InstanceCreationExpression extends InvocationExpression {
 	}
 
 	/**
-	 * The referent of an instance creation expression is the constructor
-	 * operation, class or data type to which the constructor name resolves.
+	 * The referent of an instance creation expression is normally the
+	 * constructor operation, class or data type to which the constructor name
+	 * resolves. However, if the referent is an operation whose class is
+	 * abstract or is a class that is itself abstract, and there is an
+	 * associated Impl class constructor, then the referent is the Impl class
+	 * constructor.
 	 **/
 	public boolean instanceCreationExpressionReferentDerivation() {
 		return this.getImpl().instanceCreationExpressionReferentDerivation();
@@ -126,10 +130,13 @@ public class InstanceCreationExpression extends InvocationExpression {
 	}
 
 	/**
-	 * If the expression is constructorless, then its tuple must be empty.
+	 * If the expression is constructorless, then its tuple must be empty and
+	 * the referent class must not have any owned operations that are
+	 * constructors.
 	 **/
-	public boolean instanceCreationExpressionTuple() {
-		return this.getImpl().instanceCreationExpressionTuple();
+	public boolean instanceCreationExpressionConstructorlessLegality() {
+		return this.getImpl()
+				.instanceCreationExpressionConstructorlessLegality();
 	}
 
 	/**
@@ -142,10 +149,19 @@ public class InstanceCreationExpression extends InvocationExpression {
 	}
 
 	/**
+	 * If the referent of an instance creation expression is an operation, then
+	 * the class of that operation must not be abstract. Otherwise, the referent
+	 * is a class or data type, which must not be abstract.
+	 **/
+	public boolean instanceCreationExpressionReferent() {
+		return this.getImpl().instanceCreationExpressionReferent();
+	}
+
+	/**
 	 * Returns the parameters of a constructor operation or the attributes of a
 	 * data type, or an empty set for a constructorless instance creation.
 	 **/
-	public Collection<ElementReference> parameterElements() {
+	public List<ElementReference> parameterElements() {
 		return this.getImpl().parameterElements();
 	}
 
@@ -183,13 +199,17 @@ public class InstanceCreationExpression extends InvocationExpression {
 			violations.add(new ConstraintViolation(
 					"instanceCreationExpressionConstructor", this));
 		}
-		if (!this.instanceCreationExpressionTuple()) {
+		if (!this.instanceCreationExpressionConstructorlessLegality()) {
 			violations.add(new ConstraintViolation(
-					"instanceCreationExpressionTuple", this));
+					"instanceCreationExpressionConstructorlessLegality", this));
 		}
 		if (!this.instanceCreationExpressionDataTypeCompatibility()) {
 			violations.add(new ConstraintViolation(
 					"instanceCreationExpressionDataTypeCompatibility", this));
+		}
+		if (!this.instanceCreationExpressionReferent()) {
+			violations.add(new ConstraintViolation(
+					"instanceCreationExpressionReferent", this));
 		}
 		QualifiedName constructor = this.getConstructor();
 		if (constructor != null) {

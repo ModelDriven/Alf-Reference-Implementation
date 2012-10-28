@@ -31,6 +31,10 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
 	private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
 	private Expression index = null;
+    private ElementReference referent = null; // DERIVED
+    private ElementReference type = null; // DERIVED
+    private Integer lower = null; // DERIVED
+    private Integer upper = null; // DERIVED
 	
 	private Boolean isDataValueUpdate = null;
 	private String assignedName = null;
@@ -121,6 +125,50 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 		this.index = index;
 	}
 
+    public ElementReference getReferent() {
+        if (this.referent == null) {
+            this.setReferent(this.deriveReferent());
+        }
+        return this.referent;
+    }
+
+    public void setReferent(ElementReference referent) {
+        this.referent = referent;
+    }
+
+    public ElementReference getType() {
+        if (this.type == null) {
+            this.setType(this.deriveType());
+        }
+        return this.type;
+    }
+
+    public void setType(ElementReference type) {
+        this.type = type;
+    }
+
+    public Integer getLower() {
+        if (this.lower == null) {
+            this.setLower(this.deriveLower());
+        }
+        return this.lower;
+    }
+
+    public void setLower(Integer lower) {
+        this.lower = lower;
+    }
+
+    public Integer getUpper() {
+        if (this.upper == null) {
+            this.setUpper(this.deriveUpper());
+        }
+        return this.upper;
+    }
+
+    public void setUpper(Integer upper) {
+        this.upper = upper;
+    }
+
     /**
      * The assignments before are usually set externally.
      */
@@ -130,6 +178,47 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 
 	protected abstract Map<String, AssignedSource> deriveAssignmentAfter();
 	
+    protected abstract ElementReference deriveReferent();
+
+    /**
+     * The type of a feature left-hand side is the type of its referent.
+     **/
+    // NOTE: This is overridden for a name left-hand side.
+    protected ElementReference deriveType() {
+        ElementReference referent = this.getSelf().getReferent();
+        return referent == null? null: referent.getImpl().getType();
+    }
+
+   /**
+    * If a feature left-hand side is indexed, then its lower bound is 1.
+    * Otherwise, its lower bound is that of its referent.
+    **/
+   // NOTE: This is overridden for a name left-hand side.
+   protected Integer deriveLower() {
+        LeftHandSide self = this.getSelf();
+        if (self.getIndex() != null) {
+            return 1;
+        } else {
+            ElementReference referent = self.getReferent();
+            return referent == null? 0: referent.getImpl().getLower();
+        }
+    }
+
+    /**
+     * If a feature left-hand side is indexed, then its upper bound is 1.
+     * Otherwise, its upper bound is that of its referent.
+     **/
+    // NOTE: This is overridden for a name left-hand side.
+    protected Integer deriveUpper() {
+        LeftHandSide self = this.getSelf();
+        if (self.getIndex() != null) {
+            return 1;
+        } else {
+            ElementReference referent = self.getReferent();
+            return referent == null? 0: referent.getImpl().getUpper();
+        }
+    }
+    
 	/*
 	 * Constraints
 	 */
@@ -140,12 +229,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	 **/
 	public boolean leftHandSideIndexExpression() {
 	    Expression index = this.getSelf().getIndex();
-		return index == null || index.getUpper() <= 1 &&
-		    // NOTE: This checks that a feature with an index is ordered, non-unique..
-		    // It needs to be added to the spec as a separate constraint.
-		    (this.getFeature() == null || 
-		            this.getReferent().getImpl().isOrdered() && 
-		            !this.getReferent().getImpl().isUnique());
+		return index == null || index.getUpper() <= 1;
 	}
 	
 	/*
@@ -236,34 +320,6 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
     }
     
     public abstract String getLocalName();
-    
-    @Override
-    public ElementReference getType() {
-        ElementReference referent = this.getReferent();
-        return referent == null? null: referent.getImpl().getType();
-    }
-
-    @Override
-    public Integer getLower() {
-        if (this.getSelf().getIndex() != null) {
-            return 1;
-        } else {
-            ElementReference referent = this.getReferent();
-            return referent == null? 0: referent.getImpl().getLower();
-        }
-    }
-
-    @Override
-    public Integer getUpper() {
-        if (this.getSelf().getIndex() != null) {
-            return 1;
-        } else {
-            ElementReference referent = this.getReferent();
-            return referent == null? 0: referent.getImpl().getUpper();
-        }
-    }
-    
-    public abstract ElementReference getReferent();
     
     public void setCurrentScope(NamespaceDefinition currentScope) {
         this.currentScope = currentScope;

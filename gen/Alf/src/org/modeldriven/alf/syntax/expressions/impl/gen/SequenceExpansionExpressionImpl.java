@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions.impl.gen;
 
@@ -18,14 +17,15 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Stereotype;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * An expression used to carry out one of a predefined set of operations over
@@ -98,7 +98,9 @@ public abstract class SequenceExpansionExpressionImpl extends
 
 	/**
 	 * The assigned source for the expansion variable of a sequence expansion
-	 * expression is the expression itself.
+	 * expression is the expression itself. The type for the assignment is the
+	 * type of the primary expression of the sequence expansion expression and
+	 * the multiplicity lower and upper bounds are 1.
 	 **/
 	public boolean sequenceExpansionExpressionVariableSourceDerivation() {
 		this.getSelf().getVariableSource();
@@ -132,10 +134,11 @@ public abstract class SequenceExpansionExpressionImpl extends
 	}
 
 	/**
-	 * The expansion variable may not be assigned within the argument
+	 * The assignments after the argument expression of a sequence expansion
+	 * expression must be the same as the assignments before the argument
 	 * expression.
 	 **/
-	public boolean sequenceExpansionExpressionVariableAssignment() {
+	public boolean sequenceExpansionExpressionAssignmentsAfterArgument() {
 		return true;
 	}
 

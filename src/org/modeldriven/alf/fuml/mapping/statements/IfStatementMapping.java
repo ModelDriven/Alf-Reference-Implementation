@@ -110,7 +110,7 @@ public class IfStatementMapping extends ConditionalStatementMapping {
                 assignedNames, predecessorClauses, this.graph);
         
         node.setIsAssured(statement.getIsAssured());
-        node.setIsDeterminate(statement.getIsDetermined());
+        node.setIsDeterminate(statement.getIsDeterminate());
     }
     
 	public IfStatement getIfStatement() {

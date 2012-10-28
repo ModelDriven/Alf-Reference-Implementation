@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.statements;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.statements.impl.LocalNameDeclarationStatementImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A statement that declares the type of a local name and assigns it an initial
@@ -128,12 +128,12 @@ public class LocalNameDeclarationStatement extends Statement {
 
 	/**
 	 * The assignments after a local name declaration statement are the
-	 * assignments before the statement plus a new assignment for the local name
-	 * defined by the statement. The assigned source for the local name is the
-	 * local name declaration statement. The local name has the type denoted by
-	 * the type name if this is not empty and is untyped otherwise. If the
-	 * statement has multiplicity, then the multiplicity of the local name is
-	 * [0..*], otherwise it is [0..1].
+	 * assignments after the expression of the statement plus a new assignment
+	 * for the local name defined by the statement. The assigned source for the
+	 * local name is the local name declaration statement. The local name has
+	 * the type denoted by the type name if this is not empty and is untyped
+	 * otherwise. If the statement has multiplicity, then the multiplicity of
+	 * the local name is [0..*], otherwise it is [0..1].
 	 **/
 	public boolean localNameDeclarationStatementAssignmentsAfter() {
 		return this.getImpl().localNameDeclarationStatementAssignmentsAfter();
@@ -151,8 +151,7 @@ public class LocalNameDeclarationStatement extends Statement {
 
 	/**
 	 * The type of a local name declaration statement with a type name is the
-	 * single classifier referent of the type name. Otherwise it is the type of
-	 * the expression of the statement.
+	 * single classifier referent of the type name. Otherwise the type is empty.
 	 **/
 	public boolean localNameDeclarationStatementTypeDerivation() {
 		return this.getImpl().localNameDeclarationStatementTypeDerivation();

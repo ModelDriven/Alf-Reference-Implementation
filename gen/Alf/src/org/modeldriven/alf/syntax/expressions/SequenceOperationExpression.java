@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceOperationExpressionImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * An expression used to invoke a behavior as if it was an operation on a target
@@ -128,7 +128,10 @@ public class SequenceOperationExpression extends InvocationExpression {
 
 	/**
 	 * If the first parameter of the referent has direction inout, then the
-	 * parameter type must have the same type as the primary expression.
+	 * parameter type must have the same type as the primary expression, the
+	 * primary expression must have the form of a left-hand side and, if the
+	 * equivalent left-hand side is for a local name, that name must already
+	 * exist.
 	 **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
 		return this.getImpl().sequenceOperationExpressionTargetCompatibility();
@@ -158,7 +161,8 @@ public class SequenceOperationExpression extends InvocationExpression {
 
 	/**
 	 * Collection conversion is required if the type of the primary expression
-	 * of a sequence operation expression is a collection class.
+	 * of a sequence operation expression is a collection class and the
+	 * multiplicity upper bound of the primary expression is 1.
 	 **/
 	public boolean sequenceOperationExpressionIsCollectionConversionDerivation() {
 		return this.getImpl()
@@ -178,6 +182,34 @@ public class SequenceOperationExpression extends InvocationExpression {
 	}
 
 	/**
+	 * A local name that is assigned in the primary expression of a sequence
+	 * operation expression may not be assigned in any expression in the tuple
+	 * of the sequence operation expression.
+	 **/
+	public boolean sequenceOperationExpressionAssignmentsAfter() {
+		return this.getImpl().sequenceOperationExpressionAssignmentsAfter();
+	}
+
+	/**
+	 * If the operation of a sequence operation expression has a first parameter
+	 * whose direction is inout, then the effective left-hand side for the
+	 * expression is constructed as follows: If the primary is a name
+	 * expression, then the left-hand side is a name left-hand side with the
+	 * name from the name expression as its target. If the primary is a property
+	 * access expression, then the left-hand side is a feature left hand side
+	 * with the feature reference from the property access expression as its
+	 * feature. If the primary is a sequence access expression whose primary is
+	 * a name expression or a property access expression, then the left-hand
+	 * side is constructed from the primary of the sequence access expression as
+	 * given previously and the index of the sequence access expression becomes
+	 * the index of the left-hand side.
+	 **/
+	public boolean sequenceOperationExpressionLeftHandSideDerivation() {
+		return this.getImpl()
+				.sequenceOperationExpressionLeftHandSideDerivation();
+	}
+
+	/**
 	 * The assignments after a sequence operation expression include those made
 	 * in the primary expression and those made in the tuple and, for an
 	 * "in place" operation (one whose first parameter is inout), that made by
@@ -185,6 +217,16 @@ public class SequenceOperationExpression extends InvocationExpression {
 	 **/
 	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
+	}
+
+	/**
+	 * Returns the list of parameter elements from the superclass operation,
+	 * with the first parameter removed (since the argument for the first
+	 * parameter is given by the primary expression of a sequence operation
+	 * expression, not in its tuple).
+	 **/
+	public List<ElementReference> parameterElements() {
+		return this.getImpl().parameterElements();
 	}
 
 	public void _deriveAll() {
@@ -243,6 +285,14 @@ public class SequenceOperationExpression extends InvocationExpression {
 					.add(new ConstraintViolation(
 							"sequenceOperationExpressionIsBitStringConversionDerivation",
 							this));
+		}
+		if (!this.sequenceOperationExpressionAssignmentsAfter()) {
+			violations.add(new ConstraintViolation(
+					"sequenceOperationExpressionAssignmentsAfter", this));
+		}
+		if (!this.sequenceOperationExpressionLeftHandSideDerivation()) {
+			violations.add(new ConstraintViolation(
+					"sequenceOperationExpressionLeftHandSideDerivation", this));
 		}
 		ExtentOrExpression primary = this.getPrimary();
 		if (primary != null) {

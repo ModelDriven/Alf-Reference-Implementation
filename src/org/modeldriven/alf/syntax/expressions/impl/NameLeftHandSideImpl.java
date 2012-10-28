@@ -80,25 +80,43 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
         return assignments;
 	}
 	
-	@Override
-	public ElementReference getType() {
+    @Override
+    public ElementReference deriveReferent() {
+        FeatureReference feature = this.getFeature();
+        ElementReference parameter = this.getParameter();
         AssignedSource oldAssignment = this.getOldAssignment();
-        return oldAssignment == null? super.getType(): oldAssignment.getType();
+        if (feature != null) {
+            return feature.getImpl().getStructuralFeatureReferent();
+        } else if (oldAssignment != null) {
+            InternalElementReference referent = new InternalElementReference();
+            referent.setElement(oldAssignment.getSource());
+            return referent;
+        } else if (parameter != null) {
+            return parameter;
+        } else {
+            return null;
+        }
+    }
+
+	@Override
+	public ElementReference deriveType() {
+        AssignedSource oldAssignment = this.getOldAssignment();
+        return oldAssignment == null? super.deriveType(): oldAssignment.getType();
 	    
 	}
 	
 	@Override
-	public Integer getLower() {
+	public Integer deriveLower() {
 	    AssignedSource oldAssignment = this.getOldAssignment();
 	    return this.getSelf().getIndex() != null || oldAssignment == null? 
-	            super.getLower(): oldAssignment.getLower();
+	            super.deriveLower(): oldAssignment.getLower();
 	}
 	
     @Override
-    public Integer getUpper() {
+    public Integer deriveUpper() {
         AssignedSource oldAssignment = this.getOldAssignment();
         return this.getSelf().getIndex() != null || oldAssignment == null? 
-                super.getUpper(): oldAssignment.getUpper();
+                super.deriveUpper(): oldAssignment.getUpper();
     }
     
 	/*
@@ -157,24 +175,6 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	 * Helper Methods
 	 */
     
-	@Override
-    public ElementReference getReferent() {
-	    FeatureReference feature = this.getFeature();
-	    ElementReference parameter = this.getParameter();
-	    AssignedSource oldAssignment = this.getOldAssignment();
-	    if (feature != null) {
-	        return feature.getImpl().getStructuralFeatureReferent();
-	    } else if (oldAssignment != null) {
-	        InternalElementReference referent = new InternalElementReference();
-	        referent.setElement(oldAssignment.getSource());
-	        return referent;
-	    } else if (parameter != null) {
-	        return parameter;
-	    } else {
-	        return null;
-	    }
-    }
-
     /**
      * If the target does not have a disambiguation, the effective expression is
      * the name left-hand side treated as a name expression.

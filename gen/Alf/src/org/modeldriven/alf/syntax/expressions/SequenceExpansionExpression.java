@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * An expression used to carry out one of a predefined set of operations over
@@ -101,7 +101,9 @@ public abstract class SequenceExpansionExpression extends Expression {
 
 	/**
 	 * The assigned source for the expansion variable of a sequence expansion
-	 * expression is the expression itself.
+	 * expression is the expression itself. The type for the assignment is the
+	 * type of the primary expression of the sequence expansion expression and
+	 * the multiplicity lower and upper bounds are 1.
 	 **/
 	public boolean sequenceExpansionExpressionVariableSourceDerivation() {
 		return this.getImpl()
@@ -137,11 +139,13 @@ public abstract class SequenceExpansionExpression extends Expression {
 	}
 
 	/**
-	 * The expansion variable may not be assigned within the argument
+	 * The assignments after the argument expression of a sequence expansion
+	 * expression must be the same as the assignments before the argument
 	 * expression.
 	 **/
-	public boolean sequenceExpansionExpressionVariableAssignment() {
-		return this.getImpl().sequenceExpansionExpressionVariableAssignment();
+	public boolean sequenceExpansionExpressionAssignmentsAfterArgument() {
+		return this.getImpl()
+				.sequenceExpansionExpressionAssignmentsAfterArgument();
 	}
 
 	/**
@@ -188,9 +192,11 @@ public abstract class SequenceExpansionExpression extends Expression {
 			violations.add(new ConstraintViolation(
 					"sequenceExpansionExpressionVariableName", this));
 		}
-		if (!this.sequenceExpansionExpressionVariableAssignment()) {
-			violations.add(new ConstraintViolation(
-					"sequenceExpansionExpressionVariableAssignment", this));
+		if (!this.sequenceExpansionExpressionAssignmentsAfterArgument()) {
+			violations
+					.add(new ConstraintViolation(
+							"sequenceExpansionExpressionAssignmentsAfterArgument",
+							this));
 		}
 		Expression argument = this.getArgument();
 		if (argument != null) {

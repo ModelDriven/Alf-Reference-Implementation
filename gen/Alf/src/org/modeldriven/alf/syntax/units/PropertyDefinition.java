@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.units;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.units.impl.PropertyDefinitionImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A typed element definition for a property (attribute or association end).
@@ -93,7 +93,8 @@ public class PropertyDefinition extends TypedElementDefinition {
 
 	/**
 	 * If a property definition has an initializer, then the initializer
-	 * expression must be assignable to the property definition.
+	 * expression must be assignable to the property definition. There are no
+	 * assignments before an initializer expression.
 	 **/
 	public boolean propertyDefinitionInitializer() {
 		return this.getImpl().propertyDefinitionInitializer();
@@ -113,8 +114,9 @@ public class PropertyDefinition extends TypedElementDefinition {
 	 * BitString and the type of its initializer is Integer or a collection
 	 * class whose argument type is Integer.
 	 **/
-	public boolean propertyDefinitionIsBitStringConversion() {
-		return this.getImpl().propertyDefinitionIsBitStringConversion();
+	public boolean propertyDefinitionIsBitStringConversionDerivation() {
+		return this.getImpl()
+				.propertyDefinitionIsBitStringConversionDerivation();
 	}
 
 	/**
@@ -162,9 +164,9 @@ public class PropertyDefinition extends TypedElementDefinition {
 							"propertyDefinitionIsCollectionConversionDerivation",
 							this));
 		}
-		if (!this.propertyDefinitionIsBitStringConversion()) {
+		if (!this.propertyDefinitionIsBitStringConversionDerivation()) {
 			violations.add(new ConstraintViolation(
-					"propertyDefinitionIsBitStringConversion", this));
+					"propertyDefinitionIsBitStringConversionDerivation", this));
 		}
 		if (!this.propertyDefinitionIsFeatureDerivation()) {
 			violations.add(new ConstraintViolation(

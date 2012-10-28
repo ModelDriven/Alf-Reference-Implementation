@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.expressions.impl.AssignmentExpressionImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * An expression used to assign a value to a local name, parameter or property.
@@ -225,8 +225,9 @@ public class AssignmentExpression extends Expression {
 	 * assignment expression. If the assignment is a definition, then the type
 	 * is given by the right hand side, the multiplicity upper bound is 1 if the
 	 * upper bound of the right hand side is 1 and otherwise * and the
-	 * multiplicity lower bound is 0. Otherwise, the type and multiplicity are
-	 * the same as the left hand side.
+	 * multiplicity lower bound is 0. Otherwise, the type is the same as the
+	 * left-hand side and the multiplicity is also the same as the left-hand
+	 * side, if the left-hand side is not indexed, and is * if it is indexed.
 	 **/
 	public boolean assignmentExpressionAssignmentDerivation() {
 		return this.getImpl().assignmentExpressionAssignmentDerivation();
@@ -251,8 +252,9 @@ public class AssignmentExpression extends Expression {
 	}
 
 	/**
-	 * An assignment expression has the same type as its right-hand side
-	 * expression.
+	 * A simple assignment expression has the same type as its right-hand side
+	 * expression. A compound assignment expression has the same type as its
+	 * left-hand side.
 	 **/
 	public boolean assignmentExpressionTypeDerivation() {
 		return this.getImpl().assignmentExpressionTypeDerivation();
@@ -267,8 +269,9 @@ public class AssignmentExpression extends Expression {
 	}
 
 	/**
-	 * An assignment expression has the same multiplicity lower bound as its
-	 * right-hand side expression.
+	 * A simple assignment expression has the same multiplicity lower bound as
+	 * its right-hand side expression. A compound assignment expression has the
+	 * same multiplicity as its left-hand side.
 	 **/
 	public boolean assignmentExpressionLowerDerivation() {
 		return this.getImpl().assignmentExpressionLowerDerivation();
@@ -297,9 +300,14 @@ public class AssignmentExpression extends Expression {
 	}
 
 	/**
-	 * For a compound assignment, both the left-hand side and the right-hand
-	 * side must have the same type, consistent with the arithmetic or logical
-	 * operator used in the compound assignment operator.
+	 * For a compound assignment, if the operator is an arithmetic operator,
+	 * then either the left-hand side and the right-hand side both have type
+	 * Integer or they both have type String and the operator is +. If the
+	 * operator is a logical operator, then either the left-hand side and the
+	 * right-hand side both have type Boolean or Bit String or the left-hand
+	 * side has type Bit String and the right-hand side has type Integer. If the
+	 * operator is a shift operator, then the left-hand side must have type Bit
+	 * String and the right-hand side must have type Integer.
 	 **/
 	public boolean assignmentExpressionCompoundAssignmentTypeConformance() {
 		return this.getImpl()
@@ -345,6 +353,15 @@ public class AssignmentExpression extends Expression {
 	public boolean assignmentExpressionIsBitStringConversionDerivation() {
 		return this.getImpl()
 				.assignmentExpressionIsBitStringConversionDerivation();
+	}
+
+	/**
+	 * If an assignment expression has a feature with a primary expression whose
+	 * type is a data type, then the assignment expression must be a data value
+	 * update.
+	 **/
+	public boolean assignmentExpressionDataValueUpdateLegality() {
+		return this.getImpl().assignmentExpressionDataValueUpdateLegality();
 	}
 
 	/**
@@ -467,6 +484,10 @@ public class AssignmentExpression extends Expression {
 					.add(new ConstraintViolation(
 							"assignmentExpressionIsBitStringConversionDerivation",
 							this));
+		}
+		if (!this.assignmentExpressionDataValueUpdateLegality()) {
+			violations.add(new ConstraintViolation(
+					"assignmentExpressionDataValueUpdateLegality", this));
 		}
 		LeftHandSide leftHandSide = this.getLeftHandSide();
 		if (leftHandSide != null) {

@@ -201,11 +201,10 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      * upper bound of the right hand side is 1 and otherwise * and the
      * multiplicity lower bound is 0. Otherwise, the type and multiplicity are
      * the same as the left hand side.
+     * multiplicity lower bound is 0. Otherwise, the type is the same as the
+     * left-hand side and the multiplicity is also the same as the left-hand
+     * side, if the left-hand side is not indexed, and is * if it is indexed.
      **/
-	/*
-	 * NOTE: This also needs to account for data value updates and indexed left
-	 * hand sides.
-	 */
 	protected AssignedSource deriveAssignment() {
 	    AssignmentExpression self = this.getSelf();
 	    LeftHandSide lhs = self.getLeftHandSide();
@@ -373,8 +372,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	}
 	
 	/**
-	 * An assignment expression has the same type as its right-hand side
-	 * expression.
+     * A simple assignment expression has the same type as its right-hand side
+     * expression. A compound assignment expression has the same type as its
+     * left-hand side.
 	 **/
 	@Override
 	protected ElementReference deriveType() {
@@ -383,7 +383,6 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
     	    Expression rhs = self.getRightHandSide();
     	    return rhs == null? null: rhs.getType();
 	    } else {
-	        // Correction for the case of a compound assignment.
 	        LeftHandSide lhs = self.getLeftHandSide();
 	        return lhs == null? null: lhs.getImpl().getType();
 	    }
@@ -395,29 +394,22 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      **/
 	@Override
 	protected Integer deriveUpper() {
-        AssignmentExpression self = this.getSelf();
-        if (self.getIsSimple()) {
-            Expression rhs = this.getSelf().getRightHandSide();
-            return rhs == null? null: rhs.getUpper();
-        } else {
-            // Correction for the case of a compound assignment.
-            LeftHandSide lhs = self.getLeftHandSide();
-            return lhs == null? null: lhs.getImpl().getUpper();
-        }
+        Expression rhs = this.getSelf().getRightHandSide();
+        return rhs == null? null: rhs.getUpper();
 	}
 	
     /**
-     * An assignment expression has the same multiplicity lower bound as its
-     * right-hand side expression.
+     * A simple assignment expression has the same multiplicity lower bound as
+     * its right-hand side expression. A compound assignment expression has the
+     * same multiplicity as its left-hand side.
      **/
 	@Override
 	protected Integer deriveLower() {
         AssignmentExpression self = this.getSelf();
         if (self.getIsSimple()) {
-            Expression rhs = this.getSelf().getRightHandSide();
+            Expression rhs = self.getRightHandSide();
             return rhs == null? null: rhs.getLower();
         } else {
-            // Correction for the case of a compound assignment.
             LeftHandSide lhs = self.getLeftHandSide();
             return lhs == null? null: lhs.getImpl().getLower();
         }
@@ -502,15 +494,11 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 */
 
 	/**
-	 * If the left-hand side of a simple assignment is not a new local name, and
-	 * the right-hand side is not null, then the left-hand side must either be
-	 * untyped or have a type that conforms to the type of the right-hand side
-	 * expression.
-	 **/
-    /*
-     * It should actually be the right-hand side that conforms to the left-hand
-     * side.
-     */
+     * If the left-hand side of a simple assignment is not a new local name, and
+     * the right-hand side is not null, then the left-hand side must either be
+     * untyped or the right-hand side expression must have a type that conforms
+     * to the type of the left-hand side.
+     **/
 	public boolean assignmentExpressionSimpleAssignmentTypeConformance() {
 	    AssignmentExpression self = this.getSelf();
 	    LeftHandSide lhs = self.getLeftHandSide();
@@ -536,9 +524,14 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	}
 
 	/**
-	 * For a compound assignment, both the left-hand side and the right-hand
-	 * side must have the same type, consistent with the arithmetic or logical
-	 * operator used in the compound assignment operator.
+     * For a compound assignment, if the operator is an arithmetic operator,
+     * then either the left-hand side and the right-hand side both have type
+     * Integer or they both have type String and the operator is +. If the
+     * operator is a logical operator, then either the left-hand side and the
+     * right-hand side both have type Boolean or Bit String or the left-hand
+     * side has type Bit String and the right-hand side has type Integer. If the
+     * operator is a shift operator, then the left-hand side must have type Bit
+     * String and the right-hand side must have type Integer.
 	 **/
 	public boolean assignmentExpressionCompoundAssignmentTypeConformance() {
 	    AssignmentExpression self = this.getSelf();
@@ -557,12 +550,14 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
     	                       lhsType.getImpl().isInteger() &&
     	                       rhsType.getImpl().isInteger() ||
     	                this.isLogicalOperator() &&
-    	                       lhsType.getImpl().isBoolean() &&
-    	                       rhsType.getImpl().isBoolean() ||
-    	                this.isBitstringOperator() &&
+    	                       (lhsType.getImpl().isBoolean() &&
+    	                        rhsType.getImpl().isBoolean() ||
+                                lhsType.getImpl().isBitString() &&
+                                (rhsType.getImpl().isBitString() ||
+                                       rhsType.getImpl().isInteger())) ||
+    	                this.isShiftOperator() &&
     	                       lhsType.getImpl().isBitString() &&
-    	                       (rhsType.getImpl().isBitString() ||
-    	                               rhsType.getImpl().isInteger()) ||
+    	                       rhsType.getImpl().isInteger() ||
                         this.isStringOperator() &&
                                lhsType.getImpl().isString() &&
                                rhsType.getImpl().isString()
@@ -597,6 +592,22 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	    // Note: This is handled by updateAssignmentMap.
 		return true;
 	}
+
+    /**
+     * If an assignment expression has a feature with a primary expression whose
+     * type is a data type, then the assignment expression must be a data value
+     * update.
+     **/
+    public boolean assignmentExpressionDataValueUpdateLegality() {
+        AssignmentExpression self = this.getSelf();
+        LeftHandSide leftHandSide = self.getLeftHandSide();
+        FeatureReference feature = leftHandSide == null? null: 
+            leftHandSide.getImpl().getFeature();
+        Expression primary = feature == null? null: feature.getExpression();
+        ElementReference type = primary == null? null: primary.getType();
+        return type == null || !type.getImpl().isDataType() || 
+                    self.getIsDataValueUpdate();
+    }
 
 	/*
 	 * Helper Methods
@@ -647,10 +658,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                 operator.equals("^="));
     }
 
-    public boolean isBitstringOperator() {
+    public boolean isShiftOperator() {
         String operator = this.getSelf().getOperator();
         return operator != null && (
-                this.isLogicalOperator() ||
                 operator.equals("<<=") ||
                 operator.equals(">>=") ||
                 operator.equals(">>>="));

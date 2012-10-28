@@ -81,16 +81,20 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	 * Constraints
 	 */
 
-	/**
-	 * The operands of a binary expression must both have a multiplicity upper
-	 * bound of 1.
-	 **/
+    /**
+     * The operands of a binary expression must both have a multiplicity upper
+     * bound no greater than 1. If null arguments are not allowed (as given by
+     * the noNullArguments helper operation), then the upper bounds must be
+     * exactly 1.
+     **/
 	public boolean binaryExpressionOperandMultiplicity() {
 	    BinaryExpression self = this.getSelf();
 	    Expression operand1 = self.getOperand1();
 	    Expression operand2 = self.getOperand2();
-		return operand1 != null && operand1.getUpper() == 1 &&
-		            operand2 != null && operand2.getUpper() == 1;
+		return operand1 != null && operand2 != null && 
+		    self.noNullArguments()?
+		            operand1.getUpper() == 1 && operand2.getUpper() == 1:
+		            operand1.getUpper() <= 1 && operand2.getUpper() <= 1;
 	}
 
 	/**
@@ -152,6 +156,14 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
         }
 		return assignmentsAfter;
 	} // updateAssignments
+
+    /**
+     * By default, null arguments are not allowed for binary expressions. (This
+     * is overridden for equality expressions.)
+     **/
+    public Boolean noNullArguments() {
+        return true;
+    }
 
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {

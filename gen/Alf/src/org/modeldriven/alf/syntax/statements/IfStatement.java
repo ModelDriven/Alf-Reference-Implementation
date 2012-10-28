@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.statements;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.statements.impl.IfStatementImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A conditional statement that executes (at most) one of a set of clauses based
@@ -88,12 +88,12 @@ public class IfStatement extends Statement {
 		this.getImpl().setIsAssured(isAssured);
 	}
 
-	public Boolean getIsDetermined() {
-		return this.getImpl().getIsDetermined();
+	public Boolean getIsDeterminate() {
+		return this.getImpl().getIsDeterminate();
 	}
 
-	public void setIsDetermined(Boolean isDetermined) {
-		this.getImpl().setIsDetermined(isDetermined);
+	public void setIsDeterminate(Boolean isDeterminate) {
+		this.getImpl().setIsDeterminate(isDeterminate);
 	}
 
 	/**
@@ -108,19 +108,19 @@ public class IfStatement extends Statement {
 
 	/**
 	 * If an if statement does not have a final else clause, then any name that
-	 * is unassigned before the if statement is unassigned after the if
-	 * statement. If an if statement does have a final else clause, then any
-	 * name that is unassigned before the if statement and is assigned after any
-	 * one clause of the if statement must also be assigned after every other
-	 * clause. The type of such names after the if statement is the effective
-	 * common ancestor of the types of the name in each clause with a
-	 * multiplicity lower bound that is the minimum of the lower bound for the
-	 * name in each clause and a multiplicity upper bound that is the maximum
-	 * for the name in each clause. For a name that has an assigned source after
-	 * any clause of an if statement that is different than before that clause,
-	 * then the assigned source after the if statement is the if statement.
-	 * Otherwise, the assigned source of a name after the if statement is the
-	 * same as before the if statement.
+	 * is not an out parameter and is unassigned before the if statement is
+	 * unassigned after the if statement. If an if statement does have a final
+	 * else clause, then any name that is unassigned before the if statement and
+	 * is assigned after any one clause of the if statement must also be
+	 * assigned after every other clause. The type of such names after the if
+	 * statement is the effective common ancestor of the types of the name in
+	 * each clause with a multiplicity lower bound that is the minimum of the
+	 * lower bound for the name in each clause and a multiplicity upper bound
+	 * that is the maximum for the name in each clause. For a name that has an
+	 * assigned source after any clause of an if statement that is different
+	 * than before that clause, then the assigned source after the if statement
+	 * is the if statement. Otherwise, the assigned source of a name after the
+	 * if statement is the same as before the if statement.
 	 **/
 	public boolean ifStatementAssignmentsAfter() {
 		return this.getImpl().ifStatementAssignmentsAfter();
@@ -143,15 +143,15 @@ public class IfStatement extends Statement {
 	}
 
 	/**
-	 * An if statement is determined if it has an @determined annotation.
+	 * An if statement is determinate if it has an @determinate annotation.
 	 **/
-	public boolean ifStatementIsDeterminedDerivation() {
-		return this.getImpl().ifStatementIsDeterminedDerivation();
+	public boolean ifStatementIsDeterminateDerivation() {
+		return this.getImpl().ifStatementIsDeterminateDerivation();
 	}
 
 	/**
 	 * In addition to an @isolated annotation, an if statement may have @assured
-	 * and @determined annotations. They may not have arguments.
+	 * and @determinate annotations. They may not have arguments.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
@@ -159,7 +159,7 @@ public class IfStatement extends Statement {
 
 	public void _deriveAll() {
 		this.getIsAssured();
-		this.getIsDetermined();
+		this.getIsDeterminate();
 		super._deriveAll();
 		Collection<ConcurrentClauses> nonFinalClauses = this
 				.getNonFinalClauses();
@@ -192,9 +192,9 @@ public class IfStatement extends Statement {
 			violations.add(new ConstraintViolation(
 					"ifStatementIsAssuredDerivation", this));
 		}
-		if (!this.ifStatementIsDeterminedDerivation()) {
+		if (!this.ifStatementIsDeterminateDerivation()) {
 			violations.add(new ConstraintViolation(
-					"ifStatementIsDeterminedDerivation", this));
+					"ifStatementIsDeterminateDerivation", this));
 		}
 		Collection<ConcurrentClauses> nonFinalClauses = this
 				.getNonFinalClauses();
@@ -217,8 +217,8 @@ public class IfStatement extends Statement {
 			s.append(this.getIsAssured());
 		}
 		if (includeDerived) {
-			s.append(" /isDetermined:");
-			s.append(this.getIsDetermined());
+			s.append(" /isDeterminate:");
+			s.append(this.getIsDeterminate());
 		}
 		return s.toString();
 	}

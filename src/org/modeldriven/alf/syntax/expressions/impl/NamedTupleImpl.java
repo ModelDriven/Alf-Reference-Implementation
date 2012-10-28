@@ -124,6 +124,41 @@ public class NamedTupleImpl extends TupleImpl {
         }
         return outputs;
     }
+    
+    /*
+     * Constraints
+     */
+
+    /**
+     * The name of a named expression of a named tuple must be the name of a
+     * parameter of the invocation the tuple is for. No two named expressions
+     * may have the same name.
+     **/
+    public boolean namedTupleArgumentNames() {
+        NamedTuple self = this.getSelf();
+        InvocationExpression invocation = self.getInvocation();
+        if (invocation == null) {
+            return true;
+        } else {
+            Collection<FormalParameter> parameters = 
+                new ArrayList<FormalParameter>(invocation.getImpl().parameters());
+            for (NamedExpression namedExpression: self.getNamedExpression()) {
+                String name = namedExpression.getName();
+                boolean found = false;
+                for (FormalParameter parameter: parameters) {
+                    if (name.equals(parameter.getName())) {
+                        parameters.remove(parameter);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 
 	/*
 	 * Helper Methods

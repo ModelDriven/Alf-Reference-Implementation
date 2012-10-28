@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.units.impl.gen;
 
@@ -18,14 +17,15 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Stereotype;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * A model of the common properties of the definition of a namespace in Alf.
@@ -34,7 +34,7 @@ import java.util.List;
 public abstract class NamespaceDefinitionImpl extends
 		org.modeldriven.alf.syntax.units.impl.gen.MemberImpl {
 
-	private Collection<Member> ownedMember = new ArrayList<Member>();
+	private List<Member> ownedMember = new ArrayList<Member>();
 	private UnitDefinition unit = null;
 	private Collection<Member> member = null; // DERIVED
 
@@ -46,11 +46,11 @@ public abstract class NamespaceDefinitionImpl extends
 		return (NamespaceDefinition) this.self;
 	}
 
-	public Collection<Member> getOwnedMember() {
+	public List<Member> getOwnedMember() {
 		return this.ownedMember;
 	}
 
-	public void setOwnedMember(Collection<Member> ownedMember) {
+	public void setOwnedMember(List<Member> ownedMember) {
 		this.ownedMember = ownedMember;
 	}
 
@@ -105,12 +105,15 @@ public abstract class NamespaceDefinitionImpl extends
 	 * The members of a namespace must be distinguishable as determined by the
 	 * Member::isDistinguishableFrom operation.
 	 **/
-	public boolean namespaceDefinitionMemberDistinguishaibility() {
+	public boolean namespaceDefinitionMemberDistinguishability() {
 		return true;
 	}
 
 	/**
 	 * Returns true if the annotation is @external.
 	 **/
-	public abstract Boolean annotationAllowed(StereotypeAnnotation annotation);
+	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+		return false; // STUB
+	} // annotationAllowed
+
 } // NamespaceDefinitionImpl
