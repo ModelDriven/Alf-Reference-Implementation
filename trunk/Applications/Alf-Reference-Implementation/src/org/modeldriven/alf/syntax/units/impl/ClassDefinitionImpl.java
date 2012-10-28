@@ -140,13 +140,13 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	            if (ownedMember instanceof OperationDefinition) {
 	                if (inheritableMember.getImpl().getReferent().getImpl().
                             isContainedIn(((OperationDefinition)ownedMember).
-                                    getRedefinedOperations())) {
+                                    getRedefinedOperation())) {
 	                    inheritableMembers.remove(i);
 	                    i--;
 	                    break;
 	                } else if (!ownedMember.isDistinguishableFrom(inheritableMember)) {
 	                    inheritableMembers.remove(i);
-	                    ((OperationDefinition)ownedMember).addRedefinedOperations
+	                    ((OperationDefinition)ownedMember).addRedefinedOperation
 	                        (inheritableMember.getImpl().getReferent());
     	                i--;
     	                break;

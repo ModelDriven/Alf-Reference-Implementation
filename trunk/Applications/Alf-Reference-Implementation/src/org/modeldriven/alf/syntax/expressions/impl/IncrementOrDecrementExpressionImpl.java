@@ -241,7 +241,7 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
 	 * Derivations
 	 */
 	
-    public boolean incrementOrDecrementExpressionAssignment() {
+    public boolean incrementOrDecrementExpressionAssignmentDerivation() {
         return true;
     }
 
@@ -260,11 +260,11 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
         return true;
     }
 
-    public boolean incrementOrDecrementExpressionIsDataValueUpdate() {
+    public boolean incrementOrDecrementExpressionIsDataValueUpdateDerivation() {
         return true;
     }
 
-    public boolean incrementOrDecrementExpressionFeature() {
+    public boolean incrementOrDecrementExpressionFeatureDerivation() {
         return true;
     }
 

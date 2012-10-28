@@ -33,7 +33,7 @@ public class SwitchStatementImpl extends StatementImpl {
 	private Expression expression = null;
 	private Block defaultClause = null;
 	private Boolean isAssured = null; // DERIVED
-	private Boolean isDetermined = null; // DERIVED
+	private Boolean isDeterminate = null; // DERIVED
 
 	public SwitchStatementImpl(SwitchStatement self) {
 		super(self);
@@ -100,15 +100,15 @@ public class SwitchStatementImpl extends StatementImpl {
 		this.isAssured = isAssured;
 	}
 
-	public Boolean getIsDetermined() {
-		if (this.isDetermined == null) {
-			this.setIsDetermined(this.deriveIsDetermined());
+	public Boolean getIsDeterminate() {
+		if (this.isDeterminate == null) {
+			this.setIsDeterminate(this.deriveIsDetermined());
 		}
-		return this.isDetermined;
+		return this.isDeterminate;
 	}
 
-	public void setIsDetermined(Boolean isDetermined) {
-		this.isDetermined = isDetermined;
+	public void setIsDeterminate(Boolean isDetermined) {
+		this.isDeterminate = isDetermined;
 	}
 
     /**
@@ -172,8 +172,8 @@ public class SwitchStatementImpl extends StatementImpl {
 	 * Derivations
 	 */
 	
-    public boolean switchStatementIsDeterminedDerivation() {
-        this.getSelf().getIsDetermined();
+    public boolean switchStatementIsDeterminateDerivation() {
+        this.getSelf().getIsDeterminate();
         return true;
     }
 

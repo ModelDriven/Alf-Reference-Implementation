@@ -31,7 +31,7 @@ public class IfStatementImpl extends StatementImpl {
 	private List<ConcurrentClauses> nonFinalClauses = new ArrayList<ConcurrentClauses>();
 	private Block finalClause = null;
 	private Boolean isAssured = null; // DERIVED
-	private Boolean isDetermined = null; // DERIVED
+	private Boolean isDeterminate = null; // DERIVED
 	
 	private NamespaceDefinition currentScope = null;
 
@@ -81,15 +81,15 @@ public class IfStatementImpl extends StatementImpl {
 		this.isAssured = isAssured;
 	}
 
-	public Boolean getIsDetermined() {
-		if (this.isDetermined == null) {
-			this.setIsDetermined(this.deriveIsDetermined());
+	public Boolean getIsDeterminate() {
+		if (this.isDeterminate == null) {
+			this.setIsDeterminate(this.deriveIsDetermined());
 		}
-		return this.isDetermined;
+		return this.isDeterminate;
 	}
 
-	public void setIsDetermined(Boolean isDetermined) {
-		this.isDetermined = isDetermined;
+	public void setIsDeterminate(Boolean isDetermined) {
+		this.isDeterminate = isDetermined;
 	}
 	
 	/**
@@ -162,8 +162,8 @@ public class IfStatementImpl extends StatementImpl {
         return true;
     }
 
-    public boolean ifStatementIsDeterminedDerivation() {
-        this.getSelf().getIsDetermined();
+    public boolean ifStatementIsDeterminateDerivation() {
+        this.getSelf().getIsDeterminate();
         return true;
     }
     

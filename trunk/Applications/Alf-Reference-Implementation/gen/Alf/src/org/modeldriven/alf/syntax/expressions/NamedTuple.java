@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.expressions.impl.NamedTupleImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A tuple in which the arguments are matched to parameters by name.
@@ -71,6 +71,15 @@ public class NamedTuple extends Tuple {
 		this.getImpl().addNamedExpression(namedExpression);
 	}
 
+	/**
+	 * The name of a named expression of a named tuple must be the name of a
+	 * parameter of the invocation the tuple is for. No two named expressions
+	 * may have the same name.
+	 **/
+	public boolean namedTupleArgumentNames() {
+		return this.getImpl().namedTupleArgumentNames();
+	}
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Collection<NamedExpression> namedExpression = this.getNamedExpression();
@@ -83,6 +92,10 @@ public class NamedTuple extends Tuple {
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
+		if (!this.namedTupleArgumentNames()) {
+			violations.add(new ConstraintViolation("namedTupleArgumentNames",
+					this));
+		}
 		Collection<NamedExpression> namedExpression = this.getNamedExpression();
 		if (namedExpression != null) {
 			for (Object _namedExpression : namedExpression.toArray()) {

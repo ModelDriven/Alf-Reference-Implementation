@@ -124,7 +124,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
         }
         
         for (ElementReference redefinedOperation: 
-            definition.getRedefinedOperations()) {
+            definition.getRedefinedOperation()) {
             mapping = this.fumlMap(redefinedOperation);
             if (mapping instanceof ElementReferenceMapping) {
                 mapping = ((ElementReferenceMapping)mapping).getMapping();

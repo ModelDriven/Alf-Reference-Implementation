@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.expressions.impl.LogicalExpressionImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A binary expression with a logical operator.
@@ -84,7 +84,8 @@ public class LogicalExpression extends BinaryExpression {
 	}
 
 	/**
-	 * A logical expression has type Boolean.
+	 * A logical expression has type Boolean if it is not bit-wise and type
+	 * BitString if it is bit-wise.
 	 **/
 	public boolean logicalExpressionTypeDerivation() {
 		return this.getImpl().logicalExpressionTypeDerivation();
@@ -106,7 +107,9 @@ public class LogicalExpression extends BinaryExpression {
 	}
 
 	/**
-	 * The operands of a logical expression must have type Boolean.
+	 * The operands of a logical expression must have type Boolean, Integer or
+	 * BitString. However, if one of the operands is Boolean, then the other
+	 * must also be Boolean.
 	 **/
 	public boolean logicalExpressionOperands() {
 		return this.getImpl().logicalExpressionOperands();
@@ -114,7 +117,7 @@ public class LogicalExpression extends BinaryExpression {
 
 	/**
 	 * BitString conversion is required if the first operand expression of a
-	 * shift expression has type Integer.
+	 * logical expression has type Integer.
 	 **/
 	public boolean logicalExpressionIsBitStringConversion1Derivation() {
 		return this.getImpl()
@@ -123,7 +126,7 @@ public class LogicalExpression extends BinaryExpression {
 
 	/**
 	 * BitString conversion is required if the second operand expression of a
-	 * shift expression has type Integer.
+	 * logical expression has type Integer.
 	 **/
 	public boolean logicalExpressionIsBitStringConversion2Derivation() {
 		return this.getImpl()

@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions.impl.gen;
 
@@ -18,14 +17,15 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Stereotype;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * An expression denoting the invocation of a behavior or operation, or the
@@ -264,8 +264,11 @@ public abstract class InvocationExpressionImpl extends
 	}
 
 	/**
-	 * The type of an invocation expression is determined by the return
-	 * parameter (if any) of the referent.
+	 * If the referent of an invocationExpression is an operation or behavior
+	 * with a return parameter, then the type of the expression is that of the
+	 * return parameter (if any). If the referent is a classifier, then the type
+	 * is the referent. If the referent is a property, then the type is that of
+	 * the property. Otherwise the expression has no type.
 	 **/
 	public boolean invocationExpressionTypeDerivation() {
 		this.getSelf().getType();
@@ -273,8 +276,11 @@ public abstract class InvocationExpressionImpl extends
 	}
 
 	/**
-	 * The multiplicity upper bound of an invocation expression is determined by
-	 * the return parameter (if any) of the referent.
+	 * If the referent of an invocationExpression is an operation or behavior
+	 * with a return parameter, then the upper bound of the expression is that
+	 * of the return parameter. If the referent is a classifier, then the upper
+	 * bound is 1. If the referent is a property, then the upper bound is that
+	 * of the property. Otherwise the upper bound is 0.
 	 **/
 	public boolean invocationExpressionUpperDerivation() {
 		this.getSelf().getUpper();
@@ -282,8 +288,11 @@ public abstract class InvocationExpressionImpl extends
 	}
 
 	/**
-	 * The multiplicity lower bound of an invocation expression is determined by
-	 * the return parameter (if any) of the referent.
+	 * If the referent of an invocationExpression is an operation or behavior
+	 * with a return parameter, then the lower bound of the expression is that
+	 * of the return parameter. If the referent is a classifier, then the lower
+	 * bound is 1. If the referent is a property, then the lower bound is that
+	 * of the property. Otherwise the lower bound is 0.
 	 **/
 	public boolean invocationExpressionLowerDerivation() {
 		this.getSelf().getLower();
@@ -301,13 +310,16 @@ public abstract class InvocationExpressionImpl extends
 
 	/**
 	 * Returns references to the elements that act as the parameters of the
-	 * referent. For a behavior or operation, these are the owned parameters, in
-	 * order. Otherwise (by default), they are actually any properties of the
-	 * referent (e.g., signal attributes), which are treated as if they were in
-	 * parameters. (This is defined as a helper operation, so that it can be
-	 * overridden by subclasses of InvocationExpression, if necessary.)
+	 * referent. If the referent is a behavior or operation, these are the owned
+	 * parameters, in order. If the referent is an association end, then the
+	 * parameters are the other association ends of the association of the
+	 * referent end, which are treated as if they were in parameters. Otherwise
+	 * (by default), they are any properties of the referent (e.g., signal
+	 * attributes), which are treated as if they were in parameters. (This is
+	 * defined as a helper operation, so that it can be overridden by subclasses
+	 * of InvocationExpression, if necessary.)
 	 **/
-	public Collection<ElementReference> parameterElements() {
+	public List<ElementReference> parameterElements() {
 		return new ArrayList<ElementReference>(); // STUB
 	} // parameterElements
 

@@ -103,7 +103,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         this.addToNode(graph.getModelElements());
         
         node.setIsAssured(statement.getIsAssured());
-        node.setIsDeterminate(statement.getIsDetermined());
+        node.setIsDeterminate(statement.getIsDeterminate());
     }
 
 	public SwitchStatement getSwitchStatement() {

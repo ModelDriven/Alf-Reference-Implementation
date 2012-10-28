@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions.impl.gen;
 
@@ -18,14 +17,15 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Stereotype;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * A unary expression with either an increment or decrement operator.
@@ -34,11 +34,11 @@ import java.util.List;
 public class IncrementOrDecrementExpressionImpl extends
 		org.modeldriven.alf.syntax.expressions.impl.gen.ExpressionImpl {
 
-	private String operator = "";
 	private AssignedSource assignment = null; // DERIVED
 	private LeftHandSide operand = null;
 	private Expression expression = null; // DERIVED
 	private ElementReference feature = null; // DERIVED
+	private String operator = "";
 	private Boolean isPrefix = false;
 	private Boolean isFeature = null; // DERIVED
 	private Boolean isIndexed = null; // DERIVED
@@ -51,14 +51,6 @@ public class IncrementOrDecrementExpressionImpl extends
 
 	public IncrementOrDecrementExpression getSelf() {
 		return (IncrementOrDecrementExpression) this.self;
-	}
-
-	public String getOperator() {
-		return this.operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
 	}
 
 	public AssignedSource getAssignment() {
@@ -100,6 +92,14 @@ public class IncrementOrDecrementExpressionImpl extends
 
 	public void setFeature(ElementReference feature) {
 		this.feature = feature;
+	}
+
+	public String getOperator() {
+		return this.operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
 	public Boolean getIsPrefix() {
@@ -172,7 +172,8 @@ public class IncrementOrDecrementExpressionImpl extends
 	 * the assignment for the expression is a new assigned source for the name
 	 * with the expression as the source.
 	 **/
-	public boolean incrementOrDecrementExpressionAssignment() {
+	public boolean incrementOrDecrementExpressionAssignmentDerivation() {
+		this.getSelf().getAssignment();
 		return true;
 	}
 
@@ -199,7 +200,8 @@ public class IncrementOrDecrementExpressionImpl extends
 	 * operand is an attribute of a data value held in a local name or
 	 * parameter.
 	 **/
-	public boolean incrementOrDecrementExpressionIsDataValueUpdate() {
+	public boolean incrementOrDecrementExpressionIsDataValueUpdateDerivation() {
+		this.getSelf().getIsDataValueUpdate();
 		return true;
 	}
 
@@ -207,7 +209,8 @@ public class IncrementOrDecrementExpressionImpl extends
 	 * If the operand of an increment or decrement expression is a feature, then
 	 * the referent for the operand.
 	 **/
-	public boolean incrementOrDecrementExpressionFeature() {
+	public boolean incrementOrDecrementExpressionFeatureDerivation() {
+		this.getSelf().getFeature();
 		return true;
 	}
 

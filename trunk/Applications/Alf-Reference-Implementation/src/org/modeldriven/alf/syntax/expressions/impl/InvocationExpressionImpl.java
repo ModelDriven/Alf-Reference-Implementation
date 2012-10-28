@@ -13,6 +13,9 @@ package org.modeldriven.alf.syntax.expressions.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.ExpressionStatement;
+import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.syntax.units.impl.AssignableTypedElementImpl;
 import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
@@ -41,6 +44,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	private Boolean isSignal = null; // DERIVED
 	
 	private NamespaceDefinition currentScope = null;
+	private Block enclosingBlock = null;
 
 	public InvocationExpressionImpl(InvocationExpression self) {
 		super(self);
@@ -235,7 +239,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
      * parameterElements helper operation.
      **/
 	protected List<ElementReference> deriveParameter() {
-		return this.parameterElementList();
+		return this.parameterElements();
 	}
 
     /**
@@ -360,12 +364,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	 * parameters. (This is defined as a helper operation, so that it can be
 	 * overridden by subclasses of InvocationExpression, if necessary.)
 	 **/
-	// Note: The result of this operation should be a List.
-	public Collection<ElementReference> parameterElements() {
-		return this.parameterElementList();
-	} // parameterElements
-
-    public List<ElementReference> parameterElementList() {
+	public List<ElementReference> parameterElements() {
         List<ElementReference> parameters = new ArrayList<ElementReference>();
         for (FormalParameter parameter: this.parameters()) {
             parameters.add(parameter.getImpl().getReferent());
@@ -487,6 +486,53 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         }
     }
     
+    @Override
+    public void setEnclosingBlock(Block enclosingBlock) {
+        this.enclosingBlock = enclosingBlock;
+    }
+    
+
+    /**
+     * The referent may only be a constructor (as a result of the target
+     * disambiguating to a feature reference) if this behavior invocation
+     * expression is the expression of an expression statement that is the first
+     * statement in the definition for the method of a constructor operation.
+     **/
+    public boolean checkAlternativeConstructorValidity() {
+        InvocationExpression self = this.getSelf();
+        ElementReference referent = self.getReferent();
+        NamespaceDefinition currentScope = this.getCurrentScope();
+        if (referent == null || !referent.getImpl().isConstructor() || 
+                currentScope == null) {
+            return true;
+        } else {
+            // Note: This will work, even it the operation definition is not an
+            // Alf unit.
+            ElementReference operation = currentScope.getImpl().getReferent();
+            if (!operation.getImpl().isConstructor() || this.enclosingBlock == null) {
+                return false;
+            } else {
+                List<Statement> statements = this.enclosingBlock.getStatement();
+                if (statements.size() == 0) {
+                    return false;
+                } else {
+                    Statement statement = statements.get(0);
+                    return statement instanceof ExpressionStatement &&
+                            ((ExpressionStatement)statement).getExpression() == self &&
+                            statement.getImpl().getEnclosingStatement() == null &&
+                            // NOTE: This ensures that the invoked constructor
+                            // the is from the same class as the containing
+                            // constructor.
+                            operation.getImpl().getNamespace().getImpl().
+                                equals(referent.getImpl().getNamespace()) &&
+                            // NOTE: An alternative constructor invocation should
+                            // only be allowed on "this".
+                            self.getFeature().getExpression() instanceof ThisExpression;
+                }
+            }
+        }
+    }
+
     /**
      * Infer the implicit template arguments for a template behavior referent
      * and bind them to template parameters.

@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.statements.impl.gen;
 
@@ -18,14 +17,15 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Stereotype;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * A statement that executes (at most) one of a set of statement sequences based
@@ -39,7 +39,7 @@ public class SwitchStatementImpl extends
 	private Expression expression = null;
 	private Block defaultClause = null;
 	private Boolean isAssured = null; // DERIVED
-	private Boolean isDetermined = null; // DERIVED
+	private Boolean isDeterminate = null; // DERIVED
 
 	public SwitchStatementImpl(SwitchStatement self) {
 		super(self);
@@ -88,28 +88,28 @@ public class SwitchStatementImpl extends
 		this.isAssured = isAssured;
 	}
 
-	public Boolean getIsDetermined() {
-		if (this.isDetermined == null) {
-			this.setIsDetermined(this.deriveIsDetermined());
+	public Boolean getIsDeterminate() {
+		if (this.isDeterminate == null) {
+			this.setIsDeterminate(this.deriveIsDeterminate());
 		}
-		return this.isDetermined;
+		return this.isDeterminate;
 	}
 
-	public void setIsDetermined(Boolean isDetermined) {
-		this.isDetermined = isDetermined;
+	public void setIsDeterminate(Boolean isDeterminate) {
+		this.isDeterminate = isDeterminate;
 	}
 
 	protected Boolean deriveIsAssured() {
 		return null; // STUB
 	}
 
-	protected Boolean deriveIsDetermined() {
+	protected Boolean deriveIsDeterminate() {
 		return null; // STUB
 	}
 
 	/**
 	 * The assignments before all clauses of a switch statement are the same as
-	 * the assignments before the switch statement.
+	 * the assignments after the expression of the switch statement.
 	 **/
 	public boolean switchStatementAssignmentsBefore() {
 		return true;
@@ -136,38 +136,45 @@ public class SwitchStatementImpl extends
 
 	/**
 	 * If a switch statement does not have a final default clause, then any name
-	 * that is unassigned before the switch statement is unassigned after the
-	 * switch statement. If a switch statement does have a final default clause,
-	 * then any name that is unassigned before the switch statement and is
-	 * assigned after any one clause of the switch statement must also be
-	 * assigned after every other clause. The type of such names after the
-	 * switch statement is the effective common ancestor of the types of the
-	 * name in each clause with a multiplicity lower bound that is the minimum
-	 * of the lower bound for the name in each clause and a multiplicity upper
-	 * bound that is the maximum for the name in each clause.
+	 * that is not an out parameter and is unassigned before the switch
+	 * statement is unassigned after the switch statement. If a switch statement
+	 * does have a final default clause, then any name that is unassigned before
+	 * the switch statement and is assigned after any one clause of the switch
+	 * statement must also be assigned after every other clause. The type of
+	 * such names after the switch statement is the effective common ancestor of
+	 * the types of the name in each clause with a multiplicity lower bound that
+	 * is the minimum of the lower bound for the name in each clause and a
+	 * multiplicity upper bound that is the maximum for the name in each clause.
 	 **/
 	public boolean switchStatementAssignments() {
 		return true;
 	}
 
+	/**
+	 * A switch statement expression must have a multiplicity no greater than 1.
+	 **/
 	public boolean switchStatementExpression() {
 		return true;
 	}
 
+	/**
+	 * A switch statement is the enclosing statement for the statements in all
+	 * of its switch clauses.
+	 **/
 	public boolean switchStatementEnclosedStatements() {
 		return true;
 	}
 
 	/**
-	 * An switch statement is determined if it has an @determined annotation.
+	 * A switch statement is determinate if it has a @determinate annotation.
 	 **/
-	public boolean switchStatementIsDeterminedDerivation() {
-		this.getSelf().getIsDetermined();
+	public boolean switchStatementIsDeterminateDerivation() {
+		this.getSelf().getIsDeterminate();
 		return true;
 	}
 
 	/**
-	 * An switch statement is assured if it has an @assured annotation.
+	 * A switch statement is assured if it has an @assured annotation.
 	 **/
 	public boolean switchStatementIsAssuredDerivation() {
 		this.getSelf().getIsAssured();
@@ -176,7 +183,7 @@ public class SwitchStatementImpl extends
 
 	/**
 	 * In addition to an @isolated annotation, a switch statement may have @assured
-	 * and @determined annotations. They may not have arguments.
+	 * and @determinate annotations. They may not have arguments.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
 		return false; // STUB

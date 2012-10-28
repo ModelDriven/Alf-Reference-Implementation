@@ -335,22 +335,31 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public List<Member> getPublicMembers(Collection<ElementReference> excluded) {
-        return !this.isPackage()? new ArrayList<Member>():
-            ((PackageDefinition)this.getSelf().getElement()).getImpl().getPublicMembers(excluded);
+    public List<ElementReference> getOwnedMembers() {
+        List<ElementReference> members = new ArrayList<ElementReference>();
+        if (this.isClassifier()) {
+            for (Member member: ((ClassifierDefinition)this.getSelf().getElement()).getOwnedMember()) {
+                members.add(member.getImpl().getReferent());
+            }
+        }
+        return members;
     }
 
     @Override
-    public List<ElementReference> getFeatures() {
-        List<ElementReference> features = new ArrayList<ElementReference>();
+    public List<ElementReference> getMembers() {
+        List<ElementReference> members = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
             for (Member member: ((ClassifierDefinition)this.getSelf().getElement()).getMember()) {
-                if (member.getIsFeature()) {
-                    features.add(member.getImpl().getReferent());
-                }
+                members.add(member.getImpl().getReferent());
             }
         }
-        return features;
+        return members;
+    }
+
+    @Override
+    public List<Member> getPublicMembers(Collection<ElementReference> excluded) {
+        return !this.isPackage()? new ArrayList<Member>():
+            ((PackageDefinition)this.getSelf().getElement()).getImpl().getPublicMembers(excluded);
     }
 
     @Override

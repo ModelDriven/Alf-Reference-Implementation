@@ -87,10 +87,14 @@ public class InstanceCreationExpressionImpl
         return referent == null || !referent.getImpl().isDataType();
 	}
 	
-	/**
-	 * The referent of an instance creation expression is the constructor
-	 * operation, class or data type to which the constructor name resolves.
-	 **/
+    /**
+     * The referent of an instance creation expression is normally the
+     * constructor operation, class or data type to which the constructor name
+     * resolves. However, if the referent is an operation whose class is
+     * abstract or is a class that is itself abstract, and there is an
+     * associated Impl class constructor, then the referent is the Impl class
+     * constructor.
+     **/
 	@Override
 	protected ElementReference deriveReferent() {
         InstanceCreationExpression self = this.getSelf();
@@ -279,14 +283,17 @@ public class InstanceCreationExpressionImpl
     	                    isAbstractClassifier());
 	}
 	
-	/**
-	 * If the expression is constructorless, then its tuple must be empty.
-	 **/
-	public boolean instanceCreationExpressionTuple() {
+    /**
+     * If the expression is constructorless, then its tuple must be empty and
+     * the referent class must not have any owned operations that are
+     * constructors.
+     **/
+	public boolean instanceCreationExpressionConstructorlessLegality() {
 	    InstanceCreationExpression self = this.getSelf();
 	    Tuple tuple = self.getTuple();
 		return !self.getIsConstructorless() || 
-		            tuple != null && tuple.getImpl().isEmpty();
+		            tuple != null && tuple.getImpl().isEmpty() &&
+		            this.referentHasNoConstructors();
 	}
 
 	/**
@@ -317,21 +324,45 @@ public class InstanceCreationExpressionImpl
         }
 	}
 	
+    /**
+     * If the referent of an instance creation expression is an operation, then
+     * the class of that operation must not be abstract. Otherwise, the referent
+     * is a class or data type, which must not be abstract.
+     **/
+    public boolean instanceCreationExpressionReferent() {
+        InstanceCreationExpression self = this.getSelf();
+        ElementReference referent = self.getReferent();
+        if (referent.getImpl().isOperation()) {
+            referent = referent.getImpl().getNamespace();
+        }
+        return !referent.getImpl().isAbstractClassifier();
+    }
+
 	/*
 	 * Helper Methods
 	 */
 
-	/**
-	 * Returns the parameters of a constructor operation or the attributes of a
-	 * data type, or an empty set for a constructorless instance creation.
-	 **/
-	@Override
-	public List<FormalParameter> parameters() {
+    /**
+     * Returns the parameters of a constructor operation or the attributes of a
+     * data type, or an empty set for a constructorless instance creation.
+     **/
+    @Override
+    public List<FormalParameter> parameters() {
         if (this.getSelf().getIsConstructorless()) {
             return new ArrayList<FormalParameter>();
         } else {
             return super.parameters();
         }
+    }
+    
+	private boolean referentHasNoConstructors() {
+	    for (ElementReference feature: 
+	        this.getSelf().getReferent().getImpl().getOwnedMembers()) {
+	        if (feature.getImpl().isConstructor()) {
+	            return false;
+	        }
+	    }
+	    return true;
 	}
 	
 	@Override

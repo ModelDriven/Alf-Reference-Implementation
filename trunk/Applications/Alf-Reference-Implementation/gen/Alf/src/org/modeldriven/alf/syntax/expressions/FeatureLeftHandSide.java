@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.expressions.impl.FeatureLeftHandSideImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A left-hand side that is a property reference.
@@ -102,6 +102,53 @@ public class FeatureLeftHandSide extends LeftHandSide {
 		return this.getImpl().featureLeftHandSideAssignmentsBefore();
 	}
 
+	/**
+	 * The referent of a feature left-hand side is the structural feature to
+	 * which the feature reference of the left-hand side resolves.
+	 **/
+	public boolean featureLeftHandSideReferentDerivation() {
+		return this.getImpl().featureLeftHandSideReferentDerivation();
+	}
+
+	/**
+	 * The type of a feature left-hand side is the type of its referent.
+	 **/
+	public boolean featureLeftHandSideTypeDerivation() {
+		return this.getImpl().featureLeftHandSideTypeDerivation();
+	}
+
+	/**
+	 * If a feature left-hand side is indexed, then its lower bound is 1.
+	 * Otherwise, its lower bound is that of its referent.
+	 **/
+	public boolean featureLeftHandSideLowerDerivation() {
+		return this.getImpl().featureLeftHandSideLowerDerivation();
+	}
+
+	/**
+	 * If a feature left-hand side is indexed, then its upper bound is 1.
+	 * Otherwise, its upper bound is that of its referent.
+	 **/
+	public boolean featureLeftHandSideUpperDerivation() {
+		return this.getImpl().featureLeftHandSideUpperDerivation();
+	}
+
+	/**
+	 * The feature of a feature-left hand side must have a single referent that
+	 * is a structural feature.
+	 **/
+	public boolean featureLeftHandSideReferentConstraint() {
+		return this.getImpl().featureLeftHandSideReferentConstraint();
+	}
+
+	/**
+	 * If a feature left-hand side has an index, then the referent of the
+	 * feature must be ordered and non-unique.
+	 **/
+	public boolean featureLeftHandSideIndexedFeature() {
+		return this.getImpl().featureLeftHandSideIndexedFeature();
+	}
+
 	public void _deriveAll() {
 		super._deriveAll();
 		FeatureReference feature = this.getFeature();
@@ -127,6 +174,30 @@ public class FeatureLeftHandSide extends LeftHandSide {
 		if (!this.featureLeftHandSideAssignmentsBefore()) {
 			violations.add(new ConstraintViolation(
 					"featureLeftHandSideAssignmentsBefore", this));
+		}
+		if (!this.featureLeftHandSideReferentDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideReferentDerivation", this));
+		}
+		if (!this.featureLeftHandSideTypeDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideTypeDerivation", this));
+		}
+		if (!this.featureLeftHandSideLowerDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideLowerDerivation", this));
+		}
+		if (!this.featureLeftHandSideUpperDerivation()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideUpperDerivation", this));
+		}
+		if (!this.featureLeftHandSideReferentConstraint()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideReferentConstraint", this));
+		}
+		if (!this.featureLeftHandSideIndexedFeature()) {
+			violations.add(new ConstraintViolation(
+					"featureLeftHandSideIndexedFeature", this));
 		}
 		FeatureReference feature = this.getFeature();
 		if (feature != null) {

@@ -14,9 +14,6 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.statements.Block;
-import org.modeldriven.alf.syntax.statements.ExpressionStatement;
-import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.*;
 
 /**
@@ -28,9 +25,6 @@ public class FeatureInvocationExpressionImpl
 
 	private FeatureReference target = null;
 	
-	private NamespaceDefinition currentScope = null;
-	private Block enclosingBlock = null;
-
 	public FeatureInvocationExpressionImpl(FeatureInvocationExpression self) {
 		super(self);
 	}
@@ -78,15 +72,15 @@ public class FeatureInvocationExpressionImpl
 	protected FeatureReference deriveFeature() {
         FeatureInvocationExpression self = this.getSelf();
         FeatureReference feature = self.getTarget();
-	    if (feature == null && this.currentScope != null) {
-	        NamespaceDefinition outerScope = this.currentScope.getImpl().getOuterScope();
+	    if (feature == null && this.getCurrentScope() != null) {
+	        NamespaceDefinition outerScope = this.getCurrentScope().getImpl().getOuterScope();
 	        if (outerScope instanceof ClassDefinition) {
     	        feature = new FeatureReference();
     	        NameBinding nameBinding = new NameBinding();
     	        nameBinding.setName(outerScope.getName());
     	        feature.setNameBinding(nameBinding);
     	        ThisExpression thisExpression = new ThisExpression();
-    	        thisExpression.getImpl().setCurrentScope(this.currentScope);
+    	        thisExpression.getImpl().setCurrentScope(this.getCurrentScope());
     	        feature.setExpression(thisExpression);
 	        }
 	    }
@@ -150,38 +144,7 @@ public class FeatureInvocationExpressionImpl
 	 * constructor operation.
 	 **/
 	public boolean featureInvocationExpressionAlternativeConstructor() {
-	    FeatureInvocationExpression self = this.getSelf();
-        ElementReference referent = self.getReferent();
-        NamespaceDefinition currentScope = this.getCurrentScope();
-        if (referent == null || !referent.getImpl().isConstructor() || 
-                currentScope == null) {
-            return true;
-        } else {
-            // Note: This will work, even it the operation definition is not an
-            // Alf unit.
-            ElementReference operation = currentScope.getImpl().getReferent();
-            if (!operation.getImpl().isConstructor() || this.enclosingBlock == null) {
-                return false;
-            } else {
-                List<Statement> statements = this.enclosingBlock.getStatement();
-                if (statements.size() == 0) {
-                    return false;
-                } else {
-                    Statement statement = statements.get(0);
-                    return statement instanceof ExpressionStatement &&
-                            ((ExpressionStatement)statement).getExpression() == self &&
-                            statement.getImpl().getEnclosingStatement() == null &&
-                            // NOTE: This ensures that the invoked constructor
-                            // the is from the same class as the containing
-                            // constructor.
-                            operation.getImpl().getNamespace().getImpl().
-                                equals(referent.getImpl().getNamespace()) &&
-                            // NOTE: An alternative constructor invocation should
-                            // only be allowed on "this".
-                            self.getFeature().getExpression() instanceof ThisExpression;
-                }
-            }
-        }
+        return this.checkAlternativeConstructorValidity();
 	}
 
 	/**
@@ -202,16 +165,10 @@ public class FeatureInvocationExpressionImpl
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    super.setCurrentScope(currentScope);
-	    this.currentScope = currentScope;
         FeatureReference feature = this.getSelf().getFeature();
         if (feature != null) {
             feature.getImpl().setCurrentScope(currentScope);
         }
-	}
-	
-	@Override
-	public void setEnclosingBlock(Block enclosingBlock) {
-	    this.enclosingBlock = enclosingBlock;
 	}
 	
 	@Override

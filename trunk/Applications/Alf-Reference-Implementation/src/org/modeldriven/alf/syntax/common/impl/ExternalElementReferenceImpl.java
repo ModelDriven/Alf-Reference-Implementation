@@ -353,6 +353,32 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public List<ElementReference> getOwnedMembers() {
+        List<ElementReference> features = new ArrayList<ElementReference>();
+        if (this.isClassifier()) {
+            for (NamedElement member: ((Classifier)this.getSelf().getElement()).getOwnedMember()) {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(member);
+                features.add(reference);
+            }
+        }
+        return features;
+    }
+
+    @Override
+    public List<ElementReference> getMembers() {
+        List<ElementReference> features = new ArrayList<ElementReference>();
+        if (this.isClassifier()) {
+            for (NamedElement member: ((Classifier)this.getSelf().getElement()).getMember()) {
+                ExternalElementReference reference = new ExternalElementReference();
+                reference.setElement(member);
+                features.add(reference);
+            }
+        }
+        return features;
+    }
+
+    @Override
     public List<Member> getPublicMembers(Collection<ElementReference> excluded) {
         List<Member> members = new ArrayList<Member>();
         if (this.isPackage()) {
@@ -364,19 +390,6 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
         return members;       
-    }
-
-    @Override
-    public List<ElementReference> getFeatures() {
-        List<ElementReference> features = new ArrayList<ElementReference>();
-        if (this.isClassifier()) {
-            for (Feature feature: ((Classifier)this.getSelf().getElement()).getFeature()) {
-                ExternalElementReference reference = new ExternalElementReference();
-                reference.setElement(feature);
-                features.add(reference);
-            }
-        }
-        return features;
     }
 
     @Override

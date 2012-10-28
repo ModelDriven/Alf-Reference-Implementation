@@ -97,13 +97,13 @@ public class SuperInvocationExpressionImpl
 	        // TODO: Handle overloading resolution.
 	        ElementReference referent = null;
 	        for (ElementReference superclass: superclasses) {
-	            for (ElementReference feature: superclass.getImpl().getFeatures()) {
-	                if (feature.getImpl().isOperation() && 
-	                        feature.getImpl().getName().equals(name)) {
+	            for (ElementReference member: superclass.getImpl().getMembers()) {
+	                if (member.getImpl().isOperation() && 
+	                        member.getImpl().getName().equals(name)) {
 	                    if (referent != null) {
 	                        return null;
 	                    }
-	                    referent = feature;
+	                    referent = member;
 	                }
 	            }
 	        }

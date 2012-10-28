@@ -1,12 +1,11 @@
 
-/*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * All rights reserved worldwide. This program and the accompanying materials
- * are made available for use under the terms of the GNU General Public License 
- * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
- *******************************************************************************/
+/*
+ * Copyright 2011 Data Access Technologies, Inc. (Model Driven Solutions)
+ *
+ * Licensed under the Academic Free License version 3.0 
+ * (http://www.opensource.org/licenses/afl-3.0.php) 
+ *
+ */
 
 package org.modeldriven.alf.syntax.expressions;
 
@@ -19,15 +18,16 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.syntax.expressions.impl.IncrementOrDecrementExpressionImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 /**
  * A unary expression with either an increment or decrement operator.
@@ -57,14 +57,6 @@ public class IncrementOrDecrementExpression extends Expression {
 
 	public IncrementOrDecrementExpressionImpl getImpl() {
 		return (IncrementOrDecrementExpressionImpl) this.impl;
-	}
-
-	public String getOperator() {
-		return this.getImpl().getOperator();
-	}
-
-	public void setOperator(String operator) {
-		this.getImpl().setOperator(operator);
 	}
 
 	public AssignedSource getAssignment() {
@@ -97,6 +89,14 @@ public class IncrementOrDecrementExpression extends Expression {
 
 	public void setFeature(ElementReference feature) {
 		this.getImpl().setFeature(feature);
+	}
+
+	public String getOperator() {
+		return this.getImpl().getOperator();
+	}
+
+	public void setOperator(String operator) {
+		this.getImpl().setOperator(operator);
 	}
 
 	public Boolean getIsPrefix() {
@@ -136,8 +136,9 @@ public class IncrementOrDecrementExpression extends Expression {
 	 * the assignment for the expression is a new assigned source for the name
 	 * with the expression as the source.
 	 **/
-	public boolean incrementOrDecrementExpressionAssignment() {
-		return this.getImpl().incrementOrDecrementExpressionAssignment();
+	public boolean incrementOrDecrementExpressionAssignmentDerivation() {
+		return this.getImpl()
+				.incrementOrDecrementExpressionAssignmentDerivation();
 	}
 
 	/**
@@ -163,16 +164,17 @@ public class IncrementOrDecrementExpression extends Expression {
 	 * operand is an attribute of a data value held in a local name or
 	 * parameter.
 	 **/
-	public boolean incrementOrDecrementExpressionIsDataValueUpdate() {
-		return this.getImpl().incrementOrDecrementExpressionIsDataValueUpdate();
+	public boolean incrementOrDecrementExpressionIsDataValueUpdateDerivation() {
+		return this.getImpl()
+				.incrementOrDecrementExpressionIsDataValueUpdateDerivation();
 	}
 
 	/**
 	 * If the operand of an increment or decrement expression is a feature, then
 	 * the referent for the operand.
 	 **/
-	public boolean incrementOrDecrementExpressionFeature() {
-		return this.getImpl().incrementOrDecrementExpressionFeature();
+	public boolean incrementOrDecrementExpressionFeatureDerivation() {
+		return this.getImpl().incrementOrDecrementExpressionFeatureDerivation();
 	}
 
 	/**
@@ -250,9 +252,11 @@ public class IncrementOrDecrementExpression extends Expression {
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-		if (!this.incrementOrDecrementExpressionAssignment()) {
-			violations.add(new ConstraintViolation(
-					"incrementOrDecrementExpressionAssignment", this));
+		if (!this.incrementOrDecrementExpressionAssignmentDerivation()) {
+			violations
+					.add(new ConstraintViolation(
+							"incrementOrDecrementExpressionAssignmentDerivation",
+							this));
 		}
 		if (!this.incrementOrDecrementExpressionIsFeatureDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -262,13 +266,15 @@ public class IncrementOrDecrementExpression extends Expression {
 			violations.add(new ConstraintViolation(
 					"incrementOrDecrementExpressionIsIndexedDerivation", this));
 		}
-		if (!this.incrementOrDecrementExpressionIsDataValueUpdate()) {
-			violations.add(new ConstraintViolation(
-					"incrementOrDecrementExpressionIsDataValueUpdate", this));
+		if (!this.incrementOrDecrementExpressionIsDataValueUpdateDerivation()) {
+			violations
+					.add(new ConstraintViolation(
+							"incrementOrDecrementExpressionIsDataValueUpdateDerivation",
+							this));
 		}
-		if (!this.incrementOrDecrementExpressionFeature()) {
+		if (!this.incrementOrDecrementExpressionFeatureDerivation()) {
 			violations.add(new ConstraintViolation(
-					"incrementOrDecrementExpressionFeature", this));
+					"incrementOrDecrementExpressionFeatureDerivation", this));
 		}
 		if (!this.incrementOrDecrementExpressionExpressionDerivation()) {
 			violations

@@ -25,7 +25,7 @@ public class BehaviorInvocationExpressionImpl
 		extends InvocationExpressionImpl {
 
 	private QualifiedName target = null;
-
+	
 	public BehaviorInvocationExpressionImpl(BehaviorInvocationExpression self) {
 		super(self);
 	}
@@ -47,9 +47,11 @@ public class BehaviorInvocationExpressionImpl
 	}
 	
 	/**
-	 * The referent of a behavior invocation expression is the behavior or 
-	 * association end named by the target or, if the target disambiguates to a 
-	 * feature reference, the operation or signal being invoked.
+     * If the target of a behavior invocation expression resolves to a behavior,
+     * then the referent of the expression is that behavior. If the target
+     * disambiguates to a feature reference, then the reference is the operation
+     * or signal being invoked. Otherwise, if the target resolves to a property
+     * that is an association end, then the referent is that property.
 	 **/
 	@Override
 	protected ElementReference deriveReferent() {
@@ -122,11 +124,12 @@ public class BehaviorInvocationExpressionImpl
 	}
 
 	/**
-	 * An input argument expression must be assignable to its corresponding
-	 * parameter. An output parameter must be assignable to its corresponding
-	 * argument expression. (Note that this implies that the type of an argument
-	 * expression for an inout parameter must be the same as the type of that
-	 * parameter.)
+     * If the target qualified name does not disambiguate to a feature
+     * reference, then each input argument expression must be assignable to its
+     * corresponding parameter and each output argument expression must be
+     * assignable from its corresponding parameter. (Note that this implies that
+     * the type of an argument expression for an inout parameter must be the
+     * same as the type of that parameter.)
 	 **/
 	public boolean behaviorInvocationExpressionArgumentCompatibility() {
         BehaviorInvocationExpression self = this.getSelf();
@@ -154,6 +157,16 @@ public class BehaviorInvocationExpressionImpl
 		return true;
 	}
 	
+    /**
+     * The referent may only be a constructor (as a result of the target
+     * disambiguating to a feature reference) if this behavior invocation
+     * expression is the expression of an expression statement that is the first
+     * statement in the definition for the method of a constructor operation.
+     **/
+    public boolean behaviorInvocationExpressionAlternativeConstructor() {
+        return this.checkAlternativeConstructorValidity();
+    }
+
 	/*
 	 * Helper Methods
 	 */
