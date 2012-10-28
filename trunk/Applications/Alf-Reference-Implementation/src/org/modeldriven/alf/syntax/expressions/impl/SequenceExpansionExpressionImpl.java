@@ -175,6 +175,19 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
         return true;
 	}
 	
+    /**
+     * The assignments after the argument expression of a sequence expansion
+     * expression must be the same as the assignments before the argument
+     * expression.
+     **/
+    public boolean sequenceExpansionExpressionAssignmentsAfterArgument() {
+        SequenceExpansionExpression self = this.getSelf();
+        Expression argument = self.getArgument();
+        this.getAssignmentAfterMap(); // Force computation of assignments.
+        return argument == null || 
+                argument.getImpl().getNewAssignments().isEmpty();
+    }
+
 	/*
 	 * Helper Methods
 	 */

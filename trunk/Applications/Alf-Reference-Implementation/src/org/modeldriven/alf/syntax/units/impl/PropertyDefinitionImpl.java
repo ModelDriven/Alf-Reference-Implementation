@@ -160,7 +160,7 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 		return true;
 	}
 
-    public boolean propertyDefinitionIsBitStringConversion() {
+    public boolean propertyDefinitionIsBitStringConversionDerivation() {
         this.getSelf().getIsBitStringConversion();
         return true;
     }

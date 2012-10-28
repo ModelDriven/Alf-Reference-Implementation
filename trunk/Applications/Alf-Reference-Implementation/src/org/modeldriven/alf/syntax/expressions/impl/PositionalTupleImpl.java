@@ -132,6 +132,22 @@ public class PositionalTupleImpl extends TupleImpl {
         }
         return outputs;
     }
+    
+    /*
+     * Constraints
+     */
+    
+    /**
+     * A positional tuple must not have more arguments than the invocation it is
+     * for has parameters.
+     **/
+    public boolean positionalTupleArguments() {
+        PositionalTuple self = this.getSelf();
+        List<Expression> expression = self.getExpression();
+        InvocationExpression invocation = self.getInvocation();
+        return expression == null || invocation == null ||
+                expression.size() <= invocation.parameterElements().size();
+    }
 
     /*
      * Helper Methods

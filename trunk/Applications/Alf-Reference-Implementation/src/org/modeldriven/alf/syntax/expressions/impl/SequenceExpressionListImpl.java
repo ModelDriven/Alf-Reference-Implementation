@@ -17,7 +17,6 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ import java.util.Map;
 
 public class SequenceExpressionListImpl extends SequenceElementsImpl {
 
-	private Collection<Expression> element = new ArrayList<Expression>();
+	private List<Expression> element = new ArrayList<Expression>();
 	
 	public SequenceExpressionListImpl(SequenceExpressionList self) {
 		super(self);
@@ -37,11 +36,11 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
 		return (SequenceExpressionList) this.self;
 	}
 
-	public Collection<Expression> getElement() {
+	public List<Expression> getElement() {
 		return this.element;
 	}
 
-	public void setElement(Collection<Expression> element) {
+	public void setElement(List<Expression> element) {
 		this.element = element;
 	}
 

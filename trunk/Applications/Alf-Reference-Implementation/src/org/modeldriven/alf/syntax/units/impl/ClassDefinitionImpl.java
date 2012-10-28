@@ -39,7 +39,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	}
 	
 	@Override
-	public Collection<Member> getOwnedMember() {
+	public List<Member> getOwnedMember() {
 	    ClassDefinition self = this.getSelf();
 	    if (!self.getIsStub()) {
             if (this.needsDefaultConstructor()) {
@@ -90,6 +90,25 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         return true;
 	}
 	
+    /**
+     * If a class definition is not abstract, then no member operations (owned
+     * or inherited) of the class definition may be abstract.
+     **/
+    public boolean classDefinitionAbstractMember() {
+        ClassDefinition self = this.getSelf();
+        if (self.getIsAbstract()) {
+            return true;
+        } else {
+            for (Member member: self.getMember()) {
+                if (member instanceof OperationDefinition && 
+                        ((OperationDefinition)member).getIsAbstract()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
     /*
 	 * Helper Methods
 	 */

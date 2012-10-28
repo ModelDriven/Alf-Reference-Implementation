@@ -29,7 +29,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	private QualifiedNameList redefinition = null;
 	private Boolean isAbstract = false;
 	private Block body = null;
-	private Collection<ElementReference> redefinedOperations = null; // DERIVED
+	private Collection<ElementReference> redefinedOperation = null; // DERIVED
 	private Boolean isConstructor = null; // DERIVED
 	private Boolean isDestructor = null; // DERIVED
 
@@ -68,20 +68,20 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         }
 	}
 
-	public Collection<ElementReference> getRedefinedOperations() {
-		if (this.redefinedOperations == null) {
-			this.setRedefinedOperations(this.deriveRedefinedOperations());
+	public Collection<ElementReference> getRedefinedOperation() {
+		if (this.redefinedOperation == null) {
+			this.setRedefinedOperation(this.deriveRedefinedOperation());
 		}
-		return this.redefinedOperations;
+		return this.redefinedOperation;
 	}
 
-	public void setRedefinedOperations(
-			Collection<ElementReference> redefinedOperations) {
-		this.redefinedOperations = redefinedOperations;
+	public void setRedefinedOperation(
+			Collection<ElementReference> redefinedOperation) {
+		this.redefinedOperation = redefinedOperation;
 	}
 
-	public void addRedefinedOperations(ElementReference redefinedOperations) {
-		this.redefinedOperations.add(redefinedOperations);
+	public void addRedefinedOperation(ElementReference redefinedOperation) {
+		this.redefinedOperation.add(redefinedOperation);
 	}
 
 	public Boolean getIsConstructor() {
@@ -113,7 +113,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
      * are any operations that would otherwise be indistinguishable from the
      * operation being defined in this operation definition.
      **/
-	protected Collection<ElementReference> deriveRedefinedOperations() {
+	protected Collection<ElementReference> deriveRedefinedOperation() {
 	    OperationDefinition self = this.getSelf();
 	    ArrayList<ElementReference> redefinedOperations = new ArrayList<ElementReference>();
 	    QualifiedNameList redefinitions = self.getRedefinition();
@@ -165,12 +165,12 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         return true;
     }
 
-    public boolean operationDefinitionIsConstructorDefinition() {
+    public boolean operationDefinitionIsConstructorDerivation() {
         this.getSelf().getIsConstructor();
         return true;
     }
 
-    public boolean operationDefinitionIsDestructorDefinition() {
+    public boolean operationDefinitionIsDestructorDerivation() {
         this.getSelf().getIsDestructor();
         return true;
     }
@@ -180,14 +180,11 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
      */
 
 	/**
-	 * The namespace for an operation definition must be a class definition. If
-	 * the operation definition is abstract, then the class definition must be
-	 * abstract.
+	 * The namespace for an operation definition must be a class definition.
 	 **/
 	public boolean operationDefinitionNamespace() {
 	    ElementReference namespace = this.getNamespaceReference();
-		return namespace != null && namespace.getImpl().isClass() && 
-		        (!this.getSelf().getIsAbstract() || namespace.getImpl().isAbstractClassifier());
+		return namespace != null && namespace.getImpl().isClass();
 	}
 
 	/**

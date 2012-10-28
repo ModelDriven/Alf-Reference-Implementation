@@ -10,6 +10,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +88,42 @@ public class SequenceRangeImpl extends SequenceElementsImpl {
 	}
 	
 	/*
+	 * Constraints
+	 */
+	
+    /**
+     * Both expression in a sequence range must have a multiplicity upper bound
+     * of 1.
+     **/
+    public boolean sequenceRangeExpressionMultiplicity() {
+        SequenceRange self = this.getSelf();
+        Expression rangeLower = self.getRangeLower();
+        Expression rangeUpper = self.getRangeUpper();
+        return rangeLower != null && rangeLower.getUpper() == 1 &&
+               rangeUpper != null && rangeUpper.getUpper() == 1;
+    }
+
+    /**
+     * A local name may be defined or reassigned in at most one of the
+     * expressions of a sequence range.
+     **/
+    public boolean sequenceRangeAssignments() {
+        SequenceRange self = this.getSelf();
+        Expression rangeLower = self.getRangeLower();
+        Expression rangeUpper = self.getRangeUpper();
+        if (rangeLower != null && rangeUpper != null) {
+            Collection<AssignedSource> assignmentsAfter1 = rangeLower.getImpl().getNewAssignments();
+            Collection<AssignedSource> assignmentsAfter2 = rangeUpper.getImpl().getNewAssignments();
+            for (AssignedSource assignment: assignmentsAfter1) {
+                if (assignment.getImpl().isAssignedIn(assignmentsAfter2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+	/*
 	 * Helper Methods
 	 */
 
@@ -123,8 +160,7 @@ public class SequenceRangeImpl extends SequenceElementsImpl {
     }
 
     /**
-     * The lower and upper range expressions must have a multiplicity upper
-     * bound of 1 and type Integer.
+     * The lower and upper range expressions must have type Integer.
      */
     @Override
     public boolean checkElements(SequenceConstructionExpression owner) {
@@ -133,9 +169,7 @@ public class SequenceRangeImpl extends SequenceElementsImpl {
         Expression rangeUpper = self.getRangeUpper();
         ElementReference rangeLowerType = rangeLower == null? null: rangeLower.getType();
         ElementReference rangeUpperType = rangeUpper == null? null: rangeUpper.getType();
-        return rangeLower != null && rangeLower.getUpper() == 1 && 
-               rangeLowerType != null && rangeLowerType.getImpl().isInteger() &&
-               rangeUpper != null && rangeUpper.getUpper() == 1 && 
+        return rangeLowerType != null && rangeLowerType.getImpl().isInteger() && 
                rangeUpperType != null && rangeUpperType.getImpl().isInteger();
     }
 

@@ -40,6 +40,19 @@ public class ElementImportReferenceImpl extends ImportReferenceImpl {
     public void setAlias(String alias) {
         this.alias = alias;
     }
+    
+    /*
+     * Constraints
+     */
+
+    /**
+     * The referent of an element import reference must be a packageable
+     * element.
+     **/
+    public boolean elementImportReferenceReferent() {
+        ElementReference referent = this.getSelf().getReferent();
+        return referent == null || referent.getImpl().isPackageableElement();
+    }
 
 	/*
 	 * Helper Methods

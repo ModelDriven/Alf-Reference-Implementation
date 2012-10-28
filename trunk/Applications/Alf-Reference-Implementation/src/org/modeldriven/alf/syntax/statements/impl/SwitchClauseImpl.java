@@ -92,6 +92,19 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
 		return true;
 	}
 	
+    /**
+     * All the case expressions of a switch clause must have a multiplicity no
+     * greater than 1.
+     **/
+    public boolean switchClauseCases() {
+        for (Expression expression: this.getSelf().getCase()) {
+            if (expression.getUpper() > 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 	/*
 	 * Helper Methods
 	 */
