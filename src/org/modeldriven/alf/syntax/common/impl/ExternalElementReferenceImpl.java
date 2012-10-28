@@ -41,6 +41,7 @@ import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
 import org.modeldriven.alf.uml.Operation;
 import org.modeldriven.alf.uml.Package;
+import org.modeldriven.alf.uml.PackageableElement;
 import org.modeldriven.alf.uml.Parameter;
 import org.modeldriven.alf.uml.ParameterableElement;
 import org.modeldriven.alf.uml.Primitive;
@@ -178,6 +179,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isStereotype() {
         return this.getSelf().getElement() instanceof Stereotype;
+    }
+    
+    @Override
+    public boolean isPackageableElement() {
+        return this.getSelf().getElement() instanceof PackageableElement;
     }
 
     @Override

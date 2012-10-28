@@ -80,6 +80,13 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
         return assignments;
 	}
 	
+    /**
+     * If the target of a name left-hand side disambiguates to a structural
+     * feature, then the referent of the left-hand side is that feature. If the
+     * target resolves to a parameter, then the referent is that parameter. If
+     * the target resolves to a local name, then the referent is the assigned
+     * source for that local name, if it has one.
+     **/
     @Override
     public ElementReference deriveReferent() {
         FeatureReference feature = this.getFeature();
@@ -98,6 +105,11 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
         }
     }
 
+    /**
+     * If a name left-hand side is for a local name with an assignment, then its
+     * type is that of that assignment. Otherwise, if the left-hand side has a
+     * referent, then its type is the type of that referent.
+     **/
 	@Override
 	public ElementReference deriveType() {
         AssignedSource oldAssignment = this.getOldAssignment();
@@ -105,6 +117,12 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	    
 	}
 	
+    /**
+     * If a name left-hand side is indexed, then its lower bound is 1.
+     * Otherwise, if the left-hand side is for a local name with an assignment,
+     * than its lower bound is that of the assignment, else, if it has a
+     * referent, then its lower bound is that of the referent.
+     **/
 	@Override
 	public Integer deriveLower() {
 	    AssignedSource oldAssignment = this.getOldAssignment();
@@ -112,6 +130,12 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	            super.deriveLower(): oldAssignment.getLower();
 	}
 	
+    /**
+     * If a name left-hand side is indexed, then its upper bound is 1.
+     * Otherwise, if the left-hand side is for a local name with an assignment,
+     * than its upper bound is that of the assignment, else, if it has a
+     * referent, then its upper bound is that of the referent.
+     **/
     @Override
     public Integer deriveUpper() {
         AssignedSource oldAssignment = this.getOldAssignment();
@@ -128,6 +152,26 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 		return true;
 	}
 	
+    public boolean nameLeftHandSideReferentDerivation() {
+        this.getSelf().getReferent();
+        return true;
+    }
+
+    public boolean nameLeftHandSideLowerDerivation() {
+        this.getSelf().getLower();
+        return true;
+    }
+
+    public boolean nameLeftHandSideUpperDerivation() {
+        this.getSelf().getUpper();
+        return true;
+    }
+
+    public boolean nameLeftHandSideTypeDerivation() {
+        this.getSelf().getType();
+        return true;
+    }
+
 	/*
 	 * Constraints
 	 */
@@ -171,6 +215,41 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	        this.getOldAssignment() != null;
 	}
 	
+    /**
+     * If the target of a name left-hand side is qualified, then, if it does not
+     * disambiguate to a feature, it must have a referent that is a parameter of
+     * an operation or behavior that is the current scope the left-hand is in,
+     * and, if it does disambiguate to a feature, it must have a single referent
+     * that is a structural feature.
+     **/
+    public boolean nameLeftHandSideTargetResolution() {
+        return this.getSelf().getReferent() != null;
+    }
+
+    /**
+     * If the target of a name left-hand side disambiguates to a feature
+     * reference, and the left-hand side has an index, then the referent of the
+     * feature reference must be ordered and non-unique.
+     **/
+    public boolean nameLeftHandSideIndexedFeature() {
+        NameLeftHandSide self = this.getSelf();
+        if (self.getIndex() == null) {
+            return true;
+        } else {
+            ElementReference referent = self.getReferent();
+            return referent == null || !referent.getImpl().isFeature() ||
+                referent.getImpl().isOrdered() && referent.getImpl().isUnique();
+        }
+    }
+
+    /**
+     * The target of a name left-hand side must not have a template binding.
+     **/
+    public boolean nameLeftHandSideNontemplateTarget() {
+        QualifiedName target = this.getSelf().getTarget();
+        return target == null || target.getImpl().getTemplateName() == null;
+    }
+
 	/*
 	 * Helper Methods
 	 */

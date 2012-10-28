@@ -167,23 +167,50 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	 * Constraints
 	 */
 
-	/**
-	 * The type name of a sequence construction expression must resolve to a
-	 * non-template classifier. If the expression does not have multiplicity,
-	 * then this classifier must be the instantiation of a collection class.
-	 **/
+    /**
+     * If the type name of a sequence construction expression is not empty, then
+     * it must resolve to a non-template classifier. If the expression does not
+     * have multiplicity, then the type name must not be empty and the
+     * classifier to which it resolves must be the instantiation of a collection
+     * class.
+     **/
 	public boolean sequenceConstructionExpressionType() {
 	    SequenceConstructionExpression self = this.getSelf();
 	    ElementReference type = self.getType();
-	    SequenceElements elements = self.getElements();
-	    // Note: The checking of the sequence elements should really be done
-	    // in separate constraints on the SequenceElements subclasses.
-		return (elements == null || elements.getImpl().checkElements(self)) &&
-		        self.getHasMultiplicity()? 
+		return self.getHasMultiplicity()? 
 		            self.getTypeName() == null || type != null:
 		            type != null && type.getImpl().isCollectionClass();
 	}
 	
+    /**
+     * If the elements of a sequence construction expression are given by a
+     * sequence range, then the expression must have type Integer. If the
+     * elements are given by a sequence element list, and the sequence
+     * construction expression has a non-empty type, then each expression in the
+     * list must have a type that either conforms to the type of the sequence
+     * construction expression or is convertible to it by bit string conversion.
+     **/
+    public boolean sequenceConstructionExpressionElementType() {
+        SequenceConstructionExpression self = this.getSelf();
+        SequenceElements elements = self.getElements();
+        return elements == null || elements.getImpl().checkElements(self);
+    }
+
+    /**
+     * If the elements of a sequence construction expression are given by a
+     * sequence expression list, then the assignments before the first
+     * expression in the list are the same as the assignments before the
+     * sequence construction expression, and the assignments before each
+     * subsequent expression are the assignments after the previous expression.
+     * If the elements are given by a sequence range, the assignments before
+     * both expressions in the range are the same as the assignments before the
+     * sequence construction expression.
+     **/
+    public boolean sequenceConstructionExpressionAssignmentsBefore() {
+        // NOTE: This is handled in updateAssignmentsMap.
+        return true;
+    }
+
 	/*
 	 * Helper Methods
 	 */

@@ -42,6 +42,19 @@ public class ActiveClassDefinitionImpl extends ClassDefinitionImpl {
     }
 
     /*
+     * Constraints
+     */
+    
+    /**
+     * If an active class definition is not abstract, then it must have a
+     * classifier behavior.
+     **/
+    public boolean activeClassDefinitionClassifierBehavior() {
+        ActiveClassDefinition self = this.getSelf();
+        return self.getIsAbstract() || self.getClassifierBehavior() != null;
+    }
+
+    /*
      * Helper Methods
      */
 

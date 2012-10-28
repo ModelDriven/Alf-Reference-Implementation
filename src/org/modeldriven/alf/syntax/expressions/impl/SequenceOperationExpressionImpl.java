@@ -180,11 +180,20 @@ public class SequenceOperationExpressionImpl
 	    return null;
 	}
 	
-	/**
-	 * The left-hand side for an "in-place" sequence operation expression is the
-	 * equivalent to the left-hand side for an argument to the initial inout
-	 * parameter of the operation. 
-	 */
+    /**
+     * If the operation of a sequence operation expression has a first parameter
+     * whose direction is inout, then the effective left-hand side for the
+     * expression is constructed as follows: If the primary is a name
+     * expression, then the left-hand side is a name left-hand side with the
+     * name from the name expression as its target. If the primary is a property
+     * access expression, then the left-hand side is a feature left hand side
+     * with the feature reference from the property access expression as its
+     * feature. If the primary is a sequence access expression whose primary is
+     * a name expression or a property access expression, then the left-hand
+     * side is constructed from the primary of the sequence access expression as
+     * given previously and the index of the sequence access expression becomes
+     * the index of the left-hand side.
+     **/
     public LeftHandSide deriveLeftHandSide() {
         LeftHandSide lhs = null;
         if (this.isInPlace()) {
@@ -224,6 +233,11 @@ public class SequenceOperationExpressionImpl
 		return true;
 	}
 	
+    public boolean sequenceOperationExpressionLeftHandSideDerivation() {
+        this.getSelf().getLeftHandSide();
+        return true;
+    }
+
 	/*
 	 * Constraints
 	 */
@@ -308,12 +322,16 @@ public class SequenceOperationExpressionImpl
 	 * expression.
 	 **/
 	public boolean sequenceOperationExpressionAssignmentsBefore() {
-	    // Note: Setting the assignments before the primary expression is
-	    // handled by updateAssignments.
-	    //
-	    // The following condition checks whether a name is not assigned in both
-	    // the primary expression and an argument expression. This needs to be
-	    // added to the spec.
+	    // Note: This is handled by updateAssignments.
+	    return true;
+	}
+	
+    /**
+     * A local name that is assigned in the primary expression of a sequence
+     * operation expression may not be assigned in any expression in the tuple
+     * of the sequence operation expression.
+     **/
+    public boolean sequenceOperationExpressionAssignmentsAfter() {
 	    SequenceOperationExpression self = this.getSelf();
 	    Expression expression = this.getExpression();
 	    Tuple tuple = self.getTuple();

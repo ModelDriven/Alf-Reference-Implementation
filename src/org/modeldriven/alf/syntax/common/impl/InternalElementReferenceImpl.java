@@ -148,6 +148,13 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public boolean isPackageableElement() {
+        SyntaxElement element = this.getSelf().getElement();
+        return element != null && element instanceof Member &&
+                !((Member)element).getIsFeature();
+    }
+    
+    @Override
     public boolean isFeature() {
         SyntaxElement element = this.getSelf().getElement();
         return element != null && element instanceof Member && 
@@ -531,7 +538,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     public Collection<ElementReference> getRedefinedElements() {
         return this.isOperation()?
                 ((OperationDefinition)this.getSelf().getElement()).getImpl().
-                    getRedefinedOperations():
+                    getRedefinedOperation():
                 new ArrayList<ElementReference>();
     }
     

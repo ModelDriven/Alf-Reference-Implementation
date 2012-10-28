@@ -82,6 +82,7 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isClassifierTemplateParameter();
     public abstract boolean isCompletelyBound();
 
+    public abstract boolean isPackageableElement();
     public abstract boolean isFeature();
     public abstract boolean isOrdered();
     public abstract boolean isUnique();

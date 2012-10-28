@@ -27,7 +27,7 @@ import java.util.Map;
 
 public abstract class NamespaceDefinitionImpl extends MemberImpl {
 
-	private Collection<Member> ownedMember = new ArrayList<Member>();
+	private List<Member> ownedMember = new ArrayList<Member>();
 	private UnitDefinition unit = null;
     private Collection<Member> member = null; // DERIVED
     private Map<String, Collection<Member>> memberMap = null;
@@ -41,11 +41,11 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 		return (NamespaceDefinition) this.self;
 	}
 
-	public Collection<Member> getOwnedMember() {
+	public List<Member> getOwnedMember() {
 		return this.ownedMember;
 	}
 
-	public void setOwnedMember(Collection<Member> ownedMember) {
+	public void setOwnedMember(List<Member> ownedMember) {
 		this.ownedMember = ownedMember;
 	}
 
@@ -147,7 +147,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	 * The members of a namespace must be distinguishable as determined by the
 	 * Member::isDistinguishableFrom operation.
 	 **/
-	public boolean namespaceDefinitionMemberDistinguishaibility() {
+	public boolean namespaceDefinitionMemberDistinguishability() {
 	    ArrayList<Member> members = new ArrayList<Member>(this.getSelf().getMember());
 	    int n = members.size();
 	    for (int i = 0; i < n; i++) {
