@@ -268,13 +268,13 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         // Resolve in the containing scope, if there is one.
         NamespaceDefinition outerScope = this.getOuterScope();
         if (outerScope != null) {
-            for (Member member: outerScope.getImpl().resolve(name)) {
-                if (!classifierOnly || 
-                        member.getImpl().getReferent().getImpl().isClassifier()) {
+            for (Member member: outerScope.getImpl().resolveAsOuterScope(name, classifierOnly)) {
+                // if (!classifierOnly || 
+                //        member.getImpl().getReferent().getImpl().isClassifier()) {
                     if (member != null && member.getImpl().isDistinguishableFromAll(members)) {
                         members.add(member);
                     }
-                }
+                //}
             }
         }
         
@@ -297,6 +297,10 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         }
               
         return members;
+    }
+    
+    public Collection<Member> resolveAsOuterScope(String name, boolean classifierOnly) {
+        return this.resolve(name, classifierOnly);
     }
     
     /**

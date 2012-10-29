@@ -57,6 +57,7 @@ public class ModelNamespaceImpl extends
     
     @Override
     public Collection<Member> resolve(String name, boolean classifierOnly) {
+        // System.out.println("[resolve] Model scope name=" + name);
         Collection<Member> members = super.resolveInScope(name, classifierOnly);
         if (members.size() == 0) {
             QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
@@ -65,6 +66,7 @@ public class ModelNamespaceImpl extends
                 Member member = unit.getDefinition();
                 members.add(member);
                 NamespaceDefinition self = this.getSelf();
+                // System.out.println("[resolve] Adding to namespace=" + self);
                 self.addOwnedMember(member);
                 self.addMember(member);
                 member.setNamespace(self);
@@ -74,7 +76,7 @@ public class ModelNamespaceImpl extends
     }
     
     public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
-        // System.out.println("Resolving unit " + qualifiedName.getPathName());
+        // System.out.println("[resolveModelUnit] Resolving unit " + qualifiedName.getPathName());
 
         StringBuilder path = new StringBuilder();
         for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
@@ -85,7 +87,7 @@ public class ModelNamespaceImpl extends
         AlfParser parser;
 
         try {
-            // System.out.println("Looking for " + this.modelDirectory + path + "...");
+            // System.out.println("[ResolveModelUnit] Looking for " + this.modelDirectory + path + "...");
             parser = new AlfParser(this.modelDirectory + path);
         } catch (java.io.FileNotFoundException e) {
             return new MissingUnit(qualifiedName);

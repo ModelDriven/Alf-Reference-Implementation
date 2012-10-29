@@ -86,10 +86,16 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
             NamespaceDefinition self = this.getSelf();
             self.addOwnedMember(member);
             self.addMember(member);
+            member.setNamespace(self);
         } else if (members.toArray()[0] instanceof MissingMember) {
             members = new ArrayList<Member>();
         }
         return members;
+    }
+    
+    @Override
+    public Collection<Member> resolveAsOuterScope(String name, boolean classifierOnly) {
+        return new ArrayList<Member>();
     }
     
     @Override

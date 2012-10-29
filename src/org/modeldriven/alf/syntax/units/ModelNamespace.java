@@ -36,7 +36,7 @@ public class ModelNamespace extends PackageDefinition {
         return this.getImpl().getModelNamespace(unit);
     }
 
-        @Override
+    @Override
     public void _deriveAll() {
         List<Member> ownedMembers = (List<Member>)this.getOwnedMember();
         int i = ownedMembers.size();
