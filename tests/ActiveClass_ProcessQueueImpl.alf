@@ -20,5 +20,5 @@ active class ProcessQueueImpl             // Concrete active subclass
     return this.waitingProcesses->notEmpty();
   }
 
-}                                         // No additional behavior
+} do { }                                // No additional behavior
 

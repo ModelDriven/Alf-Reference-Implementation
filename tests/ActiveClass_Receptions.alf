@@ -10,4 +10,4 @@ active class Receptions {
     public cardExpirationDate: MonthYear;
     public cardholderName:     PersonalName;
   }
-}
+} do { }
