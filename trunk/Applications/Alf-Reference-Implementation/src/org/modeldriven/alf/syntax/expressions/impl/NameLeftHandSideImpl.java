@@ -223,7 +223,9 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
      * that is a structural feature.
      **/
     public boolean nameLeftHandSideTargetResolution() {
-        return this.getSelf().getReferent() != null;
+        NameLeftHandSide self = this.getSelf();
+        return self.getTarget().getQualification() == null ||
+                self.getReferent() != null;
     }
 
     /**
@@ -238,7 +240,7 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
         } else {
             ElementReference referent = self.getReferent();
             return referent == null || !referent.getImpl().isFeature() ||
-                referent.getImpl().isOrdered() && referent.getImpl().isUnique();
+                referent.getImpl().isOrdered() && !referent.getImpl().isUnique();
         }
     }
 

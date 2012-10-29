@@ -172,7 +172,7 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
         } else {
             ElementReference referent = self.getReferent();
             return referent == null || 
-                referent.getImpl().isOrdered() && referent.getImpl().isUnique();
+                referent.getImpl().isOrdered() && !referent.getImpl().isUnique();
         }
     }
 
