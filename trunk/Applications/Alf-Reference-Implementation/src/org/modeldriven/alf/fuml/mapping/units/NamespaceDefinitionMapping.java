@@ -95,7 +95,10 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
          * references between members and between members and the namespace
          * itself.
          */
-        for (Member member: definition.getOwnedMember()) {
+        // NOTE: Using an indexed loop allows for the possibility that members
+        // may get added to a namespace due to derivations while mapping.
+        for (int i = 0; i < definition.getOwnedMember().size(); i++) {
+            Member member = definition.getOwnedMember().get(i);
             Mapping mapping = member.getImpl().getMapping();
             if (mapping instanceof MemberMapping) {
                 ((MemberMapping)mapping).mapBody();
