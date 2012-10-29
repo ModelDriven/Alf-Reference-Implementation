@@ -98,4 +98,15 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
 		return true;
 	}
 	
+	/*
+	 * Helper methods
+	 */
+	
+    /**
+     * Returns false for an equality expression.
+     **/
+    public Boolean noNullArguments() {
+        return false;
+    }
+
 } // EqualityExpressionImpl

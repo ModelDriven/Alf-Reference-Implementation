@@ -51,7 +51,13 @@ public class ActiveClassDefinitionImpl extends ClassDefinitionImpl {
      **/
     public boolean activeClassDefinitionClassifierBehavior() {
         ActiveClassDefinition self = this.getSelf();
-        return self.getIsAbstract() || self.getClassifierBehavior() != null;
+        if (self.getIsStub()) {
+            UnitDefinition unit = self.getSubunit();
+            NamespaceDefinition definition = unit == null? null: unit.getDefinition();
+            self = definition == null || !(definition instanceof ActiveClassDefinition) ? null: 
+                (ActiveClassDefinition)definition;
+        }
+        return self == null || self.getIsAbstract() || self.getClassifierBehavior() != null;
     }
 
     /*
