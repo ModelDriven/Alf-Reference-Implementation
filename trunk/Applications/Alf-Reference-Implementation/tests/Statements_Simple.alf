@@ -29,9 +29,9 @@ class Statements_Simple {
 	  period = 1;
 	  members = Member[]{};
 	  assets = null;
-	  land = new 'Real Property'();
-	  home = new 'Real Property'();
-	  condominium = new 'Real Property'();
+	  land = new 'Real Property'::'create property'("0", "land");
+	  home = new 'Real Property'::'create property'("1", "home");
+	  condominium = new 'Real Property'::'create property'("2", "home");
 	  // *****
 	  	  	
 	  /*@inline('C++')  // Native code

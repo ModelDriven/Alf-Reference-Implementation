@@ -10,7 +10,7 @@ class Expressions_Invocation specializes Super {
     	public receive signal SignalAlarm {
     		public sensorId: Integer;
         }
-    }
+    } do { }
     class Reply { }
 
   	activity A(in x: Integer, in y: Boolean[0..1]) { }
