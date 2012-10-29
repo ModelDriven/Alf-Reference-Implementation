@@ -268,19 +268,12 @@ public class InstanceCreationExpressionImpl
      * compatible with the tuple argument expressions), a class or a data type,
      * but not both a class and a data type.
      **/
-	/* 
-	 * Also, if the referent is a class, then it must not be abstract, or if it
-	 * is an operation, then it must not be owned by an abstract class.
-	 */
 	public boolean instanceCreationExpressionConstructor() {
 	    ElementReference referent = this.getSelf().getReferent();
 	    return referent != null &&
     	          (referent.getImpl().isDataType() ||
-    	           referent.getImpl().isClass() &&
-    	               !referent.getImpl().isAbstractClassifier() ||
-    	           referent.getImpl().isOperation() &&
-    	               !referent.getImpl().getNamespace().getImpl().
-    	                    isAbstractClassifier());
+    	           referent.getImpl().isClass() ||
+    	           referent.getImpl().isOperation());
 	}
 	
     /**
@@ -332,10 +325,10 @@ public class InstanceCreationExpressionImpl
     public boolean instanceCreationExpressionReferent() {
         InstanceCreationExpression self = this.getSelf();
         ElementReference referent = self.getReferent();
-        if (referent.getImpl().isOperation()) {
+        if (referent != null && referent.getImpl().isOperation()) {
             referent = referent.getImpl().getNamespace();
         }
-        return !referent.getImpl().isAbstractClassifier();
+        return referent == null || !referent.getImpl().isAbstractClassifier();
     }
 
 	/*
