@@ -141,6 +141,15 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     protected Boolean deriveIsFeature() {
 		return false;
 	}
+    
+    @Override
+    public void deriveAll() {
+        super.deriveAll();
+        UnitDefinition subunit = this.getSubunit();
+        if (subunit != null) {
+            subunit.deriveAll();
+        }
+    }
 
     /**
      * A member is primitive if it has a @primitive annotation.
