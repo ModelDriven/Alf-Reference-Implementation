@@ -1,304 +1,242 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests" default="run" basedir=".">
-    <property name="classname" value="org.modeldriven.alf.parser.AlfParser"/>
+    <property name="classname" value="org.modeldriven.alf.parser.AlfParser" />
+    <target name="run-test">
+        <echo message="${file}" />
+        <echo file="tests.txt" append="true">${file}...
+</echo>
+        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
+            <arg value="-uC" />
+            <arg value="tests/${file}.alf" />
+        </java>
+    </target>
     <target name="run">
-        <java classname="${classname}" classpath="bin" output="tests.txt">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Basic.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Object.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Association.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Invocation.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Constructor_Destructor.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Sequence_Construction.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Sequence_Operation.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Sequence_Expansion_Reduction.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Operator.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Expressions_Template.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Statements_Simple.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Statements_Conditional.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Statements_Looping.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Statements_Return.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Statements_Classify.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Statements_Accept.alf" />
-        </java>
+        <echo file="tests.txt" append="false">Start...
+</echo>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Basic" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Object" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Association" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Invocation" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Constructor_Destructor" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Sequence_Construction" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Sequence_Operation" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Sequence_Expansion_Reduction" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Operator" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Expressions_Template" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Statements_Simple" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Statements_Conditional" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Statements_Looping" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Statements_Return" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Statements_Classify" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Statements_Accept" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example0a" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example0b" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example1a" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example1b" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example2a" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example2b" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example2c" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example2d" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example2e" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example2f" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example2g" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example2h" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3a" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3b" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3c" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3d" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3e" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3f" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3g" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3h" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3i" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example3j" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-CollectionClasses-Impl" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-CollectionImpl" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-OrderedCollectionImpl" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-Set" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-OrderedSet" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-Bag" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-List" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-Queue" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-Deque" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Example4-Map" />
+        </antcall>
 
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example0a.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example0b.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example1a.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example1b.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example2a.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example2b.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example2c.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example2d.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example2e.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example2f.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example2g.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example2h.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3a.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3b.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3c.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3d.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3e.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3f.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3g.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3h.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3i.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example3j.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-CollectionClasses-Impl.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-CollectionImpl.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-OrderedCollectionImpl.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-Set.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-OrderedSet.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-Bag.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-List.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-Queue.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-Deque.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Example4-Map.alf" />
-        </java>
-
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/ActiveClass_Order.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/ActiveClass_ProcessQueue.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/ActiveClass_ProcessQueueImpl.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/ActiveClass_Receptions.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Activity_execute.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Activity_getNodeActivations.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Activity_HelloWorld.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Activity_Order_Behavior.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Assoc_Selection.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Collection.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Constructors.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Destructors.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Initialization.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_MapToString.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Operations.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Properties.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Redefinitions.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Singleton.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Sorter.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_SuperConstructors.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Class_Templates.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Datatype_Complex.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Enum_TrafficLightColor.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Package_Ordering.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Package_CyclicImport.alf" />
-        </java>
-        <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
-            <arg value="tests/Signal_SubmitCharge.alf" />
-        </java>
+        <antcall target="run-test">
+            <param name="file" value="ActiveClass_Order" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="ActiveClass_ProcessQueue" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="ActiveClass_ProcessQueueImpl" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="ActiveClass_Receptions" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Activity_execute" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Activity_getNodeActivations" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Activity_HelloWorld" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Activity_Order_Behavior" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Assoc_Selection" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Collection" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Constructors" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Destructors" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Initialization" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_MapToString" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Operations" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Properties" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Redefinitions" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Singleton" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Sorter" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_SuperConstructors" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Class_Templates" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Datatype_Complex" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Enum_TrafficLightColor" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Package_Ordering" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Package_CyclicImport" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="file" value="Signal_SubmitCharge" />
+        </antcall>
+        <echo file="tests.txt" append="true">Done!
+</echo>
     </target>
 </project>
