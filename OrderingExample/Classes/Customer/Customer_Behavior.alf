@@ -4,14 +4,14 @@ activity Customer_Behavior() {
 
   while(true) {
     accept (approval: ChargeApproved) {
-      WriteLine("CHARGE APPROVED");
-      WriteLine("Customer: " + this.name);
-      WriteLine("Amount: " + IntegerFunctions::ToString(approval.charge.amount));
-      WriteLine("Authorization Code: " + approval.charge.authorizationCode);
+      WriteLine("        [Customer] Received charge approval");
+      WriteLine("                   Customer: " + this.name);
+      WriteLine("                   Amount: " + IntegerFunctions::ToString(approval.charge.amount));
+      WriteLine("                   Authorization Code: " + approval.charge.authorizationCode);
     } or accept (denial: ChargeDenied) {
-      WriteLine("CHARGE DENIED");
-      WriteLine("Customer: " + this.name);
-      WriteLine("Amount: " + IntegerFunctions::ToString(denial.charge.amount));
+      WriteLine("        [Customer] Received charge denial");
+      WriteLine("                   Customer: " + this.name);
+      WriteLine("                   Amount: " + IntegerFunctions::ToString(denial.charge.amount));
     }
     WriteLine("");
   }

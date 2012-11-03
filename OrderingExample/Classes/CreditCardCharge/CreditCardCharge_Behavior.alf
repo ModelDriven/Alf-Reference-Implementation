@@ -3,11 +3,17 @@ namespace Classes::CreditCardCharge;
 activity CreditCardCharge_Behavior() {
 
   count = this.order.charge->size();
-  WriteLine("Attempt " + IntegerFunctions::ToString(count));
+  WriteLine("[CreditCardCharge] Attempt " + IntegerFunctions::ToString(count));
+  WriteLine("                   Card: " + this.card.account);
+  WriteLine("                   Amount: " + IntegerFunctions::ToString(this.amount));
 
   if (count <= 1) {
+    WriteLine("                   DENIED!");
+    WriteLine("");
     this.order.ChargeDenied(this);
   } else {
+    WriteLine("                   ACCEPTED!");
+    WriteLine("");
     this.authorizationCode = "123456";
     this.order.ChargeApproved(this);
   }
