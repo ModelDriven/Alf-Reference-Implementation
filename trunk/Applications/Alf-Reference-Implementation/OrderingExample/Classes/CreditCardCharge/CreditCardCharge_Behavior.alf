@@ -4,7 +4,7 @@ activity CreditCardCharge_Behavior() {
 
   count = this.order.charge->size();
   WriteLine("[CreditCardCharge] Attempt " + IntegerFunctions::ToString(count));
-  WriteLine("                   Card: " + this.card.account);
+  WriteLine("                   Card: " + this.card.accountNumber);
   WriteLine("                   Amount: " + IntegerFunctions::ToString(this.amount));
 
   if (count <= 1) {
