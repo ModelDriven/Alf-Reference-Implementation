@@ -39,7 +39,7 @@ public class AlfParser implements AlfParserConstants {
            this.getColumn() + ". \u005cn" + message;
   }
 
-  public static final String version = "v1.0 Beta (rev 4)";
+  public static final String version = "v1.0";
 
   public static final char unitOption = 'u';
   public static final char statementOption = 's';
