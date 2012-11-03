@@ -248,6 +248,10 @@ public abstract class Member extends DocumentedElement {
 				((StereotypeAnnotation) _annotation).deriveAll();
 			}
 		}
+		UnitDefinition subunit = this.getSubunit();
+		if (subunit != null) {
+			subunit.deriveAll();
+		}
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -286,6 +290,10 @@ public abstract class Member extends DocumentedElement {
 				((StereotypeAnnotation) _annotation)
 						.checkConstraints(violations);
 			}
+		}
+		UnitDefinition subunit = this.getSubunit();
+		if (subunit != null) {
+			subunit.checkConstraints(violations);
 		}
 	}
 
@@ -342,8 +350,8 @@ public abstract class Member extends DocumentedElement {
 		if (includeDerived) {
 			UnitDefinition subunit = this.getSubunit();
 			if (subunit != null) {
-				System.out.println(prefix + " /subunit:"
-						+ subunit.toString(includeDerived));
+				System.out.println(prefix + " /subunit:");
+				subunit.print(prefix + "  ", includeDerived);
 			}
 		}
 	}
