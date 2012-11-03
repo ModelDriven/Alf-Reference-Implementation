@@ -368,8 +368,8 @@ public class AssignmentExpressionImpl extends
 	/**
 	 * If the left-hand side of a simple assignment is not a new local name, and
 	 * the right-hand side is not null, then the left-hand side must either be
-	 * untyped or have a type that conforms to the type of the right-hand side
-	 * expression.
+	 * untyped or the right-hand side expression must have a type that conforms
+	 * to the type of the left-hand side.
 	 **/
 	public boolean assignmentExpressionSimpleAssignmentTypeConformance() {
 		return true;
