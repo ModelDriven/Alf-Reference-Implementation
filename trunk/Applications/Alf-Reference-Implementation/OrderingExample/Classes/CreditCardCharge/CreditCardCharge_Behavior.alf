@@ -12,7 +12,7 @@ activity CreditCardCharge_Behavior() {
     WriteLine("");
     this.order.ChargeDenied(this);
   } else {
-    WriteLine("                   ACCEPTED!");
+    WriteLine("                   APPROVED!");
     WriteLine("");
     this.authorizationCode = "123456";
     this.order.ChargeApproved(this);
