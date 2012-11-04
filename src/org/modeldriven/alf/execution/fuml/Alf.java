@@ -99,6 +99,8 @@ public abstract class Alf extends org.modeldriven.alf.execution.Alf {
                 } else {
                     this.println("Cannot execute a class without a classifier behavior.");
                 }
+            } else {
+                this.println("Unit not executable.");
             }
         } catch (MappingError e) {
             this.println("Mapping failed.");
