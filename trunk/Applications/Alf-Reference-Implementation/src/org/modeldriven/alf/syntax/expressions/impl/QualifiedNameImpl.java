@@ -279,7 +279,17 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	    return this.deriveReferent(false);
 	}
 	
-	private Collection<ElementReference> deriveReferent(boolean classifierOnly) {
+	protected Collection<ElementReference> deriveReferent(boolean classifierOnly) {
+	    return this.deriveReferent(classifierOnly, new ArrayList<ElementReference>());
+	}
+	
+	protected Collection<ElementReference> deriveReferent(Collection<ElementReference> excluded) {
+	    return this.deriveReferent(false, excluded);
+	}
+	
+	private Collection<ElementReference> deriveReferent(
+	        boolean classifierOnly, 
+	        Collection<ElementReference> excluded) {
 	    ArrayList<ElementReference> referents = new ArrayList<ElementReference>();    
 	    QualifiedName self = this.getSelf();
 	    if (!self.getIsFeatureReference()) {
@@ -308,7 +318,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         	        }
         	    } else if (n > 0) {
         	        // Resolve as a qualified name
-        	        for (ElementReference namespaceReference: self.getQualification().getImpl().getReferent()) {
+        	        for (ElementReference namespaceReference: self.getQualification().getImpl().getReferent(excluded)) {
         	            NamespaceDefinition namespace = namespaceReference.getImpl().asNamespace();
         	            if (namespace != null) {
         	                this.addReferentsTo(referents, 
@@ -497,6 +507,24 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             source = containingExpression.getImpl().resolve(getSelf().getUnqualifiedName().getName());
         }
         return source;
+    }
+    
+    public Collection<ElementReference> getReferent(Collection<ElementReference> excluded) {
+        if (this.referent != null) {
+            return this.referent;
+        } else if (excluded == null || excluded.isEmpty()) {
+            return this.getReferent();
+        } else {
+            Collection<ElementReference> referents = new ArrayList<ElementReference>();
+            for (ElementReference referent: this.deriveReferent(excluded)) {
+                if (referent.getImpl().isContainedIn(excluded)) {
+                    return new ArrayList<ElementReference>();
+                } else {
+                    referents.add(referent);
+                }
+            }
+            return referents;
+        }
     }
     
     public ElementReference getNonTemplateClassifierReferent() {

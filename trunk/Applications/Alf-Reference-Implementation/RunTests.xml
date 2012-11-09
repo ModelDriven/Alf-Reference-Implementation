@@ -234,6 +234,9 @@
             <param name="file" value="Package_CyclicImport" />
         </antcall>
         <antcall target="run-test">
+            <param name="file" value="Package_PropertyManagement" />
+        </antcall>
+        <antcall target="run-test">
             <param name="file" value="Signal_SubmitCharge" />
         </antcall>
         <echo file="tests.txt" append="true">Done!

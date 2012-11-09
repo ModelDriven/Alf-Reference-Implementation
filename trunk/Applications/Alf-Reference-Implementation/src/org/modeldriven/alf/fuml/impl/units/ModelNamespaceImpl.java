@@ -9,6 +9,8 @@
 package org.modeldriven.alf.fuml.impl.units;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.modeldriven.alf.parser.AlfParser;
 import org.modeldriven.alf.parser.ParseException;
@@ -27,6 +29,10 @@ public class ModelNamespaceImpl extends
     
     private String modelDirectory = "Models";
     private boolean isVerbose = false;
+    
+    // Cache ensures that no unit is parsed more than once.
+    private Map<String, UnitDefinition> parsedUnitCache = 
+            new HashMap<String, UnitDefinition>();
     
     public ModelNamespaceImpl(ModelNamespace self) {
         super(self);
@@ -78,36 +84,43 @@ public class ModelNamespaceImpl extends
     public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
         // System.out.println("[resolveModelUnit] Resolving unit " + qualifiedName.getPathName());
 
-        StringBuilder path = new StringBuilder();
+        StringBuilder pathBuilder = new StringBuilder(this.modelDirectory);
         for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
-            path.append("/" + nameBinding.getName());
+            pathBuilder.append("/" + nameBinding.getName());
         }
-        path.append(".alf");
-
-        AlfParser parser;
-
-        try {
-            // System.out.println("[ResolveModelUnit] Looking for " + this.modelDirectory + path + "...");
-            parser = new AlfParser(this.modelDirectory + path);
-        } catch (java.io.FileNotFoundException e) {
-            return new MissingUnit(qualifiedName);
-        }
-
-        try {
-            UnitDefinition subunit = parser.UnitDefinition();
-            if (isVerbose) {
-                System.out.println("Parsed " + this.modelDirectory + path);
+        pathBuilder.append(".alf");
+        String path = pathBuilder.toString();
+        
+        UnitDefinition subunit = parsedUnitCache.get(path);
+        if (subunit != null) {
+            return subunit;
+        } else {
+            AlfParser parser;
+    
+            try {
+                // System.out.println("[ResolveModelUnit] Looking for " + path + "...");
+                parser = new AlfParser(path);
+            } catch (java.io.FileNotFoundException e) {
+                return new MissingUnit(qualifiedName);
             }
-            subunit.getImpl().addImplicitImports();
-            return subunit;           
-        } catch (TokenMgrError e) {
-            System.out.println("Parse failed: " + this.modelDirectory + path);
-            System.out.println(e.getMessage());
-            return null;
-        } catch (ParseException e) {
-            System.out.println("Parse failed: " + this.modelDirectory + path);
-            System.out.println(e.getMessage());
-            return null;
+    
+            try {
+                subunit = parser.UnitDefinition();
+                if (isVerbose) {
+                    System.out.println("Parsed " + path);
+                }
+                subunit.getImpl().addImplicitImports();
+                parsedUnitCache.put(path, subunit);
+                return subunit;           
+            } catch (TokenMgrError e) {
+                System.out.println("Parse failed: " + path);
+                System.out.println(e.getMessage());
+                return null;
+            } catch (ParseException e) {
+                System.out.println("Parse failed: " + path);
+                System.out.println(e.getMessage());
+                return null;
+            }
         }
     }
     

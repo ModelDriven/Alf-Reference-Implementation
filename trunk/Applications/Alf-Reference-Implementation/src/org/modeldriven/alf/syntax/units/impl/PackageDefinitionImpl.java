@@ -78,6 +78,7 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	 * package definition allows @apply annotations plus any stereotype whose
 	 * metaclass is consistent with Package.
 	 **/
+	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 	    // TODO: Allow profile and stereotype applications on packages.
 		return super.annotationAllowed(annotation) ||
@@ -90,6 +91,7 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	 * Returns true if the namespace definition associated with the given unit
 	 * definition is a package definition.
 	 **/
+	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
 		return unit.getDefinition() instanceof PackageDefinition;
 	} // matchForStub
@@ -98,12 +100,14 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	 * Return true if the given member is either a PackageDefinition or an
 	 * imported member whose referent is a PackageDefinition or a Package.
 	 **/
+	@Override
 	public Boolean isSameKindAs(Member member) {
 	    return member.getImpl().getReferent().getImpl().isPackage();
 	} // isSameKindAs
 	
 	// Package-only members are limited to visibility within this package 
 	// definition.
+	@Override
     protected boolean allowPackageOnly() {
         return false;
     }

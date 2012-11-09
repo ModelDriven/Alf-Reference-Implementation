@@ -1,5 +1,6 @@
 package org.modeldriven.alf.syntax.units.impl;
 
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
@@ -27,6 +28,10 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
             definition.setNamespace(modelScope);
         }
         return modelScope;
+    }
+    
+    public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+        return null;
     }
 
 }
