@@ -127,7 +127,13 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
      * not imported.
      **/
     protected Collection<Member> deriveMember() {
-        return this.deriveMember(new ArrayList<ElementReference>());
+        Collection<ElementReference> excluded = new ArrayList<ElementReference>();
+        /*
+        if (this.getSelf().getUnit() != null) {
+            excluded.add(this.getReferent());
+        }
+        */
+        return this.deriveMember(excluded);
     }
 
     /*
@@ -177,7 +183,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	 */
 	
 	public Collection<Member> getMember(Collection<ElementReference> excluded) {
-	    if (excluded == null || excluded.isEmpty()) {
+	    if (this.member != null) {
+	        return this.member;
+	    } else if (excluded == null || excluded.isEmpty()) {
 	        return this.getSelf().getMember();
 	    } else {
 	        return this.deriveMember(excluded);

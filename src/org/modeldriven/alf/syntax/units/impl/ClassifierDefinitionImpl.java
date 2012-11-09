@@ -210,6 +210,10 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             
             for (ElementReference specialization: mySpecializations) {
                 if (!specialization.getImpl().isContainedIn(otherSpecializations)) {
+                    System.out.println("[matchForStub] specialization=" + specialization);
+                    for (ElementReference otherSpecialization: otherSpecializations) {
+                        System.out.println("[matchForStub] otherSpecialization=" + otherSpecialization);
+                    }
                     return false;
                 }
             }
