@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.common;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -47,7 +47,7 @@ public abstract class ElementReference implements ParsedElement {
 	public ElementReference() {
 	}
 
-	public ElementReference(AlfParser parser) {
+	public ElementReference(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.statements;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -41,7 +41,7 @@ public class SwitchClause extends SyntaxElement {
 		this.impl = new SwitchClauseImpl(this);
 	}
 
-	public SwitchClause(AlfParser parser) {
+	public SwitchClause(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

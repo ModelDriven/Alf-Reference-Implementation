@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.units.impl.gen;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;

@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -40,7 +40,7 @@ public abstract class TemplateBinding extends SyntaxElement {
 	public TemplateBinding() {
 	}
 
-	public TemplateBinding(AlfParser parser) {
+	public TemplateBinding(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

@@ -6,7 +6,7 @@
         <echo file="tests.txt" append="true">${file}...
 </echo>
         <java classname="${classname}" classpath="bin" output="tests.txt" append="true">
-            <arg value="-uC" />
+            <arg value="-C" />
             <arg value="tests/${file}.alf" />
         </java>
     </target>
@@ -231,10 +231,13 @@
             <param name="file" value="Package_Ordering" />
         </antcall>
         <antcall target="run-test">
+            <param name="file" value="Package_PropertyManagement" />
+        </antcall>
+        <antcall target="run-test">
             <param name="file" value="Package_CyclicImport" />
         </antcall>
         <antcall target="run-test">
-            <param name="file" value="Package_PropertyManagement" />
+            <param name="file" value="Package_InternalImport" />
         </antcall>
         <antcall target="run-test">
             <param name="file" value="Signal_SubmitCharge" />

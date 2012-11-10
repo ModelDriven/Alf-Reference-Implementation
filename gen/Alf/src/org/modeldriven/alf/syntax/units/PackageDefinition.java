@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.units;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -41,7 +41,7 @@ public class PackageDefinition extends NamespaceDefinition {
 		this.impl = new PackageDefinitionImpl(this);
 	}
 
-	public PackageDefinition(AlfParser parser) {
+	public PackageDefinition(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

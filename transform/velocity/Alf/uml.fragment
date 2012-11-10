@@ -12,7 +12,7 @@
 #set( $packageDeclaration = "package #qualifiedPackageName(${object.owner})")
 
 #set( $commonImports = "
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;

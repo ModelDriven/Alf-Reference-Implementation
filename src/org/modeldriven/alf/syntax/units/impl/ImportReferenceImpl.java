@@ -135,8 +135,7 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 	    if (referents.size() == 0) {
 	        return null;
 	    } else {
-    	    ElementReference referent = (ElementReference)referents.toArray()[0];
-            return referent.getImpl().isContainedIn(excluded)? null: referent;
+    	    return (ElementReference)referents.toArray()[0];
 	    }
 	}
 	

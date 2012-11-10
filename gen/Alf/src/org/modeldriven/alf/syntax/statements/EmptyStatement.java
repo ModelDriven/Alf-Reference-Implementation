@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.statements;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -40,7 +40,7 @@ public class EmptyStatement extends Statement {
 		this.impl = new EmptyStatementImpl(this);
 	}
 
-	public EmptyStatement(AlfParser parser) {
+	public EmptyStatement(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

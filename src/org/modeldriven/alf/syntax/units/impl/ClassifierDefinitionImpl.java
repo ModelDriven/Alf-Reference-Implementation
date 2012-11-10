@@ -96,8 +96,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
      * 7.3.8.
      **/
 	@Override
-	protected Collection<Member> deriveMember() {
-	    Collection<Member> members = super.deriveMember();
+	protected Collection<Member> deriveMember(Collection<ElementReference> excluded) {
+	    Collection<Member> members = super.deriveMember(excluded);
 	    
 	    if (!this.getSelf().getIsStub()) {
             // Note: The members field is set here in order to avoid the possibility
@@ -130,6 +130,13 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     	    this.addAllMembers(inheritedMembers);
     	    
             members.addAll(this.inherit(inheritedMembers));
+            
+            // Note: If there were excluded elements, the set of members may
+            // not have been completely determined. Clear it so that it can
+            // be recomputed later.
+            if (excluded != null && excluded.size() > 0) {
+                this.setMember(null);
+            }
 	    }
 	    
 	    return members;
@@ -210,10 +217,6 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             
             for (ElementReference specialization: mySpecializations) {
                 if (!specialization.getImpl().isContainedIn(otherSpecializations)) {
-                    System.out.println("[matchForStub] specialization=" + specialization);
-                    for (ElementReference otherSpecialization: otherSpecializations) {
-                        System.out.println("[matchForStub] otherSpecialization=" + otherSpecialization);
-                    }
                     return false;
                 }
             }

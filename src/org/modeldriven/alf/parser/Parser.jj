@@ -9,8 +9,8 @@
 
  /*
    Parser for the 
-   Action Language for Foundational UML (Alf) v1.0 Beta
-   Revision 4
+   Action Language for Foundational UML (Alf) v1.0
+   Revision 1
 
    with construction of an Abstract Syntax Tree
    as an instance of the Alf Abstract Syntax model
@@ -23,11 +23,10 @@
 options {
   DEBUG_PARSER=false;
   DEBUG_LOOKAHEAD=false;
-  OUTPUT_DIRECTORY="org/modeldriven/alf/parser";
   STATIC=false;
 }
 
-PARSER_BEGIN(AlfParser)
+PARSER_BEGIN(Parser)
 
 package org.modeldriven.alf.parser;
 
@@ -42,11 +41,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class AlfParser {
+public class Parser {
 
   private String fileName = "";
   
-  public AlfParser(String fileName) throws java.io.FileNotFoundException {
+  public Parser(String fileName) throws java.io.FileNotFoundException {
     this(fileName == null? System.in: new java.io.FileInputStream(fileName));
     this.fileName = fileName == null? "System.in": fileName;
   }
@@ -68,225 +67,9 @@ public class AlfParser {
            this.getColumn() + ". \n" + message;
   } 
   
-  public static final String version = "v1.0";
-  
-  public static final char unitOption = 'u';
-  public static final char statementOption = 's';
-  public static final char expressionOption = 'e';
-  public static final char checkOption = 'c';
-  public static final char checkAllOption = 'C';
-  public static final char printOption = 'p';
-  public static final char printDerivedOption = 'P';
-	
-  private static boolean isUnit = true;
-  private static boolean isStatements = false;
-  private static boolean isExpression = false;
-  private static boolean checkConstraints = false;
-  private static boolean checkAllConstraints = false;
-  private static boolean print = false;
-  private static boolean printDerived = false;
-  	
-  private static boolean optionsAreLegal = true;
-  private static SyntaxElement element = null;
-  private static Collection<ConstraintViolation> violations =
-  	new ArrayList<ConstraintViolation>();
-  	
-  public static boolean optionsAreLegal() {
-    return optionsAreLegal;
-  }
-  
-  public static SyntaxElement getElement() {
-    return element;
-  }
-  
-  public static Collection<ConstraintViolation> getViolations() {
-    return violations;
-  }
-  
-  public static boolean constraintsCheck() {
-    return getViolations().isEmpty();
-  }
-  	
-  public static boolean parseOptions(String options) {
-  
-  	isUnit = false;
-  	isStatements = false;
-  	isExpression = false;
-  	checkConstraints = false;
-  	print = false;
-  	printDerived = false;
-  	
-    if (options.length() == 0) {
-      isUnit = true;
-      optionsAreLegal = true;
-  	  return true; 
-  	}
-  	
-  	for (int i=0; i < options.length(); i++) {
-  	  switch (options.charAt(i)) {
-  	  	case unitOption:
-  	  	  isUnit = true;
-  	  	  break;
-  		case statementOption:
-  		  isStatements = true;
-  		  break;
-		case expressionOption:
-		  isExpression = true;
-		  break;
-		case checkOption:
-		  checkConstraints = true;
-		  break;
-		case checkAllOption:
-		  checkAllConstraints = true;
-		  break;
-		case printOption:
-		  print = true;
-		  break;
-		case printDerivedOption:
-		  printDerived = true;
-		  break;
-		default:
-		  optionsAreLegal = false;
-		  return false;
-	  }  	  
-  	}
-  	
-    optionsAreLegal =
-      !((isUnit || checkConstraints || checkAllConstraints || printDerived) && 
-      		(isStatements || isExpression) ||
-  	    isStatements && (isUnit || isExpression) ||
-  	    isExpression && (isUnit || isStatements));
-  	    
-    isUnit = !isStatements && !isExpression;
-    
-    return optionsAreLegal;
-  }
-  	
-  public static SyntaxElement parse(String fileName) {
-    AlfParser parser;
-    
-    element = null;
-    
-    if (fileName == null) {
-      System.out.println("Reading from standard input...");
-    } else {
-      System.out.println("Parsing " + fileName + "...");
-    }
-    
-    try {
-      parser = new AlfParser(fileName);
-    } catch (java.io.FileNotFoundException e) {
-      System.out.println("File not found: " + fileName);
-      return null;
-    }
-    
-    try {
-    
-      if (isUnit) {
-        element = parser.UnitDefinition();
-      } else if (isStatements) {
-        element = parser.StatementSequence();
-      } else if (isExpression) {
-        element = parser.Expression();
-      }
-      
-      System.out.println("Parsed successfully.");
-
-      if (checkConstraints || checkAllConstraints) {
-        new RootNamespaceImpl();
-        RootNamespace root = RootNamespace.getRootScope();
-        
-      	UnitDefinition unit = (UnitDefinition)element;
-        if (unit.getImpl().resolveStub()) {
-          System.out.println("Resolved stub for " +
-            unit.getDefinition().getImpl().getQualifiedName().getPathName());
-        } else {
-            unit.getImpl().addImplicitImports();
-        }
-        if (checkAllConstraints) {
-	        root.deriveAll();
-	        violations = root.checkConstraints();
-        } else {
-        	violations = element.checkConstraints();
-    	}
-        if (constraintsCheck()) {
-          System.out.println("No constraint violations.");
-        } else {
-          System.out.println("Constraint violations:");
-          for (ConstraintViolation violation: violations) {
-            System.out.println("  " + violation);
-          }
-        }
-      }
-    
-      if (print || printDerived) {
-	      printElement(printDerived);
-	  }
-	  
-    } catch (ParseException e) {
-      System.out.println("Parse failed.");
-      if (e.getMessage()!=null) {
-        System.out.println(e.getMessage());
-      }
-    } catch (Throwable e) {
-      System.out.println("Failed.");
-      e.printStackTrace();
-    }
-    
-    return element;
-    
-  }
-  
-  public static void printElement(boolean includeDerived) {
-    SyntaxElement element = getElement();
-    if (element != null) {
-      element.print(includeDerived);
-    }
-  }
-  
-  public static void printFromRoot() {
-    RootNamespace.getRootScope().print(true);
-  }
-  
-  public static void main(String args[]) {
-    System.out.println("Alf " + version + " Parser");
-    
-    String fileName = null;
-    String options = "";
-    
-    if (args.length > 0) {
-      if (args[0].charAt(0) == '-') {
-        options = args[0].substring(1);
-        if (args.length > 1) {
-           fileName = args[1];
-        }
-      } else {
-         fileName = args[0];
-      }
-    }
-      
-    if (args.length <= 2 && parseOptions(options)) {
-      parse(fileName);
-    } else {
-      System.out.println("Usage is");
-      System.out.println("         alfp [-options] < inputfile");
-      System.out.println("OR");
-      System.out.println("         alfp [-options] inputfile");
-      System.out.println("Options:");
-      System.out.println("  u   Parse as a unit (default)");
-      System.out.println("  s   Parse as a statement sequence");
-      System.out.println("  e   Parse as an expression");
-      System.out.println("  p   Print abstract syntax tree");
-      System.out.println();
-      System.out.println("Additional options for units:");
-      System.out.println("  P   Print with derived properties");
-      System.out.println("  c   Perform static semantic checking)");
-      System.out.println("  C   Perform static semantic checking from root");
-    }
-  }
 }
 
-PARSER_END(AlfParser)
+PARSER_END(Parser)
 
 /*********************
  * LEXICAL STRUCTURE *
