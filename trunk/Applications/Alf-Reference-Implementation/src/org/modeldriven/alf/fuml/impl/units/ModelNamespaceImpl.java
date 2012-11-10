@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.ParseException;
 import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
@@ -67,51 +67,48 @@ public class ModelNamespaceImpl extends
         Collection<Member> members = super.resolveInScope(name, classifierOnly);
         if (members.size() == 0) {
             QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
-            UnitDefinition unit = this.resolveModelUnit(qualifiedName);
-            if (unit != null && !(unit instanceof MissingUnit)) {
-                Member member = unit.getDefinition();
-                members.add(member);
-                NamespaceDefinition self = this.getSelf();
-                // System.out.println("[resolve] Adding to namespace=" + self);
-                self.addOwnedMember(member);
-                self.addMember(member);
-                member.setNamespace(self);
+            try {
+                UnitDefinition unit = this.resolveModelUnit(qualifiedName);
+                if (unit != null) {
+                    Member member = unit.getDefinition();
+                    members.add(member);
+                    NamespaceDefinition self = this.getSelf();
+                    self.addOwnedMember(member);
+                    self.addMember(member);
+                    member.setNamespace(self);
+                }
+            } catch (java.io.FileNotFoundException e) {
             }
         }
         return members;
     }
     
-    public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
-        // System.out.println("[resolveModelUnit] Resolving unit " + qualifiedName.getPathName());
-
+    public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) 
+            throws java.io.FileNotFoundException {
         StringBuilder pathBuilder = new StringBuilder(this.modelDirectory);
         for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
             pathBuilder.append("/" + nameBinding.getName());
         }
         pathBuilder.append(".alf");
-        String path = pathBuilder.toString();
-        
-        UnitDefinition subunit = parsedUnitCache.get(path);
-        if (subunit != null) {
-            return subunit;
+        return this.resolveModelFile(pathBuilder.toString());
+    }
+    
+    public UnitDefinition resolveModelFile(String path) 
+            throws java.io.FileNotFoundException {
+        UnitDefinition unit = this.parsedUnitCache.get(path);
+        if (unit != null) {
+            return unit;
         } else {
-            AlfParser parser;
+            Parser parser = new Parser(path);
     
             try {
-                // System.out.println("[ResolveModelUnit] Looking for " + path + "...");
-                parser = new AlfParser(path);
-            } catch (java.io.FileNotFoundException e) {
-                return new MissingUnit(qualifiedName);
-            }
-    
-            try {
-                subunit = parser.UnitDefinition();
+                unit = parser.UnitDefinition();
                 if (isVerbose) {
                     System.out.println("Parsed " + path);
                 }
-                subunit.getImpl().addImplicitImports();
-                parsedUnitCache.put(path, subunit);
-                return subunit;           
+                unit.getImpl().addImplicitImports();
+                this.parsedUnitCache.put(path, unit);
+                return unit;           
             } catch (TokenMgrError e) {
                 System.out.println("Parse failed: " + path);
                 System.out.println(e.getMessage());
@@ -125,22 +122,24 @@ public class ModelNamespaceImpl extends
     }
     
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-        // ModelNamespace modelScope = RootNamespace.getModelScope();
+        UnitDefinition unit = null;
         
-        // Look for the unit in the model first.
-        UnitDefinition unit = this.resolveModelUnit(qualifiedName);
+        try {
+            // Look for the unit in the model first.
+            unit = this.resolveModelUnit(qualifiedName);
         
-        // If not found in the model, look for the unit in the library.
-        if (unit instanceof MissingUnit) {
+        } catch (java.io.FileNotFoundException e) {
+            try {
+            // If not found in the model, look for the unit in the library.
             unit = ((RootNamespaceImpl)this.getSelf().getNamespace().getImpl()).
                     resolveModelUnit(qualifiedName);
-            // unit = RootNamespace.getRootScope().getImpl().resolveModelUnit(qualifiedName);
-            if (unit instanceof MissingUnit) {
+            } catch (java.io.FileNotFoundException e1) {
                 System.out.println("Unit not found: " + qualifiedName.getPathName());
             } 
         }
         
         // Return a MissingUnit rather than null if parsing failed.
-        return unit == null? new MissingUnit(qualifiedName): unit;
+        return unit == null? 
+                new MissingUnit(qualifiedName): unit;
     }
 }

@@ -1,411 +1,812 @@
 Start...
 Expressions_Basic...
 Alf v1.0 Parser
-Parsing tests/Expressions_Basic.alf...
-Parsed successfully.
+Parsed tests/Expressions_Basic.alf
 No constraint violations.
 Expressions_Object...
 Alf v1.0 Parser
-Parsing tests/Expressions_Object.alf...
-Parsed successfully.
+Parsed tests/Expressions_Object.alf
 No constraint violations.
 Expressions_Association...
 Alf v1.0 Parser
-Parsing tests/Expressions_Association.alf...
-Parsed successfully.
+Parsed tests/Expressions_Association.alf
 No constraint violations.
 Expressions_Invocation...
 Alf v1.0 Parser
-Parsing tests/Expressions_Invocation.alf...
-Parsed successfully.
+Parsed tests/Expressions_Invocation.alf
+Parsed Models/Super.alf
 No constraint violations.
 Expressions_Constructor_Destructor...
 Alf v1.0 Parser
-Parsing tests/Expressions_Constructor_Destructor.alf...
-Parsed successfully.
+Parsed tests/Expressions_Constructor_Destructor.alf
 No constraint violations.
 Expressions_Sequence_Construction...
 Alf v1.0 Parser
-Parsing tests/Expressions_Sequence_Construction.alf...
-Parsed successfully.
+Parsed tests/Expressions_Sequence_Construction.alf
 No constraint violations.
 Expressions_Sequence_Operation...
 Alf v1.0 Parser
-Parsing tests/Expressions_Sequence_Operation.alf...
-Parsed successfully.
+Parsed tests/Expressions_Sequence_Operation.alf
 No constraint violations.
 Expressions_Sequence_Expansion_Reduction...
 Alf v1.0 Parser
-Parsing tests/Expressions_Sequence_Expansion_Reduction.alf...
-Parsed successfully.
+Parsed tests/Expressions_Sequence_Expansion_Reduction.alf
 No constraint violations.
 Expressions_Operator...
 Alf v1.0 Parser
-Parsing tests/Expressions_Operator.alf...
-Parsed successfully.
+Parsed tests/Expressions_Operator.alf
 No constraint violations.
 Expressions_Template...
 Alf v1.0 Parser
-Parsing tests/Expressions_Template.alf...
-Parsed successfully.
+Parsed tests/Expressions_Template.alf
 Unit not found: Expressions_Template
 No constraint violations.
 Statements_Simple...
 Alf v1.0 Parser
-Parsing tests/Statements_Simple.alf...
-Parsed successfully.
+Parsed tests/Statements_Simple.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Statements_Conditional...
 Alf v1.0 Parser
-Parsing tests/Statements_Conditional.alf...
-Parsed successfully.
+Parsed tests/Statements_Conditional.alf
 No constraint violations.
 Statements_Looping...
 Alf v1.0 Parser
-Parsing tests/Statements_Looping.alf...
-Parsed successfully.
+Parsed tests/Statements_Looping.alf
 No constraint violations.
 Statements_Return...
 Alf v1.0 Parser
-Parsing tests/Statements_Return.alf...
-Parsed successfully.
+Parsed tests/Statements_Return.alf
 No constraint violations.
 Statements_Classify...
 Alf v1.0 Parser
-Parsing tests/Statements_Classify.alf...
-Parsed successfully.
+Parsed tests/Statements_Classify.alf
 No constraint violations.
 Statements_Accept...
 Alf v1.0 Parser
-Parsing tests/Statements_Accept.alf...
-Parsed successfully.
+Parsed tests/Statements_Accept.alf
 No constraint violations.
 Example0a...
 Alf v1.0 Parser
-Parsing tests/Example0a.alf...
-Parsed successfully.
+Parsed tests/Example0a.alf
 Resolved stub for fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup::run
 No constraint violations.
 Example0b...
 Alf v1.0 Parser
-Parsing tests/Example0b.alf...
-Parsed successfully.
+Parsed tests/Example0b.alf
 Resolved stub for fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup::run
 No constraint violations.
 Example1a...
 Alf v1.0 Parser
-Parsing tests/Example1a.alf...
-Parsed successfully.
+Parsed tests/Example1a.alf
 No constraint violations.
 Example1b...
 Alf v1.0 Parser
-Parsing tests/Example1b.alf...
-Parsed successfully.
+Parsed tests/Example1b.alf
 No constraint violations.
 Example2a...
 Alf v1.0 Parser
-Parsing tests/Example2a.alf...
-Parsed successfully.
+Parsed tests/Example2a.alf
+Parsed Models/Ordering1.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering1/ShoppingCart.alf
+Parsed Models/Ordering1/Order.alf
+Parsed Models/Ordering1/CreditCardCharge.alf
+Parsed Models/Ordering1/Customer.alf
+Parsed Models/Ordering1/ProductSelection.alf
 Resolved stub for Ordering1::Order::Order_Behavior
 No constraint violations.
 Example2b...
 Alf v1.0 Parser
-Parsing tests/Example2b.alf...
-Parsed successfully.
+Parsed tests/Example2b.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Example2c...
 Alf v1.0 Parser
-Parsing tests/Example2c.alf...
-Parsed successfully.
+Parsed tests/Example2c.alf
+Parsed Models/Ordering.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
 Resolved stub for Ordering::Order
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Example2d...
 Alf v1.0 Parser
-Parsing tests/Example2d.alf...
-Parsed successfully.
+Parsed tests/Example2d.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
 Resolved stub for Ordering::Order::EstablishCustomer
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Example2e...
 Alf v1.0 Parser
-Parsing tests/Example2e.alf...
-Parsed successfully.
+Parsed tests/Example2e.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
 Resolved stub for Ordering::Order::ProcessCharge
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Example2f...
 Alf v1.0 Parser
-Parsing tests/Example2f.alf...
-Parsed successfully.
+Parsed tests/Example2f.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
 Resolved stub for Ordering::Order::DeclineCharge
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Example2g...
 Alf v1.0 Parser
-Parsing tests/Example2g.alf...
-Parsed successfully.
+Parsed tests/Example2g.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
 Resolved stub for Ordering::Order::PackAndShip
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Example2h...
 Alf v1.0 Parser
-Parsing tests/Example2h.alf...
-Parsed successfully.
+Parsed tests/Example2h.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
 Resolved stub for Ordering::Order::NotifyOfDelivery
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Example3a...
 Alf v1.0 Parser
-Parsing tests/Example3a.alf...
-Parsed successfully.
+Parsed tests/Example3a.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
 Resolved stub for Property Management::Data Model::Properties::Property::create property
+Parsed Models/Property Management/Service Model/Property Management Service.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example3b...
 Alf v1.0 Parser
-Parsing tests/Example3b.alf...
-Parsed successfully.
+Parsed tests/Example3b.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
 Resolved stub for Property Management::Data Model::Properties::Property::update status
+Parsed Models/Property Management/Service Model/Property Management Service.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example3c...
 Alf v1.0 Parser
-Parsing tests/Example3c.alf...
-Parsed successfully.
+Parsed tests/Example3c.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 Resolved stub for Identifiers::Identifier Factory::get next identifier
 No constraint violations.
 Example3d...
 Alf v1.0 Parser
-Parsing tests/Example3d.alf...
-Parsed successfully.
+Parsed tests/Example3d.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
 Resolved stub for Property Management::Service Model::Property Management Service Implementation::create reply
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example3e...
 Alf v1.0 Parser
-Parsing tests/Example3e.alf...
-Parsed successfully.
+Parsed tests/Example3e.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
 Resolved stub for Property Management::Service Model::Property Management Service Implementation::establish
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example3f...
 Alf v1.0 Parser
-Parsing tests/Example3f.alf...
-Parsed successfully.
+Parsed tests/Example3f.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
 Resolved stub for Property Management::Service Model::Property Management Service Implementation::acquire
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example3g...
 Alf v1.0 Parser
-Parsing tests/Example3g.alf...
-Parsed successfully.
+Parsed tests/Example3g.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
 Resolved stub for Property Management::Service Model::Property Management Service Implementation::update
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example3h...
 Alf v1.0 Parser
-Parsing tests/Example3h.alf...
-Parsed successfully.
+Parsed tests/Example3h.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
 Resolved stub for Property Management::Service Model::Property Management Service Implementation::dispose
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example3i...
 Alf v1.0 Parser
-Parsing tests/Example3i.alf...
-Parsed successfully.
+Parsed tests/Example3i.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
 Resolved stub for Property Management::Service Model::Property Management Service Implementation::delete
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example3j...
 Alf v1.0 Parser
-Parsing tests/Example3j.alf...
-Parsed successfully.
+Parsed tests/Example3j.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
 Resolved stub for Property Management::Service Model::Property Management Service Implementation::retrieve
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
 No constraint violations.
 Example4-CollectionClasses-Impl...
 Alf v1.0 Parser
-Parsing tests/Example4-CollectionClasses-Impl.alf...
-Parsed successfully.
+Parsed tests/Example4-CollectionClasses-Impl.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl
 No constraint violations.
 Example4-CollectionImpl...
 Alf v1.0 Parser
-Parsing tests/Example4-CollectionImpl.alf...
-Parsed successfully.
+Parsed tests/Example4-CollectionImpl.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::CollectionImpl
 No constraint violations.
 Example4-OrderedCollectionImpl...
 Alf v1.0 Parser
-Parsing tests/Example4-OrderedCollectionImpl.alf...
-Parsed successfully.
+Parsed tests/Example4-OrderedCollectionImpl.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::OrderedCollectionImpl
 No constraint violations.
 Example4-Set...
 Alf v1.0 Parser
-Parsing tests/Example4-Set.alf...
-Parsed successfully.
+Parsed tests/Example4-Set.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::Set
 No constraint violations.
 Example4-OrderedSet...
 Alf v1.0 Parser
-Parsing tests/Example4-OrderedSet.alf...
-Parsed successfully.
+Parsed tests/Example4-OrderedSet.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::OrderedSet
 No constraint violations.
 Example4-Bag...
 Alf v1.0 Parser
-Parsing tests/Example4-Bag.alf...
-Parsed successfully.
+Parsed tests/Example4-Bag.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::Bag
 No constraint violations.
 Example4-List...
 Alf v1.0 Parser
-Parsing tests/Example4-List.alf...
-Parsed successfully.
+Parsed tests/Example4-List.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::List
 No constraint violations.
 Example4-Queue...
 Alf v1.0 Parser
-Parsing tests/Example4-Queue.alf...
-Parsed successfully.
+Parsed tests/Example4-Queue.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::Queue
 No constraint violations.
 Example4-Deque...
 Alf v1.0 Parser
-Parsing tests/Example4-Deque.alf...
-Parsed successfully.
+Parsed tests/Example4-Deque.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::Deque
 No constraint violations.
 Example4-Map...
 Alf v1.0 Parser
-Parsing tests/Example4-Map.alf...
-Parsed successfully.
+Parsed tests/Example4-Map.alf
 Resolved stub for Alf::Library::CollectionClasses::Impl::Map
 No constraint violations.
 ActiveClass_Order...
 Alf v1.0 Parser
-Parsing tests/ActiveClass_Order.alf...
-Parsed successfully.
+Parsed tests/ActiveClass_Order.alf
+Parsed Models/Ordering1.alf
 Resolved stub for Ordering1::Order
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering1/ShoppingCart.alf
+Parsed Models/Ordering1/CreditCardCharge.alf
+Parsed Models/Ordering1/Customer.alf
+Parsed Models/Ordering1/ProductSelection.alf
+Parsed Models/Ordering1/Order/Order_Behavior.alf
 No constraint violations.
 ActiveClass_ProcessQueue...
 Alf v1.0 Parser
-Parsing tests/ActiveClass_ProcessQueue.alf...
-Parsed successfully.
+Parsed tests/ActiveClass_ProcessQueue.alf
+Parsed Models/Process.alf
 No constraint violations.
 ActiveClass_ProcessQueueImpl...
 Alf v1.0 Parser
-Parsing tests/ActiveClass_ProcessQueueImpl.alf...
-Parsed successfully.
+Parsed tests/ActiveClass_ProcessQueueImpl.alf
+Parsed Models/ProcessQueue.alf
+Parsed Models/Process.alf
+Parsed Models/process.alf
 No constraint violations.
 ActiveClass_Receptions...
 Alf v1.0 Parser
-Parsing tests/ActiveClass_Receptions.alf...
-Parsed successfully.
+Parsed tests/ActiveClass_Receptions.alf
+Parsed Models/Ordering1.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering1/ShoppingCart.alf
+Parsed Models/Ordering1/Order.alf
+Parsed Models/Ordering1/CreditCardCharge.alf
+Parsed Models/Ordering1/Customer.alf
+Parsed Models/Ordering1/ProductSelection.alf
+Parsed Models/Ordering1/Order/Order_Behavior.alf
 No constraint violations.
 Activity_execute...
 Alf v1.0 Parser
-Parsing tests/Activity_execute.alf...
-Parsed successfully.
+Parsed tests/Activity_execute.alf
 Resolved stub for fUML::Semantics::Activities::IntermediateActivities::ActivityExecution::execute
 No constraint violations.
 Activity_getNodeActivations...
 Alf v1.0 Parser
-Parsing tests/Activity_getNodeActivations.alf...
-Parsed successfully.
+Parsed tests/Activity_getNodeActivations.alf
 Resolved stub for fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup::getNodeActivations
 No constraint violations.
 Activity_HelloWorld...
 Alf v1.0 Parser
-Parsing tests/Activity_HelloWorld.alf...
-Parsed successfully.
+Parsed tests/Activity_HelloWorld.alf
 No constraint violations.
 Activity_Order_Behavior...
 Alf v1.0 Parser
-Parsing tests/Activity_Order_Behavior.alf...
-Parsed successfully.
+Parsed tests/Activity_Order_Behavior.alf
+Parsed Models/Ordering1.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering1/ShoppingCart.alf
+Parsed Models/Ordering1/Order.alf
+Parsed Models/Ordering1/CreditCardCharge.alf
+Parsed Models/Ordering1/Customer.alf
+Parsed Models/Ordering1/ProductSelection.alf
 Resolved stub for Ordering1::Order::Order_Behavior
 No constraint violations.
 Assoc_Selection...
 Alf v1.0 Parser
-Parsing tests/Assoc_Selection.alf...
-Parsed successfully.
+Parsed tests/Assoc_Selection.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Class_Collection...
 Alf v1.0 Parser
-Parsing tests/Class_Collection.alf...
-Parsed successfully.
+Parsed tests/Class_Collection.alf
 No constraint violations.
 Class_Constructors...
 Alf v1.0 Parser
-Parsing tests/Class_Constructors.alf...
-Parsed successfully.
+Parsed tests/Class_Constructors.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Class_Destructors...
 Alf v1.0 Parser
-Parsing tests/Class_Destructors.alf...
-Parsed successfully.
+Parsed tests/Class_Destructors.alf
+Parsed Models/Super.alf
 No constraint violations.
 Class_Initialization...
 Alf v1.0 Parser
-Parsing tests/Class_Initialization.alf...
-Parsed successfully.
+Parsed tests/Class_Initialization.alf
 No constraint violations.
 Class_MapToString...
 Alf v1.0 Parser
-Parsing tests/Class_MapToString.alf...
-Parsed successfully.
+Parsed tests/Class_MapToString.alf
 No constraint violations.
 Class_Operations...
 Alf v1.0 Parser
-Parsing tests/Class_Operations.alf...
-Parsed successfully.
+Parsed tests/Class_Operations.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Class_Properties...
 Alf v1.0 Parser
-Parsing tests/Class_Properties.alf...
-Parsed successfully.
+Parsed tests/Class_Properties.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/ProductSpecification.alf
 No constraint violations.
 Class_Redefinitions...
 Alf v1.0 Parser
-Parsing tests/Class_Redefinitions.alf...
-Parsed successfully.
+Parsed tests/Class_Redefinitions.alf
 No constraint violations.
 Class_Singleton...
 Alf v1.0 Parser
-Parsing tests/Class_Singleton.alf...
-Parsed successfully.
+Parsed tests/Class_Singleton.alf
 No constraint violations.
 Class_Sorter...
 Alf v1.0 Parser
-Parsing tests/Class_Sorter.alf...
-Parsed successfully.
+Parsed tests/Class_Sorter.alf
+Parsed Models/Comparable.alf
 No constraint violations.
 Class_SuperConstructors...
 Alf v1.0 Parser
-Parsing tests/Class_SuperConstructors.alf...
-Parsed successfully.
+Parsed tests/Class_SuperConstructors.alf
+Parsed Models/Super.alf
 No constraint violations.
 Class_Templates...
 Alf v1.0 Parser
-Parsing tests/Class_Templates.alf...
-Parsed successfully.
+Parsed tests/Class_Templates.alf
 No constraint violations.
 Datatype_Complex...
 Alf v1.0 Parser
-Parsing tests/Datatype_Complex.alf...
-Parsed successfully.
+Parsed tests/Datatype_Complex.alf
 No constraint violations.
 Enum_TrafficLightColor...
 Alf v1.0 Parser
-Parsing tests/Enum_TrafficLightColor.alf...
-Parsed successfully.
+Parsed tests/Enum_TrafficLightColor.alf
 No constraint violations.
 Package_Ordering...
 Alf v1.0 Parser
-Parsing tests/Package_Ordering.alf...
-Parsed successfully.
-No constraint violations.
-Package_CyclicImport...
-Alf v1.0 Parser
-Parsing tests/Package_CyclicImport.alf...
-Parsed successfully.
+Parsed tests/Package_Ordering.alf
+Parsed Models/Ordering/ShoppingCart.alf
+Parsed Models/Ordering.alf
+Parsed Models/EE_OnlineCustomer.alf
+Parsed Models/ProductSpecification.alf
+Parsed Models/DomainDataTypes.alf
+Parsed Models/Ordering/Order.alf
+Parsed Models/Ordering/CreditCardCharge.alf
+Parsed Models/Ordering/Customer.alf
+Parsed Models/Ordering/ProductSelection.alf
+Parsed Models/Ordering/Order/EstablishCustomer.alf
+Parsed Models/Ordering/Order/ProcessCharge.alf
+Parsed Models/Ordering/Order/DeclineCharge.alf
+Parsed Models/Ordering/Order/PackAndShip.alf
+Parsed Models/Ordering/Order/NotifyOfDelivery.alf
+Parsed Models/TIM.alf
+Parsed Models/Shipping.alf
 No constraint violations.
 Package_PropertyManagement...
 Alf v1.0 Parser
-Parsing tests/Package_PropertyManagement.alf...
-Parsed successfully.
+Parsed tests/Package_PropertyManagement.alf
+Parsed Models/Property Management/Basic Types.alf
+Parsed Models/Property Management/Data Model.alf
+Parsed Models/Property Management/Message Model.alf
+Parsed Models/Property Management/Service Model.alf
+Parsed Models/Property Management.alf
+Parsed Models/Property Management/Data Model/Locations.alf
+Parsed Models/Property Management/Data Model/Properties.alf
+Parsed Models/Property Management/Data Model/Properties/Property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/create property.alf
+Parsed Models/Property Management/Data Model/Properties/Property/update status.alf
+Parsed Models/Property Management/Service Model/Property Management Service.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/establish.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/acquire.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/update.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/dispose.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/delete.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/retrieve.alf
+Parsed Models/Property Management/Service Model/Property Management Service Implementation/create reply.alf
+Parsed Models/Identifiers.alf
+Parsed Models/Identifiers/Identifier Factory.alf
+Parsed Models/Identifiers/Identifier Factory/get next identifier.alf
+No constraint violations.
+Package_CyclicImport...
+Alf v1.0 Parser
+Parsed tests/Package_CyclicImport.alf
+Parsed Models/Package_CyclicImport1.alf
+Parsed Models/Package_CyclicImport2.alf
+No constraint violations.
+Package_InternalImport...
+Alf v1.0 Parser
+Parsed tests/Package_InternalImport.alf
+Parsed Models/InternalImport.alf
 No constraint violations.
 Signal_SubmitCharge...
 Alf v1.0 Parser
-Parsing tests/Signal_SubmitCharge.alf...
-Parsed successfully.
+Parsed tests/Signal_SubmitCharge.alf
+Parsed Models/DomainDataTypes.alf
 No constraint violations.
 Done!

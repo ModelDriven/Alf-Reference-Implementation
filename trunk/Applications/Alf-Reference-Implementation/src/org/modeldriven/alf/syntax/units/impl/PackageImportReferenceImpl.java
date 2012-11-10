@@ -51,19 +51,18 @@ public class PackageImportReferenceImpl extends ImportReferenceImpl {
     public ArrayList<Member> getImportedMembers(Collection<ElementReference> excluded) {
         PackageImportReference self = this.getSelf();
         ArrayList<Member> members = new ArrayList<Member>();
-        ElementReference definition = 
-                self.getUnit().getDefinition().getImpl().getReferent();
-        excluded.add(definition);
         ElementReference referent = this.getReferent(excluded);
-        if (referent != null) {
-            // Collection<ElementReference> excluded2 = new ArrayList<ElementReference>(excluded);
+        if (referent != null && !referent.getImpl().isContainedIn(excluded)) {
+            ElementReference definition = 
+                    self.getUnit().getDefinition().getImpl().getReferent();
+            excluded.add(definition);
             for (Member member: referent.getImpl().getPublicMembers(excluded)) {
                 ImportedMember importedMember = ImportedMemberImpl.makeImportedMember(member);
                 importedMember.setVisibility(self.getVisibility());
                 members.add(importedMember);
             }
+            excluded.remove(definition);
         }
-        excluded.remove(definition);
         return members;
     }
     

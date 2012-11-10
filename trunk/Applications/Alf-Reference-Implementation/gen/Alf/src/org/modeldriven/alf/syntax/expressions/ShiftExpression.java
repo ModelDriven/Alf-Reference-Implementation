@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -36,7 +36,7 @@ public class ShiftExpression extends BinaryExpression {
 		this.impl = new ShiftExpressionImpl(this);
 	}
 
-	public ShiftExpression(AlfParser parser) {
+	public ShiftExpression(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

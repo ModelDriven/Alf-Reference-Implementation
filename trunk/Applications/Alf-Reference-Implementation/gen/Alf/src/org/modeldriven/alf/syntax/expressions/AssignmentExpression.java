@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -40,7 +40,7 @@ public class AssignmentExpression extends Expression {
 		this.impl = new AssignmentExpressionImpl(this);
 	}
 
-	public AssignmentExpression(AlfParser parser) {
+	public AssignmentExpression(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

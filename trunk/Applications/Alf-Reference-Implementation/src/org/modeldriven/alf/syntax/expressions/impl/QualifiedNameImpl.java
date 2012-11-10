@@ -323,7 +323,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         	            if (namespace != null) {
         	                this.addReferentsTo(referents, 
                                 namespace.getImpl().resolveVisible(self.getUnqualifiedName().getName(),
-                                    this.getCurrentScope(), classifierOnly));
+                                    this.getCurrentScope(), classifierOnly, excluded));
         	            }
         	        }
         	    }
@@ -510,17 +510,14 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     }
     
     public Collection<ElementReference> getReferent(Collection<ElementReference> excluded) {
-        if (this.referent != null) {
-            return this.referent;
-        } else if (excluded == null || excluded.isEmpty()) {
+        if (excluded == null || excluded.isEmpty()) {
             return this.getReferent();
         } else {
-            Collection<ElementReference> referents = new ArrayList<ElementReference>();
-            for (ElementReference referent: this.deriveReferent(excluded)) {
+            Collection<ElementReference> referents = this.referent == null? 
+                    this.deriveReferent(excluded): this.referent;
+            for (ElementReference referent: referents) {
                 if (referent.getImpl().isContainedIn(excluded)) {
-                    return new ArrayList<ElementReference>();
-                } else {
-                    referents.add(referent);
+                     return new ArrayList<ElementReference>();
                 }
             }
             return referents;

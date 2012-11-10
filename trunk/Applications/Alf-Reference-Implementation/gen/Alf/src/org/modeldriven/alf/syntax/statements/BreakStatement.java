@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.statements;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -41,7 +41,7 @@ public class BreakStatement extends Statement {
 		this.impl = new BreakStatementImpl(this);
 	}
 
-	public BreakStatement(AlfParser parser) {
+	public BreakStatement(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

@@ -10,7 +10,7 @@
 
 package org.modeldriven.alf.syntax.units;
 
-import org.modeldriven.alf.parser.AlfParser;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.*;
@@ -40,7 +40,7 @@ public class DataTypeDefinition extends ClassifierDefinition {
 		this.impl = new DataTypeDefinitionImpl(this);
 	}
 
-	public DataTypeDefinition(AlfParser parser) {
+	public DataTypeDefinition(Parser parser) {
 		this();
 		Token token = parser.getToken(0);
 		if (token.next != null) {

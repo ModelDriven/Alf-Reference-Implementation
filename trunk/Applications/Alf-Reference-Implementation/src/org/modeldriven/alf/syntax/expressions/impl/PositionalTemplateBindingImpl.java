@@ -77,7 +77,7 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
                 argumentReferents.add(null);
             } else {
                 argumentName.getImpl().setCurrentScope(currentScope);
-                ElementReference argumentReferent = argumentName == null? null:
+                ElementReference argumentReferent =
                     argumentName.getImpl().getClassifierReferent();
                 if (argumentReferent != null) {
                     argumentReferents.add(argumentReferent);

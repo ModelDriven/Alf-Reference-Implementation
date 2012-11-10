@@ -62,11 +62,8 @@ public class ElementImportReferenceImpl extends ImportReferenceImpl {
     public ArrayList<Member> getImportedMembers(Collection<ElementReference> excluded) {
         ElementImportReference self = this.getSelf();
         ArrayList<Member> members = new ArrayList<Member>();
-        ElementReference definition = 
-                self.getUnit().getDefinition().getImpl().getReferent();
-        excluded.add(definition);
         ElementReference referent = this.getReferent(excluded);
-        if (referent != null) {
+        if (referent != null && !referent.getImpl().isContainedIn(excluded)) {
             Member importedMember = ImportedMemberImpl.makeImportedMember(referent);
             importedMember.setVisibility(this.getSelf().getVisibility());
             String alias = this.getSelf().getAlias();
@@ -81,7 +78,6 @@ public class ElementImportReferenceImpl extends ImportReferenceImpl {
             }
             members.add(importedMember);
         }
-        excluded.remove(definition);
         return members;
     }
     
