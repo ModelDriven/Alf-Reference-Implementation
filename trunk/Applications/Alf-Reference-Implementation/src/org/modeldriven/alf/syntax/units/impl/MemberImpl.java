@@ -215,15 +215,9 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	    } else {
 	        UnitDefinition subunit = self.getSubunit();
     	    NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
-    		boolean result = definition != null && 
+    		return definition != null && 
     		    definition.getImpl().getQualifiedName().getImpl().equals(this.getQualifiedName()) && 
     		        self.matchForStub(subunit);
-    		if (!result) {
-    		    System.out.println("[memberStub] self=" + self);
-    		    System.out.println("[memberStub] subunit=" + subunit);
-    		    System.out.println("[memberStub] matchForStub=" + self.matchForStub(subunit));
-    		}
-    		return result;
 	    }
 	}
 
