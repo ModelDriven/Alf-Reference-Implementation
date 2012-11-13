@@ -62,7 +62,7 @@ public class ElementImportReferenceImpl extends ImportReferenceImpl {
     public ArrayList<Member> getImportedMembers(Collection<ElementReference> excluded) {
         ElementImportReference self = this.getSelf();
         ArrayList<Member> members = new ArrayList<Member>();
-        ElementReference referent = this.getReferent(excluded);
+        ElementReference referent = this.getReferent();
         if (referent != null && !referent.getImpl().isContainedIn(excluded)) {
             Member importedMember = ImportedMemberImpl.makeImportedMember(referent);
             importedMember.setVisibility(this.getSelf().getVisibility());

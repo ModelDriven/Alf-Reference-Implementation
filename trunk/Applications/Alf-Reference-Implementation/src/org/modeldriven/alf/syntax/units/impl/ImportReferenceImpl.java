@@ -28,6 +28,8 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 	private QualifiedName referentName = null;
 	private UnitDefinition unit = null;
 	private ElementReference referent = null; // DERIVED
+	
+	private Boolean isExcluded = false;
 
 	public ImportReferenceImpl(ImportReference self) {
 		super(self);
@@ -71,6 +73,14 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 
 	public void setReferent(ElementReference referent) {
 		this.referent = referent;
+	}
+	
+	public boolean getIsExcluded() {
+	    return this.isExcluded;
+	}
+	
+	public void setIsExcluded(boolean isExcluded) {
+	    this.isExcluded = isExcluded;
 	}
 
     /**
@@ -116,27 +126,18 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 	 */
 	
 	protected Collection<ElementReference> getReferents() {
-	    return this.getReferents(new ArrayList<ElementReference>());
-	}
-	
-	protected Collection<ElementReference> getReferents(Collection<ElementReference> excluded) {
         ImportReference self = this.getSelf();
         QualifiedName referentName = self.getReferentName();
-        if (referentName == null) {
+        if (referentName == null || this.getIsExcluded()) {
             return new ArrayList<ElementReference>();
         } else {
+            this.setIsExcluded(true);
             referentName.getImpl().setCurrentScope(RootNamespace.getRootScope());
-            return referentName.getImpl().getReferent(excluded);
+            Collection<ElementReference> referents = 
+                    referentName.getImpl().getReferent();
+            this.setIsExcluded(false);
+            return referents;
         }
-	}
-	
-	protected ElementReference getReferent(Collection<ElementReference> excluded) {
-	    Collection<ElementReference> referents = this.getReferents(excluded);
-	    if (referents.size() == 0) {
-	        return null;
-	    } else {
-    	    return (ElementReference)referents.toArray()[0];
-	    }
 	}
 	
 	public abstract ArrayList<Member> getImportedMembers(Collection<ElementReference> excluded);
