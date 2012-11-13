@@ -67,30 +67,30 @@ public class ModelNamespaceImpl extends
         Collection<Member> members = super.resolveInScope(name, classifierOnly);
         if (members.size() == 0) {
             QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
-            try {
-                UnitDefinition unit = this.resolveModelUnit(qualifiedName);
-                if (unit != null) {
-                    Member member = unit.getDefinition();
-                    members.add(member);
-                    NamespaceDefinition self = this.getSelf();
-                    self.addOwnedMember(member);
-                    self.addMember(member);
-                    member.setNamespace(self);
-                }
-            } catch (java.io.FileNotFoundException e) {
+            UnitDefinition unit = this.resolveModelUnit(qualifiedName);
+            if (unit != null && !(unit instanceof MissingUnit)) {
+                Member member = unit.getDefinition();
+                members.add(member);
+                NamespaceDefinition self = this.getSelf();
+                self.addOwnedMember(member);
+                self.addMember(member);
+                member.setNamespace(self);
             }
         }
         return members;
     }
     
-    public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) 
-            throws java.io.FileNotFoundException {
+    public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
         StringBuilder pathBuilder = new StringBuilder(this.modelDirectory);
         for (NameBinding nameBinding: qualifiedName.getNameBinding()) {
             pathBuilder.append("/" + nameBinding.getName());
         }
         pathBuilder.append(".alf");
-        return this.resolveModelFile(pathBuilder.toString());
+        try {
+            return this.resolveModelFile(pathBuilder.toString());
+        } catch(java.io.FileNotFoundException e) {
+            return new MissingUnit(qualifiedName);
+        }
     }
     
     public UnitDefinition resolveModelFile(String path) 
@@ -124,22 +124,16 @@ public class ModelNamespaceImpl extends
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
         UnitDefinition unit = null;
         
-        try {
-            // Look for the unit in the model first.
-            unit = this.resolveModelUnit(qualifiedName);
+        // Look for the unit in the model first.
+        unit = this.resolveModelUnit(qualifiedName);
         
-        } catch (java.io.FileNotFoundException e) {
-            try {
+        if (unit instanceof MissingUnit) {
             // If not found in the model, look for the unit in the library.
             unit = ((RootNamespaceImpl)this.getSelf().getNamespace().getImpl()).
                     resolveModelUnit(qualifiedName);
-            } catch (java.io.FileNotFoundException e1) {
-                System.out.println("Unit not found: " + qualifiedName.getPathName());
-            } 
         }
         
         // Return a MissingUnit rather than null if parsing failed.
-        return unit == null? 
-                new MissingUnit(qualifiedName): unit;
+        return unit == null? new MissingUnit(qualifiedName): unit;
     }
 }
