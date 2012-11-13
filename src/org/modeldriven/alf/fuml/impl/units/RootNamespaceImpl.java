@@ -14,6 +14,7 @@ import java.util.Collection;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingMember;
+import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -75,22 +76,17 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
             if (members.size() == 0) {
                 QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
                 Member member;
-                try {
-                    UnitDefinition unit = this.resolveModelUnit(qualifiedName);
-                    if (unit == null) {
+                UnitDefinition unit = this.resolveModelUnit(qualifiedName);
+                if (unit == null) {
+                    member = new MissingMember(name);
+                } else {
+                    member = unit.getDefinition();
+                    if (member == null) {
                         member = new MissingMember(name);
                     } else {
-                        member = unit.getDefinition();
-                        if (member == null) {
-                            member = new MissingMember(name);
-                        } else {
-                            members.add(member);
-                        }
+                        members.add(member);
                     }
-                } catch (java.io.FileNotFoundException e) {
-                    System.out.println("Unit not found: " + qualifiedName.getPathName());
-                    member = new MissingMember(name);
-                } 
+                }
                 NamespaceDefinition self = this.getSelf();
                 self.addOwnedMember(member);
                 self.addMember(member);
@@ -100,6 +96,15 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
             }
         }
         return members;
+    }
+    
+    @Override
+    public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
+        UnitDefinition unit = super.resolveModelUnit(qualifiedName);
+        if (unit instanceof MissingUnit) {
+            System.out.println("Unit not found: " + qualifiedName.getPathName());
+        }
+        return unit;
     }
     
     @Override
