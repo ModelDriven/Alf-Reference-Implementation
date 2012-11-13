@@ -224,8 +224,12 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
      **/
     public boolean nameLeftHandSideTargetResolution() {
         NameLeftHandSide self = this.getSelf();
+        FeatureReference feature = this.getFeature();
+        Expression expression = feature == null? null: feature.getExpression();
         return self.getTarget().getQualification() == null ||
-                self.getReferent() != null;
+                self.getReferent() != null &&
+                // TODO: This needs to be specified as a separate constraint.
+                (expression == null || expression.getUpper() == 1 );
     }
 
     /**
