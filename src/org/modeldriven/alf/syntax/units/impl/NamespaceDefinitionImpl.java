@@ -207,10 +207,15 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         
         UnitDefinition unit = self.getUnit();       
         if (unit != null) {
-          members.addAll(unit.getImpl().getImportedMembers(excluded));
+            members.addAll(unit.getImpl().getImportedMembers(excluded));
         }
         
         return members;
+    }
+    
+    public boolean noExcludedImports() {
+        UnitDefinition unit = this.getSelf().getUnit();
+        return unit == null || unit.getImpl().noExcludedImports();
     }
 
 	@Override
@@ -223,14 +228,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 
     public Collection<Member> resolveVisible(String name, 
             NamespaceDefinition namespace, boolean classifierOnly) {
-        return this.resolveVisible(
-                name, namespace, classifierOnly, new ArrayList<ElementReference>());
-    }
-
-    public Collection<Member> resolveVisible(String name, 
-            NamespaceDefinition namespace, boolean classifierOnly,
-            Collection<ElementReference> excluded) {
-        Collection<Member> members = this.resolveInScope(name, classifierOnly, excluded);
+        Collection<Member> members = this.resolveInScope(name, classifierOnly);
             
         // Note: If this namespace is the same as or a containing scope of the 
         // given namespace, then all members of this namespace are visible.
@@ -291,32 +289,14 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     
     public List<Member> resolveInScope(
             String name, boolean classifierOnly) {
-        return this.resolveInScope(name, classifierOnly, new ArrayList<ElementReference>());
-    }
-    
-    public List<Member> resolveInScope(
-            String name, boolean classifierOnly, 
-            Collection<ElementReference> excluded) {
         Collection<Member> namedMembers = null;
-        if (this.memberMap != null) {
-            namedMembers = this.memberMap.get(name);
+        if (this.noExcludedImports()) {
+            namedMembers = this.getMemberMap().get(name);
         } else {
-            if (excluded == null) {
-                excluded = new ArrayList<ElementReference>();
-            }
-            ElementReference thisNamespace = this.getReferent();
-            excluded.add(thisNamespace);
-            Collection<Member> members = this.deriveMember(excluded);
-            excluded.remove(thisNamespace);
-            if (excluded.size() == 0) {
-                this.setMember(members);
-                namedMembers = this.memberMap.get(name);
-            } else {
-                namedMembers = new ArrayList<Member>();
-                for (Member member: members) {
-                    if (name.equals(member.getName())) {
-                        namedMembers.add(member);
-                    }
+            namedMembers = new ArrayList<Member>();
+            for (Member member: this.deriveMember()) {
+                if (name.equals(member.getName())) {
+                    namedMembers.add(member);
                 }
             }
         }
@@ -440,6 +420,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             ElementReference namespace = unit.getNamespace();
             if (namespace == null) {
                 outerScope = RootNamespace.getModelScope(unit);
+                System.out.println("[getOuterScope] namespace=" + this.getQualifiedName().getPathName());
+                System.out.println("[getOuterScope] outerScope=" + outerScope);
             } else {
                 outerScope = namespace.getImpl().asNamespace();
             }

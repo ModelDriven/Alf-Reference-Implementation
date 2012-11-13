@@ -68,27 +68,36 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     @Override
     public Collection<Member> resolve(String name, boolean classifierOnly) {
-        Collection<Member> members = super.resolveInScope(name, classifierOnly);
+        ModelNamespaceImpl modelScopeImpl = this.getModelScopeImpl();
+        Collection<Member> members = modelScopeImpl.resolve(name, classifierOnly);
         if (members.size() == 0) {
-            QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
-            UnitDefinition unit = this.resolveUnit(qualifiedName);
-            Member member;
-            if (unit == null) {
-                member = new MissingMember(name);
-            } else {
-                member = unit.getDefinition();
-                if (member == null) {
+            members = super.resolveInScope(name, classifierOnly);
+            if (members.size() == 0) {
+                QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
+                Member member;
+                try {
+                    UnitDefinition unit = this.resolveModelUnit(qualifiedName);
+                    if (unit == null) {
+                        member = new MissingMember(name);
+                    } else {
+                        member = unit.getDefinition();
+                        if (member == null) {
+                            member = new MissingMember(name);
+                        } else {
+                            members.add(member);
+                        }
+                    }
+                } catch (java.io.FileNotFoundException e) {
+                    System.out.println("Unit not found: " + qualifiedName.getPathName());
                     member = new MissingMember(name);
-                } else {
-                    members.add(member);
-                }
+                } 
+                NamespaceDefinition self = this.getSelf();
+                self.addOwnedMember(member);
+                self.addMember(member);
+                member.setNamespace(self);
+            } else if (members.toArray()[0] instanceof MissingMember) {
+                members = new ArrayList<Member>();
             }
-            NamespaceDefinition self = this.getSelf();
-            self.addOwnedMember(member);
-            self.addMember(member);
-            member.setNamespace(self);
-        } else if (members.toArray()[0] instanceof MissingMember) {
-            members = new ArrayList<Member>();
         }
         return members;
     }
