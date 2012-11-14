@@ -2326,11 +2326,11 @@ BreakStatement BreakStatement():
 
 ReturnStatement ReturnStatement():
 {
-  Expression e;
+  Expression e = null;
   ReturnStatement s = new ReturnStatement(this);
 }
 {
-  <RETURN> e = Expression() <SEMICOLON>
+  <RETURN> [ e = Expression() ] <SEMICOLON>
   { s.setExpression(e);
     return s; }
 }

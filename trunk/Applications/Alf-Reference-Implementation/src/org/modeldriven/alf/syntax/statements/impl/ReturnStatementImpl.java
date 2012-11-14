@@ -84,11 +84,13 @@ public class ReturnStatementImpl extends StatementImpl {
 	 * Constraints
 	 */
 
-	/**
-	 * The behavior containing the return statement must have a return
-	 * parameter. The expression of the return statement must be assignable to
-	 * that return parameter.
-	 **/
+    /**
+     * If the behavior containing the return statement has a return parameter,
+     * then the return statement must have an expression, and the expression
+     * must be assignable to that return parameter.
+     **/
+	// And, if the behavior does not have a return parameter, then the return
+	// statement must not have an expression.
 	public boolean returnStatementContext() {
 	    ReturnStatement self = this.getSelf();
 	    ElementReference behavior = self.getBehavior();
@@ -97,7 +99,8 @@ public class ReturnStatementImpl extends StatementImpl {
 	    } else {
 	        FormalParameter returnParameter = behavior.getImpl().getReturnParameter();
 	        Expression expression = self.getExpression(); 
-	        return expression != null && returnParameter != null &&
+	        return expression == null && returnParameter == null ||
+	               expression != null && returnParameter != null &&
 	                    returnParameter.getImpl().isAssignableFrom(expression);
 	    }
 	}
