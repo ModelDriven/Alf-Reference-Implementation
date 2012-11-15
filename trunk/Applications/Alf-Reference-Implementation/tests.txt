@@ -39,7 +39,6 @@ No constraint violations.
 Expressions_Template...
 Alf v1.0 Parser
 Parsed tests/Expressions_Template.alf
-Unit not found: Expressions_Template
 No constraint violations.
 Statements_Simple...
 Alf v1.0 Parser
@@ -131,7 +130,6 @@ Parsed Models/Ordering/Order.alf
 Parsed Models/Ordering/CreditCardCharge.alf
 Parsed Models/Ordering/Customer.alf
 Parsed Models/Ordering/ProductSelection.alf
-Parsed Models/Ordering.alf
 Parsed Models/Ordering/Order/EstablishCustomer.alf
 Parsed Models/Ordering/Order/ProcessCharge.alf
 Parsed Models/Ordering/Order/DeclineCharge.alf
@@ -751,21 +749,6 @@ Package_Ordering...
 Alf v1.0 Parser
 Parsed tests/Package_Ordering.alf
 Parsed Models/Ordering/ShoppingCart.alf
-Parsed Models/Ordering.alf
-Parsed Models/EE_OnlineCustomer.alf
-Parsed Models/ProductSpecification.alf
-Parsed Models/DomainDataTypes.alf
-Parsed Models/Ordering/Order.alf
-Parsed Models/Ordering/CreditCardCharge.alf
-Parsed Models/Ordering/Customer.alf
-Parsed Models/Ordering/ProductSelection.alf
-Parsed Models/Ordering/Order/EstablishCustomer.alf
-Parsed Models/Ordering/Order/ProcessCharge.alf
-Parsed Models/Ordering/Order/DeclineCharge.alf
-Parsed Models/Ordering/Order/PackAndShip.alf
-Parsed Models/Ordering/Order/NotifyOfDelivery.alf
-Parsed Models/TIM.alf
-Parsed Models/Shipping.alf
 No constraint violations.
 Package_PropertyManagement...
 Alf v1.0 Parser
@@ -774,7 +757,6 @@ Parsed Models/Property Management/Basic Types.alf
 Parsed Models/Property Management/Data Model.alf
 Parsed Models/Property Management/Message Model.alf
 Parsed Models/Property Management/Service Model.alf
-Parsed Models/Property Management.alf
 Parsed Models/Property Management/Data Model/Locations.alf
 Parsed Models/Property Management/Data Model/Properties.alf
 Parsed Models/Property Management/Data Model/Properties/Property.alf
