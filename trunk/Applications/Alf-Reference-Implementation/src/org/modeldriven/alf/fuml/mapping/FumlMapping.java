@@ -199,7 +199,7 @@ public abstract class FumlMapping extends Mapping {
     public static FumlMapping parseAndMap(String fileName) {
         FumlMapping mapping = null;
         
-        AlfParser.parseOptions("uC");
+        AlfParser.parseOptions("C");
         parsedElement = AlfParser.parse(fileName);
         
         if (parsedElement != null && AlfParser.constraintsCheck()) {
