@@ -77,7 +77,7 @@ public class AlfParser {
         return true;
     }
 
-    public static SyntaxElement parse(String filePath) {
+    public static UnitDefinition parse(String filePath) {
         unit = null;
 
         try {
