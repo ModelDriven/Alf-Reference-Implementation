@@ -34,4 +34,24 @@ class Templates {
     public test() {
         new List< List<String> >();
     }
+
+    public abstract class Base {
+      public abstract op();
+    }
+    
+    public class Template<T specializes Base> {
+      @Create
+      public instance(in x: T) { 
+        x.op();
+      }
+    }
+    
+    public class Test specializes Base {
+      public op() { }
+      
+      public test() {
+        new Template<Test>::instance(this);
+      }
+    }
+  
 }

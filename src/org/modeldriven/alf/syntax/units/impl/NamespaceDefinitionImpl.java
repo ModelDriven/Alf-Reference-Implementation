@@ -420,8 +420,6 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             ElementReference namespace = unit.getNamespace();
             if (namespace == null) {
                 outerScope = RootNamespace.getModelScope(unit);
-                System.out.println("[getOuterScope] namespace=" + this.getQualifiedName().getPathName());
-                System.out.println("[getOuterScope] outerScope=" + outerScope);
             } else {
                 outerScope = namespace.getImpl().asNamespace();
             }
@@ -506,14 +504,17 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                 unit.setDefinition(self);
             }
             
-            self.setOwnedMember(new ArrayList<Member>());
             for (Member ownedMember: baseNamespace.getOwnedMember()) {
                 // Note: If a boundMember is created, it will be added to
                 // the given namespace.
                 ownedMember.getImpl().bind(ownedMember.getName(), self, false,
                         templateParameters, templateArguments);
             }
+            
+            for (Member ownedMember: self.getOwnedMember()) {
+                ownedMember.getImpl().fixUpAfterBinding();
+            }
         }
     }
-
+    
 } // NamespaceDefinitionImpl
