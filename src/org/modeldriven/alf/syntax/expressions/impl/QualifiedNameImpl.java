@@ -821,8 +821,13 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             Member boundElement = templateReferent.getImpl().asNamespace().
                 getImpl().bind(name, templateNamespace, true,
                         templateParameters, templateArguments);
-            return boundElement == null? null: 
-                boundElement.getImpl().getReferent();
+            if (boundElement == null) {
+                return null;
+            } else {
+                // System.out.println("[getBoundElement] boundElement=" + boundElement);
+                boundElement.deriveAll();
+                return boundElement.getImpl().getReferent();
+            }
         }
     }
     
