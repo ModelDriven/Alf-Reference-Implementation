@@ -218,11 +218,19 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
         if (base instanceof PropertyDefinition) {
             PropertyDefinition self = this.getSelf();
             PropertyDefinition baseDefinition = (PropertyDefinition)base;
-            Expression initializer = baseDefinition.getInitializer();
+            Expression baseInitializer = baseDefinition.getInitializer();
             self.setIsComposite(baseDefinition.getIsComposite());
-            if (initializer != null) {
-                self.setInitializer((Expression)initializer.getImpl().
-                        bind(templateParameters, templateArguments));
+            if (baseInitializer != null) {
+                Expression initializer = (Expression)baseInitializer.getImpl().
+                        bind(templateParameters, templateArguments);
+                self.setInitializer(initializer);
+                if (initializer != null) {
+                    // Note: This is necessary, because the current scope for
+                    // an initializer is normally set when the namespace is set
+                    // on the property definition, but has been done previously
+                    // in the case of a bound property definition.
+                    initializer.getImpl().setCurrentScope(self.getNamespace());
+                }
             }
         }
     }
