@@ -142,9 +142,12 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
             NamedTemplateBinding self = this.getSelf();
             for (TemplateParameterSubstitution substitution: 
                 ((NamedTemplateBinding)base).getSubstitution()) {
-                self.addSubstitution
-                    ((TemplateParameterSubstitution)substitution.getImpl().
-                        bind(templateParameters, templateArguments));
+                TemplateParameterSubstitution updatedSubstitution =
+                        (TemplateParameterSubstitution)substitution.getImpl().
+                        bind(templateParameters, templateArguments);
+                if (updatedSubstitution.getArgumentName() != null) {
+                    self.addSubstitution(updatedSubstitution);
+                }
             }
         }
     }

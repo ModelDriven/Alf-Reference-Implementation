@@ -104,8 +104,11 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
             PositionalTemplateBinding self = this.getSelf();
             for (QualifiedName argumentName: 
                 ((PositionalTemplateBinding)base).getArgumentName()) {
-                self.addArgumentName(argumentName.getImpl().
-                        updateForBinding(templateParameters, templateArguments));
+                QualifiedName updatedName = argumentName.getImpl().
+                        updateForBinding(templateParameters, templateArguments);
+                if (updatedName != null) {
+                    self.addArgumentName(updatedName);
+                }
             }
         }
     }
