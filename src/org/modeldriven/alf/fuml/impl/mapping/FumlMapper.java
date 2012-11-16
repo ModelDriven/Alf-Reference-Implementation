@@ -32,7 +32,7 @@ public class FumlMapper {
             mapping = FumlMapping.parseAndMap(fileName);
 
             if (mapping == null) {
-                System.out.println("Mapping failed");
+                System.out.println("Mapping failed.");
             } else {
                 mapping.getModelElements();
                 System.out.println("Mapped successfully.");
