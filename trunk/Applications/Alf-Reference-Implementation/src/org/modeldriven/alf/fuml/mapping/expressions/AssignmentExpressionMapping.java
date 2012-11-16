@@ -397,7 +397,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                                     ((OperationDefinitionMapping)mapping).
                                         getOperation());
                         subgraph.addObjectFlow(
-                                rhsResultSource, callAction.getArgument().get(0));
+                                rhsResultSource, callAction.getTarget());
                         rhsResultSource = callAction.getResult().get(0);
                     }
                 }
