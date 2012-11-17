@@ -23,6 +23,7 @@ import org.modeldriven.alf.syntax.expressions.InstanceCreationExpression;
 import org.modeldriven.alf.uml.Action;
 import org.modeldriven.alf.uml.CallOperationAction;
 import org.modeldriven.alf.uml.InputPin;
+import org.modeldriven.alf.uml.OutputPin;
 import org.modeldriven.alf.uml.StartObjectBehaviorAction;
 import org.modeldriven.alf.uml.CreateObjectAction;
 import org.modeldriven.alf.uml.ValueSpecificationAction;
@@ -101,24 +102,33 @@ public class InstanceCreationExpressionMapping extends
         if (action instanceof CallOperationAction) {
             Class_ class_ = ((CallOperationAction)action).getOperation().getClass_();
             
-            if (class_.getIsActive()) {            
+            if (class_.getIsActive()) {
                 ForkNode fork = 
-                    this.graph.addForkNode("Fork(" + this.resultSource.getName() + ")");
-                
+                    this.graph.addForkNode("Fork(" + this.resultSource.getName() + ")");                
                 this.graph.addObjectFlow(this.resultSource, fork);
-                this.resultSource = fork;
                 
                 StartObjectBehaviorAction startAction = 
-                    this.graph.addStartObjectBehaviorAction(class_);
-                
+                    this.graph.addStartObjectBehaviorAction(class_);                
                 this.graph.addObjectFlow(fork, startAction.getObject());
                 
                 Collection<Element> elements = this.graph.getModelElements();
                 this.graph = this.createActivityGraph();
-                action = this.graph.addStructuredActivityNode(
+                action = 
+                    this.graph.addStructuredActivityNode(
                         "InstanceCreationExpression@" +
                                 this.getInstanceCreationExpression().getId(),
                         elements);
+                
+                OutputPin pin = this.graph.createOutputPin(
+                        "Output(" + this.resultSource.getName() + ")", 
+                        class_, 1, 1);
+                ((StructuredActivityNode)action).addStructuredNodeOutput(pin);
+                ActivityGraph subgraph = this.createActivityGraph();
+                subgraph.addObjectFlow(fork, pin);
+                this.graph.addToStructuredNode(
+                        (StructuredActivityNode)action, 
+                        subgraph.getModelElements());                
+                this.resultSource = pin;
             }
         }
         
@@ -179,7 +189,7 @@ public class InstanceCreationExpressionMapping extends
                                 this.resultSource, valuePin, this);
                 }
                 
-                graph.addToStructuredNode(
+                this.graph.addToStructuredNode(
                         structuredNode, 
                         subgraph.getModelElements());
                 action = structuredNode;
