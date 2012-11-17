@@ -595,7 +595,7 @@ public class ActivityGraph {
             this.create(StartObjectBehaviorAction.class);
         startAction.setName("Start(" + (class_ == null? "any": class_.getName()) + ")");
         startAction.setObject(createInputPin(
-                startAction.getName() + "object", class_, 1, 1));
+                startAction.getName() + ".object", class_, 1, 1));
         this.add(startAction);
         return startAction;
     }
