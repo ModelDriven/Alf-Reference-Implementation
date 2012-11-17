@@ -1,0 +1,17 @@
+namespace ProductSpecification;
+
+/**
+A Recording Product is a commercially available recording of a performance. This
+class encompasses videotapes, audio tapes, CDs, phonograph records, and similar
+products.
+*/
+class RecordingProduct specializes Product {
+
+  /**
+  The total playing time of the recording. If a recording consists of multiple
+  tracks (e.g., an audio tape or a CD), this is the sum of the reunning times of
+  the individual tracks.
+  */
+  public runningTime: Integer;
+  
+}

@@ -1,0 +1,34 @@
+namespace ProductSpecification;
+
+/**
+A Book Product is a printed text that can be ordered through the online bookstore.
+*/
+class BookProduct specializes Product {
+
+  /**
+  The International Standard Book Number, a globally unique identifier assigned
+  to every book in print. For a complete description of the role of the ISBN,
+  go to www.isbn.org.
+  */
+  public bookNumber: ISBNBookNumber; // derived ID
+  
+  /**
+  The unique code assigned buy the publisher that becomes part of the ISBN for
+  the book.
+  */
+  public titleCode: ISBNTitleCode;
+  
+  /**
+  The title of the book. Note that many books have both a title ("Executable
+  UML") and a subtitle ("A Foundation for Model Driven Architecture").
+  */
+  public title: String;
+  
+  /**
+  The subordinate title of the book. Not all books have subtitles, but when a
+  book does have a subtitle, it is generally listed along with the main title of
+  the book.
+  */
+  public subtitle: String[0..1];
+  
+}

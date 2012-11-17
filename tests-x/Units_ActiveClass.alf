@@ -1,0 +1,22 @@
+/**
+ * Test active class instantiation
+ */
+active class Units_ActiveClass {
+
+  active class C {
+    public i: Integer;
+    public j: Integer;
+    @Create public C(in i: Integer) { this.i = i; }
+  } do {
+    $(this.j = this.i);
+  }
+  
+  activity test(out j: Integer) {
+    j = new C(1).j;
+  }  
+  
+} do {
+  test(j);
+  
+  AssertEqual("j", j, 1);
+}

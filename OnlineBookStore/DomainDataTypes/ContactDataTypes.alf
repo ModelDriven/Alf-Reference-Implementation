@@ -1,0 +1,34 @@
+namespace DomainDataTypes;
+
+public import Alf::Library::PrimitiveTypes::String as WebsiteURL;
+public import Alf::Library::PrimitiveTypes::String as InternetEmailAddress;
+public import Alf::Library::PrimitiveTypes::String as TelephoneNumber;
+
+package ContactDataTypes {
+
+  public datatype PersonalName {
+    public title: String[0..1];
+    public firstName: String;
+    public middleName: String[0..1];
+    public lastName: String;
+    public suffix: String[0..1];
+  }
+  
+  public datatype MailingAddress {
+    public addressLine1: String;
+    public addressLine2: String[0..1];
+    public stateOrProvince: String[0..1];
+    public country: String[0..1];
+    public postalCode: String[0..1];
+  }
+  
+  public activity ToString(in name: PersonalName): String {
+    return 
+      (name.title == null? "": name.title + " ") +
+      name.firstName + " " +
+      (name.middleName == null? "": name.middleName + " ") +
+      name.lastName +
+      (name.suffix == null? "" : " " + name.suffix);
+  }
+
+}

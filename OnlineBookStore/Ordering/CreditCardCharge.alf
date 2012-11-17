@@ -1,0 +1,182 @@
+namespace Ordering;
+
+/**
+All purchases are paid by credit card. A credit card charge is created when an
+order is placed. The charge is submitted to the bookstore's credit card
+processing company. This company either approves or declines the charge. Then
+the charge is approved, the order can be packed and shipped to the customer.
+*/
+active class CreditCardCharge specializes Timer::Observer {
+
+  /**
+  A unique identifier assigned by the bookstore to the charge submission.
+  */
+  public chargeID: arbitrary_id = CreditCardCharge->size(); // isID
+  
+  /**
+  The credit card account to be charged.
+  */
+  public accountNumber: BankCardAccountNumber;
+  
+  /**
+  The name of the accountholder as it appears on the credit card.
+  */
+  public cardholderName: PersonalName;
+  
+  /**
+  The billing address on the credit card account. The credit card processing
+  company compares this to the account's billing address to ensure that the 
+  charge submission is correct.
+  */
+  public billingAddress: MailingAddress;
+  
+  /**
+  The expiration date as shown on the credit card. The credit card processing
+  company compares this to the account's expiration date to ensure that the
+  charge submission is correct. The processing company will not accept a charge
+  for an expired card, even if a future (but incorrect) expiration date is
+  submitted.
+  */
+  public cardExpirationDate: MonthYear;
+  
+  /**
+  The date the charge is sent for processing.
+  */
+  public dateChargeMade: date;
+  
+  /**
+  The amount of the charge submitted for processing. Normally this is the same 
+  as the totalValue of the related order.
+  */
+  public chargeAmount: Money;
+  
+  /**
+  The amount of the charge submitted for processing. Normally, this is the same
+  as the totalValue of the related order.
+  */
+  public approvalCode: BankCardApprovalCode;
+  
+  /**
+  External entity references.
+  */
+  private EE: ExternalEntities = ExternalEntities::GetInstance();
+  
+  
+  /*
+   * Signal receptions
+   */
+  
+  public receive signal MakeCharge {
+    public order: Order;
+    public accountNumber: BankCardAccountNumber;
+    public billingAddress: MailingAddress;
+    public cardExpirationDate: MonthYear;
+    public cardholderName: PersonalName;
+    public chargeAmount: Money;
+  }
+  
+  public receive signal ChargeProcessed {
+    public resultCode: BankCardApprovalCode;
+  }
+  
+  public receive signal ChargeProcessingNotCompleted {
+  }
+  
+  
+  /*
+   * Timer helper operation
+   */
+   
+  public timeout() {
+    this.ChargeProcessingNotCompleted();
+  }
+
+  private class Observer specializes Timer::Observer {
+  
+    private charge: CreditCardCharge;
+    
+    @Create
+    public Observer(in charge: CreditCardCharge) {
+      this.charge = charge;
+    }
+   
+    public timeout() {
+      this.charge.ChargeProcessingNotCompleted();
+    }
+  
+  }
+  
+  
+  /*
+   * Event entry behaviors
+   */
+  
+  private '1. Requesting Charge Approval'(in rcvd_evt: MakeCharge) {
+    //@isolated
+    {
+    
+    R8.createLink(rcvd_evt.order, this);
+    
+    this.accountNumber = rcvd_evt.accountNumber;
+    this.cardholderName = rcvd_evt.cardholderName;
+    this.billingAddress = rcvd_evt.billingAddress;
+    this.cardExpirationDate = rcvd_evt.cardExpirationDate;
+    this.chargeAmount = rcvd_evt.chargeAmount;
+    this.dateChargeMade = TIM::current_date();
+    
+    this.EE.creditCardCompany.RequestChargeApproval(
+      accountNumber => this.accountNumber,
+      billingAddress => this.billingAddress,
+      cardholderName => this.cardholderName,
+      expirationDate => this.cardExpirationDate,
+      transactionID => this.chargeID,
+      chargeAmount => this.chargeAmount
+    );
+    
+    // Simultaneously set a timer to signal if no response from the credit
+    // card company after one minute.
+    new Timer::delay(new Observer(this), 60);
+    
+    }
+  }
+  
+  private '2. Processing Completed'(in rcvd_evt: ChargeProcessed) {
+    //@isolated
+    {
+    
+    this.approvalCode = rcvd_evt.resultCode;
+    order = this.'pays for';
+    if (rcvd_evt.resultCode == BankCardApprovalCode::approved) {
+      order.PaymentApproved();
+    } else {
+      order.PaymentDeclined();
+    }
+    
+    }
+  }
+  
+  private '3. Decline For Timeout'(in rcvd_evt: ChargeProcessingNotCompleted) {
+    //@isolated
+    {
+    
+    this.approvalCode = BankCardApprovalCode::connectionFailed;
+    order = this.'pays for';
+    order.PaymentDeclined();
+    
+    }
+  }
+  
+} do {
+
+  accept(makeCharge: MakeCharge);
+  this.'1. Requesting Charge Approval'(makeCharge);
+  
+  accept(chargeProcessed: ChargeProcessed) {
+    this.'2. Processing Completed'(chargeProcessed);
+  
+  } or accept(chargeProcessingNotCompleted: ChargeProcessingNotCompleted) {
+    this.'3. Decline For Timeout'(chargeProcessingNotCompleted);
+    
+  }
+    
+}
