@@ -1,0 +1,9 @@
+namespace DomainDataTypes;
+
+public import Alf::Library::PrimitiveTypes::String as ISBNBookNumber;
+public import Alf::Library::PrimitiveTypes::Integer as ISBNGroupIdentifier;
+public import Alf::Library::PrimitiveTypes::Integer as ISBNPublisherPrefix;
+public import Alf::Library::PrimitiveTypes::Integer as ISBNTitleCode;
+
+package ISBNDataTypes {
+}

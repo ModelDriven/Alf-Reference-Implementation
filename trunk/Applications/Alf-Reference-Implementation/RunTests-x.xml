@@ -1,91 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests-x" default="run" basedir=".">
-	<property name="classname" value="org.modeldriven.alf.fuml.impl.execution.Alf" />
-	<path id="cp">
-		<pathelement location="${classpath}" />
-		<pathelement location="../Alf-Reference-Implementation/lib/fuml.jar" />
-		<pathelement location="../Alf-Reference-Implementation/lib/commons-logging.jar" />
-		<pathelement location="../Alf-Reference-Implementation/lib/log4j.jar" />
-	</path>
-	<target name="run-test">
-		<echo message="${unit}" />
-		<echo file="tests-x.txt" append="true">${unit}...
+    <property name="classname" value="org.modeldriven.alf.fuml.impl.execution.Alf" />
+    <path id="cp">
+        <pathelement location="${classpath}" />
+        <pathelement location="../Alf-Reference-Implementation/lib/fuml.jar" />
+        <pathelement location="../Alf-Reference-Implementation/lib/commons-logging.jar" />
+        <pathelement location="../Alf-Reference-Implementation/lib/log4j.jar" />
+    </path>
+    <target name="run-test">
+        <echo message="${unit}" />
+        <echo file="tests-x.txt" append="true">${unit}...
 </echo>
-		<java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
-			<classpath refid="cp" />
-			<arg value="-m" />
-			<arg value="tests-x" />
-			<arg value="-d" />
-			<arg value="OFF" />
-			<arg value="${unit}" />
-		</java>
-	</target>
-	<target name="run">
-		<echo file="tests-x.txt" append="false">Start...
+        <java classname="${classname}" classpath="bin" output="tests-x.txt" append="true">
+            <classpath refid="cp" />
+            <arg value="-m" />
+            <arg value="tests-x" />
+            <arg value="-d" />
+            <arg value="OFF" />
+            <arg value="${unit}" />
+        </java>
+    </target>
+    <target name="run">
+        <echo file="tests-x.txt" append="false">Start...
 </echo>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Assignment" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Assignment_Feature" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Assignment_Indexed" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Assignment_Feature_Indexed" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Association" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Constructor_Destructor" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Increment_Decrement" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Invocation" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Literal_Name" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Object" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Operator" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Sequence_Construction" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Sequence_Expansion_Reduction" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_Sequence_Operation" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Expressions_SuperConstructors" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Statements_Accept" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Statements_Classify" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Statements_Conditional" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Statements_For_Looping" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Statements_Simple" />
-		</antcall>
-		<antcall target="run-test">
-			<param name="unit" value="Statements_While_Do_Looping" />
-		</antcall>
-		<echo message="Done!" file="tests-x.txt" append="true" />
-	</target>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment_Feature" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment_Indexed" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment_Feature_Indexed" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Association" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Constructor_Destructor" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Increment_Decrement" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Invocation" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Literal_Name" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Object" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Operator" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Sequence_Construction" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Sequence_Expansion_Reduction" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Sequence_Operation" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_SuperConstructors" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Template" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Accept" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Classify" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Conditional" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_For_Looping" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Simple" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_While_Do_Looping" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Units_ActiveClass" />
+        </antcall>
+        <echo message="Done!" file="tests-x.txt" append="true" />
+    </target>
 </project>

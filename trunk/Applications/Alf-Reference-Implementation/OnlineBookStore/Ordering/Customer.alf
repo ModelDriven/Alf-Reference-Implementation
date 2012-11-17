@@ -1,0 +1,42 @@
+namespace Ordering;
+
+/**
+A customer is an individual or organization that has placed orders for books
+and other products offered by the store.
+
+A customer must have purchased products; a user who simply browses to the site
+is not considered a customer until he or she places an order.
+
+Customers remain active for six months after their last order. An active
+customer receives periodic e-mail reminders of sales and can be eligible for
+discounts based on how much he or she has previously purchased.
+*/
+class Customer {
+
+  /**
+  The customer's e-mail address, also used as the customer's login and unique
+  identifier.
+  */
+  public email: InternetEmailAddress; // isId
+  
+  /**
+  The customer's name.
+  */
+  public name: PersonalName;
+  
+  /**
+  The address to which the customer's orders are normally sent.
+  */
+  public shippingAddress: MailingAddress;
+  
+  /**
+  The customer's telephone number.
+  */
+  public phone: TelephoneNumber;
+  
+  /**
+  How many purchases the customer had made since becoming a customer.
+  */
+  public purchasesMade: Count;
+  
+}

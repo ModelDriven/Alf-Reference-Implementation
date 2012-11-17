@@ -1,0 +1,27 @@
+namespace ProductSpecification;
+
+/**
+An Authorship is an individual credit for writing or otherwise contributing to a
+book. Many people may contribute to a book in different ways; each Authorship
+identifies the person and his or her role (preCredit and postCredit) on the
+book.
+
+Examples: 
+  Foreword By Ivar Jacobson ("Foreword By" is the preCredit)
+  Grady Booch, editor (", editor" is the postCredit)
+*/
+class Authorship {
+
+  /**
+  The wording that precedes the name of the author on an Authorship, e.g.,
+  "Foreword By".
+  */
+  public preCredit: String;
+  
+  /**
+  The working that follows the name of an author on an Authorship, e.g.,
+  Grady Booch, editor.
+  */
+  public postCredit: String;
+  
+}

@@ -1,0 +1,28 @@
+namespace ProductSpecification;
+
+/**
+An author is an individual who is credited with writing or contributing to a
+book.
+
+There are no good mechanisms for ensuring that two people with the same name who
+write different books are represented as different authors.
+*/
+class Author {
+
+  /**
+  The name of the author as presented on the book.
+  */
+  public name: PersonalName; // isID
+  
+  /**
+  The autor's personal website, if available. This is distinct from the
+  publisher's website and the book's website.
+  */
+  public website: WebsiteURL[0..1];
+  
+  /**
+  The author's personal e-mail address.
+  */
+  public email: InternetEmailAddress[0..1];
+  
+}

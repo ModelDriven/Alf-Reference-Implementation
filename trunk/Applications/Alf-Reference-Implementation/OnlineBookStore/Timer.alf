@@ -1,0 +1,17 @@
+active class Timer {
+
+  public abstract class Observer {
+    public abstract timeout();
+  }
+  
+  private observer: Observer;
+  private duration: Integer;
+  
+  @Create
+  public delay(in observer: Observer, in duration: Integer) {
+    this.observer = observer;
+    this.duration = duration;
+  }
+  
+} do {
+}

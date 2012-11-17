@@ -1,0 +1,18 @@
+namespace ExternalEntities;
+
+active class OnlineCustomer {
+
+  public receive signal ChargeDeclined {
+    public customerEmail: InternetEmailAddress;
+  }
+  
+  public receive signal ChargeApproved {
+    public customerEmail: InternetEmailAddress;
+  }
+  
+  public receive signal OrderReportedDelivered {
+    public customerEmail: InternetEmailAddress;
+  }
+
+} do {
+}

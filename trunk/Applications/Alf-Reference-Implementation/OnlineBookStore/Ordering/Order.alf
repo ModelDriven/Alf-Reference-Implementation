@@ -1,0 +1,187 @@
+namespace Ordering;
+
+private import Shipping::Shipment;
+
+/**
+An order is a request to purchase one or more products. An order is started when
+a customer checks out a shopping cart by specifying a credit card number and
+shipping address. If the credit card charge is approved, the contents of the
+order are shipped to the customer.
+*/
+active class Order {
+
+  /**
+  A unique number assigned by the bookstore to the order.
+  */
+  public orderID: arbitrary_id = Order->size(); // isID
+  
+  /**
+  The date the order was started -- when a shopping cart is checked out. In some
+  instances, this may be different from the date that the order is shipped.
+  */
+  public dateOrderPlaced: date;
+  
+  /**
+  The total value of the order: the sum of all of the product selections on the
+  order.
+  
+  The bookstore does not collect tax or shipping charges on orders.
+  */
+  public totalValue: Money; // derived
+  
+  /**
+  The name of the person to whom the order is to be shipped. This is generally
+  the same as the customer, but a customer may place an order to be shipped to
+  someone else (as a gift, for example).
+  */
+  public recipient: PersonalName;
+  
+  /**
+  The location where the order is to be shipped.
+  */
+  public deliveryAddress: MailingAddress;
+  
+  /**
+  A telephone number to contact someone (generally, the customer) in case of
+  problems or questions about the order, the charge, or the shipments.
+  */
+  public contactPhone: TelephoneNumber;
+  
+  /**
+  External entity references.
+  */
+  private EE: ExternalEntities = ExternalEntities::GetInstance();
+  
+  /*
+   * Signal receptions
+   */
+   
+  public receive ShoppingCart::CheckOut;
+  
+  public receive signal SubmitCharge {
+    public accountNumber: BankCardAccountNumber;
+    public billingAddress: MailingAddress;
+    public cardExpirationDate: MonthYear;
+    public cardholderName: PersonalName;
+  }
+  
+  public receive signal PaymentDeclined {
+  }
+  
+  public receive signal PaymentApproved {
+  }
+  
+  public receive signal OrderDelivered {
+  }
+  
+  
+  /*
+   * State entry behaviors.
+   */
+  
+  private '1. Establishing Customer and Verifying Payment'(
+    in rcvd_evt: ShoppingCart::CheckOut) {
+    
+    //@isolated
+    {
+    
+    R10.createLink(this, rcvd_evt.cart);
+    
+    // Create a Customer if one does not already exist with the given email
+    // address.
+    customer = Customer->select c (c.email == rcvd_evt.customerEmail)[1];
+    if (customer->isEmpty()) {
+      customer = new Customer();
+      customer.email = rcvd_evt.customerEmail;
+    }
+    
+    // Use the name, address, etc. to update the Customer whether new or
+    // existing.
+    customer.name = rcvd_evt.customerName;
+    customer.shippingAddress = rcvd_evt.shippingAddress;
+    customer.phone = rcvd_evt.customerPhone;
+    
+    // Link the order to the customer.
+    R5.createLink(this, customer);
+    
+    // Set the date order placed to today.
+    this.dateOrderPlaced = TIM::current_date();
+    
+    // Set total order value to shopping cart total value.
+    this.totalValue = rcvd_evt.cart.totalValue;
+    
+    // Create a Credit Card Charge and submit it to the credit card company.
+    this.SubmitCharge(
+      accountNumber =>      rcvd_evt.accountNumber,
+      billingAddress =>     rcvd_evt.billingAddress,
+      cardExpirationDate => rcvd_evt.cardExpirationDate,
+      cardholderName =>     rcvd_evt.cardholderName
+    );
+    
+    }
+  }
+  
+  private '2. Submitting Charge'(in rcvd_evt: SubmitCharge) {
+    // Create a Credit Card Charge and submit it to the credit card company.
+    new CreditCardCharge().MakeCharge(
+      accountNumber =>      rcvd_evt.accountNumber,
+      billingAddress =>     rcvd_evt.billingAddress,
+      cardExpirationDate => rcvd_evt.cardExpirationDate,
+      cardholderName =>     rcvd_evt.cardholderName,
+      chargeAmount =>       this.totalValue,
+      order =>              this
+    );
+  }
+  
+  private '3. Payment Not Approved'(in rcvd_evt: PaymentDeclined) {
+    // Notify the customer that the card was rejected.
+    customer = this.'is placed by';
+    this.EE.onlineCustomer.ChargeDeclined(
+      customerEmail => customer.email
+    );
+  }
+  
+  private '4. Being Packed And Shipped'(in rcvd_evt: PaymentApproved) {
+    // Notify the customer that the charge was approved and the order will be
+    // shipped.
+    customer = this.'is placed by';
+    this.EE.onlineCustomer.ChargeApproved(
+      customerEmail => customer.email
+    );
+    
+    // Create a shipment to send the order to the customer.
+    new Shipment().RequestShipment(
+      order => this
+    );
+  }
+  
+  private '5. Delivered to Customer'(in rcvd_evt: OrderDelivered) {
+    // Notify the customer that we think the order has been delivered.
+    customer = this.'is placed by';
+    this.EE.onlineCustomer.OrderReportedDelivered(
+      customerEmail => customer.email
+    );
+  }
+  
+} do {
+  
+  accept (checkOut: ShoppingCart::CheckOut);
+  this.'1. Establishing Customer and Verifying Payment'(checkOut);
+  
+  while(true) {
+    accept (submitCharge: SubmitCharge);
+    this.'2. Submitting Charge'(submitCharge);
+    
+    accept (paymentDeclined: PaymentDeclined) {
+      this.'3. Payment Not Approved'(paymentDeclined);
+      
+    } or accept (paymentApproved: PaymentApproved) {
+      this.'4. Being Packed And Shipped'(paymentApproved);
+      break;
+    }
+  }
+  
+  accept (orderDelivered: OrderDelivered);
+  this.'5. Delivered to Customer'(orderDelivered);
+
+}
