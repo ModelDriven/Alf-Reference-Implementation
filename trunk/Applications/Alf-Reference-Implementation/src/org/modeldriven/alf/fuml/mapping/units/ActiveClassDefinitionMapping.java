@@ -44,10 +44,7 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
         class_.setIsActive(true);
 
         ActiveClassDefinition definition = this.getActiveClassDefinition();
-        ActiveClassDefinition base = 
-            (ActiveClassDefinition)definition.getImpl().getBase();
-        ActivityDefinition classifierBehavior = 
-            (base == null? definition: base).getImpl().getClassifierBehavior();
+        ActivityDefinition classifierBehavior = definition.getClassifierBehavior();
         
         if (classifierBehavior != null) {
             FumlMapping mapping = this.fumlMap(classifierBehavior);
@@ -60,7 +57,7 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
                 // Give the classifier behavior a name to aid in execution tracing.
                 if (behavior.getName() == null || behavior.getName().equals("")) {
                     behavior.setName(makeDistinguishableName(
-                            definition, class_.getName() + "$classifierBehavior"));
+                            definition, definition.getName() + "$classifierBehavior"));
                 }
 
                 class_.addOwnedBehavior(behavior);
