@@ -188,7 +188,11 @@ public class LinkOperationExpressionImpl
             parameters.add(parameter);
         } else if (referent != null) {
             for (ElementReference property: referent.getImpl().getAssociationEnds()) {
-                parameters.add(parameterFromProperty(property));
+                FormalParameter parameter = parameterFromProperty(property);
+                // NOTE: Arguments for a link operation have multiplicity 1..1.
+                parameter.setLower(1);
+                parameter.setUpper(1);
+                parameters.add(parameter);
             }
         }
 		return parameters;
