@@ -54,6 +54,11 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
         return other instanceof Element && 
                 ((Element)other).getBase() == this.getBase();
     }
+    
+    public String toString() {
+        Object base = this.getBase();
+        return base == null? null: base.toString();
+    }
 
 	public List<org.modeldriven.alf.uml.Element> getOwnedElement() {
 		List<org.modeldriven.alf.uml.Element> list = new ArrayList<org.modeldriven.alf.uml.Element>();

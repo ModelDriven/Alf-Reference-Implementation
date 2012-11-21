@@ -14,6 +14,7 @@ import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
+import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.PropertyDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
@@ -56,56 +57,74 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
         
         Action action = null;
         
-        FumlMapping mapping = this.fumlMap(feature);
+        ElementReference namespace = feature.getImpl().getNamespace();
+        FumlMapping mapping = this.fumlMap(namespace);
         if (mapping instanceof ElementReferenceMapping) {
             mapping = ((ElementReferenceMapping)mapping).getMapping();
         }
-        if (!(mapping instanceof PropertyDefinitionMapping)) {
-            this.throwError("Error mapping feature: " + mapping.getErrorMessage());
+        if (!(mapping instanceof NamespaceDefinitionMapping)) {
+            this.throwError("Error mapping namespace: " + 
+                    mapping.getErrorMessage());
         } else {
-            Property property = 
-                ((PropertyDefinitionMapping)mapping).getProperty();
-            mapping = this.fumlMap(expression);
+            // NOTE: Forcing the mapping of the property namespace is necessary
+            // to ensure that there is a type that may be used for the object
+            // input pin on a read structural feature action for the property.
+            ((NamespaceDefinitionMapping)mapping).getModelElements();
             
-            if (!(mapping instanceof ExpressionMapping)) {
-                this.throwError("Error mapping expression: " + 
+            mapping = this.fumlMap(feature);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
+            if (!(mapping instanceof PropertyDefinitionMapping)) {
+                this.throwError("Error mapping feature: " + 
                         mapping.getErrorMessage());
             } else {
-                ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
-                this.graph.addAll(expressionMapping.getGraph());
-                
-                ReadStructuralFeatureAction readAction =
-                    this.graph.addReadStructuralFeatureAction(property);
+                Property property = 
+                        ((PropertyDefinitionMapping)mapping).getProperty();
+                mapping = this.fumlMap(expression);
 
-                ActivityNode expressionResult = 
-                    expressionMapping.getResultSource();
-                
-                // Add a fork node that may be used as the source of the feature
-                // expression to avoid recomputing it for inout parameters,
-                // increment or decrement expressions and compound assignments.
-                this.objectSource = this.graph.addForkNode(
-                        "Fork(" + expressionResult.getName() + ")");
-                this.graph.addObjectFlow(expressionResult, this.objectSource);
-                
-                if (!propertyAccess.getImpl().isSequencePropertyAccess()) {
-                    action = readAction;
-                    this.graph.addObjectFlow(this.objectSource, readAction.getObject());
-                    this.resultSource = readAction.getResult();
-                    
+                if (!(mapping instanceof ExpressionMapping)) {
+                    this.throwError("Error mapping expression: " + 
+                            mapping.getErrorMessage());
                 } else {
-                    Collection<Element> elements = new ArrayList<Element>();
-                    elements.add(readAction);
-                    
-                    ExpansionRegion region = this.graph.addExpansionRegion(
-                            "Collect(" + readAction.getName() + ")", 
-                            "parallel", 
-                            elements, 
-                            this.objectSource, 
-                            readAction.getObject(), 
-                            readAction.getResult());
+                    ExpressionMapping expressionMapping = 
+                            (ExpressionMapping)mapping;
+                    this.graph.addAll(expressionMapping.getGraph());
 
-                    action = region;
-                    this.resultSource = region.getOutputElement().get(0);                    
+                    ReadStructuralFeatureAction readAction =
+                            this.graph.addReadStructuralFeatureAction(property);
+
+                    ActivityNode expressionResult = 
+                            expressionMapping.getResultSource();
+
+                    // Add a fork node that may be used as the source of the feature
+                    // expression to avoid recomputing it for inout parameters,
+                    // increment or decrement expressions and compound assignments.
+                    this.objectSource = this.graph.addForkNode(
+                            "Fork(" + expressionResult.getName() + ")");
+                    this.graph.addObjectFlow(expressionResult, this.objectSource);
+
+                    if (!propertyAccess.getImpl().isSequencePropertyAccess()) {
+                        action = readAction;
+                        this.graph.addObjectFlow(
+                                this.objectSource, readAction.getObject());
+                        this.resultSource = readAction.getResult();
+
+                    } else {
+                        Collection<Element> elements = new ArrayList<Element>();
+                        elements.add(readAction);
+
+                        ExpansionRegion region = this.graph.addExpansionRegion(
+                                "Collect(" + readAction.getName() + ")", 
+                                "parallel", 
+                                elements, 
+                                this.objectSource, 
+                                readAction.getObject(), 
+                                readAction.getResult());
+
+                        action = region;
+                        this.resultSource = region.getOutputElement().get(0);                    
+                    }
                 }
             }
         }
