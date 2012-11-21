@@ -320,8 +320,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     }
     
     /**
-     * For all visible binary associations, return association ends with the
-     * given opposite end type and name.
+     * For all visible binary associations, return association ends that conform 
+     * to the given opposite end type and have the given name.
      */
     public Collection<ElementReference> resolveAssociationEnd
         (ElementReference oppositeEndType, String name) {
@@ -341,12 +341,12 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                     ElementReference associationEnd2 =
                         associationEnds.get(1);
                     if (oppositeEndType.getImpl().
-                            equals(associationEnd1.getImpl().getType()) &&
+                            conformsTo(associationEnd1.getImpl().getType()) &&
                         name.equals(associationEnd2.getImpl().getName())) {
                         referents.add(associationEnd2);
                     }                               
                     if (oppositeEndType.getImpl().
-                            equals(associationEnd2.getImpl().getType()) &&
+                            conformsTo(associationEnd2.getImpl().getType()) &&
                         name.equals(associationEnd1.getImpl().getName())) {
                         referents.add(associationEnd1);
                     }                               
