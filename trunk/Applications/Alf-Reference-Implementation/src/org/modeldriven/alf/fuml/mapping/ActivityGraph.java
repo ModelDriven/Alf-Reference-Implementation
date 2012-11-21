@@ -486,15 +486,24 @@ public class ActivityGraph {
     public ReadStructuralFeatureAction addReadStructuralFeatureAction(
             Property property) {
         ReadStructuralFeatureAction readAction = this.create(ReadStructuralFeatureAction.class);
-        readAction.setName("ReadStructuralFeature(" + property.getName() + ")");
         readAction.setStructuralFeature(property);
         readAction.setObject(createInputPin(
                 readAction.getName() + ".object", 
-                property.getFeaturingClassifier().get(0), 1, 1));
+                getOppositeType(property), 1, 1));
         readAction.setResult(createOutputPin(
                 readAction.getName() + ".result", property.getType(), 1, 1));
         this.add(readAction);
         return readAction;
+    }
+    
+    private static Type getOppositeType(Property property) {
+        Type type = property.getFeaturingClassifier().get(0);
+        if (type instanceof Association) {
+            List<Property> memberEnds = ((Association)type).getMemberEnd();
+            int i = property.equals(memberEnds.get(0))? 1: 0;
+            type = memberEnds.get(i).getType();
+        }
+        return type;
     }
     
     public ReclassifyObjectAction addReclassifyObjectAction(
