@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.fuml.impl.execution;
 
+import java.io.FileNotFoundException;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -20,6 +22,7 @@ import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
+import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Class_;
@@ -196,25 +199,29 @@ public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
         PropertyConfigurator.configure("log4j.properties");
         
         String unitName = this.parseArgs(args);
+        UnitDefinition unit;
         
         if (unitName != null) {
             QualifiedName qualifiedName = new QualifiedName();
             
             if (this.isFileName) {
-                int len = unitName.length();
-                if (len > 4 && unitName.substring(len - 4, len).equals(".alf")) {
-                    unitName = unitName.substring(0, len - 4);
+                try {
+                    unit = ((RootNamespaceImpl) RootNamespace.getRootScope().getImpl()).
+                            getModelScopeImpl().resolveModelFile(unitName);
+                } catch (FileNotFoundException e) {
+                    this.println("File not found: " + unitName);
+                    unit = new MissingUnit(new QualifiedName());
                 }
-                qualifiedName.getImpl().addName(unitName);
             } else {        
                 String[] names = unitName.replace(".","::").split("::");
                 for (String name: names) {
                     qualifiedName.getImpl().addName(name);
                 }
+                unit = RootNamespace.resolve(qualifiedName);
             }
 
-            UnitDefinition unit = RootNamespace.resolve(qualifiedName);
             this.executeUnit(unit);
+            
         } else {
             this.println("Usage is");
             this.println("  alf [options] unit");
