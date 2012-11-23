@@ -137,55 +137,58 @@ public class InstanceCreationExpressionImpl
                     if (classReferent.getImpl().isAbstractClassifier()) {
                         
                         // Check for an "Impl" package.
-                        NamespaceDefinition classDefinition = 
-                            classReferent.getImpl().getNamespace().getImpl().
-                                asNamespace();
-                        QualifiedName className = classDefinition.getImpl().
-                            getQualifiedName();
-                        QualifiedName implPackageName = 
-                            className.getImpl().copy().addName("Impl");
-                        ElementReference implPackageReferent = 
-                            implPackageName.getImpl().getNamespaceReferent();
-                        if (implPackageReferent != null &&
-                                implPackageReferent.getImpl().isPackage()) {
-                            QualifiedName qualification = 
-                                constructor.getQualification();
-                            NameBinding unqualifiedName = 
-                                constructor.getUnqualifiedName();
-                            QualifiedName implConstructor;
-                            
-                            if (qualification == null) {
-                                // Note: If there is no qualification at this
-                                // point, then the constructor operation cannot
-                                // be for a template binding.
-                                implConstructor = new QualifiedName().getImpl().
-                                    addName("Impl").getImpl().
-                                        addName(classDefinition.getName());
-                                implConstructor.getImpl().
-                                    setCurrentScope(classDefinition);
-                                
-                            } else {                           
-                                // Note: Constructing a qualified name with 
-                                // "Impl" inserted and resolving it makes sure
-                                // that all template bindings are handled 
-                                // correctly.
-                                implConstructor = qualification.getQualification();
-                                if (implConstructor == null) {
-                                    implConstructor = new QualifiedName();
+                        ElementReference namespaceReferent = 
+                                classReferent.getImpl().getNamespace();
+                        if (namespaceReferent != null) {
+                            NamespaceDefinition classDefinition = 
+                                    namespaceReferent.getImpl().asNamespace();
+                            QualifiedName className = classDefinition.getImpl().
+                                    getQualifiedName();
+                            QualifiedName implPackageName = 
+                                    className.getImpl().copy().addName("Impl");
+                            ElementReference implPackageReferent = 
+                                    implPackageName.getImpl().getNamespaceReferent();
+                            if (implPackageReferent != null &&
+                                    implPackageReferent.getImpl().isPackage()) {
+                                QualifiedName qualification = 
+                                        constructor.getQualification();
+                                NameBinding unqualifiedName = 
+                                        constructor.getUnqualifiedName();
+                                QualifiedName implConstructor;
+
+                                if (qualification == null) {
+                                    // Note: If there is no qualification at this
+                                    // point, then the constructor operation cannot
+                                    // be for a template binding.
+                                    implConstructor = new QualifiedName().getImpl().
+                                            addName("Impl").getImpl().
+                                            addName(classDefinition.getName());
                                     implConstructor.getImpl().
+                                    setCurrentScope(classDefinition);
+
+                                } else {                           
+                                    // Note: Constructing a qualified name with 
+                                    // "Impl" inserted and resolving it makes sure
+                                    // that all template bindings are handled 
+                                    // correctly.
+                                    implConstructor = qualification.getQualification();
+                                    if (implConstructor == null) {
+                                        implConstructor = new QualifiedName();
+                                        implConstructor.getImpl().
                                         setCurrentScope(classDefinition);
-                                }
-                                implConstructor.getImpl().addName("Impl").
+                                    }
+                                    implConstructor.getImpl().addName("Impl").
                                     addNameBinding(qualification.getUnqualifiedName());
+                                }
+
+                                implConstructor.addNameBinding(unqualifiedName);
+                                ElementReference implOperationReferent = 
+                                        implConstructor.getImpl().getOperationReferent();
+
+                                if (implOperationReferent != null) {
+                                    operationReferent = implOperationReferent;
+                                }                            
                             }
-                            
-                            implConstructor.addNameBinding(unqualifiedName);
-                            ElementReference implOperationReferent = 
-                                implConstructor.getImpl().getOperationReferent();
-                            
-                            if (implOperationReferent != null) {
-                                operationReferent = implOperationReferent;
-                            }                            
                         }
                     }
                     
