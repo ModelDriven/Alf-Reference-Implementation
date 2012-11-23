@@ -199,7 +199,7 @@ public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
         PropertyConfigurator.configure("log4j.properties");
         
         String unitName = this.parseArgs(args);
-        UnitDefinition unit;
+        UnitDefinition unit = null;
         
         if (unitName != null) {
             QualifiedName qualifiedName = new QualifiedName();
@@ -210,6 +210,8 @@ public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
                             getModelScopeImpl().resolveModelFile(unitName);
                 } catch (FileNotFoundException e) {
                     this.println("File not found: " + unitName);
+                }
+                if (unit == null) {
                     unit = new MissingUnit(new QualifiedName());
                 }
             } else {        
