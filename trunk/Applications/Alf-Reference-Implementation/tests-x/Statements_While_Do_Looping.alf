@@ -82,11 +82,13 @@ active class Statements_While_Do_Looping {
       count++;
     }
     
-    while (file.hasMore()) {
+    continue = true;
+    while (continue) {
       nextRecord = file.readNext();
       if (!nextRecord->isEmpty()) {
         checksum = checksum + 1;
       }
+      continue = file.hasMore();
     }
     
     file.reset();
