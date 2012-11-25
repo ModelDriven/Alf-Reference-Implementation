@@ -775,13 +775,19 @@ public class ActivityGraph {
         for (Element element: nestedElements) {
             if (element instanceof ActivityEdge) {
                 ActivityEdge edge = (ActivityEdge)element;
-                if (isContainedIn(edge.getSource(), node) &&
-                        isContainedIn(edge.getTarget(), node)) {
-                    node.addEdge(edge);
-                } else {
-                    this.add(edge);
-                }
+                this.addToStructuredNode(node, edge);
             }
+        }
+    }
+    
+    public void addToStructuredNode(
+            StructuredActivityNode node,
+            ActivityEdge edge) {
+        if (isContainedIn(edge.getSource(), node) &&
+                isContainedIn(edge.getTarget(), node)) {
+            node.addEdge(edge);
+        } else {
+            this.add(edge);
         }
     }
 
