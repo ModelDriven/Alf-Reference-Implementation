@@ -115,6 +115,9 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                                 ((AssignedSourceMapping)mapping).getActivityNode();
                         if (!(ActivityGraph.isContainedIn(source, this.blockNode))) {
                             mapping = this.fumlMap(assignment.getType());
+                            if (mapping instanceof ElementReferenceMapping) {
+                                mapping = ((ElementReferenceMapping)mapping).getMapping();
+                            }
                             if (!(mapping instanceof ClassifierDefinitionMapping)) {
                                 this.throwError("Error mapping type for " + 
                                         name + ": " + mapping.getErrorMessage());
@@ -128,13 +131,13 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                                                 assignment.getLower(), 
                                                 assignment.getUpper());
                                 blockNode.addNode(passthruNode);
-                                blockNode.addEdge(this.graph.createObjectFlow(
+                                this.graph.addObjectFlow(
                                         source, 
-                                        passthruNode.getStructuredNodeInput().get(0)));
+                                        passthruNode.getStructuredNodeInput().get(0));
                                 source = passthruNode.getStructuredNodeOutput().get(0);
                             }
                         }
-                        graph.addObjectFlow(
+                        this.graph.addObjectFlow(
                                 source, 
                                 parentMapping.getAssignedValueSource(name).
                                     getIncoming().get(0).getSource());
