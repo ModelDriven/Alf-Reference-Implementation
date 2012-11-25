@@ -28,12 +28,13 @@ active class Statements_Accept {
     accept (sig: SignalNewArrival, SignalTermination);    
     this.sig = sig;
     
+    terminate = false;
     accept (arrival1: SignalNewArrival) {
       this.name = arrival1.name;
-      this.terminate = false;
     } or accept (SignalTermination) {
-      this.terminate = true;
+      terminate = true;
     }
+    this.terminate = terminate;
     
     accept (SignalNewArrival);
     
