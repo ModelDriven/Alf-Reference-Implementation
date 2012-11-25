@@ -76,7 +76,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
         
         if (block != null) {
             FumlMapping mapping = this.fumlMap(block);
-            this.blockNode = graph.addStructuredActivityNode(
+            this.blockNode = this.graph.addStructuredActivityNode(
                     "", mapping.getModelElements());
             
             ActivityNode signalSourceNode = parentMapping.getSignalSourceNode();
@@ -88,12 +88,12 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                 signalNames.append(signal.getName());
 
                 ReadIsClassifiedObjectAction testAction = 
-                        graph.addReadIsClassifiedObjectAction(
+                        this.graph.addReadIsClassifiedObjectAction(
                                 signal, false);
-                graph.addObjectFlow(signalSourceNode, testAction.getObject());
+                this.graph.addObjectFlow(signalSourceNode, testAction.getObject());
 
                 this.decisionNode = 
-                        graph.addControlDecisionNode(
+                        this.graph.addControlDecisionNode(
                                 "Test(" + signal.getName() + ")", 
                                 null, testAction.getResult(), 
                                 this.blockNode, this.decisionNode);
@@ -103,7 +103,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
             
             Map<String, AssignedSource> assignments = 
                     block.getImpl().getAssignmentAfterMap();
-            for (String name: parentMapping.getAssignedNames()) {
+            for (String name: this.parentMapping.getAssignedNames()) {
                 AssignedSource assignment = assignments.get(name);
                 if (assignment != null) {
                     mapping = this.fumlMap(assignment);
@@ -139,7 +139,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                         }
                         this.graph.addObjectFlow(
                                 source, 
-                                parentMapping.getAssignedValueSource(name).
+                                this.parentMapping.getAssignedValueSource(name).
                                     getIncoming().get(0).getSource());
                     }
                 }
