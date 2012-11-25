@@ -5,11 +5,14 @@ active class Statements_Classify {
 
     // Supporting declarations *************************************************
     
-    private monitor: Monitor;
-	
     class Monitor { }
 	  class InActiveMonitor specializes Monitor { }
-	  class ActiveMonitor specializes Monitor { }
+	  active class ActiveMonitor specializes Monitor {
+	      public n: Integer = 0;
+	  } do {
+	      this.n = 1;
+	  }
+	  
     class Employee { }
     class Administrator specializes Employee { }
     class Staff specializes Employee { }
@@ -26,20 +29,18 @@ active class Statements_Classify {
     
       // Setup
 	    employee = new Staff();
-	    this.monitor = new InActiveMonitor();
+	    monitor = new InActiveMonitor();
 	    issue = new Pending();
 	    // ***
 	  	  
 	    classify employee from * to Administrator;
 	    classify employee to PartTime;
 	    classify employee from Administrator;
-	    classify this.monitor from InActiveMonitor to ActiveMonitor;
+	    classify monitor from InActiveMonitor to ActiveMonitor;
 	    classify issue 
 	      from Pending, Overdue 
 	      to Resolved, InProcess;
-	    
-	    monitor = this.monitor;
-	
+	      	    
     }
 } do {
 	this.test(employee, monitor, issue);
@@ -48,9 +49,12 @@ active class Statements_Classify {
 	AssertFalse("employee hastype Staff", employee hastype Staff);
 	AssertFalse("employee hastype Administrator", employee hastype Administrator);
 	AssertTrue("employee hastype PartTime", employee hastype PartTime);
+	
 	AssertTrue("monitor instanceof Monitor", monitor instanceof Monitor);
 	AssertFalse("monitor hastype InActiveMonitor", monitor hastype InActiveMonitor);
 	AssertTrue("monitor hastype ActiveMonitor", monitor hastype ActiveMonitor);
+	AssertEqual("monitor.n", ((ActiveMonitor)monitor).n, 1);
+	
 	AssertTrue("issue instanceof Issue", issue instanceof Issue);
 	AssertFalse("issue hastype Pending", issue hastype Pending);
 	AssertFalse("issue hastype Overdue", issue hastype Overdue);

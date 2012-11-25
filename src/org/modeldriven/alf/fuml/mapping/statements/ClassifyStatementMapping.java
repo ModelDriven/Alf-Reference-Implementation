@@ -23,8 +23,12 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.ClassifyStatement;
 
+import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Class_;
+import org.modeldriven.alf.uml.ForkNode;
 import org.modeldriven.alf.uml.ReclassifyObjectAction;
 import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.StartObjectBehaviorAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +36,7 @@ import java.util.Collection;
 public class ClassifyStatementMapping extends StatementMapping {
     
     private ReclassifyObjectAction reclassifyAction = null;
+    private StartObjectBehaviorAction startAction = null;
     
     /**
      * A classify statement maps to a structured activity node containing a
@@ -43,6 +48,8 @@ public class ClassifyStatementMapping extends StatementMapping {
      * statement is reclassify all, then the reclassify object action has
      * isReplaceAll=true.
      */
+    // If any of the new classifiers are active, add a start behavior action to
+    // start the new classifier behaviors.
     
     private Collection<Classifier> mapClassifiers(
             Collection<ElementReference> references) throws MappingError {
@@ -85,11 +92,27 @@ public class ClassifyStatementMapping extends StatementMapping {
                             this.mapClassifiers(statement.getToClass()),
                             statement.getIsReclassifyAll());
             
+            ActivityNode resultSource = expressionMapping.getResultSource();
             subgraph.addObjectFlow(
                     expressionMapping.getResultSource(), 
                     this.reclassifyAction.getObject());
             
-            this.addToNode(subgraph.getModelElements());
+            for (Classifier classifier: this.reclassifyAction.getNewClassifier()) {
+                if (((Class_)classifier).getIsActive()) {
+                    ForkNode fork = 
+                            subgraph.addForkNode("Fork(" + resultSource.getName() + ")");                
+                    subgraph.addObjectFlow(resultSource, fork);
+
+                    this.startAction = 
+                            subgraph.addStartObjectBehaviorAction(null);                
+                    subgraph.addControlFlow(this.reclassifyAction, this.startAction);
+                    subgraph.addObjectFlow(fork, this.startAction.getObject());
+                    
+                    break;
+                }
+            }
+            
+            this.addToNode(subgraph.getModelElements());            
         }
     }
 
@@ -107,6 +130,8 @@ public class ClassifyStatementMapping extends StatementMapping {
 	    super.print(prefix);
 	    
 	    if (this.reclassifyAction != null) {
+	        System.out.println(prefix + " reclassifyAction: " + 
+	                this.reclassifyAction);
             Collection<Classifier> oldClassifiers = 
                     this.reclassifyAction.getOldClassifier();
             if (!oldClassifiers.isEmpty()) {
@@ -123,6 +148,10 @@ public class ClassifyStatementMapping extends StatementMapping {
                     System.out.println(prefix + "  " + newClassifier);
                 }
             }
+	    }
+	    
+	    if (this.startAction != null) {
+	        System.out.println(prefix + " startAction: " + this.startAction);
 	    }
 	    
         ClassifyStatement statement = this.getClassifyStatement();
