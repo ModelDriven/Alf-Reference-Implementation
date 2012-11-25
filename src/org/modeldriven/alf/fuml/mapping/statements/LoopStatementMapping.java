@@ -141,7 +141,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
                             decider.getName(), getBooleanType(), 1, 1);
                 node.addTest(passthruNode);
                 node.addNode(passthruNode);
-                node.addEdge(this.graph.createObjectFlow(
+                this.graph.addToStructuredNode(node, this.graph.createObjectFlow(
                         decider, passthruNode.getStructuredNodeInput().get(0)));
                 decider = passthruNode.getStructuredNodeOutput().get(0);
             }
