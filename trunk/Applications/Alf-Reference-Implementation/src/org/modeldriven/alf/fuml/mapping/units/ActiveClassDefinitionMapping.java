@@ -38,6 +38,13 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
      */
     
     // Subunits are handled by NamespaceDefinitionMapping.
+    
+    @Override
+    public Classifier mapClassifier() {
+        Classifier classifier = super.mapClassifier();
+        ((Class_)classifier).setIsActive(true);
+        return classifier;
+    }
 
     public void mapTo(Classifier classifier) throws MappingError {
         Class_ class_ = (Class_)classifier;

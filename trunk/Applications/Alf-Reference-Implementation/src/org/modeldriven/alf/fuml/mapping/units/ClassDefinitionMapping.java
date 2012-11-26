@@ -74,6 +74,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
     public Classifier mapClassifier() {
         ClassDefinition definition = this.getClassDefinition();
         Class_ class_ = this.create(Class_.class);
+        class_.setName(definition.getName());
         
         // Create initialization flag.
         this.initializationFlag = this.create(Property.class);
