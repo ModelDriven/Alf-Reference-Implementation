@@ -339,7 +339,7 @@ public class ActivityGraph {
     
     public CreateObjectAction addCreateObjectAction(Class_ class_) {
         CreateObjectAction createAction = this.create(CreateObjectAction.class);
-        createAction.setName("this.create(" + class_.getQualifiedName() + ")");
+        createAction.setName("Create(" + class_.getQualifiedName() + ")");
         createAction.setClassifier(class_);            
         createAction.setResult(createOutputPin(
                 createAction.getName() + ".result", class_, 1, 1));
