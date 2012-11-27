@@ -36,7 +36,6 @@ import java.util.Collection;
 public class ClassifyStatementMapping extends StatementMapping {
     
     private ReclassifyObjectAction reclassifyAction = null;
-    private StartObjectBehaviorAction startAction = null;
     
     /**
      * A classify statement maps to a structured activity node containing a
@@ -103,10 +102,20 @@ public class ClassifyStatementMapping extends StatementMapping {
                             subgraph.addForkNode("Fork(" + resultSource.getName() + ")");                
                     subgraph.addObjectFlow(resultSource, fork);
 
-                    this.startAction = 
-                            subgraph.addStartObjectBehaviorAction(null);                
-                    subgraph.addControlFlow(this.reclassifyAction, this.startAction);
-                    subgraph.addObjectFlow(fork, this.startAction.getObject());
+                    StartObjectBehaviorAction startAction = 
+                            subgraph.addStartObjectBehaviorAction((Class_)classifier);                
+                    subgraph.addControlFlow(this.reclassifyAction, startAction);
+                    subgraph.addObjectFlow(fork, startAction.getObject());
+                    
+                    for (Classifier parent: classifier.allParents()) {
+                        if (parent instanceof Class_ && 
+                                ((Class_) parent).getClassifierBehavior() != null) {
+                            startAction = this.graph.addStartObjectBehaviorAction(
+                                    (Class_)parent);         
+                            subgraph.addControlFlow(this.reclassifyAction, startAction);
+                            subgraph.addObjectFlow(fork, startAction.getObject());
+                        }
+                    }
                     
                     break;
                 }
@@ -130,8 +139,6 @@ public class ClassifyStatementMapping extends StatementMapping {
 	    super.print(prefix);
 	    
 	    if (this.reclassifyAction != null) {
-	        System.out.println(prefix + " reclassifyAction: " + 
-	                this.reclassifyAction);
             Collection<Classifier> oldClassifiers = 
                     this.reclassifyAction.getOldClassifier();
             if (!oldClassifiers.isEmpty()) {
@@ -148,10 +155,6 @@ public class ClassifyStatementMapping extends StatementMapping {
                     System.out.println(prefix + "  " + newClassifier);
                 }
             }
-	    }
-	    
-	    if (this.startAction != null) {
-	        System.out.println(prefix + " startAction: " + this.startAction);
 	    }
 	    
         ClassifyStatement statement = this.getClassifyStatement();

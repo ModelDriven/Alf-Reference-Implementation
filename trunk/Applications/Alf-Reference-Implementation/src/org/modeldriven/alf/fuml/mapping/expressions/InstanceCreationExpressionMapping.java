@@ -22,6 +22,7 @@ import org.modeldriven.alf.syntax.expressions.InstanceCreationExpression;
 
 import org.modeldriven.alf.uml.Action;
 import org.modeldriven.alf.uml.CallOperationAction;
+import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.InputPin;
 import org.modeldriven.alf.uml.OutputPin;
 import org.modeldriven.alf.uml.StartObjectBehaviorAction;
@@ -108,8 +109,17 @@ public class InstanceCreationExpressionMapping extends
                 this.graph.addObjectFlow(this.resultSource, fork);
                 
                 StartObjectBehaviorAction startAction = 
-                    this.graph.addStartObjectBehaviorAction(class_);                
+                    this.graph.addStartObjectBehaviorAction(class_);         
                 this.graph.addObjectFlow(fork, startAction.getObject());
+                
+                for (Classifier parent: class_.allParents()) {
+                    if (parent instanceof Class_ && 
+                            ((Class_) parent).getClassifierBehavior() != null) {
+                        startAction = this.graph.addStartObjectBehaviorAction(
+                                (Class_)parent);         
+                        this.graph.addObjectFlow(fork, startAction.getObject());
+                    }
+                }
                 
                 Collection<Element> elements = this.graph.getModelElements();
                 this.graph = this.createActivityGraph();
