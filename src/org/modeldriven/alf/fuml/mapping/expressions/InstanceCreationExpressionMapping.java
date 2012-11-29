@@ -14,6 +14,7 @@ import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.InvocationExpressionMapping;
+import org.modeldriven.alf.fuml.mapping.units.ClassDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.DataTypeDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
@@ -22,7 +23,6 @@ import org.modeldriven.alf.syntax.expressions.InstanceCreationExpression;
 
 import org.modeldriven.alf.uml.Action;
 import org.modeldriven.alf.uml.CallOperationAction;
-import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.InputPin;
 import org.modeldriven.alf.uml.OutputPin;
 import org.modeldriven.alf.uml.StartObjectBehaviorAction;
@@ -112,11 +112,33 @@ public class InstanceCreationExpressionMapping extends
                     this.graph.addStartObjectBehaviorAction(class_);         
                 this.graph.addObjectFlow(fork, startAction.getObject());
                 
-                for (Classifier parent: class_.allParents()) {
-                    if (parent instanceof Class_ && 
-                            ((Class_) parent).getClassifierBehavior() != null) {
+                // NOTE: The generalizations of class_ may not have been mapped
+                // yet, so we need to go back to the abstract syntax to
+                // get parent class definitions.
+                ElementReference referent = 
+                        this.getInstanceCreationExpression().getReferent();
+                if (referent.getImpl().isOperation()) {
+                    referent = referent.getImpl().getNamespace();
+                }                
+                for (ElementReference parent: referent.getImpl().allParents()) {
+                    if (parent.getImpl().isClass() && 
+                            parent.getImpl().getClassifierBehavior() != null) {
+                        class_ = (Class_)parent.getImpl().getUml();
+                        if (class_ == null) {
+                            FumlMapping mapping = this.fumlMap(parent);
+                            if (mapping instanceof ElementReferenceMapping) {
+                                mapping = ((ElementReferenceMapping) mapping).
+                                        getMapping();
+                            }
+                            if (!(mapping instanceof ClassDefinitionMapping)) {
+                                this.throwError("Error mapping parent class: " + 
+                                        mapping.getErrorMessage());
+                            }
+                            class_ = (Class_)((ClassDefinitionMapping)mapping).
+                                    getClassifierOnly();
+                        }
                         startAction = this.graph.addStartObjectBehaviorAction(
-                                (Class_)parent);         
+                                class_);         
                         this.graph.addObjectFlow(fork, startAction.getObject());
                     }
                 }
