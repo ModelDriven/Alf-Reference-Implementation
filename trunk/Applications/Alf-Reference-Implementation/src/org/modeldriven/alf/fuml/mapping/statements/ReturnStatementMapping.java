@@ -15,14 +15,17 @@ import java.util.List;
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
+import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.statements.StatementMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
+import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.FormalParameterMapping;
 import org.modeldriven.alf.fuml.mapping.units.OperationDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
@@ -79,59 +82,112 @@ public class ReturnStatementMapping extends StatementMapping {
                 if (resultSource == null) {
                     this.setErrorMessage("No result source: " + expressionMapping);
                 } else {
-                    OutputPin pin = this.graph.createOutputPin(
-                            this.node.getName() + ".output", 
+                    this.mapOutput(
+                            resultSource, 
                             expressionMapping.getType(), 
                             expression.getLower(), 
-                            expression.getUpper());
-                    this.node.addStructuredNodeOutput(pin);
-
-                    if (!ActivityGraph.isContainedIn(resultSource, this.node)) {
-                        StructuredActivityNode passThruNode =
-                                this.graph.createPassthruNode(
-                                        resultSource.getName(), 
-                                        pin.getType(), 
-                                        pin.getLower(), 
-                                        pin.getUpper());
-                        this.node.addNode(passThruNode);
-                        this.graph.addObjectFlow(
-                                resultSource, 
-                                passThruNode.getStructuredNodeInput().get(0));
-                        resultSource = passThruNode.getStructuredNodeOutput().get(0);
-                    }
-
-                    node.addEdge(this.graph.createObjectFlow(
-                            resultSource, pin));
-
-                    FormalParameter returnParameter = 
-                            behavior.getImpl().getReturnParameter();
-                    FumlMapping parameterMapping = this.fumlMap(returnParameter);
-                    if (!(parameterMapping instanceof FormalParameterMapping)) {
-                        this.throwError("Error mapping return parameter: " + 
-                                parameterMapping.getErrorMessage());
+                            expression.getUpper(), 
+                            behavior.getImpl().getReturnParameter(), 
+                            activity, operation);
+                }                
+            }
+        }
+        
+        for (FormalParameter parameter: 
+            behavior.getImpl().getParameters()) {
+            if (parameter.getDirection().equals("out") ||
+                    parameter.getDirection().equals("inout")) {
+                String name = parameter.getName();
+                AssignedSource assignment = 
+                    returnStatement.getImpl().getAssignmentAfter(name);
+                if (assignment != null) {
+                    FumlMapping sourceMapping = 
+                        mapping.fumlMap(assignment.getSource());
+                    if (!(sourceMapping instanceof SyntaxElementMapping)) {
+                        mapping.throwError("Error mapping parameter " + 
+                                name + ": " + mapping.getErrorMessage());
                     } else {
-                        Parameter parameter = 
-                                ((FormalParameterMapping)parameterMapping).getParameter();
-
-                        if (operation != null) {
-                            parameter = activity.getOwnedParameter().
-                                    get(operation.getOwnedParameter().indexOf(parameter));
+                        ActivityNode source = ((SyntaxElementMapping)sourceMapping).
+                                getAssignedValueSource(name);
+                        Classifier type = null;
+                        ElementReference typeReference = assignment.getType();
+                        if (typeReference != null) {
+                            mapping = this.fumlMap(assignment.getType());
+                            if (mapping instanceof ElementReferenceMapping) {
+                                mapping = ((ElementReferenceMapping)mapping).
+                                        getMapping();
+                            }
+                            if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                                this.throwError("Error mapping type of parameter " +
+                                        parameter.getName() + ": " + 
+                                        mapping.getErrorMessage());
+                            } else {
+                                type = 
+                                        ((ClassifierDefinitionMapping)mapping).
+                                        getClassifierOnly();
+                            }
                         }
-
-                        ActivityParameterNode parameterNode = 
-                                ActivityDefinitionMapping.getOutputParameterNode(
-                                        activity, parameter);
-
-                        if (parameterNode == null) {
-                            this.throwError("Activity does not contain parameter: " + 
-                                    parameter);
-                        } else {
-                            this.add(this.graph.createObjectFlow(pin, parameterNode));
-                        }
+                        this.mapOutput(
+                                source, type, 
+                                assignment.getLower(), assignment.getUpper(), 
+                                parameter, activity, operation);
                     }
                 }
             }
         }
+    }
+    
+    private void mapOutput(
+            ActivityNode source, Type type, int lower, int upper,
+            FormalParameter outputParameter, 
+            Activity activity, Operation operation) throws MappingError {
+        OutputPin pin = this.graph.createOutputPin(
+                this.node.getName() + ".output", 
+                type, lower, upper);
+        this.node.addStructuredNodeOutput(pin);
+
+        if (!ActivityGraph.isContainedIn(source, this.node)) {
+            StructuredActivityNode passThruNode =
+                    this.graph.createPassthruNode(
+                            source.getName(), 
+                            pin.getType(), 
+                            pin.getLower(), 
+                            pin.getUpper());
+            this.node.addNode(passThruNode);
+            this.graph.addObjectFlow(
+                    source, 
+                    passThruNode.getStructuredNodeInput().get(0));
+            source = passThruNode.getStructuredNodeOutput().get(0);
+        }
+
+        node.addEdge(this.graph.createObjectFlow(
+                source, pin));
+
+        FumlMapping parameterMapping = this.fumlMap(outputParameter);
+        if (!(parameterMapping instanceof FormalParameterMapping)) {
+            this.throwError("Error mapping parameter: " + 
+                    parameterMapping.getErrorMessage());
+        } else {
+            Parameter parameter = 
+                    ((FormalParameterMapping)parameterMapping).getParameter();
+
+            if (operation != null) {
+                parameter = activity.getOwnedParameter().
+                        get(operation.getOwnedParameter().indexOf(parameter));
+            }
+
+            ActivityParameterNode parameterNode = 
+                    ActivityDefinitionMapping.getOutputParameterNode(
+                            activity, parameter);
+
+            if (parameterNode == null) {
+                this.throwError("Activity does not contain parameter: " + 
+                        parameter);
+            } else {
+                this.add(this.graph.createObjectFlow(pin, parameterNode));
+            }
+        }
+        
     }
     
 	public ReturnStatement getReturnStatement() {

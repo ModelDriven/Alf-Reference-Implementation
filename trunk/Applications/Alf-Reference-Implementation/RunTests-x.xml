@@ -84,6 +84,9 @@
             <param name="unit" value="Statements_For_Looping" />
         </antcall>
         <antcall target="run-test">
+            <param name="unit" value="Statements_Return" />
+        </antcall>
+        <antcall target="run-test">
             <param name="unit" value="Statements_Simple" />
         </antcall>
         <antcall target="run-test">
