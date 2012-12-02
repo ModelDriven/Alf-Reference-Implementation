@@ -13,12 +13,15 @@ package org.modeldriven.alf.fuml.mapping.units;
 import java.util.Collection;
 
 import org.modeldriven.alf.execution.fuml.OpaqueBehaviorExecution;
+
+import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
+
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
@@ -34,7 +37,9 @@ import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.ForkNode;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.OpaqueBehavior;
+import org.modeldriven.alf.uml.OutputPin;
 import org.modeldriven.alf.uml.Parameter;
+import org.modeldriven.alf.uml.StructuredActivityNode;
 
 public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     
@@ -174,7 +179,22 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 	        Block body,
 	        FumlMapping mapping) throws MappingError {
 	    
-        for (Element element: elements) {
+	    StructuredActivityNode structuredNode = null;
+	    for (ActivityNode node: activity.getNode()) {
+	        if (node instanceof StructuredActivityNode) {
+	            structuredNode = (StructuredActivityNode)node;
+	        }
+	    }
+	    if (structuredNode == null) {
+	        structuredNode = (StructuredActivityNode)mapping.
+	                create(StructuredActivityNode.class);
+	        activity.addNode(structuredNode);
+	    }
+	    
+        ActivityGraph graph = mapping.createActivityGraph();
+        graph.addToStructuredNode(structuredNode, elements);
+        
+        for (Element element: graph.getModelElements()) {
             if (element instanceof ActivityNode) {
                 activity.addNode((ActivityNode)element);
             } else if (element instanceof ActivityEdge) {
@@ -186,6 +206,10 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         
         // Connect final output parameter assigned sources to corresponding 
         // output parameter nodes.
+        // NOTE: A structured activity node is used here so that, if the
+        // activity is terminated by a return statement, the output parameters
+        // are set by the mapping of that statement, not by the final assigned
+        // sources here.
         for (Parameter parameter: activity.getOwnedParameter()) {
             if (parameter.getDirection().equals("out") ||
                     parameter.getDirection().equals("inout")) {
@@ -201,8 +225,13 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                     } else {
                         ActivityNode source = ((SyntaxElementMapping)sourceMapping).
                                 getAssignedValueSource(name);
+                        OutputPin pin = graph.createOutputPin(
+                                "Output(" + assignment.getName() + ")", 
+                                null, assignment.getLower(), assignment.getUpper());
+                        structuredNode.addStructuredNodeOutput(pin);
+                        structuredNode.addEdge(graph.createObjectFlow(source, pin));
                         activity.addEdge(mapping.createActivityGraph().createObjectFlow(
-                                source, 
+                                pin, 
                                 getOutputParameterNode(activity, parameter)));
                     }
                 }
@@ -241,11 +270,9 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     public static ActivityFinalNode getFinalNode(
             Activity activity,
             FumlMapping mapping) {
-        if (activity != null) {
-            for (ActivityNode node: activity.getNode()) {
-                if (node instanceof ActivityFinalNode) {
-                    return (ActivityFinalNode)node;
-                }
+        for (ActivityNode node: activity.getNode()) {
+            if (node instanceof ActivityFinalNode) {
+                return (ActivityFinalNode)node;
             }
         }
         ActivityFinalNode node = mapping.create(ActivityFinalNode.class);

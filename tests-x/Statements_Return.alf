@@ -1,0 +1,57 @@
+/**
+ * Test return statements.
+ **/
+active class Statements_Return {
+
+  public activity test1(): Integer {
+    item = 4;
+    return item;
+  }
+  
+  public activity test2(): Integer {
+    index = 2;
+    list = Integer[]{1,2,3};
+    return list[index];    
+  }
+  
+  public activity test3(): String {
+    s = "x";
+    return s + s;
+  }
+  
+  public activity test4(inout x: Integer, out y: Integer): Integer {
+    y = 2;
+    if (x == 0) {
+      x = x + 1;
+      return 3; 
+    }
+  }
+  
+  public test(
+    out a: Integer, out b: Integer, out c: String,
+    out x: Integer, out y: Integer, out z: Integer,
+    out n: Integer) {
+    a = test1();
+    b = test2();
+    c = test3();
+    
+    x = 0;
+    z = test4(x, y);
+    
+    n = 1;
+    return;
+    n = 2;
+  }
+} do {
+  this.test(a, b, c, x, y, z, n);
+  
+  AssertEqual("a", a, 4);
+  AssertEqual("b", b, 2);
+  AssertEqual("c", c, "xx");
+  
+  AssertEqual("x", x, 1);
+  AssertEqual("y", y, 2);
+  AssertEqual("z", z, 3);
+  
+  AssertEqual("n", n, 1);
+}
