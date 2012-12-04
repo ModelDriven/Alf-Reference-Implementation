@@ -1,0 +1,69 @@
+namespace OnlineBookstoreUI;
+
+private import Ordering::*;
+
+active class ShoppingCartController specializes Controller {
+
+  public cart: ShoppingCart;
+
+  @Create
+  public ShoppingCartController() {
+    this.cart = ShoppingCart->select s (s.isActive)[1];
+  }
+  
+  @Create
+  public addProduct(
+    in productID: UniversalProductCode,
+    in quantity: Count
+  ) {
+    this();
+    if (this.cart->isEmpty()) {
+      this.cart = new ShoppingCart();
+      this.cart.StartCart(productID, quantity);
+    } else {
+      this.cart.AddSelection(productID, quantity);
+    }
+  }
+  
+  protected displayView() {
+    if (this.cart->isEmpty()) {
+      new EmptyCartView(this);
+    } else {
+      new ShoppingCartView(this);
+    }
+  }
+  
+  protected handleChoice(in choice: String): Controller[0..1] {
+    switch (choice) {
+      case "x": return null;
+      case "h": return new HomeController();
+      case "e": return this.emptyCart();
+      case "c": return this.checkOut();
+      default: return this.changeQuantity(IntegerFunctions.ToInteger(choice));
+    }
+  }
+    
+  private emptyCart(): Controller {
+    if (Ask("Are you sure you want to empty your cart")) {
+      this.cart.Cancel();
+    }
+    return new ShoppingCartController();
+  }
+  
+  private checkOut(): Controller {
+    customerEmail = GetCustomerEmail();
+    return customerEmail == null?
+      new ShoppingCartController():
+      new CheckOutController(customerEmail);
+  }
+  
+  private changeQuantity(in choice: Integer): Controller {
+    quantity = GetQuantity("Enter new quantity:", 0);
+    if (quantity != null) {
+      this.cart.'includes selection'->at(choice).ChangeQuantity(quantity);
+    }
+    return new ShoppingCartController();
+  }
+  
+} do {
+}

@@ -1,0 +1,32 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+private import Ordering::*;
+private import Shipping::*;
+
+active class HomeController specializes Controller {
+
+  public topLevelCategories: ProductCategory[*] sequence =
+    ProductCategory->select pc (pc.'is part of'->isEmpty());
+    
+  protected displayView() {
+    new HomeView(this);
+  }
+  
+  protected handleChoice(in choice: String): Controller[0..1] {
+    switch (choice) {
+      case "x": return null;
+      case "s": return new ShoppingCartController();
+      default: return this.showCategory(IntegerFunctions::ToInteger(choice));
+    }
+  }
+  
+  private showCategory(in choice: Integer): Controller {
+    category = this.topLevelCategories->at(choice);
+    return category.'is divided into'->isEmpty()?
+      new ProductCategoryController("Home", category):
+      new SubcategoryController("Home", category);
+  }  
+  
+} do {
+}

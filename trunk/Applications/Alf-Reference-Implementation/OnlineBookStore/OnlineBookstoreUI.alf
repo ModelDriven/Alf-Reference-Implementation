@@ -1,0 +1,34 @@
+private import DomainDataTypes::*;
+
+private import UserInterface::*;
+private import Utility::*;
+
+active class OnlineBookstoreUI {
+
+  private active class HomeView specializes View;  
+  private active class HomeController specializes Controller;
+  
+  private active class SubcategoryView specializes View;
+  private active class SubcategoryController specializes Controller;
+  
+  private active class ProductCategoryView specializes View;
+  private active class ProductCategoryController specializes Controller;
+  
+  private active class ProductView specializes View;
+  private active class ProductController specializes Controller;
+  
+  private active class EmptyCartView specializes View;
+  private active class ShoppingCartView specializes View;
+  private active class ShoppingCartController specializes Controller;
+  
+  private active class CheckOutView specializes View;
+  private active class CheckOutController specializes Controller;
+  
+  private active class PaymentView specializes View;
+  private active class PaymentController specializes Controller;
+
+} do {
+
+  new HomeController().Display();
+  
+}

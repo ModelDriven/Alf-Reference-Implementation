@@ -1,0 +1,30 @@
+namespace OnlineBookstoreUI;
+
+active class PaymentView specializes View {
+
+  @Create
+  public PaymentView(in controller: PaymentController) {
+    super(
+      title => "Shopping Cart > Check Out > Payment Information",
+      prompt => "Select a field to change, p to pay, b to go back, s for shopping cart, h for home or x to exit",
+      controller => controller
+    );
+  }
+  
+  protected display(): String[*] sequence {
+    controller = (PaymentController)this.controller;
+    
+    WriteLine("1. Cardholder Name: " + ToNameString(controller.cardholderName));
+    WriteLine("2. Bank Card Account Number: " + 
+                NullToString(controller.accountNumber));
+    WriteLine("3. Bank Card Expiration Date: " + 
+                NullToString(ToMonthYearString(controller.cardExpirationDate)));
+    WriteLine("4. Billing Address:");
+    WriteLine("");
+    Write(ToAddressString(controller.billingAddress));
+    
+    return String[]{"1", "2", "3", "4", "p", "o", "s", "h", "x"};
+  }
+
+} do {
+}

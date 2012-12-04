@@ -1,0 +1,39 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+
+active class ProductController specializes Controller {
+
+  public title: String;
+  public product: Product;
+  
+  @Create
+  public ProductController(
+    in title: String,
+    in product: Product
+  ) {
+    this.title = title;
+    this.product = product;
+  }
+  
+  protected displayView() {
+    new ProductView(this.title, this);
+  }
+  
+  protected handleChoice(in choice: String): Controller[0..1] {
+    switch (choice) {
+      case "x": return null;
+      case "h": return new HomeController();
+      case "a": return this.addProduct();
+    }
+  }
+  
+  private addProduct(): Controller {
+    quantity = GetQuantity("Enter quantity:", 1);
+    return quantity == null? 
+      new ProductController(this.title, this.product):
+      new ShoppingCartController::addProduct(this.product.productID, quantity);
+  }
+  
+} do {
+}

@@ -1,0 +1,36 @@
+namespace ExternalEntitiesImpl;
+
+active class ShippingCompanyImpl specializes ShippingCompany {
+
+  private companyName: String = "Shipping Express";
+  private trackingNumber: Integer = 1;
+  
+} do {
+
+  while (true) {
+
+    accept (ShipmentReadyForPickup);
+    
+    //@isolated
+    {
+      shipment = Shipping::Shipment->select selected (
+        selected.timePrepared->notEmpty() && selected.timePickedUp->isEmpty() &&
+        (selected.shippingCompany->isEmpty() || selected.shippingCompany == this.companyName)
+      )[1];
+      
+      if (shipment.shippingCompany->isEmpty()) {
+        shipment.TrackingNumberAssigned(
+          shippingCompany => this.companyName, 
+          trackingNumber => IntegerFunctions::ToString(this.trackingNumber++));
+      }
+      
+      shipment.PickedUp();
+      shipment.DeliveryConfirmed(
+        timeDelivered => TIM::current_date()
+      );
+      
+    }
+    
+  }
+  
+}

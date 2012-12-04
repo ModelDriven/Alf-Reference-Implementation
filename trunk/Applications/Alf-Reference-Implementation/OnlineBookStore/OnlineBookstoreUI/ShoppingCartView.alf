@@ -1,0 +1,36 @@
+namespace OnlineBookstoreUI;
+
+private import Ordering::*;
+
+active class ShoppingCartView specializes View {
+
+  @Create
+  public ShoppingCartView (
+    in controller: ShoppingCartController) {
+    super(
+      title => "Shopping Cart",
+      prompt => "Select a quantity to change, c to check out, " +
+                "e to empty, h for home or x to exit",
+      controller => controller
+    );
+  }
+
+  public display(): String[*] sequence {
+    choices = String[]{"c", "e", "h", "x"};
+    i = 1;
+    controller = (ShoppingCartController)this.controller;
+    for (selection in controller.cart.'includes selection') {
+      choice = IntegerFunctions::ToString(i++);
+      choices->add(choice);
+      product = selection.'is selection of';
+      WriteLine(choice + ". " + product.productName + 
+        " Quantity: " + IntegerFunctions::ToString(selection.quantity) +
+        " Amount: " + ToMoneyString(selection.selectionValue));
+    }
+    WriteLine("");
+    WriteLine("Total amount: " + ToMoneyString(controller.cart.totalValue));
+    return choices;
+  }
+
+} do {
+}

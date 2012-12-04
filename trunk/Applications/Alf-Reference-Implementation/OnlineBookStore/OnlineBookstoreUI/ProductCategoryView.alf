@@ -1,0 +1,32 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+
+active class ProductCategoryView specializes View {
+
+  @Create
+  public ProductCategoryView (
+    in title: String,
+    in controller: ProductCategoryController) {
+    super(
+      title => title,
+      prompt => "Select a product, h for home, s for shopping cart or x to exit.",
+      controller => controller
+    );
+  }
+  
+  protected display(): String[*] sequence {
+    choices = String[]{"x", "h", "s"};
+    i = 1;
+    for (product in ((ProductCategoryController)this.controller).products) {
+      if (product.currentlyAvailable) {
+        choice = IntegerFunctions::ToString(i++);
+        choices->add(choice);
+        WriteLine(choice + ". " + product.productName);
+      }
+    }    
+    return choices;
+  }
+  
+} do {
+}

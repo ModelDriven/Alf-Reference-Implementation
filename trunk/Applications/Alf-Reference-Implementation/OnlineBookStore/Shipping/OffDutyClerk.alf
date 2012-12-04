@@ -1,0 +1,9 @@
+namespace Shipping;
+
+/**
+An Off Duty Clerk is a clerk who is currently not on duty at the warehouse
+(sick, vacation, not on shift) and is therefore not available to restock the
+warehouse or to pack and ship orders.
+*/
+class OffDutyClerk specializes WarehouseClerk {
+}

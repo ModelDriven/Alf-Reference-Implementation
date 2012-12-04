@@ -1,0 +1,20 @@
+namespace ExternalEntitiesImpl;
+
+active class ShippingClerkImpl specializes ShippingClerk {
+} do {
+
+  while (true) {
+
+    accept (shipmentReadyToPack: ShipmentReadyToPack);
+    
+    shippingClerk = Shipping::ShippingClerk->select selected (
+      selected.clerkID == shipmentReadyToPack.clerkID)[1];
+    shippingClerk.BooksSelected();
+    shippingClerk.BoxPacked();
+    shippingClerk.BoxSealed();
+    shippingClerk.ShippingLabelAttached();
+    shippingClerk.BoxAtLoadingDock();
+  
+  }
+
+}
