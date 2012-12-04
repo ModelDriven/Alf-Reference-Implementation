@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Feature extends RedefinableElement implements
 		org.modeldriven.alf.uml.Feature {
 
-	public Feature(fUML.Syntax.Classes.Kernel.Feature base) {
+	public Feature(org.eclipse.uml2.uml.Feature base) {
 		super(base);
 	}
 
@@ -22,11 +22,14 @@ public class Feature extends RedefinableElement implements
 		this.getBase().setIsStatic(isStatic);
 	}
 
-	public List<org.modeldriven.alf.uml.Classifier> getFeaturingClassifier() {
-		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
-		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
-				.getFeaturingClassifier()) {
-			list.add(new Classifier(element));
+	public List< org.modeldriven.alf.uml.Classifier> getFeaturingClassifier
+() {
+		List< org.modeldriven.alf.uml.Classifier> list = new ArrayList< org.modeldriven.alf.uml.Classifier>();
+		for (org.eclipse.uml2.uml.Classifier
+ element: this.getBase().getFeaturingClassifier
+s()) {
+			list.add( new Classifier(element)
+);
 		}
 		return list;
 	}

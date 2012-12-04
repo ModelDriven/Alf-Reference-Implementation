@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class DecisionNode extends ControlNode implements
 		org.modeldriven.alf.uml.DecisionNode {
 	public DecisionNode() {
-		this(UMLFactory.eINSTANCE.createDecisionNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createDecisionNode());
 	}
 
-	public DecisionNode(
-			fUML.Syntax.Activities.IntermediateActivities.DecisionNode base) {
+	public DecisionNode(org.eclipse.uml2.uml.DecisionNode base) {
 		super(base);
 	}
 

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class DestroyObjectAction extends Action implements
 		org.modeldriven.alf.uml.DestroyObjectAction {
 	public DestroyObjectAction() {
-		this(UMLFactory.eINSTANCE.createDestroyObjectAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createDestroyObjectAction());
 	}
 
-	public DestroyObjectAction(
-			fUML.Syntax.Actions.IntermediateActions.DestroyObjectAction base) {
+	public DestroyObjectAction(org.eclipse.uml2.uml.DestroyObjectAction base) {
 		super(base);
 	}
 

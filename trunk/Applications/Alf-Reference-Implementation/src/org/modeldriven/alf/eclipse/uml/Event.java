@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Event extends PackageableElement implements
 		org.modeldriven.alf.uml.Event {
 
-	public Event(fUML.Syntax.CommonBehaviors.Communications.Event base) {
+	public Event(org.eclipse.uml2.uml.Event base) {
 		super(base);
 	}
 

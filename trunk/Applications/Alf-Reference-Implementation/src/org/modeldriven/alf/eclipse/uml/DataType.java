@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class DataType extends Classifier implements
 		org.modeldriven.alf.uml.DataType {
 	public DataType() {
-		this(UMLFactory.eINSTANCE.createDataType());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createDataType());
 	}
 
-	public DataType(fUML.Syntax.Classes.Kernel.DataType base) {
+	public DataType(org.eclipse.uml2.uml.DataType base) {
 		super(base);
 	}
 
@@ -17,20 +17,23 @@ public class DataType extends Classifier implements
 		return (org.eclipse.uml2.uml.DataType) this.base;
 	}
 
-	public List<org.modeldriven.alf.uml.Property> getOwnedAttribute() {
-		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
-		for (org.eclipse.uml2.uml.Property element : this.getBase()
-				.getOwnedAttribute()) {
-			list.add(new Property(element));
+	public List< org.modeldriven.alf.uml.Property> getOwnedAttribute
+() {
+		List< org.modeldriven.alf.uml.Property> list = new ArrayList< org.modeldriven.alf.uml.Property>();
+		for (org.eclipse.uml2.uml.Property
+ element: this.getBase().getOwnedAttribute
+s()) {
+			list.add( new Property(element)
+);
 		}
 		return list;
 	}
 
-	public void addOwnedAttribute(
-			org.modeldriven.alf.uml.Property ownedAttribute) {
-		this.getBase().addOwnedAttribute(
-				ownedAttribute == null ? null : ((Property) ownedAttribute)
-						.getBase());
+	public void addOwnedAttribute
+( org.modeldriven.alf.uml.Property ownedAttribute) {
+		this.getBase().getOwnedAttribute
+s.add( ownedAttribute == null? null: ((Property)ownedAttribute).getBase()
+);
 	}
 
 }

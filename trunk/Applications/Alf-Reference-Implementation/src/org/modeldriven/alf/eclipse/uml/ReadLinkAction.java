@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class ReadLinkAction extends LinkAction implements
 		org.modeldriven.alf.uml.ReadLinkAction {
 	public ReadLinkAction() {
-		this(UMLFactory.eINSTANCE.createReadLinkAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createReadLinkAction());
 	}
 
-	public ReadLinkAction(
-			fUML.Syntax.Actions.IntermediateActions.ReadLinkAction base) {
+	public ReadLinkAction(org.eclipse.uml2.uml.ReadLinkAction base) {
 		super(base);
 	}
 

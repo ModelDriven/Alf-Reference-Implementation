@@ -5,11 +5,10 @@ import java.util.ArrayList;
 
 public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 	public Clause() {
-		this(UMLFactory.eINSTANCE.createClause());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createClause());
 	}
 
-	public Clause(
-			fUML.Syntax.Activities.CompleteStructuredActivities.Clause base) {
+	public Clause(org.eclipse.uml2.uml.Clause base) {
 		super(base);
 	}
 
@@ -17,64 +16,80 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 		return (org.eclipse.uml2.uml.Clause) this.base;
 	}
 
-	public List<org.modeldriven.alf.uml.ExecutableNode> getTest() {
-		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
-		for (org.eclipse.uml2.uml.ExecutableNode element : this.getBase()
-				.getTest()) {
-			list.add(new ExecutableNode(element));
+	public List< org.modeldriven.alf.uml.ExecutableNode> getTest
+() {
+		List< org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList< org.modeldriven.alf.uml.ExecutableNode>();
+		for (org.eclipse.uml2.uml.ExecutableNode
+ element: this.getBase().getTest
+s()) {
+			list.add( new ExecutableNode(element)
+);
 		}
 		return list;
 	}
 
-	public void addTest(org.modeldriven.alf.uml.ExecutableNode test) {
-		this.getBase().addTest(
-				test == null ? null : ((ExecutableNode) test).getBase());
+	public void addTest
+( org.modeldriven.alf.uml.ExecutableNode test) {
+		this.getBase().getTest
+s.add( test == null? null: ((ExecutableNode)test).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.ExecutableNode> getBody() {
-		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
-		for (org.eclipse.uml2.uml.ExecutableNode element : this.getBase()
-				.getBody()) {
-			list.add(new ExecutableNode(element));
+	public List< org.modeldriven.alf.uml.ExecutableNode> getBody
+() {
+		List< org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList< org.modeldriven.alf.uml.ExecutableNode>();
+		for (org.eclipse.uml2.uml.ExecutableNode
+ element: this.getBase().getBody
+s()) {
+			list.add( new ExecutableNode(element)
+);
 		}
 		return list;
 	}
 
-	public void addBody(org.modeldriven.alf.uml.ExecutableNode body) {
-		this.getBase().addBody(
-				body == null ? null : ((ExecutableNode) body).getBase());
+	public void addBody
+( org.modeldriven.alf.uml.ExecutableNode body) {
+		this.getBase().getBody
+s.add( body == null? null: ((ExecutableNode)body).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.Clause> getPredecessorClause() {
-		List<org.modeldriven.alf.uml.Clause> list = new ArrayList<org.modeldriven.alf.uml.Clause>();
-		for (org.eclipse.uml2.uml.Clause element : this.getBase()
-				.getPredecessorClause()) {
-			list.add(new Clause(element));
+	public List< org.modeldriven.alf.uml.Clause> getPredecessorClause
+() {
+		List< org.modeldriven.alf.uml.Clause> list = new ArrayList< org.modeldriven.alf.uml.Clause>();
+		for (org.eclipse.uml2.uml.Clause
+ element: this.getBase().getPredecessorClause
+s()) {
+			list.add( new Clause(element)
+);
 		}
 		return list;
 	}
 
-	public void addPredecessorClause(
-			org.modeldriven.alf.uml.Clause predecessorClause) {
-		this.getBase().addPredecessorClause(
-				predecessorClause == null ? null : ((Clause) predecessorClause)
-						.getBase());
+	public void addPredecessorClause
+( org.modeldriven.alf.uml.Clause predecessorClause) {
+		this.getBase().getPredecessorClause
+s.add( predecessorClause == null? null: ((Clause)predecessorClause).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.Clause> getSuccessorClause() {
-		List<org.modeldriven.alf.uml.Clause> list = new ArrayList<org.modeldriven.alf.uml.Clause>();
-		for (org.eclipse.uml2.uml.Clause element : this.getBase()
-				.getSuccessorClause()) {
-			list.add(new Clause(element));
+	public List< org.modeldriven.alf.uml.Clause> getSuccessorClause
+() {
+		List< org.modeldriven.alf.uml.Clause> list = new ArrayList< org.modeldriven.alf.uml.Clause>();
+		for (org.eclipse.uml2.uml.Clause
+ element: this.getBase().getSuccessorClause
+s()) {
+			list.add( new Clause(element)
+);
 		}
 		return list;
 	}
 
-	public void addSuccessorClause(
-			org.modeldriven.alf.uml.Clause successorClause) {
-		this.getBase().addSuccessorClause(
-				successorClause == null ? null : ((Clause) successorClause)
-						.getBase());
+	public void addSuccessorClause
+( org.modeldriven.alf.uml.Clause successorClause) {
+		this.getBase().getSuccessorClause
+s.add( successorClause == null? null: ((Clause)successorClause).getBase()
+);
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getDecider() {
@@ -86,18 +101,23 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 				decider == null ? null : ((OutputPin) decider).getBase());
 	}
 
-	public List<org.modeldriven.alf.uml.OutputPin> getBodyOutput() {
-		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
-				.getBodyOutput()) {
-			list.add(new OutputPin(element));
+	public List< org.modeldriven.alf.uml.OutputPin> getBodyOutput
+() {
+		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin
+ element: this.getBase().getBodyOutput
+s()) {
+			list.add( new OutputPin(element)
+);
 		}
 		return list;
 	}
 
-	public void addBodyOutput(org.modeldriven.alf.uml.OutputPin bodyOutput) {
-		this.getBase().addBodyOutput(
-				bodyOutput == null ? null : ((OutputPin) bodyOutput).getBase());
+	public void addBodyOutput
+( org.modeldriven.alf.uml.OutputPin bodyOutput) {
+		this.getBase().getBodyOutput
+s.add( bodyOutput == null? null: ((OutputPin)bodyOutput).getBase()
+);
 	}
 
 }

@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class FunctionBehavior extends OpaqueBehavior implements
 		org.modeldriven.alf.uml.FunctionBehavior {
 	public FunctionBehavior() {
-		this(UMLFactory.eINSTANCE.createFunctionBehavior());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createFunctionBehavior());
 	}
 
-	public FunctionBehavior(
-			fUML.Syntax.CommonBehaviors.BasicBehaviors.FunctionBehavior base) {
+	public FunctionBehavior(org.eclipse.uml2.uml.FunctionBehavior base) {
 		super(base);
 	}
 

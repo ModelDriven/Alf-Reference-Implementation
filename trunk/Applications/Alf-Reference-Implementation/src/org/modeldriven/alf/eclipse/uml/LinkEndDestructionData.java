@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class LinkEndDestructionData extends LinkEndData implements
 		org.modeldriven.alf.uml.LinkEndDestructionData {
 	public LinkEndDestructionData() {
-		this(UMLFactory.eINSTANCE.createLinkEndDestructionData());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createLinkEndDestructionData());
 	}
 
 	public LinkEndDestructionData(
-			fUML.Syntax.Actions.IntermediateActions.LinkEndDestructionData base) {
+			org.eclipse.uml2.uml.LinkEndDestructionData base) {
 		super(base);
 	}
 

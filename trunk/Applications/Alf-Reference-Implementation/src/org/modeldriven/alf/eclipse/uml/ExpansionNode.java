@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class ExpansionNode extends ObjectNode implements
 		org.modeldriven.alf.uml.ExpansionNode {
 	public ExpansionNode() {
-		this(UMLFactory.eINSTANCE.createExpansionNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createExpansionNode());
 	}
 
-	public ExpansionNode(
-			fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionNode base) {
+	public ExpansionNode(org.eclipse.uml2.uml.ExpansionNode base) {
 		super(base);
 	}
 

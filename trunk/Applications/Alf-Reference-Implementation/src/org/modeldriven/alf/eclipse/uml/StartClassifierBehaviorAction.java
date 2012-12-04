@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class StartClassifierBehaviorAction extends Action implements
 		org.modeldriven.alf.uml.StartClassifierBehaviorAction {
 	public StartClassifierBehaviorAction() {
-		this(UMLFactory.eINSTANCE.createStartClassifierBehaviorAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createStartClassifierBehaviorAction());
 	}
 
 	public StartClassifierBehaviorAction(
-			fUML.Syntax.Actions.CompleteActions.StartClassifierBehaviorAction base) {
+			org.eclipse.uml2.uml.StartClassifierBehaviorAction base) {
 		super(base);
 	}
 

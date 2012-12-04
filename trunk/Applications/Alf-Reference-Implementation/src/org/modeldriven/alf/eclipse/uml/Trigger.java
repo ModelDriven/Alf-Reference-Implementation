@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Trigger extends NamedElement implements
 		org.modeldriven.alf.uml.Trigger {
 	public Trigger() {
-		this(UMLFactory.eINSTANCE.createTrigger());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createTrigger());
 	}
 
-	public Trigger(fUML.Syntax.CommonBehaviors.Communications.Trigger base) {
+	public Trigger(org.eclipse.uml2.uml.Trigger base) {
 		super(base);
 	}
 

@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class LiteralSpecification extends ValueSpecification implements
 		org.modeldriven.alf.uml.LiteralSpecification {
 
-	public LiteralSpecification(
-			fUML.Syntax.Classes.Kernel.LiteralSpecification base) {
+	public LiteralSpecification(org.eclipse.uml2.uml.LiteralSpecification base) {
 		super(base);
 	}
 

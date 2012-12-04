@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class MessageEvent extends Event implements
 		org.modeldriven.alf.uml.MessageEvent {
 
-	public MessageEvent(
-			fUML.Syntax.CommonBehaviors.Communications.MessageEvent base) {
+	public MessageEvent(org.eclipse.uml2.uml.MessageEvent base) {
 		super(base);
 	}
 

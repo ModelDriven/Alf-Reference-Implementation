@@ -7,7 +7,7 @@ public class StructuralFeatureAction extends Action implements
 		org.modeldriven.alf.uml.StructuralFeatureAction {
 
 	public StructuralFeatureAction(
-			fUML.Syntax.Actions.IntermediateActions.StructuralFeatureAction base) {
+			org.eclipse.uml2.uml.StructuralFeatureAction base) {
 		super(base);
 	}
 

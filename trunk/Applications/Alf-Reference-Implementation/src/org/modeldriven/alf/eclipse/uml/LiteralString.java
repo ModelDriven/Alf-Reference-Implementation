@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class LiteralString extends LiteralSpecification implements
 		org.modeldriven.alf.uml.LiteralString {
 	public LiteralString() {
-		this(UMLFactory.eINSTANCE.createLiteralString());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createLiteralString());
 	}
 
-	public LiteralString(fUML.Syntax.Classes.Kernel.LiteralString base) {
+	public LiteralString(org.eclipse.uml2.uml.LiteralString base) {
 		super(base);
 	}
 

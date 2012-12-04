@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class NamedElement extends Element implements
 		org.modeldriven.alf.uml.NamedElement {
 
-	public NamedElement(fUML.Syntax.Classes.Kernel.NamedElement base) {
+	public NamedElement(org.eclipse.uml2.uml.NamedElement base) {
 		super(base);
 	}
 

@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Reception extends BehavioralFeature implements
 		org.modeldriven.alf.uml.Reception {
 	public Reception() {
-		this(UMLFactory.eINSTANCE.createReception());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createReception());
 	}
 
-	public Reception(fUML.Syntax.CommonBehaviors.Communications.Reception base) {
+	public Reception(org.eclipse.uml2.uml.Reception base) {
 		super(base);
 	}
 

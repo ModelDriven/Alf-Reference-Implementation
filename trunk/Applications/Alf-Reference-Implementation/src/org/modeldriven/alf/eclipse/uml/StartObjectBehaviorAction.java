@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class StartObjectBehaviorAction extends CallAction implements
 		org.modeldriven.alf.uml.StartObjectBehaviorAction {
 	public StartObjectBehaviorAction() {
-		this(UMLFactory.eINSTANCE.createStartObjectBehaviorAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createStartObjectBehaviorAction());
 	}
 
 	public StartObjectBehaviorAction(
-			fUML.Syntax.Actions.CompleteActions.StartObjectBehaviorAction base) {
+			org.eclipse.uml2.uml.StartObjectBehaviorAction base) {
 		super(base);
 	}
 

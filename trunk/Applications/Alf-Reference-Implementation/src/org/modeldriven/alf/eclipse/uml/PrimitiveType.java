@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class PrimitiveType extends DataType implements
 		org.modeldriven.alf.uml.PrimitiveType {
 	public PrimitiveType() {
-		this(UMLFactory.eINSTANCE.createPrimitiveType());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createPrimitiveType());
 	}
 
-	public PrimitiveType(fUML.Syntax.Classes.Kernel.PrimitiveType base) {
+	public PrimitiveType(org.eclipse.uml2.uml.PrimitiveType base) {
 		super(base);
 	}
 

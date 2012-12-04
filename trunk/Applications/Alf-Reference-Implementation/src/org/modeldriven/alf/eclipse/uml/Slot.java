@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 public class Slot extends Element implements org.modeldriven.alf.uml.Slot {
 	public Slot() {
-		this(UMLFactory.eINSTANCE.createSlot());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createSlot());
 	}
 
-	public Slot(fUML.Syntax.Classes.Kernel.Slot base) {
+	public Slot(org.eclipse.uml2.uml.Slot base) {
 		super(base);
 	}
 
@@ -31,18 +31,23 @@ public class Slot extends Element implements org.modeldriven.alf.uml.Slot {
 						: ((StructuralFeature) definingFeature).getBase());
 	}
 
-	public List<org.modeldriven.alf.uml.ValueSpecification> getValue() {
-		List<org.modeldriven.alf.uml.ValueSpecification> list = new ArrayList<org.modeldriven.alf.uml.ValueSpecification>();
-		for (org.eclipse.uml2.uml.ValueSpecification element : this.getBase()
-				.getValue()) {
-			list.add(new ValueSpecification(element));
+	public List< org.modeldriven.alf.uml.ValueSpecification> getValue
+() {
+		List< org.modeldriven.alf.uml.ValueSpecification> list = new ArrayList< org.modeldriven.alf.uml.ValueSpecification>();
+		for (org.eclipse.uml2.uml.ValueSpecification
+ element: this.getBase().getValue
+s()) {
+			list.add( new ValueSpecification(element)
+);
 		}
 		return list;
 	}
 
-	public void addValue(org.modeldriven.alf.uml.ValueSpecification value) {
-		this.getBase().addValue(
-				value == null ? null : ((ValueSpecification) value).getBase());
+	public void addValue
+( org.modeldriven.alf.uml.ValueSpecification value) {
+		this.getBase().getValue
+s.add( value == null? null: ((ValueSpecification)value).getBase()
+);
 	}
 
 }

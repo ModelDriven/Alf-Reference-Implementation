@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Behavior extends Class_ implements
 		org.modeldriven.alf.uml.Behavior {
 
-	public Behavior(fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior base) {
+	public Behavior(org.eclipse.uml2.uml.Behavior base) {
 		super(base);
 	}
 
@@ -33,20 +33,23 @@ public class Behavior extends Class_ implements
 						: ((BehavioralFeature) specification).getBase());
 	}
 
-	public List<org.modeldriven.alf.uml.Parameter> getOwnedParameter() {
-		List<org.modeldriven.alf.uml.Parameter> list = new ArrayList<org.modeldriven.alf.uml.Parameter>();
-		for (org.eclipse.uml2.uml.Parameter element : this.getBase()
-				.getOwnedParameter()) {
-			list.add(new Parameter(element));
+	public List< org.modeldriven.alf.uml.Parameter> getOwnedParameter
+() {
+		List< org.modeldriven.alf.uml.Parameter> list = new ArrayList< org.modeldriven.alf.uml.Parameter>();
+		for (org.eclipse.uml2.uml.Parameter
+ element: this.getBase().getOwnedParameter
+s()) {
+			list.add( new Parameter(element)
+);
 		}
 		return list;
 	}
 
-	public void addOwnedParameter(
-			org.modeldriven.alf.uml.Parameter ownedParameter) {
-		this.getBase().addOwnedParameter(
-				ownedParameter == null ? null : ((Parameter) ownedParameter)
-						.getBase());
+	public void addOwnedParameter
+( org.modeldriven.alf.uml.Parameter ownedParameter) {
+		this.getBase().getOwnedParameter
+s.add( ownedParameter == null? null: ((Parameter)ownedParameter).getBase()
+);
 	}
 
 	public org.modeldriven.alf.uml.BehavioredClassifier getContext() {

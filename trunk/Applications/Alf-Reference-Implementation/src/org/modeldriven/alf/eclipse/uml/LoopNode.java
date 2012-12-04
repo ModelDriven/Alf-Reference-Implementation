@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class LoopNode extends StructuredActivityNode implements
 		org.modeldriven.alf.uml.LoopNode {
 	public LoopNode() {
-		this(UMLFactory.eINSTANCE.createLoopNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createLoopNode());
 	}
 
-	public LoopNode(
-			fUML.Syntax.Activities.CompleteStructuredActivities.LoopNode base) {
+	public LoopNode(org.eclipse.uml2.uml.LoopNode base) {
 		super(base);
 	}
 
@@ -35,108 +34,137 @@ public class LoopNode extends StructuredActivityNode implements
 				decider == null ? null : ((OutputPin) decider).getBase());
 	}
 
-	public List<org.modeldriven.alf.uml.ExecutableNode> getTest() {
-		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
-		for (org.eclipse.uml2.uml.ExecutableNode element : this.getBase()
-				.getTest()) {
-			list.add(new ExecutableNode(element));
+	public List< org.modeldriven.alf.uml.ExecutableNode> getTest
+() {
+		List< org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList< org.modeldriven.alf.uml.ExecutableNode>();
+		for (org.eclipse.uml2.uml.ExecutableNode
+ element: this.getBase().getTest
+s()) {
+			list.add( new ExecutableNode(element)
+);
 		}
 		return list;
 	}
 
-	public void addTest(org.modeldriven.alf.uml.ExecutableNode test) {
-		this.getBase().addTest(
-				test == null ? null : ((ExecutableNode) test).getBase());
+	public void addTest
+( org.modeldriven.alf.uml.ExecutableNode test) {
+		this.getBase().getTest
+s.add( test == null? null: ((ExecutableNode)test).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.OutputPin> getBodyOutput() {
-		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
-				.getBodyOutput()) {
-			list.add(new OutputPin(element));
+	public List< org.modeldriven.alf.uml.OutputPin> getBodyOutput
+() {
+		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin
+ element: this.getBase().getBodyOutput
+s()) {
+			list.add( new OutputPin(element)
+);
 		}
 		return list;
 	}
 
-	public void addBodyOutput(org.modeldriven.alf.uml.OutputPin bodyOutput) {
-		this.getBase().addBodyOutput(
-				bodyOutput == null ? null : ((OutputPin) bodyOutput).getBase());
+	public void addBodyOutput
+( org.modeldriven.alf.uml.OutputPin bodyOutput) {
+		this.getBase().getBodyOutput
+s.add( bodyOutput == null? null: ((OutputPin)bodyOutput).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.InputPin> getLoopVariableInput() {
-		List<org.modeldriven.alf.uml.InputPin> list = new ArrayList<org.modeldriven.alf.uml.InputPin>();
-		for (org.eclipse.uml2.uml.InputPin element : this.getBase()
-				.getLoopVariableInput()) {
-			list.add(new InputPin(element));
+	public List< org.modeldriven.alf.uml.InputPin> getLoopVariableInput
+() {
+		List< org.modeldriven.alf.uml.InputPin> list = new ArrayList< org.modeldriven.alf.uml.InputPin>();
+		for (org.eclipse.uml2.uml.InputPin
+ element: this.getBase().getLoopVariableInput
+s()) {
+			list.add( new InputPin(element)
+);
 		}
 		return list;
 	}
 
-	public void addLoopVariableInput(
-			org.modeldriven.alf.uml.InputPin loopVariableInput) {
-		this.getBase().addLoopVariableInput(
-				loopVariableInput == null ? null
-						: ((InputPin) loopVariableInput).getBase());
+	public void addLoopVariableInput
+( org.modeldriven.alf.uml.InputPin loopVariableInput) {
+		this.getBase().getLoopVariableInput
+s.add( loopVariableInput == null? null: ((InputPin)loopVariableInput).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.ExecutableNode> getBodyPart() {
-		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
-		for (org.eclipse.uml2.uml.ExecutableNode element : this.getBase()
-				.getBodyPart()) {
-			list.add(new ExecutableNode(element));
+	public List< org.modeldriven.alf.uml.ExecutableNode> getBodyPart
+() {
+		List< org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList< org.modeldriven.alf.uml.ExecutableNode>();
+		for (org.eclipse.uml2.uml.ExecutableNode
+ element: this.getBase().getBodyPart
+s()) {
+			list.add( new ExecutableNode(element)
+);
 		}
 		return list;
 	}
 
-	public void addBodyPart(org.modeldriven.alf.uml.ExecutableNode bodyPart) {
-		this.getBase()
-				.addBodyPart(
-						bodyPart == null ? null : ((ExecutableNode) bodyPart)
-								.getBase());
+	public void addBodyPart
+( org.modeldriven.alf.uml.ExecutableNode bodyPart) {
+		this.getBase().getBodyPart
+s.add( bodyPart == null? null: ((ExecutableNode)bodyPart).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.OutputPin> getResult() {
-		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
-				.getResult()) {
-			list.add(new OutputPin(element));
+	public List< org.modeldriven.alf.uml.OutputPin> getResult
+() {
+		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin
+ element: this.getBase().getResult
+s()) {
+			list.add( new OutputPin(element)
+);
 		}
 		return list;
 	}
 
-	public void addResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().addResult(
-				result == null ? null : ((OutputPin) result).getBase());
+	public void addResult
+( org.modeldriven.alf.uml.OutputPin result) {
+		this.getBase().getResult
+s.add( result == null? null: ((OutputPin)result).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.OutputPin> getLoopVariable() {
-		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
-				.getLoopVariable()) {
-			list.add(new OutputPin(element));
+	public List< org.modeldriven.alf.uml.OutputPin> getLoopVariable
+() {
+		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin
+ element: this.getBase().getLoopVariable
+s()) {
+			list.add( new OutputPin(element)
+);
 		}
 		return list;
 	}
 
-	public void addLoopVariable(org.modeldriven.alf.uml.OutputPin loopVariable) {
-		this.getBase().addLoopVariable(
-				loopVariable == null ? null : ((OutputPin) loopVariable)
-						.getBase());
+	public void addLoopVariable
+( org.modeldriven.alf.uml.OutputPin loopVariable) {
+		this.getBase().getLoopVariable
+s.add( loopVariable == null? null: ((OutputPin)loopVariable).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.ExecutableNode> getSetupPart() {
-		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
-		for (org.eclipse.uml2.uml.ExecutableNode element : this.getBase()
-				.getSetupPart()) {
-			list.add(new ExecutableNode(element));
+	public List< org.modeldriven.alf.uml.ExecutableNode> getSetupPart
+() {
+		List< org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList< org.modeldriven.alf.uml.ExecutableNode>();
+		for (org.eclipse.uml2.uml.ExecutableNode
+ element: this.getBase().getSetupPart
+s()) {
+			list.add( new ExecutableNode(element)
+);
 		}
 		return list;
 	}
 
-	public void addSetupPart(org.modeldriven.alf.uml.ExecutableNode setupPart) {
-		this.getBase().addSetupPart(
-				setupPart == null ? null : ((ExecutableNode) setupPart)
-						.getBase());
+	public void addSetupPart
+( org.modeldriven.alf.uml.ExecutableNode setupPart) {
+		this.getBase().getSetupPart
+s.add( setupPart == null? null: ((ExecutableNode)setupPart).getBase()
+);
 	}
 
 }

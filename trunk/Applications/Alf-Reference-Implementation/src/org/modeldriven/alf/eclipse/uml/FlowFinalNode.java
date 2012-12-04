@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class FlowFinalNode extends FinalNode implements
 		org.modeldriven.alf.uml.FlowFinalNode {
 	public FlowFinalNode() {
-		this(UMLFactory.eINSTANCE.createFlowFinalNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createFlowFinalNode());
 	}
 
-	public FlowFinalNode(
-			fUML.Syntax.Activities.IntermediateActivities.FlowFinalNode base) {
+	public FlowFinalNode(org.eclipse.uml2.uml.FlowFinalNode base) {
 		super(base);
 	}
 

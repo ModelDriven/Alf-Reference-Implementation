@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class LiteralBoolean extends LiteralSpecification implements
 		org.modeldriven.alf.uml.LiteralBoolean {
 	public LiteralBoolean() {
-		this(UMLFactory.eINSTANCE.createLiteralBoolean());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createLiteralBoolean());
 	}
 
-	public LiteralBoolean(fUML.Syntax.Classes.Kernel.LiteralBoolean base) {
+	public LiteralBoolean(org.eclipse.uml2.uml.LiteralBoolean base) {
 		super(base);
 	}
 

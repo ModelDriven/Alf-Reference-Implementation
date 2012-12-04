@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class MergeNode extends ControlNode implements
 		org.modeldriven.alf.uml.MergeNode {
 	public MergeNode() {
-		this(UMLFactory.eINSTANCE.createMergeNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createMergeNode());
 	}
 
-	public MergeNode(
-			fUML.Syntax.Activities.IntermediateActivities.MergeNode base) {
+	public MergeNode(org.eclipse.uml2.uml.MergeNode base) {
 		super(base);
 	}
 

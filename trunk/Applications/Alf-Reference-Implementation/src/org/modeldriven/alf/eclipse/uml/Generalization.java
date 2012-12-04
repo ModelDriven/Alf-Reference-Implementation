@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Generalization extends Element implements
 		org.modeldriven.alf.uml.Generalization {
 	public Generalization() {
-		this(UMLFactory.eINSTANCE.createGeneralization());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createGeneralization());
 	}
 
-	public Generalization(fUML.Syntax.Classes.Kernel.Generalization base) {
+	public Generalization(org.eclipse.uml2.uml.Generalization base) {
 		super(base);
 	}
 

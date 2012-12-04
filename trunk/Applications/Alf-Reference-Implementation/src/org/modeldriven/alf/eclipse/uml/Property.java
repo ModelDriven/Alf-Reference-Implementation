@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Property extends StructuralFeature implements
 		org.modeldriven.alf.uml.Property {
 	public Property() {
-		this(UMLFactory.eINSTANCE.createProperty());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createProperty());
 	}
 
-	public Property(fUML.Syntax.Classes.Kernel.Property base) {
+	public Property(org.eclipse.uml2.uml.Property base) {
 		super(base);
 	}
 

@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class ReadSelfAction extends Action implements
 		org.modeldriven.alf.uml.ReadSelfAction {
 	public ReadSelfAction() {
-		this(UMLFactory.eINSTANCE.createReadSelfAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createReadSelfAction());
 	}
 
-	public ReadSelfAction(
-			fUML.Syntax.Actions.IntermediateActions.ReadSelfAction base) {
+	public ReadSelfAction(org.eclipse.uml2.uml.ReadSelfAction base) {
 		super(base);
 	}
 

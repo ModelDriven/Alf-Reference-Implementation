@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class OpaqueBehavior extends Behavior implements
 		org.modeldriven.alf.uml.OpaqueBehavior {
 	public OpaqueBehavior() {
-		this(UMLFactory.eINSTANCE.createOpaqueBehavior());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createOpaqueBehavior());
 	}
 
-	public OpaqueBehavior(
-			fUML.Syntax.CommonBehaviors.BasicBehaviors.OpaqueBehavior base) {
+	public OpaqueBehavior(org.eclipse.uml2.uml.OpaqueBehavior base) {
 		super(base);
 	}
 
@@ -18,28 +17,40 @@ public class OpaqueBehavior extends Behavior implements
 		return (org.eclipse.uml2.uml.OpaqueBehavior) this.base;
 	}
 
-	public List<String> getBody() {
+	public List<String> getBody
+() {
 		List<String> list = new ArrayList<String>();
-		for (String element : this.getBase().getBody()) {
-			list.add(element);
+		for (String element: this.getBase().getBody
+s()) {
+			list.add(element
+);
 		}
 		return list;
 	}
 
-	public void addBody(String body) {
-		this.getBase().addBody(body);
+	public void addBody
+(String body) {
+		this.getBase().getBody
+s.add(body
+);
 	}
 
-	public List<String> getLanguage() {
+	public List<String> getLanguage
+() {
 		List<String> list = new ArrayList<String>();
-		for (String element : this.getBase().getLanguage()) {
-			list.add(element);
+		for (String element: this.getBase().getLanguage
+s()) {
+			list.add(element
+);
 		}
 		return list;
 	}
 
-	public void addLanguage(String language) {
-		this.getBase().addLanguage(language);
+	public void addLanguage
+(String language) {
+		this.getBase().getLanguage
+s.add(language
+);
 	}
 
 }

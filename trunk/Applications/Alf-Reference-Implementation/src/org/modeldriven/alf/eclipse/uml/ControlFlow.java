@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class ControlFlow extends ActivityEdge implements
 		org.modeldriven.alf.uml.ControlFlow {
 	public ControlFlow() {
-		this(UMLFactory.eINSTANCE.createControlFlow());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createControlFlow());
 	}
 
-	public ControlFlow(
-			fUML.Syntax.Activities.IntermediateActivities.ControlFlow base) {
+	public ControlFlow(org.eclipse.uml2.uml.ControlFlow base) {
 		super(base);
 	}
 

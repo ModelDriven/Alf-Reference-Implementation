@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class InvocationAction extends Action implements
 		org.modeldriven.alf.uml.InvocationAction {
 
-	public InvocationAction(
-			fUML.Syntax.Actions.BasicActions.InvocationAction base) {
+	public InvocationAction(org.eclipse.uml2.uml.InvocationAction base) {
 		super(base);
 	}
 
@@ -15,18 +14,23 @@ public class InvocationAction extends Action implements
 		return (org.eclipse.uml2.uml.InvocationAction) this.base;
 	}
 
-	public List<org.modeldriven.alf.uml.InputPin> getArgument() {
-		List<org.modeldriven.alf.uml.InputPin> list = new ArrayList<org.modeldriven.alf.uml.InputPin>();
-		for (org.eclipse.uml2.uml.InputPin element : this.getBase()
-				.getArgument()) {
-			list.add(new InputPin(element));
+	public List< org.modeldriven.alf.uml.InputPin> getArgument
+() {
+		List< org.modeldriven.alf.uml.InputPin> list = new ArrayList< org.modeldriven.alf.uml.InputPin>();
+		for (org.eclipse.uml2.uml.InputPin
+ element: this.getBase().getArgument
+s()) {
+			list.add( new InputPin(element)
+);
 		}
 		return list;
 	}
 
-	public void addArgument(org.modeldriven.alf.uml.InputPin argument) {
-		this.getBase().addArgument(
-				argument == null ? null : ((InputPin) argument).getBase());
+	public void addArgument
+( org.modeldriven.alf.uml.InputPin argument) {
+		this.getBase().getArgument
+s.add( argument == null? null: ((InputPin)argument).getBase()
+);
 	}
 
 }

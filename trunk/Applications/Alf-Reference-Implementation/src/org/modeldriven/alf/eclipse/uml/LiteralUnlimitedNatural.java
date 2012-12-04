@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class LiteralUnlimitedNatural extends LiteralSpecification implements
 		org.modeldriven.alf.uml.LiteralUnlimitedNatural {
 	public LiteralUnlimitedNatural() {
-		this(UMLFactory.eINSTANCE.createLiteralUnlimitedNatural());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createLiteralUnlimitedNatural());
 	}
 
 	public LiteralUnlimitedNatural(
-			fUML.Syntax.Classes.Kernel.LiteralUnlimitedNatural base) {
+			org.eclipse.uml2.uml.LiteralUnlimitedNatural base) {
 		super(base);
 	}
 

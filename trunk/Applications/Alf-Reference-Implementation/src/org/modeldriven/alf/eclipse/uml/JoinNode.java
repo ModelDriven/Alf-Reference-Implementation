@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class JoinNode extends ControlNode implements
 		org.modeldriven.alf.uml.JoinNode {
 	public JoinNode() {
-		this(UMLFactory.eINSTANCE.createJoinNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createJoinNode());
 	}
 
-	public JoinNode(fUML.Syntax.Activities.IntermediateActivities.JoinNode base) {
+	public JoinNode(org.eclipse.uml2.uml.JoinNode base) {
 		super(base);
 	}
 

@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class FinalNode extends ControlNode implements
 		org.modeldriven.alf.uml.FinalNode {
 
-	public FinalNode(
-			fUML.Syntax.Activities.IntermediateActivities.FinalNode base) {
+	public FinalNode(org.eclipse.uml2.uml.FinalNode base) {
 		super(base);
 	}
 

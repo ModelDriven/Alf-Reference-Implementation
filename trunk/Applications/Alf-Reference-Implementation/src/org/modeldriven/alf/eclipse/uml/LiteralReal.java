@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class LiteralReal extends LiteralSpecification implements
 		org.modeldriven.alf.uml.LiteralReal {
 	public LiteralReal() {
-		this(UMLFactory.eINSTANCE.createLiteralReal());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createLiteralReal());
 	}
 
-	public LiteralReal(fUML.Syntax.Classes.Kernel.LiteralReal base) {
+	public LiteralReal(org.eclipse.uml2.uml.LiteralReal base) {
 		super(base);
 	}
 
