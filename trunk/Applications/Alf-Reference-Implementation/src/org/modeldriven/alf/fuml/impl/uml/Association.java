@@ -71,7 +71,7 @@ public class Association extends Classifier implements
 
 	public void addNavigableOwnedEnd(
 			org.modeldriven.alf.uml.Property navigableOwnedEnd) {
-		this.getBase().addNavigableOwnedEnd(
+		this.getBase().addNavigableOwnedEnd(navigableOwnedEnd == null? null:
 				((Property) navigableOwnedEnd).getBase());
 	}
 
