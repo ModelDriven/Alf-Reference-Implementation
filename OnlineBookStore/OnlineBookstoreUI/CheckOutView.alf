@@ -1,0 +1,28 @@
+namespace OnlineBookstoreUI;
+
+active class CheckOutView specializes View {
+
+  @Create
+  public CheckOutView(in controller: CheckOutController) {
+    super(
+      title => "Shopping Cart > Check Out > Customer Information",
+      prompt => "Select a field to change, n for next, s for shopping cart, h for home or x to exit",
+      controller => controller
+    );
+  }
+  
+  protected display(): String[*] sequence {
+    controller = (CheckOutController)this.controller;
+    
+    WriteLine("1. Customer Email: " + controller.customerEmail);
+    WriteLine("2. Customer Name: " + NullToString(ToNameString(controller.customerName)));
+    WriteLine("3. Customer Phone: " + NullToString(controller.customerPhone));
+    WriteLine("4. Shipping Address:");
+    WriteLine("");
+    Write(ToAddressString(controller.shippingAddress));
+    
+    return String[]{"1", "2", "3", "4", "n", "s", "h", "x"};
+  }
+  
+} do {
+}

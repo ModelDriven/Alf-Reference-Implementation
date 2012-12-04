@@ -1,0 +1,55 @@
+namespace UserInterface;
+
+private import Alf::Library::PrimitiveBehaviors::StringFunctions::*;
+
+abstract active class View {
+
+  private title: String;
+  private display: String[*] sequence;
+  private prompt: String;
+  private choices: String[*];
+  
+  @Create
+  public View(
+    in title: String,
+    in prompt: String,
+    in controller: Controller
+  ) {
+    this.title = title;
+    this.prompt = prompt;
+    
+    ControlledBy.createLink(this, controller);
+  }
+  
+  protected abstract display(): String[*] sequence;
+  
+} do {
+
+  WriteLine("");
+  WriteLine("View: " + this.title);
+  WriteLine("");
+  choices = this.display();
+  WriteLine("");
+  
+  choiceIsInvalid = true;
+  do {
+    WriteLine(this.prompt);
+    StandardOutputChannel.allInstances().write("> ");
+    choice = ReadLine();
+    
+    for (validChoice in choices) {
+      if (choice == validChoice) {
+        choiceIsInvalid = false;
+      }
+    }
+    
+    if (choiceIsInvalid) {
+      WriteLine("");
+      WriteLine("Please choose one of the following:");
+    }
+  } while (choiceIsInvalid);
+  
+  this.controller.Select(choice);
+  
+}
+    

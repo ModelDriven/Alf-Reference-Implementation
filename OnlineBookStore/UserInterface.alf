@@ -1,0 +1,11 @@
+package UserInterface {
+
+    public abstract active class View;
+    public abstract active class Controller;
+    
+    public assoc ControlledBy {
+      public view: View[0..*];
+      public controller: Controller[1];
+    }
+
+}

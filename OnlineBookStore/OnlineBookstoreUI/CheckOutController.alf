@@ -1,0 +1,93 @@
+namespace OnlineBookstoreUI;
+
+private import Ordering::Customer;
+
+active class CheckOutController specializes Controller {
+
+  public customerEmail: InternetEmailAddress;
+  public customerName: PersonalName = new PersonalName(firstName => "", lastName => "");
+  public customerPhone: TelephoneNumber[0..1];
+  public shippingAddress: MailingAddress = new MailingAddress(addressLine1 => "");
+
+  @Create
+  public CheckOutController(in customerEmail: InternetEmailAddress) {
+    this.customerEmail = customerEmail;
+    
+    customer = Customer->
+      select selected (selected.email == customerEmail)[1];
+    if (customer->notEmpty()) {
+      this.customerName = customer.name;
+      this.customerPhone = customer.phone;
+      this.shippingAddress = customer.shippingAddress;
+    }
+  }
+  
+  @Create
+  public continue(in controller: CheckOutController) {
+    this.customerEmail = controller.customerEmail;
+    this.customerName = controller.customerName;
+    this.customerPhone = controller.customerPhone;
+    this.shippingAddress = controller.shippingAddress;
+  }
+
+  protected displayView() {
+    new CheckOutView(this);
+  }
+  
+  protected handleChoice(in choice: String): Controller[0..1] {
+    switch (choice) {
+      case "1": return this.updateCustomerEmail();
+      case "2": return this.updateCustomerName();
+      case "3": return this.updateCustomerPhone();
+      case "4": return this.updateShippingAddress();
+      case "n": return this.validate();
+      case "s": return new ShoppingCartController();
+      case "h": return new HomeController();
+      case "x": return null;
+    }
+  }
+  
+  private updateCustomerEmail(): Controller {
+    email = GetCustomerEmail();
+    if (email->notEmpty()) {
+      this.customerEmail == email;
+    }
+    return new CheckOutController::continue(this);
+  }
+  
+  private updateCustomerName(): Controller {
+    WriteLine("Enter your name:");
+    this.customerName = GetPersonalName();
+    return new CheckOutController::continue(this);
+  }
+  
+  private updateCustomerPhone(): Controller {
+    Write("Enter your phone number:");
+    phone = ReadLine();
+    if (phone != "") {
+      this.customerPhone = phone;
+    }
+    return new CheckOutController::continue(this);
+  }
+  
+  private updateShippingAddress(): Controller {
+    WriteLine("Enter your shipping address:");
+    this.shippingAddress = GetMailingAddress();
+    return new CheckOutController::continue(this);
+  }
+  
+  private validate(): Controller {
+    if (this.customerName.firstName == "" || this.customerName.lastName == "") {
+      WriteLine("*** Both your first and last are required. ***");
+    } else if (this.customerPhone->isEmpty()) {
+      WriteLine("*** Your telephone number is required. ***");
+    } else if (this.shippingAddress.addressLine1 == "") {
+      WriteLine("*** Your shipping address must include a first address line. ***");
+    } else {
+      return new PaymentController(this);
+    }
+    return new CheckOutController::continue(this);
+  }
+  
+} do {
+}

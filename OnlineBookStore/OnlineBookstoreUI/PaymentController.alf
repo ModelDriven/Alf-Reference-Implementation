@@ -1,0 +1,106 @@
+namespace OnlineBookstoreUI;
+
+private import Ordering::ShoppingCart;
+
+active class PaymentController specializes Controller {
+
+  public cardholderName: PersonalName;
+  public accountNumber: BankCardAccountNumber[0..1];
+  public cardExpirationDate: MonthYear[0..1];
+  public billingAddress: MailingAddress;
+
+  public previous: CheckOutController;
+  
+  @Create
+  public PaymentController(in previous: CheckOutController) {
+    this.cardholderName = previous.customerName;
+    this.billingAddress = previous.shippingAddress;
+    this.previous = previous;
+  }
+  
+  @Create
+  public continue(in controller: PaymentController) {
+    this.cardholderName = controller.cardholderName;
+    this.accountNumber = controller.accountNumber;
+    this.cardExpirationDate = controller.cardExpirationDate;
+    this.billingAddress = controller.billingAddress;
+    this.previous = controller.previous;
+  }
+  
+  protected displayView() {
+    new PaymentView(this);
+  }
+  
+  protected handleChoice(in choice: String): Controller[0..1] {
+    switch (choice) {
+      case "1": return this.updateCardholderName();
+      case "2": return this.updateAccountNumber();
+      case "3": return this.updateCardExpirationDate();
+      case "4": return this.updateBillingAddress();
+      case "p": return this.placeOrder();
+      case "b": return new CheckOutController::continue(this.previous);
+      case "s": return new ShoppingCartController();
+      case "h": return new HomeController();
+      case "x": return null;
+    }
+  }
+
+  private updateCardholderName(): Controller {
+    WriteLine("Enter cardholder name:");
+    this.cardholderName = GetPersonalName();
+    return new PaymentController::continue(this);
+  }
+  
+  private updateAccountNumber(): Controller {
+    Write("Enter bank card account number:");
+    accountNumber = ReadLine();
+    if (accountNumber != "") {
+      this.accountNumber = accountNumber;
+    }
+    return new PaymentController::continue(this);
+  }
+  
+  private updateCardExpirationDate(): Controller {
+    WriteLine("Enter card expiration date:");
+    this.cardExpirationDate = GetMonthYear();
+    return new PaymentController::continue(this);
+  }
+  
+  private updateBillingAddress(): Controller {
+    Write("Enter billing address:");
+    this.billingAddress == GetMailingAddress();
+    return new PaymentController::continue(this);
+  }
+  
+  private placeOrder(): Controller {
+    if (this.cardholderName.firstName == "" || this.cardholderName.lastName == "") {
+      WriteLine("*** The cardholder first and last names are both required. ***");
+    } else if (this.accountNumber->isEmpty()) {
+      WriteLine("*** A bank card account number is required. ***");
+    } else if (this.cardExpirationDate->isEmpty()) {
+      WriteLine("*** The bank card expiration date is required. ***");
+    } else if (this.billingAddress.addressLine1 == "") {
+      WriteLine("*** The billing address must include a first address line. ***");
+    } else {
+      this.completeCheckOut();
+      return new HomeController();
+    }
+    return new PaymentController::continue(this);
+  }
+  
+  private completeCheckOut() {
+    cart = ShoppingCart->select s (s.isActive)[1];
+    cart.CheckOut(
+      accountNumber => this.accountNumber,
+      billingAddress => this.billingAddress,
+      cardExpirationDate => this.cardExpirationDate,
+      cardholderName => this.cardholderName,
+      customerEmail => this.previous.customerEmail,
+      customerName => this.previous.customerName,
+      customerPhone => this.previous.customerPhone,
+      shippingAddress => this.previous.shippingAddress
+    );
+  }  
+  
+} do {
+}

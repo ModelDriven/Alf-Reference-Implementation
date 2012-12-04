@@ -1,0 +1,32 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+
+active class ProductView specializes View {
+
+  @Create
+  public ProductView (
+    in title: String,
+    in controller: ProductController) {
+    super(
+      title => title,
+      prompt => "Type a to add to cart, h for home or x to exit.",
+      controller => controller
+    );
+  }
+  
+  protected display(): String[*] sequence {
+    product = ((ProductController)this.controller).product;
+    
+    WriteLine(product.productName);
+    WriteLine("");    
+    WriteLine("Description:");
+    WriteWrapped(product.description, 80);
+    WriteLine("");
+    WriteLine("Price: " + DomainDataTypes::ToMoneyString(product.unitPrice));
+    
+    return String[]{"a", "h", "x"};
+  }
+  
+} do {
+}

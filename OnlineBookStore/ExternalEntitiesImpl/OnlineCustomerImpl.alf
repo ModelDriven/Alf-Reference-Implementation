@@ -1,0 +1,27 @@
+namespace ExternalEntitiesImpl;
+
+active class OnlineCustomerImpl specializes OnlineCustomer {
+
+  private activity SendMessage(
+    in customerEmail: InternetEmailAddress,
+    in message: String
+  ) {
+    WriteLine(">>>> Message to: " + customerEmail);
+    WriteLine(">>>> " + message);
+  }
+  
+} do {
+
+  while (true) {
+  
+    accept (chargeDeclined: ChargeDeclined) {
+      SendMessage(chargeDeclined.customerEmail, "CHARGE DECLINED");
+    } or accept (chargeApproved: ChargeApproved) {
+      SendMessage(chargeApproved.customerEmail, "CHARGE APPROVED");
+    } or accept (orderReportedDelivered: OrderReportedDelivered) {
+      SendMessage(orderReportedDelivered.customerEmail, "ORDER DELIVERED");
+    }
+  
+  }
+
+}

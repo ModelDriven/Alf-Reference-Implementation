@@ -1,0 +1,181 @@
+private import Alf::Library::PrimitiveBehaviors::StringFunctions::*;
+private import DomainDataTypes::*;
+
+package Utility {
+
+  public activity BlankToNull(in string: String): String[0..1] {
+    return string == ""? null: string;
+  }
+
+  public activity NullToString(in string: String[0..1]): String {
+    return string == null? "": string;
+  }
+  
+  public activity Ask(in query: String): Boolean {
+    Write(query + " (y or n)?");
+    answer = ReadLine();
+    while (answer !="y" && answer != "n") {
+      Write("Please respond y or n:");
+      answer = ReadLine();
+    }
+    return answer == "y";
+  }
+  
+  public activity GetCustomerEmail(): InternetEmailAddress[0..1] {
+    do {
+      Write("Enter your email address:");
+      response = ReadLine();
+      if (response == "") {
+        return null;
+      } else if (IsValidEmail(response)) {
+        return response;
+      } else {
+        WriteLine("That is not a valid email address.\n");
+      }
+    } while (true);
+  }
+  
+  public activity IsValidEmail(in email: String): Boolean {
+    // Check that the given address contains exactly one "@".
+    foundOne = false;
+    for (i in 1..Size(email)) {
+      if (Substring(email, i, i) == "@") {
+        if (foundOne || i == 1 || i == Size(email)) {
+          return false;
+        }
+        foundOne = true;
+      }
+    }
+    return foundOne;
+  }
+  
+  public activity GetQuantity(
+    in message: String, 
+    in minimum: Count): Count[0..1] {
+    do {
+      Write(message);
+      response = ReadLine();
+      if (response == "") {
+        return null;
+      }
+      quantity = IntegerFunctions::ToInteger(response);
+      if (quantity->isEmpty() || quantity < minimum) {
+        WriteLine("That is not a valid quantity.\n");
+      } else {        
+        return quantity;
+      }
+    } while (true);
+  }
+  
+  public activity GetPersonalName(): PersonalName {
+    Write("  Title:"); title = BlankToNull(ReadLine());
+    Write("  First name:"); firstName = ReadLine();
+    Write("  Middle name:"); middleName = BlankToNull(ReadLine());
+    Write("  Last name:"); lastName = ReadLine();
+    Write("  Suffix:"); suffix = BlankToNull(ReadLine());
+    return new PersonalName(title, firstName, middleName, lastName, suffix);
+  }
+  
+  public activity GetMailingAddress(): MailingAddress {
+    Write("  Address Line 1:"); addressLine1 = ReadLine();
+    Write("  Address Line 2:"); addressLine2 = BlankToNull(ReadLine());
+    Write("  City:"); city = BlankToNull(ReadLine());
+    Write("  State Or Province:"); stateOrProvince = BlankToNull(ReadLine());
+    Write("  Postal Code:"); postalCode = BlankToNull(ReadLine());
+    Write("  Country:"); country = BlankToNull(ReadLine());
+    return new MailingAddress(
+      addressLine1, addressLine2, city, stateOrProvince, country, postalCode);
+  }
+
+  public activity GetMonthYear(): MonthYear[0..1] {
+    do {
+      Write("  Month:");
+      response = ReadLine();
+      if (response->isEmpty()) {
+        return null;
+      }
+      month = IntegerFunctions::ToInteger(response);
+      if (month->isEmpty() || month < 1 || month > 12) {
+        WriteLine("  That is not a valid month.\n");
+      }
+    } while (month->isEmpty() || month < 1 || month > 12);
+    
+    do {
+      Write("  Year:");
+      response = ReadLine();
+      if (response->isEmpty()) {
+        return null;
+      }
+      year = IntegerFunctions::ToInteger(response);
+      if (year->isEmpty() || year < 2000 || year > 2099) {
+        WriteLine("  That is not a valid year.\n");
+      }
+    } while (year->isEmpty() || year < 2000 || year > 2099);
+    
+    return new MonthYear(year, month);
+  }
+  
+  public activity Write(in data: any) {
+    StandardOutputChannel.allInstances().write(data);
+  }
+  
+  public activity WriteWrapped(in text: String, in length: Integer) {
+    remainingText = text;
+    n = Size(text);
+    startOfLine = StartOfWord(text, 0);
+    endOfLine = +0;
+    startOfWord = startOfLine;
+    while (endOfLine < n) {
+      if (startOfWord >= n) {
+        endOfWord = startOfWord;
+      } else {
+        endOfWord = EndOfWord(text, startOfWord);
+        if (endOfWord - startOfLine + 1 > length) {
+          WriteLine(Substring(text, startOfLine, endOfLine));
+          startOfLine = startOfWord;
+          startOfWord = StartOfWord(text, endOfWord);
+        } else if (Substring(text, endOfWord, endOfWord) == "\n") {
+          WriteLine(Substring(text, startOfLine, endOfWord));
+          startOfLine = StartOfWord(text, endOfWord);
+          startOfWord = startOfLine;
+        } else {
+          startOfWord = StartOfWord(text, endOfWord);
+        }
+      }
+      endOfLine = endOfWord;
+    }
+    WriteLine(Substring(text, startOfLine, endOfLine));
+  }
+  
+  private activity StartOfWord(in text: String, in start: Integer): Integer {
+    n = Size(text);
+    i = n + 1;
+    if (start < n) {
+      i = start;
+      do {
+        i++;
+        char = Substring(text, i, i);
+      } while (i <= n && char == " ");
+      if (char == " ") {
+        i = n + 1;
+      }
+    }
+    return i;
+  }
+  
+  // Precondition: start <= Size(text)
+  private activity EndOfWord(in text: String, in start: Integer): Integer {
+    n = Size(text);
+    j = start;
+    char = Substring(text, j, j);
+    while (j < n && char != " " && char != "\n") {
+      j++;
+      char = Substring(text, j, j);
+    }
+    if (char == " ") {
+      j--;
+    }
+    return j;
+  }  
+  
+}

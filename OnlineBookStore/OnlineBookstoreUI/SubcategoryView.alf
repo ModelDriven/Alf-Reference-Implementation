@@ -1,0 +1,30 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+
+active class SubcategoryView specializes View {
+
+  @Create
+  public SubcategoryView (
+    in title: String,
+    in controller: SubcategoryController) {
+    super(
+      title => title,
+      prompt => "Select a category, h for home, s for shopping cart or x to exit.",
+      controller => controller
+    );
+  }
+  
+  protected display(): String[*] sequence {
+    choices = String[]{"x", "h", "s"};
+    i = 1;
+    for (category in ((SubcategoryController)this.controller).subcategories) {
+      choice = IntegerFunctions::ToString(i++);
+      choices->add(choice);
+      WriteLine(choice + ". " + category.categoryName);
+    }    
+    return choices;
+  }
+  
+} do {
+}

@@ -1,0 +1,40 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+
+active class SubcategoryController specializes Controller {
+
+  public title: String;
+  public subcategories: ProductCategory[*] sequence;
+  
+  @Create
+  public SubcategoryController(
+    in title: String,
+    in category: ProductCategory
+  ) {
+    this.title = title + " > " + category.categoryName;
+    this.subcategories = category.'is divided into';
+  }
+  
+  protected displayView() {
+    new SubcategoryView(this.title, this);
+  }
+  
+  protected handleChoice(in choice: String): Controller[0..1] {
+    switch (choice) {
+      case "x": return null;
+      case "h": return new HomeController();
+      case "s": return new ShoppingCartController();
+      default: return this.showCategory(IntegerFunctions::ToInteger(choice));
+    }
+  }
+  
+  private showCategory(in choice: Integer): Controller {
+    category = this.subcategories->at(choice);
+    return category.'is divided into'->isEmpty()?
+      new ProductCategoryController(this.title, category):
+      new SubcategoryController(this.title, category);
+  }
+  
+} do {
+}

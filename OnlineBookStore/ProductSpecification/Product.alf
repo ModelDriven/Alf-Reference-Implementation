@@ -1,0 +1,101 @@
+namespace ProductSpecification;
+
+/**
+A Product is an item available for sale by the online store. The online store
+currently offers books (hardcover and paperback), CDs, tapes, videotapes and
+DVDs (all classified as "Recordings"), and computer software.
+ 
+New products can be made available by Marketing at any time. Likewise, the
+descriptions and prices of these produces can be changed as well. If a price
+change is made, it does not cause current orders to be re-priced. For that
+reason, when a ProductSelection is created (a customer selects product for an
+order), the price of the product is recorded as part of the ProductSelection
+(attribute unitPriceOfSelection). See the description of ProductSelection for
+more detail on this matter.
+*/
+abstract class Product {
+
+  /**
+  The UPC code of the product. These are provided by the manufacturer based on a
+  coding scheme established by a consortium of manufacturing organizations.
+  */
+  public productID: UniversalProductCode; // isID
+  
+  /**
+  The official name of the product. Since some kinds of Product have the same 
+  title for a number of different products (e.g., the VHS videocassette and the
+  DVD of the same movie have the same title), this is a derived attribute.
+  */
+  public productName: String;
+  
+  /**
+  The copyright date for the product as it is listed on the product. If a
+  product has more than one copyright date, we record the most recent
+  copyright date.
+  */
+  public copyright: Year;
+  
+  /**
+  The price at which the product is sold to customers. Note that this price can
+  change oer time. Each time a customer makes a product selection, the "unit
+  price per selection" for that selection is set to the unit price currently
+  in effect for the product. In that way, even if there are price changes, we
+  keep track of the actual price at which an item was sold at the time it was
+  sold.
+  */
+  public unitPrice: Money;
+  
+  /**
+  A short description of the product, usually provided by the publisher as part
+  of its marketing program.
+  */
+  public description: String;
+  
+  /**
+  A website associated with the product. Many wuthors now create websites to
+  provide supplemental information related to their books, including
+  downloadable software and utilities. Similarly, recordings and software
+  products also have their own websites.
+  */
+  public website: WebsiteURL[0..1];
+  
+  /**
+  States whether the product is available for sale and can be added to a Cart.
+  Products are generally never deleted, since we always need the reference to
+  the product for historical tracking. Instead, a product may be discontinued
+  and, as such, no longer available for ordering.
+  */
+  public currentlyAvailable: Boolean;
+  
+  @Create
+  public Product(
+    in productID: UniversalProductCode,
+    in productName: String,
+    in copyright: Year,
+    in unitPrice: Money,
+    in description: String,
+    in website: WebsiteURL[0..1],
+    in isStocked: Boolean,
+    in publisher: Publisher,
+    in productCategory: ProductCategory
+  ) {
+    if (isStocked) {
+      classify this to StockedProduct;
+    } else {
+      classify this to SpecialOrderProduct;
+    }
+    
+    this.productID = productID;
+    this.productName = productName;
+    this.copyright = copyright;
+    this.unitPrice = unitPrice;
+    this.description = description;
+    this.website = website;
+    
+    R1.createLink(publisher, this);
+    R15.createLink(productCategory, this);
+    
+    this.currentlyAvailable = true;    
+  }
+  
+}

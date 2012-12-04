@@ -1,0 +1,20 @@
+namespace ExternalEntitiesImpl;
+
+private import DomainDataTypes::BankCardApprovalCode;
+private import Ordering::CreditCardCharge;
+
+active class CreditCardCompanyImpl specializes CreditCardCompany {
+} do {
+
+  while (true) {
+  
+    accept(requestChargeApproval: RequestChargeApproval);
+    charge = CreditCardCharge->select selected (
+      selected.chargeID == requestChargeApproval.transactionID);
+    charge.ChargeProcessed(
+      resultCode => BankCardApprovalCode::approved
+    );
+    
+  }
+  
+}

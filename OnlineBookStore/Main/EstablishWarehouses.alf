@@ -1,0 +1,27 @@
+namespace Main;
+
+private import DomainDataTypes::*;
+private import Shipping::*;
+
+activity EstablishWarehouses() {
+
+  w1 = new Warehouse(
+    warehouseName => "East Coast",
+    warehouseLocation => new MailingAddress(
+      addressLine1 => "",
+      city => "New York",
+      stateOrProvince => "NY",
+      country => "USA"
+    )
+  );
+  
+  c1 = new ShippingClerk(
+    clerkName => new PersonalName(
+      firstName => "John",
+      lastName => "Smith"
+    ),
+    warehouse => w1
+  );
+  c1.StartShipping();
+  
+}
