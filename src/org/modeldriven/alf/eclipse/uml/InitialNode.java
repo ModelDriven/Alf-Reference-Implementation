@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class InitialNode extends ControlNode implements
 		org.modeldriven.alf.uml.InitialNode {
 	public InitialNode() {
-		this(UMLFactory.eINSTANCE.createInitialNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createInitialNode());
 	}
 
-	public InitialNode(
-			fUML.Syntax.Activities.IntermediateActivities.InitialNode base) {
+	public InitialNode(org.eclipse.uml2.uml.InitialNode base) {
 		super(base);
 	}
 

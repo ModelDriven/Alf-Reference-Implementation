@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class LiteralNull extends LiteralSpecification implements
 		org.modeldriven.alf.uml.LiteralNull {
 	public LiteralNull() {
-		this(UMLFactory.eINSTANCE.createLiteralNull());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createLiteralNull());
 	}
 
-	public LiteralNull(fUML.Syntax.Classes.Kernel.LiteralNull base) {
+	public LiteralNull(org.eclipse.uml2.uml.LiteralNull base) {
 		super(base);
 	}
 

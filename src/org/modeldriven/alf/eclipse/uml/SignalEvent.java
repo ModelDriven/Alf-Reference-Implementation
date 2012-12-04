@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class SignalEvent extends MessageEvent implements
 		org.modeldriven.alf.uml.SignalEvent {
 	public SignalEvent() {
-		this(UMLFactory.eINSTANCE.createSignalEvent());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createSignalEvent());
 	}
 
-	public SignalEvent(
-			fUML.Syntax.CommonBehaviors.Communications.SignalEvent base) {
+	public SignalEvent(org.eclipse.uml2.uml.SignalEvent base) {
 		super(base);
 	}
 

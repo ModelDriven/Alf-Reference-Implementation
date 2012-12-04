@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class ReduceAction extends Action implements
 		org.modeldriven.alf.uml.ReduceAction {
 	public ReduceAction() {
-		this(UMLFactory.eINSTANCE.createReduceAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createReduceAction());
 	}
 
-	public ReduceAction(fUML.Syntax.Actions.CompleteActions.ReduceAction base) {
+	public ReduceAction(org.eclipse.uml2.uml.ReduceAction base) {
 		super(base);
 	}
 

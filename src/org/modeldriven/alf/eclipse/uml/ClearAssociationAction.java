@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class ClearAssociationAction extends Action implements
 		org.modeldriven.alf.uml.ClearAssociationAction {
 	public ClearAssociationAction() {
-		this(UMLFactory.eINSTANCE.createClearAssociationAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createClearAssociationAction());
 	}
 
 	public ClearAssociationAction(
-			fUML.Syntax.Actions.IntermediateActions.ClearAssociationAction base) {
+			org.eclipse.uml2.uml.ClearAssociationAction base) {
 		super(base);
 	}
 

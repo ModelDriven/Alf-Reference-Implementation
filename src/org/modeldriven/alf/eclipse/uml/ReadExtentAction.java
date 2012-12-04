@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class ReadExtentAction extends Action implements
 		org.modeldriven.alf.uml.ReadExtentAction {
 	public ReadExtentAction() {
-		this(UMLFactory.eINSTANCE.createReadExtentAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createReadExtentAction());
 	}
 
-	public ReadExtentAction(
-			fUML.Syntax.Actions.CompleteActions.ReadExtentAction base) {
+	public ReadExtentAction(org.eclipse.uml2.uml.ReadExtentAction base) {
 		super(base);
 	}
 

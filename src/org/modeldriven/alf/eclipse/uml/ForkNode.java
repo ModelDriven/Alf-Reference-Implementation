@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class ForkNode extends ControlNode implements
 		org.modeldriven.alf.uml.ForkNode {
 	public ForkNode() {
-		this(UMLFactory.eINSTANCE.createForkNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createForkNode());
 	}
 
-	public ForkNode(fUML.Syntax.Activities.IntermediateActivities.ForkNode base) {
+	public ForkNode(org.eclipse.uml2.uml.ForkNode base) {
 		super(base);
 	}
 

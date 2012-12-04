@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class ControlNode extends ActivityNode implements
 		org.modeldriven.alf.uml.ControlNode {
 
-	public ControlNode(
-			fUML.Syntax.Activities.IntermediateActivities.ControlNode base) {
+	public ControlNode(org.eclipse.uml2.uml.ControlNode base) {
 		super(base);
 	}
 

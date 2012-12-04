@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 public class InputPin extends Pin implements org.modeldriven.alf.uml.InputPin {
 	public InputPin() {
-		this(UMLFactory.eINSTANCE.createInputPin());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createInputPin());
 	}
 
-	public InputPin(fUML.Syntax.Actions.BasicActions.InputPin base) {
+	public InputPin(org.eclipse.uml2.uml.InputPin base) {
 		super(base);
 	}
 

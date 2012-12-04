@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class CallBehaviorAction extends CallAction implements
 		org.modeldriven.alf.uml.CallBehaviorAction {
 	public CallBehaviorAction() {
-		this(UMLFactory.eINSTANCE.createCallBehaviorAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createCallBehaviorAction());
 	}
 
-	public CallBehaviorAction(
-			fUML.Syntax.Actions.BasicActions.CallBehaviorAction base) {
+	public CallBehaviorAction(org.eclipse.uml2.uml.CallBehaviorAction base) {
 		super(base);
 	}
 

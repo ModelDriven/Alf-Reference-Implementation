@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class PackageImport extends Element implements
 		org.modeldriven.alf.uml.PackageImport {
 	public PackageImport() {
-		this(UMLFactory.eINSTANCE.createPackageImport());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createPackageImport());
 	}
 
-	public PackageImport(fUML.Syntax.Classes.Kernel.PackageImport base) {
+	public PackageImport(org.eclipse.uml2.uml.PackageImport base) {
 		super(base);
 	}
 

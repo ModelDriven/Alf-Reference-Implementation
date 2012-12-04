@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Package extends Namespace implements
 		org.modeldriven.alf.uml.Package {
 	public Package() {
-		this(UMLFactory.eINSTANCE.createPackage());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createPackage());
 	}
 
-	public Package(fUML.Syntax.Classes.Kernel.Package base) {
+	public Package(org.eclipse.uml2.uml.Package base) {
 		super(base);
 	}
 
@@ -17,35 +17,45 @@ public class Package extends Namespace implements
 		return (org.eclipse.uml2.uml.Package) this.base;
 	}
 
-	public List<org.modeldriven.alf.uml.PackageableElement> getPackagedElement() {
-		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
-		for (org.eclipse.uml2.uml.PackageableElement element : this.getBase()
-				.getPackagedElement()) {
-			list.add(new PackageableElement(element));
+	public List< org.modeldriven.alf.uml.PackageableElement> getPackagedElement
+() {
+		List< org.modeldriven.alf.uml.PackageableElement> list = new ArrayList< org.modeldriven.alf.uml.PackageableElement>();
+		for (org.eclipse.uml2.uml.PackageableElement
+ element: this.getBase().getPackagedElement
+s()) {
+			list.add( new PackageableElement(element)
+);
 		}
 		return list;
 	}
 
-	public void addPackagedElement(
-			org.modeldriven.alf.uml.PackageableElement packagedElement) {
-		this.getBase().addPackagedElement(
-				packagedElement == null ? null
-						: ((PackageableElement) packagedElement).getBase());
+	public void addPackagedElement
+( org.modeldriven.alf.uml.PackageableElement packagedElement) {
+		this.getBase().getPackagedElement
+s.add( packagedElement == null? null: ((PackageableElement)packagedElement).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.Type> getOwnedType() {
-		List<org.modeldriven.alf.uml.Type> list = new ArrayList<org.modeldriven.alf.uml.Type>();
-		for (org.eclipse.uml2.uml.Type element : this.getBase().getOwnedType()) {
-			list.add(new Type(element));
+	public List< org.modeldriven.alf.uml.Type> getOwnedType
+() {
+		List< org.modeldriven.alf.uml.Type> list = new ArrayList< org.modeldriven.alf.uml.Type>();
+		for (org.eclipse.uml2.uml.Type
+ element: this.getBase().getOwnedType
+s()) {
+			list.add( new Type(element)
+);
 		}
 		return list;
 	}
 
-	public List<org.modeldriven.alf.uml.Package> getNestedPackage() {
-		List<org.modeldriven.alf.uml.Package> list = new ArrayList<org.modeldriven.alf.uml.Package>();
-		for (org.eclipse.uml2.uml.Package element : this.getBase()
-				.getNestedPackage()) {
-			list.add(new Package(element));
+	public List< org.modeldriven.alf.uml.Package> getNestedPackage
+() {
+		List< org.modeldriven.alf.uml.Package> list = new ArrayList< org.modeldriven.alf.uml.Package>();
+		for (org.eclipse.uml2.uml.Package
+ element: this.getBase().getNestedPackage
+s()) {
+			list.add( new Package(element)
+);
 		}
 		return list;
 	}

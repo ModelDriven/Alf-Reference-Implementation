@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class PackageableElement extends NamedElement implements
 		org.modeldriven.alf.uml.PackageableElement {
 
-	public PackageableElement(fUML.Syntax.Classes.Kernel.PackageableElement base) {
+	public PackageableElement(org.eclipse.uml2.uml.PackageableElement base) {
 		super(base);
 	}
 

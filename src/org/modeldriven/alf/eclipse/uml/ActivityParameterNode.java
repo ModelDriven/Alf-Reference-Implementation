@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class ActivityParameterNode extends ObjectNode implements
 		org.modeldriven.alf.uml.ActivityParameterNode {
 	public ActivityParameterNode() {
-		this(UMLFactory.eINSTANCE.createActivityParameterNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createActivityParameterNode());
 	}
 
-	public ActivityParameterNode(
-			fUML.Syntax.Activities.IntermediateActivities.ActivityParameterNode base) {
+	public ActivityParameterNode(org.eclipse.uml2.uml.ActivityParameterNode base) {
 		super(base);
 	}
 

@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class SendSignalAction extends InvocationAction implements
 		org.modeldriven.alf.uml.SendSignalAction {
 	public SendSignalAction() {
-		this(UMLFactory.eINSTANCE.createSendSignalAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createSendSignalAction());
 	}
 
-	public SendSignalAction(
-			fUML.Syntax.Actions.BasicActions.SendSignalAction base) {
+	public SendSignalAction(org.eclipse.uml2.uml.SendSignalAction base) {
 		super(base);
 	}
 

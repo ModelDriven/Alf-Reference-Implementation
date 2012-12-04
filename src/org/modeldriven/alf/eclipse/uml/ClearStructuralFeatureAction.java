@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class ClearStructuralFeatureAction extends StructuralFeatureAction
 		implements org.modeldriven.alf.uml.ClearStructuralFeatureAction {
 	public ClearStructuralFeatureAction() {
-		this(UMLFactory.eINSTANCE.createClearStructuralFeatureAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createClearStructuralFeatureAction());
 	}
 
 	public ClearStructuralFeatureAction(
-			fUML.Syntax.Actions.IntermediateActions.ClearStructuralFeatureAction base) {
+			org.eclipse.uml2.uml.ClearStructuralFeatureAction base) {
 		super(base);
 	}
 

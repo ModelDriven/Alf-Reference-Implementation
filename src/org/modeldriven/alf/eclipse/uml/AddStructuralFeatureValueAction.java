@@ -7,11 +7,12 @@ public class AddStructuralFeatureValueAction extends
 		WriteStructuralFeatureAction implements
 		org.modeldriven.alf.uml.AddStructuralFeatureValueAction {
 	public AddStructuralFeatureValueAction() {
-		this(UMLFactory.eINSTANCE.createAddStructuralFeatureValueAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createAddStructuralFeatureValueAction());
 	}
 
 	public AddStructuralFeatureValueAction(
-			fUML.Syntax.Actions.IntermediateActions.AddStructuralFeatureValueAction base) {
+			org.eclipse.uml2.uml.AddStructuralFeatureValueAction base) {
 		super(base);
 	}
 

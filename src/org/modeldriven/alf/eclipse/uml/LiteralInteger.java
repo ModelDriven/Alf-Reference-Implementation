@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class LiteralInteger extends LiteralSpecification implements
 		org.modeldriven.alf.uml.LiteralInteger {
 	public LiteralInteger() {
-		this(UMLFactory.eINSTANCE.createLiteralInteger());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createLiteralInteger());
 	}
 
-	public LiteralInteger(fUML.Syntax.Classes.Kernel.LiteralInteger base) {
+	public LiteralInteger(org.eclipse.uml2.uml.LiteralInteger base) {
 		super(base);
 	}
 

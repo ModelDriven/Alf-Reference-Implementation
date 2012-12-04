@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class ElementImport extends Element implements
 		org.modeldriven.alf.uml.ElementImport {
 	public ElementImport() {
-		this(UMLFactory.eINSTANCE.createElementImport());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createElementImport());
 	}
 
-	public ElementImport(fUML.Syntax.Classes.Kernel.ElementImport base) {
+	public ElementImport(org.eclipse.uml2.uml.ElementImport base) {
 		super(base);
 	}
 

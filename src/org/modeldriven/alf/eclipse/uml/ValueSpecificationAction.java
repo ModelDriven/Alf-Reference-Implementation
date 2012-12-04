@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class ValueSpecificationAction extends Action implements
 		org.modeldriven.alf.uml.ValueSpecificationAction {
 	public ValueSpecificationAction() {
-		this(UMLFactory.eINSTANCE.createValueSpecificationAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createValueSpecificationAction());
 	}
 
 	public ValueSpecificationAction(
-			fUML.Syntax.Actions.IntermediateActions.ValueSpecificationAction base) {
+			org.eclipse.uml2.uml.ValueSpecificationAction base) {
 		super(base);
 	}
 

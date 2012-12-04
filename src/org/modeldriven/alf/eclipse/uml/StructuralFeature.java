@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class StructuralFeature extends Feature implements
 		org.modeldriven.alf.uml.StructuralFeature {
 
-	public StructuralFeature(fUML.Syntax.Classes.Kernel.StructuralFeature base) {
+	public StructuralFeature(org.eclipse.uml2.uml.StructuralFeature base) {
 		super(base);
 	}
 

@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class InstanceValue extends ValueSpecification implements
 		org.modeldriven.alf.uml.InstanceValue {
 	public InstanceValue() {
-		this(UMLFactory.eINSTANCE.createInstanceValue());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createInstanceValue());
 	}
 
-	public InstanceValue(fUML.Syntax.Classes.Kernel.InstanceValue base) {
+	public InstanceValue(org.eclipse.uml2.uml.InstanceValue base) {
 		super(base);
 	}
 

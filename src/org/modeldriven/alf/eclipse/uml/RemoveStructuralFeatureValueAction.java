@@ -7,11 +7,12 @@ public class RemoveStructuralFeatureValueAction extends
 		WriteStructuralFeatureAction implements
 		org.modeldriven.alf.uml.RemoveStructuralFeatureValueAction {
 	public RemoveStructuralFeatureValueAction() {
-		this(UMLFactory.eINSTANCE.createRemoveStructuralFeatureValueAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createRemoveStructuralFeatureValueAction());
 	}
 
 	public RemoveStructuralFeatureValueAction(
-			fUML.Syntax.Actions.IntermediateActions.RemoveStructuralFeatureValueAction base) {
+			org.eclipse.uml2.uml.RemoveStructuralFeatureValueAction base) {
 		super(base);
 	}
 

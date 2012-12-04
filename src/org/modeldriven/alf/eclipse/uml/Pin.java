@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Pin extends ObjectNode implements org.modeldriven.alf.uml.Pin {
 
-	public Pin(fUML.Syntax.Actions.BasicActions.Pin base) {
+	public Pin(org.eclipse.uml2.uml.Pin base) {
 		super(base);
 	}
 

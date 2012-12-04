@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class ObjectNode extends ActivityNode implements
 		org.modeldriven.alf.uml.ObjectNode {
 
-	public ObjectNode(
-			fUML.Syntax.Activities.IntermediateActivities.ObjectNode base) {
+	public ObjectNode(org.eclipse.uml2.uml.ObjectNode base) {
 		super(base);
 	}
 

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class LinkEndCreationData extends LinkEndData implements
 		org.modeldriven.alf.uml.LinkEndCreationData {
 	public LinkEndCreationData() {
-		this(UMLFactory.eINSTANCE.createLinkEndCreationData());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createLinkEndCreationData());
 	}
 
-	public LinkEndCreationData(
-			fUML.Syntax.Actions.IntermediateActions.LinkEndCreationData base) {
+	public LinkEndCreationData(org.eclipse.uml2.uml.LinkEndCreationData base) {
 		super(base);
 	}
 

@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class ReclassifyObjectAction extends Action implements
 		org.modeldriven.alf.uml.ReclassifyObjectAction {
 	public ReclassifyObjectAction() {
-		this(UMLFactory.eINSTANCE.createReclassifyObjectAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createReclassifyObjectAction());
 	}
 
 	public ReclassifyObjectAction(
-			fUML.Syntax.Actions.CompleteActions.ReclassifyObjectAction base) {
+			org.eclipse.uml2.uml.ReclassifyObjectAction base) {
 		super(base);
 	}
 
@@ -26,20 +27,23 @@ public class ReclassifyObjectAction extends Action implements
 		this.getBase().setIsReplaceAll(isReplaceAll);
 	}
 
-	public List<org.modeldriven.alf.uml.Classifier> getOldClassifier() {
-		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
-		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
-				.getOldClassifier()) {
-			list.add(new Classifier(element));
+	public List< org.modeldriven.alf.uml.Classifier> getOldClassifier
+() {
+		List< org.modeldriven.alf.uml.Classifier> list = new ArrayList< org.modeldriven.alf.uml.Classifier>();
+		for (org.eclipse.uml2.uml.Classifier
+ element: this.getBase().getOldClassifier
+s()) {
+			list.add( new Classifier(element)
+);
 		}
 		return list;
 	}
 
-	public void addOldClassifier(
-			org.modeldriven.alf.uml.Classifier oldClassifier) {
-		this.getBase().addOldClassifier(
-				oldClassifier == null ? null : ((Classifier) oldClassifier)
-						.getBase());
+	public void addOldClassifier
+( org.modeldriven.alf.uml.Classifier oldClassifier) {
+		this.getBase().getOldClassifier
+s.add( oldClassifier == null? null: ((Classifier)oldClassifier).getBase()
+);
 	}
 
 	public org.modeldriven.alf.uml.InputPin getObject() {
@@ -51,20 +55,23 @@ public class ReclassifyObjectAction extends Action implements
 				object == null ? null : ((InputPin) object).getBase());
 	}
 
-	public List<org.modeldriven.alf.uml.Classifier> getNewClassifier() {
-		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
-		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
-				.getNewClassifier()) {
-			list.add(new Classifier(element));
+	public List< org.modeldriven.alf.uml.Classifier> getNewClassifier
+() {
+		List< org.modeldriven.alf.uml.Classifier> list = new ArrayList< org.modeldriven.alf.uml.Classifier>();
+		for (org.eclipse.uml2.uml.Classifier
+ element: this.getBase().getNewClassifier
+s()) {
+			list.add( new Classifier(element)
+);
 		}
 		return list;
 	}
 
-	public void addNewClassifier(
-			org.modeldriven.alf.uml.Classifier newClassifier) {
-		this.getBase().addNewClassifier(
-				newClassifier == null ? null : ((Classifier) newClassifier)
-						.getBase());
+	public void addNewClassifier
+( org.modeldriven.alf.uml.Classifier newClassifier) {
+		this.getBase().getNewClassifier
+s.add( newClassifier == null? null: ((Classifier)newClassifier).getBase()
+);
 	}
 
 }

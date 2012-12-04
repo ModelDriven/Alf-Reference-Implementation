@@ -7,7 +7,7 @@ public class WriteStructuralFeatureAction extends StructuralFeatureAction
 		implements org.modeldriven.alf.uml.WriteStructuralFeatureAction {
 
 	public WriteStructuralFeatureAction(
-			fUML.Syntax.Actions.IntermediateActions.WriteStructuralFeatureAction base) {
+			org.eclipse.uml2.uml.WriteStructuralFeatureAction base) {
 		super(base);
 	}
 

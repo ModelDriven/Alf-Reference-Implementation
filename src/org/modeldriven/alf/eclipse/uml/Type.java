@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Type extends PackageableElement implements
 		org.modeldriven.alf.uml.Type {
 
-	public Type(fUML.Syntax.Classes.Kernel.Type base) {
+	public Type(org.eclipse.uml2.uml.Type base) {
 		super(base);
 	}
 

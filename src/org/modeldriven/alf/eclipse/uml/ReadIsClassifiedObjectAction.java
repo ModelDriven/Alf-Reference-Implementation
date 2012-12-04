@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class ReadIsClassifiedObjectAction extends Action implements
 		org.modeldriven.alf.uml.ReadIsClassifiedObjectAction {
 	public ReadIsClassifiedObjectAction() {
-		this(UMLFactory.eINSTANCE.createReadIsClassifiedObjectAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createReadIsClassifiedObjectAction());
 	}
 
 	public ReadIsClassifiedObjectAction(
-			fUML.Syntax.Actions.CompleteActions.ReadIsClassifiedObjectAction base) {
+			org.eclipse.uml2.uml.ReadIsClassifiedObjectAction base) {
 		super(base);
 	}
 

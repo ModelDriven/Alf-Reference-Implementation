@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class CreateObjectAction extends Action implements
 		org.modeldriven.alf.uml.CreateObjectAction {
 	public CreateObjectAction() {
-		this(UMLFactory.eINSTANCE.createCreateObjectAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createCreateObjectAction());
 	}
 
-	public CreateObjectAction(
-			fUML.Syntax.Actions.IntermediateActions.CreateObjectAction base) {
+	public CreateObjectAction(org.eclipse.uml2.uml.CreateObjectAction base) {
 		super(base);
 	}
 

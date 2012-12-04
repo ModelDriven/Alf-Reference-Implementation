@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class MultiplicityElement extends Element implements
 		org.modeldriven.alf.uml.MultiplicityElement {
 	public MultiplicityElement() {
-		this(UMLFactory.eINSTANCE.createMultiplicityElement());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createMultiplicityElement());
 	}
 
-	public MultiplicityElement(
-			fUML.Syntax.Classes.Kernel.MultiplicityElement base) {
+	public MultiplicityElement(org.eclipse.uml2.uml.MultiplicityElement base) {
 		super(base);
 	}
 

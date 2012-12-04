@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class TestIdentityAction extends Action implements
 		org.modeldriven.alf.uml.TestIdentityAction {
 	public TestIdentityAction() {
-		this(UMLFactory.eINSTANCE.createTestIdentityAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createTestIdentityAction());
 	}
 
-	public TestIdentityAction(
-			fUML.Syntax.Actions.IntermediateActions.TestIdentityAction base) {
+	public TestIdentityAction(org.eclipse.uml2.uml.TestIdentityAction base) {
 		super(base);
 	}
 

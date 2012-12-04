@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class ExecutableNode extends ActivityNode implements
 		org.modeldriven.alf.uml.ExecutableNode {
 
-	public ExecutableNode(
-			fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode base) {
+	public ExecutableNode(org.eclipse.uml2.uml.ExecutableNode base) {
 		super(base);
 	}
 

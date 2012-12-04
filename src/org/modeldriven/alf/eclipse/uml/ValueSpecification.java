@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class ValueSpecification extends TypedElement implements
 		org.modeldriven.alf.uml.ValueSpecification {
 
-	public ValueSpecification(fUML.Syntax.Classes.Kernel.ValueSpecification base) {
+	public ValueSpecification(org.eclipse.uml2.uml.ValueSpecification base) {
 		super(base);
 	}
 

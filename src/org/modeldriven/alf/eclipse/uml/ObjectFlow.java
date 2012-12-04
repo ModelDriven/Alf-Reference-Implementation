@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class ObjectFlow extends ActivityEdge implements
 		org.modeldriven.alf.uml.ObjectFlow {
 	public ObjectFlow() {
-		this(UMLFactory.eINSTANCE.createObjectFlow());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createObjectFlow());
 	}
 
-	public ObjectFlow(
-			fUML.Syntax.Activities.IntermediateActivities.ObjectFlow base) {
+	public ObjectFlow(org.eclipse.uml2.uml.ObjectFlow base) {
 		super(base);
 	}
 

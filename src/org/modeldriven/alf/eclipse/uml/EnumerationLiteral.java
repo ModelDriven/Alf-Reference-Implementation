@@ -6,10 +6,11 @@ import java.util.ArrayList;
 public class EnumerationLiteral extends InstanceSpecification implements
 		org.modeldriven.alf.uml.EnumerationLiteral {
 	public EnumerationLiteral() {
-		this(UMLFactory.eINSTANCE.createEnumerationLiteral());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createEnumerationLiteral());
 	}
 
-	public EnumerationLiteral(fUML.Syntax.Classes.Kernel.EnumerationLiteral base) {
+	public EnumerationLiteral(org.eclipse.uml2.uml.EnumerationLiteral base) {
 		super(base);
 	}
 

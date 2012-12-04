@@ -6,8 +6,7 @@ import java.util.ArrayList;
 public class ActivityEdge extends RedefinableElement implements
 		org.modeldriven.alf.uml.ActivityEdge {
 
-	public ActivityEdge(
-			fUML.Syntax.Activities.IntermediateActivities.ActivityEdge base) {
+	public ActivityEdge(org.eclipse.uml2.uml.ActivityEdge base) {
 		super(base);
 	}
 

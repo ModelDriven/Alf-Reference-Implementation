@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Parameter extends TypedElement implements
 		org.modeldriven.alf.uml.Parameter {
 	public Parameter() {
-		this(UMLFactory.eINSTANCE.createParameter());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createParameter());
 	}
 
-	public Parameter(fUML.Syntax.Classes.Kernel.Parameter base) {
+	public Parameter(org.eclipse.uml2.uml.Parameter base) {
 		super(base);
 	}
 

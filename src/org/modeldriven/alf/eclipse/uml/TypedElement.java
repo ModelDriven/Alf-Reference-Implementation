@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class TypedElement extends NamedElement implements
 		org.modeldriven.alf.uml.TypedElement {
 	public TypedElement() {
-		this(UMLFactory.eINSTANCE.createTypedElement());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createTypedElement());
 	}
 
-	public TypedElement(fUML.Syntax.Classes.Kernel.TypedElement base) {
+	public TypedElement(org.eclipse.uml2.uml.TypedElement base) {
 		super(base);
 	}
 

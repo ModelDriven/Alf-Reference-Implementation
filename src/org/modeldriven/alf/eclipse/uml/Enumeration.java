@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Enumeration extends DataType implements
 		org.modeldriven.alf.uml.Enumeration {
 	public Enumeration() {
-		this(UMLFactory.eINSTANCE.createEnumeration());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createEnumeration());
 	}
 
-	public Enumeration(fUML.Syntax.Classes.Kernel.Enumeration base) {
+	public Enumeration(org.eclipse.uml2.uml.Enumeration base) {
 		super(base);
 	}
 
@@ -17,20 +17,23 @@ public class Enumeration extends DataType implements
 		return (org.eclipse.uml2.uml.Enumeration) this.base;
 	}
 
-	public List<org.modeldriven.alf.uml.EnumerationLiteral> getOwnedLiteral() {
-		List<org.modeldriven.alf.uml.EnumerationLiteral> list = new ArrayList<org.modeldriven.alf.uml.EnumerationLiteral>();
-		for (org.eclipse.uml2.uml.EnumerationLiteral element : this.getBase()
-				.getOwnedLiteral()) {
-			list.add(new EnumerationLiteral(element));
+	public List< org.modeldriven.alf.uml.EnumerationLiteral> getOwnedLiteral
+() {
+		List< org.modeldriven.alf.uml.EnumerationLiteral> list = new ArrayList< org.modeldriven.alf.uml.EnumerationLiteral>();
+		for (org.eclipse.uml2.uml.EnumerationLiteral
+ element: this.getBase().getOwnedLiteral
+s()) {
+			list.add( new EnumerationLiteral(element)
+);
 		}
 		return list;
 	}
 
-	public void addOwnedLiteral(
-			org.modeldriven.alf.uml.EnumerationLiteral ownedLiteral) {
-		this.getBase().addOwnedLiteral(
-				ownedLiteral == null ? null
-						: ((EnumerationLiteral) ownedLiteral).getBase());
+	public void addOwnedLiteral
+( org.modeldriven.alf.uml.EnumerationLiteral ownedLiteral) {
+		this.getBase().getOwnedLiteral
+s.add( ownedLiteral == null? null: ((EnumerationLiteral)ownedLiteral).getBase()
+);
 	}
 
 }

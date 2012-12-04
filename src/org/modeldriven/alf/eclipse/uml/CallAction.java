@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class CallAction extends InvocationAction implements
 		org.modeldriven.alf.uml.CallAction {
 
-	public CallAction(fUML.Syntax.Actions.BasicActions.CallAction base) {
+	public CallAction(org.eclipse.uml2.uml.CallAction base) {
 		super(base);
 	}
 
@@ -22,18 +22,23 @@ public class CallAction extends InvocationAction implements
 		this.getBase().setIsSynchronous(isSynchronous);
 	}
 
-	public List<org.modeldriven.alf.uml.OutputPin> getResult() {
-		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
-				.getResult()) {
-			list.add(new OutputPin(element));
+	public List< org.modeldriven.alf.uml.OutputPin> getResult
+() {
+		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin
+ element: this.getBase().getResult
+s()) {
+			list.add( new OutputPin(element)
+);
 		}
 		return list;
 	}
 
-	public void addResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().addResult(
-				result == null ? null : ((OutputPin) result).getBase());
+	public void addResult
+( org.modeldriven.alf.uml.OutputPin result) {
+		this.getBase().getResult
+s.add( result == null? null: ((OutputPin)result).getBase()
+);
 	}
 
 }

@@ -6,11 +6,10 @@ import java.util.ArrayList;
 public class ConditionalNode extends StructuredActivityNode implements
 		org.modeldriven.alf.uml.ConditionalNode {
 	public ConditionalNode() {
-		this(UMLFactory.eINSTANCE.createConditionalNode());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createConditionalNode());
 	}
 
-	public ConditionalNode(
-			fUML.Syntax.Activities.CompleteStructuredActivities.ConditionalNode base) {
+	public ConditionalNode(org.eclipse.uml2.uml.ConditionalNode base) {
 		super(base);
 	}
 
@@ -34,31 +33,42 @@ public class ConditionalNode extends StructuredActivityNode implements
 		this.getBase().setIsAssured(isAssured);
 	}
 
-	public List<org.modeldriven.alf.uml.Clause> getClause() {
-		List<org.modeldriven.alf.uml.Clause> list = new ArrayList<org.modeldriven.alf.uml.Clause>();
-		for (org.eclipse.uml2.uml.Clause element : this.getBase().getClause()) {
-			list.add(new Clause(element));
+	public List< org.modeldriven.alf.uml.Clause> getClause
+() {
+		List< org.modeldriven.alf.uml.Clause> list = new ArrayList< org.modeldriven.alf.uml.Clause>();
+		for (org.eclipse.uml2.uml.Clause
+ element: this.getBase().getClause
+s()) {
+			list.add( new Clause(element)
+);
 		}
 		return list;
 	}
 
-	public void addClause(org.modeldriven.alf.uml.Clause clause) {
-		this.getBase().addClause(
-				clause == null ? null : ((Clause) clause).getBase());
+	public void addClause
+( org.modeldriven.alf.uml.Clause clause) {
+		this.getBase().getClause
+s.add( clause == null? null: ((Clause)clause).getBase()
+);
 	}
 
-	public List<org.modeldriven.alf.uml.OutputPin> getResult() {
-		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
-				.getResult()) {
-			list.add(new OutputPin(element));
+	public List< org.modeldriven.alf.uml.OutputPin> getResult
+() {
+		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin
+ element: this.getBase().getResult
+s()) {
+			list.add( new OutputPin(element)
+);
 		}
 		return list;
 	}
 
-	public void addResult(org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().addResult(
-				result == null ? null : ((OutputPin) result).getBase());
+	public void addResult
+( org.modeldriven.alf.uml.OutputPin result) {
+		this.getBase().getResult
+s.add( result == null? null: ((OutputPin)result).getBase()
+);
 	}
 
 }

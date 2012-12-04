@@ -6,11 +6,12 @@ import java.util.ArrayList;
 public class ReadStructuralFeatureAction extends StructuralFeatureAction
 		implements org.modeldriven.alf.uml.ReadStructuralFeatureAction {
 	public ReadStructuralFeatureAction() {
-		this(UMLFactory.eINSTANCE.createReadStructuralFeatureAction());
+		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE
+				.createReadStructuralFeatureAction());
 	}
 
 	public ReadStructuralFeatureAction(
-			fUML.Syntax.Actions.IntermediateActions.ReadStructuralFeatureAction base) {
+			org.eclipse.uml2.uml.ReadStructuralFeatureAction base) {
 		super(base);
 	}
 
