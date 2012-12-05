@@ -23,7 +23,7 @@ public class StructuralFeature extends Feature implements
 	}
 
 	public org.modeldriven.alf.uml.Type getType() {
-		return wrap(this.getBase().getType());
+		return (org.modeldriven.alf.uml.Type) wrap(this.getBase().getType());
 	}
 
 	public void setType(org.modeldriven.alf.uml.Type type) {
@@ -55,7 +55,8 @@ public class StructuralFeature extends Feature implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getUpperValue() {
-		return wrap(this.getBase().getUpperValue());
+		return (org.modeldriven.alf.uml.ValueSpecification) wrap(this.getBase()
+				.getUpperValue());
 	}
 
 	public void setUpperValue(
@@ -66,7 +67,8 @@ public class StructuralFeature extends Feature implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getLowerValue() {
-		return wrap(this.getBase().getLowerValue());
+		return (org.modeldriven.alf.uml.ValueSpecification) wrap(this.getBase()
+				.getLowerValue());
 	}
 
 	public void setLowerValue(

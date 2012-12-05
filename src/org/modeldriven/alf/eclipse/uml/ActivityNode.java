@@ -15,18 +15,20 @@ public class ActivityNode extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.StructuredActivityNode getInStructuredNode() {
-		return wrap(this.getBase().getInStructuredNode());
+		return (org.modeldriven.alf.uml.StructuredActivityNode) wrap(this
+				.getBase().getInStructuredNode());
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {
-		return wrap(this.getBase().getActivity());
+		return (org.modeldriven.alf.uml.Activity) wrap(this.getBase()
+				.getActivity());
 	}
 
 	public List<org.modeldriven.alf.uml.ActivityEdge> getOutgoing() {
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (org.eclipse.uml2.uml.ActivityEdge element : this.getBase()
 				.getOutgoings()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.ActivityEdge) wrap(element));
 		}
 		return list;
 	}
@@ -40,7 +42,7 @@ public class ActivityNode extends RedefinableElement implements
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (org.eclipse.uml2.uml.ActivityEdge element : this.getBase()
 				.getIncomings()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.ActivityEdge) wrap(element));
 		}
 		return list;
 	}

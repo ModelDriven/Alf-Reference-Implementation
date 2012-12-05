@@ -19,7 +19,8 @@ public class TestIdentityAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getSecond() {
-		return wrap(this.getBase().getSecond());
+		return (org.modeldriven.alf.uml.InputPin) wrap(this.getBase()
+				.getSecond());
 	}
 
 	public void setSecond(org.modeldriven.alf.uml.InputPin second) {
@@ -28,7 +29,8 @@ public class TestIdentityAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return wrap(this.getBase().getResult());
+		return (org.modeldriven.alf.uml.OutputPin) wrap(this.getBase()
+				.getResult());
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {
@@ -37,7 +39,8 @@ public class TestIdentityAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getFirst() {
-		return wrap(this.getBase().getFirst());
+		return (org.modeldriven.alf.uml.InputPin) wrap(this.getBase()
+				.getFirst());
 	}
 
 	public void setFirst(org.modeldriven.alf.uml.InputPin first) {

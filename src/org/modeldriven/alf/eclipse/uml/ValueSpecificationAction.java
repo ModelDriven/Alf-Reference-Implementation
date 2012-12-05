@@ -20,7 +20,8 @@ public class ValueSpecificationAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getValue() {
-		return wrap(this.getBase().getValue());
+		return (org.modeldriven.alf.uml.ValueSpecification) wrap(this.getBase()
+				.getValue());
 	}
 
 	public void setValue(org.modeldriven.alf.uml.ValueSpecification value) {
@@ -29,7 +30,8 @@ public class ValueSpecificationAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return wrap(this.getBase().getResult());
+		return (org.modeldriven.alf.uml.OutputPin) wrap(this.getBase()
+				.getResult());
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {

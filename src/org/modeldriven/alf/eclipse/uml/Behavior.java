@@ -23,7 +23,8 @@ public class Behavior extends Class_ implements
 	}
 
 	public org.modeldriven.alf.uml.BehavioralFeature getSpecification() {
-		return wrap(this.getBase().getSpecification());
+		return (org.modeldriven.alf.uml.BehavioralFeature) wrap(this.getBase()
+				.getSpecification());
 	}
 
 	public void setSpecification(
@@ -37,7 +38,7 @@ public class Behavior extends Class_ implements
 		List<org.modeldriven.alf.uml.Parameter> list = new ArrayList<org.modeldriven.alf.uml.Parameter>();
 		for (org.eclipse.uml2.uml.Parameter element : this.getBase()
 				.getOwnedParameters()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Parameter) wrap(element));
 		}
 		return list;
 	}
@@ -50,7 +51,8 @@ public class Behavior extends Class_ implements
 	}
 
 	public org.modeldriven.alf.uml.BehavioredClassifier getContext() {
-		return wrap(this.getBase().getContext());
+		return (org.modeldriven.alf.uml.BehavioredClassifier) wrap(this
+				.getBase().getContext());
 	}
 
 }

@@ -18,7 +18,7 @@ public class BehavioredClassifier extends Classifier implements
 		List<org.modeldriven.alf.uml.Behavior> list = new ArrayList<org.modeldriven.alf.uml.Behavior>();
 		for (org.eclipse.uml2.uml.Behavior element : this.getBase()
 				.getOwnedBehaviors()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Behavior) wrap(element));
 		}
 		return list;
 	}
@@ -30,7 +30,8 @@ public class BehavioredClassifier extends Classifier implements
 	}
 
 	public org.modeldriven.alf.uml.Behavior getClassifierBehavior() {
-		return wrap(this.getBase().getClassifierBehavior());
+		return (org.modeldriven.alf.uml.Behavior) wrap(this.getBase()
+				.getClassifierBehavior());
 	}
 
 	public void setClassifierBehavior(

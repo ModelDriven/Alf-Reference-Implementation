@@ -22,7 +22,7 @@ public class InstanceSpecification extends NamedElement implements
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
 				.getClassifiers()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Classifier) wrap(element));
 		}
 		return list;
 	}
@@ -37,7 +37,7 @@ public class InstanceSpecification extends NamedElement implements
 	public List<org.modeldriven.alf.uml.Slot> getSlot() {
 		List<org.modeldriven.alf.uml.Slot> list = new ArrayList<org.modeldriven.alf.uml.Slot>();
 		for (org.eclipse.uml2.uml.Slot element : this.getBase().getSlots()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Slot) wrap(element));
 		}
 		return list;
 	}

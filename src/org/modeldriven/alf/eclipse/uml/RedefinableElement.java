@@ -26,7 +26,8 @@ public class RedefinableElement extends NamedElement implements
 		List<org.modeldriven.alf.uml.RedefinableElement> list = new ArrayList<org.modeldriven.alf.uml.RedefinableElement>();
 		for (org.eclipse.uml2.uml.RedefinableElement element : this.getBase()
 				.getRedefinedElements()) {
-			list.add(wrap(element));
+			list
+					.add((org.modeldriven.alf.uml.RedefinableElement) wrap(element));
 		}
 		return list;
 	}
@@ -35,7 +36,7 @@ public class RedefinableElement extends NamedElement implements
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
 				.getRedefinitionContexts()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Classifier) wrap(element));
 		}
 		return list;
 	}

@@ -18,7 +18,8 @@ public class ReadExtentAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return wrap(this.getBase().getResult());
+		return (org.modeldriven.alf.uml.OutputPin) wrap(this.getBase()
+				.getResult());
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {
@@ -27,7 +28,8 @@ public class ReadExtentAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.Classifier getClassifier() {
-		return wrap(this.getBase().getClassifier());
+		return (org.modeldriven.alf.uml.Classifier) wrap(this.getBase()
+				.getClassifier());
 	}
 
 	public void setClassifier(org.modeldriven.alf.uml.Classifier classifier) {

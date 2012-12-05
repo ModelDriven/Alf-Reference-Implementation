@@ -36,7 +36,7 @@ public class ConditionalNode extends StructuredActivityNode implements
 	public List<org.modeldriven.alf.uml.Clause> getClause() {
 		List<org.modeldriven.alf.uml.Clause> list = new ArrayList<org.modeldriven.alf.uml.Clause>();
 		for (org.eclipse.uml2.uml.Clause element : this.getBase().getClauses()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Clause) wrap(element));
 		}
 		return list;
 	}
@@ -50,7 +50,7 @@ public class ConditionalNode extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
 		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
 				.getResults()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.OutputPin) wrap(element));
 		}
 		return list;
 	}

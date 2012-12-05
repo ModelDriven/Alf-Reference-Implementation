@@ -22,7 +22,8 @@ public class DestroyLinkAction extends WriteLinkAction implements
 		List<org.modeldriven.alf.uml.LinkEndDestructionData> list = new ArrayList<org.modeldriven.alf.uml.LinkEndDestructionData>();
 		for (org.eclipse.uml2.uml.LinkEndDestructionData element : this
 				.getBase().getEndDatas()) {
-			list.add(wrap(element));
+			list
+					.add((org.modeldriven.alf.uml.LinkEndDestructionData) wrap(element));
 		}
 		return list;
 	}

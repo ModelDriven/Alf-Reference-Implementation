@@ -29,7 +29,7 @@ public class Association extends Classifier implements
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (org.eclipse.uml2.uml.Property element : this.getBase()
 				.getOwnedEnds()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Property) wrap(element));
 		}
 		return list;
 	}
@@ -42,7 +42,7 @@ public class Association extends Classifier implements
 	public List<org.modeldriven.alf.uml.Type> getEndType() {
 		List<org.modeldriven.alf.uml.Type> list = new ArrayList<org.modeldriven.alf.uml.Type>();
 		for (org.eclipse.uml2.uml.Type element : this.getBase().getEndTypes()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Type) wrap(element));
 		}
 		return list;
 	}
@@ -51,7 +51,7 @@ public class Association extends Classifier implements
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (org.eclipse.uml2.uml.Property element : this.getBase()
 				.getMemberEnds()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Property) wrap(element));
 		}
 		return list;
 	}
@@ -65,7 +65,7 @@ public class Association extends Classifier implements
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (org.eclipse.uml2.uml.Property element : this.getBase()
 				.getNavigableOwnedEnds()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Property) wrap(element));
 		}
 		return list;
 	}

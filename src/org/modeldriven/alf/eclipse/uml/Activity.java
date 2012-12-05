@@ -21,7 +21,8 @@ public class Activity extends Behavior implements
 		List<org.modeldriven.alf.uml.StructuredActivityNode> list = new ArrayList<org.modeldriven.alf.uml.StructuredActivityNode>();
 		for (org.eclipse.uml2.uml.StructuredActivityNode element : this
 				.getBase().getStructuredNodes()) {
-			list.add(wrap(element));
+			list
+					.add((org.modeldriven.alf.uml.StructuredActivityNode) wrap(element));
 		}
 		return list;
 	}
@@ -30,7 +31,7 @@ public class Activity extends Behavior implements
 		List<org.modeldriven.alf.uml.ActivityNode> list = new ArrayList<org.modeldriven.alf.uml.ActivityNode>();
 		for (org.eclipse.uml2.uml.ActivityNode element : this.getBase()
 				.getNodes()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.ActivityNode) wrap(element));
 		}
 		return list;
 	}
@@ -52,7 +53,7 @@ public class Activity extends Behavior implements
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (org.eclipse.uml2.uml.ActivityEdge element : this.getBase()
 				.getEdges()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.ActivityEdge) wrap(element));
 		}
 		return list;
 	}

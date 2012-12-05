@@ -29,7 +29,7 @@ public class ExpansionRegion extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.ExpansionNode> list = new ArrayList<org.modeldriven.alf.uml.ExpansionNode>();
 		for (org.eclipse.uml2.uml.ExpansionNode element : this.getBase()
 				.getOutputElements()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.ExpansionNode) wrap(element));
 		}
 		return list;
 	}
@@ -45,7 +45,7 @@ public class ExpansionRegion extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.ExpansionNode> list = new ArrayList<org.modeldriven.alf.uml.ExpansionNode>();
 		for (org.eclipse.uml2.uml.ExpansionNode element : this.getBase()
 				.getInputElements()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.ExpansionNode) wrap(element));
 		}
 		return list;
 	}
