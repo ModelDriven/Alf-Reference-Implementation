@@ -36,7 +36,7 @@ public class NamedElement extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.Namespace getNamespace() {
-		return new Namespace(this.getBase().getNamespace());
+		return wrap(this.getBase().getNamespace());
 	}
 
 }

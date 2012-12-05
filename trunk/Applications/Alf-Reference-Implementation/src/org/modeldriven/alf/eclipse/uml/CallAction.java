@@ -26,7 +26,7 @@ public class CallAction extends InvocationAction implements
 		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
 		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
 				.getResults()) {
-			list.add(new OutputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

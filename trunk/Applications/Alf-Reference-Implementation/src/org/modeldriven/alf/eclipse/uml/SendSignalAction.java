@@ -18,7 +18,7 @@ public class SendSignalAction extends InvocationAction implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getTarget() {
-		return new InputPin(this.getBase().getTarget());
+		return wrap(this.getBase().getTarget());
 	}
 
 	public void setTarget(org.modeldriven.alf.uml.InputPin target) {
@@ -27,7 +27,7 @@ public class SendSignalAction extends InvocationAction implements
 	}
 
 	public org.modeldriven.alf.uml.Signal getSignal() {
-		return new Signal(this.getBase().getSignal());
+		return wrap(this.getBase().getSignal());
 	}
 
 	public void setSignal(org.modeldriven.alf.uml.Signal signal) {

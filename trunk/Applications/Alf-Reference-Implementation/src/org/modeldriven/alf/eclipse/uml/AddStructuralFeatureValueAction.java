@@ -29,7 +29,7 @@ public class AddStructuralFeatureValueAction extends
 	}
 
 	public org.modeldriven.alf.uml.InputPin getInsertAt() {
-		return new InputPin(this.getBase().getInsertAt());
+		return wrap(this.getBase().getInsertAt());
 	}
 
 	public void setInsertAt(org.modeldriven.alf.uml.InputPin insertAt) {

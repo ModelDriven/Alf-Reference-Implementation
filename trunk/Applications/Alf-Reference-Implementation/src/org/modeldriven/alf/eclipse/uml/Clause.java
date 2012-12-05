@@ -20,7 +20,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (org.eclipse.uml2.uml.ExecutableNode element : this.getBase()
 				.getTests()) {
-			list.add(new ExecutableNode(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -34,7 +34,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (org.eclipse.uml2.uml.ExecutableNode element : this.getBase()
 				.getBodies()) {
-			list.add(new ExecutableNode(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -48,7 +48,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 		List<org.modeldriven.alf.uml.Clause> list = new ArrayList<org.modeldriven.alf.uml.Clause>();
 		for (org.eclipse.uml2.uml.Clause element : this.getBase()
 				.getPredecessorClauses()) {
-			list.add(new Clause(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -64,7 +64,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 		List<org.modeldriven.alf.uml.Clause> list = new ArrayList<org.modeldriven.alf.uml.Clause>();
 		for (org.eclipse.uml2.uml.Clause element : this.getBase()
 				.getSuccessorClauses()) {
-			list.add(new Clause(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -77,7 +77,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getDecider() {
-		return new OutputPin(this.getBase().getDecider());
+		return wrap(this.getBase().getDecider());
 	}
 
 	public void setDecider(org.modeldriven.alf.uml.OutputPin decider) {
@@ -89,7 +89,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
 		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
 				.getBodyOutputs()) {
-			list.add(new OutputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

@@ -18,7 +18,7 @@ public class InvocationAction extends Action implements
 		List<org.modeldriven.alf.uml.InputPin> list = new ArrayList<org.modeldriven.alf.uml.InputPin>();
 		for (org.eclipse.uml2.uml.InputPin element : this.getBase()
 				.getArguments()) {
-			list.add(new InputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

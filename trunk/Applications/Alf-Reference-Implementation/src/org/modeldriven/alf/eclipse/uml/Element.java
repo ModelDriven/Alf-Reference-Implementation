@@ -19,20 +19,20 @@ public class Element implements org.modeldriven.alf.uml.Element {
 		List<org.modeldriven.alf.uml.Element> list = new ArrayList<org.modeldriven.alf.uml.Element>();
 		for (org.eclipse.uml2.uml.Element element : this.getBase()
 				.getOwnedElements()) {
-			list.add(new Element(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
 
 	public org.modeldriven.alf.uml.Element getOwner() {
-		return new Element(this.getBase().getOwner());
+		return wrap(this.getBase().getOwner());
 	}
 
 	public List<org.modeldriven.alf.uml.Comment> getOwnedComment() {
 		List<org.modeldriven.alf.uml.Comment> list = new ArrayList<org.modeldriven.alf.uml.Comment>();
 		for (org.eclipse.uml2.uml.Comment element : this.getBase()
 				.getOwnedComments()) {
-			list.add(new Comment(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

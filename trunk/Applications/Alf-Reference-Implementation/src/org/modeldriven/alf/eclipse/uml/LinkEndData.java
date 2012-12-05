@@ -18,7 +18,7 @@ public class LinkEndData extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getValue() {
-		return new InputPin(this.getBase().getValue());
+		return wrap(this.getBase().getValue());
 	}
 
 	public void setValue(org.modeldriven.alf.uml.InputPin value) {
@@ -27,7 +27,7 @@ public class LinkEndData extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.Property getEnd() {
-		return new Property(this.getBase().getEnd());
+		return wrap(this.getBase().getEnd());
 	}
 
 	public void setEnd(org.modeldriven.alf.uml.Property end) {

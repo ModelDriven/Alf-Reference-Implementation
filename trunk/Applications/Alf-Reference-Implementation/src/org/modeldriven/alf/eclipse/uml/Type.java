@@ -15,7 +15,7 @@ public class Type extends PackageableElement implements
 	}
 
 	public org.modeldriven.alf.uml.Package getPackage_() {
-		return new Package(this.getBase().getPackage_());
+		return wrap(this.getBase().getPackage_());
 	}
 
 }

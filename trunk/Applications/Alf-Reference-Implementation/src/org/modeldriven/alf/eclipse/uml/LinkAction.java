@@ -18,7 +18,7 @@ public class LinkAction extends Action implements
 		List<org.modeldriven.alf.uml.LinkEndData> list = new ArrayList<org.modeldriven.alf.uml.LinkEndData>();
 		for (org.eclipse.uml2.uml.LinkEndData element : this.getBase()
 				.getEndDatas()) {
-			list.add(new LinkEndData(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -32,7 +32,7 @@ public class LinkAction extends Action implements
 		List<org.modeldriven.alf.uml.InputPin> list = new ArrayList<org.modeldriven.alf.uml.InputPin>();
 		for (org.eclipse.uml2.uml.InputPin element : this.getBase()
 				.getInputValues()) {
-			list.add(new InputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

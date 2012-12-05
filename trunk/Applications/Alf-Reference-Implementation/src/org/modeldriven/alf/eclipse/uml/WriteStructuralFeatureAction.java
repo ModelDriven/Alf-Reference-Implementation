@@ -16,7 +16,7 @@ public class WriteStructuralFeatureAction extends StructuralFeatureAction
 	}
 
 	public org.modeldriven.alf.uml.InputPin getValue() {
-		return new InputPin(this.getBase().getValue());
+		return wrap(this.getBase().getValue());
 	}
 
 	public void setValue(org.modeldriven.alf.uml.InputPin value) {
@@ -25,7 +25,7 @@ public class WriteStructuralFeatureAction extends StructuralFeatureAction
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return new OutputPin(this.getBase().getResult());
+		return wrap(this.getBase().getResult());
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {

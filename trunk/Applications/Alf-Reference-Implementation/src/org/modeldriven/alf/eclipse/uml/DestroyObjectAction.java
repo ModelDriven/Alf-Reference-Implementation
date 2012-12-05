@@ -35,7 +35,7 @@ public class DestroyObjectAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getTarget() {
-		return new InputPin(this.getBase().getTarget());
+		return wrap(this.getBase().getTarget());
 	}
 
 	public void setTarget(org.modeldriven.alf.uml.InputPin target) {

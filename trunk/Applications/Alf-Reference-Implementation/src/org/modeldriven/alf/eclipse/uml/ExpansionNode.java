@@ -18,7 +18,7 @@ public class ExpansionNode extends ObjectNode implements
 	}
 
 	public org.modeldriven.alf.uml.ExpansionRegion getRegionAsOutput() {
-		return new ExpansionRegion(this.getBase().getRegionAsOutput());
+		return wrap(this.getBase().getRegionAsOutput());
 	}
 
 	public void setRegionAsOutput(
@@ -29,7 +29,7 @@ public class ExpansionNode extends ObjectNode implements
 	}
 
 	public org.modeldriven.alf.uml.ExpansionRegion getRegionAsInput() {
-		return new ExpansionRegion(this.getBase().getRegionAsInput());
+		return wrap(this.getBase().getRegionAsInput());
 	}
 
 	public void setRegionAsInput(

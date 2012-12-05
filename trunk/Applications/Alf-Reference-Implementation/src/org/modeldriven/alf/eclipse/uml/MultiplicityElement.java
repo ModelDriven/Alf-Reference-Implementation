@@ -43,7 +43,7 @@ public class MultiplicityElement extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getUpperValue() {
-		return new ValueSpecification(this.getBase().getUpperValue());
+		return wrap(this.getBase().getUpperValue());
 	}
 
 	public void setUpperValue(
@@ -54,7 +54,7 @@ public class MultiplicityElement extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getLowerValue() {
-		return new ValueSpecification(this.getBase().getLowerValue());
+		return wrap(this.getBase().getLowerValue());
 	}
 
 	public void setLowerValue(

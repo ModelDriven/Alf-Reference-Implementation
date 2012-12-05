@@ -19,7 +19,7 @@ public class CallBehaviorAction extends CallAction implements
 	}
 
 	public org.modeldriven.alf.uml.Behavior getBehavior() {
-		return new Behavior(this.getBase().getBehavior());
+		return wrap(this.getBase().getBehavior());
 	}
 
 	public void setBehavior(org.modeldriven.alf.uml.Behavior behavior) {

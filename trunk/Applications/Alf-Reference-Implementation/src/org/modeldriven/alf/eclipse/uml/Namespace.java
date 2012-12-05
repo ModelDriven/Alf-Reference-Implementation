@@ -18,7 +18,7 @@ public class Namespace extends NamedElement implements
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (org.eclipse.uml2.uml.NamedElement element : this.getBase()
 				.getMembers()) {
-			list.add(new NamedElement(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -27,7 +27,7 @@ public class Namespace extends NamedElement implements
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (org.eclipse.uml2.uml.NamedElement element : this.getBase()
 				.getOwnedMembers()) {
-			list.add(new NamedElement(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -36,7 +36,7 @@ public class Namespace extends NamedElement implements
 		List<org.modeldriven.alf.uml.ElementImport> list = new ArrayList<org.modeldriven.alf.uml.ElementImport>();
 		for (org.eclipse.uml2.uml.ElementImport element : this.getBase()
 				.getElementImports()) {
-			list.add(new ElementImport(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -52,7 +52,7 @@ public class Namespace extends NamedElement implements
 		List<org.modeldriven.alf.uml.PackageImport> list = new ArrayList<org.modeldriven.alf.uml.PackageImport>();
 		for (org.eclipse.uml2.uml.PackageImport element : this.getBase()
 				.getPackageImports()) {
-			list.add(new PackageImport(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -68,7 +68,7 @@ public class Namespace extends NamedElement implements
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (org.eclipse.uml2.uml.PackageableElement element : this.getBase()
 				.getImportedMembers()) {
-			list.add(new PackageableElement(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
