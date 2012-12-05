@@ -47,7 +47,7 @@ public class Property extends StructuralFeature implements
 
 	public void setAggregation( String
  aggregation) {
-		this.getBase().setAggregation( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@769e74 (name: AggregationKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(aggregation)
+		this.getBase().setAggregation( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@6babe (name: AggregationKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(aggregation)
 );
 	}
 

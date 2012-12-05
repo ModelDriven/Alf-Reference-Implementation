@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Element implements org.modeldriven.alf.uml.Element {
 
-	protected fUML.Syntax.Classes.Kernel.Element base;
+	protected org.eclipse.uml2.uml.Element base;
 
 	public Element(org.eclipse.uml2.uml.Element base) {
 		this.base = base;

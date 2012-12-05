@@ -8,7 +8,7 @@ public class Comment implements org.modeldriven.alf.uml.Comment {
 		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createComment());
 	}
 
-	protected fUML.Syntax.Classes.Kernel.Comment base;
+	protected org.eclipse.uml2.uml.Comment base;
 
 	public Comment(org.eclipse.uml2.uml.Comment base) {
 		this.base = base;
