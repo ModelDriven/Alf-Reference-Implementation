@@ -23,7 +23,7 @@ active class PaymentView specializes View {
     WriteLine("");
     Write(ToAddressString(controller.billingAddress));
     
-    return String[]{"1", "2", "3", "4", "p", "o", "s", "h", "x"};
+    return String[]{"1", "2", "3", "4", "p", "b", "s", "h", "x"};
   }
 
 } do {
