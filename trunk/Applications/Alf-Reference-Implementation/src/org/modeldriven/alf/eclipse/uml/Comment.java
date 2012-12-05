@@ -18,23 +18,20 @@ public class Comment implements org.modeldriven.alf.uml.Comment {
 		return (org.eclipse.uml2.uml.Comment) this.base;
 	}
 
-	public List< org.modeldriven.alf.uml.Element> getAnnotatedElement
-() {
-		List< org.modeldriven.alf.uml.Element> list = new ArrayList< org.modeldriven.alf.uml.Element>();
-		for (org.eclipse.uml2.uml.Element
- element: this.getBase().getAnnotatedElement
-s()) {
-			list.add( new Element(element)
-);
+	public List<org.modeldriven.alf.uml.Element> getAnnotatedElement() {
+		List<org.modeldriven.alf.uml.Element> list = new ArrayList<org.modeldriven.alf.uml.Element>();
+		for (org.eclipse.uml2.uml.Element element : this.getBase()
+				.getAnnotatedElements()) {
+			list.add(new Element(element));
 		}
 		return list;
 	}
 
-	public void addAnnotatedElement
-( org.modeldriven.alf.uml.Element annotatedElement) {
-		this.getBase().getAnnotatedElement
-s.add( annotatedElement == null? null: ((Element)annotatedElement).getBase()
-);
+	public void addAnnotatedElement(
+			org.modeldriven.alf.uml.Element annotatedElement) {
+		this.getBase().getAnnotatedElements().add(
+				annotatedElement == null ? null : ((Element) annotatedElement)
+						.getBase());
 	}
 
 	public String getBody() {

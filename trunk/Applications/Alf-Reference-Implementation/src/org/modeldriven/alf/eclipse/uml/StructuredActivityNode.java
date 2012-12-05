@@ -19,23 +19,18 @@ public class StructuredActivityNode extends Action implements
 		return (org.eclipse.uml2.uml.StructuredActivityNode) this.base;
 	}
 
-	public List< org.modeldriven.alf.uml.ActivityNode> getNode
-() {
-		List< org.modeldriven.alf.uml.ActivityNode> list = new ArrayList< org.modeldriven.alf.uml.ActivityNode>();
-		for (org.eclipse.uml2.uml.ActivityNode
- element: this.getBase().getNode
-s()) {
-			list.add( new ActivityNode(element)
-);
+	public List<org.modeldriven.alf.uml.ActivityNode> getNode() {
+		List<org.modeldriven.alf.uml.ActivityNode> list = new ArrayList<org.modeldriven.alf.uml.ActivityNode>();
+		for (org.eclipse.uml2.uml.ActivityNode element : this.getBase()
+				.getNodes()) {
+			list.add(new ActivityNode(element));
 		}
 		return list;
 	}
 
-	public void addNode
-( org.modeldriven.alf.uml.ActivityNode node) {
-		this.getBase().getNode
-s.add( node == null? null: ((ActivityNode)node).getBase()
-);
+	public void addNode(org.modeldriven.alf.uml.ActivityNode node) {
+		this.getBase().getNodes().add(
+				node == null ? null : ((ActivityNode) node).getBase());
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {
@@ -50,61 +45,50 @@ s.add( node == null? null: ((ActivityNode)node).getBase()
 		this.getBase().setMustIsolate(mustIsolate);
 	}
 
-	public List< org.modeldriven.alf.uml.ActivityEdge> getEdge
-() {
-		List< org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList< org.modeldriven.alf.uml.ActivityEdge>();
-		for (org.eclipse.uml2.uml.ActivityEdge
- element: this.getBase().getEdge
-s()) {
-			list.add( new ActivityEdge(element)
-);
+	public List<org.modeldriven.alf.uml.ActivityEdge> getEdge() {
+		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
+		for (org.eclipse.uml2.uml.ActivityEdge element : this.getBase()
+				.getEdges()) {
+			list.add(new ActivityEdge(element));
 		}
 		return list;
 	}
 
-	public void addEdge
-( org.modeldriven.alf.uml.ActivityEdge edge) {
-		this.getBase().getEdge
-s.add( edge == null? null: ((ActivityEdge)edge).getBase()
-);
+	public void addEdge(org.modeldriven.alf.uml.ActivityEdge edge) {
+		this.getBase().getEdges().add(
+				edge == null ? null : ((ActivityEdge) edge).getBase());
 	}
 
-	public List< org.modeldriven.alf.uml.OutputPin> getStructuredNodeOutput
-() {
-		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin
- element: this.getBase().getStructuredNodeOutput
-s()) {
-			list.add( new OutputPin(element)
-);
+	public List<org.modeldriven.alf.uml.OutputPin> getStructuredNodeOutput() {
+		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
+				.getStructuredNodeOutputs()) {
+			list.add(new OutputPin(element));
 		}
 		return list;
 	}
 
-	public void addStructuredNodeOutput
-( org.modeldriven.alf.uml.OutputPin structuredNodeOutput) {
-		this.getBase().getStructuredNodeOutput
-s.add( structuredNodeOutput == null? null: ((OutputPin)structuredNodeOutput).getBase()
-);
+	public void addStructuredNodeOutput(
+			org.modeldriven.alf.uml.OutputPin structuredNodeOutput) {
+		this.getBase().getStructuredNodeOutputs().add(
+				structuredNodeOutput == null ? null
+						: ((OutputPin) structuredNodeOutput).getBase());
 	}
 
-	public List< org.modeldriven.alf.uml.InputPin> getStructuredNodeInput
-() {
-		List< org.modeldriven.alf.uml.InputPin> list = new ArrayList< org.modeldriven.alf.uml.InputPin>();
-		for (org.eclipse.uml2.uml.InputPin
- element: this.getBase().getStructuredNodeInput
-s()) {
-			list.add( new InputPin(element)
-);
+	public List<org.modeldriven.alf.uml.InputPin> getStructuredNodeInput() {
+		List<org.modeldriven.alf.uml.InputPin> list = new ArrayList<org.modeldriven.alf.uml.InputPin>();
+		for (org.eclipse.uml2.uml.InputPin element : this.getBase()
+				.getStructuredNodeInputs()) {
+			list.add(new InputPin(element));
 		}
 		return list;
 	}
 
-	public void addStructuredNodeInput
-( org.modeldriven.alf.uml.InputPin structuredNodeInput) {
-		this.getBase().getStructuredNodeInput
-s.add( structuredNodeInput == null? null: ((InputPin)structuredNodeInput).getBase()
-);
+	public void addStructuredNodeInput(
+			org.modeldriven.alf.uml.InputPin structuredNodeInput) {
+		this.getBase().getStructuredNodeInputs().add(
+				structuredNodeInput == null ? null
+						: ((InputPin) structuredNodeInput).getBase());
 	}
 
 }

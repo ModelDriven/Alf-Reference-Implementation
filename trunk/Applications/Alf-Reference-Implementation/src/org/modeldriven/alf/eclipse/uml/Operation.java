@@ -45,46 +45,40 @@ public class Operation extends BehavioralFeature implements
 		return new Class_(this.getBase().getClass());
 	}
 
-	public List< org.modeldriven.alf.uml.Operation> getRedefinedOperation
-() {
-		List< org.modeldriven.alf.uml.Operation> list = new ArrayList< org.modeldriven.alf.uml.Operation>();
-		for (org.eclipse.uml2.uml.Operation
- element: this.getBase().getRedefinedOperation
-s()) {
-			list.add( new Operation(element)
-);
+	public List<org.modeldriven.alf.uml.Operation> getRedefinedOperation() {
+		List<org.modeldriven.alf.uml.Operation> list = new ArrayList<org.modeldriven.alf.uml.Operation>();
+		for (org.eclipse.uml2.uml.Operation element : this.getBase()
+				.getRedefinedOperations()) {
+			list.add(new Operation(element));
 		}
 		return list;
 	}
 
-	public void addRedefinedOperation
-( org.modeldriven.alf.uml.Operation redefinedOperation) {
-		this.getBase().getRedefinedOperation
-s.add( redefinedOperation == null? null: ((Operation)redefinedOperation).getBase()
-);
+	public void addRedefinedOperation(
+			org.modeldriven.alf.uml.Operation redefinedOperation) {
+		this.getBase().getRedefinedOperations().add(
+				redefinedOperation == null ? null
+						: ((Operation) redefinedOperation).getBase());
 	}
 
 	public org.modeldriven.alf.uml.Type getType() {
 		return new Type(this.getBase().getType());
 	}
 
-	public List< org.modeldriven.alf.uml.Parameter> getOwnedParameter
-() {
-		List< org.modeldriven.alf.uml.Parameter> list = new ArrayList< org.modeldriven.alf.uml.Parameter>();
-		for (org.eclipse.uml2.uml.Parameter
- element: this.getBase().getOwnedParameter
-s()) {
-			list.add( new Parameter(element)
-);
+	public List<org.modeldriven.alf.uml.Parameter> getOwnedParameter() {
+		List<org.modeldriven.alf.uml.Parameter> list = new ArrayList<org.modeldriven.alf.uml.Parameter>();
+		for (org.eclipse.uml2.uml.Parameter element : this.getBase()
+				.getOwnedParameters()) {
+			list.add(new Parameter(element));
 		}
 		return list;
 	}
 
-	public void addOwnedParameter
-( org.modeldriven.alf.uml.Parameter ownedParameter) {
-		this.getBase().getOwnedParameter
-s.add( ownedParameter == null? null: ((Parameter)ownedParameter).getBase()
-);
+	public void addOwnedParameter(
+			org.modeldriven.alf.uml.Parameter ownedParameter) {
+		this.getBase().getOwnedParameters().add(
+				ownedParameter == null ? null : ((Parameter) ownedParameter)
+						.getBase());
 	}
 
 }

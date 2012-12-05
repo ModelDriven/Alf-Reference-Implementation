@@ -14,14 +14,11 @@ public class Action extends ExecutableNode implements
 		return (org.eclipse.uml2.uml.Action) this.base;
 	}
 
-	public List< org.modeldriven.alf.uml.OutputPin> getOutput
-() {
-		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin
- element: this.getBase().getOutput
-s()) {
-			list.add( new OutputPin(element)
-);
+	public List<org.modeldriven.alf.uml.OutputPin> getOutput() {
+		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
+				.getOutputs()) {
+			list.add(new OutputPin(element));
 		}
 		return list;
 	}
@@ -30,14 +27,10 @@ s()) {
 		return new Classifier(this.getBase().getContext());
 	}
 
-	public List< org.modeldriven.alf.uml.InputPin> getInput
-() {
-		List< org.modeldriven.alf.uml.InputPin> list = new ArrayList< org.modeldriven.alf.uml.InputPin>();
-		for (org.eclipse.uml2.uml.InputPin
- element: this.getBase().getInput
-s()) {
-			list.add( new InputPin(element)
-);
+	public List<org.modeldriven.alf.uml.InputPin> getInput() {
+		List<org.modeldriven.alf.uml.InputPin> list = new ArrayList<org.modeldriven.alf.uml.InputPin>();
+		for (org.eclipse.uml2.uml.InputPin element : this.getBase().getInputs()) {
+			list.add(new InputPin(element));
 		}
 		return list;
 	}

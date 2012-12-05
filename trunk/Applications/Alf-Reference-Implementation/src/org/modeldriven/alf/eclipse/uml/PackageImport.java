@@ -21,9 +21,10 @@ public class PackageImport extends Element implements
 		return this.getBase().getVisibility().toString();
 	}
 
-	public void setVisibility(String visibility) {
-		this.getBase().setVisibility(
-				fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility));
+	public void setVisibility( String
+ visibility) {
+		this.getBase().setVisibility( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@4958ed (name: VisibilityKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(visibility)
+);
 	}
 
 	public org.modeldriven.alf.uml.Namespace getImportingNamespace() {

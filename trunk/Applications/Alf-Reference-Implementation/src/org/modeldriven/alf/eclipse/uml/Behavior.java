@@ -33,23 +33,20 @@ public class Behavior extends Class_ implements
 						: ((BehavioralFeature) specification).getBase());
 	}
 
-	public List< org.modeldriven.alf.uml.Parameter> getOwnedParameter
-() {
-		List< org.modeldriven.alf.uml.Parameter> list = new ArrayList< org.modeldriven.alf.uml.Parameter>();
-		for (org.eclipse.uml2.uml.Parameter
- element: this.getBase().getOwnedParameter
-s()) {
-			list.add( new Parameter(element)
-);
+	public List<org.modeldriven.alf.uml.Parameter> getOwnedParameter() {
+		List<org.modeldriven.alf.uml.Parameter> list = new ArrayList<org.modeldriven.alf.uml.Parameter>();
+		for (org.eclipse.uml2.uml.Parameter element : this.getBase()
+				.getOwnedParameters()) {
+			list.add(new Parameter(element));
 		}
 		return list;
 	}
 
-	public void addOwnedParameter
-( org.modeldriven.alf.uml.Parameter ownedParameter) {
-		this.getBase().getOwnedParameter
-s.add( ownedParameter == null? null: ((Parameter)ownedParameter).getBase()
-);
+	public void addOwnedParameter(
+			org.modeldriven.alf.uml.Parameter ownedParameter) {
+		this.getBase().getOwnedParameters().add(
+				ownedParameter == null ? null : ((Parameter) ownedParameter)
+						.getBase());
 	}
 
 	public org.modeldriven.alf.uml.BehavioredClassifier getContext() {

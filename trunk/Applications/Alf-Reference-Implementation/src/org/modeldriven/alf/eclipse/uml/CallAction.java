@@ -22,23 +22,18 @@ public class CallAction extends InvocationAction implements
 		this.getBase().setIsSynchronous(isSynchronous);
 	}
 
-	public List< org.modeldriven.alf.uml.OutputPin> getResult
-() {
-		List< org.modeldriven.alf.uml.OutputPin> list = new ArrayList< org.modeldriven.alf.uml.OutputPin>();
-		for (org.eclipse.uml2.uml.OutputPin
- element: this.getBase().getResult
-s()) {
-			list.add( new OutputPin(element)
-);
+	public List<org.modeldriven.alf.uml.OutputPin> getResult() {
+		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
+		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
+				.getResults()) {
+			list.add(new OutputPin(element));
 		}
 		return list;
 	}
 
-	public void addResult
-( org.modeldriven.alf.uml.OutputPin result) {
-		this.getBase().getResult
-s.add( result == null? null: ((OutputPin)result).getBase()
-);
+	public void addResult(org.modeldriven.alf.uml.OutputPin result) {
+		this.getBase().getResults().add(
+				result == null ? null : ((OutputPin) result).getBase());
 	}
 
 }

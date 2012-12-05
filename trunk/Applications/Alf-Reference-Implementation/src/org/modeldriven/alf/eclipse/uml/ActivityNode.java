@@ -22,42 +22,32 @@ public class ActivityNode extends RedefinableElement implements
 		return new Activity(this.getBase().getActivity());
 	}
 
-	public List< org.modeldriven.alf.uml.ActivityEdge> getOutgoing
-() {
-		List< org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList< org.modeldriven.alf.uml.ActivityEdge>();
-		for (org.eclipse.uml2.uml.ActivityEdge
- element: this.getBase().getOutgoing
-s()) {
-			list.add( new ActivityEdge(element)
-);
+	public List<org.modeldriven.alf.uml.ActivityEdge> getOutgoing() {
+		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
+		for (org.eclipse.uml2.uml.ActivityEdge element : this.getBase()
+				.getOutgoings()) {
+			list.add(new ActivityEdge(element));
 		}
 		return list;
 	}
 
-	public void addOutgoing
-( org.modeldriven.alf.uml.ActivityEdge outgoing) {
-		this.getBase().getOutgoing
-s.add( outgoing == null? null: ((ActivityEdge)outgoing).getBase()
-);
+	public void addOutgoing(org.modeldriven.alf.uml.ActivityEdge outgoing) {
+		this.getBase().getOutgoings().add(
+				outgoing == null ? null : ((ActivityEdge) outgoing).getBase());
 	}
 
-	public List< org.modeldriven.alf.uml.ActivityEdge> getIncoming
-() {
-		List< org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList< org.modeldriven.alf.uml.ActivityEdge>();
-		for (org.eclipse.uml2.uml.ActivityEdge
- element: this.getBase().getIncoming
-s()) {
-			list.add( new ActivityEdge(element)
-);
+	public List<org.modeldriven.alf.uml.ActivityEdge> getIncoming() {
+		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
+		for (org.eclipse.uml2.uml.ActivityEdge element : this.getBase()
+				.getIncomings()) {
+			list.add(new ActivityEdge(element));
 		}
 		return list;
 	}
 
-	public void addIncoming
-( org.modeldriven.alf.uml.ActivityEdge incoming) {
-		this.getBase().getIncoming
-s.add( incoming == null? null: ((ActivityEdge)incoming).getBase()
-);
+	public void addIncoming(org.modeldriven.alf.uml.ActivityEdge incoming) {
+		this.getBase().getIncomings().add(
+				incoming == null ? null : ((ActivityEdge) incoming).getBase());
 	}
 
 }
