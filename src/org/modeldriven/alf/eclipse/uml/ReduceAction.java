@@ -45,7 +45,7 @@ public class ReduceAction extends Action implements
 	}
 
 	public boolean getIsOrdered() {
-		return this.getBase().getIsOrdered();
+		return this.getBase().isOrdered();
 	}
 
 	public void setIsOrdered(boolean isOrdered) {

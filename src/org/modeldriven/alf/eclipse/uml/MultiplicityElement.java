@@ -19,7 +19,7 @@ public class MultiplicityElement extends Element implements
 	}
 
 	public boolean getIsOrdered() {
-		return this.getBase().getIsOrdered();
+		return this.getBase().isOrdered();
 	}
 
 	public void setIsOrdered(boolean isOrdered) {
@@ -27,7 +27,7 @@ public class MultiplicityElement extends Element implements
 	}
 
 	public boolean getIsUnique() {
-		return this.getBase().getIsUnique();
+		return this.getBase().isUnique();
 	}
 
 	public void setIsUnique(boolean isUnique) {

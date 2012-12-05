@@ -34,7 +34,7 @@ public class Class_ extends BehavioredClassifier implements
 	}
 
 	public boolean getIsActive() {
-		return this.getBase().getIsActive();
+		return this.getBase().isActive();
 	}
 
 	public void setIsActive(boolean isActive) {
@@ -90,7 +90,7 @@ public class Class_ extends BehavioredClassifier implements
 	}
 
 	public boolean getIsID() {
-		return this.getBase().getIsID();
+		return this.getBase().isID();
 	}
 
 	public void setIsID(boolean isID) {

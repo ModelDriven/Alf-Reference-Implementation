@@ -14,7 +14,7 @@ public class Pin extends ObjectNode implements org.modeldriven.alf.uml.Pin {
 	}
 
 	public boolean getIsOrdered() {
-		return this.getBase().getIsOrdered();
+		return this.getBase().isOrdered();
 	}
 
 	public void setIsOrdered(boolean isOrdered) {
@@ -22,7 +22,7 @@ public class Pin extends ObjectNode implements org.modeldriven.alf.uml.Pin {
 	}
 
 	public boolean getIsUnique() {
-		return this.getBase().getIsUnique();
+		return this.getBase().isUnique();
 	}
 
 	public void setIsUnique(boolean isUnique) {

@@ -20,7 +20,7 @@ public class LinkEndDestructionData extends LinkEndData implements
 	}
 
 	public boolean getIsDestroyDuplicates() {
-		return this.getBase().getIsDestroyDuplicates();
+		return this.getBase().isDestroyDuplicates();
 	}
 
 	public void setIsDestroyDuplicates(boolean isDestroyDuplicates) {

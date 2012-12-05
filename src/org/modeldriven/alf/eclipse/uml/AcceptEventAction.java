@@ -19,7 +19,7 @@ public class AcceptEventAction extends Action implements
 	}
 
 	public boolean getIsUnmarshall() {
-		return this.getBase().getIsUnmarshall();
+		return this.getBase().isUnmarshall();
 	}
 
 	public void setIsUnmarshall(boolean isUnmarshall) {

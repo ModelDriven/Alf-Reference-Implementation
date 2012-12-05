@@ -21,7 +21,7 @@ public class AddStructuralFeatureValueAction extends
 	}
 
 	public boolean getIsReplaceAll() {
-		return this.getBase().getIsReplaceAll();
+		return this.getBase().isReplaceAll();
 	}
 
 	public void setIsReplaceAll(boolean isReplaceAll) {

@@ -20,7 +20,7 @@ public class ReadIsClassifiedObjectAction extends Action implements
 	}
 
 	public boolean getIsDirect() {
-		return this.getBase().getIsDirect();
+		return this.getBase().isDirect();
 	}
 
 	public void setIsDirect(boolean isDirect) {

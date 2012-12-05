@@ -18,7 +18,7 @@ public class LoopNode extends StructuredActivityNode implements
 	}
 
 	public boolean getIsTestedFirst() {
-		return this.getBase().getIsTestedFirst();
+		return this.getBase().isTestedFirst();
 	}
 
 	public void setIsTestedFirst(boolean isTestedFirst) {

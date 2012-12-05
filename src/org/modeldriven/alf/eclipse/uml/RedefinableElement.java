@@ -15,7 +15,7 @@ public class RedefinableElement extends NamedElement implements
 	}
 
 	public boolean getIsLeaf() {
-		return this.getBase().getIsLeaf();
+		return this.getBase().isLeaf();
 	}
 
 	public void setIsLeaf(boolean isLeaf) {
