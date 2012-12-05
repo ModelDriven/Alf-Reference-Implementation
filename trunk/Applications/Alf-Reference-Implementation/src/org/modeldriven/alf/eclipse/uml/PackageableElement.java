@@ -20,7 +20,7 @@ public class PackageableElement extends NamedElement implements
 
 	public void setVisibility( String
  visibility) {
-		this.getBase().setVisibility( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@4958ed (name: VisibilityKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(visibility)
+		this.getBase().setVisibility( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@130fe4e (name: VisibilityKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(visibility)
 );
 	}
 
