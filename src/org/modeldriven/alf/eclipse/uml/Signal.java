@@ -21,7 +21,7 @@ public class Signal extends Classifier implements
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (org.eclipse.uml2.uml.Property element : this.getBase()
 				.getOwnedAttributes()) {
-			list.add(new Property(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

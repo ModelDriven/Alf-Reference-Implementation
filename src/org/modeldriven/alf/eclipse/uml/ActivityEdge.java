@@ -15,11 +15,11 @@ public class ActivityEdge extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {
-		return new Activity(this.getBase().getActivity());
+		return wrap(this.getBase().getActivity());
 	}
 
 	public org.modeldriven.alf.uml.ActivityNode getSource() {
-		return new ActivityNode(this.getBase().getSource());
+		return wrap(this.getBase().getSource());
 	}
 
 	public void setSource(org.modeldriven.alf.uml.ActivityNode source) {
@@ -28,7 +28,7 @@ public class ActivityEdge extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.ActivityNode getTarget() {
-		return new ActivityNode(this.getBase().getTarget());
+		return wrap(this.getBase().getTarget());
 	}
 
 	public void setTarget(org.modeldriven.alf.uml.ActivityNode target) {
@@ -37,7 +37,7 @@ public class ActivityEdge extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getGuard() {
-		return new ValueSpecification(this.getBase().getGuard());
+		return wrap(this.getBase().getGuard());
 	}
 
 	public void setGuard(org.modeldriven.alf.uml.ValueSpecification guard) {
@@ -46,7 +46,7 @@ public class ActivityEdge extends RedefinableElement implements
 	}
 
 	public org.modeldriven.alf.uml.StructuredActivityNode getInStructuredNode() {
-		return new StructuredActivityNode(this.getBase().getInStructuredNode());
+		return wrap(this.getBase().getInStructuredNode());
 	}
 
 }

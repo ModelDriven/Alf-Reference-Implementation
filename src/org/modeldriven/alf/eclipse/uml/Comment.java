@@ -22,7 +22,7 @@ public class Comment implements org.modeldriven.alf.uml.Comment {
 		List<org.modeldriven.alf.uml.Element> list = new ArrayList<org.modeldriven.alf.uml.Element>();
 		for (org.eclipse.uml2.uml.Element element : this.getBase()
 				.getAnnotatedElements()) {
-			list.add(new Element(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

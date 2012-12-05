@@ -27,11 +27,11 @@ public class PackageImport extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.Namespace getImportingNamespace() {
-		return new Namespace(this.getBase().getImportingNamespace());
+		return wrap(this.getBase().getImportingNamespace());
 	}
 
 	public org.modeldriven.alf.uml.Package getImportedPackage() {
-		return new Package(this.getBase().getImportedPackage());
+		return wrap(this.getBase().getImportedPackage());
 	}
 
 	public void setImportedPackage(

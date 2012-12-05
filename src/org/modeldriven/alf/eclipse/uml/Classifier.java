@@ -26,7 +26,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.Generalization> list = new ArrayList<org.modeldriven.alf.uml.Generalization>();
 		for (org.eclipse.uml2.uml.Generalization element : this.getBase()
 				.getGeneralizations()) {
-			list.add(new Generalization(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -42,7 +42,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.Feature> list = new ArrayList<org.modeldriven.alf.uml.Feature>();
 		for (org.eclipse.uml2.uml.Feature element : this.getBase()
 				.getFeatures()) {
-			list.add(new Feature(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -51,7 +51,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (org.eclipse.uml2.uml.NamedElement element : this.getBase()
 				.getInheritedMembers()) {
-			list.add(new NamedElement(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -60,7 +60,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (org.eclipse.uml2.uml.Property element : this.getBase()
 				.getAttributes()) {
-			list.add(new Property(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -69,7 +69,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
 				.getGenerals()) {
-			list.add(new Classifier(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -86,7 +86,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (org.eclipse.uml2.uml.NamedElement element : this.getBase()
 				.getMembers()) {
-			list.add(new NamedElement(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -95,7 +95,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (org.eclipse.uml2.uml.NamedElement element : this.getBase()
 				.getOwnedMembers()) {
-			list.add(new NamedElement(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -104,7 +104,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.ElementImport> list = new ArrayList<org.modeldriven.alf.uml.ElementImport>();
 		for (org.eclipse.uml2.uml.ElementImport element : this.getBase()
 				.getElementImports()) {
-			list.add(new ElementImport(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -120,7 +120,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.PackageImport> list = new ArrayList<org.modeldriven.alf.uml.PackageImport>();
 		for (org.eclipse.uml2.uml.PackageImport element : this.getBase()
 				.getPackageImports()) {
-			list.add(new PackageImport(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -136,7 +136,7 @@ public class Classifier extends Type implements
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (org.eclipse.uml2.uml.PackageableElement element : this.getBase()
 				.getImportedMembers()) {
-			list.add(new PackageableElement(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

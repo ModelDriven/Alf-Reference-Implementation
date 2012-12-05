@@ -16,7 +16,7 @@ public class StructuralFeatureAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.StructuralFeature getStructuralFeature() {
-		return new StructuralFeature(this.getBase().getStructuralFeature());
+		return wrap(this.getBase().getStructuralFeature());
 	}
 
 	public void setStructuralFeature(
@@ -27,7 +27,7 @@ public class StructuralFeatureAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getObject() {
-		return new InputPin(this.getBase().getObject());
+		return wrap(this.getBase().getObject());
 	}
 
 	public void setObject(org.modeldriven.alf.uml.InputPin object) {

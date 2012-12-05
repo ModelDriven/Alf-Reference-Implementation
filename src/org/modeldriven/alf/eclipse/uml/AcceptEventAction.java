@@ -30,7 +30,7 @@ public class AcceptEventAction extends Action implements
 		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
 		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
 				.getResults()) {
-			list.add(new OutputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -44,7 +44,7 @@ public class AcceptEventAction extends Action implements
 		List<org.modeldriven.alf.uml.Trigger> list = new ArrayList<org.modeldriven.alf.uml.Trigger>();
 		for (org.eclipse.uml2.uml.Trigger element : this.getBase()
 				.getTriggers()) {
-			list.add(new Trigger(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

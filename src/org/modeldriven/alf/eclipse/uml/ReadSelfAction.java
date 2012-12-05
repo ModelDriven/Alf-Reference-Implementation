@@ -18,7 +18,7 @@ public class ReadSelfAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return new OutputPin(this.getBase().getResult());
+		return wrap(this.getBase().getResult());
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {

@@ -17,11 +17,11 @@ public class Slot extends Element implements org.modeldriven.alf.uml.Slot {
 	}
 
 	public org.modeldriven.alf.uml.InstanceSpecification getOwningInstance() {
-		return new InstanceSpecification(this.getBase().getOwningInstance());
+		return wrap(this.getBase().getOwningInstance());
 	}
 
 	public org.modeldriven.alf.uml.StructuralFeature getDefiningFeature() {
-		return new StructuralFeature(this.getBase().getDefiningFeature());
+		return wrap(this.getBase().getDefiningFeature());
 	}
 
 	public void setDefiningFeature(
@@ -35,7 +35,7 @@ public class Slot extends Element implements org.modeldriven.alf.uml.Slot {
 		List<org.modeldriven.alf.uml.ValueSpecification> list = new ArrayList<org.modeldriven.alf.uml.ValueSpecification>();
 		for (org.eclipse.uml2.uml.ValueSpecification element : this.getBase()
 				.getValues()) {
-			list.add(new ValueSpecification(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

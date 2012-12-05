@@ -21,7 +21,7 @@ public class Enumeration extends DataType implements
 		List<org.modeldriven.alf.uml.EnumerationLiteral> list = new ArrayList<org.modeldriven.alf.uml.EnumerationLiteral>();
 		for (org.eclipse.uml2.uml.EnumerationLiteral element : this.getBase()
 				.getOwnedLiterals()) {
-			list.add(new EnumerationLiteral(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

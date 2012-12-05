@@ -18,19 +18,19 @@ public class Action extends ExecutableNode implements
 		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
 		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
 				.getOutputs()) {
-			list.add(new OutputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
 
 	public org.modeldriven.alf.uml.Classifier getContext() {
-		return new Classifier(this.getBase().getContext());
+		return wrap(this.getBase().getContext());
 	}
 
 	public List<org.modeldriven.alf.uml.InputPin> getInput() {
 		List<org.modeldriven.alf.uml.InputPin> list = new ArrayList<org.modeldriven.alf.uml.InputPin>();
 		for (org.eclipse.uml2.uml.InputPin element : this.getBase().getInputs()) {
-			list.add(new InputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

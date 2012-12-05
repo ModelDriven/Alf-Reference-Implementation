@@ -18,7 +18,7 @@ public class BehavioralFeature extends Feature implements
 		List<org.modeldriven.alf.uml.Parameter> list = new ArrayList<org.modeldriven.alf.uml.Parameter>();
 		for (org.eclipse.uml2.uml.Parameter element : this.getBase()
 				.getOwnedParameters()) {
-			list.add(new Parameter(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -42,7 +42,7 @@ public class BehavioralFeature extends Feature implements
 		List<org.modeldriven.alf.uml.Behavior> list = new ArrayList<org.modeldriven.alf.uml.Behavior>();
 		for (org.eclipse.uml2.uml.Behavior element : this.getBase()
 				.getMethods()) {
-			list.add(new Behavior(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}

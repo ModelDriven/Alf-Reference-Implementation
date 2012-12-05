@@ -23,7 +23,7 @@ public class StructuredActivityNode extends Action implements
 		List<org.modeldriven.alf.uml.ActivityNode> list = new ArrayList<org.modeldriven.alf.uml.ActivityNode>();
 		for (org.eclipse.uml2.uml.ActivityNode element : this.getBase()
 				.getNodes()) {
-			list.add(new ActivityNode(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -34,7 +34,7 @@ public class StructuredActivityNode extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {
-		return new Activity(this.getBase().getActivity());
+		return wrap(this.getBase().getActivity());
 	}
 
 	public boolean getMustIsolate() {
@@ -49,7 +49,7 @@ public class StructuredActivityNode extends Action implements
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (org.eclipse.uml2.uml.ActivityEdge element : this.getBase()
 				.getEdges()) {
-			list.add(new ActivityEdge(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -63,7 +63,7 @@ public class StructuredActivityNode extends Action implements
 		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
 		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
 				.getStructuredNodeOutputs()) {
-			list.add(new OutputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
@@ -79,7 +79,7 @@ public class StructuredActivityNode extends Action implements
 		List<org.modeldriven.alf.uml.InputPin> list = new ArrayList<org.modeldriven.alf.uml.InputPin>();
 		for (org.eclipse.uml2.uml.InputPin element : this.getBase()
 				.getStructuredNodeInputs()) {
-			list.add(new InputPin(element));
+			list.add(wrap(element));
 		}
 		return list;
 	}
