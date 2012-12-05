@@ -18,7 +18,7 @@ public class Operation extends BehavioralFeature implements
 	}
 
 	public boolean getIsQuery() {
-		return this.getBase().getIsQuery();
+		return this.getBase().isQuery();
 	}
 
 	public void setIsQuery(boolean isQuery) {
@@ -26,11 +26,11 @@ public class Operation extends BehavioralFeature implements
 	}
 
 	public boolean getIsOrdered() {
-		return this.getBase().getIsOrdered();
+		return this.getBase().isOrdered();
 	}
 
 	public boolean getIsUnique() {
-		return this.getBase().getIsUnique();
+		return this.getBase().isUnique();
 	}
 
 	public int getLower() {

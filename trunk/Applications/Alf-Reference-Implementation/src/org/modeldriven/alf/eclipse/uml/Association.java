@@ -18,7 +18,7 @@ public class Association extends Classifier implements
 	}
 
 	public boolean getIsDerived() {
-		return this.getBase().getIsDerived();
+		return this.getBase().isDerived();
 	}
 
 	public void setIsDerived(boolean isDerived) {

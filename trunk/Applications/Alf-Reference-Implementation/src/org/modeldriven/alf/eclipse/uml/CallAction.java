@@ -15,7 +15,7 @@ public class CallAction extends InvocationAction implements
 	}
 
 	public boolean getIsSynchronous() {
-		return this.getBase().getIsSynchronous();
+		return this.getBase().isSynchronous();
 	}
 
 	public void setIsSynchronous(boolean isSynchronous) {

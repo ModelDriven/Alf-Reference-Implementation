@@ -18,7 +18,7 @@ public class Property extends StructuralFeature implements
 	}
 
 	public boolean getIsDerived() {
-		return this.getBase().getIsDerived();
+		return this.getBase().isDerived();
 	}
 
 	public void setIsDerived(boolean isDerived) {
@@ -26,7 +26,7 @@ public class Property extends StructuralFeature implements
 	}
 
 	public boolean getIsReadOnly() {
-		return this.getBase().getIsReadOnly();
+		return this.getBase().isReadOnly();
 	}
 
 	public void setIsReadOnly(boolean isReadOnly) {
@@ -34,7 +34,7 @@ public class Property extends StructuralFeature implements
 	}
 
 	public boolean getIsDerivedUnion() {
-		return this.getBase().getIsDerivedUnion();
+		return this.getBase().isDerivedUnion();
 	}
 
 	public void setIsDerivedUnion(boolean isDerivedUnion) {
@@ -47,12 +47,12 @@ public class Property extends StructuralFeature implements
 
 	public void setAggregation( String
  aggregation) {
-		this.getBase().setAggregation( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@6babe (name: AggregationKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(aggregation)
+		this.getBase().setAggregation( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@1e55343 (name: AggregationKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(aggregation)
 );
 	}
 
 	public boolean getIsComposite() {
-		return this.getBase().getIsComposite();
+		return this.getBase().isComposite();
 	}
 
 	public org.modeldriven.alf.uml.Association getOwningAssociation() {
@@ -82,7 +82,7 @@ public class Property extends StructuralFeature implements
 	}
 
 	public boolean getIsID() {
-		return this.getBase().getIsID();
+		return this.getBase().isID();
 	}
 
 	public void setIsID(boolean isID) {

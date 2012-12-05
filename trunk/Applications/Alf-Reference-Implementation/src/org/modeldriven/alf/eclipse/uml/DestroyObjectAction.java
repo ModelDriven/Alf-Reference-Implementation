@@ -19,7 +19,7 @@ public class DestroyObjectAction extends Action implements
 	}
 
 	public boolean getIsDestroyLinks() {
-		return this.getBase().getIsDestroyLinks();
+		return this.getBase().isDestroyLinks();
 	}
 
 	public void setIsDestroyLinks(boolean isDestroyLinks) {
@@ -27,7 +27,7 @@ public class DestroyObjectAction extends Action implements
 	}
 
 	public boolean getIsDestroyOwnedObjects() {
-		return this.getBase().getIsDestroyOwnedObjects();
+		return this.getBase().isDestroyOwnedObjects();
 	}
 
 	public void setIsDestroyOwnedObjects(boolean isDestroyOwnedObjects) {

@@ -18,7 +18,7 @@ public class Generalization extends Element implements
 	}
 
 	public boolean getIsSubstitutable() {
-		return this.getBase().getIsSubstitutable();
+		return this.getBase().isSubstitutable();
 	}
 
 	public void setIsSubstitutable(boolean isSubstitutable) {

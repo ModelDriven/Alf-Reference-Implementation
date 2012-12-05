@@ -21,7 +21,7 @@ public class RemoveStructuralFeatureValueAction extends
 	}
 
 	public boolean getIsRemoveDuplicates() {
-		return this.getBase().getIsRemoveDuplicates();
+		return this.getBase().isRemoveDuplicates();
 	}
 
 	public void setIsRemoveDuplicates(boolean isRemoveDuplicates) {

@@ -15,7 +15,7 @@ public class Behavior extends Class_ implements
 	}
 
 	public boolean getIsReentrant() {
-		return this.getBase().getIsReentrant();
+		return this.getBase().isReentrant();
 	}
 
 	public void setIsReentrant(boolean isReentrant) {

@@ -41,7 +41,7 @@ public class Activity extends Behavior implements
 	}
 
 	public boolean getIsReadOnly() {
-		return this.getBase().getIsReadOnly();
+		return this.getBase().isReadOnly();
 	}
 
 	public void setIsReadOnly(boolean isReadOnly) {

@@ -18,7 +18,7 @@ public class LiteralBoolean extends LiteralSpecification implements
 	}
 
 	public boolean getValue() {
-		return this.getBase().getValue();
+		return this.getBase().value();
 	}
 
 	public void setValue(boolean value) {

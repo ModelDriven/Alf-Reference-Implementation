@@ -36,7 +36,7 @@ public class Action extends ExecutableNode implements
 	}
 
 	public boolean getIsLocallyReentrant() {
-		return this.getBase().getIsLocallyReentrant();
+		return this.getBase().isLocallyReentrant();
 	}
 
 	public void setIsLocallyReentrant(boolean isLocallyReentrant) {

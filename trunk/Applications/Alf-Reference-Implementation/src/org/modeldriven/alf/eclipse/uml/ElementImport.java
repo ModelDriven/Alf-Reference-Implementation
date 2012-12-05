@@ -23,7 +23,7 @@ public class ElementImport extends Element implements
 
 	public void setVisibility( String
  visibility) {
-		this.getBase().setVisibility( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@130fe4e (name: VisibilityKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(visibility)
+		this.getBase().setVisibility( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@aff6f0 (name: VisibilityKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(visibility)
 );
 	}
 

@@ -18,7 +18,7 @@ public class ConditionalNode extends StructuredActivityNode implements
 	}
 
 	public boolean getIsDeterminate() {
-		return this.getBase().getIsDeterminate();
+		return this.getBase().isDeterminate();
 	}
 
 	public void setIsDeterminate(boolean isDeterminate) {
@@ -26,7 +26,7 @@ public class ConditionalNode extends StructuredActivityNode implements
 	}
 
 	public boolean getIsAssured() {
-		return this.getBase().getIsAssured();
+		return this.getBase().isAssured();
 	}
 
 	public void setIsAssured(boolean isAssured) {

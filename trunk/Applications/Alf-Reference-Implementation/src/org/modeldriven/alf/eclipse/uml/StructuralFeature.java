@@ -15,7 +15,7 @@ public class StructuralFeature extends Feature implements
 	}
 
 	public boolean getIsReadOnly() {
-		return this.getBase().getIsReadOnly();
+		return this.getBase().isReadOnly();
 	}
 
 	public void setIsReadOnly(boolean isReadOnly) {
@@ -31,7 +31,7 @@ public class StructuralFeature extends Feature implements
 	}
 
 	public boolean getIsOrdered() {
-		return this.getBase().getIsOrdered();
+		return this.getBase().isOrdered();
 	}
 
 	public void setIsOrdered(boolean isOrdered) {
@@ -39,7 +39,7 @@ public class StructuralFeature extends Feature implements
 	}
 
 	public boolean getIsUnique() {
-		return this.getBase().getIsUnique();
+		return this.getBase().isUnique();
 	}
 
 	public void setIsUnique(boolean isUnique) {

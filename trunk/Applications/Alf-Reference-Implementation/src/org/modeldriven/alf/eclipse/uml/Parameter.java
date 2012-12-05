@@ -23,7 +23,7 @@ public class Parameter extends TypedElement implements
 
 	public void setDirection( String
  direction) {
-		this.getBase().setDirection( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@bdc97d (name: ParameterDirectionKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(direction)
+		this.getBase().setDirection( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@445397 (name: ParameterDirectionKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(direction)
 );
 	}
 
@@ -32,7 +32,7 @@ public class Parameter extends TypedElement implements
 	}
 
 	public boolean getIsOrdered() {
-		return this.getBase().getIsOrdered();
+		return this.getBase().isOrdered();
 	}
 
 	public void setIsOrdered(boolean isOrdered) {
@@ -40,7 +40,7 @@ public class Parameter extends TypedElement implements
 	}
 
 	public boolean getIsUnique() {
-		return this.getBase().getIsUnique();
+		return this.getBase().isUnique();
 	}
 
 	public void setIsUnique(boolean isUnique) {

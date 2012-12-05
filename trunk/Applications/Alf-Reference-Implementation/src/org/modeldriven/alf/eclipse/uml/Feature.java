@@ -15,7 +15,7 @@ public class Feature extends RedefinableElement implements
 	}
 
 	public boolean getIsStatic() {
-		return this.getBase().getIsStatic();
+		return this.getBase().isStatic();
 	}
 
 	public void setIsStatic(boolean isStatic) {

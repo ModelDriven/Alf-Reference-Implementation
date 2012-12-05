@@ -15,7 +15,7 @@ public class Classifier extends Type implements
 	}
 
 	public boolean getIsAbstract() {
-		return this.getBase().getIsAbstract();
+		return this.getBase().isAbstract();
 	}
 
 	public void setIsAbstract(boolean isAbstract) {
@@ -75,7 +75,7 @@ public class Classifier extends Type implements
 	}
 
 	public boolean getIsFinalSpecialization() {
-		return this.getBase().getIsFinalSpecialization();
+		return this.getBase().isFinalSpecialization();
 	}
 
 	public void setIsFinalSpecialization(boolean isFinalSpecialization) {
