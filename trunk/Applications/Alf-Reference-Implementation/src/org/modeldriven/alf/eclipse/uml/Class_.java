@@ -100,7 +100,7 @@ public class Class_ extends BehavioredClassifier implements
 	public List<org.modeldriven.alf.uml.Class_> getSuperClass() {
 		List<org.modeldriven.alf.uml.Class_> list = new ArrayList<org.modeldriven.alf.uml.Class_>();
 		for (org.eclipse.uml2.uml.Class element : this.getBase()
-				.getSuperClasss()) {
+				.getSuperClasses()) {
 			list.add(new Class_(element));
 		}
 		return list;

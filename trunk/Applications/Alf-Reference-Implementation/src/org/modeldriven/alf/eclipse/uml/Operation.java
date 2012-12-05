@@ -41,8 +41,8 @@ public class Operation extends BehavioralFeature implements
 		return this.getBase().getUpper();
 	}
 
-	public org.modeldriven.alf.uml.Class_ getClass() {
-		return new Class_(this.getBase().getClass());
+	public org.modeldriven.alf.uml.Class_ getClass_() {
+		return new Class_(this.getBase().getClass_());
 	}
 
 	public List<org.modeldriven.alf.uml.Operation> getRedefinedOperation() {
