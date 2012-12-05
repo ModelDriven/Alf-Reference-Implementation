@@ -21,7 +21,7 @@ public class DataType extends Classifier implements
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (org.eclipse.uml2.uml.Property element : this.getBase()
 				.getOwnedAttributes()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Property) wrap(element));
 		}
 		return list;
 	}

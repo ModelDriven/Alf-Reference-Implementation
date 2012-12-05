@@ -18,7 +18,7 @@ public class TypedElement extends NamedElement implements
 	}
 
 	public org.modeldriven.alf.uml.Type getType() {
-		return wrap(this.getBase().getType());
+		return (org.modeldriven.alf.uml.Type) wrap(this.getBase().getType());
 	}
 
 	public void setType(org.modeldriven.alf.uml.Type type) {

@@ -21,7 +21,7 @@ public class Class_ extends BehavioredClassifier implements
 		List<org.modeldriven.alf.uml.Operation> list = new ArrayList<org.modeldriven.alf.uml.Operation>();
 		for (org.eclipse.uml2.uml.Operation element : this.getBase()
 				.getOwnedOperations()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Operation) wrap(element));
 		}
 		return list;
 	}
@@ -45,7 +45,7 @@ public class Class_ extends BehavioredClassifier implements
 		List<org.modeldriven.alf.uml.Reception> list = new ArrayList<org.modeldriven.alf.uml.Reception>();
 		for (org.eclipse.uml2.uml.Reception element : this.getBase()
 				.getOwnedReceptions()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Reception) wrap(element));
 		}
 		return list;
 	}
@@ -61,7 +61,7 @@ public class Class_ extends BehavioredClassifier implements
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (org.eclipse.uml2.uml.Property element : this.getBase()
 				.getOwnedAttributes()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Property) wrap(element));
 		}
 		return list;
 	}
@@ -77,7 +77,7 @@ public class Class_ extends BehavioredClassifier implements
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
 				.getNestedClassifiers()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Classifier) wrap(element));
 		}
 		return list;
 	}
@@ -101,7 +101,7 @@ public class Class_ extends BehavioredClassifier implements
 		List<org.modeldriven.alf.uml.Class_> list = new ArrayList<org.modeldriven.alf.uml.Class_>();
 		for (org.eclipse.uml2.uml.Class element : this.getBase()
 				.getSuperClasses()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Class_) wrap(element));
 		}
 		return list;
 	}

@@ -28,7 +28,8 @@ public class ReadIsClassifiedObjectAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.Classifier getClassifier() {
-		return wrap(this.getBase().getClassifier());
+		return (org.modeldriven.alf.uml.Classifier) wrap(this.getBase()
+				.getClassifier());
 	}
 
 	public void setClassifier(org.modeldriven.alf.uml.Classifier classifier) {
@@ -39,7 +40,8 @@ public class ReadIsClassifiedObjectAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return wrap(this.getBase().getResult());
+		return (org.modeldriven.alf.uml.OutputPin) wrap(this.getBase()
+				.getResult());
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {
@@ -48,7 +50,8 @@ public class ReadIsClassifiedObjectAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getObject() {
-		return wrap(this.getBase().getObject());
+		return (org.modeldriven.alf.uml.InputPin) wrap(this.getBase()
+				.getObject());
 	}
 
 	public void setObject(org.modeldriven.alf.uml.InputPin object) {

@@ -55,15 +55,18 @@ public class Property extends StructuralFeature implements
 	}
 
 	public org.modeldriven.alf.uml.Association getOwningAssociation() {
-		return wrap(this.getBase().getOwningAssociation());
+		return (org.modeldriven.alf.uml.Association) wrap(this.getBase()
+				.getOwningAssociation());
 	}
 
 	public org.modeldriven.alf.uml.DataType getDatatype() {
-		return wrap(this.getBase().getDatatype());
+		return (org.modeldriven.alf.uml.DataType) wrap(this.getBase()
+				.getDatatype());
 	}
 
 	public org.modeldriven.alf.uml.Association getAssociation() {
-		return wrap(this.getBase().getAssociation());
+		return (org.modeldriven.alf.uml.Association) wrap(this.getBase()
+				.getAssociation());
 	}
 
 	public void setAssociation(org.modeldriven.alf.uml.Association association) {
@@ -73,11 +76,12 @@ public class Property extends StructuralFeature implements
 	}
 
 	public org.modeldriven.alf.uml.Class_ getClass_() {
-		return wrap(this.getBase().getClass_());
+		return (org.modeldriven.alf.uml.Class_) wrap(this.getBase().getClass_());
 	}
 
 	public org.modeldriven.alf.uml.Property getOpposite() {
-		return wrap(this.getBase().getOpposite());
+		return (org.modeldriven.alf.uml.Property) wrap(this.getBase()
+				.getOpposite());
 	}
 
 	public boolean getIsID() {

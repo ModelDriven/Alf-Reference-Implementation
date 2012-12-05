@@ -27,7 +27,8 @@ public class Parameter extends TypedElement implements
 	}
 
 	public org.modeldriven.alf.uml.Operation getOperation() {
-		return wrap(this.getBase().getOperation());
+		return (org.modeldriven.alf.uml.Operation) wrap(this.getBase()
+				.getOperation());
 	}
 
 	public boolean getIsOrdered() {
@@ -55,7 +56,8 @@ public class Parameter extends TypedElement implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getUpperValue() {
-		return wrap(this.getBase().getUpperValue());
+		return (org.modeldriven.alf.uml.ValueSpecification) wrap(this.getBase()
+				.getUpperValue());
 	}
 
 	public void setUpperValue(
@@ -66,7 +68,8 @@ public class Parameter extends TypedElement implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getLowerValue() {
-		return wrap(this.getBase().getLowerValue());
+		return (org.modeldriven.alf.uml.ValueSpecification) wrap(this.getBase()
+				.getLowerValue());
 	}
 
 	public void setLowerValue(

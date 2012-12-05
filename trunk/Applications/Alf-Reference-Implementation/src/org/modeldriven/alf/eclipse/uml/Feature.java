@@ -26,7 +26,7 @@ public class Feature extends RedefinableElement implements
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
 				.getFeaturingClassifiers()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Classifier) wrap(element));
 		}
 		return list;
 	}

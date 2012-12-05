@@ -19,7 +19,8 @@ public class CallOperationAction extends CallAction implements
 	}
 
 	public org.modeldriven.alf.uml.Operation getOperation() {
-		return wrap(this.getBase().getOperation());
+		return (org.modeldriven.alf.uml.Operation) wrap(this.getBase()
+				.getOperation());
 	}
 
 	public void setOperation(org.modeldriven.alf.uml.Operation operation) {
@@ -28,7 +29,8 @@ public class CallOperationAction extends CallAction implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getTarget() {
-		return wrap(this.getBase().getTarget());
+		return (org.modeldriven.alf.uml.InputPin) wrap(this.getBase()
+				.getTarget());
 	}
 
 	public void setTarget(org.modeldriven.alf.uml.InputPin target) {

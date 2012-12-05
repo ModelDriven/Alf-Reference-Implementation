@@ -31,7 +31,7 @@ public class ReclassifyObjectAction extends Action implements
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
 				.getOldClassifiers()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Classifier) wrap(element));
 		}
 		return list;
 	}
@@ -44,7 +44,8 @@ public class ReclassifyObjectAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getObject() {
-		return wrap(this.getBase().getObject());
+		return (org.modeldriven.alf.uml.InputPin) wrap(this.getBase()
+				.getObject());
 	}
 
 	public void setObject(org.modeldriven.alf.uml.InputPin object) {
@@ -56,7 +57,7 @@ public class ReclassifyObjectAction extends Action implements
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
 				.getNewClassifiers()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Classifier) wrap(element));
 		}
 		return list;
 	}

@@ -21,7 +21,8 @@ public class Package extends Namespace implements
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (org.eclipse.uml2.uml.PackageableElement element : this.getBase()
 				.getPackagedElements()) {
-			list.add(wrap(element));
+			list
+					.add((org.modeldriven.alf.uml.PackageableElement) wrap(element));
 		}
 		return list;
 	}
@@ -36,7 +37,7 @@ public class Package extends Namespace implements
 	public List<org.modeldriven.alf.uml.Type> getOwnedType() {
 		List<org.modeldriven.alf.uml.Type> list = new ArrayList<org.modeldriven.alf.uml.Type>();
 		for (org.eclipse.uml2.uml.Type element : this.getBase().getOwnedTypes()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Type) wrap(element));
 		}
 		return list;
 	}
@@ -45,13 +46,14 @@ public class Package extends Namespace implements
 		List<org.modeldriven.alf.uml.Package> list = new ArrayList<org.modeldriven.alf.uml.Package>();
 		for (org.eclipse.uml2.uml.Package element : this.getBase()
 				.getNestedPackages()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Package) wrap(element));
 		}
 		return list;
 	}
 
 	public org.modeldriven.alf.uml.Package getNestingPackage() {
-		return wrap(this.getBase().getNestingPackage());
+		return (org.modeldriven.alf.uml.Package) wrap(this.getBase()
+				.getNestingPackage());
 	}
 
 	public String getURI() {

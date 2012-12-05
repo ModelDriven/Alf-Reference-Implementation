@@ -42,14 +42,14 @@ public class Operation extends BehavioralFeature implements
 	}
 
 	public org.modeldriven.alf.uml.Class_ getClass_() {
-		return wrap(this.getBase().getClass_());
+		return (org.modeldriven.alf.uml.Class_) wrap(this.getBase().getClass_());
 	}
 
 	public List<org.modeldriven.alf.uml.Operation> getRedefinedOperation() {
 		List<org.modeldriven.alf.uml.Operation> list = new ArrayList<org.modeldriven.alf.uml.Operation>();
 		for (org.eclipse.uml2.uml.Operation element : this.getBase()
 				.getRedefinedOperations()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Operation) wrap(element));
 		}
 		return list;
 	}
@@ -62,14 +62,14 @@ public class Operation extends BehavioralFeature implements
 	}
 
 	public org.modeldriven.alf.uml.Type getType() {
-		return wrap(this.getBase().getType());
+		return (org.modeldriven.alf.uml.Type) wrap(this.getBase().getType());
 	}
 
 	public List<org.modeldriven.alf.uml.Parameter> getOwnedParameter() {
 		List<org.modeldriven.alf.uml.Parameter> list = new ArrayList<org.modeldriven.alf.uml.Parameter>();
 		for (org.eclipse.uml2.uml.Parameter element : this.getBase()
 				.getOwnedParameters()) {
-			list.add(wrap(element));
+			list.add((org.modeldriven.alf.uml.Parameter) wrap(element));
 		}
 		return list;
 	}
