@@ -18,23 +18,20 @@ public class DestroyLinkAction extends WriteLinkAction implements
 		return (org.eclipse.uml2.uml.DestroyLinkAction) this.base;
 	}
 
-	public List< org.modeldriven.alf.uml.LinkEndDestructionData> getEndData
-() {
-		List< org.modeldriven.alf.uml.LinkEndDestructionData> list = new ArrayList< org.modeldriven.alf.uml.LinkEndDestructionData>();
-		for (org.eclipse.uml2.uml.LinkEndDestructionData
- element: this.getBase().getEndData
-s()) {
-			list.add( new LinkEndDestructionData(element)
-);
+	public List<org.modeldriven.alf.uml.LinkEndDestructionData> getEndData() {
+		List<org.modeldriven.alf.uml.LinkEndDestructionData> list = new ArrayList<org.modeldriven.alf.uml.LinkEndDestructionData>();
+		for (org.eclipse.uml2.uml.LinkEndDestructionData element : this
+				.getBase().getEndDatas()) {
+			list.add(new LinkEndDestructionData(element));
 		}
 		return list;
 	}
 
-	public void addEndData
-( org.modeldriven.alf.uml.LinkEndDestructionData endData) {
-		this.getBase().getEndData
-s.add( endData == null? null: ((LinkEndDestructionData)endData).getBase()
-);
+	public void addEndData(
+			org.modeldriven.alf.uml.LinkEndDestructionData endData) {
+		this.getBase().getEndDatas().add(
+				endData == null ? null : ((LinkEndDestructionData) endData)
+						.getBase());
 	}
 
 }

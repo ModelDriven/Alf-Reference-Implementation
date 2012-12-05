@@ -21,48 +21,42 @@ public class ExpansionRegion extends StructuredActivityNode implements
 		return this.getBase().getMode().toString();
 	}
 
-	public void setMode(String mode) {
-		this.getBase().setMode(
-				fUML.Syntax.Activities.ExtraStructuredActivities.ExpansionKind
-						.valueOf(mode));
+	public void setMode( String
+ mode) {
+		this.getBase().setMode( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@1483a57 (name: ExpansionKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(mode)
+);
 	}
 
-	public List< org.modeldriven.alf.uml.ExpansionNode> getOutputElement
-() {
-		List< org.modeldriven.alf.uml.ExpansionNode> list = new ArrayList< org.modeldriven.alf.uml.ExpansionNode>();
-		for (org.eclipse.uml2.uml.ExpansionNode
- element: this.getBase().getOutputElement
-s()) {
-			list.add( new ExpansionNode(element)
-);
+	public List<org.modeldriven.alf.uml.ExpansionNode> getOutputElement() {
+		List<org.modeldriven.alf.uml.ExpansionNode> list = new ArrayList<org.modeldriven.alf.uml.ExpansionNode>();
+		for (org.eclipse.uml2.uml.ExpansionNode element : this.getBase()
+				.getOutputElements()) {
+			list.add(new ExpansionNode(element));
 		}
 		return list;
 	}
 
-	public void addOutputElement
-( org.modeldriven.alf.uml.ExpansionNode outputElement) {
-		this.getBase().getOutputElement
-s.add( outputElement == null? null: ((ExpansionNode)outputElement).getBase()
-);
+	public void addOutputElement(
+			org.modeldriven.alf.uml.ExpansionNode outputElement) {
+		this.getBase().getOutputElements().add(
+				outputElement == null ? null : ((ExpansionNode) outputElement)
+						.getBase());
 	}
 
-	public List< org.modeldriven.alf.uml.ExpansionNode> getInputElement
-() {
-		List< org.modeldriven.alf.uml.ExpansionNode> list = new ArrayList< org.modeldriven.alf.uml.ExpansionNode>();
-		for (org.eclipse.uml2.uml.ExpansionNode
- element: this.getBase().getInputElement
-s()) {
-			list.add( new ExpansionNode(element)
-);
+	public List<org.modeldriven.alf.uml.ExpansionNode> getInputElement() {
+		List<org.modeldriven.alf.uml.ExpansionNode> list = new ArrayList<org.modeldriven.alf.uml.ExpansionNode>();
+		for (org.eclipse.uml2.uml.ExpansionNode element : this.getBase()
+				.getInputElements()) {
+			list.add(new ExpansionNode(element));
 		}
 		return list;
 	}
 
-	public void addInputElement
-( org.modeldriven.alf.uml.ExpansionNode inputElement) {
-		this.getBase().getInputElement
-s.add( inputElement == null? null: ((ExpansionNode)inputElement).getBase()
-);
+	public void addInputElement(
+			org.modeldriven.alf.uml.ExpansionNode inputElement) {
+		this.getBase().getInputElements().add(
+				inputElement == null ? null : ((ExpansionNode) inputElement)
+						.getBase());
 	}
 
 }

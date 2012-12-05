@@ -45,11 +45,10 @@ public class Property extends StructuralFeature implements
 		return this.getBase().getAggregation().toString();
 	}
 
-	public void setAggregation(String aggregation) {
-		this.getBase()
-				.setAggregation(
-						fUML.Syntax.Classes.Kernel.AggregationKind
-								.valueOf(aggregation));
+	public void setAggregation( String
+ aggregation) {
+		this.getBase().setAggregation( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@769e74 (name: AggregationKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(aggregation)
+);
 	}
 
 	public boolean getIsComposite() {

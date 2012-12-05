@@ -22,14 +22,11 @@ public class Feature extends RedefinableElement implements
 		this.getBase().setIsStatic(isStatic);
 	}
 
-	public List< org.modeldriven.alf.uml.Classifier> getFeaturingClassifier
-() {
-		List< org.modeldriven.alf.uml.Classifier> list = new ArrayList< org.modeldriven.alf.uml.Classifier>();
-		for (org.eclipse.uml2.uml.Classifier
- element: this.getBase().getFeaturingClassifier
-s()) {
-			list.add( new Classifier(element)
-);
+	public List<org.modeldriven.alf.uml.Classifier> getFeaturingClassifier() {
+		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
+		for (org.eclipse.uml2.uml.Classifier element : this.getBase()
+				.getFeaturingClassifiers()) {
+			list.add(new Classifier(element));
 		}
 		return list;
 	}

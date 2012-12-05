@@ -17,23 +17,19 @@ public class CreateLinkAction extends WriteLinkAction implements
 		return (org.eclipse.uml2.uml.CreateLinkAction) this.base;
 	}
 
-	public List< org.modeldriven.alf.uml.LinkEndCreationData> getEndData
-() {
-		List< org.modeldriven.alf.uml.LinkEndCreationData> list = new ArrayList< org.modeldriven.alf.uml.LinkEndCreationData>();
-		for (org.eclipse.uml2.uml.LinkEndCreationData
- element: this.getBase().getEndData
-s()) {
-			list.add( new LinkEndCreationData(element)
-);
+	public List<org.modeldriven.alf.uml.LinkEndCreationData> getEndData() {
+		List<org.modeldriven.alf.uml.LinkEndCreationData> list = new ArrayList<org.modeldriven.alf.uml.LinkEndCreationData>();
+		for (org.eclipse.uml2.uml.LinkEndCreationData element : this.getBase()
+				.getEndDatas()) {
+			list.add(new LinkEndCreationData(element));
 		}
 		return list;
 	}
 
-	public void addEndData
-( org.modeldriven.alf.uml.LinkEndCreationData endData) {
-		this.getBase().getEndData
-s.add( endData == null? null: ((LinkEndCreationData)endData).getBase()
-);
+	public void addEndData(org.modeldriven.alf.uml.LinkEndCreationData endData) {
+		this.getBase().getEndDatas().add(
+				endData == null ? null : ((LinkEndCreationData) endData)
+						.getBase());
 	}
 
 }

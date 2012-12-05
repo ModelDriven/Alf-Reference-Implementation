@@ -17,23 +17,20 @@ public class Enumeration extends DataType implements
 		return (org.eclipse.uml2.uml.Enumeration) this.base;
 	}
 
-	public List< org.modeldriven.alf.uml.EnumerationLiteral> getOwnedLiteral
-() {
-		List< org.modeldriven.alf.uml.EnumerationLiteral> list = new ArrayList< org.modeldriven.alf.uml.EnumerationLiteral>();
-		for (org.eclipse.uml2.uml.EnumerationLiteral
- element: this.getBase().getOwnedLiteral
-s()) {
-			list.add( new EnumerationLiteral(element)
-);
+	public List<org.modeldriven.alf.uml.EnumerationLiteral> getOwnedLiteral() {
+		List<org.modeldriven.alf.uml.EnumerationLiteral> list = new ArrayList<org.modeldriven.alf.uml.EnumerationLiteral>();
+		for (org.eclipse.uml2.uml.EnumerationLiteral element : this.getBase()
+				.getOwnedLiterals()) {
+			list.add(new EnumerationLiteral(element));
 		}
 		return list;
 	}
 
-	public void addOwnedLiteral
-( org.modeldriven.alf.uml.EnumerationLiteral ownedLiteral) {
-		this.getBase().getOwnedLiteral
-s.add( ownedLiteral == null? null: ((EnumerationLiteral)ownedLiteral).getBase()
-);
+	public void addOwnedLiteral(
+			org.modeldriven.alf.uml.EnumerationLiteral ownedLiteral) {
+		this.getBase().getOwnedLiterals().add(
+				ownedLiteral == null ? null
+						: ((EnumerationLiteral) ownedLiteral).getBase());
 	}
 
 }

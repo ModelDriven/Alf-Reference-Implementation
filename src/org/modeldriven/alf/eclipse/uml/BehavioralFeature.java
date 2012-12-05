@@ -14,23 +14,20 @@ public class BehavioralFeature extends Feature implements
 		return (org.eclipse.uml2.uml.BehavioralFeature) this.base;
 	}
 
-	public List< org.modeldriven.alf.uml.Parameter> getOwnedParameter
-() {
-		List< org.modeldriven.alf.uml.Parameter> list = new ArrayList< org.modeldriven.alf.uml.Parameter>();
-		for (org.eclipse.uml2.uml.Parameter
- element: this.getBase().getOwnedParameter
-s()) {
-			list.add( new Parameter(element)
-);
+	public List<org.modeldriven.alf.uml.Parameter> getOwnedParameter() {
+		List<org.modeldriven.alf.uml.Parameter> list = new ArrayList<org.modeldriven.alf.uml.Parameter>();
+		for (org.eclipse.uml2.uml.Parameter element : this.getBase()
+				.getOwnedParameters()) {
+			list.add(new Parameter(element));
 		}
 		return list;
 	}
 
-	public void addOwnedParameter
-( org.modeldriven.alf.uml.Parameter ownedParameter) {
-		this.getBase().getOwnedParameter
-s.add( ownedParameter == null? null: ((Parameter)ownedParameter).getBase()
-);
+	public void addOwnedParameter(
+			org.modeldriven.alf.uml.Parameter ownedParameter) {
+		this.getBase().getOwnedParameters().add(
+				ownedParameter == null ? null : ((Parameter) ownedParameter)
+						.getBase());
 	}
 
 	public boolean getIsAbstract() {
@@ -41,33 +38,28 @@ s.add( ownedParameter == null? null: ((Parameter)ownedParameter).getBase()
 		this.getBase().setIsAbstract(isAbstract);
 	}
 
-	public List< org.modeldriven.alf.uml.Behavior> getMethod
-() {
-		List< org.modeldriven.alf.uml.Behavior> list = new ArrayList< org.modeldriven.alf.uml.Behavior>();
-		for (org.eclipse.uml2.uml.Behavior
- element: this.getBase().getMethod
-s()) {
-			list.add( new Behavior(element)
-);
+	public List<org.modeldriven.alf.uml.Behavior> getMethod() {
+		List<org.modeldriven.alf.uml.Behavior> list = new ArrayList<org.modeldriven.alf.uml.Behavior>();
+		for (org.eclipse.uml2.uml.Behavior element : this.getBase()
+				.getMethods()) {
+			list.add(new Behavior(element));
 		}
 		return list;
 	}
 
-	public void addMethod
-( org.modeldriven.alf.uml.Behavior method) {
-		this.getBase().getMethod
-s.add( method == null? null: ((Behavior)method).getBase()
-);
+	public void addMethod(org.modeldriven.alf.uml.Behavior method) {
+		this.getBase().getMethods().add(
+				method == null ? null : ((Behavior) method).getBase());
 	}
 
 	public String getConcurrency() {
 		return this.getBase().getConcurrency().toString();
 	}
 
-	public void setConcurrency(String concurrency) {
-		this.getBase().setConcurrency(
-				fUML.Syntax.CommonBehaviors.BasicBehaviors.CallConcurrencyKind
-						.valueOf(concurrency));
+	public void setConcurrency( String
+ concurrency) {
+		this.getBase().setConcurrency( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@1bbc992 (name: CallConcurrencyKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(concurrency)
+);
 	}
 
 }
