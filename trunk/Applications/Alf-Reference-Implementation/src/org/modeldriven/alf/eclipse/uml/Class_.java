@@ -89,14 +89,6 @@ public class Class_ extends BehavioredClassifier implements
 						: ((Classifier) nestedClassifier).getBase());
 	}
 
-	public boolean getIsID() {
-		return this.getBase().isID();
-	}
-
-	public void setIsID(boolean isID) {
-		this.getBase().setIsID(isID);
-	}
-
 	public List<org.modeldriven.alf.uml.Class_> getSuperClass() {
 		List<org.modeldriven.alf.uml.Class_> list = new ArrayList<org.modeldriven.alf.uml.Class_>();
 		for (org.eclipse.uml2.uml.Class element : this.getBase()

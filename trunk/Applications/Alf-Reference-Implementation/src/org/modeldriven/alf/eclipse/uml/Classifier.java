@@ -1,7 +1,9 @@
 package org.modeldriven.alf.eclipse.uml;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Classifier extends Type implements
 		org.modeldriven.alf.uml.Classifier {
@@ -141,5 +143,47 @@ public class Classifier extends Type implements
 		}
 		return list;
 	}
+
+    @Override
+    public List<String> getNamesOfMember(org.modeldriven.alf.uml.NamedElement member) {
+        return this.getBase().getNamesOfMember(((NamedElement)member).getBase());
+    }
+
+    @Override
+    public Set<org.modeldriven.alf.uml.Classifier> parents() {
+        Set<org.modeldriven.alf.uml.Classifier> set = 
+                new HashSet<org.modeldriven.alf.uml.Classifier>();
+        for (org.eclipse.uml2.uml.Classifier parent: this.getBase().parents()) {
+            set.add((org.modeldriven.alf.uml.Classifier) wrap(parent));
+        }
+        return set;
+    }
+
+    @Override
+    public Set<org.modeldriven.alf.uml.Classifier> allParents() {
+        Set<org.modeldriven.alf.uml.Classifier> set = 
+                new HashSet<org.modeldriven.alf.uml.Classifier>();
+        for (org.eclipse.uml2.uml.Classifier parent: this.getBase().allParents()) {
+            set.add((org.modeldriven.alf.uml.Classifier) wrap(parent));
+        }
+        return set;
+    }
+
+    @Override
+    public List<org.modeldriven.alf.uml.NamedElement> inheritableMembers() {
+        List<org.modeldriven.alf.uml.NamedElement> inheritable = 
+                new ArrayList<org.modeldriven.alf.uml.NamedElement>();
+        for (org.modeldriven.alf.uml.NamedElement member: this.getMember()) {
+            if (!"private".equals(member.getVisibility())) {
+                inheritable.add(member);
+            }
+        }
+        return inheritable;
+    }
+
+    @Override
+    public boolean conformsTo(org.modeldriven.alf.uml.Classifier classifier) {
+        return this.getBase().conformsTo(((Classifier)classifier).getBase());
+    }
 
 }

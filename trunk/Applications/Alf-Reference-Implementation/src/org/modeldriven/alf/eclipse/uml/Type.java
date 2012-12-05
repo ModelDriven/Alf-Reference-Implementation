@@ -14,9 +14,9 @@ public class Type extends PackageableElement implements
 		return (org.eclipse.uml2.uml.Type) this.base;
 	}
 
-	public org.modeldriven.alf.uml.Package getPackage_() {
+	public org.modeldriven.alf.uml.Package getPackage() {
 		return (org.modeldriven.alf.uml.Package) wrap(this.getBase()
-				.getPackage_());
+				.getPackage());
 	}
 
 }

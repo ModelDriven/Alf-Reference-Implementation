@@ -14,17 +14,17 @@ public class LinkAction extends Action implements
 		return (org.eclipse.uml2.uml.LinkAction) this.base;
 	}
 
-	public List<org.modeldriven.alf.uml.LinkEndData> getEndData() {
+	public List<? extends org.modeldriven.alf.uml.LinkEndData> getEndData() {
 		List<org.modeldriven.alf.uml.LinkEndData> list = new ArrayList<org.modeldriven.alf.uml.LinkEndData>();
 		for (org.eclipse.uml2.uml.LinkEndData element : this.getBase()
-				.getEndDatas()) {
+				.getEndData()) {
 			list.add((org.modeldriven.alf.uml.LinkEndData) wrap(element));
 		}
 		return list;
 	}
 
 	public void addEndData(org.modeldriven.alf.uml.LinkEndData endData) {
-		this.getBase().getEndDatas().add(
+		this.getBase().getEndData().add(
 				endData == null ? null : ((LinkEndData) endData).getBase());
 	}
 

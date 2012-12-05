@@ -3,7 +3,7 @@ package org.modeldriven.alf.eclipse.uml;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Comment implements org.modeldriven.alf.uml.Comment {
+public class Comment extends Element implements org.modeldriven.alf.uml.Comment {
 	public Comment() {
 		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createComment());
 	}
@@ -11,7 +11,7 @@ public class Comment implements org.modeldriven.alf.uml.Comment {
 	protected org.eclipse.uml2.uml.Comment base;
 
 	public Comment(org.eclipse.uml2.uml.Comment base) {
-		this.base = base;
+		super(base);
 	}
 
 	public org.eclipse.uml2.uml.Comment getBase() {

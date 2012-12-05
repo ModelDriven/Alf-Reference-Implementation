@@ -19,8 +19,8 @@ public class CreateLinkAction extends WriteLinkAction implements
 
 	public List<org.modeldriven.alf.uml.LinkEndCreationData> getEndData() {
 		List<org.modeldriven.alf.uml.LinkEndCreationData> list = new ArrayList<org.modeldriven.alf.uml.LinkEndCreationData>();
-		for (org.eclipse.uml2.uml.LinkEndCreationData element : this.getBase()
-				.getEndDatas()) {
+		for (org.eclipse.uml2.uml.LinkEndData element : this.getBase()
+				.getEndData()) {
 			list
 					.add((org.modeldriven.alf.uml.LinkEndCreationData) wrap(element));
 		}
@@ -28,7 +28,7 @@ public class CreateLinkAction extends WriteLinkAction implements
 	}
 
 	public void addEndData(org.modeldriven.alf.uml.LinkEndCreationData endData) {
-		this.getBase().getEndDatas().add(
+		this.getBase().getEndData().add(
 				endData == null ? null : ((LinkEndCreationData) endData)
 						.getBase());
 	}

@@ -73,4 +73,13 @@ public class Package extends Namespace implements
 				org.eclipse.uml2.uml.VisibilityKind.get(visibility));
 	}
 
+    @Override
+    public List<org.modeldriven.alf.uml.NamedElement> visibleMembers() {
+        List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
+        for (org.eclipse.uml2.uml.NamedElement member: this.getBase().visibleMembers()) {
+            list.add((org.modeldriven.alf.uml.NamedElement)wrap(member));
+        }
+        return list;
+    }
+
 }

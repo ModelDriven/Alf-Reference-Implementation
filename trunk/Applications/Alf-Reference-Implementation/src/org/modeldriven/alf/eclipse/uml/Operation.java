@@ -81,4 +81,21 @@ public class Operation extends BehavioralFeature implements
 						.getBase());
 	}
 
+    @Override
+    public void setClass_(org.modeldriven.alf.uml.Class_ class_) {
+        this.getBase().setClass_(((Class_)class_).getBase());
+    }
+
+    @Override
+    public boolean isConstructor() {
+        // TODO Check for Create stereotype application.
+        return false;
+    }
+
+    @Override
+    public boolean isDestructor() {
+        // TODO Check for Destroy stereotype application.
+        return false;
+    }
+
 }
