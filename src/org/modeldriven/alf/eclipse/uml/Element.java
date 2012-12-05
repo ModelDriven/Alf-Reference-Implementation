@@ -15,6 +15,31 @@ public class Element implements org.modeldriven.alf.uml.Element {
 		return (org.eclipse.uml2.uml.Element) this.base;
 	}
 
+    private void setBase(org.eclipse.uml2.uml.Element base) {
+        this.base = base;
+    }
+    
+    public static Element wrap(org.eclipse.uml2.uml.Element base) {
+        if (base == null) {
+            return null;
+        }
+        Element newInstance = ElementFactory.newInstance(base.getClass().getSimpleName());
+        if (newInstance != null) {
+            newInstance.setBase(base);
+        }
+        return newInstance;
+    }
+    
+    public boolean equals(Object other) {
+        return other instanceof Element && 
+                ((Element)other).getBase() == this.getBase();
+    }
+    
+    public String toString() {
+        Object base = this.getBase();
+        return base == null? null: base.toString();
+    }
+
 	public List<org.modeldriven.alf.uml.Element> getOwnedElement() {
 		List<org.modeldriven.alf.uml.Element> list = new ArrayList<org.modeldriven.alf.uml.Element>();
 		for (org.eclipse.uml2.uml.Element element : this.getBase()
@@ -43,4 +68,11 @@ public class Element implements org.modeldriven.alf.uml.Element {
 						.getBase());
 	}
 
+    public String toString(boolean includeDerived) {
+        return this.toString();
+    }
+
+    public void print(String prefix) {
+        System.out.println(prefix + this.toString());
+    }
 }

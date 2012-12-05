@@ -23,9 +23,9 @@ public class EnumerationLiteral extends InstanceSpecification implements
 				.getEnumeration());
 	}
 
-	public org.modeldriven.alf.uml.Enumeration getClassifier() {
-		return (org.modeldriven.alf.uml.Enumeration) wrap(this.getBase()
-				.getClassifier());
-	}
+    @Override
+    public void setEnumeration(org.modeldriven.alf.uml.Enumeration enumeration) {
+        this.getBase().setEnumeration(((Enumeration)enumeration).getBase());
+    }
 
 }

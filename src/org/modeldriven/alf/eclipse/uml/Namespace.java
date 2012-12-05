@@ -74,4 +74,9 @@ public class Namespace extends NamedElement implements
 		return list;
 	}
 
+    @Override
+    public List<String> getNamesOfMember(org.modeldriven.alf.uml.NamedElement member) {
+        return this.getBase().getNamesOfMember(((NamedElement)member).getBase());
+    }
+
 }

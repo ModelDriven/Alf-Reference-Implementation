@@ -50,9 +50,19 @@ public class StructuralFeature extends Feature implements
 		return this.getBase().getUpper();
 	}
 
+    @Override
+    public void setUpper(int upper) {
+        this.getBase().setUpper(upper);
+    }
+
 	public int getLower() {
 		return this.getBase().getLower();
 	}
+
+    @Override
+    public void setLower(int lower) {
+        this.getBase().setLower(lower);
+    }
 
 	public org.modeldriven.alf.uml.ValueSpecification getUpperValue() {
 		return (org.modeldriven.alf.uml.ValueSpecification) wrap(this.getBase()

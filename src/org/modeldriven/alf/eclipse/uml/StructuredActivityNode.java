@@ -39,7 +39,7 @@ public class StructuredActivityNode extends Action implements
 	}
 
 	public boolean getMustIsolate() {
-		return this.getBase().mustIsolate();
+		return this.getBase().isMustIsolate();
 	}
 
 	public void setMustIsolate(boolean mustIsolate) {

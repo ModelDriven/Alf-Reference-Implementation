@@ -40,4 +40,12 @@ public class NamedElement extends Element implements
 				.getNamespace());
 	}
 
+    @Override
+    public boolean isDistinguishableFrom(org.modeldriven.alf.uml.NamedElement otherElement,
+            org.modeldriven.alf.uml.Namespace namespace) {
+        return this.getBase().isDistinguishableFrom(
+                ((NamedElement)otherElement).getBase(), 
+                ((Namespace)namespace).getBase());
+    }
+
 }
