@@ -72,8 +72,8 @@ public class Property extends StructuralFeature implements
 						.getBase());
 	}
 
-	public org.modeldriven.alf.uml.Class_ getClass() {
-		return new Class_(this.getBase().getClass());
+	public org.modeldriven.alf.uml.Class_ getClass_() {
+		return new Class_(this.getBase().getClass_());
 	}
 
 	public org.modeldriven.alf.uml.Property getOpposite() {
