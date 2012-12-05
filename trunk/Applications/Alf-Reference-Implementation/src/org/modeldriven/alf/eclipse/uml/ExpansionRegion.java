@@ -21,10 +21,8 @@ public class ExpansionRegion extends StructuredActivityNode implements
 		return this.getBase().getMode().toString();
 	}
 
-	public void setMode( String
- mode) {
-		this.getBase().setMode( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@1e683fc (name: ExpansionKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(mode)
-);
+	public void setMode(String mode) {
+		this.getBase().setMode(org.eclipse.uml2.uml.ExpansionKind.get(mode));
 	}
 
 	public List<org.modeldriven.alf.uml.ExpansionNode> getOutputElement() {

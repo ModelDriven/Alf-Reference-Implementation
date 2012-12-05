@@ -21,10 +21,9 @@ public class Parameter extends TypedElement implements
 		return this.getBase().getDirection().toString();
 	}
 
-	public void setDirection( String
- direction) {
-		this.getBase().setDirection( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@445397 (name: ParameterDirectionKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(direction)
-);
+	public void setDirection(String direction) {
+		this.getBase().setDirection(
+				org.eclipse.uml2.uml.ParameterDirectionKind.get(direction));
 	}
 
 	public org.modeldriven.alf.uml.Operation getOperation() {

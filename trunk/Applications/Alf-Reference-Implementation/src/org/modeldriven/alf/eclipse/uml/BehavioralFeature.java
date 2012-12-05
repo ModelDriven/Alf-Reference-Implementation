@@ -56,10 +56,9 @@ public class BehavioralFeature extends Feature implements
 		return this.getBase().getConcurrency().toString();
 	}
 
-	public void setConcurrency( String
- concurrency) {
-		this.getBase().setConcurrency( org.eclipse.uml2.uml.org.eclipse.uml2.uml.internal.impl.EnumerationImpl@14f0f24 (name: CallConcurrencyKind, visibility: <unset>) (isLeaf: false, isAbstract: false).get(concurrency)
-);
+	public void setConcurrency(String concurrency) {
+		this.getBase().setConcurrency(
+				org.eclipse.uml2.uml.CallConcurrencyKind.get(concurrency));
 	}
 
 }
