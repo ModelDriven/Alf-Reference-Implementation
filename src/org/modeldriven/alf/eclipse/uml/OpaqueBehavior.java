@@ -19,14 +19,14 @@ public class OpaqueBehavior extends Behavior implements
 
 	public List<String> getBody() {
 		List<String> list = new ArrayList<String>();
-		for (String element : this.getBase().getBodys()) {
+		for (String element : this.getBase().getBodies()) {
 			list.add(element);
 		}
 		return list;
 	}
 
 	public void addBody(String body) {
-		this.getBase().getBodys().add(body);
+		this.getBase().getBodies().add(body);
 	}
 
 	public List<String> getLanguage() {

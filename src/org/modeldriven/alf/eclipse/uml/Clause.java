@@ -33,14 +33,14 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 	public List<org.modeldriven.alf.uml.ExecutableNode> getBody() {
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (org.eclipse.uml2.uml.ExecutableNode element : this.getBase()
-				.getBodys()) {
+				.getBodies()) {
 			list.add(new ExecutableNode(element));
 		}
 		return list;
 	}
 
 	public void addBody(org.modeldriven.alf.uml.ExecutableNode body) {
-		this.getBase().getBodys().add(
+		this.getBase().getBodies().add(
 				body == null ? null : ((ExecutableNode) body).getBase());
 	}
 
