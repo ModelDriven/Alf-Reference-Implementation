@@ -84,7 +84,7 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
         
         if (element instanceof Reception) {
           class_.addOwnedReception((Reception)element);
-        } else if (element != class_.getClassifierBehavior()){
+        } else if (!element.equals(class_.getClassifierBehavior())){
           super.addMemberTo(element, namespace);
         }
     }
