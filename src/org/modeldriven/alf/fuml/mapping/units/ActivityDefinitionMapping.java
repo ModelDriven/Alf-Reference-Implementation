@@ -72,7 +72,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
      */
     
     // For the mapping of formal parameters, see FormalParameterMapping.
-    // For the mappping of return parameters, see also ReturnStatementMapping.
+    // For the mapping of return parameters, see also ReturnStatementMapping.
 
     @Override
     public Classifier mapClassifier() {
