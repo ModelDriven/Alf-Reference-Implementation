@@ -109,7 +109,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         ReadSelfAction readSelfAction = 
                 graph.addReadSelfAction(class_);
         ActivityNode selfFork = graph.addForkNode(
-                "Fork(" + readSelfAction.getResult() + ")");
+                "Fork(" + readSelfAction.getResult().getName() + ")");
         graph.addObjectFlow(readSelfAction.getResult(), selfFork);
 
         NamespaceDefinition classDefinition = this.getClassDefinition();

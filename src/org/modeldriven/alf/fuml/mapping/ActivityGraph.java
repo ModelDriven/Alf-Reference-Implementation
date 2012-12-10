@@ -15,18 +15,6 @@ import java.util.List;
 
 import org.modeldriven.alf.uml.*;
 
-/*
-import fUML.Syntax.Actions.BasicActions.*;
-import fUML.Syntax.Actions.CompleteActions.*;
-import fUML.Syntax.Actions.IntermediateActions.*;
-import fUML.Syntax.Activities.CompleteStructuredActivities.*;
-import fUML.Syntax.Activities.ExtraStructuredActivities.*;
-import fUML.Syntax.Activities.IntermediateActivities.*;
-import fUML.Syntax.Classes.Kernel.*;
-import fUML.Syntax.CommonBehaviors.BasicBehaviors.*;
-import fUML.Syntax.CommonBehaviors.Communications.*;
-*/
-
 public class ActivityGraph {
     
     private ElementFactory elementFactory = null;
@@ -229,7 +217,7 @@ public class ActivityGraph {
             Property property, boolean isReplaceAll) {
         AddStructuralFeatureValueAction writeAction = 
             this.create(AddStructuralFeatureValueAction.class);
-        writeAction.setName("Write(" + property.getQualifiedName() + ")");
+        writeAction.setName("Write(" + property.getName() + ")");
         writeAction.setStructuralFeature(property);
         writeAction.setIsReplaceAll(isReplaceAll);
         this.add(writeAction);
@@ -244,7 +232,7 @@ public class ActivityGraph {
         
         if (property.getIsOrdered() && !isReplaceAll) {
             writeAction.setInsertAt(this.createInputPin(
-                    writeAction + ".insertAt", 
+                    writeAction.getName() + ".insertAt", 
                     FumlMapping.getUnlimitedNaturalType(), 1, 1));
         }
         
@@ -253,7 +241,7 @@ public class ActivityGraph {
     
     public CallBehaviorAction addCallBehaviorAction(Behavior behavior) {
         CallBehaviorAction callAction = this.create(CallBehaviorAction.class);
-        callAction.setName("Call(" + behavior.getQualifiedName() + ")");
+        callAction.setName("Call(" + behavior.getName() + ")");
         callAction.setBehavior(behavior);
         addPinsFromParameters(callAction, behavior.getOwnedParameter());
         this.add(callAction);
@@ -262,10 +250,10 @@ public class ActivityGraph {
     
     public CallOperationAction addCallOperationAction(Operation operation) {
         CallOperationAction callAction = this.create(CallOperationAction.class);
-        callAction.setName("Call(" + operation.getQualifiedName() + ")");
+        callAction.setName("Call(" + operation.getName() + ")");
         callAction.setOperation(operation);
         callAction.setTarget(createInputPin(
-                callAction.getName() + ".getTarget()", operation.getClass_(), 1, 1));
+                callAction.getName() + ".target", operation.getClass_(), 1, 1));
         addPinsFromParameters(callAction, operation.getOwnedParameter());
         this.add(callAction);
         return callAction;
@@ -273,7 +261,7 @@ public class ActivityGraph {
     
     public ClearAssociationAction addClearAssociationAction(Association association) {
         ClearAssociationAction clearAction = this.create(ClearAssociationAction.class);
-        clearAction.setName("Clear(" + association.getQualifiedName() + ")");
+        clearAction.setName("Clear(" + association.getName() + ")");
         clearAction.setAssociation(association);
         clearAction.setObject(createInputPin(
                 clearAction.getName() + ".object", null, 1, 1));
@@ -285,7 +273,7 @@ public class ActivityGraph {
     public ClearStructuralFeatureAction addClearStructuralFeatureAction(
             Property property) {
         ClearStructuralFeatureAction clearAction = this.create(ClearStructuralFeatureAction.class);
-        clearAction.setName("Clear(" + property.getQualifiedName() + ")");
+        clearAction.setName("Clear(" + property.getName() + ")");
         clearAction.setStructuralFeature(property);
         this.add(clearAction);
 
@@ -300,7 +288,7 @@ public class ActivityGraph {
     
     public CreateLinkAction addCreateLinkAction(Association association) {
         CreateLinkAction createAction = this.create(CreateLinkAction.class);
-        createAction.setName("this.create(" + association.getQualifiedName() + ")");
+        createAction.setName("this.create(" + association.getName() + ")");
         for (Property end: association.getOwnedEnd()) {
             InputPin valuePin = createInputPin(
                     createAction.getName() + ".value(" + end.getName() + ")", 
@@ -339,7 +327,7 @@ public class ActivityGraph {
     
     public CreateObjectAction addCreateObjectAction(Class_ class_) {
         CreateObjectAction createAction = this.create(CreateObjectAction.class);
-        createAction.setName("Create(" + class_.getQualifiedName() + ")");
+        createAction.setName("Create(" + class_.getName() + ")");
         createAction.setClassifier(class_);            
         createAction.setResult(createOutputPin(
                 createAction.getName() + ".result", class_, 1, 1));
@@ -349,7 +337,7 @@ public class ActivityGraph {
     
     public DestroyLinkAction addDestroyLinkAction(Association association) {
         DestroyLinkAction destroyAction = this.create(DestroyLinkAction.class);
-        destroyAction.setName("Destroy(" + association.getQualifiedName() + ")");
+        destroyAction.setName("Destroy(" + association.getName() + ")");
         for (Property end: association.getOwnedEnd()) {
             InputPin valuePin = createInputPin(
                     destroyAction.getName() + ".value(" + end.getName() + ")", 
@@ -378,7 +366,7 @@ public class ActivityGraph {
         destroyAction.setIsDestroyLinks(true);
         destroyAction.setIsDestroyOwnedObjects(true);
         destroyAction.setTarget(createInputPin(
-                destroyAction.getName() + ".getTarget()", class_, 1, 1));
+                destroyAction.getName() + ".target", class_, 1, 1));
         this.add(destroyAction);
         return destroyAction;
     }
@@ -458,7 +446,7 @@ public class ActivityGraph {
     
     public ReadLinkAction addReadLinkAction(Property associationEnd) {
         ReadLinkAction readAction = this.create(ReadLinkAction.class);
-        readAction.setName("ReadLink(" + associationEnd.getQualifiedName() + ")");
+        readAction.setName("ReadLink(" + associationEnd.getName() + ")");
         
         LinkEndData openEnd = this.create(LinkEndData.class);
         openEnd.setEnd(associationEnd);
@@ -486,6 +474,7 @@ public class ActivityGraph {
     public ReadStructuralFeatureAction addReadStructuralFeatureAction(
             Property property) {
         ReadStructuralFeatureAction readAction = this.create(ReadStructuralFeatureAction.class);
+        readAction.setName("Read(" + property.getName() + ")");
         readAction.setStructuralFeature(property);
         readAction.setObject(createInputPin(
                 readAction.getName() + ".object", 
@@ -497,7 +486,8 @@ public class ActivityGraph {
     }
     
     private static Type getOppositeType(Property property) {
-        Type type = property.getFeaturingClassifier().get(0);
+        // Type type = property.getFeaturingClassifier().get(0);
+        Type type = (Type)property.getOwner();
         if (type instanceof Association) {
             List<Property> memberEnds = ((Association)type).getMemberEnd();
             int i = property.equals(memberEnds.get(0))? 1: 0;
@@ -564,7 +554,7 @@ public class ActivityGraph {
             Property property, boolean isRemoveDuplicates) {
         RemoveStructuralFeatureValueAction removeAction = 
             this.create(RemoveStructuralFeatureValueAction.class);
-        removeAction.setName("Remove(" + property.getQualifiedName() + ")");
+        removeAction.setName("Remove(" + property.getName() + ")");
         removeAction.setStructuralFeature(property);
         removeAction.setIsRemoveDuplicates(isRemoveDuplicates);
         this.add(removeAction);
@@ -590,10 +580,10 @@ public class ActivityGraph {
     
     public SendSignalAction addSendSignalAction(Signal signal) {
         SendSignalAction sendAction = this.create(SendSignalAction.class);
-        sendAction.setName("SendSignal(" + signal.getQualifiedName() + ")");
+        sendAction.setName("SendSignal(" + signal.getName() + ")");
         sendAction.setSignal(signal);
         sendAction.setTarget(createInputPin(
-                sendAction.getName() + ".getTarget()", null, 1, 1));
+                sendAction.getName() + ".target", null, 1, 1));
         addPinsFromProperties(sendAction, signal.getAttribute());
         this.add(sendAction);
         return sendAction;
