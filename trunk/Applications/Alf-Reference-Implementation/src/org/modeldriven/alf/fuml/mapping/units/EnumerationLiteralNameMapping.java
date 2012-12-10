@@ -48,7 +48,7 @@ public class EnumerationLiteralNameMapping extends MemberMapping {
         } else {
             Classifier classifier = 
                 ((ClassifierDefinitionMapping)mapping).getClassifier();
-            enumerationLiteral.addClassifier(classifier);
+            // enumerationLiteral.addClassifier(classifier);
             enumerationLiteral.setEnumeration((Enumeration)classifier);
         }
     }

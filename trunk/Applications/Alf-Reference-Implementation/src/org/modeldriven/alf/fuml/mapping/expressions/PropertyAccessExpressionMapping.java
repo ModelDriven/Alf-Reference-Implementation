@@ -113,6 +113,7 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
                     } else {
                         Collection<Element> elements = new ArrayList<Element>();
                         elements.add(readAction);
+                        this.graph.remove(readAction);
 
                         ExpansionRegion region = this.graph.addExpansionRegion(
                                 "Collect(" + readAction.getName() + ")", 

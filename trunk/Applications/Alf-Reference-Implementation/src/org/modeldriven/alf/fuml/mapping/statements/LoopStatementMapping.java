@@ -43,7 +43,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
             LoopNode loopNode, String name, Classifier classifier,
             int lower, int upper, ActivityNode sourceNode) throws MappingError {
         InputPin inputPin = this.graph.createInputPin(
-                loopNode.getName() + ".getLoopVariableInput()(" + name + ")", 
+                loopNode.getName() + ".loopVariableInput(" + name + ")", 
                 classifier, lower, upper);
         loopNode.addLoopVariableInput(inputPin);
         if (sourceNode != null) {

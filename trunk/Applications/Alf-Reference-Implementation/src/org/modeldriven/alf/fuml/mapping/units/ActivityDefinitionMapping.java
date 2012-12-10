@@ -188,6 +188,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 	    if (structuredNode == null) {
 	        structuredNode = (StructuredActivityNode)mapping.
 	                create(StructuredActivityNode.class);
+	        structuredNode.setName("Body(" + activity.getName() + ")");
 	        activity.addNode(structuredNode);
 	    }
 	    
