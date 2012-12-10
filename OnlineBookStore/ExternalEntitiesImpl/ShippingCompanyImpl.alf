@@ -27,12 +27,14 @@ active class ShippingCompanyImpl specializes ShippingCompany {
         shipment.TrackingNumberAssigned(
           shippingCompany => this.companyName, 
           trackingNumber => trackingNumber);
+      } else {
+        trackingNumber = shipment.trackingNumber;
       }
       
-      SendMessage(title, "Shipment " + shipment.trackingNumber + " picked up.");      
+      SendMessage(title, "Shipment " + trackingNumber + " picked up.");      
       shipment.PickedUp();
       
-      SendMessage(title, "Shipment " + shipment.trackingNumber + " delivered.");
+      SendMessage(title, "Shipment " + trackingNumber + " delivered.");
       shipment.DeliveryConfirmed(
         timeDelivered => TIM::current_date()
       );
