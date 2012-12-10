@@ -18,13 +18,21 @@ active class ShippingCompanyImpl specializes ShippingCompany {
         (selected.shippingCompany->isEmpty() || selected.shippingCompany == this.companyName)
       )[1];
       
+      title = "SHIPPING COMPANY: " + this.companyName;
+      
       if (shipment.shippingCompany->isEmpty()) {
+        trackingNumber = IntegerFunctions::ToString(this.trackingNumber++);
+        SendMessage(title, "Tracking number assigned: " + trackingNumber);
+        
         shipment.TrackingNumberAssigned(
           shippingCompany => this.companyName, 
-          trackingNumber => IntegerFunctions::ToString(this.trackingNumber++));
+          trackingNumber => trackingNumber);
       }
       
+      SendMessage(title, "Shipment " + shipment.trackingNumber + " picked up.");      
       shipment.PickedUp();
+      
+      SendMessage(title, "Shipment " + shipment.trackingNumber + " delivered.");
       shipment.DeliveryConfirmed(
         timeDelivered => TIM::current_date()
       );

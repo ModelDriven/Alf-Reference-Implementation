@@ -1,4 +1,5 @@
 private import DomainDataTypes::*;
+private import Utility::SendMessage;
 
 class ExternalEntitiesImpl specializes ExternalEntities {
 

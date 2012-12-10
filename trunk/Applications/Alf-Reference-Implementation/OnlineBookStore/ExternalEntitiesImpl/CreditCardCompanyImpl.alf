@@ -1,6 +1,5 @@
 namespace ExternalEntitiesImpl;
 
-private import DomainDataTypes::BankCardApprovalCode;
 private import Ordering::CreditCardCharge;
 
 active class CreditCardCompanyImpl specializes CreditCardCompany {
@@ -10,7 +9,13 @@ active class CreditCardCompanyImpl specializes CreditCardCompany {
   
     accept(requestChargeApproval: RequestChargeApproval);
     charge = CreditCardCharge->select selected (
-      selected.chargeID == requestChargeApproval.transactionID);
+      selected.chargeID == requestChargeApproval.transactionID)[1];
+    SendMessage(
+      "CREDIT CARD COMPANY",
+      "Charge to: " + charge.accountNumber + " for: " + 
+          ToMoneyString(charge.chargeAmount) + "\n" +
+      "Charge APPROVED"
+    );
     charge.ChargeProcessed(
       resultCode => BankCardApprovalCode::approved
     );
