@@ -2,12 +2,11 @@ namespace ExternalEntitiesImpl;
 
 active class OnlineCustomerImpl specializes OnlineCustomer {
 
-  private activity SendMessage(
+  private activity SendCustomerMessage(
     in customerEmail: InternetEmailAddress,
     in message: String
-  ) {
-    WriteLine(">>>> Message to: " + customerEmail);
-    WriteLine(">>>> " + message);
+  ) {    
+    SendMessage("CUSTOMER: " + customerEmail, message);
   }
   
 } do {
@@ -15,11 +14,11 @@ active class OnlineCustomerImpl specializes OnlineCustomer {
   while (true) {
   
     accept (chargeDeclined: ChargeDeclined) {
-      SendMessage(chargeDeclined.customerEmail, "CHARGE DECLINED");
+      SendCustomerMessage(chargeDeclined.customerEmail, "CHARGE DECLINED");
     } or accept (chargeApproved: ChargeApproved) {
-      SendMessage(chargeApproved.customerEmail, "CHARGE APPROVED");
+      SendCustomerMessage(chargeApproved.customerEmail, "CHARGE APPROVED");
     } or accept (orderReportedDelivered: OrderReportedDelivered) {
-      SendMessage(orderReportedDelivered.customerEmail, "ORDER DELIVERED");
+      SendCustomerMessage(orderReportedDelivered.customerEmail, "ORDER DELIVERED");
     }
   
   }

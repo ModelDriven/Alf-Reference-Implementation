@@ -9,10 +9,22 @@ active class ShippingClerkImpl specializes ShippingClerk {
     
     shippingClerk = Shipping::ShippingClerk->select selected (
       selected.clerkID == shipmentReadyToPack.clerkID)[1];
+      
+    title = "SHIPPING CLERK: " + IntegerFunctions::ToString(shippingClerk.clerkID);
+      
+    SendMessage(title, "Books selected.");
     shippingClerk.BooksSelected();
+    
+    SendMessage(title, "Box packed.");
     shippingClerk.BoxPacked();
+    
+    SendMessage(title, "Box sealed.");
     shippingClerk.BoxSealed();
+    
+    SendMessage(title, "Shipping label attached.");
     shippingClerk.ShippingLabelAttached();
+    
+    SendMessage(title, "Box at loading dock.");
     shippingClerk.BoxAtLoadingDock();
   
   }

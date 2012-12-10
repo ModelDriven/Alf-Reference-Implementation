@@ -3,6 +3,14 @@ private import DomainDataTypes::*;
 
 package Utility {
 
+  public activity SendMessage(
+    in title: String,
+    in message: String) {
+    WriteLine(title);
+    WriteLine(message);
+    ReadLine();
+  }
+
   public activity BlankToNull(in string: String): String[0..1] {
     return string == ""? null: string;
   }
