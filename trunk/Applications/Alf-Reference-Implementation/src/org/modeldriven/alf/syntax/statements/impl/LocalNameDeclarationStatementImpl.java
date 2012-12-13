@@ -69,7 +69,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
         } else if (this.expression instanceof SequenceConstructionExpression) {
             SequenceConstructionExpression initializer =
                 (SequenceConstructionExpression)this.expression;
-            if (initializer.getTypeName() == null) {
+            if (initializer.getTypeName() == null && initializer.getElements() != null) {
                 initializer.setTypeName(self.getTypeName());
                 initializer.setHasMultiplicity(self.getHasMultiplicity());
             }
