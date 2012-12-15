@@ -9,7 +9,7 @@
 package org.modeldriven.alf.fuml.impl.execution;
 
 public class OpaqueBehaviorExecution implements
-        org.modeldriven.alf.execution.fuml.OpaqueBehaviorExecution {
+        org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution {
     
     private fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution base = null;
     

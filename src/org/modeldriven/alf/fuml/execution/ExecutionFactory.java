@@ -6,8 +6,18 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-package org.modeldriven.alf.execution.fuml;
+package org.modeldriven.alf.fuml.execution;
 
-public interface OpaqueBehaviorExecution {
+import java.util.List;
+
+import org.modeldriven.alf.uml.PrimitiveType;
+
+public interface ExecutionFactory {
+
+    List<PrimitiveType> getBuiltInTypes();
+
+    void addBuiltInType(PrimitiveType type);
+
+    void addPrimitiveBehaviorPrototype(OpaqueBehaviorExecution execution);
 
 }

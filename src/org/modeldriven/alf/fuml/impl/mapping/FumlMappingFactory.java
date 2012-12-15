@@ -10,7 +10,7 @@ package org.modeldriven.alf.fuml.impl.mapping;
 
 import java.util.Collection;
 
-import org.modeldriven.alf.execution.fuml.OpaqueBehaviorExecution;
+import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.QualifiedNameList;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;

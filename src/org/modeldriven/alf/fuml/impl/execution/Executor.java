@@ -8,12 +8,12 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.impl.execution;
 
-import org.modeldriven.alf.execution.fuml.Object_;
+import org.modeldriven.alf.fuml.execution.Object_;
 import org.modeldriven.alf.uml.Behavior;
 
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 
-public class Executor implements org.modeldriven.alf.execution.fuml.Executor {
+public class Executor implements org.modeldriven.alf.fuml.execution.Executor {
     
     private fUML.Semantics.Loci.LociL1.Executor base = null;
     

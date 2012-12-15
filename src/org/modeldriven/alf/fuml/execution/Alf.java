@@ -7,7 +7,7 @@
  * contact Model Driven Solutions.
  *******************************************************************************/
 
-package org.modeldriven.alf.execution.fuml;
+package org.modeldriven.alf.fuml.execution;
 
 import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;

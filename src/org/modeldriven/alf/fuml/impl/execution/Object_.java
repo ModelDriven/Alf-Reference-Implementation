@@ -12,7 +12,7 @@ import org.modeldriven.alf.uml.Class_;
 
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 
-public class Object_ implements org.modeldriven.alf.execution.fuml.Object_ {
+public class Object_ implements org.modeldriven.alf.fuml.execution.Object_ {
     
     private fUML.Semantics.Classes.Kernel.Object_ base = null;
     
