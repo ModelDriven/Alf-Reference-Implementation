@@ -48,6 +48,9 @@
             <param name="unit" value="Expressions_Invocation" />
         </antcall>
         <antcall target="run-test">
+            <param name="unit" value="Expressions_Invocation_Reception" />
+        </antcall>
+        <antcall target="run-test">
             <param name="unit" value="Expressions_Literal_Name" />
         </antcall>
         <antcall target="run-test">

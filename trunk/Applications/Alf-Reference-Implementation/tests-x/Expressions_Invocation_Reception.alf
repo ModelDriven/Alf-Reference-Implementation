@@ -1,0 +1,62 @@
+/**
+ * Test reception invocation expressions.
+ */
+active class Expressions_Invocation_Reception {
+
+  public active class Receiver {
+  
+    public a: Integer = 0;
+    public x: Integer[*] sequence;
+    public y: Integer[*] sequence;
+  
+    public receive signal A {
+    }
+    
+    public receive signal B {
+      x: Integer;
+    }
+    
+    public receive signal C {
+      x: Integer [0..1];
+      y: Integer [0..1];
+    }
+    
+  } do {
+  
+    do {
+      accept (A) {
+        this.a++;
+      } or accept (b: B) {
+        this.x->add(b.x);
+      } or accept (c: C) {
+        this.x->add(c.x);
+        this.y->add(c.y);
+      }
+    } while (true);
+    
+  }
+  
+  public test(out a: Integer, out x: Integer[*] sequence, out y: Integer[*] sequence) {
+  
+    receiver = new Receiver();
+    
+    receiver.A();
+    receiver.B(1);
+    receiver.C(2,3);
+    receiver.C(x => 3);
+    receiver.C(y => 4);
+    
+    a = receiver.a;
+    x = receiver.x;
+    y = receiver.y;
+  }
+  
+} do {
+
+  this.test(a, x, y);
+  
+  AssertEqual("a", a, 1);
+  AssertList("x", x, Integer[]{1,2,3});
+  AssertList("y", y, Integer[]{3,4});
+  
+}

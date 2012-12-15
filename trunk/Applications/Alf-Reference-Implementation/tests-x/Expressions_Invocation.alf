@@ -1,6 +1,6 @@
 private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToString;
 /**
- * Test invocation expressions.
+ * Test behavior, operation and super invocation expressions.
  **/
 active class Expressions_Invocation {
 
