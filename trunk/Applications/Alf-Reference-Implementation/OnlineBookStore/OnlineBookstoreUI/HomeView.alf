@@ -9,7 +9,7 @@ active class HomeView specializes View {
     in controller: HomeController) {
     super(
       title => "Home",
-      prompt => "Select a category s for shopping cart or x to exit.",
+      prompt => "Select a category, s for shopping cart or x to exit.",
       controller => controller
     );
   }
