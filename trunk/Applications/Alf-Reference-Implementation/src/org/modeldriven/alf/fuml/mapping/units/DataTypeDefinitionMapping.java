@@ -14,7 +14,7 @@ import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.units.DataTypeDefinition;
 
-import org.modeldriven.alf.execution.fuml.ExecutionFactory;
+import org.modeldriven.alf.fuml.execution.ExecutionFactory;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.DataType;

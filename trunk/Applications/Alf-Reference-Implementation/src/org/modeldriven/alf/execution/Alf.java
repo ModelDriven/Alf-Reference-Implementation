@@ -66,7 +66,7 @@ public abstract class Alf {
                 unit.print(true);
             } else if (!this.isParseOnly && violations.isEmpty()) {
                 if (definition.getImpl().isTemplate()) { 
-                    System.out.println(definition.getName() + " is a template.");
+                    this.println(definition.getName() + " is a template.");
                 } else {
                     this.execute(definition);
                 }

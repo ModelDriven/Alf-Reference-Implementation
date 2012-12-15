@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.mapping;
 
-import org.modeldriven.alf.execution.fuml.OpaqueBehaviorExecution;
+import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingFactory;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;

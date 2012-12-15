@@ -39,7 +39,7 @@ import fUML.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
 import fUML.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import fUML.Semantics.Loci.LociL1.FirstChoiceStrategy;
 
-public class Alf extends org.modeldriven.alf.execution.fuml.Alf {
+public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     
     protected RootNamespaceImpl rootScopeImpl = null;    
     protected boolean isFileName = false;

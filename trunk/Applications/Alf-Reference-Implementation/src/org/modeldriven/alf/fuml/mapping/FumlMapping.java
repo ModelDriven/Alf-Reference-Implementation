@@ -21,7 +21,7 @@ import org.modeldriven.alf.uml.PrimitiveType;
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.ElementFactory;
 
-import org.modeldriven.alf.execution.fuml.ExecutionFactory;
+import org.modeldriven.alf.fuml.execution.ExecutionFactory;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.DataTypeDefinitionMapping;

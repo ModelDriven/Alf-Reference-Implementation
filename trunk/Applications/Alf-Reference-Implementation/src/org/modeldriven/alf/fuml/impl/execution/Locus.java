@@ -13,7 +13,7 @@ import org.modeldriven.fuml.library.libraryclass.ImplementationObject;
 
 import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
 
-public class Locus implements org.modeldriven.alf.execution.fuml.Locus {
+public class Locus implements org.modeldriven.alf.fuml.execution.Locus {
     
     fUML.Semantics.Loci.LociL1.Locus locus = null;
     

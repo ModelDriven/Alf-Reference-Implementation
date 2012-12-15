@@ -6,11 +6,8 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-package org.modeldriven.alf.execution.fuml;
+package org.modeldriven.alf.fuml.execution;
 
-import org.modeldriven.alf.uml.Behavior;
+public interface OpaqueBehaviorExecution {
 
-public interface Executor {
-    // Note: Only handles execution of behaviors with no inputs or outputs.
-    public void execute(Behavior behavior, Object_ context);
 }

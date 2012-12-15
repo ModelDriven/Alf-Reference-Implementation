@@ -6,18 +6,11 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-package org.modeldriven.alf.execution.fuml;
+package org.modeldriven.alf.fuml.execution;
 
-import java.util.List;
+import org.modeldriven.alf.uml.Class_;
 
-import org.modeldriven.alf.uml.PrimitiveType;
-
-public interface ExecutionFactory {
-
-    List<PrimitiveType> getBuiltInTypes();
-
-    void addBuiltInType(PrimitiveType type);
-
-    void addPrimitiveBehaviorPrototype(OpaqueBehaviorExecution execution);
-
+public interface Object_ {
+    // Note: Only handles starting behaviors with no inputs.
+    public void startBehavior(Class_ classifier);
 }

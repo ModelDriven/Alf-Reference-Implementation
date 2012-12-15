@@ -11,10 +11,10 @@ package org.modeldriven.alf.fuml.impl.execution;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.modeldriven.alf.execution.fuml.OpaqueBehaviorExecution;
+import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.uml.PrimitiveType;
 
-public class ExecutionFactory implements org.modeldriven.alf.execution.fuml.ExecutionFactory {
+public class ExecutionFactory implements org.modeldriven.alf.fuml.execution.ExecutionFactory {
     
     private fUML.Semantics.Loci.LociL1.ExecutionFactory base = null;
     

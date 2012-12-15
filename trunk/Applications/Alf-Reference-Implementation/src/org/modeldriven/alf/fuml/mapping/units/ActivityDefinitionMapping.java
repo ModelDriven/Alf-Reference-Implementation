@@ -12,8 +12,8 @@ package org.modeldriven.alf.fuml.mapping.units;
 
 import java.util.Collection;
 
-import org.modeldriven.alf.execution.fuml.OpaqueBehaviorExecution;
 
+import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
