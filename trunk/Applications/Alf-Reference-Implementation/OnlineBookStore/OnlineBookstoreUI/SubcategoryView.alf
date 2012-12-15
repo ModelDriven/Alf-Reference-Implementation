@@ -15,6 +15,10 @@ active class SubcategoryView specializes View {
     );
   }
   
+  public getController(): SubcategoryController {
+    return (SubcategoryController)this.controller;
+  }
+  
   protected display(): String[*] sequence {
     choices = String[]{"x", "h", "s"};
     i = 1;
@@ -24,6 +28,16 @@ active class SubcategoryView specializes View {
       WriteLine(choice + ". " + category.categoryName);
     }    
     return choices;
+  }
+  
+  protected handle(in choice: String) {
+    controller = (SubcategoryController)this.controller;
+    switch (choice) {
+      case "x": controller.Exit();
+      case "h": controller.Home();
+      case "s": controller.ShowShoppingCart();
+      default:  controller.ShowCategory(IntegerFunctions::ToInteger(choice));
+    }
   }
   
 } do {

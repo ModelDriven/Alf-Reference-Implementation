@@ -16,6 +16,14 @@ active class EmptyCartView specializes View {
     WriteLine("Your shopping cart is empty.");
     return String[]{"h", "x"};
   }
+  
+  protected handle(in choice: String) {
+    controller = (ShoppingCartController)this.controller;
+    switch (choice) {
+      case "x": controller.Exit();
+      case "h": controller.Home();
+    }
+  }
 
 } do {
 }

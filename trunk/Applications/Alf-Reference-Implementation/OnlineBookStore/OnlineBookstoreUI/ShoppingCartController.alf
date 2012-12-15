@@ -25,7 +25,25 @@ active class ShoppingCartController specializes Controller {
     }
   }
   
-  protected displayView() {
+  public receive signal Home {
+  }
+  
+  public receive signal Cancel {
+  }
+  
+  public receive signal CheckOut {
+    public customerEmail: String;
+  }
+  
+  public receive signal ShowShoppingCart {
+  }
+  
+  public receive signal ChangeQuantity {
+    public choice: Integer;
+    public quantity: Count;
+  }
+  
+  private displayView() {
     if (this.cart->isEmpty()) {
       new EmptyCartView(this);
     } else {
@@ -33,37 +51,35 @@ active class ShoppingCartController specializes Controller {
     }
   }
   
-  protected handleChoice(in choice: String): Controller[0..1] {
-    switch (choice) {
-      case "x": return null;
-      case "h": return new HomeController();
-      case "e": return this.emptyCart();
-      case "c": return this.checkOut();
-      default: return this.changeQuantity(IntegerFunctions.ToInteger(choice));
-    }
-  }
-    
-  private emptyCart(): Controller {
-    if (Ask("Are you sure you want to empty your cart")) {
-      this.cart.Cancel();
-    }
-    return new ShoppingCartController();
-  }
-  
-  private checkOut(): Controller {
-    customerEmail = GetCustomerEmail();
-    return customerEmail == null?
-      new ShoppingCartController():
-      new CheckOutController(customerEmail);
-  }
-  
-  private changeQuantity(in choice: Integer): Controller {
-    quantity = GetQuantity("Enter new quantity:", 0);
-    if (quantity != null) {
-      this.cart.'includes selection'->at(choice).ChangeQuantity(quantity);
-    }
-    return new ShoppingCartController();
-  }
-  
 } do {
+
+  accept (Display);
+  
+  continue = true;
+  do {
+    this.displayView();
+    
+    accept (Exit) {
+      continue = false;
+    } or accept (Home) {
+      new HomeController().Display();
+      continue = false;
+    } or accept (event: CheckOut) {
+      new CheckOutController(event.customerEmail).Display();
+      continue = false;
+    } or accept (ShowShoppingCart) {
+    } or accept (Cancel) {
+      this.cart.Cancel();
+    } or accept (event: ChangeQuantity) {
+      this.cart.'includes selection'->at(event.choice).
+        ChangeQuantity(event.quantity);
+    }
+    
+    if (!this.cart.isActive) {
+      this.cart = null;
+    }
+    
+    this.view.destroy();
+    
+  } while (continue);
 }

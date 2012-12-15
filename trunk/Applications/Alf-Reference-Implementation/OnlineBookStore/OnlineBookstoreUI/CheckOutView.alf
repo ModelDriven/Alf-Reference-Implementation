@@ -11,6 +11,10 @@ active class CheckOutView specializes View {
     );
   }
   
+  public getController(): CheckOutController {
+    return (CheckOutController)this.controller;
+  }
+  
   protected display(): String[*] sequence {
     controller = (CheckOutController)this.controller;
     
@@ -22,6 +26,58 @@ active class CheckOutView specializes View {
     Write(ToAddressString(controller.shippingAddress));
     
     return String[]{"1", "2", "3", "4", "n", "s", "h", "x"};
+  }
+  
+  protected handle(in choice: String) {
+    switch (choice) {
+      case "1": this.updateCustomerEmail();
+      case "2": this.updateCustomerName();
+      case "3": this.updateCustomerPhone();
+      case "4": this.updateShippingAddress();
+      case "n": this.next();
+      case "s": this.showShoppingCart();
+      case "h": this.home();
+      case "x": this.exit();
+    }
+  }
+  
+  private updateCustomerEmail() {
+    this.getController().Update(
+      customerEmail => GetCustomerEmail());
+  }
+  
+  private updateCustomerName() {
+    WriteLine("Enter your name:");
+    this.getController().Update(
+      customerName => GetPersonalName());
+  }
+  
+  private updateCustomerPhone() {
+    Write("Enter your phone number:");
+    this.getController().Update(
+      customerPhone => ReadLine());
+  }
+  
+  private updateShippingAddress() {
+    WriteLine("Enter your shipping address:");
+    this.getController().Update(
+      shippingAddress => GetMailingAddress());
+  }
+  
+  private next() {
+    this.getController().Next();
+  }
+  
+  private showShoppingCart() {
+    this.getController().ShowShoppingCart();
+  }
+  
+  private home() {
+    this.getController().Home();
+  }
+  
+  private exit() {
+    this.getController().Exit();
   }
   
 } do {

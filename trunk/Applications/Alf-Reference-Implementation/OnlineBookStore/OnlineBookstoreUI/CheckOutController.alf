@@ -29,54 +29,24 @@ active class CheckOutController specializes Controller {
     this.customerPhone = controller.customerPhone;
     this.shippingAddress = controller.shippingAddress;
   }
-
-  protected displayView() {
-    new CheckOutView(this);
+  
+  public receive signal Update {
+    public customerEmail: InternetEmailAddress[0..1];
+    public customerName: PersonalName[0..1];
+    public customerPhone: TelephoneNumber[0..1];
+    public shippingAddress: MailingAddress[0..1];
   }
   
-  protected handleChoice(in choice: String): Controller[0..1] {
-    switch (choice) {
-      case "1": return this.updateCustomerEmail();
-      case "2": return this.updateCustomerName();
-      case "3": return this.updateCustomerPhone();
-      case "4": return this.updateShippingAddress();
-      case "n": return this.validate();
-      case "s": return new ShoppingCartController();
-      case "h": return new HomeController();
-      case "x": return null;
-    }
+  public receive signal Next {
   }
   
-  private updateCustomerEmail(): Controller {
-    email = GetCustomerEmail();
-    if (email->notEmpty()) {
-      this.customerEmail == email;
-    }
-    return new CheckOutController::continue(this);
+  public receive signal ShowShoppingCart {
   }
   
-  private updateCustomerName(): Controller {
-    WriteLine("Enter your name:");
-    this.customerName = GetPersonalName();
-    return new CheckOutController::continue(this);
+  public receive signal Home {
   }
   
-  private updateCustomerPhone(): Controller {
-    Write("Enter your phone number:");
-    phone = ReadLine();
-    if (phone != "") {
-      this.customerPhone = phone;
-    }
-    return new CheckOutController::continue(this);
-  }
-  
-  private updateShippingAddress(): Controller {
-    WriteLine("Enter your shipping address:");
-    this.shippingAddress = GetMailingAddress();
-    return new CheckOutController::continue(this);
-  }
-  
-  private validate(): Controller {
+  private isValid(): Boolean {
     if (this.customerName.firstName == "" || this.customerName.lastName == "") {
       WriteLine("*** Both your first and last are required. ***");
     } else if (this.customerPhone->isEmpty()) {
@@ -84,10 +54,48 @@ active class CheckOutController specializes Controller {
     } else if (this.shippingAddress.addressLine1 == "") {
       WriteLine("*** Your shipping address must include a first address line. ***");
     } else {
-      return new PaymentController(this);
+      return true;
     }
-    return new CheckOutController::continue(this);
+    return false;
   }
   
 } do {
+
+  accept (Display);
+  
+  continue = true;
+  do {
+    new CheckOutView(this);
+    
+    accept (event: Update) {
+      if (event.customerEmail->notEmpty()) {
+        this.customerEmail = event.customerEmail;
+      }
+      if (event.customerName->notEmpty()) {
+        this.customerName = event.customerName;
+      }
+      if (event.customerPhone->notEmpty()) {
+        this.customerPhone = event.customerPhone;
+      }
+      if (event.shippingAddress->notEmpty()) {
+        this.shippingAddress = event.shippingAddress;
+      }
+    } or accept (Next) {
+      if (this.isValid()) {
+        new PaymentController(this).Display();
+        continue = false;
+      }
+    } or accept (ShowShoppingCart) {
+      new ShoppingCartController().Display();
+      continue = false;
+    } or accept (Home) {
+      new HomeController().Display();
+      continue = false;
+    } or accept (Exit) {
+      continue = false;
+    }
+    
+    this.view.destroy();
+  } while (continue);
+    
 }
