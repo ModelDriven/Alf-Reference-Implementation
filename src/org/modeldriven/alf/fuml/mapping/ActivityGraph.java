@@ -971,13 +971,13 @@ public class ActivityGraph {
 
     private void addPin(Action action, Pin pin, Property property) {
         pin.setLower(property.getLower());
-        pin.setLower(property.getUpper());
+        pin.setUpper(property.getUpper());
         pin.setIsOrdered(property.getIsOrdered());
         pin.setIsUnique(property.getIsUnique());
         pin.setType(property.getType());
 
         if (pin instanceof InputPin) {
-            InputPin inputPin = this.create(InputPin.class);
+            InputPin inputPin = (InputPin)pin;
             if (action instanceof SendSignalAction) {
                 inputPin.setName(action.getName() + ".argument(" + property.getName() + ")");
                 ((InvocationAction) action).addArgument(inputPin);
