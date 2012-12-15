@@ -9,24 +9,31 @@ active class HomeController specializes Controller {
   public topLevelCategories: ProductCategory[*] sequence =
     ProductCategory->select pc (pc.'is part of'->isEmpty());
     
-  protected displayView() {
-    new HomeView(this);
+  public receive signal ShowCategory {
+    public choice: Integer;
   }
   
-  protected handleChoice(in choice: String): Controller[0..1] {
-    switch (choice) {
-      case "x": return null;
-      case "s": return new ShoppingCartController();
-      default: return this.showCategory(IntegerFunctions::ToInteger(choice));
-    }
+  public receive signal ShowShoppingCart {
   }
-  
-  private showCategory(in choice: Integer): Controller {
-    category = this.topLevelCategories->at(choice);
-    return category.'is divided into'->isEmpty()?
-      new ProductCategoryController("Home", category):
-      new SubcategoryController("Home", category);
-  }  
-  
+       
 } do {
+
+  accept (Display);
+  new HomeView(this);
+  
+  let category : ProductCategory = null;
+  accept (event: ShowCategory) {
+    category = this.topLevelCategories->at(event.choice);
+    if (category.'is divided into'->isEmpty()) {
+      new ProductCategoryController("Home", category).Display();
+    } else {
+      new SubcategoryController("Home", category).Display();
+    }
+  } or accept (ShowShoppingCart) {
+    new ShoppingCartController().Display();
+  } or accept (Exit) {
+  }
+  
+  this.view.destroy();
+  
 }

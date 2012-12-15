@@ -25,5 +25,14 @@ active class HomeView specializes View {
     return choices;
   }
   
+  protected handle(in choice: String) {
+    controller = (HomeController)this.controller;
+    switch (choice) {
+      case "x": controller.Exit();
+      case "s": controller.ShowShoppingCart();
+      default: controller.ShowCategory(IntegerFunctions::ToInteger(choice));
+    }
+  }
+
 } do {
 }

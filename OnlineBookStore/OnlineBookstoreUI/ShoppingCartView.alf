@@ -14,6 +14,10 @@ active class ShoppingCartView specializes View {
       controller => controller
     );
   }
+  
+  public getController(): ShoppingCartController {
+    return (ShoppingCartController)this.controller;
+  }
 
   public display(): String[*] sequence {
     choices = String[]{"c", "e", "h", "x"};
@@ -32,5 +36,37 @@ active class ShoppingCartView specializes View {
     return choices;
   }
 
+  protected handle(in choice: String) {
+    switch (choice) {
+      case "x": this.getController().Exit();
+      case "h": this.getController().Home();
+      case "e": this.emptyCart();
+      case "c": this.checkOut();
+      default:  this.changeQuantity(IntegerFunctions.ToInteger(choice));
+    }
+  }
+    
+  private emptyCart() {
+    if (Ask("Are you sure you want to empty your cart")) {
+      this.getController().Cancel();
+    } else {
+      this.getController().ShowShoppingCart();
+    }
+  }
+  
+  private checkOut() {
+    customerEmail = GetCustomerEmail();
+    this.getController().CheckOut(customerEmail);
+  }
+  
+  private changeQuantity(in choice: Integer) {
+    quantity = GetQuantity("Enter new quantity:", 0);
+    if (quantity->notEmpty()) {
+      this.getController().ChangeQuantity(choice, quantity);
+    } else {
+      this.getController().ShowShoppingCart();
+    }
+  }
+  
 } do {
 }

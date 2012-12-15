@@ -21,7 +21,8 @@ abstract active class View {
     ControlledBy.createLink(this, controller);
   }
   
-  protected abstract display(): String[*] sequence;
+  protected display(): String[*] sequence { return null; }
+  protected handle(in choice: String) { }
   
 } do {
 
@@ -49,7 +50,7 @@ abstract active class View {
     }
   } while (choiceIsInvalid);
   
-  this.controller.Select(choice);
+  this.handle(choice);
   
 }
     

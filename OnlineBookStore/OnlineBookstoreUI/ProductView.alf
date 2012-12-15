@@ -15,6 +15,10 @@ active class ProductView specializes View {
     );
   }
   
+  public getController(): ProductController {
+    return (ProductController)this.controller;
+  }
+  
   protected display(): String[*] sequence {
     product = ((ProductController)this.controller).product;
     
@@ -26,6 +30,26 @@ active class ProductView specializes View {
     WriteLine("Price: " + DomainDataTypes::ToMoneyString(product.unitPrice));
     
     return String[]{"a", "h", "x"};
+  }
+  
+  protected handle(in choice: String) {
+    switch (choice) {
+      case "x": this.exit();
+      case "h": this.home();
+      case "a": this.addProduct();
+    }
+  }
+  
+  private exit() {
+    this.getController().Exit();
+  }
+  
+  private home() {
+    this.getController().Home();
+  }
+  
+  private addProduct() {
+    this.getController().AddProduct(GetQuantity("Enter quantity:", 1));
   }
   
 } do {

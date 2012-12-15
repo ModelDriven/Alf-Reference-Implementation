@@ -2,23 +2,10 @@ namespace UserInterface;
 
 abstract active class Controller {
 
-  protected abstract displayView();
-  protected abstract handleChoice(in choice: String): Controller[0..1];
-  
   public receive signal Display {
   }
-  
-  public receive signal Select {
-    choice: String;
+
+  public receive signal Exit {
   }
-  
-} do {
-
-  accept (Display);
-  this.displayView();
-  
-  accept (selection: Select);
-  this.view.destroy();  
-  this.handleChoice(selection.choice).Display();
-
+    
 }

@@ -15,6 +15,10 @@ active class ProductCategoryView specializes View {
     );
   }
   
+  public getController(): ProductCategoryController {
+    return (ProductCategoryController)this.controller;
+  }
+  
   protected display(): String[*] sequence {
     choices = String[]{"x", "h", "s"};
     i = 1;
@@ -26,6 +30,31 @@ active class ProductCategoryView specializes View {
       }
     }    
     return choices;
+  }
+  
+  protected handle(in choice: String){
+    switch (choice) {
+      case "x": this.exit();
+      case "h": this.home();
+      case "s": this.showShoppingCart();
+      default: this.showProduct(IntegerFunctions::ToInteger(choice));
+    }
+  }
+  
+  private exit() {
+    this.getController().Exit();
+  }
+  
+  private home() {
+    this.getController().Home();
+  }
+  
+  private showShoppingCart() {
+    this.getController().ShowShoppingCart();
+  }
+  
+  private showProduct(in choice: Integer) {
+    this.getController().ShowProduct(choice);
   }
   
 } do {

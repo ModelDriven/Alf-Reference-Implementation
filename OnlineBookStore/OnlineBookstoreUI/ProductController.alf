@@ -16,24 +16,33 @@ active class ProductController specializes Controller {
     this.product = product;
   }
   
-  protected displayView() {
-    new ProductView(this.title, this);
+  public receive signal Home {
   }
   
-  protected handleChoice(in choice: String): Controller[0..1] {
-    switch (choice) {
-      case "x": return null;
-      case "h": return new HomeController();
-      case "a": return this.addProduct();
-    }
-  }
-  
-  private addProduct(): Controller {
-    quantity = GetQuantity("Enter quantity:", 1);
-    return quantity == null? 
-      new ProductController(this.title, this.product):
-      new ShoppingCartController::addProduct(this.product.productID, quantity);
+  public receive signal AddProduct {
+    public quantity: Count;
   }
   
 } do {
+
+  accept (Display);
+  
+  continue = true;
+  do {
+    new ProductView(this.title, this);
+    
+    accept (Exit) {
+      continue = false;
+    } or accept (Home) {
+      new HomeController().Display();
+      continue = false;
+    } or accept (event: AddProduct) {
+      if (event.quantity->notEmpty()) {
+        new ShoppingCartController::addProduct(
+          this.product.productID, event.quantity).Display();
+        continue = false;
+      }
+    }
+  } while (continue);
+  
 }

@@ -16,25 +16,39 @@ active class SubcategoryController specializes Controller {
     this.subcategories = category.'is divided into';
   }
   
-  protected displayView() {
-    new SubcategoryView(this.title, this);
+  public receive signal Home { 
   }
   
-  protected handleChoice(in choice: String): Controller[0..1] {
-    switch (choice) {
-      case "x": return null;
-      case "h": return new HomeController();
-      case "s": return new ShoppingCartController();
-      default: return this.showCategory(IntegerFunctions::ToInteger(choice));
-    }
+  public receive signal ShowShoppingCart {
+  }
+  
+  public receive signal ShowCategory {
+    public choice: Integer;
   }
   
   private showCategory(in choice: Integer): Controller {
     category = this.subcategories->at(choice);
-    return category.'is divided into'->isEmpty()?
-      new ProductCategoryController(this.title, category):
-      new SubcategoryController(this.title, category);
+    if (category.'is divided into'->isEmpty()) {
+      new ProductCategoryController(this.title, category).Display();
+    } else {
+      new SubcategoryController(this.title, category).Display();
+    }
   }
   
 } do {
+
+  accept (Display);  
+  new SubcategoryView(this.title, this);
+
+  accept (Exit) {
+  } or accept (Home) {
+    new HomeController().Display();
+  } or accept (ShowShoppingCart) {
+    new ShoppingCartController().Display();
+  } or accept (event: ShowCategory) {
+    this.showCategory(event.choice);
+  }
+  
+  this.view.destroy();
+  
 }
