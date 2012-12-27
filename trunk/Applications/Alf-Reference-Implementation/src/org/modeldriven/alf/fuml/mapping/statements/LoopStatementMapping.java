@@ -53,7 +53,6 @@ public abstract class LoopStatementMapping extends StatementMapping {
         OutputPin loopVariablePin = this.graph.createOutputPin(
                 loopNode.getName() + ".loopVariable(" + name + ")", 
                 classifier, lower, upper);
-        loopNode.addStructuredNodeOutput(loopVariablePin);
         loopNode.addLoopVariable(loopVariablePin);
         ForkNode forkNode = this.create(ForkNode.class);
         forkNode.setName("Fork(" + loopVariablePin.getName() + ")");

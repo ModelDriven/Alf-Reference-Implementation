@@ -1032,7 +1032,14 @@ public class ActivityGraph {
                 
                 // A pin that is owned by a structured activity node is
                 // considered to be "contained in" that node.
-                if (node.equals(container)) {
+                if (node == null) {
+                    // NOTE: node can only be false if the pin is a loop
+                    // loop variable, and then it could only be contained in
+                    // container if container was the loop node for that loop
+                    // variable, in which case this would have been caught by
+                    // the test above.
+                    return false;
+                } else if (node.equals(container)) {
                     return true;
                 }
             }
