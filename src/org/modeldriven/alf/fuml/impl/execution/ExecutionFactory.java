@@ -19,7 +19,7 @@ public class ExecutionFactory implements org.modeldriven.alf.fuml.execution.Exec
     private fUML.Semantics.Loci.LociL1.ExecutionFactory base = null;
     
     public ExecutionFactory() {
-        this(new fUML.Semantics.Loci.LociL3.ExecutionFactoryL3());
+        this(new org.modeldriven.fuml.environment.ExecutionFactory());
     }
 
     public ExecutionFactory(fUML.Semantics.Loci.LociL1.ExecutionFactory factory) {
