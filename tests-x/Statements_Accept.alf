@@ -3,6 +3,8 @@
  **/
 active class Statements_Accept {
 
+  private receive signal SignalDone { }
+
   private abstract active class Super {
     public signal SignalNewArrival { public name: String; }
     public receive signal SignalTermination { }
@@ -22,6 +24,13 @@ active class Statements_Accept {
     public flag: Boolean;
 
     public receive SignalNewArrival;
+    
+    public tester: Statements_Accept;
+    
+    @Create
+    public Test(in tester: Statements_Accept) {
+      this.tester = tester;
+    }
   
   } do {
   
@@ -62,10 +71,12 @@ active class Statements_Accept {
     accept (sig1: SignalTermination);
     this.sig1 = sig1;
     
+    this.tester.SignalDone();
+    
   }
   
   private test(out test: Test) {
-    test = new Test();
+    test = new Test(this);
     
     test.SignalTermination();
     test.SignalNewArrival("Arrival1");
@@ -81,11 +92,13 @@ active class Statements_Accept {
     
     test.SignalNewArrival("Arrival7");
     test.SignalNewArrival("Arrival8");
+    test.SignalTermination();
   }
 
 } do {
 
   this.test(test);
+  accept (SignalDone);
 
   AssertTrue("test.sig instanceof SignalTermination", test.sig instanceof Test::SignalTermination);
   AssertEqual("test.name", test.name, "Arrival1");
@@ -97,5 +110,5 @@ active class Statements_Accept {
   
   AssertEqual("test.count", test.count, 3);
   AssertTrue("test.flag", test.flag);
-  AssertTrue("test.sig1->isEmpty()", test.sig1->isEmpty());
+  AssertTrue("test.sig1 instanceof SignalTermination", test.sig1 instanceof Test::SignalTermination);
 }
