@@ -338,7 +338,8 @@ public class SequenceOperationExpressionImpl
 	    if (expression == null || tuple == null) {
 	        return true;
 	    } else {
-    	    this.getAssignmentAfterMap(); // Force computation of assignments.
+    	    // NOTE: getExpression() will already have forced computation of 
+	        // assignments.
     	    Collection<AssignedSource> assignments = 
     	        expression.getImpl().getNewAssignments();
      	    assignments.retainAll(tuple.getImpl().getNewAssignments());
@@ -359,13 +360,15 @@ public class SequenceOperationExpressionImpl
 	@Override
 	public Map<String, AssignedSource> updateAssignmentMap() {
 	    SequenceOperationExpression self = this.getSelf();
-	    Expression expression = this.getExpression();
+	    ExtentOrExpression primary = self.getPrimary();
 	    Tuple tuple = self.getTuple();
 	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
 	    Map<String, AssignedSource> assignments = new HashMap<String, AssignedSource>();
-	    if (expression != null) {
-	        expression.getImpl().setAssignmentBefore(assignmentsBefore);
-	        assignments.putAll(expression.getImpl().getAssignmentAfterMap());
+	    if (primary != null) {
+            this.expression = this.getExpression();
+            if (this.expression != null) {
+                assignments.putAll(this.expression.getImpl().getAssignmentAfterMap());
+            }
 	    }
 	    if (tuple != null) {
 	        tuple.getImpl().setAssignmentsBefore(assignmentsBefore);
@@ -438,7 +441,13 @@ public class SequenceOperationExpressionImpl
             SequenceOperationExpression self = this.getSelf();
             ExtentOrExpression primary = self.getPrimary();
             QualifiedName operation = self.getOperation();
-            this.expression = primary == null? null: primary.getExpression();
+            
+            if (primary != null) {
+                // NOTE: Setting assignments is necessary for proper derivation 
+                // of the primary expression.
+                primary.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
+                this.expression = primary.getExpression();
+            }
             
             // Identify the first argument of an invocation of
             // CollectionFunctions::add, since an @parallel local name is 
@@ -454,11 +463,10 @@ public class SequenceOperationExpressionImpl
                         equals(operation.getImpl().getBehaviorReferent())) {
                 this.expression.getImpl().setIsAddTarget();
             }
-            
         }
         return this.expression;
     }
-
+    
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    super.setCurrentScope(currentScope);

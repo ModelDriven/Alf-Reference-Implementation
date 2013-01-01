@@ -201,11 +201,13 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	@Override
 	public Map<String, AssignedSource> updateAssignmentMap() {
 		ExtentOrExpression primary = this.getSelf().getPrimary();
-		Expression expression = primary == null? null: primary.getExpression();
 		Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
-		if (expression != null) {
-		    expression.getImpl().setAssignmentBefore(assignments);
-		    assignments = expression.getImpl().getAssignmentAfterMap();
+		if (primary != null) {
+		    primary.getImpl().setAssignmentBefore(assignments);
+		    Expression expression = primary.getExpression();
+    		if (expression != null) {
+    		    assignments = expression.getImpl().getAssignmentAfterMap();
+    		}
 		}
 		return assignments;
 	} // updateAssignmentMap

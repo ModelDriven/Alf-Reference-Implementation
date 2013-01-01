@@ -30,6 +30,8 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 	private AssignedSource variableSource = null; // DERIVED
 	private Expression argument = null;
 	private ExtentOrExpression primary = null;
+	
+	private Expression expression = null;
 
 	public SequenceExpansionExpressionImpl(SequenceExpansionExpression self) {
 		super(self);
@@ -94,12 +96,13 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 	 **/
 	protected AssignedSource deriveVariableSource() {
 	    SequenceExpansionExpression self = this.getSelf();
-	    ExtentOrExpression primary = self.getPrimary();
+	    Expression expression = this.getExpression();
+	    
 	    AssignedSource variableSource = new AssignedSource();
 	    variableSource.setName(self.getVariable());
 	    variableSource.setSource(self);
-	    variableSource.setType(primary == null? null: 
-	        primary.getExpression().getType());
+	    variableSource.setType(expression == null? null: 
+	        expression.getType());
 	    variableSource.setLower(1);
 	    variableSource.setUpper(1);
 		return variableSource;
@@ -144,9 +147,8 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 	 **/
 	public boolean sequenceExpansionExpressionVariableName() {
 	    SequenceExpansionExpression self = this.getSelf();
-	    ExtentOrExpression primary = self.getPrimary();
-	    this.getAssignmentAfterMap(); // Force computation of assignments.
-	    return !primary.getExpression().getImpl().
+	    Expression expression = this.getExpression();
+	    return expression == null || !expression.getImpl().
 	                getAssignmentAfterMap().containsKey(self.getVariable());
 	}
 
@@ -199,16 +201,11 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
 	@Override
 	public Map<String, AssignedSource> updateAssignmentMap() {
         SequenceExpansionExpression self = this.getSelf();
-        ExtentOrExpression primary = self.getPrimary();
+        Expression expression = this.getExpression();
         Expression argument = self.getArgument();
-        Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
-        if (primary != null) {
-            Expression expression = primary.getExpression();
-            if (expression != null) {
-                expression.getImpl().setAssignmentBefore(assignments);
-                assignments = expression.getImpl().getAssignmentAfterMap();
-            }
-        }
+        Map<String, AssignedSource> assignments = 
+                expression == null ? this.getAssignmentBeforeMap():
+                    expression.getImpl().getAssignmentAfterMap();
         if (argument != null) {
             Map<String, AssignedSource> assignmentsBeforeArgument =
                 new HashMap<String, AssignedSource>(assignments);
@@ -218,6 +215,19 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
         }
 		return assignments;
 	} // updateAssignments
+	
+	protected Expression getExpression() {
+	    if (this.expression == null) {
+	        ExtentOrExpression primary = this.getSelf().getPrimary();
+	        if (primary != null) {
+                // NOTE: Setting assignments is necessary for proper derivation 
+                // of the primary expression.
+	            primary.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
+	            this.expression = primary.getExpression();
+	        }
+	    }
+	    return this.expression;
+	}
 	
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {

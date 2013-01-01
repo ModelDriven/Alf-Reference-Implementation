@@ -11,7 +11,9 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -26,6 +28,8 @@ public class ExtentOrExpressionImpl {
 	private QualifiedName name = null;
 	private Expression expression = null; // DERIVED
 	private Expression nonNameExpression = null;
+
+    private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
 
 	protected ExtentOrExpression self;
 
@@ -77,6 +81,16 @@ public class ExtentOrExpressionImpl {
 		this.nonNameExpression = nonNameExpression;
 	}
 
+    public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
+        this.assignmentBefore = assignmentBefore;
+        
+        // NOTE: The proper derivation of the expression depends on
+        // assignmentBefore being set.
+        if (this.expression != null) {
+            this.setExpression(this.deriveExpression());
+        }
+    }
+
 	/**
 	 * The effective expression for the target is the parsed primary expression,
 	 * if the target is not a qualified name, a name expression, if the target
@@ -87,13 +101,18 @@ public class ExtentOrExpressionImpl {
 	    ExtentOrExpression self = this.getSelf();
 	    QualifiedName name = self.getName();
 	    Expression expression = self.getNonNameExpression();
-	    if (expression == null && name != null) {
-	        if (name.getImpl().getClassReferent() != null) {
+        if (expression != null) {
+            expression.getImpl().setAssignmentBefore(this.assignmentBefore);
+        } else if (name != null) {
+	        expression = new NameExpression(self);
+	        // NOTE: assignmentBefore must be set before getAssignment is called.
+            expression.getImpl().setAssignmentBefore(this.assignmentBefore);
+	        ((NameExpression)expression).setName(name);
+	        if (((NameExpression)expression).getAssignment() == null
+	                && name.getImpl().getClassReferent() != null) {
 	            expression = new ClassExtentExpression(self);
+	            expression.getImpl().setAssignmentBefore(this.assignmentBefore);
 	            ((ClassExtentExpression)expression).setClassName(name);
-	        } else {
-	            expression = new NameExpression(self);
-	            ((NameExpression)expression).setName(name);
 	        }
 	    }
 		return expression;
