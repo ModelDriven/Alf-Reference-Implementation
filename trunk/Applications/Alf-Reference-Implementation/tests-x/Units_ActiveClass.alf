@@ -3,20 +3,28 @@
  */
 active class Units_ActiveClass {
 
-  active class C {
+  public receive signal Continue { }
+
+  public active class C {
     public i: Integer;
     public j: Integer;
-    @Create public C(in i: Integer) { this.i = i; }
+    public t: Units_ActiveClass;
+    @Create public C(in i: Integer, in t: Units_ActiveClass) { 
+      this.i = i;
+      this.t = t;
+    }
   } do {
     $(this.j = this.i);
+    this.t.Continue();
   }
   
-  activity test(out j: Integer) {
-    j = new C(1).j;
+  public test(out c: C) {
+    c = new C(1, this);    
   }  
   
 } do {
-  test(j);
+  this.test(c);
+  accept (Continue);
   
-  AssertEqual("j", j, 1);
+  AssertEqual("c.j", c.j, 1);
 }
