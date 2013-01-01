@@ -35,8 +35,8 @@ public class SelectOrRejectExpressionImpl
 	 **/
 	@Override
 	protected ElementReference deriveType() {
-	    ExtentOrExpression primary = this.getSelf().getPrimary();
-	    return primary == null? null: primary.getExpression().getType();
+	    Expression expression = this.getExpression();
+	    return expression == null? null: expression.getType();
 	}
 	
 	/**

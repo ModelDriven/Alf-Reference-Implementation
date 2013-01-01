@@ -51,7 +51,7 @@ public class CollectOrIterateExpressionImpl
         if (argument == null || primary == null) {
             return 0;
         } else {
-            Expression expression = primary.getExpression();
+            Expression expression = this.getExpression();
             return expression == null? 0: argument.getLower() * expression.getLower();
         }
 	}
@@ -68,7 +68,7 @@ public class CollectOrIterateExpressionImpl
         if (argument == null || primary == null) {
             return 0;
         } else {
-            Expression expression = primary.getExpression();
+            Expression expression = this.getExpression();
             if (expression == null) {
                 return 0;
             } else {
