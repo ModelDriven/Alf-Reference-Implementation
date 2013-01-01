@@ -3,11 +3,20 @@
  */
 active class Expressions_Invocation_Reception {
 
+  public receive signal SignalLoop { }
+
   public active class Receiver {
   
     public a: Integer = 0;
     public x: Integer[*] sequence;
     public y: Integer[*] sequence;
+    
+    public tester: Expressions_Invocation_Reception;
+    
+    @Create
+    public Receiver(in tester: Expressions_Invocation_Reception) {
+      this.tester = tester;
+    }
   
     public receive signal A {
     }
@@ -32,31 +41,33 @@ active class Expressions_Invocation_Reception {
         this.x->add(c.x);
         this.y->add(c.y);
       }
+      this.tester.SignalLoop();
     } while (true);
     
   }
   
-  public test(out a: Integer, out x: Integer[*] sequence, out y: Integer[*] sequence) {
+  public test(out receiver: Receiver, out n: Integer) {
   
-    receiver = new Receiver();
+    receiver = new Receiver(this);
     
     receiver.A();
     receiver.B(1);
     receiver.C(2,3);
     receiver.C(x => 3);
     receiver.C(y => 4);
-    
-    a = receiver.a;
-    x = receiver.x;
-    y = receiver.y;
+    n = 5;
   }
   
 } do {
 
-  this.test(a, x, y);
+  this.test(receiver, n);
   
-  AssertEqual("a", a, 1);
-  AssertList("x", x, Integer[]{1,2,3});
-  AssertList("y", y, Integer[]{3,4});
+  for (i in 1..n) {
+    accept (SignalLoop);
+  }
+  
+  AssertEqual("receiver.a", receiver.a, 1);
+  AssertList("receiver.x", receiver.x, Integer[]{1,2,3});
+  AssertList("receiver.y", receiver.y, Integer[]{3,4});
   
 }

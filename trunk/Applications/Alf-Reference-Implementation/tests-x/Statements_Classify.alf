@@ -5,12 +5,15 @@ active class Statements_Classify {
 
     // Supporting declarations *************************************************
     
+    receive signal Ready { }
+    
     class Monitor { }
 	  class InActiveMonitor specializes Monitor { }
 	  active class ActiveMonitor specializes Monitor {
 	      public n: Integer = 0;
 	  } do {
 	      this.n = 1;
+	      Statements_Classify.allInstances().Ready();
 	  }
 	  
     class Employee { }
@@ -44,6 +47,7 @@ active class Statements_Classify {
     }
 } do {
 	this.test(employee, monitor, issue);
+	accept (Ready);
 	
 	AssertTrue("employee instanceof Employee", employee instanceof Employee);
 	AssertFalse("employee hastype Staff", employee hastype Staff);
