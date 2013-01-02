@@ -6,14 +6,17 @@ active class SubcategoryController specializes Controller {
 
   public title: String;
   public subcategories: ProductCategory[*] sequence;
+  public cartID: arbitrary_id[0..1];
   
   @Create
   public SubcategoryController(
     in title: String,
-    in category: ProductCategory
+    in category: ProductCategory,
+    in cartID: arbitrary_id
   ) {
     this.title = title + " > " + category.categoryName;
     this.subcategories = category.'is divided into';
+    this.cartID = cartID;
   }
   
   public receive signal Home { 
@@ -29,9 +32,9 @@ active class SubcategoryController specializes Controller {
   private showCategory(in choice: Integer): Controller {
     category = this.subcategories->at(choice);
     if (category.'is divided into'->isEmpty()) {
-      new ProductCategoryController(this.title, category).Display();
+      new ProductCategoryController(this.title, category, this.cartID).Display();
     } else {
-      new SubcategoryController(this.title, category).Display();
+      new SubcategoryController(this.title, category, this.cartID).Display();
     }
   }
   
@@ -42,9 +45,9 @@ active class SubcategoryController specializes Controller {
 
   accept (Exit) {
   } or accept (Home) {
-    new HomeController().Display();
+    new HomeController(this.cartID).Display();
   } or accept (ShowShoppingCart) {
-    new ShoppingCartController().Display();
+    new ShoppingCartController(this.cartID).Display();
   } or accept (event: ShowCategory) {
     this.showCategory(event.choice);
   }

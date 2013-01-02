@@ -1,6 +1,6 @@
 namespace UserInterface;
 
-abstract active class Controller {
+abstract active class Controller specializes Listener {
 
   public receive signal Display {
   }

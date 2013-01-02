@@ -6,8 +6,14 @@ private import Shipping::*;
 
 active class HomeController specializes Controller {
 
+  public cartID: arbitrary_id[0..1]; 
   public topLevelCategories: ProductCategory[*] sequence =
     ProductCategory->select pc (pc.'is part of'->isEmpty());
+    
+  @Create
+  public HomeController(in cartID: arbitrary_id[0..1]) {
+    this.cartID = cartID;
+  }
     
   public receive signal ShowCategory {
     public choice: Integer;
@@ -25,12 +31,12 @@ active class HomeController specializes Controller {
   accept (event: ShowCategory) {
     category = this.topLevelCategories->at(event.choice);
     if (category.'is divided into'->isEmpty()) {
-      new ProductCategoryController("Home", category).Display();
+      new ProductCategoryController("Home", category, this.cartID).Display();
     } else {
-      new SubcategoryController("Home", category).Display();
+      new SubcategoryController("Home", category, this.cartID).Display();
     }
   } or accept (ShowShoppingCart) {
-    new ShoppingCartController().Display();
+    new ShoppingCartController(this.cartID).Display();
   } or accept (Exit) {
   }
   

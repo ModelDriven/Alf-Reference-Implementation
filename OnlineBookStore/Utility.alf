@@ -8,6 +8,7 @@ package Utility {
     in message: String) {
     WriteLine(title);
     WriteLine(message);
+    WriteLine("Press Return to continue.");
     ReadLine();
   }
 

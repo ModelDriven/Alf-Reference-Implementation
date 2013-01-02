@@ -18,10 +18,9 @@ active class ShoppingCart {
   public totalValue: Money = new (0,0);  // derived
   
   /**
-  A flag to indicate that the shopping cart has not been checked out or
-  cancelled.
+  External entity references.
   */
-  public isActive: Boolean = true;
+  private EE: ExternalEntities = ExternalEntities::GetInstance();
   
   /*
    * Signal receptions
@@ -91,6 +90,8 @@ active class ShoppingCart {
     productSelections = this.'includes selection';
     this.totalValue = productSelections.selectionValue->reduce Add;
     
+    this.EE.onlineCustomer.ShoppingCartUpdated(this.cartID);
+    
     }
   }
   
@@ -109,7 +110,8 @@ active class ShoppingCart {
       customerEmail =>      rcvd_evt.customerEmail,
       shippingAddress =>    rcvd_evt.shippingAddress
     );
-    this.isActive = false;
+    
+    this.EE.onlineCustomer.ShoppingCartUpdated(this.cartID);
     
     }
   }
@@ -122,7 +124,8 @@ active class ShoppingCart {
     this.'includes selection'.destroy();
     
     this.totalValue = new Money(0,0);
-    this.isActive = false;
+    
+    this.EE.onlineCustomer.ShoppingCartUpdated(this.cartID);
     
     }
   }
@@ -151,15 +154,15 @@ active class ShoppingCart {
         
       } or accept (checkOut: CheckOut) {
         this.'3. Establishing Customer and Verifying Payment'(checkOut);
-        continue = false;
+        return;
         
       } or accept (cancel: Cancel) {
         this.'4. Canceling Entire Cart'(cancel);
-        continue = false;
+        return;
         
       } 
 
     } while(continue);
     
-  } while (this.isActive);
+  } while (true);
 }

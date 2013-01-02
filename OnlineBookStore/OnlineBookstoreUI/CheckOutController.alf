@@ -8,10 +8,15 @@ active class CheckOutController specializes Controller {
   public customerName: PersonalName = new PersonalName(firstName => "", lastName => "");
   public customerPhone: TelephoneNumber[0..1];
   public shippingAddress: MailingAddress = new MailingAddress(addressLine1 => "");
+  public cartID: arbitrary_id;
 
   @Create
-  public CheckOutController(in customerEmail: InternetEmailAddress) {
+  public CheckOutController(
+    in customerEmail: InternetEmailAddress,
+    in cartID: arbitrary_id
+  ) {
     this.customerEmail = customerEmail;
+    this.cartID = cartID;
     
     customer = Customer->
       select selected (selected.email == customerEmail)[1];
@@ -28,6 +33,7 @@ active class CheckOutController specializes Controller {
     this.customerName = controller.customerName;
     this.customerPhone = controller.customerPhone;
     this.shippingAddress = controller.shippingAddress;
+    this.cartID = controller.cartID;
   }
   
   public receive signal Update {
@@ -86,10 +92,10 @@ active class CheckOutController specializes Controller {
         continue = false;
       }
     } or accept (ShowShoppingCart) {
-      new ShoppingCartController().Display();
+      new ShoppingCartController(this.cartID).Display();
       continue = false;
     } or accept (Home) {
-      new HomeController().Display();
+      new HomeController(this.cartID).Display();
       continue = false;
     } or accept (Exit) {
       continue = false;
