@@ -2,6 +2,61 @@ namespace ExternalEntitiesImpl;
 
 active class OnlineCustomerImpl specializes OnlineCustomer {
 
+  public cartPublishers: Map<arbitrary_id, Publisher> = new();
+  public customerPublishers: Map<InternetEmailAddress, Publisher> = new();
+  
+  public registerForCart(
+    in listener: Listener, in cartID: arbitrary_id) {
+    //@isolated
+    {
+    
+    Register(this.cartPublishers, listener, cartID);
+    
+    }
+  }
+  
+  public unregisterForCart(
+    in listener: Listener, in cartID: arbitrary_id) {
+    //@isolated
+    {
+    
+    this.cartPublishers.get(cartID).unregister(listener);
+    
+    }
+  }
+  
+  public registerForCustomer(
+    in listener: Listener, in customerEmail: InternetEmailAddress) {
+    //@isolated
+    {
+    
+    Register(this.customerPublishers, listener, customerEmail);
+    
+    }
+  }
+
+  public unregisterForCustomer(
+    in listener: Listener, in customerEmail: InternetEmailAddress) {
+    //@isolated
+    {
+    
+    this.customerPublishers.get(customerEmail).unregister(listener);
+    
+    }
+  }
+    
+  private activity Register<Key>(
+    in map: Map<Key, Publisher>, 
+    in listener: Listener,
+    in key: Key) {
+    publisher = map.get(key);
+    if (publisher->isEmpty()) {
+      publisher = new Publisher();
+      map.put(key, publisher);
+    }
+    publisher.register(listener);
+  }
+
   private activity SendCustomerMessage(
     in customerEmail: InternetEmailAddress,
     in message: String
@@ -13,10 +68,14 @@ active class OnlineCustomerImpl specializes OnlineCustomer {
 
   while (true) {
   
-    accept (chargeDeclined: ChargeDeclined) {
+    accept (cartUpdated: ShoppingCartUpdated) {
+      this.cartPublishers.get(cartUpdated.cartID).notify();
+    } or accept (chargeDeclined: ChargeDeclined) {
       SendCustomerMessage(chargeDeclined.customerEmail, "CHARGE DECLINED");
+      this.customerPublishers.get(chargeDeclined.customerEmail).notify(chargeDeclined);
     } or accept (chargeApproved: ChargeApproved) {
       SendCustomerMessage(chargeApproved.customerEmail, "CHARGE APPROVED");
+      this.customerPublishers.get(chargeApproved.customerEmail).notify(chargeApproved);
     } or accept (orderReportedDelivered: OrderReportedDelivered) {
       SendCustomerMessage(orderReportedDelivered.customerEmail, "ORDER DELIVERED");
     }

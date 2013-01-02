@@ -1,6 +1,7 @@
 namespace OnlineBookstoreUI;
 
 private import Ordering::ShoppingCart;
+private import ExternalEntities::OnlineCustomer;
 
 active class PaymentController specializes Controller {
 
@@ -8,14 +9,18 @@ active class PaymentController specializes Controller {
   public accountNumber: BankCardAccountNumber[0..1];
   public cardExpirationDate: MonthYear[0..1];
   public billingAddress: MailingAddress;
+  public cartID: arbitrary_id;
 
   public previous: CheckOutController;
+  public EE: ExternalEntities = ExternalEntities::GetInstance();
   
   @Create
   public PaymentController(in previous: CheckOutController) {
     this.cardholderName = previous.customerName;
     this.billingAddress = previous.shippingAddress;
     this.previous = previous;
+    this.cartID = previous.cartID;
+    this.EE.onlineCustomer.registerForCustomer(this, previous.customerEmail);
   }
   
   public receive signal Update {
@@ -53,7 +58,7 @@ active class PaymentController specializes Controller {
   }
   
   private completeCheckOut() {
-    cart = ShoppingCart->select s (s.isActive)[1];
+    cart = ShoppingCart->select s (s.cartID == this.cartID)[1];
     cart.CheckOut(
       accountNumber => this.accountNumber,
       billingAddress => this.billingAddress,
@@ -91,17 +96,20 @@ active class PaymentController specializes Controller {
     } or accept (PlaceOrder) {
       if (this.isValid()) {
         this.completeCheckOut();
-        new HomeController().Display();
-        continue = false;
+        accept (notification: Notification);
+        if (notification.content instanceof OnlineCustomer::ChargeApproved) {
+          new HomeController().Display();
+          continue = false;
+        }
       }
     } or accept (Back) {
       new CheckOutController::continue(this.previous).Display();
       continue = false;
     } or accept (ShowShoppingCart) {
-      new ShoppingCartController().Display();
+      new ShoppingCartController(this.cartID).Display();
       continue = false;
     } or accept (Home) {
-      new HomeController().Display();
+      new HomeController(this.cartID).Display();
       continue = false;
     } or accept (Exit) {
       continue = false;
@@ -109,5 +117,7 @@ active class PaymentController specializes Controller {
     
     this.view.destroy();
   } while (continue);
+  
+  this.EE.onlineCustomer.unregisterForCustomer(this, this.previous.customerEmail);
   
 }

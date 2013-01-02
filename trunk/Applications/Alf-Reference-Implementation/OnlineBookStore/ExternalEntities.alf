@@ -2,11 +2,11 @@ private import DomainDataTypes::*;
 
 abstract class ExternalEntities {
 
-  protected abstract active class OnlineCustomer;
-  protected abstract active class CreditCardCompany;
-  protected abstract class Logistics;
-  protected abstract active class ShippingCompany;
-  protected abstract active class ShippingClerk;
+  public abstract active class OnlineCustomer;
+  public abstract active class CreditCardCompany;
+  public abstract class Logistics;
+  public abstract active class ShippingCompany;
+  public abstract active class ShippingClerk;
   
   public onlineCustomer: OnlineCustomer;
   public creditCardCompany: CreditCardCompany;

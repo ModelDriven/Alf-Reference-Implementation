@@ -6,14 +6,17 @@ active class ProductCategoryController specializes Controller {
 
   public title: String;
   public products: Product[*] sequence;
+  public cartID: arbitrary_id[0..1];
   
   @Create
   public ProductCategoryController(
     in title: String,
-    in category: ProductCategory
+    in category: ProductCategory,
+    in cartID: arbitrary_id[0..1]
   ) {
     this.title = title + " > " + category.categoryName;
     this.products = category.classifies->select p (p.currentlyAvailable);
+    this.cartID = cartID;
   }
   
   public receive signal Home {
@@ -33,11 +36,11 @@ active class ProductCategoryController specializes Controller {
   
   accept (Exit) {
   } or accept (Home) {
-    new HomeController().Display();
+    new HomeController(this.cartID).Display();
   } or accept (ShowShoppingCart) {
-    new ShoppingCartController().Display();
+    new ShoppingCartController(this.cartID).Display();
   } or accept (event: ShowProduct) {
-    new ProductController(this.title, this.products->at(event.choice)).Display();
+    new ProductController(this.title, this.products->at(event.choice), this.cartID).Display();
   }
   
   this.view.destroy();

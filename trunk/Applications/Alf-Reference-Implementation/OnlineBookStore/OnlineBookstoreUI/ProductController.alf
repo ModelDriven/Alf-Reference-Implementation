@@ -6,14 +6,17 @@ active class ProductController specializes Controller {
 
   public title: String;
   public product: Product;
+  public cartID: arbitrary_id[0..1];
   
   @Create
   public ProductController(
     in title: String,
-    in product: Product
+    in product: Product,
+    in cartID: arbitrary_id[0..1]
   ) {
     this.title = title;
     this.product = product;
+    this.cartID = cartID;
   }
   
   public receive signal Home {
@@ -34,12 +37,12 @@ active class ProductController specializes Controller {
     accept (Exit) {
       continue = false;
     } or accept (Home) {
-      new HomeController().Display();
+      new HomeController(this.cartID).Display();
       continue = false;
     } or accept (event: AddProduct) {
       if (event.quantity->notEmpty()) {
-        new ShoppingCartController::addProduct(
-          this.product.productID, event.quantity).Display();
+        new ShoppingCartController(this.cartID).AddProduct(
+          this.product.productID, event.quantity);
         continue = false;
       }
     }

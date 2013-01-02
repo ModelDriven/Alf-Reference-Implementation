@@ -15,10 +15,6 @@ active class ProductView specializes View {
     );
   }
   
-  public getController(): ProductController {
-    return (ProductController)this.controller;
-  }
-  
   protected display(): String[*] sequence {
     product = ((ProductController)this.controller).product;
     
@@ -33,23 +29,12 @@ active class ProductView specializes View {
   }
   
   protected handle(in choice: String) {
+    controller = (ProductController)this.controller;
     switch (choice) {
-      case "x": this.exit();
-      case "h": this.home();
-      case "a": this.addProduct();
+      case "x": controller.Exit();
+      case "h": controller.Home();
+      case "a": controller.AddProduct(GetQuantity("Enter quantity:", 1));
     }
-  }
-  
-  private exit() {
-    this.getController().Exit();
-  }
-  
-  private home() {
-    this.getController().Home();
-  }
-  
-  private addProduct() {
-    this.getController().AddProduct(GetQuantity("Enter quantity:", 1));
   }
   
 } do {
