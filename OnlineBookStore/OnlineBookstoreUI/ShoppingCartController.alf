@@ -42,8 +42,8 @@ active class ShoppingCartController specializes Controller {
   ) {
     if (this.cart->isEmpty()) {
       this.cart = new ShoppingCart();
-      this.cart.StartCart(productID, quantity);
       this.EE.onlineCustomer.registerForCart(this, this.cart.cartID);
+      this.cart.StartCart(productID, quantity);
     } else {
       this.cart.AddSelection(productID, quantity);
     }
