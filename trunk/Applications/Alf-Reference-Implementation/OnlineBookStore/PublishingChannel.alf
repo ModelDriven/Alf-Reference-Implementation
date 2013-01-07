@@ -1,5 +1,5 @@
-active class Publisher specializes ActiveChannel {
-  private publisherID: Integer = Publisher->size();
+active class PublishingChannel specializes ActiveChannel {
+  private channelID: Integer = PublishingChannel->size();
   private listeners: Listener[*];
   
   public register(in listener: Listener) {
@@ -15,7 +15,7 @@ active class Publisher specializes ActiveChannel {
   }
   
   public getName(): String {
-    return "Publisher#" + IntegerFunctions::ToString(this.publisherID);
+    return "PublishingChannel#" + IntegerFunctions::ToString(this.channelID);
   }
   
   public open(out errorStatus: Status[0..1]) {
@@ -30,7 +30,7 @@ active class Publisher specializes ActiveChannel {
   
   public getStatus(): Status {
     return new Status(
-      context => "Publisher",
+      context => "PublishingChannel",
       code => 0,
       description => "Normal"
     );
