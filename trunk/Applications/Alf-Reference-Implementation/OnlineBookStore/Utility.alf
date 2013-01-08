@@ -31,7 +31,7 @@ package Utility {
   }
   
   public activity GetString(in prompt: String[0..1]): String {
-    WriteLine(prompt);
+    Write(prompt);
     s = ReadLine();
     return s == ""? null: s;
   }
