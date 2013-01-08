@@ -6,7 +6,7 @@ active class PaymentView specializes View {
   public PaymentView(in controller: PaymentController) {
     super(
       title => "Shopping Cart > Check Out > Payment Information",
-      prompt => "Select a field to change, p to pay, b to go back, s for shopping cart, h for home or x to exit",
+      prompt => "Select a field to change, p to pay, b for back, s for shopping cart, h for home or x to exit",
       controller => controller
     );
   }
@@ -31,58 +31,19 @@ active class PaymentView specializes View {
   }
   
   protected handle(in choice: String) {
+    controller = (PaymentController)this.controller;
     switch (choice) {
-      case "1": this.updateCardholderName();
-      case "2": this.updateAccountNumber();
-      case "3": this.updateCardExpirationDate();
-      case "4": this.updateBillingAddress();
-      case "p": this.placeOrder();
-      case "b": this.back();
-      case "s": this.showShoppingCart();
-      case "h": this.home();
-      case "x": this.exit();
+      case "1": controller.Update(cardholderName => GetPersonalName("Enter cardholder name:"));
+      case "2": controller.Update(accountNumber => GetString("Enter bank card account number:"));
+      case "3": controller.Update(cardExpirationDate => GetMonthYear("Enter card expiration date:"));
+      case "4": controller.Update(billingAddress => GetMailingAddress("Enter billing address:"));
+      case "p": controller.PlaceOrder();
+      case "b": controller.Back();
+      case "s": controller.ShowShoppingCart();
+      case "h": controller.Home();
+      case "x": controller.Exit();
     }
   }
 
-  private updateCardholderName() {
-    WriteLine("Enter cardholder name:");
-    this.getController().Update(cardholderName => GetPersonalName());
-  }
-  
-  private updateAccountNumber() {
-    Write("Enter bank card account number:");
-    this.getController().Update(accountNumber => ReadLine());
-  }
-  
-  private updateCardExpirationDate() {
-    WriteLine("Enter card expiration date:");
-    this.getController().Update(cardExpirationDate => GetMonthYear());
-  }
-  
-  private updateBillingAddress() {
-    Write("Enter billing address:");
-    this.getController().Update(billingAddress => GetMailingAddress());
-  }
-  
-  private placeOrder() {
-    this.getController().PlaceOrder();
-  }
-  
-  private back() {
-    this.getController().Back();
-  }
-  
-  private showShoppingCart() {
-    this.getController().ShowShoppingCart();
-  }
-  
-  private home() {
-    this.getController().Home();
-  }
-  
-  private exit() {
-    this.getController().Exit();
-  }
-    
 } do {
 }

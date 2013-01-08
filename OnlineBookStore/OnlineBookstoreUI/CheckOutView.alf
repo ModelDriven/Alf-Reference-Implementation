@@ -6,13 +6,9 @@ active class CheckOutView specializes View {
   public CheckOutView(in controller: CheckOutController) {
     super(
       title => "Shopping Cart > Check Out > Customer Information",
-      prompt => "Select a field to change, n for next, s for shopping cart, h for home or x to exit",
+      prompt => "Select a field to change, n for next, b for back, s for shopping cart, h for home or x to exit",
       controller => controller
     );
-  }
-  
-  public getController(): CheckOutController {
-    return (CheckOutController)this.controller;
   }
   
   protected display(): String[*] sequence {
@@ -25,59 +21,22 @@ active class CheckOutView specializes View {
     WriteLine("");
     Write(ToAddressString(controller.shippingAddress));
     
-    return String[]{"1", "2", "3", "4", "n", "s", "h", "x"};
+    return String[]{"1", "2", "3", "4", "n", "s", "h", "b", "x"};
   }
   
   protected handle(in choice: String) {
+    controller = (CheckOutController)this.controller;
     switch (choice) {
-      case "1": this.updateCustomerEmail();
-      case "2": this.updateCustomerName();
-      case "3": this.updateCustomerPhone();
-      case "4": this.updateShippingAddress();
-      case "n": this.next();
-      case "s": this.showShoppingCart();
-      case "h": this.home();
-      case "x": this.exit();
+      case "1": controller.Update(customerEmail => GetCustomerEmail());
+      case "2": controller.Update(customerName => GetPersonalName("Enter your name:"));
+      case "3": controller.Update(customerPhone => GetString("Enter your phone number:"));
+      case "4": controller.Update(shippingAddress => GetMailingAddress("Enter your shipping address:"));
+      case "n": controller.Next();
+      case "s": controller.ShowShoppingCart();
+      case "h": controller.Home();
+      case "b": controller.Back();
+      case "x": controller.Exit();
     }
-  }
-  
-  private updateCustomerEmail() {
-    this.getController().Update(
-      customerEmail => GetCustomerEmail());
-  }
-  
-  private updateCustomerName() {
-    WriteLine("Enter your name:");
-    this.getController().Update(
-      customerName => GetPersonalName());
-  }
-  
-  private updateCustomerPhone() {
-    Write("Enter your phone number:");
-    this.getController().Update(
-      customerPhone => ReadLine());
-  }
-  
-  private updateShippingAddress() {
-    WriteLine("Enter your shipping address:");
-    this.getController().Update(
-      shippingAddress => GetMailingAddress());
-  }
-  
-  private next() {
-    this.getController().Next();
-  }
-  
-  private showShoppingCart() {
-    this.getController().ShowShoppingCart();
-  }
-  
-  private home() {
-    this.getController().Home();
-  }
-  
-  private exit() {
-    this.getController().Exit();
   }
   
 } do {

@@ -10,7 +10,7 @@ active class ShoppingCartView specializes View {
     super(
       title => "Shopping Cart",
       prompt => "Select a quantity to change, c to check out, " +
-                "e to empty, h for home or x to exit",
+                "e to empty, b for back, h for home or x to exit",
       controller => controller
     );
   }
@@ -20,10 +20,11 @@ active class ShoppingCartView specializes View {
   }
 
   public display(): String[*] sequence {
-    choices = String[]{"c", "e", "h", "x"};
+    choices = String[]{"c", "e", "h", "b", "x"};
     i = 1;
     controller = (ShoppingCartController)this.controller;
-    for (selection in controller.cart.'includes selection') {
+    cart = controller.getCart();
+    for (selection in cart.'includes selection') {
       choice = IntegerFunctions::ToString(i++);
       choices->add(choice);
       product = selection.'is selection of';
@@ -32,7 +33,7 @@ active class ShoppingCartView specializes View {
         " Amount: " + ToMoneyString(selection.selectionValue));
     }
     WriteLine("");
-    WriteLine("Total amount: " + ToMoneyString(controller.cart.totalValue));
+    WriteLine("Total amount: " + ToMoneyString(cart.totalValue));
     return choices;
   }
 
@@ -40,6 +41,7 @@ active class ShoppingCartView specializes View {
     controller = (ShoppingCartController)this.controller;
     switch (choice) {
       case "x": controller.Exit();
+      case "b": controller.Back();
       case "h": controller.Home();
       case "e": controller.Cancel(Ask("Are you sure you want to empty your cart"));
       case "c": controller.CheckOut(GetCustomerEmail());
