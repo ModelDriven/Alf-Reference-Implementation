@@ -8,15 +8,15 @@ active class CheckOutController specializes Controller {
   public customerName: PersonalName = new PersonalName(firstName => "", lastName => "");
   public customerPhone: TelephoneNumber[0..1];
   public shippingAddress: MailingAddress = new MailingAddress(addressLine1 => "");
-  public cartID: arbitrary_id;
 
   @Create
   public CheckOutController(
     in customerEmail: InternetEmailAddress,
-    in cartID: arbitrary_id
+    in previous: Controller
   ) {
+    super.following(previous);
+    
     this.customerEmail = customerEmail;
-    this.cartID = cartID;
     
     customer = Customer->
       select selected (selected.email == customerEmail)[1];
@@ -25,15 +25,6 @@ active class CheckOutController specializes Controller {
       this.customerPhone = customer.phone;
       this.shippingAddress = customer.shippingAddress;
     }
-  }
-  
-  @Create
-  public continue(in controller: CheckOutController) {
-    this.customerEmail = controller.customerEmail;
-    this.customerName = controller.customerName;
-    this.customerPhone = controller.customerPhone;
-    this.shippingAddress = controller.shippingAddress;
-    this.cartID = controller.cartID;
   }
   
   public receive signal Update {
@@ -67,41 +58,47 @@ active class CheckOutController specializes Controller {
   
 } do {
 
-  accept (Display);
-  
-  continue = true;
   do {
-    new CheckOutView(this);
+    accept (Display);
     
-    accept (event: Update) {
-      if (event.customerEmail->notEmpty()) {
-        this.customerEmail = event.customerEmail;
+    do {
+      new CheckOutView(this);
+      
+      accept (event: Update) {
+        if (event.customerEmail->notEmpty()) {
+          this.customerEmail = event.customerEmail;
+        }
+        if (event.customerName->notEmpty()) {
+          this.customerName = event.customerName;
+        }
+        if (event.customerPhone->notEmpty()) {
+          this.customerPhone = event.customerPhone;
+        }
+        if (event.shippingAddress->notEmpty()) {
+          this.shippingAddress = event.shippingAddress;
+        }
+      } or accept (Next) {
+        if (this.isValid()) {
+          new PaymentController(this).Display();
+          break;
+        }
+      } or accept (ShowShoppingCart) {
+        new ShoppingCartController(this).Display();
+        break;
+      } or accept (Home) {
+        new HomeController(this).Display();
+        break;
+      } or accept (Back) {
+        this.previous.Display();
+        break;
+      } or accept (Exit) {
+        this.session.destroy();
+        return;
       }
-      if (event.customerName->notEmpty()) {
-        this.customerName = event.customerName;
-      }
-      if (event.customerPhone->notEmpty()) {
-        this.customerPhone = event.customerPhone;
-      }
-      if (event.shippingAddress->notEmpty()) {
-        this.shippingAddress = event.shippingAddress;
-      }
-    } or accept (Next) {
-      if (this.isValid()) {
-        new PaymentController(this).Display();
-        continue = false;
-      }
-    } or accept (ShowShoppingCart) {
-      new ShoppingCartController(this.cartID).Display();
-      continue = false;
-    } or accept (Home) {
-      new HomeController(this.cartID).Display();
-      continue = false;
-    } or accept (Exit) {
-      continue = false;
-    }
+      
+      this.view.destroy();
+    } while (true);
     
-    this.view.destroy();
-  } while (continue);
+  } while (true);
     
 }

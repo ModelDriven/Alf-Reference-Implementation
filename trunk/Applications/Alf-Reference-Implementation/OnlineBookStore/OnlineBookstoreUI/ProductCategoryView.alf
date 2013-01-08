@@ -10,17 +10,13 @@ active class ProductCategoryView specializes View {
     in controller: ProductCategoryController) {
     super(
       title => title,
-      prompt => "Select a product, h for home, s for shopping cart or x to exit.",
+      prompt => "Select a product, b for back, h for home, s for shopping cart or x to exit.",
       controller => controller
     );
   }
   
-  public getController(): ProductCategoryController {
-    return (ProductCategoryController)this.controller;
-  }
-  
   protected display(): String[*] sequence {
-    choices = String[]{"x", "h", "s"};
+    choices = String[]{"x", "b", "h", "s"};
     i = 1;
     for (product in ((ProductCategoryController)this.controller).products) {
       if (product.currentlyAvailable) {
@@ -33,28 +29,14 @@ active class ProductCategoryView specializes View {
   }
   
   protected handle(in choice: String){
+    controller = (ProductCategoryController)this.controller;
     switch (choice) {
-      case "x": this.exit();
-      case "h": this.home();
-      case "s": this.showShoppingCart();
-      default: this.showProduct(IntegerFunctions::ToInteger(choice));
+      case "x": controller.Exit();
+      case "b": controller.Back();
+      case "h": controller.Home();
+      case "s": controller.ShowShoppingCart();
+      default: controller.ShowProduct(IntegerFunctions::ToInteger(choice));
     }
-  }
-  
-  private exit() {
-    this.getController().Exit();
-  }
-  
-  private home() {
-    this.getController().Home();
-  }
-  
-  private showShoppingCart() {
-    this.getController().ShowShoppingCart();
-  }
-  
-  private showProduct(in choice: Integer) {
-    this.getController().ShowProduct(choice);
   }
   
 } do {

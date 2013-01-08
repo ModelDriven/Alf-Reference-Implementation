@@ -18,7 +18,7 @@ abstract active class View {
     this.title = title;
     this.prompt = prompt;
     
-    ControlledBy.createLink(this, controller);
+    HasViews.createLink(controller, this);
   }
   
   protected display(): String[*] sequence { return null; }

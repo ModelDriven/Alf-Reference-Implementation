@@ -5,6 +5,8 @@ private import Utility::*;
 
 active class OnlineBookstoreUI {
 
+  private class ShoppingSession specializes Session;
+
   private active class HomeView specializes View;  
   private active class HomeController specializes Controller;
   
@@ -29,6 +31,6 @@ active class OnlineBookstoreUI {
 
 } do {
 
-  new HomeController().Display();
+  new HomeController::start().Display();
   
 }

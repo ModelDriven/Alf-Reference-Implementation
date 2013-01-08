@@ -6,20 +6,22 @@ active class ProductController specializes Controller {
 
   public title: String;
   public product: Product;
-  public cartID: arbitrary_id[0..1];
   
   @Create
   public ProductController(
     in title: String,
     in product: Product,
-    in cartID: arbitrary_id[0..1]
+    in previous: Controller
   ) {
+    super.following(previous);
     this.title = title;
     this.product = product;
-    this.cartID = cartID;
   }
   
   public receive signal Home {
+  }
+  
+  public receive signal ShowShoppingCart {
   }
   
   public receive signal AddProduct {
@@ -28,24 +30,33 @@ active class ProductController specializes Controller {
   
 } do {
 
-  accept (Display);
-  
-  continue = true;
   do {
-    new ProductView(this.title, this);
-    
-    accept (Exit) {
-      continue = false;
-    } or accept (Home) {
-      new HomeController(this.cartID).Display();
-      continue = false;
-    } or accept (event: AddProduct) {
-      if (event.quantity->notEmpty()) {
-        new ShoppingCartController(this.cartID).AddProduct(
-          this.product.productID, event.quantity);
-        continue = false;
+    accept (Display);
+  
+    do {
+      new ProductView(this.title, this);
+      
+      accept (Exit) {
+        this.session.destroy();
+        return;
+      } or accept (Back) {
+        this.previous.Display();
+        break;
+      } or accept (Home) {
+        new HomeController(this).Display();
+        break;
+      } or accept (ShowShoppingCart) {
+        new ShoppingCartController(this).Display();
+        break;
+      } or accept (event: AddProduct) {
+        if (event.quantity->notEmpty()) {
+          new ShoppingCartController(this).AddProduct(
+            this.product.productID, event.quantity);
+          break;
+        }
       }
-    }
-  } while (continue);
+    } while (true);
+    
+  } while (true);
   
 }

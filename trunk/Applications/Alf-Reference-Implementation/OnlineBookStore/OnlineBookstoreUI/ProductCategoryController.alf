@@ -6,17 +6,16 @@ active class ProductCategoryController specializes Controller {
 
   public title: String;
   public products: Product[*] sequence;
-  public cartID: arbitrary_id[0..1];
   
   @Create
   public ProductCategoryController(
     in title: String,
     in category: ProductCategory,
-    in cartID: arbitrary_id[0..1]
+    in previous: Controller
   ) {
+    super.following(previous);
     this.title = title + " > " + category.categoryName;
     this.products = category.classifies->select p (p.currentlyAvailable);
-    this.cartID = cartID;
   }
   
   public receive signal Home {
@@ -31,17 +30,23 @@ active class ProductCategoryController specializes Controller {
   
 } do {
 
-  accept (Display);
-  new ProductCategoryView(this.title, this);
-  
-  accept (Exit) {
-  } or accept (Home) {
-    new HomeController(this.cartID).Display();
-  } or accept (ShowShoppingCart) {
-    new ShoppingCartController(this.cartID).Display();
-  } or accept (event: ShowProduct) {
-    new ProductController(this.title, this.products->at(event.choice), this.cartID).Display();
-  }
-  
-  this.view.destroy();
+  do {
+    accept (Display);
+    new ProductCategoryView(this.title, this);
+    
+    accept (Exit) {
+      this.session.destroy();
+      return;
+    } or accept (Back) {
+      this.previous.Display();
+    } or accept (Home) {
+      new HomeController(this).Display();
+    } or accept (ShowShoppingCart) {
+      new ShoppingCartController(this).Display();
+    } or accept (event: ShowProduct) {
+      new ProductController(this.title, this.products->at(event.choice), this).Display();
+    }
+    
+    this.view.destroy();
+  } while (true);
 }

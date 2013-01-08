@@ -6,15 +6,19 @@ private import Shipping::*;
 
 active class HomeController specializes Controller {
 
-  public cartID: arbitrary_id[0..1]; 
   public topLevelCategories: ProductCategory[*] sequence =
     ProductCategory->select pc (pc.'is part of'->isEmpty());
     
   @Create
-  public HomeController(in cartID: arbitrary_id[0..1]) {
-    this.cartID = cartID;
+  public HomeController(in previous: Controller) {
+    super.following(previous);
   }
-    
+  
+  @Create
+  public start() {
+    super.inSession(new ShoppingSession());
+  }
+  
   public receive signal ShowCategory {
     public choice: Integer;
   }
@@ -24,22 +28,26 @@ active class HomeController specializes Controller {
        
 } do {
 
-  accept (Display);
-  new HomeView(this);
-  
-  let category : ProductCategory = null;
-  accept (event: ShowCategory) {
-    category = this.topLevelCategories->at(event.choice);
-    if (category.'is divided into'->isEmpty()) {
-      new ProductCategoryController("Home", category, this.cartID).Display();
-    } else {
-      new SubcategoryController("Home", category, this.cartID).Display();
+  do {
+    accept (Display);
+    new HomeView(this);
+    
+    let category : ProductCategory = null;
+    accept (event: ShowCategory) {
+      category = this.topLevelCategories->at(event.choice);
+      if (category.'is divided into'->isEmpty()) {
+        new ProductCategoryController("Home", category, this).Display();
+      } else {
+        new SubcategoryController("Home", category, this).Display();
+      }
+    } or accept (ShowShoppingCart) {
+      new ShoppingCartController(this).Display();
+    } or accept (Exit) {
+      this.session.destroy();
+      return;
     }
-  } or accept (ShowShoppingCart) {
-    new ShoppingCartController(this.cartID).Display();
-  } or accept (Exit) {
-  }
-  
-  this.view.destroy();
+    
+    this.view.destroy();
+  } while (true);
   
 }

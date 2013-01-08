@@ -30,6 +30,12 @@ package Utility {
     return answer == "y";
   }
   
+  public activity GetString(in prompt: String[0..1]): String {
+    WriteLine(prompt);
+    s = ReadLine();
+    return s == ""? null: s;
+  }
+  
   public activity GetCustomerEmail(): InternetEmailAddress[0..1] {
     do {
       Write("Enter your email address:");
@@ -76,7 +82,8 @@ package Utility {
     } while (true);
   }
   
-  public activity GetPersonalName(): PersonalName {
+  public activity GetPersonalName(in prompt: String[0..1]): PersonalName {
+    WriteLine(prompt);
     Write("  Title:"); title = BlankToNull(ReadLine());
     Write("  First name:"); firstName = ReadLine();
     Write("  Middle name:"); middleName = BlankToNull(ReadLine());
@@ -85,7 +92,8 @@ package Utility {
     return new PersonalName(title, firstName, middleName, lastName, suffix);
   }
   
-  public activity GetMailingAddress(): MailingAddress {
+  public activity GetMailingAddress(in prompt: String[0..1]): MailingAddress {
+    WriteLine(prompt);
     Write("  Address Line 1:"); addressLine1 = ReadLine();
     Write("  Address Line 2:"); addressLine2 = BlankToNull(ReadLine());
     Write("  City:"); city = BlankToNull(ReadLine());
@@ -96,7 +104,8 @@ package Utility {
       addressLine1, addressLine2, city, stateOrProvince, country, postalCode);
   }
 
-  public activity GetMonthYear(): MonthYear[0..1] {
+  public activity GetMonthYear(in prompt: String[0..1]): MonthYear[0..1] {
+    WriteLine(prompt);
     do {
       Write("  Month:");
       response = ReadLine();
