@@ -132,7 +132,7 @@ public class BlockImpl extends SyntaxElementImpl {
         
         // This ensures that there is an initial assignment for each input
         // parameter for a block that is the body of an activity or operation.
-        if (!hasEnclosingStatement) {
+        if (!this.hasEnclosingStatement()) {
             for (FormalParameter parameter: parameters) {
                 String direction = parameter.getDirection();
                 if (direction != null &&
@@ -204,6 +204,10 @@ public class BlockImpl extends SyntaxElementImpl {
         for (Statement statement: this.getSelf().getStatement()) {
             statement.setEnclosingStatement(enclosingStatement);
         }
+    }
+    
+    public boolean hasEnclosingStatement() {
+        return this.hasEnclosingStatement;
     }
 
     /**
