@@ -12,6 +12,7 @@ package org.modeldriven.alf.fuml.mapping.common;
 
 import org.modeldriven.alf.fuml.mapping.ErrorMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
@@ -54,6 +55,26 @@ public class AssignedSourceMapping extends FumlMapping {
 
 	public AssignedSource getAssignedSource() {
 		return (AssignedSource) this.getSource();
+	}
+	
+	@Override
+	public String toString() {
+	    return super.toString() + " name:" + this.getAssignedSource().getName();
+	}
+	
+	@Override
+	public void print(String prefix) {
+	    super.print(prefix);
+	    
+	    SyntaxElement source = this.getAssignedSource().getSource();
+	    if (source != null) {
+	        Mapping mapping = source.getImpl().getMapping();
+	        if (mapping != null) {
+	            System.out.println(prefix + " source: " + source);
+	        }
+	    }
+	    
+	    System.out.println(prefix + " activityNode: " + this.activityNode);
 	}
 
 } // AssignedSourceMapping
