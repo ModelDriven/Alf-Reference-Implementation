@@ -138,62 +138,63 @@ package Utility {
   }
   
   public activity WriteWrapped(in text: String, in length: Integer) {
-    remainingText = text;
-    n = Size(text);
-    startOfLine = StartOfWord(text, 0);
-    endOfLine = +0;
-    startOfWord = startOfLine;
-    while (endOfLine < n) {
-      if (startOfWord >= n) {
-        endOfWord = startOfWord;
+    l = +0;
+    i = +1;
+    GetWord(text, i, word);
+    while (word->size() > 0) {
+      if (word->at(1) == "\n") {
+        WriteLine("\n");
+        l = 0;
       } else {
-        endOfWord = EndOfWord(text, startOfWord);
-        if (endOfWord - startOfLine + 1 > length) {
-          WriteLine(Substring(text, startOfLine, endOfLine));
-          startOfLine = startOfWord;
-          startOfWord = StartOfWord(text, endOfWord);
-        } else if (Substring(text, endOfWord, endOfWord) == "\n") {
-          WriteLine(Substring(text, startOfLine, endOfWord));
-          startOfLine = StartOfWord(text, endOfWord);
-          startOfWord = startOfLine;
-        } else {
-          startOfWord = StartOfWord(text, endOfWord);
+        l = l + word->size();
+        if (l > length) {
+          WriteLine("");
+          l = word->size();
+        }
+        WriteWord(word);
+        if (l < length) {
+          Write(" ");
+          l++;
         }
       }
-      endOfLine = endOfWord;
+      GetWord(text, i, word);
     }
-    WriteLine(Substring(text, startOfLine, endOfLine));
+    WriteLine("");
   }
   
-  private activity StartOfWord(in text: String, in start: Integer): Integer {
+  private activity GetWord(
+    in text: String, 
+    inout i: Integer,
+    out word: String[*]) {
+    word = null;
     n = Size(text);
-    i = n + 1;
-    if (start < n) {
-      i = start;
+    if (i <= n) {
       do {
-        i++;
         char = Substring(text, i, i);
-      } while (i <= n && char == " ");
-      if (char == " ") {
-        i = n + 1;
+        i++;
+      } while (i < n && char == " ");
+      if (char == "\n") {
+        word = "\n";
+      } else {
+        while (char != " " && char != "\n") {
+          word->add(char);
+          if (i > n) {
+            break;
+          }
+          char = Substring(text, i, i);
+          i++;
+        }
+        if (char == "\n") {
+          i--;
+        }
       }
     }
-    return i;
   }
   
-  // Precondition: start <= Size(text)
-  private activity EndOfWord(in text: String, in start: Integer): Integer {
-    n = Size(text);
-    j = start;
-    char = Substring(text, j, j);
-    while (j < n && char != " " && char != "\n") {
-      j++;
-      char = Substring(text, j, j);
+  private activity WriteWord(in word: String[*]) {
+    for (char in word) {
+      Write(char);
     }
-    if (char == " ") {
-      j--;
-    }
-    return j;
-  }  
+  }
   
 }
