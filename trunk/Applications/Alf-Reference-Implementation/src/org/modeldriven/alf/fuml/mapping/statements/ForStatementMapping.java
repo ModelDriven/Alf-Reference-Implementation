@@ -16,9 +16,12 @@ import java.util.Map;
 
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
+import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ForStatement;
@@ -170,10 +173,10 @@ public class ForStatementMapping extends LoopStatementMapping {
             // assigned within the for statement, so they can be made available
             // as loop variables for access within the body of the for 
             // statement.
-            Collection<String> assignedNames = 
+            List<String> assignedNames = 
                 this.mapAssignedValueSources(node, this.graph, true);
             
-            // Create a loop variable pin for corresponding to each loop
+            // Create a loop variable pin corresponding to each loop
             // variable definition.
             int n = node.getLoopVariable().size();            
             for (LoopVariableDefinitionMapping variableDefinitionMapping: 
@@ -296,17 +299,6 @@ public class ForStatementMapping extends LoopStatementMapping {
                             "Values(" + name + ")", subgraph.getModelElements());
 
             // Map the body of the for statement.
-            Block body = this.getBody();
-            FumlMapping mapping = this.fumlMap(body);
-            Collection<Element>  bodyElements = mapping.getModelElements();
-            
-            // NOTE: Call to mapBodyOutputs must come before adding bodyElements
-            // to the node, because mapping body outputs may add passthru nodes
-            // to bodyElements.
-            for (OutputPin bodyOutput: NonFinalClauseMapping.mapBodyOutputs(
-                    bodyElements, this.getAssignments(), assignedNames, this)) {
-                node.addBodyOutput(bodyOutput);
-            }
             
             // NOTE: The loop variable value model elements and the body model
             // elements are mapped into separate structured activity nodes,
@@ -315,8 +307,56 @@ public class ForStatementMapping extends LoopStatementMapping {
             // body executes.
             StructuredActivityNode bodyNode = 
                     bodyGraph.addStructuredActivityNode(
-                            "Body(" + name + ")", bodyElements);
+                            "Body(" + name + ")", null);
             bodyGraph.addControlFlow(valuesNode, bodyNode);
+            
+            Map<String, AssignedSource> assignmentsAfter = 
+                    this.getStatement().getImpl().getAssignmentAfterMap();
+            
+            // NOTE: Making every body output (for an assigned name) an output 
+            // pin of the single body node is necessary for properly setting
+            // these outputs in the case of a break statement within the loop.
+            for (String assignedName: assignedNames) {
+                AssignedSource assignment = assignmentsAfter.get(assignedName);
+                ElementReference type = assignment.getType();
+                Classifier classifier = null;
+                if (type != null) {
+                    FumlMapping mapping = this.fumlMap(type);
+                    if (mapping instanceof ElementReferenceMapping) {
+                        mapping = ((ElementReferenceMapping)mapping).getMapping();
+                    }
+                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                        this.throwError("Error mapping type of " + assignedName + ": " + 
+                                mapping.getErrorMessage());
+                    } else {
+                        classifier = ((ClassifierDefinitionMapping)mapping).
+                                getClassifierOnly();
+                    }
+                }
+                OutputPin outputPin = this.graph.createOutputPin(
+                        assignedName, classifier, 
+                        assignment.getLower(), assignment.getUpper());            
+                bodyNode.addStructuredNodeOutput(outputPin);
+                node.addBodyOutput(outputPin);
+            }          
+
+            Block body = this.getBody();
+            FumlMapping mapping = this.fumlMap(body);
+            Collection<Element>  bodyElements = mapping.getModelElements();
+            
+            // NOTE: Call to mapBodyOutputs must come before adding bodyElements
+            // to the node, because mapping body outputs may add passthru nodes
+            // to bodyElements.
+            List<OutputPin> bodyOutputs = NonFinalClauseMapping.mapBodyOutputs(
+                    bodyElements, this.getAssignments(), assignedNames, this);
+            for (int j = 0; j < bodyOutputs.size(); j++) {
+                OutputPin bodyOutput = bodyOutputs.get(j);
+                OutputPin output = bodyNode.getStructuredNodeOutput().get(j);
+                bodyNode.addEdge(this.graph.createObjectFlow(
+                        bodyOutput, output));
+            }
+            
+            bodyGraph.addToStructuredNode(bodyNode, bodyElements);
             
             // Identify the body output corresponding to each loop variable.
             i = n;

@@ -80,7 +80,7 @@ public class IfStatementMapping extends ConditionalStatementMapping {
         ConditionalNode node = (ConditionalNode)this.getElement();
         IfStatement statement = this.getIfStatement();
         
-        Collection<String> assignedNames = 
+        List<String> assignedNames = 
             this.mapConditionalNode(node, this.graph);
         
         Collection<Clause> predecessorClauses = new ArrayList<Clause>();

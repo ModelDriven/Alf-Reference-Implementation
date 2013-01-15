@@ -23,15 +23,16 @@ import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class ConcurrentClausesMapping extends SyntaxElementMapping {
     
     Collection<Clause> clauses = null;
     Collection<Element> modelElements = null;
-    Collection<String> assignedNames = null;
+    List<String> assignedNames = null;
     
     // NOTE: This should be called before mapping.
-    public void setAssignedNames(Collection<String> assignedNames) {
+    public void setAssignedNames(List<String> assignedNames) {
         this.assignedNames = assignedNames;
     }
     

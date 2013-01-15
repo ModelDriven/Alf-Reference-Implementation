@@ -30,13 +30,14 @@ import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class NonFinalClauseMapping extends SyntaxElementMapping {
 
     private Clause clause = null;
     private Collection<Element> modelElements = null;
-    private Collection<String> assignedNames = null;
+    private List<String> assignedNames = null;
 
     /**
      * 1. Each if clause maps to a clause of the conditional node.
@@ -57,7 +58,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
      */
     
     // NOTE: This should be called before mapping.
-    public void setAssignedNames(Collection<String> assignedNames) {
+    public void setAssignedNames(List<String> assignedNames) {
         this.assignedNames = assignedNames;
     }
     
@@ -104,7 +105,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	        Collection<Element> testElements, ActivityNode decider,
 	        Collection<Element> bodyElements,
 	        Map<String, AssignedSource> assignments,
-	        Collection<String> assignedNames,
+	        List<String> assignedNames,
 	        Collection<Element> modelElements,
 	        FumlMapping parentMapping) throws MappingError {
         Clause clause = parentMapping.create(Clause.class);
@@ -147,12 +148,12 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         return clause;
 	}
 	
-	public static Collection<OutputPin> mapBodyOutputs(
+	public static List<OutputPin> mapBodyOutputs(
             Collection<Element> bodyElements,
             Map<String, AssignedSource> assignments,
-            Collection<String> assignedNames,
+            List<String> assignedNames,
             FumlMapping parentMapping) throws MappingError {
-	    Collection<OutputPin> bodyOutputs = new ArrayList<OutputPin>();
+	    List<OutputPin> bodyOutputs = new ArrayList<OutputPin>();
         if (assignedNames != null) {
             for (String name: assignedNames) {
                 AssignedSource assignment = assignments.get(name);

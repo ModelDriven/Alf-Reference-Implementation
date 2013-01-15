@@ -26,13 +26,14 @@ import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class SwitchClauseMapping extends SyntaxElementMapping {
 
     private Clause clause = null;
     private Collection<Element> modelElements = null;
     private ActivityNode switchSource = null;
-    private Collection<String> assignedNames = null;
+    private List<String> assignedNames = null;
     
     /**
      * A switch clause maps to a concurrent clause of the conditional node.
@@ -46,7 +47,7 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
     }
     
     // NOTE: This should be called before mapping.
-    public void setAssignedNames(Collection<String> assignedNames) {
+    public void setAssignedNames(List<String> assignedNames) {
         this.assignedNames = assignedNames;
     }
     
