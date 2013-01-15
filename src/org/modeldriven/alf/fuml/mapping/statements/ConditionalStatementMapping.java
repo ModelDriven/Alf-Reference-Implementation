@@ -20,6 +20,7 @@ import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class ConditionalStatementMapping extends StatementMapping {
     
@@ -27,7 +28,7 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
      * Common mapping for if and switch statements
      */
     
-    protected Collection<String> mapConditionalNode(
+    protected List<String> mapConditionalNode(
             ConditionalNode node,
             ActivityGraph graph) throws MappingError {
         return super.mapAssignedValueSources(node, graph, false);
@@ -49,7 +50,7 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
     protected void mapFinalClause(
             Block block,
             ConditionalNode node,
-            Collection<String> assignedNames,
+            List<String> assignedNames,
             Collection<Clause> predecessorClauses,
             ActivityGraph graph
             ) throws MappingError {

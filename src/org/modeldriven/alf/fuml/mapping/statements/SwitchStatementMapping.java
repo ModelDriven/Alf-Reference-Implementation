@@ -24,6 +24,7 @@ import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class SwitchStatementMapping extends ConditionalStatementMapping {
     
@@ -63,7 +64,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         node.setName("Conditional(SwitchStatement@" + statement.getId() + ")");
         graph.add(node);
         
-        Collection<String> assignedNames = this.mapConditionalNode(node, graph);
+        List<String> assignedNames = this.mapConditionalNode(node, graph);
         
         Collection<Clause> clauses = new ArrayList<Clause>();        
         FumlMapping mapping = this.fumlMap(statement.getExpression());

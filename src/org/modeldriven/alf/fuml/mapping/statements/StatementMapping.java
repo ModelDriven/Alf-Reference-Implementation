@@ -13,6 +13,7 @@ package org.modeldriven.alf.fuml.mapping.statements;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
@@ -77,16 +78,16 @@ public abstract class StatementMapping extends DocumentedElementMapping {
     /**
      * Create an output pin for each assignment for which this statement
      * will be the assigned value source. Return the collection of names
-     * from those assignments. (If mapAll is try, then map all assignments after
+     * from those assignments. (If mapAll is true, then map all assignments after
      * the statement, not just those with the statement as the source.)
      */
-    protected Collection<String> mapAssignedValueSources(
+    protected List<String> mapAssignedValueSources(
             StructuredActivityNode node,
             ActivityGraph graph, 
             boolean mapAll) throws MappingError {
         Statement statement = this.getStatement();
         
-        Collection<String> assignedNames = new ArrayList<String>();
+        List<String> assignedNames = new ArrayList<String>();
         for (AssignedSource assignment: statement.getAssignmentAfter()) {
             boolean statementIsSource = assignment.getSource() == statement;
             if (mapAll || statementIsSource) {

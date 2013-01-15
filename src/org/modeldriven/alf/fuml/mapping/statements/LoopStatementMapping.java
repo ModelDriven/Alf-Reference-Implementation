@@ -11,15 +11,19 @@ package org.modeldriven.alf.fuml.mapping.statements;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
+import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
+import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.Statement;
@@ -100,8 +104,43 @@ public abstract class LoopStatementMapping extends StatementMapping {
         LoopNode node = (LoopNode)this.getElement();
         node.setIsTestedFirst(this.isTestedFirst());
         
-        Collection<String> assignedNames = 
+        List<String> assignedNames = 
             this.mapAssignedValueSources(node, this.graph, true);
+              
+        ActivityGraph subgraph = this.createActivityGraph();
+        StructuredActivityNode bodyPart = 
+                subgraph.addStructuredActivityNode(
+                        "BodyPart(" + node.getName() + ")", null);
+        Map<String, AssignedSource> assignmentsAfter = 
+                this.getStatement().getImpl().getAssignmentAfterMap();
+        
+        // NOTE: Making every body output an output pin of a single body
+        // part structured activity node is necessary for properly
+        // setting these outputs in the case of a break statement within
+        // the loop.
+        for (String name: assignedNames) {
+            AssignedSource assignment = assignmentsAfter.get(name);
+            ElementReference type = assignment.getType();
+            Classifier classifier = null;
+            if (type != null) {
+                FumlMapping mapping = this.fumlMap(type);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                    this.throwError("Error mapping type of " + name + ": " + 
+                            mapping.getErrorMessage());
+                } else {
+                    classifier = ((ClassifierDefinitionMapping)mapping).
+                            getClassifierOnly();
+                }
+            }
+            OutputPin outputPin = this.graph.createOutputPin(
+                    name, classifier, 
+                    assignment.getLower(), assignment.getUpper());            
+            bodyPart.addStructuredNodeOutput(outputPin);
+            node.addBodyOutput(outputPin);
+        }
         
         FumlMapping mapping = this.fumlMap(this.getCondition());
         if (!(mapping instanceof ExpressionMapping)) {
@@ -122,16 +161,16 @@ public abstract class LoopStatementMapping extends StatementMapping {
                     }
                 }
             } else {
-                ActivityGraph subgraph = this.createActivityGraph();
-                ActivityNode bodyNode = subgraph.addStructuredActivityNode(
+                ActivityGraph subsubgraph = this.createActivityGraph();
+                ActivityNode bodyNode = subsubgraph.addStructuredActivityNode(
                         "Body(" + node.getName() + ")", bodyElements);
-                ActivityNode conditionNode = subgraph.addStructuredActivityNode(
+                ActivityNode conditionNode = subsubgraph.addStructuredActivityNode(
                         "Condition(" + node.getName() + ")", conditionElements);
-                subgraph.addControlFlow(bodyNode, conditionNode);
-                bodyElements = subgraph.getModelElements();
+                subsubgraph.addControlFlow(bodyNode, conditionNode);
+                bodyElements = subsubgraph.getModelElements();
                 conditionElements = new ArrayList<Element>();
             }
-            
+                      
             ActivityNode decider = conditionMapping.getResultSource();
             
             if (conditionElements.isEmpty() || !(decider instanceof OutputPin)) {
@@ -150,17 +189,19 @@ public abstract class LoopStatementMapping extends StatementMapping {
             // NOTE: Call to mapBodyOutputs must come before adding bodyElements
             // to the node, because mapping body outputs may add passthru nodes
             // to bodyElements.
-            for (OutputPin bodyOutput: NonFinalClauseMapping.mapBodyOutputs(
-                    bodyElements, this.getAssignments(), assignedNames, this)) {
-                node.addBodyOutput(bodyOutput);
+            List<OutputPin> bodyOutputs = NonFinalClauseMapping.mapBodyOutputs(
+                    bodyElements, this.getAssignments(), assignedNames, this);
+            for (int i = 0; i < bodyOutputs.size(); i++) {
+                OutputPin bodyOutput = bodyOutputs.get(i);
+                OutputPin output = bodyPart.getStructuredNodeOutput().get(i);
+                bodyPart.addEdge(this.graph.createObjectFlow(
+                        bodyOutput, output));
             }
-
-            this.addToNode(bodyElements);
-            for (Element element: bodyElements) {
-                if (element instanceof ExecutableNode) {
-                    node.addBodyPart((ExecutableNode)element);
-                }
-            }
+            
+            subgraph.addToStructuredNode(bodyPart, bodyElements);
+            this.addToNode(subgraph.getModelElements());
+            node.addBodyPart(bodyPart);
+                       
         }
     }
     

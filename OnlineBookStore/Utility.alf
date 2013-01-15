@@ -172,7 +172,7 @@ package Utility {
       do {
         char = Substring(text, i, i);
         i++;
-      } while (i < n && char == " ");
+      } while (i <= n && char == " ");
       if (char == "\n") {
         word = "\n";
       } else {

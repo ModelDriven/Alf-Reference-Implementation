@@ -62,7 +62,8 @@ active class Statements_While_Do_Looping {
   test(
     out count: Integer, out checksum: Integer, 
     out nextRecord: FileRecord[0..1], out file: File, 
-    out lines: String[*] sequence, out readings: Reading[*] sequence, out i: Integer,
+    out lines: String[*] sequence, out readings: Reading[*] sequence, 
+    out i: Integer, out j: Integer,
     out self: Statements_While_Do_Looping) {
   
     // Setup
@@ -74,6 +75,7 @@ active class Statements_While_Do_Looping {
     lines = null;
     readings = null;
     i = 4;
+    j = 0;
     // *****
     
     while ((last = this.list->size()) > 0) {
@@ -109,10 +111,17 @@ active class Statements_While_Do_Looping {
       i--;
     } while(true);
     
+     do {
+      j++;
+      if (j > 2) {
+        break;
+      }
+    } while (true);
+    
     self = this;
   }
 } do {
-  this.test(count, checksum, nextRecord, file, lines, readings, i, self);
+  this.test(count, checksum, nextRecord, file, lines, readings, i, j, self);
   
   AssertEqual("count", count, 2);
   AssertEqual("checksum", checksum, 1);
@@ -120,5 +129,6 @@ active class Statements_While_Do_Looping {
   AssertList("lines", lines, String[]{"Record","End"});
   AssertList("readings", readings, Integer[]{2,1,0});
   AssertEqual("i", i, 2);
+  AssertEqual("j", j, 3);
   AssertTrue("self.list->isEmpty()", self.list->isEmpty());
 }
