@@ -1,0 +1,15 @@
+activity Squares() {
+
+  do {
+    Write("Enter n: ");
+    n = IntegerFunctions::ToInteger(ReadLine());
+    
+    if (n->isEmpty()) {
+      break;
+    }
+    
+    Integer[]{1..n}->iterate j (Write(IntegerFunctions::ToString(j*j) + " "));
+    WriteLine("");
+  } while (true);
+
+}
