@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,27 @@ public abstract class UnaryExpressionImpl extends ExpressionImpl {
 		this.operand = operand;
 	}
 	
+    @Override
+    public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+        super.setAssignmentBefore(assignmentBefore);
+        UnaryExpression self = this.getSelf();
+        Expression operand = self.getOperand();
+        Map<String, AssignedSource> assignmentBeforeMap = this.getAssignmentBeforeMap();
+        if (operand != null) {
+            operand.getImpl().setAssignmentBefore(assignmentBeforeMap);
+        }
+    }
+    
+    @Override
+    public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
+        super.setAssignmentBefore(assignmentBefore);
+        UnaryExpression self = this.getSelf();
+        Expression operand = self.getOperand();
+        if (operand != null) {
+            operand.getImpl().setAssignmentBefore(assignmentBefore);
+        }
+    }
+
 	/*
 	 * Constraints
 	 */
@@ -61,7 +83,7 @@ public abstract class UnaryExpressionImpl extends ExpressionImpl {
 	 * those before the unary expression.
 	 **/
 	public boolean unaryExpressionAssignmentsBefore() {
-	    // Note: This is handled by updateAssignments.
+	    // Note: This is handled by setAssignmentBefore.
 		return true;
 	}
 	
@@ -79,7 +101,6 @@ public abstract class UnaryExpressionImpl extends ExpressionImpl {
 	    Expression operand = self.getOperand();
 	    Map<String, AssignedSource> assignments = this.getAssignmentBeforeMap();
 	    if (operand != null) {
-	        operand.getImpl().setAssignmentBefore(assignments);
 	        assignments = operand.getImpl().getAssignmentAfterMap();
 	    }
 	    return assignments;
