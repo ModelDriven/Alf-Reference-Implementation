@@ -38,21 +38,6 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 		return (BinaryExpression) this.self;
 	}
 	
-	@Override
-	public void deriveAll() {
-	    BinaryExpression self = this.getSelf();
-	    Expression operand1 = self.getOperand1();
-	    Expression operand2 = self.getOperand2();
-	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
-	    if (operand1 != null) {
-	        operand1.getImpl().setAssignmentBefore(assignmentsBefore);
-	    }
-	    if (operand2 != null) {
-	        operand2.getImpl().setAssignmentBefore(assignmentsBefore);
-	    }
-	    super.deriveAll();
-	}
-
 	public Expression getOperand1() {
 		return this.operand1;
 	}
@@ -77,6 +62,35 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 		this.operator = operator;
 	}
 	
+	@Override
+    public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+        super.setAssignmentBefore(assignmentBefore);
+        BinaryExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        Map<String, AssignedSource> assignmentBeforeMap = this.getAssignmentBeforeMap();
+        if (operand1 != null) {
+            operand1.getImpl().setAssignmentBefore(assignmentBeforeMap);
+        }
+        if (operand2 != null) {
+            operand2.getImpl().setAssignmentBefore(assignmentBeforeMap);
+        }
+    }
+    
+	@Override
+    public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
+        super.setAssignmentBefore(assignmentBefore);
+        BinaryExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        if (operand1 != null) {
+            operand1.getImpl().setAssignmentBefore(assignmentBefore);
+        }
+        if (operand2 != null) {
+            operand2.getImpl().setAssignmentBefore(assignmentBefore);
+        }
+    }
+
 	/*
 	 * Constraints
 	 */
@@ -147,11 +161,9 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
         Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
         Map<String, AssignedSource> assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
         if (operand1 != null) {
-            operand1.getImpl().setAssignmentBefore(assignmentsBefore);
             assignmentsAfter.putAll(operand1.getImpl().getAssignmentAfterMap());
         }
         if (operand2 != null) {
-            operand2.getImpl().setAssignmentBefore(assignmentsBefore);
             assignmentsAfter.putAll(operand1.getImpl().getAssignmentAfterMap());
         }
 		return assignmentsAfter;
