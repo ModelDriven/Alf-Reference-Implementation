@@ -49,5 +49,7 @@ package Expressions_Sequence_Expansion_Reduction {
 	  employees->one e (e.title=="President");
 	  employees->isUnique e (e.id);
 	  
+    Integer[]{1..3}->collect j (WriteLine(IntegerFunctions::ToString(j)));
+	  
 	}
 }
