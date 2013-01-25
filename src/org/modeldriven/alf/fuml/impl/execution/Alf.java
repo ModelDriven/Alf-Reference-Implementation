@@ -222,7 +222,7 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
                 unit = RootNamespace.resolve(qualifiedName);
             }
 
-            this.executeUnit(unit);
+            this.processUnit(unit);
             
         } else {
             this.println("Usage is");
