@@ -41,7 +41,7 @@ public abstract class Alf extends org.modeldriven.alf.execution.Alf {
     protected abstract ElementFactory createElementFactory();
     protected void createSystemServices() { }
     
-    public void execute(NamespaceDefinition definition) {
+    public void process(NamespaceDefinition definition) {
         Locus locus = this.getLocus();
         FumlMapping.setExecutionFactory(locus.getFactory());
         FumlMapping.setFumlFactory(this.createFumlFactory());
