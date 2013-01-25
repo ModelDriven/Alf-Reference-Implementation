@@ -41,7 +41,7 @@ public abstract class Alf {
         }
     }
     
-    public void executeUnit(UnitDefinition unit) {
+    public void processUnit(UnitDefinition unit) {
         if (!(unit instanceof MissingUnit)) {
             NamespaceDefinition definition = unit.getDefinition();
             if (unit.getImpl().resolveStub()) {
@@ -68,13 +68,13 @@ public abstract class Alf {
                 if (definition.getImpl().isTemplate()) { 
                     this.println(definition.getName() + " is a template.");
                 } else {
-                    this.execute(definition);
+                    this.process(definition);
                 }
             }
         }
     }
     
-    protected abstract void execute(NamespaceDefinition definition);
+    protected abstract void process(NamespaceDefinition definition);
     
     protected void println(String message) {
         System.out.println(message);
