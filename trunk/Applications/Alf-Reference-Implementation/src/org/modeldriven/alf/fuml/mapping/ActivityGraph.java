@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -194,9 +194,12 @@ public class ActivityGraph {
                 signalNames.append(",");
             }
             signalNames.append(signal.getName());
+            
             SignalEvent event = this.create(SignalEvent.class);
             event.setName("Event(" + signal.getName() + ")");
             event.setSignal(signal);
+            this.modelElements.add(event);
+            
             Trigger trigger = this.create(Trigger.class);
             trigger.setEvent(event);
             acceptAction.addTrigger(trigger);
@@ -673,6 +676,7 @@ public class ActivityGraph {
         InstanceSpecification instance = this.create(InstanceSpecification.class);
         instance.setName(dataType.getName());
         instance.addClassifier(dataType);
+        this.modelElements.add(instance);
         return this.addDataValueSpecificationAction(instance);
     }
     
@@ -760,8 +764,11 @@ public class ActivityGraph {
         for (Element element: nestedElements) {
             if (element instanceof ActivityNode) {
                 node.addNode((ActivityNode)element);
+            } else if (!(element instanceof ActivityEdge)) {
+                this.modelElements.add(element);
             }
         }
+        
         for (Element element: nestedElements) {
             if (element instanceof ActivityEdge) {
                 ActivityEdge edge = (ActivityEdge)element;
@@ -788,6 +795,8 @@ public class ActivityGraph {
         for (Element element : nestedElements) {
             if (element instanceof ActivityNode) {
                 region.addNode((ActivityNode) element);
+            } else if (!(element instanceof ActivityEdge)) {
+                this.modelElements.add(element);
             }
         }
         
@@ -806,8 +815,8 @@ public class ActivityGraph {
                             ((ExpansionNode)target).getRegionAsOutput().equals(region)) {
                     region.addEdge(edge);
                 } else if (!sourceIsContained && targetIsContained){
-                    source.getOutgoing().remove(edge);
-                    target.getIncoming().remove(edge);
+                    source.removeOutgoing(edge);
+                    target.removeIncoming(edge);
                     
                     if (edge instanceof ControlFlow) {
                         // If an incoming control flow crosses into the region,
@@ -838,8 +847,8 @@ public class ActivityGraph {
                         this.addObjectFlow(source, pin);
                     }
                 } else if (sourceIsContained && !targetIsContained) {
-                    source.getOutgoing().remove(edge);
-                    target.getIncoming().remove(edge);
+                    source.removeOutgoing(edge);
+                    target.removeIncoming(edge);
                     
                     if (edge instanceof ControlFlow) {
                         // If an outgoing control flow crosses out of the region,
@@ -851,7 +860,7 @@ public class ActivityGraph {
                         // add an output expansion node at the boundary.
                         ExpansionNode outputNode = this.create(ExpansionNode.class);
                         outputNode.setName(region.getName() + 
-                                ".outputElement(" + edge.getSource().getName() + ")");
+                                ".outputElement(" + source.getName() + ")");
                         region.addOutputElement(outputNode);
                         region.addEdge(createObjectFlow(source, outputNode));
                         this.add(outputNode);

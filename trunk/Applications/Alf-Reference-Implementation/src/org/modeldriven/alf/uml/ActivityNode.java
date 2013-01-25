@@ -19,7 +19,11 @@ public interface ActivityNode extends RedefinableElement {
 
 	public void addOutgoing(ActivityEdge outgoing);
 
+	public void removeOutgoing(ActivityEdge outgoing);
+	
 	public List<ActivityEdge> getIncoming();
 
 	public void addIncoming(ActivityEdge incoming);
+	
+	public void removeIncoming(ActivityEdge incoming);
 }

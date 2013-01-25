@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,6 +8,10 @@
  *******************************************************************************/
 
 package org.modeldriven.alf.fuml.mapping.units;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
@@ -32,6 +36,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
     
     private Property initializationFlag = null;
     private Operation initializationOperation = null;
+    protected Collection<Element> otherElements = new ArrayList<Element>();
 
     /**
      * 1. A non-active class definition maps to a class with isActive=false.
@@ -53,15 +58,15 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
      * 5. If a class definition has no operation definitions that are
      * constructors, a public, concrete owned operation is added to the class
      * with the same name as the class and no parameters and the standard
-     * «Create» stereotype applied. It has a corresponding method activity that
+     * <<Create>> stereotype applied. It has a corresponding method activity that
      * is a private owned behavior of the class with the default behavior.
      * Within this behavior, initializers for attributes of the class are mapped
      * as sequenced structured activity nodes containing the mappings of the
      * initializer expressions.
      * 
      * 6. If a class definition has no operation definitions that are
-     * destructors, a public, concrete owned operation with the name “destroy”,
-     * no parameters and the standard «Destroy» stereotype applied is added to
+     * destructors, a public, concrete owned operation with the name <<destroy>>,
+     * no parameters and the standard <<Destroy>> stereotype applied is added to
      * the class. It has a corresponding method activity that is a private owned
      * behavior of the class with the default behavior.
      */
@@ -114,7 +119,6 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
 
         NamespaceDefinition classDefinition = this.getClassDefinition();
         Property initializationFlag = this.getInitializationFlag();
-        ActivityGraph subgraph = this.createActivityGraph();
         ActivityNode previousNode = null;
                 
         // Add initialization of superclass properties.
@@ -164,7 +168,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                         } else {
                             ExpressionMapping expressionMapping =
                                     (ExpressionMapping)mapping;
-                            subgraph = this.createActivityGraph();
+                            ActivityGraph subgraph = this.createActivityGraph();
                             subgraph.addAll(expressionMapping.getGraph());
                             AssignmentExpressionMapping.mapPropertyAssignment(
                                     property, subgraph, selfFork, 
@@ -184,6 +188,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         }
         
         // Add action to set initialization to true.
+        ActivityGraph subgraph = this.createActivityGraph();
         ValueSpecificationAction valueAction = 
                 subgraph.addBooleanValueSpecificationAction(true);
         AssignmentExpressionMapping.mapPropertyAssignment(
@@ -219,9 +224,10 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         // Add method to initialization operation.
         Activity initializationMethod = this.create(Activity.class);
         initializationMethod.setName(this.initializationOperation.getName());
-        ActivityDefinitionMapping.addElements(
-                initializationMethod, graph.getModelElements(), null, this);
+        this.otherElements.addAll(ActivityDefinitionMapping.addElements(
+                initializationMethod, graph.getModelElements(), null, this));
         this.initializationOperation.addMethod(initializationMethod);
+        class_.addOwnedBehavior(initializationMethod);
     }
 
     @Override
@@ -234,6 +240,14 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
             class_.addOwnedOperation((Operation) element);
         } else if (element instanceof Classifier) {
             class_.addNestedClassifier((Classifier) element);
+        } else if (element instanceof InstanceSpecification || element instanceof Event) {
+            // NOTE: An instance specification can result from a data value
+            // specification action within an activity. The instance value for
+            // such an action uses but does not own an instance specification.
+            // An event can result from an accept event action within the
+            // classifier behavior of a nested active class. The triggers for
+            // such an action reference but do not own events.
+            this.otherElements.add(element);
         } else {
             this.throwError("Member not legal for a class: " + element);
         }
@@ -247,6 +261,13 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
     public Operation getInitializationOperation() throws MappingError {
         this.getClassifier();
         return this.initializationOperation;
+    }
+
+    @Override
+    public List<Element> getModelElements() throws MappingError {
+        List<Element> elements = super.getModelElements();
+        elements.addAll(this.otherElements);
+        return elements;
     }
 
     public ClassDefinition getClassDefinition() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -15,6 +15,7 @@ import org.modeldriven.alf.fuml.mapping.units.ImportReferenceMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.expressions.impl.NameBindingImpl;
 import org.modeldriven.alf.syntax.units.ElementImportReference;
 
 import org.modeldriven.alf.uml.Element;
@@ -22,7 +23,6 @@ import org.modeldriven.alf.uml.ElementImport;
 import org.modeldriven.alf.uml.PackageableElement;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class ElementImportReferenceMapping extends ImportReferenceMapping {
@@ -44,13 +44,13 @@ public class ElementImportReferenceMapping extends ImportReferenceMapping {
         if (mapping instanceof ElementReferenceMapping) {
             mapping = ((ElementReferenceMapping)mapping).getMapping();
         }
-        Collection<Element> modelElements = mapping.getModelElements();
-        if (modelElements.size() != 1 || 
-                !(mapping.getElement() instanceof PackageableElement)) {
+        mapping.getModelElements(); // To force mapping to actually take place.
+        Element element = mapping.getElement();
+        if (!(element instanceof PackageableElement)) {
             this.throwError("Invalid imported element mapping: " + mapping);
         } else {
-            elementImport.setImportedElement(
-                    (PackageableElement) mapping.getElement());
+            elementImport.setImportedElement((PackageableElement) element);
+            elementImport.setAlias(NameBindingImpl.processName(importReference.getAlias()));
         }
     }
 
