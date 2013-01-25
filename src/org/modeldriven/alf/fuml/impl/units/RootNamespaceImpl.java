@@ -38,6 +38,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         this.modelScope.setNamespace(self);
     }
     
+    @Override
     public RootNamespace getSelf() {
         return (RootNamespace)this.self;
     }
@@ -50,14 +51,25 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         return (ModelNamespaceImpl)this.getModelScope().getImpl();
     }
     
+    @Override
     public void setModelDirectory(String modelDirectory) {
         this.getModelScopeImpl().setModelDirectory(modelDirectory);
+    }
+    
+    @Override
+    public String getModelDirectory() {
+        return this.getModelScopeImpl().getModelDirectory();
     }
     
     public void setLibraryDirectory(String libraryDirectory) {
         super.setModelDirectory(libraryDirectory);
     }
     
+    public String getLibraryDirectory() {
+        return this.getModelDirectory();
+    }
+    
+    @Override
     public void setIsVerbose(boolean isVerbose) {
         this.getModelScopeImpl().setIsVerbose(isVerbose);
     }

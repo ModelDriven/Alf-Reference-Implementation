@@ -44,6 +44,12 @@ public abstract class ActivityNode extends RedefinableElement implements
 		outgoing.setSource(this);
 	}
 
+	public void removeOutgoing(org.modeldriven.alf.uml.ActivityEdge outgoing) {
+	    if (outgoing != null) {
+	        this.getBase().outgoing.remove(((ActivityEdge)outgoing).getBase());
+	    }
+	}
+	
 	public List<org.modeldriven.alf.uml.ActivityEdge> getIncoming() {
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (fUML.Syntax.Activities.IntermediateActivities.ActivityEdge element : this
@@ -57,4 +63,10 @@ public abstract class ActivityNode extends RedefinableElement implements
 		incoming.setTarget(this);
 	}
 
+    public void removeIncoming(org.modeldriven.alf.uml.ActivityEdge incoming) {
+        if (incoming != null) {
+            this.getBase().incoming.remove(((ActivityEdge)incoming).getBase());
+        }
+    }
+    
 }

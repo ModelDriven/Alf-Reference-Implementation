@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -26,12 +26,14 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import org.modeldriven.alf.uml.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
     private Operation operation = null;
+    private List<Element> otherElements = new ArrayList<Element>();
     
     /**
      * 1. An operation definition maps to an operation with the given name and
@@ -141,7 +143,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
     }
     
     @Override
-    public void mapBody() throws MappingError {
+    public List<Element> mapBody() throws MappingError {
         OperationDefinition definition = this.getOperationDefinition();
         
         if (!definition.getIsAbstract()) {
@@ -236,8 +238,10 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 elements = graph.getModelElements();
             }
 
-            ActivityDefinitionMapping.addElements(activity, elements, body, this);
+            this.otherElements = ActivityDefinitionMapping.addElements(activity, elements, body, this);
         }
+        
+        return this.otherElements;
     }
     
     @Override
@@ -261,7 +265,14 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
         return this.getOperation();
 	}
 
-    public Operation getOperation() throws MappingError {
+    @Override
+    public List<Element> getModelElements() throws MappingError {
+        List<Element> elements = super.getModelElements();
+        elements.addAll(this.otherElements);
+        return elements;
+    }
+
+   public Operation getOperation() throws MappingError {
         if (this.operation == null) {
             this.operation = this.create(Operation.class);
             this.mapTo(this.operation);

@@ -42,9 +42,12 @@ public abstract class MemberMapping extends DocumentedElementMapping {
     
     /**
      * Allow for a second pass mapping of expressions or statements within
-     * the member being mapped.
+     * the member being mapped. Returns any additional packageable model
+     * elements that result from mapping the body (e.g., instance 
+     * specifications and events).
      */
-    public void mapBody() throws MappingError {        
+    public List<Element> mapBody() throws MappingError {
+        return new ArrayList<Element>();
     }
     
     @Override

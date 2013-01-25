@@ -47,6 +47,10 @@ public class ModelNamespaceImpl extends
         this.modelDirectory = modelDirectory;
     }
     
+    public String getModelDirectory() {
+        return this.modelDirectory;
+    }
+    
     public void setIsVerbose(boolean isVerbose) {
         this.isVerbose = isVerbose;
     }

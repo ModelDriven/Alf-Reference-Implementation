@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,7 +10,9 @@
 
 package org.modeldriven.alf.fuml.mapping.units;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
@@ -44,6 +46,7 @@ import org.modeldriven.alf.uml.StructuredActivityNode;
 public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     
     OpaqueBehaviorExecution execution = null;
+    List<Element> otherElements = new ArrayList<Element>();
     
     /**
      * 1. An activity definition that is not primitive maps to an activity. If
@@ -105,7 +108,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     }
     
     @Override
-    public void mapBody() throws MappingError {
+    public List<Element> mapBody() throws MappingError {
         Classifier classifier = this.getClassifier();
         if (!(classifier instanceof OpaqueBehavior)) {
             Block body = 
@@ -113,9 +116,10 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             if (body != null) {
                 FumlMapping bodyMapping = this.fumlMap(body);
                 Collection<Element> elements = bodyMapping.getModelElements();
-                addElements((Activity)classifier, elements, body, this);
+                this.otherElements = addElements((Activity)classifier, elements, body, this);
             }
         }
+        return this.otherElements;
     }
 
     @Override
@@ -173,7 +177,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 		return (ActivityDefinition)this.getSource();
 	}
 	
-	public static void addElements(
+	public static List<Element> addElements(
 	        Activity activity, 
 	        Collection<Element> elements,
 	        Block body,
@@ -195,13 +199,14 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         ActivityGraph graph = mapping.createActivityGraph();
         graph.addToStructuredNode(structuredNode, elements);
         
+        List<Element> otherElements = new ArrayList<Element>();
         for (Element element: graph.getModelElements()) {
             if (element instanceof ActivityNode) {
                 activity.addNode((ActivityNode)element);
             } else if (element instanceof ActivityEdge) {
                 activity.addEdge((ActivityEdge)element);
             } else {
-                mapping.throwError("Element not an activity node or edge: " + element);
+                otherElements.add(element);
             }
         }
         
@@ -238,6 +243,8 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                 }
             }
         }
+        
+        return otherElements;
     }
 
     public static ForkNode getInputParameterFork(
@@ -280,6 +287,13 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         node.setName("Final");
         activity.addNode(node);
         return node;
+    }
+    
+    @Override
+    public List<Element> getModelElements() throws MappingError {
+        List<Element> elements = super.getModelElements();
+        elements.addAll(this.otherElements);
+        return elements;
     }
 
     @Override

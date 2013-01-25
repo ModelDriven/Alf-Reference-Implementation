@@ -228,7 +228,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
                         InputPin inputPin = node.getLoopVariableInput().get(i);
                         for (ActivityEdge incoming: inputPin.getIncoming()) {
                             if (incoming.getSource().equals(flow.getSource())) {
-                                flow.getSource().getOutgoing().remove(flow);
+                                flow.getSource().removeOutgoing(flow);
                                 flow.setSource(node.getLoopVariable().get(i).
                                         getOutgoing().get(0).getTarget());
                                 this.graph.remove(flow);

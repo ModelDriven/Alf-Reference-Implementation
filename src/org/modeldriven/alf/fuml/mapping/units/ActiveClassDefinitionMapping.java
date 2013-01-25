@@ -69,6 +69,9 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
 
                 class_.addOwnedBehavior(behavior);
                 class_.setClassifierBehavior(behavior);
+                
+                this.otherElements.addAll(mapping.getModelElements());
+                this.otherElements.remove(behavior);
             }
         }
         

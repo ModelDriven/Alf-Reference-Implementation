@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -38,7 +38,7 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
      * 
      * 2. A visibility indicator maps to the visibility of the named element
      * mapped from the definition containing the visibility indicator, with an
-     * empty visibility indicator mapping to a visibility kind of “package”.
+     * empty visibility indicator mapping to a visibility kind of "package".
      */
     
     // Visibility mapping is handled by MemberMapping.
@@ -104,7 +104,9 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
             }
             Mapping mapping = member.getImpl().getMapping();
             if (mapping instanceof MemberMapping) {
-                ((MemberMapping)mapping).mapBody();
+                for (Element element: ((MemberMapping)mapping).mapBody()) {
+                    this.addMemberTo(element, namespace);
+                }
             }
         }
     }

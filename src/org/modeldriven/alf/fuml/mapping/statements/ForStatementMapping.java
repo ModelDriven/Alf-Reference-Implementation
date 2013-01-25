@@ -195,7 +195,7 @@ public class ForStatementMapping extends LoopStatementMapping {
                     setupSubgraph.addForkNode("Fork(" + resultSource1.getName() + ")");
             InputPin inputPin = node.getLoopVariableInput().get(n);
             ActivityEdge flow = inputPin.getIncoming().get(0);
-            flow.getTarget().getIncoming().remove(flow);
+            flow.getTarget().removeIncoming(flow);
             flow.setTarget(forkNode);
             setupSubgraph.addObjectFlow(forkNode, inputPin);
 

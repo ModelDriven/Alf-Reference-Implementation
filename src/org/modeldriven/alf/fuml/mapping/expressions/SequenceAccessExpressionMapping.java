@@ -47,7 +47,7 @@ public class SequenceAccessExpressionMapping extends BehaviorInvocationExpressio
         InputPin inputPin = action.getInput().get(1);
         this.indexSource = this.graph.addForkNode("Fork(" + inputPin.getName() + ")");
         ActivityEdge flow = inputPin.getIncoming().get(0);
-        inputPin.getIncoming().remove(flow);
+        inputPin.removeIncoming(flow);
         flow.setTarget(this.indexSource);
         this.graph.addObjectFlow(this.indexSource, inputPin);
         
