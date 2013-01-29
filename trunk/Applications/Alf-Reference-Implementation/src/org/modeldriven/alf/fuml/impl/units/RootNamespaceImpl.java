@@ -32,8 +32,10 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         
         this.modelScope = new ModelNamespace();
         this.modelScope.setImpl(new ModelNamespaceImpl(this.modelScope));
-        
+        this.modelScope.setName("Model");
+                
         RootNamespace self = this.getSelf();
+        self.setName("Root");
         self.addOwnedMember(this.modelScope);
         this.modelScope.setNamespace(self);
     }
