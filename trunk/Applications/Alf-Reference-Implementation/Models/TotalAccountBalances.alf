@@ -1,9 +1,0 @@
-private import Banking::Bank;
-activity TotalAccountBalances() {
-    bank = new Bank::setUp("SomeBank");
-    for (customer in bank.customers) {
-        WriteLine("Customer: " + customer.customerId +
-            " Total balance: " + IntegerFunctions::ToString(
-                bank.totalAccountBalance(customer.customerId)));
-    }
-}

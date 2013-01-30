@@ -1,7 +1,0 @@
-namespace Alf::Library::PrimitiveBehaviors;
-public import FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Concat as '+';
-public import FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Size;
-public import FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Substring;
-
-package StringFunctions {
-}

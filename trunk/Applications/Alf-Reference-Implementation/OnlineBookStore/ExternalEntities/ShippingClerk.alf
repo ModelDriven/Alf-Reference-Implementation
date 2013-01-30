@@ -1,9 +1,0 @@
-namespace ExternalEntities;
-
-abstract active class ShippingClerk {
-
-  public receive signal ShipmentReadyToPack {
-    clerkID: arbitrary_id;
-  }
-  
-}

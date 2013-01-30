@@ -1,8 +1,0 @@
-namespace Banking;
-
-assoc AccountOwnership {
-
-    public accountOwners: Customer[*];
-    public accounts: Account[*];
-    
-}

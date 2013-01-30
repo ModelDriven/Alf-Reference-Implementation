@@ -1,5 +1,0 @@
-activity Hello() {
-
-  WriteLine("Hello World!");
-  
-}
