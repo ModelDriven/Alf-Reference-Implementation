@@ -1,0 +1,86 @@
+namespace 'Property Management';
+
+private import 'Property Management'::'Basic Types'::*;
+private import 'Property Management'::'Data Model'::Properties::'Property Status';
+private import 'Property Management'::'Data Model'::Properties::'Property Acquisition Data';
+private import 'Property Management'::'Data Model'::Properties::'Property Disposition Data';
+
+package 'Message Model' {
+
+  // Requests
+  
+  public datatype Request {
+    public identifier: String;
+  }
+  
+  public datatype 'Property Record Establishment' specializes Request {
+    public 'property name': String;
+    public 'property type': 'Property Type';
+  }
+  
+  public datatype 'Property Record Update' specializes Request {
+    public 'property identifier': String;
+    public 'property name': String[0..1];
+    public 'property value': 'Currency Amount'[0..1];
+    public 'property serial number': String[0..1];
+    public 'property size': Area[0..1];
+    public 'property location identifier': String[0..1];
+  }
+  
+  public datatype 'Property Acquisition Notification' specializes Request {
+    public 'property identifier': String;
+    public 'property location identifier': String;
+    public 'property acquisition data': compose 'Property Acquisition Data';
+  }
+  
+  public datatype 'Property Disposition Notification' specializes Request {
+    public 'property identifier': String;
+    public 'property disposition data': compose 'Property Disposition Data';
+  }
+  
+  public datatype 'Property Record Deletion' specializes Request {
+    public 'property identifier': String;
+  }
+  
+  public datatype 'Property Record Retrieval' specializes Request {
+    public 'property identifier': String;
+  }
+  
+  public enum 'Property Type' {personal, real}
+  
+  // Replies
+  
+  public datatype Reply {
+    public identifier: String;
+    public 'request identifier': String;
+  }
+  
+  public datatype 'Property Management Success Reply' specializes Reply {
+    public property: compose 'Property Data';
+  }
+  
+  public datatype 'Error Reply' specializes Reply {
+    public 'error code': String;
+    public 'error message': String;
+  }
+  
+  public datatype 'Property Data' {
+    public 'property identifier': String;
+    public 'property name': String;
+    public 'property status': 'Property Status';
+    public 'property value': 'Currency Amount'[0..1];
+    public 'property type': 'Property Type';
+    public 'property serial number': String[0..1];
+    public 'property size': Area[0..1];
+
+    public 'property location': compose 'Location Data'[0..1];
+    public 'property acquisition data': compose 'Property Acquisition Data'[0..1];
+    public 'property disposition data': compose 'Property Disposition Data'[0..1];
+  }
+  
+  public datatype 'Location Data' {
+    public 'location identifier': String;
+    public 'location address': String;
+  }
+
+}

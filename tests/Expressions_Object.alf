@@ -1,0 +1,40 @@
+/**
+ * Test object structure expressions.
+ **/
+class Expressions_Object {
+
+    // Supporting declarations *************************************************
+    
+  	members: Member[*];
+	principal: Integer;
+	rate: Integer;
+	interest: Integer;
+	
+    class Member { 
+      	public isActive: Boolean;
+      	public name: String;
+      	public address: String;
+  	}
+  	class Customer {
+  		public name: String;
+  		public email: String;
+  		public address: String[*] sequence;
+    }
+  	
+	//**************************************************************************
+
+	test () {
+	
+	  member = this.members[1];
+	  customer = new Customer();
+	  
+	  this.interest = this.principal * this.rate * 10;  
+	  customer.email;
+	  this.rate;
+	  this.members.name;
+
+	  (customer);
+	  (this.principal);
+	  
+	}
+}

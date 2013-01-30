@@ -1,0 +1,12 @@
+namespace Alf::Library;
+public import UML::AuxiliaryConstructs::PrimitiveTypes::*;
+
+package PrimitiveTypes {
+
+   @primitive
+   public datatype Natural specializes Integer, UnlimitedNatural {}
+   
+   @primitive
+   public datatype BitString {}
+
+}

@@ -1,0 +1,7 @@
+namespace fUML::Semantics;
+
+package Activities {
+
+  public package IntermediateActivities;
+  
+}

@@ -1,0 +1,95 @@
+namespace Ordering;
+
+/**
+Active class for managing an order
+*/
+active class Order
+{
+  public orderID:               arbitrary_id;
+  public dateOrderPlaced:       date;
+  public totalValue:            Money;
+  public recipient:             PersonalName;
+  public deliveryAddress:       MailingAddress;
+  public contactPhone:          TelephoneNumber;
+
+  private checkOutData:         CheckOutData;
+  private chargeSubmissionData: ChargeSubmissionData;
+
+  public datatype CheckOutData 
+  {
+    public cart:                ShoppingCart;
+    public accountNumber:       BankCardAccountNumber;
+    public billingAddress:      MailingAddress;
+    public cardExpirationDate:  MonthYear;
+    public cardholderName:      PersonalName;
+    public customerEmail:       InternetEmailAddress;
+    public customerName:        PersonalName;
+    public customerPhone:       TelephoneNumber;
+    public shippingAddress:     MailingAddress;
+  }
+
+  public datatype ChargeSubmissionData
+  {
+    public accountNumber:       BankCardAccountNumber;
+    public billingAddress:      MailingAddress;
+    public cardExpirationDate:  MonthYear;
+    public cardholderName:      PersonalName;
+  }
+
+  public receive signal CheckOut                           // See Note 1
+  {
+    public data:                CheckOutData;
+  }
+
+  public receive signal SubmitCharge
+  {
+    public data:                ChargeSubmissionData;
+  }
+
+  public receive signal PaymentDeclined{}
+  public receive signal PaymentApproved{}
+  public receive signal OrderDelivered{}
+
+  private EstablishCustomer();                    // See Note 2
+  private ProcessCharge();
+  private DeclineCharge();
+  private PackAndShip();
+  private NotifyOfDelivery();
+
+} 
+do                                                         // See Note 3
+{
+
+  /** 0. Waiting for Check Out */                          // See Note 4
+  accept (checkOut: CheckOut);                             // See Note 5
+  this.checkOutData = checkOut.data;
+
+  /** 1. Establishing Customer and Verifying Payment */
+  this.EstablishCustomer();                                     // See Note 6
+
+  while (true) {                                           // See Note 7
+
+    accept (chargeSubmission: SubmitCharge);
+    this.chargeSubmissionData = chargeSubmission.data;
+
+    /** 2. Submitting Charge */
+    this.ProcessCharge();
+
+    accept (PaymentDeclined) {
+      /** 3. Payment Not Approved */
+      this.DeclineCharge();
+
+    } or accept (PaymentApproved) {                        // See Note 8
+      break;                                               // See Note 9
+    }
+
+  }
+
+  /** 4. Being Packed and Shipped */
+  this.PackAndShip();
+  accept (OrderDelivered);
+
+  /** 5. Delivered to Customer */
+  this.NotifyOfDelivery();
+
+}

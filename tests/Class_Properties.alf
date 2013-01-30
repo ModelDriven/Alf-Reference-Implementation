@@ -1,0 +1,20 @@
+private import DomainDataTypes::Money;
+private import ProductSpecification::Product;
+
+class Properties {
+
+  class Wheel { }
+  class Item { }
+  class A { }
+  class B { }
+  
+  public amount: Money = new(0);
+  public products: Product [1..*] ordered;
+  public wheels: compose Wheel [2..4] = { new Wheel(), new Wheel() };
+  public items: Item [0..*] ordered nonunique;
+  public moreItems: Item[] ordered nonunique;
+  
+  public a: A = new A();
+  public b: compose B = new B();
+
+}

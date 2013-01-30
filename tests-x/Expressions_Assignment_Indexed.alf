@@ -1,0 +1,33 @@
+/**
+ * Test indexed assignment expressions.
+ **/
+active class Expressions_Assignment_Indexed {
+
+    public test(out i: Integer[], out a: Integer[]) {
+    
+        i = Integer[]{1..4};
+        i[1] = 0;
+        i[2] += i[3];
+        a = i;
+        a[3] = 5;
+        test::a[3] = 5;
+        test.a[3] = 5;
+        a[4] += 1;
+        test::a[4] += 1;
+        test.a[4] += 1;
+ 
+    }
+    
+} do {
+    this.test(i,a);
+    
+    AssertEqual("i[1]", i[1], 0);
+    AssertEqual("i[2]", i[2], 5);
+    AssertEqual("i[3]", i[3], 3);
+    AssertEqual("i[4]", i[4], 4);
+    
+    AssertEqual("a[1]", a[1], 0);
+    AssertEqual("a[2]", a[2], 5);
+    AssertEqual("a[3]", a[3], 5);
+    AssertEqual("a[4]", a[4], 7);
+}

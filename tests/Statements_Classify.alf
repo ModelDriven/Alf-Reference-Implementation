@@ -1,0 +1,40 @@
+/**
+ * Test classify statements.
+ **/
+class Statements_Classify {
+
+    // Supporting declarations *************************************************
+	
+    class Monitor { 
+    	public raiseAlarm(in sensorId: Integer) { }
+    	public cleanUp() { }
+	}
+	class InActiveMonitor specializes Monitor { }
+	class ActiveMonitor specializes Monitor { }
+    class Principal { }
+    class Administrator specializes Principal { }
+    class Issue { }
+    class Pending specializes Issue { }
+    class InProcess specializes Issue { }
+    class Overdue specializes Issue { }
+    class Resolved specializes Issue { }
+	
+	//**************************************************************************
+
+    test() {
+    
+      // Setup
+	  principal = new Principal();
+	  monitor = new Monitor();
+	  issue = new Issue();
+	  // ***
+	  	  
+	  classify principal from * to Administrator;
+	  classify principal from Administrator;
+	  classify monitor from InActiveMonitor to ActiveMonitor;
+	  classify issue 
+	    from Pending, Overdue 
+	    to Resolved, InProcess;
+	
+    }
+}

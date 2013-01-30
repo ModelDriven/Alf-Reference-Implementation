@@ -1,0 +1,68 @@
+/**
+ * Test object structure expressions.
+ **/
+active class Expressions_Object {
+
+    // Supporting declarations *************************************************
+    
+  	members: Member[*] sequence;
+	  principal: Integer;
+	  rate: Integer;
+	  interest: Integer;
+	
+    class Member { 
+      	public isActive: Boolean;
+      	public name: String;
+      	public address: String;
+  	}
+  	datatype Customer {
+  		  public name: String;
+  		  public email: String;
+  		  public address: String[*] sequence;
+    }
+  	
+	//**************************************************************************
+
+	test (out member: Member, out customer0: Customer, out customer1: Customer,
+		  out names: String[*], out self: Expressions_Object) {
+	
+	  this.members[1] = new Member();
+	  this.members[2] = new Member();
+	  this.members[1].name = "A";
+	  this.members[2].name = "B";
+	  member = this.members[1];
+	  member.isActive = true;
+	  member.address = "Easy Street";
+	  
+	  customer0 = new Customer(name=>"Fred", email=>"fred@blah.com", address=>"Unknown");
+	  customer1 = customer0;
+	  customer1.address = member.address;
+	  
+	  this.principal = 1000;
+	  this.rate = 5;
+	  this.interest = (this.principal * this.rate) / 100 * 10;  
+
+	  names = this.members.name;	  
+	  self = this;
+	}
+} do {
+	this.test(member, customer0, customer1, names, self);
+	
+	AssertEqual("member.name", member.name, "A");
+	AssertTrue("member.isActive", member.isActive);
+	AssertEqual("member.address", member.address, "Easy Street");
+	
+	AssertEqual("customer0.name", customer0.name, "Fred");
+	AssertEqual("customer0.email", customer0.email, "fred@blah.com");
+	AssertList("customer0.address", customer0.address, "Unknown");
+	
+  AssertEqual("customer1.name", customer1.name, "Fred");
+  AssertEqual("customer1.email", customer1.email, "fred@blah.com");
+  AssertList("customer1.address", customer1.address, "Easy Street");
+	
+	AssertEqual("self.principal", self.principal, 1000);
+	AssertEqual("self.rate", self.rate, 5);
+	AssertEqual("self.interest", self.interest, 500);
+	
+	AssertList("names", names, String[]{"A", "B"});
+}

@@ -1,0 +1,123 @@
+private import fUML::Semantics::Activities::IntermediateActivities::*;
+
+/**
+ * Test while, do and for statements.
+ **/
+class Statements_Looping {
+
+    // Supporting declarations *************************************************
+    
+    list: Monitor[*] sequence;
+    
+    class Member { 
+      	public isActive: Boolean;
+      	public name: String;
+      	public address: String;
+  	}
+    class Monitor { 
+    	public raiseAlarm(in sensorId: Integer) { }
+    	public cleanUp() { }
+	}
+	class File { 
+		public hasMore(): Boolean { }
+		public readNext(): FileRecord[0..1] { }
+	}
+	class FileRecord { public toString():String { } }
+	class Sensor {
+		public getNextReading(): Reading[0..1] { }
+    }
+    class Reading {
+    	public isFinal(): Boolean { }
+    	public getValue(): Integer { }
+    }
+	
+    activity ComputeChecksum(in checksum: Integer, in record: FileRecord): Integer { }
+    activity Record(in reading: Reading) { }
+    activity processRecord(in index: Integer) { }
+    
+	//**************************************************************************
+
+    test() {
+    
+      // Setup
+	  file = new File();
+	  checksum = +0; // Use "+" to ensure type Integer instead of Natural
+	  endMarker = new FileRecord();
+	  sensor = new Sensor();
+	  memberList = Member[]{};
+	  names = String[]{};
+	  addresses = String[]{};
+	  reading = +0;
+	  readings = Integer[]{};
+	  noiseLimit = 50;
+	  sensors = Sensor[]{};
+	  recordCount = 10;
+	  tokens = Token[]{};
+	  node = new ActivityNodeActivation();
+	  SLower = Integer[]{};
+	  SUpper = Integer[]{};
+	  SnEven = Integer[]{};
+	  SnOdd = Integer[]{};
+	  V = Integer[]{};
+	  // *****
+	      
+	  while ((last = this.list->size()) > 0) {
+	    this.list[last].cleanUp();
+	    this.list->removeAt(last);
+	  }
+	  
+	  while (file.hasMore()) {
+	    nextRecord = file.readNext();
+	    if (!nextRecord->isEmpty()) {
+	      checksum = ComputeChecksum(checksum, nextRecord);
+	    }
+	  }
+	  	  
+	  do {
+	    line = file.readNext();
+	    WriteLine(line.toString());
+	  } while (line != endMarker);
+	  
+	  do {
+	    nextReading = sensor.getNextReading();
+	    Record(nextReading);
+	  } while (!nextReading.isFinal());
+	  
+	  for (member in memberList) {
+	    names->add(member.name);
+	    addresses->add(member.address);
+	  }
+	  
+	  for (s in sensors) {
+	    if ((reading = s.getNextReading().getValue())->isEmpty()) {
+	      break;
+	    }
+	    if (reading > noiseLimit) {
+	      readings->add(reading);
+	    }
+	  }
+	  	  
+	  for (j in 1..recordCount) {
+	    processRecord(j);
+	  }
+	  
+	  for (ActivityEdgeInstance outgoingEdge: node.outgoingEdges) {
+	    outgoingEdge.sendOffer(tokens);
+	  }
+	  
+	  //@parallel 
+	  for (outgoingEdge in node.outgoingEdges) {
+	    outgoingEdge.sendOffer(tokens);
+	  }
+	  
+	  //@parallel(SnEven,SnOdd)
+	  for (lower in SLower, upper in SUpper, root in V) {
+	    //@parallel 
+	    {
+	      SnEven -> add(lower+upper);
+	      SnOdd  -> add((lower-upper)*root);
+	    }
+	  }
+	  
+    }
+}

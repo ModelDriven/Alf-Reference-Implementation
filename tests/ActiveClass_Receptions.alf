@@ -1,0 +1,13 @@
+private import Ordering1::CheckOut;
+private import DomainDataTypes::*;
+
+active class Receptions {
+  public receive CheckOut;
+  
+  public receive signal SubmitCharge {
+    public accountNumber:      BankCardAccountNumber;
+    public billingAddress:     MailingAddress;
+    public cardExpirationDate: MonthYear;
+    public cardholderName:     PersonalName;
+  }
+} do { }

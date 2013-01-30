@@ -1,0 +1,28 @@
+namespace FoundationalModelLibrary;
+
+public import FoundationalModelLibrary::Common::*;
+
+@ModelLibrary
+package BasicInputOutput {
+
+  public abstract class Channel;
+  
+  public abstract active class ActiveChannel specializes Channel;
+  
+  public abstract class InputChannel specializes Channel;
+  public abstract class TextInputChannel specializes InputChannel;
+  public abstract class StandardInputChannel specializes TextInputChannel {}
+  
+  public abstract class OutputChannel specializes Channel;
+  public abstract class TextOutputChannel specializes OutputChannel;
+  public abstract class StandardOutputChannel specializes TextOutputChannel {}
+  
+  public activity ReadLine(out errorStatus: Status[0..1]): String {
+    return StandardInputChannel.allInstances()[1].readLine(errorStatus);
+  }
+  
+  public activity WriteLine(in value: String, out errorStatus: Status[0..1]) {
+    StandardOutputChannel.allInstances()[1].writeLine(value, errorStatus);
+  }
+  
+}

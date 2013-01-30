@@ -1,0 +1,22 @@
+/**
+ * Test return statements.
+ **/
+package Statements_Return {
+
+  public activity test1(): Integer {
+    // Setup
+    item = 4;
+    index = 1;
+    list = Integer[]{1,2,3};
+    x = 1;
+    // *****
+    
+    return item;
+    return list[index];
+    return x * x;
+  }
+  
+  public activity test2() {
+    return;
+  }
+}
