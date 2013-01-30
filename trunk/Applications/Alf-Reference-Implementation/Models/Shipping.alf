@@ -1,0 +1,17 @@
+private import Ordering::Order;
+
+package Shipping {
+
+  public active class Shipment { 
+  
+    public receive signal RequestShipment {
+    
+      public order: Order;
+      
+    }
+  
+  } do {
+  
+  }
+
+}

@@ -1,0 +1,16 @@
+namespace Classes;
+
+class OrderLineItem {
+
+  public product: Product;
+  public quantity: Integer;
+  
+  public amount: Integer; // Derived
+  
+  @Create public OrderLineItem(in product: Product, in quantity: Integer) {
+    this.product = product;
+    this.quantity = quantity;
+    this.amount = product.unitPrice * quantity;
+  }
+  
+}

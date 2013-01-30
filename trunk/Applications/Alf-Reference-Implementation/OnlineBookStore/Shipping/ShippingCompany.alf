@@ -1,0 +1,45 @@
+namespace Shipping;
+
+/**
+A shipping company is an organization that contracts with the bookstore to
+deliver merchandise ordered to customers. Generally, all shipments are sent via
+a single company, although in special circumstances other shipping companies can
+be used.
+*/
+class ShippingCompany {
+
+  /**
+  The name of the company;
+  */
+  public companyName: String; // isID
+  
+  /**
+  The webpage provided by the shipping company that provides package tracking 
+  information.
+  */
+  public trackingWebsite: WebsiteURL;
+  
+  /**
+  The telephone number customers can call for tracking, billing or pickup 
+  information. This is generally not the same as the phone number of the 
+  corporate account manager.
+  */
+  public customerServicePhone: TelephoneNumber;
+  
+  /**
+  The telephone number of the local dispatch office.
+  */
+  public localDispatchPhone: TelephoneNumber;
+  
+  /**
+  The address of the shipping company office that serves the bookstore 
+  warehouse.
+  */
+  public localOffice: MailingAddress;
+  
+  /**
+  The name of the account manager at the shipping company's local office.
+  */
+  public localContact: PersonalName;
+  
+}

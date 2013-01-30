@@ -1,0 +1,123 @@
+namespace Ordering;
+
+/**
+Each Product Selection represents a single selection by a customer of products
+in a shopping cart. A Product Selection is created each time a customer adds
+a product to a cart.
+*/
+active class ProductSelection {
+
+  /**
+  The quantity of the related product that the customer has selected.
+  */
+  public quantity: Count;
+  
+  /**
+  Represents the unit price of a product added to a shopping cart at the time
+  the product us selected and added to the cart. This attribute is initialized
+  with the Product.unitPrice but is kept separately so as to capture the price
+  the customer actually pays even if the actual product price changes.
+  */
+  public unitPriceOfSelection: Money;
+  
+  /**
+  The total price of the selection.
+  */
+  public selectionValue: Money; // derived
+  
+  /*
+   * Signal receptions
+   */
+  
+  public receive signal AddSelection {
+    public cartID: arbitrary_id;
+    public productID: UniversalProductCode;
+    public quantity: Count;
+  }
+  
+  public receive signal ChangeQuantity {
+    public quantity: Count;
+  }
+  
+  public receive signal RemoveSelection {
+  }
+  
+  /**
+   * State entry behaviors
+   */
+  
+  private '1. New Selection'(in rcvd_evt: AddSelection) {
+    //@isolated
+    {
+    
+    this.quantity = rcvd_evt.quantity;
+    
+    cart = ShoppingCart -> select selected (selected.cartID == rcvd_evt.cartID)[1];
+    product = Product -> select selected (selected.productID == rcvd_evt.productID)[1];
+    R4a.createLink(product, this);
+    R4b.createLink(cart, this);
+    this.unitPriceOfSelection = product.unitPrice;
+    
+    this.ChangeQuantity(
+      quantity => rcvd_evt.quantity
+    );
+    
+    }
+  }
+  
+  private '2. Changing Quantity'(in rcvd_evt: ChangeQuantity) {
+    //@isolated
+    {
+    
+    this.quantity = rcvd_evt.quantity;
+    
+    // Update derived attribute
+    this.selectionValue = Multiply(this.unitPriceOfSelection, this.quantity);
+    
+    if (this.quantity == 0) {
+      this.RemoveSelection();
+    } else {
+      this.'is added to'.CartUpdated();
+    }
+    
+    }
+  }
+  
+  private '3. Removing Selection'(in rcvd_evt: RemoveSelection) {
+    //@isolated
+    {
+    
+    product = this.'is selection of';
+    cart = this.'is added to';
+    R4a.destroyLink(product, this);
+    R4b.destroyLink(cart, this);
+    
+    // Now see if the cart is empty (any other related Products). If empty,
+    // cancel the cart.
+    if (cart.'includes selection'->isEmpty()) {
+      cart.Cancel();
+    } else {
+      cart.CartUpdated();
+    }
+    
+    }
+  }
+  
+} do {
+
+  accept (addSelection: AddSelection);
+  this.'1. New Selection'(addSelection);
+  
+  while (true) {
+  
+    accept (changeQuantity: ChangeQuantity) {
+      this.'2. Changing Quantity'(changeQuantity);
+      
+    } or accept (removeSelection: RemoveSelection) {
+      this.'3. Removing Selection'(removeSelection);
+      return;
+    }
+  
+  }
+  
+}

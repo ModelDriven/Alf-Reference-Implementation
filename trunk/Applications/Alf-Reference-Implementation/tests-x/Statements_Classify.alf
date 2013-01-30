@@ -1,0 +1,67 @@
+/**
+ * Test classify statements.
+ **/
+active class Statements_Classify {
+
+    // Supporting declarations *************************************************
+    
+    receive signal Ready { }
+    
+    class Monitor { }
+	  class InActiveMonitor specializes Monitor { }
+	  active class ActiveMonitor specializes Monitor {
+	      public n: Integer = 0;
+	  } do {
+	      this.n = 1;
+	      Statements_Classify.allInstances().Ready();
+	  }
+	  
+    class Employee { }
+    class Administrator specializes Employee { }
+    class Staff specializes Employee { }
+    class PartTime specializes Employee { }
+    class Issue { }
+    class Pending specializes Issue { }
+    class InProcess specializes Issue { }
+    class Overdue specializes Issue { }
+    class Resolved specializes Issue { }
+    
+	//**************************************************************************
+
+    test(out employee: Employee, out monitor: Monitor, out issue: Issue) {
+    
+      // Setup
+	    employee = new Staff();
+	    monitor = new InActiveMonitor();
+	    issue = new Pending();
+	    // ***
+	  	  
+	    classify employee from * to Administrator;
+	    classify employee to PartTime;
+	    classify employee from Administrator;
+	    classify monitor from InActiveMonitor to ActiveMonitor;
+	    classify issue 
+	      from Pending, Overdue 
+	      to Resolved, InProcess;
+	      	    
+    }
+} do {
+	this.test(employee, monitor, issue);
+	accept (Ready);
+	
+	AssertTrue("employee instanceof Employee", employee instanceof Employee);
+	AssertFalse("employee hastype Staff", employee hastype Staff);
+	AssertFalse("employee hastype Administrator", employee hastype Administrator);
+	AssertTrue("employee hastype PartTime", employee hastype PartTime);
+	
+	AssertTrue("monitor instanceof Monitor", monitor instanceof Monitor);
+	AssertFalse("monitor hastype InActiveMonitor", monitor hastype InActiveMonitor);
+	AssertTrue("monitor hastype ActiveMonitor", monitor hastype ActiveMonitor);
+	AssertEqual("monitor.n", ((ActiveMonitor)monitor).n, 1);
+	
+	AssertTrue("issue instanceof Issue", issue instanceof Issue);
+	AssertFalse("issue hastype Pending", issue hastype Pending);
+	AssertFalse("issue hastype Overdue", issue hastype Overdue);
+	AssertTrue("issue hastype Resolved", issue hastype Resolved);
+	AssertTrue("issue hastype InProcess", issue hastype InProcess);
+}

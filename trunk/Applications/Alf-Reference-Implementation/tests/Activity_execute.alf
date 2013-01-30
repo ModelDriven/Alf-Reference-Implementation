@@ -1,0 +1,17 @@
+namespace fUML::Semantics::Activities::IntermediateActivities::ActivityExecution;
+
+activity execute()
+{ 
+  //@parallel 
+  {  
+    'activity' = (Activity)(this.types[1]); 
+    {
+      group = new ActivityNodeActivationGroup();
+      group.activityExecution = this; 
+    }
+    {
+      this.activationGroup = group;
+      group.activate('activity'.node, 'activity'.edge);
+    }
+  }
+}

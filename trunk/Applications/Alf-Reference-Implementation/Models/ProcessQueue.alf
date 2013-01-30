@@ -1,0 +1,31 @@
+public import Process;
+abstract active class ProcessQueue {      // Abstract active class
+
+  private busy: Boolean = false;
+
+  public receive signal Wait {            // Signal reception definitions
+    public process: Process;
+  }
+  public receive signal Release {}
+
+  protected abstract enqueue(in process: Process); // Abstract operations
+  protected abstract dequeue(): Process;
+  protected abstract processesWaiting(): Boolean;
+
+} do {                                    // In-line classifier behavior
+  while (true) {
+    accept (sig: Wait) {               // Accept statement for signals
+      if (this.busy) {
+        this.enqueue(sig.process);
+      } else {
+        sig.process.resume();
+      }
+    } or accept (Release) {
+      if (this.processesWaiting()) {
+        this.dequeue().resume();
+      } else {
+        this.busy = false;
+      }
+    }
+  }
+}

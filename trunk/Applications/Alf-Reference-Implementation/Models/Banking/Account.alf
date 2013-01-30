@@ -1,0 +1,12 @@
+namespace Banking;
+
+class Account {
+
+    public accountId: String;
+    public balance: Integer = 0;
+    
+    @Create Account(in accountId: String) {
+        this.accountId = accountId;
+    }
+
+}

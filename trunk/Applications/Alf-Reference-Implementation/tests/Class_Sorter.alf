@@ -1,0 +1,21 @@
+public import Comparable;
+class Sorter<T specializes Comparable> {
+
+  private list: List<T>;
+  @Create public Sorter() { }
+  @Create public Sorter1(in list: List<T>) {
+    this();
+    this.list = list;
+  }
+
+  public append(in elements: List<T>) { 
+    this.list.addAll(elements);
+  }
+  public sort() { }
+  public getList(): List<T> {
+    return this.list;
+  }
+  public clear() {
+    this.list.clear();
+  }
+}

@@ -1,0 +1,28 @@
+private import Alf::Library::BasicInputOutput;
+
+active class Interactive_InputOutput {
+    activity Input(): StandardInputChannel {
+        return StandardInputChannel.allInstances()[1];
+    }
+    
+    activity Output(): StandardOutputChannel {
+        return StandardOutputChannel.allInstances()[1];
+    }
+    
+    activity A(out x: any[0..1], out y: any[0..1], 
+               out status1: Status[0..1], out status2: Status[0..1] ) {
+        Input().read(x, status1);
+        Input().read(y, status2);
+    }
+} do {
+    WriteLine("Enter two characters.");
+    A(char1, char2, s1, s2);
+    Output().write("char1=");
+    Output().write(char1);
+    Output().write(" status1=" + s1.description);
+    Output().writeNewLine();
+    Output().write("char2=");
+    Output().write(char2);
+    Output().write(" status2=" + s2.description);
+    Output().writeNewLine();
+}

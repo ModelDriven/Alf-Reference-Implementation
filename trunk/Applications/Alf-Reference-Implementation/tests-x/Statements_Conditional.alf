@@ -1,0 +1,98 @@
+/**
+ * Test if and switch statements.
+ **/  
+active class Statements_Conditional {
+
+    // Supporting declarations *************************************************
+    
+    class Monitor { 
+    	public raiseAlarm(in sensorId: Integer) { }
+    	public cleanUp() { }
+	}
+    enum Condition { normal, alert, critical, error }
+    
+	//**************************************************************************
+
+    test(out condition1: Condition, out condition2: Condition, out condition3: Condition,
+    	 out year: Integer, out month: Integer, out numDays: Integer ) {
+    
+      // Setup
+	  reading = 150;
+	  threshold = 10;
+	  safeLimit = 100;
+	  criticalLimit = 200;
+	  errorLimit = 1000;
+	  sensorId = 1;
+	  monitor = new Monitor();
+	  year = 2012;
+	  // *****
+	  
+	  if (reading > threshold) {
+	     monitor.raiseAlarm(sensorId); 
+	  }
+	  
+	  //@determined @assured
+	  if (reading <= safeLimit) {
+	    condition1 = Condition::normal; }
+	  or if (reading > safeLimit && reading <= criticalLimit) {
+	    condition1 = Condition::alert; }
+	  or if (reading > criticalLimit) {
+	    condition1 = Condition::critical; }
+	  
+	  reading = 500;
+	  
+	  if (reading <= safeLimit) {
+	    condition2 = Condition::normal; 
+	  }
+	  else if (reading <= criticalLimit) {
+	    condition2 = Condition::alert; 
+	  }
+	  else {
+	    condition2 = Condition::critical; 
+	  }
+	  
+	  if (reading <= safeLimit) {
+	    condition3 = Condition::normal; }
+	  else if (reading > safeLimit && reading <= criticalLimit) {
+	    condition3 = Condition::alert; }
+	  or if (reading > criticalLimit && reading < errorLimit) {
+	    condition3 = Condition::critical; }
+	  else {
+	    condition3 = Condition::error; }
+	  
+	  switch (year) {
+	  	case 2012:
+	  	  month = 2;
+  		default:
+  		  month = 3;
+	  }
+	  
+	  switch (month) {
+	    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+	      numDays = 31; 
+	     case 4: case 6: case 9: case 11:
+	      numDays = 30; 
+	    case 2:
+	      if ( ((year % 4 == 0) && !(year % 100 == 0))
+	           || (year % 400 == 0) ) {
+	        numDays = 29;
+	      } 
+	      else {
+	        numDays = 28;
+	      }
+	    default:
+	      WriteLine("Invalid month.");
+	      numDays = 0;
+	  }
+	  
+    }
+} do {
+	this.test(condition1, condition2, condition3, year, month, numDays);
+	
+	AssertEqual("condition1", condition1, Condition::alert);
+	AssertEqual("condition2", condition2, Condition::critical);
+	AssertEqual("condition3", condition3, Condition::critical);
+	AssertEqual("year", year, 2012);
+	AssertEqual("month", month, 2);
+	AssertEqual("numDays", numDays, 29);
+}

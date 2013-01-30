@@ -1,0 +1,29 @@
+namespace Classes::Order;
+
+activity Order_Behavior() {
+
+  accept (submission: SubmitCharge);
+  card = submission.card;
+  
+  for (i in 1..3) {
+    WriteLine("           [Order] Charging: " + card.accountNumber);
+    WriteLine("");
+
+    new CreditCardCharge(card, this);
+  
+    accept (response: ChargeApproved) {
+      WriteLine("           [Order] Received charge approval");
+      WriteLine("");
+      this.customer.ChargeApproved(response.charge);
+      break;
+  
+    } or accept (response: ChargeDenied) {
+      WriteLine("           [Order] Received charge denial");
+      WriteLine("");
+      this.customer.ChargeDenied(response.charge);
+  
+    }
+  
+  }
+
+}

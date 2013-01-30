@@ -1,0 +1,12 @@
+namespace Ordering::Order;
+
+private import EE_OnlineCustomer;
+/**
+Entry behavior for State 3. Payment Not Approved
+*/
+activity DeclineCharge()
+{
+  // Notify the customer that the charge was rejected
+  customer = this.'is placed by';
+  EE_OnlineCustomer.ChargeDeclined(customerEmail => customer.email);
+}

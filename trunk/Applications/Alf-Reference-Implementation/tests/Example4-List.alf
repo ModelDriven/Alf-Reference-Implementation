@@ -1,0 +1,133 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::CollectionFunctions::*;
+/**
+The concrete implementation of the standard library template List class.
+*/
+class List<T> 
+  specializes OrderedCollectionImpl<T>, CollectionClasses::List<T> {
+  
+  private content: T[0..*] sequence;
+
+  @Create public List (in seq: T[0..*] sequence) { 
+    super.OrderedCollectionImpl(seq);
+  }
+
+  @Destroy public destroy () { 
+  }
+
+  private setContent(in seq: T[0..*] sequence) {
+    this.content = seq;
+  }
+  
+  public add (in element: T): Boolean {
+    return super.OrderedCollectionImpl<T>::add(element);
+  }
+  
+  public addAt (in index: Integer, in element: T): Boolean {
+    return super.OrderedCollectionImpl<T>::addAt(index, element);
+  }
+
+  public addAll (in seq: T[0..*] sequence): Boolean {
+    return super.OrderedCollectionImpl<T>::addAll(seq);
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public addAllAt (in index: Integer, in seq: T[0..*] sequence): Boolean {
+    return super.OrderedCollectionImpl<T>::addAllAt(index, seq);
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public at (in index: Integer): T[0..1] {
+    return super.OrderedCollectionImpl<T>::at(index);
+  }
+
+  public clear () {
+    super.OrderedCollectionImpl<T>::clear();
+  }
+  
+  public count (in element: T): Integer  {
+    return super.OrderedCollectionImpl<T>::count(element);
+  }
+
+  public equals (in seq: T[0..*] sequence): Boolean { 
+    return super.OrderedCollectionImpl<T>::equals(seq);
+  }
+
+  public first (): T[0..1] { 
+    return super.OrderedCollectionImpl<T>::first();
+  }
+  
+  public indexOf (in element: T) : Integer[0..1] { 
+    return super.OrderedCollectionImpl<T>::indexOf(element);
+  }
+  
+  public last (): T[0..1] { 
+    return super.OrderedCollectionImpl<T>::last();
+  }
+  
+  public excludes (in element: T): Boolean {
+    return super.OrderedCollectionImpl<T>::excludes (element);
+  }
+  
+  public excludesAll (in seq: T[0..*] sequence): Boolean {
+    return super.OrderedCollectionImpl<T>::excludesAll(seq);
+  }
+  
+  public includes (in element: T): Boolean {
+    return super.OrderedCollectionImpl<T>::includes(element);
+  }
+  
+  public includesAll (in seq: T[0..*] sequence): Boolean {
+    return super.OrderedCollectionImpl<T>::includesAll(seq);
+  }
+  
+  public isEmpty (): Boolean {
+    return super.OrderedCollectionImpl<T>::isEmpty();
+  }
+  
+  public notEmpty (): Boolean {
+    return super.OrderedCollectionImpl<T>::notEmpty();
+  }
+  
+  public remove (in element: T): Integer { 
+    return super.OrderedCollectionImpl<T>::remove(element);
+  }
+  
+  public removeAll (in seq: T[0..*] sequence): Boolean { 
+    return super.OrderedCollectionImpl<T>::removeAll(seq);
+  }
+  
+  public removeAt (in index: Integer): T[0..1] { 
+    return super.OrderedCollectionImpl<T>::removeAt(index);
+  }
+  
+  public removeOne (in element: T): Boolean { 
+    return super.OrderedCollectionImpl<T>::removeOne(element);
+  }
+  
+  public replace (in element: T, in newElement: T): Integer { 
+    return super.OrderedCollectionImpl<T>::replace(element, newElement);
+  }
+  
+  public replaceAt (in index: Integer, in element: T): T[0..1] {
+    return super.OrderedCollectionImpl<T>::replaceAt(index, element);
+  }
+  
+  public replaceOne (in element: T, in newElement: T): Boolean { 
+    return super.OrderedCollectionImpl<T>::replaceOne(element, newElement);
+  }
+  
+  public retainAll (in seq: T[0..*] sequence): Boolean { 
+    return super.OrderedCollectionImpl<T>::retainAll(seq);
+  }
+   
+  public size (): Integer {
+    return super.OrderedCollectionImpl<T>::size();
+  }
+  
+  public subList (in lower: Integer, in upper: Integer): CollectionClasses::List<T> {
+    return new List<T>(this.toSequence()->subsequence(lower, upper));
+  }
+  
+  public toSequence(): T[0..*] sequence {
+    return this.content;
+  }
+}

@@ -1,0 +1,50 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::CollectionFunctions::*;
+/**
+The base concrete implementation for the standard library ordered collection 
+classes
+*/
+abstract class OrderedCollectionImpl<T> specializes CollectionImpl<T> {
+
+  @Create protected OrderedCollectionImpl(in seq: T[0..*] sequence) {
+    super(seq);
+  }
+
+  public addAllAt (in index: Integer, in seq: T[0..*] sequence): Boolean {
+    preSize = this.size();
+    this.setContent(this.toSequence()->includeAllAt(index, seq));
+    return this.size() > preSize;
+  }
+  
+  public addAt (in index: Integer, in element: T): Boolean {
+    return this.addAllAt(index, element);
+  }
+  
+  public at (in index: Integer): T[0..1] {
+    return this.toSequence()->at(index);
+  }
+  
+  public first (): T[0..1] {
+    return this.at(1);
+  }
+  
+  public indexOf (in element: T) : Integer[0..1] {
+    return this.toSequence()->indexOf(element);
+  }
+  
+  public last (): T[0..1] {
+    return this.at(this.size());
+  }
+  
+  public removeAt (in index: Integer): T[0..1] {
+    result = this.at(index);
+    this.setContent(this.toSequence()->excludeAt(index));
+    return result;
+  }
+  
+  public replaceAt (in index: Integer, in element: T): T[0..1] {
+    result = this.at(index);
+    this.setContent(this.toSequence()->replacingAt(index, element));
+    return result;
+  }
+}

@@ -1,0 +1,14 @@
+namespace ExternalEntities;
+
+abstract active class CreditCardCompany {
+
+  public receive signal RequestChargeApproval {
+    public accountNumber: BankCardAccountNumber;
+    public billingAddress: MailingAddress;
+    public cardholderName: PersonalName;
+    public expirationDate: MonthYear;
+    public transactionID: arbitrary_id;
+    public chargeAmount: Money;
+  }
+  
+}

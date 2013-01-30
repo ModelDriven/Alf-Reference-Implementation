@@ -1,0 +1,54 @@
+private import Super;
+/**
+ * Test invocation expressions.
+ **/
+class Expressions_Invocation specializes Super {
+
+    // Supporting declarations *************************************************
+    
+    active class Monitor {
+    	public receive signal SignalAlarm {
+    		public sensorId: Integer;
+        }
+    } do { }
+    class Reply { }
+
+  	activity A(in x: Integer, in y: Boolean[0..1]) { }
+  	activity ComputeInterest(in amount: Integer) { }
+  	activity Start(in monitor: Monitor) { }
+  	
+  	createReply(): Reply { }
+  	
+  	@Create Super1() redefines Super { } // to avoid name clash.
+
+	//**************************************************************************
+
+	test(inout status1: Status, out status2: Status, out statuses: Status[*]) {
+	
+	  ReadLine(status1);
+	  ReadLine(status2);
+	  ReadLine(statuses);
+	  ReadLine(s);  // Define local name "s" as an output argument.
+	
+	  A(1, true);
+	  A(x=>1, y=>true);
+	  A(y=>true, x=>1);
+	  A(x=>1);
+	  A(1, null);
+	  ComputeInterest(i = 3);
+	  reply = this.createReply();
+	  
+	  monitor = new Monitor();
+	  monitor.SignalAlarm(i);	  
+	  Start(monitor => monitor);
+	  
+	  super.run();
+	  super.initialize(i);
+	  super.Super::setName("Fred");
+	  
+	  monitors = (Monitor)null;
+	  including(monitors, monitor);
+	  size(Monitor.allInstances());
+	  
+	}
+}

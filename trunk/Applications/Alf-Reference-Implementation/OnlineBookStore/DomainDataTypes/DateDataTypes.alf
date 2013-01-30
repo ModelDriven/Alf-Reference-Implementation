@@ -1,0 +1,43 @@
+namespace DomainDataTypes;
+
+public import Alf::Library::PrimitiveTypes::Integer as Year;
+public import Alf::Library::PrimitiveTypes::Integer as Month;
+public import Alf::Library::PrimitiveTypes::Integer as Day;
+public import Alf::Library::PrimitiveTypes::Integer as Hour;
+public import Alf::Library::PrimitiveTypes::Integer as Minute;
+public import Alf::Library::PrimitiveTypes::Integer as Second;
+
+package DateDataTypes {
+
+  public datatype time {
+    public hour: Hour;
+    public minute: Minute;
+    public second: Second;
+  }
+
+  public datatype date {
+    public year: Year;
+    public month: Month;
+    public day: Day;
+    public time: time;
+  }
+  
+  public datatype ElapsedTime {
+    public days: Integer;
+    public hours: Integer;
+    public minutes: Integer;
+    public seconds: Integer;
+  }
+  
+  public datatype MonthYear {
+    public year: Year;
+    public month: Month;
+  }
+  
+  public activity ToMonthYearString(in my: MonthYear): String {
+    return IntegerFunctions::ToString(my.month) + "/" + 
+           IntegerFunctions::ToString(my.year);
+  }
+  
+}
+  

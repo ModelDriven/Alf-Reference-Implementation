@@ -1,0 +1,8 @@
+namespace 'Property Management';
+
+package 'Service Model' {
+
+  public abstract class 'Property Management Service';
+  public class 'Property Management Service Implementation' specializes 'Property Management Service';
+  
+}

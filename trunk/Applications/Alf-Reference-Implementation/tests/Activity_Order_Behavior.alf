@@ -1,0 +1,25 @@
+namespace Ordering1::Order;
+
+activity Order_Behavior() {
+  accept (checkOut: CheckOut);
+  this.establishCustomer(checkOut);
+
+  do {
+
+    accept (chargeSubmission: SubmitCharge);
+    this.processCharge(chargeSubmission);
+
+    accept (PaymentDeclined) {
+      declined = true;
+      this.declineCharge();
+
+    } or accept (PaymentApproved) {
+      declined = false;
+    }
+
+  } while (declined);
+
+  this.packAndShip();
+  accept(OrderDelivered);
+  this.notifyOfDelivery();
+}

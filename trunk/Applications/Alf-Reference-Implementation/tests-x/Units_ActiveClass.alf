@@ -1,0 +1,30 @@
+/**
+ * Test active class instantiation
+ */
+active class Units_ActiveClass {
+
+  public receive signal Continue { }
+
+  public active class C {
+    public i: Integer;
+    public j: Integer;
+    public t: Units_ActiveClass;
+    @Create public C(in i: Integer, in t: Units_ActiveClass) { 
+      this.i = i;
+      this.t = t;
+    }
+  } do {
+    $(this.j = this.i);
+    this.t.Continue();
+  }
+  
+  public test(out c: C) {
+    c = new C(1, this);    
+  }  
+  
+} do {
+  this.test(c);
+  accept (Continue);
+  
+  AssertEqual("c.j", c.j, 1);
+}

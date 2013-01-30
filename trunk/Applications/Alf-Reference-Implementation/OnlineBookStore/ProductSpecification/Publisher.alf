@@ -1,0 +1,61 @@
+namespace ProductSpecification;
+
+/**
+A publisher is an organization responsible for producting and marketing
+("publishing") books and other products sold by the store.
+*/
+class Publisher {
+
+  /**
+  A code that identifies a country, area or language area that participates in
+  the ISBN system. Each group has an agency that is responsible for assigning
+  unique codes to publishers within its group.
+  
+  The group code, together with the publisher code, uniquely identifies a
+  publisher anywhere in the world.
+  */
+  public groupCode: ISBNGroupIdentifier; // isID
+  
+  /**
+  Each publisher is assigned a unique code (one or more digits) that is used to
+  uniquely identify the publisher in an International Standard Book Number
+  (ISBN).
+  
+  The U.S. ISBN Agency (www.isbn.org) is responsible for the assignment of the
+  ISBN Publisher Prefix to those publishers with a residence or office in the
+  U.S. that are publishing their titles within the U.S.
+  */
+  public publisherCode: ISBNPublisherPrefix; // isID
+  
+  /**
+  The common name oif the publisher, e.g., "Addison-Wesley" or "Prentice-Hall."
+  */
+  public name: String;
+  
+  /**
+  The address at which the publisher receives mail. It can be a legal or
+  common-use street address recognized by the post office, or a post office box.
+  */
+  public address: MailingAddress;
+  
+  /**
+  The publisher's public website, it one exists.
+  */
+  public website: WebsiteURL[0..1];
+  
+  @Create
+  public Publisher(
+    in groupCode: ISBNGroupIdentifier,
+    in publisherCode: ISBNPublisherPrefix,
+    in name: String,
+    in address: MailingAddress,
+    in website: WebsiteURL[0..1]
+  ) {
+    this.groupCode = groupCode;
+    this.publisherCode = publisherCode;
+    this.name = name;
+    this.address = address;
+    this.website = website;
+  }
+  
+}

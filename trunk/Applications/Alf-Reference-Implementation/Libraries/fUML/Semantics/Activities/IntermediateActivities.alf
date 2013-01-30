@@ -1,0 +1,51 @@
+namespace fUML::Semantics::Activities;
+
+public import fUML::Syntax::Activities::IntermediateActivities::*;
+
+package IntermediateActivities {
+
+  public class Token { }
+  
+  public class ActivityEdgeInstance {
+    public sendOffer(in tokens: Token[*]);
+  }
+
+  public class ActivityNodeActivation { 
+  
+    public node: ActivityNode;
+    public incomingEdges: ActivityEdgeInstance[*];
+    public outgoingEdges: ActivityEdgeInstance[*];
+  
+    public run() {}
+    public receiveOffer() {}
+    public isSourceFor(in edgeInstance: ActivityEdgeInstance): Boolean {}
+    
+  }
+  
+  public class ControlNodeActivation specializes ActivityNodeActivation {}
+
+  public class ObjectNodeActivation specializes ActivityNodeActivation {}
+  public class ActivityParameterNodeActivation specializes ObjectNodeActivation {}
+
+  public class ActivityNodeActivationGroup {
+  
+    public activityExecution: ActivityExecution;
+    public activations: ActivityNodeActivation[*];
+ 
+    public activate(in nodes: ActivityNode[*], in edges: ActivityEdge[*]); 
+    public run(in activations: ActivityNodeActivation[*]);
+    public getNodeActivations(in node: ActivityNode): ActivityNodeActivation[*];
+    
+  }
+  
+  public class ActivityExecution {
+  
+    public types: Activity[*];
+    
+    public activationGroup: ActivityNodeActivationGroup;
+  
+    public execute();
+    
+  }
+  
+}
