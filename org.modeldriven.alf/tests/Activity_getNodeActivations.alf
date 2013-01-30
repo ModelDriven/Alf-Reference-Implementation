@@ -1,0 +1,6 @@
+namespace fUML::Semantics::Activities::IntermediateActivities::ActivityNodeActivationGroup;
+
+activity getNodeActivations
+  (in node: ActivityNode): ActivityNodeActivation[*] {
+  return this.activations -> select a (a.node == node);
+}

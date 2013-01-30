@@ -1,0 +1,8 @@
+namespace ExternalEntities;
+
+abstract active class ShippingCompany {
+
+  public receive signal ShipmentReadyForPickup {
+  }
+  
+}

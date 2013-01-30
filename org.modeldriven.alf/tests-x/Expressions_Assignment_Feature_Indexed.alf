@@ -1,0 +1,64 @@
+/**
+ * Test indexed feature assignment expressions
+ **/
+active class Expressions_Assignment_Feature_Indexed {
+
+    private y: Integer[] sequence;
+    
+    private class C {
+        public y: Integer[] sequence;
+    }
+    
+    private datatype D {
+        public y: Integer[] sequence;
+    }
+    
+    private assoc A {
+        public c: C;
+        public n: Integer[] sequence;
+    }
+
+    private assoc B {
+        public d: D;
+        public m: Integer[] sequence;
+    }
+
+    public test(out c: C, out d: D, out n: Integer, out m: Integer, 
+        out self: Expressions_Assignment_Feature_Indexed) {      
+      c = new C();
+      c.y = Integer[]{1,2,3};
+      c.y[2] = 4;
+      c.y[1] = null;
+      
+      c.n[1] = 4;
+      n = A::n(c)[1];
+      
+      d = new D(Integer[]{1,2,3});
+      
+      d.y[2] = 4;
+      d.y[1] = null;
+      
+      d.m[1] = 4;
+      m = B::m(d)[1];
+      
+      this.y = Integer[]{1,2};
+      this.y[2] = 4;
+      this.y[1] = null;
+      self = this;
+     }
+  
+} do {
+    this.test(c,d,n,m,self);
+    
+    AssertEqual("c.y[1]", c.y[1], 4);
+    AssertEqual("c.n[1]", c.n[1], 4);
+    
+    AssertEqual("d.y[1]", d.y[1], 4);
+    AssertEqual("d.m[1]", d.m[1], 4);
+    
+    AssertEqual("n", n, 4);
+    AssertEqual("m", m, 4);
+    
+    AssertEqual("self.y[1]", self.y[1], 4);
+}
+      

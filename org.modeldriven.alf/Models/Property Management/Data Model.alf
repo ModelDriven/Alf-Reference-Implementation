@@ -1,0 +1,8 @@
+namespace 'Property Management';
+
+package 'Data Model' {
+
+  public package Locations;
+  public package Properties;
+  
+}

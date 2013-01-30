@@ -1,0 +1,14 @@
+if [ "$ALF_LIB" = "" ] 
+then
+  lib=""
+else
+  lib="-l $ALF_LIB"
+fi
+
+cp="-cp"
+cp="$cp lib/alf.jar"
+cp="$cp:lib/fuml.jar"
+cp="$cp:lib/log4j.jar"
+cp="$cp:lib/commons-logging.jar"
+
+java $cp org.modeldriven.alf.fuml.impl.execution.Alf $lib $@

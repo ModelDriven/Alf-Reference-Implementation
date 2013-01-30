@@ -1,0 +1,26 @@
+namespace 'Property Management';
+
+package 'Basic Types' {
+
+  public datatype Date {
+    public day: Integer;
+    public month: Integer;
+    public year: Integer;
+  }
+  
+  public datatype 'Currency Amount' {
+    public amount: FixedPointNumber;
+    public currencyCode: String;
+  }
+  
+  public datatype Area {
+    public value: FixedPointNumber;
+    public units: String;
+  }
+  
+  public datatype FixedPointNumber {
+    public scaledValue: Integer;
+    public decimalPlaces: Integer;
+  }
+
+}

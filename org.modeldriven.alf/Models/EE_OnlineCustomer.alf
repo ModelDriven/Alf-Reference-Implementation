@@ -1,0 +1,17 @@
+private import DomainDataTypes::InternetEmailAddress;
+
+package EE_OnlineCustomer {
+
+  public activity ChargeApproved (
+    in customerEmail: InternetEmailAddress
+  ) { }
+
+  public activity ChargeDeclined (
+    in customerEmail: InternetEmailAddress
+  ) { }
+
+  public activity OrderReportedDelivered (
+    in customerEmail: InternetEmailAddress
+  ) { }
+
+}

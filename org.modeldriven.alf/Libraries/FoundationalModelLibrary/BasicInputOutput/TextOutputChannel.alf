@@ -1,0 +1,12 @@
+namespace FoundationalModelLibrary::BasicInputOutput;
+
+abstract class TextOutputChannel specializes OutputChannel {
+
+  public writeString(in value: String, out errorStatus: Status[0..1]) { }
+  public abstract writeNewLine(out errorStatus: Status[0..1]);
+  public writeLine(in value: String, out errorStatus: Status[0..1]) { }
+  public writeInteger(in value: Integer, out errorStatus: Status[0..1]) { }
+  public writeBoolean(in value: Boolean, out errorStatus: Status[0..1]) { }
+  public writeUnlimitedNatural(in value: UnlimitedNatural, out errorStatus: Status[0..1]) { }
+  
+}

@@ -1,0 +1,24 @@
+private import ProcessQueue;
+public import Process;
+active class ProcessQueueImpl             // Concrete active subclass
+  specializes ProcessQueue {
+
+  private waitingProcesses: Process[*] ordered;
+
+  // Concrete operation redefinitions
+  private enqueue(in process: Process) {
+    this.waitingProcesses->add(process);
+  }
+  
+  private dequeue(): Process {
+    process = this.waitingProcesses->at(1);
+    this.waitingProcesses->removeAt(1);
+    return process;
+  }
+    
+  private processesWaiting(): Boolean {
+    return this.waitingProcesses->notEmpty();
+  }
+
+} do { }                                // No additional behavior
+

@@ -1,0 +1,38 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+
+active class HomeView specializes View {
+
+  @Create
+  public HomeView (
+    in controller: HomeController) {
+    super(
+      title => "Home",
+      prompt => "Select a category, s for shopping cart or x to exit.",
+      controller => controller
+    );
+  }
+  
+  protected display(): String[*] sequence {
+    choices = String[]{"x", "s"};
+    i = 1;
+    for (category in ((HomeController)this.controller).topLevelCategories) {
+      choice = IntegerFunctions::ToString(i++);
+      choices->add(choice);
+      WriteLine(choice + ". " + category.categoryName);
+    }    
+    return choices;
+  }
+  
+  protected handle(in choice: String) {
+    controller = (HomeController)this.controller;
+    switch (choice) {
+      case "x": controller.Exit();
+      case "s": controller.ShowShoppingCart();
+      default: controller.ShowCategory(IntegerFunctions::ToInteger(choice));
+    }
+  }
+
+} do {
+}

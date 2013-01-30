@@ -1,0 +1,13 @@
+class Super {
+
+  @Create public Super() { }
+  @Create public create() { }
+  @Create public create1(in x: Integer) { }
+  
+  @Destroy public destroy() { }
+  
+  public run() { }
+  public initialize(in value: Integer) { }
+  public setName(in name: String) { }
+  
+}

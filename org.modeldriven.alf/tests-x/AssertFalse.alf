@@ -1,0 +1,4 @@
+private import Alf::Library::PrimitiveBehaviors::BooleanFunctions::ToString;
+activity AssertFalse(in label: String, in condition: Boolean[0..1]) {
+    AssertTrue("! " + label, condition == false);
+}

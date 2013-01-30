@@ -1,0 +1,132 @@
+/**
+ * Test various operator expressions.
+ **/
+active class Expressions_Operator {
+
+    // Supporting declarations *************************************************
+    
+    class Monitor {
+        public getActiveSensor(): Sensor { return new Sensor(); }
+    }
+    class Sensor {
+      public getReading(): Integer { return 2; }
+    }
+    class Person { }
+    class Employee specializes Person {
+      public id: Integer;
+      public name: String;
+    }
+    
+  //**************************************************************************
+
+  test(
+     out i: Integer, out j: Integer,
+     out bs: BitString, out h: Integer,
+     out a: Boolean, out b: Boolean, out c: Boolean, out d: Boolean, out e: Boolean,
+     out e1: Boolean, out e2: Boolean, out e3: Boolean, out e4: Boolean, out e5: Boolean,
+     out e6: Boolean, out e7: Boolean, out e8: Boolean, out e9: Boolean,
+     out f: Boolean, out f1: Boolean, out f2: Boolean,
+     out x: any, out y: any[*] sequence, out z: Integer[], out r: Integer) {
+    
+    employee = new Employee();
+    monitor = new Monitor();
+
+    i = 1;
+    j = 2;
+      
+    i = +i; // 1
+    i = -i; // -1
+    i = i * j; // -2
+    i = i / j; // -1
+    i = i % j; // -1
+    i = i + j; // 1
+    i = i - j; // -1
+    
+    bs = (BitString)0xAB; // 0b10101011
+    bs = ~bs; // 0b11111111111111111111111101010100
+    bs = bs & 0xF0; // 0b01010000
+    bs = bs | 0360; // 0b11110000
+    bs = bs << 2; // 0b1111000000
+    bs = bs >> 2; // 0b11110000
+    bs = bs >>> 2; // 0b00111100
+    bs = bs ^ 4; // 0b00111000
+    
+    h = 0xAB;
+    h = (Integer)~h;
+    h = (Integer)(h & 0xF0);
+    h = (Integer)(h | 0360);
+    h = (Integer)(h << 2);
+    h = (Integer)(h >> 2);
+    h = (Integer)(h >>> 2);
+    h = (Integer)(h ^ 4); // 0x38
+      
+    a = i > j;
+    b = i < j;
+    c = i >= j;
+    d = i <= j;
+    
+    f = true;
+    g = false;
+    
+    e = f | g;
+    e = e & f;
+    e = !e;
+    
+    e1 = 3 < *;
+    e2 = (UnlimitedNatural)(+3) < *;
+    
+    e3 = employee instanceof Person;
+    e4 = i hastype Employee;
+    
+    e5 = i==0;
+    e6 = monitor!=monitor;
+    e7 = employee.name==null;
+    e8 = null!=employee.name;
+    e9 = null==null;
+    
+    f = i < j & (i > j | f);    
+      
+    f1 = i > 0 && 2 < j;
+    f2 = i == 0 || 2 >= j;
+    
+    x = !f? 1: +2;
+    y = f? Integer[]{1,2}: 0;    
+    z = (Integer)any[]{1,"banana",2};
+    
+    r = $monitor.getActiveSensor().getReading();    
+  }
+} do {
+    this.test(i, j, bs, h, a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, e9,
+      f, f1, f2, x, y, z, r);
+      
+    AssertEqual("i", i, -1);
+    AssertEqual("j", j, 2);
+    AssertEqual("bs", bs, (BitString)0b00111000);
+    AssertEqual("h", h, 0x38);
+    
+    AssertFalse("a", a);
+    AssertTrue("b", b);
+    AssertFalse("c", c);
+    AssertTrue("d", d);
+    AssertFalse("e", e);
+    
+    AssertTrue("e1", e1);
+    AssertTrue("e2", e2);
+    AssertTrue("e3", e3);
+    AssertFalse("e4", e4);
+    AssertFalse("e5", e5);
+    AssertFalse("e6", e6);
+    AssertTrue("e7", e7);
+    AssertFalse("e8", e8);
+    AssertTrue("e9", e9);
+    
+    AssertTrue("f", f);
+    AssertFalse("f1", f1);
+    AssertTrue("f2", f2);
+    
+    AssertEqual("x", x, +2);
+    AssertList("y", y, Integer[]{1,2});
+    AssertList("z", z, Integer[]{1,2});
+    
+    AssertEqual("r", r, 2);
+}

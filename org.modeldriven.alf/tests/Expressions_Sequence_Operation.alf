@@ -1,0 +1,32 @@
+/**
+ * Test sequence operation expressions.
+ **/
+class Expressions_Sequence_Operation {
+
+    // Supporting declarations *************************************************
+    
+  	class Customer { }
+  	
+	//**************************************************************************
+
+	test() {
+	
+	  customer = new Customer();
+	  customers = (Customer)null;
+	  
+	  customers->notEmpty();
+	  customers->includes(customer);
+	  customers->including(customer);
+	  customers->removeAll(customer);
+	  
+	  Customer->size();
+	  Customer.allInstances()->size();
+	  
+	  list = null; // Type is "any".
+	  list->size();
+	  list->notEmpty();
+	  list->includes(customer);
+	  list->including(customer);
+	  list->removeAll(customer);
+	}
+}

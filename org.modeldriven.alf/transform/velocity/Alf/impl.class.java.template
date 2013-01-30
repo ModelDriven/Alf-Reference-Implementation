@@ -1,0 +1,89 @@
+#**
+*impl.class.java template for Alf project
+@projectPath /src/org/modeldriven/${object.owner.qualifiedName.toLowerCase().replace("::","/")}/impl/gen/${object.name}Impl.java 
+@artifactContext GenClass 
+*#
+#parse( "uml.fragment" )
+${copyrightBoilerPlate}
+${packageDeclaration}.impl.gen;
+#imports()
+#comments(${object})
+
+#macro( impl $object )
+## #classJavaDoc(${object}) 
+
+#visibility(${object}) #abstract(${object}) class ${object.name}Impl
+#foreach ( $superclass in ${object.superClasses} )
+    extends #qualifiedPackageName(${superclass.owner}).impl.gen.#name(${superclass.name})Impl 
+#end
+{
+## #foreach( $behavior in ${object.ownedBehaviors} )
+## #if( ${behavior.eClass().name}=="Activity" )
+## #class(${behavior})
+## #end
+## #end
+
+#foreach( $feature in ${object.ownedAttributes} )
+  #if( ${feature.isStatic()} )
+  #visibility(${feature}) static #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
+  #elseif( ${feature.isDerived()} )
+  private #type(${feature}) #name(${feature.name}) = null; // DERIVED
+  #else
+  private #type(${feature}) #name(${feature.name}) = #defaultValue(${feature});
+  #end  
+#end
+
+#if( ${object.superClasses.size()}==0 )
+  protected #name(${object.name}) self;
+  
+  public #name(${object.name})Impl(#name(${object.name}) self) {
+    this.self = self;
+  }
+  
+  public String toString(boolean includeDerived) {
+    return this.getSelf()._toString(includeDerived);
+  }
+  
+  public void deriveAll() {
+  	this.getSelf()._deriveAll();
+  }
+  
+#else
+  public #name(${object.name})Impl(#name(${object.name}) self) {
+    super(self);
+  }
+#end
+
+public #name(${object.name}) getSelf() {
+  return (#name(${object.name}))this.self;
+}
+
+#foreach ( $attribute in ${object.ownedAttributes} )
+  #if( !${attribute.isStatic()} )
+  #getterImpl(${attribute})
+  #setterImpl(${attribute})
+  #end  
+#end
+
+#foreach ( $attribute in ${object.ownedAttributes} )
+  #if( ${attribute.isDerived()} )
+    #deriver(${attribute})
+  #end  
+#end
+
+#foreach ( $rule in ${object.ownedRules} )
+  #comments(${rule})
+  #constraint(${rule} ${object})
+#end
+    
+#foreach ( $operation in ${object.ownedOperations} )
+  ## #featureJavaDoc("operation ${operation.name}" ${operation})
+  #comments(${operation})
+  public #abstract(${operation}) #static(${operation}) #operationType(${operation.returnResult} ${operation} ${object}) #name(${operation.name})(#operationParameters(${operation})) #throws(${operation})
+  #if( ${operation.isAbstract()} );#else#body(${operation} ${object})#end
+#end
+
+} //${object.name}Impl
+#end
+
+#impl(${object})

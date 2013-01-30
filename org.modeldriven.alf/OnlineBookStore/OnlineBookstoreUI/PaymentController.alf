@@ -1,0 +1,135 @@
+namespace OnlineBookstoreUI;
+
+private import Ordering::ShoppingCart;
+private import ExternalEntities::OnlineCustomer;
+
+active class PaymentController specializes Controller {
+
+  public cardholderName: PersonalName;
+  public accountNumber: BankCardAccountNumber[0..1];
+  public cardExpirationDate: MonthYear[0..1];
+  public billingAddress: MailingAddress;
+  
+  public customerEmail: InternetEmailAddress;
+  public customerName: PersonalName;
+  public customerPhone: TelephoneNumber;
+  public shippingAddress: MailingAddress;
+
+  public EE: ExternalEntities = ExternalEntities::GetInstance();
+  
+  @Create
+  public PaymentController(in previous: CheckOutController) {
+    super.following(previous);
+    this.cardholderName = previous.customerName;
+    this.billingAddress = previous.shippingAddress;
+    
+    this.customerEmail = previous.customerEmail;
+    this.customerName = previous.customerName;
+    this.customerPhone = previous.customerPhone;
+    this.shippingAddress = previous.shippingAddress;
+    
+    this.EE.onlineCustomer.registerForCustomer(this, this.customerEmail);
+  }
+  
+  @Destroy
+  public destroy() {
+    this.EE.onlineCustomer.unregisterForCustomer(this, this.customerEmail);
+  }
+  
+  public receive signal Update {
+    public cardholderName: PersonalName[0..1];
+    public accountNumber: BankCardAccountNumber[0..1];
+    public cardExpirationDate: MonthYear[0..1];
+    public billingAddress: MailingAddress[0..1];
+  }
+  
+  public receive signal PlaceOrder {
+  }
+  
+  public receive signal ShowShoppingCart {
+  }
+  
+  public receive signal Home {
+  }
+      
+  private isValid(): Boolean {
+    if (this.cardholderName.firstName == "" || this.cardholderName.lastName == "") {
+      WriteLine("*** The cardholder first and last names are both required. ***");
+    } else if (this.accountNumber->isEmpty()) {
+      WriteLine("*** A bank card account number is required. ***");
+    } else if (this.cardExpirationDate->isEmpty()) {
+      WriteLine("*** The bank card expiration date is required. ***");
+    } else if (this.billingAddress.addressLine1 == "") {
+      WriteLine("*** The billing address must include a first address line. ***");
+    } else {
+      return true;
+    }
+    return false;
+  }
+  
+  private completeCheckOut() {
+    cart = ((ShoppingSession)this.session).cart;
+    cart.CheckOut(
+      accountNumber => this.accountNumber,
+      billingAddress => this.billingAddress,
+      cardExpirationDate => this.cardExpirationDate,
+      cardholderName => this.cardholderName,
+      customerEmail => this.customerEmail,
+      customerName => this.customerName,
+      customerPhone => this.customerPhone,
+      shippingAddress => this.shippingAddress
+    );
+  }  
+  
+} do {
+
+  do {
+    accept (Display);
+  
+    do {
+      new PaymentView(this);
+    
+      accept (event: Update) {
+        WriteLine("Update");
+        if (event.cardholderName->notEmpty()) {
+          this.cardholderName = event.cardholderName;
+        }
+        if (event.accountNumber->notEmpty()) {
+          this.accountNumber = event.accountNumber;
+        }
+        if (event.cardExpirationDate->notEmpty()) {
+          this.cardExpirationDate = event.cardExpirationDate;
+        }
+        if (event.billingAddress->notEmpty()) {
+          this.billingAddress = event.billingAddress;
+        }
+      } or accept (PlaceOrder) {
+        if (this.isValid()) {
+          this.completeCheckOut();
+          accept (notification: Notification);
+          if (notification.content instanceof OnlineCustomer::ChargeApproved) {
+            ((ShoppingSession)this.session).cart = null;
+            new HomeController(this).Display();
+            break;
+          }
+        }
+      } or accept (Back) {
+        this.previous.Display();
+        break;
+      } or accept (ShowShoppingCart) {
+        new ShoppingCartController(this).Display();
+        break;
+      } or accept (Home) {
+        new HomeController(this).Display();
+        break;
+      } or accept (Exit) {
+        this.session.destroy();
+        return;
+      }
+      
+      this.view.destroy();
+    } while (true);
+    
+  } while (true);
+    
+}

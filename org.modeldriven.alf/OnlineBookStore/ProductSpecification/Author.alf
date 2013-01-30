@@ -1,0 +1,39 @@
+namespace ProductSpecification;
+
+/**
+An author is an individual who is credited with writing or contributing to a
+book.
+
+There are no good mechanisms for ensuring that two people with the same name who
+write different books are represented as different authors.
+*/
+class Author {
+
+  /**
+  The name of the author as presented on the book.
+  */
+  public name: PersonalName; // isID
+  
+  /**
+  The author's personal website, if available. This is distinct from the
+  publisher's website and the book's website.
+  */
+  public website: WebsiteURL[0..1];
+  
+  /**
+  The author's personal e-mail address.
+  */
+  public email: InternetEmailAddress[0..1];
+  
+  @Create
+  public Author(
+    in name: PersonalName,
+    in website: WebsiteURL[0..1],
+    in email: InternetEmailAddress[0..1]
+  ) {
+    this.name = name;
+    this.website = website;
+    this.email = email;
+  }
+  
+}

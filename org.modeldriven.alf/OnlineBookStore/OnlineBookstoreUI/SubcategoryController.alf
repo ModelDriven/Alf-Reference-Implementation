@@ -1,0 +1,61 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+
+active class SubcategoryController specializes Controller {
+
+  public title: String;
+  public subcategories: ProductCategory[*] sequence;
+  
+  @Create
+  public SubcategoryController(
+    in title: String,
+    in category: ProductCategory,
+    in previous: Controller
+  ) {
+    super.following(previous);
+    this.title = title + " > " + category.categoryName;
+    this.subcategories = category.'is divided into';
+  }
+  
+  public receive signal Home { 
+  }
+  
+  public receive signal ShowShoppingCart {
+  }
+  
+  public receive signal ShowCategory {
+    public choice: Integer;
+  }
+  
+  private showCategory(in choice: Integer): Controller {
+    category = this.subcategories->at(choice);
+    if (category.'is divided into'->isEmpty()) {
+      new ProductCategoryController(this.title, category, this).Display();
+    } else {
+      new SubcategoryController(this.title, category, this).Display();
+    }
+  }
+  
+} do {
+
+  do {
+    accept (Display);  
+    new SubcategoryView(this.title, this);
+  
+    accept (Exit) {
+      this.session.destroy();
+    } or accept (Back) {
+      this.previous.Display();
+    } or accept (Home) {
+      new HomeController(this).Display();
+    } or accept (ShowShoppingCart) {
+      new ShoppingCartController(this).Display();
+    } or accept (event: ShowCategory) {
+      this.showCategory(event.choice);
+    }
+    
+    this.view.destroy();
+  } while(true);
+  
+}
