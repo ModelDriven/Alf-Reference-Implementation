@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modeldriven.alf"/>
-	<classpathentry kind="lib" path="/Alf-Reference-Implementation/lib/commons-logging.jar"/>
-	<classpathentry kind="lib" path="/Alf-Reference-Implementation/lib/log4j.jar"/>
+	<classpathentry kind="lib" path="/org.modeldriven.alf/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="/org.modeldriven.alf/lib/log4j.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
