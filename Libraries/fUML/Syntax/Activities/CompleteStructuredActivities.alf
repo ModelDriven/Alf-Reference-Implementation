@@ -1,9 +1,0 @@
-namespace fUML::Syntax::Activities;
-
-public import fUML::Syntax::Activities::IntermediateActivities::*;
-
-package CompleteStructuredActivities {
-
-  public abstract class ExecutableNode specializes ActivityNode {}
-  
-}

@@ -1,8 +1,0 @@
-namespace fUML::Syntax;
-
-package Activities {
-
-  public package IntermediateActivities;
-  public package CompleteStructuredActivities;
-  
-}

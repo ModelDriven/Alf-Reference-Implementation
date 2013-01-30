@@ -1,9 +1,0 @@
-public import DomainDataTypes::Money;
-
-package ProductSpecification {
-
-  public class Product { 
-    public getUnitPrice(): Money { }
-  }
-  
-}

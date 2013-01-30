@@ -1,7 +1,0 @@
-private import DomainDataTypes::*;
-signal SubmitCharge {
-    public accountNumber:      BankCardAccountNumber;
-    public billingAddress:     MailingAddress;
-    public cardExpirationDate: MonthYear;
-    public cardholderName:     PersonalName;
-}

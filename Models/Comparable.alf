@@ -1,5 +1,0 @@
-class Comparable {
-
-  @Create public Comparable() { }
-  
-}

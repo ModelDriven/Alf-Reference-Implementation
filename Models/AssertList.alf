@@ -1,6 +1,0 @@
-activity AssertList(in label: String, in list: any[*] sequence, in expected: any[*] sequence) {
-    AssertEqual(label + "->size()", list->size(), expected->size());
-    for (i in 1..IntegerFunctions::Min(list->size(),expected->size())) {
-        AssertEqual(label + "[" + IntegerFunctions::ToString(i) + "]", list[i], expected[i]);
-    }
-}

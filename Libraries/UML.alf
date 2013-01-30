@@ -1,6 +1,0 @@
-@ModelLibrary
-package UML {
-
-  public package AuxiliaryConstructs;
-  
-}

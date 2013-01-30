@@ -1,7 +1,0 @@
-namespace ExternalEntities;
-
-abstract class Logistics {
-
-  public abstract assignWarehouse(in shipmentID: arbitrary_id): String;
-  
-}

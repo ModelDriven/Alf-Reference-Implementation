@@ -1,9 +1,0 @@
-namespace Identifiers;
-
-class 'Identifier Factory' {
-
-  private 'next identifier': Integer = 0;
-  
-  public 'get next identifier'(): String;
-  
-}
