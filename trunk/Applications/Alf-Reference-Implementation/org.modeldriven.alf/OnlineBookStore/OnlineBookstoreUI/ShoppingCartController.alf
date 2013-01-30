@@ -1,0 +1,126 @@
+namespace OnlineBookstoreUI;
+
+private import Ordering::*;
+
+active class ShoppingCartController specializes Controller {
+
+  public EE: ExternalEntities = ExternalEntities::GetInstance();
+
+  @Create
+  public ShoppingCartController(in previous: Controller) {
+    super.following(previous);
+    cart = this.getCart();
+    if (cart->notEmpty()) {
+      this.EE.onlineCustomer.registerForCart(this, cart.cartID);
+    }
+  }
+  
+  @Destroy
+  public destroy() {
+    cart = this.getCart();
+    if (cart->notEmpty()) {
+      this.EE.onlineCustomer.unregisterForCart(this, cart.cartID);
+    }
+    super.destroy();
+  }
+  
+  public getCart(): ShoppingCart[0..1] {
+    return ((ShoppingSession)this.session).cart;
+  }
+  
+  public setCart(in cart: ShoppingCart[0..1]) {
+    ((ShoppingSession)this.session).cart = cart;
+  }
+    
+  public receive signal AddProduct {
+    public productID: UniversalProductCode;
+    public quantity: Count;
+  }
+  
+  public receive signal Home {
+  }
+  
+  public receive signal Cancel {
+    public isConfirmed: Boolean;
+  }
+  
+  public receive signal CheckOut {
+    public customerEmail: String[0..1];
+  }
+  
+  public receive signal ChangeQuantity {
+    public choice: Integer;
+    public quantity: Count[0..1];
+  }
+  
+  private addProduct(
+    in productID: UniversalProductCode,
+    in quantity: Count
+  ) {
+    cart = this.getCart();
+    if (cart->isEmpty()) {
+      cart = new ShoppingCart();
+      this.setCart(cart);
+      this.EE.onlineCustomer.registerForCart(this, cart.cartID);
+      cart.StartCart(productID, quantity);
+    } else {
+      cart.AddSelection(productID, quantity);
+    }
+  }
+  
+  private displayView() {
+    if (this.getCart()->isEmpty()) {
+      new EmptyCartView(this);
+    } else {
+      new ShoppingCartView(this);
+    }
+  }
+  
+} do {
+
+  do {
+    accept (Display) {
+    } or accept (event: AddProduct) {
+      this.addProduct(event.productID, event.quantity);
+      accept (Notification);
+    }  
+    
+    do {
+      this.displayView();
+      
+      cart = this.getCart();
+      accept (Exit) {
+        this.session.destroy();
+        return;
+      } or accept (Back) {
+        this.previous.Display();
+        break;
+      } or accept (Home) {
+        new HomeController(this).Display();
+        break;
+      } or accept (event: CheckOut) {
+        if (event.customerEmail->notEmpty()) {
+          new CheckOutController(event.customerEmail, this).Display();
+          break;
+        }
+      } or accept (event: Cancel) {
+        if (event.isConfirmed) {
+          cart.Cancel();
+          accept (Notification);
+          this.EE.onlineCustomer.unregisterForCart(this, cart.cartID);
+          this.setCart(null);
+        }
+      } or accept (event: ChangeQuantity) {
+        if (event.quantity->notEmpty()) {
+          cart.'includes selection'->at(event.choice).
+            ChangeQuantity(event.quantity);
+          accept (Notification);
+        }
+      }
+      
+      this.view.destroy();
+      
+    } while (true);
+    
+  } while (true);
+}

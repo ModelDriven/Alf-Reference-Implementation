@@ -1,0 +1,450 @@
+
+#macro( javaDoc $element )
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of <b>${element.name}</b>.
+ #javaDocContent( ${element} )
+ * <!-- end-user-doc -->
+ * @generated
+ */
+#end
+
+#macro( javaDocContent $element )
+	#foreach ( $annotation in ${element.annotations} )
+		* source: ${annotation.source}
+		#foreach ( $detail in ${annotation.details} )
+			* key: ${detail.key}
+			* ocl: ${detail.ocl}
+			* escapedValue: ${detail.escapedValue}
+		#end
+	#end
+	#foreach ( $annotation in ${element.genAnnotations} )
+		* source: ${annotation.source}
+		* documentation: ${annotation.documentation}
+		* copyright: ${annotation.copyright}
+		#foreach ( $detail in ${annotation.details} )
+			* key: ${detail.key}
+			* ocl: ${detail.ocl}
+			* escapedValue: ${detail.escapedValue}
+		#end
+	#end
+#end
+
+#macro( featureJavaDoc $comment $feature )
+  /**
+   * ${comment}
+   * <!-- begin-user-doc -->
+   #javaDocContent( ${feature} )
+   * <!-- end-user-doc -->
+   * @generated
+   */
+#end
+
+#macro( classJavaDoc $class )
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>${class.qualifiedName}</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * <ul>
+ 	#foreach ( $feature in ${class.ownedOperations} )
+ *   <li>{@link ${name}#${feature.name} <em>${feature.name}</em>}</li>
+	#end
+ 	#foreach ( $feature in ${class.ownedAttributes} )
+ *   <li>{@link ${name}#${feature.name} <em>${feature.name}</em>}</li>
+	#end
+ * </ul>
+ * </p>
+ *
+ * @generated
+ */
+#end
+
+#macro( imports )
+${commonImports}
+#foreach ( $classifier in ${genClasses} )
+import ${classifier.rawInstanceClassName};
+#end
+#foreach ( $classifier in ${genDataTypes} )
+#if ( !(${classifier.isPrimitiveType}) )
+import ${classifier.rawInstanceClassName};
+#end
+#end
+#foreach ( $classifier in ${genEnums} )
+import ${definitionPackage}.${classifier.classifierAccessorName};
+#end
+#end
+
+
+#macro( visibility $element )${element.visibility}#end
+#macro( abstract $element ) #if ( ${element.isAbstract()})abstract#end#end 
+#macro( static $element ) #if ( ${element.isStatic()} )static#end#end 
+#macro( name $name )##
+#if (${name}=="Class")Class_##
+#elseif (${name}=="case")case_##
+#elseif (${name}=="import")import_##
+#else${name}##
+#end
+#end
+#macro( qualifiedName $element )#qualifiedPackageName(${element.owner}).#name(${element.name})#end
+#macro( qualifiedPackageName $element )org.modeldriven.${element.qualifiedName.toLowerCase().replace("::",".")}#end
+#macro( primitiveName $primitive )
+#if(${primitive.name}=="Boolean")Boolean
+#elseif(${primitive.name}=="Integer" || ${primitive.name}=="UnlimitedNatural")Integer
+#else #name(${primitive.name})#end#end
+
+#macro( defaultValue $feature)
+#if( ${feature.isDerived()} )null
+#elseif( ${feature.default} )#if( ${feature.type.eClass().name}=="Enumeration" )#type(${feature}).#end${feature.default}##
+#else #createValue($feature)
+#end
+#end
+
+#macro( createValue $element )
+#if(${element.upper}!=1)new ArrayList<#basicType(${element})>()##
+#elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="Boolean")false##
+#elseif(${element.type.eClass().name}=="PrimitiveType"&&(${element.type.name}=="Integer" || ${element.type.name}=="UnlimitedNatural"))0##
+#elseif(${element.type.eClass().name}=="PrimitiveType"&&${element.type.name}=="String")""##
+#else null##
+#end
+#end
+
+#macro( listablePrimitiveName $primitive )#name(${primitive.name})#end
+#macro( basicName $element )#if(${element.eClass().name}=="PrimitiveType")#primitiveName(${element})#else#name(${element.name})#end#end
+#macro( basicType $element )#if(${element.type.eClass().name}=="PrimitiveType")#primitiveName(${element.type})#else #name(${element.type.name})#end#end
+#macro( basicQualifiedType $element )#if(${element.type.eClass().name}=="PrimitiveType")#qualifiedPackageName(${element.type.owner}).#end#basicType(${element})#end
+#macro( listable $type )#if(${type.eClass().name}=="PrimitiveType")#listablePrimitiveName(${type})#else#qualifiedName(${type})#end#end
+#macro( listableType $element )#listable(${element.type})#end
+#macro( type $element )#if(${element})#if(${element.upper}!=1)#if(${element.isOrdered()})List#else#**#Collection#end<#basicType(${element})>#else#basicType(${element})#end#else#**#void#end#end
+
+#macro( operationParameters $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else#type(${parameter}) #name(${parameter.name})#if($velocityCount+1<${operation.ownedParameters.size()}||($velocityCount+1==${operation.ownedParameters.size()}&&${operation.ownedParameters.get($velocityCount).direction.toString()}!="return")), #end#end#end#end
+#macro( operationParameterNames $operation )#foreach($parameter in ${operation.ownedParameters})#if(${parameter.direction.toString()}=="return")#else#name(${parameter.name})#if($velocityCount+1<${operation.ownedParameters.size()}||($velocityCount+1==${operation.ownedParameters.size()}&&${operation.ownedParameters.get($velocityCount).direction.toString()}!="return")), #end#end#end#end
+#macro( operationType $element $operation $class)#if(${operation.name}==${class.name})#else#type(${element})#end#end
+
+#macro( throws $operation) #end 
+
+#macro( upperCase $name )
+${name.substring(0,1).toUpperCase()}${name.substring(1)}
+#end
+
+#macro( getter $attribute )
+public #type(${attribute}) get#upperCase(${attribute.name})() { 
+   return this.getImpl().get#upperCase(${attribute.name})();
+}
+#end
+
+#macro( setter $attribute )
+public void set#upperCase(${attribute.name})(#type($attribute) #name($attribute.name)) 
+{ this.getImpl().set#upperCase(${attribute.name})(#name($attribute.name)); }
+#if( $attribute.upper!=1 )
+public void add#upperCase(${attribute.name})(#basicType($attribute) #name($attribute.name)) 
+{ this.getImpl().add#upperCase(${attribute.name})(#name($attribute.name)); }
+#end
+#end
+
+#macro( getterImpl $attribute )
+public #type(${attribute}) get#upperCase(${attribute.name})() { 
+#if( ${attribute.isDerived()} )
+   if (this.#name($attribute.name)==null) {
+     this.set#upperCase(${attribute.name})(this.derive#upperCase(${attribute.name})());
+   }
+#end
+   return this.#name($attribute.name);
+}
+#end
+
+#macro( setterImpl $attribute )
+public void set#upperCase(${attribute.name})(#type($attribute) #name($attribute.name)) 
+{ this.#name($attribute.name) = #name($attribute.name); }
+#if( $attribute.upper!=1 )
+public void add#upperCase(${attribute.name})(#basicType($attribute) #name($attribute.name)) 
+{ this.#name($attribute.name).add(#name($attribute.name)); }
+#end
+#end
+
+#macro( deriver $attribute )
+protected #type(${attribute}) derive#upperCase(${attribute.name})() { 
+  return null; //STUB 
+}
+#end
+
+#macro( body $operation $class)#if(${operation.isAbstract()});#else {
+## #bodycontent(${operation} ${class})	  
+## #foreach ( $comment in ${operation.ownedComments} )
+## /*
+## ${comment.body}##
+## */
+## #end
+#set( $foundBody = false )
+#foreach ( $method in ${operation.methods} )
+   #if ( ${method.eClass().name}=="OpaqueBehavior" || ${method.eClass().name} == "FunctionBehavior" )
+	  #foreach ( $language in ${method.languages} )
+	     #if ( $language=="Java" )
+		    #set( $i = $velocityCount - 1 )
+	        ${method.bodies.get($i)}##
+	        #set( $foundBody = true )
+	     #end
+	  #end
+   #end
+#end
+#if (!${foundBody} && !${operation.isAbstract} && ${operation.returnResult})
+return #createValue(${operation.returnResult}); // STUB
+#end
+} // ${operation.name}
+
+#end  
+#end
+
+#macro( bodycontent $operation $class)
+#if ( ${operation.eClass().name}=="Operation" )
+	#set( $foundBody = false )
+	#foreach ( $method in ${operation.methods} )
+	  	#if ( ${method.eClass().name}=="OpaqueBehavior" || ${method.eClass().name} == "FunctionBehavior" )
+	    	#foreach ( $language in ${method.languages} )
+	      		#if ( $language=="Java" )
+	      			#set( $i = $velocityCount - 1 )
+	        		$method.bodies.get($i)##
+	        		#set( $foundBody = true )
+	      		#end
+	    	#end
+		#end
+	#end
+	#if ( !${foundBody} )
+	    #if ( ${operation.name.startsWith("set")} )
+	        #if ( ${operation.ownedParameters.size()} == 0 )
+	         	this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)} = true;
+	        #else
+	        	this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)} = ${operation.ownedParameters.get(0).name};
+	        #end
+	    #elseif ( ${operation.name.startsWith("add")} )
+	    	#set ( $p = ${operation.ownedParameters.get(0)} )
+	    	#set ( $opt = ${p.lower}==0 )
+	    	#if ($opt) if (${p.name} != null ) { #end
+	        #if ( ${operation.name.length()} == 3 )
+	        	this.list.add(${operation.ownedParameters.get(0).name});
+         	#else
+         		this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)}s.add(${operation.ownedParameters.get(0).name});
+         	#end
+	        #if ($opt) } #end
+	    #elseif ( ${operation.name.startsWith("get")} )
+         	return this.${operation.name.substring(3,4).toLowerCase()}${operation.name.substring(4)};
+	    #elseif ( ${operation.ownedParameters.size()} == 1&&${operation.returnResult.type.eClass().name}=="PrimitiveType"&&${operation.returnResult.type.name}=="Boolean" )
+        	return this.${operation.name};
+	  	#else
+	  		// TODO
+	  		#if ( ${operation.name} != ${class.name} && ${operation.returnResult} )
+				return #createValue(${operation.returnResult});
+			#end
+		#end
+	#end
+#end
+#end
+
+#macro( comments $element)
+#foreach ( $comment in ${element.ownedComments} )
+	#set ( $isJava = false )
+	#foreach ( $stereotype in ${comment.appliedStereotypes} )
+		#if ( ${stereotype.name}=="Java" )
+			#set ( $isJava = true )
+		#end
+	#end
+	#if ( $isJava )
+		${comment.body}##
+	#else
+/**
+${comment.body}
+**/
+	#end
+#end
+#end
+
+#macro( deriveAllOperation $class )
+#if( ${object.superClasses.size()}==0 )
+public void deriveAll() {
+	this.getImpl().deriveAll();
+}
+
+#end
+public void _deriveAll() {
+	#foreach( $attribute in ${class.ownedAttributes} )
+		#if ( ${attribute.isDerived()} )
+			this.get#upperCase(${attribute.name})();
+        #end
+    #end
+	#if( ${class.superClasses.size()} > 0 )
+		super._deriveAll();
+	#end
+	#foreach( $attribute in ${class.ownedAttributes} )
+        #if( ${attribute.isComposite()} )
+            #if( ${attribute.upper} == 1 )
+		        #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+  			    if (#name(${attribute.name})!=null) {
+                    #name(${attribute.name}).deriveAll();
+                }
+            #else
+		        Collection<#basicType($attribute)> #name($attribute.name) = this.get#upperCase(${attribute.name})();            
+  			    if (#name(${attribute.name})!=null) {
+	                for (Object _#name($attribute.name): #name($attribute.name).toArray()) {
+	                    ((#basicType($attribute))_#name($attribute.name)).deriveAll();
+	                }
+                }
+            #end
+        #end
+	#end
+}
+#end
+
+#macro( checkOperations $class )
+
+#if( ${class.superClasses.size()} == 0 )
+public Collection<ConstraintViolation> checkConstraints() {
+    Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
+    this.checkConstraints(violations);
+    return violations;
+}
+#end
+
+public void checkConstraints(Collection<ConstraintViolation> violations) {
+    #if ( ${class.superClasses.size()} > 0 )
+        super.checkConstraints(violations);
+    #end
+    #foreach( $rule in ${class.ownedRules} )
+        if (!this.${rule.name}()) {
+            violations.add(new ConstraintViolation("${rule.name}", this));
+        }
+    #end
+    #foreach( $attribute in ${class.ownedAttributes} )
+        #if( ${attribute.isComposite()} )
+            #if( ${attribute.upper} == 1 )
+		        #basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+  			    if (#name(${attribute.name})!=null) {
+                    #name(${attribute.name}).checkConstraints(violations);
+                }
+            #else
+		        Collection<#basicType($attribute)> #name($attribute.name) = this.get#upperCase(${attribute.name})();            
+  			    if (#name(${attribute.name})!=null) {
+	                for (Object _#name($attribute.name): #name($attribute.name).toArray()) {
+	                    ((#basicType($attribute))_#name($attribute.name)).checkConstraints(violations);
+	                }
+                }
+            #end
+        #end
+    #end
+}
+#end
+
+#macro( printOperations $class )
+#if( ${object.superClasses.size()}==0 )
+public String getId() {
+    return Integer.toHexString(this.hashCode());
+}
+
+public String toString() {
+	return this.toString(false);
+}
+
+public String toString(boolean includeDerived) {
+	return "(" + this.getId() + ")" + this.getImpl().toString(includeDerived);
+}
+
+#end
+public String _toString(boolean includeDerived) {
+	#if( ${class.superClasses.size()}==0 )
+		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
+	#else
+		StringBuffer s = new StringBuffer(super._toString(includeDerived));
+	#end
+	#foreach( $attribute in ${class.ownedAttributes} )
+		#if( ${attribute.type.eClass().name}=="PrimitiveType" &&
+			 ${attribute.upper}==1 )
+			#if( ${attribute.isDerived()} )
+			if (includeDerived) {
+				s.append(" /${attribute.name}:");
+				s.append(this.get#upperCase(${attribute.name})());
+			}
+			#else
+			s.append(" ${attribute.name}:");
+			s.append(this.get#upperCase(${attribute.name})());
+			#end
+		#end
+	#end
+	return s.toString();
+}
+
+public void print() {
+    this.print("", false);
+}
+
+public void print(boolean includeDerived) {
+	this.print("", includeDerived);
+}
+
+public void print(String prefix, boolean includeDerived) {
+	#if( ${class.superClasses.size()}==0 )
+		System.out.println(prefix + "[" + this.getId() + "]" + this._toString(includeDerived));
+	#else
+		super.print(prefix, includeDerived);
+	#end	
+	#foreach( $attribute in ${class.ownedAttributes} )
+		#set( $deriv = "" )
+ 		#if( ${attribute.upper}!=1 )
+			#if( ${attribute.isDerived()} )
+				#set( $deriv = "/" )
+				if (includeDerived) {
+			#end
+		    #type($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+ 			if (#name(${attribute.name}) != null && #name($attribute.name).size() > 0) {
+     			System.out.println(prefix + " $deriv${attribute.name}:");
+	     		for (Object _object: #name($attribute.name).toArray()) {
+	     			#basicType($attribute) _#name($attribute.name) = (#basicType($attribute))_object;
+		     		#if( ${attribute.type.eClass().name}=="PrimitiveType" )
+	    	 			System.out.println(prefix + "  " + _#name($attribute.name));
+	    	 	    #elseif( !${attribute.isComposite()} )
+	    	 			System.out.println(prefix + "  " + _#name($attribute.name).toString(includeDerived));
+	     			#else
+	     			    if (_#name($attribute.name)!=null) {
+							_#name($attribute.name).print(prefix + "  ", includeDerived);
+						} else {
+						  System.out.println(prefix + "  null");
+						}
+	     			#end
+	 			}
+ 			}
+			#if( ${attribute.isDerived()} )
+				}
+			#end
+ 		#elseif( ${attribute.type.eClass().name}!="PrimitiveType" )
+			#if( ${attribute.isDerived()} )
+				#set( $deriv = "/" )
+				if (includeDerived) {
+			#end
+	    	#basicType($attribute) #name($attribute.name) = this.get#upperCase(${attribute.name})();
+			if (#name(${attribute.name}) != null) {
+				#if( !${attribute.isComposite()} )
+	 				System.out.println(prefix + " $deriv${attribute.name}:" + 
+	 					#name(${attribute.name}).toString(includeDerived));
+	 			#else
+	 				System.out.println(prefix + " $deriv${attribute.name}:");
+					#name(${attribute.name}).print(prefix + "  ", includeDerived);
+				#end
+			}
+			#if( ${attribute.isDerived()} )
+				}
+			#end
+		#end
+	#end
+}
+#end
+
+#macro( constraint $rule $class )
+#set( $i = ${class.name.length()} )
+#set( $n = ${rule.name.length()} - 10 )
+public boolean ${rule.name}() {
+#if( ${rule.name.substring($n)}=="Derivation" )
+   this.getSelf().get${rule.name.substring($i,$n)}();
+#end
+   return true;
+}
+#end
+ 

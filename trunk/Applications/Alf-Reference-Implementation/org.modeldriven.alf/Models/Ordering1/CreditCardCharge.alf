@@ -1,0 +1,21 @@
+namespace Ordering1;
+
+active class CreditCardCharge {
+
+  public datatype ChargeData
+  {
+    public accountNumber:       BankCardAccountNumber;
+    public billingAddress:      MailingAddress;
+    public cardExpirationDate:  MonthYear;
+    public chargeAmount:        Money;
+    public order:               Order;
+  }
+
+  public receive signal MakeCharge
+  {
+    public data:                ChargeData;
+  }
+
+} do {
+
+}

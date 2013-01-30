@@ -1,0 +1,19 @@
+private import Ordering::*;
+private import ProductSpecification::Product;
+private import DomainDataTypes::*;
+
+abstract active class Operations specializes ProductSelection {
+
+  // Abstract operation
+  public abstract select(in cart: ShoppingCart, in product: Product, in quantity: Count);
+  
+  // In-line definition
+  public select1(in cart: ShoppingCart, in product: Product, in quantity: Count) {
+    R1.createLink(cart, product, this);
+    this.quantity = quantity;
+    this.unitPriceOfSelection = product.getUnitPrice();
+  }
+  
+  // Redefinition
+  public unitPrice(): Money redefines ProductSelection::getUnitPriceOfSelection { } 
+}

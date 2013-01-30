@@ -1,0 +1,11 @@
+namespace Banking;
+
+class Customer {
+
+    public customerId: String;
+    
+    @Create public Customer(in customerId: String) {
+        this.customerId = customerId;
+    }
+    
+}

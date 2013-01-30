@@ -1,0 +1,17 @@
+private import DataTypes::*;
+private import Classes::*;
+
+activity Main() {
+  product = new Product("Widget", 100);
+  customer = new Customer("Fred");
+  
+  expiration = new Date(01, 01, 2015);
+  address = new Address("street", "city", "state", "12345");
+  card = new CreditCard("1111-2222-3333-4444", expiration, address);
+  
+  date = new Date(20, 6, 2012);
+  order = new Order(customer, date);
+  order.addProduct(product, 2);
+  
+  order.SubmitCharge(card);
+}

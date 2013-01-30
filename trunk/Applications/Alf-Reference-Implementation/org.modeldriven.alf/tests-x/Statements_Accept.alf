@@ -1,0 +1,114 @@
+/**
+ * Test accept statements.
+ **/
+active class Statements_Accept {
+
+  private receive signal SignalDone { }
+
+  private abstract active class Super {
+    public signal SignalNewArrival { public name: String; }
+    public receive signal SignalTermination { }
+  }
+
+  private active class Test specializes Super {
+  
+    public sig: any;
+    public sig1: any;
+    public name: String;
+    public terminate: Boolean;
+    public arrival: SignalNewArrival;
+    
+    public count: Integer = 0;
+    public signals: any[*] sequence;
+    
+    public flag: Boolean;
+
+    public receive SignalNewArrival;
+    
+    public tester: Statements_Accept;
+    
+    @Create
+    public Test(in tester: Statements_Accept) {
+      this.tester = tester;
+    }
+  
+  } do {
+  
+    accept (sig: SignalNewArrival, SignalTermination);    
+    this.sig = sig;
+    
+    terminate = false;
+    accept (arrival1: SignalNewArrival) {
+      this.name = arrival1.name;
+    } or accept (SignalTermination) {
+      terminate = true;
+    }
+    this.terminate = terminate;
+    
+    accept (SignalNewArrival);
+    
+    accept (arrival3: SignalNewArrival);
+    this.arrival = arrival3;
+    
+    for (i in 1..2) {
+      accept (s1: SignalNewArrival, SignalTermination);
+      this.signals[i] = s1;
+    }
+    
+    do {
+      accept (s: SignalNewArrival, SignalTermination);
+      this.count++;
+    } while (s hastype SignalNewArrival);
+    
+    if (true) {
+      accept (SignalNewArrival);
+      this.flag = true;
+    } else {
+      accept (SignalTermination);
+      this.flag = false;
+    }
+    
+    accept (sig1: SignalTermination);
+    this.sig1 = sig1;
+    
+    this.tester.SignalDone();
+    
+  }
+  
+  private test(out test: Test) {
+    test = new Test(this);
+    
+    test.SignalTermination();
+    test.SignalNewArrival("Arrival1");
+    test.SignalNewArrival("Arrival2");
+    test.SignalNewArrival("Arrival3");
+    
+    test.SignalNewArrival("Arrival4");
+    test.SignalTermination();
+    
+    test.SignalNewArrival("Arrival5");    
+    test.SignalNewArrival("Arrival6");
+    test.SignalTermination();
+    
+    test.SignalNewArrival("Arrival7");
+    test.SignalNewArrival("Arrival8");
+    test.SignalTermination();
+  }
+
+} do {
+
+  this.test(test);
+  accept (SignalDone);
+
+  AssertTrue("test.sig instanceof SignalTermination", test.sig instanceof Test::SignalTermination);
+  AssertEqual("test.name", test.name, "Arrival1");
+  AssertFalse("test.terminate", test.terminate);
+  AssertEqual("test.arrival.name", test.arrival.name, "Arrival3");
+  
+  AssertTrue("test.signals[1] hastype SignalArrival", test.signals[1] hastype Test::SignalNewArrival);
+  AssertTrue("test.signals[2] hastype SignalTermination", test.signals[2] hastype Test::SignalTermination);
+  
+  AssertEqual("test.count", test.count, 3);
+  AssertTrue("test.flag", test.flag);
+  AssertTrue("test.sig1 instanceof SignalTermination", test.sig1 instanceof Test::SignalTermination);
+}

@@ -1,0 +1,33 @@
+namespace ExternalEntities;
+
+abstract active class OnlineCustomer {
+
+  public abstract registerForCart(
+    in listener: Listener, in cartID: arbitrary_id);
+  
+  public abstract unregisterForCart(
+    in listener: Listener, in cartID: arbitrary_id);
+  
+  public abstract registerForCustomer(
+    in listener: Listener, in customerEmail: InternetEmailAddress);
+
+  public abstract unregisterForCustomer(
+    in listener: Listener, in customerEmail: InternetEmailAddress);
+
+  public receive signal ShoppingCartUpdated {
+    public cartID: arbitrary_id;
+  }
+
+  public receive signal ChargeDeclined {
+    public customerEmail: InternetEmailAddress;
+  }
+  
+  public receive signal ChargeApproved {
+    public customerEmail: InternetEmailAddress;
+  }
+  
+  public receive signal OrderReportedDelivered {
+    public customerEmail: InternetEmailAddress;
+  }
+
+}

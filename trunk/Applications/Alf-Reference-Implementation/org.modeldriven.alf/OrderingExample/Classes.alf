@@ -1,0 +1,24 @@
+private import DataTypes::*;
+private import Signals::*;
+
+package Classes {
+
+  public class Product;
+  public class OrderLineItem;
+  public class CreditCard;
+
+  public active class Order;
+  public active class Customer;
+  public active class CreditCardCharge;
+  
+  public assoc Customer_Order {
+    public customer: Customer;
+    public order: Order[*] ordered;
+  }
+  
+  public assoc Order_Charge {
+    public order: Order;
+    public charge: CreditCardCharge[*];
+  }
+
+}

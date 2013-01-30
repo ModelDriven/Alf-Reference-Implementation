@@ -1,0 +1,30 @@
+namespace DomainDataTypes;
+
+public import Alf::Library::PrimitiveTypes::String as ISBNBookNumber;
+public import Alf::Library::PrimitiveTypes::Integer as ISBNGroupIdentifier;
+public import Alf::Library::PrimitiveTypes::Integer as ISBNPublisherPrefix;
+public import Alf::Library::PrimitiveTypes::Integer as ISBNTitleCode;
+
+private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToString;
+
+package ISBNDataTypes {
+
+  public activity ConstructISBN(
+    in groupCode: ISBNGroupIdentifier,
+    in publisherCode: ISBNPublisherPrefix,
+    in titleCode: ISBNTitleCode
+  ): ISBNBookNumber {
+    checkDigit = ComputeCheckDigit(groupCode, publisherCode, titleCode);
+    return ToString(groupCode) + "-" + ToString(publisherCode) + "-" +
+           ToString(titleCode) + "-" + ToString(checkDigit);
+  }
+  
+  private activity ComputeCheckDigit(
+    in groupCode: ISBNGroupIdentifier,
+    in publisherCode: ISBNPublisherPrefix,
+    in titleCode: ISBNTitleCode
+  ): Integer {
+    return 0;
+  }
+  
+}

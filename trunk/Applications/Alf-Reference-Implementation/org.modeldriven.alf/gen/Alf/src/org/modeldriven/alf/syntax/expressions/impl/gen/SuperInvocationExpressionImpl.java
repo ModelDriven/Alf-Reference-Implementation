@@ -1,0 +1,119 @@
+
+/*******************************************************************************
+ * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
+
+package org.modeldriven.alf.syntax.expressions.impl.gen;
+
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.parser.Token;
+
+import org.modeldriven.alf.syntax.*;
+import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.statements.*;
+import org.modeldriven.alf.syntax.units.*;
+
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.TreeSet;
+
+/**
+ * An invocation expression used to invoke an operation of a superclass.
+ **/
+
+public class SuperInvocationExpressionImpl
+		extends
+		org.modeldriven.alf.syntax.expressions.impl.gen.InvocationExpressionImpl {
+
+	private QualifiedName target = null;
+
+	public SuperInvocationExpressionImpl(SuperInvocationExpression self) {
+		super(self);
+	}
+
+	public SuperInvocationExpression getSelf() {
+		return (SuperInvocationExpression) this.self;
+	}
+
+	public QualifiedName getTarget() {
+		return this.target;
+	}
+
+	public void setTarget(QualifiedName target) {
+		this.target = target;
+	}
+
+	/**
+	 * The referent of a super invocation expression is the method behavior of
+	 * the operation identified using the overloading resolution rules.
+	 **/
+	public boolean superInvocationExpressionReferentDerivation() {
+		this.getSelf().getReferent();
+		return true;
+	}
+
+	/**
+	 * There is no feature for a super invocation.
+	 **/
+	public boolean superInvocationExpressionFeatureDerivation() {
+		this.getSelf().getFeature();
+		return true;
+	}
+
+	/**
+	 * If the target has a qualification, then this must resolve to one of the
+	 * superclasses of the current context class.
+	 **/
+	public boolean superInvocationExpressionQualification() {
+		return true;
+	}
+
+	/**
+	 * If the target is empty, the referent must be the method for a constructor
+	 * operation and the context class for the behavior containing the super
+	 * invocation expression must have exactly one superclass.
+	 **/
+	public boolean superInvocationExpressionImplicitTarget() {
+		return true;
+	}
+
+	/**
+	 * If the referent is the method of a constructor operation, the super
+	 * invocation expression must occur in an expression statement at the start
+	 * of the definition for the method of a constructor operation, such that
+	 * any statements preceding it are also super constructor invocations.
+	 **/
+	public boolean superInvocationExpressionConstructorCall() {
+		return true;
+	}
+
+	/**
+	 * If the referent is the method of a destructor operation, the super
+	 * invocation expression must occur in an within the method of a destructor
+	 * operation.
+	 **/
+	public boolean superInvocationExpressionDestructorCall() {
+		return true;
+	}
+
+	/**
+	 * It must be possible to identify a single valid operation denoted by the
+	 * target of a super invocation expression that satisfies the overloading
+	 * resolution rules.
+	 **/
+	public boolean superInvocationExpressionOperation() {
+		return true;
+	}
+
+} // SuperInvocationExpressionImpl

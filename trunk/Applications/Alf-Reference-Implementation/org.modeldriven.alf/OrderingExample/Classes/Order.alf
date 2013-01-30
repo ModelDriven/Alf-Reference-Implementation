@@ -1,0 +1,35 @@
+namespace Classes;
+
+active class Order {
+
+  public lineItems: OrderLineItem[*] ordered;  
+  public datePlaced: Date;
+  
+  public totalAmount: Integer = 0; // Derived
+  
+  @Create public Order(in customer: Customer, in datePlaced: Date) {
+    this.datePlaced = datePlaced;
+    Customer_Order.createLink(customer, this);
+  }
+  
+  @Destroy public cancel() {
+    Customer_Order.destroyLink(this.customer, this);
+  }
+  
+  public addProduct(in product: Product, in quantity: Integer) {
+    lineItem = new OrderLineItem(product, quantity);
+    this.lineItems->add(lineItem);
+    this.totalAmount += lineItem.amount;
+  }
+  
+  public removeProduct(in product: Product) {
+    lineItem = this.lineItems->select item (item.product == product)[1];
+    this.lineItems->remove(lineItem);
+    lineItem.destroy();
+  }
+  
+  public receive SubmitCharge;
+  public receive ChargeApproved;
+  public receive ChargeDenied;
+  
+} do Order_Behavior
