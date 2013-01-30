@@ -1,0 +1,17 @@
+namespace Shipping;
+
+/**
+A Stock Clerk is a Warehouse Clerk who is assigned to restock product in the
+warehouse. The bookstore system only needs to track stock inasmuch as it can
+determine which clerks on-duty at warehouses are currently available to pack
+and ship customer orders. (Clerks assigned to stock jobs are not available to
+pack and ship customer orders.)
+*/
+class StockClerk specializes WarehouseClerk {
+
+  /**
+  Whether the clerk is assigned to any warehouse restocking task or not.
+  */
+  public idle: Boolean = false;
+  
+}

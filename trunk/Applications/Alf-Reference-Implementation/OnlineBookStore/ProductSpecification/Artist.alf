@@ -1,0 +1,29 @@
+namespace ProductSpecification;
+
+/**
+An artist is an individual who is credited for a performance on a recording.
+This may be the "star" or a supporting individual (producer, director).
+*/
+class Artist {
+
+  /**
+  A unique identifier of the artist. Since several different artists and authors
+  may have the same name (e.g., "Michael Jackson" the performer vs. "Michael
+  Jackson" the software methodologist), we use a scheme whereby the name is not
+  the unique identifier of an artist.
+  */
+  public artistID: arbitrary_id = Artist->size(); // isID
+  
+  /**
+  The name of the artist.
+  */
+  public artistName: String;
+  
+  @Create
+  public Artist(
+    in artistName: String
+  ) {
+    this.artistName = artistName;
+  }
+  
+}

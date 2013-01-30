@@ -1,0 +1,21 @@
+private import DomainDataTypes::*;
+
+abstract class ExternalEntities {
+
+  public abstract active class OnlineCustomer;
+  public abstract active class CreditCardCompany;
+  public abstract class Logistics;
+  public abstract active class ShippingCompany;
+  public abstract active class ShippingClerk;
+  
+  public onlineCustomer: OnlineCustomer;
+  public creditCardCompany: CreditCardCompany;
+  public logistics: Logistics;
+  public shippingCompany: ShippingCompany;
+  public shippingClerk: ShippingClerk;
+  
+  public activity GetInstance(): ExternalEntities {
+    return ExternalEntities.allInstances()[1];
+  }
+  
+}

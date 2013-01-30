@@ -1,0 +1,49 @@
+namespace OnlineBookstoreUI;
+
+active class PaymentView specializes View {
+
+  @Create
+  public PaymentView(in controller: PaymentController) {
+    super(
+      title => "Shopping Cart > Check Out > Payment Information",
+      prompt => "Select a field to change, p to pay, b for back, s for shopping cart, h for home or x to exit",
+      controller => controller
+    );
+  }
+  
+  public getController(): PaymentController {
+    return (PaymentController)this.controller;
+  }
+  
+  protected display(): String[*] sequence {
+    controller = (PaymentController)this.controller;
+    
+    WriteLine("1. Cardholder Name: " + ToNameString(controller.cardholderName));
+    WriteLine("2. Bank Card Account Number: " + 
+                NullToString(controller.accountNumber));
+    WriteLine("3. Bank Card Expiration Date: " + 
+                NullToString(ToMonthYearString(controller.cardExpirationDate)));
+    WriteLine("4. Billing Address:");
+    WriteLine("");
+    Write(ToAddressString(controller.billingAddress));
+    
+    return String[]{"1", "2", "3", "4", "p", "b", "s", "h", "x"};
+  }
+  
+  protected handle(in choice: String) {
+    controller = (PaymentController)this.controller;
+    switch (choice) {
+      case "1": controller.Update(cardholderName => GetPersonalName("Enter cardholder name:"));
+      case "2": controller.Update(accountNumber => GetString("Enter bank card account number:"));
+      case "3": controller.Update(cardExpirationDate => GetMonthYear("Enter card expiration date:"));
+      case "4": controller.Update(billingAddress => GetMailingAddress("Enter billing address:"));
+      case "p": controller.PlaceOrder();
+      case "b": controller.Back();
+      case "s": controller.ShowShoppingCart();
+      case "h": controller.Home();
+      case "x": controller.Exit();
+    }
+  }
+
+} do {
+}
