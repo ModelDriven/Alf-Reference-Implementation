@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 
-public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler {
+public class AlfCompiler extends org.modeldriven.alf.execution.AlfCompiler {
     
     protected RootNamespaceImpl rootScopeImpl = null;    
     protected boolean isFileName = false;
