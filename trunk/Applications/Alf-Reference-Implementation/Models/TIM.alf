@@ -1,7 +1,0 @@
-private import DomainDataTypes::*;
-
-package TIM {
-
-  public activity GetCurrentDate(): date { }
-  
-}

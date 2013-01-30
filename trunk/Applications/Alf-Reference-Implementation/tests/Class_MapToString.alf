@@ -1,1 +1,0 @@
-abstract class MapToString<T> specializes Map<Key=>T, Value=>String> { }

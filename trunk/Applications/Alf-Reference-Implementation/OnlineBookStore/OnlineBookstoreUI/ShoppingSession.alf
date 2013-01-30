@@ -1,9 +1,0 @@
-namespace OnlineBookstoreUI;
-
-private import Ordering::ShoppingCart;
-
-class ShoppingSession specializes Session {
-
-  public cart: ShoppingCart[0..1];
-  
-}

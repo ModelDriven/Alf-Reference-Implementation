@@ -1,7 +1,0 @@
-namespace fUML::Syntax;
-
-package Actions {
-
-  public package BasicActions;
-  
-}

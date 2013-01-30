@@ -1,7 +1,0 @@
-namespace UserInterface;
-
-abstract class Session {
-
-  public sessionID: Integer = Session->size();
-  
-}

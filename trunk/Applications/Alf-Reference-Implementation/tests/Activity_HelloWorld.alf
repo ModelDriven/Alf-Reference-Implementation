@@ -1,3 +1,0 @@
-activity HelloWorld() {
-	WriteLine("Hello World!");
-}

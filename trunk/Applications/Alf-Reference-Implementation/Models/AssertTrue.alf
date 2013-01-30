@@ -1,4 +1,0 @@
-private import Alf::Library::PrimitiveBehaviors::BooleanFunctions::ToString;
-activity AssertTrue(in label: String, in condition: Boolean) {
-    WriteLine(label + ": " + ToString(condition));
-}
