@@ -1,0 +1,46 @@
+namespace ProductSpecification;
+
+/**
+A Software Product is a commercially available computer program available for
+sale in the store. Each title sold by the store may be available on multiple
+platforms and multiple versions; these may have different prices and are
+generally represented by different prouct codes.
+*/
+class SoftwareProduct specializes Product {
+
+  /**
+  A string identifying the product version. Since there is no industry
+  standard for representing this information, the version string as we use it is
+  merely the commonly used text that the product publisher uses to identify the
+  version.
+  
+  Note that in some cases different "versions" of the same software title may be
+  cataloged as different titles, e.g., "Windows 95" vs. "Windows ME".
+  */
+  public productVersion: VersionString;
+  
+  @Create
+  public SoftwareProduct(
+    in productID: UniversalProductCode,
+    in productName: String,
+    in copyright: Year,
+    in unitPrice: Money,
+    in description: String,
+    in website: WebsiteURL[0..1],
+    in productVersion: VersionString,
+    in isStocked: Boolean,
+    in publisher: Publisher,
+    in productCategory: ProductCategory,
+    in platform: Platform,
+    in computerSoftware: ComputerSoftware
+  ) {
+    super(
+      productID, computerSoftware.title, copyright, unitPrice, description, website, 
+      isStocked, publisher, productCategory);
+
+    this.productVersion = productVersion;
+    
+    R19.createLink(platform, this);
+    R20.createLink(computerSoftware, this);
+  }
+}

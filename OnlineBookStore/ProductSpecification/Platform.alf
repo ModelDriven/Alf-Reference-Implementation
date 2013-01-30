@@ -1,0 +1,32 @@
+namespace ProductSpecification;
+
+/**
+A platform is a particular combination of computer hardware and system software 
+on which a particular software product can be run.
+
+Platform names are not intended to be exhaustive enumerations of the hardware
+and system software requirements for a particular software product, merely
+enough information necessary to distinguish different variations of the same
+title.
+*/
+class Platform {
+
+  /**
+  A unique ID for a Platform. This ID is only used by the store -- there is no
+  general industry standard identifier for software platforms.
+  */
+  public platformID: arbitrary_id = Platform->size(); // isID
+  
+  /**
+  The general name of a software platform, e.g., Unix, Macintosh, Windows NT.
+  */
+  platformName: String;
+  
+  @Create
+  public Platform(
+    in platformName: String
+  ) {
+    this.platformName = platformName;
+  }
+  
+}

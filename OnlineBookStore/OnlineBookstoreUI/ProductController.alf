@@ -1,0 +1,62 @@
+namespace OnlineBookstoreUI;
+
+private import ProductSpecification::*;
+
+active class ProductController specializes Controller {
+
+  public title: String;
+  public product: Product;
+  
+  @Create
+  public ProductController(
+    in title: String,
+    in product: Product,
+    in previous: Controller
+  ) {
+    super.following(previous);
+    this.title = title;
+    this.product = product;
+  }
+  
+  public receive signal Home {
+  }
+  
+  public receive signal ShowShoppingCart {
+  }
+  
+  public receive signal AddProduct {
+    public quantity: Count;
+  }
+  
+} do {
+
+  do {
+    accept (Display);
+  
+    do {
+      new ProductView(this.title, this);
+      
+      accept (Exit) {
+        this.session.destroy();
+        return;
+      } or accept (Back) {
+        this.previous.Display();
+        break;
+      } or accept (Home) {
+        new HomeController(this).Display();
+        break;
+      } or accept (ShowShoppingCart) {
+        new ShoppingCartController(this).Display();
+        break;
+      } or accept (event: AddProduct) {
+        if (event.quantity->notEmpty()) {
+          new ShoppingCartController(this).AddProduct(
+            this.product.productID, event.quantity);
+          break;
+        }
+      }
+    } while (true);
+    
+  } while (true);
+  
+}

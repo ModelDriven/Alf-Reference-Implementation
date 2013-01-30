@@ -1,0 +1,104 @@
+namespace OnlineBookstoreUI;
+
+private import Ordering::Customer;
+
+active class CheckOutController specializes Controller {
+
+  public customerEmail: InternetEmailAddress;
+  public customerName: PersonalName = new PersonalName(firstName => "", lastName => "");
+  public customerPhone: TelephoneNumber[0..1];
+  public shippingAddress: MailingAddress = new MailingAddress(addressLine1 => "");
+
+  @Create
+  public CheckOutController(
+    in customerEmail: InternetEmailAddress,
+    in previous: Controller
+  ) {
+    super.following(previous);
+    
+    this.customerEmail = customerEmail;
+    
+    customer = Customer->
+      select selected (selected.email == customerEmail)[1];
+    if (customer->notEmpty()) {
+      this.customerName = customer.name;
+      this.customerPhone = customer.phone;
+      this.shippingAddress = customer.shippingAddress;
+    }
+  }
+  
+  public receive signal Update {
+    public customerEmail: InternetEmailAddress[0..1];
+    public customerName: PersonalName[0..1];
+    public customerPhone: TelephoneNumber[0..1];
+    public shippingAddress: MailingAddress[0..1];
+  }
+  
+  public receive signal Next {
+  }
+  
+  public receive signal ShowShoppingCart {
+  }
+  
+  public receive signal Home {
+  }
+  
+  private isValid(): Boolean {
+    if (this.customerName.firstName == "" || this.customerName.lastName == "") {
+      WriteLine("*** Both your first and last are required. ***");
+    } else if (this.customerPhone->isEmpty()) {
+      WriteLine("*** Your telephone number is required. ***");
+    } else if (this.shippingAddress.addressLine1 == "") {
+      WriteLine("*** Your shipping address must include a first address line. ***");
+    } else {
+      return true;
+    }
+    return false;
+  }
+  
+} do {
+
+  do {
+    accept (Display);
+    
+    do {
+      new CheckOutView(this);
+      
+      accept (event: Update) {
+        if (event.customerEmail->notEmpty()) {
+          this.customerEmail = event.customerEmail;
+        }
+        if (event.customerName->notEmpty()) {
+          this.customerName = event.customerName;
+        }
+        if (event.customerPhone->notEmpty()) {
+          this.customerPhone = event.customerPhone;
+        }
+        if (event.shippingAddress->notEmpty()) {
+          this.shippingAddress = event.shippingAddress;
+        }
+      } or accept (Next) {
+        if (this.isValid()) {
+          new PaymentController(this).Display();
+          break;
+        }
+      } or accept (ShowShoppingCart) {
+        new ShoppingCartController(this).Display();
+        break;
+      } or accept (Home) {
+        new HomeController(this).Display();
+        break;
+      } or accept (Back) {
+        this.previous.Display();
+        break;
+      } or accept (Exit) {
+        this.session.destroy();
+        return;
+      }
+      
+      this.view.destroy();
+    } while (true);
+    
+  } while (true);
+    
+}

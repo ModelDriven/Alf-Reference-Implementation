@@ -1,0 +1,103 @@
+namespace Shipping;
+
+/**
+A facility where merchandise is stored for shipment to customers. Warehouses are
+located in specific locations throughout the country (and soon, the world).
+*/
+active class Warehouse {
+
+  /**
+  The name of the warehouse, generally the name of the city or town in which the
+  warehouse is located.
+  */
+  public warehouseName: String; // isID
+  
+  /**
+  The actual physical location of the warehouse.
+  */
+  public warehouseLocation: MailingAddress;
+  
+  @Create
+  public Warehouse(
+    in warehouseName: String,
+    in warehouseLocation: MailingAddress
+  ) {
+    this.warehouseName = warehouseName;
+    this.warehouseLocation = warehouseLocation;
+  }
+  
+  /*
+   * Signal receptions
+   */
+  
+  public receive signal ShipmentReadyToPack {
+  }
+  
+  public receive signal ClerkFree {
+  }
+  
+  public receive signal ClerkAssignedToShipment {
+  }
+  
+  /*
+   * State entry behaviors
+   */
+  
+  private '1. Waiting for Shipment'() {
+  
+    readyShipment = this.'is origin point for'->
+      select selected (selected.waitingToBePacked)[1];
+      
+    if (readyShipment->notEmpty()) {
+      this.ShipmentReadyToPack();
+    }
+    
+  }
+  
+  private '2. Waiting for a Free Clerk'() {
+  
+    freeClerk = ((ShippingClerk)this.employs)-> 
+      select selected (selected.awaitingAssignment)[1];
+    
+    if (freeClerk->notEmpty()) {
+      this.ClerkFree();
+    }
+    
+  }
+  
+  private '3. Assigning Clerk to Shipment'() {
+    //@isolated
+    {
+    
+    readyShipment = this.'is origin point for'->
+      select selected (selected.waitingToBePacked)[1];
+    freeClerk = ((ShippingClerk)this.employs)-> 
+      select selected (selected.awaitingAssignment)[1];
+    
+    R23.createLink(freeClerk, readyShipment);
+    readyShipment.waitingToBePacked = false;
+    freeClerk.awaitingAssignment = false;
+    
+    freeClerk.ClerkAssigned();
+    this.ClerkAssignedToShipment();
+    
+    }
+    
+  }
+  
+} do {
+
+  while (true) {
+  
+    this.'1. Waiting for Shipment'();
+    
+    accept (ShipmentReadyToPack);
+    this.'2. Waiting for a Free Clerk'();
+    
+    accept (ClerkFree);
+    this.'3. Assigning Clerk to Shipment'();
+    
+    accept (ClerkAssignedToShipment);
+    
+  }
+}
