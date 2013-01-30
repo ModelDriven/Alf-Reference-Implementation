@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CompileTests-x" default="run" basedir=".">
+    <property name="alf.dir" value="../Alf-Reference-Implementation" />
+    <property name="moka.dir" value="../org.eclipse.papyrus.moka.fuml" />
+    <property name="moka.lib" value="../org.eclipse.papyrus.moka.fuml.standardlibrary" />
+    <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
+    <path id="cp-moka">
+        <pathelement location="${classpath}" />
+        <pathelement location="${alf.dir}/bin" />
+        <pathelement location="${alf.dir}/lib/commons-logging.jar" />
+        <pathelement location="${alf.dir}/lib/log4j.jar" />
+        <pathelement location="${moka.dir}/bin" />
+        <pathelement location="${moka.lib}/bin" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml_4.0.1.v20120913-1441.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.profile.l2_1.0.1.v20120913-1441.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.profile.l3_1.0.1.v20120913-1441.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.resources_4.0.1.v20120913-1441.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.common_1.7.0.v20120913-1441.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.types_1.0.0.v20120913-1441.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.common_2.8.0.v20120911-0500.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore_2.8.1.v20120911-0500.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore.xmi_2.8.0.v20120911-0500.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20120917-0436.jar" />
+    </path>
+    <target name="run-test">
+        <echo message="${unit}" />
+        <echo file="${filename}" append="true">${unit}...
+</echo>
+        <java classname="${classname}" classpath="bin" output="${filename}" append="true">
+            <classpath refid="${cp}" />
+            <arg value="-l" />
+            <arg value="${alf.dir}/Libraries" />
+            <arg value="-m" />
+            <arg value="${alf.dir}/tests-x" />
+            <arg value="-d" />
+            <arg value="ERROR" />
+            <arg value="${unit}" />
+        </java>
+    </target>
+    <target name="run">
+        <property name="classname" value="org.modeldriven.alf.eclipse.papyrus.fuml.execution.AlfCompiler" />
+        <property name="cp" value="cp-moka" />
+        <property name="filename" value="compile-tests-x-moka.txt" />
+        <antcall target="run-tests" />
+    </target>
+    <target name="run-tests">
+        <echo file="${filename}" append="false">Start...
+</echo>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment_Feature" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment_Indexed" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment_Feature_Indexed" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Association" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Constructor_Destructor" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Increment_Decrement" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Invocation" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Invocation_Reception" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Literal_Name" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Object" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Operator" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Sequence_Construction" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Sequence_Expansion_Reduction" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Sequence_Operation" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_SuperConstructors" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Expressions_Template" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Accept" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Classify" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Conditional" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_For_Looping" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Return" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_Simple" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Statements_While_Do_Looping" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Units_ActiveClass" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Interactive_HelloWorld" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Interactive_InputOutput" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Interactive_PingPong" />
+        </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Interactive_Read" />
+        </antcall>
+        <echo message="Done!" file="${filename}" append="true" />
+    </target>
+</project>
