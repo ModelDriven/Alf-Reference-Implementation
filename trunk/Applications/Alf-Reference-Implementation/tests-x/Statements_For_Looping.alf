@@ -1,7 +1,7 @@
 /**
  * Test for statements.
  **/
-active class Statements_Looping {
+active class Statements_For_Looping {
 
     // Supporting declarations *************************************************
     
