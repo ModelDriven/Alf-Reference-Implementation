@@ -22,7 +22,7 @@ import org.modeldriven.alf.eclipse.papyrus.fuml.library.libraryclass.Implementat
 import org.modeldriven.alf.eclipse.papyrus.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.execution.Object_;
-import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
+import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.Member;
