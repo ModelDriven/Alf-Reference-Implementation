@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
@@ -22,6 +21,7 @@ import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.MissingUnit;
@@ -38,6 +38,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     protected boolean isParseOnly = false;
     protected boolean isPrint = false;
     protected boolean isFileName = false;
+    protected Level debugLevel = Level.OFF;
     
     public RootNamespaceImpl getRootScopeImpl() {
         if (this.rootScopeImpl == null) {
@@ -55,6 +56,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     }
     
     public void setDebugLevel(Level level) {
+        this.debugLevel = level;
     }
     
     public void setIsParseOnly(boolean isParseOnly) {
@@ -167,9 +169,6 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     }
     
     public String parseArgs(String[] args) {
-        Logger logger = Logger.getLogger(fUML.Debug.class);
-        Level level = logger.getLevel();
-
         int i = 0;
         while (i < args.length) {
             String arg = args[i];
@@ -198,8 +197,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
                     } else if (option.equals("l")) {
                         this.setLibraryDirectory(arg);
                     } else if (option.equals("d")) {
-                        this.setDebugLevel(Level.toLevel(arg, level));
-                        level = logger.getLevel();
+                        this.setDebugLevel(Level.toLevel(arg, this.debugLevel));
                     }
                 } else {
                     return null;
@@ -210,7 +208,19 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         return i == args.length - 1? args[i]: null;
     }
     
-    public abstract void process(UnitDefinition unit);
+    public NamespaceDefinition process(UnitDefinition unit) {
+        NamespaceDefinition definition = null;
+        if (unit != null) {
+            Collection<ConstraintViolation> violations = this.check(unit);
+            if (this.isPrint) {
+                unit.print(true);
+            } else if (!this.isParseOnly && violations.isEmpty()) {
+                FumlMapping mapping = this.map(RootNamespace.getRootScope());
+                definition = mapping == null? null: unit.getDefinition();
+            }
+        }
+        return definition;
+    }
     
     protected void configure() {
         PropertyConfigurator.configure("log4j.properties");
