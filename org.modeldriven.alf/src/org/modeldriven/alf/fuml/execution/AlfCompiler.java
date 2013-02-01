@@ -9,22 +9,16 @@
 
 package org.modeldriven.alf.fuml.execution;
 
-import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
-import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public abstract class AlfCompiler extends AlfBase {
     
-    protected abstract void saveModel(NamespaceDefinition definition);
+    protected abstract NamespaceDefinition saveModel(NamespaceDefinition definition);
     
-    public void process(UnitDefinition unit) {
-        if (unit != null) {
-            FumlMapping mapping = this.map(RootNamespace.getRootScope());
-            if (mapping != null) {
-                this.saveModel(unit.getDefinition());
-            }
-        }
+    @Override
+    public NamespaceDefinition process(UnitDefinition unit) {
+        return this.saveModel(super.process(unit));
     }
     
     public AlfCompiler() {

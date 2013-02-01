@@ -32,6 +32,7 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     
     @Override
     public void setDebugLevel(Level level) {
+        super.setDebugLevel(level);
         Logger logger = Logger.getLogger(fUML.Debug.class);
         logger.setLevel(level);
     }
