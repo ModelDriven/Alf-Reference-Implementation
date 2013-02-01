@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests-x" default="run" basedir=".">
-    <property name="alf.dir" value="../Alf-Reference-Implementation" />
+    <property name="alf.dir" value="../org.modeldriven.alf" />
     <property name="moka.dir" value="../org.eclipse.papyrus.moka.fuml" />
     <property name="moka.lib" value="../org.eclipse.papyrus.moka.fuml.standardlibrary" />
     <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
