@@ -14,7 +14,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
+import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,69 +12,65 @@ package org.modeldriven.alf.execution;
 import java.util.Collection;
 
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
-import org.modeldriven.alf.syntax.units.MissingUnit;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
-public abstract class Alf {
+public abstract class AlfBase {
     
     protected boolean isVerbose = false;
-    protected boolean isParseOnly = false;
-    protected boolean isPrint = false;
-    
+
     public void setIsVerbose(boolean isVerbose) {
         this.isVerbose = isVerbose;
     }
     
-    public void setIsParseOnly(boolean isParseOnly) {
-        this.isParseOnly = isParseOnly;
-    }
-    
-    public void setIsPrint(boolean isPrint) {
-        this.isPrint = isPrint;
-    }
-
-    protected void printVerbose(String message) {
-        if (this.isVerbose) {
-            this.println(message);
+    public UnitDefinition resolve(String unitName) {
+        if (unitName == null) {
+            return null;
+        } else {
+            String[] names = unitName.replace(".","::").split("::");
+            QualifiedName qualifiedName = new QualifiedName();
+            for (String name: names) {
+                qualifiedName.getImpl().addName(name);
+            }
+            return RootNamespace.resolve(qualifiedName);
         }
     }
     
-    public void processUnit(UnitDefinition unit) {
-        if (!(unit instanceof MissingUnit)) {
+    public Collection<ConstraintViolation> check(
+            UnitDefinition unit) {
+        Collection<ConstraintViolation> violations = null;
+        
+        if (unit != null) {
             NamespaceDefinition definition = unit.getDefinition();
             if (unit.getImpl().resolveStub()) {
                 this.printVerbose("Resolved stub for " + 
                         definition.getImpl().getQualifiedName().getPathName());
             }
-            
+    
             RootNamespace root = RootNamespace.getRootScope();
             root.deriveAll();
-            Collection<ConstraintViolation> violations = root.checkConstraints();
+            violations = root.checkConstraints();
+            
             if (!violations.isEmpty()) {
                 this.println("Constraint violations:");
                 for (ConstraintViolation violation: violations) {
                     this.println("  " + violation);
-                }
-                
+                }    
             } else {
                 this.printVerbose("No constraint violations.");
-            }
-            
-            if (this.isPrint) {
-                unit.print(true);
-            } else if (!this.isParseOnly && violations.isEmpty()) {
-                if (definition.getImpl().isTemplate()) { 
-                    this.println(definition.getName() + " is a template.");
-                } else {
-                    this.process(definition);
-                }
-            }
+            }    
         }
+        
+        return violations;
     }
     
-    protected abstract void process(NamespaceDefinition definition);
+    protected void printVerbose(String message) {
+        if (this.isVerbose) {
+            this.println(message);
+        }
+    }
     
     protected void println(String message) {
         System.out.println(message);

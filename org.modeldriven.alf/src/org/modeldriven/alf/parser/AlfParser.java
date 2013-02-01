@@ -11,7 +11,7 @@ package org.modeldriven.alf.parser;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
+import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.RootNamespace;
