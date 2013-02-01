@@ -21,7 +21,6 @@ import org.modeldriven.alf.uml.PrimitiveType;
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.ElementFactory;
 
-import org.modeldriven.alf.fuml.execution.ExecutionFactory;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.DataTypeDefinitionMapping;
@@ -30,7 +29,6 @@ public abstract class FumlMapping extends Mapping {
 
     private static FumlMappingFactory fumlFactory = null;
     private static ElementFactory fumlElementFactory = null;
-    private static ExecutionFactory executionFactory = null;
     private static SyntaxElement parsedElement = null;
     
     private static PrimitiveType booleanType = null;
@@ -48,14 +46,6 @@ public abstract class FumlMapping extends Mapping {
     }
     public static void setFumlFactory(FumlMappingFactory fumlFactory) {
         FumlMapping.fumlFactory = fumlFactory;
-    }
-    
-    public static ExecutionFactory getExecutionFactory() {
-        return executionFactory;
-    }
-
-    public static void setExecutionFactory(ExecutionFactory executionFactory) {
-        FumlMapping.executionFactory = executionFactory;
     }
     
     public static ElementFactory getElementFactory() {

@@ -19,24 +19,12 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 
 public abstract class AlfCompiler extends org.modeldriven.alf.execution.Alf {
     
-    private Locus locus = null;
-    
-    public Locus getLocus() {
-        if (this.locus == null) {
-            this.locus = this.createLocus();
-        }
-        return this.locus;
-    }
-    
-    protected abstract Locus createLocus();
     protected abstract FumlMappingFactory createFumlFactory();
     protected abstract ElementFactory createElementFactory();
     
     protected abstract void saveModel(NamespaceDefinition definition);
     
     public void process(NamespaceDefinition definition) {
-        Locus locus = this.getLocus();
-        FumlMapping.setExecutionFactory(locus.getFactory());
         FumlMapping.setFumlFactory(this.createFumlFactory());
         FumlMapping.setElementFactory(this.createElementFactory());
         FumlMapping mapping = FumlMapping.getMapping(RootNamespace.getRootScope());
