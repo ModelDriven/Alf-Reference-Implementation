@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests-x" default="run" basedir=".">
+    <property name="alf.dir" value="../org.modeldriven.alf" />
     <property name="classname" value="org.modeldriven.alf.fuml.impl.execution.Alf" />
     <path id="cp">
         <pathelement location="${classpath}" />
-        <pathelement location="../Alf-Reference-Implementation/lib/fuml.jar" />
-        <pathelement location="../Alf-Reference-Implementation/lib/commons-logging.jar" />
-        <pathelement location="../Alf-Reference-Implementation/lib/log4j.jar" />
+        <pathelement location="${alf.dir}/lib/fuml.jar" />
+        <pathelement location="${alf.dir}/lib/commons-logging.jar" />
+        <pathelement location="${alf.dir}/lib/log4j.jar" />
     </path>
     <target name="run-test">
         <echo message="${unit}" />
@@ -16,7 +17,7 @@
             <arg value="-m" />
             <arg value="tests-x" />
             <arg value="-d" />
-            <arg value="OFF" />
+            <arg value="ERROR" />
             <arg value="${unit}" />
         </java>
     </target>

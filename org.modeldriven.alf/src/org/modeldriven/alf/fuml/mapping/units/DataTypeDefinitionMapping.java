@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,11 +10,13 @@
 
 package org.modeldriven.alf.fuml.mapping.units;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.units.DataTypeDefinition;
 
-import org.modeldriven.alf.fuml.execution.ExecutionFactory;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.DataType;
@@ -24,6 +26,9 @@ import org.modeldriven.alf.uml.PrimitiveType;
 import org.modeldriven.alf.uml.Property;
 
 public class DataTypeDefinitionMapping extends ClassifierDefinitionMapping {
+    
+    private static Collection<PrimitiveType> primitiveTypes = 
+            new ArrayList<PrimitiveType>();
     
     /**
      * 1. A data type definition that is not primitive maps to a data type (that
@@ -55,17 +60,12 @@ public class DataTypeDefinitionMapping extends ClassifierDefinitionMapping {
         
         if (classifier instanceof PrimitiveType) {
             DataTypeDefinition dataTypeDefinition = this.getDataTypeDefinition();
-            ExecutionFactory executionFactory = getExecutionFactory();
             String name = classifier.getName();
             if (name == null) {
                 this.throwError("Unnamed primitive type: " + dataTypeDefinition);
+            } else {
+                primitiveTypes.add((PrimitiveType)classifier);
             }
-            for (PrimitiveType builtInType: executionFactory.getBuiltInTypes()) {
-                if (builtInType.getName() != null && builtInType.getName().equals(name)) {
-                    this.throwError("Duplicate primitive type: " + dataTypeDefinition);
-                }
-            }
-            executionFactory.addBuiltInType((PrimitiveType)classifier);           
         }
     }
 
@@ -80,6 +80,10 @@ public class DataTypeDefinitionMapping extends ClassifierDefinitionMapping {
 
 	public DataTypeDefinition getDataTypeDefinition() {
 		return (DataTypeDefinition) this.getSource();
+	}
+	
+	public static Collection<PrimitiveType> getPrimitiveTypes() {
+	    return primitiveTypes;
 	}
 
 } // DataTypeDefinitionMapping

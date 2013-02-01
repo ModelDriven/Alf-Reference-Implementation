@@ -45,8 +45,11 @@ import org.modeldriven.alf.uml.StructuredActivityNode;
 
 public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     
-    OpaqueBehaviorExecution execution = null;
-    List<Element> otherElements = new ArrayList<Element>();
+    private OpaqueBehaviorExecution execution = null;
+    private List<Element> otherElements = new ArrayList<Element>();
+    
+    private static Collection<OpaqueBehaviorExecution> primitiveBehaviorPrototypes = 
+            new ArrayList<OpaqueBehaviorExecution>();
     
     /**
      * 1. An activity definition that is not primitive maps to an activity. If
@@ -99,7 +102,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             if (this.execution == null) {
                 this.throwError("Primitive behavior not implemented: " + classifier.getName());
             } else {
-                getExecutionFactory().addPrimitiveBehaviorPrototype(this.execution);
+                primitiveBehaviorPrototypes.add(this.execution);
             }
         } else {
             Activity activity = (Activity)classifier;
@@ -175,6 +178,10 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     
 	public ActivityDefinition getActivityDefinition() {
 		return (ActivityDefinition)this.getSource();
+	}
+	
+	public static Collection<OpaqueBehaviorExecution> getPrimitiveBehaviorPrototypes() {
+	    return primitiveBehaviorPrototypes;
 	}
 	
 	public static List<Element> addElements(

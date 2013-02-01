@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.impl.mapping;
 
-import org.modeldriven.alf.fuml.impl.execution.ExecutionFactory;
 import org.modeldriven.alf.fuml.impl.uml.ElementFactory;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.mapping.Mapping;
@@ -26,7 +25,6 @@ public class FumlMapper {
         
         FumlMapping.setFumlFactory(new FumlMappingFactory());
         FumlMapping.setElementFactory(new ElementFactory());
-        FumlMapping.setExecutionFactory(new ExecutionFactory());
         FumlMapping mapping = null;
         try {
             mapping = FumlMapping.parseAndMap(fileName);

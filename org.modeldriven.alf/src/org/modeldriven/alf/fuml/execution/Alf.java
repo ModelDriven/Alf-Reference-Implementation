@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -9,10 +9,14 @@
 
 package org.modeldriven.alf.fuml.execution;
 
+import java.util.Collection;
+
 import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
+import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassDefinitionMapping;
+import org.modeldriven.alf.fuml.mapping.units.DataTypeDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.units.ClassDefinition;
@@ -24,6 +28,7 @@ import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Operation;
 import org.modeldriven.alf.uml.Behavior;
+import org.modeldriven.alf.uml.PrimitiveType;
 
 public abstract class Alf extends org.modeldriven.alf.execution.Alf {
     
@@ -41,9 +46,27 @@ public abstract class Alf extends org.modeldriven.alf.execution.Alf {
     protected abstract ElementFactory createElementFactory();
     protected void createSystemServices() { }
     
+    protected void addPrimitiveTypes(Collection<PrimitiveType> primitiveTypes) {
+        ExecutionFactory executionFactory = this.getLocus().getFactory();
+        for (PrimitiveType primitiveType: primitiveTypes) {
+            for (PrimitiveType builtInType: executionFactory.getBuiltInTypes()) {
+                if (builtInType.getName() != null && builtInType.getName().equals(primitiveType.getName())) {
+                    this.println("Duplicate primitive type: " + primitiveType.getName());
+                }
+            }
+            executionFactory.addBuiltInType(primitiveType);
+        }
+    }
+    
+    protected void addPrimitiveBehaviorPrototypes(
+            Collection<OpaqueBehaviorExecution> primitiveBehaviorPrototypes) {
+        ExecutionFactory executionFactory = this.getLocus().getFactory();
+        for (OpaqueBehaviorExecution primitiveBehaviorPrototype: primitiveBehaviorPrototypes) {
+            executionFactory.addPrimitiveBehaviorPrototype(primitiveBehaviorPrototype);
+        }
+    }
+    
     public void process(NamespaceDefinition definition) {
-        Locus locus = this.getLocus();
-        FumlMapping.setExecutionFactory(locus.getFactory());
         FumlMapping.setFumlFactory(this.createFumlFactory());
         FumlMapping.setElementFactory(this.createElementFactory());
         FumlMapping mapping = FumlMapping.getMapping(RootNamespace.getRootScope());
@@ -51,6 +74,7 @@ public abstract class Alf extends org.modeldriven.alf.execution.Alf {
             mapping.getModelElements();
             Mapping elementMapping = definition.getImpl().getMapping();
             printVerbose("Mapped successfully.");
+            
             Element element = ((FumlMapping)elementMapping).getElement();
             if (element instanceof Behavior && 
                     ((Behavior)element).getOwnedParameter().isEmpty() ||
@@ -58,7 +82,15 @@ public abstract class Alf extends org.modeldriven.alf.execution.Alf {
                     ((Class_)element).getIsActive() && 
                     !((Class_)element).getIsAbstract() && 
                     ((Class_)element).getClassifierBehavior() != null) {
-                createSystemServices();
+                
+                // Set up execution environment
+                Locus locus = this.getLocus();
+                this.addPrimitiveTypes(
+                        DataTypeDefinitionMapping.getPrimitiveTypes());
+                this.addPrimitiveBehaviorPrototypes(
+                        ActivityDefinitionMapping.getPrimitiveBehaviorPrototypes());
+                this.createSystemServices();
+                
                 this.printVerbose("Executing...");
                 if (element instanceof Behavior) {
                     locus.getExecutor().execute((Behavior)element, null);
