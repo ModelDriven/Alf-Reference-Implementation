@@ -28,7 +28,7 @@ public class ModelNamespaceImpl extends
     org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl {
     
     private String modelDirectory = "Models";
-    private boolean isVerbose = false;
+    protected boolean isVerbose = false;
     
     // Cache ensures that no unit is parsed more than once.
     private Map<String, UnitDefinition> parsedUnitCache = 

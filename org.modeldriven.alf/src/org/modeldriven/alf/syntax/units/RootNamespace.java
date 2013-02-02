@@ -21,7 +21,7 @@ public class RootNamespace extends ModelNamespace {
     private static RootNamespace rootNamespace = new RootNamespace();
     
     private static QualifiedName alfStandardLibrary = null;
-    private static QualifiedName primitiveTypes = null;
+    private static QualifiedName primitiveTypes = null;   
     private static QualifiedName primitiveBehaviors = null;
     private static QualifiedName booleanFunctions = null;
     private static QualifiedName integerFunctions = null;
@@ -32,6 +32,8 @@ public class RootNamespace extends ModelNamespace {
     private static QualifiedName sequenceFunctions = null;
     private static QualifiedName collectionFunctions = null;
     private static QualifiedName collectionClasses = null;
+    
+    private static QualifiedName umlPrimitiveTypes = null;
     
     private static ElementReference booleanType = null;
     private static ElementReference integerType = null;
@@ -99,7 +101,7 @@ public class RootNamespace extends ModelNamespace {
         return primitiveTypes;
     }
 
-    public static QualifiedName getPrimitiveBehaviors() {
+   public static QualifiedName getPrimitiveBehaviors() {
         if (primitiveBehaviors == null) {
             primitiveBehaviors = getAlfStandardLibrary().getImpl().copy().addName("PrimitiveBehaviors");
             primitiveBehaviors.getImpl().setCurrentScope(getRootScope());
@@ -139,9 +141,19 @@ public class RootNamespace extends ModelNamespace {
         return collectionClasses;
     }
     
+    public static QualifiedName getUmlPrimitiveTypes() {
+        if (umlPrimitiveTypes == null) {
+            umlPrimitiveTypes = new QualifiedName();
+            umlPrimitiveTypes = umlPrimitiveTypes.getImpl().addName("UML").getImpl().
+                    addName("AuxiliaryTypes").getImpl().addName("PrimitiveTypes");
+            umlPrimitiveTypes.getImpl().setCurrentScope(getRootScope());
+        }
+        return umlPrimitiveTypes;
+    }
+
    public static ElementReference getBooleanType() {
         if (booleanType == null) {
-            booleanType = getPrimitiveTypes().getImpl().copy().
+            booleanType = getUmlPrimitiveTypes().getImpl().copy().
                             addName("Boolean").getImpl().getClassifierReferent();
         }
         return booleanType;
@@ -149,7 +161,7 @@ public class RootNamespace extends ModelNamespace {
 
     public static ElementReference getIntegerType() {
         if (integerType == null) {
-            integerType = getPrimitiveTypes().getImpl().copy().
+            integerType = getUmlPrimitiveTypes().getImpl().copy().
                             addName("Integer").getImpl().getClassifierReferent();
         }
         return integerType;
@@ -157,7 +169,7 @@ public class RootNamespace extends ModelNamespace {
 
     public static ElementReference getStringType() {
         if (stringType == null) {
-            stringType = getPrimitiveTypes().getImpl().copy().
+            stringType = getUmlPrimitiveTypes().getImpl().copy().
                             addName("String").getImpl().getClassifierReferent();
         }
         return stringType;
@@ -165,7 +177,7 @@ public class RootNamespace extends ModelNamespace {
 
     public static ElementReference getUnlimitedNaturalType() {
         if (unlimitedNaturalType == null) {
-            unlimitedNaturalType = getPrimitiveTypes().getImpl().copy().
+            unlimitedNaturalType = getUmlPrimitiveTypes().getImpl().copy().
                             addName("UnlimitedNatural").getImpl().getClassifierReferent();
         }
         return unlimitedNaturalType;

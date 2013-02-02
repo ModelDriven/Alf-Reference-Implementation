@@ -68,7 +68,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     }
     
     public String getLibraryDirectory() {
-        return this.getModelDirectory();
+        return super.getModelDirectory();
     }
     
     @Override
