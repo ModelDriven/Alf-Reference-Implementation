@@ -270,6 +270,7 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         Member stub = self.getImpl().getStub();
         if (stub != null) {
             stub.setSubunit(self);
+            self.getDefinition().setVisibility(stub.getVisibility());
             return true;
         } else {
             // Ensures that a model unit is made a member of its model scope.

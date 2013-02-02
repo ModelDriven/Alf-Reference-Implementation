@@ -168,7 +168,14 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	    if (!self.getIsStub() || self.getIsExternal()) {
 	        return null;
 	    } else {
-	        return this.resolveUnit(this.getQualifiedName());
+	        UnitDefinition unit = this.resolveUnit(this.getQualifiedName());
+	        if (unit != null) {
+	            NamespaceDefinition definition = unit.getDefinition();
+	            if (definition != null) {
+	                definition.setVisibility(this.getVisibility());
+	            }
+	        }
+	        return unit;
 	    }	    
 	}
 
