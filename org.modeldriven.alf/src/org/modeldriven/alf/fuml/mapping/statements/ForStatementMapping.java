@@ -321,16 +321,19 @@ public class ForStatementMapping extends LoopStatementMapping {
                 ElementReference type = assignment.getType();
                 Classifier classifier = null;
                 if (type != null) {
-                    FumlMapping mapping = this.fumlMap(type);
-                    if (mapping instanceof ElementReferenceMapping) {
-                        mapping = ((ElementReferenceMapping)mapping).getMapping();
-                    }
-                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                        this.throwError("Error mapping type of " + assignedName + ": " + 
-                                mapping.getErrorMessage());
-                    } else {
-                        classifier = ((ClassifierDefinitionMapping)mapping).
-                                getClassifierOnly();
+                    classifier = (Classifier)type.getImpl().getUml();
+                        if (classifier == null) {
+                        FumlMapping mapping = this.fumlMap(type);
+                        if (mapping instanceof ElementReferenceMapping) {
+                            mapping = ((ElementReferenceMapping)mapping).getMapping();
+                        }
+                        if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                            this.throwError("Error mapping type of " + assignedName + ": " + 
+                                    mapping.getErrorMessage());
+                        } else {
+                            classifier = ((ClassifierDefinitionMapping)mapping).
+                                    getClassifierOnly();
+                        }
                     }
                 }
                 OutputPin outputPin = this.graph.createOutputPin(

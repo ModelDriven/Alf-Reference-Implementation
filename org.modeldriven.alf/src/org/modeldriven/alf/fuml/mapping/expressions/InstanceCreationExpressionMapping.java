@@ -172,61 +172,64 @@ public class InstanceCreationExpressionMapping extends
         InstanceCreationExpression instanceCreationExpression =
             this.getInstanceCreationExpression();
         Action action = null;
-        ElementReference referent = instanceCreationExpression.getReferent();
-        FumlMapping mapping = this.fumlMap(referent);
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
-        }
         if (!instanceCreationExpression.getIsObjectCreation()) {
-            if (!(mapping instanceof DataTypeDefinitionMapping)) {
-                this.throwError("Error mapping data type referent: " + 
-                        mapping.getErrorMessage());
-            } else {
-                DataType dataType = (DataType)
-                    ((DataTypeDefinitionMapping)mapping).getClassifier();
-                ActivityGraph subgraph = this.createActivityGraph();
-                
-                // Create a value specification action to create an instance
-                // of the data type.
-                ValueSpecificationAction valueAction = 
-                    subgraph.addDataValueSpecificationAction(dataType);
-                this.resultSource = valueAction.getResult();
-                
-                // Place the value specification action inside the structured
-                // activity node. Create input pins on the structured activity 
-                // node connected to property assignments for each attribute of 
-                // the data type.
-                //
-                // Note: The mapping for a data value creation is placed inside
-                // a structured activity node so that it can act as the action
-                // with input pins to which the results of mapping the tuple are
-                // connected.
+            ElementReference referent = instanceCreationExpression.getReferent();
+            DataType dataType = (DataType)referent.getImpl().getUml();
+            if (dataType == null) {
+                FumlMapping mapping = this.fumlMap(referent);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof DataTypeDefinitionMapping)) {
+                    this.throwError("Error mapping data type referent: " + 
+                            mapping.getErrorMessage());
+                } else {
+                    dataType = (DataType)
+                        ((DataTypeDefinitionMapping)mapping).getClassifier();
+                }
+            }
+            ActivityGraph subgraph = this.createActivityGraph();
 
-                StructuredActivityNode structuredNode =
+            // Create a value specification action to create an instance
+            // of the data type.
+            ValueSpecificationAction valueAction = 
+                    subgraph.addDataValueSpecificationAction(dataType);
+            this.resultSource = valueAction.getResult();
+
+            // Place the value specification action inside the structured
+            // activity node. Create input pins on the structured activity 
+            // node connected to property assignments for each attribute of 
+            // the data type.
+            //
+            // Note: The mapping for a data value creation is placed inside
+            // a structured activity node so that it can act as the action
+            // with input pins to which the results of mapping the tuple are
+            // connected.
+
+            StructuredActivityNode structuredNode =
                     this.graph.addStructuredActivityNode(
                             "Create(" + dataType.getQualifiedName() +")", 
                             new ArrayList<Element>());
-                
-                for (Property attribute: dataType.getAttribute()) {
-                    InputPin valuePin = this.graph.createInputPin(
-                            structuredNode.getName() + 
-                                ".input(" + attribute.getQualifiedName() + ")", 
-                            attribute.getType(), 
-                            attribute.getLower(), 
-                            attribute.getUpper());
-                    structuredNode.addStructuredNodeInput(valuePin);
-                    this.resultSource = 
+
+            for (Property attribute: dataType.getAttribute()) {
+                InputPin valuePin = this.graph.createInputPin(
+                        structuredNode.getName() + 
+                        ".input(" + attribute.getQualifiedName() + ")", 
+                        attribute.getType(), 
+                        attribute.getLower(), 
+                        attribute.getUpper());
+                structuredNode.addStructuredNodeInput(valuePin);
+                this.resultSource = 
                         AssignmentExpressionMapping.mapPropertyAssignment(
                                 attribute, subgraph, 
                                 this.resultSource, valuePin, this);
-                }
-                
-                this.graph.addToStructuredNode(
-                        structuredNode, 
-                        subgraph.getModelElements());
-                action = structuredNode;
             }
-            
+
+            this.graph.addToStructuredNode(
+                    structuredNode, 
+                    subgraph.getModelElements());
+            action = structuredNode;
+
         } else if (!instanceCreationExpression.getImpl().getIsConstructorless()) {
             // Map the constructor call as a normal call operation action.
             action = super.mapTarget();                

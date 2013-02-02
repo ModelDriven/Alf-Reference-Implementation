@@ -29,6 +29,7 @@ import org.modeldriven.alf.uml.CallBehaviorAction;
 import org.modeldriven.alf.uml.CallOperationAction;
 import org.modeldriven.alf.uml.InputPin;
 import org.modeldriven.alf.uml.AddStructuralFeatureValueAction;
+import org.modeldriven.alf.uml.Operation;
 import org.modeldriven.alf.uml.ValueSpecificationAction;
 import org.modeldriven.alf.uml.LoopNode;
 import org.modeldriven.alf.uml.StructuredActivityNode;
@@ -384,22 +385,24 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 if (toSequenceOperation == null) {
                     outerMapping.throwError("No toSequence operation: " + rhsType);
                 } else {
-                    FumlMapping mapping = outerMapping.fumlMap(toSequenceOperation);
-                    if (mapping instanceof ElementReferenceMapping) {
-                        mapping = ((ElementReferenceMapping)mapping).getMapping();
+                    Operation operation = (Operation)toSequenceOperation.getImpl().getUml();
+                    if (operation == null) {
+                        FumlMapping mapping = outerMapping.fumlMap(toSequenceOperation);
+                        if (mapping instanceof ElementReferenceMapping) {
+                            mapping = ((ElementReferenceMapping)mapping).getMapping();
+                        }
+                        if (!(mapping instanceof OperationDefinitionMapping)) {
+                            outerMapping.throwError("Error mapping toSequence operation: " + 
+                                    mapping.getErrorMessage());
+                        } else {
+                            operation = ((OperationDefinitionMapping)mapping).getOperation();
+                        }
                     }
-                    if (!(mapping instanceof OperationDefinitionMapping)) {
-                        outerMapping.throwError("Error mapping toSequence operation: " + 
-                                mapping.getErrorMessage());
-                    } else {
-                        CallOperationAction callAction = 
-                            subgraph.addCallOperationAction(
-                                    ((OperationDefinitionMapping)mapping).
-                                        getOperation());
-                        subgraph.addObjectFlow(
-                                rhsResultSource, callAction.getTarget());
-                        rhsResultSource = callAction.getResult().get(0);
-                    }
+                    CallOperationAction callAction = 
+                            subgraph.addCallOperationAction(operation);
+                    subgraph.addObjectFlow(
+                            rhsResultSource, callAction.getTarget());
+                    rhsResultSource = callAction.getResult().get(0);
                 }
             }
             if (isBitStringConversion) {

@@ -40,27 +40,36 @@ public class ReturnStatementMapping extends StatementMapping {
         super.map();
         
         ReturnStatement returnStatement = this.getReturnStatement();
-        ElementReference behavior = returnStatement.getBehavior();
-        FumlMapping mapping = this.fumlMap(behavior);
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        ElementReference behaviorReference = returnStatement.getBehavior();
+        Element behavior = behaviorReference.getImpl().getUml();
+        if (behavior == null) {
+            FumlMapping mapping = this.fumlMap(behaviorReference);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
+            if (mapping instanceof ActivityDefinitionMapping) {
+                behavior = ((ActivityDefinitionMapping)mapping).getBehavior();
+            } else if (mapping instanceof OperationDefinitionMapping) {
+                behavior = 
+                    ((OperationDefinitionMapping)mapping).getOperation();
+            } else {
+                this.throwError("Error mapping behavior: " + 
+                        mapping.getErrorMessage());
+            }
         }
+            
         Activity activity = null;
         Operation operation = null;
-        if (mapping instanceof ActivityDefinitionMapping) {
-            activity = (Activity)((ActivityDefinitionMapping)mapping).getBehavior();
-        } else if (mapping instanceof OperationDefinitionMapping) {
-            operation = 
-                ((OperationDefinitionMapping)mapping).getOperation();
+        if (behavior instanceof Activity) {
+            activity = (Activity)behavior;
+        } else {
+            operation = (Operation)behavior;
             List<Behavior> methods = operation.getMethod();
             if (methods.size() > 0) {
                 activity = (Activity)methods.get(0);
             } else {
                 this.throwError("Operation has no method: " + operation);
             }
-        } else {
-            this.throwError("Error mapping behavior: " + 
-                    mapping.getErrorMessage());
         }
         
         this.add(this.graph.createControlFlow(                
@@ -69,7 +78,7 @@ public class ReturnStatementMapping extends StatementMapping {
         
         Expression expression = returnStatement.getExpression();
         if (expression != null) {
-            mapping = this.fumlMap(expression);
+            FumlMapping mapping = this.fumlMap(expression);
             if (!(mapping instanceof ExpressionMapping)) {
                 this.throwError("Error mapping expression: " + 
                         mapping.getErrorMessage());
@@ -87,14 +96,14 @@ public class ReturnStatementMapping extends StatementMapping {
                             expressionMapping.getType(), 
                             expression.getLower(), 
                             expression.getUpper(), 
-                            behavior.getImpl().getReturnParameter(), 
+                            behaviorReference.getImpl().getReturnParameter(), 
                             activity, operation);
                 }                
             }
         }
         
         for (FormalParameter parameter: 
-            behavior.getImpl().getParameters()) {
+            behaviorReference.getImpl().getParameters()) {
             if (parameter.getDirection().equals("out") ||
                     parameter.getDirection().equals("inout")) {
                 String name = parameter.getName();
@@ -102,29 +111,32 @@ public class ReturnStatementMapping extends StatementMapping {
                     returnStatement.getImpl().getAssignmentAfter(name);
                 if (assignment != null) {
                     FumlMapping sourceMapping = 
-                        mapping.fumlMap(assignment.getSource());
+                        this.fumlMap(assignment.getSource());
                     if (!(sourceMapping instanceof SyntaxElementMapping)) {
-                        mapping.throwError("Error mapping parameter " + 
-                                name + ": " + mapping.getErrorMessage());
+                        this.throwError("Error mapping parameter " + 
+                                name + ": " + sourceMapping.getErrorMessage());
                     } else {
                         ActivityNode source = ((SyntaxElementMapping)sourceMapping).
                                 getAssignedValueSource(name);
                         Classifier type = null;
                         ElementReference typeReference = assignment.getType();
                         if (typeReference != null) {
-                            mapping = this.fumlMap(assignment.getType());
-                            if (mapping instanceof ElementReferenceMapping) {
-                                mapping = ((ElementReferenceMapping)mapping).
-                                        getMapping();
-                            }
-                            if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                                this.throwError("Error mapping type of parameter " +
-                                        parameter.getName() + ": " + 
-                                        mapping.getErrorMessage());
-                            } else {
-                                type = 
-                                        ((ClassifierDefinitionMapping)mapping).
-                                        getClassifierOnly();
+                            type = (Classifier)typeReference.getImpl().getUml();
+                            if (type == null) {
+                                FumlMapping mapping = this.fumlMap(assignment.getType());
+                                if (mapping instanceof ElementReferenceMapping) {
+                                    mapping = ((ElementReferenceMapping)mapping).
+                                            getMapping();
+                                }
+                                if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                                    this.throwError("Error mapping type of parameter " +
+                                            parameter.getName() + ": " + 
+                                            mapping.getErrorMessage());
+                                } else {
+                                    type = 
+                                            ((ClassifierDefinitionMapping)mapping).
+                                            getClassifierOnly();
+                                }
                             }
                         }
                         this.mapOutput(

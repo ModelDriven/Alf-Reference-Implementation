@@ -64,21 +64,24 @@ public abstract class TypedElementDefinitionMapping extends MemberMapping {
 
         ElementReference type = definition.getType();
         if (type != null ) {
-            FumlMapping mapping = this.fumlMap(type);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            Classifier classifier = (Classifier)type.getImpl().getUml();
+            if (classifier == null) {
+                FumlMapping mapping = this.fumlMap(type);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                    this.throwError("Error mapping type: " + type);
+                } else {
+                    // NOTE: If this typed element is within an operation, then the
+                    // use of getClassifierOnly here avoids problems with mapping
+                    // the classifier before the mapping of the operation is
+                    // complete, if the type is the class that owns the operation.
+                    classifier = ((ClassifierDefinitionMapping)mapping).
+                            getClassifierOnly();
+                }
             }
-            if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                this.throwError("Error mapping type: " + type);
-            } else {
-                // NOTE: If this typed element is within an operation, then the
-                // use of getClassifierOnly here avoids problems with mapping
-                // the classifier before the mapping of the operation is
-                // complete, if the type is the class that owns the operation.
-                Classifier classifier = 
-                    ((ClassifierDefinitionMapping)mapping).getClassifierOnly();
-                typedElement.setType(classifier);                   
-            }
+            typedElement.setType(classifier);                   
         }
     }
     

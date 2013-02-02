@@ -15,6 +15,7 @@ import org.modeldriven.alf.fuml.mapping.units.ImportReferenceMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.impl.NameBindingImpl;
 import org.modeldriven.alf.syntax.units.ElementImportReference;
 
@@ -40,18 +41,22 @@ public class ElementImportReferenceMapping extends ImportReferenceMapping {
         super.mapTo(elementImport);
 
         ElementImportReference importReference = this.getElementImportReference();
-        FumlMapping mapping = this.fumlMap(importReference.getReferent());
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        ElementReference referent = importReference.getReferent();
+        Element element = referent.getImpl().getUml();
+        if (element == null) {
+            FumlMapping mapping = this.fumlMap(importReference.getReferent());
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
+            mapping.getModelElements(); // To force mapping to actually take place.
+            element = mapping.getElement();
+            if (!(element instanceof PackageableElement)) {
+                this.throwError("Invalid imported element mapping: " + mapping);
+            }
         }
-        mapping.getModelElements(); // To force mapping to actually take place.
-        Element element = mapping.getElement();
-        if (!(element instanceof PackageableElement)) {
-            this.throwError("Invalid imported element mapping: " + mapping);
-        } else {
-            elementImport.setImportedElement((PackageableElement) element);
-            elementImport.setAlias(NameBindingImpl.processName(importReference.getAlias()));
-        }
+        
+        elementImport.setImportedElement((PackageableElement) element);
+        elementImport.setAlias(NameBindingImpl.processName(importReference.getAlias()));
     }
 
     @Override

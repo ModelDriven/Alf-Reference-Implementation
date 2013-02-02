@@ -134,23 +134,33 @@ public abstract class FumlMapping extends Mapping {
     
     public static PrimitiveType getPrimitiveType(ElementReference typeReference) 
     throws MappingError {
-        DataTypeDefinitionMapping mapping = (DataTypeDefinitionMapping)
-        ((ElementReferenceMapping)getFumlFactory().getMapping(typeReference)).getMapping();
-        return (PrimitiveType)mapping.getClassifier();
+        PrimitiveType primitiveType = (PrimitiveType)typeReference.getImpl().getUml();
+        if (primitiveType == null) {
+            DataTypeDefinitionMapping mapping = 
+                    (DataTypeDefinitionMapping)((ElementReferenceMapping)getFumlFactory().
+                            getMapping(typeReference)).getMapping();
+            primitiveType = (PrimitiveType)mapping.getClassifier();
+        } 
+        return primitiveType;
     }
 
     public static Behavior getBehavior(ElementReference behaviorReference)
     throws MappingError {
-        Mapping mapping = getFumlFactory().getMapping(behaviorReference);
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        Behavior behavior = behaviorReference == null? null: 
+            (Behavior)behaviorReference.getImpl().getUml();
+        if (behavior == null) {
+            Mapping mapping = getFumlFactory().getMapping(behaviorReference);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
+            if (mapping instanceof ActivityDefinitionMapping) {
+                behavior = (Behavior)((ActivityDefinitionMapping)mapping).getClassifier();
+            } else {
+                throw new MappingError(mapping,
+                        "Error mapping behavior: " + mapping.getErrorMessage());
+            }
         }
-        if (mapping instanceof ActivityDefinitionMapping) {
-            return (Behavior)((ActivityDefinitionMapping)mapping).getClassifier();
-        } else {
-            throw new MappingError(mapping,
-                    "Error mapping behavior: " +mapping.getErrorMessage());
-        }
+        return behavior;
     }
     
     public FumlMapping() {

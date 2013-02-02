@@ -22,7 +22,6 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
-import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import org.modeldriven.alf.uml.*;
 
@@ -125,20 +124,25 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
             }
         }
         
-        for (ElementReference redefinedOperation: 
+        for (ElementReference redefinedOperationReference: 
             definition.getRedefinedOperation()) {
-            mapping = this.fumlMap(redefinedOperation);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            Operation redefinedOperation = 
+                    (Operation)redefinedOperationReference.getImpl().getUml();
+            if (redefinedOperation == null) {
+                mapping = this.fumlMap(redefinedOperationReference);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof OperationDefinitionMapping)) {
+                    this.throwError("Error mapping redefined operation " + 
+                            redefinedOperationReference.getImpl().getQualifiedName() + ": " +
+                            mapping.getErrorMessage());
+                } else {
+                    redefinedOperation =
+                            ((OperationDefinitionMapping)mapping).getOperation();
+                }
             }
-            if (!(mapping instanceof OperationDefinitionMapping)) {
-                this.throwError("Error mapping redefined operation " + 
-                        redefinedOperation.getImpl().getQualifiedName() + ": " +
-                        mapping.getErrorMessage());
-            } else {
-                operation.addRedefinedOperation(
-                        ((OperationDefinitionMapping)mapping).getOperation());
-            }
+            operation.addRedefinedOperation(redefinedOperation);
         }
     }
     
@@ -220,17 +224,31 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                         // Use decision node to skip constructor if this object is
                         // already initialized.
                         Property initializationFlag = classMapping.getInitializationFlag();
-                        ActivityNode initialNode = graph.addInitialNode("InitialNode");
                         ReadStructuralFeatureAction readAction = 
                                 graph.addReadStructuralFeatureAction(initializationFlag);
+                        graph.addObjectFlow(selfFork, readAction.getObject());
+                        
+                        // NOTE: The structured node here acts to convert an
+                        // object flow into a control flow. This avoids the
+                        // need to do a test and use a decision node.
+                        StructuredActivityNode testNode = 
+                                graph.addStructuredActivityNode("TestNode", null);
+                        InputPin inputPin = graph.createInputPin(
+                                "Input(initializationFlag", null, 1, 1);
+                        testNode.addStructuredNodeInput(inputPin);
+                        graph.addObjectFlow(readAction.getResult(), inputPin);
+                        graph.addControlFlow(testNode, node);
+                        
+                        /*
                         CallBehaviorAction testAction = graph.addCallBehaviorAction(
                                 getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
-                        graph.addObjectFlow(selfFork, readAction.getObject());
                         graph.addObjectFlow(readAction.getResult(), testAction.getArgument().get(0));
+                        ActivityNode initialNode = graph.addInitialNode("InitialNode");
                         graph.addControlDecisionNode(
                                 "Test(" + initializationFlag.getName() + ")", 
                                 initialNode, testAction.getResult().get(0), 
                                 node, null);
+                        */
                     }
                     
                 }

@@ -61,17 +61,20 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
         
         this.signals = new ArrayList<Signal>();
         for (ElementReference signalReference: signalReferences) {
-            FumlMapping mapping = this.fumlMap(signalReference);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            Signal signal = (Signal)signalReference.getImpl().getUml();
+            if (signal == null) {
+                FumlMapping mapping = this.fumlMap(signalReference);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof SignalDefinitionMapping)) {
+                    this.throwError("Error mapping signal " + signalReference + ": " + 
+                            mapping.getErrorMessage());
+                } else {
+                    signal = (Signal)((SignalDefinitionMapping)mapping).getClassifier();
+                }
             }
-            if (!(mapping instanceof SignalDefinitionMapping)) {
-                this.throwError("Error mapping signal " + signalReference + ": " + 
-                        mapping.getErrorMessage());
-            } else {
-                this.signals.add((Signal)((SignalDefinitionMapping)mapping).
-                            getClassifier());
-            }
+            this.signals.add(signal);
         }
         
         if (block != null) {
@@ -114,28 +117,35 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                         ActivityNode source = 
                                 ((AssignedSourceMapping)mapping).getActivityNode();
                         if (!(ActivityGraph.isContainedIn(source, this.blockNode))) {
-                            mapping = this.fumlMap(assignment.getType());
-                            if (mapping instanceof ElementReferenceMapping) {
-                                mapping = ((ElementReferenceMapping)mapping).getMapping();
+                            ElementReference type = assignment.getType();
+                            Classifier classifier = null;
+                            if (type != null) {
+                                classifier = (Classifier)type.getImpl().getUml();
+                                if (classifier == null) {
+                                    mapping = this.fumlMap(assignment.getType());
+                                    if (mapping instanceof ElementReferenceMapping) {
+                                        mapping = ((ElementReferenceMapping)mapping).getMapping();
+                                    }
+                                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                                        this.throwError("Error mapping type for " + 
+                                                name + ": " + mapping.getErrorMessage());
+                                    } else {
+                                        classifier = 
+                                                ((ClassifierDefinitionMapping)mapping).
+                                                    getClassifier();
+                                    }
+                                }
                             }
-                            if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                                this.throwError("Error mapping type for " + 
-                                        name + ": " + mapping.getErrorMessage());
-                            } else {
-                                Classifier type = 
-                                        ((ClassifierDefinitionMapping)mapping).
-                                            getClassifier();
-                                StructuredActivityNode passthruNode =
-                                        this.graph.createPassthruNode(
-                                                name, type,
-                                                assignment.getLower(), 
-                                                assignment.getUpper());
-                                blockNode.addNode(passthruNode);
-                                this.graph.addObjectFlow(
-                                        source, 
-                                        passthruNode.getStructuredNodeInput().get(0));
-                                source = passthruNode.getStructuredNodeOutput().get(0);
-                            }
+                            StructuredActivityNode passthruNode =
+                                    this.graph.createPassthruNode(
+                                            name, classifier,
+                                            assignment.getLower(), 
+                                            assignment.getUpper());
+                            blockNode.addNode(passthruNode);
+                            this.graph.addObjectFlow(
+                                    source, 
+                                    passthruNode.getStructuredNodeInput().get(0));
+                            source = passthruNode.getStructuredNodeOutput().get(0);
                         }
                         this.graph.addObjectFlow(
                                 source, 

@@ -97,16 +97,19 @@ public abstract class StatementMapping extends DocumentedElementMapping {
                 
                 Classifier classifier = null;
                 if (type != null) {
-                    FumlMapping mapping = this.fumlMap(type);
-                    if (mapping instanceof ElementReferenceMapping) {
-                        mapping = ((ElementReferenceMapping)mapping).getMapping();
+                    classifier = (Classifier)type.getImpl().getUml();
+                    if (classifier == null) {
+                        FumlMapping mapping = this.fumlMap(type);
+                        if (mapping instanceof ElementReferenceMapping) {
+                            mapping = ((ElementReferenceMapping)mapping).getMapping();
+                        }
+                        if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                            this.throwError("Error mapping type " + type + ": " + 
+                                    mapping.getErrorMessage());
+                        }
+                        classifier = 
+                            ((ClassifierDefinitionMapping)mapping).getClassifier();
                     }
-                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                        this.throwError("Error mapping type " + type + ": " + 
-                                mapping.getErrorMessage());
-                    }
-                    classifier = 
-                        ((ClassifierDefinitionMapping)mapping).getClassifier();
                 }
                 
                 OutputPin outputPin = this.mapAssignment(

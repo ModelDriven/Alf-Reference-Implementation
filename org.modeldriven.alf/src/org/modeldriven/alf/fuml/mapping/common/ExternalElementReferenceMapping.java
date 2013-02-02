@@ -10,19 +10,35 @@
 
 package org.modeldriven.alf.fuml.mapping.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 
 import org.modeldriven.alf.syntax.common.ExternalElementReference;
+import org.modeldriven.alf.uml.Element;
 
 public class ExternalElementReferenceMapping extends ElementReferenceMapping {
     
     public ExternalElementReferenceMapping() {
-        this.setErrorMessage("ExternalElementReferenceMapping not supported.");
     }
 
+    @Override
     public FumlMapping getMapping() {
         return this;
+    }
+    
+    @Override
+    public Element getElement() {
+        return this.getExternalElementReference().getElement();
+    }
+    
+    @Override
+    public List<Element> getModelElements() {
+        List<Element> elements = new ArrayList<Element>();
+        elements.add(this.getElement());
+        return elements;
     }
     
     public ExternalElementReference getExternalElementReference() {

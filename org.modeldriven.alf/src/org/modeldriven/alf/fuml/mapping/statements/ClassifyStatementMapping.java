@@ -54,17 +54,21 @@ public class ClassifyStatementMapping extends StatementMapping {
             Collection<ElementReference> references) throws MappingError {
         Collection<Classifier> classifiers = new ArrayList<Classifier>();
         for (ElementReference reference: references) {
+            Classifier classifier = (Classifier)reference.getImpl().getUml();
+            if (classifier == null) {
             FumlMapping mapping = this.fumlMap(reference);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
-            }
-            if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                this.throwError("Error mapping classifier " + 
-                        reference.getImpl().getName() + ": " + 
-                        mapping.getErrorMessage());
-            } else {
-                classifiers.add(
-                        ((ClassifierDefinitionMapping)mapping).getClassifier());
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                    this.throwError("Error mapping classifier " + 
+                            reference.getImpl().getName() + ": " + 
+                            mapping.getErrorMessage());
+                } else {
+                    classifier =
+                            ((ClassifierDefinitionMapping)mapping).getClassifier();
+                }
+                classifiers.add(classifier);
             }
         }
         return classifiers;

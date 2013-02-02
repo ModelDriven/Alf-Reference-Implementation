@@ -171,18 +171,21 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                                         (OutputPin)bodyOutput, bodyElements))) {
                             Classifier classifier = null;
                             if (type != null) {
-                                mapping = parentMapping.fumlMap(type);
-                                if (mapping instanceof ElementReferenceMapping) {
-                                    mapping = ((ElementReferenceMapping)mapping).
-                                        getMapping();
+                                classifier = (Classifier)type.getImpl().getUml();
+                                if (classifier == null) {
+                                    mapping = parentMapping.fumlMap(type);
+                                    if (mapping instanceof ElementReferenceMapping) {
+                                        mapping = ((ElementReferenceMapping)mapping).
+                                            getMapping();
+                                    }
+                                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                                        parentMapping.throwError("Error mapping type " + 
+                                                type + ": " + mapping.getErrorMessage());
+                                    }
+                                    classifier = 
+                                        ((ClassifierDefinitionMapping)mapping).
+                                            getClassifier();
                                 }
-                                if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                                    parentMapping.throwError("Error mapping type " + 
-                                            type + ": " + mapping.getErrorMessage());
-                                }
-                                classifier = 
-                                    ((ClassifierDefinitionMapping)mapping).
-                                        getClassifier();
                             }
         
                             StructuredActivityNode passthruNode = 

@@ -21,6 +21,7 @@ import org.modeldriven.alf.fuml.mapping.units.PropertyDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.FeatureReference;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
@@ -138,178 +139,182 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
         LeftHandSide lhs = this.getLeftHandSide();
         FeatureReference feature = lhs.getImpl().getFeature();
         if (feature != null) {
-            FumlMapping mapping = this.fumlMap(lhs.getImpl().getReferent());
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
-            }
-            if (!(mapping instanceof PropertyDefinitionMapping)) {
-                this.throwError("Error mapping feature: " + 
-                        mapping.getErrorMessage());
-            } else {
-                Property property =
-                    ((PropertyDefinitionMapping)mapping).getProperty();
-                ActivityNode objectSource = this.getObjectSource();
-                if (objectSource == null) {
-                    mapping = this.fumlMap(feature.getExpression());
-                    if (!(mapping instanceof ExpressionMapping)) {
-                        this.throwError("Error mapping feature expression: " + 
-                                mapping.getErrorMessage());
-                    } else {
-                        ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
-                        this.controlTarget = this.graph.addStructuredActivityNode(
-                                "Expression(LeftHandSide@" + lhs.getId() +")", 
-                                expressionMapping.getModelElements());
-                        objectSource = expressionMapping.getResultSource();
-                    }
+            ElementReference referent = lhs.getImpl().getReferent();
+            Property property = (Property)referent.getImpl().getUml();
+            if (property == null) {
+                FumlMapping mapping = this.fumlMap(lhs.getImpl().getReferent());
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
                 }
-                Expression index = lhs.getIndex();
-                ActivityNode resultNode;
-                if (index == null) {
-                    if (this.rhsUpper == 0) {
-                        ClearStructuralFeatureAction clearAction =
+                if (!(mapping instanceof PropertyDefinitionMapping)) {
+                    this.throwError("Error mapping feature: " + 
+                            mapping.getErrorMessage());
+                } else {
+                    property =
+                            ((PropertyDefinitionMapping)mapping).getProperty();
+                }
+            }
+            ActivityNode objectSource = this.getObjectSource();
+            if (objectSource == null) {
+                FumlMapping mapping = this.fumlMap(feature.getExpression());
+                if (!(mapping instanceof ExpressionMapping)) {
+                    this.throwError("Error mapping feature expression: " + 
+                            mapping.getErrorMessage());
+                } else {
+                    ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
+                    this.controlTarget = this.graph.addStructuredActivityNode(
+                            "Expression(LeftHandSide@" + lhs.getId() +")", 
+                            expressionMapping.getModelElements());
+                    objectSource = expressionMapping.getResultSource();
+                }
+            }
+            Expression index = lhs.getIndex();
+            ActivityNode resultNode;
+            if (index == null) {
+                if (this.rhsUpper == 0) {
+                    ClearStructuralFeatureAction clearAction =
                             this.graph.addClearStructuralFeatureAction(property);
-                        this.node = clearAction;
-                        this.graph.addObjectFlow(
-                                objectSource, 
-                                clearAction.getObject());
-                        if (this.controlTarget == null) {
-                            this.controlTarget = clearAction;
-                        }
-                        resultNode = clearAction.getResult();
-                    } else if (this.rhsUpper == 1) {
-                        AddStructuralFeatureValueAction writeAction =
+                    this.node = clearAction;
+                    this.graph.addObjectFlow(
+                            objectSource, 
+                            clearAction.getObject());
+                    if (this.controlTarget == null) {
+                        this.controlTarget = clearAction;
+                    }
+                    resultNode = clearAction.getResult();
+                } else if (this.rhsUpper == 1) {
+                    AddStructuralFeatureValueAction writeAction =
                             this.graph.addAddStructuralFeatureValueAction(
                                     property, true);
-                        this.node = writeAction;
-                        this.resultSource = this.graph.addForkNode(
-                                "Fork(LeftHandSide@" + lhs.getId() + ")");
-                        this.assignmentTarget = this.resultSource;
-                        this.graph.addObjectFlow(
-                                objectSource, 
-                                writeAction.getObject());
-                        this.graph.addObjectFlow(
-                                this.resultSource, writeAction.getValue());
-                        resultNode = writeAction.getResult();
-                    } else {
-                        ClearStructuralFeatureAction clearAction =
+                    this.node = writeAction;
+                    this.resultSource = this.graph.addForkNode(
+                            "Fork(LeftHandSide@" + lhs.getId() + ")");
+                    this.assignmentTarget = this.resultSource;
+                    this.graph.addObjectFlow(
+                            objectSource, 
+                            writeAction.getObject());
+                    this.graph.addObjectFlow(
+                            this.resultSource, writeAction.getValue());
+                    resultNode = writeAction.getResult();
+                } else {
+                    ClearStructuralFeatureAction clearAction =
                             this.graph.addClearStructuralFeatureAction(property);
-                        this.graph.addObjectFlow(
-                                objectSource, 
-                                clearAction.getObject());
-                        if (this.controlTarget == null) {
-                            this.controlTarget = clearAction;
-                        }
-                        this.resultSource = this.graph.addForkNode(
-                                "Fork(LeftHandSide@" + lhs.getId() + ")");
-                        this.assignmentTarget = this.resultSource;
+                    this.graph.addObjectFlow(
+                            objectSource, 
+                            clearAction.getObject());
+                    if (this.controlTarget == null) {
+                        this.controlTarget = clearAction;
+                    }
+                    this.resultSource = this.graph.addForkNode(
+                            "Fork(LeftHandSide@" + lhs.getId() + ")");
+                    this.assignmentTarget = this.resultSource;
 
-                        // Place property assignment mapping in a
-                        // structured activity node to insure the isEmpty
-                        // test within it does start executing too soon.
-                        this.node =
+                    // Place property assignment mapping in a
+                    // structured activity node to insure the isEmpty
+                    // test within it does start executing too soon.
+                    this.node =
                             this.graph.addStructuredActivityNode(
                                     "WriteAll(" + property.getQualifiedName() +")", 
                                     new ArrayList<Element>());
 
-                        InputPin valuePin = this.graph.createInputPin(
-                                this.node.getName() + 
-                                ".input(" + property.getQualifiedName() + ")", 
-                                property.getType(), 
-                                property.getLower(), 
-                                property.getUpper());
-                        ((StructuredActivityNode)this.node).
-                            addStructuredNodeInput(valuePin);
-                        this.graph.addObjectFlow(this.resultSource, valuePin);
+                    InputPin valuePin = this.graph.createInputPin(
+                            this.node.getName() + 
+                            ".input(" + property.getQualifiedName() + ")", 
+                            property.getType(), 
+                            property.getLower(), 
+                            property.getUpper());
+                    ((StructuredActivityNode)this.node).
+                    addStructuredNodeInput(valuePin);
+                    this.graph.addObjectFlow(this.resultSource, valuePin);
 
-                        ActivityGraph subgraph = this.createActivityGraph();
-                        resultNode = 
+                    ActivityGraph subgraph = this.createActivityGraph();
+                    resultNode = 
                             AssignmentExpressionMapping.mapPropertyAssignment(
                                     property, subgraph, 
                                     clearAction.getResult(), valuePin, this);
 
-                        graph.addToStructuredNode(
-                                (StructuredActivityNode)this.node, 
-                                subgraph.getModelElements());
-                    }
-                } else {
-                    ActivityNode indexSource = this.getIndexSource();
-                    if (indexSource == null) {
-                        mapping = this.fumlMap(index);
-                        if (!(mapping instanceof ExpressionMapping)) {
-                            this.throwError("Error mapping index expression: " + 
-                                    mapping.getErrorMessage());
-                        } else {
-                            ExpressionMapping indexMapping = 
+                    graph.addToStructuredNode(
+                            (StructuredActivityNode)this.node, 
+                            subgraph.getModelElements());
+                }
+            } else {
+                ActivityNode indexSource = this.getIndexSource();
+                if (indexSource == null) {
+                    FumlMapping mapping = this.fumlMap(index);
+                    if (!(mapping instanceof ExpressionMapping)) {
+                        this.throwError("Error mapping index expression: " + 
+                                mapping.getErrorMessage());
+                    } else {
+                        ExpressionMapping indexMapping = 
                                 (ExpressionMapping)mapping;
-                            StructuredActivityNode indexNode = 
+                        StructuredActivityNode indexNode = 
                                 this.graph.addStructuredActivityNode(
                                         "Index(LeftHandSide@" + lhs.getId() +")", 
                                         indexMapping.getModelElements());
-                            if (this.controlTarget == null) {
-                                this.controlTarget = indexNode;
-                            } else {
-                                this.graph.addControlFlow(
-                                        this.controlTarget, indexNode);
-                            }
-                            indexSource = indexMapping.getResultSource();
+                        if (this.controlTarget == null) {
+                            this.controlTarget = indexNode;
+                        } else {
+                            this.graph.addControlFlow(
+                                    this.controlTarget, indexNode);
                         }
+                        indexSource = indexMapping.getResultSource();
                     }
-                    
-                    CallBehaviorAction indexConversionAction = 
+                }
+
+                CallBehaviorAction indexConversionAction = 
                         this.graph.addCallBehaviorAction(getBehavior(
                                 RootNamespace.getIntegerFunctionToUnlimitedNatural()));
+                this.graph.addObjectFlow(
+                        indexSource, indexConversionAction.getArgument().get(0));
+
+                if (this.rhsUpper == 0) {
+                    RemoveStructuralFeatureValueAction removeAction =
+                            this.graph.addRemoveStructuralFeatureValueAction(
+                                    property, false);
+                    this.node = removeAction;
                     this.graph.addObjectFlow(
-                            indexSource, indexConversionAction.getArgument().get(0));
-                    
-                    if (this.rhsUpper == 0) {
-                        RemoveStructuralFeatureValueAction removeAction =
+                            objectSource, 
+                            removeAction.getObject());
+                    this.graph.addObjectFlow(
+                            indexConversionAction.getResult().get(0),
+                            removeAction.getRemoveAt());
+                    resultNode = removeAction.getResult();                                
+                } else {
+                    ForkNode indexFork = this.graph.addForkNode(
+                            "Fork(" + indexSource.getName() + ")");
+                    this.graph.addObjectFlow(
+                            indexConversionAction.getResult().get(0), indexFork);
+
+                    RemoveStructuralFeatureValueAction removeAction =
                             this.graph.addRemoveStructuralFeatureValueAction(
                                     property, false);
-                        this.node = removeAction;
-                        this.graph.addObjectFlow(
-                                objectSource, 
-                                removeAction.getObject());
-                        this.graph.addObjectFlow(
-                                indexConversionAction.getResult().get(0),
-                                removeAction.getRemoveAt());
-                        resultNode = removeAction.getResult();                                
-                    } else {
-                        ForkNode indexFork = this.graph.addForkNode(
-                                "Fork(" + indexSource.getName() + ")");
-                        this.graph.addObjectFlow(
-                                indexConversionAction.getResult().get(0), indexFork);
-                        
-                        RemoveStructuralFeatureValueAction removeAction =
-                            this.graph.addRemoveStructuralFeatureValueAction(
-                                    property, false);
-                        this.graph.addObjectFlow(
-                                objectSource, removeAction.getObject());
-                        this.graph.addObjectFlow(
-                                indexFork, removeAction.getRemoveAt());
-                        
-                        AddStructuralFeatureValueAction writeAction =
+                    this.graph.addObjectFlow(
+                            objectSource, removeAction.getObject());
+                    this.graph.addObjectFlow(
+                            indexFork, removeAction.getRemoveAt());
+
+                    AddStructuralFeatureValueAction writeAction =
                             this.graph.addAddStructuralFeatureValueAction(
                                     property, false);
-                        this.node = writeAction;
-                        this.resultSource = this.graph.addForkNode(
-                                "Fork(LeftHandSide@" + lhs.getId() + ")");
-                        this.assignmentTarget = this.resultSource;
-                        this.graph.addObjectFlow(
-                                removeAction.getResult(), 
-                                writeAction.getObject());
-                        this.graph.addObjectFlow(
-                                indexFork, writeAction.getInsertAt());
-                        this.graph.addObjectFlow(
-                                this.resultSource, writeAction.getValue());
-                        resultNode = writeAction.getResult();
-                    }
-                }
-                if (lhs.getImpl().isDataValueUpdate()) {
-                    this.assignedValueSource = this.graph.addForkNode(
-                            "Fork(" + resultNode.getName() + ")");
+                    this.node = writeAction;
+                    this.resultSource = this.graph.addForkNode(
+                            "Fork(LeftHandSide@" + lhs.getId() + ")");
+                    this.assignmentTarget = this.resultSource;
                     this.graph.addObjectFlow(
-                            resultNode, this.assignedValueSource);
+                            removeAction.getResult(), 
+                            writeAction.getObject());
+                    this.graph.addObjectFlow(
+                            indexFork, writeAction.getInsertAt());
+                    this.graph.addObjectFlow(
+                            this.resultSource, writeAction.getValue());
+                    resultNode = writeAction.getResult();
                 }
+            }
+            if (lhs.getImpl().isDataValueUpdate()) {
+                this.assignedValueSource = this.graph.addForkNode(
+                        "Fork(" + resultNode.getName() + ")");
+                this.graph.addObjectFlow(
+                        resultNode, this.assignedValueSource);
             }
         }
     }
