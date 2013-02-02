@@ -39,21 +39,24 @@ public class SuperInvocationExpressionMapping extends
         CallBehaviorAction action = null;
         InvocationExpression expression = this.getInvocationExpression();
         ElementReference referent = expression.getReferent();
-        FumlMapping mapping = this.fumlMap(referent);
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping) mapping).getMapping();
-        }
-        if (mapping instanceof OperationDefinitionMapping) {
-            Operation operation =
-                ((OperationDefinitionMapping)mapping).getOperation();
-            if (operation.getMethod().isEmpty()) {
-                this.throwError("No method for: " + operation);
-            } else {
-                action = this.graph.addCallBehaviorAction(operation.getMethod().get(0));
-                this.resultSource = ActivityGraph.getReturnPin(action);
+        Operation operation = (Operation)referent.getImpl().getUml();
+        if (operation == null) {
+            FumlMapping mapping = this.fumlMap(referent);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping) mapping).getMapping();
             }
+            if (mapping instanceof OperationDefinitionMapping) {
+                operation =
+                    ((OperationDefinitionMapping)mapping).getOperation();
+            } else {
+                this.throwError("Unknown referent mapping: " + mapping);
+            }
+        }
+        if (operation.getMethod().isEmpty()) {
+            this.throwError("No method for: " + operation);
         } else {
-            this.throwError("Unknown referent mapping: " + mapping);
+            action = this.graph.addCallBehaviorAction(operation.getMethod().get(0));
+            this.resultSource = ActivityGraph.getReturnPin(action);
         }
         return action;
     }

@@ -43,15 +43,22 @@ public class ReceptionDefinitionMapping extends MemberMapping {
         ReceptionDefinition definition = this.getReceptionDefinition();
         ElementReference signalReference = definition.getSignal();
 
-        FumlMapping mapping = this.fumlMap(signalReference);
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
-            if (mapping instanceof SignalDefinitionMapping) {
-                Signal signal = 
-                    (Signal)((SignalDefinitionMapping)mapping).getClassifier();
-                reception.setSignal(signal);
+        Signal signal = (Signal)signalReference.getImpl().getUml();
+        if (signal == null) {
+            FumlMapping mapping = this.fumlMap(signalReference);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+                if (!(mapping instanceof SignalDefinitionMapping)) {
+                    this.throwError("Error mapping signal " + 
+                            signalReference.getImpl().getName() + ": " + 
+                            mapping.getErrorMessage());
+                } else {
+                    signal = 
+                        (Signal)((SignalDefinitionMapping)mapping).getClassifier();
+                 }
             }
         }
+        reception.setSignal(signal);
     }
     
     @Override

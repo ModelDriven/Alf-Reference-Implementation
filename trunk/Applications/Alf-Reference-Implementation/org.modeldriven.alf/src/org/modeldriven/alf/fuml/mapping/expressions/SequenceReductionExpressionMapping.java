@@ -18,10 +18,12 @@ import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.ExtentOrExpression;
 import org.modeldriven.alf.syntax.expressions.SequenceReductionExpression;
 
+import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.ReduceAction;
 import org.modeldriven.alf.uml.ActivityNode;
 
@@ -40,31 +42,35 @@ public class SequenceReductionExpressionMapping extends ExpressionMapping {
     public void mapAction() throws MappingError {
         SequenceReductionExpression expression = 
             this.getSequenceReductionExpression();
-        FumlMapping mapping = this.fumlMap(expression.getReferent());
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
-        }
-        if (!(mapping instanceof ActivityDefinitionMapping)) {
-            this.throwError("Error mapping behavior " + 
-                    expression.getBehaviorName() + ": " + 
-                    mapping.getErrorMessage());
-        } else {
-            this.action = this.graph.addReduceAction(
-                    ((ActivityDefinitionMapping)mapping).getBehavior(),
-                    this.getType(),
-                    expression.getIsOrdered());
-            ExtentOrExpression primary = expression.getPrimary();
-            mapping = this.fumlMap(primary == null? null: primary.getExpression());
-            if (!(mapping instanceof ExpressionMapping)) {
-                this.throwError("Error mapping primary expression: " + 
+        ElementReference referent = expression.getReferent();
+        Behavior behavior = (Behavior)referent.getImpl().getUml();
+        if (behavior == null) {
+            FumlMapping mapping = this.fumlMap(expression.getReferent());
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
+            if (!(mapping instanceof ActivityDefinitionMapping)) {
+                this.throwError("Error mapping behavior " + 
+                        expression.getBehaviorName() + ": " + 
                         mapping.getErrorMessage());
             } else {
-                ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
-                this.graph.addAll(expressionMapping.getGraph());
-                this.graph.addObjectFlow(
-                        expressionMapping.getResultSource(), 
-                        this.action.getCollection());
+                behavior = ((ActivityDefinitionMapping)mapping).getBehavior();
             }
+        }
+        this.action = this.graph.addReduceAction(
+                behavior, this.getType(), expression.getIsOrdered());
+        ExtentOrExpression primary = expression.getPrimary();
+        FumlMapping mapping = 
+                this.fumlMap(primary == null? null: primary.getExpression());
+        if (!(mapping instanceof ExpressionMapping)) {
+            this.throwError("Error mapping primary expression: " + 
+                    mapping.getErrorMessage());
+        } else {
+            ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
+            this.graph.addAll(expressionMapping.getGraph());
+            this.graph.addObjectFlow(
+                    expressionMapping.getResultSource(), 
+                    this.action.getCollection());
         }
     }
     

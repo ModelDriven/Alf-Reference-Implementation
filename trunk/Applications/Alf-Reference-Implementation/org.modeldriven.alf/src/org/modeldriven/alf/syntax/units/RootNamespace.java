@@ -145,7 +145,7 @@ public class RootNamespace extends ModelNamespace {
         if (umlPrimitiveTypes == null) {
             umlPrimitiveTypes = new QualifiedName();
             umlPrimitiveTypes = umlPrimitiveTypes.getImpl().addName("UML").getImpl().
-                    addName("AuxiliaryTypes").getImpl().addName("PrimitiveTypes");
+                    addName("AuxiliaryConstructs").getImpl().addName("PrimitiveTypes");
             umlPrimitiveTypes.getImpl().setCurrentScope(getRootScope());
         }
         return umlPrimitiveTypes;

@@ -23,6 +23,7 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.InternalElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.units.ClassDefinition;
 import org.modeldriven.alf.syntax.units.Member;
@@ -124,22 +125,25 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         // Add initialization of superclass properties.
         for (ElementReference superclassReference: 
             this.getClassDefinition().getSpecializationReferent()) {
-            FumlMapping mapping = this.fumlMap(superclassReference);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
-            }
-            if (!(mapping instanceof ClassDefinitionMapping)) {
-                this.throwError("Error mapping superclass reference for " + 
-                        superclassReference.getImpl().getName() + ": " + 
-                        mapping.getErrorMessage());
-            } else {
-                CallOperationAction callAction = initializationGraph.addCallOperationAction(
-                        ((ClassDefinitionMapping)mapping).getInitializationOperation());
-                initializationGraph.addObjectFlow(selfFork, callAction.getTarget());
-                if (previousNode != null) {
-                    initializationGraph.addControlFlow(previousNode, callAction);
+            // TODO: Implement superclass initialization for non-Alf superclasses.
+            if (superclassReference instanceof InternalElementReference) {
+                FumlMapping mapping = this.fumlMap(superclassReference);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
                 }
-                previousNode = callAction;
+                if (!(mapping instanceof ClassDefinitionMapping)) {
+                    this.throwError("Error mapping superclass reference for " + 
+                            superclassReference.getImpl().getName() + ": " + 
+                            mapping.getErrorMessage());
+                } else {
+                    CallOperationAction callAction = initializationGraph.addCallOperationAction(
+                            ((ClassDefinitionMapping)mapping).getInitializationOperation());
+                    initializationGraph.addObjectFlow(selfFork, callAction.getTarget());
+                    if (previousNode != null) {
+                        initializationGraph.addControlFlow(previousNode, callAction);
+                    }
+                    previousNode = callAction;
+                }
             }
         }
         

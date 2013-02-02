@@ -16,8 +16,10 @@ import org.modeldriven.alf.fuml.mapping.expressions.UnaryExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.ClassificationExpression;
 
+import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.ReadIsClassifiedObjectAction;
 
 public class ClassificationExpressionMapping extends UnaryExpressionMapping {
@@ -43,29 +45,33 @@ public class ClassificationExpressionMapping extends UnaryExpressionMapping {
             ExpressionMapping operandMapping = (ExpressionMapping)mapping;
             this.graph.addAll(operandMapping.getGraph());
             
-            mapping = this.fumlMap(expression.getReferent());
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            ElementReference referent = expression.getReferent();
+            Classifier classifier = (Classifier)referent.getImpl().getUml();
+            if (classifier == null) {
+                mapping = this.fumlMap(referent);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                    this.throwError("Error mapping referent for " + 
+                            expression.getTypeName().getPathName() + 
+                            ": " + mapping.getErrorMessage());
+                } else {
+                    ClassifierDefinitionMapping referentMapping = 
+                            (ClassifierDefinitionMapping)mapping;
+                    classifier = referentMapping.getClassifier();                
+                }
             }
-            if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                this.throwError("Error mapping referent for " + 
-                        expression.getTypeName().getPathName() + 
-                        ": " + mapping.getErrorMessage());
-            } else {
-                ClassifierDefinitionMapping referentMapping = 
-                    (ClassifierDefinitionMapping)mapping;
-                
-                ReadIsClassifiedObjectAction action = 
+            ReadIsClassifiedObjectAction action = 
                     this.graph.addReadIsClassifiedObjectAction(
-                            referentMapping.getClassifier(), 
+                            classifier, 
                             expression.getIsDirect());
-                this.graph.addObjectFlow(
-                        operandMapping.getResultSource(), 
-                        action.getObject());
-                
-                this.action = action;
-                this.resultSource = action.getResult();
-            }
+            this.graph.addObjectFlow(
+                    operandMapping.getResultSource(), 
+                    action.getObject());
+
+            this.action = action;
+            this.resultSource = action.getResult();
         }
     }
 

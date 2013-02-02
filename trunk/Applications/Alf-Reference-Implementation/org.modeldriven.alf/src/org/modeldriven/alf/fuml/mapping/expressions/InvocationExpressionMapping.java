@@ -188,35 +188,47 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
             action = this.graph.addDestroyObjectAction(null);
         } else {
             ElementReference referent = expression.getReferent();
-            FumlMapping mapping = this.fumlMap(referent);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping) mapping).getMapping();
-            }            
-            if (mapping instanceof OperationDefinitionMapping) {
-                Operation operation = 
-                    ((OperationDefinitionMapping) mapping).getOperation();
-                action = this.graph.addCallOperationAction(operation);
+            Element element = referent.getImpl().getUml();
+            if (element == null) {
+                FumlMapping mapping = this.fumlMap(referent);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping) mapping).getMapping();
+                }          
+                if (mapping instanceof OperationDefinitionMapping) {
+                    element = 
+                        ((OperationDefinitionMapping) mapping).getOperation();
+                } else if (mapping instanceof SignalDefinitionMapping) {
+                    element = ((SignalDefinitionMapping) mapping).getSignal();
+                    
+                } else if (mapping instanceof ActivityDefinitionMapping) {
+                    element = 
+                        ((ActivityDefinitionMapping) mapping).getBehavior();
+                } else if (mapping instanceof PropertyDefinitionMapping) {
+                    element = 
+                        ((PropertyDefinitionMapping) mapping).getProperty();
+                    
+                } else {
+                    this.throwError("Unknown referent mapping: " + 
+                            mapping.getErrorMessage());
+                }
+            }
+            if (element instanceof Operation) {
+                action = this.graph.addCallOperationAction((Operation)element);
                 this.resultSource = ActivityGraph.getReturnPin(action);
 
-            } else if (mapping instanceof SignalDefinitionMapping) {
-                Signal signal = ((SignalDefinitionMapping) mapping).getSignal();
-                action = this.graph.addSendSignalAction(signal);
+            } else if (element instanceof Signal) {
+                action = this.graph.addSendSignalAction((Signal)element);
                 
-            } else if (mapping instanceof ActivityDefinitionMapping) {
-                Behavior behavior = 
-                    ((ActivityDefinitionMapping) mapping).getBehavior();
-                action = this.graph.addCallBehaviorAction(behavior);
+            } else if (element instanceof Behavior) {
+                action = this.graph.addCallBehaviorAction((Behavior)element);
                 this.resultSource = ActivityGraph.getReturnPin(action);
                  
-            } else if (mapping instanceof PropertyDefinitionMapping) {
-                Property associationEnd = 
-                    ((PropertyDefinitionMapping) mapping).getProperty();
-                action = this.graph.addReadLinkAction(associationEnd);
+            } else if (element instanceof Property) {
+                action = this.graph.addReadLinkAction((Property)element);
                 this.resultSource = action.getOutput().get(0);
                 
             } else {
-                this.throwError("Unknown referent mapping: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Unknown referent: " + element);
             }
         }
         return action;

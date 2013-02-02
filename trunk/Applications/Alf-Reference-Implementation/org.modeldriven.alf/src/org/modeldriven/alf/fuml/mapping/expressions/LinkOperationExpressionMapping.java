@@ -57,115 +57,118 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
     public Action mapTarget() throws MappingError {
         LinkOperationExpression expression = this.getLinkOperationExpression();
         Action action = null;
-        FumlMapping mapping = this.fumlMap(expression.getReferent());
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        Association association = null;
+        if (association == null) {
+            FumlMapping mapping = this.fumlMap(expression.getReferent());
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
+            if (!(mapping instanceof AssociationDefinitionMapping)) {
+                this.throwError("Error mapping association: " + mapping.getErrorMessage());
+            } else {
+                association = (Association)
+                    ((AssociationDefinitionMapping)mapping).getClassifier();
+            }
         }
-        if (!(mapping instanceof AssociationDefinitionMapping)) {
-            this.throwError("Error mapping association: " + mapping.getErrorMessage());
-        } else {
-            Association association = (Association)
-                ((AssociationDefinitionMapping)mapping).getClassifier();
-            action = 
-                expression.getIsClear()?
-                    this.graph.addClearAssociationAction(association):
-                expression.getIsCreation()?
-                    this.graph.addCreateLinkAction(association):
-                    this.graph.addDestroyLinkAction(association);
-            if (expression.getIsCreation()) {
-                List<LinkEndCreationData> endDataList = 
-                        ((CreateLinkAction)action).getEndData();
-                if (association.getMemberEnd().size() == 2) {
-                    // For a binary association, setting isReplaceAll=true on 
-                    // the opposite end of an end with multiplicity upper bound of 1
-                    // ensures that the upper bound is maintained.
-                    LinkEndCreationData endData1 = endDataList.get(0);
-                    LinkEndCreationData endData2 = endDataList.get(1);
-                    if (endData1.getEnd().getUpper() == 1) {
-                        endData2.setIsReplaceAll(true);
+        action = 
+            expression.getIsClear()?
+                this.graph.addClearAssociationAction(association):
+            expression.getIsCreation()?
+                this.graph.addCreateLinkAction(association):
+                this.graph.addDestroyLinkAction(association);
+        if (expression.getIsCreation()) {
+            List<LinkEndCreationData> endDataList = 
+                    ((CreateLinkAction)action).getEndData();
+            if (association.getMemberEnd().size() == 2) {
+                // For a binary association, setting isReplaceAll=true on 
+                // the opposite end of an end with multiplicity upper bound of 1
+                // ensures that the upper bound is maintained.
+                LinkEndCreationData endData1 = endDataList.get(0);
+                LinkEndCreationData endData2 = endDataList.get(1);
+                if (endData1.getEnd().getUpper() == 1) {
+                    endData2.setIsReplaceAll(true);
+                }
+                if (endData2.getEnd().getUpper() == 1) {
+                    endData1.setIsReplaceAll(true);
+                }
+            } else {
+                // For a non-binary association, specific links need to be
+                // found and destroyed to maintain any upper bound
+                // multiplicities of 1.
+                boolean hasUpperBound1 = false;
+                for (LinkEndCreationData endData: endDataList) {
+                    if (endData.getEnd().getUpper() == 1) {
+                        hasUpperBound1 = true;
+                        break;
                     }
-                    if (endData2.getEnd().getUpper() == 1) {
-                        endData1.setIsReplaceAll(true);
-                    }
-                } else {
-                    // For a non-binary association, specific links need to be
-                    // found and destroyed to maintain any upper bound
-                    // multiplicities of 1.
-                    boolean hasUpperBound1 = false;
+                }
+                if (hasUpperBound1) {
+                    StructuredActivityNode node = 
+                            this.graph.addStructuredActivityNode(
+                                    "CreateLink(" + association.getName() + ")", null);
+                    this.graph.remove(action);
+                    ActivityGraph subgraph = this.createActivityGraph();
+                    subgraph.add(action);
                     for (LinkEndCreationData endData: endDataList) {
-                        if (endData.getEnd().getUpper() == 1) {
-                            hasUpperBound1 = true;
-                            break;
+                        Property end = endData.getEnd();
+                        InputPin inputPin = this.graph.createInputPin(
+                                node.getName() + ".input(" + end.getName() + ")", 
+                                end.getType(), 
+                                end.getLower(), 
+                                end.getUpper());
+                        inputPin.setIsOrdered(end.getIsOrdered());
+                        node.addStructuredNodeInput(inputPin);
+                        ActivityNode forkNode = 
+                                subgraph.addForkNode("Fork" + end.getName() + ")");
+                        subgraph.addObjectFlow(inputPin, forkNode);
+                        subgraph.addObjectFlow(forkNode, endData.getValue());
+                        if (end.getIsOrdered()) {
+                            inputPin = this.graph.createInputPin(
+                                    "Index(" + end.getName() + ")", 
+                                    getUnlimitedNaturalType(), 1, 1);
+                            node.addStructuredNodeInput(inputPin);
+                            subgraph.addObjectFlow(inputPin, endData.getInsertAt());
                         }
                     }
-                    if (hasUpperBound1) {
-                        StructuredActivityNode node = 
-                                this.graph.addStructuredActivityNode(
-                                        "CreateLink(" + association.getName() + ")", null);
-                        this.graph.remove(action);
-                        ActivityGraph subgraph = this.createActivityGraph();
-                        subgraph.add(action);
-                        for (LinkEndCreationData endData: endDataList) {
-                            Property end = endData.getEnd();
-                            InputPin inputPin = this.graph.createInputPin(
-                                    node.getName() + ".input(" + end.getName() + ")", 
-                                    end.getType(), 
-                                    end.getLower(), 
-                                    end.getUpper());
-                            inputPin.setIsOrdered(end.getIsOrdered());
-                            node.addStructuredNodeInput(inputPin);
-                            ActivityNode forkNode = 
-                                    subgraph.addForkNode("Fork" + end.getName() + ")");
-                            subgraph.addObjectFlow(inputPin, forkNode);
-                            subgraph.addObjectFlow(forkNode, endData.getValue());
-                            if (end.getIsOrdered()) {
-                                inputPin = this.graph.createInputPin(
-                                        "Index(" + end.getName() + ")", 
-                                        getUnlimitedNaturalType(), 1, 1);
-                                node.addStructuredNodeInput(inputPin);
-                                subgraph.addObjectFlow(inputPin, endData.getInsertAt());
-                            }
-                        }
-                        ActivityGraph destroyGraph = this.createActivityGraph();
-                        for (int i = 0; i < endDataList.size(); i++) {
-                            Property end = endDataList.get(i).getEnd();
-                            if (end.getUpper() == 1) {
-                                ReadLinkAction readAction = 
-                                        destroyGraph.addReadLinkAction(end);
-                                DestroyLinkAction destroyAction = 
-                                        destroyGraph.addDestroyLinkAction(association);
-                                for (int j = 0, k = 0; j < endDataList.size(); j++, k++) {
-                                    if (j == i) {
-                                        destroyGraph.addObjectFlow(
-                                                readAction.getResult(), 
-                                                destroyAction.getInputValue().get(j));
-                                    } else {
-                                        InputPin inputPin = 
-                                                node.getStructuredNodeInput().get(k);
-                                        ActivityNode forkNode = 
-                                                inputPin.getOutgoing().get(0).getTarget();
-                                        destroyGraph.addObjectFlow(
-                                                forkNode, 
-                                                readAction.getInputValue().get(j < i? j: j-1));
-                                        destroyGraph.addObjectFlow(
-                                                forkNode, 
-                                                destroyAction.getInputValue().get(j));
-                                    }
-                                    if (endDataList.get(j).getEnd().getIsOrdered()) {
-                                        k++;
-                                    }
+                    ActivityGraph destroyGraph = this.createActivityGraph();
+                    for (int i = 0; i < endDataList.size(); i++) {
+                        Property end = endDataList.get(i).getEnd();
+                        if (end.getUpper() == 1) {
+                            ReadLinkAction readAction = 
+                                    destroyGraph.addReadLinkAction(end);
+                            DestroyLinkAction destroyAction = 
+                                    destroyGraph.addDestroyLinkAction(association);
+                            for (int j = 0, k = 0; j < endDataList.size(); j++, k++) {
+                                if (j == i) {
+                                    destroyGraph.addObjectFlow(
+                                            readAction.getResult(), 
+                                            destroyAction.getInputValue().get(j));
+                                } else {
+                                    InputPin inputPin = 
+                                            node.getStructuredNodeInput().get(k);
+                                    ActivityNode forkNode = 
+                                            inputPin.getOutgoing().get(0).getTarget();
+                                    destroyGraph.addObjectFlow(
+                                            forkNode, 
+                                            readAction.getInputValue().get(j < i? j: j-1));
+                                    destroyGraph.addObjectFlow(
+                                            forkNode, 
+                                            destroyAction.getInputValue().get(j));
+                                }
+                                if (endDataList.get(j).getEnd().getIsOrdered()) {
+                                    k++;
                                 }
                             }
                         }
-                        ActivityNode destroyNode = 
-                                subgraph.addStructuredActivityNode(
-                                        "DestroyLinks", 
-                                        destroyGraph.getModelElements());
-                        subgraph.addControlFlow(destroyNode, action);
-                        this.graph.addToStructuredNode(
-                                node, subgraph.getModelElements());
-                        action = node;
                     }
+                    ActivityNode destroyNode = 
+                            subgraph.addStructuredActivityNode(
+                                    "DestroyLinks", 
+                                    destroyGraph.getModelElements());
+                    subgraph.addControlFlow(destroyNode, action);
+                    this.graph.addToStructuredNode(
+                            node, subgraph.getModelElements());
+                    action = node;
                 }
             }
         }

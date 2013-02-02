@@ -56,19 +56,22 @@ public abstract class ClassifierDefinitionMapping extends
             definition.getSpecializationReferent();
 
         for (ElementReference referent: referents) {
-            FumlMapping mapping = this.fumlMap(referent);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            Classifier general = (Classifier)referent.getImpl().getUml();
+            if (general == null) {
+                FumlMapping mapping = this.fumlMap(referent);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                    this.throwError("Error mapping generalization: " + referent);
+                } else {
+                    general = 
+                            ((ClassifierDefinitionMapping)mapping).getClassifier();        
+                }
             }
-            if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                this.throwError("Error mapping generalization: " + referent);
-            } else {
-                Classifier general = 
-                    ((ClassifierDefinitionMapping)mapping).getClassifier();        
-                Generalization generalization = this.create(Generalization.class);
-                generalization.setGeneral(general);
-                classifier.addGeneralization(generalization);                   
-            }
+            Generalization generalization = this.create(Generalization.class);
+            generalization.setGeneral(general);
+            classifier.addGeneralization(generalization);                   
         }
 
     }

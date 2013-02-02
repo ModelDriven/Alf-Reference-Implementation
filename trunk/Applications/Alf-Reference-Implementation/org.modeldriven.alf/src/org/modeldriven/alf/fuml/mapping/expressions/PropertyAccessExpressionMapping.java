@@ -14,7 +14,6 @@ import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
-import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.PropertyDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
@@ -57,20 +56,16 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
         
         Action action = null;
         
-        ElementReference namespace = feature.getImpl().getNamespace();
-        FumlMapping mapping = this.fumlMap(namespace);
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
-        }
-        if (!(mapping instanceof NamespaceDefinitionMapping)) {
-            this.throwError("Error mapping namespace: " + 
-                    mapping.getErrorMessage());
-        } else {
-            // NOTE: Forcing the mapping of the property namespace is necessary
-            // to ensure that there is a type that may be used for the object
-            // input pin on a read structural feature action for the property.
-            ((NamespaceDefinitionMapping)mapping).getModelElements();
-            
+        ElementReference namespaceReference = feature.getImpl().getNamespace();
+        
+        // NOTE: Forcing the mapping of the property namespace is necessary
+        // to ensure that there is a type that may be used for the object
+        // input pin on a read structural feature action for the property.
+        FumlMapping mapping = this.fumlMap(namespaceReference);
+        mapping.getModelElements();
+        
+        Property property = (Property)feature.getImpl().getUml();
+        if (property == null) {
             mapping = this.fumlMap(feature);
             if (mapping instanceof ElementReferenceMapping) {
                 mapping = ((ElementReferenceMapping)mapping).getMapping();
@@ -79,54 +74,54 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
                 this.throwError("Error mapping feature: " + 
                         mapping.getErrorMessage());
             } else {
-                Property property = 
+                property = 
                         ((PropertyDefinitionMapping)mapping).getProperty();
-                mapping = this.fumlMap(expression);
+            }
+        }
+            
+        mapping = this.fumlMap(expression);
+        if (!(mapping instanceof ExpressionMapping)) {
+            this.throwError("Error mapping expression: " + 
+                    mapping.getErrorMessage());
+        } else {
+            ExpressionMapping expressionMapping = 
+                    (ExpressionMapping)mapping;
+            this.graph.addAll(expressionMapping.getGraph());
 
-                if (!(mapping instanceof ExpressionMapping)) {
-                    this.throwError("Error mapping expression: " + 
-                            mapping.getErrorMessage());
-                } else {
-                    ExpressionMapping expressionMapping = 
-                            (ExpressionMapping)mapping;
-                    this.graph.addAll(expressionMapping.getGraph());
+            ReadStructuralFeatureAction readAction =
+                    this.graph.addReadStructuralFeatureAction(property);
 
-                    ReadStructuralFeatureAction readAction =
-                            this.graph.addReadStructuralFeatureAction(property);
+            ActivityNode expressionResult = 
+                    expressionMapping.getResultSource();
 
-                    ActivityNode expressionResult = 
-                            expressionMapping.getResultSource();
+            // Add a fork node that may be used as the source of the feature
+            // expression to avoid recomputing it for inout parameters,
+            // increment or decrement expressions and compound assignments.
+            this.objectSource = this.graph.addForkNode(
+                    "Fork(" + expressionResult.getName() + ")");
+            this.graph.addObjectFlow(expressionResult, this.objectSource);
 
-                    // Add a fork node that may be used as the source of the feature
-                    // expression to avoid recomputing it for inout parameters,
-                    // increment or decrement expressions and compound assignments.
-                    this.objectSource = this.graph.addForkNode(
-                            "Fork(" + expressionResult.getName() + ")");
-                    this.graph.addObjectFlow(expressionResult, this.objectSource);
+            if (!propertyAccess.getImpl().isSequencePropertyAccess()) {
+                action = readAction;
+                this.graph.addObjectFlow(
+                        this.objectSource, readAction.getObject());
+                this.resultSource = readAction.getResult();
 
-                    if (!propertyAccess.getImpl().isSequencePropertyAccess()) {
-                        action = readAction;
-                        this.graph.addObjectFlow(
-                                this.objectSource, readAction.getObject());
-                        this.resultSource = readAction.getResult();
+            } else {
+                Collection<Element> elements = new ArrayList<Element>();
+                elements.add(readAction);
+                this.graph.remove(readAction);
 
-                    } else {
-                        Collection<Element> elements = new ArrayList<Element>();
-                        elements.add(readAction);
-                        this.graph.remove(readAction);
+                ExpansionRegion region = this.graph.addExpansionRegion(
+                        "Collect(" + readAction.getName() + ")", 
+                        "parallel", 
+                        elements, 
+                        this.objectSource, 
+                        readAction.getObject(), 
+                        readAction.getResult());
 
-                        ExpansionRegion region = this.graph.addExpansionRegion(
-                                "Collect(" + readAction.getName() + ")", 
-                                "parallel", 
-                                elements, 
-                                this.objectSource, 
-                                readAction.getObject(), 
-                                readAction.getResult());
-
-                        action = region;
-                        this.resultSource = region.getOutputElement().get(0);                    
-                    }
-                }
+                action = region;
+                this.resultSource = region.getOutputElement().get(0);                    
             }
         }
         return action;

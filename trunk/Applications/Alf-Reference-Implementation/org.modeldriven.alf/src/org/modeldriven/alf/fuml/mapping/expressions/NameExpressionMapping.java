@@ -24,6 +24,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.NameExpression;
 import org.modeldriven.alf.syntax.expressions.PropertyAccessExpression;
 
+import org.modeldriven.alf.uml.EnumerationLiteral;
 import org.modeldriven.alf.uml.ValueSpecificationAction;
 import org.modeldriven.alf.uml.ActivityNode;
 import org.modeldriven.alf.uml.Element;
@@ -94,18 +95,22 @@ public class NameExpressionMapping extends ExpressionMapping {
                     }
                 }
             } else if (enumerationLiteralReference != null) {
-                FumlMapping mapping = this.fumlMap(enumerationLiteralReference);
-                if (mapping instanceof ElementReferenceMapping) {
-                    mapping = ((ElementReferenceMapping)mapping).getMapping();
-                }
-                if (mapping instanceof EnumerationLiteralNameMapping) {
-                    this.action = this.graph.addDataValueSpecificationAction(
-                            ((EnumerationLiteralNameMapping)mapping).
-                            getEnumerationLiteral());
+                EnumerationLiteral literal = 
+                        (EnumerationLiteral)enumerationLiteralReference.getImpl().getUml();
+                if (literal == null) {
+                    FumlMapping mapping = this.fumlMap(enumerationLiteralReference);
+                    if (mapping instanceof ElementReferenceMapping) {
+                        mapping = ((ElementReferenceMapping)mapping).getMapping();
+                    }
+                    if (mapping instanceof EnumerationLiteralNameMapping) {
+                        literal = ((EnumerationLiteralNameMapping)mapping).
+                                getEnumerationLiteral();
+                    } else {
+                        this.throwError("Error mapping enumeration literal:" + 
+                                enumerationLiteralReference);
+                    }
+                    this.action = this.graph.addDataValueSpecificationAction(literal);
                     this.activityNode = this.action.getResult();
-                } else {
-                    this.throwError("Error mapping enumeration literal:" + 
-                            enumerationLiteralReference);
                 }
             } else if (propertyAccess != null) {
                 FumlMapping mapping = this.fumlMap(propertyAccess);

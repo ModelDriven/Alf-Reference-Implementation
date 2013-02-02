@@ -15,9 +15,11 @@ import org.modeldriven.alf.fuml.mapping.units.ImportReferenceMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.PackageImportReference;
 
 import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageImport;
 
 import java.util.ArrayList;
@@ -36,18 +38,22 @@ public class PackageImportReferenceMapping extends ImportReferenceMapping {
     public void mapTo(PackageImport packageImport) throws MappingError {
         super.mapTo(packageImport);
 
-        PackageImportReference importReference = this.getPackageImportReference();
-        FumlMapping mapping = this.fumlMap(importReference.getReferent());
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        ElementReference importReference = 
+                this.getPackageImportReference().getReferent();
+        Package package_ = (Package)importReference.getImpl().getUml();
+        if (package_ == null) {
+            FumlMapping mapping = this.fumlMap(importReference);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
+            if (!(mapping instanceof PackageDefinitionMapping)) {
+                this.throwError("Error mapping referent: " + 
+                        mapping.getErrorMessage());
+            } else {
+                package_ = ((PackageDefinitionMapping)mapping).getPackage();
+            }
         }
-        if (!(mapping instanceof PackageDefinitionMapping)) {
-            this.throwError("Error mapping referent: " + 
-                    mapping.getErrorMessage());
-        } else {
-            packageImport.setImportedPackage(
-                    ((PackageDefinitionMapping)mapping).getPackage());
-        }
+        packageImport.setImportedPackage(package_);
     }
 
     @Override
