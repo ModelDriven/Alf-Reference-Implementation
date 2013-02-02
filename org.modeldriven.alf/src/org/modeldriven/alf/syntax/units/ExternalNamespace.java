@@ -33,6 +33,11 @@ public class ExternalNamespace extends NamespaceDefinition {
     }
     
     @Override
+    public String getName() {
+        return this.getUmlNamespace().getName();
+    }
+    
+    @Override
     public NamespaceDefinition getNamespace() {
         Namespace namespace = this.getUmlNamespace().getNamespace();
         return namespace == null? null: new ExternalNamespace(namespace);
