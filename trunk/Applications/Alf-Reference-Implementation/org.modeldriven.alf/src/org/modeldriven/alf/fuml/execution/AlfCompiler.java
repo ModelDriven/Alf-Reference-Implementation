@@ -9,15 +9,14 @@
 
 package org.modeldriven.alf.fuml.execution;
 
-import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public abstract class AlfCompiler extends AlfBase {
     
-    protected abstract NamespaceDefinition saveModel(NamespaceDefinition definition);
+    protected abstract UnitDefinition saveModel(UnitDefinition definition);
     
     @Override
-    public NamespaceDefinition process(UnitDefinition unit) {
+    public UnitDefinition process(UnitDefinition unit) {
         return this.saveModel(super.process(unit));
     }
     

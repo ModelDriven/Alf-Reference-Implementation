@@ -34,7 +34,7 @@ import org.modeldriven.alf.uml.PrimitiveType;
 
 public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     
-    private RootNamespaceImpl rootScopeImpl = null;    
+    protected RootNamespaceImpl rootScopeImpl = null;    
     protected boolean isParseOnly = false;
     protected boolean isPrint = false;
     protected boolean isFileName = false;
@@ -208,18 +208,18 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         return i == args.length - 1? args[i]: null;
     }
     
-    public NamespaceDefinition process(UnitDefinition unit) {
-        NamespaceDefinition definition = null;
+    public UnitDefinition process(UnitDefinition unit) {
         if (unit != null) {
             Collection<ConstraintViolation> violations = this.check(unit);
             if (this.isPrint) {
                 unit.print(true);
             } else if (!this.isParseOnly && violations.isEmpty()) {
-                FumlMapping mapping = this.map(RootNamespace.getRootScope());
-                definition = mapping == null? null: unit.getDefinition();
+                if (this.map(RootNamespace.getRootScope()) != null) {
+                    return unit;
+                }
             }
         }
-        return definition;
+        return null;
     }
     
     protected void configure() {

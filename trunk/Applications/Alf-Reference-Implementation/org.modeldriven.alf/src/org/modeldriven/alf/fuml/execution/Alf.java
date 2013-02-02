@@ -32,9 +32,10 @@ import org.modeldriven.alf.uml.Behavior;
 
 public abstract class Alf extends AlfBase {
     
-    public NamespaceDefinition execute(NamespaceDefinition definition) {
-        if (definition != null) {
+    public UnitDefinition execute(UnitDefinition unit) {
+        if (unit != null) {
             try {
+                NamespaceDefinition definition = unit.getDefinition();
                 Mapping elementMapping = definition.getImpl().getMapping();
                 Element element = ((FumlMapping)elementMapping).getElement();
 
@@ -56,7 +57,7 @@ public abstract class Alf extends AlfBase {
                     this.printVerbose("Executing...");
                     if (element instanceof Behavior) {
                         locus.getExecutor().execute((Behavior)element, null);
-                        return definition;
+                        return unit;
                     } else {
                         ClassDefinition classDefinition = 
                                 (ClassDefinition)definition;
@@ -82,7 +83,7 @@ public abstract class Alf extends AlfBase {
                             // Execute the classifier behavior.
                             object.startBehavior(class_);
 
-                            return definition;
+                            return unit;
                         }
                     }
                 } else if (element instanceof Behavior) {
@@ -128,7 +129,7 @@ public abstract class Alf extends AlfBase {
     }
     
     @Override
-    public NamespaceDefinition process(UnitDefinition unit) {
+    public UnitDefinition process(UnitDefinition unit) {
         return this.execute(super.process(unit));
     }
     
