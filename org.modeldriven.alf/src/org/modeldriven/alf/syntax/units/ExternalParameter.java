@@ -10,6 +10,7 @@ package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.uml.Parameter;
+import org.modeldriven.alf.uml.Type;
 
 public class ExternalParameter extends FormalParameter {
     
@@ -18,9 +19,12 @@ public class ExternalParameter extends FormalParameter {
         
         this.setDirection(parameter.getDirection());
         
-        ExternalElementReference typeReference = new ExternalElementReference();
-        typeReference.setElement(parameter.getType());
-        this.setType(typeReference);
+        Type type = parameter.getType();
+        if (type != null) {
+            ExternalElementReference typeReference = new ExternalElementReference();
+            typeReference.setElement(parameter.getType());
+            this.setType(typeReference);
+        }
         
         this.setName(parameter.getName());
         this.setLower(parameter.getLower());
