@@ -288,8 +288,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         Element element = this.getSelf().getElement();
         return namespace instanceof ExternalNamespace &&
                     element instanceof NamedElement &&
-                    ((NamedElement)element).getNamespace() == 
-                        ((ExternalNamespace)namespace).getUmlNamespace();
+                    ((NamedElement)element).getNamespace().equals( 
+                        ((ExternalNamespace)namespace).getUmlNamespace());
     }
 
     @Override
@@ -302,7 +302,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             Class_ class_ = (Class_)this.getUml();
             for (NamedElement member: class_.getMember()) {
                 if (member instanceof Reception &&
-                        ((Reception)member).getSignal() == umlSignal) {
+                        ((Reception)member).getSignal().equals(umlSignal)) {
                     return true;
                 }
             }
@@ -500,7 +500,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                 ExternalElementReference templateActual = null;
                 for (TemplateParameterSubstitution parameterSubstitution: 
                     parameterSubstitutions) {
-                    if (parameterSubstitution.getFormal() == formal) {
+                    if (parameterSubstitution.getFormal().equals(formal)) {
                         Collection<ParameterableElement> actuals = 
                             parameterSubstitution.getActual();
                         if (actuals != null && !actuals.isEmpty()) {
@@ -709,7 +709,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             } else {
                 BehavioredClassifier context = element.getContext();
                 if (context != null && 
-                        context.getClassifierBehavior() == element) {
+                        context.getClassifierBehavior().equals(element)) {
                     ExternalElementReference reference = new ExternalElementReference();
                     reference.setElement(context);
                     return reference;
@@ -733,7 +733,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             } else if (object instanceof Element) {
                 element = (Element)object;
             }
-            return element != null && this.getSelf().getElement() == element;
+            return element != null && this.getSelf().getElement().equals(element);
         }
     }
 
