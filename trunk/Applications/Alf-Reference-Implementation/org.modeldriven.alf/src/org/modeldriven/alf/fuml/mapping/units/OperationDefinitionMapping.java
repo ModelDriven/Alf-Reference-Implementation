@@ -22,6 +22,7 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import org.modeldriven.alf.uml.*;
 
@@ -228,6 +229,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                                 graph.addReadStructuralFeatureAction(initializationFlag);
                         graph.addObjectFlow(selfFork, readAction.getObject());
                         
+                        /*
                         // NOTE: The structured node here acts to convert an
                         // object flow into a control flow. This avoids the
                         // need to do a test and use a decision node.
@@ -238,8 +240,8 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                         testNode.addStructuredNodeInput(inputPin);
                         graph.addObjectFlow(readAction.getResult(), inputPin);
                         graph.addControlFlow(testNode, node);
+                        */
                         
-                        /*
                         CallBehaviorAction testAction = graph.addCallBehaviorAction(
                                 getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
                         graph.addObjectFlow(readAction.getResult(), testAction.getArgument().get(0));
@@ -248,7 +250,6 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                                 "Test(" + initializationFlag.getName() + ")", 
                                 initialNode, testAction.getResult().get(0), 
                                 node, null);
-                        */
                     }
                     
                 }
