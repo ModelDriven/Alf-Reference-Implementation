@@ -19,6 +19,7 @@ import org.modeldriven.alf.fuml.mapping.expressions.InvocationExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.units.AssociationDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.LinkOperationExpression;
 
 import org.modeldriven.alf.uml.*;
@@ -56,8 +57,10 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
     @Override
     public Action mapTarget() throws MappingError {
         LinkOperationExpression expression = this.getLinkOperationExpression();
+        ElementReference referent = expression.getReferent();
+        
         Action action = null;
-        Association association = null;
+        Association association = (Association)referent.getImpl().getUml();
         if (association == null) {
             FumlMapping mapping = this.fumlMap(expression.getReferent());
             if (mapping instanceof ElementReferenceMapping) {
