@@ -256,7 +256,7 @@ public class SuperInvocationExpressionImpl
             // TODO: Remove this check once overloading resolution is implemented.
             Tuple tuple = self.getTuple();
             if (tuple == null || 
-                    tuple.getImpl().size() > this.parameters().size()) {
+                    tuple.getImpl().size() > this.parameterCount()) {
                 return false;
             } else {
                 this.getAssignmentAfterMap(); // Force computation of assignments.

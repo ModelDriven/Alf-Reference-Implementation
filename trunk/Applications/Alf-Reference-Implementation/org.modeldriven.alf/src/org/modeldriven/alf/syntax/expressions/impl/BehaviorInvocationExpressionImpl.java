@@ -138,7 +138,7 @@ public class BehaviorInvocationExpressionImpl
         // if (self.getFeature() == null) {
             Tuple tuple = self.getTuple();
             if (tuple == null || 
-                    tuple.getImpl().size() > this.parameters().size()) {
+                    tuple.getImpl().size() > this.parameterCount()) {
                 return false;
             } else {
                 this.getAssignmentAfterMap(); // Force computation of assignments.

@@ -394,6 +394,17 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         return parameters;
     }
     
+    // Returns the number of parameters, excluding return parameters.
+    public int parameterCount() {
+        int n = this.parameters().size();
+        for (FormalParameter parameter: this.parameters()) {
+            if ("return".equals(parameter.getDirection())) {
+                n--;
+            }
+        }
+        return n;
+    }
+    
     protected static FormalParameter parameterFromProperty(ElementReference property) {
         ElementReferenceImpl propertyImpl = property.getImpl();
         FormalParameter parameter = new FormalParameter();
