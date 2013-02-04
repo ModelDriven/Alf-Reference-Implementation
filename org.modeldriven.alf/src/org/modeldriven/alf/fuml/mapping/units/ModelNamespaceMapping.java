@@ -10,8 +10,15 @@
 package org.modeldriven.alf.fuml.mapping.units;
 
 import org.modeldriven.alf.syntax.units.PackageDefinition;
+import org.modeldriven.alf.uml.Model;
+import org.modeldriven.alf.uml.Package;
 
 public class ModelNamespaceMapping extends PackageDefinitionMapping {
+    
+    @Override
+    protected Package mapPackage() {
+        return this.create(Model.class);
+    }
     
     @Override
     public PackageDefinition getPackageDefinition() {
