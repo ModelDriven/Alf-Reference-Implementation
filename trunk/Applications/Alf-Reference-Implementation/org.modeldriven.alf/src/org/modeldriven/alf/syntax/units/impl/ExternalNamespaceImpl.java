@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
@@ -15,6 +17,7 @@ import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
 import org.modeldriven.alf.uml.Package;
 
@@ -41,6 +44,35 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
         ExternalElementReference reference = new ExternalElementReference();
         reference.setElement(namespace);
         return reference;
+    }
+    
+    @Override
+    public List<Member> getOwnedMember() {
+        List<Member> ownedMembers = new ArrayList<Member>();
+        for (NamedElement element: this.getSelf().getUmlNamespace().getOwnedMember()) {
+            ownedMembers.add(ImportedMemberImpl.makeImportedMember(
+                    element.getName(), element));
+        }
+        return ownedMembers;
+    }
+    
+    @Override
+    protected Collection<Member> deriveMember() {
+        List<Member> members = new ArrayList<Member>();
+        Namespace umlNamespace = this.getSelf().getUmlNamespace();
+        for (NamedElement member: umlNamespace.getMember()) {
+            List<String> names = umlNamespace.getNamesOfMember(member);
+            if (names.size() == 0) {
+                members.add(ImportedMemberImpl.makeImportedMember(
+                        member.getName(), member));
+            } else {
+                for (String name: umlNamespace.getNamesOfMember(member)) {
+                    members.add(ImportedMemberImpl.makeImportedMember(
+                            name, member));
+                }
+            }
+        }
+        return members;
     }
 
     @Override
