@@ -11,6 +11,7 @@
 package org.modeldriven.alf.fuml.mapping.units;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.units.MemberMapping;
@@ -52,7 +53,11 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
         NamespaceDefinition definition = this.getNamespaceDefinition();
 
         // Map owned members of the namespace.
-        for (Member member: definition.getOwnedMember()) {
+        // NOTE: Not using an iterator allows for possible modification of the
+        // owned members during mapping.
+        List<Member> ownedMembers = definition.getOwnedMember();
+        for (int i = 0; i < ownedMembers.size(); i++) {
+            Member member = ownedMembers.get(i);
             // Note: Ignore classifiers that are not completely bound and 
             // classifier template parameters.
             if (member.getImpl().isCompletelyBound() && 
