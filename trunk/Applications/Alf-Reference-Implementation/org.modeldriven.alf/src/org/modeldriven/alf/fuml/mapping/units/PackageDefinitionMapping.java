@@ -39,6 +39,10 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
     // The mapping of visibility is handled in MemberMapping.
     // Stubs are handled in NamespaceDefinitionMapping. 
     
+    protected Package mapPackage() {
+        return this.create(Package.class);
+    }
+    
     public void mapTo(Package package_) throws MappingError {
         PackageDefinition packageDefinition = this.getPackageDefinition();
         if (packageDefinition != null && 
@@ -71,7 +75,7 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 
     public Package getPackage() throws MappingError {
         if (this.package_ == null) {
-            this.package_ = this.create(Package.class);
+            this.package_ = this.mapPackage();
             this.mapTo(this.package_);
           }
 
