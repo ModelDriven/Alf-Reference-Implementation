@@ -213,16 +213,25 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         // Use decision node to skip initialization if this object is already
         // initialized.
         // Add actions to read initialization flag.
-        ActivityNode initialNode = graph.addInitialNode("InitialNode");
         ReadStructuralFeatureAction readAction = 
                 graph.addReadStructuralFeatureAction(initializationFlag);
-        CallBehaviorAction callAction = graph.addCallBehaviorAction(
-                getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
         graph.addObjectFlow(selfFork, readAction.getObject());
-        graph.addObjectFlow(readAction.getResult(), callAction.getArgument().get(0));
+        
+        CallBehaviorAction sizeAction = graph.addCallBehaviorAction(
+                getBehavior(RootNamespace.getListFunctionSize()));
+        graph.addObjectFlow(readAction.getResult(), sizeAction.getArgument().get(0));
+        
+        valueAction = 
+                graph.addIntegerValueSpecificationAction(0);
+        
+        TestIdentityAction testAction = graph.addTestIdentityAction("Size==0");
+        graph.addObjectFlow(sizeAction.getResult().get(0), testAction.getFirst());
+        graph.addObjectFlow(valueAction.getResult(), testAction.getSecond());
+        
+        ActivityNode initialNode = graph.addInitialNode("InitialNode");
         graph.addControlDecisionNode(
                 "Test(" + initializationFlag.getName() + ")", 
-                initialNode, callAction.getResult().get(0), 
+                initialNode, testAction.getResult(), 
                 initializationNode, null);
 
         // Add method to initialization operation.

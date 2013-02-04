@@ -229,26 +229,21 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                                 graph.addReadStructuralFeatureAction(initializationFlag);
                         graph.addObjectFlow(selfFork, readAction.getObject());
                         
-                        /*
-                        // NOTE: The structured node here acts to convert an
-                        // object flow into a control flow. This avoids the
-                        // need to do a test and use a decision node.
-                        StructuredActivityNode testNode = 
-                                graph.addStructuredActivityNode("TestNode", null);
-                        InputPin inputPin = graph.createInputPin(
-                                "Input(initializationFlag", null, 1, 1);
-                        testNode.addStructuredNodeInput(inputPin);
-                        graph.addObjectFlow(readAction.getResult(), inputPin);
-                        graph.addControlFlow(testNode, node);
-                        */
+                        CallBehaviorAction sizeAction = graph.addCallBehaviorAction(
+                                getBehavior(RootNamespace.getListFunctionSize()));
+                        graph.addObjectFlow(readAction.getResult(), sizeAction.getArgument().get(0));
                         
-                        CallBehaviorAction testAction = graph.addCallBehaviorAction(
-                                getBehavior(RootNamespace.getSequenceFunctionIsEmpty()));
-                        graph.addObjectFlow(readAction.getResult(), testAction.getArgument().get(0));
+                        ValueSpecificationAction valueAction = 
+                                graph.addIntegerValueSpecificationAction(0);
+                        
+                        TestIdentityAction testAction = graph.addTestIdentityAction("Size==0");
+                        graph.addObjectFlow(sizeAction.getResult().get(0), testAction.getFirst());
+                        graph.addObjectFlow(valueAction.getResult(), testAction.getSecond());
+                        
                         ActivityNode initialNode = graph.addInitialNode("InitialNode");
                         graph.addControlDecisionNode(
                                 "Test(" + initializationFlag.getName() + ")", 
-                                initialNode, testAction.getResult().get(0), 
+                                initialNode, testAction.getResult(), 
                                 node, null);
                     }
                     
