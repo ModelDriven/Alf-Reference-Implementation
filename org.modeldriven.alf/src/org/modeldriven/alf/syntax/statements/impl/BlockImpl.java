@@ -181,8 +181,12 @@ public class BlockImpl extends SyntaxElementImpl {
 		return true;
 	}
 
-	// TODO: Remove this from the Abstract Syntax model.
+    /**
+     * The assignments before the first statement of a block are the same as the
+     * assignments before the block.
+     */
 	public boolean blockAssignmentsBefore() {
+        // Note: This is handled by deriveAssignementAfter.
 		return true;
 	}
 
