@@ -3,13 +3,11 @@
  */
 active class Units_ActiveClass {
 
-  public receive signal Continue { }
-
   public active class C {
     public i: Integer;
     public j: Integer;
-    public t: Units_ActiveClass;
-    @Create public C(in i: Integer, in t: Units_ActiveClass) { 
+    public t: TestRunner;
+    @Create public C(in i: Integer, in t: TestRunner) { 
       this.i = i;
       this.t = t;
     }
@@ -18,13 +16,25 @@ active class Units_ActiveClass {
     this.t.Continue();
   }
   
-  public test(out c: C) {
-    c = new C(1, this);    
-  }  
+  public active class TestRunner {
   
+    public receive signal Start { }
+    public receive signal Continue { }
+
+    public test(out c: C) {
+      c = new C(1, this);    
+    }  
+  
+    } do {
+      accept(Start);
+      this.test(c);
+      accept (Continue);
+      
+      AssertEqual("c.j", c.j, 1);
+      
+      WriteLine("Done");
+    }
+
 } do {
-  this.test(c);
-  accept (Continue);
-  
-  AssertEqual("c.j", c.j, 1);
+  new TestRunner().Start();
 }

@@ -65,4 +65,6 @@ active class Expressions_Object {
 	AssertEqual("self.interest", self.interest, 500);
 	
 	AssertList("names", names, String[]{"A", "B"});
+
+  WriteLine("Done");
 }

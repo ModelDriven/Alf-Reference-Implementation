@@ -1,5 +1,4 @@
-namespace UML::AuxiliaryConstructs;
-
+@ModelLibrary
 package PrimitiveTypes {
 
   @primitive public datatype Boolean {}

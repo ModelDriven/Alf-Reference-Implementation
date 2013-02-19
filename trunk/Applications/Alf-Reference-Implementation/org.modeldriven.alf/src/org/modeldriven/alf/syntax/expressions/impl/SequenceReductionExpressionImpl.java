@@ -168,7 +168,7 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	            ElementReference type = self.getType();
 	            for (FormalParameter parameter: parameters) {
 	                ElementReference parameterType = parameter.getType();
-	                if (!((parameter == returnParameter ||
+	                if (!((parameter.equals(returnParameter) ||
 	                            "in".equals(parameter.getDirection())) &&
 	                       (type == null && parameterType == null ||
 	                           parameterType != null && 

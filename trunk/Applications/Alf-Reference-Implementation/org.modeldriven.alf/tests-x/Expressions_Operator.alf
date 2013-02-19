@@ -129,4 +129,6 @@ active class Expressions_Operator {
     AssertList("z", z, Integer[]{1,2});
     
     AssertEqual("r", r, 2);
+
+    WriteLine("Done");
 }

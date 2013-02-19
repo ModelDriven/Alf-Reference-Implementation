@@ -143,9 +143,8 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
      * ModelLibrary.
      **/
 	protected Boolean deriveIsModelLibrary() {
-	    // TODO: Require reference to standard UML ModelLibary stereotype.
 	    NamespaceDefinition definition = this.getSelf().getDefinition();
-		return definition != null && definition.getImpl().hasAnnotation("ModelLibrary");
+		return definition != null && definition.getImpl().isModelLibrary();
 	}
 
     /**

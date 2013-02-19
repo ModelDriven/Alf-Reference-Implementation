@@ -1,5 +1,5 @@
 namespace Alf::Library;
-public import UML::AuxiliaryConstructs::PrimitiveTypes::*;
+public import PrimitiveTypes::*;
 
 package PrimitiveTypes {
 

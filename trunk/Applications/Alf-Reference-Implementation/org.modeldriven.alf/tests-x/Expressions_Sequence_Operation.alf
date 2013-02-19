@@ -49,4 +49,6 @@ active class Expressions_Sequence_Operation {
     
     AssertList("customers.name", customers.name, "C");
     AssertList("list", list, any[]{"Blah", 1});
+
+    WriteLine("Done");
 }

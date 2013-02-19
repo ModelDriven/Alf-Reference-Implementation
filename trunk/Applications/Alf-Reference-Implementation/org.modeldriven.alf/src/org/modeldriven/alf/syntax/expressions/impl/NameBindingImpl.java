@@ -56,12 +56,16 @@ public class NameBindingImpl extends SyntaxElementImpl {
     }
 
     public void setName(String name) {
-        this.name = processName(name);
+        this.setExactName(processName(name));
     }
     
     /*
      * Helper Methods
      */
+    
+    public void setExactName(String name) {
+        this.name = name;
+    }
 
     public static String processName(String name) {
         if (name != null && name.length() > 0 && name.charAt(0) == '\'') {
@@ -123,7 +127,7 @@ public class NameBindingImpl extends SyntaxElementImpl {
             NameBinding self = this.getSelf();
             NameBinding baseNameBinding = (NameBinding)base;
             TemplateBinding binding = baseNameBinding.getBinding();
-            self.setName(baseNameBinding.getName());
+            this.setExactName(baseNameBinding.getName());
             if (binding != null) {
                 self.setBinding(binding.getImpl().
                         update(templateParameters, templateArguments));

@@ -583,13 +583,15 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         for (ElementReference templateParameter: templateParameters) {
             Collection<ElementReference> types = new ArrayList<ElementReference>();
             if (firstParameter != null) {
-                if (templateParameter.getImpl().equals(firstParameter.getType())) {
+                if (templateParameter.getImpl().getParameteredElement().getImpl().
+                        equals(firstParameter.getType())) {
                     types.add(effectiveType(firstParameter, primary));
                 }
             }
             for (NamedExpression input: self.getTuple().getInput()) {
                 FormalParameter parameter = this.parameterNamed(input.getName());
-                if (templateParameter.getImpl().equals(parameter.getType())) {
+                if (templateParameter.getImpl().getParameteredElement().getImpl().
+                        equals(parameter.getType())) {
                     types.add(effectiveType(parameter, input.getExpression()));                             
                 }
             }

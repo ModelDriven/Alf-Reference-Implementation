@@ -1,6 +1,6 @@
 namespace FoundationalModelLibrary;
 
-public import UML::AuxiliaryConstructs::PrimitiveTypes::*;
+public import PrimitiveTypes::*;
 
 package PrimitiveBehaviors {
 

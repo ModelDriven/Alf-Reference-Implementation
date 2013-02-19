@@ -26,8 +26,8 @@ active class Expressions_Template {
     public active class H<T> {
         public a: T;
         public b: T;
-        public t: Expressions_Template;
-        @Create public H(in a: T, in t: Expressions_Template) { 
+        public t: TestRunner;
+        @Create public H(in a: T, in t: TestRunner) { 
           this.a = a; 
           this.t = t;
         }
@@ -36,30 +36,41 @@ active class Expressions_Template {
         this.t.Continue();
     }
     
-    public test(
-      out i: Integer, out j: Integer, out h: H<B>,
-      out s: Set<Integer>, out list: List<Integer>) {
+    public active class TestRunner {
+      public receive signal Start { }
+      public receive signal Continue { }
       
-      b = new B(1);
+      public test(
+        out i: Integer, out j: Integer, out h: H<B>,
+        out s: Set<Integer>, out list: List<Integer>) {
+        
+        b = new B(1);
+        
+        i = A<B>(b);
+        j = C<B>.E(b).i;
+        h = new H<B>(b, this);      
+  
+        s = new Set<Integer>(null);
+        s.add(1);
+        
+        list = List<Integer>{1, 2, 3};
+      }
       
-      i = A<B>(b);
-      j = C<B>.E(b).i;
-      h = new H<B>(b, this);      
-
-      s = new Set<Integer>(null);
-      s.add(1);
+    } do {
+      accept (Start);
+      this.test(i, j, h, s, list);
+      accept (Continue);
       
-      list = List<Integer>{1, 2, 3};
+      AssertEqual("i", i, 1);
+      AssertEqual("j", j, 1);
+      AssertEqual("h.b.i", h.b.i, 1);
+      
+      AssertList("s", s.toSequence(), 1);
+      AssertList("list", list.toSequence(), Integer[]{1,2,3});
+      
+      WriteLine("Done");
     }
     
 } do {
-  this.test(i, j, h, s, list);
-  accept (Continue);
-  
-  AssertEqual("i", i, 1);
-  AssertEqual("j", j, 1);
-  AssertEqual("h.b.i", h.b.i, 1);
-  
-  AssertList("s", s.toSequence(), 1);
-  AssertList("list", list.toSequence(), Integer[]{1,2,3});
+   new TestRunner().Start();
 }

@@ -3,8 +3,6 @@
  **/
 active class Statements_Accept {
 
-  private receive signal SignalDone { }
-
   private abstract active class Super {
     public signal SignalNewArrival { public name: String; }
     public receive signal SignalTermination { }
@@ -25,10 +23,10 @@ active class Statements_Accept {
 
     public receive SignalNewArrival;
     
-    public tester: Statements_Accept;
+    public tester: TestRunner;
     
     @Create
-    public Test(in tester: Statements_Accept) {
+    public Test(in tester: TestRunner) {
       this.tester = tester;
     }
   
@@ -71,44 +69,54 @@ active class Statements_Accept {
     accept (sig1: SignalTermination);
     this.sig1 = sig1;
     
-    this.tester.SignalDone();
+    this.tester.Continue();
     
   }
   
-  private test(out test: Test) {
-    test = new Test(this);
+  public active class TestRunner {
+    public receive signal Start { }
+    public receive signal Continue { }
+
+    private test(out test: Test) {
+      test = new Test(this);
+      
+      test.SignalTermination();
+      test.SignalNewArrival("Arrival1");
+      test.SignalNewArrival("Arrival2");
+      test.SignalNewArrival("Arrival3");
+      
+      test.SignalNewArrival("Arrival4");
+      test.SignalTermination();
+      
+      test.SignalNewArrival("Arrival5");    
+      test.SignalNewArrival("Arrival6");
+      test.SignalTermination();
+      
+      test.SignalNewArrival("Arrival7");
+      test.SignalNewArrival("Arrival8");
+      test.SignalTermination();
+    }
     
-    test.SignalTermination();
-    test.SignalNewArrival("Arrival1");
-    test.SignalNewArrival("Arrival2");
-    test.SignalNewArrival("Arrival3");
+  } do {
+    accept(Start);
+    this.test(test);
+    accept (Continue);
+  
+    AssertTrue("test.sig instanceof SignalTermination", test.sig instanceof Test::SignalTermination);
+    AssertEqual("test.name", test.name, "Arrival1");
+    AssertFalse("test.terminate", test.terminate);
+    AssertEqual("test.arrival.name", test.arrival.name, "Arrival3");
     
-    test.SignalNewArrival("Arrival4");
-    test.SignalTermination();
+    AssertTrue("test.signals[1] hastype SignalArrival", test.signals[1] hastype Test::SignalNewArrival);
+    AssertTrue("test.signals[2] hastype SignalTermination", test.signals[2] hastype Test::SignalTermination);
     
-    test.SignalNewArrival("Arrival5");    
-    test.SignalNewArrival("Arrival6");
-    test.SignalTermination();
+    AssertEqual("test.count", test.count, 3);
+    AssertTrue("test.flag", test.flag);
+    AssertTrue("test.sig1 instanceof SignalTermination", test.sig1 instanceof Test::SignalTermination);
     
-    test.SignalNewArrival("Arrival7");
-    test.SignalNewArrival("Arrival8");
-    test.SignalTermination();
+    WriteLine("Done");
   }
 
 } do {
-
-  this.test(test);
-  accept (SignalDone);
-
-  AssertTrue("test.sig instanceof SignalTermination", test.sig instanceof Test::SignalTermination);
-  AssertEqual("test.name", test.name, "Arrival1");
-  AssertFalse("test.terminate", test.terminate);
-  AssertEqual("test.arrival.name", test.arrival.name, "Arrival3");
-  
-  AssertTrue("test.signals[1] hastype SignalArrival", test.signals[1] hastype Test::SignalNewArrival);
-  AssertTrue("test.signals[2] hastype SignalTermination", test.signals[2] hastype Test::SignalTermination);
-  
-  AssertEqual("test.count", test.count, 3);
-  AssertTrue("test.flag", test.flag);
-  AssertTrue("test.sig1 instanceof SignalTermination", test.sig1 instanceof Test::SignalTermination);
+  new TestRunner().Start();
 }

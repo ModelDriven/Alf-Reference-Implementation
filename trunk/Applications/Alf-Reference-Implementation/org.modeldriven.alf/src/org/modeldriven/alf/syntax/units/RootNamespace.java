@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.units;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +17,9 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Package;
+import org.modeldriven.alf.uml.PackageableElement;
 
 public class RootNamespace extends ModelNamespace {
     
@@ -68,6 +73,12 @@ public class RootNamespace extends ModelNamespace {
     private static ElementReference listFunctionGet = null;
     private static ElementReference listFunctionSize = null;
       
+    private static ElementReference standardProfile = null;
+    
+    private static ElementReference createStereotype = null;
+    private static ElementReference destroyStereotype = null;
+    private static ElementReference modelLibraryStereotype = null;
+    
     public static RootNamespace getRootScope() {
         return rootNamespace;
     }
@@ -144,8 +155,7 @@ public class RootNamespace extends ModelNamespace {
     public static QualifiedName getUmlPrimitiveTypes() {
         if (umlPrimitiveTypes == null) {
             umlPrimitiveTypes = new QualifiedName();
-            umlPrimitiveTypes = umlPrimitiveTypes.getImpl().addName("UML").getImpl().
-                    addName("AuxiliaryConstructs").getImpl().addName("PrimitiveTypes");
+            umlPrimitiveTypes = umlPrimitiveTypes.getImpl().addName("PrimitiveTypes");
             umlPrimitiveTypes.getImpl().setCurrentScope(getRootScope());
         }
         return umlPrimitiveTypes;
@@ -427,6 +437,78 @@ public class RootNamespace extends ModelNamespace {
 
     public static ElementReference getBitStringFunctionToInteger() {
         return getBitStringFunction("ToInteger");
+    }
+    
+    public static ElementReference getStandardProfile() {
+        if (standardProfile == null) {
+            QualifiedName name = new QualifiedName().getImpl().addName("StandardProfileL2");
+            name.getImpl().setCurrentScope(getRootScope());
+            ElementReference namespace = name.getImpl().getNamespaceReferent();
+            if (namespace != null && namespace.getImpl().isProfile()) {
+                standardProfile = namespace;
+            }
+        }
+        return standardProfile;
+    }
+    
+    public boolean isStandardProfileUsed() {
+        return standardProfile != null;
+    }
+
+   public static ElementReference getCreateStereotype() {
+        if (createStereotype == null) {
+            ElementReference standardProfile = getStandardProfile();
+            if (standardProfile != null) {
+                QualifiedName name = new QualifiedName().getImpl().addName("Create");
+                name.getImpl().setCurrentScope(standardProfile.getImpl().asNamespace());
+                createStereotype = name.getImpl().getStereotypeReferent();
+            }
+        }
+        return createStereotype;
+    }
+    
+    public static ElementReference getDestroyStereotype() {
+        if (destroyStereotype == null) {
+            ElementReference standardProfile = getStandardProfile();
+            if (standardProfile != null) {
+                QualifiedName name = new QualifiedName().getImpl().addName("Destroy");
+                name.getImpl().setCurrentScope(standardProfile.getImpl().asNamespace());
+                destroyStereotype = name.getImpl().getStereotypeReferent();
+            }
+        }
+        return destroyStereotype;
+    }
+
+    public static ElementReference getModelLibraryStereotype() {
+        if (modelLibraryStereotype == null) {
+            ElementReference standardProfile = getStandardProfile();
+            if (standardProfile != null) {
+                QualifiedName name = new QualifiedName().getImpl().addName("ModelLibrary");
+                name.getImpl().setCurrentScope(standardProfile.getImpl().asNamespace());
+                modelLibraryStereotype = name.getImpl().getStereotypeReferent();
+            }
+        }
+        return modelLibraryStereotype;
+    }
+    
+    private static Collection<Element> additionalElements = new ArrayList<Element>();
+    
+    public static Collection<Element> getAdditionalElements() {
+        return additionalElements;
+    }
+    
+    public static void recordAdditionalElement(Element element) {
+       additionalElements.add(element);
+    }
+    
+    public static void recordAdditionalElements(Collection<? extends Element> elements) {
+        additionalElements.addAll(elements);
+    }
+    
+    public static void addAdditionalElementsTo(Package package_) {
+        for (Element element: RootNamespace.getAdditionalElements()) {
+            package_.addPackagedElement((PackageableElement)element);
+        }
     }
 
 }

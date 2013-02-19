@@ -64,7 +64,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     public Element getUml() {
         return null;
     }
-
+    
     @Override
     public boolean isNamespace() {
         return this.getSelf().getElement() instanceof NamespaceDefinition;

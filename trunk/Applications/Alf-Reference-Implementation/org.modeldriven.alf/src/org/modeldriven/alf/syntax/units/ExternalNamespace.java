@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -9,21 +9,21 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.syntax.units.impl.ExternalNamespaceImpl;
-import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
-import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
-
-import java.util.ArrayList;
 
 public class ExternalNamespace extends NamespaceDefinition {
     
     private Namespace umlNamespace = null;
     
-    public ExternalNamespace(Namespace namespace) {
+    public ExternalNamespace(Namespace namespace, NamespaceDefinition parent) {
         this.impl = new ExternalNamespaceImpl(this);
         this.umlNamespace = namespace;
+        if (parent != null) {
+            this.setNamespace(parent);
+        }
     }
     
+    @Override
     public ExternalNamespaceImpl getImpl() {
         return (ExternalNamespaceImpl)this.impl;
     }
@@ -32,38 +32,27 @@ public class ExternalNamespace extends NamespaceDefinition {
         return this.umlNamespace;
     }
     
-    @Override
-    public String getName() {
-        return this.getUmlNamespace().getName();
-    }
-    
-    @Override
-    public NamespaceDefinition getNamespace() {
-        Namespace namespace = this.getUmlNamespace().getNamespace();
-        return namespace == null? null: new ExternalNamespace(namespace);
-    }
-    
-    @Override
-    public ArrayList<Member> getOwnedMember() {
-        Namespace namespace = this.getUmlNamespace();
-        ArrayList<Member> members = new ArrayList<Member>();
-        for (NamedElement element: namespace.getOwnedMember()) {
-            members.add(ImportedMemberImpl.makeImportedMember(element.getName(), element));
-        }
-        return members;
-    }
-    
-
-    @Override
-    public ArrayList<Member> getMember() {
-        Namespace namespace = this.getUmlNamespace();
-        ArrayList<Member> members = new ArrayList<Member>();
-        for (NamedElement element: namespace.getMember()) {
-            for (String name: namespace.getNamesOfMember(element)) {
-                members.add(ImportedMemberImpl.makeImportedMember(name, element));
+    public static NamespaceDefinition makeExternalNamespace(
+            Namespace namespace,
+            NamespaceDefinition parent) {
+        NamespaceDefinition externalNamespace = null;
+        if (namespace != null) {
+            externalNamespace = new ExternalNamespace(namespace, parent);
+            /*
+            if (namespace.getNamespace() == null) {
+                UnitDefinition unit = new UnitDefinition();
+                unit.setIsModelLibrary(true);
+                unit.setDefinition(externalNamespace);
+                externalNamespace.setUnit(unit);
+                
+                NamespaceDefinition rootScope = RootNamespace.getRootScope();
+                rootScope.addOwnedMember(externalNamespace);
+                rootScope.addMember(externalNamespace);
+                externalNamespace.setNamespace(rootScope);
             }
-        }
-        return members;
+            */
+         }
+        return externalNamespace;
     }
-
-}
+    
+ }

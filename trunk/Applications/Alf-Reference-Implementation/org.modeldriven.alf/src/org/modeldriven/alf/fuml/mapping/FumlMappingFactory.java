@@ -11,7 +11,7 @@ package org.modeldriven.alf.fuml.mapping;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingFactory;
-import org.modeldriven.alf.syntax.units.ActivityDefinition;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.uml.OpaqueBehavior;
 
 public class FumlMappingFactory extends MappingFactory {
@@ -33,7 +33,7 @@ public class FumlMappingFactory extends MappingFactory {
     }
     
     public OpaqueBehaviorExecution instantiatePrimitiveBehaviorPrototype(
-            ActivityDefinition definition, 
+            Member definition, 
             OpaqueBehavior behavior) {
         return null;
     }

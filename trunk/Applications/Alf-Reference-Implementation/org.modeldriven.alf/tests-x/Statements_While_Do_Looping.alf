@@ -131,4 +131,6 @@ active class Statements_While_Do_Looping {
   AssertEqual("i", i, 2);
   AssertEqual("j", j, 3);
   AssertTrue("self.list->isEmpty()", self.list->isEmpty());
+
+  WriteLine("Done");
 }

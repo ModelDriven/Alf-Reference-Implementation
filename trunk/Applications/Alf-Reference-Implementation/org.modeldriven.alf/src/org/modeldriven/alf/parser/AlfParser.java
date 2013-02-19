@@ -91,7 +91,7 @@ public class AlfParser {
         try {
             new RootNamespaceImpl().setIsVerbose(true);
             RootNamespace root = RootNamespace.getRootScope();
-            unit = ((RootNamespaceImpl) root.getImpl()).getModelScopeImpl().
+            unit = ((RootNamespaceImpl) root.getImpl()).getModelNamespaceImpl().
                     resolveModelFile(filePath);
 
             if (unit != null) {

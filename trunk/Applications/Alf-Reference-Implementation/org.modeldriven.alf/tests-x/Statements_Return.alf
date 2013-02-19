@@ -54,4 +54,6 @@ active class Statements_Return {
   AssertEqual("z", z, 3);
   
   AssertEqual("n", n, 1);
+
+  WriteLine("Done");
 }

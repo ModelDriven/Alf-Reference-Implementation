@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.impl.uml;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class NamedElement extends Element implements
@@ -17,35 +18,47 @@ public abstract class NamedElement extends Element implements
 		super(base);
 	}
 
+    @Override
 	public fUML.Syntax.Classes.Kernel.NamedElement getBase() {
 		return (fUML.Syntax.Classes.Kernel.NamedElement) this.base;
 	}
 
+    @Override
 	public String getName() {
 		return this.getBase().name;
 	}
 
+    @Override
 	public void setName(String name) {
 		this.getBase().setName(name);
 	}
 
+    @Override
 	public String getVisibility() {
 		String visibility = this.getBase().visibility.toString();
 		return visibility == null? null: visibility.substring(0, visibility.length() - 1);
 	}
 
+    @Override
 	public void setVisibility(String visibility) {
 		this.getBase().setVisibility(visibility == null? null:
 				fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility + "_"));
 	}
 
+    @Override
 	public String getQualifiedName() {
 		return this.getBase().qualifiedName;
 	}
 
+    @Override
 	public org.modeldriven.alf.uml.Namespace getNamespace() {
 		return (Namespace)this.wrap(this.getBase().namespace);
 	}
+    
+    @Override
+    public List<org.modeldriven.alf.uml.Dependency> getClientDependency() {
+        return new ArrayList<org.modeldriven.alf.uml.Dependency>();
+    }
 
     @Override
     public boolean isDistinguishableFrom(org.modeldriven.alf.uml.NamedElement otherElement,

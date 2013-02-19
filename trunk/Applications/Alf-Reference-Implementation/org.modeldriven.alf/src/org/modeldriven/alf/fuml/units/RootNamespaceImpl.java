@@ -22,7 +22,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public class RootNamespaceImpl extends ModelNamespaceImpl {
     
-    private ModelNamespace modelScope = null;
+    private ModelNamespace modelNamespace = null;
     
     public RootNamespaceImpl() {
         super(RootNamespace.getRootScope());
@@ -30,14 +30,14 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         
         this.setLibraryDirectory("Libraries");
         
-        this.modelScope = new ModelNamespace();
-        this.modelScope.setImpl(new ModelNamespaceImpl(this.modelScope));
-        this.modelScope.setName("Model");
+        this.modelNamespace = new ModelNamespace();
+        this.modelNamespace.setImpl(new ModelNamespaceImpl(this.modelNamespace));
+        this.modelNamespace.setName("Model");
                 
         RootNamespace self = this.getSelf();
         self.setName("Root");
-        self.addOwnedMember(this.modelScope);
-        this.modelScope.setNamespace(self);
+        self.addOwnedMember(this.modelNamespace);
+        this.modelNamespace.setNamespace(self);
     }
     
     @Override
@@ -45,22 +45,22 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         return (RootNamespace)this.self;
     }
 
-    public ModelNamespace getModelScope() {
-        return this.modelScope;
+    public ModelNamespace getModelNamespace() {
+        return this.modelNamespace;
     }
     
-    public ModelNamespaceImpl getModelScopeImpl() {
-        return (ModelNamespaceImpl)this.getModelScope().getImpl();
+    public ModelNamespaceImpl getModelNamespaceImpl() {
+        return (ModelNamespaceImpl)this.getModelNamespace().getImpl();
     }
     
     @Override
     public void setModelDirectory(String modelDirectory) {
-        this.getModelScopeImpl().setModelDirectory(modelDirectory);
+        this.getModelNamespaceImpl().setModelDirectory(modelDirectory);
     }
     
     @Override
     public String getModelDirectory() {
-        return this.getModelScopeImpl().getModelDirectory();
+        return this.getModelNamespaceImpl().getModelDirectory();
     }
     
     public void setLibraryDirectory(String libraryDirectory) {
@@ -73,21 +73,21 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     @Override
     public void setIsVerbose(boolean isVerbose) {
-        this.getModelScopeImpl().setIsVerbose(isVerbose);
+        this.getModelNamespaceImpl().setIsVerbose(isVerbose);
     }
     
     @Override
     public NamespaceDefinition getModelNamespace(UnitDefinition unit) {
-        return this.getModelScope().getModelNamespace(unit);
+        return this.getModelNamespace().getModelNamespace(unit);
     }
     
     @Override
     public Collection<Member> resolve(String name, boolean classifierOnly) {
-        ModelNamespaceImpl modelScopeImpl = this.getModelScopeImpl();
+        ModelNamespaceImpl modelScopeImpl = this.getModelNamespaceImpl();
         Collection<Member> members = modelScopeImpl.resolve(name, classifierOnly);
-        if (members.size() == 0) {
+        if (members.isEmpty()) {
             members = super.resolveInScope(name, classifierOnly);
-            if (members.size() == 0) {
+            if (members.isEmpty()) {
                 QualifiedName qualifiedName = new QualifiedName().getImpl().addName(name);
                 Member member;
                 UnitDefinition unit = this.resolveModelUnit(qualifiedName);
@@ -128,7 +128,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     @Override
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-        return this.getModelScope().resolveUnit(qualifiedName);
+        return this.getModelNamespace().resolveUnit(qualifiedName);
     }
 
 }

@@ -82,4 +82,6 @@ active class Statements_Simple {
     AssertList("properties.name", properties.name, assets.name);
     AssertEqual("point.x", point.x, 0);
     AssertEqual("point.y", point.y, 0);
+
+    WriteLine("Done");
 }
