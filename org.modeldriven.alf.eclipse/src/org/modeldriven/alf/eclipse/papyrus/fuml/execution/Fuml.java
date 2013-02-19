@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.FirstChoiceStrategy;
+import org.eclipse.papyrus.uml.tools.utils.NameResolutionUtils;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 import org.eclipse.uml2.uml.util.UMLUtil;
@@ -20,9 +21,9 @@ import org.modeldriven.alf.eclipse.papyrus.fuml.library.channel.StandardOutputCh
 import org.modeldriven.alf.eclipse.papyrus.fuml.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.fuml.library.libraryclass.ImplementationObject;
 import org.modeldriven.alf.eclipse.papyrus.fuml.mapping.FumlMappingFactory;
+import org.modeldriven.alf.eclipse.units.RootNamespaceImpl;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.execution.Object_;
-import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.Member;
@@ -42,7 +43,8 @@ import org.modeldriven.alf.uml.PrimitiveType;
 
 public class Fuml {
 	
-	private String umlDirectory = "UML";
+	private String libraryDirectory = "Libraries";
+	private String umlDirectory = ".";
 	private boolean isVerbose = false;
 	
 	private RootNamespaceImpl rootScopeImpl = null;
@@ -56,7 +58,8 @@ public class Fuml {
     }
     
     public void setLibraryDirectory(String libraryDirectory) {
-    	this.rootScopeImpl.setLibraryDirectory(libraryDirectory);
+    	this.libraryDirectory = libraryDirectory;
+    	// this.rootScopeImpl.setModelDirectory(libraryDirectory);
     }
     
     public void setUmlDirectory(String umlDirectory) {
@@ -65,6 +68,7 @@ public class Fuml {
     
     public void setIsVerbose(boolean isVerbose) {
         this.isVerbose = isVerbose;
+        // this.rootScopeImpl.setIsVerbose(isVerbose);
     }
     
     private void createLocus() {
@@ -75,9 +79,9 @@ public class Fuml {
         factory.setStrategy(new FirstChoiceStrategy());       
     }
     
-    private void addPrimitiveTypes(Resource resource) {
+    private void addPrimitiveTypes(Element scope) {
     	Package primitiveTypes = this.getPackage(
-    			resource, "Root::Alf::Library::PrimitiveTypes");
+    			scope, "Alf::Library::PrimitiveTypes");
     	for (NamedElement element: primitiveTypes.getMember()) {
     		if (element instanceof PrimitiveType) {
     			this.locus.getFactory().addBuiltInType((PrimitiveType)element);
@@ -86,22 +90,22 @@ public class Fuml {
     	}
     }
     
-    private void addPrimitiveBehaviorPrototypes(Resource resource) {
+    private void addPrimitiveBehaviorPrototypes(Element scope) {
     	QualifiedName qualifiedName = new QualifiedName().getImpl().
     			addName("Alf").getImpl().
     			addName("Library").getImpl().
     			addName("PrimitiveBehaviors");
-    	this.createPrimitiveBehaviorPrototypes(resource, qualifiedName);
+    	this.createPrimitiveBehaviorPrototypes(scope, qualifiedName);
     	
     	qualifiedName = new QualifiedName().getImpl().
     			addName("FoundationalModelLibrary").getImpl().
     			addName("PrimitiveBehaviors");
-    	this.createPrimitiveBehaviorPrototypes(resource, qualifiedName);
+    	this.createPrimitiveBehaviorPrototypes(scope, qualifiedName);
     }
     
-    private void createPrimitiveBehaviorPrototypes(Resource resource, QualifiedName qualifiedName) {
-    	String pathName = "Root::" + qualifiedName.getImpl().getPathName();
-    	UnitDefinition unit = this.rootScopeImpl.resolveModelUnit(qualifiedName);
+    private void createPrimitiveBehaviorPrototypes(Element scope, QualifiedName qualifiedName) {
+    	String pathName = qualifiedName.getImpl().getPathName();
+    	UnitDefinition unit = this.rootScopeImpl.resolveUnit(qualifiedName);
     	NamespaceDefinition definition = unit.getDefinition();
     	if (definition != null) {
 	    	for (Member packageDefinition: definition.getOwnedMember()) {
@@ -114,7 +118,7 @@ public class Fuml {
 		    			for (Member member: ((PackageDefinition) packageDefinition).getOwnedMember()) {
 		    				if (member instanceof ActivityDefinition && member.getIsPrimitive()) {
 		    					Classifier behavior = this.getClassifier(
-		    							resource, 
+		    							scope, 
 		    							packageName + "::" + member.getName());
 		    					if (behavior instanceof OpaqueBehavior) {
 		    						OpaqueBehaviorExecution execution = 
@@ -134,20 +138,20 @@ public class Fuml {
     	}
     }
     
-    protected void createSystemServices(Resource resource) {
-    	String basicInputOutput = "Root::Alf::Library::BasicInputOutput";
+    protected void createSystemServices(Element scope) {
+    	String basicInputOutput = "Alf::Library::BasicInputOutput";
     	Classifier standardOutputChannel = this.getClassifier(
-    			resource, basicInputOutput + "::StandardOutputChannel");
+    			scope, basicInputOutput + "::StandardOutputChannel");
         this.createSystemService
             (standardOutputChannel, new StandardOutputChannelObject());
         
         Classifier standardInputChannel = this.getClassifier(
-        		resource, basicInputOutput + "::StandardInputChannel");
+        		scope, basicInputOutput + "::StandardInputChannel");
         this.createSystemService
             (standardInputChannel, new StandardInputChannelObject());
         
         Classifier statusType = this.getClassifier(
-        		resource, basicInputOutput + "::Status");
+        		scope, basicInputOutput + "::Status");
         if (statusType instanceof DataType) {
             Status.setStatusType(((org.modeldriven.alf.eclipse.uml.DataType)statusType).getBase());
         } else {
@@ -168,13 +172,23 @@ public class Fuml {
         }
     }
     
-    private Package getPackage(Resource resource, String qualifiedName) {
-    	Element element = this.getElement(resource, qualifiedName);
+    private Package getPackage(Element scope, String qualifiedName) {
+    	Element element = this.getElement(scope, qualifiedName);
     	if (!(element instanceof Package)) {
     		this.println(qualifiedName + " is not a Package.");
     		return null;
     	} else {
     		return (Package)element;
+    	}
+    }
+    
+    private Classifier getClassifier(Element scope, String qualifiedName) {
+    	Element element = this.getElement(scope, qualifiedName);
+    	if (!(element instanceof Classifier)) {
+    		this.println(qualifiedName + " is not a Classifier.");
+    		return null;
+    	} else {
+    		return (Classifier)element;
     	}
     }
     
@@ -186,6 +200,24 @@ public class Fuml {
     	} else {
     		return (Classifier)element;
     	}
+    }
+    
+    private Element getElement(Element scope, String qualifiedName) {
+    	Element element = null;
+    	Collection<org.eclipse.uml2.uml.NamedElement> elements = 
+    			NameResolutionUtils.getNamedElements(
+    					qualifiedName, 
+    					((org.modeldriven.alf.eclipse.uml.Element)scope).getBase(), 
+    					null);
+    	if (elements.size() == 0) {
+    		this.println("Cannot find " + qualifiedName);
+    	} else if (elements.size() > 1) {
+    		this.println("More than one " + qualifiedName);
+    	} else {
+    		element = org.modeldriven.alf.eclipse.uml.Element.
+    				wrap((org.eclipse.uml2.uml.Element)elements.toArray()[0]);
+    	}
+    	return element;    	
     }
     
     private Element getElement(Resource resource, String qualifiedName) {
@@ -220,7 +252,7 @@ public class Fuml {
                     this.setIsVerbose(true);
                  } else if (option.matches("[dlu]")) {
                     arg = args[i];
-                    if (arg.charAt(0) == '-') {
+                    if (arg.length() > 0 && arg.charAt(0) == '-') {
                         return null;
                     }
                     i++;
@@ -260,7 +292,13 @@ public class Fuml {
     }
     
     public void execute(Resource resource, String name) {
-    	Classifier element = this.getClassifier(resource, "Root::Model::" + name);
+    	this.rootScopeImpl = new RootNamespaceImpl(this.umlDirectory);
+    	this.rootScopeImpl.setModelDirectory(this.libraryDirectory);
+    	this.rootScopeImpl.setIsVerbose(this.isVerbose);
+    	
+    	this.mappingFactory = new FumlMappingFactory();
+
+    	Classifier element = this.getClassifier(resource, "Model::" + name);
       	if (element instanceof Behavior && 
         		((Behavior)element).getOwnedParameter().isEmpty() ||
         		element instanceof Class_ && 
@@ -268,10 +306,14 @@ public class Fuml {
         		!((Class_)element).getIsAbstract() && 
         		((Class_)element).getClassifierBehavior() != null) {
       		
+      		// EcoreUtil.resolveAll(resource);
+      		resource.getResourceSet().getURIConverter().getURIMap().
+      			put(URI.createURI(""), resource.getURI());
+      		
             this.createLocus();
-            this.addPrimitiveTypes(resource);
-            this.addPrimitiveBehaviorPrototypes(resource);
-            this.createSystemServices(resource);
+            this.addPrimitiveTypes(element);
+            this.addPrimitiveBehaviorPrototypes(element);
+            this.createSystemServices(element);
             
         	this.printVerbose("Executing...");
         	if (element instanceof Behavior) {
@@ -320,9 +362,6 @@ public class Fuml {
     }
     
     public Fuml(String[] args) {
-    	this.rootScopeImpl = new RootNamespaceImpl();
-    	this.mappingFactory = new FumlMappingFactory();
-
         PropertyConfigurator.configure("log4j.properties");
         
         String name = this.parseArgs(args);

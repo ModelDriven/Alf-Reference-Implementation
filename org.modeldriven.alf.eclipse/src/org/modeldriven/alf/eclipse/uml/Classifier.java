@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,10 +8,15 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class Classifier extends Type implements
 		org.modeldriven.alf.uml.Classifier {
@@ -193,5 +198,150 @@ public class Classifier extends Type implements
     public boolean conformsTo(org.modeldriven.alf.uml.Classifier classifier) {
         return this.getBase().conformsTo(((Classifier)classifier).getBase());
     }
+
+	@Override
+	public void setOwnedTemplateSignature(org.modeldriven.alf.uml.TemplateSignature signature) {
+		this.getBase().setOwnedTemplateSignature(
+				signature == null? null: ((TemplateSignature)signature).getBase());
+	}
+
+	@Override
+	public org.modeldriven.alf.uml.TemplateSignature getOwnedTemplateSignature() {
+		return (org.modeldriven.alf.uml.TemplateSignature)wrap(
+				this.getBase().getOwnedTemplateSignature());
+	}
+
+	@Override
+	public boolean isTemplate() {
+		return this.getBase().isTemplate();
+	}
+
+	@Override
+	public List<org.modeldriven.alf.uml.TemplateBinding> getTemplateBinding() {
+		List<org.modeldriven.alf.uml.TemplateBinding> list =
+				new ArrayList<org.modeldriven.alf.uml.TemplateBinding>();
+		for (org.eclipse.uml2.uml.TemplateBinding templateBinding: 
+			this.getBase().getTemplateBindings()) {
+			list.add((org.modeldriven.alf.uml.TemplateBinding)wrap(templateBinding));
+		}
+		return list;
+	}
+
+	@Override
+	public void addTemplateBinding(org.modeldriven.alf.uml.TemplateBinding templateBinding) {
+		this.getBase().getTemplateBindings().add(
+				templateBinding == null? null: 
+					((TemplateBinding)templateBinding).getBase());
+	}
+
+	@Override
+	public org.modeldriven.alf.uml.TemplateParameter getTemplateParameter() {
+		return (org.modeldriven.alf.uml.TemplateParameter)wrap(
+				this.getBase().getTemplateParameter());
+	}
+
+	@Override
+	public org.modeldriven.alf.uml.TemplateableElement instantiate(
+			final Collection<org.modeldriven.alf.uml.StereotypeApplication> stereotypeApplications,
+			final Set<org.modeldriven.alf.uml.Element> externalReferences) {
+		
+		EcoreUtil.Copier copier = new EcoreUtil.Copier() {
+			private static final long serialVersionUID = 1L;
+
+			// If the source object has stereotypes applied, record the need
+			// to apply them to the copied object.
+			@Override
+			protected EObject createCopy(EObject eObject) {
+				EObject result = super.createCopy(eObject);
+				if (eObject instanceof org.eclipse.uml2.uml.Element) {
+					org.modeldriven.alf.uml.Element copy = 
+							wrap((org.eclipse.uml2.uml.Element)result);
+					// TODO: Handle copying of tagged values.
+					for (org.eclipse.uml2.uml.Stereotype stereotype: 
+						((org.eclipse.uml2.uml.Element)eObject).getAppliedStereotypes()) {
+						stereotypeApplications.add(
+								new org.modeldriven.alf.uml.StereotypeApplication(
+										copy, (Stereotype)wrap(stereotype)));
+					}
+				}
+				return result;
+			}
+			
+			// Add to the set of external references any reference that is not
+			// to a copied object.
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void copyReference(
+					EReference eReference, EObject eObject, EObject copyEObject) {
+				super.copyReference(eReference, eObject, copyEObject);
+				if (eReference.isMany()) {
+					for (EObject referencedEObject: (List<EObject>)eObject.eGet(eReference)) {
+						if (!this.containsKey(referencedEObject)) {
+							externalReferences.add(
+									wrap((org.eclipse.uml2.uml.Element)referencedEObject));
+						}
+					}
+				} else {
+					EObject referencedEObject = (EObject)eObject.eGet(eReference);
+					if (!this.containsKey(referencedEObject)) {
+						externalReferences.add(
+								wrap((org.eclipse.uml2.uml.Element)referencedEObject));
+					}
+				}
+			}
+		    
+		};
+		
+		EObject copy = copier.copy(this.getBase());
+		copier.copyReferences();
+		
+		return (org.modeldriven.alf.uml.TemplateableElement)wrap(
+				(org.eclipse.uml2.uml.Element)copy);		
+	}
+
+	@Override
+	public List<org.modeldriven.alf.uml.NamedElement> bindTo(
+			org.modeldriven.alf.uml.TemplateableElement template) {
+		List<org.modeldriven.alf.uml.NamedElement> elements = 
+				new ArrayList<org.modeldriven.alf.uml.NamedElement>(2);
+		
+		try {
+			Classifier boundElement = this.getClass().newInstance();
+			
+			TemplateBinding templateBinding = new TemplateBinding();
+			org.modeldriven.alf.uml.TemplateSignature templateSignature = 
+					template.getOwnedTemplateSignature();			
+			templateBinding.setSignature(templateSignature);
+			boundElement.addTemplateBinding(templateBinding);
+			
+			org.modeldriven.alf.uml.TemplateSignature mySignature = 
+					this.getOwnedTemplateSignature();
+			if (mySignature != null) {
+				List<org.modeldriven.alf.uml.TemplateParameter> templateParameters = 
+						templateSignature.getParameter();
+				List<org.modeldriven.alf.uml.TemplateParameter> myParameters = 
+						mySignature.getParameter();
+				for (int i = 0; 
+						i < templateParameters.size() && i < myParameters.size(); 
+						i++) {
+					TemplateParameterSubstitution substitution = 
+							new TemplateParameterSubstitution();
+					substitution.setFormal(templateParameters.get(i));
+					substitution.setActual(
+							templateParameters.get(i).getParameteredElement());
+				}
+			}
+			
+			Realization realization = new Realization();
+			realization.setSupplier(boundElement);
+			realization.setClient(this);
+			
+			elements.add(boundElement);
+			elements.add(realization);
+		} catch (Exception e) {
+		}
+		
+		return elements;
+	}
 
 }

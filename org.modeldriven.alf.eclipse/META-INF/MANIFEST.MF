@@ -11,4 +11,5 @@ Require-Bundle: org.eclipse.papyrus.moka.fuml;bundle-version="0.9.2",
  org.eclipse.uml2.uml.ecore.importer;bundle-version="2.6.0",
  org.eclipse.uml2.uml.profile.l2;bundle-version="1.0.1",
  org.eclipse.uml2.uml.profile.l3;bundle-version="1.0.1",
- org.eclipse.uml2.uml.resources;bundle-version="4.0.1"
+ org.eclipse.uml2.uml.resources;bundle-version="4.0.1",
+ org.eclipse.papyrus.uml.tools.utils;bundle-version="0.9.1"

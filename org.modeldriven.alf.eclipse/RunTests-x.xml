@@ -117,6 +117,6 @@
         <antcall target="run-test">
             <param name="unit" value="Units_ActiveClass" />
         </antcall>
-        <echo message="Done!" file="${filename}" append="true" />
+        <echo message="All done!" file="${filename}" append="true" />
     </target>
 </project>
