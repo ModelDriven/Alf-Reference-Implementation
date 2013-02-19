@@ -83,6 +83,26 @@ public class Package extends Namespace implements
 				org.eclipse.uml2.uml.VisibilityKind.get(visibility));
 	}
 
+	@Override
+	public List<org.modeldriven.alf.uml.ProfileApplication> getProfileApplication() {
+		List<org.modeldriven.alf.uml.ProfileApplication> list = 
+				new ArrayList<org.modeldriven.alf.uml.ProfileApplication>();
+		for (org.eclipse.uml2.uml.ProfileApplication profileApplication: this.getBase().getProfileApplications()) {
+			list.add((org.modeldriven.alf.uml.ProfileApplication)wrap(profileApplication));
+		}
+		return list;
+	}
+
+	@Override
+	public void addProfileApplication(org.modeldriven.alf.uml.ProfileApplication profileApplication) {
+		if (profileApplication != null) {
+			org.modeldriven.alf.uml.Profile appliedProfile = profileApplication.getAppliedProfile();
+			if (appliedProfile != null) {
+				this.getBase().applyProfile(((Profile)appliedProfile).getBase());
+			}
+		}
+	}
+
     @Override
     public List<org.modeldriven.alf.uml.NamedElement> visibleMembers() {
         List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,10 +11,12 @@ package org.modeldriven.alf.eclipse.uml;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.eclipse.uml2.uml.UMLFactory;
+
 public class Operation extends BehavioralFeature implements
 		org.modeldriven.alf.uml.Operation {
 	public Operation() {
-		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createOperation());
+		this(UMLFactory.eINSTANCE.createOperation());
 	}
 
 	public Operation(org.eclipse.uml2.uml.Operation base) {
@@ -93,17 +95,5 @@ public class Operation extends BehavioralFeature implements
     public void setClass_(org.modeldriven.alf.uml.Class_ class_) {
         this.getBase().setClass_(((Class_)class_).getBase());
     }
-
-    @Override
-    public boolean isConstructor() {
-        // TODO Check for Create stereotype application.
-        return false;
-    }
-
-    @Override
-    public boolean isDestructor() {
-        // TODO Check for Destroy stereotype application.
-        return false;
-    }
-
+    
 }

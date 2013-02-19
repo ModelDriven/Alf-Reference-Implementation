@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_TFclUG8HEeKSydOqOJJ_Ew" name="Model" visibility="package">
+  <packagedElement xmi:type="uml:Activity" xmi:id="_TFclUW8HEeKSydOqOJJ_Ew" name="AssertTrue" visibility="package" group="_TFclZm8HEeKSydOqOJJ_Ew" node="_TFclYm8HEeKSydOqOJJ_Ew _TFclY28HEeKSydOqOJJ_Ew _TFclZG8HEeKSydOqOJJ_Ew _TFclZW8HEeKSydOqOJJ_Ew _TFclZm8HEeKSydOqOJJ_Ew">
+    <elementImport xmi:id="_TFclUm8HEeKSydOqOJJ_Ew" alias="">
+      <importedElement xmi:type="uml:OpaqueBehavior" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/FoundationalModelLibrary.uml#_Cajek23gEeKdeoSkrA51Qw"/>
+    </elementImport>
+    <packageImport xmi:id="_TFclU28HEeKSydOqOJJ_Ew">
+      <importedPackage href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/Alf.uml#_d6UtIm5XEeKG_PE-xsGuFg"/>
+    </packageImport>
+    <packageImport xmi:id="_TFclVG8HEeKSydOqOJJ_Ew">
+      <importedPackage href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/Alf.uml#_d6UtKG5XEeKG_PE-xsGuFg"/>
+    </packageImport>
+    <packageImport xmi:id="_TFclVW8HEeKSydOqOJJ_Ew">
+      <importedPackage href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/Alf.uml#_d6nB125XEeKG_PE-xsGuFg"/>
+    </packageImport>
+    <packageImport xmi:id="_TFclVm8HEeKSydOqOJJ_Ew">
+      <importedPackage href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/Alf.uml#_d6nB2W5XEeKG_PE-xsGuFg"/>
+    </packageImport>
+    <packageImport xmi:id="_TFclV28HEeKSydOqOJJ_Ew">
+      <importedPackage href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/Alf.uml#_d6nB3G5XEeKG_PE-xsGuFg"/>
+    </packageImport>
+    <ownedParameter xmi:id="_TFclWG8HEeKSydOqOJJ_Ew" name="label" visibility="package">
+      <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_SsfgdG1fEeKf5pjW7ThCjA"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFclWW8HEeKSydOqOJJ_Ew" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFclWm8HEeKSydOqOJJ_Ew" value="1"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_TFclW28HEeKSydOqOJJ_Ew" name="condition" visibility="package">
+      <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFclXG8HEeKSydOqOJJ_Ew"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFclXW8HEeKSydOqOJJ_Ew" value="1"/>
+    </ownedParameter>
+    <edge xmi:type="uml:ObjectFlow" xmi:id="_TFclXm8HEeKSydOqOJJ_Ew" source="_TFclYm8HEeKSydOqOJJ_Ew" target="_TFclY28HEeKSydOqOJJ_Ew"/>
+    <edge xmi:type="uml:ObjectFlow" xmi:id="_TFclX28HEeKSydOqOJJ_Ew" source="_TFclZG8HEeKSydOqOJJ_Ew" target="_TFclZW8HEeKSydOqOJJ_Ew"/>
+    <edge xmi:type="uml:ObjectFlow" xmi:id="_TFclYG8HEeKSydOqOJJ_Ew" source="_TFclZW8HEeKSydOqOJJ_Ew" target="_TFcld28HEeKSydOqOJJ_Ew"/>
+    <edge xmi:type="uml:ObjectFlow" xmi:id="_TFclYW8HEeKSydOqOJJ_Ew" source="_TFclY28HEeKSydOqOJJ_Ew" target="_TFdMg28HEeKSydOqOJJ_Ew"/>
+    <structuredNode xmi:id="_TFclZm8HEeKSydOqOJJ_Ew" name="Body(AssertTrue)">
+      <node xmi:type="uml:ConditionalNode" xmi:id="_TFclZ28HEeKSydOqOJJ_Ew" name="IfStatement@4ee00c09">
+        <node xmi:type="uml:ValueSpecificationAction" xmi:id="_TFclaG8HEeKSydOqOJJ_Ew" name="Value(true)">
+          <result xmi:id="_TFclaW8HEeKSydOqOJJ_Ew" name="Value(true).result" outgoing="_TFdMmW8HEeKSydOqOJJ_Ew" isOrdered="true" isUnique="false">
+            <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFclam8HEeKSydOqOJJ_Ew" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFcla28HEeKSydOqOJJ_Ew" value="1"/>
+          </result>
+          <value xmi:type="uml:LiteralBoolean" xmi:id="_TFclbG8HEeKSydOqOJJ_Ew" value="true">
+            <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+          </value>
+        </node>
+        <node xmi:type="uml:TestIdentityAction" xmi:id="_TFclbW8HEeKSydOqOJJ_Ew" name="Test(==)">
+          <first xmi:id="_TFclbm8HEeKSydOqOJJ_Ew" name="Test(==).first" incoming="_TFdMkW8HEeKSydOqOJJ_Ew" isOrdered="true" isUnique="false">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFclb28HEeKSydOqOJJ_Ew" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFclcG8HEeKSydOqOJJ_Ew" value="1"/>
+          </first>
+          <result xmi:id="_TFclcW8HEeKSydOqOJJ_Ew" name="Test(==).result" outgoing="_TFdMlG8HEeKSydOqOJJ_Ew" isOrdered="true" isUnique="false">
+            <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFclcm8HEeKSydOqOJJ_Ew" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFclc28HEeKSydOqOJJ_Ew" value="1"/>
+          </result>
+          <second xmi:id="_TFcldG8HEeKSydOqOJJ_Ew" name="Test(==).second" incoming="_TFdMmW8HEeKSydOqOJJ_Ew" isOrdered="true" isUnique="false">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFcldW8HEeKSydOqOJJ_Ew" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFcldm8HEeKSydOqOJJ_Ew" value="1"/>
+          </second>
+        </node>
+        <node xmi:type="uml:ForkNode" xmi:id="_TFcld28HEeKSydOqOJJ_Ew" name="Fork(Fork(condition))" outgoing="_TFdMkW8HEeKSydOqOJJ_Ew _TFdMkm8HEeKSydOqOJJ_Ew" incoming="_TFclYG8HEeKSydOqOJJ_Ew"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_TFdMYG8HEeKSydOqOJJ_Ew" name="Call(NotEmpty)">
+          <argument xmi:id="_TFdMYW8HEeKSydOqOJJ_Ew" name="Call(NotEmpty).argument(seq)" incoming="_TFdMkm8HEeKSydOqOJJ_Ew" isOrdered="true" isUnique="false">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMYm8HEeKSydOqOJJ_Ew"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMY28HEeKSydOqOJJ_Ew" value="*"/>
+          </argument>
+          <result xmi:id="_TFdMZG8HEeKSydOqOJJ_Ew" name="Call(NotEmpty).result()" outgoing="_TFdMk28HEeKSydOqOJJ_Ew">
+            <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMZW8HEeKSydOqOJJ_Ew" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMZm8HEeKSydOqOJJ_Ew" value="1"/>
+          </result>
+          <behavior xmi:type="uml:Activity" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/Alf.uml#_d6Xwm25XEeKG_PE-xsGuFg"/>
+        </node>
+        <node xmi:type="uml:ForkNode" xmi:id="_TFdMZ28HEeKSydOqOJJ_Ew" name="Fork(Call(NotEmpty).result())" outgoing="_TFdMlW8HEeKSydOqOJJ_Ew _TFdMlm8HEeKSydOqOJJ_Ew" incoming="_TFdMk28HEeKSydOqOJJ_Ew"/>
+        <node xmi:type="uml:MergeNode" xmi:id="_TFdMaG8HEeKSydOqOJJ_Ew" name="Merge(Test(==).result, Call(NotEmpty).result())" outgoing="_TFdMmm8HEeKSydOqOJJ_Ew" incoming="_TFdMlG8HEeKSydOqOJJ_Ew _TFdMl28HEeKSydOqOJJ_Ew"/>
+        <node xmi:type="uml:DecisionNode" xmi:id="_TFdMaW8HEeKSydOqOJJ_Ew" name="Decision(Call(NotEmpty).result())" outgoing="_TFdMl28HEeKSydOqOJJ_Ew" incoming="_TFdMlW8HEeKSydOqOJJ_Ew _TFdMlm8HEeKSydOqOJJ_Ew" decisionInputFlow="_TFdMlm8HEeKSydOqOJJ_Ew"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_TFdMam8HEeKSydOqOJJ_Ew" name="Call(Not)">
+          <argument xmi:id="_TFdMa28HEeKSydOqOJJ_Ew" name="Call(Not).argument(x)" incoming="_TFdMmm8HEeKSydOqOJJ_Ew">
+            <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMbG8HEeKSydOqOJJ_Ew" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMbW8HEeKSydOqOJJ_Ew" value="1"/>
+          </argument>
+          <result xmi:id="_TFdMbm8HEeKSydOqOJJ_Ew" name="Call(Not).result()">
+            <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMb28HEeKSydOqOJJ_Ew" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMcG8HEeKSydOqOJJ_Ew" value="1"/>
+          </result>
+          <behavior xmi:type="uml:OpaqueBehavior" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/FoundationalModelLibrary.uml#_Cajegm3gEeKdeoSkrA51Qw"/>
+        </node>
+        <node xmi:type="uml:StructuredActivityNode" xmi:id="_TFdMcW8HEeKSydOqOJJ_Ew" name="ExpressionStatement@762589c3">
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_TFdMcm8HEeKSydOqOJJ_Ew" name="Call(WriteLine)" incoming="_TFdMi28HEeKSydOqOJJ_Ew">
+            <argument xmi:id="_TFdMc28HEeKSydOqOJJ_Ew" name="Call(WriteLine).argument(value)" incoming="_TFdMim8HEeKSydOqOJJ_Ew">
+              <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_SsfgdG1fEeKf5pjW7ThCjA"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMdG8HEeKSydOqOJJ_Ew" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMdW8HEeKSydOqOJJ_Ew" value="1"/>
+            </argument>
+            <result xmi:id="_TFdMdm8HEeKSydOqOJJ_Ew" name="Call(WriteLine).result(errorStatus)">
+              <type xmi:type="uml:DataType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/FoundationalModelLibrary.uml#_Cal6sW3gEeKdeoSkrA51Qw"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMd28HEeKSydOqOJJ_Ew"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMeG8HEeKSydOqOJJ_Ew" value="1"/>
+            </result>
+            <behavior xmi:type="uml:Activity" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/FoundationalModelLibrary.uml#_CayIEm3gEeKdeoSkrA51Qw"/>
+          </node>
+          <node xmi:type="uml:StructuredActivityNode" xmi:id="_TFdMeW8HEeKSydOqOJJ_Ew" name="Tuple@5f51d6cb" outgoing="_TFdMi28HEeKSydOqOJJ_Ew">
+            <node xmi:type="uml:ValueSpecificationAction" xmi:id="_TFdMem8HEeKSydOqOJJ_Ew" name="Value(&quot;FAILED: &quot;)">
+              <result xmi:id="_TFdMe28HEeKSydOqOJJ_Ew" name="Value(&quot;FAILED: &quot;).result" outgoing="_TFdMiW8HEeKSydOqOJJ_Ew" isOrdered="true" isUnique="false">
+                <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_SsfgdG1fEeKf5pjW7ThCjA"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMfG8HEeKSydOqOJJ_Ew" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMfW8HEeKSydOqOJJ_Ew" value="1"/>
+              </result>
+              <value xmi:type="uml:LiteralString" xmi:id="_TFdMfm8HEeKSydOqOJJ_Ew" value="FAILED: ">
+                <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_SsfgdG1fEeKf5pjW7ThCjA"/>
+              </value>
+            </node>
+            <node xmi:type="uml:CallBehaviorAction" xmi:id="_TFdMf28HEeKSydOqOJJ_Ew" name="Call(Concat)">
+              <argument xmi:id="_TFdMgG8HEeKSydOqOJJ_Ew" name="Call(Concat).argument(x)" incoming="_TFdMiW8HEeKSydOqOJJ_Ew">
+                <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_SsfgdG1fEeKf5pjW7ThCjA"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMgW8HEeKSydOqOJJ_Ew" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMgm8HEeKSydOqOJJ_Ew" value="1"/>
+              </argument>
+              <argument xmi:id="_TFdMg28HEeKSydOqOJJ_Ew" name="Call(Concat).argument(y)" incoming="_TFclYW8HEeKSydOqOJJ_Ew">
+                <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_SsfgdG1fEeKf5pjW7ThCjA"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMhG8HEeKSydOqOJJ_Ew" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMhW8HEeKSydOqOJJ_Ew" value="1"/>
+              </argument>
+              <result xmi:id="_TFdMhm8HEeKSydOqOJJ_Ew" name="Call(Concat).result()" outgoing="_TFdMim8HEeKSydOqOJJ_Ew">
+                <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_SsfgdG1fEeKf5pjW7ThCjA"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMh28HEeKSydOqOJJ_Ew" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMiG8HEeKSydOqOJJ_Ew" value="1"/>
+              </result>
+              <behavior xmi:type="uml:OpaqueBehavior" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/FoundationalModelLibrary.uml#_Caksrm3gEeKdeoSkrA51Qw"/>
+            </node>
+            <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMiW8HEeKSydOqOJJ_Ew" source="_TFdMe28HEeKSydOqOJJ_Ew" target="_TFdMgG8HEeKSydOqOJJ_Ew"/>
+          </node>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMim8HEeKSydOqOJJ_Ew" source="_TFdMhm8HEeKSydOqOJJ_Ew" target="_TFdMc28HEeKSydOqOJJ_Ew"/>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_TFdMi28HEeKSydOqOJJ_Ew" source="_TFdMeW8HEeKSydOqOJJ_Ew" target="_TFdMcm8HEeKSydOqOJJ_Ew"/>
+        </node>
+        <node xmi:type="uml:ValueSpecificationAction" xmi:id="_TFdMjG8HEeKSydOqOJJ_Ew" name="Value(true)">
+          <result xmi:id="_TFdMjW8HEeKSydOqOJJ_Ew" name="Value(true).result" isOrdered="true" isUnique="false">
+            <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TFdMjm8HEeKSydOqOJJ_Ew" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TFdMj28HEeKSydOqOJJ_Ew" value="1"/>
+          </result>
+          <value xmi:type="uml:LiteralBoolean" xmi:id="_TFdMkG8HEeKSydOqOJJ_Ew" value="true">
+            <type xmi:type="uml:PrimitiveType" href="file:/Users/seidewitz/Documents/workspace/org.modeldriven.alf.eclipse/UML/UML.uml#_Ssfgcm1fEeKf5pjW7ThCjA"/>
+          </value>
+        </node>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMkW8HEeKSydOqOJJ_Ew" source="_TFcld28HEeKSydOqOJJ_Ew" target="_TFclbm8HEeKSydOqOJJ_Ew"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMkm8HEeKSydOqOJJ_Ew" source="_TFcld28HEeKSydOqOJJ_Ew" target="_TFdMYW8HEeKSydOqOJJ_Ew"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMk28HEeKSydOqOJJ_Ew" source="_TFdMZG8HEeKSydOqOJJ_Ew" target="_TFdMZ28HEeKSydOqOJJ_Ew"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMlG8HEeKSydOqOJJ_Ew" source="_TFclcW8HEeKSydOqOJJ_Ew" target="_TFdMaG8HEeKSydOqOJJ_Ew"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMlW8HEeKSydOqOJJ_Ew" source="_TFdMZ28HEeKSydOqOJJ_Ew" target="_TFdMaW8HEeKSydOqOJJ_Ew"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMlm8HEeKSydOqOJJ_Ew" source="_TFdMZ28HEeKSydOqOJJ_Ew" target="_TFdMaW8HEeKSydOqOJJ_Ew"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMl28HEeKSydOqOJJ_Ew" source="_TFdMaW8HEeKSydOqOJJ_Ew" target="_TFdMaG8HEeKSydOqOJJ_Ew">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_TFdMmG8HEeKSydOqOJJ_Ew" name="Value(false)"/>
+        </edge>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMmW8HEeKSydOqOJJ_Ew" source="_TFclaW8HEeKSydOqOJJ_Ew" target="_TFcldG8HEeKSydOqOJJ_Ew"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TFdMmm8HEeKSydOqOJJ_Ew" source="_TFdMaG8HEeKSydOqOJJ_Ew" target="_TFdMa28HEeKSydOqOJJ_Ew"/>
+        <clause xmi:id="_TFdMm28HEeKSydOqOJJ_Ew" body="_TFdMcW8HEeKSydOqOJJ_Ew" decider="_TFdMbm8HEeKSydOqOJJ_Ew" successorClause="_TFdMnG8HEeKSydOqOJJ_Ew" test="_TFclaG8HEeKSydOqOJJ_Ew _TFclbW8HEeKSydOqOJJ_Ew _TFdMYG8HEeKSydOqOJJ_Ew _TFdMam8HEeKSydOqOJJ_Ew"/>
+        <clause xmi:id="_TFdMnG8HEeKSydOqOJJ_Ew" decider="_TFdMjW8HEeKSydOqOJJ_Ew" predecessorClause="_TFdMm28HEeKSydOqOJJ_Ew" test="_TFdMjG8HEeKSydOqOJJ_Ew"/>
+      </node>
+    </structuredNode>
+    <node xmi:type="uml:ActivityParameterNode" xmi:id="_TFclYm8HEeKSydOqOJJ_Ew" name="Input(label)" outgoing="_TFclXm8HEeKSydOqOJJ_Ew" parameter="_TFclWG8HEeKSydOqOJJ_Ew"/>
+    <node xmi:type="uml:ForkNode" xmi:id="_TFclY28HEeKSydOqOJJ_Ew" name="Fork(label)" outgoing="_TFclYW8HEeKSydOqOJJ_Ew" incoming="_TFclXm8HEeKSydOqOJJ_Ew"/>
+    <node xmi:type="uml:ActivityParameterNode" xmi:id="_TFclZG8HEeKSydOqOJJ_Ew" name="Input(condition)" outgoing="_TFclX28HEeKSydOqOJJ_Ew" parameter="_TFclW28HEeKSydOqOJJ_Ew"/>
+    <node xmi:type="uml:ForkNode" xmi:id="_TFclZW8HEeKSydOqOJJ_Ew" name="Fork(condition)" outgoing="_TFclYG8HEeKSydOqOJJ_Ew" incoming="_TFclX28HEeKSydOqOJJ_Ew"/>
+  </packagedElement>
+</uml:Package>

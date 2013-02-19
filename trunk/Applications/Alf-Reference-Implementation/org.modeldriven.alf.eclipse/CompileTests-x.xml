@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="CompileTests-x" default="run" basedir=".">
     <property name="alf.dir" value="../org.modeldriven.alf" />
+    <property name="alf.eclipse.dir" value="${basedir}" />
     <property name="moka.dir" value="../org.eclipse.papyrus.moka.fuml" />
     <property name="moka.lib" value="../org.eclipse.papyrus.moka.fuml.standardlibrary" />
     <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
@@ -21,6 +22,7 @@
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore_2.8.1.v20120911-0500.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore.xmi_2.8.0.v20120911-0500.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20120917-0436.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.papyrus.uml.tools.utils_0.9.1.v201210051358.jar" />
     </path>
     <target name="run-test">
         <echo message="${unit}" />
@@ -29,7 +31,7 @@
         <java classname="${classname}" classpath="bin" output="${filename}" append="true">
             <classpath refid="${cp}" />
             <arg value="-l" />
-            <arg value="${alf.dir}/Libraries" />
+            <arg value="${alf.eclipse.dir}/UML" />
             <arg value="-m" />
             <arg value="${alf.dir}/tests-x" />
             <arg value="-d" />

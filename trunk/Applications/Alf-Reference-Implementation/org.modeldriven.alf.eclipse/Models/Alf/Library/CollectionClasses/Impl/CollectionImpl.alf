@@ -1,0 +1,104 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::CollectionFunctions::*;
+/**
+The base concrete implementation for all the standard library collection classes.
+*/
+abstract class CollectionImpl<T> {
+  
+  @Create protected CollectionImpl(in seq: T[0..*] sequence) {
+    this.setContent(seq);
+  }
+
+  protected abstract setContent (in seq: T[0..*] sequence);
+  
+  public abstract toSequence (): T[0..*] sequence;
+
+  public add (in element: T): Boolean { 
+    result = this.excludes(element);
+    this.setContent(this.toSequence()->including(element));
+    return result;
+  }
+
+  public addAll (in seq: T[0..*] sequence): Boolean { 
+    preSize = this.size();
+    this.setContent(this.toSequence()->union(seq));
+    return this.size() > preSize;
+  }
+
+  public clear () { 
+    this.setContent(null);
+  }
+
+  public count (in element: T): Integer { 
+    return this.toSequence()->count(element);
+  }
+
+  public equals (in seq: T[0..*] sequence): Boolean { 
+    return this.toSequence()->equals(seq);
+  }
+
+  public excludes (in element: T): Boolean { 
+    return this.toSequence()->excludes(element);
+  }
+
+  public excludesAll (in seq: T[0..*] sequence): Boolean {
+    return this.toSequence()->excludesAll(seq); 
+  }
+
+  public includes (in element: T): Boolean { 
+    return this.toSequence()->includes(element);
+  }
+
+  public includesAll (in seq: T[0..*] sequence): Boolean { 
+    return this.toSequence()->includesAll(seq);
+  }
+
+  public isEmpty (): Boolean { 
+    return this.toSequence()->isEmpty();
+  }
+
+  public notEmpty (): Boolean { 
+    return this.toSequence()->notEmpty();
+  }
+
+  public remove (in element: T): Integer { 
+    result = this.count(element);
+    this.setContent(this.toSequence()->excluding(element));
+    return result;
+  }
+
+  public removeAll (in seq: T[0..*] sequence): Boolean { 
+    preSize = this.size();
+    this.setContent(this.toSequence()->difference(seq));
+    return this.size() < preSize;
+  }
+
+  public removeOne (in element: T): Boolean { 
+    result = this.includes(element);
+    this.setContent(this.toSequence()->excludingOne(element));
+    return result;
+  }
+
+  public replace (in element: T, in newElement: T): Integer { 
+    result = this.count(element);
+    this.setContent(this.toSequence()->replacing(element, newElement));
+    return result;
+  }
+
+  public replaceOne (in element: T, in newElement: T): Boolean { 
+    result = this.includes(element);
+    this.setContent(this.toSequence()->replacingOne(element, newElement));
+    return result;
+  }
+
+  public retainAll (in seq: T[0..*] sequence): Boolean { 
+    preSize = this.size();
+    this.setContent(this.toSequence()->intersection(seq));
+    return this.size() < preSize;
+  }
+
+  public size (): Integer { 
+    return this.toSequence()->size();
+  }
+
+}
