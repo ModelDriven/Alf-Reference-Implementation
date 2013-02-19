@@ -71,5 +71,7 @@ active class Expressions_Assignment_Feature {
     AssertEqual("self.x", self.x, 2);
     AssertEqual("self.y[1]", self.y[1], 1);
     AssertEqual("self.y[2]", self.y[2], 2);
+
+    WriteLine("Done");
 }
       

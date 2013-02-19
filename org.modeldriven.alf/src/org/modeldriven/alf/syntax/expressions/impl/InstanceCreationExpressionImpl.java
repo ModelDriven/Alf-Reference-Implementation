@@ -140,12 +140,12 @@ public class InstanceCreationExpressionImpl
                         ElementReference namespaceReferent = 
                                 classReferent.getImpl().getNamespace();
                         if (namespaceReferent != null) {
-                            NamespaceDefinition classDefinition = 
+                            NamespaceDefinition namespaceDefinition = 
                                     namespaceReferent.getImpl().asNamespace();
-                            QualifiedName className = classDefinition.getImpl().
+                            QualifiedName namespaceName = namespaceDefinition.getImpl().
                                     getQualifiedName();
                             QualifiedName implPackageName = 
-                                    className.getImpl().copy().addName("Impl");
+                                    namespaceName.getImpl().copy().addName("Impl");
                             ElementReference implPackageReferent = 
                                     implPackageName.getImpl().getNamespaceReferent();
                             if (implPackageReferent != null &&
@@ -162,9 +162,9 @@ public class InstanceCreationExpressionImpl
                                     // be for a template binding.
                                     implConstructor = new QualifiedName().getImpl().
                                             addName("Impl").getImpl().
-                                            addName(classDefinition.getName());
+                                            addName(namespaceDefinition.getName());
                                     implConstructor.getImpl().
-                                    setCurrentScope(classDefinition);
+                                        setCurrentScope(namespaceDefinition);
 
                                 } else {                           
                                     // Note: Constructing a qualified name with 
@@ -175,7 +175,7 @@ public class InstanceCreationExpressionImpl
                                     if (implConstructor == null) {
                                         implConstructor = new QualifiedName();
                                         implConstructor.getImpl().
-                                        setCurrentScope(classDefinition);
+                                            setCurrentScope(namespaceDefinition);
                                     }
                                     implConstructor.getImpl().addName("Impl").
                                     addNameBinding(qualification.getUnqualifiedName());

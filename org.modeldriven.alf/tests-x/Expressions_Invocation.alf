@@ -90,4 +90,6 @@ active class Expressions_Invocation {
     AssertTrue("list[1]==obj", list[1]==obj);
     
     AssertEqual("ns", ns, 2);
+
+    WriteLine("Done");
 }

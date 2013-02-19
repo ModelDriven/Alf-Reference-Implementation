@@ -30,4 +30,6 @@ active class Expressions_Assignment_Indexed {
     AssertEqual("a[2]", a[2], 5);
     AssertEqual("a[3]", a[3], 5);
     AssertEqual("a[4]", a[4], 7);
+
+    WriteLine("Done");
 }

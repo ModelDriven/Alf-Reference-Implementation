@@ -109,5 +109,7 @@ active class Expressions_SuperConstructors {
   AssertEqual("s3.y", s3.y, 2);
   AssertEqual("s3.z1", s3.z1, 4);
   AssertEqual("s3.z2", s3.z2, 5);
+
+  WriteLine("Done");
 }
     

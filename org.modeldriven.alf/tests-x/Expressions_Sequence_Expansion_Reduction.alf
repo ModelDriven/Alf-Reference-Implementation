@@ -79,4 +79,6 @@ active class Expressions_Sequence_Expansion_Reduction {
     
     AssertEqual("jack.name", jack.name, "Jack");
     AssertEqual("joan.name", joan.name, "Joan");
+
+    WriteLine("Done");
 }

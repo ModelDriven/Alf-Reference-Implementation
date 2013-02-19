@@ -88,14 +88,4 @@ public class Operation extends BehavioralFeature implements
 				.addOwnedParameter(ownedParameter==null? null: ((Parameter) ownedParameter).getBase());
 	}
 	
-    @Override
-    public boolean isConstructor() {
-        return false;
-    }
-
-    @Override
-    public boolean isDestructor() {
-        return false;
-    }
-
 }

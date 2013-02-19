@@ -56,11 +56,13 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
         // NOTE: Not using an iterator allows for possible modification of the
         // owned members during mapping.
         List<Member> ownedMembers = definition.getOwnedMember();
+        boolean supportsTemplates = this.supportsTemplates();
         for (int i = 0; i < ownedMembers.size(); i++) {
             Member member = ownedMembers.get(i);
-            // Note: Ignore classifiers that are not completely bound and 
-            // classifier template parameters.
-            if (member.getImpl().isCompletelyBound() && 
+            // Ignore members that are not completely bound, unless templates
+            // are supported in the target UML implementation, and template
+            // parameters (which are handled during classifier mapping).
+            if ((supportsTemplates || member.getImpl().isCompletelyBound()) && 
                     !(member instanceof ClassifierTemplateParameter)) {
                 if (member.getIsStub()) {
                     UnitDefinition subunit = member.getSubunit();

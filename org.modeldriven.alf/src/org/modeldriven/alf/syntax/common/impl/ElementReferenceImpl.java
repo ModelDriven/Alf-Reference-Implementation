@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,17 +11,27 @@
 package org.modeldriven.alf.syntax.common.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.PositionalTemplateBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
+import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.ParameterableElement;
+import org.modeldriven.alf.uml.TemplateParameter;
+import org.modeldriven.alf.uml.TemplateSignature;
 
 /**
  * A reference to a model element, either directly or via its Alf abstract
@@ -30,6 +40,12 @@ import org.modeldriven.alf.uml.Element;
  **/
 
 public abstract class ElementReferenceImpl {
+    
+    // Used as a non-null value to represent the "any" type.
+    private static final ElementReference any = new InternalElementReference();
+    
+    private static Map<ParameterableElement, ElementReference> templateBindings = 
+            new HashMap<ParameterableElement, ElementReference>();
 
 	protected ElementReference self;
 
@@ -129,31 +145,37 @@ public abstract class ElementReferenceImpl {
 
     
     public QualifiedName getQualifiedName() {
-        ElementReference namespace = this.getNamespace();
-        String name = this.getName();
-        QualifiedName qualifiedName = 
-            namespace != null? namespace.getImpl().getQualifiedName():
-            name != null? new QualifiedName(): null;
-        if (qualifiedName != null) {
-            ElementReference template = this.getTemplate();
-            if (template != null) {
-                name = template.getImpl().getName();
+        QualifiedName qualifiedName;
+        if (this.getAlf() instanceof ModelNamespace) {
+            qualifiedName = new QualifiedName();
+        } else {
+            ElementReference namespace = this.getNamespace();
+            String name = this.getName();
+            qualifiedName = 
+                namespace != null? namespace.getImpl().getQualifiedName():
+                name != null? new QualifiedName(): null;
+            if (qualifiedName != null) {
+                ElementReference template = this.getTemplate();
+                if (template != null) {
+                    name = template.getImpl().getName();
+                }
+                if (name == null) {
+                    name = "";
+                }
+                NameBinding nameBinding = new NameBinding();
+                nameBinding.setName(name);
+                if (template != null) {
+                    PositionalTemplateBinding templateBinding = 
+                        new PositionalTemplateBinding();
+                    for (ElementReference templateActual: this.getTemplateActuals()) {
+                        templateBinding.addArgumentName(
+                                templateActual == null? new QualifiedName():
+                                templateActual.getImpl().getQualifiedName());
+                        nameBinding.setBinding(templateBinding);
+                    }                
+                }
+                qualifiedName.addNameBinding(nameBinding);
             }
-            if (name == null) {
-                name = "";
-            }
-            NameBinding nameBinding = new NameBinding();
-            nameBinding.setName(name);
-            if (template != null) {
-                PositionalTemplateBinding templateBinding = 
-                    new PositionalTemplateBinding();
-                for (ElementReference templateActual: this.getTemplateActuals()) {
-                    templateBinding.addArgumentName(
-                            templateActual.getImpl().getQualifiedName());
-                    nameBinding.setBinding(templateBinding);
-                }                
-            }
-            qualifiedName.addNameBinding(nameBinding);
         }
         return qualifiedName;
     }
@@ -251,6 +273,68 @@ public abstract class ElementReferenceImpl {
             }
         }
         return false;
+    }
+    
+    public static void addTemplateBinding(
+            TemplateParameter templateParameter, 
+            ElementReference templateArgument) {
+        templateBindings.put(
+                templateParameter.getParameteredElement(), 
+                templateArgument == null? any: templateArgument);
+    }
+    
+    public static void replaceTemplateBindings(Element context) {
+        Set<TemplateSignature> templateSignatures = 
+                new HashSet<TemplateSignature>();
+        for (ParameterableElement element: templateBindings.keySet()) {
+            ElementReference reference = templateBindings.get(element);
+            
+            TemplateParameter templateParameter = 
+                    element.getTemplateParameter();
+            templateSignatures.add(
+                    templateParameter.getSignature());
+            templateParameter.setParameteredElement(null);
+            templateParameter.setOwnedParameteredElement(null);
+            
+            if (reference == any) {
+                context.replace(element, null);
+            } else {
+                FumlMapping mapping = ((ElementReferenceMapping)
+                        FumlMapping.getMapping(reference)).getMapping();
+                context.replace(element, mapping == null? null:
+                    mapping.getElement());
+            }
+        }
+        
+        for (TemplateSignature signature: templateSignatures) {
+            signature.getTemplate().setOwnedTemplateSignature(null);
+        }
+     }
+    
+    public static boolean isBound(TemplateParameter templateParameter) {
+        return templateBindings.containsKey(
+                templateParameter.getParameteredElement());
+    }
+    
+    public static ElementReference makeElementReference(Element element) {
+        return makeElementReference(element, null);
+    }
+    
+    public static ElementReference makeElementReference(
+            Element element, NamespaceDefinition namespace) {
+        ElementReference reference = templateBindings.get(element);
+        
+        if (reference == null) {
+            ExternalElementReference externalReference = 
+                    new ExternalElementReference();
+            externalReference.setElement(element);
+            externalReference.getImpl().setNamespace(namespace);
+            reference = externalReference;
+        } else if (reference == any) {
+            reference = null;
+        }
+        
+        return reference;
     }
 
 } // ElementReferenceImpl

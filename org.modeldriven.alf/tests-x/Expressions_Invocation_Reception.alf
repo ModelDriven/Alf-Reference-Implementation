@@ -3,18 +3,16 @@
  */
 active class Expressions_Invocation_Reception {
 
-  public receive signal SignalLoop { }
-
   public active class Receiver {
   
     public a: Integer = 0;
     public x: Integer[*] sequence;
     public y: Integer[*] sequence;
     
-    public tester: Expressions_Invocation_Reception;
+    public tester: TestRunner;
     
     @Create
-    public Receiver(in tester: Expressions_Invocation_Reception) {
+    public Receiver(in tester: TestRunner) {
       this.tester = tester;
     }
   
@@ -46,28 +44,39 @@ active class Expressions_Invocation_Reception {
     
   }
   
-  public test(out receiver: Receiver, out n: Integer) {
+  public active class TestRunner {
   
-    receiver = new Receiver(this);
+    public receive signal Start { }
+    public receive signal SignalLoop { }
+  
+    public test(out receiver: Receiver, out n: Integer) {
     
-    receiver.A();
-    receiver.B(1);
-    receiver.C(2,3);
-    receiver.C(x => 3);
-    receiver.C(y => 4);
-    n = 5;
+      receiver = new Receiver(this);
+      
+      receiver.A();
+      receiver.B(1);
+      receiver.C(2,3);
+      receiver.C(x => 3);
+      receiver.C(y => 4);
+      n = 5;
+    }
+    
+  } do {  
+    accept (Start);
+  
+    this.test(receiver, n);
+    
+    for (i in 1..n) {
+      accept (SignalLoop);
+    }
+    
+    AssertEqual("receiver.a", receiver.a, 1);
+    AssertList("receiver.x", receiver.x, Integer[]{1,2,3});
+    AssertList("receiver.y", receiver.y, Integer[]{3,4});
+  
+    WriteLine("Done");
   }
   
 } do {
-
-  this.test(receiver, n);
-  
-  for (i in 1..n) {
-    accept (SignalLoop);
-  }
-  
-  AssertEqual("receiver.a", receiver.a, 1);
-  AssertList("receiver.x", receiver.x, Integer[]{1,2,3});
-  AssertList("receiver.y", receiver.y, Integer[]{3,4});
-  
+  new TestRunner().Start();
 }

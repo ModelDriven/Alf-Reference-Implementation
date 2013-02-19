@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,12 +8,14 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
-import java.util.Collection;
-
-public interface TemplateParameterSubstitution {
+public interface TemplateParameterSubstitution extends Element {
 
     public TemplateParameter getFormal();
-    public Collection<ParameterableElement> getActual();
-    public Collection<ParameterableElement> getOwnedActual();
+    
+    public void setFormal(TemplateParameter formal);
+    
+    public ParameterableElement getActual();
+    
+    public void setActual(ParameterableElement actual);
     
 }

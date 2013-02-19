@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -13,7 +13,7 @@ import java.util.Collection;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.QualifiedNameList;
-import org.modeldriven.alf.syntax.units.ActivityDefinition;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.StereotypeAnnotation;
 import org.modeldriven.alf.uml.OpaqueBehavior;
 import org.modeldriven.fuml.library.LibraryFunctions;
@@ -26,7 +26,7 @@ public class FumlMappingFactory extends org.modeldriven.alf.fuml.mapping.FumlMap
 
     @Override
     public OpaqueBehaviorExecution instantiatePrimitiveBehaviorPrototype(
-            ActivityDefinition definition, 
+            Member definition, 
             final OpaqueBehavior behavior) {
         fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution execution = new UnimplementedBehaviorExecution();
         for (StereotypeAnnotation annotation: definition.getAnnotation()) {
@@ -77,7 +77,7 @@ public class FumlMappingFactory extends org.modeldriven.alf.fuml.mapping.FumlMap
         
     }
 
-    private static String classNameFor(ActivityDefinition definition, String name) {
+    private static String classNameFor(Member definition, String name) {
         QualifiedName definitionName = definition.getImpl().getQualifiedName();
         String rootName = definitionName.getNameBinding().get(0).getName();
         return "org.modeldriven." + 

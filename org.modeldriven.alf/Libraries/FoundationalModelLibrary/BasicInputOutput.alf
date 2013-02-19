@@ -2,7 +2,6 @@ namespace FoundationalModelLibrary;
 
 public import FoundationalModelLibrary::Common::*;
 
-@ModelLibrary
 package BasicInputOutput {
 
   public abstract class Channel;

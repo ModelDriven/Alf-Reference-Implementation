@@ -35,4 +35,6 @@ active class Expressions_Literal_Name {
     AssertEqual("b", b, 1);
     AssertEqual("c", c, 1);
     AssertEqual("d", d, 1);
+
+    WriteLine("Done");
 }

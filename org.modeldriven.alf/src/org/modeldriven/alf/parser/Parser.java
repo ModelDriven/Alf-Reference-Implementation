@@ -1637,7 +1637,7 @@ public class Parser implements ParserConstants {
   final public Expression NumericUnaryExpression() throws ParseException {
   String op;
   Expression e;
-  UnaryExpression u = new NumericUnaryExpression();
+  UnaryExpression u = new NumericUnaryExpression(this);
     op = NumericUnaryOperator();
     e = UnaryExpression();
     u.setOperator(op);
@@ -1666,7 +1666,7 @@ public class Parser implements ParserConstants {
 
   final public Expression IsolationExpression() throws ParseException {
   Expression e;
-  UnaryExpression u = new IsolationExpression();
+  UnaryExpression u = new IsolationExpression(this);
     jj_consume_token(DOLLAR);
     e = UnaryExpression();
     u.setOperator("$");

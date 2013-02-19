@@ -145,6 +145,15 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
             }
             operation.addRedefinedOperation(redefinedOperation);
         }
+        
+        if (definition.getIsConstructor()) {
+            ModelNamespaceMapping.applyStereotype(
+                    definition, RootNamespace.getCreateStereotype());
+        } else if (definition.getIsDestructor()) {
+            ModelNamespaceMapping.applyStereotype(
+                    definition, RootNamespace.getDestroyStereotype());
+        }
+        
     }
     
     @Override
@@ -153,6 +162,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
         
         if (!definition.getIsAbstract()) {
             Operation operation = this.getOperation();
+            
             Activity activity = (Activity)operation.getMethod().get(0);
 
             Collection<Element> elements;

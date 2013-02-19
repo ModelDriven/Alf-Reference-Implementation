@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -18,6 +18,23 @@ public interface Element {
     public List<Comment> getOwnedComment();
 
     public void addOwnedComment(Comment ownedComment);
+    
+    public void applyStereotype(Stereotype stereotype);
+    
+    public boolean isStereotypeApplied(Stereotype stereotype);
+    
+    // Note: The hashCode for an element should be the hashCode for its base
+    // implementation object.
+    public int hashCode();
+    
+    // Replace references to Element with references to newElement in the 
+    // properties of all elements contained within this templateable element.
+    public void replace(Element element, Element newElement);
+    
+    // Note: For a given implementation, an element should equal another element
+    // with the same base implementation, or a base implementation object
+    // equal to the element base implementation.
+    public boolean equals(Object other);
 
     public String toString(boolean includeDerived);
 

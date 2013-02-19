@@ -117,7 +117,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         if (isFileName) {
             try {
                 unit = ((RootNamespaceImpl) RootNamespace.getRootScope().getImpl()).
-                        getModelScopeImpl().resolveModelFile(unitName);
+                        getModelNamespaceImpl().resolveModelFile(unitName);
             } catch (FileNotFoundException e) {
                 this.println("File not found: " + unitName);
             }

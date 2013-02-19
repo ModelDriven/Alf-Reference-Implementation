@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,7 +10,9 @@
 
 package org.modeldriven.alf.fuml.mapping.units;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
@@ -18,18 +20,25 @@ import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.ClassifierDefinition;
+import org.modeldriven.alf.syntax.units.ClassifierTemplateParameter;
 
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Generalization;
 import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.ParameterableElement;
+import org.modeldriven.alf.uml.RedefinableTemplateSignature;
+import org.modeldriven.alf.uml.TemplateBinding;
+import org.modeldriven.alf.uml.TemplateParameterSubstitution;
 
 public abstract class ClassifierDefinitionMapping extends
 		NamespaceDefinitionMapping {
     
     private Classifier classifier = null;
     private boolean notFullyMapped = true;
+    protected Collection<Element> otherElements = new ArrayList<Element>();
     
     /**
      * 1. A classifier definition (other than a classifier template parameter)
@@ -43,15 +52,120 @@ public abstract class ClassifierDefinitionMapping extends
      * 2. If the classifier definition has specialization referents, then the
      * classifier being defined has generalization relationships with each of
      * the referents. If the classifier definition is abstract, then the
-     * classifer has isAbstract=true. Otherwise isAbstract=false.
+     * classifier has isAbstract=true. Otherwise isAbstract=false.
      */
     
     public void mapTo(Classifier classifier) throws MappingError {
+        ClassifierDefinition definition = this.getClassifierDefinition();
+
+        // NOTE: Mapping of template parameters and binding is handled before
+        // mapping the memebrs of the classifier, in case a template refers
+        // to an instantiation of itself.
+        if (this.supportsTemplates()) {
+            if (definition.getImpl().isTemplate()) {
+                RedefinableTemplateSignature signature = 
+                        this.create(RedefinableTemplateSignature.class);
+                for (ClassifierTemplateParameter templateParameter: 
+                    definition.getImpl().getTemplateParameters()) {
+                    FumlMapping mapping = this.fumlMap(templateParameter);
+                    if (!(mapping instanceof ClassifierTemplateParameterMapping)) {
+                        this.throwError("Error mapping template parameter " + 
+                                definition.getName() + ": " + 
+                                mapping.getErrorMessage());
+                    } else {
+                        org.modeldriven.alf.uml.ClassifierTemplateParameter parameter = 
+                                ((ClassifierTemplateParameterMapping)mapping).
+                                    getTemplateParameter();
+                        if (parameter != null) {
+                            signature.addOwnedParameter(parameter);
+                        }
+                    }
+                }
+                if (signature.getOwnedParameter().size() > 0) {
+                    classifier.setOwnedTemplateSignature(signature);
+                }
+            }
+            if (definition.getImpl().isBound()) {
+                SyntaxElement base = definition.getImpl().getBase();
+                if (base != null) {
+                    FumlMapping mapping = this.fumlMap(base);
+                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                        this.throwError("Error mapping base template: " + 
+                                mapping.getErrorMessage());
+                    } else {
+                        Classifier template = ((ClassifierDefinitionMapping)mapping).
+                                getClassifier();
+
+                        List<NamedElement> elements = classifier.bindTo(template);
+                        if (elements.isEmpty()) {
+                            this.throwError("Cannot bind to " + template);
+                        } else {
+                            Classifier boundClassifier = 
+                                    (Classifier)(elements.get(0));
+                            this.otherElements.addAll(elements);
+
+                            TemplateBinding binding = 
+                                    boundClassifier.getTemplateBinding().get(0);
+                            binding.setSignature(
+                                    template.getOwnedTemplateSignature());
+
+                            for (ClassifierTemplateParameter templateParameter: 
+                                definition.getImpl().getBoundTemplateParameters()) {
+                                TemplateParameterSubstitution substitution = 
+                                        this.create(
+                                                TemplateParameterSubstitution.class);
+                                binding.addParameterSubstitution(substitution);
+                                mapping = this.fumlMap(
+                                        templateParameter.getImpl().getBase());
+                                if (!(mapping instanceof ClassifierTemplateParameterMapping)) {
+                                    this.throwError("Error mapping template parameter " + 
+                                            templateParameter.getName() + ": " + 
+                                            mapping.getErrorMessage());
+                                } else {
+                                    substitution.setFormal( 
+                                            ((ClassifierTemplateParameterMapping)mapping).
+                                            getTemplateParameter());
+                                    ElementReference boundArgument = 
+                                            templateParameter.getImpl().getBoundArgument();
+                                    Element actual = null;
+                                    if (boundArgument != null) {
+                                        actual = boundArgument.getImpl().getUml();
+                                        if (actual == null) {
+                                            mapping = this.fumlMap(boundArgument);
+                                            if (mapping instanceof ElementReferenceMapping) {
+                                                mapping = ((ElementReferenceMapping)mapping).getMapping();
+                                            }
+                                            if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                                                this.throwError("Error mapping template actual for " + 
+                                                        definition.getName() + "::" + 
+                                                        templateParameter.getName() + ": " + 
+                                                        mapping.getErrorMessage());
+                                            } else {
+                                                actual = ((ClassifierDefinitionMapping)mapping).
+                                                        getClassifierOnly();
+                                            }
+                                        }
+                                        if (!(actual instanceof ParameterableElement)) {
+                                            this.throwError("Template actual for " + 
+                                                    definition.getName() + "::" + 
+                                                    templateParameter.getName() + 
+                                                    " is not a ParameterableElement: " + 
+                                                    actual);
+                                        }
+                                    }
+                                    substitution.setActual((ParameterableElement)actual);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         super.mapTo(classifier);
 
-        ClassifierDefinition definition = this.getClassifierDefinition();
         classifier.setIsAbstract(definition.getIsAbstract());
-
+        
         Collection<ElementReference> referents = 
             definition.getSpecializationReferent();
 
@@ -100,8 +214,16 @@ public abstract class ClassifierDefinitionMapping extends
         return this.classifier;
     }
     
+    @Override
     public Element getElement() {
         return this.classifier;
+    }
+
+    @Override
+    public List<Element> getModelElements() throws MappingError {
+        List<Element> elements = super.getModelElements();
+        elements.addAll(this.otherElements);
+        return elements;
     }
 
 	public ClassifierDefinition getClassifierDefinition() {

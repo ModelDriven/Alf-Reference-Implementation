@@ -64,7 +64,8 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
                 // Give the classifier behavior a name to aid in execution tracing.
                 if (behavior.getName() == null || behavior.getName().equals("")) {
                     behavior.setName(makeDistinguishableName(
-                            definition, definition.getName() + "$classifierBehavior"));
+                            definition, 
+                            this.getDefinitionBaseName() + "$classifierBehavior"));
                 }
 
                 class_.addOwnedBehavior(behavior);

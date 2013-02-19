@@ -259,6 +259,16 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
         return false;
     }
 	
+	public boolean isBound() {
+	    for (Member member: this.getSelf().getOwnedMember()) {
+	        if (member instanceof ClassifierTemplateParameter &&
+	                ((ClassifierTemplateParameter)member).getImpl().isBound()) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
 	public List<ClassifierTemplateParameter> getTemplateParameters() {
 	    List<ClassifierTemplateParameter> templateParameters = 
 	        new ArrayList<ClassifierTemplateParameter>();
@@ -271,6 +281,18 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
         return templateParameters;
 	}
 	
+    public List<ClassifierTemplateParameter> getBoundTemplateParameters() {
+        List<ClassifierTemplateParameter> templateParameters = 
+            new ArrayList<ClassifierTemplateParameter>();
+        for (Member member: this.getSelf().getOwnedMember()) {
+            if (member instanceof ClassifierTemplateParameter &&
+                    ((ClassifierTemplateParameter)member).getImpl().isBound()) {
+                templateParameters.add((ClassifierTemplateParameter)member);
+            }
+        }
+        return templateParameters;
+    }
+    
 	public List<ElementReference> getTemplateActuals() {
 	    List<ElementReference> templateActuals = new ArrayList<ElementReference>();
         for (Member member: this.getSelf().getOwnedMember()) {

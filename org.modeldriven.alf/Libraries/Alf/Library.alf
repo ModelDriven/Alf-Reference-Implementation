@@ -1,6 +1,5 @@
 namespace Alf;
 
-@ModelLibrary
 package Library {
 
    public package PrimitiveTypes;

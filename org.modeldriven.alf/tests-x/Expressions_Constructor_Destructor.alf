@@ -98,4 +98,6 @@ active class Expressions_Constructor_Destructor {
     
     AssertEqual("d.x", d.x, "test");
     AssertList("d.y", d.y, Integer[]{1,2});
+
+    WriteLine("Done");
 }

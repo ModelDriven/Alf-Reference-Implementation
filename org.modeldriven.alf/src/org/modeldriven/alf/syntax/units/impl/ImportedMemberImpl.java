@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -13,6 +13,7 @@ package org.modeldriven.alf.syntax.units.impl;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.NamedElement;
@@ -57,7 +58,7 @@ public class ImportedMemberImpl extends MemberImpl {
      **/
 	@Override
 	protected Boolean deriveIsFeature() {
-	    return false;
+	    return !this.isImported && this.getReferent().getImpl().isFeature();
 	}
 	
 	/*
@@ -155,12 +156,13 @@ public class ImportedMemberImpl extends MemberImpl {
         return importedMember;        
     }
 
-    public static ImportedMember makeImportedMember(String name, NamedElement element) {
-        ExternalElementReference reference = new ExternalElementReference();
-        reference.setElement(element);
-        ImportedMember importedMember = makeImportedMember(reference);
+    public static ImportedMember makeImportedMember(
+            String name, Element element, NamespaceDefinition namespace) {
+        ImportedMember importedMember = makeImportedMember(
+                ElementReferenceImpl.makeElementReference(element, namespace));
         importedMember.getImpl().setExactName(name);
         importedMember.getImpl().setIsImported(false);
+        importedMember.setNamespace(namespace);
         return importedMember;
     }
     

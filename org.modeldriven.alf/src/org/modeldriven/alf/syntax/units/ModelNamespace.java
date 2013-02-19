@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,15 +8,24 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.units;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Stereotype;
+import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class ModelNamespace extends PackageDefinition {
+    
+    private Map<Element, Collection<Stereotype>> stereotypeApplications = 
+            new HashMap<Element, Collection<Stereotype>>();
     
     public ModelNamespace() {
     }
@@ -72,6 +81,41 @@ public class ModelNamespace extends PackageDefinition {
     
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
         return this.getImpl().resolveUnit(qualifiedName);
+    }
+    
+    public void addStereotypeApplication(Element element, Stereotype stereotype) {
+        Collection<Stereotype> stereotypes = this.stereotypeApplications.get(element);
+        if (stereotypes == null) {
+            stereotypes = new ArrayList<Stereotype>();
+            this.stereotypeApplications.put(element, stereotypes);
+        }
+        stereotypes.add(stereotype);
+    }
+    
+    public void addStereotypeApplications(Collection<StereotypeApplication> stereotypeApplications) {
+        for (StereotypeApplication stereotypeApplication: stereotypeApplications) {
+            this.addStereotypeApplication(
+                    stereotypeApplication.getElement(), 
+                    stereotypeApplication.getStereotype());
+        }
+    }
+    
+    public boolean hasStereotypeApplication(Element element, Stereotype stereotype) {
+        Collection<Stereotype> stereotypes = this.stereotypeApplications.get(element);
+        return stereotypes != null && stereotypes.contains(stereotype);
+    }
+    
+    public boolean isStereotypeApplied(Element element, Stereotype stereotype) {
+        return this.hasStereotypeApplication(element, stereotype) || 
+                element.isStereotypeApplied(stereotype);
+    }
+    
+    public void applyStereotypes() {
+        for (Element element: this.stereotypeApplications.keySet()) {
+            for (Stereotype stereotype: this.stereotypeApplications.get(element)) {
+                element.applyStereotype(stereotype);
+            }
+        }
     }
     
 }

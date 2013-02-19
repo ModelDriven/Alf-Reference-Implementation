@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -15,11 +15,16 @@ public interface Package extends Namespace, PackageableElement {
 
 	public void addPackagedElement(PackageableElement packagedElement);
 
-	public List<Type> getOwnedType();
+    public List<ProfileApplication> getProfileApplication();
+    
+    public void addProfileApplication(ProfileApplication profileApplication);
+
+    public List<Type> getOwnedType();
 
 	public List<Package> getNestedPackage();
 
 	public Package getNestingPackage();
 
     public List<NamedElement> visibleMembers();
+    
 }

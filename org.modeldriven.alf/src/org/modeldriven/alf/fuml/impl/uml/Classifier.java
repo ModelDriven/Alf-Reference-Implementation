@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -187,5 +187,47 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
     @Override
     public List<String> getNamesOfMember(org.modeldriven.alf.uml.NamedElement member) {
         return ((Namespace)this.wrap(this.getBase())).getNamesOfMember(member);
+    }
+    
+    @Override
+    public org.modeldriven.alf.uml.TemplateSignature getOwnedTemplateSignature() {
+        return null;
+    }
+    
+    public void setOwnedTemplateSignature(org.modeldriven.alf.uml.TemplateSignature signature) {
+    }
+    
+    @Override
+    public boolean isTemplate() {
+        return false;
+    }
+    
+    @Override
+    public List<org.modeldriven.alf.uml.TemplateBinding> getTemplateBinding() {
+        return null;
+    }
+    
+    @Override
+    public void addTemplateBinding(org.modeldriven.alf.uml.TemplateBinding templateBinding) {
+    }
+
+    @Override
+    public org.modeldriven.alf.uml.TemplateParameter getTemplateParameter() {
+        return null;
+    }
+    
+    @Override
+    public org.modeldriven.alf.uml.TemplateableElement instantiate(
+            Collection<org.modeldriven.alf.uml.StereotypeApplication> stereotypeApplications,
+            Set<org.modeldriven.alf.uml.Element> externalReferences) {
+        return null;
+    }
+    
+    @Override
+    public List<org.modeldriven.alf.uml.NamedElement> bindTo(org.modeldriven.alf.uml.TemplateableElement template) {
+        return new ArrayList<org.modeldriven.alf.uml.NamedElement>();
+    }
+
+    public void replace(org.modeldriven.alf.uml.Element element, org.modeldriven.alf.uml.Element newElement) {
     }
 }

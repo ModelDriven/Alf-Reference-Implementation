@@ -11,8 +11,11 @@ package org.modeldriven.alf.fuml.impl.uml;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modeldriven.alf.uml.ProfileApplication;
+
 public class Package extends Namespace implements org.modeldriven.alf.uml.Package {
-	public Package() {
+
+    public Package() {
 		this(new fUML.Syntax.Classes.Kernel.Package());
 	}
 
@@ -20,10 +23,12 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 		super(base);
 	}
 
+    @Override
 	public fUML.Syntax.Classes.Kernel.Package getBase() {
 		return (fUML.Syntax.Classes.Kernel.Package) this.base;
 	}
 
+    @Override
 	public List<org.modeldriven.alf.uml.PackageableElement> getPackagedElement() {
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (fUML.Syntax.Classes.Kernel.PackageableElement element : this
@@ -33,6 +38,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 		return list;
 	}
 
+    @Override
 	public void addPackagedElement(
 			org.modeldriven.alf.uml.PackageableElement packagedElement) {
 	    // NOTE: Instance specifications are (erroneously) not packageable
@@ -43,6 +49,16 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 	    }
 	}
 
+    @Override
+    public List<ProfileApplication> getProfileApplication() {
+        return new ArrayList<ProfileApplication>();
+    }
+
+    @Override
+    public void addProfileApplication(ProfileApplication profileApplication) {
+    }
+
+    @Override
 	public List<org.modeldriven.alf.uml.Type> getOwnedType() {
 		List<org.modeldriven.alf.uml.Type> list = new ArrayList<org.modeldriven.alf.uml.Type>();
 		for (fUML.Syntax.Classes.Kernel.Type element : this.getBase().ownedType) {
@@ -51,6 +67,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 		return list;
 	}
 
+    @Override
 	public List<org.modeldriven.alf.uml.Package> getNestedPackage() {
 		List<org.modeldriven.alf.uml.Package> list = new ArrayList<org.modeldriven.alf.uml.Package>();
 		for (fUML.Syntax.Classes.Kernel.Package element : this.getBase().nestedPackage) {
@@ -59,6 +76,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 		return list;
 	}
 
+    @Override
 	public org.modeldriven.alf.uml.Package getNestingPackage() {
 		return (Package)this.wrap(this.getBase().nestingPackage);
 	}

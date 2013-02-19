@@ -85,4 +85,6 @@ active class Statements_For_Looping {
 	AssertList("outgoingEdges.token", outgoingEdges.token, Integer[]{2,4});
 	AssertList("SnEven", SnEven, Integer[]{5,7,9});
 	AssertList("SnOdd", SnOdd, Integer[]{30,60,90});
+
+  WriteLine("Done");
 }

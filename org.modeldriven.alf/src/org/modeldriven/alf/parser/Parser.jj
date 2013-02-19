@@ -1348,7 +1348,7 @@ Expression NumericUnaryExpression():
 {
   String op;
   Expression e;
-  UnaryExpression u = new NumericUnaryExpression();
+  UnaryExpression u = new NumericUnaryExpression(this);
 }
 {
   op = NumericUnaryOperator() e = UnaryExpression()
@@ -1373,7 +1373,7 @@ String NumericUnaryOperator():
 Expression IsolationExpression():
 {
   Expression e;
-  UnaryExpression u = new IsolationExpression();
+  UnaryExpression u = new IsolationExpression(this);
 }
 {
   <DOLLAR> e = UnaryExpression()

@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -231,7 +231,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         Collection<Member> members = this.resolveInScope(name, classifierOnly);
             
         // Note: If this namespace is the same as or a containing scope of the 
-        // given namespace, then all members of this namespace are visible.
+        // given namespace, or if the given namespace is null, then all members 
+        // of this namespace are visible. If
         ElementReference namespaceReferent = 
                 namespace == null? null: namespace.getImpl().getReferent();
         if (namespaceReferent != null && 
@@ -374,6 +375,11 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         
         return referents;
     }
+    
+    public boolean isModelLibrary() {
+        // TODO: Require reference to standard UML ModelLibary stereotype.
+        return this.hasAnnotation("ModelLibrary");
+    }
 
     public boolean hasSubunitFor(UnitDefinition unit) {
         return this.getStubFor(unit) != null;
@@ -425,6 +431,12 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             }
         }
         return outerScope;
+    }
+    
+    // This is valid for every namespace other than a model namespace.
+    public ModelNamespace getModelScope() {
+        NamespaceDefinition outerScope = this.getOuterScope();
+        return outerScope == null? null: outerScope.getImpl().getModelScope();
     }
     
     @Override

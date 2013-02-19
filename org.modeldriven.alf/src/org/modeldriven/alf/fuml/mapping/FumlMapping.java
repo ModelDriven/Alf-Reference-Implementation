@@ -181,6 +181,10 @@ public abstract class FumlMapping extends Mapping {
         return getElementFactory().newInstance(class_);
     }
     
+    public boolean supportsTemplates() {
+        return getElementFactory().supportsTemplates();
+    }
+    
     public ActivityGraph createActivityGraph() {
         return new ActivityGraph(getElementFactory());
     }

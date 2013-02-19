@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -13,12 +13,17 @@ package org.modeldriven.alf.fuml.mapping.units;
 import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.PackageDefinition;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Model;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageableElement;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.ProfileApplication;
 
 public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
 
@@ -40,7 +45,9 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
     // Stubs are handled in NamespaceDefinitionMapping. 
     
     protected Package mapPackage() {
-        return this.create(Package.class);
+        return this.create(
+                this.getPackageDefinition().getImpl().isModelLibrary()? 
+                        Model.class: Package.class);
     }
     
     public void mapTo(Package package_) throws MappingError {
@@ -51,7 +58,22 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
                     packageDefinition.getName());
         }
         
+        if (package_ instanceof Model) {
+            ElementReference standardProfile = RootNamespace.getStandardProfile();
+            if (standardProfile != null) {
+                ProfileApplication profileApplication = this.create(ProfileApplication.class);
+                profileApplication.setAppliedProfile((Profile)standardProfile.getImpl().getUml());
+                package_.addProfileApplication(profileApplication);
+            }
+        }
+        
         super.mapTo(package_);
+        
+        if (packageDefinition != null && 
+                packageDefinition.getImpl().isModelLibrary()) {
+            ModelNamespaceMapping.applyStereotype(
+                    packageDefinition, RootNamespace.getModelLibraryStereotype());
+        }
     }
     
     @Override

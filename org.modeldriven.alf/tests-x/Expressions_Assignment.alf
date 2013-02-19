@@ -47,4 +47,6 @@ active class Expressions_Assignment {
     AssertEqual("h", h, 0x55);
     AssertEqual("filename", filename, "xyz.doc");
     AssertEqual("a", a, 2);
+
+    WriteLine("Done");
 }

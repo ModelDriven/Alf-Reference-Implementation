@@ -95,4 +95,6 @@ active class Statements_Conditional {
 	AssertEqual("year", year, 2012);
 	AssertEqual("month", month, 2);
 	AssertEqual("numDays", numDays, 29);
+
+  WriteLine("Done");
 }
