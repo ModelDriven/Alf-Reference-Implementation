@@ -50,6 +50,18 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
     }
 
     @Override
+    public void deriveAll() {
+        Collection<QualifiedName> argumentName = this.getArgumentName();
+        if (argumentName != null) {
+            for (Object _argumentName : argumentName.toArray()) {
+                if (_argumentName != null) {
+                    ((QualifiedName) _argumentName).deriveAll();
+                }
+            }
+        }
+    }
+
+    @Override
 	public String toString(boolean includeDerived) {
         StringBuilder s = new StringBuilder("<");
 	    PositionalTemplateBinding self = this.getSelf();
