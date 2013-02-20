@@ -40,6 +40,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 
     private NamespaceDefinition currentScope = null;
     private Expression containingExpression = null;
+    private boolean isVisibleOnly = true;
 
     public QualifiedNameImpl(QualifiedName self) {
 		super(self);
@@ -174,6 +175,14 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     public void setContainingExpression(Expression containingExpression) {
         this.containingExpression = containingExpression;
     }
+    
+    public boolean getIsVisibleOnly() {
+        return this.isVisibleOnly;
+    }
+    
+    public void setIsVisibleOnly(boolean isVisibleOnly) {
+        this.isVisibleOnly = isVisibleOnly;
+    }
 
     /**
      * The path name for a qualified name consists of the string representation
@@ -229,6 +238,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	        qualification.setIsAmbiguous(n > 1 && self.getIsAmbiguous());
 	        qualification.getImpl().setContainingExpression(this.getContainingExpression());
 	        qualification.getImpl().setCurrentScope(this.getCurrentScope());
+	        qualification.getImpl().setIsVisibleOnly(this.getIsVisibleOnly());
 	    }
 		return qualification;
 	}
@@ -276,12 +286,13 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
      * and named elements.
      **/
 	protected Collection<ElementReference> deriveReferent() {
-	    return this.deriveReferent(false, true);
+	    return this.deriveReferent(false);
 	}
 	
 	protected Collection<ElementReference> deriveReferent(
-	        boolean classifierOnly, boolean visibleOnly) {
-	    ArrayList<ElementReference> referents = new ArrayList<ElementReference>();    
+	        boolean classifierOnly) {
+	    ArrayList<ElementReference> referents = 
+	            new ArrayList<ElementReference>();    
 	    QualifiedName self = this.getSelf();
 	    if (!self.getIsFeatureReference()) {
 	        QualifiedName templateName = self.getTemplateName();
@@ -305,19 +316,20 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         	            referents.add(sourceReference);
         	        } else if (currentScope != null) {
         	            this.addReferentsTo(referents, currentScope.getImpl().
-        	                    resolve(self.getUnqualifiedName().getName(), classifierOnly));
+        	                    resolve(self.getUnqualifiedName().getName(), 
+        	                            classifierOnly));
         	        }
         	    } else if (n > 0 && currentScope != null) {
         	        // Resolve as a qualified name
         	        for (ElementReference namespaceReference: 
-        	                self.getQualification().getImpl().getReferent()) {
+        	                self.getQualification().getReferent()) {
         	            NamespaceDefinition namespace = 
         	                    namespaceReference.getImpl().asNamespace();
         	            if (namespace != null) {
         	                this.addReferentsTo(referents, 
                                 namespace.getImpl().resolveVisible(
                                         self.getUnqualifiedName().getName(),
-                                        visibleOnly? currentScope: null, 
+                                        this.getIsVisibleOnly()? currentScope: null, 
                                         classifierOnly));
         	            }
         	        }
@@ -360,6 +372,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     	        templateName.addNameBinding(binding);
     	    }
     	    templateName.getImpl().setCurrentScope(this.getCurrentScope());
+    	    templateName.getImpl().setIsVisibleOnly(this.getIsVisibleOnly());
     	    return templateName;
         }
 	}
@@ -505,12 +518,6 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         return source;
     }
     
-    // Returns all referents of this qualified name without regard to 
-    // visibility.
-    public Collection<ElementReference> getAllReferents() {
-        return this.deriveReferent(false, false);
-    }
-    
     public ElementReference getNonTemplateClassifierReferent() {
         ElementReference classifier = null;
         for (ElementReference referent: this.getSelf().getReferent()) {
@@ -571,7 +578,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     public ElementReference getClassifierOnlyReferent() {
         Collection<ElementReference> referents = this.referent;
         if (referents == null) {
-            referents = this.deriveReferent(true, true);
+            referents = this.deriveReferent(true);
         }
         ElementReference classifier = null;
         for (ElementReference referent: referents) {
@@ -788,6 +795,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         QualifiedNameImpl qualifiedNameImpl = qualifiedName.getImpl();
         qualifiedNameImpl.setContainingExpression(this.getContainingExpression());
         qualifiedNameImpl.setCurrentScope(this.getCurrentScope());
+        qualifiedNameImpl.setIsVisibleOnly(this.getIsVisibleOnly());
         return qualifiedNameImpl;
     }
     
@@ -894,6 +902,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         }
         // qualifiedName.getImpl().setContainingExpression(this.getContainingExpression());
         qualifiedName.getImpl().setCurrentScope(this.getCurrentScope());
+        qualifiedName.getImpl().setIsVisibleOnly(this.getIsVisibleOnly());
         return qualifiedName;
     }
     
