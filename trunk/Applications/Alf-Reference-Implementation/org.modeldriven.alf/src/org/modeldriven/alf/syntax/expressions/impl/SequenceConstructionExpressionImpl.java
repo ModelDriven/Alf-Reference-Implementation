@@ -256,6 +256,7 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	            // NOTE: Root scope is used here because the typeName
 	            // generated above will be fully qualified.
 	            typeName.getImpl().setCurrentScope(RootNamespace.getRootScope());
+	            typeName.getImpl().setIsVisibleOnly(false);
 	        }
 	    }
 
