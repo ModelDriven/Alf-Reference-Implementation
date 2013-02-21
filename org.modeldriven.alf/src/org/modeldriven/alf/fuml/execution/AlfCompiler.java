@@ -9,15 +9,52 @@
 
 package org.modeldriven.alf.fuml.execution;
 
+import java.io.IOException;
+
+import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
+import org.modeldriven.alf.syntax.units.ModelNamespace;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
+import org.modeldriven.alf.uml.Package;
+import org.modeldriven.alf.uml.StereotypeApplication;
 
 public abstract class AlfCompiler extends AlfBase {
     
-    protected abstract UnitDefinition saveModel(UnitDefinition definition);
+    protected Package getModel(UnitDefinition unit) {
+        ModelNamespace modelScope = 
+                (ModelNamespace)RootNamespace.getModelScope(unit);
+        
+        SyntaxElement modelDefinition = 
+                unit.getIsModelLibrary() && 
+                unit.getDefinition().getNamespace() == modelScope?
+                        unit: modelScope;
+        FumlMapping mapping = FumlMapping.getMapping(modelDefinition);
+        return (Package)mapping.getElement();        
+    }
+    
+    protected abstract void saveModel(String name, Package model) throws IOException;
     
     @Override
     public UnitDefinition process(UnitDefinition unit) {
-        return this.saveModel(super.process(unit));
+        unit = super.process(unit);
+        
+        if (unit != null) {
+            Package model = this.getModel(unit);
+            
+            RootNamespace.addAdditionalElementsTo(model);        
+            ElementReferenceImpl.replaceTemplateBindingsIn(model);          
+            StereotypeApplication.applyStereotypes();
+            
+            try {
+                this.saveModel(unit.getDefinition().getName(), model);
+            } catch (IOException e) {
+                unit = null;
+            }
+        }
+        
+        return unit;
     }
     
     public AlfCompiler() {
