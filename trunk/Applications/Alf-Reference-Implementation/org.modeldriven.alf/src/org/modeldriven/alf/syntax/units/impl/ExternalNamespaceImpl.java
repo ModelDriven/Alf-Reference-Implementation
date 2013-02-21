@@ -33,7 +33,6 @@ import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
 import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageableElement;
-import org.modeldriven.alf.uml.StereotypeApplication;
 import org.modeldriven.alf.uml.TemplateParameter;
 import org.modeldriven.alf.uml.TemplateSignature;
 import org.modeldriven.alf.uml.TemplateableElement;
@@ -190,24 +189,17 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
        if (umlNamespace instanceof TemplateableElement) {
            Collection<NamedElement> additionalElements = 
                    new ArrayList<NamedElement>();
-           Collection<StereotypeApplication> stereotypeApplications = 
-                   new ArrayList<StereotypeApplication>();
            Set<Element> externalReferences = new HashSet<Element>();
            TemplateableElement instantiation = 
                    this.instantiate(
                            namespace, templateParameters, templateArguments,
-                           additionalElements, stereotypeApplications, externalReferences);
+                           additionalElements, externalReferences);
            
            boundMember = ExternalNamespace.makeExternalNamespace(
                    (Namespace)instantiation, namespace);
            boundMember.getImpl().setExactName(name);
            
            if (namespace != null) {
-               // Record any stereotype applications that need to be made within the
-               // new instantiation.
-               namespace.getImpl().getModelScope().addStereotypeApplications(
-                       stereotypeApplications);
-               
                namespace.addMember(boundMember);
                if (isOwnedMember) {
                    boundMember.setNamespace(namespace);
@@ -254,14 +246,13 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            List<ElementReference> boundParameters, 
            List<ElementReference> arguments,
            Collection<NamedElement> additionalElements,
-           Collection<StereotypeApplication> stereotypeApplications,
            Set<Element> externalReferences) {
        
        // Create an instantiation of the external namespace as a template.
        TemplateableElement template = 
                (TemplateableElement)this.getSelf().getUmlNamespace();
        TemplateableElement instantiation = 
-               template.instantiate(stereotypeApplications, externalReferences);
+               template.instantiate(externalReferences);
        additionalElements.addAll(instantiation.bindTo(template));
        
        // Record the template parameter bindings, to be applied later.

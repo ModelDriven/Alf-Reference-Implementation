@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -24,13 +23,9 @@ public interface TemplateableElement extends Element {
     
     public void addTemplateBinding(TemplateBinding templateBinding);
     
-    // Return a copy of this templateable element. Update the first collection
-    // with any stereotype applications to be made on elements within the
-    // copy and the second collection with an references to elements not
-    // contained in this templateable element.
-    public TemplateableElement instantiate(
-            Collection<StereotypeApplication> stereotypeApplications,
-            Set<Element> externalReferences);
+    // Return a copy of this templateable element. Update the collection with 
+    // any references to elements not contained in this templateable element.
+    public TemplateableElement instantiate(Set<Element> externalReferences);
     
     // Create a realization from this templateable element to a new
     // templateable element with a template binding to the given template. The

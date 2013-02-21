@@ -283,7 +283,7 @@ public abstract class ElementReferenceImpl {
                 templateArgument == null? any: templateArgument);
     }
     
-    public static void replaceTemplateBindings(Element context) {
+    public static void replaceTemplateBindingsIn(Element context) {
         Set<TemplateSignature> templateSignatures = 
                 new HashSet<TemplateSignature>();
         for (ParameterableElement element: templateBindings.keySet()) {
