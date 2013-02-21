@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class ValueSpecification extends TypedElement implements
 		org.modeldriven.alf.uml.ValueSpecification {
 

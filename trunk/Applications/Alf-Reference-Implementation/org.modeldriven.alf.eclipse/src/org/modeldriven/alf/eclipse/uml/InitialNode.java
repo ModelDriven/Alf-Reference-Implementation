@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class InitialNode extends ControlNode implements
 		org.modeldriven.alf.uml.InitialNode {
 	public InitialNode() {

@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class Parameter extends TypedElement implements
 		org.modeldriven.alf.uml.Parameter {
 	public Parameter() {

@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class MultiplicityElement extends Element implements
 		org.modeldriven.alf.uml.MultiplicityElement {
 	public MultiplicityElement(org.eclipse.uml2.uml.MultiplicityElement base) {

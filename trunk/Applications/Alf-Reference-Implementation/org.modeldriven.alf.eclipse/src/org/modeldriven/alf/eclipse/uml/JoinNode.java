@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class JoinNode extends ControlNode implements
 		org.modeldriven.alf.uml.JoinNode {
 	public JoinNode() {

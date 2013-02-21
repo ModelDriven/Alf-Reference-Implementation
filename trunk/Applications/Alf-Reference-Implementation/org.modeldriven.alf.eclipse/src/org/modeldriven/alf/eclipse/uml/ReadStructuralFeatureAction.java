@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class ReadStructuralFeatureAction extends StructuralFeatureAction
 		implements org.modeldriven.alf.uml.ReadStructuralFeatureAction {
 	public ReadStructuralFeatureAction() {

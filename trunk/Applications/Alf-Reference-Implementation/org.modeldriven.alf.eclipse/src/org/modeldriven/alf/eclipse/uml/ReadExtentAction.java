@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class ReadExtentAction extends Action implements
 		org.modeldriven.alf.uml.ReadExtentAction {
 	public ReadExtentAction() {

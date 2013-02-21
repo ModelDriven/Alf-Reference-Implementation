@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class ActivityEdge extends RedefinableElement implements
 		org.modeldriven.alf.uml.ActivityEdge {
 
