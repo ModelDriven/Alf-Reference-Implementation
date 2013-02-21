@@ -11,8 +11,10 @@ package org.modeldriven.alf.eclipse.uml;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.uml2.uml.UMLFactory;
 
 public class Element implements org.modeldriven.alf.uml.Element {
 	
@@ -88,14 +90,60 @@ public class Element implements org.modeldriven.alf.uml.Element {
 	public void replace(
 			org.modeldriven.alf.uml.Element element, 
 			org.modeldriven.alf.uml.Element newElement) {
-		org.eclipse.uml2.uml.Element elementBase = ((Element)element).getBase();
-		org.eclipse.uml2.uml.Element newElementBase = newElement == null? null: 
-			((Element)newElement).getBase();
+		replace(this.getBase(), ((Element) element).getBase(),
+				newElement == null ? null : ((Element) newElement).getBase());
+	}
+	
+	private static void replace(
+			org.eclipse.uml2.uml.Element context, 
+			org.eclipse.uml2.uml.Element element, 
+			org.eclipse.uml2.uml.Element newElement) {
 		for (EStructuralFeature.Setting setting: 
-			EcoreUtil.UsageCrossReferencer.find(elementBase, this.getBase())) {
-			if (setting.getEStructuralFeature().isChangeable()) {
-				EcoreUtil.replace(setting, elementBase, newElementBase);
+			EcoreUtil.UsageCrossReferencer.find(element, context)) {
+			EObject object = setting.getEObject();
+			EStructuralFeature feature = setting.getEStructuralFeature();
+			if (feature.isChangeable()) {
+				EcoreUtil.replace(setting, element, newElement);
+				if (newElement == null && feature.isRequired()) {
+					fixRequiredFeature(object, feature);
+				}
 			}
+		}
+	}
+	
+	// This method handles the case when a required feature is supposed to be
+	// replaced with a null value.
+	// NOTE: Currently, the only case that is handled is
+	// ReadIsClassifierObjectAction.classifier. ReadExtent.classifer is not
+	// a possibility since, in Alf, a non-constrained template parameter always
+	// has a data type as its templateable parameter and fUML requires that
+	// ReadExtent.classifier be a Class.
+	private static void fixRequiredFeature(EObject object, EStructuralFeature feature) {
+		String name = feature.getName();
+		if (object instanceof org.eclipse.uml2.uml.ReadIsClassifiedObjectAction && 
+				"classifier".equals(name)) {
+			org.eclipse.uml2.uml.ReadIsClassifiedObjectAction action = 
+					(org.eclipse.uml2.uml.ReadIsClassifiedObjectAction)object;
+			org.eclipse.uml2.uml.StructuredActivityNode node = 
+					UMLFactory.eINSTANCE.createStructuredActivityNode();
+			node.setName(action.getName());
+			node.getStructuredNodeInputs().add(action.getObject());
+			org.eclipse.uml2.uml.LiteralBoolean literal =
+					UMLFactory.eINSTANCE.createLiteralBoolean();
+			literal.setValue(true);
+			org.eclipse.uml2.uml.ValueSpecificationAction valueAction =
+					UMLFactory.eINSTANCE.createValueSpecificationAction();
+			valueAction.setResult(action.getResult());
+			valueAction.setValue(literal);
+			valueAction.setName("Value(true)");
+			node.getNodes().add(valueAction);
+			org.eclipse.uml2.uml.Element owner = action.getOwner();
+			List<org.eclipse.uml2.uml.ActivityNode> nodes = owner instanceof Activity? 
+					((org.eclipse.uml2.uml.Activity)owner).getNodes():
+				    ((org.eclipse.uml2.uml.StructuredActivityNode)owner).getNodes();
+			nodes.remove(action);
+			nodes.add(node);
+			replace(owner, action, node);
 		}
 	}
 	
