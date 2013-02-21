@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
@@ -242,7 +241,6 @@ public class Classifier extends Type implements
 
 	@Override
 	public org.modeldriven.alf.uml.TemplateableElement instantiate(
-			final Collection<org.modeldriven.alf.uml.StereotypeApplication> stereotypeApplications,
 			final Set<org.modeldriven.alf.uml.Element> externalReferences) {
 		
 		EcoreUtil.Copier copier = new EcoreUtil.Copier() {
@@ -259,9 +257,9 @@ public class Classifier extends Type implements
 					// TODO: Handle copying of tagged values.
 					for (org.eclipse.uml2.uml.Stereotype stereotype: 
 						((org.eclipse.uml2.uml.Element)eObject).getAppliedStereotypes()) {
-						stereotypeApplications.add(
-								new org.modeldriven.alf.uml.StereotypeApplication(
-										copy, (Stereotype)wrap(stereotype)));
+						org.modeldriven.alf.uml.StereotypeApplication.
+							addStereotypeApplication(
+									copy, (Stereotype)wrap(stereotype));
 					}
 				}
 				return result;
