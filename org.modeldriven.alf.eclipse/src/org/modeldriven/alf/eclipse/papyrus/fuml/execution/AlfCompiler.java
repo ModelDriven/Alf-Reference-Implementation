@@ -11,16 +11,8 @@ package org.modeldriven.alf.eclipse.papyrus.fuml.execution;
 
 import java.io.IOException;
 
-import org.modeldriven.alf.eclipse.uml.Model;
 import org.modeldriven.alf.eclipse.units.RootNamespaceImpl;
-import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
-import org.modeldriven.alf.fuml.mapping.units.ModelNamespaceMapping;
-import org.modeldriven.alf.syntax.common.SyntaxElement;
-import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
-import org.modeldriven.alf.syntax.units.ModelNamespace;
-import org.modeldriven.alf.syntax.units.RootNamespace;
-import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.ElementFactory;
 
 import org.eclipse.emf.ecore.resource.Resource;
@@ -55,40 +47,22 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     }
     
     @Override
-    protected UnitDefinition saveModel(UnitDefinition unit) {
-    	if (unit != null) {
-    		ModelNamespace modelScope = 
-    				(ModelNamespace)RootNamespace.getModelScope(unit);
-     		
-    		SyntaxElement modelDefinition = 
-    				unit.getIsModelLibrary() && 
-    				unit.getDefinition().getNamespace() == modelScope?
-    						unit: modelScope;
-    		FumlMapping mapping = FumlMapping.getMapping(modelDefinition);
-	        Model model = (Model)mapping.getElement();
-	        
-	        RootNamespace.addAdditionalElementsTo(model);        
-	        ElementReferenceImpl.replaceTemplateBindings(model);
-	        
-	        ((ModelNamespaceMapping)modelScope.getImpl().getMapping()).
-	        	applyStereotypes();
-	        
-	        Resource resource = ((RootNamespaceImpl)this.getRootScopeImpl()).createResource(
-	                this.umlDirectory, unit.getDefinition().getName());
-	        resource.getContents().add(
-	                ((org.modeldriven.alf.eclipse.uml.Element)model).getBase());
-	        
-	        try {
-	            resource.save(null);
-	            this.printVerbose("Saved to " + resource.getURI());
-	        } catch (IOException ioe) {
-	            this.println("Error saving model to " + resource.getURI() + 
-	            		": " + ioe.getMessage());
-	            unit = null;
-	            // ioe.printStackTrace();
-	        }
+    protected void saveModel(String name, org.modeldriven.alf.uml.Package model) 
+    		throws IOException {
+    	Resource resource = ((RootNamespaceImpl)this.getRootScopeImpl()).createResource(
+    			this.umlDirectory, name);
+    	resource.getContents().add(
+    			((org.modeldriven.alf.eclipse.uml.Element)model).getBase());
+
+    	try {
+    		resource.save(null);
+    		this.printVerbose("Saved to " + resource.getURI());
+    	} catch (IOException ioe) {
+    		this.println("Error saving model to " + resource.getURI() + 
+    				": " + ioe.getMessage());
+    		// ioe.printStackTrace();
+    		throw ioe;
     	}
-    	return unit;
     }
     
     protected void configure() {
