@@ -328,7 +328,8 @@ public class Classifier extends Type implements
 							new TemplateParameterSubstitution();
 					substitution.setFormal(templateParameters.get(i));
 					substitution.setActual(
-							templateParameters.get(i).getParameteredElement());
+							myParameters.get(i).getParameteredElement());
+					templateBinding.addParameterSubstitution(substitution);
 				}
 			}
 			
