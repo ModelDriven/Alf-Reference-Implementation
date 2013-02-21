@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class LiteralInteger extends LiteralSpecification implements
 		org.modeldriven.alf.uml.LiteralInteger {
 	public LiteralInteger() {

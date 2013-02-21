@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class LinkEndCreationData extends LinkEndData implements
 		org.modeldriven.alf.uml.LinkEndCreationData {
 	public LinkEndCreationData() {

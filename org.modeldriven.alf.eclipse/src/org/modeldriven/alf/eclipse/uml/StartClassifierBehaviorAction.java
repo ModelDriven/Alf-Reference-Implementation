@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class StartClassifierBehaviorAction extends Action implements
 		org.modeldriven.alf.uml.StartClassifierBehaviorAction {
 	public StartClassifierBehaviorAction() {

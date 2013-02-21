@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class TypedElement extends NamedElement implements
 		org.modeldriven.alf.uml.TypedElement {
 	public TypedElement(org.eclipse.uml2.uml.TypedElement base) {

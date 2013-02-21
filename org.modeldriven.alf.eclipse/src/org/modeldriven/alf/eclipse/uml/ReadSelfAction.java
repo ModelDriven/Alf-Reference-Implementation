@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class ReadSelfAction extends Action implements
 		org.modeldriven.alf.uml.ReadSelfAction {
 	public ReadSelfAction() {

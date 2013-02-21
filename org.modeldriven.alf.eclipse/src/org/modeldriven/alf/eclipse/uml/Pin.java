@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class Pin extends ObjectNode implements org.modeldriven.alf.uml.Pin {
 
 	public Pin(org.eclipse.uml2.uml.Pin base) {
