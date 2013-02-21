@@ -13,13 +13,13 @@ import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.PackageDefinition;
 import org.modeldriven.alf.uml.Model;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.Stereotype;
+import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class ModelNamespaceMapping extends PackageDefinitionMapping {
     
@@ -37,21 +37,15 @@ public class ModelNamespaceMapping extends PackageDefinitionMapping {
         }
     }
     
-    public void applyStereotypes() {
-        ((ModelNamespace)this.getSource()).applyStereotypes();
-    }
-    
     public static void applyStereotype(
             NamespaceDefinition definition, ElementReference stereotypeReference) {
         if (stereotypeReference != null) {
             Element stereotype = stereotypeReference.getImpl().getUml();
             if (stereotype instanceof Stereotype) {
-                ModelNamespace modelScope = 
-                        (ModelNamespace)definition.getImpl().getModelScope();
                 FumlMapping elementMapping = 
                         (FumlMapping)FumlMapping.getFumlFactory().
                             getMapping(definition);
-                modelScope.addStereotypeApplication(
+                StereotypeApplication.addStereotypeApplication(
                         elementMapping.getElement(), (Stereotype)stereotype);
             }
         }

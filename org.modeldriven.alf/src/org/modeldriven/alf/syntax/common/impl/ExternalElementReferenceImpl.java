@@ -22,7 +22,6 @@ import org.modeldriven.alf.syntax.units.ExternalParameter;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.ImportedMember;
 import org.modeldriven.alf.syntax.units.Member;
-import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
@@ -55,6 +54,7 @@ import org.modeldriven.alf.uml.Reception;
 import org.modeldriven.alf.uml.RedefinableElement;
 import org.modeldriven.alf.uml.Signal;
 import org.modeldriven.alf.uml.Stereotype;
+import org.modeldriven.alf.uml.StereotypeApplication;
 import org.modeldriven.alf.uml.TemplateBinding;
 import org.modeldriven.alf.uml.TemplateParameter;
 import org.modeldriven.alf.uml.TemplateParameterSubstitution;
@@ -245,12 +245,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     public boolean isStereotypeApplied(Stereotype stereotype) {
-        Element element = this.getElement();
-        ModelNamespace modelScope = this.namespace == null? null: 
-            this.namespace.getImpl().getModelScope();
-        return modelScope == null? 
-                element.isStereotypeApplied(stereotype): 
-                modelScope.isStereotypeApplied(element, stereotype);
+        return StereotypeApplication.isStereotypeApplied(
+                this.getElement(), stereotype);
     }
     
     @Override
