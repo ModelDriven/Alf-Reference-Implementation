@@ -322,16 +322,20 @@ public abstract class ElementReferenceImpl {
     
     public static ElementReference makeElementReference(
             Element element, NamespaceDefinition namespace) {
-        ElementReference reference = templateBindings.get(element);
+        ElementReference reference = null;
         
-        if (reference == null) {
-            ExternalElementReference externalReference = 
-                    new ExternalElementReference();
-            externalReference.setElement(element);
-            externalReference.getImpl().setNamespace(namespace);
-            reference = externalReference;
-        } else if (reference == any) {
-            reference = null;
+        if (element != null) {
+            reference = templateBindings.get(element);
+            
+            if (reference == null) {
+                ExternalElementReference externalReference = 
+                        new ExternalElementReference();
+                externalReference.setElement(element);
+                externalReference.getImpl().setNamespace(namespace);
+                reference = externalReference;
+            } else if (reference == any) {
+                reference = null;
+            }
         }
         
         return reference;
