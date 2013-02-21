@@ -293,17 +293,21 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            List<ElementReference> templateParameters,
            List<ElementReference> templateArguments,
            Set<Element> externalReferences) {
+       // System.out.println("[fixExternalReferences] instantiation=" + instantiation);
        for (Element reference: externalReferences) {
+           // System.out.println("[fixExternalReferences] reference=" + reference);
            if (reference instanceof NamedElement) {
                QualifiedName qualifiedName = 
                        makeQualifiedName((NamedElement)reference);
+               // System.out.println("[fixExternalReferences] qualifiedName=" + qualifiedName.getImpl().getPathName());
                qualifiedName = qualifiedName.getImpl().updateBindings(
                        templateParameters, templateArguments);
-               for (ElementReference referent: 
-                       qualifiedName.getImpl().getAllReferents()) {
+               // System.out.println("[fixExternalReferences] updated qualifiedName=" + qualifiedName.getImpl().getPathName());
+               for (ElementReference referent: qualifiedName.getReferent()) {
                    Element newReference = referent.getImpl().getUml();
                    if (newReference != null && !newReference.equals(reference) && 
                            isSameKind(newReference, reference)) {
+                       // System.out.println("[fixExternalReferences] referent=" + referent);
                        instantiation.replace(reference, newReference);
                        break;
                    }
@@ -356,6 +360,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
        }
        
        qualifiedName.getImpl().setCurrentScope(RootNamespace.getRootScope());
+       qualifiedName.getImpl().setIsVisibleOnly(false);
        return qualifiedName;
    }
    
