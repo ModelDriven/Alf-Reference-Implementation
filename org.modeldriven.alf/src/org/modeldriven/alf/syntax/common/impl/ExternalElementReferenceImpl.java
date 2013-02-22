@@ -313,9 +313,13 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public NamespaceDefinition asNamespace() {
-        return !this.isNamespace()? null: 
+        Element element = this.getSelf().getElement();
+        if (element instanceof TemplateParameter) {
+            element = ((TemplateParameter)element).getParameteredElement();
+        }
+        return !(element instanceof Namespace)? null: 
             ExternalNamespace.makeExternalNamespace(
-                    (Namespace)this.getSelf().getElement(), this.namespace);
+                    (Namespace)element, this.namespace);
     }
     
     @Override
@@ -503,8 +507,10 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             TemplateSignature signature = ((TemplateableElement)element).getOwnedTemplateSignature();
             if (signature != null) {
                 for (TemplateParameter parameter: signature.getParameter()) {
-                    templateParameters.add(ElementReferenceImpl.makeElementReference(
-                            parameter, this.asNamespace()));
+                    if (!isBound(parameter)) {
+                        templateParameters.add(ElementReferenceImpl.makeElementReference(
+                                parameter, this.asNamespace()));
+                    }
                 }
             }
         }
