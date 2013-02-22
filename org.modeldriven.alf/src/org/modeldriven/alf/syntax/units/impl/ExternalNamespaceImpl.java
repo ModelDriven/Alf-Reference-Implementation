@@ -34,7 +34,6 @@ import org.modeldriven.alf.uml.Namespace;
 import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageableElement;
 import org.modeldriven.alf.uml.TemplateParameter;
-import org.modeldriven.alf.uml.TemplateSignature;
 import org.modeldriven.alf.uml.TemplateableElement;
 
 public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
@@ -122,21 +121,12 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
     private List<Member> getTemplateParameterMembers() {
         ExternalNamespace self = this.getSelf();
         List<Member> members = new ArrayList<Member>();
-        Namespace umlNamespace = self.getUmlNamespace();
-        if (umlNamespace instanceof TemplateableElement) {
-            TemplateSignature signature = 
-                    ((TemplateableElement)umlNamespace).getOwnedTemplateSignature();
-            if (signature != null) {
-                for (TemplateParameter templateParameter: signature.getParameter()) {
-                    Element element = templateParameter.getParameteredElement();
-                    String name = !(element instanceof NamedElement)? "":
-                        ((NamedElement)element).getName();
-                    Member member = ImportedMemberImpl.makeImportedMember(
-                            name, templateParameter, self);
-                    member.setVisibility("public");
-                    members.add(member);
-                }
-            }
+        for (ElementReference templateParameter: 
+            self.getImpl().getReferent().getImpl().getTemplateParameters()) {
+            Member member = ImportedMemberImpl.makeImportedMember(templateParameter);
+            member.setVisibility("public");
+            member.setNamespace(self);
+            members.add(member);
         }
         return members;
     }
