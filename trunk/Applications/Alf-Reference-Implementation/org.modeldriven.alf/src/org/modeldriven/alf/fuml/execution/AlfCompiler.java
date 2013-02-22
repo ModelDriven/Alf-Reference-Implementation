@@ -18,7 +18,6 @@ import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Package;
-import org.modeldriven.alf.uml.StereotypeApplication;
 
 public abstract class AlfCompiler extends AlfBase {
     
@@ -45,7 +44,6 @@ public abstract class AlfCompiler extends AlfBase {
             
             RootNamespace.addAdditionalElementsTo(model);        
             ElementReferenceImpl.replaceTemplateBindingsIn(model);          
-            StereotypeApplication.applyStereotypes();
             
             try {
                 this.saveModel(unit.getDefinition().getName(), model);
