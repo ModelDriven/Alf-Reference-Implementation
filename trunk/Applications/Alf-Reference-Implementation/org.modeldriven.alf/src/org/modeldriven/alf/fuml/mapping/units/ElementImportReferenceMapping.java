@@ -57,6 +57,7 @@ public class ElementImportReferenceMapping extends ImportReferenceMapping {
         
         elementImport.setImportedElement((PackageableElement) element);
         elementImport.setAlias(NameBindingImpl.processName(importReference.getAlias()));
+        elementImport.setVisibility(importReference.getVisibility());
     }
 
     @Override

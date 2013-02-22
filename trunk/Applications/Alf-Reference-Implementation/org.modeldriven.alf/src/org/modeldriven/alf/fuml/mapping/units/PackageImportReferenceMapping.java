@@ -38,11 +38,11 @@ public class PackageImportReferenceMapping extends ImportReferenceMapping {
     public void mapTo(PackageImport packageImport) throws MappingError {
         super.mapTo(packageImport);
 
-        ElementReference importReference = 
-                this.getPackageImportReference().getReferent();
-        Package package_ = (Package)importReference.getImpl().getUml();
+        PackageImportReference importReference = this.getPackageImportReference();
+        ElementReference referent = importReference.getReferent();
+        Package package_ = (Package)referent.getImpl().getUml();
         if (package_ == null) {
-            FumlMapping mapping = this.fumlMap(importReference);
+            FumlMapping mapping = this.fumlMap(referent);
             if (mapping instanceof ElementReferenceMapping) {
                 mapping = ((ElementReferenceMapping)mapping).getMapping();
             }
@@ -54,6 +54,7 @@ public class PackageImportReferenceMapping extends ImportReferenceMapping {
             }
         }
         packageImport.setImportedPackage(package_);
+        packageImport.setVisibility(importReference.getVisibility());
     }
 
     @Override
