@@ -58,7 +58,6 @@ package DomainDataTypes {
   dialed from the United States.
   
   BankCardAccountNumber - An account number for a standard credit or debit card
-  (commony known as a "bank card") that can be used for payment.
   
   BankCardApprovalCode - One of the several response codes that the credit
   card company can return to indicate whether a charge has been approved or
@@ -67,7 +66,7 @@ package DomainDataTypes {
   UniversalProductCode - A unique code assigned to all commercial products
   ("bar code").
   
-  VersionString - A string used to identify the version of a softeare product.
+  VersionString - A string used to identify the version of a software product.
   
   **/
   
