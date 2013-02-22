@@ -150,12 +150,13 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean isClassOnly() {
-        return this.getSelf().getElement().getClass() == Class_.class;
+        return this.isClass() && !this.isActivity();
     }
 
     @Override
     public boolean isActiveClass() {
-        return this.isClass() && ((Class_)this.getSelf().getElement()).getIsActive();
+        return this.isClassOnly() && 
+                ((Class_)this.getSelf().getElement()).getIsActive();
     }
 
     @Override
