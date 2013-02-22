@@ -196,7 +196,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
     private OperationDefinition createDefaultConstructor() {
         ClassDefinition self = this.getSelf();
         
-        OperationDefinition operation = new OperationDefinition();
+        OperationDefinition operation = new OperationDefinition(self);
         operation.setName(self.getName());
         operation.setNamespace(self);
         operation.setBody(new Block());
@@ -224,7 +224,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
     private OperationDefinition createDefaultDestructor() {
         ClassDefinition self = this.getSelf();
         
-        OperationDefinition operation = new OperationDefinition();
+        OperationDefinition operation = new OperationDefinition(self);
         operation.setName("destroy");
         operation.setNamespace(self);
         operation.setBody(new Block());
