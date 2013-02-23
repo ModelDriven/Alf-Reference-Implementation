@@ -99,9 +99,9 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
 	}
     
     @Override
-    public void replace(
-            org.modeldriven.alf.uml.Element element, 
-            org.modeldriven.alf.uml.Element newElement) {
+    public void replaceAll(
+            List<? extends org.modeldriven.alf.uml.Element> elements, 
+            List<? extends org.modeldriven.alf.uml.Element> newElements) {    
     }
 
     @Override
