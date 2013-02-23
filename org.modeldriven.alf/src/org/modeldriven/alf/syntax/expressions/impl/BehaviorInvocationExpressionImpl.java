@@ -60,6 +60,8 @@ public class BehaviorInvocationExpressionImpl
         ElementReference referent = null;
 	    if (target != null) {
 	        if (target.getIsFeatureReference()){
+	            this.getFeature().getImpl().setAssignmentBefore(
+	                    this.getAssignmentBeforeMap());
 	            referent = target.getDisambiguation().getImpl().
 	                                        getBehavioralFeatureReferent(self);
 	        } else {

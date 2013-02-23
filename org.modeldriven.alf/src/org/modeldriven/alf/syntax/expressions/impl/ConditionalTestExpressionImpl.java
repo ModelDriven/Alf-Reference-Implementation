@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -73,6 +73,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	@Override
 	protected ElementReference deriveType() {
 	    ConditionalTestExpression self = this.getSelf();
+        this.getAssignmentAfterMap(); // Force computation of assignments.
 	    Expression operand2 = self.getOperand2();
 	    Expression operand3 = self.getOperand3();
 	    if (operand2 == null || operand3 == null) {
@@ -95,6 +96,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	@Override
     protected Integer deriveLower() {
         ConditionalTestExpression self = this.getSelf();
+        this.getAssignmentAfterMap(); // Force computation of assignments.
         Expression operand2 = self.getOperand2();
         Expression operand3 = self.getOperand3();
         int lower2 = operand2 == null? 0: operand2.getLower();
@@ -110,6 +112,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
     @Override
     protected Integer deriveUpper() {
         ConditionalTestExpression self = this.getSelf();
+        this.getAssignmentAfterMap(); // Force computation of assignments.
         Expression operand2 = self.getOperand2();
         Expression operand3 = self.getOperand3();
         int upper2 = operand2 == null? 0: operand2.getUpper();
