@@ -14,6 +14,7 @@ import java.io.IOException;
 import org.modeldriven.alf.eclipse.units.RootNamespaceImpl;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.uml.ElementFactory;
+import org.modeldriven.alf.uml.StereotypeApplication;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
@@ -53,6 +54,11 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     			this.umlDirectory, name);
     	resource.getContents().add(
     			((org.modeldriven.alf.eclipse.uml.Element)model).getBase());
+    	
+    	// NOTE: Stereotypes must be applied after the model is put in
+    	// a resource, since the resource is what contains the stereotype
+    	// applications.
+    	StereotypeApplication.applyStereotypes();
 
     	try {
     		resource.save(null);
