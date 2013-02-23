@@ -335,10 +335,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean hasReceptionFor(ElementReference signal) {
         Element umlSignal = signal.getImpl().getUml();
-        if (umlSignal == null || !(umlSignal instanceof Signal) 
-                || !this.isClass()) {
-            return false;
-        } else {
+        if (this.isClass() && umlSignal instanceof Signal) {
             Class_ class_ = (Class_)this.getUml();
             for (NamedElement member: class_.getMember()) {
                 if (member instanceof Reception &&
