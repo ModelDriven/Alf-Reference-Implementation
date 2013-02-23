@@ -23,15 +23,17 @@ public class ElementImport extends Element implements
 		return (fUML.Syntax.Classes.Kernel.ElementImport) this.base;
 	}
 
-	public String getVisibility() {
-	    String visibility = this.getBase().visibility.toString();
-		return visibility == null? null: visibility;
-	}
+    @Override
+    public String getVisibility() {
+        String visibility = this.getBase().visibility.toString();
+        return visibility == null? null: visibility.substring(0, visibility.length() - 1);
+    }
 
-	public void setVisibility(String visibility) {
-		this.getBase().setVisibility(visibility == null? null:
-				fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility));
-	}
+    @Override
+    public void setVisibility(String visibility) {
+        this.getBase().setVisibility(visibility == null? null:
+                fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility + "_"));
+    }
 
 	public String getAlias() {
 		return this.getBase().alias;

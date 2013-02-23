@@ -23,15 +23,17 @@ public class PackageImport extends Element implements
 		return (fUML.Syntax.Classes.Kernel.PackageImport) this.base;
 	}
 
-	public String getVisibility() {
+    @Override
+    public String getVisibility() {
         String visibility = this.getBase().visibility.toString();
-        return visibility == null? null: visibility;
-	}
+        return visibility == null? null: visibility.substring(0, visibility.length() - 1);
+    }
 
-	public void setVisibility(String visibility) {
-		this.getBase().setVisibility(visibility == null? null:
-				fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility));
-	}
+    @Override
+    public void setVisibility(String visibility) {
+        this.getBase().setVisibility(visibility == null? null:
+                fUML.Syntax.Classes.Kernel.VisibilityKind.valueOf(visibility + "_"));
+    }
 
 	public org.modeldriven.alf.uml.Namespace getImportingNamespace() {
 		return (Namespace)this.wrap(this.getBase().importingNamespace);
