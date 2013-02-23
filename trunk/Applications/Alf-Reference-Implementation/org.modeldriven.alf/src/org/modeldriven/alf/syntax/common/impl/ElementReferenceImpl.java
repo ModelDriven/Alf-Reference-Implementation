@@ -10,6 +10,7 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -286,7 +287,10 @@ public abstract class ElementReferenceImpl {
     public static void replaceTemplateBindingsIn(Element context) {
         Set<TemplateSignature> templateSignatures = 
                 new HashSet<TemplateSignature>();
-        for (ParameterableElement element: templateBindings.keySet()) {
+        List<ParameterableElement> elements = 
+                new ArrayList<ParameterableElement>(templateBindings.keySet());
+        List<Element> newElements = new ArrayList<Element>();
+        for (ParameterableElement element: elements) {
             ElementReference reference = templateBindings.get(element);
             
             TemplateParameter templateParameter = 
@@ -296,16 +300,23 @@ public abstract class ElementReferenceImpl {
             templateParameter.setParameteredElement(null);
             templateParameter.setOwnedParameteredElement(null);
             
-            if (reference == any) {
-                context.replace(element, null);
-            } else {
+            Element newElement = null;
+            if (reference != any) {
                 FumlMapping mapping = ((ElementReferenceMapping)
                         FumlMapping.getMapping(reference)).getMapping();
-                context.replace(element, mapping == null? null:
-                    mapping.getElement());
+                if (mapping != null) {
+                    newElement = mapping.getElement();
+                }
+                if (newElement instanceof TemplateParameter) {
+                    newElement = ((TemplateParameter)newElement).
+                            getParameteredElement();
+                }
             }
+            newElements.add(newElement);
         }
-        
+
+        context.replaceAll(elements, newElements);
+
         for (TemplateSignature signature: templateSignatures) {
             signature.getTemplate().setOwnedTemplateSignature(null);
         }
