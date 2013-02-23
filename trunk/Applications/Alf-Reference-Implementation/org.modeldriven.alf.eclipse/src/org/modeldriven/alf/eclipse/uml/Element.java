@@ -8,8 +8,10 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -87,19 +89,36 @@ public class Element implements org.modeldriven.alf.uml.Element {
 	}
 
 	@Override
-	public void replace(
-			org.modeldriven.alf.uml.Element element, 
-			org.modeldriven.alf.uml.Element newElement) {
-		replace(this.getBase(), ((Element) element).getBase(),
-				newElement == null ? null : ((Element) newElement).getBase());
+	public void replaceAll(
+			List<? extends org.modeldriven.alf.uml.Element> elements, 
+			List<? extends org.modeldriven.alf.uml.Element> newElements) {
+		List<org.eclipse.uml2.uml.Element> umlElements = getBases(elements);
+		List<org.eclipse.uml2.uml.Element> newUmlElements = getBases(newElements);
+		Map<EObject, Collection<EStructuralFeature.Setting>> map =
+				EcoreUtil.UsageCrossReferencer.findAll(umlElements, this.getBase());
+		for (int i = 0; i < umlElements.size(); i++) {
+			org.eclipse.uml2.uml.Element umlElement = umlElements.get(i);
+			org.eclipse.uml2.uml.Element newUmlElement = newUmlElements.get(i);
+			replace(map.get(umlElement), umlElement, newUmlElement);
+		}
+
+	}
+	
+	private static List<org.eclipse.uml2.uml.Element> getBases(
+			List<? extends org.modeldriven.alf.uml.Element> elements) {
+		List<org.eclipse.uml2.uml.Element> umlElements = 
+				new ArrayList<org.eclipse.uml2.uml.Element>();		
+		for (org.modeldriven.alf.uml.Element element: elements) {
+			umlElements.add(element == null? null: ((Element)element).getBase());
+		}
+		return umlElements;
 	}
 	
 	private static void replace(
-			org.eclipse.uml2.uml.Element context, 
-			org.eclipse.uml2.uml.Element element, 
+			Collection<EStructuralFeature.Setting> settings, 
+			org.eclipse.uml2.uml.Element element,
 			org.eclipse.uml2.uml.Element newElement) {
-		for (EStructuralFeature.Setting setting: 
-			EcoreUtil.UsageCrossReferencer.find(element, context)) {
+		for (EStructuralFeature.Setting setting: settings) {
 			EObject object = setting.getEObject();
 			EStructuralFeature feature = setting.getEStructuralFeature();
 			if (feature.isChangeable()) {
@@ -109,6 +128,14 @@ public class Element implements org.modeldriven.alf.uml.Element {
 				}
 			}
 		}
+	}
+	
+	private static void replace(
+			org.eclipse.uml2.uml.Element context, 
+			org.eclipse.uml2.uml.Element element, 
+			org.eclipse.uml2.uml.Element newElement) {
+		replace(EcoreUtil.UsageCrossReferencer.find(element, context), 
+				element, newElement);
 	}
 	
 	// This method handles the case when a required feature is supposed to be
