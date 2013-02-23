@@ -19,7 +19,6 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.InternalElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.units.ClassDefinition;
 import org.modeldriven.alf.syntax.units.Member;
@@ -123,8 +122,11 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         // Add initialization of superclass properties.
         for (ElementReference superclassReference: 
             this.getClassDefinition().getSpecializationReferent()) {
-            // TODO: Implement superclass initialization for non-Alf superclasses.
-            if (superclassReference instanceof InternalElementReference) {
+            Operation initializationOperation = null;
+            Class_ superClass = (Class_)superclassReference.getImpl().getUml();
+            if (superClass != null) {
+                initializationOperation = getInitializationOperation(superClass);
+            } else {
                 FumlMapping mapping = this.fumlMap(superclassReference);
                 if (mapping instanceof ElementReferenceMapping) {
                     mapping = ((ElementReferenceMapping)mapping).getMapping();
@@ -134,14 +136,19 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                             superclassReference.getImpl().getName() + ": " + 
                             mapping.getErrorMessage());
                 } else {
-                    CallOperationAction callAction = initializationGraph.addCallOperationAction(
-                            ((ClassDefinitionMapping)mapping).getInitializationOperation());
-                    initializationGraph.addObjectFlow(selfFork, callAction.getTarget());
-                    if (previousNode != null) {
-                        initializationGraph.addControlFlow(previousNode, callAction);
-                    }
-                    previousNode = callAction;
+                    initializationOperation = ((ClassDefinitionMapping)mapping).
+                            getInitializationOperation();
                 }
+            }
+            if (initializationOperation != null) {
+                CallOperationAction callAction = 
+                        initializationGraph.addCallOperationAction(
+                                initializationOperation);
+                initializationGraph.addObjectFlow(selfFork, callAction.getTarget());
+                if (previousNode != null) {
+                    initializationGraph.addControlFlow(previousNode, callAction);
+                }
+                previousNode = callAction;
             }
         }
         
@@ -269,6 +276,24 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         return this.initializationOperation;
     }
 
+    private static Operation getInitializationOperation(Class_ class_) {
+        Operation operation = null;
+        String initializerName = class_.getName() + "$initialization$";
+        int n = initializerName.length();
+        
+        for (Operation ownedOperation: class_.getOwnedOperation()) {
+            String operationName = ownedOperation.getName();
+            if (operationName != null && 
+                    operationName.length() > n &&
+                    operationName.substring(0, n).equals(initializerName) &&
+                    operationName.substring(n).matches("[0-9]+")) {
+                operation = ownedOperation;
+            }
+        }
+        
+        return operation;
+    }
+    
     public ClassDefinition getClassDefinition() {
         return (ClassDefinition) this.getSource();
     }
