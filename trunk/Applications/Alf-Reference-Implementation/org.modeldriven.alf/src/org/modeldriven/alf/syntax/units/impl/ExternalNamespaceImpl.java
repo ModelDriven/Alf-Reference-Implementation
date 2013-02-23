@@ -274,27 +274,28 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            List<ElementReference> templateParameters,
            List<ElementReference> templateArguments,
            Set<Element> externalReferences) {
-       // System.out.println("[fixExternalReferences] instantiation=" + instantiation);
+       List<Element> references = new ArrayList<Element>();
+       List<Element> newReferences = new ArrayList<Element>();
        for (Element reference: externalReferences) {
-           // System.out.println("[fixExternalReferences] reference=" + reference);
            if (reference instanceof NamedElement) {
                QualifiedName qualifiedName = 
                        makeQualifiedName((NamedElement)reference);
-               // System.out.println("[fixExternalReferences] qualifiedName=" + qualifiedName.getImpl().getPathName());
                qualifiedName = qualifiedName.getImpl().updateBindings(
                        templateParameters, templateArguments);
-               // System.out.println("[fixExternalReferences] updated qualifiedName=" + qualifiedName.getImpl().getPathName());
+               Element newReference = reference;
                for (ElementReference referent: qualifiedName.getReferent()) {
-                   Element newReference = referent.getImpl().getUml();
-                   if (newReference != null && !newReference.equals(reference) && 
-                           isSameKind(newReference, reference)) {
-                       // System.out.println("[fixExternalReferences] referent=" + referent);
-                       instantiation.replace(reference, newReference);
+                   Element element = referent.getImpl().getUml();
+                   if (element != null && !element.equals(reference) && 
+                           isSameKind(element, reference)) {
+                       newReference = element;
                        break;
                    }
                }
+               references.add(reference);
+               newReferences.add(newReference);
            }
-       }  
+       }
+       instantiation.replaceAll(references, newReferences);
    }
    
    /**

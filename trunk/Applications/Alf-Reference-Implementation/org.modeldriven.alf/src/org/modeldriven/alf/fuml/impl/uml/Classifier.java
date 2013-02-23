@@ -227,7 +227,4 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
         return new ArrayList<org.modeldriven.alf.uml.NamedElement>();
     }
 
-    @Override
-    public void replace(org.modeldriven.alf.uml.Element element, org.modeldriven.alf.uml.Element newElement) {
-    }
 }

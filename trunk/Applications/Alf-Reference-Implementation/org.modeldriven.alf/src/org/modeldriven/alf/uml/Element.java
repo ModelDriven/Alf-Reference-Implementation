@@ -27,9 +27,12 @@ public interface Element {
     // implementation object.
     public int hashCode();
     
-    // Replace references to Element with references to newElement in the 
-    // properties of all elements contained within this templateable element.
-    public void replace(Element element, Element newElement);
+    // Replace references to all given elements with references to corresponding 
+    // newElements, in the properties of all elements contained within this 
+    // templateable element.
+    public void replaceAll(
+            List<? extends Element> elements, 
+            List<? extends Element> newElements);
     
     // Note: For a given implementation, an element should equal another element
     // with the same base implementation, or a base implementation object
