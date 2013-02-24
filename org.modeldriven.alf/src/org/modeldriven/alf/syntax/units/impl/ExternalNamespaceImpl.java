@@ -29,10 +29,13 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.InstanceSpecification;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
 import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageableElement;
+import org.modeldriven.alf.uml.Signal;
+import org.modeldriven.alf.uml.SignalEvent;
 import org.modeldriven.alf.uml.TemplateParameter;
 import org.modeldriven.alf.uml.TemplateableElement;
 
@@ -194,25 +197,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                if (isOwnedMember) {
                    boundMember.setNamespace(namespace);
                    namespace.addOwnedMember(boundMember);
-                   
-                   if (additionalElements.isEmpty()) {
-                       System.out.println("Cannot bind " + name);
-                   } else {
-                       for (NamedElement element: additionalElements) {
-                           Member member = ImportedMemberImpl.makeImportedMember(
-                                   element.getName(), element, namespace);
-                           namespace.addOwnedMember(member);
-                           namespace.addMember(member);
-                       }
-                   }
-                   
-                   if (namespace.getImpl().getModelScope() == 
-                           RootNamespace.getRootScope()) {
-                       RootNamespace.recordAdditionalElement(instantiation);
-                       RootNamespace.recordAdditionalElements(additionalElements);
-                   }
                }
-                             
            }
            
            // NOTE: This needs to take place after the bound member is added
@@ -220,8 +205,23 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            // bound member refers to itself.
            fixExternalReferences(
                    instantiation, templateParameters, templateArguments, 
-                   externalReferences);
+                   externalReferences, additionalElements);
            
+           if (namespace != null && !additionalElements.isEmpty()) {
+               for (NamedElement element: additionalElements) {
+                   Member member = ImportedMemberImpl.makeImportedMember(
+                           element.getName(), element, namespace);
+                   namespace.addOwnedMember(member);
+                   namespace.addMember(member);
+               }
+               
+               if (namespace.getImpl().getModelScope() == 
+                       RootNamespace.getRootScope()) {
+                   RootNamespace.recordAdditionalElement(instantiation);
+                   RootNamespace.recordAdditionalElements(additionalElements);
+               }
+           }
+
        }
 
        return boundMember;
@@ -273,29 +273,76 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            TemplateableElement instantiation, 
            List<ElementReference> templateParameters,
            List<ElementReference> templateArguments,
-           Set<Element> externalReferences) {
+           Set<Element> externalReferences,
+           Collection<NamedElement> additionalElements) {
        List<Element> references = new ArrayList<Element>();
        List<Element> newReferences = new ArrayList<Element>();
        for (Element reference: externalReferences) {
-           if (reference instanceof NamedElement) {
-               QualifiedName qualifiedName = 
-                       makeQualifiedName((NamedElement)reference);
-               qualifiedName = qualifiedName.getImpl().updateBindings(
-                       templateParameters, templateArguments);
-               Element newReference = reference;
-               for (ElementReference referent: qualifiedName.getReferent()) {
-                   Element element = referent.getImpl().getUml();
-                   if (element != null && !element.equals(reference) && 
-                           isSameKind(element, reference)) {
-                       newReference = element;
-                       break;
+           Element newReference = null;
+           
+           if (reference instanceof InstanceSpecification) {
+               try {
+                   InstanceSpecification newInstanceSpecification = 
+                           (InstanceSpecification)reference.getClass().newInstance();
+                   for (Classifier classifier: 
+                       ((InstanceSpecification)reference).getClassifier()) {
+                       Classifier newClassifier = (Classifier)getNewReference(
+                               classifier, templateParameters, templateArguments);
+                       newInstanceSpecification.addClassifier(newClassifier);
+                       if (!newClassifier.equals(classifier)) {
+                           newReference = newInstanceSpecification;
+                       }
+                   }
+                   if (newReference != null) {
+                       additionalElements.add(newInstanceSpecification);
+                   }
+               } catch (Exception e) {
+               }
+           } else if (reference instanceof SignalEvent) {
+               Signal signal = (Signal)((SignalEvent) reference).getSignal();
+               Signal newSignal = (Signal)getNewReference(
+                       signal, templateParameters, templateArguments);
+               if (!newSignal.equals(signal)) {
+                   try {
+                       SignalEvent newEvent = 
+                               (SignalEvent)reference.getClass().newInstance();
+                       newEvent.setSignal(newSignal);
+                       additionalElements.add(newEvent);
+                       newReference = newEvent;
+                   } catch (Exception e) {
                    }
                }
+           } else if (reference instanceof NamedElement) {
+               newReference = getNewReference(
+                       (NamedElement)reference, 
+                       templateParameters, templateArguments);
+           }
+           
+           if (newReference != null) {
                references.add(reference);
                newReferences.add(newReference);
            }
        }
+       
        instantiation.replaceAll(references, newReferences);
+   }
+   
+   private static Element getNewReference(
+           NamedElement reference,
+           List<ElementReference> templateParameters,
+           List<ElementReference> templateArguments) {
+       QualifiedName qualifiedName = 
+               makeQualifiedName((NamedElement)reference);
+       qualifiedName = qualifiedName.getImpl().updateBindings(
+               templateParameters, templateArguments);
+       for (ElementReference referent: qualifiedName.getReferent()) {
+           Element element = referent.getImpl().getUml();
+           if (element != null && !element.equals(reference) && 
+                   isSameKind(element, reference)) {
+               return element;
+           }
+       }
+       return reference;
    }
    
    /**
