@@ -99,6 +99,9 @@
         <antcall target="run-test">
             <param name="unit" value="Units_ActiveClass" />
         </antcall>
+        <antcall target="run-test">
+            <param name="unit" value="Units_Map" />
+        </antcall>
         <echo message="All done!" file="tests-x.txt" append="true" />
     </target>
 </project>

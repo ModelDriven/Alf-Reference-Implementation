@@ -1,0 +1,38 @@
+active class Units_Map {
+
+  public class Listener {
+    public name: String;
+    public notifications: Integer = 0;
+    
+    @Create
+    public Listener(in name: String) { this.name = name; }
+    
+    public notify() {
+      this.notifications++;
+    }
+    
+  }
+  
+  public listeners: Map<Integer, Listener> = new();
+  
+  public register(
+    in listener: Listener, in id: Integer) {
+    {   
+      this.listeners.put(id, listener);
+    }
+  }
+   
+  public test(out listener: Listener) {
+    listener = new Listener("Listener");
+    this.register(listener, 1);
+    listener = this.listeners.get(1);
+    listener.notify();
+  } 
+
+} do {
+  this.test(listener);
+  
+  AssertEqual("listener.notifications", listener.notifications, 1);
+  
+  WriteLine("Done");
+}
