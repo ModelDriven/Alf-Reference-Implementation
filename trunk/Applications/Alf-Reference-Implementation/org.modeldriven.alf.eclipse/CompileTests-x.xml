@@ -124,6 +124,9 @@
             <param name="unit" value="Units_ActiveClass" />
         </antcall>
         <antcall target="run-test">
+            <param name="unit" value="Units_Map" />
+        </antcall>
+        <antcall target="run-test">
             <param name="unit" value="Interactive_HelloWorld" />
         </antcall>
         <antcall target="run-test">
