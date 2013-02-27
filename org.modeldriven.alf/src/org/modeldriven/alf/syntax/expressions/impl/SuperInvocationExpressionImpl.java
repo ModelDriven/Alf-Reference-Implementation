@@ -155,11 +155,6 @@ public class SuperInvocationExpressionImpl
 	        ElementReferenceImpl context = this.getContext();
 	        if (!(superclass != null && context != null &&
                     superclass.getImpl().isContainedIn(context.parents()))) {
-    	        // System.out.println("[superInvocationExpressionQualification] superclass=" + superclass);
-    	        // System.out.println("[superInvocationExpressionQualification] context=" + context);
-    	        for (ElementReference parent: context.parents()) {
-    	            System.out.println("[superInvocationExpressionQualification] parent=" + parent);
-    	        }
 	        }
 	        return superclass != null && context != null &&
 	                    superclass.getImpl().isContainedIn(context.parents());
