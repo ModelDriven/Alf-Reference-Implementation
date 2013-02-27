@@ -1,0 +1,43 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+The implementation of queues.
+*/
+abstract class QueueImpl specializes CollectionImpl {
+
+  private content: any[0..*] sequence;
+
+  @Create protected QueueImpl (in seq: any[0..*] sequence) { 
+    super.CollectionImpl(seq);
+  }
+
+  @Destroy public destroy () { 
+  }
+
+  protected setContent (in seq: any[0..*] sequence) {
+    this.content = seq;
+  }
+  
+  protected getContent (): any[0..*] sequence {
+    return this.content;
+  }                                                                      
+
+  protected equalsImpl (in seq: any[0..*] sequence): Boolean { 
+    return this.sizeImpl() == seq->Size() && this.includesAllImpl(seq);
+  }
+  
+  protected firstImpl(): any[0..1] {
+    this.content->First();
+  }
+ 
+  protected removeFirstImpl (): any[0..1] {
+    result = this.content->First();
+    this.setContent(this.content->Subsequence(2,this.sizeImpl()));
+    return result;
+  }
+  
+  protected removeFirstOneImpl (in element: any): any[0..1] {
+    return this.removeOneImpl(element)? element: null;
+  }                      
+
+}
