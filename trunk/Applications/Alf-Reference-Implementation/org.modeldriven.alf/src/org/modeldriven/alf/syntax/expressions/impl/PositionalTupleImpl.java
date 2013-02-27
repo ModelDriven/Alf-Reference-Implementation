@@ -77,7 +77,9 @@ public class PositionalTupleImpl extends TupleImpl {
                     namedExpression.setExpression(expression);
                     inputs.add(namedExpression);
                 }
-                i++;
+                if (!"return".equals(direction)) {
+                    i++;
+                }
             }
         }
         return inputs;
@@ -127,7 +129,9 @@ public class PositionalTupleImpl extends TupleImpl {
                         outputs.add(namedExpression);
                     }
                 }
-                i++;
+                if (!"return".equals(direction)) {
+                    i++;
+                }
             }
         }
         return outputs;
