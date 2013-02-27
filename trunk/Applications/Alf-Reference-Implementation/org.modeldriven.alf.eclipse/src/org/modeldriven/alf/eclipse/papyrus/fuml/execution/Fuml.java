@@ -360,8 +360,12 @@ public class Fuml {
     	System.out.println(message);
     }
     
-    public Fuml(String[] args) {
+    public Fuml() {
         PropertyConfigurator.configure("log4j.properties");
+    }
+    
+    public Fuml(String[] args) {
+    	this();
         
         String name = this.parseArgs(args);
         
