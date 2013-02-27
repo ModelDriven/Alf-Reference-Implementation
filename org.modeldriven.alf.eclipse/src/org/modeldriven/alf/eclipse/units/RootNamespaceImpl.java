@@ -32,15 +32,17 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     private ResourceSet resourceSet;
     
     public RootNamespaceImpl() {
-    	this("UML");
-    }
-    
-    public RootNamespaceImpl(String libraryDirectory) {
         super();
         this.resourceSet = new ResourceSetImpl();
         UMLResourcesUtil.init(this.resourceSet);
-        this.setLibraryDirectory(libraryDirectory);
-        this.getResource(libraryDirectory,"StandardL2.profile");
+    }
+    
+    public void initialize() {
+    	if (this.getLibraryDirectory() == null) {
+    		this.setLibraryDirectory("UML");
+    	}
+        this.getProfileResource("StandardL2.profile");
+        this.getLibraryResource("UMLPrimitiveTypes.library");
     }
     
     public URI createURI(String directory, String name) {
@@ -57,8 +59,22 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     }
     
     public Resource getResource(String directory, String name) {
-        return this.resourceSet.getResource(
+        Resource resource = this.resourceSet.getResource(
                 this.createURI(directory, name), true);
+    	if (this.isVerbose) {
+    		System.out.println("Loaded " + 
+    				this.resourceSet.getURIConverter().normalize(
+    						resource.getURI()));
+    	}
+    	return resource;
+    }
+    
+    public Resource getMetamodelResource(String name) {
+    	return this.getResource(UMLResource.METAMODELS_PATHMAP, name);
+    }
+    
+    public Resource getProfileResource(String name) {
+    	return this.getResource(UMLResource.PROFILES_PATHMAP, name);
     }
     
     public Resource getLibraryResource(String name) {
@@ -98,11 +114,6 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     	        Resource resource = null;
     	        try {
     	        	resource = this.getLibraryResource(name);
-    	        	if (this.isVerbose) {
-    	        		System.out.println("Loaded " + 
-    	        				this.resourceSet.getURIConverter().normalize(
-    	        						resource.getURI()));
-    	        	}
     	        } catch (Exception e) {
     	        	System.out.println("Error loading " + name + ": " + e.getMessage());
     	        }

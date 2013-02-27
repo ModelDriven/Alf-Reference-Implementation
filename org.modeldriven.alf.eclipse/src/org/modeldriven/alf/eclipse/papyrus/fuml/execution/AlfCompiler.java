@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import org.modeldriven.alf.eclipse.units.RootNamespaceImpl;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.uml.StereotypeApplication;
 
@@ -45,6 +46,12 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     @Override
     protected ElementFactory createElementFactory() {
         return new org.modeldriven.alf.eclipse.uml.ElementFactory();
+    }
+    
+    @Override
+    public UnitDefinition parse(String unitName, boolean isFileName) {
+    	((RootNamespaceImpl)this.getRootScopeImpl()).initialize();
+    	return super.parse(unitName, isFileName);
     }
     
     @Override
