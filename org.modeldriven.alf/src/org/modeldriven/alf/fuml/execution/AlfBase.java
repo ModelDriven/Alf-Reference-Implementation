@@ -34,7 +34,7 @@ import org.modeldriven.alf.uml.PrimitiveType;
 
 public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     
-    protected RootNamespaceImpl rootScopeImpl = null;    
+    protected RootNamespaceImpl rootScopeImpl = null;
     protected boolean isParseOnly = false;
     protected boolean isPrint = false;
     protected boolean isFileName = false;
@@ -246,7 +246,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
             this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
             this.println("            Set debug logging level (default is as configured)");
             this.println("  -f        Treat unit as a file name rather than a qualifed name");
-            this.println("  -l path   Set library directory path (default is \"Library\")");
+            this.println("  -l path   Set library directory path (default is \"Libraries\")");
             this.println("  -m path   Set model directory path (default is \"Models\")");
             this.println("  -p        Parse and constraint check only");
             this.println("  -P        Parse, constraint check and print abstract syntax tree");
