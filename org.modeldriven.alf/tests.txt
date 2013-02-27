@@ -517,52 +517,149 @@ No constraint violations.
 Example4-CollectionClasses-Impl...
 Alf v1.0 Parser
 Parsed tests/Example4-CollectionClasses-Impl.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
 No constraint violations.
 Example4-CollectionImpl...
 Alf v1.0 Parser
 Parsed tests/Example4-CollectionImpl.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::CollectionImpl
+Parsed Models/CollectionClassesImpl.alf
+Resolved stub for CollectionClassesImpl::CollectionImpl
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
 No constraint violations.
 Example4-OrderedCollectionImpl...
 Alf v1.0 Parser
 Parsed tests/Example4-OrderedCollectionImpl.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::OrderedCollectionImpl
+Parsed Models/CollectionClassesImpl.alf
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
+Resolved stub for CollectionClassesImpl::OrderedCollectionImpl
 No constraint violations.
 Example4-Set...
 Alf v1.0 Parser
 Parsed tests/Example4-Set.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::Set
+Parsed Models/CollectionClassesImpl.alf
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
+Resolved stub for CollectionClassesImpl::Set
 No constraint violations.
 Example4-OrderedSet...
 Alf v1.0 Parser
 Parsed tests/Example4-OrderedSet.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::OrderedSet
+Parsed Models/CollectionClassesImpl.alf
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
+Resolved stub for CollectionClassesImpl::OrderedSet
 No constraint violations.
 Example4-Bag...
 Alf v1.0 Parser
 Parsed tests/Example4-Bag.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::Bag
+Parsed Models/CollectionClassesImpl.alf
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
+Resolved stub for CollectionClassesImpl::Bag
 No constraint violations.
 Example4-List...
 Alf v1.0 Parser
 Parsed tests/Example4-List.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::List
+Parsed Models/CollectionClassesImpl.alf
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
+Resolved stub for CollectionClassesImpl::List
 No constraint violations.
 Example4-Queue...
 Alf v1.0 Parser
 Parsed tests/Example4-Queue.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::Queue
+Parsed Models/CollectionClassesImpl.alf
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
+Resolved stub for CollectionClassesImpl::Queue
 No constraint violations.
 Example4-Deque...
 Alf v1.0 Parser
 Parsed tests/Example4-Deque.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::Deque
+Parsed Models/CollectionClassesImpl.alf
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
+Resolved stub for CollectionClassesImpl::Deque
 No constraint violations.
 Example4-Map...
 Alf v1.0 Parser
 Parsed tests/Example4-Map.alf
-Resolved stub for Alf::Library::CollectionClasses::Impl::Map
+Parsed Models/CollectionClassesImpl.alf
+Parsed Models/CollectionClassesImpl/CollectionImpl.alf
+Parsed Models/CollectionClassesImpl/OrderedCollectionImpl.alf
+Parsed Models/CollectionClassesImpl/Set.alf
+Parsed Models/CollectionClassesImpl/Bag.alf
+Parsed Models/CollectionClassesImpl/OrderedSet.alf
+Parsed Models/CollectionClassesImpl/List.alf
+Parsed Models/CollectionClassesImpl/Queue.alf
+Parsed Models/CollectionClassesImpl/Deque.alf
+Parsed Models/CollectionClassesImpl/Map.alf
+Resolved stub for CollectionClassesImpl::Map
 No constraint violations.
 ActiveClass_Order...
 Alf v1.0 Parser
