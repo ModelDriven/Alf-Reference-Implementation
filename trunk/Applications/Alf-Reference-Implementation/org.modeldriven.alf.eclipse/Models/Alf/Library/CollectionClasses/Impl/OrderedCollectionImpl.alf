@@ -1,50 +1,49 @@
 namespace Alf::Library::CollectionClasses::Impl;
-private import Alf::Library::CollectionFunctions::*;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
 /**
-The base concrete implementation for the standard library ordered collection 
-classes
+The base concrete implementation for ordered collections.
 */
-abstract class OrderedCollectionImpl<T> specializes CollectionImpl<T> {
+abstract class OrderedCollectionImpl specializes CollectionImpl {
 
-  @Create protected OrderedCollectionImpl(in seq: T[0..*] sequence) {
+  @Create protected OrderedCollectionImpl(in seq: any[0..*] sequence) {
     super(seq);
   }
 
-  public addAllAt (in index: Integer, in seq: T[0..*] sequence): Boolean {
-    preSize = this.size();
-    this.setContent(this.toSequence()->includeAllAt(index, seq));
-    return this.size() > preSize;
+  protected addAllAtImpl (in index: Integer, in seq: any[0..*] sequence): Boolean {
+    preSize = this.sizeImpl();
+    this.setContent(this.getContent()->IncludeAllAt(index, seq));
+    return this.sizeImpl() > preSize;
   }
   
-  public addAt (in index: Integer, in element: T): Boolean {
-    return this.addAllAt(index, element);
+  protected addAtImpl (in index: Integer, in element: any): Boolean {
+    return this.addAllAtImpl(index, element);
   }
   
-  public at (in index: Integer): T[0..1] {
-    return this.toSequence()->at(index);
+  protected atImpl (in index: Integer): any[0..1] {
+    return this.getContent()->At(index);
   }
   
-  public first (): T[0..1] {
-    return this.at(1);
+  protected firstImpl (): any[0..1] {
+    return this.atImpl(1);
   }
   
-  public indexOf (in element: T) : Integer[0..1] {
-    return this.toSequence()->indexOf(element);
+  protected indexOfImpl (in element: any) : Integer[0..1] {
+    return this.getContent()->IndexOf(element);
   }
   
-  public last (): T[0..1] {
-    return this.at(this.size());
+  protected lastImpl (): any[0..1] {
+    return this.atImpl(this.sizeImpl());
   }
   
-  public removeAt (in index: Integer): T[0..1] {
-    result = this.at(index);
-    this.setContent(this.toSequence()->excludeAt(index));
+  protected removeAtImpl (in index: Integer): any[0..1] {
+    result = this.atImpl(index);
+    this.setContent(this.getContent()->ExcludeAt(index));
     return result;
   }
   
-  public replaceAt (in index: Integer, in element: T): T[0..1] {
-    result = this.at(index);
-    this.setContent(this.toSequence()->replacingAt(index, element));
+  protected replaceAtImpl (in index: Integer, in element: any): any[0..1] {
+    result = this.atImpl(index);
+    this.setContent(this.getContent()->ReplacingAt(index, element));
     return result;
   }
 }

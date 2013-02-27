@@ -1,104 +1,104 @@
 namespace Alf::Library::CollectionClasses::Impl;
-private import Alf::Library::CollectionFunctions::*;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
 /**
-The base concrete implementation for all the standard library collection classes.
+The base concrete implementation for all collections.
 */
-abstract class CollectionImpl<T> {
+abstract class CollectionImpl {
   
-  @Create protected CollectionImpl(in seq: T[0..*] sequence) {
+  @Create protected CollectionImpl(in seq: any[0..*] sequence) {
     this.setContent(seq);
   }
 
-  protected abstract setContent (in seq: T[0..*] sequence);
+  protected abstract setContent (in seq: any[0..*] sequence);
   
-  public abstract toSequence (): T[0..*] sequence;
+  protected abstract getContent (): any[0..*] sequence;
 
-  public add (in element: T): Boolean { 
-    result = this.excludes(element);
-    this.setContent(this.toSequence()->including(element));
+  protected addImpl (in element: any): Boolean { 
+    result = this.excludesImpl(element);
+    this.setContent(this.getContent()->Including(element));
     return result;
   }
 
-  public addAll (in seq: T[0..*] sequence): Boolean { 
-    preSize = this.size();
-    this.setContent(this.toSequence()->union(seq));
-    return this.size() > preSize;
+  protected addAllImpl (in seq: any[0..*] sequence): Boolean { 
+    preSize = this.sizeImpl();
+    this.setContent(this.getContent()->Union(seq));
+    return this.sizeImpl() > preSize;
   }
 
-  public clear () { 
+  protected clearImpl () { 
     this.setContent(null);
   }
 
-  public count (in element: T): Integer { 
-    return this.toSequence()->count(element);
+  protected countImpl (in element: any): Integer { 
+    return this.getContent()->Count(element);
   }
 
-  public equals (in seq: T[0..*] sequence): Boolean { 
-    return this.toSequence()->equals(seq);
+  protected equalsImpl (in seq: any[0..*] sequence): Boolean { 
+    return this.getContent()->Equals(seq);
   }
 
-  public excludes (in element: T): Boolean { 
-    return this.toSequence()->excludes(element);
+  protected excludesImpl (in element: any): Boolean { 
+    return this.getContent()->Excludes(element);
   }
 
-  public excludesAll (in seq: T[0..*] sequence): Boolean {
-    return this.toSequence()->excludesAll(seq); 
+  protected excludesAllImpl (in seq: any[0..*] sequence): Boolean {
+    return this.getContent()->ExcludesAll(seq); 
   }
 
-  public includes (in element: T): Boolean { 
-    return this.toSequence()->includes(element);
+  protected includesImpl (in element: any): Boolean { 
+    return this.getContent()->Includes(element);
   }
 
-  public includesAll (in seq: T[0..*] sequence): Boolean { 
-    return this.toSequence()->includesAll(seq);
+  protected includesAllImpl (in seq: any[0..*] sequence): Boolean { 
+    return this.getContent()->IncludesAll(seq);
   }
 
-  public isEmpty (): Boolean { 
-    return this.toSequence()->isEmpty();
+  protected isEmptyImpl (): Boolean { 
+    return this.getContent()->IsEmpty();
   }
 
-  public notEmpty (): Boolean { 
-    return this.toSequence()->notEmpty();
+  protected notEmptyImpl (): Boolean { 
+    return this.getContent()->NotEmpty();
   }
 
-  public remove (in element: T): Integer { 
-    result = this.count(element);
-    this.setContent(this.toSequence()->excluding(element));
+  protected removeImpl (in element: any): Integer { 
+    result = this.countImpl(element);
+    this.setContent(this.getContent()->Excluding(element));
     return result;
   }
 
-  public removeAll (in seq: T[0..*] sequence): Boolean { 
-    preSize = this.size();
-    this.setContent(this.toSequence()->difference(seq));
-    return this.size() < preSize;
+  protected removeAllImpl (in seq: any[0..*] sequence): Boolean { 
+    preSize = this.sizeImpl();
+    this.setContent(this.getContent()->Difference(seq));
+    return this.sizeImpl() < preSize;
   }
 
-  public removeOne (in element: T): Boolean { 
-    result = this.includes(element);
-    this.setContent(this.toSequence()->excludingOne(element));
+  protected removeOneImpl (in element: any): Boolean { 
+    result = this.includesImpl(element);
+    this.setContent(this.getContent()->ExcludingOne(element));
     return result;
   }
 
-  public replace (in element: T, in newElement: T): Integer { 
-    result = this.count(element);
-    this.setContent(this.toSequence()->replacing(element, newElement));
+  protected replaceImpl (in element: any, in newElement: any): Integer { 
+    result = this.countImpl(element);
+    this.setContent(this.getContent()->Replacing(element, newElement));
     return result;
   }
 
-  public replaceOne (in element: T, in newElement: T): Boolean { 
-    result = this.includes(element);
-    this.setContent(this.toSequence()->replacingOne(element, newElement));
+  protected replaceOneImpl (in element: any, in newElement: any): Boolean { 
+    result = this.includesImpl(element);
+    this.setContent(this.getContent()->ReplacingOne(element, newElement));
     return result;
   }
 
-  public retainAll (in seq: T[0..*] sequence): Boolean { 
-    preSize = this.size();
-    this.setContent(this.toSequence()->intersection(seq));
-    return this.size() < preSize;
+  protected retainAllImpl (in seq: any[0..*] sequence): Boolean { 
+    preSize = this.sizeImpl();
+    this.setContent(this.getContent()->Intersection(seq));
+    return this.sizeImpl() < preSize;
   }
 
-  public size (): Integer { 
-    return this.toSequence()->size();
+  protected sizeImpl (): Integer { 
+    return this.getContent()->Size();
   }
 
 }

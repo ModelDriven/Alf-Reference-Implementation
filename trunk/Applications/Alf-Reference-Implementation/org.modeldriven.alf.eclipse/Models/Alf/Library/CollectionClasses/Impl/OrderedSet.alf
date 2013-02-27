@@ -1,139 +1,124 @@
 namespace Alf::Library::CollectionClasses::Impl;
-private import Alf::Library::CollectionFunctions::*;
+
 /**
 The concrete implementation of the standard library template OrderedSet class.
 */
-class OrderedSet<T> 
-  specializes OrderedCollectionImpl<T>, CollectionClasses::OrderedSet<T> {
-  
-  private content: T[0..*] ordered;
+class OrderedSet<T> specializes OrderedSetImpl, CollectionClasses::OrderedSet<T> {
   
   @Create public OrderedSet (in seq: T[0..*] sequence) { 
-    super.OrderedCollectionImpl(seq->toOrderedSet());
-  }
-
-  @Destroy public destroy () { 
-  }
-
-  private setContent(in seq: T[0..*] sequence) {
-    this.content = seq;
+    super.OrderedCollectionImpl(seq);
   }
 
   public add (in element: T): Boolean {
-    return super.OrderedCollectionImpl<T>::add(element);
+    return super.addImpl(element);
   }
   
   public addAt (in index: Integer, in element: T): Boolean {
-    return super.OrderedCollectionImpl<T>::addAt(index, element);
+    return super.addAtImpl(index, element);
   }
 
   public addAll (in seq: T[0..*] sequence): Boolean {
-    return super.OrderedCollectionImpl<T>::addAll(seq->toOrderedSet());
+    return super.addAllImpl(seq);
   }
                                                                                                                                                                                                                                                                                                                                                  
   public addAllAt (in index: Integer, in seq: T[0..*] sequence): Boolean {
-    return super.OrderedCollectionImpl<T>::addAllAt(index, seq->toOrderedSet());
+    return super.addAllAtImpl(index, seq);
   }
                                                                                                                                                                                                                                                                                                                                                  
   public at (in index: Integer): T[0..1] {
-    return super.OrderedCollectionImpl<T>::at(index);
+    return (T)super.atImpl(index);
   }
 
   public clear () {
-    super.OrderedCollectionImpl<T>::clear();
+    super.clearImpl();
   }
   
   public count (in element: T): Integer  {
-    return super.OrderedCollectionImpl<T>::count(element);
+    return super.countImpl(element);
   }
 
   public equals (in seq: T[0..*] sequence): Boolean { 
-    return super.OrderedCollectionImpl<T>::equals(seq->toOrderedSet());
+    return super.equalsImpl(seq);
   }
 
   public first (): T[0..1] { 
-    return super.OrderedCollectionImpl<T>::first();
+    return (T)super.firstImpl();
   }
   
   public indexOf (in element: T) : Integer[0..1] { 
-    return super.OrderedCollectionImpl<T>::indexOf(element);
+    return super.indexOfImpl(element);
   }
   
   public last (): T[0..1] { 
-    return super.OrderedCollectionImpl<T>::last();
+    return (T)super.lastImpl();
   }
   
   public excludes (in element: T): Boolean {
-    return super.OrderedCollectionImpl<T>::excludes (element);
+    return super.excludesImpl(element);
   }
   
   public excludesAll (in seq: T[0..*] sequence): Boolean {
-    return super.OrderedCollectionImpl<T>::excludesAll(seq->toOrderedSet());
+    return super.excludesAllImpl(seq);
   }
   
   public includes (in element: T): Boolean {
-    return super.OrderedCollectionImpl<T>::includes(element);
+    return super.includesImpl(element);
   }
   
   public includesAll (in seq: T[0..*] sequence): Boolean {
-    return super.OrderedCollectionImpl<T>::includesAll(seq->toOrderedSet());
+    return super.includesAllImpl(seq);
   }
   
   public isEmpty (): Boolean {
-    return super.OrderedCollectionImpl<T>::isEmpty();
+    return super.isEmptyImpl();
   }
   
   public notEmpty (): Boolean {
-    return super.OrderedCollectionImpl<T>::notEmpty();
+    return super.notEmptyImpl();
   }
   
   public remove (in element: T): Integer { 
-    return super.OrderedCollectionImpl<T>::remove(element);
+    return super.removeImpl(element);
   }
   
   public removeAll (in seq: T[0..*] sequence): Boolean { 
-    return super.OrderedCollectionImpl<T>::removeAll(seq);
+    return super.removeAllImpl(seq);
   }
   
   public removeAt (in index: Integer): T[0..1] { 
-    return super.OrderedCollectionImpl<T>::removeAt(index);
+    return (T)super.removeAtImpl(index);
   }
   
   public removeOne (in element: T): Boolean { 
-    return super.OrderedCollectionImpl<T>::removeOne(element);
+    return super.removeOneImpl(element);
   }
   
   public replace (in element: T, in newElement: T): Integer { 
-    return super.OrderedCollectionImpl<T>::replace(element, newElement);
+    return super.replaceImpl(element, newElement);
   }
   
   public replaceAt (in index: Integer, in element: T): T[0..1] {
-    result = this.at(index);
-    if (result->notEmpty()) {
-      this.remove(result);
-      this.addAt(index, element);
-    }
-    return result;
+    return (T)super.replaceAtImpl(index, element);
   }
   
   public replaceOne (in element: T, in newElement: T): Boolean { 
-    return super.OrderedCollectionImpl<T>::replaceOne(element, newElement);
+    return super.replaceOneImpl(element, newElement);
   }
   
   public retainAll (in seq: T[0..*] sequence): Boolean { 
-    return super.OrderedCollectionImpl<T>::retainAll(seq);
+    return super.retainAllImpl(seq);
   }
    
   public size (): Integer {
-    return super.OrderedCollectionImpl<T>::size();
+    return super.sizeImpl();
   }
   
   public subOrderedSet (in lower: Integer, in upper: Integer): CollectionClasses::OrderedSet<T> {
-    return new OrderedSet<T>(this.toSequence()->subsequence(lower, upper));
+    return new OrderedSet<T>((T)super.subOrderedSetImpl(lower, upper));
   }
   
   public toSequence(): T[0..*] sequence {
-    return this.content;
+    return (T)this.getContent();
   }
 
 }
