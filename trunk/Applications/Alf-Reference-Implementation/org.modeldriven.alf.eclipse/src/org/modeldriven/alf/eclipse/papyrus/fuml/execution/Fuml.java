@@ -7,14 +7,11 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.FirstChoiceStrategy;
 import org.eclipse.papyrus.uml.tools.utils.NameResolutionUtils;
 import org.eclipse.uml2.uml.resource.UMLResource;
-import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 import org.eclipse.uml2.uml.util.UMLUtil;
 import org.modeldriven.alf.eclipse.papyrus.fuml.library.channel.StandardInputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.fuml.library.channel.StandardOutputChannelObject;
@@ -47,7 +44,7 @@ public class Fuml {
 	private String umlDirectory = ".";
 	private boolean isVerbose = false;
 	
-	private RootNamespaceImpl rootScopeImpl = null;
+	private RootNamespaceImpl rootScopeImpl = new RootNamespaceImpl();
 	private FumlMappingFactory mappingFactory = null;
 
 	private org.modeldriven.alf.eclipse.papyrus.fuml.execution.Locus locus;
@@ -59,7 +56,6 @@ public class Fuml {
     
     public void setLibraryDirectory(String libraryDirectory) {
     	this.libraryDirectory = libraryDirectory;
-    	// this.rootScopeImpl.setModelDirectory(libraryDirectory);
     }
     
     public void setUmlDirectory(String umlDirectory) {
@@ -68,7 +64,6 @@ public class Fuml {
     
     public void setIsVerbose(boolean isVerbose) {
         this.isVerbose = isVerbose;
-        // this.rootScopeImpl.setIsVerbose(isVerbose);
     }
     
     private void createLocus() {
@@ -292,10 +287,6 @@ public class Fuml {
     }
     
     public void execute(Resource resource, String name) {
-    	this.rootScopeImpl = new RootNamespaceImpl(this.umlDirectory);
-    	this.rootScopeImpl.setModelDirectory(this.libraryDirectory);
-    	this.rootScopeImpl.setIsVerbose(this.isVerbose);
-    	
     	this.mappingFactory = new FumlMappingFactory();
 
     	Classifier element = this.getClassifier(resource, "Model::" + name);
@@ -375,6 +366,7 @@ public class Fuml {
         		name = name.substring(0, l1 - l2);
         	}
         	
+        	/*
             ResourceSet resourceSet = new ResourceSetImpl();
             UMLResourcesUtil.init(resourceSet);
             URI uri = URI.createFileURI(this.umlDirectory).
@@ -389,10 +381,17 @@ public class Fuml {
         		this.println("Error loading model: " + e.getMessage());
         		return;
         	}
+        	*/
+        	
+        	this.rootScopeImpl.setModelDirectory(this.libraryDirectory);
+        	this.rootScopeImpl.setLibraryDirectory(this.umlDirectory);
+            this.rootScopeImpl.setIsVerbose(this.isVerbose);
+            this.rootScopeImpl.initialize();	
+
+        	Resource resource = 
+        			this.rootScopeImpl.getResource(this.umlDirectory, name);
  
-            if (resource == null) {
-            	this.println("Resource " + uri + " not found.");
-            } else {
+            if (resource != null) {
             	this.execute(resource, name);
             }
 
