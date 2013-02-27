@@ -1,5 +1,5 @@
 namespace Alf::Library::CollectionClasses::Impl;
-private import Alf::Library::CollectionFunctions::*;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
 /**
 The concrete implementation of the standard library template Map class.
 */
@@ -15,7 +15,7 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
   }
 
   private indexOf(in key: Key): Integer[0..1] {
-    return this.entries.key->indexOf(key);
+    return this.entries.key->IndexOf(key);
   }
   
   public entries (): CollectionClasses::Set<Entry> { 
@@ -27,7 +27,7 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
   }
 
   public excludesAll (in entries: Entry[0..*]): Boolean { 
-    return this.entries->excludesAll(entries);
+    return this.entries->ExcludesAll(entries);
   }
 
   public get (in key: Key): Value[0..1] { 
@@ -35,19 +35,19 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
   }
 
   public includesAll (in entries: Entry[0..*]): Boolean { 
-    return this.entries->includesAll(entries);
+    return this.entries->IncludesAll(entries);
   }
 
   public includesKey (in key: Key): Boolean { 
-    return this.entries.key->includes(key);
+    return this.entries.key->Includes(key);
   }
 
   public includesValue (in value: Value[0..1]): Boolean { 
-    return this.entries.value->includes(value);
+    return this.entries.value->Includes(value);
   }
 
   public isEmpty (): Boolean { 
-    return this.entries->isEmpty();
+    return this.entries->IsEmpty();
   }
 
   public keys (): CollectionClasses::Set<Key> { 
@@ -55,13 +55,13 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
   }
 
   public notEmpty (): Boolean { 
-    return this.entries->notEmpty();
+    return this.entries->NotEmpty();
   }
 
   public put (in key: Key, in value: Value[0..1]): Value[0..1] { 
-	result = this.remove(key);
-	this.entries->add(new Entry(key,value));
-	return result;
+  	result = this.remove(key);
+  	this.entries = (Entry)this.entries->Including(new Entry(key,value));
+  	return result;
   }
 
   public putAll (in entries: Entry[0..*]) { 
@@ -79,7 +79,7 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
   }
 
   public size (): Integer { 
-    this.entries->size();
+    this.entries->Size();
   }
 
   public toSequence (): Entry[0..*] sequence { 

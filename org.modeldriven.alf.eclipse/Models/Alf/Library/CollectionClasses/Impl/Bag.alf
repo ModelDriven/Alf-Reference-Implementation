@@ -1,95 +1,87 @@
 namespace Alf::Library::CollectionClasses::Impl;
-private import Alf::Library::CollectionFunctions::*;
+
 /**
 The concrete implementation of the standard library template Bag class.
 */
-class Bag<T> specializes CollectionImpl<T>, CollectionClasses::Bag<T> {
-
-  private content: T[0..*] nonunique;
+class Bag<T> specializes BagImpl, CollectionClasses::Bag<T> {
 
   @Create public Bag (in seq: T[0..*] sequence) { 
-    super.CollectionImpl(seq);
-  }
-
-  @Destroy public destroy () { }
-  
-  private setContent(in seq: T[0..*] sequence) {
-    this.content = seq;
+    super.BagImpl(seq);
   }
 
   public add (in element: T): Boolean {
-    return super.CollectionImpl<T>::add(element);
+    return super.addImpl(element);
   }
   
   public addAll (in seq: T[0..*] sequence): Boolean {
-    return super.CollectionImpl<T>::addAll(seq);
+    return super.addAllImpl(seq);
   }
   
   public clear () {
-    super.CollectionImpl<T>::clear();
+    super.clearImpl();
   }
   
   public count (in element: T): Integer  {
-    return super.CollectionImpl<T>::count(element);
+    return super.countImpl(element);
   }
 
   public equals (in seq: T[0..*] sequence): Boolean { 
-    return this.size() == seq->size() && this.includesAll(seq);
+    return super.equalsImpl(seq);
   }
  
   public excludes (in element: T): Boolean {
-    return super.CollectionImpl<T>::excludes (element);
+    return super.excludesImpl(element);
   }
   
   public excludesAll (in seq: T[0..*] sequence): Boolean {
-    return super.CollectionImpl<T>::excludesAll(seq);
+    return super.excludesAllImpl(seq);
   }
   
   public includes (in element: T): Boolean {
-    return super.CollectionImpl<T>::includes(element);
+    return super.includesImpl(element);
   }
   
   public includesAll (in seq: T[0..*] sequence): Boolean {
-    return super.CollectionImpl<T>::includesAll(seq);
+    return super.includesAllImpl(seq);
   }
   
   public isEmpty (): Boolean {
-    return super.CollectionImpl<T>::isEmpty();
+    return super.isEmptyImpl();
   }
   
   public notEmpty (): Boolean {
-    return super.CollectionImpl<T>::notEmpty();
+    return super.notEmptyImpl();
   }
   
   public remove (in element: T): Integer {
-    return super.CollectionImpl<T>::remove(element);
+    return super.removeImpl(element);
   }
   
   public removeAll (in seq: T[0..*] sequence): Boolean {
-    return super.CollectionImpl<T>::removeAll(seq);
+    return super.removeAllImpl(seq);
   }
   
   public removeOne (in element: T): Boolean {
-    return super.CollectionImpl<T>::removeOne(element);
+    return super.removeOneImpl(element);
   }
   
   public replace (in element: T, in newElement: T): Integer  {
-    return super.CollectionImpl<T>::replace(element, newElement);
+    return super.replaceImpl(element, newElement);
   }
   
   public replaceOne (in element: T, in newElement: T): Boolean {
-    return super.CollectionImpl<T>::replaceOne(element, newElement);
+    return super.replaceOneImpl(element, newElement);
   }
   
   public retainAll (in seq: T[0..*] sequence): Boolean {
-    return super.CollectionImpl<T>::retainAll(seq);
+    return super.retainAllImpl(seq);
   }
 
   public size(): Integer {
-    return super.CollectionImpl<T>::size();
+    return super.sizeImpl();
   }
   
   public toSequence(): T[0..*] sequence {
-    return this.content;
+    return (T)super.getContent();
   }
 }
