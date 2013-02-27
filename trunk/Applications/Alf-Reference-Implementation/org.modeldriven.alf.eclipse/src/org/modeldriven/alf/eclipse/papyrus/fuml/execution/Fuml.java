@@ -44,8 +44,8 @@ public class Fuml {
 	private String umlDirectory = ".";
 	private boolean isVerbose = false;
 	
-	private RootNamespaceImpl rootScopeImpl = new RootNamespaceImpl();
-	private FumlMappingFactory mappingFactory = null;
+	private final RootNamespaceImpl rootScopeImpl = new RootNamespaceImpl();
+	private final FumlMappingFactory mappingFactory = new FumlMappingFactory();
 
 	private org.modeldriven.alf.eclipse.papyrus.fuml.execution.Locus locus;
 
@@ -286,60 +286,68 @@ public class Fuml {
     	return operation;
     }
     
-    public void execute(Resource resource, String name) {
-    	this.mappingFactory = new FumlMappingFactory();
+    public void execute(String name) {
+    	this.rootScopeImpl.setModelDirectory(this.libraryDirectory);
+    	this.rootScopeImpl.setLibraryDirectory(this.umlDirectory);
+        this.rootScopeImpl.setIsVerbose(this.isVerbose);
+        this.rootScopeImpl.initialize();	
 
-    	Classifier element = this.getClassifier(resource, "Model::" + name);
-      	if (element instanceof Behavior && 
-        		((Behavior)element).getOwnedParameter().isEmpty() ||
-        		element instanceof Class_ && 
-        		((Class_)element).getIsActive() && 
-        		!((Class_)element).getIsAbstract() && 
-        		((Class_)element).getClassifierBehavior() != null) {
-      		
-      		// EcoreUtil.resolveAll(resource);
-      		resource.getResourceSet().getURIConverter().getURIMap().
-      			put(URI.createURI(""), resource.getURI());
-      		
-            this.createLocus();
-            this.addPrimitiveTypes(element);
-            this.addPrimitiveBehaviorPrototypes(element);
-            this.createSystemServices(element);
-            
-        	this.printVerbose("Executing...");
-        	if (element instanceof Behavior) {
-        		this.locus.getExecutor().execute((Behavior)element, null);
-        	} else {
-        		// Instantiate active class.
-        		Class_ class_ = (Class_)element;
-        		Object_ object = locus.instantiate(class_);
+    	Resource resource = 
+    			this.rootScopeImpl.getResource(this.umlDirectory, name);
+    	
+    	if (resource != null) {
+    		Classifier element = this.getClassifier(resource, "Model::" + name);
+    		
+    		if (element instanceof Behavior && 
+    				((Behavior)element).getOwnedParameter().isEmpty() ||
+    				element instanceof Class_ && 
+    				((Class_)element).getIsActive() && 
+    				!((Class_)element).getIsAbstract() && 
+    				((Class_)element).getClassifierBehavior() != null) {
 
-        		// Initialize the object.
-         		Operation initializer = getInitializationOperation(class_);        		
-         		if (initializer != null) {
-	        		this.locus.getExecutor().execute(
-	        				((Behavior)initializer.getMethod().get(0)), 
-	        				object);
-         		}
+    			resource.getResourceSet().getURIConverter().getURIMap().
+    				put(URI.createURI(""), resource.getURI());
 
-        		// Execute the classifier behavior.
-        		object.startBehavior(class_);
-        	}
-        	
-        } else if (element instanceof Behavior) {
-        	this.println("Cannot execute a behavior with parameters.");
-        } else if (element instanceof Class_) {
-        	Class_ class_ = (Class_)element;
-        	if (!class_.getIsActive()) {
-        		this.println("Cannot execute a class that is not active.");
-        	} else if (class_.getIsAbstract()) {
-        		this.println("Cannot execute an abstract class.");
-        	} else {
-        		this.println("Cannot execute a class without a classifier behavior.");
-        	}
-        } else {
-        	this.println("Unit not executable.");
-        }
+    			this.createLocus();
+    			this.addPrimitiveTypes(element);
+    			this.addPrimitiveBehaviorPrototypes(element);
+    			this.createSystemServices(element);
+
+    			this.printVerbose("Executing...");
+    			if (element instanceof Behavior) {
+    				this.locus.getExecutor().execute((Behavior)element, null);
+    			} else {
+    				// Instantiate active class.
+    				Class_ class_ = (Class_)element;
+    				Object_ object = locus.instantiate(class_);
+
+    				// Initialize the object.
+    				Operation initializer = getInitializationOperation(class_);        		
+    				if (initializer != null) {
+    					this.locus.getExecutor().execute(
+    							((Behavior)initializer.getMethod().get(0)), 
+    							object);
+    				}
+
+    				// Execute the classifier behavior.
+    				object.startBehavior(class_);
+    			}
+
+    		} else if (element instanceof Behavior) {
+    			this.println("Cannot execute a behavior with parameters.");
+    		} else if (element instanceof Class_) {
+    			Class_ class_ = (Class_)element;
+    			if (!class_.getIsActive()) {
+    				this.println("Cannot execute a class that is not active.");
+    			} else if (class_.getIsAbstract()) {
+    				this.println("Cannot execute an abstract class.");
+    			} else {
+    				this.println("Cannot execute a class without a classifier behavior.");
+    			}
+    		} else {
+    			this.println("Unit not executable.");
+    		}
+    	}
     }
     
    protected void printVerbose(String message) {
@@ -366,34 +374,7 @@ public class Fuml {
         		name = name.substring(0, l1 - l2);
         	}
         	
-        	/*
-            ResourceSet resourceSet = new ResourceSetImpl();
-            UMLResourcesUtil.init(resourceSet);
-            URI uri = URI.createFileURI(this.umlDirectory).
-                    appendSegment(name).
-                    appendFileExtension(UMLResource.FILE_EXTENSION);
-            
-        	this.printVerbose("Loading model from " + uri);
-        	Resource resource = null;
-        	try {
-        		resource = resourceSet.getResource(uri, true);
-        	} catch (Exception e) {
-        		this.println("Error loading model: " + e.getMessage());
-        		return;
-        	}
-        	*/
-        	
-        	this.rootScopeImpl.setModelDirectory(this.libraryDirectory);
-        	this.rootScopeImpl.setLibraryDirectory(this.umlDirectory);
-            this.rootScopeImpl.setIsVerbose(this.isVerbose);
-            this.rootScopeImpl.initialize();	
-
-        	Resource resource = 
-        			this.rootScopeImpl.getResource(this.umlDirectory, name);
- 
-            if (resource != null) {
-            	this.execute(resource, name);
-            }
+        	this.execute(name);
 
         } else {
         	this.println("Usage is");
@@ -402,7 +383,8 @@ public class Fuml {
         	this.println("allowable options are:");
         	this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
         	this.println("            Set debug logging level (default is as configured)");
-        	this.println("  -u path   Set UML directory path (default is \"UML\"");
+        	this.println("  -l path   Set Alf library directory (default is \"Libraries\"");
+        	this.println("  -u path   Set UML directory path (default is \".\"");
         	this.println("  -v        Set verbose mode");
         }         
     }
