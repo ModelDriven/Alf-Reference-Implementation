@@ -6,7 +6,7 @@ The concrete implementation of the standard library template Set class.
 class Set<T> specializes SetImpl, CollectionClasses::Set<T> {
 
   @Create public Set (in seq: T[0..*] sequence) { 
-    super.CollectionImpl(seq);
+    super.SetImpl(seq);
   }
 
   public add (in element: T): Boolean {

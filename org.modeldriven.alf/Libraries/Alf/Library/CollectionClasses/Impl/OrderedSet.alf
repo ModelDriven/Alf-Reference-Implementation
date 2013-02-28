@@ -6,7 +6,7 @@ The concrete implementation of the standard library template OrderedSet class.
 class OrderedSet<T> specializes OrderedSetImpl, CollectionClasses::OrderedSet<T> {
   
   @Create public OrderedSet (in seq: T[0..*] sequence) { 
-    super.OrderedCollectionImpl(seq);
+    super.OrderedSetImpl(seq);
   }
 
   public add (in element: T): Boolean {

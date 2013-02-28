@@ -6,7 +6,7 @@ The concrete implementation of the standard library template List class.
 class List<T> specializes ListImpl, CollectionClasses::List<T> {
   
   @Create public List (in seq: T[0..*] sequence) { 
-    super.OrderedCollectionImpl(seq);
+    super.ListImpl(seq);
   }
 
   public add (in element: T): Boolean {
