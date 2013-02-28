@@ -366,10 +366,33 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     }
 
     private boolean equateParameters(ElementReference operation) {
+        // NOTE: Return parameters are handled separately, so they are not
+        // presumed to be at the end.
+        FormalParameter myReturnParameter = this.getReturnParameter();
+        FormalParameter otherReturnParameter = operation.getImpl().getReturnParameter();
         return operation != null &&
                     FormalParameterImpl.equals(
-                        this.getFormalParameters(), 
-                        operation.getImpl().getParameters());
+                        removeReturnParameter(this.getFormalParameters()), 
+                        removeReturnParameter(operation.getImpl().getParameters())) &&
+                        
+                        // Presume that return parameters conform for two
+                        // constructor operations.
+                        (this.getSelf().getIsConstructor() && 
+                                operation.getImpl().isConstructor() ||
+                                
+                         myReturnParameter != null && 
+                            myReturnParameter.getImpl().equals(otherReturnParameter) ||
+                         myReturnParameter == null && otherReturnParameter == null);
+    }
+    
+    private static List<FormalParameter> removeReturnParameter(List<FormalParameter> parameters) {
+        List<FormalParameter> list = new ArrayList<FormalParameter>();
+        for (FormalParameter parameter: parameters) {
+            if (!"return".equals(parameter.getDirection())) {
+                list.add(parameter);
+            }
+        }
+        return list;
     }
     
     private boolean matchParameters(ElementReference operation) {
