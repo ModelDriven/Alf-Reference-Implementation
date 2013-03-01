@@ -306,7 +306,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     // This will work even if there are (illegal) cyclic generalization relationships.
     private Collection<ElementReference> allParents(Collection<ElementReference> alreadySeen) {
-        Collection<ElementReference> parents = this.parents();
+        Collection<ElementReference> parents = 
+                new HashSet<ElementReference>(this.parents());
         parents.removeAll(alreadySeen);
         Set<ElementReference> allParents = new HashSet<ElementReference>(parents);
         for (ElementReference parent: parents) {
