@@ -598,7 +598,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             templateArguments.add(ClassifierDefinitionImpl.commonAncestor(types));
         }
         
-        return target.getImpl().getBoundElement
+        return QualifiedNameImpl.getBoundElement
             (referent, templateParameters, templateArguments);
     }
     
