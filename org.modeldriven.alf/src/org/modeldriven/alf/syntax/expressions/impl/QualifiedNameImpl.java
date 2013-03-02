@@ -816,14 +816,16 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             List<ElementReference> templateArguments = 
                 self.getUnqualifiedName().getBinding().getImpl().getArgumentReferents
                     (templateParameters, this.getCurrentScope());
-            return this.getBoundElement(templateReferent, templateParameters, templateArguments);
+            return getBoundElement(templateReferent, templateParameters, templateArguments);
         }
     }
     
-    public ElementReference getBoundElement(ElementReference templateReferent,
+    public static ElementReference getBoundElement(
+            ElementReference templateReferent,
             List<ElementReference> templateParameters,
             List<ElementReference> templateArguments) {
-        String name = this.makeBoundElementName(templateArguments);
+        String name = makeBoundElementName(
+                templateReferent.getImpl().getName(), templateArguments);
         ElementReference namespaceReference = templateReferent.getImpl().getNamespace();        
         if (namespaceReference == null) {
             return null;
@@ -864,10 +866,10 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         }
     }
     
-    private String makeBoundElementName(List<ElementReference> templateArguments) {
-        QualifiedName self = this.getSelf();
+    private static String makeBoundElementName(
+            String templateName, List<ElementReference> templateArguments) {
         StringBuilder name = new StringBuilder("$$");
-        name.append(self.getUnqualifiedName().getName());
+        name.append(templateName);
         name.append("__");
         for (ElementReference argument: templateArguments) {
             String argumentName = argument == null? "any":
