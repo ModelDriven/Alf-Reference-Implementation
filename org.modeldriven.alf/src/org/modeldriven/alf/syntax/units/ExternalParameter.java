@@ -24,12 +24,16 @@ public class ExternalParameter extends FormalParameter {
         
         Type type = parameter.getType();
         if (type != null) {
-            this.setType(ElementReferenceImpl.makeElementReference(type));
+            this.setType(ElementReferenceImpl.makeBoundReference(type));
         }
         
-        this.setName(parameter.getName());
+        String name = parameter.getName();
+        this.setName(name == null? "": name);
+        
         this.setLower(parameter.getLower());
+        this.setLowerBound(Integer.toString(parameter.getLower()));
         this.setUpper(parameter.getUpper());
+        this.setUpperBound(Integer.toString(parameter.getUpper()));
         this.setIsOrdered(parameter.getIsOrdered());
         this.setIsNonunique(!parameter.getIsUnique());
     }
