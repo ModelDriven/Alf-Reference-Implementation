@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_0" name="FoundationalModelLibrary">
+  <packagedElement xmi:type="uml:Package" xmi:id="PrimitiveBehaviors" name="PrimitiveBehaviors">
+    <packageImport xmi:id="PrimitiveBehaviors-_packageImport.0">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Package" xmi:id="PrimitiveBehaviors-IntegerFunctions" name="IntegerFunctions">
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-ToInteger" name="ToInteger" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ToInteger-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ToInteger-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-IntegerFunctions-ToInteger-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-lt" name="&lt;" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-lt-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-lt-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-lt-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-plus" name="+" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-plus-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-plus-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-plus-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-minus" name="-" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-minus-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-minus-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-minus-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-times" name="*" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-times-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-times-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-times-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-Div" name="Div" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Div-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Div-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Div-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-IntegerFunctions-Div-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-Neg" name="Neg" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Neg-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Neg-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-Mod" name="Mod" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Mod-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Mod-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Mod-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-Max" name="Max" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Max-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Max-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Max-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-Min" name="Min" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Min-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Min-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Min-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-Abs" name="Abs" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Abs-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-Abs-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-gt" name=">" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-gt-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-gt-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-gt-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-le" name="&lt;=" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-le-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-le-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-le-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-ge" name=">=" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ge-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ge-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ge-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-ToString" name="ToString" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ToString-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ToString-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-ToUnlimitedNatural" name="ToUnlimitedNatural" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ToUnlimitedNatural-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-IntegerFunctions-ToUnlimitedNatural-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-IntegerFunctions-ToUnlimitedNatural-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-IntegerFunctions-divide" name="/" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="rimitiveBehaviors-IntegerFunctions-divide-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="rimitiveBehaviors-IntegerFunctions-divide-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="rimitiveBehaviors-IntegerFunctions-divide-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-IntegerFunctions-divide-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="PrimitiveBehaviors-RealFunctions" name="RealFunctions">
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-ToInteger" name="ToInteger" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ToInteger-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ToInteger-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-lt" name="&lt;" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-lt-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-lt-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-lt-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-plus" name="+" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-plus-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-plus-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-plus-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-minus" name="-" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-minus-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-minus-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-minus-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-times" name="*" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-times-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-times-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-times-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-divide" name="/" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-divide-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-divide-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-divide-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-RealFunctions-divide-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-Neg" name="Neg" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Neg-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Neg-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-Max" name="Max" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Max-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Max-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Max-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-Min" name="Min" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Min-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Min-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Min-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-Abs" name="Abs" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Abs-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Abs-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-gt" name=">" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-gt-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-gt-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-gt-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-le" name="&lt;=" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-le-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-le-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-le-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-ge" name=">=" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ge-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ge-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ge-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-ToString" name="ToString" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ToString-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ToString-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-Floor" name="Floor" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Floor-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="_PrimitiveBehaviors-RealFunctions-Floor-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-Floor-Round" name="Round" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Round-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Round-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-Inv" name="Inv" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Inv-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-Inv-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-RealFunctions-ToReal" name="ToReal" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ToReal-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-RealFunctions-ToReal-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-RealFunctions-ToReal-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions" name="UnlimitedNaturalFunctions">
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToUnlimitedNatural" name="ToUnlimitedNatural" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToUnlimitedNatural-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToUnlimitedNatural-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToUnlimitedNatural-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-lt" name="&lt;" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-lt-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-lt-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-lt-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-Max" name="Max" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-Max-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-Max-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-Max-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-Min" name="Min" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-Min-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-Min-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-Min-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-gt" name=">" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-gt-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-gt-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-gt-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-le" name="&lt;=" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-le-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-le-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-le-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ge" name=">=" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ge-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ge-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ge-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToString" name="ToString" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToString-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToString-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToInteger" name="ToInteger" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToInteger-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToInteger-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-UnlimitedNaturalFunctions-ToInteger-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="PrimitiveBehaviors-BooleanFunctions" name="BooleanFunctions">
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-BooleanFunctions-ToBoolean" name="ToBoolean" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-ToBoolean-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-ToBoolean-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-BooleanFunctions-ToBoolean-result-_lowerValue"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-BooleanFunctions-ToString" name="ToString" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-ToString-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-ToString-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-BooleanFunctions-Or" name="Or" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Or-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Or-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Or-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-BooleanFunctions-Xor" name="Xor" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Xor-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Xor-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Xor-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-BooleanFunctions-And" name="And" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-And-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-And-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-And-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-BooleanFunctions-Implies" name="Implies" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Implies-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Implies-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Implies-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-BooleanFunctions-Not" name="Not" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Not-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-BooleanFunctions-Not-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="PrimitiveBehaviors-StringFunctions" name="StringFunctions">
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-StringFunctions-Size" name="Size" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Size-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Size-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-StringFunctions-Concat" name="Concat" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Concat-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Concat-y" name="y">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Concat-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-StringFunctions-Substring" name="Substring" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Substring-x" name="x">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Substring-lower" name="lower">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Substring-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-StringFunctions-Substring-result-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-StringFunctions-Substring-upper" name="upper">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="PrimitiveBehaviors-ListFunctions" name="ListFunctions">
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-ListFunctions-ListSize" name="ListSize" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-ListFunctions-ListSize-list" name="list">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-ListFunctions-ListSize-list-_lowerValue"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="PrimitiveBehaviors-ListFunctions-ListSize-list-_upperValue" value="*"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-ListFunctions-ListSize-result" name="result" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-ListFunctions-ListGet" name="ListGet" isAbstract="true" isReentrant="false">
+        <ownedParameter xmi:id="PrimitiveBehaviors-ListFunctions-ListGet-list" name="list">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-ListFunctions-ListGet-list-_lowerValue"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="PrimitiveBehaviors-ListFunctions-ListGet-list-_upperValue" value="*"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-ListFunctions-ListGet-result" name="result" direction="return">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-ListFunctions-ListGet-result-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-ListFunctions-ListGet-index" name="index">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+      </packagedElement>
+      <packagedElement xmi:type="uml:FunctionBehavior" xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat" name="ListConcat" isAbstract="true">
+        <ownedParameter xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-list1" name="list1">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-list1-_lowerValue"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-list1-_upperValue" value="*"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-list2" name="list2">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-list2-_lowerValue"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-list2-_upperValue" value="*"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-result" name="result" direction="return">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-result-_lowerValue"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="PrimitiveBehaviors-ListFunctions-ListConcat-result-_upperValue" value="*"/>
+        </ownedParameter>
+      </packagedElement>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="BasicInputOutput" name="BasicInputOutput">
+    <packageImport xmi:id="BasicInputOutput-_packageImport.0" importedPackage="Common"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="BasicInputOutput-Channel" name="Channel" isAbstract="true">
+      <ownedOperation xmi:id="BasicInputOutput-Channel-getName" name="getName" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-Channel-getName-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-Channel-open" name="open" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-Channel-open-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-Channel-open-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-Channel-close" name="close" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-Channel-close-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-Channel-close-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-Channel-isOpen" name="isOpen" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-Channel-isOpen-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-Channel-getStatus" name="getStatus" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-Channel-getStatus-ReturnResult" name="ReturnResult" type="Common-Status" direction="return"/>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="BasicInputOutput-InputChannel" name="InputChannel" isAbstract="true">
+      <generalization xmi:id="BasicInputOutput-InputChannel-_generalization.0" general="BasicInputOutput-Channel"/>
+      <ownedOperation xmi:id="BasicInputOutput-InputChannel-hasMore" name="hasMore" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-InputChannel-hasMore-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-InputChannel-read" name="read" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-InputChannel-read-value" name="value" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-InputChannel-read-value-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-InputChannel-read-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-InputChannel-read-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-InputChannel-peek" name="peek" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-InputChannel-peek-value" name="value" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-InputChannel-peek-value-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-InputChannel-peek-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-InputChannel-peek-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="BasicInputOutput-OutputChannel" name="OutputChannel" isAbstract="true">
+      <generalization xmi:id="BasicInputOutput-OutputChannel-_generalization.0" general="BasicInputOutput-Channel"/>
+      <ownedOperation xmi:id="BasicInputOutput-OutputChannel-write" name="write" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-OutputChannel-write-value" name="value"/>
+        <ownedParameter xmi:id="BasicInputOutput-OutputChannel-write-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-OutputChannel-write-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-OutputChannel-isFull" name="isFull" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-OutputChannel-isFull-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="BasicInputOutput-TextInputChannel" name="TextInputChannel" isAbstract="true">
+      <generalization xmi:id="BasicInputOutput-TextInputChannel-_generalization.0" general="BasicInputOutput-InputChannel"/>
+      <ownedOperation xmi:id="BasicInputOutput-TextInputChannel-readCharacter" name="readCharacter">
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readCharacter-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readCharacter-ReturnResult-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readCharacter-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readCharacter-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextInputChannel-peekCharacter" name="peekCharacter">
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-peekCharacter-OwnedParameter" name="OwnedParameter" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-peekCharacter-OwnedParameter-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-peekCharacter-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-peekCharacter-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextInputChannel-readLine" name="readLine">
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readLine-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readLine-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readLine-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextInputChannel-readInteger" name="readInteger">
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readInteger-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readInteger-ReturnResult-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readInteger-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readInteger-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextInputChannel-readBoolean" name="readBoolean">
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readBoolean-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readBoolean-ReturnResult-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readBoolean-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readBoolean-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextInputChannel-readUnlimitedNatural" name="readUnlimitedNatural">
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readUnlimitedNatural-ReturnResult" name="ReturnResult" direction="return">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readUnlimitedNatural-ReturnResult-_lowerValue"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextInputChannel-readUnlimitedNatural-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextInputChannel-readUnlimitedNatural-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="BasicInputOutput-TextOutputChannel" name="TextOutputChannel" isAbstract="true">
+      <generalization xmi:id="BasicInputOutput-TextOutputChannel-_generalization.0" general="BasicInputOutput-OutputChannel"/>
+      <ownedOperation xmi:id="BasicInputOutput-TextOutputChannel-writeString" name="writeString">
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeString-value" name="value">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeString-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextOutputChannel-writeString-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextOutputChannel-writeNewLine" name="writeNewLine" isAbstract="true">
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeNewLine-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextOutputChannel-writeNewLine-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextOutputChannel-writeLine" name="writeLine">
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeLine-value" name="value">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeLine-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextOutputChannel-writeLine-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextOutputChannel-writeInteger" name="writeInteger">
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeInteger-value" name="value">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeInteger-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextOutputChannel-writeInteger-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextOutputChannel-writeBoolean" name="writeBoolean">
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeBoolean-value" name="value">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeBoolean-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextOutputChannel-writeBoolean-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-TextOutputChannel-writeUnlimitedNatural" name="writeUnlimitedNatural">
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeUnlimitedNatural-value" name="value">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+        </ownedParameter>
+        <ownedParameter xmi:id="BasicInputOutput-TextOutputChannel-writeUnlimitedNatural-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-TextOutputChannel-writeUnlimitedNatural-errorStatus-_lowerValue"/>
+        </ownedParameter>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="BasicInputOutput-StandardInputChannel" name="StandardInputChannel" isAbstract="true">
+      <generalization xmi:id="BasicInputOutput-StandardInputChannel-_generalization.0" general="BasicInputOutput-TextInputChannel"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="BasicInputOutput-StandardOutputChannel" name="StandardOutputChannel" isAbstract="true">
+      <generalization xmi:id="BasicInputOutput-StandardOutputChannel-_generalization.0" general="BasicInputOutput-TextOutputChannel"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="BasicInputOutput-WriteLine" name="WriteLine" isReentrant="false" node="BasicInputOutput-WriteLine-StandardOutputChannel BasicInputOutput-WriteLine-writeLine BasicInputOutput-WriteLine-value.1 BasicInputOutput-WriteLine-errorStatus.1">
+      <ownedParameter xmi:id="BasicInputOutput-WriteLine-value" name="value">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="BasicInputOutput-WriteLine-errorStatus" name="errorStatus" direction="out">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-errorStatus-_lowerValue"/>
+      </ownedParameter>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.0" source="BasicInputOutput-WriteLine-StandardOutputChannel-_result" target="BasicInputOutput-WriteLine-writeLine-_target">
+        <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-WriteLine-_edge.0-_guard">
+          <body></body>
+        </guard>
+        <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-_edge.0-_weight" value="1"/>
+      </edge>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.1" source="BasicInputOutput-WriteLine-value.1" target="BasicInputOutput-WriteLine-writeLine-value">
+        <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-WriteLine-_edge.1-_guard">
+          <body></body>
+        </guard>
+        <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-_edge.1-_weight" value="1"/>
+      </edge>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.2" source="BasicInputOutput-WriteLine-writeLine-errorStatus" target="BasicInputOutput-WriteLine-errorStatus.1">
+        <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-WriteLine-_edge.2-_guard">
+          <body></body>
+        </guard>
+        <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-_edge.2-_weight" value="1"/>
+      </edge>
+      <node xmi:type="uml:ReadExtentAction" xmi:id="BasicInputOutput-WriteLine-StandardOutputChannel" name="StandardOutputChannel" classifier="BasicInputOutput-StandardOutputChannel">
+        <result xmi:id="BasicInputOutput-WriteLine-StandardOutputChannel-_result" outgoing="BasicInputOutput-WriteLine-_edge.0" type="BasicInputOutput-StandardOutputChannel">
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-StandardOutputChannel-_result-_upperBound" value="1"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-StandardOutputChannel-_result-_lowerValue"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="BasicInputOutput-WriteLine-StandardOutputChannel-_result-_upperValue" value="*"/>
+        </result>
+      </node>
+      <node xmi:type="uml:CallOperationAction" xmi:id="BasicInputOutput-WriteLine-writeLine" name="writeLine" operation="BasicInputOutput-TextOutputChannel-writeLine">
+        <argument xmi:id="BasicInputOutput-WriteLine-writeLine-value" name="value" incoming="BasicInputOutput-WriteLine-_edge.1">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-writeLine-value-_upperBound" value="1"/>
+        </argument>
+        <result xmi:id="BasicInputOutput-WriteLine-writeLine-errorStatus" name="errorStatus" outgoing="BasicInputOutput-WriteLine-_edge.2" type="Common-Status">
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-writeLine-errorStatus-_upperBound" value="1"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-writeLine-errorStatus-_lowerValue"/>
+        </result>
+        <target xmi:id="BasicInputOutput-WriteLine-writeLine-_target" incoming="BasicInputOutput-WriteLine-_edge.0" type="BasicInputOutput-TextOutputChannel">
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-writeLine-_target-_upperBound" value="1"/>
+        </target>
+      </node>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="BasicInputOutput-WriteLine-value.1" name="value" outgoing="BasicInputOutput-WriteLine-_edge.1" parameter="BasicInputOutput-WriteLine-value">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-value.1-_upperBound" value="1"/>
+      </node>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="BasicInputOutput-WriteLine-errorStatus.1" name="errorStatus" incoming="BasicInputOutput-WriteLine-_edge.2" type="Common-Status" parameter="BasicInputOutput-WriteLine-errorStatus">
+        <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-errorStatus.1-_upperBound" value="1"/>
+      </node>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="BasicInputOutput-ActiveChannel" name="ActiveChannel" isAbstract="true" isActive="true">
+      <generalization xmi:id="BasicInputOutput-ActiveChannel-_generalization.0" general="BasicInputOutput-Channel"/>
+      <ownedOperation xmi:id="BasicInputOutput-ActiveChannel-register" name="register">
+        <ownedParameter xmi:id="BasicInputOutput-ActiveChannel-register-listener" name="listener" type="Common-Listener"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="BasicInputOutput-ActiveChannel-unregister" name="unregister">
+        <ownedParameter xmi:id="BasicInputOutput-ActiveChannel-unregister-listener" name="listener" type="Common-Listener"/>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="BasicInputOutput-ReadLine" name="ReadLine" isReentrant="false" node="BasicInputOutput-ReadLine-StandardInputChannel BasicInputOutput-ReadLine-readLine BasicInputOutput-ReadLine-errorStatus.1 BasicInputOutput-ReadLine-result.1">
+      <ownedParameter xmi:id="BasicInputOutput-ReadLine-errorStatus" name="errorStatus" type="Common-Status" direction="out">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-errorStatus-_lowerValue"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="BasicInputOutput-ReadLine-result" name="result" direction="return">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedParameter>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.0" source="BasicInputOutput-ReadLine-StandardInputChannel-_result" target="BasicInputOutput-ReadLine-readLine-_target">
+        <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-ReadLine-_edge.0-_guard">
+          <body></body>
+        </guard>
+        <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-_edge.0-_weight" value="1"/>
+      </edge>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.1" source="BasicInputOutput-ReadLine-readLine-errorStatus" target="BasicInputOutput-ReadLine-errorStatus.1">
+        <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-ReadLine-_edge.1-_guard">
+          <body></body>
+        </guard>
+        <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-_edge.1-_weight" value="1"/>
+      </edge>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.2" source="BasicInputOutput-ReadLine-readLine-_result.0" target="BasicInputOutput-ReadLine-result.1">
+        <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-ReadLine-_edge.2-_guard">
+          <body></body>
+        </guard>
+        <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-_edge.2-_weight" value="1"/>
+      </edge>
+      <node xmi:type="uml:ReadExtentAction" xmi:id="BasicInputOutput-ReadLine-StandardInputChannel" name="StandardInputChannel" classifier="BasicInputOutput-StandardInputChannel">
+        <result xmi:id="BasicInputOutput-ReadLine-StandardInputChannel-_result" outgoing="BasicInputOutput-ReadLine-_edge.0" type="BasicInputOutput-StandardInputChannel">
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-StandardInputChannel-_result-_upperBound" value="1"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-StandardInputChannel-_result-_lowerValue"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="BasicInputOutput-ReadLine-StandardInputChannel-_result-_upperValue" value="*"/>
+        </result>
+      </node>
+      <node xmi:type="uml:CallOperationAction" xmi:id="BasicInputOutput-ReadLine-readLine" name="readLine" operation="BasicInputOutput-TextInputChannel-readLine">
+        <result xmi:id="BasicInputOutput-ReadLine-readLine-_result.0" outgoing="BasicInputOutput-ReadLine-_edge.2">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-readLine-_result.0-_upperBound" value="1"/>
+        </result>
+        <result xmi:id="BasicInputOutput-ReadLine-readLine-errorStatus" name="errorStatus" outgoing="BasicInputOutput-ReadLine-_edge.1" type="Common-Status">
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-readLine-errorStatus-_upperBound" value="1"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-readLine-errorStatus-_lowerValue"/>
+        </result>
+        <target xmi:id="BasicInputOutput-ReadLine-readLine-_target" incoming="BasicInputOutput-ReadLine-_edge.0" type="BasicInputOutput-TextInputChannel">
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-readLine-_target-_upperBound" value="1"/>
+        </target>
+      </node>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="BasicInputOutput-ReadLine-errorStatus.1" name="errorStatus" incoming="BasicInputOutput-ReadLine-_edge.1" type="Common-Status" parameter="BasicInputOutput-ReadLine-errorStatus">
+        <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-errorStatus.1-_upperBound" value="1"/>
+      </node>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="BasicInputOutput-ReadLine-result.1" name="result" incoming="BasicInputOutput-ReadLine-_edge.2" parameter="BasicInputOutput-ReadLine-result">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <upperBound xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-result.1-_upperBound" value="1"/>
+      </node>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="Common" name="Common">
+    <packagedElement xmi:type="uml:Signal" xmi:id="Common-Notification" name="Notification">
+      <ownedAttribute xmi:id="Common-Notification-content" name="content" visibility="public">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="Common-Notification-content-_lowerValue"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="Common-Listener" name="Listener" isAbstract="true" isActive="true">
+      <ownedReception xmi:id="Common-Listener-_ownedReception.0" name="Notification" signal="Common-Notification"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:DataType" xmi:id="Common-Status" name="Status">
+      <ownedAttribute xmi:id="Common-Status-context" name="context" visibility="public">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="Common-Status-code" name="code">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="Common-Status-description" name="description">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

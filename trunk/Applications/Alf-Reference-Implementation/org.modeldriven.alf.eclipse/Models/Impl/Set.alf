@@ -1,0 +1,91 @@
+namespace Impl;
+
+/**
+The concrete implementation of the standard library template Set class.
+*/
+class Set<T> specializes SetImpl, CollectionClasses::Set<T> {
+
+  @Create public Set (in seq: T[0..*] sequence) { 
+    super.SetImpl(seq);
+  }
+
+  @Destroy public destroy () { 
+  }
+
+  public add (in element: T): Boolean {
+    return super.addImpl(element);
+  }
+  
+  public addAll (in seq: T[0..*] sequence): Boolean {
+    return super.addAllImpl(seq);
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public clear () {
+    super.clearImpl();
+  }
+  
+  public count (in element: T): Integer  {
+    return super.countImpl(element);
+  }
+
+  public equals (in seq: T[0..*] sequence): Boolean { 
+    return super.equalsImpl(seq);
+  }
+  
+  public excludes (in element: T): Boolean {
+    return super.excludesImpl(element);
+  }
+  
+  public excludesAll (in seq: T[0..*] sequence): Boolean {
+    return super.excludesAllImpl(seq);
+  }
+  
+  public includes (in element: T): Boolean {
+    return super.includesImpl(element);
+  }
+  
+  public includesAll (in seq: T[0..*] sequence): Boolean {
+    return super.includesAllImpl(seq);
+  }
+  
+  public isEmpty (): Boolean {
+    return super.isEmptyImpl();
+  }
+  
+  public notEmpty (): Boolean {
+    return super.notEmptyImpl();
+  }
+  
+  public remove (in element: T): Integer {
+    return super.removeImpl(element);
+  }
+  
+  public removeAll (in seq: T[0..*] sequence): Boolean {
+    return super.removeAllImpl(seq);
+  }
+  
+  public removeOne (in element: T): Boolean {
+    return super.removeOneImpl(element);
+  }
+  
+  public replace (in element: T, in newElement: T): Integer  {
+    return super.replaceImpl(element, newElement);
+  }
+  
+  public replaceOne (in element: T, in newElement: T): Boolean {
+    return super.replaceOneImpl(element, newElement);
+  }
+  
+  public retainAll (in seq: T[0..*] sequence): Boolean {
+    return super.retainAllImpl(seq);
+  }
+
+  public size (): Integer {
+    return super.sizeImpl();
+  }
+  
+  public toSequence (): T[0..*] sequence {
+    return (T)this.getContent();
+  }
+
+}
