@@ -24,6 +24,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.PositionalTemplateBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
@@ -33,6 +34,7 @@ import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.ParameterableElement;
 import org.modeldriven.alf.uml.TemplateParameter;
 import org.modeldriven.alf.uml.TemplateSignature;
+import org.modeldriven.alf.uml.TemplateableElement;
 
 /**
  * A reference to a model element, either directly or via its Alf abstract
@@ -349,6 +351,29 @@ public abstract class ElementReferenceImpl {
             }
         }
         
+        return reference;
+    }
+    
+    public static ElementReference makeBoundReference(Element element) {
+        return makeBoundReference(element, null);
+    }
+
+    /**
+     * For an element with template bindings, return a reference to the 
+     * expanded effective bound element.
+     */
+    public static ElementReference makeBoundReference(
+            Element element, NamespaceDefinition namespace) {
+        ElementReference reference = makeElementReference(element, namespace);
+        if (element instanceof TemplateableElement && 
+                !((TemplateableElement)element).getTemplateBinding().isEmpty()) {
+            ElementReference templateReferent = 
+                    reference.getImpl().getTemplate();
+            reference = QualifiedNameImpl.getBoundElement(
+                    templateReferent, 
+                    templateReferent.getImpl().getTemplateParameters(), 
+                    reference.getImpl().getTemplateActuals());
+        }
         return reference;
     }
 

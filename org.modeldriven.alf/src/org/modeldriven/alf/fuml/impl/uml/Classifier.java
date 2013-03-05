@@ -212,6 +212,11 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
     }
 
     @Override
+    public org.modeldriven.alf.uml.TemplateParameter getOwningTemplateParameter() {
+        return null;
+    }
+    
+    @Override
     public org.modeldriven.alf.uml.TemplateParameter getTemplateParameter() {
         return null;
     }

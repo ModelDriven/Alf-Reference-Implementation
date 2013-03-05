@@ -744,7 +744,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             Collection<Member> members) {
         for (Member member: members) {
             if (!(member instanceof MissingMember)) {
-                referents.add(member.getImpl().getReferent());
+                referents.add(member.getImpl().getBoundReferent());
             }
         }
     }
@@ -833,17 +833,6 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             NamespaceDefinition templateNamespace = 
                     namespaceReference.getImpl().asNamespace();
             
-            /*
-            System.out.println("[getBoundElement] name=" + name + 
-                    " modelScope=" + templateNamespace.getImpl().getModelScope());
-            if (templateNamespace.getImpl().getModelScope() == 
-                    RootNamespace.getRootScope()) {
-                templateNamespace = this.getCurrentScope().getImpl().
-                        getModelScope();
-                System.out.println("[getBoundElement] templateNamespace=" + templateNamespace);
-            }
-            */
-
             Collection<Member> members = 
                 templateNamespace.getImpl().resolve(name);
             for (Member member: members) {
@@ -859,7 +848,6 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             if (boundElement == null) {
                 return null;
             } else {
-                // System.out.println("[getBoundElement] boundElement=" + boundElement);
                 boundElement.deriveAll();
                 return boundElement.getImpl().getReferent();
             }

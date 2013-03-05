@@ -8,6 +8,9 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.units;
 
+import java.util.Collection;
+
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.units.impl.ExternalNamespaceImpl;
 import org.modeldriven.alf.uml.Namespace;
 
@@ -32,26 +35,18 @@ public class ExternalNamespace extends NamespaceDefinition {
         return this.umlNamespace;
     }
     
+    @Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
+        
+    }
+    
     public static NamespaceDefinition makeExternalNamespace(
             Namespace namespace,
             NamespaceDefinition parent) {
         NamespaceDefinition externalNamespace = null;
         if (namespace != null) {
             externalNamespace = new ExternalNamespace(namespace, parent);
-            /*
-            if (namespace.getNamespace() == null) {
-                UnitDefinition unit = new UnitDefinition();
-                unit.setIsModelLibrary(true);
-                unit.setDefinition(externalNamespace);
-                externalNamespace.setUnit(unit);
-                
-                NamespaceDefinition rootScope = RootNamespace.getRootScope();
-                rootScope.addOwnedMember(externalNamespace);
-                rootScope.addMember(externalNamespace);
-                externalNamespace.setNamespace(rootScope);
-            }
-            */
-         }
+        }
         return externalNamespace;
     }
     

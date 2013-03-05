@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.common.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -458,7 +459,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (this.isClassifier()) {
             Classifier classifier = (Classifier)this.getSelf().getElement();
             for (NamedElement element: classifier.inheritableMembers()) {
-                for (String name: classifier.getNamesOfMember(element)) {
+                List<String> names = classifier.getNamesOfMember(element);
+                if (names.isEmpty()) {
+                    names = Collections.singletonList(element.getName());
+                }
+                for (String name: names) {
                     ImportedMember member = 
                         ImportedMemberImpl.makeImportedMember(
                                 name, element, this.asNamespace());
@@ -474,9 +479,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public List<FormalParameter> getParameters() {
         List<Parameter> ownedParameters = null;
         if (this.isBehavior()) {
-            ownedParameters = ((Behavior)this.getSelf().getElement()).getOwnedParameter();
+            ownedParameters = ((Behavior)this.getSelf().getElement()).
+                    getOwnedParameter();
         } else if (this.isOperation()) {
-            ownedParameters = ((Operation)this.getSelf().getElement()).getOwnedParameter();
+            ownedParameters = ((Operation)this.getSelf().getElement()).
+                    getOwnedParameter();
         } else {
             ownedParameters = new ArrayList<Parameter>();
         }
@@ -499,15 +506,18 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public List<ElementReference> getTemplateParameters() {
-        List<ElementReference> templateParameters = new ArrayList<ElementReference>();
+        List<ElementReference> templateParameters = 
+                new ArrayList<ElementReference>();
         Element element = this.getSelf().getElement();
         if (element instanceof TemplateableElement) {
-            TemplateSignature signature = ((TemplateableElement)element).getOwnedTemplateSignature();
+            TemplateSignature signature = ((TemplateableElement)element).
+                    getOwnedTemplateSignature();
             if (signature != null) {
                 for (TemplateParameter parameter: signature.getParameter()) {
                     if (!isBound(parameter)) {
-                        templateParameters.add(ElementReferenceImpl.makeElementReference(
-                                parameter, this.asNamespace()));
+                        templateParameters.add(
+                                ElementReferenceImpl.makeElementReference(
+                                        parameter, this.asNamespace()));
                     }
                 }
             }
@@ -529,7 +539,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                 for (TemplateParameterSubstitution parameterSubstitution: 
                     parameterSubstitutions) {
                     if (parameterSubstitution.getFormal().equals(formal)) {
-                        templateActual = ElementReferenceImpl.makeElementReference(
+                        templateActual = ElementReferenceImpl.makeBoundReference(
                                 parameterSubstitution.getActual());
                         break;
                     }
@@ -601,7 +611,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                 ((ClassifierTemplateParameter)this.getSelf().getElement()).
                     getConstrainingClassifier()) {
                 constrainingClassifiers.add(
-                        ElementReferenceImpl.makeElementReference(classifier));
+                        ElementReferenceImpl.makeBoundReference(classifier));
             }
         }
         return constrainingClassifiers;
@@ -610,22 +620,23 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public ElementReference getType() {
         if (this.isProperty() || this.isParameter()) {
-            return ElementReferenceImpl.makeElementReference(
+            return ElementReferenceImpl.makeBoundReference(
                     ((TypedElement)this.getSelf().getElement()).getType());
         } else if (this.isOperation()) {
-            return ElementReferenceImpl.makeElementReference(
+            return ElementReferenceImpl.makeBoundReference(
                     ((Operation)this.getSelf().getElement()).getType());
         } else if (this.isBehavior()) {
             FormalParameter parameter = this.getReturnParameter();
             return parameter == null? null: parameter.getType();
         } else if (this.isEnumerationLiteral()) {
-            return ElementReferenceImpl.makeElementReference(
-                    ((EnumerationLiteral)this.getSelf().getElement()).getEnumeration());
-       } else {
+            return ElementReferenceImpl.makeBoundReference(
+                    ((EnumerationLiteral)this.getSelf().getElement()).
+                        getEnumeration());
+        } else {
             return null;
         }
     }
-
+    
     @Override
     public ElementReference getAssociation() {
         if (!this.isAssociationEnd()) {
@@ -679,7 +690,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (!(element instanceof BehavioredClassifier)) {
             return null;
         } else {
-             Behavior behavior =((BehavioredClassifier)element).getClassifierBehavior();
+             Behavior behavior =((BehavioredClassifier)element).
+                     getClassifierBehavior();
              if (behavior == null) {
                  return null;
              } else {
@@ -696,7 +708,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         } else if (this.namespace != null) {
             return this.namespace.getImpl().getReferent();            
         } else {
-            return ElementReferenceImpl.makeElementReference(((NamedElement)element).getNamespace());
+            return ElementReferenceImpl.makeElementReference(
+                    ((NamedElement)element).getNamespace());
         }
     }
     
@@ -722,7 +735,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (!this.isReception()) {
             return null;
         } else {
-            return ElementReferenceImpl.makeElementReference(
+            return ElementReferenceImpl.makeBoundReference(
                     ((Reception)this.getElement()).getSignal());
         }
     }
@@ -771,11 +784,13 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             return false;
         } else if (type == null) {
             return true;
-        } else if (!type.getImpl().isClassifier() || !(type instanceof ExternalElementReference)) {
+        } else if (!type.getImpl().isClassifier() || 
+                !(type instanceof ExternalElementReference)) {
             return false;
         } else {
             return ((Classifier)this.getSelf().getElement()).
-                conformsTo((Classifier)((ExternalElementReference)type).getElement());
+                conformsTo((Classifier)((ExternalElementReference)type).
+                        getElement());
         }
     }
 
