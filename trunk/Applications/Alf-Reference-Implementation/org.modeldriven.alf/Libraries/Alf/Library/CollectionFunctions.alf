@@ -123,16 +123,48 @@ package CollectionFunctions {
     return seq = including(seq, element);
   }
   
+  public activity addAll<T>(inout seq1: T[*] sequence, in seq2: T[*] sequence): T[*] sequence { 
+    return seq1 = union(seq1, seq2);
+  }
+  
+  public activity addAt<T>(inout seq: T[*] sequence, in index: Integer, in element: T): T[*] sequence { 
+    return seq = includeAt(seq, index, element);
+  }
+  
+  public activity addAllAt<T>(inout seq1: T[*] sequence, in index: Integer, in seq2: T[*] sequence): T[*] sequence { 
+    return seq1 = includeAllAt(seq1, index, seq2);
+  }
+  
   public activity remove<T>(inout seq: T[*] sequence, in element: T): T[*] sequence { 
     return seq = excluding(seq, element);
+  }
+  
+  public activity removeAll<T>(inout seq1: T[*] sequence, in seq2: T[*] sequence): T[*] sequence { 
+    return seq = difference(seq1, seq2);
+  }
+  
+  public activity removeOne<T>(inout seq: T[*] sequence, in element: T): T[*] sequence { 
+    return seq = excludingOne(seq, element);
   }
   
   public activity removeAt<T>(inout seq: T[*] sequence, in index: Integer): T[*] sequence { 
     return seq = excludeAt(seq, index);
   }
   
-  public activity removeAll<T>(inout seq: T[*] sequence, in element: T): T[*] sequence { 
-    return seq = excluding(seq, element);
+  public activity replace<T>(inout seq: T[*] sequence, in element: T, in newElement: T): T[*] sequence { 
+    return seq = replacing(seq, element, newElement);
+  }
+  
+  public activity replaceOne<T>(inout seq: T[*] sequence, in element: T, in newElement: T): T[*] sequence { 
+    return seq = replacingOne(seq, element, newElement);
+  }
+  
+  public activity replaceAt<T>(inout seq: T[*] sequence, in index: Integer, in newElement: T): T[*] sequence { 
+    return seq = replacingAt(seq, index, newElement);
+  }
+  
+  public activity clear<T>(inout seq: T[*]) {
+    seq = null;
   }
   
 }
