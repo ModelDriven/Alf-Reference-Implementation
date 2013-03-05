@@ -38,6 +38,13 @@ public class ImportedMemberImpl extends MemberImpl {
     public ElementReference getReferent() {
         return this.referent;
     }
+	
+	@Override
+	public ElementReference getBoundReferent() {
+	    Element element = this.referent.getImpl().getUml();
+	    return element == null? this.referent: 
+	        ElementReferenceImpl.makeBoundReference(element, this.getNamespace());
+	}
 
     public void setReferent(ElementReference referent) {
         this.referent = referent;
@@ -160,7 +167,7 @@ public class ImportedMemberImpl extends MemberImpl {
             String name, Element element, NamespaceDefinition namespace) {
         ImportedMember importedMember = makeImportedMember(
                 ElementReferenceImpl.makeElementReference(element, namespace));
-        importedMember.getImpl().setExactName(name);
+        importedMember.getImpl().setExactName(name == null? "": name);
         importedMember.getImpl().setIsImported(false);
         importedMember.setNamespace(namespace);
         return importedMember;

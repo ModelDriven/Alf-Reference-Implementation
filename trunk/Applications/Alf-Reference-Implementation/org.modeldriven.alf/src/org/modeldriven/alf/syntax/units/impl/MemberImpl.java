@@ -396,6 +396,10 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         referent.setElement(definition == null? self: definition);
         return referent;
     }
+    
+    public ElementReference getBoundReferent() {
+        return this.getReferent();
+    }
 
     public boolean isDistinguishableFromAll(Collection<Member> ownedMembers) {
         Member self = this.getSelf();
