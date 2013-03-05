@@ -1,0 +1,65 @@
+namespace CollectionClassesImpl;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+The implementation of deques.
+*/
+abstract class DequeImpl specializes QueueImpl {
+
+  @Create protected DequeImpl (in seq: any[0..*] sequence) { 
+    super.QueueImpl(seq);
+  }
+
+  @Create private QueueImpl (in seq: any[0..*] sequence) {
+    this.DequeImpl(seq);
+  }
+
+  protected addFirstImpl (in element: any): Boolean {
+    this.setContent(this.getContent()->IncludeAt(1, element));
+    return true;
+  }
+  
+  protected addLastImpl (in element : any): Boolean {
+    return this.addImpl(element);
+  }
+  
+  protected equalsImpl (in seq: any[0..*] sequence): Boolean { 
+    return this.sizeImpl() == seq->Size() && this.includesAllImpl(seq);
+  }
+ 
+  protected firstImpl (): any[0..1] {
+    return this.getContent()->First();
+  }
+  
+  protected lastImpl (): any[0..1] {
+    return this.getContent()->Last();
+  }
+  
+  protected removeFirstImpl (): any[0..1] {
+    result = this.getContent()->First();
+    this.setContent(this.getContent()->Subsequence(2,this.sizeImpl()));
+    return result;
+  }
+  
+  protected removeFirstOneImpl (in element: any): any[0..1] {
+    return this.removeOneImpl(element)? element: null;
+  }                      
+
+  protected removeLastImpl (): any[0..1] {
+    result = this.lastImpl();
+    this.setContent(this.getContent()->Subsequence(1,this.sizeImpl()-1));
+    return result;
+  }
+  
+  protected removeLastOneImpl (in element: any): any[0..1] {
+    n = this.sizeImpl();
+    for (i in 1..n) {
+      e = this.getContent()->At(n - i + 1);
+      if (e == element) {
+        this.setContent(this.getContent()->ExcludeAt(i));
+        return e;
+      }
+    }
+    return null;
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+}

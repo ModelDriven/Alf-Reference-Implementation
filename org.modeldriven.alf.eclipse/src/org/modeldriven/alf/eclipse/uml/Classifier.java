@@ -234,6 +234,12 @@ public class Classifier extends Type implements
 	}
 
 	@Override
+	public org.modeldriven.alf.uml.TemplateParameter getOwningTemplateParameter() {
+		return (org.modeldriven.alf.uml.TemplateParameter)wrap(
+				this.getBase().getOwningTemplateParameter());
+	}
+
+	@Override
 	public org.modeldriven.alf.uml.TemplateParameter getTemplateParameter() {
 		return (org.modeldriven.alf.uml.TemplateParameter)wrap(
 				this.getBase().getTemplateParameter());
@@ -251,22 +257,20 @@ public class Classifier extends Type implements
 			@Override
 			protected EObject createCopy(EObject eObject) {
 				EObject result = super.createCopy(eObject);
-				if (eObject instanceof org.eclipse.uml2.uml.Element) {
-					org.modeldriven.alf.uml.Element copy = 
-							wrap((org.eclipse.uml2.uml.Element)result);
-					// TODO: Handle copying of tagged values.
-					for (org.eclipse.uml2.uml.Stereotype stereotype: 
-						((org.eclipse.uml2.uml.Element)eObject).getAppliedStereotypes()) {
-						org.modeldriven.alf.uml.StereotypeApplication.
-							addStereotypeApplication(
+				org.modeldriven.alf.uml.Element copy = 
+						wrap((org.eclipse.uml2.uml.Element)result);
+				// TODO: Handle copying of tagged values.
+				for (org.eclipse.uml2.uml.Stereotype stereotype: 
+					((org.eclipse.uml2.uml.Element)eObject).getAppliedStereotypes()) {
+					org.modeldriven.alf.uml.StereotypeApplication.
+					addStereotypeApplication(
 									copy, (Stereotype)wrap(stereotype));
-					}
 				}
 				return result;
 			}
 			
 			// Add to the set of external references any reference that is not
-			// to a copied object.
+			// to a copied object, or any object that has a template binding.
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void copyReference(
@@ -274,23 +278,44 @@ public class Classifier extends Type implements
 				super.copyReference(eReference, eObject, copyEObject);
 				if (eReference.isMany()) {
 					for (EObject referencedEObject: (List<EObject>)eObject.eGet(eReference)) {
-						if (!this.containsKey(referencedEObject)) {
-							externalReferences.add(
-									wrap((org.eclipse.uml2.uml.Element)referencedEObject));
-						}
+						this.addExternalReference(referencedEObject);
 					}
 				} else {
 					EObject referencedEObject = (EObject)eObject.eGet(eReference);
-					if (!this.containsKey(referencedEObject)) {
-						externalReferences.add(
-								wrap((org.eclipse.uml2.uml.Element)referencedEObject));
-					}
+					this.addExternalReference(referencedEObject);
 				}
+			}
+			
+			private void addExternalReference(EObject object) {
+				EObject containedObject = this.get(object);
+				if (containedObject == null) {
+					externalReferences.add(
+							wrap((org.eclipse.uml2.uml.Element)object));
+				} /*else if (object instanceof org.eclipse.uml2.uml.TemplateableElement && 
+						!((org.eclipse.uml2.uml.TemplateableElement)object).
+							getTemplateBindings().isEmpty()) {
+					externalReferences.add(
+							wrap((org.eclipse.uml2.uml.Element)containedObject));
+				}*/
 			}
 		    
 		};
 		
 		EObject copy = copier.copy(this.getBase());
+		
+		// Remove the copied template signature and template parameters for
+		// the instantiation from the copy map, so that any nested bindings
+		// will remain to the original template.
+		org.eclipse.uml2.uml.TemplateSignature signature = 
+				this.getBase().getOwnedTemplateSignature();
+		if (signature != null) {
+			copier.remove(signature);
+			for (org.eclipse.uml2.uml.TemplateParameter templateParameter: 
+				signature.getOwnedParameters()) {
+				copier.remove(templateParameter);
+			}
+		}
+		
 		copier.copyReferences();
 		
 		return (org.modeldriven.alf.uml.TemplateableElement)wrap(

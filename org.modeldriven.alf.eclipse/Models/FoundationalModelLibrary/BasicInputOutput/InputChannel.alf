@@ -1,9 +1,0 @@
-namespace FoundationalModelLibrary::BasicInputOutput;
-
-abstract class InputChannel specializes Channel {
-
-  public abstract hasMore(): Boolean { }
-  public abstract read(out value: any, out errorStatus: Status[0..1]) { }
-  public abstract peek(out value: any, out errorStatus: Status[0..1]) { }
-  
-}

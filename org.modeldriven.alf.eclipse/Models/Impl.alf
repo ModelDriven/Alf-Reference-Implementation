@@ -1,0 +1,19 @@
+private import CollectionClassesImpl::*;
+private import Alf::Library::PrimitiveTypes::*;
+
+@ModelLibrary
+package Impl {
+
+  public class Set<T> specializes SetImpl, CollectionClasses::Set<T>;
+  public class Bag<T> specializes BagImpl, CollectionClasses::Bag<T>;
+
+  public class OrderedSet<T> specializes OrderedSetImpl, CollectionClasses::OrderedSet<T>;
+  public class List<T> specializes ListImpl, CollectionClasses::List<T>;
+  
+  public class Queue<T> specializes QueueImpl, CollectionClasses::Queue<T>;
+  public class Deque<T> specializes DequeImpl, CollectionClasses::Deque<T>;
+  
+  public class Map<Key,Value> specializes MapImpl, CollectionClasses::Map<Key,Value>;
+  
+}
+  

@@ -42,29 +42,44 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     		this.setLibraryDirectory("UML");
     	}
         this.getProfileResource("StandardL2.profile");
-        this.getLibraryResource("UMLPrimitiveTypes.library");
+        // this.getLibraryResource("UMLPrimitiveTypes.library");
+        this.getLibraryResource("fUML.library");
+        this.getLibraryResource("Alf.library");
     }
     
-    public URI createURI(String directory, String name) {
+    public URI createNormalizedURI(String directory, String name) {
         return this.resourceSet.getURIConverter().normalize(
         		URI.createURI(directory).
                 appendSegment(name).
                 appendFileExtension(UMLResource.FILE_EXTENSION));
     }
     
+    public URI createURI(String directory, String name) {
+        return URI.createURI(directory).
+                appendSegment(name).
+                appendFileExtension(UMLResource.FILE_EXTENSION);
+    }
+    
     public Resource createResource(String directory, String name) {
         return this.resourceSet.createResource(
-                this.createURI(directory, name), 
+                this.createNormalizedURI(directory, name), 
                 UMLResource.UML_CONTENT_TYPE_IDENTIFIER);
     }
     
-    public Resource getResource(String directory, String name) {
-        Resource resource = this.resourceSet.getResource(
-                this.createURI(directory, name), true);
+    public Resource getNormalizedResource(String directory, String name) {
+    	URI uri = this.createNormalizedURI(directory, name);
+        Resource resource = this.resourceSet.getResource(uri, true);
     	if (this.isVerbose) {
-    		System.out.println("Loaded " + 
-    				this.resourceSet.getURIConverter().normalize(
-    						resource.getURI()));
+    		System.out.println("Loaded " + uri);
+    	}
+    	return resource;
+    }
+    
+    public Resource getResource(String directory, String name) {
+    	URI uri = this.createURI(directory, name);
+        Resource resource = this.resourceSet.getResource(uri, true);
+    	if (this.isVerbose) {
+    		System.out.println("Loaded " + uri);
     	}
     	return resource;
     }
@@ -78,7 +93,7 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     }
     
     public Resource getLibraryResource(String name) {
-    	return this.getResource(UMLResource.LIBRARIES_PATHMAP, name);
+    	return this.getNormalizedResource(UMLResource.LIBRARIES_PATHMAP, name);
     }
     
     @Override

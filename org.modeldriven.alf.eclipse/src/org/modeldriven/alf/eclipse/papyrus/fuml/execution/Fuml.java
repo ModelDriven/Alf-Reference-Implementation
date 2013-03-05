@@ -290,7 +290,7 @@ public class Fuml {
     	this.rootScopeImpl.setModelDirectory(this.libraryDirectory);
     	this.rootScopeImpl.setLibraryDirectory(this.umlDirectory);
         this.rootScopeImpl.setIsVerbose(this.isVerbose);
-        this.rootScopeImpl.initialize();	
+        // this.rootScopeImpl.initialize();	
 
     	Resource resource = 
     			this.rootScopeImpl.getResource(this.umlDirectory, name);
