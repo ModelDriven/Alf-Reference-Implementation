@@ -139,7 +139,7 @@ package CollectionFunctions {
   }
   
   public activity removeAll<T>(inout seq1: T[*] sequence, in seq2: T[*] sequence): T[*] sequence { 
-    return seq = difference(seq1, seq2);
+    return seq1 = difference(seq1, seq2);
   }
   
   public activity removeOne<T>(inout seq: T[*] sequence, in element: T): T[*] sequence { 

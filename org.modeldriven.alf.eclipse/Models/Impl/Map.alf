@@ -5,7 +5,7 @@ The concrete implementation of the standard library template Map class.
 */
 class Map<Key, Value> specializes MapImpl, CollectionClasses::Map<Key,Value> {
 
-  @Create public Map (in entries: Entry[0..*]) { 
+  @Create public Map (in entries: Entry[0..*]) redefines CollectionClasses::Map<Key,Value>::Map { 
     super.MapImpl(ToEntryImpls(entries));
   }
 

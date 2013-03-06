@@ -5,7 +5,7 @@ The concrete implementation of the standard library template Queue class.
 */
 class Queue<T> specializes QueueImpl, CollectionClasses::Queue<T> {
 
-  @Create public Queue (in seq: T[0..*] sequence) { 
+  @Create public Queue (in seq: T[0..*] sequence) redefines CollectionClasses::Queue<T>::Queue { 
     super.QueueImpl(seq);
   }
 

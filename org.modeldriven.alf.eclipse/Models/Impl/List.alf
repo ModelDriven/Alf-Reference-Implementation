@@ -5,7 +5,7 @@ The concrete implementation of the standard library template List class.
 */
 class List<T> specializes ListImpl, CollectionClasses::List<T> {
   
-  @Create public List (in seq: T[0..*] sequence) { 
+  @Create public List (in seq: T[0..*] sequence) redefines CollectionClasses::List<T>::List { 
     super.ListImpl(seq);
   }
 

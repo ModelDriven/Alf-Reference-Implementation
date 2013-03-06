@@ -5,7 +5,7 @@ The concrete implementation of the standard library template Deque class.
 */
 class Deque<T> specializes DequeImpl, CollectionClasses::Deque<T> {
 
-  @Create public Deque (in seq: T[0..*] sequence) { 
+  @Create public Deque (in seq: T[0..*] sequence) redefines CollectionClasses::Deque<T>::Deque { 
     super.DequeImpl(seq);
   }
 
