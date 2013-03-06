@@ -199,7 +199,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-addImplmethod1-BodyaddImplmethod1-ExpressionStatement73f18153-Tuple5d363c50-CallIncluding-CallIncluding.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-addImplmethod1-BodyaddImplmethod1-ExpressionStatement73f18153-Tuple5d363c50-CallIncluding-CallIncluding.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Including"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Including"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-addImplmethod1-BodyaddImplmethod1-ExpressionStatement73f18153-Tuple5d363c50-Tuple7276d4af" name="Tuple@7276d4af" outgoing="CollectionImpl-addImplmethod1-BodyaddImplmethod1-ExpressionStatement73f18153-Tuple5d363c50-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-addImplmethod1-BodyaddImplmethod1-ExpressionStatement73f18153-Tuple5d363c50-Tuple7276d4af-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -327,7 +327,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-addAllImplmethod1-BodyaddAllImplmethod1-ExpressionStatement101b6d56-Tuple2dd5b144-CallUnion-CallUnion.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-addAllImplmethod1-BodyaddAllImplmethod1-ExpressionStatement101b6d56-Tuple2dd5b144-CallUnion-CallUnion.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Union"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Union"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-addAllImplmethod1-BodyaddAllImplmethod1-ExpressionStatement101b6d56-Tuple2dd5b144-Tupleb426780" name="Tuple@b426780" outgoing="CollectionImpl-addAllImplmethod1-BodyaddAllImplmethod1-ExpressionStatement101b6d56-Tuple2dd5b144-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-addAllImplmethod1-BodyaddAllImplmethod1-ExpressionStatement101b6d56-Tuple2dd5b144-Tupleb426780-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -479,7 +479,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-countImplmethod1-BodycountImplmethod1-ReturnStatement17894800-CallCount-CallCount.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-countImplmethod1-BodycountImplmethod1-ReturnStatement17894800-CallCount-CallCount.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Count"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Count"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-countImplmethod1-BodycountImplmethod1-ReturnStatement17894800-Tuple55ac8c3d" name="Tuple@55ac8c3d" outgoing="CollectionImpl-countImplmethod1-BodycountImplmethod1-ReturnStatement17894800-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-countImplmethod1-BodycountImplmethod1-ReturnStatement17894800-Tuple55ac8c3d-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -545,7 +545,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement2f823290-CallEquals-CallEquals.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement2f823290-CallEquals-CallEquals.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Equals"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Equals"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement2f823290-Tuple694435e5" name="Tuple@694435e5" outgoing="CollectionImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement2f823290-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement2f823290-Tuple694435e5-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -611,7 +611,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-excludesImplmethod1-BodyexcludesImplmethod1-ReturnStatement4c4f1af2-CallExcludes-CallExcludes.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-excludesImplmethod1-BodyexcludesImplmethod1-ReturnStatement4c4f1af2-CallExcludes-CallExcludes.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Excludes"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Excludes"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-excludesImplmethod1-BodyexcludesImplmethod1-ReturnStatement4c4f1af2-Tuple387f9d70" name="Tuple@387f9d70" outgoing="CollectionImpl-excludesImplmethod1-BodyexcludesImplmethod1-ReturnStatement4c4f1af2-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-excludesImplmethod1-BodyexcludesImplmethod1-ReturnStatement4c4f1af2-Tuple387f9d70-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -677,7 +677,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatementbb114ee-CallExcludesAll-CallExcludesAll.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatementbb114ee-CallExcludesAll-CallExcludesAll.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludesAll"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludesAll"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatementbb114ee-Tuple66fdeeec" name="Tuple@66fdeeec" outgoing="CollectionImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatementbb114ee-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatementbb114ee-Tuple66fdeeec-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -743,7 +743,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-includesImplmethod1-BodyincludesImplmethod1-ReturnStatement31f0fe3-CallIncludes-CallIncludes.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-includesImplmethod1-BodyincludesImplmethod1-ReturnStatement31f0fe3-CallIncludes-CallIncludes.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Includes"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Includes"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-includesImplmethod1-BodyincludesImplmethod1-ReturnStatement31f0fe3-Tuple7997f538" name="Tuple@7997f538" outgoing="CollectionImpl-includesImplmethod1-BodyincludesImplmethod1-ReturnStatement31f0fe3-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-includesImplmethod1-BodyincludesImplmethod1-ReturnStatement31f0fe3-Tuple7997f538-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -809,7 +809,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement24dafcf2-CallIncludesAll-CallIncludesAll.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement24dafcf2-CallIncludesAll-CallIncludesAll.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IncludesAll"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IncludesAll"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement24dafcf2-Tuple4da7234f" name="Tuple@4da7234f" outgoing="CollectionImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement24dafcf2-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement24dafcf2-Tuple4da7234f-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -865,7 +865,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement3a9ae1ab-CallIsEmpty-CallIsEmpty.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement3a9ae1ab-CallIsEmpty-CallIsEmpty.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IsEmpty"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IsEmpty"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement3a9ae1ab-Tuple5eace9d4" name="Tuple@5eace9d4" outgoing="CollectionImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement3a9ae1ab-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement3a9ae1ab-Tuple5eace9d4-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -919,7 +919,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement7964b4fe-CallNotEmpty-CallNotEmpty.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement7964b4fe-CallNotEmpty-CallNotEmpty.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-NotEmpty"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-NotEmpty"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement7964b4fe-Tuple50e3c8c" name="Tuple@50e3c8c" outgoing="CollectionImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement7964b4fe-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement7964b4fe-Tuple50e3c8c-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -1022,7 +1022,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-removeImplmethod1-BodyremoveImplmethod1-ExpressionStatement32eb1f9a-Tuple78036a55-CallExcluding-CallExcluding.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-removeImplmethod1-BodyremoveImplmethod1-ExpressionStatement32eb1f9a-Tuple78036a55-CallExcluding-CallExcluding.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Excluding"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Excluding"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-removeImplmethod1-BodyremoveImplmethod1-ExpressionStatement32eb1f9a-Tuple78036a55-Tuple3763956f" name="Tuple@3763956f" outgoing="CollectionImpl-removeImplmethod1-BodyremoveImplmethod1-ExpressionStatement32eb1f9a-Tuple78036a55-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-removeImplmethod1-BodyremoveImplmethod1-ExpressionStatement32eb1f9a-Tuple78036a55-Tuple3763956f-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -1150,7 +1150,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-removeAllImplmethod1-BodyremoveAllImplmethod1-ExpressionStatement2f0c624a-Tuple544aad08-CallDifference-CallDifference.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-removeAllImplmethod1-BodyremoveAllImplmethod1-ExpressionStatement2f0c624a-Tuple544aad08-CallDifference-CallDifference.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Difference"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Difference"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-removeAllImplmethod1-BodyremoveAllImplmethod1-ExpressionStatement2f0c624a-Tuple544aad08-Tuple3811e725" name="Tuple@3811e725" outgoing="CollectionImpl-removeAllImplmethod1-BodyremoveAllImplmethod1-ExpressionStatement2f0c624a-Tuple544aad08-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-removeAllImplmethod1-BodyremoveAllImplmethod1-ExpressionStatement2f0c624a-Tuple544aad08-Tuple3811e725-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -1307,7 +1307,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-removeOneImplmethod1-BodyremoveOneImplmethod1-ExpressionStatement12ef22c9-Tuple31e5fc9d-CallExcludingOne-CallExcludingOne.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-removeOneImplmethod1-BodyremoveOneImplmethod1-ExpressionStatement12ef22c9-Tuple31e5fc9d-CallExcludingOne-CallExcludingOne.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludingOne"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludingOne"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-removeOneImplmethod1-BodyremoveOneImplmethod1-ExpressionStatement12ef22c9-Tuple31e5fc9d-Tuple53e59730" name="Tuple@53e59730" outgoing="CollectionImpl-removeOneImplmethod1-BodyremoveOneImplmethod1-ExpressionStatement12ef22c9-Tuple31e5fc9d-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-removeOneImplmethod1-BodyremoveOneImplmethod1-ExpressionStatement12ef22c9-Tuple31e5fc9d-Tuple53e59730-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -1450,7 +1450,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-replaceImplmethod1-BodyreplaceImplmethod1-ExpressionStatement3a17f493-Tuple779896c7-CallReplacing-CallReplacing.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-replaceImplmethod1-BodyreplaceImplmethod1-ExpressionStatement3a17f493-Tuple779896c7-CallReplacing-CallReplacing.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Replacing"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Replacing"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-replaceImplmethod1-BodyreplaceImplmethod1-ExpressionStatement3a17f493-Tuple779896c7-Tuple79a1ea46" name="Tuple@79a1ea46" outgoing="CollectionImpl-replaceImplmethod1-BodyreplaceImplmethod1-ExpressionStatement3a17f493-Tuple779896c7-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-replaceImplmethod1-BodyreplaceImplmethod1-ExpressionStatement3a17f493-Tuple779896c7-Tuple79a1ea46-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -1595,7 +1595,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-replaceOneImplmethod1-BodyreplaceOneImplmethod1-ExpressionStatement46a2a2b-Tuplec04fe90-CallReplacingOne-CallReplacingOne.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-replaceOneImplmethod1-BodyreplaceOneImplmethod1-ExpressionStatement46a2a2b-Tuplec04fe90-CallReplacingOne-CallReplacingOne.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ReplacingOne"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ReplacingOne"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-replaceOneImplmethod1-BodyreplaceOneImplmethod1-ExpressionStatement46a2a2b-Tuplec04fe90-Tuple511bfc28" name="Tuple@511bfc28" outgoing="CollectionImpl-replaceOneImplmethod1-BodyreplaceOneImplmethod1-ExpressionStatement46a2a2b-Tuplec04fe90-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-replaceOneImplmethod1-BodyreplaceOneImplmethod1-ExpressionStatement46a2a2b-Tuplec04fe90-Tuple511bfc28-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -1725,7 +1725,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-retainAllImplmethod1-BodyretainAllImplmethod1-ExpressionStatement52fad2a1-Tuple50802ed1-CallIntersection-CallIntersection.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-retainAllImplmethod1-BodyretainAllImplmethod1-ExpressionStatement52fad2a1-Tuple50802ed1-CallIntersection-CallIntersection.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Intersection"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Intersection"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-retainAllImplmethod1-BodyretainAllImplmethod1-ExpressionStatement52fad2a1-Tuple50802ed1-Tuple3f5d8ef1" name="Tuple@3f5d8ef1" outgoing="CollectionImpl-retainAllImplmethod1-BodyretainAllImplmethod1-ExpressionStatement52fad2a1-Tuple50802ed1-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-retainAllImplmethod1-BodyretainAllImplmethod1-ExpressionStatement52fad2a1-Tuple50802ed1-Tuple3f5d8ef1-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -1833,7 +1833,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CollectionImpl-sizeImplmethod1-BodysizeImplmethod1-ReturnStatement53372fcf-CallSize-CallSize.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CollectionImpl-sizeImplmethod1-BodysizeImplmethod1-ReturnStatement53372fcf-CallSize-CallSize.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="CollectionImpl-sizeImplmethod1-BodysizeImplmethod1-ReturnStatement53372fcf-Tuple3d74098f" name="Tuple@3d74098f" outgoing="CollectionImpl-sizeImplmethod1-BodysizeImplmethod1-ReturnStatement53372fcf-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="CollectionImpl-sizeImplmethod1-BodysizeImplmethod1-ReturnStatement53372fcf-Tuple3d74098f-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -2447,7 +2447,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="SetImpl-addAllImplmethod1-BodyaddAllImplmethod1-ReturnStatement4d6bbe53-Tuple693f23a2-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="SetImpl-addAllImplmethod1-BodyaddAllImplmethod1-ReturnStatement4d6bbe53-Tuple693f23a2-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <structuredNodeOutput xmi:id="SetImpl-addAllImplmethod1-BodyaddAllImplmethod1-ReturnStatement4d6bbe53-ReturnStatement4d6bbe53.output" name="ReturnStatement@4d6bbe53.output" outgoing="SetImpl-addAllImplmethod1-_edge.3" incoming="SetImpl-addAllImplmethod1-BodyaddAllImplmethod1-ReturnStatement4d6bbe53-_edge.2" isOrdered="true" isUnique="false">
@@ -2492,7 +2492,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ExpressionStatement5c57b13a-RightHandSide394563d4-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ExpressionStatement5c57b13a-RightHandSide394563d4-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <edge xmi:type="uml:ObjectFlow" xmi:id="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ExpressionStatement5c57b13a-_edge.0" source="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ExpressionStatement5c57b13a-RightHandSide394563d4-CallToOrderedSet-CallToOrderedSet.resultnull" target="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ExpressionStatement5c57b13a-Forkset77cf08b7"/>
@@ -2525,7 +2525,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement5d38c394-CallSize-CallSize.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement5d38c394-CallSize-CallSize.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
             </node>
             <node xmi:type="uml:TestIdentityAction" xmi:id="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement5d38c394-Test" name="Test(==)">
               <first xmi:id="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement5d38c394-Test-Test.first" name="Test(==).first" incoming="SetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement5d38c394-_edge.1" isOrdered="true" isUnique="false">
@@ -2657,7 +2657,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="SetImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement37190ae9-Tuple7e0e873b-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="SetImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement37190ae9-Tuple7e0e873b-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <structuredNodeOutput xmi:id="SetImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement37190ae9-ReturnStatement37190ae9.output" name="ReturnStatement@37190ae9.output" outgoing="SetImpl-excludesAllImplmethod1-_edge.3" incoming="SetImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement37190ae9-_edge.2" isOrdered="true" isUnique="false">
@@ -2712,7 +2712,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="SetImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement6ca2cb13-Tuple6b89c934-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="SetImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement6ca2cb13-Tuple6b89c934-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <structuredNodeOutput xmi:id="SetImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement6ca2cb13-ReturnStatement6ca2cb13.output" name="ReturnStatement@6ca2cb13.output" outgoing="SetImpl-includesAllImplmethod1-_edge.3" incoming="SetImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement6ca2cb13-_edge.2" isOrdered="true" isUnique="false">
@@ -3185,7 +3185,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BagImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement3630fb71-CallSize-CallSize.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="BagImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement3630fb71-CallSize-CallSize.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
             </node>
             <node xmi:type="uml:TestIdentityAction" xmi:id="BagImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement3630fb71-Test" name="Test(==)">
               <first xmi:id="BagImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement3630fb71-Test-Test.first" name="Test(==).first" incoming="BagImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement3630fb71-_edge.1" isOrdered="true" isUnique="false">
@@ -3621,7 +3621,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedCollectionImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ExpressionStatement1946d5dc-Tuple1fb65425-CallIncludeAllAt-CallIncludeAllAt.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedCollectionImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ExpressionStatement1946d5dc-Tuple1fb65425-CallIncludeAllAt-CallIncludeAllAt.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IncludeAllAt"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IncludeAllAt"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="OrderedCollectionImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ExpressionStatement1946d5dc-Tuple1fb65425-Tuple14d10efa" name="Tuple@14d10efa" outgoing="OrderedCollectionImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ExpressionStatement1946d5dc-Tuple1fb65425-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="OrderedCollectionImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ExpressionStatement1946d5dc-Tuple1fb65425-Tuple14d10efa-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -3806,7 +3806,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedCollectionImpl-atImplmethod1-BodyatImplmethod1-ReturnStatement529df6cf-CallAt-CallAt.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedCollectionImpl-atImplmethod1-BodyatImplmethod1-ReturnStatement529df6cf-CallAt-CallAt.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-At"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-At"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="OrderedCollectionImpl-atImplmethod1-BodyatImplmethod1-ReturnStatement529df6cf-Tuple4247609b" name="Tuple@4247609b" outgoing="OrderedCollectionImpl-atImplmethod1-BodyatImplmethod1-ReturnStatement529df6cf-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="OrderedCollectionImpl-atImplmethod1-BodyatImplmethod1-ReturnStatement529df6cf-Tuple4247609b-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -3926,7 +3926,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedCollectionImpl-indexOfImplmethod1-BodyindexOfImplmethod1-ReturnStatement139a9de2-CallIndexOf-CallIndexOf.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedCollectionImpl-indexOfImplmethod1-BodyindexOfImplmethod1-ReturnStatement139a9de2-CallIndexOf-CallIndexOf.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IndexOf"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IndexOf"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="OrderedCollectionImpl-indexOfImplmethod1-BodyindexOfImplmethod1-ReturnStatement139a9de2-Tuple36101828" name="Tuple@36101828" outgoing="OrderedCollectionImpl-indexOfImplmethod1-BodyindexOfImplmethod1-ReturnStatement139a9de2-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="OrderedCollectionImpl-indexOfImplmethod1-BodyindexOfImplmethod1-ReturnStatement139a9de2-Tuple36101828-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -4095,7 +4095,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedCollectionImpl-removeAtImplmethod1-BodyremoveAtImplmethod1-ExpressionStatement4edfa6f0-Tuple2cccf2e0-CallExcludeAt-CallExcludeAt.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedCollectionImpl-removeAtImplmethod1-BodyremoveAtImplmethod1-ExpressionStatement4edfa6f0-Tuple2cccf2e0-CallExcludeAt-CallExcludeAt.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludeAt"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludeAt"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="OrderedCollectionImpl-removeAtImplmethod1-BodyremoveAtImplmethod1-ExpressionStatement4edfa6f0-Tuple2cccf2e0-Tuple788aa29e" name="Tuple@788aa29e" outgoing="OrderedCollectionImpl-removeAtImplmethod1-BodyremoveAtImplmethod1-ExpressionStatement4edfa6f0-Tuple2cccf2e0-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="OrderedCollectionImpl-removeAtImplmethod1-BodyremoveAtImplmethod1-ExpressionStatement4edfa6f0-Tuple2cccf2e0-Tuple788aa29e-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -4236,7 +4236,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedCollectionImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-ExpressionStatement6954bfe-Tuple77fb911a-CallReplacingAt-CallReplacingAt.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedCollectionImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-ExpressionStatement6954bfe-Tuple77fb911a-CallReplacingAt-CallReplacingAt.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ReplacingAt"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ReplacingAt"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="OrderedCollectionImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-ExpressionStatement6954bfe-Tuple77fb911a-Tupleecd90ce" name="Tuple@ecd90ce" outgoing="OrderedCollectionImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-ExpressionStatement6954bfe-Tuple77fb911a-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="OrderedCollectionImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-ExpressionStatement6954bfe-Tuple77fb911a-Tupleecd90ce-CallgetContent" name="Call(getContent)" operation="CollectionImpl-getContent">
@@ -4574,7 +4574,7 @@
                     <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedSetImpl-OrderedSetImplmethod1-BodyOrderedSetImplmethod1-Super-ExpressionStatement37f75468-Tuple4a2c1b1c-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                     <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedSetImpl-OrderedSetImplmethod1-BodyOrderedSetImplmethod1-Super-ExpressionStatement37f75468-Tuple4a2c1b1c-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                   </result>
-                  <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                  <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
                 </node>
               </node>
               <edge xmi:type="uml:ObjectFlow" xmi:id="OrderedSetImpl-OrderedSetImplmethod1-BodyOrderedSetImplmethod1-Super-ExpressionStatement37f75468-_edge.0" source="OrderedSetImpl-OrderedSetImplmethod1-BodyOrderedSetImplmethod1-Super-ExpressionStatement37f75468-Tuple4a2c1b1c-CallToOrderedSet-CallToOrderedSet.resultnull" target="OrderedSetImpl-OrderedSetImplmethod1-BodyOrderedSetImplmethod1-Super-ExpressionStatement37f75468-CallOrderedCollectionImplmethod1-CallOrderedCollectionImplmethod1.argumentseq"/>
@@ -4814,7 +4814,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedSetImpl-addAllImplmethod1-BodyaddAllImplmethod1-ReturnStatement7e94fde1-Tuple1117ae94-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedSetImpl-addAllImplmethod1-BodyaddAllImplmethod1-ReturnStatement7e94fde1-Tuple1117ae94-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <structuredNodeOutput xmi:id="OrderedSetImpl-addAllImplmethod1-BodyaddAllImplmethod1-ReturnStatement7e94fde1-ReturnStatement7e94fde1.output" name="ReturnStatement@7e94fde1.output" outgoing="OrderedSetImpl-addAllImplmethod1-_edge.3" incoming="OrderedSetImpl-addAllImplmethod1-BodyaddAllImplmethod1-ReturnStatement7e94fde1-_edge.2" isOrdered="true" isUnique="false">
@@ -4881,7 +4881,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedSetImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ReturnStatement4531eb31-Tuple72402ecb-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedSetImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ReturnStatement4531eb31-Tuple72402ecb-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <structuredNodeOutput xmi:id="OrderedSetImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ReturnStatement4531eb31-ReturnStatement4531eb31.output" name="ReturnStatement@4531eb31.output" outgoing="OrderedSetImpl-addAllAtImplmethod1-_edge.5" incoming="OrderedSetImpl-addAllAtImplmethod1-BodyaddAllAtImplmethod1-ReturnStatement4531eb31-_edge.2" isOrdered="true" isUnique="false">
@@ -4938,7 +4938,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedSetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4fee5bed-Tuple2efb541d-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedSetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4fee5bed-Tuple2efb541d-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <structuredNodeOutput xmi:id="OrderedSetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4fee5bed-ReturnStatement4fee5bed.output" name="ReturnStatement@4fee5bed.output" outgoing="OrderedSetImpl-equalsImplmethod1-_edge.3" incoming="OrderedSetImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4fee5bed-_edge.2" isOrdered="true" isUnique="false">
@@ -4993,7 +4993,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedSetImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement14ef54ee-Tuple114c86cf-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedSetImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement14ef54ee-Tuple114c86cf-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <structuredNodeOutput xmi:id="OrderedSetImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement14ef54ee-ReturnStatement14ef54ee.output" name="ReturnStatement@14ef54ee.output" outgoing="OrderedSetImpl-excludesAllImplmethod1-_edge.3" incoming="OrderedSetImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement14ef54ee-_edge.2" isOrdered="true" isUnique="false">
@@ -5048,7 +5048,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedSetImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement14e73af3-Tuple52751a9b-CallToOrderedSet-CallToOrderedSet.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedSetImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement14e73af3-Tuple52751a9b-CallToOrderedSet-CallToOrderedSet.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ToOrderedSet"/>
               </node>
             </node>
             <structuredNodeOutput xmi:id="OrderedSetImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement14e73af3-ReturnStatement14e73af3.output" name="ReturnStatement@14e73af3.output" outgoing="OrderedSetImpl-includesAllImplmethod1-_edge.3" incoming="OrderedSetImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement14e73af3-_edge.2" isOrdered="true" isUnique="false">
@@ -5127,7 +5127,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedSetImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-IfStatement252b65bf-CallNotEmpty-CallNotEmpty.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedSetImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-IfStatement252b65bf-CallNotEmpty-CallNotEmpty.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-NotEmpty"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-NotEmpty"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="OrderedSetImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-IfStatement252b65bf-ExpressionStatement75be8fe4" name="ExpressionStatement@75be8fe4" outgoing="OrderedSetImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-IfStatement252b65bf-_edge.0">
               <node xmi:type="uml:CallOperationAction" xmi:id="OrderedSetImpl-replaceAtImplmethod1-BodyreplaceAtImplmethod1-IfStatement252b65bf-ExpressionStatement75be8fe4-CallremoveImpl" name="Call(removeImpl)" operation="CollectionImpl-removeImpl">
@@ -5269,7 +5269,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="OrderedSetImpl-subOrderedSetImplmethod1-BodysubOrderedSetImplmethod1-ReturnStatement5b0b0f64-CallSubsequence-CallSubsequence.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="OrderedSetImpl-subOrderedSetImplmethod1-BodysubOrderedSetImplmethod1-ReturnStatement5b0b0f64-CallSubsequence-CallSubsequence.resultnull-_upperValue" value="*"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="OrderedSetImpl-subOrderedSetImplmethod1-BodysubOrderedSetImplmethod1-ReturnStatement5b0b0f64-Tupleaa85638" name="Tuple@aa85638" outgoing="OrderedSetImpl-subOrderedSetImplmethod1-BodysubOrderedSetImplmethod1-ReturnStatement5b0b0f64-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="OrderedSetImpl-subOrderedSetImplmethod1-BodysubOrderedSetImplmethod1-ReturnStatement5b0b0f64-Tupleaa85638-ReadSelf" name="ReadSelf">
@@ -5824,7 +5824,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="ListImpl-subListImplmethod1-BodysubListImplmethod1-ReturnStatement605036e8-CallSubsequence-CallSubsequence.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="ListImpl-subListImplmethod1-BodysubListImplmethod1-ReturnStatement605036e8-CallSubsequence-CallSubsequence.resultnull-_upperValue" value="*"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="ListImpl-subListImplmethod1-BodysubListImplmethod1-ReturnStatement605036e8-Tuple46be1539" name="Tuple@46be1539" outgoing="ListImpl-subListImplmethod1-BodysubListImplmethod1-ReturnStatement605036e8-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="ListImpl-subListImplmethod1-BodysubListImplmethod1-ReturnStatement605036e8-Tuple46be1539-ReadSelf" name="ReadSelf">
@@ -6306,7 +6306,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="QueueImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4ec57293-CallSize-CallSize.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="QueueImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4ec57293-CallSize-CallSize.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
             </node>
             <node xmi:type="uml:TestIdentityAction" xmi:id="QueueImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4ec57293-Test" name="Test(==)">
               <first xmi:id="QueueImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4ec57293-Test-Test.first" name="Test(==).first" incoming="QueueImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement4ec57293-_edge.1" isOrdered="true" isUnique="false">
@@ -6414,7 +6414,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="QueueImpl-firstImplmethod1-BodyfirstImplmethod1-ExpressionStatement2d8c93dc-CallFirst-CallFirst.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="QueueImpl-firstImplmethod1-BodyfirstImplmethod1-ExpressionStatement2d8c93dc-CallFirst-CallFirst.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-First"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-First"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="QueueImpl-firstImplmethod1-BodyfirstImplmethod1-ExpressionStatement2d8c93dc-Tuplee7f4211" name="Tuple@e7f4211" outgoing="QueueImpl-firstImplmethod1-BodyfirstImplmethod1-ExpressionStatement2d8c93dc-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="QueueImpl-firstImplmethod1-BodyfirstImplmethod1-ExpressionStatement2d8c93dc-Tuplee7f4211-ReadSelf" name="ReadSelf">
@@ -6463,7 +6463,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement1ece988a-RightHandSide5675e2b4-CallFirst-CallFirst.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement1ece988a-RightHandSide5675e2b4-CallFirst-CallFirst.resultnull-_upperValue" value="1"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-First"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-First"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement1ece988a-RightHandSide5675e2b4-Tuple684383e3" name="Tuple@684383e3" outgoing="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement1ece988a-RightHandSide5675e2b4-_edge.1">
                 <node xmi:type="uml:ReadSelfAction" xmi:id="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement1ece988a-RightHandSide5675e2b4-Tuple684383e3-ReadSelf" name="ReadSelf">
@@ -6522,7 +6522,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatementcc6798-Tuple60515a25-CallSubsequence-CallSubsequence.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatementcc6798-Tuple60515a25-CallSubsequence-CallSubsequence.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatementcc6798-Tuple60515a25-Tuple39367a2c" name="Tuple@39367a2c" outgoing="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatementcc6798-Tuple60515a25-_edge.3">
                 <node xmi:type="uml:ReadSelfAction" xmi:id="QueueImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatementcc6798-Tuple60515a25-Tuple39367a2c-ReadSelf" name="ReadSelf">
@@ -7084,7 +7084,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-addFirstImplmethod1-BodyaddFirstImplmethod1-ExpressionStatementb1f3c4e-Tuple25844fbe-CallIncludeAt-CallIncludeAt.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-addFirstImplmethod1-BodyaddFirstImplmethod1-ExpressionStatementb1f3c4e-Tuple25844fbe-CallIncludeAt-CallIncludeAt.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IncludeAt"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IncludeAt"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="DequeImpl-addFirstImplmethod1-BodyaddFirstImplmethod1-ExpressionStatementb1f3c4e-Tuple25844fbe-Tuple679ed60e" name="Tuple@679ed60e" outgoing="DequeImpl-addFirstImplmethod1-BodyaddFirstImplmethod1-ExpressionStatementb1f3c4e-Tuple25844fbe-_edge.2">
                 <node xmi:type="uml:CallOperationAction" xmi:id="DequeImpl-addFirstImplmethod1-BodyaddFirstImplmethod1-ExpressionStatementb1f3c4e-Tuple25844fbe-Tuple679ed60e-CallgetContent" name="Call(getContent)" operation="QueueImpl-getContent">
@@ -7249,7 +7249,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement7b2f2476-CallSize-CallSize.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement7b2f2476-CallSize-CallSize.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
             </node>
             <node xmi:type="uml:TestIdentityAction" xmi:id="DequeImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement7b2f2476-Test" name="Test(==)">
               <first xmi:id="DequeImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement7b2f2476-Test-Test.first" name="Test(==).first" incoming="DequeImpl-equalsImplmethod1-BodyequalsImplmethod1-ReturnStatement7b2f2476-_edge.1" isOrdered="true" isUnique="false">
@@ -7359,7 +7359,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-firstImplmethod1-BodyfirstImplmethod1-ReturnStatement13dd5ec-CallFirst-CallFirst.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-firstImplmethod1-BodyfirstImplmethod1-ReturnStatement13dd5ec-CallFirst-CallFirst.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-First"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-First"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="DequeImpl-firstImplmethod1-BodyfirstImplmethod1-ReturnStatement13dd5ec-Tuple63a7a517" name="Tuple@63a7a517" outgoing="DequeImpl-firstImplmethod1-BodyfirstImplmethod1-ReturnStatement13dd5ec-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="DequeImpl-firstImplmethod1-BodyfirstImplmethod1-ReturnStatement13dd5ec-Tuple63a7a517-CallgetContent" name="Call(getContent)" operation="QueueImpl-getContent">
@@ -7410,7 +7410,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-lastImplmethod1-BodylastImplmethod1-ReturnStatement6960691a-CallLast-CallLast.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-lastImplmethod1-BodylastImplmethod1-ReturnStatement6960691a-CallLast-CallLast.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Last"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Last"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="DequeImpl-lastImplmethod1-BodylastImplmethod1-ReturnStatement6960691a-Tuple70a26301" name="Tuple@70a26301" outgoing="DequeImpl-lastImplmethod1-BodylastImplmethod1-ReturnStatement6960691a-_edge.1">
               <node xmi:type="uml:CallOperationAction" xmi:id="DequeImpl-lastImplmethod1-BodylastImplmethod1-ReturnStatement6960691a-Tuple70a26301-CallgetContent" name="Call(getContent)" operation="QueueImpl-getContent">
@@ -7463,7 +7463,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement265e1f7a-RightHandSide72732600-CallFirst-CallFirst.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement265e1f7a-RightHandSide72732600-CallFirst-CallFirst.resultnull-_upperValue" value="1"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-First"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-First"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement265e1f7a-RightHandSide72732600-Tuple6ea1ade8" name="Tuple@6ea1ade8" outgoing="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement265e1f7a-RightHandSide72732600-_edge.1">
                 <node xmi:type="uml:CallOperationAction" xmi:id="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement265e1f7a-RightHandSide72732600-Tuple6ea1ade8-CallgetContent" name="Call(getContent)" operation="QueueImpl-getContent">
@@ -7520,7 +7520,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement339e6e00-Tuple4a6bb386-CallSubsequence-CallSubsequence.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement339e6e00-Tuple4a6bb386-CallSubsequence-CallSubsequence.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement339e6e00-Tuple4a6bb386-Tuplee5d1aef" name="Tuple@e5d1aef" outgoing="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement339e6e00-Tuple4a6bb386-_edge.3">
                 <node xmi:type="uml:CallOperationAction" xmi:id="DequeImpl-removeFirstImplmethod1-BodyremoveFirstImplmethod1-ExpressionStatement339e6e00-Tuple4a6bb386-Tuplee5d1aef-CallgetContent" name="Call(getContent)" operation="QueueImpl-getContent">
@@ -7756,7 +7756,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-removeLastImplmethod1-BodyremoveLastImplmethod1-ExpressionStatement4f71d691-Tuple72d876d9-CallSubsequence-CallSubsequence.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-removeLastImplmethod1-BodyremoveLastImplmethod1-ExpressionStatement4f71d691-Tuple72d876d9-CallSubsequence-CallSubsequence.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Subsequence"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="DequeImpl-removeLastImplmethod1-BodyremoveLastImplmethod1-ExpressionStatement4f71d691-Tuple72d876d9-Tuple571f0759" name="Tuple@571f0759" outgoing="DequeImpl-removeLastImplmethod1-BodyremoveLastImplmethod1-ExpressionStatement4f71d691-Tuple72d876d9-_edge.3">
                 <node xmi:type="uml:CallOperationAction" xmi:id="DequeImpl-removeLastImplmethod1-BodyremoveLastImplmethod1-ExpressionStatement4f71d691-Tuple72d876d9-Tuple571f0759-CallgetContent" name="Call(getContent)" operation="QueueImpl-getContent">
@@ -7961,7 +7961,7 @@
                         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-ExpressionStatement2c21840d-RightHandSide7e2ac92f-CallAt-CallAt.resultnull-_lowerValue"/>
                         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-ExpressionStatement2c21840d-RightHandSide7e2ac92f-CallAt-CallAt.resultnull-_upperValue" value="1"/>
                       </result>
-                      <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-At"/>
+                      <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-At"/>
                     </node>
                     <node xmi:type="uml:StructuredActivityNode" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-ExpressionStatement2c21840d-RightHandSide7e2ac92f-Tuple4d4acd0b" name="Tuple@4d4acd0b" outgoing="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-ExpressionStatement2c21840d-RightHandSide7e2ac92f-_edge.2">
                       <node xmi:type="uml:CallOperationAction" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-ExpressionStatement2c21840d-RightHandSide7e2ac92f-Tuple4d4acd0b-CallgetContent" name="Call(getContent)" operation="QueueImpl-getContent">
@@ -8063,7 +8063,7 @@
                       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-CallNotEmpty-CallNotEmpty.resultnull-_lowerValue" value="1"/>
                       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-CallNotEmpty-CallNotEmpty.resultnull-_upperValue" value="1"/>
                     </result>
-                    <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-NotEmpty"/>
+                    <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-NotEmpty"/>
                   </node>
                   <node xmi:type="uml:ForkNode" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-ForkCallNotEmpty.resultnull" name="Fork(Call(NotEmpty).result(null))" outgoing="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-_edge.4 DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-_edge.5" incoming="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-_edge.2"/>
                   <node xmi:type="uml:MergeNode" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-MergeTest.result20CallNotEmpty.resultnull" name="Merge(Test(==).result, Call(NotEmpty).result(null))" outgoing="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-_edge.7" incoming="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-_edge.3 DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-_edge.6"/>
@@ -8107,7 +8107,7 @@
                           <lowerValue xmi:type="uml:LiteralInteger" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-ExpressionStatement71846ce0-Tuple28fd3fba-CallExcludeAt-CallExcludeAt.resultnull-_lowerValue"/>
                           <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-ExpressionStatement71846ce0-Tuple28fd3fba-CallExcludeAt-CallExcludeAt.resultnull-_upperValue" value="*"/>
                         </result>
-                        <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludeAt"/>
+                        <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludeAt"/>
                       </node>
                       <node xmi:type="uml:StructuredActivityNode" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-ExpressionStatement71846ce0-Tuple28fd3fba-Tuple2006eb91" name="Tuple@2006eb91" outgoing="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-ExpressionStatement71846ce0-Tuple28fd3fba-_edge.1">
                         <node xmi:type="uml:CallOperationAction" xmi:id="DequeImpl-removeLastOneImplmethod1-BodyremoveLastOneImplmethod1-ForStatement6c62aa33-LoopForStatement6c62aa33-BodyForStatement6c62aa33-IfStatement4637c533-ExpressionStatement71846ce0-Tuple28fd3fba-Tuple2006eb91-CallgetContent" name="Call(getContent)" operation="QueueImpl-getContent">
@@ -8856,7 +8856,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-indexOfmethod1-BodyindexOfmethod1-ReturnStatement68e816f5-CallIndexOf-CallIndexOf.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-indexOfmethod1-BodyindexOfmethod1-ReturnStatement68e816f5-CallIndexOf-CallIndexOf.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IndexOf"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IndexOf"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-indexOfmethod1-BodyindexOfmethod1-ReturnStatement68e816f5-Tuple62bc1e7e" name="Tuple@62bc1e7e" outgoing="MapImpl-indexOfmethod1-BodyindexOfmethod1-ReturnStatement68e816f5-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-indexOfmethod1-BodyindexOfmethod1-ReturnStatement68e816f5-Tuple62bc1e7e-ReadSelf" name="ReadSelf">
@@ -9006,7 +9006,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement3d3979cc-CallExcludesAll-CallExcludesAll.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement3d3979cc-CallExcludesAll-CallExcludesAll.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludesAll"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-ExcludesAll"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement3d3979cc-Tuple303f7944" name="Tuple@303f7944" outgoing="MapImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement3d3979cc-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-excludesAllImplmethod1-BodyexcludesAllImplmethod1-ReturnStatement3d3979cc-Tuple303f7944-ReadSelf" name="ReadSelf">
@@ -9073,7 +9073,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-getImplmethod1-BodygetImplmethod1-ReturnStatement31506701-CallAt-CallAt.resultnull-_lowerValue"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-getImplmethod1-BodygetImplmethod1-ReturnStatement31506701-CallAt-CallAt.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-At"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-At"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-getImplmethod1-BodygetImplmethod1-ReturnStatement31506701-Tuple500b6585" name="Tuple@500b6585" outgoing="MapImpl-getImplmethod1-BodygetImplmethod1-ReturnStatement31506701-_edge.2">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-getImplmethod1-BodygetImplmethod1-ReturnStatement31506701-Tuple500b6585-ReadSelf" name="ReadSelf">
@@ -9215,7 +9215,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement66aa50f-CallIncludesAll-CallIncludesAll.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement66aa50f-CallIncludesAll-CallIncludesAll.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IncludesAll"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IncludesAll"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement66aa50f-Tuple2b7ac7ba" name="Tuple@2b7ac7ba" outgoing="MapImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement66aa50f-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-includesAllImplmethod1-BodyincludesAllImplmethod1-ReturnStatement66aa50f-Tuple2b7ac7ba-ReadSelf" name="ReadSelf">
@@ -9283,7 +9283,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-includesKeyImplmethod1-BodyincludesKeyImplmethod1-ReturnStatement2b4b2d2d-CallIncludes-CallIncludes.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-includesKeyImplmethod1-BodyincludesKeyImplmethod1-ReturnStatement2b4b2d2d-CallIncludes-CallIncludes.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Includes"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Includes"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-includesKeyImplmethod1-BodyincludesKeyImplmethod1-ReturnStatement2b4b2d2d-Tuple76c5faf5" name="Tuple@76c5faf5" outgoing="MapImpl-includesKeyImplmethod1-BodyincludesKeyImplmethod1-ReturnStatement2b4b2d2d-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-includesKeyImplmethod1-BodyincludesKeyImplmethod1-ReturnStatement2b4b2d2d-Tuple76c5faf5-ReadSelf" name="ReadSelf">
@@ -9370,7 +9370,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-includesValueImplmethod1-BodyincludesValueImplmethod1-ReturnStatement299bc338-CallIncludes-CallIncludes.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-includesValueImplmethod1-BodyincludesValueImplmethod1-ReturnStatement299bc338-CallIncludes-CallIncludes.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Includes"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Includes"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-includesValueImplmethod1-BodyincludesValueImplmethod1-ReturnStatement299bc338-Tuple292898f5" name="Tuple@292898f5" outgoing="MapImpl-includesValueImplmethod1-BodyincludesValueImplmethod1-ReturnStatement299bc338-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-includesValueImplmethod1-BodyincludesValueImplmethod1-ReturnStatement299bc338-Tuple292898f5-ReadSelf" name="ReadSelf">
@@ -9447,7 +9447,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement391ba64d-CallIsEmpty-CallIsEmpty.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement391ba64d-CallIsEmpty-CallIsEmpty.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IsEmpty"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-IsEmpty"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement391ba64d-Tuple44c2394" name="Tuple@44c2394" outgoing="MapImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement391ba64d-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-isEmptyImplmethod1-BodyisEmptyImplmethod1-ReturnStatement391ba64d-Tuple44c2394-ReadSelf" name="ReadSelf">
@@ -9560,7 +9560,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement2e64e02-CallNotEmpty-CallNotEmpty.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement2e64e02-CallNotEmpty-CallNotEmpty.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-NotEmpty"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-NotEmpty"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement2e64e02-Tuple75176704" name="Tuple@75176704" outgoing="MapImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement2e64e02-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-notEmptyImplmethod1-BodynotEmptyImplmethod1-ReturnStatement2e64e02-Tuple75176704-ReadSelf" name="ReadSelf">
@@ -9708,7 +9708,7 @@
                   <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-putImplmethod1-BodyputImplmethod1-ExpressionStatement2b132ca1-RightHandSide1fcf6aa3-CallIncluding-CallIncluding.resultnull-_lowerValue"/>
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-putImplmethod1-BodyputImplmethod1-ExpressionStatement2b132ca1-RightHandSide1fcf6aa3-CallIncluding-CallIncluding.resultnull-_upperValue" value="*"/>
                 </result>
-                <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Including"/>
+                <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Including"/>
               </node>
               <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-putImplmethod1-BodyputImplmethod1-ExpressionStatement2b132ca1-RightHandSide1fcf6aa3-Tuple1d9a43d7" name="Tuple@1d9a43d7" outgoing="MapImpl-putImplmethod1-BodyputImplmethod1-ExpressionStatement2b132ca1-RightHandSide1fcf6aa3-_edge.2">
                 <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-putImplmethod1-BodyputImplmethod1-ExpressionStatement2b132ca1-RightHandSide1fcf6aa3-Tuple1d9a43d7-ReadSelf" name="ReadSelf">
@@ -10179,7 +10179,7 @@
                 <lowerValue xmi:type="uml:LiteralInteger" xmi:id="MapImpl-sizeImplmethod1-BodysizeImplmethod1-ExpressionStatement1aa6a14b-CallSize-CallSize.resultnull-_lowerValue" value="1"/>
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="MapImpl-sizeImplmethod1-BodysizeImplmethod1-ExpressionStatement1aa6a14b-CallSize-CallSize.resultnull-_upperValue" value="1"/>
               </result>
-              <behavior xmi:type="uml:FunctionBehavior" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
+              <behavior xmi:type="uml:Activity" href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-Size"/>
             </node>
             <node xmi:type="uml:StructuredActivityNode" xmi:id="MapImpl-sizeImplmethod1-BodysizeImplmethod1-ExpressionStatement1aa6a14b-Tuple23bd31c0" name="Tuple@23bd31c0" outgoing="MapImpl-sizeImplmethod1-BodysizeImplmethod1-ExpressionStatement1aa6a14b-_edge.1">
               <node xmi:type="uml:ReadSelfAction" xmi:id="MapImpl-sizeImplmethod1-BodysizeImplmethod1-ExpressionStatement1aa6a14b-Tuple23bd31c0-ReadSelf" name="ReadSelf">
