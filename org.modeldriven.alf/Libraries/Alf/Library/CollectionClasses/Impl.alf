@@ -12,6 +12,8 @@ package Impl {
   
   private abstract class QueueImpl specializes CollectionImpl;
   private abstract class DequeImpl specializes QueueImpl;
+  
+  private abstract class MapImpl;
 
   public class Set<T> specializes SetImpl, CollectionClasses::Set<T>;
   public class Bag<T> specializes BagImpl, CollectionClasses::Bag<T>;
@@ -22,6 +24,6 @@ package Impl {
   public class Queue<T> specializes QueueImpl, CollectionClasses::Queue<T>;
   public class Deque<T> specializes DequeImpl, CollectionClasses::Deque<T>;
   
-  public class Map<Key,Value> specializes CollectionClasses::Map<Key,Value>;
+  public class Map<Key,Value> specializes MapImpl, CollectionClasses::Map<Key,Value>;
   
 }

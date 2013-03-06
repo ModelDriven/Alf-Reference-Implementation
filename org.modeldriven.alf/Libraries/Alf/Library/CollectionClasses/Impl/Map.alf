@@ -3,91 +3,89 @@ private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
 /**
 The concrete implementation of the standard library template Map class.
 */
-class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
+class Map<Key, Value> specializes MapImpl, CollectionClasses::Map<Key,Value> {
 
-  private entries: Entry[0..*];
-
-  @Create public Map (in entries: Entry[0..*]) { 
-    this.putAll(entries);
+  @Create public Map (in entries: Entry[0..*]) redefines CollectionClasses::Map<Key,Value>::Map { 
+    super.MapImpl(ToEntryImpls(entries));
   }
 
   @Destroy public destroy () { 
   }
-
-  private indexOf(in key: Key): Integer[0..1] {
-    return this.entries.key->IndexOf(key);
+  
+  private activity ToEntryImpls (in entries: Entry[0..*]): EntryImpl[0..*] {
+    return entries->collect e (new EntryImpl(e.key, e.value));
   }
   
+  private activity ToEntries (in entryImpls: EntryImpl[0..*]): Entry[0..*] {
+    return entryImpls->collect e (new Entry((Key)e.key, (Value)e.value));
+  }
+
   public entries (): CollectionClasses::Set<Entry> { 
-    return new Set<Entry>(this.entries);
+    return new Set<Entry>(ToEntries(super.entriesImpl()));
   }
 
   public clear () { 
-    this.entries = null;
+    super.clearImpl();
   }
 
   public excludesAll (in entries: Entry[0..*]): Boolean { 
-    return this.entries->ExcludesAll(entries);
+    return super.excludesAllImpl();
   }
 
   public get (in key: Key): Value[0..1] { 
-    return this.entries->select e (e.key == key)[1].value;
+    return (Value)super.getImpl(key);
   }
 
   public includesAll (in entries: Entry[0..*]): Boolean { 
-    return this.entries->IncludesAll(entries);
+    return super.includesAllImpl(ToEntryImpls(entries));
   }
 
   public includesKey (in key: Key): Boolean { 
-    return this.entries.key->Includes(key);
+    return super.includesKeyImpl(key);
   }
 
   public includesValue (in value: Value[0..1]): Boolean { 
-    return this.entries.value->Includes(value);
+    return super.includesValueImpl(value);
   }
 
   public isEmpty (): Boolean { 
-    return this.entries->IsEmpty();
+    return super.isEmptyImpl();
   }
 
   public keys (): CollectionClasses::Set<Key> { 
-    return new Set<Key>(this.entries.key);
+    return new Set<Key>((Key)super.keysImpl());
   }
 
   public notEmpty (): Boolean { 
-    return this.entries->NotEmpty();
+    return super.notEmptyImpl();
   }
 
   public put (in key: Key, in value: Value[0..1]): Value[0..1] { 
-  	result = this.remove(key);
-  	this.entries = (Entry)this.entries->Including(new Entry(key,value));
-  	return result;
+    return (Value)super.putImpl(key, value);
   }
 
   public putAll (in entries: Entry[0..*]) { 
-    entries->iterate e (this.put(e.key, e.value));
+    super.putAllImpl(ToEntryImpls(entries));
   }
 
   public remove (in key: Key): Value[0..1] { 
-    result = this.get(key);
-    this.entries = this.entries->reject e (e.key == key);
-    return result;
+    return (Value)super.removeImpl(key);
   }
 
   public removeAll (in keys: Key[0..*]) { 
-    keys->iterate k (this.remove(k));
+    super.removeAllImpl(keys);
   }
 
   public size (): Integer { 
-    this.entries->Size();
+    return super.sizeImpl();
   }
 
   public toSequence (): Entry[0..*] sequence { 
-    return this.entries;
+    return ToEntries(super.entriesImpl());
   }
 
   public values (): CollectionClasses::Bag<Value> { 
-    return new Bag<Value>(this.entries.value);
+    return new Bag<Value>((Value)super.valuesImpl());
   }
 }
 
