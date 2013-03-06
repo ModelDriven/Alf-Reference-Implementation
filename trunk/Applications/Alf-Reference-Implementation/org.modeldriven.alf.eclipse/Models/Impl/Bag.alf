@@ -5,7 +5,7 @@ The concrete implementation of the standard library template Bag class.
 */
 class Bag<T> specializes BagImpl, CollectionClasses::Bag<T> {
 
-  @Create public Bag (in seq: T[0..*] sequence) { 
+  @Create public Bag (in seq: T[0..*] sequence) redefines CollectionClasses::Bag<T>::Bag { 
     super.BagImpl(seq);
   }
 
