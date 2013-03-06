@@ -242,6 +242,21 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                                 "Output(" + assignment.getName() + ")", 
                                 null, assignment.getLower(), assignment.getUpper());
                         structuredNode.addStructuredNodeOutput(pin);
+                        
+                        if (!ActivityGraph.isContainedIn(source, structuredNode)) {
+                            StructuredActivityNode passThruNode =
+                                    graph.createPassthruNode(
+                                            source.getName(), 
+                                            pin.getType(), 
+                                            pin.getLower(), 
+                                            pin.getUpper());
+                            structuredNode.addNode(passThruNode);
+                            activity.addEdge(graph.createObjectFlow(
+                                    source, 
+                                    passThruNode.getStructuredNodeInput().get(0)));
+                            source = passThruNode.getStructuredNodeOutput().get(0);
+                        }
+
                         structuredNode.addEdge(graph.createObjectFlow(source, pin));
                         activity.addEdge(mapping.createActivityGraph().createObjectFlow(
                                 pin, 
