@@ -2,16 +2,12 @@
 <project name="CompileTests-x" default="run" basedir=".">
     <property name="alf.dir" value="../org.modeldriven.alf" />
     <property name="alf.eclipse.dir" value="${basedir}" />
-    <property name="moka.dir" value="../org.eclipse.papyrus.moka.fuml" />
-    <property name="moka.lib" value="../org.eclipse.papyrus.moka.fuml.standardlibrary" />
     <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
-    <path id="cp-moka">
+    <path id="cp">
         <pathelement location="${classpath}" />
         <pathelement location="${alf.dir}/bin" />
         <pathelement location="${alf.dir}/lib/commons-logging.jar" />
         <pathelement location="${alf.dir}/lib/log4j.jar" />
-        <pathelement location="${moka.dir}/bin" />
-        <pathelement location="${moka.lib}/bin" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml_4.0.1.v20120913-1441.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.profile.l2_1.0.1.v20120913-1441.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.profile.l3_1.0.1.v20120913-1441.jar" />
@@ -22,7 +18,6 @@
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore_2.8.1.v20120911-0500.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore.xmi_2.8.0.v20120911-0500.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20120917-0436.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.papyrus.uml.tools.utils_0.9.1.v201210051358.jar" />
     </path>
     <target name="run-test">
         <echo message="${unit}" />
@@ -40,9 +35,9 @@
         </java>
     </target>
     <target name="run">
-        <property name="classname" value="org.modeldriven.alf.eclipse.papyrus.fuml.execution.AlfCompiler" />
-        <property name="cp" value="cp-moka" />
-        <property name="filename" value="compile-tests-x-moka.txt" />
+        <property name="classname" value="org.modeldriven.alf.eclipse.fuml.execution.AlfCompiler" />
+        <property name="cp" value="cp" />
+        <property name="filename" value="compile-tests-x.txt" />
         <antcall target="run-tests" />
     </target>
     <target name="run-tests">

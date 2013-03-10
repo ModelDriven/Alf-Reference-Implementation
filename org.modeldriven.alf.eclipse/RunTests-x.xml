@@ -34,9 +34,9 @@
         </java>
     </target>
     <target name="run">
-        <property name="classname" value="org.modeldriven.alf.eclipse.papyrus.fuml.execution.Alf" />
+        <property name="classname" value="org.modeldriven.alf.eclipse.fuml.papyrus.execution.Alf" />
         <property name="cp" value="cp-moka" />
-        <property name="filename" value="tests-x-moka.txt" />
+        <property name="filename" value="tests-x.txt" />
         <antcall target="run-tests" />
     </target>
     <target name="run-tests">
