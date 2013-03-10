@@ -9,9 +9,12 @@
 
 package org.modeldriven.alf.fuml.impl.execution;
 
+import java.util.List;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
+import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -69,7 +72,8 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     protected String getPrototypeClassName(Member definition, QualifiedName prototypeName) {
         QualifiedName definitionName = definition.getImpl().getQualifiedName();
         String rootName = definitionName.getNameBinding().get(0).getName();
-        String name = prototypeName.getNameBinding().get(0).getName();
+        List<NameBinding> nameBindings = prototypeName.getNameBinding();
+        String name = nameBindings.get(nameBindings.size() - 1).getName();
         return "org.modeldriven." + 
             (rootName.equals("FoundationalModelLibrary")? "fuml": "alf") +
             ".library." + 
