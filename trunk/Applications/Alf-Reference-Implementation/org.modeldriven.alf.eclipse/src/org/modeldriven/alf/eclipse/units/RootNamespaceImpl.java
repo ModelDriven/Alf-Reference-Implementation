@@ -15,7 +15,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.papyrus.uml.tools.utils.NameResolutionUtils;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 import org.eclipse.uml2.uml.util.UMLUtil;
@@ -120,62 +119,30 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
     	UnitDefinition unit = new MissingUnit(qualifiedName);
     	String pathName = qualifiedName.getImpl().getPathName();
-    	int n = qualifiedName.getNameBinding().size();
-    	if (n > 0) {
-    		String name = qualifiedName.getNameBinding().get(0).getName();
-        	Collection<org.eclipse.uml2.uml.NamedElement> elements = 
-        			UMLUtil.findNamedElements(this.resourceSet, name);
-        	if (elements.size() == 0) {
-    	        Resource resource = null;
-    	        try {
-    	        	resource = this.getLibraryResource(name);
-    	        } catch (Exception e) {
-    	        	System.out.println("Error loading " + name + ": " + e.getMessage());
-    	        }
-    	        if (resource != null) {
-    	        	elements = UMLUtil.findNamedElements(resource, name);
-    	        }
-        	}
-        	
-        	if (elements.size() == 1) {
-        		org.eclipse.uml2.uml.NamedElement element = 
-        				(org.eclipse.uml2.uml.NamedElement)elements.toArray()[0];
-        		/*
-        		if (!(element instanceof org.eclipse.uml2.uml.Model)) {
-        			org.eclipse.uml2.uml.Model model = UMLFactory.eINSTANCE.createModel();
-        			org.eclipse.uml2.uml.ElementImport elementImport = UMLFactory.eINSTANCE.createElementImport();
-        			elementImport.setImportedElement((org.eclipse.uml2.uml.PackageableElement)element);
-        			model.getElementImports().add(elementImport);
-        			element = model;
-        		}
-        		*/
-        		if (n > 1) {
-        			qualifiedName = qualifiedName.getImpl().copy().getSelf();
-        			qualifiedName.getNameBinding().remove(0);
-        			elements = NameResolutionUtils.getNamedElements(
-        					qualifiedName.getImpl().getPathName(), element, null);
-        			element = elements.size() != 1? null:
-        				(org.eclipse.uml2.uml.NamedElement)elements.toArray()[0];
-        		}
-        		if (element instanceof org.eclipse.uml2.uml.Namespace) {
-        			NamespaceDefinition namespace = 
-        					ExternalNamespace.makeExternalNamespace(
-        							(Namespace)Element.wrap(
-        									(org.eclipse.uml2.uml.Namespace)element),
-        									this.getSelf());
-        			unit = new UnitDefinition();
-        			unit.setIsModelLibrary(true);
-        			unit.setDefinition(namespace);
-        			namespace.setUnit(unit);
-        		}
-        	}
+    	Collection<org.eclipse.uml2.uml.NamedElement> elements = 
+    			UMLUtil.findNamedElements(
+    					this.resourceSet, qualifiedName.getPathName());
+    	if (elements.size() == 1) {
+    		org.eclipse.uml2.uml.NamedElement element = 
+    				(org.eclipse.uml2.uml.NamedElement)elements.toArray()[0];
+    		if (element instanceof org.eclipse.uml2.uml.Namespace) {
+    			NamespaceDefinition namespace = 
+    					ExternalNamespace.makeExternalNamespace(
+    							(Namespace)Element.wrap(
+    									(org.eclipse.uml2.uml.Namespace)element),
+    									this.getSelf());
+    			unit = new UnitDefinition();
+    			unit.setIsModelLibrary(true);
+    			unit.setDefinition(namespace);
+    			namespace.setUnit(unit);
+    		}
     	}
-    	
-        if (unit instanceof MissingUnit) {
-            System.out.println("Unit not found: " + pathName);
-        }
-        
-        return unit;
+
+    	if (unit instanceof MissingUnit) {
+    		System.err.println("Unit not found: " + pathName);
+    	}
+
+    	return unit;
     }
-    
+
 }
