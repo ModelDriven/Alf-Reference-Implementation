@@ -59,10 +59,8 @@ public class DataTypeDefinitionMapping extends ClassifierDefinitionMapping {
         super.mapTo(classifier);
         
         if (classifier instanceof PrimitiveType) {
-            DataTypeDefinition dataTypeDefinition = this.getDataTypeDefinition();
-            String name = classifier.getName();
-            if (name == null) {
-                this.throwError("Unnamed primitive type: " + dataTypeDefinition);
+             if (classifier.getName() == null) {
+                this.throwError("Unnamed primitive type: " + this.getDataTypeDefinition());
             } else {
                 primitiveTypes.add((PrimitiveType)classifier);
             }
