@@ -21,7 +21,7 @@
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore_2.8.1.v20120911-0500.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore.xmi_2.8.0.v20120911-0500.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20120917-0436.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.papyrus.uml.tools.utils_0.9.1.v201210051358.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.papyrus.uml.tools.utils_0.9.2.v201302131112.jar" />
     </path>
     <target name="run-test">
         <echo message="${unit}" />
@@ -37,9 +37,9 @@
         </java>
     </target>
     <target name="run">
-        <property name="classname" value="org.modeldriven.alf.eclipse.papyrus.fuml.execution.Fuml" />
+        <property name="classname" value="org.modeldriven.alf.eclipse.fuml.papyrus.execution.Fuml" />
         <property name="cp" value="cp-moka" />
-        <property name="filename" value="exec-tests-x-moka.txt" />
+        <property name="filename" value="exec-tests-x.txt" />
         <antcall target="run-tests" />
     </target>
     <target name="run-tests">

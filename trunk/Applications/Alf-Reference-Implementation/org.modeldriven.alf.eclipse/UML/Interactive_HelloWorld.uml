@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_Or8DAIXzEeKjgqAXzIhUeg" name="Model">
-  <packagedElement xmi:type="uml:Activity" xmi:id="_Or8qEIXzEeKjgqAXzIhUeg" name="Interactive_HelloWorld" group="_Or8qFoXzEeKjgqAXzIhUeg" node="_Or8qFoXzEeKjgqAXzIhUeg">
-    <packageImport xmi:id="_Or8qEYXzEeKjgqAXzIhUeg" visibility="private">
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_0XWvUIk8EeKuFrhWgLw6eg" name="Model">
+  <packagedElement xmi:type="uml:Activity" xmi:id="_0XWvUYk8EeKuFrhWgLw6eg" name="Interactive_HelloWorld" group="_0XWvV4k8EeKuFrhWgLw6eg" node="_0XWvV4k8EeKuFrhWgLw6eg">
+    <packageImport xmi:id="_0XWvUok8EeKuFrhWgLw6eg" visibility="private">
       <importedPackage href="Alf.library.uml#Alf-Library-PrimitiveTypes"/>
     </packageImport>
-    <packageImport xmi:id="_Or8qEoXzEeKjgqAXzIhUeg" visibility="private">
+    <packageImport xmi:id="_0XWvU4k8EeKuFrhWgLw6eg" visibility="private">
       <importedPackage href="Alf.library.uml#Alf-Library-PrimitiveBehaviors"/>
     </packageImport>
-    <packageImport xmi:id="_Or8qE4XzEeKjgqAXzIhUeg" visibility="private">
+    <packageImport xmi:id="_0XWvVIk8EeKuFrhWgLw6eg" visibility="private">
       <importedPackage href="Alf.library.uml#Alf-Library-BasicInputOutput"/>
     </packageImport>
-    <packageImport xmi:id="_Or8qFIXzEeKjgqAXzIhUeg" visibility="private">
+    <packageImport xmi:id="_0XWvVYk8EeKuFrhWgLw6eg" visibility="private">
       <importedPackage href="Alf.library.uml#Alf-Library-PrimitiveBehaviors-CollectionFunctions"/>
     </packageImport>
-    <packageImport xmi:id="_Or8qFYXzEeKjgqAXzIhUeg" visibility="private">
+    <packageImport xmi:id="_0XWvVok8EeKuFrhWgLw6eg" visibility="private">
       <importedPackage href="Alf.library.uml#Alf-Library-CollectionClasses"/>
     </packageImport>
-    <structuredNode xmi:id="_Or8qFoXzEeKjgqAXzIhUeg" name="Body(Interactive_HelloWorld)">
-      <node xmi:type="uml:StructuredActivityNode" xmi:id="_Or8qF4XzEeKjgqAXzIhUeg" name="ExpressionStatement@48383339">
-        <node xmi:type="uml:CallBehaviorAction" xmi:id="_Or8qGIXzEeKjgqAXzIhUeg" name="Call(WriteLine)" incoming="_Or8qJoXzEeKjgqAXzIhUeg">
-          <argument xmi:id="_Or8qGYXzEeKjgqAXzIhUeg" name="Call(WriteLine).argument(value)" incoming="_Or8qJYXzEeKjgqAXzIhUeg">
+    <structuredNode xmi:id="_0XWvV4k8EeKuFrhWgLw6eg" name="Body(Interactive_HelloWorld)">
+      <node xmi:type="uml:StructuredActivityNode" xmi:id="_0XWvWIk8EeKuFrhWgLw6eg" name="ExpressionStatement@465b4e3d">
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_0XWvWYk8EeKuFrhWgLw6eg" name="Call(WriteLine)" incoming="_0XWvZ4k8EeKuFrhWgLw6eg">
+          <argument xmi:id="_0XWvWok8EeKuFrhWgLw6eg" name="Call(WriteLine).argument(value)" incoming="_0XWvZok8EeKuFrhWgLw6eg">
             <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Or8qGoXzEeKjgqAXzIhUeg" value="1"/>
-            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Or8qG4XzEeKjgqAXzIhUeg" value="1"/>
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_0XWvW4k8EeKuFrhWgLw6eg" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0XWvXIk8EeKuFrhWgLw6eg" value="1"/>
           </argument>
-          <result xmi:id="_Or8qHIXzEeKjgqAXzIhUeg" name="Call(WriteLine).result(errorStatus)">
-            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Or8qHYXzEeKjgqAXzIhUeg"/>
-            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Or8qHoXzEeKjgqAXzIhUeg" value="1"/>
+          <result xmi:id="_0XWvXYk8EeKuFrhWgLw6eg" name="Call(WriteLine).result(errorStatus)">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_0XWvXok8EeKuFrhWgLw6eg"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0XWvX4k8EeKuFrhWgLw6eg" value="1"/>
           </result>
           <behavior xmi:type="uml:Activity" href="fUML.library.uml#BasicInputOutput-WriteLine"/>
         </node>
-        <node xmi:type="uml:StructuredActivityNode" xmi:id="_Or8qH4XzEeKjgqAXzIhUeg" name="Tuple@52cdfc0b" outgoing="_Or8qJoXzEeKjgqAXzIhUeg">
-          <node xmi:type="uml:ValueSpecificationAction" xmi:id="_Or8qIIXzEeKjgqAXzIhUeg" name="Value(&quot;Hello World!&quot;)">
-            <result xmi:id="_Or8qIYXzEeKjgqAXzIhUeg" name="Value(&quot;Hello World!&quot;).result" outgoing="_Or8qJYXzEeKjgqAXzIhUeg" isOrdered="true" isUnique="false">
+        <node xmi:type="uml:StructuredActivityNode" xmi:id="_0XWvYIk8EeKuFrhWgLw6eg" name="Tuple@197da9bc" outgoing="_0XWvZ4k8EeKuFrhWgLw6eg">
+          <node xmi:type="uml:ValueSpecificationAction" xmi:id="_0XWvYYk8EeKuFrhWgLw6eg" name="Value(&quot;Hello World!&quot;)">
+            <result xmi:id="_0XWvYok8EeKuFrhWgLw6eg" name="Value(&quot;Hello World!&quot;).result" outgoing="_0XWvZok8EeKuFrhWgLw6eg" isOrdered="true" isUnique="false">
               <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Or8qIoXzEeKjgqAXzIhUeg" value="1"/>
-              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Or8qI4XzEeKjgqAXzIhUeg" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_0XWvY4k8EeKuFrhWgLw6eg" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0XWvZIk8EeKuFrhWgLw6eg" value="1"/>
             </result>
-            <value xmi:type="uml:LiteralString" xmi:id="_Or8qJIXzEeKjgqAXzIhUeg" value="Hello World!">
+            <value xmi:type="uml:LiteralString" xmi:id="_0XWvZYk8EeKuFrhWgLw6eg" value="Hello World!">
               <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
             </value>
           </node>
         </node>
-        <edge xmi:type="uml:ObjectFlow" xmi:id="_Or8qJYXzEeKjgqAXzIhUeg" source="_Or8qIYXzEeKjgqAXzIhUeg" target="_Or8qGYXzEeKjgqAXzIhUeg"/>
-        <edge xmi:type="uml:ControlFlow" xmi:id="_Or8qJoXzEeKjgqAXzIhUeg" source="_Or8qH4XzEeKjgqAXzIhUeg" target="_Or8qGIXzEeKjgqAXzIhUeg"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_0XWvZok8EeKuFrhWgLw6eg" source="_0XWvYok8EeKuFrhWgLw6eg" target="_0XWvWok8EeKuFrhWgLw6eg"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_0XWvZ4k8EeKuFrhWgLw6eg" source="_0XWvYIk8EeKuFrhWgLw6eg" target="_0XWvWYk8EeKuFrhWgLw6eg"/>
       </node>
     </structuredNode>
   </packagedElement>
-  <profileApplication xmi:id="_Or8qJ4XzEeKjgqAXzIhUeg">
-    <eAnnotations xmi:id="_Or8qKIXzEeKjgqAXzIhUeg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+  <profileApplication xmi:id="_0XWvaIk8EeKuFrhWgLw6eg">
+    <eAnnotations xmi:id="_0XWvaYk8EeKuFrhWgLw6eg" source="http://www.eclipse.org/uml2/2.0.0/UML">
       <references xmi:type="ecore:EPackage" href="pathmap://UML_PROFILES/StandardL2.profile.uml#_QLYqEHJLEeKLR_U6HVChUg"/>
     </eAnnotations>
     <appliedProfile href="pathmap://UML_PROFILES/StandardL2.profile.uml#_0"/>
