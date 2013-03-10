@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,11 +8,8 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.mapping;
 
-import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingFactory;
-import org.modeldriven.alf.syntax.units.Member;
-import org.modeldriven.alf.uml.OpaqueBehavior;
 
 public class FumlMappingFactory extends MappingFactory {
 
@@ -30,12 +27,6 @@ public class FumlMappingFactory extends MappingFactory {
                 return new ErrorMapping(source, "No mapping: " + className);
             }
         }
-    }
-    
-    public OpaqueBehaviorExecution instantiatePrimitiveBehaviorPrototype(
-            Member definition, 
-            OpaqueBehavior behavior) {
-        return null;
     }
     
 }

@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,11 +10,14 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.QualifiedNameList;
 import org.modeldriven.alf.syntax.units.*;
 
 /**
@@ -150,6 +153,21 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
             this.getReferent().getImpl().
                 equals(namespace.getImpl().getClassifierBehavior());
     }
+    
+    public QualifiedName getPrimitiveBehaviorPrototypeName() {
+        for (StereotypeAnnotation annotation: this.getSelf().getAnnotation()) {
+            if (annotation.getStereotypeName().getPathName().equals("primitive")) {
+                QualifiedNameList nameList = annotation.getNames();
+                if (nameList != null) {
+                    Collection<QualifiedName> names = nameList.getName();
+                    if (!names.isEmpty()) {
+                        return (QualifiedName)names.toArray()[0];
+                    }
+                }
+            }
+        }
+        return null;
+     }
     
     @Override
     protected void bindTo(SyntaxElement base,

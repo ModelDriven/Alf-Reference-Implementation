@@ -15,18 +15,19 @@ import java.util.Collection;
 import java.util.List;
 
 
-import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
-import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.QualifiedNameList;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
+import org.modeldriven.alf.syntax.units.StereotypeAnnotation;
 
 import org.modeldriven.alf.uml.Activity;
 import org.modeldriven.alf.uml.ActivityEdge;
@@ -45,11 +46,10 @@ import org.modeldriven.alf.uml.StructuredActivityNode;
 
 public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     
-    private OpaqueBehaviorExecution execution = null;
-    private List<Element> otherElements = new ArrayList<Element>();
+     private List<Element> otherElements = new ArrayList<Element>();
     
-    private static Collection<OpaqueBehaviorExecution> primitiveBehaviorPrototypes = 
-            new ArrayList<OpaqueBehaviorExecution>();
+    private static Collection<ActivityDefinitionMapping> primitiveBehaviorMappings =
+            new ArrayList<ActivityDefinitionMapping>();
     
     /**
      * 1. An activity definition that is not primitive maps to an activity. If
@@ -95,15 +95,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 
         ActivityDefinition definition = this.getActivityDefinition();
         if (classifier instanceof OpaqueBehavior) {
-            this.execution = 
-                ((FumlMappingFactory)this.getFactory()).
-                    instantiatePrimitiveBehaviorPrototype
-                        (definition, (OpaqueBehavior)classifier);
-            if (this.execution == null) {
-                this.throwError("Primitive behavior not implemented: " + classifier.getName());
-            } else {
-                primitiveBehaviorPrototypes.add(this.execution);
-            }
+            primitiveBehaviorMappings.add(this);
         } else {
             Activity activity = (Activity)classifier;
             activity.setIsActive(definition.getImpl().isClassifierBehavior());
@@ -180,10 +172,29 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 		return (ActivityDefinition)this.getSource();
 	}
 	
-	public static Collection<OpaqueBehaviorExecution> getPrimitiveBehaviorPrototypes() {
-	    return primitiveBehaviorPrototypes;
-	}
-	
+    public QualifiedName getPrimitiveBehaviorPrototypeName() {
+        return this.getActivityDefinition().getImpl().getPrimitiveBehaviorPrototypeName();
+    }
+    
+    public static QualifiedName getPrimitiveBehaviorPrototypeName(ActivityDefinition definition) {
+        for (StereotypeAnnotation annotation: definition.getAnnotation()) {
+            if (annotation.getStereotypeName().getPathName().equals("primitive")) {
+                QualifiedNameList nameList = annotation.getNames();
+                if (nameList != null) {
+                    Collection<QualifiedName> names = nameList.getName();
+                    if (!names.isEmpty()) {
+                        return (QualifiedName)names.toArray()[0];
+                    }
+                }
+            }
+        }
+        return null;
+     }
+    
+    public static Collection<ActivityDefinitionMapping> getPrimitiveBehaviorMappings() {
+        return primitiveBehaviorMappings;
+    }
+    
 	public static List<Element> addElements(
 	        Activity activity, 
 	        Collection<Element> elements,
@@ -321,8 +332,10 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     @Override
     public String toString() {
         Behavior behavior = (Behavior)this.getElement();
+        QualifiedName prototypeName = this.getPrimitiveBehaviorPrototypeName();
         return super.toString() + 
-            (behavior == null? "": " isActive:" + behavior.getIsActive());
+            (behavior == null? "": " isActive:" + behavior.getIsActive()) +
+            (prototypeName == null? "": " primitive: " + prototypeName.getPathName());
     }
     
     @Override
@@ -337,10 +350,6 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             if (mapping != null) {
                 mapping.printChild(prefix);
             }
-        }
-        
-        if (this.execution != null) {
-            System.out.println(prefix + " execution: " + execution);
         }
     }
 

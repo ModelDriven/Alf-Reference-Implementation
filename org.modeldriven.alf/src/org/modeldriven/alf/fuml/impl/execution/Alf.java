@@ -11,8 +11,9 @@ package org.modeldriven.alf.fuml.impl.execution;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
+import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
@@ -49,16 +50,33 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     }
     
     @Override
-    protected FumlMappingFactory createFumlFactory() {
-        return new org.modeldriven.alf.fuml.impl.mapping.FumlMappingFactory();
-    }
-    
-    @Override
     protected ElementFactory createElementFactory() {
         return new org.modeldriven.alf.fuml.impl.uml.ElementFactory();
     }
     
     @Override
+    protected OpaqueBehaviorExecution getUnimplementedBehaviorExecution() {
+        return new UnimplementedBehaviorExecution();
+    }
+    
+    @Override
+    protected OpaqueBehaviorExecution getOpaqueBehaviorExecution(Object object) {
+        return new org.modeldriven.alf.fuml.impl.execution.OpaqueBehaviorExecution(
+                (fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution)object);
+    }
+    
+    @Override
+    protected String getPrototypeClassName(Member definition, QualifiedName prototypeName) {
+        QualifiedName definitionName = definition.getImpl().getQualifiedName();
+        String rootName = definitionName.getNameBinding().get(0).getName();
+        String name = prototypeName.getNameBinding().get(0).getName();
+        return "org.modeldriven." + 
+            (rootName.equals("FoundationalModelLibrary")? "fuml": "alf") +
+            ".library." + 
+            definition.getNamespace().getName().toLowerCase() + "." + name;
+    }
+
+     @Override
     protected void createSystemServices() {
         QualifiedName standardOutputChannel = 
             RootNamespace.getBasicInputOutput().getImpl().copy().

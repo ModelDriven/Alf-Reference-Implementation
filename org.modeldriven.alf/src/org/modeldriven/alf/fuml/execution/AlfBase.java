@@ -30,7 +30,6 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 import org.modeldriven.alf.uml.Classifier;
-import org.modeldriven.alf.uml.PrimitiveType;
 
 public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     
@@ -77,40 +76,12 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         this.getRootScopeImpl().setIsVerbose(isVerbose);
     }
     
-    private Locus locus = null;
-    
-    public Locus getLocus() {
-        if (this.locus == null) {
-            this.locus = this.createLocus();
-        }
-        return this.locus;
+    protected FumlMappingFactory createFumlFactory() {
+        return new org.modeldriven.alf.fuml.mapping.FumlMappingFactory();
     }
     
-    protected abstract Locus createLocus();
-    protected abstract FumlMappingFactory createFumlFactory();
-    protected abstract ElementFactory createElementFactory();
-    protected void createSystemServices() { }
-    
-    protected void addPrimitiveTypes(Collection<PrimitiveType> primitiveTypes) {
-        ExecutionFactory executionFactory = this.getLocus().getFactory();
-        for (PrimitiveType primitiveType: primitiveTypes) {
-            for (PrimitiveType builtInType: executionFactory.getBuiltInTypes()) {
-                if (builtInType.getName() != null && builtInType.getName().equals(primitiveType.getName())) {
-                    this.println("Duplicate primitive type: " + primitiveType.getName());
-                }
-            }
-            executionFactory.addBuiltInType(primitiveType);
-        }
-    }
-    
-    protected void addPrimitiveBehaviorPrototypes(
-            Collection<OpaqueBehaviorExecution> primitiveBehaviorPrototypes) {
-        ExecutionFactory executionFactory = this.getLocus().getFactory();
-        for (OpaqueBehaviorExecution primitiveBehaviorPrototype: primitiveBehaviorPrototypes) {
-            executionFactory.addPrimitiveBehaviorPrototype(primitiveBehaviorPrototype);
-        }
-    }
-    
+   protected abstract ElementFactory createElementFactory();
+
     public UnitDefinition parse(String unitName, boolean isFileName) {
         UnitDefinition unit = null;
         

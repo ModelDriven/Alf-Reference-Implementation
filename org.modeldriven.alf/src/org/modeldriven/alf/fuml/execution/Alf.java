@@ -9,6 +9,9 @@
 
 package org.modeldriven.alf.fuml.execution;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
@@ -20,6 +23,7 @@ import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ClassDefinition;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
@@ -27,10 +31,98 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.OpaqueBehavior;
 import org.modeldriven.alf.uml.Operation;
 import org.modeldriven.alf.uml.Behavior;
+import org.modeldriven.alf.uml.PrimitiveType;
 
 public abstract class Alf extends AlfBase {
+    
+    private Locus locus = null;
+    
+    protected abstract Locus createLocus();
+    protected void createSystemServices() { }
+    
+    protected abstract OpaqueBehaviorExecution getUnimplementedBehaviorExecution();
+    protected abstract OpaqueBehaviorExecution getOpaqueBehaviorExecution(Object object);
+    protected abstract String getPrototypeClassName(Member definition, QualifiedName prototypeName);
+        
+    public Locus getLocus() {
+        if (this.locus == null) {
+            this.locus = this.createLocus();
+        }
+        return this.locus;
+    }
+    
+    protected void addPrimitiveTypes(Collection<PrimitiveType> primitiveTypes) {
+        ExecutionFactory executionFactory = this.getLocus().getFactory();
+        for (PrimitiveType primitiveType: primitiveTypes) {
+            for (PrimitiveType builtInType: executionFactory.getBuiltInTypes()) {
+                if (builtInType.getName() != null && builtInType.getName().equals(primitiveType.getName())) {
+                    this.println("Duplicate primitive type: " + primitiveType.getName());
+                }
+            }
+            executionFactory.addBuiltInType(primitiveType);
+        }
+    }
+    
+    protected void addPrimitiveBehaviorPrototypes(
+            Collection<OpaqueBehaviorExecution> primitiveBehaviorPrototypes) {
+        ExecutionFactory executionFactory = this.getLocus().getFactory();
+        for (OpaqueBehaviorExecution primitiveBehaviorPrototype: primitiveBehaviorPrototypes) {
+            executionFactory.addPrimitiveBehaviorPrototype(primitiveBehaviorPrototype);
+        }
+    }
+    
+    private Collection<OpaqueBehaviorExecution> instantiatePrimitiveBehaviorPrototypes() {
+        Collection<OpaqueBehaviorExecution> executions = 
+                new ArrayList<OpaqueBehaviorExecution>();
+        for (ActivityDefinitionMapping primitiveBehaviorMapping: 
+            ActivityDefinitionMapping.getPrimitiveBehaviorMappings()) {            
+            QualifiedName prototypeName = 
+                    primitiveBehaviorMapping.getPrimitiveBehaviorPrototypeName();
+            OpaqueBehaviorExecution execution = prototypeName == null? null:
+                getPrimitiveBehaviorPrototype(
+                        primitiveBehaviorMapping.getActivityDefinition(), prototypeName);
+            if (execution != null) {
+                execution.addType((OpaqueBehavior)primitiveBehaviorMapping.getElement());
+                executions.add(execution);
+            }
+        }
+        return executions;
+    }
+        
+    private OpaqueBehaviorExecution getPrimitiveBehaviorPrototype(
+            Member definition, QualifiedName prototypeName) {
+        OpaqueBehaviorExecution execution = this.getUnimplementedBehaviorExecution();
+        try {
+            execution = this.getOpaqueBehaviorExecution(
+                Class.forName
+                    (this.getPrototypeClassName(definition, prototypeName)).
+                        newInstance());
+        } catch (Exception e) {
+        }
+        return execution;
+    }
+    
+    public static Classifier getClassifier(QualifiedName name) {
+        Classifier classifier = null;
+        ElementReference referent = 
+            name.getImpl().getClassifierReferent();
+        FumlMapping mapping = FumlMapping.getMapping(referent);
+        if (mapping instanceof ElementReferenceMapping) {
+            mapping = ((ElementReferenceMapping)mapping).getMapping();
+        }
+        if (mapping instanceof ClassifierDefinitionMapping) {
+            try {
+                classifier = ((ClassifierDefinitionMapping)mapping).getClassifier();
+            } catch (MappingError e) {
+                System.out.println("Cannot map " + name.getPathName());
+                System.out.println(" error: " + e.getMessage());
+            }
+        }
+        return classifier;
+    }
     
     public UnitDefinition execute(UnitDefinition unit) {
         if (unit != null) {
@@ -51,7 +143,7 @@ public abstract class Alf extends AlfBase {
                     this.addPrimitiveTypes(
                             DataTypeDefinitionMapping.getPrimitiveTypes());
                     this.addPrimitiveBehaviorPrototypes(
-                            ActivityDefinitionMapping.getPrimitiveBehaviorPrototypes());
+                            this.instantiatePrimitiveBehaviorPrototypes());
                     this.createSystemServices();
 
                     this.printVerbose("Executing...");
@@ -107,25 +199,6 @@ public abstract class Alf extends AlfBase {
             }
         }
         return null;
-    }
-    
-    public static Classifier getClassifier(QualifiedName name) {
-        Classifier classifier = null;
-        ElementReference referent = 
-            name.getImpl().getClassifierReferent();
-        FumlMapping mapping = FumlMapping.getMapping(referent);
-        if (mapping instanceof ElementReferenceMapping) {
-            mapping = ((ElementReferenceMapping)mapping).getMapping();
-        }
-        if (mapping instanceof ClassifierDefinitionMapping) {
-            try {
-                classifier = ((ClassifierDefinitionMapping)mapping).getClassifier();
-            } catch (MappingError e) {
-                System.out.println("Cannot map " + name.getPathName());
-                System.out.println(" error: " + e.getMessage());
-            }
-        }
-        return classifier;
     }
     
     @Override
