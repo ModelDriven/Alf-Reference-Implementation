@@ -35,7 +35,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
-import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
+import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -2513,8 +2513,8 @@ void TaggedValues(StereotypeAnnotation s):
   TaggedValueList tl;
 }
 { LOOKAHEAD(2)
-  nl = QualifiedNameList() { s.setNames(nl); }
-| tl = TaggedValueList() { s.setTaggedValues(tl); }
+  tl = TaggedValueList() { s.setTaggedValues(tl); }
+| nl = QualifiedNameList() { s.setNames(nl); }
 }
 
 TaggedValueList TaggedValueList():
