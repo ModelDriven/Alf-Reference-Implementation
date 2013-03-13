@@ -118,10 +118,9 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     @Override
     public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
     	UnitDefinition unit = new MissingUnit(qualifiedName);
-    	String pathName = qualifiedName.getImpl().getPathName();
+    	String pathName = qualifiedName.getPathName();
     	Collection<org.eclipse.uml2.uml.NamedElement> elements = 
-    			UMLUtil.findNamedElements(
-    					this.resourceSet, qualifiedName.getPathName());
+    			UMLUtil.findNamedElements(this.resourceSet, pathName);
     	if (elements.size() == 1) {
     		org.eclipse.uml2.uml.NamedElement element = 
     				(org.eclipse.uml2.uml.NamedElement)elements.toArray()[0];
