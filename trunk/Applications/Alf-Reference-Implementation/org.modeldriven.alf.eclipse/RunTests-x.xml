@@ -24,8 +24,6 @@
 </echo>
         <java classname="${classname}" classpath="bin" output="${filename}" append="true">
             <classpath refid="${cp}" />
-            <arg value="-l" />
-            <arg value="${alf.dir}/Libraries" />
             <arg value="-m" />
             <arg value="${alf.dir}/tests-x" />
             <arg value="-d" />
@@ -34,7 +32,7 @@
         </java>
     </target>
     <target name="run">
-        <property name="classname" value="org.modeldriven.alf.eclipse.fuml.papyrus.execution.Alf" />
+        <property name="classname" value="org.modeldriven.alf.eclipse.papyrus.execution.Alf" />
         <property name="cp" value="cp-moka" />
         <property name="filename" value="tests-x.txt" />
         <antcall target="run-tests" />

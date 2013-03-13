@@ -30,14 +30,14 @@
         <java classname="${classname}" classpath="bin" output="${filename}" append="true" fork="true" dir="UML">
             <classpath refid="${cp}" />
             <arg value="-l" />
-            <arg value="../${alf.dir}/Libraries" />
+            <arg value="../Libraries" />
             <arg value="-d" />
             <arg value="ERROR" />
             <arg value="${unit}" />
         </java>
     </target>
     <target name="run">
-        <property name="classname" value="org.modeldriven.alf.eclipse.fuml.papyrus.execution.Fuml" />
+        <property name="classname" value="org.modeldriven.alf.eclipse.papyrus.execution.Fuml" />
         <property name="cp" value="cp-moka" />
         <property name="filename" value="exec-tests-x.txt" />
         <antcall target="run-tests" />
