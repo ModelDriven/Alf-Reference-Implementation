@@ -29,8 +29,6 @@
 </echo>
         <java classname="${classname}" classpath="bin" output="${filename}" append="true" fork="true" dir="UML">
             <classpath refid="${cp}" />
-            <arg value="-l" />
-            <arg value="../Libraries" />
             <arg value="-d" />
             <arg value="ERROR" />
             <arg value="${unit}" />
