@@ -172,7 +172,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 		return (ActivityDefinition)this.getSource();
 	}
 	
-    public QualifiedName getPrimitiveBehaviorPrototypeName() {
+    public String getPrimitiveBehaviorPrototypeName() {
         return this.getActivityDefinition().getImpl().getPrimitiveBehaviorPrototypeName();
     }
     
@@ -332,10 +332,10 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
     @Override
     public String toString() {
         Behavior behavior = (Behavior)this.getElement();
-        QualifiedName prototypeName = this.getPrimitiveBehaviorPrototypeName();
+        String prototypeName = this.getPrimitiveBehaviorPrototypeName();
         return super.toString() + 
             (behavior == null? "": " isActive:" + behavior.getIsActive()) +
-            (prototypeName == null? "": " primitive: " + prototypeName.getPathName());
+            (prototypeName == null? "": " primitive: " + prototypeName);
     }
     
     @Override

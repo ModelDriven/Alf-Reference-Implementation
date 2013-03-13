@@ -45,7 +45,7 @@ public abstract class Alf extends AlfBase {
     
     protected abstract OpaqueBehaviorExecution getUnimplementedBehaviorExecution();
     protected abstract OpaqueBehaviorExecution getOpaqueBehaviorExecution(Object object);
-    protected abstract String getPrototypeClassName(Member definition, QualifiedName prototypeName);
+    protected abstract String getPrototypeClassName(Member definition, String prototypeName);
         
     public Locus getLocus() {
         if (this.locus == null) {
@@ -79,7 +79,7 @@ public abstract class Alf extends AlfBase {
                 new ArrayList<OpaqueBehaviorExecution>();
         for (ActivityDefinitionMapping primitiveBehaviorMapping: 
             ActivityDefinitionMapping.getPrimitiveBehaviorMappings()) {            
-            QualifiedName prototypeName = 
+            String prototypeName = 
                     primitiveBehaviorMapping.getPrimitiveBehaviorPrototypeName();
             OpaqueBehaviorExecution execution = prototypeName == null? null:
                 getPrimitiveBehaviorPrototype(
@@ -93,7 +93,7 @@ public abstract class Alf extends AlfBase {
     }
         
     private OpaqueBehaviorExecution getPrimitiveBehaviorPrototype(
-            Member definition, QualifiedName prototypeName) {
+            Member definition, String prototypeName) {
         OpaqueBehaviorExecution execution = this.getUnimplementedBehaviorExecution();
         try {
             execution = this.getOpaqueBehaviorExecution(

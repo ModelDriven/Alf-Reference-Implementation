@@ -44,5 +44,20 @@ public class TaggedValueListImpl extends SyntaxElementImpl {
 	public void addTaggedValue(TaggedValue taggedValue) {
 		this.taggedValue.add(taggedValue);
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+	public String getValue(String name) {
+	    String value = "";
+	    for (TaggedValue taggedValue: this.getSelf().getTaggedValue()) {
+	        if (taggedValue.getName().equals(name)) {
+	            String operator = taggedValue.getOperator();
+	            return (operator == null? "": operator) + taggedValue.getValue();
+	        }
+	    }
+	    return value;
+	}
 
 } // TaggedValueListImpl
