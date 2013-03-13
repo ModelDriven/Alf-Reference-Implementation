@@ -38,19 +38,22 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     
     public void initialize() {
     	if (this.getLibraryDirectory() == null) {
-    		this.setLibraryDirectory("UML");
+    		this.setLibraryDirectory("UML/Libraries");
     	}
         this.getProfileResource("StandardL2.profile");
         // this.getLibraryResource("UMLPrimitiveTypes.library");
         this.getLibraryResource("fUML.library");
+        this.getLibraryResource("CollectionClassesImpl.library");
         this.getLibraryResource("Alf.library");
+    }
+    
+    public ResourceSet getResourceSet() {
+    	return this.resourceSet;
     }
     
     public URI createNormalizedURI(String directory, String name) {
         return this.resourceSet.getURIConverter().normalize(
-        		URI.createURI(directory).
-                appendSegment(name).
-                appendFileExtension(UMLResource.FILE_EXTENSION));
+        		this.createURI(directory, name));
     }
     
     public URI createURI(String directory, String name) {
