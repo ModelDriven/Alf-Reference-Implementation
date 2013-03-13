@@ -65,7 +65,9 @@ public class Fuml {
 
     public static void setDebugLevel(Level level) {
         Logger logger = Logger.getLogger(org.eclipse.papyrus.moka.fuml.debug.Debug.class);
-        logger.setLevel(level);
+        if (logger != null) {
+        	logger.setLevel(level);
+        }
     }
     
     public void setAlfLibraryDirectory(String alfLibraryDirectory) {
@@ -415,7 +417,10 @@ public class Fuml {
     }
     
     public Fuml() {
-        PropertyConfigurator.configure("log4j.properties");
+        Logger logger = Logger.getLogger(org.eclipse.papyrus.moka.fuml.debug.Debug.class);
+        if (logger != null) {
+        	PropertyConfigurator.configure("log4j.properties");
+        }
         
         this.setAlfLibraryDirectory("../Libraries");
         this.setUmlLibraryDirectory("Libraries");
