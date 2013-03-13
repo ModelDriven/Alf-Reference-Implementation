@@ -8,12 +8,12 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.fuml.papyrus.execution;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
-import org.modeldriven.alf.eclipse.fuml.papyrus.library.LibraryFunctions;
 
 public class UnimplementedBehaviorExecution extends OpaqueBehaviorExecution {
 
@@ -28,15 +28,10 @@ public class UnimplementedBehaviorExecution extends OpaqueBehaviorExecution {
     	@Override
     	public void doBody(List<ParameterValue> inputParameters,
     			List<ParameterValue> outputParameters) {
-    		/*
-        throw new Error("Primitive behavior" + 
-                (this.types.size() == 0? "": " " + this.types.get(0).name) + 
-                " not implemented.") ;
-    		 */
     		Debug.println("[error] Primitive behavior" + 
     				(this.types.size() == 0? "": " " + this.types.get(0).getName()) + 
     				" not implemented.");
-    		LibraryFunctions.addEmptyValueListToOutputList(outputParameters);
+    		outputParameters.get(0).values = new ArrayList<Value>();
     	}
 
     	@Override

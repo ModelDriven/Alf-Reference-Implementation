@@ -66,10 +66,8 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     }
     
     @Override 
-    protected String getPrototypeClassName(Member definition, QualifiedName prototypeName) {
-    	String name = prototypeName.getNameBinding().get(0).getName();
-    	return "org.modeldriven.alf.eclipse.fuml.papyrus.library." + 
-    			definition.getNamespace().getName().toLowerCase() + "." + name;
+    protected String getPrototypeClassName(Member definition, String prototypeName) {
+    	return prototypeName;
     }
     
     @Override

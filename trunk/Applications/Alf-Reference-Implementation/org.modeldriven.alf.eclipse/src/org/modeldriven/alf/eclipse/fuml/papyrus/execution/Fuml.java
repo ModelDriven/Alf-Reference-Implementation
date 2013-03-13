@@ -144,19 +144,12 @@ public class Fuml {
         try {
             execution =  new org.modeldriven.alf.eclipse.fuml.papyrus.execution.OpaqueBehaviorExecution(
             		(org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution)
-                Class.forName
-                    (getPrototypeClassName(definition, definition.getImpl().getPrimitiveBehaviorPrototypeName())).
+                Class.forName(definition.getImpl().getPrimitiveBehaviorPrototypeName()).
                         newInstance());
         } catch (Exception e) {
         }
         execution.addType(behavior);
         return execution;
-    }
-    
-    private static String getPrototypeClassName(Member definition, QualifiedName prototypeName) {
-    	String name = prototypeName.getNameBinding().get(0).getName();
-    	return "org.modeldriven.alf.eclipse.fuml.papyrus.library." + 
-    			definition.getNamespace().getName().toLowerCase() + "." + name;
     }
     
     protected void createSystemServices(Element scope) {
