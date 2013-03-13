@@ -26,7 +26,7 @@
         <java classname="${classname}" classpath="bin" output="${filename}" append="true">
             <classpath refid="${cp}" />
             <arg value="-l" />
-            <arg value="${alf.eclipse.dir}/UML" />
+            <arg value="${alf.eclipse.dir}/UML/Libraries" />
             <arg value="-m" />
             <arg value="${alf.dir}/tests-x" />
             <arg value="-d" />
