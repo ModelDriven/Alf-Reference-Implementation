@@ -2,43 +2,43 @@ namespace Alf::Library::PrimitiveBehaviors;
 
 package BitStringFunctions {
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringIsSetFunctionExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringIsSetFunctionExecution")
   public activity IsSet(in b: BitString, in n: Integer): Boolean { }
   
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringBitLengthFunctionExecuton")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringBitLengthFunctionExecuton")
   public activity BitLength(): Integer { }
   
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringToBitStringFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToBitStringFunctionBehaviorExecution")
   public activity ToBitString(in n: Integer): BitString { }
   
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringToIntegerFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToIntegerFunctionBehaviorExecution")
   public activity ToInteger(in b: BitString): Integer { }
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringToHexStringFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToHexStringFunctionBehaviorExecution")
   public activity ToHexString(in b: BitString): String { }
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringToOctalStringFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToOctalStringFunctionBehaviorExecution")
   public activity ToOctalString(in b: BitString): String { }
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringComplementFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringComplementFunctionBehaviorExecution")
   public activity '~'(in b: BitString): BitString { }
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringOrFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringOrFunctionBehaviorExecution")
   public activity '|'(in b1: BitString, in b2: BitString): BitString { }
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringXorFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringXorFunctionBehaviorExecution")
   public activity '^'(in b1: BitString, in b2: BitString): BitString { }
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringAndFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringAndFunctionBehaviorExecution")
   public activity '&'(in b1: BitString, in b2: BitString): BitString { }
   
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringShiftLeftFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringShiftLeftFunctionBehaviorExecution")
   public activity '<<'(in x: BitString, in n: Integer): BitString { }
   
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringShiftRightFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringShiftRightFunctionBehaviorExecution")
   public activity '>>'(in x: BitString, in n: Integer): BitString { }
   
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.bitstringfunctions.BitStringUnsignedShiftRightFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringUnsignedShiftRightFunctionBehaviorExecution")
   public activity '>>>'(in x: BitString, in n: Integer): BitString[0..1] { }
   
 }

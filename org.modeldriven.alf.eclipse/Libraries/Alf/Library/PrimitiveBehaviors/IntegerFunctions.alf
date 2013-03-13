@@ -18,7 +18,7 @@ public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::To
 
 package IntegerFunctions {
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.integerfunctions.IntegerToNaturalFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.IntegerToNaturalFunctionBehaviorExecution")
   public activity ToNatural(in x: String): Integer[0..1] {}
   
 }
