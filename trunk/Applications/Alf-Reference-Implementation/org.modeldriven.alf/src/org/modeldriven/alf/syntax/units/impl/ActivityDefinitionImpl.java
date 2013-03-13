@@ -154,14 +154,23 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
                 equals(namespace.getImpl().getClassifierBehavior());
     }
     
-    public QualifiedName getPrimitiveBehaviorPrototypeName() {
+    public String getPrimitiveBehaviorPrototypeName() {
         for (StereotypeAnnotation annotation: this.getSelf().getAnnotation()) {
             if (annotation.getStereotypeName().getPathName().equals("primitive")) {
                 QualifiedNameList nameList = annotation.getNames();
                 if (nameList != null) {
                     Collection<QualifiedName> names = nameList.getName();
                     if (!names.isEmpty()) {
-                        return (QualifiedName)names.toArray()[0];
+                        return ((QualifiedName)names.toArray()[0]).getPathName();
+                    }
+                } else {
+                    TaggedValueList taggedValues = annotation.getTaggedValues();
+                    if (taggedValues != null) {
+                        String value = taggedValues.getImpl().getValue("implementation");
+                        if (value != null && value.length() > 2 && value.charAt(0) == '"') {
+                            value = value.substring(1, value.length() - 1);
+                        }
+                        return value;
                     }
                 }
             }
