@@ -1,0 +1,24 @@
+namespace Alf::Library::PrimitiveBehaviors;
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Neg;
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Abs;
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'+';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'-';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'*';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Div as '/';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Mod as '%';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Max;
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Min;
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'<';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'>';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'<=';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'>=';
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToString;
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToUnlimitedNatural;
+public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToInteger;
+
+package IntegerFunctions {
+
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.fuml.papyrus.library.integerfunctions.IntegerToNaturalFunctionBehaviorExecution")
+  public activity ToNatural(in x: String): Integer[0..1] {}
+  
+}
