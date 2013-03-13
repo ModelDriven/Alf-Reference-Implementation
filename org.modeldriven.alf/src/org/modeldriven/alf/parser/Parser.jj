@@ -37,6 +37,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,10 +45,14 @@ import java.util.List;
 public class Parser {
 
   private String fileName = "";
-  
+
   public Parser(String fileName) throws java.io.FileNotFoundException {
     this(fileName == null? System.in: new java.io.FileInputStream(fileName));
-    this.fileName = fileName == null? "System.in": fileName;
+    this.setFileName(fileName == null? "System.in": fileName);
+  }
+
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
   }
   
   public String getFileName() {

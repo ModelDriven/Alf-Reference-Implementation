@@ -8,6 +8,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +20,11 @@ public class Parser implements ParserConstants {
 
   public Parser(String fileName) throws java.io.FileNotFoundException {
     this(fileName == null? System.in: new java.io.FileInputStream(fileName));
-    this.fileName = fileName == null? "System.in": fileName;
+    this.setFileName(fileName == null? "System.in": fileName);
+  }
+
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
   }
 
   public String getFileName() {
@@ -5482,18 +5487,6 @@ public class Parser implements ParserConstants {
     finally { jj_save(44, xla); }
   }
 
-  private boolean jj_3R_141() {
-    if (jj_3R_153()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_116() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_141()) jj_scanpos = xsp;
-    return false;
-  }
-
   private boolean jj_3_12() {
     if (jj_3R_51()) return true;
     return false;
@@ -7229,6 +7222,18 @@ public class Parser implements ParserConstants {
     if (jj_scan_token(137)) return true;
     }
     }
+    return false;
+  }
+
+  private boolean jj_3R_141() {
+    if (jj_3R_153()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_116() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_141()) jj_scanpos = xsp;
     return false;
   }
 
