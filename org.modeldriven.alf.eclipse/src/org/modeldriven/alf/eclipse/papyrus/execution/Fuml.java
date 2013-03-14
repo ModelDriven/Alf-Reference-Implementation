@@ -62,6 +62,10 @@ public class Fuml {
 	private final RootNamespaceImpl rootScopeImpl = new RootNamespaceImpl();
 
 	private org.modeldriven.alf.eclipse.papyrus.execution.Locus locus;
+	
+	public org.modeldriven.alf.eclipse.papyrus.execution.Locus getLocus() {
+		return this.locus;
+	}
 
     public static void setDebugLevel(Level level) {
         Logger logger = Logger.getLogger(org.eclipse.papyrus.moka.fuml.debug.Debug.class);
