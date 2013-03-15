@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse
-Bundle-SymbolicName: org.modeldriven.alf.eclipse;singleton:=true
+Bundle-SymbolicName: org.modeldriven.alf.eclipse.papyrus;singleton:=true
 Bundle-Version: 0.1.0
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.papyrus.moka.fuml;bundle-version="0.9.2",
