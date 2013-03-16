@@ -1,0 +1,104 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+The base concrete implementation for all collections.
+*/
+abstract class CollectionImpl {
+  
+  @Create protected CollectionImpl(in seq: any[0..*] sequence) {
+    this.setContent(seq);
+  }
+
+  protected abstract setContent (in seq: any[0..*] sequence);
+  
+  protected abstract getContent (): any[0..*] sequence;
+
+  protected addImpl (in element: any): Boolean { 
+    result = this.excludesImpl(element);
+    this.setContent(this.getContent()->Including(element));
+    return result;
+  }
+
+  protected addAllImpl (in seq: any[0..*] sequence): Boolean { 
+    preSize = this.sizeImpl();
+    this.setContent(this.getContent()->Union(seq));
+    return this.sizeImpl() > preSize;
+  }
+
+  protected clearImpl () { 
+    this.setContent(null);
+  }
+
+  protected countImpl (in element: any): Integer { 
+    return this.getContent()->Count(element);
+  }
+
+  protected equalsImpl (in seq: any[0..*] sequence): Boolean { 
+    return this.getContent()->Equals(seq);
+  }
+
+  protected excludesImpl (in element: any): Boolean { 
+    return this.getContent()->Excludes(element);
+  }
+
+  protected excludesAllImpl (in seq: any[0..*] sequence): Boolean {
+    return this.getContent()->ExcludesAll(seq); 
+  }
+
+  protected includesImpl (in element: any): Boolean { 
+    return this.getContent()->Includes(element);
+  }
+
+  protected includesAllImpl (in seq: any[0..*] sequence): Boolean { 
+    return this.getContent()->IncludesAll(seq);
+  }
+
+  protected isEmptyImpl (): Boolean { 
+    return this.getContent()->IsEmpty();
+  }
+
+  protected notEmptyImpl (): Boolean { 
+    return this.getContent()->NotEmpty();
+  }
+
+  protected removeImpl (in element: any): Integer { 
+    result = this.countImpl(element);
+    this.setContent(this.getContent()->Excluding(element));
+    return result;
+  }
+
+  protected removeAllImpl (in seq: any[0..*] sequence): Boolean { 
+    preSize = this.sizeImpl();
+    this.setContent(this.getContent()->Difference(seq));
+    return this.sizeImpl() < preSize;
+  }
+
+  protected removeOneImpl (in element: any): Boolean { 
+    result = this.includesImpl(element);
+    this.setContent(this.getContent()->ExcludingOne(element));
+    return result;
+  }
+
+  protected replaceImpl (in element: any, in newElement: any): Integer { 
+    result = this.countImpl(element);
+    this.setContent(this.getContent()->Replacing(element, newElement));
+    return result;
+  }
+
+  protected replaceOneImpl (in element: any, in newElement: any): Boolean { 
+    result = this.includesImpl(element);
+    this.setContent(this.getContent()->ReplacingOne(element, newElement));
+    return result;
+  }
+
+  protected retainAllImpl (in seq: any[0..*] sequence): Boolean { 
+    preSize = this.sizeImpl();
+    this.setContent(this.getContent()->Intersection(seq));
+    return this.sizeImpl() < preSize;
+  }
+
+  protected sizeImpl (): Integer { 
+    return this.getContent()->Size();
+  }
+
+}

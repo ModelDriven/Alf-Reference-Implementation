@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RunTests-x" default="run" basedir=".">
     <property name="alf.dir" value="../org.modeldriven.alf" />
+    <property name="alf.dir.eclipse" value="../org.modeldriven.alf.eclipse" />
     <property name="moka.dir" value="../org.eclipse.papyrus.moka.fuml" />
     <property name="moka.lib" value="../org.eclipse.papyrus.moka.fuml.standardlibrary" />
     <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
     <path id="cp-moka">
         <pathelement location="${classpath}" />
         <pathelement location="${alf.dir}/bin" />
+        <pathelement location="${alf.dir.eclipse}/bin" />
         <pathelement location="${alf.dir}/lib/commons-logging.jar" />
         <pathelement location="${alf.dir}/lib/log4j.jar" />
         <pathelement location="${moka.dir}/bin" />
