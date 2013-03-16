@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_OFweMI6CEeKaj48b8YUtKg" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_d7AfoI6CEeKaj48b8YUtKg" name="Expressions_Operator">
+    <ownedBehavior xmi:type="uml:Activity" xmi:id="_z4EM0I6CEeKaj48b8YUtKg" name="test" specification="_mfJD4I6CEeKaj48b8YUtKg"/>
+    <ownedOperation xmi:id="_mfJD4I6CEeKaj48b8YUtKg" name="test" method="_z4EM0I6CEeKaj48b8YUtKg"/>
+  </packagedElement>
+</uml:Model>
