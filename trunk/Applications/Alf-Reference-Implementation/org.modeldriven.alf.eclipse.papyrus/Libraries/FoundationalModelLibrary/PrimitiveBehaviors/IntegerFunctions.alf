@@ -1,0 +1,53 @@
+namespace FoundationalModelLibrary::PrimitiveBehaviors;
+
+package IntegerFunctions {
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Neg")
+  public activity Neg(in x: Integer): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Abs")
+  public activity Abs(in x: Integer): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Add")
+  public activity '+'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Minus")
+  public activity '-'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Times")
+  public activity '*'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Div")
+  public activity Div(in x: Integer, in y: Integer): Integer[0..1] { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Mod")
+  public activity Mod(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Max")
+  public activity Max(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Min")
+  public activity Min(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Lower")
+  public activity '<'(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Greater")
+  public activity '>'(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.LowerOrEqual")
+  public activity '<='(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.GreaterOrEqual")
+  public activity '>='(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.ToString")
+  public activity ToString(in x: Integer): String {}
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.ToUnlimitedNatural")
+  public activity ToUnlimitedNatural(in x: Integer): UnlimitedNatural[0..1] {}
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.ToInteger")
+  public activity ToInteger(in x: String): Integer[0..1] {}
+
+}

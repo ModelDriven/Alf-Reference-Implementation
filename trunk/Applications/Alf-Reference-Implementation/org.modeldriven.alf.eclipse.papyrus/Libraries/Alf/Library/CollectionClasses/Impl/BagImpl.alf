@@ -1,0 +1,28 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+The implementation of bags.
+*/
+abstract class BagImpl specializes CollectionImpl {
+
+  private content: any[0..*] nonunique;
+
+  @Create protected BagImpl (in seq: any[0..*] sequence) { 
+    super.CollectionImpl(seq);
+  }
+
+  @Destroy public destroy () { }
+  
+  protected setContent(in seq: any[0..*] sequence) {
+    this.content = seq;
+  }
+
+  protected getContent (): any[0..*] sequence {
+    return this.content;
+  }                                                                      
+
+  protected equalsImpl (in seq: any[0..*] sequence): Boolean { 
+    return this.sizeImpl() == seq->Size() && this.includesAllImpl(seq);
+  }
+ 
+}
