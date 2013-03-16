@@ -12,6 +12,7 @@ package org.modeldriven.alf.fuml.execution;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
@@ -204,6 +205,10 @@ public abstract class Alf extends AlfBase {
     @Override
     public UnitDefinition process(UnitDefinition unit) {
         return this.execute(super.process(unit));
+    }
+    
+    protected void configure() {
+        PropertyConfigurator.configure("log4j.properties");
     }
     
     public Alf() {
