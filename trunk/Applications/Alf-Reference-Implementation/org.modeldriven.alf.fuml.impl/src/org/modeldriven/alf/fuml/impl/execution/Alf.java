@@ -11,7 +11,6 @@ package org.modeldriven.alf.fuml.impl.execution;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.Member;
@@ -113,10 +112,6 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
             printVerbose("Instantiated " + name.getPathName() + 
                     " as " + object.getClass().getName());
         }
-    }
-    
-    protected void configure() {
-        PropertyConfigurator.configure("log4j.properties");
     }
     
     public Alf() {
