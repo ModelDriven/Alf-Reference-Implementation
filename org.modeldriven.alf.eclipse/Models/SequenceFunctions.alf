@@ -1,0 +1,150 @@
+private import Alf::Library::PrimitiveTypes::*;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions as AlfSequenceFunctions;
+private import FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::*;
+
+@ModelLibrary
+package SequenceFunctions {
+
+  public activity Size(in seq: any[*] sequence): Integer { 
+  	return ListSize(seq);
+  }
+  
+  public activity Includes(in seq: any[*] sequence, in element: any): Boolean { 
+  	return seq->exists x (x == element);
+  }
+  
+  public activity Excludes(in seq: any[*] sequence, in element: any): Boolean { 
+  	return seq->forAll x (x != element);
+  }
+  
+  public activity Count(in seq: any[*] sequence, in element: any): Integer { 
+  	return AlfSequenceFunctions::Size(seq->select x (x == element));
+  }
+  
+  public activity IsEmpty(in seq: any[*] sequence): Boolean { 
+  	return AlfSequenceFunctions::Size(seq) == 0;
+  }
+
+  public activity NotEmpty(in seq: any[*] sequence): Boolean { 
+  	return AlfSequenceFunctions::Size(seq) > 0;
+  }
+
+  public activity IncludesAll(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { 
+  	return seq2->forAll x (AlfSequenceFunctions::Includes(seq1, x));
+  }
+  
+  public activity ExcludesAll(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { 
+  	return seq2->forAll x (AlfSequenceFunctions::Excludes(seq2, x));
+  }
+  
+  public activity Equals(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { 
+  	if (AlfSequenceFunctions::Size(seq1) != AlfSequenceFunctions::Size(seq2)) {
+  	  return false;
+  	} else {
+  	  for (x in seq1, y in seq2) {
+  	    if (x != y) {
+  	      return false;
+  	    }
+  	  }
+  	  return true;
+  	}
+  }
+  
+  public activity At(in seq: any[*] sequence, in index: Integer): any[0..1] { 
+  	return ListGet(seq, index);
+  }
+  
+  public activity IndexOf(in seq: any[*] sequence, in element: any): Integer[0..1] { 
+  	for (i in 1..AlfSequenceFunctions::Size(seq)) {
+  	  if (AlfSequenceFunctions::At(seq, i) == element) {
+  	    return i;
+  	  }
+  	}
+  	return null;
+  }
+  
+  public activity First(in seq: any[*] sequence): any[0..1] { 
+    return AlfSequenceFunctions::At(seq, 1);
+  }
+  
+  public activity Last(in seq: any[*] sequence): any[0..1] { 
+    return AlfSequenceFunctions::At(seq, AlfSequenceFunctions::Size(seq));
+  }
+  
+  public activity Union(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { 
+    return ListConcat(seq1, seq2);
+  }
+  
+  public activity Intersection(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { 
+    return seq1->reject x (AlfSequenceFunctions::Excludes(seq2, x));
+  }
+  
+  public activity Difference(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { 
+    return seq1->reject x (AlfSequenceFunctions::Includes(seq2, x));
+  }
+  
+  public activity Including(in seq: any[*] sequence, in element: any): any[*] sequence { 
+    return ListConcat(seq, element);
+  }
+  
+  public activity IncludeAt(in seq: any[*] sequence, in index: Integer, in element: any): any[*] sequence { 
+    return index < 1 || index > AlfSequenceFunctions::Size(seq)+1? seq:
+      AlfSequenceFunctions::Union(AlfSequenceFunctions::Including(AlfSequenceFunctions::Subsequence(seq, 1, index-1), element),
+            AlfSequenceFunctions::Subsequence(seq, index, AlfSequenceFunctions::Size(seq)));
+  }
+  
+  public activity InsertAt(in seq: any[*] sequence, in index: Integer, in element: any): any[*] sequence { 
+  	return AlfSequenceFunctions::IncludeAt(seq, index, element);
+  }
+  
+  public activity IncludeAllAt(in seq1: any[*] sequence, in index: Integer, in seq2: any[*] sequence): any[*] sequence { 
+    return index < 1 || index > AlfSequenceFunctions::Size(seq1)+1? seq1:
+      AlfSequenceFunctions::Union(AlfSequenceFunctions::Union(AlfSequenceFunctions::Subsequence(seq1, 1, index-1), seq2),
+            AlfSequenceFunctions::Subsequence(seq1, index, AlfSequenceFunctions::Size(seq1)));
+  }
+  
+  public activity Excluding(in seq: any[*] sequence, in element: any): any[*] sequence { 
+    return seq->reject x (x == element);
+  }
+  
+  public activity ExcludingOne(in seq: any[*] sequence, in element: any): any[*] sequence { 
+    i = AlfSequenceFunctions::IndexOf(seq, element);
+    return i == null? seq: AlfSequenceFunctions::ExcludeAt(seq, i);
+  }
+  
+  public activity ExcludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { 
+    return index < 1 || index > AlfSequenceFunctions::Size(seq)? seq:
+      AlfSequenceFunctions::Union(AlfSequenceFunctions::Subsequence(seq, 1, index-1),
+            AlfSequenceFunctions::Subsequence(seq, index+1, AlfSequenceFunctions::Size(seq)));
+  }
+  
+  public activity Replacing(in seq: any[*] sequence, in element: any, in newElement: any): any[*] sequence { 
+    return seq->collect x (x == element? newElement: element);
+  }
+  
+  public activity ReplacingOne(in seq: any[*] sequence, in element: any, in newElement: any): any[*] sequence { 
+    i = AlfSequenceFunctions::IndexOf(seq, element);
+    return i == null? seq: AlfSequenceFunctions::ReplacingAt(seq, i, newElement);
+  }
+  
+  public activity ReplacingAt(in seq: any[*] sequence, in index: Integer, in element: any): any[*] sequence {
+    return index < 1 || index > AlfSequenceFunctions::Size(seq)? seq:
+	  AlfSequenceFunctions::Union(AlfSequenceFunctions::Including(AlfSequenceFunctions::Subsequence(seq, 1, index-1), element),
+            AlfSequenceFunctions::Subsequence(seq, index+1, AlfSequenceFunctions::Size(seq)));
+  }
+  
+  public activity Subsequence(in seq: any[*] sequence, in lower: Integer, in upper: Integer): any[*] sequence {
+    n = AlfSequenceFunctions::Size(seq);
+    return Integer[]{lower < 1? 1: lower .. upper > n? n: upper}->
+      collect i (AlfSequenceFunctions::At(seq, i));
+  }
+  
+  public activity ToOrderedSet(in seq: any[*] sequence): any[*] ordered { 
+    s = null;
+    for (x in seq) {
+      s = AlfSequenceFunctions::Includes(s, x)? s: AlfSequenceFunctions::Including(s, x);
+    }
+    return s;
+  }
+
+}

@@ -1,0 +1,26 @@
+namespace FoundationalModelLibrary::PrimitiveBehaviors;
+
+package BooleanFunctions {
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Or")
+  public activity Or(in x: Boolean, in y: Boolean): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Xor")
+  public activity Xor(in x: Boolean, in y: Boolean): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.And")
+  public activity And(in x: Boolean, in y: Boolean): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Not")
+  public activity Not(in x: Boolean): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Implies")
+  public activity Implies(in x: Boolean, in y: Boolean): Boolean { }
+  
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.ToString")
+  public activity ToString(in x: Boolean): String { }
+  
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.ToBoolean")
+  public activity ToBoolean(in x: String): Boolean[0..1] { }
+
+}
