@@ -1,0 +1,127 @@
+namespace Impl;
+
+/**
+The concrete implementation of the standard library template OrderedSet class.
+*/
+class OrderedSet<T> specializes OrderedSetImpl, CollectionClasses::OrderedSet<T> {
+  
+  @Create public OrderedSet (in seq: T[0..*] sequence) redefines CollectionClasses::OrderedSet<T>::OrderedSet { 
+    super.OrderedSetImpl(seq);
+  }
+
+  @Destroy public destroy () { 
+  }
+
+  public add (in element: T): Boolean {
+    return super.addImpl(element);
+  }
+  
+  public addAt (in index: Integer, in element: T): Boolean {
+    return super.addAtImpl(index, element);
+  }
+
+  public addAll (in seq: T[0..*] sequence): Boolean {
+    return super.addAllImpl(seq);
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public addAllAt (in index: Integer, in seq: T[0..*] sequence): Boolean {
+    return super.addAllAtImpl(index, seq);
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public at (in index: Integer): T[0..1] {
+    return (T)super.atImpl(index);
+  }
+
+  public clear () {
+    super.clearImpl();
+  }
+  
+  public count (in element: T): Integer  {
+    return super.countImpl(element);
+  }
+
+  public equals (in seq: T[0..*] sequence): Boolean { 
+    return super.equalsImpl(seq);
+  }
+
+  public first (): T[0..1] { 
+    return (T)super.firstImpl();
+  }
+  
+  public indexOf (in element: T) : Integer[0..1] { 
+    return super.indexOfImpl(element);
+  }
+  
+  public last (): T[0..1] { 
+    return (T)super.lastImpl();
+  }
+  
+  public excludes (in element: T): Boolean {
+    return super.excludesImpl(element);
+  }
+  
+  public excludesAll (in seq: T[0..*] sequence): Boolean {
+    return super.excludesAllImpl(seq);
+  }
+  
+  public includes (in element: T): Boolean {
+    return super.includesImpl(element);
+  }
+  
+  public includesAll (in seq: T[0..*] sequence): Boolean {
+    return super.includesAllImpl(seq);
+  }
+  
+  public isEmpty (): Boolean {
+    return super.isEmptyImpl();
+  }
+  
+  public notEmpty (): Boolean {
+    return super.notEmptyImpl();
+  }
+  
+  public remove (in element: T): Integer { 
+    return super.removeImpl(element);
+  }
+  
+  public removeAll (in seq: T[0..*] sequence): Boolean { 
+    return super.removeAllImpl(seq);
+  }
+  
+  public removeAt (in index: Integer): T[0..1] { 
+    return (T)super.removeAtImpl(index);
+  }
+  
+  public removeOne (in element: T): Boolean { 
+    return super.removeOneImpl(element);
+  }
+  
+  public replace (in element: T, in newElement: T): Integer { 
+    return super.replaceImpl(element, newElement);
+  }
+  
+  public replaceAt (in index: Integer, in element: T): T[0..1] {
+    return (T)super.replaceAtImpl(index, element);
+  }
+  
+  public replaceOne (in element: T, in newElement: T): Boolean { 
+    return super.replaceOneImpl(element, newElement);
+  }
+  
+  public retainAll (in seq: T[0..*] sequence): Boolean { 
+    return super.retainAllImpl(seq);
+  }
+   
+  public size (): Integer {
+    return super.sizeImpl();
+  }
+  
+  public subOrderedSet (in lower: Integer, in upper: Integer): CollectionClasses::OrderedSet<T> {
+    return new OrderedSet<T>((T)super.subOrderedSetImpl(lower, upper));
+  }
+  
+  public toSequence(): T[0..*] sequence {
+    return (T)this.getContent();
+  }
+
+}

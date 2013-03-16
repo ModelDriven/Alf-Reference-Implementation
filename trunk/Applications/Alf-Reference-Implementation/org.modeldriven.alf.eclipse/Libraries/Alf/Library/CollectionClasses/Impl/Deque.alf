@@ -1,0 +1,124 @@
+namespace Alf::Library::CollectionClasses::Impl;
+
+/**
+The concrete implementation of the standard library template Deque class.
+*/
+class Deque<T> specializes DequeImpl, CollectionClasses::Deque<T> {
+
+  @Create public Deque (in seq: T[0..*] sequence) { 
+    super.DequeImpl(seq);
+  }
+
+  @Create private Queue (in seq: T[0..*] sequence) {
+    this.Deque(seq);
+  }
+
+  public add (in element: T): Boolean {
+    return super.addImpl(element);
+  }
+  
+  public addAll (in seq: T[0..*] sequence): Boolean {
+    return super.addAllImpl(seq);
+  }
+  
+  public addFirst (in element: T): Boolean {
+    return super.addFirstImpl(element);
+  }
+  
+  public addLast (in element : T): Boolean {
+    return super.addLastImpl(element);
+  }
+  
+  public clear () {
+    super.clearImpl();
+  }
+  
+  public count (in element: T): Integer  {
+    return super.countImpl(element);
+  }
+
+  public equals (in seq: T[0..*] sequence): Boolean { 
+    return super.equalsImpl(seq);
+  }
+ 
+  public excludes (in element: T): Boolean {
+    return super.excludesImpl(element);
+  }
+  
+  public excludesAll (in seq: T[0..*] sequence): Boolean {
+    return super.excludesAllImpl(seq);
+  }
+  
+  public first(): T[0..1] {
+    return (T)super.firstImpl();
+  }
+  
+  public includes (in element: T): Boolean {
+    return super.includesImpl(element);
+  }
+  
+  public includesAll (in seq: T[0..*] sequence): Boolean {
+    return super.includesAllImpl(seq);
+  }
+  
+  public isEmpty (): Boolean {
+    return super.isEmptyImpl();
+  }
+  
+  public last (): T[0..1] {
+    return (T)super.lastImpl();
+  }
+  
+  public notEmpty (): Boolean {
+    return super.notEmptyImpl();
+  }
+  
+  public remove (in element: T): Integer {
+    return super.removeImpl(element);
+  }
+  
+  public removeAll (in seq: T[0..*] sequence): Boolean {
+    return super.removeAllImpl(seq);
+  }
+  
+  public removeFirst (): T[0..1] {
+    return (T)super.removeFirstImpl();
+  }
+  
+  public removeFirstOne (in element: T): T[0..1] {
+    return (T)super.removeFirstOneImpl(element);
+  }                      
+
+  public removeLast (): T[0..1] {
+    return (T)super.removeLastImpl();
+  }
+  
+  public removeLastOne (in element: T): T[0..1] {
+    return (T)super.removeLastOneImpl(element);
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  public removeOne (in element: T): Boolean {
+    return super.removeOneImpl(element);
+  }
+  
+  public replace (in element: T, in newElement: T): Integer  {
+    return super.replaceImpl(element, newElement);
+  }
+  
+  public replaceOne (in element: T, in newElement: T): Boolean {
+    return super.replaceOneImpl(element, newElement);
+  }
+  
+  public retainAll (in seq: T[0..*] sequence): Boolean {
+    return super.retainAllImpl(seq);
+  }
+
+  public size(): Integer {
+    return super.sizeImpl();
+  }
+  
+  public toSequence (): T[0..*] sequence {
+    return (T)super.getContent();
+  }
+
+}
