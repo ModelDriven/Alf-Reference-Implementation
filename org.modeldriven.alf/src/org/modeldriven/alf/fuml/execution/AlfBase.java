@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.PropertyConfigurator;
 import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
@@ -194,7 +193,6 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     }
     
     protected void configure() {
-        PropertyConfigurator.configure("log4j.properties");
     }
     
     public AlfBase() {
