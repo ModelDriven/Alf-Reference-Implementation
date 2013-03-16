@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/org.modeldriven.alf/lib/log4j.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modeldriven.alf"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.modeldriven.alf.eclipse"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

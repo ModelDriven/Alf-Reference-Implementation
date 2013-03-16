@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ExecuteTests-x" default="run" basedir=".">
     <property name="alf.dir" value="../org.modeldriven.alf" />
+    <property name="alf.eclipse.dir" value="../org.modeldriven.alf.eclipse" />
     <property name="moka.dir" value="../org.eclipse.papyrus.moka.fuml" />
     <property name="moka.lib" value="../org.eclipse.papyrus.moka.fuml.standardlibrary" />
     <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
     <path id="cp-moka">
         <pathelement location="${classpath}" />
         <pathelement location="${alf.dir}/bin" />
+        <pathelement location="${alf.eclipse.dir}/bin" />
         <pathelement location="${alf.dir}/lib/commons-logging.jar" />
         <pathelement location="${alf.dir}/lib/log4j.jar" />
         <pathelement location="${moka.dir}/bin" />
@@ -27,7 +29,7 @@
         <echo message="${unit}" />
         <echo file="${filename}" append="true">${unit}...
 </echo>
-        <java classname="${classname}" classpath="bin" output="${filename}" append="true" fork="true" dir="UML">
+        <java classname="${classname}" classpath="bin" output="${filename}" append="true" fork="true" dir="${alf.eclipse.dir}/UML">
             <classpath refid="${cp}" />
             <arg value="-d" />
             <arg value="ERROR" />
