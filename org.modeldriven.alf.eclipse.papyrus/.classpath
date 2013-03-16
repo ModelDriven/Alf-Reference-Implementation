@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="/org.modeldriven.alf/lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="/org.modeldriven.alf/lib/log4j.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.modeldriven.alf"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.modeldriven.alf.eclipse"/>
+	<classpathentry kind="lib" path="lib/alf-base.jar"/>
+	<classpathentry kind="lib" path="lib/alf-eclipse.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
