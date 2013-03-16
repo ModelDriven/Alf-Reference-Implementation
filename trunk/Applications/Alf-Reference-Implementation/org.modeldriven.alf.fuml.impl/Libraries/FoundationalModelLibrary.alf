@@ -1,0 +1,8 @@
+@ModelLibrary
+package FoundationalModelLibrary {
+
+  public package PrimitiveBehaviors;
+  public package Common;
+  public package BasicInputOutput;
+  
+}

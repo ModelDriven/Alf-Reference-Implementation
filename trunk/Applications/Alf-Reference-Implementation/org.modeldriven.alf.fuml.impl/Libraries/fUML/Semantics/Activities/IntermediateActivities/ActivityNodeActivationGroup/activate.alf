@@ -1,0 +1,5 @@
+namespace fUML::Semantics::Activities::IntermediateActivities::
+          ActivityNodeActivationGroup;
+          
+activity activate(in nodes: ActivityNode[*], in edges: ActivityEdge[*]) {
+}
