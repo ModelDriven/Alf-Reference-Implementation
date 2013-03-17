@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/org.modeldriven.alf/lib/commons-logging.jar"/>
-	<classpathentry kind="lib" path="/org.modeldriven.alf/lib/log4j.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/alf-base.jar"/>
 	<classpathentry kind="lib" path="lib/alf-eclipse.jar"/>
