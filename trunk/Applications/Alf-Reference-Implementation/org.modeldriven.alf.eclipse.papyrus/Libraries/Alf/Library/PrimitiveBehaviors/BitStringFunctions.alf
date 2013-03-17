@@ -2,10 +2,10 @@ namespace Alf::Library::PrimitiveBehaviors;
 
 package BitStringFunctions {
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringIsSetFunctionExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringIsSetFunctionBehaviorExecution")
   public activity IsSet(in b: BitString, in n: Integer): Boolean { }
   
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringBitLengthFunctionExecuton")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringBitLengthFunctionBehaviorExecuton")
   public activity BitLength(): Integer { }
   
   @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToBitStringFunctionBehaviorExecution")

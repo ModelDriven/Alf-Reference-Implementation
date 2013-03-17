@@ -13,16 +13,16 @@
         <pathelement location="${alf.dir}/lib/log4j.jar" />
         <pathelement location="${moka.dir}/bin" />
         <pathelement location="${moka.lib}/bin" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml_4.0.1.v20120913-1441.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.profile.l2_1.0.1.v20120913-1441.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.profile.l3_1.0.1.v20120913-1441.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.resources_4.0.1.v20120913-1441.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.common_1.7.0.v20120913-1441.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.types_1.0.0.v20120913-1441.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.common_2.8.0.v20120911-0500.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore_2.8.1.v20120911-0500.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore.xmi_2.8.0.v20120911-0500.jar" />
-        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20120917-0436.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml_4.0.2.v20130114-0902.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.profile.l2_1.0.1.v20130114-0902.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.profile.l3_1.0.1.v20130114-0902.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml.resources_4.0.2.v20130114-0902.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.common_1.7.0.v20130114-0902.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.types_1.0.0.v20130114-0902.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.common_2.8.0.v20130125-0546.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore_2.8.3.v20130125-0546.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.ecore.xmi_2.8.1.v20130125-0546.jar" />
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20130125-0826.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.papyrus.uml.tools.utils_0.9.2.v201302131112.jar" />
     </path>
     <target name="run-test">
