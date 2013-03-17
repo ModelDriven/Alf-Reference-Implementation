@@ -36,13 +36,6 @@ import org.modeldriven.alf.eclipse.units.RootNamespaceImpl;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.execution.Object_;
 
-import org.modeldriven.alf.syntax.expressions.QualifiedName;
-import org.modeldriven.alf.syntax.units.ActivityDefinition;
-import org.modeldriven.alf.syntax.units.Member;
-import org.modeldriven.alf.syntax.units.NamespaceDefinition;
-import org.modeldriven.alf.syntax.units.PackageDefinition;
-import org.modeldriven.alf.syntax.units.UnitDefinition;
-
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
@@ -72,10 +65,6 @@ public class Fuml {
         if (logger != null) {
         	logger.setLevel(level);
         }
-    }
-    
-    public void setAlfLibraryDirectory(String alfLibraryDirectory) {
-    	this.rootScopeImpl.setModelDirectory(alfLibraryDirectory);
     }
     
     public void setUmlLibraryDirectory(String umlLibraryDirectory) {
@@ -115,70 +104,193 @@ public class Fuml {
     }
     
     private void addPrimitiveBehaviorPrototypes(ResourceSet resourceSet) {
-    	QualifiedName qualifiedName = new QualifiedName().getImpl().
-    			addName("Alf").getImpl().
-    			addName("Library").getImpl().
-    			addName("PrimitiveBehaviors");
-    	this.createPrimitiveBehaviorPrototypes(resourceSet, qualifiedName);
-    	
-    	qualifiedName = new QualifiedName().getImpl().
-    			addName("FoundationalModelLibrary").getImpl().
-    			addName("PrimitiveBehaviors");
-    	this.createPrimitiveBehaviorPrototypes(resourceSet, qualifiedName);
-    }
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::Or", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Or.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::Xor", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Xor.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::And", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.And.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::Not", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Not.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::Implies", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Implies.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::ToString", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.ToString.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::ToBoolean", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.ToBoolean.class);
     
-    private void createPrimitiveBehaviorPrototypes(ResourceSet resourceSet, QualifiedName qualifiedName) {
-    	String pathName = qualifiedName.getImpl().getPathName();
-    	UnitDefinition unit = this.rootScopeImpl.resolveUnit(qualifiedName);
-    	NamespaceDefinition definition = unit.getDefinition();
-    	if (definition != null) {
-	    	for (Member packageDefinition: definition.getOwnedMember()) {
-	    		if (packageDefinition instanceof PackageDefinition) {
-		    		if (packageDefinition.getIsStub()) {
-		    			packageDefinition = packageDefinition.getSubunit().getDefinition();
-		     		}
-		    		if (packageDefinition != null) {
-		    			String packageName = pathName + "::" + packageDefinition.getName();
-		    			for (Member member: ((PackageDefinition) packageDefinition).getOwnedMember()) {
-		    				if (member instanceof ActivityDefinition && member.getIsPrimitive()) {
-		    					try {
-			    					Classifier behavior = this.getClassifier(
-			    							packageName + "::" + member.getName());
-			    					if (behavior instanceof OpaqueBehavior) {
-			    						OpaqueBehaviorExecution execution = 
-			    								instantiatePrimitiveBehaviorPrototype(
-			    										(ActivityDefinition)member, 
-			    										(OpaqueBehavior)behavior);
-			    						if (execution != null) {
-			    							this.locus.getFactory().addPrimitiveBehaviorPrototype(execution);
-			    							this.printVerbose("Added " + behavior.getQualifiedName());
-			    						}
-			    					}
-		    			    	} catch (ElementResolutionError e) {
-		    			    		this.println(e.getMessage());
-		    			    	}
-		    				}
-		    			}
-		    		}
-	    		}
-	    	}
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Neg", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Neg.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Abs", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Abs.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::+", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Add.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::-", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Minus.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::*", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Times.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Div", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Div.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Mod", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Mod.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Max", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Max.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Min", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Min.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::<", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Lower.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::>", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Greater.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::<=", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.LowerOrEqual.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::>=", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.GreaterOrEqual.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToString", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.ToString.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToUnlimitedNatural", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.ToUnlimitedNatural.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToInteger", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.ToInteger.class);
+    	
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::ListSize", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.list.ListSize.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::ListGet", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.list.ListGet.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::ListConcat", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.list.ListConcat.class);
+    	
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Concat", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.string.Concat.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Size", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.string.Size.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::StringFunctions::Substring", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.string.Substring.class);
+    	
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::Max", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.Max.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::Min", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.Min.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::<", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.Lower.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::>", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.Greater.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::<=", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.LowerOrEqual.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::>=", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.GreaterOrEqual.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::ToString", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.ToString.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::ToInteger", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.ToInteger.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::ToUnlimitedNatural", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.ToUnlimitedNatural.class);
+    	
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::IsSet", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringIsSetFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::BitLength", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringBitLengthFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::ToBitString", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToBitStringFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::ToInteger", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToIntegerFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::ToHexString", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToHexStringFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::ToOctalString", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringToOctalStringFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::~", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringComplementFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::|", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringOrFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::^", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringXorFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::&", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringAndFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::<<", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringShiftLeftFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::>>", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringShiftRightFunctionBehaviorExecution.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::BitStringFunctions::>>>", 
+    			org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions.BitStringUnsignedShiftRightFunctionBehaviorExecution.class);
+    	
+    	this.createPrimitiveBehaviorPrototype(
+    			"Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToNatural", 
+    			org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.IntegerToNaturalFunctionBehaviorExecution.class);
+}
+    
+    private void createPrimitiveBehaviorPrototype(
+    		String behaviorName, 
+    		Class<? extends org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution> prototypeClass) {
+		try {
+			Classifier behavior = this.getClassifier(behaviorName);
+			if (behavior instanceof OpaqueBehavior) {
+		        OpaqueBehaviorExecution execution = null;		        
+		        try {
+		            execution = new org.modeldriven.alf.eclipse.papyrus.execution.OpaqueBehaviorExecution(
+		                prototypeClass.newInstance());
+		        } catch (Exception e) {
+		        	execution = new UnimplementedBehaviorExecution();
+		        }
+		        execution.addType((OpaqueBehavior)behavior);
+		        
+		        this.locus.getFactory().addPrimitiveBehaviorPrototype(execution);
+		        this.printVerbose("Added " + behavior.getQualifiedName());
+			}
+    	} catch (ElementResolutionError e) {
+    		this.println(e.getMessage());
     	}
     }
-    
-    private static OpaqueBehaviorExecution instantiatePrimitiveBehaviorPrototype(
-    		ActivityDefinition definition, OpaqueBehavior behavior) {
-        OpaqueBehaviorExecution execution = new UnimplementedBehaviorExecution();
-        try {
-            execution =  new org.modeldriven.alf.eclipse.papyrus.execution.OpaqueBehaviorExecution(
-            		(org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution)
-                Class.forName(definition.getImpl().getPrimitiveBehaviorPrototypeName()).
-                        newInstance());
-        } catch (Exception e) {
-        }
-        execution.addType(behavior);
-        return execution;
-    }
-    
+        
     protected void createSystemServices(ResourceSet resourceSet) {
     	String basicInputOutput = "Alf::Library::BasicInputOutput";
     	
@@ -285,7 +397,7 @@ public class Fuml {
             if (i < args.length) {
                 if (option.equals("v")) {
                     this.setIsVerbose(true);
-                 } else if (option.matches("[dLlu]")) {
+                 } else if (option.matches("[dlu]")) {
                     arg = args[i];
                     if (arg.length() > 0 && arg.charAt(0) == '-') {
                         return null;
@@ -294,8 +406,6 @@ public class Fuml {
                     if (option.equals("d")) {
                     	setDebugLevel(Level.toLevel(arg, level));
                     	level = logger.getLevel();
-                    } else if (option.equals("L")) {
-                    	this.setAlfLibraryDirectory(arg);
                     } else if (option.equals("l")) {
                     	this.setUmlLibraryDirectory(arg);
                     } else if (option.equals("u")) {
@@ -411,57 +521,55 @@ public class Fuml {
    }
     
    protected void printVerbose(String message) {
-    	if (this.isVerbose) {
-    		this.println(message);
-    	}
-    }
-    
-    protected void println(String message) {
-    	System.out.println(message);
-    }
-    
-    public Fuml() {
-        Logger logger = Logger.getLogger(org.eclipse.papyrus.moka.fuml.debug.Debug.class);
-        if (logger != null) {
-        	PropertyConfigurator.configure("log4j.properties");
-        }
-        
-        this.setAlfLibraryDirectory("../Libraries");
-        this.setUmlLibraryDirectory("Libraries");
-    }
-    
-    public Fuml(String[] args) {
-    	this();
-        
-        String name = this.parseArgs(args);
-        
-        if (name != null) {
-        	
-        	int l1 = name.length();
-        	int l2 = UMLResource.FILE_EXTENSION.length() + 1;
-        	if (l1 > l2 && name.substring(l1 - l2).
-        			equals("." + UMLResource.FILE_EXTENSION)) {
-        		name = name.substring(0, l1 - l2);
-        	}
-        	
-    		this.execute(name);
- 
-        } else {
-        	this.println("Usage is");
-        	this.println("  fuml [options] file");
-        	this.println("where file is the name of an executable unit and");
-        	this.println("allowable options are:");
-        	this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
-        	this.println("            Set debug logging level (default is as configured)");
-        	this.println("  -L path   Set Alf library directory (default is \"../Libraries\"");
-        	this.println("  -l path   Set UML library directory (default is \"Libraries\"");
-        	this.println("  -u path   Set UML directory path (default is \".\"");
-        	this.println("  -v        Set verbose mode");
-        }         
-    }
-    
-	public static void main(String[] args) {
-		new Fuml(args);
-	}
+	   if (this.isVerbose) {
+		   this.println(message);
+	   }
+   }
+
+   protected void println(String message) {
+	   System.out.println(message);
+   }
+
+   public Fuml() {
+	   Logger logger = Logger.getLogger(org.eclipse.papyrus.moka.fuml.debug.Debug.class);
+	   if (logger != null) {
+		   PropertyConfigurator.configure("log4j.properties");
+	   }
+
+	   this.setUmlLibraryDirectory("Libraries");
+   }
+
+   public Fuml(String[] args) {
+	   this();
+
+	   String name = this.parseArgs(args);
+
+	   if (name != null) {
+
+		   int l1 = name.length();
+		   int l2 = UMLResource.FILE_EXTENSION.length() + 1;
+		   if (l1 > l2 && name.substring(l1 - l2).
+				   equals("." + UMLResource.FILE_EXTENSION)) {
+			   name = name.substring(0, l1 - l2);
+		   }
+
+		   this.execute(name);
+
+	   } else {
+		   this.println("Usage is");
+		   this.println("  fuml [options] file");
+		   this.println("where file is the name of an executable unit and");
+		   this.println("allowable options are:");
+		   this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
+		   this.println("            Set debug logging level (default is as configured)");
+		   this.println("  -l path   Set UML library directory (default is \"Libraries\"");
+		   this.println("  -u path   Set UML directory path (default is \".\"");
+		   this.println("  -v        Set verbose mode");
+	   }         
+   }
+
+   public static void main(String[] args) {
+	   new Fuml(args);
+   }
 
 }
