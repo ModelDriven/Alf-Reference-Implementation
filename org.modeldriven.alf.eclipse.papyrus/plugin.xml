@@ -3,6 +3,6 @@
 <plugin>
    <extension
          point="org.eclipse.papyrus.alf.alfcompiler">
-         <compiler>org.modeldriven.alf.eclipse.papyrus.AlfCompiler</compiler>
+         <compiler class="org.modeldriven.alf.eclipse.papyrus.execution.AlfCompiler" />
    </extension>
 </plugin>
