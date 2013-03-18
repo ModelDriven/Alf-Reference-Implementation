@@ -8,19 +8,24 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.papyrus.units;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.util.UMLUtil;
 import org.modeldriven.alf.eclipse.uml.Element;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
+import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
 import org.modeldriven.alf.uml.Namespace;
 
 public class RootNamespaceImpl extends 
@@ -63,6 +68,20 @@ public class RootNamespaceImpl extends
         return modelScope;
     }
     
+    @Override
+    public Collection<Member> resolve(String name, boolean classifierOnly) {
+    	Collection<Member> members = new ArrayList<Member>();
+    	if (this.resourceSet != null) {
+	    	for (NamedElement element: UMLUtil.findNamedElements(this.resourceSet, name, false,
+	    			classifierOnly? UMLPackage.Literals.CLASSIFIER: null)) {
+	    		members.add(ImportedMemberImpl.makeImportedMember(
+	    				element.getName(), 
+	    				org.modeldriven.alf.eclipse.uml.Element.wrap(element), null));
+	    	}
+    	}
+    	return members;
+    }
+
     @Override
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
     	UnitDefinition unit = new MissingUnit(qualifiedName);
