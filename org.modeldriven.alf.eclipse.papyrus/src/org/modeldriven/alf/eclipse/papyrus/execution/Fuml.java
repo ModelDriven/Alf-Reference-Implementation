@@ -504,20 +504,21 @@ public class Fuml {
     }
     
    public void execute(String name) {
-	   	try {
-	      	Resource resource = this.getResource(name);
-	    	if (resource != null) {
-	    		try {
-	    			this.initializeEnvironment();
-		    		Classifier element = this.getClassifier("Model::" + name);
-		        	this.execute(element);
-	        	} catch (ElementResolutionError e) {
-	        		this.println(e.getMessage());
-	        	}
-	    	}
-	   	} catch (Exception e) {
-	   		this.println(e.getMessage());
-	   	}
+	   Resource resource = null;
+	   try {
+		   resource = this.getResource(name);
+	   } catch (Exception e) {
+		   this.println(e.getMessage());
+	   }
+	   if (resource != null) {
+		   try {
+			   this.initializeEnvironment();
+			   Classifier element = this.getClassifier("Model::" + name);
+			   this.execute(element);
+		   } catch (ElementResolutionError e) {
+			   this.println(e.getMessage());
+		   }
+	   }
    }
     
    protected void printVerbose(String message) {
