@@ -7,8 +7,8 @@
     <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
     <path id="cp-moka">
         <pathelement location="${classpath}" />
-        <pathelement location="${alf.dir}/bin" />
-        <pathelement location="${alf.eclipse.dir}/bin" />
+        <pathelement location="lib/alf-base.jar" />
+        <pathelement location="lib/alf-eclipse.jar" />
         <pathelement location="${alf.dir}/lib/commons-logging.jar" />
         <pathelement location="${alf.dir}/lib/log4j.jar" />
         <pathelement location="${moka.dir}/bin" />
@@ -29,10 +29,14 @@
         <echo message="${unit}" />
         <echo file="${filename}" append="true">${unit}...
 </echo>
-        <java classname="${classname}" classpath="bin" output="${filename}" append="true" fork="true" dir="${alf.eclipse.dir}/UML">
+        <java classname="${classname}" classpath="bin" output="${filename}" append="true">
             <classpath refid="${cp}" />
             <arg value="-d" />
             <arg value="ERROR" />
+            <arg value="-l" />
+            <arg value="${alf.eclipse.dir}/UML/Libraries" />
+            <arg value="-u" />
+            <arg value="${alf.eclipse.dir}/UML" />
             <arg value="${unit}" />
         </java>
     </target>
