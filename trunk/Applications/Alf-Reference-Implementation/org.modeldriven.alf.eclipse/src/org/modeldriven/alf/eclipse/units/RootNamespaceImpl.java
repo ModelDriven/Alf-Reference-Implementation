@@ -29,10 +29,12 @@ import org.modeldriven.alf.uml.Namespace;
 public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamespaceImpl {
     
     private ResourceSet resourceSet;
+    private URI baseURI;
     
     public RootNamespaceImpl() {
         super();
         this.resourceSet = new ResourceSetImpl();
+        this.baseURI = URI.createFileURI(System.getProperty("user.dir") + "/");
         UMLResourcesUtil.init(this.resourceSet);
     }
     
@@ -101,14 +103,17 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     @Override
     public void setLibraryDirectory(String libraryDirectory) {
     	super.setLibraryDirectory(libraryDirectory);
+    	URI libraryURI = URI.createFileURI(libraryDirectory +"/");
+    	if (this.baseURI != null) {
+    		libraryURI = libraryURI.resolve(this.baseURI);
+    	}
     	if (this.resourceSet != null) {
 	    	Map<URI, URI> uriMap = this.resourceSet.getURIConverter().getURIMap();
-	    	uriMap.put(URI.createURI(UMLResource.METAMODELS_PATHMAP), 
-	    			URI.createFileURI(libraryDirectory +"/"));
-	    	uriMap.put(URI.createURI(UMLResource.PROFILES_PATHMAP), 
-	    			URI.createFileURI(libraryDirectory +"/"));
-	    	uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP), 
-	    			URI.createFileURI(libraryDirectory +"/"));
+	    	uriMap.put(URI.createURI(UMLResource.METAMODELS_PATHMAP), libraryURI);
+	    	uriMap.put(URI.createURI(UMLResource.PROFILES_PATHMAP), libraryURI);
+	    	uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP), libraryURI);
+	    	// TODO: Make the following a real pathmap.
+			uriMap.put(URI.createFileURI("Libraries/"), libraryURI);
     	}
     }
     
