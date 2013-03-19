@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.execution;
 
+import java.util.List;
+
 import org.modeldriven.alf.uml.Class_;
 
 public interface Locus {
@@ -16,4 +18,6 @@ public interface Locus {
     public Executor getExecutor();
 
     public Object_ instantiate(Class_ type);
+    
+    public List<? extends Object_> getExtent(Class_ class_);
 }
