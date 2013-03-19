@@ -3,32 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modeldriven.alf"/>
-	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.core.resources_3.8.1.v20120802-154922.jar" sourcepath="/Applications/eclipse 4.2/plugins/org.eclipse.core.resources.source_3.8.1.v20120802-154922.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/Applications/eclipse%204.2/plugins/org.eclipse.platform.doc.isv_4.2.1.v20120823-094319.jar!/reference/api"/>
-		</attributes>
-		<accessrules>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/dtree/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/events/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/localstore/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/properties/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/propertytester/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/refresh/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/resources/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/resources/mapping/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/resources/projectvariables/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/resources/refresh/win32/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/utils/*"/>
-			<accessrule kind="discouraged" pattern="org/eclipse/core/internal/watson/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/core/resources/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/core/resources/filtermatchers/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/core/resources/mapping/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/core/resources/refresh/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/core/resources/team/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/core/resources/variableresolvers/*"/>
-			<accessrule ignoreifbetter="true" kind="nonaccessible" pattern="**/*"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.emf.ecore_2.8.3.v20130125-0546.jar" sourcepath="/Applications/eclipse 4.2/plugins/org.eclipse.emf.ecore.source_2.8.3.v20130125-0546.jar">
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/emf/ecore/*"/>
@@ -53,5 +27,6 @@
 	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.uml2.common_1.7.0.v20130114-0902.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.uml2.uml_4.0.2.v20130114-0902.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.uml2.uml.resources_4.0.2.v20130114-0902.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.core.resources_3.8.1.v20121114-124432.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
