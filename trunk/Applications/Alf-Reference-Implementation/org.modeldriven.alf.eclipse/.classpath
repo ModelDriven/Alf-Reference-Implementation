@@ -28,5 +28,11 @@
 	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.uml2.uml_4.0.2.v20130114-0902.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.uml2.uml.resources_4.0.2.v20130114-0902.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.core.resources_3.8.1.v20121114-124432.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.uml2.types_1.0.0.v20130114-0902.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.uml2.uml.profile.l2_1.0.1.v20130114-0902.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.uml2.uml.profile.l3_1.0.1.v20130114-0902.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.emf.mapping_2.7.0.v20130125-0826.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.emf.mapping.ecore_2.6.0.v20130125-0826.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse 4.2/plugins/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20130125-0826.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
