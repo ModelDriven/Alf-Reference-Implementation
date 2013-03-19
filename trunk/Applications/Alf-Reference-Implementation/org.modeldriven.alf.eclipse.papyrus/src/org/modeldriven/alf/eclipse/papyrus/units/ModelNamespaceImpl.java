@@ -46,7 +46,8 @@ public class ModelNamespaceImpl extends
     	if (this.contextNamespace != null) {
 	    	for (NamedElement element: NameResolutionUtils.getNamedElements(
 	    			name, this.contextNamespace, 
-	    			classifierOnly? UMLPackage.Literals.CLASSIFIER: null)) {
+	    			classifierOnly? UMLPackage.Literals.CLASSIFIER: 
+	    				UMLPackage.Literals.NAMED_ELEMENT)) {
 	    		members.add(ImportedMemberImpl.makeImportedMember(
 	    				element.getName(), 
 	    				org.modeldriven.alf.eclipse.uml.Element.wrap(element), null));

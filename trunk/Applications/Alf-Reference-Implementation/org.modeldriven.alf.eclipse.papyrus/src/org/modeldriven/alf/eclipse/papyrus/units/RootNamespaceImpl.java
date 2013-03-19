@@ -73,7 +73,8 @@ public class RootNamespaceImpl extends
     	Collection<Member> members = new ArrayList<Member>();
     	if (this.resourceSet != null) {
 	    	for (NamedElement element: UMLUtil.findNamedElements(this.resourceSet, name, false,
-	    			classifierOnly? UMLPackage.Literals.CLASSIFIER: null)) {
+	    			classifierOnly? UMLPackage.Literals.CLASSIFIER: 
+	    			UMLPackage.Literals.NAMED_ELEMENT)) {
 	    		members.add(ImportedMemberImpl.makeImportedMember(
 	    				element.getName(), 
 	    				org.modeldriven.alf.eclipse.uml.Element.wrap(element), null));
