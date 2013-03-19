@@ -17,6 +17,7 @@ import org.modeldriven.alf.eclipse.papyrus.units.RootNamespaceImpl;
 import org.modeldriven.alf.eclipse.uml.ElementFactory;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
+import org.modeldriven.alf.fuml.mapping.units.MemberMapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.parser.ParseException;
 import org.modeldriven.alf.parser.Parser;
@@ -76,6 +77,7 @@ public class AlfCompiler implements IAlfCompiler  {
         try {
             FumlMapping mapping = FumlMapping.getMapping(definition);
         	mapping.getModelElements();
+        	((MemberMapping)mapping).mapBody();
         	return mapping;
         } catch (MappingError e) {
         	System.err.println(e.getMapping().toString());                  
@@ -115,6 +117,7 @@ public class AlfCompiler implements IAlfCompiler  {
 			Activity targetActivity = (Activity)targetElement;
 			Activity sourceActivity = (Activity)sourceElement;
 			
+			targetActivity.getNodes().clear();
 			List<ActivityNode> ownedNodes = targetActivity.getOwnedNodes();
 			ownedNodes.clear();
 			ownedNodes.addAll(sourceActivity.getOwnedNodes());
