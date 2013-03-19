@@ -11,7 +11,6 @@ package org.modeldriven.alf.eclipse.papyrus.execution;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.modeldriven.alf.fuml.impl.execution.Object_;
 import org.modeldriven.alf.uml.Class_;
 
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL3.ExecutionFactoryL3;
