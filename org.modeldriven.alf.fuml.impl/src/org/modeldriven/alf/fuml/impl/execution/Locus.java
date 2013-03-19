@@ -8,6 +8,9 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.impl.execution;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.fuml.library.libraryclass.ImplementationObject;
 
@@ -15,47 +18,61 @@ import fUML.Semantics.Loci.LociL3.ExecutionFactoryL3;
 
 public class Locus implements org.modeldriven.alf.fuml.execution.Locus {
     
-    fUML.Semantics.Loci.LociL1.Locus locus = null;
+    private fUML.Semantics.Loci.LociL1.Locus base = null;
     
     public Locus() {
-        this.locus = new fUML.Semantics.Loci.LociL1.Locus();
-        this.locus.setExecutor(new fUML.Semantics.Loci.LociL1.Executor());
-        this.locus.setFactory(new fUML.Semantics.Loci.LociL3.ExecutionFactoryL3());
+        this.base = new fUML.Semantics.Loci.LociL1.Locus();
+        this.base.setExecutor(new fUML.Semantics.Loci.LociL1.Executor());
+        this.base.setFactory(new fUML.Semantics.Loci.LociL3.ExecutionFactoryL3());
     }
     
-    public Locus(fUML.Semantics.Loci.LociL1.Locus locus) {
-        this.locus = locus;
+    public Locus(fUML.Semantics.Loci.LociL1.Locus base) {
+        this.base = base;
+    }
+    
+    public fUML.Semantics.Loci.LociL1.Locus getBase() {
+    	return this.base;
     }
     
     @Override
     public ExecutionFactory getFactory() {
-        return this.locus.factory == null? null: new ExecutionFactory(locus.factory);
+        return this.base.factory == null? null: new ExecutionFactory(base.factory);
     }
 
     @Override
     public Executor getExecutor() {
-        return this.locus.executor == null? null: new Executor(locus.executor);
+        return this.base.executor == null? null: new Executor(base.executor);
     }
 
     @Override
     public Object_ instantiate(Class_ type) {
         fUML.Semantics.Classes.Kernel.Object_ object_ = 
                 type == null? null: 
-                this.locus.instantiate(((org.modeldriven.alf.fuml.impl.uml.Class_)type).getBase());
+                this.base.instantiate(((org.modeldriven.alf.fuml.impl.uml.Class_)type).getBase());
         return object_ == null? null: new Object_(object_);
+    }
+    
+    @Override
+    public List<Object_> getExtent(Class_ class_) {
+    	List<Object_> list = new ArrayList<Object_>();
+    	for (fUML.Semantics.Classes.Kernel.ExtensionalValue object: 
+    		this.getBase().getExtent(((org.modeldriven.alf.fuml.impl.uml.Class_)class_).getBase())) {
+    		list.add(new Object_((fUML.Semantics.Classes.Kernel.Object_)object));
+    	}
+    	return list;
     }
 
     public void setExecutor(fUML.Semantics.Loci.LociL1.Executor executor) {
-        this.locus.setExecutor(executor);
+        this.base.setExecutor(executor);
     }
 
     public void setFactory(ExecutionFactoryL3 factory) {
-        this.locus.setFactory(factory);
+        this.base.setFactory(factory);
     }
 
     public void add(ImplementationObject object) {
         if (object != null) {
-            this.locus.add(object);
+            this.base.add(object);
         }
     }
 
