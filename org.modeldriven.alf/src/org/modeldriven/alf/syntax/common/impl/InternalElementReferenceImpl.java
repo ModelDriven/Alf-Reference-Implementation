@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2012-2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -406,6 +406,21 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         } else {
             return null;
         }
+    }
+    
+    @Override
+    public List<ElementReference> getMethods() {
+        List<ElementReference> methods = new ArrayList<ElementReference>();
+        if (this.isOperation()) {
+            OperationDefinition definition = 
+                    (OperationDefinition)this.getSelf().getElement();
+            if (!definition.getIsAbstract()) {
+                UnitDefinition subunit = definition.getSubunit();
+                methods.add(subunit == null? definition.getImpl().getReferent(): 
+                    subunit.getDefinition().getImpl().getReferent());
+            }
+        }
+        return methods;
     }
     
     @Override

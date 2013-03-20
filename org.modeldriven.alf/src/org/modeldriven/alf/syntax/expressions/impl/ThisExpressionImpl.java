@@ -15,7 +15,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 /**
- * An expression comprising the keyword “this”.
+ * An expression comprising the keyword ï¿½thisï¿½.
  **/
 
 public class ThisExpressionImpl extends ExpressionImpl {
@@ -50,8 +50,9 @@ public class ThisExpressionImpl extends ExpressionImpl {
     	        UnitDefinition unit = context.getImpl().asNamespace().getUnit();
                 ElementReference namespace = unit == null? null: unit.getNamespace();
 	            return namespace != null && 
-	                    namespace.getImpl().asNamespace().getImpl().getStubFor(unit) 
-	                        instanceof OperationDefinition? 
+	                    namespace.getImpl().asNamespace().getImpl().
+	                        getStubFor(unit).getImpl().
+	                            getReferent().getImpl().isOperation()? 
 	                                namespace: context;
             }
 	    } else if (context.getImpl().isClass()) {
