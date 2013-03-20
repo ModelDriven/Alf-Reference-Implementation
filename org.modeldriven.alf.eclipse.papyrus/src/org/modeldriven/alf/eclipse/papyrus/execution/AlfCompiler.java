@@ -118,6 +118,8 @@ public class AlfCompiler implements IAlfCompiler  {
 			Activity sourceActivity = (Activity)sourceElement;
 			
 			targetActivity.getNodes().clear();
+			targetActivity.getGroups().clear();
+			
 			List<ActivityNode> ownedNodes = targetActivity.getOwnedNodes();
 			ownedNodes.clear();
 			ownedNodes.addAll(sourceActivity.getOwnedNodes());
