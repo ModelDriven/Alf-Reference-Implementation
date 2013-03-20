@@ -132,6 +132,7 @@ public abstract class ElementReferenceImpl {
     public abstract List<Member> getInheritableMembers();
     public abstract List<FormalParameter> getParameters();
     public abstract FormalParameter getReturnParameter();
+    public abstract List<ElementReference> getMethods();
     public abstract List<ElementReference> getTemplateParameters();
     public abstract List<ElementReference> getTemplateActuals();
     public abstract ElementReference getParameteredElement();

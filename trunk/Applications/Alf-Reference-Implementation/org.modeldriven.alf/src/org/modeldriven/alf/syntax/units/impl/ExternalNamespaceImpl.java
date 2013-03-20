@@ -22,6 +22,7 @@ import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
@@ -159,6 +160,21 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                 this.getSelf().getUmlNamespace().getNamespace());
     }
     */
+    
+    @Override
+    public UnitDefinition getUnit() {
+        UnitDefinition unit = super.getUnit();
+        if (unit == null) {
+            NamespaceDefinition self = this.getSelf();
+            unit = new UnitDefinition();
+            unit.setDefinition(self);
+            NamespaceDefinition namespace = self.getNamespace();
+            unit.setNamespace(namespace == null? null: 
+                namespace.getImpl().getReferent());
+            self.setUnit(unit);
+        }
+        return unit;
+    }
     
     @Override
     public ElementReference getReferent() {

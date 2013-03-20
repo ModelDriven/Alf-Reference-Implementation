@@ -503,6 +503,18 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         }
         return null;
     }
+    
+    @Override
+    public List<ElementReference> getMethods() {
+        List<ElementReference> methods = new ArrayList<ElementReference>();
+        if (this.isOperation()) {
+            for (Behavior method: ((Operation)this.getSelf().getElement()).getMethod()) {
+                methods.add(ElementReferenceImpl.makeElementReference(
+                        method, this.namespace));
+            }
+        }
+        return methods;
+    }
 
     @Override
     public List<ElementReference> getTemplateParameters() {

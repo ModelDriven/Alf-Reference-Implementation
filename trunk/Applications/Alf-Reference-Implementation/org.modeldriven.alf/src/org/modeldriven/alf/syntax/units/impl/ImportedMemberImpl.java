@@ -58,6 +58,18 @@ public class ImportedMemberImpl extends MemberImpl {
     public void setIsImported(boolean isImported) {
         this.isImported = isImported;
     }
+    
+    @Override
+    public Boolean getIsStub() {
+        return super.getIsStub() || 
+                // Consider an external operation to be a stub.
+                !this.isImported() && this.getReferent().getImpl().isOperation();
+    }
+    
+    @Override
+    public UnitDefinition getSubunit() {
+        return null;
+    }
 
     /**
      * An imported element should not generally be considered a feature of the
@@ -85,9 +97,13 @@ public class ImportedMemberImpl extends MemberImpl {
 	 * An imported element is not a stub.
 	 **/
 	public boolean importedMemberNotStub() {
-		return !this.getSelf().getIsStub();
+		return !this.isImported() || !this.getSelf().getIsStub();
 	}
 
+    /*
+     * Helper Methods
+     */
+    
 	/**
 	 * Returns false. (Imported members do not have annotations.)
 	 **/
@@ -141,11 +157,27 @@ public class ImportedMemberImpl extends MemberImpl {
     	        }
 	        }
 	    }
-	} // isSameKindAs
+	} // isSameKindAst
 	
-	/*
-	 * Helper Methods
+	/**
+	 * Allow an external operation to act as a stub for any of its methods.
 	 */
+	@Override
+	public Boolean matchForStub(UnitDefinition unit) {
+	    ElementReference referent = this.getReferent();
+	    NamespaceDefinition definition = unit.getDefinition();
+	    if (!this.isImported() && referent.getImpl().isOperation() 
+	            && definition instanceof ActivityDefinition) {
+            String unitName = definition.getName();
+    	    for (ElementReference method: referent.getImpl().getMethods()) {
+    	        if (unitName.equals(method.getImpl().getName())) {
+    	            return true;
+    	        }
+    	    }
+	    }
+	    return false;
+	}
+
 	
     public static ImportedMember makeImportedMember(Member member) {
         ImportedMember importedMember = new ImportedMember();
