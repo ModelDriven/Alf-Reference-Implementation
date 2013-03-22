@@ -14,6 +14,28 @@ active class Expressions_Sequence_Expansion_Reduction {
     	public id: Integer = 1;
     }
     
+    public class Attribute {
+    
+      public type: Integer = 0;
+      
+    }
+  
+    public class Something {
+    
+      public attribute: Attribute [*] = new Attribute();
+      
+    }
+    
+    public class Object {
+    
+      public attr: Attribute;
+    
+      public init (in attr: Attribute) {
+        this.attr = attr;
+      }
+      
+    }
+    
     activity Bad(in x: Integer, in y: Integer): Integer { return x/y; }
 
 	//**************************************************************************
@@ -31,7 +53,9 @@ active class Expressions_Sequence_Expansion_Reduction {
 	  out one: Boolean,
 	  out unique: Boolean,
 	  out jack: Employee,
-	  out joan: Employee) {
+	  out joan: Employee,
+	  out something: Something,
+	  out obj: Object) {
 	  
 	  subtotals = Integer[]{1,2,3};
 	  sum = subtotals->reduce '+';
@@ -60,9 +84,18 @@ active class Expressions_Sequence_Expansion_Reduction {
 	  jack = Employee->select e (e.name=="Jack")[1];
 	  joan = Employee.allInstances()->select e (e.name=="Joan")[1];
 	  
+	  myType = +1;
+    something = new Something();
+    something.attribute->iterate attr (attr.type = myType);
+    
+    obj = new Object();
+    something.attribute->iterate attr (obj.init(attr));
+    
 	}
 } do {
-    test(sum, remainder, bad, select, reject, collect, iterate, forAll, exists, one, unique, jack, joan);
+    test(sum, remainder, bad, 
+    select, reject, collect, iterate, forAll, exists, one, unique, 
+    jack, joan, something, obj);
     
     AssertEqual("sum",sum, 6);
     AssertEqual("remainder", remainder, 1);
@@ -80,5 +113,8 @@ active class Expressions_Sequence_Expansion_Reduction {
     AssertEqual("jack.name", jack.name, "Jack");
     AssertEqual("joan.name", joan.name, "Joan");
 
+    AssertList("something.attribute.type", something.attribute.type, 1);
+    AssertEqual("obj.attr.type", obj.attr.type, 1); 
+    
     WriteLine("Done");
 }
