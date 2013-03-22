@@ -168,9 +168,12 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
             NamespaceDefinition self = this.getSelf();
             unit = new UnitDefinition();
             unit.setDefinition(self);
+            unit.getImpl().setHasImplicitImports(true);
+            
             NamespaceDefinition namespace = self.getNamespace();
             unit.setNamespace(namespace == null? null: 
                 namespace.getImpl().getReferent());
+            
             self.setUnit(unit);
         }
         return unit;
