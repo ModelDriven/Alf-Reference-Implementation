@@ -818,9 +818,9 @@ public class ActivityGraph {
                 boolean targetIsContained = isContainedIn(target, region);
                 if (sourceIsContained && targetIsContained ||
                         source instanceof ExpansionNode && 
-                            ((ExpansionNode)source).getRegionAsInput().equals(region) ||
+                            region.equals(((ExpansionNode)source).getRegionAsInput()) ||
                         target instanceof ExpansionNode && 
-                            ((ExpansionNode)target).getRegionAsOutput().equals(region)) {
+                            region.equals(((ExpansionNode)target).getRegionAsOutput())) {
                     region.addEdge(edge);
                 } else if (!sourceIsContained && targetIsContained){
                     source.removeOutgoing(edge);
