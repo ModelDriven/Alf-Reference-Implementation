@@ -250,6 +250,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	        if (feature == null) {
 	            return null;
 	        } else {
+	            this.getAssignmentAfterMap(); // Force computatio of assignments.
 	            Object[] referents = feature.getReferent().toArray();
 	            if (referents.length == 0) {
 	                return null;
@@ -394,6 +395,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      **/
 	@Override
 	protected Integer deriveUpper() {
+        this.getAssignmentAfterMap(); // Force computation of assignments.
         Expression rhs = this.getSelf().getRightHandSide();
         return rhs == null? null: rhs.getUpper();
 	}
@@ -406,6 +408,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	@Override
 	protected Integer deriveLower() {
         AssignmentExpression self = this.getSelf();
+        this.getAssignmentAfterMap(); // Force computation of assignments.
         if (self.getIsSimple()) {
             Expression rhs = self.getRightHandSide();
             return rhs == null? null: rhs.getLower();

@@ -321,7 +321,6 @@ public class InstanceCreationExpressionImpl
         } else {
             for (NamedExpression input: tuple.getInput()) {
                 if (!this.parameterIsAssignableFrom(input)) {
-                    System.out.println("[instanceCreationExpressionDataTypeCompatibility] type=" + this.parameterNamed(input.getName()).getType());
                     return false;
                 }
             }

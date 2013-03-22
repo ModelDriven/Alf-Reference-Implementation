@@ -204,6 +204,10 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         // since subunits will have access to these imports from their
         // containing scope.
 	    UnitDefinition self = this.getSelf();
+	    if (!(this.hasImplicitImports() || self.getNamespaceName() != null ||
+                    self.getIsModelLibrary())) {
+	        System.out.println("[unitDefinitionImplicitImports] unit=" + self);
+	    }
 		return this.hasImplicitImports() || self.getNamespaceName() != null ||
                     self.getIsModelLibrary();
 	}
