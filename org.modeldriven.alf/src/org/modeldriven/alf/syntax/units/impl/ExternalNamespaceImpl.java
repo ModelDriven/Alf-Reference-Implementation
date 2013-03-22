@@ -17,6 +17,7 @@ import java.util.Set;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.common.impl.ExternalElementReferenceImpl;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.Member;
@@ -149,8 +150,14 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                             templateParameter.getSignature().getTemplate();
                 }
             }
-            return ExternalNamespace.makeExternalNamespace(namespace, null);
+            return namespace == null? RootNamespace.getRootScope():
+                ExternalNamespace.makeExternalNamespace(namespace, null);
         }
+    }
+    
+    @Override
+    public QualifiedName getNamespaceName() {
+        return this.getNamespace().getImpl().getQualifiedName();
     }
 
     /*
