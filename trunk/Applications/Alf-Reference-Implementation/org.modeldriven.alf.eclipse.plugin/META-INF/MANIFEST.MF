@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse Alf
+Bundle-SymbolicName: org.modeldriven.alf.eclipsr
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Model Driven Solutions
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
