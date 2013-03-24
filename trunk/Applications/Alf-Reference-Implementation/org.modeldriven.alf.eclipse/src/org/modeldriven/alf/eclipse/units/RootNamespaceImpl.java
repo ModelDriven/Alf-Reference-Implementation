@@ -9,6 +9,7 @@
 package org.modeldriven.alf.eclipse.units;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
@@ -19,6 +20,8 @@ import org.eclipse.uml2.uml.resource.UMLResource;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 import org.eclipse.uml2.uml.util.UMLUtil;
 import org.modeldriven.alf.eclipse.uml.Element;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.InternalElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.MissingUnit;
@@ -150,6 +153,25 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     	}
 
     	return unit;
+    }
+
+    @Override
+    public String makeBoundElementNameFor(
+            ElementReference templateReferent, 
+            List<ElementReference> templateArguments) {
+    	return super.makeBoundElementNameFor(
+    			templateReferent instanceof InternalElementReference? 
+    					templateReferent.getImpl().getName(): 
+    				    templateReferent.getImpl().getQualifiedName().
+    				    	getPathName().replace("::", "$"), templateArguments);
+    }
+    
+    @Override
+    public ElementReference getInstantiationNamespaceFor(
+            ElementReference templateReferent) {
+        return templateReferent instanceof InternalElementReference? 
+        		super.getInstantiationNamespaceFor(templateReferent): 
+        		this.getModelNamespace().getImpl().getReferent();
     }
 
 }
