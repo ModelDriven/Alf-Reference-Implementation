@@ -8,18 +8,14 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.units;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
-import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Package;
-import org.modeldriven.alf.uml.PackageableElement;
 
 public class RootNamespace extends ModelNamespace {
     
@@ -93,6 +89,18 @@ public class RootNamespace extends ModelNamespace {
     
     public static UnitDefinition resolve(QualifiedName qualifiedName) {
         return getRootScope().resolveUnit(qualifiedName);
+    }
+    
+    public static String makeBoundElementName(
+            ElementReference templateReferent, 
+            List<ElementReference> templateArguments) {
+        return getRootScope().makeBoundElementNameFor(
+                templateReferent, templateArguments);
+    }
+    
+    public static ElementReference getInstantiationNamespace(
+            ElementReference templateReferent) {
+        return getRootScope().getInstantiationNamespaceFor(templateReferent);
     }
     
     public static QualifiedName getAlfStandardLibrary() {
@@ -489,26 +497,6 @@ public class RootNamespace extends ModelNamespace {
             }
         }
         return modelLibraryStereotype;
-    }
-    
-    private static Collection<Element> additionalElements = new ArrayList<Element>();
-    
-    public static Collection<Element> getAdditionalElements() {
-        return additionalElements;
-    }
-    
-    public static void recordAdditionalElement(Element element) {
-       additionalElements.add(element);
-    }
-    
-    public static void recordAdditionalElements(Collection<? extends Element> elements) {
-        additionalElements.addAll(elements);
-    }
-    
-    public static void addAdditionalElementsTo(Package package_) {
-        for (Element element: RootNamespace.getAdditionalElements()) {
-            package_.addPackagedElement((PackageableElement)element);
-        }
     }
 
 }

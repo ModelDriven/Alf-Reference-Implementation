@@ -384,6 +384,20 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         return qualifiedName;
     }
     
+    /*
+     * For a template instantiation, return the original template namespace,
+     * even if the instantiation has actually been placed in a different
+     * namespace.
+     */    
+    public NamespaceDefinition getEffectiveNamespace() {
+        SyntaxElement base = this.getBase();
+        if (!(base instanceof Member)) {
+            return this.getNamespace();
+        } else {
+            return ((Member)base).getNamespace();
+        }
+    }
+    
     public NamespaceDefinition getOuterScope() {
         return this.getSelf().getNamespace();
     }

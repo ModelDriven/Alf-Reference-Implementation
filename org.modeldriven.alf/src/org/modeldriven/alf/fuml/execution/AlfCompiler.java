@@ -42,7 +42,6 @@ public abstract class AlfCompiler extends AlfBase {
         if (unit != null) {
             Package model = this.getModel(unit);
             
-            RootNamespace.addAdditionalElementsTo(model);        
             ElementReferenceImpl.replaceTemplateBindingsIn(model);          
             
             try {

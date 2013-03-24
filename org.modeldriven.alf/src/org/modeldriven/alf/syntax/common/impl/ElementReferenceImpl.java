@@ -153,33 +153,30 @@ public abstract class ElementReferenceImpl {
         if (this.getAlf() instanceof ModelNamespace) {
             qualifiedName = new QualifiedName();
         } else {
-            ElementReference namespace = this.getNamespace();
-            String name = this.getName();
-            qualifiedName = 
-                namespace != null? namespace.getImpl().getQualifiedName():
-                name != null? new QualifiedName(): null;
-            if (qualifiedName != null) {
-                ElementReference template = this.getTemplate();
-                if (template != null) {
-                    name = template.getImpl().getName();
-                }
-                if (name == null) {
-                    name = "";
-                }
-                NameBinding nameBinding = new NameBinding();
-                nameBinding.setName(name);
-                if (template != null) {
+            ElementReference template = this.getTemplate();
+            if (template == null) {
+                ElementReference namespace = this.getNamespace();
+                qualifiedName = 
+                    namespace == null? new QualifiedName(): 
+                        namespace.getImpl().getQualifiedName();                    
+                String name = this.getName();
+                qualifiedName.getImpl().addName(name == null? "": name);
+            } else {
+                qualifiedName = template.getImpl().getQualifiedName();
+                List<NameBinding> nameBindings = qualifiedName.getNameBinding();
+                int n = nameBindings.size();
+                if (n > 0) {
+                    NameBinding nameBinding = nameBindings.get(n-1);
                     PositionalTemplateBinding templateBinding = 
-                        new PositionalTemplateBinding();
+                            new PositionalTemplateBinding();
                     for (ElementReference templateActual: this.getTemplateActuals()) {
                         templateBinding.addArgumentName(
                                 templateActual == null? new QualifiedName():
-                                templateActual.getImpl().getQualifiedName());
-                        nameBinding.setBinding(templateBinding);
+                                    templateActual.getImpl().getQualifiedName());
                     }                
+                    nameBinding.setBinding(templateBinding);
                 }
-                qualifiedName.addNameBinding(nameBinding);
-            }
+            }            
         }
         return qualifiedName;
     }

@@ -217,7 +217,8 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {
 
-       Namespace umlNamespace = this.getSelf().getUmlNamespace();
+       ExternalNamespace self = this.getSelf();
+       Namespace umlNamespace = self.getUmlNamespace();
        Member boundMember = null;
 
        if (umlNamespace instanceof TemplateableElement) {
@@ -232,6 +233,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            boundMember = ExternalNamespace.makeExternalNamespace(
                    (Namespace)instantiation, namespace);
            boundMember.getImpl().setExactName(name);
+           boundMember.getImpl().setBase(self);
            
            if (namespace != null) {
                namespace.addMember(boundMember);
@@ -255,13 +257,6 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                            element.getName(), element, namespace);
                    namespace.addOwnedMember(member);
                    namespace.addMember(member);
-               }
-               
-               NamespaceDefinition modelScope = namespace.getImpl().getModelScope();
-               if (modelScope == null || 
-                       modelScope == RootNamespace.getRootScope()) {
-                   RootNamespace.recordAdditionalElement(instantiation);
-                   RootNamespace.recordAdditionalElements(additionalElements);
                }
            }
 

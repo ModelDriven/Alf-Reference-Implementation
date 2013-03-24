@@ -139,6 +139,10 @@ public class InstanceCreationExpressionImpl
                         // Check for an "Impl" package.
                         ElementReference namespaceReferent = 
                                 classReferent.getImpl().getNamespace();
+                        if (classReferent.getImpl().isCompletelyBound()) {
+                            namespaceReferent = classReferent.getImpl().
+                                    getTemplate().getImpl().getNamespace();
+                        }
                         if (namespaceReferent != null) {
                             NamespaceDefinition namespaceDefinition = 
                                     namespaceReferent.getImpl().asNamespace();
