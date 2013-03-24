@@ -13,15 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.NamedElement;
 
 public class ExternalNamespaceMapping extends NamespaceDefinitionMapping {
 
+    /*
     @Override
     public List<Element> getModelElements() throws MappingError {
         return new ArrayList<Element>();
     }
+    */
 
     @Override
     public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
@@ -29,7 +32,7 @@ public class ExternalNamespaceMapping extends NamespaceDefinitionMapping {
 
     @Override
     public NamedElement getNamedElement() throws MappingError {
-        return (NamedElement)this.getSource();
+        return ((ExternalNamespace)this.getSource()).getUmlNamespace();
     }
 
 }

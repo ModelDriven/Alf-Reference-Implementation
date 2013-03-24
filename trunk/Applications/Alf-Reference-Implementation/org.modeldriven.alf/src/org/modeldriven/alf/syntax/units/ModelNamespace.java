@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
@@ -72,6 +73,18 @@ public class ModelNamespace extends PackageDefinition {
     
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
         return this.getImpl().resolveUnit(qualifiedName);
+    }
+    
+    public String makeBoundElementNameFor(
+            ElementReference templateReferent, 
+            List<ElementReference> templateArguments) {
+        return this.getImpl().makeBoundElementNameFor(
+                templateReferent, templateArguments);
+    }
+    
+    public ElementReference getInstantiationNamespaceFor(
+            ElementReference templateReferent) {
+        return this.getImpl().getInstantiationNamespaceFor(templateReferent);
     }
     
 }

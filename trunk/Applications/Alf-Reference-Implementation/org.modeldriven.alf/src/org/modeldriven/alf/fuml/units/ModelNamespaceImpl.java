@@ -17,6 +17,7 @@ import org.modeldriven.alf.parser.ParseException;
 import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
@@ -65,6 +66,11 @@ public class ModelNamespaceImpl extends
         return false;
     }
     
+    @Override
+    public boolean hasSubunitFor(UnitDefinition unit) {
+        return unit.getDefinition() instanceof ExternalNamespace;
+    }
+
     @Override
     public Collection<Member> resolve(String name, boolean classifierOnly) {
         // System.out.println("[resolve] Model scope name=" + name);

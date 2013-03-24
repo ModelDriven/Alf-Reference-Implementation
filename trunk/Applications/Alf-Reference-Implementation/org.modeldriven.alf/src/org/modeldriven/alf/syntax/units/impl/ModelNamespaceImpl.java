@@ -8,6 +8,9 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.List;
+
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -54,6 +57,33 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
     @Override
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
         return null;
+    }
+    
+    public String makeBoundElementNameFor(
+            ElementReference templateReferent, List<ElementReference> templateArguments) {
+        return this.makeBoundElementNameFor(
+                templateReferent.getImpl().getName(), templateArguments);
+    }
+
+    protected String makeBoundElementNameFor(
+            String templateName,
+            List<ElementReference> templateArguments) {
+        StringBuilder name = new StringBuilder("$$");
+        name.append(templateName);
+        name.append("__");
+        for (ElementReference argument: templateArguments) {
+            String argumentName = argument == null? "any":
+                argument.getImpl().asNamespace().getImpl().getQualifiedName().getPathName();
+            name.append(argumentName.replace("::", "$"));
+            name.append("_");
+        }
+        name.append("_");
+        return name.toString();
+    }
+    
+    public ElementReference getInstantiationNamespaceFor(
+            ElementReference templateReferent) {
+        return templateReferent.getImpl().getNamespace();
     }
 
 }

@@ -824,17 +824,18 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             ElementReference templateReferent,
             List<ElementReference> templateParameters,
             List<ElementReference> templateArguments) {
-        String name = makeBoundElementName(
-                templateReferent.getImpl().getName(), templateArguments);
-        ElementReference namespaceReference = templateReferent.getImpl().getNamespace();        
+        ElementReference namespaceReference = 
+                RootNamespace.getInstantiationNamespace(templateReferent);        
         if (namespaceReference == null) {
             return null;
         } else {
-            NamespaceDefinition templateNamespace = 
+            NamespaceDefinition instantiationNamespace = 
                     namespaceReference.getImpl().asNamespace();
             
+            String name = RootNamespace.makeBoundElementName(
+                    templateReferent, templateArguments);
             Collection<Member> members = 
-                templateNamespace.getImpl().resolve(name);
+                instantiationNamespace.getImpl().resolve(name);
             for (Member member: members) {
                 if (member.getImpl().getNamespaceReference().getImpl().
                         equals(namespaceReference)) {
@@ -843,7 +844,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             }
             
             Member boundElement = templateReferent.getImpl().asNamespace().getImpl().
-                    bind(name, templateNamespace, true,
+                    bind(name, instantiationNamespace, true,
                         templateParameters, templateArguments);
             if (boundElement == null) {
                 return null;
@@ -852,21 +853,6 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
                 return boundElement.getImpl().getReferent();
             }
         }
-    }
-    
-    private static String makeBoundElementName(
-            String templateName, List<ElementReference> templateArguments) {
-        StringBuilder name = new StringBuilder("$$");
-        name.append(templateName);
-        name.append("__");
-        for (ElementReference argument: templateArguments) {
-            String argumentName = argument == null? "any":
-                argument.getImpl().asNamespace().getImpl().getQualifiedName().getPathName();
-            name.append(argumentName.replace("::", "$"));
-            name.append("_");
-        }
-        name.append("_");
-        return name.toString();
     }
     
     @Override
