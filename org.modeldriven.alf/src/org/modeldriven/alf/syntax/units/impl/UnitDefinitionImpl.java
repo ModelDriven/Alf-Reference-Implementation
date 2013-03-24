@@ -200,11 +200,11 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
 	 * import references for all the sub-packages of the Alf::Library package.
 	 **/
 	public boolean unitDefinitionImplicitImports() {
-        // Note: Is is only necessary to add implicit imports to model units,
+        // Note: It is only necessary to add implicit imports to model units,
         // since subunits will have access to these imports from their
         // containing scope.
 	    UnitDefinition self = this.getSelf();
-		return this.hasImplicitImports() || this.isModelUnit() ||
+		return this.hasImplicitImports() || !this.isModelUnit() ||
                     self.getIsModelLibrary();
 	}
     
