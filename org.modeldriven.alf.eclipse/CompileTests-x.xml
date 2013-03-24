@@ -5,7 +5,7 @@
     <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
     <path id="cp">
         <pathelement location="${classpath}" />
-        <pathelement location="${alf.dir}/bin" />
+        <pathelement location="${alf.eclipse.dir}/lib/alf-base.jar" />
         <pathelement location="${alf.dir}/lib/commons-logging.jar" />
         <pathelement location="${alf.dir}/lib/log4j.jar" />
         <pathelement location="${eclipse.dir}/plugins/org.eclipse.uml2.uml_4.0.2.v20130114-0902.jar" />
