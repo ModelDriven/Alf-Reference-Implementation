@@ -204,7 +204,7 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         // since subunits will have access to these imports from their
         // containing scope.
 	    UnitDefinition self = this.getSelf();
-		return this.hasImplicitImports() || self.getNamespaceName() != null ||
+		return this.hasImplicitImports() || this.isModelUnit() ||
                     self.getIsModelLibrary();
 	}
     
@@ -278,9 +278,14 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         }
     }
     
+    public boolean isModelUnit() {
+        return this.getSelf().getNamespaceName() == null || 
+                this.getNamespace() instanceof ExternalElementReference;
+    }
+    
     public void addImplicitImports() {
         UnitDefinition self = this.getSelf();
-        if (!this.hasImplicitImports() && self.getNamespaceName() == null &&
+        if (!this.hasImplicitImports() && this.isModelUnit() &&
                 !self.getIsModelLibrary()) {
             this.addImplicitImport(RootNamespace.getPrimitiveTypes());
             this.addImplicitImport(RootNamespace.getPrimitiveBehaviors());
