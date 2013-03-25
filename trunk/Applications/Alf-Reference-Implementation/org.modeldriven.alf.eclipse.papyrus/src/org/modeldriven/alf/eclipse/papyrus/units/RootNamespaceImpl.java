@@ -10,13 +10,19 @@ package org.modeldriven.alf.eclipse.papyrus.units;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.PackageableElement;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.util.UMLUtil;
 import org.modeldriven.alf.eclipse.uml.Element;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.InternalElementReference;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.Member;
@@ -32,6 +38,8 @@ public class RootNamespaceImpl extends
 	org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl {
     
 	private org.eclipse.uml2.uml.Element contextElement;
+	private Model model;
+	private ElementReference modelReference;
     private ResourceSet resourceSet;
     
     public RootNamespaceImpl() {
@@ -41,6 +49,9 @@ public class RootNamespaceImpl extends
     
     public void setContext(org.eclipse.uml2.uml.Element contextElement) {
     	this.contextElement = contextElement;
+    	this.model = this.contextElement.getModel();
+    	this.modelReference = ElementReferenceImpl.makeElementReference(
+    			Element.wrap(this.model));
     	
     	Resource resource = contextElement.eResource();
         this.resourceSet = resource == null? null: resource.getResourceSet();
@@ -71,16 +82,19 @@ public class RootNamespaceImpl extends
     @Override
     public Collection<Member> resolve(String name, boolean classifierOnly) {
     	Collection<Member> members = new ArrayList<Member>();
-    	if (this.resourceSet != null) {
-	    	for (NamedElement element: UMLUtil.findNamedElements(this.resourceSet, name, false,
-	    			classifierOnly? UMLPackage.Literals.CLASSIFIER: 
-	    			UMLPackage.Literals.NAMED_ELEMENT)) {
-	    		members.add(ImportedMemberImpl.makeImportedMember(
-	    				element.getName(), 
-	    				org.modeldriven.alf.eclipse.uml.Element.wrap(element), null));
-	    	}
+    	for (NamedElement element: this.findNamedElements(name, classifierOnly)) {
+    		members.add(ImportedMemberImpl.makeImportedMember(
+    				element.getName(), 
+    				org.modeldriven.alf.eclipse.uml.Element.wrap(element), null));
     	}
     	return members;
+    }
+    
+    public Collection<NamedElement> findNamedElements(String name, boolean classifierOnly) {
+    	return this.resourceSet == null? new ArrayList<NamedElement>(): 
+    		UMLUtil.findNamedElements(this.resourceSet, name, false,
+    			classifierOnly? UMLPackage.Literals.CLASSIFIER: 
+    			UMLPackage.Literals.NAMED_ELEMENT);
     }
 
     @Override
@@ -112,6 +126,36 @@ public class RootNamespaceImpl extends
     	}
 
     	return unit;
+    }
+
+    @Override
+    public String makeBoundElementNameFor(
+            ElementReference templateReferent, 
+            List<ElementReference> templateArguments) {
+    	return super.makeBoundElementNameFor(
+    			templateReferent instanceof InternalElementReference? 
+    					templateReferent.getImpl().getName(): 
+    				    templateReferent.getImpl().getQualifiedName().
+    				    	getPathName().replace("::", "$"), templateArguments);
+    }
+    
+    @Override
+    public ElementReference getInstantiationNamespaceFor(
+            ElementReference templateReferent) {
+        return templateReferent instanceof InternalElementReference? 
+        		super.getInstantiationNamespaceFor(templateReferent): 
+        		this.modelReference;
+    }
+    
+    public void replaceTemplateBindings() {
+    	ElementReferenceImpl.replaceTemplateBindingsIn(
+    			this.modelReference.getImpl().getUml());
+    }
+    
+    public void addToModel(NamedElement element) {
+    	if (element instanceof PackageableElement) {
+    		this.model.getPackagedElements().add((PackageableElement)element);
+    	}
     }
 
 }
