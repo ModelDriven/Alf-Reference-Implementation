@@ -20,6 +20,7 @@ import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
 public class ModelNamespace extends PackageDefinition {
     
     public ModelNamespace() {
+        this.impl = null;
     }
     
     public ModelNamespaceImpl getImpl() {
