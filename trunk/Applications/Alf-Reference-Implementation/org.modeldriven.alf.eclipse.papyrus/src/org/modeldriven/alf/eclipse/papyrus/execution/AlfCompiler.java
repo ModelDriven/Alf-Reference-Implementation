@@ -1,6 +1,7 @@
 package org.modeldriven.alf.eclipse.papyrus.execution;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,8 +12,11 @@ import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ActivityParameterNode;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.Package;
+import org.eclipse.uml2.uml.PackageableElement;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.StructuredActivityNode;
+import org.eclipse.uml2.uml.UMLFactory;
 import org.modeldriven.alf.eclipse.papyrus.units.RootNamespaceImpl;
 import org.modeldriven.alf.eclipse.uml.ElementFactory;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
@@ -28,6 +32,7 @@ import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
+import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class AlfCompiler implements IAlfCompiler  {
 	
@@ -44,6 +49,8 @@ public class AlfCompiler implements IAlfCompiler  {
 	public UnitDefinition parse(
 			Element contextElement, String textualRepresentation, Object[] args) {
 		rootScopeImpl.setContext(contextElement);
+		ElementReferenceImpl.clearTemplateBindings();
+		StereotypeApplication.clearStereotypeApplications();
 
 		Parser parser = new Parser(new StringReader(textualRepresentation));
 		if (contextElement instanceof NamedElement) {
@@ -51,6 +58,7 @@ public class AlfCompiler implements IAlfCompiler  {
 		}		
 		try {
 			UnitDefinition unit = parser.UnitDefinition();
+			unit.getImpl().addImplicitImports();
 			
 			ModelNamespace modelScope = 
 					(ModelNamespace)RootNamespace.getModelScope(unit);
@@ -73,11 +81,13 @@ public class AlfCompiler implements IAlfCompiler  {
 		return null;
 	}
 	
-    public FumlMapping map(NamespaceDefinition definition) {
+    public FumlMapping map(
+    		NamespaceDefinition definition, 
+    		Collection<org.modeldriven.alf.uml.Element> otherElements) {
         try {
             FumlMapping mapping = FumlMapping.getMapping(definition);
         	mapping.getModelElements();
-        	((MemberMapping)mapping).mapBody();
+        	otherElements.addAll(((MemberMapping)mapping).mapBody());
         	return mapping;
         } catch (MappingError e) {
         	System.err.println(e.getMapping().toString());                  
@@ -95,25 +105,29 @@ public class AlfCompiler implements IAlfCompiler  {
 	@Override
 	public boolean compile(
 			Element contextElement, String textualRepresentation, Object[] args) {
+		boolean succeeded = false;
 		UnitDefinition unit = this.parse(contextElement, textualRepresentation, args);
 		if (unit != null) {
-			FumlMapping mapping = this.map(unit.getDefinition());
+			Collection<org.modeldriven.alf.uml.Element> otherElements =
+					new ArrayList<org.modeldriven.alf.uml.Element>();
+			FumlMapping mapping = this.map(unit.getDefinition(), otherElements);
 			if (mapping != null) {
-				org.modeldriven.alf.uml.Element element = mapping.getElement();
-	            ElementReferenceImpl.replaceTemplateBindingsIn(element);
-	            for (org.modeldriven.alf.uml.Element additionalElement: 
-	            	RootNamespace.getAdditionalElements()) {
-	            	ElementReferenceImpl.replaceTemplateBindingsIn(additionalElement);
-	            }
-				return this.update(contextElement, 
-						((org.modeldriven.alf.eclipse.uml.Element)element).getBase());
+				rootScopeImpl.replaceTemplateBindings();
+				StereotypeApplication.applyStereotypes();
+				succeeded = this.update(contextElement, 
+						((org.modeldriven.alf.eclipse.uml.Element)mapping.
+								getElement()).getBase());
+				if (succeeded) {
+					this.updateOtherElements(contextElement, otherElements);
+				}
 			}
 		}
-		return false;
+		return succeeded;
 	}
 	
 	private boolean update(Element targetElement, Element sourceElement) {
-		if (targetElement instanceof Activity && sourceElement instanceof Activity) {
+		if (targetElement instanceof Activity && 
+				sourceElement instanceof Activity) {
 			Activity targetActivity = (Activity)targetElement;
 			Activity sourceActivity = (Activity)sourceElement;
 			
@@ -152,6 +166,41 @@ public class AlfCompiler implements IAlfCompiler  {
 					"Cannot update " + targetElement.getClass().getSimpleName() + 
 					" from " + sourceElement.getClass().getSimpleName() + ".");
 			return false;
+		}
+	}
+	
+	private void updateOtherElements(Element element, 
+			Collection<org.modeldriven.alf.uml.Element> otherElements) {
+		if (element instanceof NamedElement) {
+			String name = "$$" + ((NamedElement)element).getName();
+			Collection<NamedElement> namedElements = 
+					rootScopeImpl.findNamedElements(name, false);
+			if (!namedElements.isEmpty()) {
+				NamedElement namedElement = 
+						(NamedElement)namedElements.toArray()[0];
+				if (namedElement instanceof Package) {
+					addElementsToPackage(otherElements, (Package)namedElement);
+				}
+			} else if (!otherElements.isEmpty()) {
+				Package package_ = UMLFactory.eINSTANCE.createPackage();
+				package_.setName(name);
+				rootScopeImpl.addToModel(package_);
+				addElementsToPackage(otherElements, package_);
+			}
+		}
+	}
+	
+	private static void addElementsToPackage(
+			Collection<org.modeldriven.alf.uml.Element> elements, 
+			Package package_) {
+		List<PackageableElement> packagedElements = package_.getPackagedElements();
+		packagedElements.clear();
+		for (org.modeldriven.alf.uml.Element element: elements) {
+			Element base = 
+					((org.modeldriven.alf.eclipse.uml.Element)element).getBase();
+			if (base instanceof PackageableElement) {
+				packagedElements.add((PackageableElement)base);
+			}
 		}
 	}
 
