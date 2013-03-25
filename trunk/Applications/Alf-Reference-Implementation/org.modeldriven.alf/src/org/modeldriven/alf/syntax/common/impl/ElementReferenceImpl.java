@@ -276,6 +276,10 @@ public abstract class ElementReferenceImpl {
         return false;
     }
     
+    public static void clearTemplateBindings() {        
+        templateBindings.clear();
+    }
+    
     public static void addTemplateBinding(
             TemplateParameter templateParameter, 
             ElementReference templateArgument) {
