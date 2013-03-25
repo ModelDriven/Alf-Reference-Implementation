@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.apache.log4j.Level;
 import org.modeldriven.alf.uml.ElementFactory;
+import org.modeldriven.alf.uml.StereotypeApplication;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
@@ -22,6 +23,7 @@ import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -82,12 +84,15 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
    protected abstract ElementFactory createElementFactory();
 
     public UnitDefinition parse(String unitName, boolean isFileName) {
+        ElementReferenceImpl.clearTemplateBindings();
+        StereotypeApplication.clearStereotypeApplications();
+        
         UnitDefinition unit = null;
         
         if (isFileName) {
             try {
-                unit = ((RootNamespaceImpl) RootNamespace.getRootScope().getImpl()).
-                        getModelNamespaceImpl().resolveModelFile(unitName);
+                unit = this.getRootScopeImpl().getModelNamespaceImpl().
+                        resolveModelFile(unitName);
             } catch (FileNotFoundException e) {
                 this.println("File not found: " + unitName);
             }
