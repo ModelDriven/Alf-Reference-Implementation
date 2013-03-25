@@ -250,7 +250,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 
     /**
      * This operation is provided so that, if getOwnedMember is overridden, this
-     * operation can still get the orginal owned members synthesized from
+     * operation can still get the original owned members synthesized from
      * parsing.
      */
     public List<Member> getOnlyOwnedMembers() {
