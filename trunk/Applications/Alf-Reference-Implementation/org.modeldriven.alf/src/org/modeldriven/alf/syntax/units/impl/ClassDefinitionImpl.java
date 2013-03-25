@@ -95,7 +95,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
     /*
 	 * Helper Methods
 	 */
-
+    
 	/**
 	 * In addition to the annotations allowed for classifiers in general, a
 	 * class definition allows an annotation for any stereotype whose metaclass
@@ -164,6 +164,11 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         return false;
     }
     
+    @Override
+    public List<Member> getOnlyOwnedMembers() {
+        return super.getOwnedMember();
+    }
+
     public boolean needsDefaultConstructor() {
         if (this.needsDefaultConstructor) {
             for (Member ownedMember: super.getOwnedMember()) {
