@@ -49,11 +49,11 @@ public class ThisExpressionImpl extends ExpressionImpl {
             } else {
     	        UnitDefinition unit = context.getImpl().asNamespace().getUnit();
                 ElementReference namespace = unit == null? null: unit.getNamespace();
-	            return namespace != null && 
-	                    namespace.getImpl().asNamespace().getImpl().
-	                        getStubFor(unit).getImpl().
-	                            getReferent().getImpl().isOperation()? 
-	                                namespace: context;
+                Member stub = namespace == null? null: 
+                    namespace.getImpl().asNamespace().getImpl().getStubFor(unit);
+                return stub != null && 
+                        stub.getImpl().getReferent().getImpl().isOperation()? 
+                                namespace: context;
             }
 	    } else if (context.getImpl().isClass()) {
 	        return context;
