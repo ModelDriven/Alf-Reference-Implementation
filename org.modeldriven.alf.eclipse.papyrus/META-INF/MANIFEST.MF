@@ -6,7 +6,7 @@ Bundle-Version: 0.1.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.papyrus.moka.fuml;bundle-version="0.9.2",
  org.eclipse.papyrus.moka.fuml.standardlibrary;bundle-version="0.9.2",
- org.eclipse.uml2.uml;bundle-version="4.0.1",
+ org.eclipse.uml2;bundle-version="4.0.2",
  org.eclipse.uml2.uml.ecore.exporter;bundle-version="2.6.1",
  org.eclipse.uml2.uml.ecore.importer;bundle-version="2.6.0",
  org.eclipse.uml2.uml.profile.l2;bundle-version="1.0.1",

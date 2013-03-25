@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ActionLanguage="http://www.omg.org/spec/ALF/20120827/ActionLanguage-Profile" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xsi:schemaLocation="http://www.omg.org/spec/ALF/20120827/ActionLanguage-Profile platform:/plugin/org.eclipse.papyrus.alf/resources/ActionLanguage-Profile.profile.uml#_sYse0YZLEeKyw49uR6nx3g">
+  <uml:Model xmi:id="_62lbEIgUEeKtquXykzQHVw" name="AssertionLibrary">
+    <packageImport xmi:id="_LU_3YI19EeK7gYOtibANUw">
+      <importedPackage xmi:type="uml:Model" href="pathmap://PAPYRUS_fUML_LIBRARY/fUML_Library.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:id="_NEk-oI19EeK7gYOtibANUw" visibility="private">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:id="_X-RygJGjEeKappQpCeg6XA">
+      <importedPackage xmi:type="uml:Model" href="pathmap://PAPYRUS_ALF_LIBRARY/Alf.library.uml#Alf"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_8kE3oIgUEeKtquXykzQHVw" name="AssertEquals">
+      <ownedComment xmi:id="_PWUOoIgVEeKtquXykzQHVw">
+        <body>namespace AssertionLibrary ;&#xD;
+&#xD;
+private import Alf::Library::CollectionFunctions::size ;&#xD;
+&#xD;
+activity AssertEqual(in label: String, in value1: any, in value2: any) {&#xD;
+	Write(label + &quot;==&quot;);&#xD;
+	Write(value2 instanceof String? &quot;\&quot;&quot; + (String)value2 + &quot;\&quot;&quot;: value2);&#xD;
+	AssertTrue(&quot;&quot;, value1==value2);&#xD;
+}</body>
+      </ownedComment>
+      <ownedParameter xmi:id="_ERzsCY1-EeK7gYOtibANUw" name="label" visibility="package">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ERzsCo1-EeK7gYOtibANUw" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ERzsC41-EeK7gYOtibANUw" value="1"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_ERzsDI1-EeK7gYOtibANUw" name="value1" visibility="package">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ERzsDY1-EeK7gYOtibANUw" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ERzsDo1-EeK7gYOtibANUw" value="1"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_ERzsD41-EeK7gYOtibANUw" name="value2" visibility="package">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ERzsEI1-EeK7gYOtibANUw" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ERzsEY1-EeK7gYOtibANUw" value="1"/>
+      </ownedParameter>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3F5GLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3GJGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3GZGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3GpGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3G5GLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3HJGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3HZGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3HpGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_m_I3H5GLEeKaY7tSssHhGw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_9FjNAIgUEeKtquXykzQHVw" name="AssertTrue">
+      <ownedComment xmi:id="_cKvjYIgVEeKtquXykzQHVw">
+        <body>namespace AssertionLibrary ;&#xD;
+&#xD;
+private import Alf::Library::PrimitiveBehaviors::BooleanFunctions::ToString;&#xD;
+private import Alf::Library::BasicInputOutput::WriteLine ;&#xD;
+&#xD;
+activity AssertTrue(in label: String, in condition: Boolean) {&#xD;
+	WriteLine(label + &quot;: &quot; + ToString(condition));&#xD;
+}</body>
+      </ownedComment>
+      <ownedParameter xmi:id="_l17_do19EeK7gYOtibANUw" name="label" visibility="package">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_l17_d419EeK7gYOtibANUw" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_l17_eI19EeK7gYOtibANUw" value="1"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_l17_eY19EeK7gYOtibANUw" name="condition" visibility="package">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_l17_eo19EeK7gYOtibANUw" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_l17_e419EeK7gYOtibANUw" value="1"/>
+      </ownedParameter>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_E_m2I5GLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_E_m2JJGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_E_m2JZGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_E_m2JpGLEeKaY7tSssHhGw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_9tk2UIgUEeKtquXykzQHVw" name="AssertFalse">
+      <ownedComment xmi:id="_qGNYsIgVEeKtquXykzQHVw">
+        <body>namespace AssertionLibrary ;&#xD;
+&#xD;
+private import Alf::Library::PrimitiveBehaviors::BooleanFunctions::ToString;&#xD;
+private import Alf::Library::BasicInputOutput::WriteLine ;&#xD;
+&#xD;
+activity AssertFalse(in label: String, in condition: Boolean) {&#xD;
+    WriteLine(&quot;! &quot; + label + &quot;: &quot; + ToString(!condition));&#xD;
+}</body>
+      </ownedComment>
+      <ownedParameter xmi:id="_wKWOho19EeK7gYOtibANUw" name="label" visibility="package">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_wKWOh419EeK7gYOtibANUw" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_wKWOiI19EeK7gYOtibANUw" value="1"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_wKWOiY19EeK7gYOtibANUw" name="condition" visibility="package">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_wKWOio19EeK7gYOtibANUw" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_wKWOi419EeK7gYOtibANUw" value="1"/>
+      </ownedParameter>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_VANzHpGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_VANzH5GLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_VANzIJGLEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_VANzIZGLEeKaY7tSssHhGw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_-Y3PAIgUEeKtquXykzQHVw" name="AssertList">
+      <ownedComment xmi:id="_2i470IgVEeKtquXykzQHVw">
+        <body>namespace AssertionLibrary::AssertList ;&#xD;
+&#xD;
+private import Alf::Library::CollectionFunctions::* ;&#xD;
+private import Alf::Library::PrimitiveBehaviors::* ;&#xD;
+&#xD;
+activity AssertList(in label: String, in list: any[*] sequence, in expected: any[*] sequence) {&#xD;
+	AssertEquals(label + &quot;->size()&quot;, list->size(), expected->size());&#xD;
+	for (i in 1..IntegerFunctions::Min(list->size(),expected->size())) {&#xD;
+		AssertEquals(label + &quot;[&quot; + IntegerFunctions::ToString(i) + &quot;]&quot;, list[i], expected[i]);&#xD;
+	}&#xD;
+}</body>
+      </ownedComment>
+      <ownedParameter xmi:id="_AserUJF0EeKLspnMdnbsRA" name="label">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_Bqqx4JF0EeKLspnMdnbsRA" name="list" isOrdered="true" isUnique="false">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_KncfoJF0EeKLspnMdnbsRA"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_KnmQoJF0EeKLspnMdnbsRA" value="*"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_BxEU0JF0EeKLspnMdnbsRA" name="expected" isOrdered="true" isUnique="false">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_NEZqQJF0EeKLspnMdnbsRA"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_NEZqQZF0EeKLspnMdnbsRA" value="*"/>
+      </ownedParameter>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_Tz8bEIgWEeKtquXykzQHVw" name="Write">
+      <ownedComment xmi:id="_ZaCg4IgWEeKtquXykzQHVw">
+        <body>&#xD;
+namespace AssertionLibrary ;&#xD;
+&#xD;
+private import Alf::Library::BasicInputOutput::StandardOutputChannel ;&#xD;
+&#xD;
+activity Write(in value: any) {&#xD;
+	StandardOutputChannel.allInstances()[1].write(value);&#xD;
+}</body>
+      </ownedComment>
+      <ownedParameter xmi:id="_Y7osM419EeK7gYOtibANUw" name="value" visibility="package">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Y7osNI19EeK7gYOtibANUw" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Y7osNY19EeK7gYOtibANUw" value="1"/>
+      </ownedParameter>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_vtRg8ZGKEeKaY7tSssHhGw"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_vtRg8pGKEeKaY7tSssHhGw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_z5N8wJGKEeKaY7tSssHhGw" name="Tests">
+      <packagedElement xmi:type="uml:Activity" xmi:id="_4BlgUJGKEeKaY7tSssHhGw" name="TestWrite">
+        <ownedComment xmi:id="_9Q7TDpGKEeKaY7tSssHhGw">
+          <body>/* Generated textual representation of Activity AssertionLibrary::Tests::TestWrite */&#xD;
+&#xD;
+namespace AssertionLibrary::Tests ;&#xD;
+&#xD;
+activity TestWrite() { &#xD;
+	Write(&quot;Hello!&quot;) ;&#xD;
+}</body>
+        </ownedComment>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Activity" xmi:id="_Grnr0JGLEeKaY7tSssHhGw" name="TestAssertTrue">
+        <ownedComment xmi:id="_QCbqgJGLEeKaY7tSssHhGw">
+          <body>/* Generated textual representation of Activity AssertionLibrary::Tests::TestAssertTrue */&#xD;
+&#xD;
+namespace AssertionLibrary::Tests ;&#xD;
+&#xD;
+activity TestAssertTrue() { &#xD;
+	AssertTrue(&quot;1 == 1&quot;, 1 == 1) ;&#xD;
+	AssertTrue(&quot;1 == 2&quot;, 1 == 2) ;&#xD;
+}</body>
+        </ownedComment>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Activity" xmi:id="_XSUYUJGLEeKaY7tSssHhGw" name="TestAssertFalse">
+        <ownedComment xmi:id="_fY76cJGLEeKaY7tSssHhGw">
+          <body>/* Generated textual representation of Activity AssertionLibrary::Tests::TestAssertFalse */&#xD;
+&#xD;
+namespace AssertionLibrary::Tests ;&#xD;
+&#xD;
+activity TestAssertFalse() { &#xD;
+	AssertFalse(&quot;1 == 1&quot;, 1 == 1) ;&#xD;
+	AssertFalse(&quot;1 == 2&quot;, 1 == 2) ;&#xD;
+}</body>
+        </ownedComment>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Activity" xmi:id="_oUPBMJGLEeKaY7tSssHhGw" name="TestAssertEquals">
+        <ownedComment xmi:id="_xyMJoJGLEeKaY7tSssHhGw">
+          <body>/* Generated textual representation of Activity AssertionLibrary::Tests::TestAssertEquals */&#xD;
+&#xD;
+namespace AssertionLibrary::Tests ;&#xD;
+&#xD;
+activity TestAssertEquals() { &#xD;
+	AssertEquals(&quot;1 equals 1&quot;, 1, 1) ;&#xD;
+	AssertEquals(&quot;1 equals 2&quot;, 1, 2) ;&#xD;
+}</body>
+        </ownedComment>
+      </packagedElement>
+    </packagedElement>
+    <profileApplication xmi:id="_PWUOo4gVEeKtquXykzQHVw">
+      <eAnnotations xmi:id="_PWd_oIgVEeKtquXykzQHVw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/org.eclipse.papyrus.alf/resources/ActionLanguage-Profile.profile.uml#_sYse0YZLEeKyw49uR6nx3g"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/org.eclipse.papyrus.alf/resources/ActionLanguage-Profile.profile.uml#ActionLanguage"/>
+    </profileApplication>
+  </uml:Model>
+  <ActionLanguage:TextualRepresentation xmi:id="_PYjDQIgVEeKtquXykzQHVw" base_Comment="_PWUOoIgVEeKtquXykzQHVw"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_cKvjYYgVEeKtquXykzQHVw" base_Comment="_cKvjYIgVEeKtquXykzQHVw"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_qGNYsYgVEeKtquXykzQHVw" base_Comment="_qGNYsIgVEeKtquXykzQHVw"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_2i470YgVEeKtquXykzQHVw" base_Comment="_2i470IgVEeKtquXykzQHVw"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_ZaCg4YgWEeKtquXykzQHVw" base_Comment="_ZaCg4IgWEeKtquXykzQHVw"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_9RFEAJGKEeKaY7tSssHhGw" base_Comment="_9Q7TDpGKEeKaY7tSssHhGw"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_QCbqgZGLEeKaY7tSssHhGw" base_Comment="_QCbqgJGLEeKaY7tSssHhGw"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_fY76cZGLEeKaY7tSssHhGw" base_Comment="_fY76cJGLEeKaY7tSssHhGw"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_xyMJoZGLEeKaY7tSssHhGw" base_Comment="_xyMJoJGLEeKaY7tSssHhGw"/>
+</xmi:XMI>
