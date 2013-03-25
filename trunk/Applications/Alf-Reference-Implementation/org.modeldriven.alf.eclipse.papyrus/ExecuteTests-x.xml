@@ -7,8 +7,8 @@
     <property name="eclipse.dir" value="/Applications/eclipse 4.2" />
     <path id="cp-moka">
         <pathelement location="${classpath}" />
-        <pathelement location="lib/alf-base.jar" />
-        <pathelement location="lib/alf-eclipse.jar" />
+        <pathelement location="${basedir}/lib/alf-base.jar" />
+        <pathelement location="${alf.eclipse.dir}/bin" />
         <pathelement location="${alf.dir}/lib/commons-logging.jar" />
         <pathelement location="${alf.dir}/lib/log4j.jar" />
         <pathelement location="${moka.dir}/bin" />
