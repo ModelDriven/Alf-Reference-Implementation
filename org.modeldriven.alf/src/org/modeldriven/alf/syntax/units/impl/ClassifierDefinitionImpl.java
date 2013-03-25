@@ -195,7 +195,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     /*
      * Helper Methods
      */
-    
+	
 	/**
 	 * The namespace definition associated with the given unit definition must
 	 * be a classifier definition. The subunit classifier definition may be
@@ -248,9 +248,18 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
  	    }
 	} // matchForStub
 
+    /**
+     * This operation is provided so that, if getOwnedMember is overridden, this
+     * operation can still get the orginal owned members synthesized from
+     * parsing.
+     */
+    public List<Member> getOnlyOwnedMembers() {
+        return this.getOwnedMember();
+    }
+    
 	@Override
     public boolean isTemplate() {
-        for (Member member: this.getSelf().getOwnedMember()) {
+        for (Member member: this.getOnlyOwnedMembers()) {
             if (member instanceof ClassifierTemplateParameter &&
                     !((ClassifierTemplateParameter)member).getImpl().isBound()) {
                 return true;
@@ -260,7 +269,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     }
 	
 	public boolean isBound() {
-	    for (Member member: this.getSelf().getOwnedMember()) {
+	    for (Member member: this.getOnlyOwnedMembers()) {
 	        if (member instanceof ClassifierTemplateParameter &&
 	                ((ClassifierTemplateParameter)member).getImpl().isBound()) {
 	            return true;
@@ -272,7 +281,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	public List<ClassifierTemplateParameter> getTemplateParameters() {
 	    List<ClassifierTemplateParameter> templateParameters = 
 	        new ArrayList<ClassifierTemplateParameter>();
-        for (Member member: this.getSelf().getOwnedMember()) {
+        for (Member member: this.getOnlyOwnedMembers()) {
             if (member instanceof ClassifierTemplateParameter &&
                     !((ClassifierTemplateParameter)member).getImpl().isBound()) {
                 templateParameters.add((ClassifierTemplateParameter)member);
@@ -284,7 +293,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     public List<ClassifierTemplateParameter> getBoundTemplateParameters() {
         List<ClassifierTemplateParameter> templateParameters = 
             new ArrayList<ClassifierTemplateParameter>();
-        for (Member member: this.getSelf().getOwnedMember()) {
+        for (Member member: this.getOnlyOwnedMembers()) {
             if (member instanceof ClassifierTemplateParameter &&
                     ((ClassifierTemplateParameter)member).getImpl().isBound()) {
                 templateParameters.add((ClassifierTemplateParameter)member);
@@ -295,7 +304,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
     
 	public List<ElementReference> getTemplateActuals() {
 	    List<ElementReference> templateActuals = new ArrayList<ElementReference>();
-        for (Member member: this.getSelf().getOwnedMember()) {
+        for (Member member: this.getOnlyOwnedMembers()) {
             if (member instanceof ClassifierTemplateParameter) {
                 ClassifierTemplateParameterImpl parameter = 
                     ((ClassifierTemplateParameter)member).getImpl();
@@ -322,7 +331,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	    if (namespace != null && !namespace.getImpl().isCompletelyBound()){
 	        return false;
 	    } else {
-            for (Member member: this.getSelf().getOwnedMember()) {
+            for (Member member: this.getOnlyOwnedMembers()) {
                 if (member instanceof ClassifierTemplateParameter) {
                     ClassifierTemplateParameterImpl parameter = 
                         ((ClassifierTemplateParameter)member).getImpl();
