@@ -35,7 +35,11 @@ public class StereotypeApplication {
     // Record stereotype applications whose actual application is deferred
     // until after their profile is applied.
     private static Map<Element, Collection<Stereotype>> stereotypeApplications = 
-            new HashMap<Element, Collection<Stereotype>>();    
+            new HashMap<Element, Collection<Stereotype>>();
+    
+    public static void clearStereotypeApplications() {
+        stereotypeApplications.clear();
+    }
     
     public static void addStereotypeApplication(Element element, Stereotype stereotype) {
         if (element != null) {
