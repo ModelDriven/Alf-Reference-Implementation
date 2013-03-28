@@ -12,9 +12,22 @@ Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.8.3",
  org.eclipse.uml2.uml.profile.l2;bundle-version="1.0.1",
  org.eclipse.uml2.uml.profile.l3;bundle-version="1.0.1",
  org.eclipse.uml2.uml.resources;bundle-version="4.0.2"
-Bundle-ClassPath: lib/alf-base.jar,
- .
+Bundle-ClassPath: .,
+ lib/alf-base.jar
 Export-Package: org.modeldriven.alf.eclipse.fuml.execution,
  org.modeldriven.alf.eclipse.fuml.mapping,
  org.modeldriven.alf.eclipse.uml,
- org.modeldriven.alf.eclipse.units
+ org.modeldriven.alf.eclipse.units,
+ org.modeldriven.alf.execution,
+ org.modeldriven.alf.fuml.execution,
+ org.modeldriven.alf.fuml.mapping,
+ org.modeldriven.alf.fuml.mapping.units,
+ org.modeldriven.alf.mapping,
+ org.modeldriven.alf.parser,
+ org.modeldriven.alf.syntax.common,
+ org.modeldriven.alf.syntax.common.impl,
+ org.modeldriven.alf.syntax.expressions,
+ org.modeldriven.alf.syntax.expressions.impl,
+ org.modeldriven.alf.syntax.units,
+ org.modeldriven.alf.syntax.units.impl,
+ org.modeldriven.alf.uml
