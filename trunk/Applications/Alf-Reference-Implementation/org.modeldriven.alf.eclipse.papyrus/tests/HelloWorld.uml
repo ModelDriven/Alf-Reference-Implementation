@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ActionLanguage="http://www.omg.org/spec/ALF/20120827/ActionLanguage-Profile" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xsi:schemaLocation="http://www.omg.org/spec/ALF/20120827/ActionLanguage-Profile platform:/plugin/org.eclipse.papyrus.alf/resources/ActionLanguage-Profile.profile.uml#_sYse0YZLEeKyw49uR6nx3g">
+  <uml:Model xmi:id="__BGVEJlqEeKFXat7hV9zaw" name="model">
+    <packageImport xmi:id="_XK5xMJlsEeKxLIwBLYwB4A">
+      <importedPackage xmi:type="uml:Model" href="pathmap://PAPYRUS_ALF_LIBRARY/Alf.library.uml#Alf"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_g3SW8JlsEeKxLIwBLYwB4A" name="HelloWorld" group="_zzmVUJl_EeK-D7aIXXbIOg" node="_zzmVUJl_EeK-D7aIXXbIOg">
+      <ownedComment xmi:id="_pBgmYJlsEeKxLIwBLYwB4A">
+        <body>/* Generated textual representation of Activity model::HelloWorld */
+
+namespace model ;
+
+activity HelloWorld() { 
+  
+  WriteLine(&quot;Hello World!&quot;);
+
+}</body>
+      </ownedComment>
+      <structuredNode xmi:id="_zzmVUJl_EeK-D7aIXXbIOg" name="Body(HelloWorld)">
+        <node xmi:type="uml:StructuredActivityNode" xmi:id="_zzmVUZl_EeK-D7aIXXbIOg" name="ExpressionStatement@77be0464">
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_zzmVUpl_EeK-D7aIXXbIOg" name="Call(WriteLine)" incoming="_zzmVYJl_EeK-D7aIXXbIOg">
+            <argument xmi:id="_zzmVU5l_EeK-D7aIXXbIOg" name="Call(WriteLine).argument(value)" incoming="_zzmVX5l_EeK-D7aIXXbIOg">
+              <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zzmVVJl_EeK-D7aIXXbIOg" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zzmVVZl_EeK-D7aIXXbIOg" value="1"/>
+            </argument>
+            <result xmi:id="_zzmVVpl_EeK-D7aIXXbIOg" name="Call(WriteLine).result(errorStatus)">
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zzmVV5l_EeK-D7aIXXbIOg"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zzmVWJl_EeK-D7aIXXbIOg" value="1"/>
+            </result>
+            <behavior xmi:type="uml:Activity" href="pathmap://PAPYRUS_fUML_LIBRARY/fUML_Library.uml#BasicInputOutput-WriteLine"/>
+          </node>
+          <node xmi:type="uml:StructuredActivityNode" xmi:id="_zzmVWZl_EeK-D7aIXXbIOg" name="Tuple@5bba33a3" outgoing="_zzmVYJl_EeK-D7aIXXbIOg">
+            <node xmi:type="uml:ValueSpecificationAction" xmi:id="_zzmVWpl_EeK-D7aIXXbIOg" name="Value(&quot;Hello World!&quot;)">
+              <result xmi:id="_zzmVW5l_EeK-D7aIXXbIOg" name="Value(&quot;Hello World!&quot;).result" outgoing="_zzmVX5l_EeK-D7aIXXbIOg" isOrdered="true" isUnique="false">
+                <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zzmVXJl_EeK-D7aIXXbIOg" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zzmVXZl_EeK-D7aIXXbIOg" value="1"/>
+              </result>
+              <value xmi:type="uml:LiteralString" xmi:id="_zzmVXpl_EeK-D7aIXXbIOg" value="Hello World!">
+                <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+              </value>
+            </node>
+          </node>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_zzmVX5l_EeK-D7aIXXbIOg" source="_zzmVW5l_EeK-D7aIXXbIOg" target="_zzmVU5l_EeK-D7aIXXbIOg"/>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_zzmVYJl_EeK-D7aIXXbIOg" source="_zzmVWZl_EeK-D7aIXXbIOg" target="_zzmVUpl_EeK-D7aIXXbIOg"/>
+        </node>
+      </structuredNode>
+    </packagedElement>
+    <profileApplication xmi:id="_rkhLIJlrEeKxCtmQE5Jdzw">
+      <eAnnotations xmi:id="_rlZ78JlrEeKxCtmQE5Jdzw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/org.eclipse.papyrus.alf/resources/ActionLanguage-Profile.profile.uml#_sYse0YZLEeKyw49uR6nx3g"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/org.eclipse.papyrus.alf/resources/ActionLanguage-Profile.profile.uml#ActionLanguage"/>
+    </profileApplication>
+  </uml:Model>
+  <ActionLanguage:TextualRepresentation xmi:id="_pErPIJlsEeKxLIwBLYwB4A" base_Comment="_pBgmYJlsEeKxLIwBLYwB4A"/>
+</xmi:XMI>
