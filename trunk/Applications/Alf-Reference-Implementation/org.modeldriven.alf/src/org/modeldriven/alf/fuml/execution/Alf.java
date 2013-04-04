@@ -12,6 +12,7 @@ package org.modeldriven.alf.fuml.execution;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
@@ -39,6 +40,13 @@ import org.modeldriven.alf.uml.PrimitiveType;
 
 public abstract class Alf extends AlfBase {
     
+    protected Level debugLevel = Level.OFF;
+    
+    @Override
+    public void setDebugLevel(String level) {
+        this.debugLevel = Level.toLevel(level, this.debugLevel);
+    }
+
     private Locus locus = null;
     
     protected abstract Locus createLocus();
