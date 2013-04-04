@@ -48,7 +48,7 @@ public class LocalNameDeclarationStatementMapping extends StatementMapping {
     
     @Override
     public ActivityNode getAssignedValueSource(String name) throws MappingError {
-        this.map();
+        this.getNode();
         return this.assignmentMapping == null? null:
             this.assignmentMapping.getAssignedValueSource(name);
     }
