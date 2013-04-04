@@ -34,7 +34,7 @@ active class Statements_For_Looping {
   	  reading = +0;
   	  readings = null;
   	  recordCount = 10;
-  	  sum = 0;
+  	  let sum: Integer = 0; // Make sure assigned values work right for local declaration statements.
   	  outgoingEdges = ActivityEdgeInstance[]{new ActivityEdgeInstance(), new ActivityEdgeInstance()};
   	  tokens = Integer[]{1, 2, 3};
   	  SLower = Integer[]{4, 5, 6};
