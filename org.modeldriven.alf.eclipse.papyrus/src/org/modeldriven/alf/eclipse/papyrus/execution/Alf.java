@@ -9,7 +9,6 @@
 
 package org.modeldriven.alf.eclipse.papyrus.execution;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.modeldriven.alf.eclipse.papyrus.library.channel.StandardInputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.channel.StandardOutputChannelObject;
@@ -32,10 +31,10 @@ import org.eclipse.papyrus.moka.fuml.debug.Debug;
 public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     
 	@Override
-    public void setDebugLevel(Level level) {
+    public void setDebugLevel(String level) {
 		super.setDebugLevel(level);
         Logger logger = Logger.getLogger(Debug.class);
-        logger.setLevel(level);
+        logger.setLevel(this.debugLevel);
     }
     
     @Override
