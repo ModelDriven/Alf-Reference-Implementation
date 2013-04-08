@@ -1,11 +1,12 @@
 
 /*******************************************************************************
  * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013 Ivar Jacobson International
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
+ * http://www.gnu.org/licenses/gpl-3.0.html. 
  *******************************************************************************/
 
 package org.modeldriven.alf.syntax.statements.impl;
@@ -175,8 +176,8 @@ public class AcceptStatementImpl extends StatementImpl {
 	 * behavior or the classifier behavior of an active class.
 	 **/
 	public boolean acceptStatementContext() {
-	    ElementReference behavior = this.getSelf().getBehavior();
-		return behavior != null && behavior.getImpl().isActiveBehavior();
+	    ElementReference behavior = this.getEffectiveBehavior();
+	    return behavior != null && behavior.getImpl().isActiveBehavior();
 	}
 
 	/**
@@ -185,14 +186,13 @@ public class AcceptStatementImpl extends StatementImpl {
 	 * be referenced in more than one accept block of an accept statement.
 	 **/
 	public boolean acceptStatementSignals() {
-	    AcceptStatement self = this.getSelf();
-	    ElementReference behavior = self.getBehavior();
+	    ElementReference behavior = this.getEffectiveBehavior();
 	    behavior = behavior == null? null: behavior.getImpl().getActiveClass();
 	    if (behavior == null) {
 	        return false;
 	    } else {
     	    Collection<ElementReference> signals = new ArrayList<ElementReference>();
-    	    for (AcceptBlock block: self.getAcceptBlock()) {
+    	    for (AcceptBlock block: this.getSelf().getAcceptBlock()) {
     	        Collection<ElementReference> blockSignals = block.getSignal();
     	        for (ElementReference signal: blockSignals) {
         	        if (!behavior.getImpl().hasReceptionFor(signal) ||
@@ -314,6 +314,18 @@ public class AcceptStatementImpl extends StatementImpl {
 	 * Helper Methods
 	 */
 
+	/**
+	 * If the behavior for this accept statement is a subunit, then return the
+	 * corresponding stub. Note that, if the original behavior is an Alf
+	 * activity definition, the "stub" may be an external operation or activity.
+	 */
+	public ElementReference getEffectiveBehavior() {
+	    ElementReference behavior = this.getBehavior();
+        ElementReference stub = behavior == null? null:
+                behavior.getImpl().asNamespace().getImpl().getStub();
+        return stub == null? behavior: stub;
+	}
+	
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
         for (AcceptBlock acceptBlock: this.getSelf().getAcceptBlock()) {

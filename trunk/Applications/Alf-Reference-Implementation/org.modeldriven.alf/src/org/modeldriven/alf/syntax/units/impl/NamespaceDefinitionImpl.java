@@ -1,11 +1,12 @@
 
 /*******************************************************************************
  * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013 Ivar Jacobson International
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
+ * http://www.gnu.org/licenses/gpl-3.0.html. 
  *******************************************************************************/
 
 package org.modeldriven.alf.syntax.units.impl;
@@ -394,6 +395,27 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                 if (name != null && name.equals(definition.getName()) && 
                         member.getIsStub() && member.matchForStub(unit)) {
                     return member;
+                }
+            }
+        }
+        return null;
+    }
+    
+    
+    /**
+     * Return a reference to the stub the subunit for which has this namespace
+     * definition as its definition, if any. Note that, for an activity
+     * definition, the "stub" may be an external operation or activity. 
+     */
+    public ElementReference getStub() {
+        UnitDefinition unit = this.getSelf().getUnit();
+        if (unit != null) {
+            ElementReference namespace = unit.getNamespace();
+            if (namespace != null) {
+                Member stub = namespace.getImpl().asNamespace().
+                        getImpl().getStubFor(unit);
+                if (stub != null) {
+                    return stub.getImpl().getReferent();
                 }
             }
         }
