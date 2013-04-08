@@ -49,18 +49,12 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	        // NOTE: This will also work in the case in which the activity
 	        // definition provides the textual definition of an external
 	        // operation.
-	        UnitDefinition unit = context.getImpl().asNamespace().getUnit();
-	        if (unit != null) {
-	            ElementReference namespace = unit.getNamespace();
-	            if (namespace != null) {
-	                Member stub = namespace.getImpl().asNamespace().
-	                        getImpl().getStubFor(unit);
-	                if (stub != null) {
-	                    context = stub.getImpl().getReferent();
-	                    if (context.getImpl().isOperation()) {
-	                        return namespace;
-	                    }
-	                }
+	        ElementReference stub = 
+	                context.getImpl().asNamespace().getImpl().getStub();
+	        if (stub != null) {
+	            context = stub;
+	            if (context.getImpl().isOperation()) {
+	                return context.getImpl().getNamespace();
 	            }
 	        }
 	        
