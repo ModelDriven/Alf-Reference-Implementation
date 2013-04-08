@@ -9,7 +9,6 @@
 
 package org.modeldriven.alf.fuml.impl.execution;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
@@ -32,10 +31,10 @@ import fUML.Semantics.Loci.LociL1.FirstChoiceStrategy;
 public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     
     @Override
-    public void setDebugLevel(Level level) {
+    public void setDebugLevel(String level) {
         super.setDebugLevel(level);
         Logger logger = Logger.getLogger(fUML.Debug.class);
-        logger.setLevel(level);
+        logger.setLevel(this.debugLevel);
     }
     
     @Override
