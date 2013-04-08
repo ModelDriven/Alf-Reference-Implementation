@@ -157,5 +157,9 @@ public class RootNamespaceImpl extends
     		this.model.getPackagedElements().add((PackageableElement)element);
     	}
     }
+    
+    public Collection<NamedElement> findInModel(String name) {
+    	return this.findNamedElements(this.model.getName() + "::" + name, false);
+    }
 
 }
