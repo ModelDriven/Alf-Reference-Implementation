@@ -1,11 +1,12 @@
 
 /*******************************************************************************
  * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013 Ivar Jacobson International
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
+ * http://www.gnu.org/licenses/gpl-3.0.html. 
  *******************************************************************************/
 
 package org.modeldriven.alf.syntax.units.impl;
@@ -61,9 +62,17 @@ public class ImportedMemberImpl extends MemberImpl {
     
     @Override
     public Boolean getIsStub() {
-        return super.getIsStub() || 
-                // Consider an external operation to be a stub.
-                !this.isImported() && this.getReferent().getImpl().isOperation();
+        if (super.getIsStub()) {
+            return true;
+        } else if (this.isImported()) {
+            return false;
+        } else {
+            // Consider an external operation or activity to be a stub, since
+            // they can be specified using Alf subunits.
+            ElementReference referent = this.getReferent();
+            return referent.getImpl().isOperation() || 
+                    referent.getImpl().isActivity();
+        }
     }
     
     @Override
@@ -160,22 +169,17 @@ public class ImportedMemberImpl extends MemberImpl {
 	} // isSameKindAst
 	
 	/**
-	 * Allow an external operation to act as a stub for any of its methods.
+	 * Allow an external operation or active behavior (activity) to serve as the
+	 * "stub" for an activity definition. (Note that the names are already
+	 * assumed to match.)
 	 */
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
 	    ElementReference referent = this.getReferent();
-	    NamespaceDefinition definition = unit.getDefinition();
-	    if (!this.isImported() && referent.getImpl().isOperation() 
-	            && definition instanceof ActivityDefinition) {
-            String unitName = definition.getName();
-    	    for (ElementReference method: referent.getImpl().getMethods()) {
-    	        if (unitName.equals(method.getImpl().getName())) {
-    	            return true;
-    	        }
-    	    }
-	    }
-	    return false;
+	    return !this.isImported() && 
+	            unit.getDefinition() instanceof ActivityDefinition &&
+	            (referent.getImpl().isOperation() || 
+	                    referent.getImpl().isActiveBehavior());
 	}
 
 	
