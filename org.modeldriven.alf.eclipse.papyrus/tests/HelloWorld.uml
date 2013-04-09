@@ -4,7 +4,7 @@
     <packageImport xmi:id="_XK5xMJlsEeKxLIwBLYwB4A">
       <importedPackage xmi:type="uml:Model" href="pathmap://PAPYRUS_ALF_LIBRARY/Alf.library.uml#Alf"/>
     </packageImport>
-    <packagedElement xmi:type="uml:Activity" xmi:id="_g3SW8JlsEeKxLIwBLYwB4A" name="HelloWorld" group="_zzmVUJl_EeK-D7aIXXbIOg" node="_zzmVUJl_EeK-D7aIXXbIOg">
+    <packagedElement xmi:type="uml:Activity" xmi:id="_g3SW8JlsEeKxLIwBLYwB4A" name="HelloWorld" group="_OuVLUJvOEeKM7vwvYXVw8Q" node="_OuVLUJvOEeKM7vwvYXVw8Q">
       <ownedComment xmi:id="_pBgmYJlsEeKxLIwBLYwB4A">
         <body>/* Generated textual representation of Activity model::HelloWorld */
 
@@ -14,37 +14,118 @@ activity HelloWorld() {
   
   WriteLine(&quot;Hello World!&quot;);
 
+
 }</body>
       </ownedComment>
-      <structuredNode xmi:id="_zzmVUJl_EeK-D7aIXXbIOg" name="Body(HelloWorld)">
-        <node xmi:type="uml:StructuredActivityNode" xmi:id="_zzmVUZl_EeK-D7aIXXbIOg" name="ExpressionStatement@77be0464">
-          <node xmi:type="uml:CallBehaviorAction" xmi:id="_zzmVUpl_EeK-D7aIXXbIOg" name="Call(WriteLine)" incoming="_zzmVYJl_EeK-D7aIXXbIOg">
-            <argument xmi:id="_zzmVU5l_EeK-D7aIXXbIOg" name="Call(WriteLine).argument(value)" incoming="_zzmVX5l_EeK-D7aIXXbIOg">
+      <structuredNode xmi:id="_OuVLUJvOEeKM7vwvYXVw8Q" name="Body(HelloWorld)">
+        <node xmi:type="uml:StructuredActivityNode" xmi:id="_OuVLUZvOEeKM7vwvYXVw8Q" name="ExpressionStatement@369278a1">
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_OuVLUpvOEeKM7vwvYXVw8Q" name="Call(WriteLine)" incoming="_OuVLYJvOEeKM7vwvYXVw8Q">
+            <argument xmi:id="_OuVLU5vOEeKM7vwvYXVw8Q" name="Call(WriteLine).argument(value)" incoming="_OuVLX5vOEeKM7vwvYXVw8Q">
               <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zzmVVJl_EeK-D7aIXXbIOg" value="1"/>
-              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zzmVVZl_EeK-D7aIXXbIOg" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_OuVLVJvOEeKM7vwvYXVw8Q" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_OuVLVZvOEeKM7vwvYXVw8Q" value="1"/>
             </argument>
-            <result xmi:id="_zzmVVpl_EeK-D7aIXXbIOg" name="Call(WriteLine).result(errorStatus)">
-              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zzmVV5l_EeK-D7aIXXbIOg"/>
-              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zzmVWJl_EeK-D7aIXXbIOg" value="1"/>
+            <result xmi:id="_OuVLVpvOEeKM7vwvYXVw8Q" name="Call(WriteLine).result(errorStatus)">
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_OuVLV5vOEeKM7vwvYXVw8Q"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_OuVLWJvOEeKM7vwvYXVw8Q" value="1"/>
             </result>
             <behavior xmi:type="uml:Activity" href="pathmap://PAPYRUS_fUML_LIBRARY/fUML_Library.uml#BasicInputOutput-WriteLine"/>
           </node>
-          <node xmi:type="uml:StructuredActivityNode" xmi:id="_zzmVWZl_EeK-D7aIXXbIOg" name="Tuple@5bba33a3" outgoing="_zzmVYJl_EeK-D7aIXXbIOg">
-            <node xmi:type="uml:ValueSpecificationAction" xmi:id="_zzmVWpl_EeK-D7aIXXbIOg" name="Value(&quot;Hello World!&quot;)">
-              <result xmi:id="_zzmVW5l_EeK-D7aIXXbIOg" name="Value(&quot;Hello World!&quot;).result" outgoing="_zzmVX5l_EeK-D7aIXXbIOg" isOrdered="true" isUnique="false">
+          <node xmi:type="uml:StructuredActivityNode" xmi:id="_OuVLWZvOEeKM7vwvYXVw8Q" name="Tuple@43f7240f" outgoing="_OuVLYJvOEeKM7vwvYXVw8Q">
+            <node xmi:type="uml:ValueSpecificationAction" xmi:id="_OuVLWpvOEeKM7vwvYXVw8Q" name="Value(&quot;Hello World!&quot;)">
+              <result xmi:id="_OuVLW5vOEeKM7vwvYXVw8Q" name="Value(&quot;Hello World!&quot;).result" outgoing="_OuVLX5vOEeKM7vwvYXVw8Q" isOrdered="true" isUnique="false">
                 <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zzmVXJl_EeK-D7aIXXbIOg" value="1"/>
-                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zzmVXZl_EeK-D7aIXXbIOg" value="1"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_OuVLXJvOEeKM7vwvYXVw8Q" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_OuVLXZvOEeKM7vwvYXVw8Q" value="1"/>
               </result>
-              <value xmi:type="uml:LiteralString" xmi:id="_zzmVXpl_EeK-D7aIXXbIOg" value="Hello World!">
+              <value xmi:type="uml:LiteralString" xmi:id="_OuVLXpvOEeKM7vwvYXVw8Q" value="Hello World!">
                 <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
               </value>
             </node>
           </node>
-          <edge xmi:type="uml:ObjectFlow" xmi:id="_zzmVX5l_EeK-D7aIXXbIOg" source="_zzmVW5l_EeK-D7aIXXbIOg" target="_zzmVU5l_EeK-D7aIXXbIOg"/>
-          <edge xmi:type="uml:ControlFlow" xmi:id="_zzmVYJl_EeK-D7aIXXbIOg" source="_zzmVWZl_EeK-D7aIXXbIOg" target="_zzmVUpl_EeK-D7aIXXbIOg"/>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_OuVLX5vOEeKM7vwvYXVw8Q" source="_OuVLW5vOEeKM7vwvYXVw8Q" target="_OuVLU5vOEeKM7vwvYXVw8Q"/>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_OuVLYJvOEeKM7vwvYXVw8Q" source="_OuVLWZvOEeKM7vwvYXVw8Q" target="_OuVLUpvOEeKM7vwvYXVw8Q"/>
         </node>
+      </structuredNode>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_H8SFMJvNEeKPDOLlDvrDBg" name="ReadTest" group="_UfgVMJvNEeKPDOLlDvrDBg" node="_UfgVMJvNEeKPDOLlDvrDBg">
+      <ownedComment xmi:id="_SStGcJvNEeKPDOLlDvrDBg">
+        <body>/* Generated textual representation of Activity model::ReadTest */
+
+namespace model ;
+
+activity ReadTest() { 
+  WriteLine(&quot;Ready&quot;);
+  s = ReadLine();
+  WriteLine(s);
+  
+}</body>
+      </ownedComment>
+      <structuredNode xmi:id="_UfgVMJvNEeKPDOLlDvrDBg" name="Body(ReadTest)">
+        <node xmi:type="uml:StructuredActivityNode" xmi:id="_UfgVMZvNEeKPDOLlDvrDBg" name="ExpressionStatement@12ebbbaf" outgoing="_UfgVVJvNEeKPDOLlDvrDBg">
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_UfgVMpvNEeKPDOLlDvrDBg" name="Call(WriteLine)" incoming="_UfgVQJvNEeKPDOLlDvrDBg">
+            <argument xmi:id="_UfgVM5vNEeKPDOLlDvrDBg" name="Call(WriteLine).argument(value)" incoming="_UfgVP5vNEeKPDOLlDvrDBg">
+              <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UfgVNJvNEeKPDOLlDvrDBg" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UfgVNZvNEeKPDOLlDvrDBg" value="1"/>
+            </argument>
+            <result xmi:id="_UfgVNpvNEeKPDOLlDvrDBg" name="Call(WriteLine).result(errorStatus)">
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UfgVN5vNEeKPDOLlDvrDBg"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UfgVOJvNEeKPDOLlDvrDBg" value="1"/>
+            </result>
+            <behavior xmi:type="uml:Activity" href="pathmap://PAPYRUS_fUML_LIBRARY/fUML_Library.uml#BasicInputOutput-WriteLine"/>
+          </node>
+          <node xmi:type="uml:StructuredActivityNode" xmi:id="_UfgVOZvNEeKPDOLlDvrDBg" name="Tuple@533a64fd" outgoing="_UfgVQJvNEeKPDOLlDvrDBg">
+            <node xmi:type="uml:ValueSpecificationAction" xmi:id="_UfgVOpvNEeKPDOLlDvrDBg" name="Value(&quot;Ready&quot;)">
+              <result xmi:id="_UfgVO5vNEeKPDOLlDvrDBg" name="Value(&quot;Ready&quot;).result" outgoing="_UfgVP5vNEeKPDOLlDvrDBg" isOrdered="true" isUnique="false">
+                <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UfgVPJvNEeKPDOLlDvrDBg" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UfgVPZvNEeKPDOLlDvrDBg" value="1"/>
+              </result>
+              <value xmi:type="uml:LiteralString" xmi:id="_UfgVPpvNEeKPDOLlDvrDBg" value="Ready">
+                <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+              </value>
+            </node>
+          </node>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_UfgVP5vNEeKPDOLlDvrDBg" source="_UfgVO5vNEeKPDOLlDvrDBg" target="_UfgVM5vNEeKPDOLlDvrDBg"/>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_UfgVQJvNEeKPDOLlDvrDBg" source="_UfgVOZvNEeKPDOLlDvrDBg" target="_UfgVMpvNEeKPDOLlDvrDBg"/>
+        </node>
+        <node xmi:type="uml:StructuredActivityNode" xmi:id="_UfgVQZvNEeKPDOLlDvrDBg" name="ExpressionStatement@38df2dc1" outgoing="_UfgVVpvNEeKPDOLlDvrDBg" incoming="_UfgVVJvNEeKPDOLlDvrDBg">
+          <node xmi:type="uml:ForkNode" xmi:id="_UfgVQpvNEeKPDOLlDvrDBg" name="Fork(s)@31864222" outgoing="_UfgVVZvNEeKPDOLlDvrDBg" incoming="_UfgVS5vNEeKPDOLlDvrDBg"/>
+          <node xmi:type="uml:StructuredActivityNode" xmi:id="_UfgVQ5vNEeKPDOLlDvrDBg" name="RightHandSide@31d68467">
+            <node xmi:type="uml:CallBehaviorAction" xmi:id="_UfgVRJvNEeKPDOLlDvrDBg" name="Call(ReadLine)">
+              <result xmi:id="_UfgVRZvNEeKPDOLlDvrDBg" name="Call(ReadLine).result(errorStatus)">
+                <type xmi:type="uml:DataType" href="pathmap://PAPYRUS_fUML_LIBRARY/fUML_Library.uml#Common-Status"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UfgVRpvNEeKPDOLlDvrDBg"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UfgVR5vNEeKPDOLlDvrDBg" value="1"/>
+              </result>
+              <result xmi:id="_UfgVSJvNEeKPDOLlDvrDBg" name="Call(ReadLine).result(result)" outgoing="_UfgVS5vNEeKPDOLlDvrDBg">
+                <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UfgVSZvNEeKPDOLlDvrDBg" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UfgVSpvNEeKPDOLlDvrDBg" value="1"/>
+              </result>
+              <behavior xmi:type="uml:Activity" href="pathmap://PAPYRUS_fUML_LIBRARY/fUML_Library.uml#BasicInputOutput-ReadLine"/>
+            </node>
+          </node>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_UfgVS5vNEeKPDOLlDvrDBg" source="_UfgVSJvNEeKPDOLlDvrDBg" target="_UfgVQpvNEeKPDOLlDvrDBg"/>
+        </node>
+        <node xmi:type="uml:StructuredActivityNode" xmi:id="_UfgVTJvNEeKPDOLlDvrDBg" name="ExpressionStatement@45153ef8" incoming="_UfgVVpvNEeKPDOLlDvrDBg">
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_UfgVTZvNEeKPDOLlDvrDBg" name="Call(WriteLine)">
+            <argument xmi:id="_UfgVTpvNEeKPDOLlDvrDBg" name="Call(WriteLine).argument(value)" incoming="_UfgVVZvNEeKPDOLlDvrDBg">
+              <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UfgVT5vNEeKPDOLlDvrDBg" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UfgVUJvNEeKPDOLlDvrDBg" value="1"/>
+            </argument>
+            <result xmi:id="_UfgVUZvNEeKPDOLlDvrDBg" name="Call(WriteLine).result(errorStatus)">
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UfgVUpvNEeKPDOLlDvrDBg"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UfgVU5vNEeKPDOLlDvrDBg" value="1"/>
+            </result>
+            <behavior xmi:type="uml:Activity" href="pathmap://PAPYRUS_fUML_LIBRARY/fUML_Library.uml#BasicInputOutput-WriteLine"/>
+          </node>
+        </node>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_UfgVVJvNEeKPDOLlDvrDBg" source="_UfgVMZvNEeKPDOLlDvrDBg" target="_UfgVQZvNEeKPDOLlDvrDBg"/>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_UfgVVZvNEeKPDOLlDvrDBg" source="_UfgVQpvNEeKPDOLlDvrDBg" target="_UfgVTpvNEeKPDOLlDvrDBg"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_UfgVVpvNEeKPDOLlDvrDBg" source="_UfgVQZvNEeKPDOLlDvrDBg" target="_UfgVTJvNEeKPDOLlDvrDBg"/>
       </structuredNode>
     </packagedElement>
     <profileApplication xmi:id="_rkhLIJlrEeKxCtmQE5Jdzw">
@@ -55,4 +136,5 @@ activity HelloWorld() {
     </profileApplication>
   </uml:Model>
   <ActionLanguage:TextualRepresentation xmi:id="_pErPIJlsEeKxLIwBLYwB4A" base_Comment="_pBgmYJlsEeKxLIwBLYwB4A"/>
+  <ActionLanguage:TextualRepresentation xmi:id="_SVSgYJvNEeKPDOLlDvrDBg" base_Comment="_SStGcJvNEeKPDOLlDvrDBg"/>
 </xmi:XMI>
