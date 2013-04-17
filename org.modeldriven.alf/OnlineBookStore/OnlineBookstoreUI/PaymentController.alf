@@ -117,7 +117,7 @@ active class PaymentController specializes Controller {
         this.previous.Display();
         break;
       } or accept (ShowShoppingCart) {
-        new ShoppingCartController(this).Display();
+        new ShoppingCartController(new HomeController(this)).Display();
         break;
       } or accept (Home) {
         new HomeController(this).Display();
