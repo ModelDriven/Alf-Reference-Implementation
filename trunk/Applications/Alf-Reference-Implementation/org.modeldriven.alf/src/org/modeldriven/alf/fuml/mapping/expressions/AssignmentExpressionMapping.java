@@ -64,7 +64,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * and the result of that invocation acts as the result source element for
      * the right-hand side, unless bit string conversion is also require. If bit
      * string conversion is required, then either the result source element of
-     * the.getArgument() expression or the result of the toSequence invocation, if
+     * the argument expression or the result of the toSequence invocation, if
      * collection conversion was required, is connected by an object flow to an
      * invocation of the BitStringFunctions::ToBitString function, and the
      * result of that invocation acts as the result source element for the
@@ -84,10 +84,10 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * assignment maps to a call behavior action for the library behavior
      * Alf::Library::SequenceFunctions::ReplaceAt. The assigned source for the
      * name from the left-hand side is connected by an object flow to the seq
-     *.getArgument() input pin of the call behavior action. The result source element
+     * argument input pin of the call behavior action. The result source element
      * from the mapping of the right-hand side is connected to the element
-     *.getArgument() input pin and the result source element from the mapping of the
-     * index expression is connected to the index.getArgument() input pin. The seq
+     * argument input pin and the result source element from the mapping of the
+     * index expression is connected to the index argument input pin. The seq
      * output pin of the call behavior action is connected by an object flow to
      * a fork node, which is the result source element for the assignment
      * expression and also the source for the assigned value for the name after

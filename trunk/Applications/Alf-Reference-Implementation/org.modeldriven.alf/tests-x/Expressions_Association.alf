@@ -8,7 +8,9 @@ active class Expressions_Association {
       class Person { 
           public name: String = "Jack";
           @Create public Person(in name: String[0..1]) {
+            if (name != null) {
               this.name = name;
+            }
           }
       }
       class House { 

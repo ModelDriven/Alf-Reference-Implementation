@@ -182,20 +182,6 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                         this.controlTarget = clearAction;
                     }
                     resultNode = clearAction.getResult();
-                } else if (this.rhsUpper == 1) {
-                    AddStructuralFeatureValueAction writeAction =
-                            this.graph.addAddStructuralFeatureValueAction(
-                                    property, true);
-                    this.node = writeAction;
-                    this.resultSource = this.graph.addForkNode(
-                            "Fork(LeftHandSide@" + lhs.getId() + ")");
-                    this.assignmentTarget = this.resultSource;
-                    this.graph.addObjectFlow(
-                            objectSource, 
-                            writeAction.getObject());
-                    this.graph.addObjectFlow(
-                            this.resultSource, writeAction.getValue());
-                    resultNode = writeAction.getResult();
                 } else {
                     ClearStructuralFeatureAction clearAction =
                             this.graph.addClearStructuralFeatureAction(property);
@@ -208,34 +194,52 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                     this.resultSource = this.graph.addForkNode(
                             "Fork(LeftHandSide@" + lhs.getId() + ")");
                     this.assignmentTarget = this.resultSource;
+                    
+                    if (this.rhsUpper == 1) {
+                        // NOTE: The stuctural feature has already been
+                        // cleared, so that, if the value argument is null, the
+                        // the add structural feature value action will not
+                        // fire, but the property will still be null by default.
+                        
+                        AddStructuralFeatureValueAction writeAction =
+                                this.graph.addAddStructuralFeatureValueAction(
+                                        property, true);
+                        this.node = writeAction;
+                        this.graph.addObjectFlow(
+                                clearAction.getResult(), 
+                                writeAction.getObject());
+                        this.graph.addObjectFlow(
+                                this.resultSource, writeAction.getValue());
+                        resultNode = writeAction.getResult();
+                    } else {
+                        // Place property assignment mapping in a
+                        // structured activity node to insure the isEmpty
+                        // test within it does start executing too soon.
+                        this.node =
+                                this.graph.addStructuredActivityNode(
+                                        "WriteAll(" + property.getQualifiedName() +")", 
+                                        new ArrayList<Element>());
 
-                    // Place property assignment mapping in a
-                    // structured activity node to insure the isEmpty
-                    // test within it does start executing too soon.
-                    this.node =
-                            this.graph.addStructuredActivityNode(
-                                    "WriteAll(" + property.getQualifiedName() +")", 
-                                    new ArrayList<Element>());
+                        InputPin valuePin = this.graph.createInputPin(
+                                this.node.getName() + 
+                                ".input(" + property.getQualifiedName() + ")", 
+                                property.getType(), 
+                                property.getLower(), 
+                                property.getUpper());
+                        ((StructuredActivityNode)this.node).
+                        addStructuredNodeInput(valuePin);
+                        this.graph.addObjectFlow(this.resultSource, valuePin);
 
-                    InputPin valuePin = this.graph.createInputPin(
-                            this.node.getName() + 
-                            ".input(" + property.getQualifiedName() + ")", 
-                            property.getType(), 
-                            property.getLower(), 
-                            property.getUpper());
-                    ((StructuredActivityNode)this.node).
-                    addStructuredNodeInput(valuePin);
-                    this.graph.addObjectFlow(this.resultSource, valuePin);
+                        ActivityGraph subgraph = this.createActivityGraph();
+                        resultNode = 
+                                AssignmentExpressionMapping.mapPropertyAssignment(
+                                        property, subgraph, 
+                                        clearAction.getResult(), valuePin, this);
 
-                    ActivityGraph subgraph = this.createActivityGraph();
-                    resultNode = 
-                            AssignmentExpressionMapping.mapPropertyAssignment(
-                                    property, subgraph, 
-                                    clearAction.getResult(), valuePin, this);
-
-                    graph.addToStructuredNode(
-                            (StructuredActivityNode)this.node, 
-                            subgraph.getModelElements());
+                        graph.addToStructuredNode(
+                                (StructuredActivityNode)this.node, 
+                                subgraph.getModelElements());
+                    }
                 }
             } else {
                 ActivityNode indexSource = this.getIndexSource();
