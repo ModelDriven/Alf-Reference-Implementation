@@ -35,6 +35,9 @@
             <param name="unit" value="Expressions_Assignment_Indexed" />
         </antcall>
         <antcall target="run-test">
+            <param name="unit" value="Expressions_Assignment_Null" />
+        </antcall>
+        <antcall target="run-test">
             <param name="unit" value="Expressions_Assignment_Feature_Indexed" />
         </antcall>
         <antcall target="run-test">
