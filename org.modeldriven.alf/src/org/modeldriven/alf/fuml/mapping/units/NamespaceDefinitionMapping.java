@@ -20,6 +20,7 @@ import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.units.ClassifierTemplateParameter;
 import org.modeldriven.alf.syntax.units.ImportReference;
+import org.modeldriven.alf.syntax.units.ImportedMember;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
@@ -64,7 +65,7 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
             // parameters (which are handled during classifier mapping).
             if ((supportsTemplates || member.getImpl().isCompletelyBound()) && 
                     !(member instanceof ClassifierTemplateParameter)) {
-                if (member.getIsStub()) {
+                if (member.getIsStub() && !(member instanceof ImportedMember)) {
                     UnitDefinition subunit = member.getSubunit();
                     if (subunit == null) {
                         this.throwError("Cannot resolve subunit for " + 
@@ -106,8 +107,9 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
         // may get added to a namespace due to derivations while mapping.
         for (int i = 0; i < definition.getOwnedMember().size(); i++) {
             Member member = definition.getOwnedMember().get(i);
-            if (member.getIsStub()) {
-                member = member.getSubunit().getDefinition();
+            UnitDefinition stub = member.getSubunit();
+            if (stub != null) {
+                member = stub.getDefinition();
             }
             Mapping mapping = member.getImpl().getMapping();
             if (mapping instanceof MemberMapping) {
