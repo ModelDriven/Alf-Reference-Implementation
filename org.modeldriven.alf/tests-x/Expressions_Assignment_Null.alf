@@ -1,0 +1,48 @@
+/**
+ * Test non-literal assignment of null.
+ **/
+active class Expressions_Assignment_Null {
+
+  private i: Integer[0..1];
+  private j: Integer[*] sequence;
+  
+  public set(in i: Integer[0..1]) {
+    this.i = i;
+  }
+  
+  public get(): Integer[0..1] {
+    return this.i;
+  }
+  
+  public setAt(in j: Integer[0..1], in index: Integer) {
+    this.j[index] = j;
+  }
+  
+  public getAt(in index: Integer): Integer[0..1] {
+    return this.j[index];
+  }
+  
+  public test(out i: Integer[0..1], out j: Integer[0..1]) {
+  
+    this.set(5);
+    this.set(null);
+    i = this.get();
+    
+    this.j = Integer[]{1, 2};
+    
+    this.setAt(5, 1);
+    this.setAt(null, 1);
+    j = this.getAt(1);    
+    
+  }
+  
+} do {
+
+  this.test(i, j);
+  
+  AssertEqual("i", i, null);
+  AssertEqual("j", j, 2);
+  
+  WriteLine("Done");
+  
+}
