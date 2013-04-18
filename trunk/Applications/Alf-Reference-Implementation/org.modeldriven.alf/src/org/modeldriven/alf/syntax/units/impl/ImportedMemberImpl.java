@@ -108,6 +108,11 @@ public class ImportedMemberImpl extends MemberImpl {
 	public boolean importedMemberNotStub() {
 		return !this.isImported() || !this.getSelf().getIsStub();
 	}
+	
+	 @Override
+	 public boolean memberStub() {
+	     return true;
+	 }
 
     /*
      * Helper Methods

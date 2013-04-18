@@ -235,9 +235,13 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	 **/
 	public boolean memberStubStereotypes() {
         Member self = this.getSelf();
-        if (self.getIsStub()) {
+        UnitDefinition subunit = self.getSubunit();
+        // NOTE: Certain imported members encapsulating external elements may
+        // be considered stubs (getIsStub is true), even though they have no Alf 
+        // subunit.
+        if (subunit != null) {
             Collection<StereotypeAnnotation> stubAnnotations = self.getAnnotation();
-            NamespaceDefinition subunitDefinition = self.getSubunit().getDefinition();
+            NamespaceDefinition subunitDefinition = subunit.getDefinition();
             Collection<StereotypeAnnotation> subunitAnnotations = 
                 subunitDefinition == null? null: subunitDefinition.getAnnotation();
             if (stubAnnotations != null && stubAnnotations.size() > 0 &&
