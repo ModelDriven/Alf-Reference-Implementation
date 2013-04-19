@@ -17,6 +17,7 @@ import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.units.ActiveClassDefinition;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 import org.modeldriven.alf.uml.*;
 
@@ -54,6 +55,11 @@ public class ActiveClassDefinitionMapping extends ClassDefinitionMapping {
         ActivityDefinition classifierBehavior = definition.getClassifierBehavior();
         
         if (classifierBehavior != null) {
+            UnitDefinition subunit = classifierBehavior.getSubunit();
+            if (subunit != null) {
+                classifierBehavior = (ActivityDefinition)subunit.getDefinition();
+            }
+            
             FumlMapping mapping = this.fumlMap(classifierBehavior);
             
             if (!(mapping instanceof ActivityDefinitionMapping)) {
