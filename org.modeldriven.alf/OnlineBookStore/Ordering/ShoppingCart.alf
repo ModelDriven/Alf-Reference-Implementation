@@ -143,14 +143,13 @@ active class ShoppingCart {
     accept (cartUpdated1: CartUpdated);
     this.'2a. Updating Cart'(cartUpdated1);
     
-    continue = true;
     do {
       accept (cartUpdated2: CartUpdated) {
         this.'2a. Updating Cart'(cartUpdated2);
         
       } or accept (addSelection2: AddSelection) {
         this.'2. Adding Selection to Cart'(addSelection2);
-        continue = false;
+        break;
         
       } or accept (checkOut: CheckOut) {
         this.'3. Establishing Customer and Verifying Payment'(checkOut);
@@ -162,7 +161,7 @@ active class ShoppingCart {
         
       } 
 
-    } while(continue);
+    } while(true);
     
   } while (true);
 }

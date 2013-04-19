@@ -179,7 +179,6 @@ active class Order {
   accept (checkOut: CheckOut);
   this.'1. Establishing Customer and Verifying Payment'(checkOut);
   
-  continue = true;
   do {
     accept (submitCharge: SubmitCharge);
     this.'2. Submitting Charge'(submitCharge);
@@ -189,9 +188,9 @@ active class Order {
       
     } or accept (paymentApproved: PaymentApproved) {
       this.'4. Being Packed And Shipped'(paymentApproved);
-      continue = false;
+      break;
     }
-  } while(continue);
+  } while(true);
   
   accept (orderDelivered: OrderDelivered);
   this.'5. Delivered to Customer'(orderDelivered);
