@@ -216,6 +216,7 @@ public abstract class Alf extends AlfBase {
     }
     
     protected void configure() {
+        super.configure();
         PropertyConfigurator.configure("log4j.properties");
     }
     

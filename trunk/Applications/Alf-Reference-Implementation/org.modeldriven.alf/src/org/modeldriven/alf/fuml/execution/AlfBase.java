@@ -39,9 +39,6 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     protected boolean isFileName = false;
     
     public RootNamespaceImpl getRootScopeImpl() {
-        if (this.rootScopeImpl == null) {
-            this.rootScopeImpl = new RootNamespaceImpl();
-        }
         return this.rootScopeImpl;
     }
     
@@ -194,7 +191,12 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         return null;
     }
     
+    protected RootNamespaceImpl createRootScopeImpl() {
+        return new RootNamespaceImpl();
+    }
+    
     protected void configure() {
+        this.rootScopeImpl = this.createRootScopeImpl();
     }
     
     public AlfBase() {
