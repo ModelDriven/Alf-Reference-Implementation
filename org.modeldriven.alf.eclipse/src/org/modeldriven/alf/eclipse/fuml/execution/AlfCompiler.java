@@ -57,6 +57,11 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     	}
     }
     
+    @Override
+    protected RootNamespaceImpl createRootScopeImpl() {
+    	return new RootNamespaceImpl();
+    }
+    
     protected void configure() {
     	super.configure();
     	this.umlDirectory = "UML";
