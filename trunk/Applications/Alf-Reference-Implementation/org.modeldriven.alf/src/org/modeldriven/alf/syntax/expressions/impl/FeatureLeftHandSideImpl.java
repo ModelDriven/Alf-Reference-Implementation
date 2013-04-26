@@ -135,11 +135,12 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
         FeatureLeftHandSide self = this.getSelf();
         FeatureReference feature = self.getFeature();
         Expression expression = feature == null? null: feature.getExpression();
+        ElementReference type = expression == null? null: expression.getType();
 		return expression != null && expression.getUpper() == 1 &&
 		            // Note: This constraint ensures that there will be an
 		            // assigned name for an assignment to an attribute of a
 		            // data type.
-		            (!expression.getType().getImpl().isDataType() ||
+		            (type == null || !type.getImpl().isDataType() ||
 		                    this.isDataValueUpdate());
 	}
 
