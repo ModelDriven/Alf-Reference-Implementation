@@ -1,11 +1,12 @@
 
 /*******************************************************************************
  * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013 Ivar Jacobson International SA
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
+ * http://www.gnu.org/licenses/gpl-3.0.html. 
  *******************************************************************************/
 
 package org.modeldriven.alf.syntax.statements.impl;
@@ -142,6 +143,7 @@ public class IfStatementImpl extends StatementImpl {
         Map<String, AssignedSource> assignmentsAfter = 
             new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
         assignmentsAfter.putAll(this.mergeAssignments(blocks));
+        /*
         if (finalClause == null) {
             for (Object name: assignmentsAfter.keySet().toArray()) {
                 if (!(assignmentsBefore.containsKey(name) ||
@@ -150,6 +152,7 @@ public class IfStatementImpl extends StatementImpl {
                 }
             }
         }
+        */
         return assignmentsAfter;
     }
     
@@ -182,22 +185,22 @@ public class IfStatementImpl extends StatementImpl {
 		return true;
 	}
 
-	/**
-	 * If an if statement does not have a final else clause, then any name that
-	 * is unassigned before the if statement is unassigned after the if
-	 * statement. If an if statement does have a final else clause, then any
-	 * name that is unassigned before the if statement and is assigned after any
-	 * one clause of the if statement must also be assigned after every other
-	 * clause. The type of such names after the if statement is the effective
-	 * common ancestor of the types of the name in each clause with a
-	 * multiplicity lower bound that is the minimum of the lower bound for the
-	 * name in each clause and a multiplicity upper bound that is the maximum
-	 * for the name in each clause. For a name that has an assigned source after
-	 * any clause of an if statement that is different than before that clause,
-	 * then the assigned source after the if statement is the if statement.
-	 * Otherwise, the assigned source of a name after the if statement is the
-	 * same as before the if statement.
-	 **/
+    /**
+     * If an if statement does not have a final else clause, then any name that
+     * is not an out parameter and is unassigned before the if statement is
+     * unassigned after the if statement. If an if statement does have a final
+     * else clause, then any name that is unassigned before the if statement and
+     * is assigned after any one clause of the if statement must also be
+     * assigned after every other clause. The type of such names after the if
+     * statement is the effective common ancestor of the types of the name in
+     * each clause with a multiplicity lower bound that is the minimum of the
+     * lower bound for the name in each clause and a multiplicity upper bound
+     * that is the maximum for the name in each clause. For a name that has an
+     * assigned source after any clause of an if statement that is different
+     * than before that clause, then the assigned source after the if statement
+     * is the if statement. Otherwise, the assigned source of a name after the
+     * if statement is the same as before the if statement.
+     **/
 	public boolean ifStatementAssignmentsAfter() {
 	    // Note: This is partly handled by overriding deriveAssignmentAfter.
 	    IfStatement self = this.getSelf();
