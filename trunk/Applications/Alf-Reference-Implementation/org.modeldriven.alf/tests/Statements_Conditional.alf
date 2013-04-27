@@ -15,7 +15,7 @@ class Statements_Conditional {
 
     test() {
     
-      // Setup
+    // Setup
 	  reading = 0;
 	  threshold = 0;
 	  safeLimit = 100;
@@ -25,6 +25,7 @@ class Statements_Conditional {
 	  monitor = new Monitor();
 	  month = 6;
 	  year = 2011;
+	  condition = Condition::normal;
 	  // *****
 	  
 	  if (reading > threshold) {
