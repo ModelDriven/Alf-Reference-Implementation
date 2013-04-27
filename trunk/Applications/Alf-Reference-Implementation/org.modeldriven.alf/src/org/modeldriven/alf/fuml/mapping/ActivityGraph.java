@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013 Ivar Jacobson International SA
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
+ * http://www.gnu.org/licenses/gpl-3.0.html.
  *******************************************************************************/
 
 package org.modeldriven.alf.fuml.mapping;
@@ -587,6 +588,7 @@ public class ActivityGraph {
         sendAction.setSignal(signal);
         sendAction.setTarget(createInputPin(
                 sendAction.getName() + ".target", null, 1, 1));
+        // TODO: Use getAllAttributes(signal), once this is supportable by fUML.
         addPinsFromProperties(sendAction, signal.getAttribute());
         this.add(sendAction);
         return sendAction;
@@ -1029,6 +1031,27 @@ public class ActivityGraph {
             }
         }
         return null;
+    }
+    
+    /**
+     * Get all the attributes for the given classifier and any inherited from
+     * its parents.
+     * 
+     * NOTE: This operation is based on the Classifier::allAttributes OCL 
+     * operation defined in UML 2.5.
+     */
+    public static List<Property> getAllAttributes(Classifier classifier) {
+        List<Property> allAttributes = 
+                new ArrayList<Property>(classifier.getAttribute());
+        Collection<NamedElement> members = classifier.getMember();
+        for (Classifier parent: classifier.allParents()) {
+            for (Property attribute: getAllAttributes(parent)) {
+                if (members.contains(attribute)) {
+                    allAttributes.add(attribute);
+                }
+            }
+        }
+        return allAttributes;
     }
 
     /**
