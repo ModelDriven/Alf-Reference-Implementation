@@ -20,7 +20,8 @@ activity update (
 
   reply = null;
   error = null;
-
+  let location: Location = null;
+  
   if (property -> isEmpty()) {
     error = new 'Error Reply' (
       identifier           => request.identifier + "/error",
