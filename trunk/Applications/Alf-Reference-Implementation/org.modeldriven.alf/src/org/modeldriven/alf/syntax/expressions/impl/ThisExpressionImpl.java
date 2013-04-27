@@ -1,7 +1,7 @@
 
 /*******************************************************************************
  * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2013 Ivar Jacobson International
+ * Copyright 2013 Ivar Jacobson International SA
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -50,7 +50,7 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	        // definition provides the textual definition of an external
 	        // operation.
 	        ElementReference stub = 
-	                context.getImpl().asNamespace().getImpl().getStub();
+	                context.getImpl().asNamespace().getImpl().getStubReference();
 	        if (stub != null) {
 	            context = stub;
 	            if (context.getImpl().isOperation()) {

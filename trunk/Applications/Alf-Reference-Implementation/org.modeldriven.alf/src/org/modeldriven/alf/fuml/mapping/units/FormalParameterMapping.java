@@ -1,11 +1,12 @@
 
 /*******************************************************************************
  * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013 Ivar Jacobson International SA
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
+ * http://www.gnu.org/licenses/gpl-3.0.html.
  *******************************************************************************/
 
 package org.modeldriven.alf.fuml.mapping.units;
@@ -14,8 +15,11 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.units.TypedElementDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.FormalParameter;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.OperationDefinition;
 
 import org.modeldriven.alf.uml.*;
 
@@ -57,26 +61,34 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
 	
 	@Override
 	public ActivityNode getAssignedValueSource(String name) throws MappingError {
-        FormalParameter formalParameter = this.getFormalParameter();
-        NamespaceDefinition context = formalParameter.getNamespace();
         ActivityNode activityNode = null;
         Activity activity = null;
-        Parameter parameter = this.getParameter();        
+        Parameter parameter = null;
+        FumlMapping mapping = null;
         
-        FumlMapping mapping = this.fumlMap(context);
+        FormalParameter formalParameter = this.getFormalParameter();
+        NamespaceDefinition context = formalParameter.getNamespace();
+        Member stub = context.getImpl().getStub();
+        mapping = this.fumlMap(
+                stub instanceof OperationDefinition? stub: context);
+        
         if (mapping instanceof OperationDefinitionMapping) {
             Operation operation = 
                 ((OperationDefinitionMapping)mapping).getOperation();
             List<Behavior> methods = operation.getMethod();
             if (methods.size() > 0) {
                 activity = (Activity)methods.get(0);
-                parameter = activity.getOwnedParameter().
-                    get(operation.getOwnedParameter().indexOf(parameter));
+                int i = stub == null?
+                    operation.getOwnedParameter().indexOf(this.getParameter()):
+                    ((ActivityDefinition)context).getImpl().getFormalParameters().
+                                indexOf(formalParameter);
+                parameter = activity.getOwnedParameter().get(i);
             } else {
                 this.throwError("Operation has no method: " + operation);
             }
         } else if (mapping instanceof ActivityDefinitionMapping) {
             activity = (Activity)((ActivityDefinitionMapping)mapping).getBehavior();
+            parameter = this.getParameter();        
         } else {
             this.throwError("Error mapping context: " + mapping.getErrorMessage());
         }
