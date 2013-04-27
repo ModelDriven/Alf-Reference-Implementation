@@ -40,10 +40,13 @@ active class Expressions_Constructor_Destructor {
             this.relocated = true;
         }
     }
+    
+    datatype D0 {
+        public y: Integer[] sequence;
+    }
    	
-    datatype D {
+    datatype D specializes D0 {
         public x: String;
-   	    public y: Integer[] sequence;
     }
   	
     //**************************************************************************
@@ -68,7 +71,7 @@ active class Expressions_Constructor_Destructor {
       
       (monitor2 = new Monitor()).destroy(log);
       
-      d = new D("test", Integer[]{1,2});	  
+      d = new D("test", Integer[]{1,2});
     }
 
 } do {
