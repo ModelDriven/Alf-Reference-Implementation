@@ -403,23 +403,25 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     
     
     /**
-     * Return a reference to the stub the subunit for which has this namespace
+     * Return the stub member the subunit for which has this namespace
      * definition as its definition, if any. Note that, for an activity
      * definition, the "stub" may be an external operation or activity. 
      */
-    public ElementReference getStub() {
+    public Member getStub() {
         UnitDefinition unit = this.getSelf().getUnit();
         if (unit != null) {
             ElementReference namespace = unit.getNamespace();
             if (namespace != null) {
-                Member stub = namespace.getImpl().asNamespace().
+                return namespace.getImpl().asNamespace().
                         getImpl().getStubFor(unit);
-                if (stub != null) {
-                    return stub.getImpl().getReferent();
-                }
             }
         }
         return null;
+    }
+    
+    public ElementReference getStubReference() {
+        Member stub = this.getStub();
+        return stub == null? null: stub.getImpl().getReferent();
     }
     
     @Override

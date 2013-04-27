@@ -30,6 +30,9 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
 import org.modeldriven.alf.syntax.units.FormalParameter;
+import org.modeldriven.alf.syntax.units.Member;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.OperationDefinition;
 
 import org.modeldriven.alf.uml.*;
 
@@ -43,10 +46,14 @@ public class ReturnStatementMapping extends StatementMapping {
         ElementReference behaviorReference = returnStatement.getBehavior();
         Element behavior = behaviorReference.getImpl().getUml();
         if (behavior == null) {
-            FumlMapping mapping = this.fumlMap(behaviorReference);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            NamespaceDefinition definition = 
+                    (NamespaceDefinition)behaviorReference.getImpl().getAlf();
+            Member stub = definition.getImpl().getStub();
+            if (stub instanceof OperationDefinition) {
+                definition = (NamespaceDefinition)stub;
+                behaviorReference = stub.getImpl().getReferent();
             }
+            FumlMapping mapping = this.fumlMap(definition);
             if (mapping instanceof ActivityDefinitionMapping) {
                 behavior = ((ActivityDefinitionMapping)mapping).getBehavior();
             } else if (mapping instanceof OperationDefinitionMapping) {
@@ -65,7 +72,7 @@ public class ReturnStatementMapping extends StatementMapping {
         } else {
             operation = (Operation)behavior;
             List<Behavior> methods = operation.getMethod();
-            if (methods.size() > 0) {
+            if (!methods.isEmpty()) {
                 activity = (Activity)methods.get(0);
             } else {
                 this.throwError("Operation has no method: " + operation);

@@ -322,7 +322,7 @@ public class AcceptStatementImpl extends StatementImpl {
 	public ElementReference getEffectiveBehavior() {
 	    ElementReference behavior = this.getBehavior();
         ElementReference stub = behavior == null? null:
-                behavior.getImpl().asNamespace().getImpl().getStub();
+                behavior.getImpl().asNamespace().getImpl().getStubReference();
         return stub == null? behavior: stub;
 	}
 	

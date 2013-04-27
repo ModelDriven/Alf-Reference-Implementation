@@ -1,11 +1,12 @@
 
 /*******************************************************************************
  * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013 Ivar Jacobson International SA
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
+ * http://www.gnu.org/licenses/gpl-3.0.html.
  *******************************************************************************/
 
 package org.modeldriven.alf.fuml.mapping.units;
@@ -20,7 +21,6 @@ import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.units.ClassifierTemplateParameter;
 import org.modeldriven.alf.syntax.units.ImportReference;
-import org.modeldriven.alf.syntax.units.ImportedMember;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
@@ -52,7 +52,6 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
         super.mapTo(namespace);
         
         NamespaceDefinition definition = this.getNamespaceDefinition();
-
         // Map owned members of the namespace.
         // NOTE: Not using an iterator allows for possible modification of the
         // owned members during mapping.
@@ -61,19 +60,12 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
         for (int i = 0; i < ownedMembers.size(); i++) {
             Member member = ownedMembers.get(i);
             // Ignore members that are not completely bound, unless templates
-            // are supported in the target UML implementation, and template
-            // parameters (which are handled during classifier mapping).
+            // are supported in the target UML implementation. Always ignore
+            // template parameters (which are handled during classifier mapping).
             if ((supportsTemplates || member.getImpl().isCompletelyBound()) && 
                     !(member instanceof ClassifierTemplateParameter)) {
-                if (member.getIsStub() && !(member instanceof ImportedMember)) {
-                    UnitDefinition subunit = member.getSubunit();
-                    if (subunit == null) {
-                        this.throwError("Cannot resolve subunit for " + 
-                                member.getImpl().getQualifiedName().getPathName());
-                    }
-                    member = subunit.getDefinition();
-                }
-                FumlMapping mapping = this.fumlMap(member);
+                // System.out.println("[mapTo] member=" + member);
+                FumlMapping mapping = this.fumlMap(getNonfeatureSubunit(member));
                 for (Element element: mapping.getModelElements()) {
                     this.addMemberTo(element, namespace);
                 }
@@ -97,6 +89,8 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
             }
         }
         
+        // System.out.println("[mapTo] Mapping bodies...");
+        
         /*
          * Map any statements nested in members of the namespace as a
          * second pass, to avoid possible circular mapping due to internal
@@ -107,17 +101,24 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
         // may get added to a namespace due to derivations while mapping.
         for (int i = 0; i < definition.getOwnedMember().size(); i++) {
             Member member = definition.getOwnedMember().get(i);
-            UnitDefinition stub = member.getSubunit();
-            if (stub != null) {
-                member = stub.getDefinition();
-            }
-            Mapping mapping = member.getImpl().getMapping();
+            // System.out.println("[mapTo] member=" + member);
+            Mapping mapping = getNonfeatureSubunit(member).getImpl().getMapping();
             if (mapping instanceof MemberMapping) {
                 for (Element element: ((MemberMapping)mapping).mapBody()) {
                     this.addMemberTo(element, namespace);
                 }
             }
         }
+    }
+    
+    private static Member getNonfeatureSubunit(Member member) {
+        if (!member.getIsFeature()) {
+            UnitDefinition subunit = member.getSubunit();
+            if (subunit != null) {
+                member = subunit.getDefinition();
+            }
+        }
+        return member;
     }
     
     public abstract void addMemberTo(Element element, NamedElement namespace) 
@@ -127,12 +128,21 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
 		return (NamespaceDefinition) this.getSource();
 	}
 	
+    public NamespaceDefinition getEffectiveNamespaceDefinition() {
+        NamespaceDefinition definition = this.getNamespaceDefinition();
+        UnitDefinition subunit = definition.getSubunit();
+        return subunit == null? definition: subunit.getDefinition();
+    }
+    
 	@Override
 	public void print(String prefix) {
 	    super.print(prefix);
 	    
 	    NamespaceDefinition source = this.getNamespaceDefinition();
-	    UnitDefinition unit = source.getUnit();
+	    UnitDefinition unit = source.getSubunit();
+	    if (unit == null) {
+	        unit = source.getUnit();
+	    }
 	    if (unit != null) {
 	        Collection<ImportReference> imports = unit.getImport();
 	        if (!imports.isEmpty()) {
@@ -150,13 +160,7 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
 	    if (!ownedMembers.isEmpty()) {
 	        System.out.println(prefix + " ownedMember:");
     	    for (Member member: ownedMembers) {
-    	        if (member.getIsStub()) {
-    	            UnitDefinition subunit = member.getSubunit();
-    	            if (subunit != null) {
-    	                member = member.getSubunit().getDefinition();
-    	            }
-    	        }
-    	        Mapping mapping = member.getImpl().getMapping();
+    	        Mapping mapping = getNonfeatureSubunit(member).getImpl().getMapping();
     	        if (mapping != null) {
     	            mapping.printChild(prefix);
     	        }

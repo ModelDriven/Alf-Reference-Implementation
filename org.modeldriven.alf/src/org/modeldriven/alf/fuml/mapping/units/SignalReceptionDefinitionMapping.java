@@ -1,11 +1,12 @@
 
 /*******************************************************************************
  * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013 Ivar Jacobson International SA
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
- * contact Model Driven Solutions.
+ * http://www.gnu.org/licenses/gpl-3.0.html.
  *******************************************************************************/
 
 package org.modeldriven.alf.fuml.mapping.units;
@@ -13,7 +14,9 @@ package org.modeldriven.alf.fuml.mapping.units;
 import org.modeldriven.alf.fuml.mapping.units.SignalDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
+import org.modeldriven.alf.syntax.units.SignalDefinition;
 import org.modeldriven.alf.syntax.units.SignalReceptionDefinition;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Reception;
@@ -52,6 +55,14 @@ public class SignalReceptionDefinitionMapping extends SignalDefinitionMapping {
 
 	public SignalReceptionDefinition getSignalReceptionDefinition() {
 		return (SignalReceptionDefinition) this.getSource();
+	}
+	
+	@Override
+	public SignalDefinition getSignalDefinition() {
+	    SignalDefinition definition = this.getSignalDefinition();
+	    UnitDefinition subunit = definition.getSubunit();
+	    return subunit == null? definition: 
+	        (SignalDefinition)subunit.getDefinition();
 	}
 	
 	@Override
