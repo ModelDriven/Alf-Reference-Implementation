@@ -5,6 +5,11 @@ package Locations {
   public class Location {
     public identifier: String;
     public address: String;
+    
+    @Create public Location(in identifier: String, in address: String) {
+      this.identifier = identifier;
+      this.address = address;
+    }
   }
 
 }

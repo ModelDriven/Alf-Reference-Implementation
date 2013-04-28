@@ -25,7 +25,7 @@ activity delete (
 
   } else {
     reply = this.'create reply'(request.identifier, property);
-    property.destroy();                                    // See Note 1
+    property.destroy();
 
   }
 }
