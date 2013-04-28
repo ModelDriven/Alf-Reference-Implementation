@@ -2,6 +2,7 @@ namespace 'Property Management'::'Service Model'::
                            'Property Management Service Implementation';
 
 private import 'Property Management'::'Data Model'::Properties::*;
+private import 'Property Management'::'Data Model'::Locations::Location;
 private import 'Property Management'::'Message Model'::*;
 
 /** Update the acquisition information for an existing property. */
@@ -15,6 +16,7 @@ activity acquire (
 
   reply = null;
   error = null;
+  let location: Location = null;
 
   if (property -> isEmpty()) {
     error = new 'Error Reply' (
@@ -30,7 +32,19 @@ activity acquire (
       'error code'         => "PAN-002",
       'error message'      => "Property already disposed." );
 
+  } else if (!(Location -> exists loc 
+                (loc.identifier == request.'property location identifier'))) {
+    error = new 'Error Reply' (
+      identifier           => request.identifier + "/error",
+      'request identifier' => request.identifier,
+      'error code'         => "PAN-004",
+      'error message'      => "Location not found." );
+
   } else {
+    location = Location -> select loc 
+                 (loc.identifier == request.'property location identifier')[1];
+    'Property Location'.createLink(property, location);
+ 
     property.'acquisition data' = request.'property acquisition data';    
     property.'update status'();
 
