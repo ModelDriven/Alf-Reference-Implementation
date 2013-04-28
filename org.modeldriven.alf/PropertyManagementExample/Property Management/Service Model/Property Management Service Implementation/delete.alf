@@ -1,0 +1,31 @@
+namespace 'Property Management'::'Service Model'::
+                           'Property Management Service Implementation';
+
+private import 'Property Management'::'Data Model'::Properties::*;
+private import 'Property Management'::'Message Model'::*;
+
+/** Delete an existing property, destroying the record of it. */
+activity delete (
+  in request: 'Property Record Deletion',
+  out reply: 'Property Management Success Reply' [0..1],
+  out error: 'Error Reply' [0..1] ) {
+
+  property = Property -> select p 
+               (p.identifier == request.'property identifier')[1];
+
+  reply = null;
+  error = null;
+
+  if (property -> isEmpty()) {
+    error = new 'Error Reply' (
+      identifier           => request.identifier + "/error",
+      'request identifier' => request.identifier,
+      'error code'         => "PRD-001",
+      'error message'      => "Property not found." );
+
+  } else {
+    reply = this.'create reply'(request.identifier, property);
+    property.destroy();
+
+  }
+}

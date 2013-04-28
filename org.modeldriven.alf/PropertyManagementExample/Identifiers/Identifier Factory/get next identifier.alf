@@ -1,0 +1,6 @@
+namespace Identifiers::'Identifier Factory';
+
+/** Generate a unique identifier from the next sequential integer. */
+activity 'get next identifier'(): String {
+  return IntegerFunctions::ToString(this.'next identifier'++);
+}

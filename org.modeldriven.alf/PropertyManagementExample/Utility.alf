@@ -1,0 +1,120 @@
+private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToString;
+private import Alf::Library::PrimitiveBehaviors::StringFunctions::*;
+
+private import 'Property Management'::'Basic Types'::*;
+private import 'Property Management'::'Data Model'::Properties::*;
+private import 'Property Management'::'Message Model'::*;
+
+package Utility {
+
+  public activity FixedPointNumberToString(in value: FixedPointNumber): String {
+    scaledValue = value.scaledValue;
+    decimalPlaces = value.decimalPlaces;
+    
+    image = ToString(scaledValue);
+    len = Size(image);
+    
+    if (decimalPlaces <= 0) {
+      return image;
+    } else {
+      for (i in len..decimalPlaces + 1) {
+        image = "0" + image;
+      }    
+      return Substring(image, 1, len - decimalPlaces) + "." + 
+             Substring(image, len - decimalPlaces + 1, len);
+    }
+  }
+  
+  public activity CurrencyAmountToString(in currencyAmount: 'Currency Amount'[0..1]): String {
+    return currencyAmount->isEmpty()? "n/a":
+      currencyAmount.currencyCode + " " + FixedPointNumberToString(currencyAmount.amount);
+  }
+  
+  public activity AreaToString(in area: Area[0..1]): String {
+    return area->isEmpty()? "n/a":
+      FixedPointNumberToString(area.value) + " " + area.units;
+  }
+  
+  public activity DateToString(in date: Date): String {
+    return ToString(date.month) + "/" + ToString(date.day) + "/" + ToString(date.year);
+  }
+  
+  public activity PropertyTypeToString(in type: 'Property Type'): String {
+  
+    switch (type) {
+      case 'Property Type'::personal: return "Personal";
+      case 'Property Type'::real: return "Real";
+    }
+  
+  }
+  
+  public activity PropertyStatusToString(in status: 'Property Status'): String {
+  
+    switch (status) {
+      case 'Property Status'::pending: return "Pending";
+      case 'Property Status'::acquired: return "Acquired";
+      case 'Property Status'::disposed: return "Disposed";
+    }
+  
+  }
+  
+  public activity DispositionTypeToString(in type: 'Property Disposition Type'): String {
+  
+    switch (type) {
+      case 'Property Disposition Type'::transferred: return "Transferred";
+      case 'Property Disposition Type'::sold: return "Sold";
+      case 'Property Disposition Type'::destroyed: return "Destroyed";
+    }
+  
+  }
+  
+  public activity OptionalString(in string: String[0..1]): String {
+    return string->notEmpty()? string: "n/a";
+  }
+  
+  public activity WriteReply(in reply: 'Property Management Success Reply') {
+  
+    property = reply.property;
+    acquisitionData = property.'property acquisition data';
+    dispositionData = property.'property disposition data';
+    location = property.'property location';
+  
+    WriteLine("Reply: " + reply.identifier);
+    WriteLine("Identifier: " + property.'property identifier');
+    WriteLine("Name: " + property.'property name');
+    WriteLine("Status: " + PropertyStatusToString(property.'property status'));
+    WriteLine("Value: " + CurrencyAmountToString(property.'property value'));
+    WriteLine("Type: " + PropertyTypeToString(property.'property type'));
+    WriteLine("Serial Number: " + OptionalString(property.'property serial number'));
+    WriteLine("Size: " + OptionalString(AreaToString(property.'property size')));
+    WriteLine("Acquisition Date: " + OptionalString(DateToString(acquisitionData.'acquisition date')));
+    WriteLine("Acquisition Cost: " + OptionalString(CurrencyAmountToString(acquisitionData.'acquisition cost')));
+    WriteLine("Disposition Date: " + OptionalString(DateToString(dispositionData.'disposition date')));
+    WriteLine("Disposition Revenue: " + OptionalString(CurrencyAmountToString(dispositionData.'disposition revenue')));
+    WriteLine("Disposition Type: " + OptionalString(DispositionTypeToString(dispositionData.'disposition type')));
+    WriteLine("Location: " + OptionalString(location.'location identifier'));
+    
+    if (location->notEmpty()) {
+      WriteLine("Address: ");
+      WriteLine(location.'location address');
+    }
+    
+  }
+  
+  public activity WriteError(in error: 'Error Reply') {
+    WriteLine("Reply: " + error.identifier);
+    WriteLine("Error Code: " + error.'error code');
+    WriteLine("Error Message: " + error.'error message');
+  }
+
+  public activity USD(in dollars: Integer, in cents: Integer): 'Currency Amount' {
+    return new 'Currency Amount'(
+      new FixedPointNumber(dollars * 100 + cents, 2), 
+      "USD");
+  }
+  
+  public activity Acres(in acres: Integer): Area {
+    return new Area(new FixedPointNumber(acres, 0), "acre");
+  }
+
+}

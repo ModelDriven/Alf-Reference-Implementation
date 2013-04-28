@@ -1,0 +1,60 @@
+private import 'Property Management'::'Basic Types'::Date;
+private import 'Property Management'::'Data Model'::Locations::Location;
+private import 'Property Management'::'Message Model'::*;
+private import 'Property Management'::'Service Model'::
+                                  'Property Management Service Implementation';
+
+private import Utility::USD;
+private import Utility::Acres;
+
+activity Test() {
+
+  new Location(
+    identifier => "location/1",
+    address => "1234 J Street\nWashington, DC"
+  );
+  
+  requests = Request[]{
+    new 'Property Record Establishment'(
+      identifier => "request/1",
+      'property name' => "Property 1",
+      'property type' => 'Property Type'::real
+    ),
+    new 'Property Acquisition Notification'(
+      identifier => "request/2",
+      'property identifier' => "0",
+      'property location identifier' => "location/1",
+      'property acquisition data' => new 'Property Acquisition Data'(
+        'acquisition date' => new Date(day=>27, month=>4, year=>2013),
+        'acquisition cost' => USD(10000, 0)
+      )
+    ),
+    new 'Property Record Update'(
+      identifier => "request/3",
+      'property identifier' => "0",
+      'property value' => USD(12345, 67),
+      'property size' => Acres(2)
+    ),
+    new 'Property Disposition Notification' (
+      identifier => "request/4",
+      'property identifier' => "0",
+      'property disposition data' => new 'Property Disposition Data'(
+        'disposition date' => new Date(day=>28, month=>4, year=>2013),
+        'disposition revenue' => USD(12345, 67),
+        'disposition type' => 'Property Disposition Type'::sold
+      )
+    ),
+    new 'Property Record Deletion'(
+      identifier => "request/5",
+      'property identifier' => "0"
+    ),
+    new 'Property Record Retrieval'(
+      identifier => "request/6",
+      'property identifier' => "0"
+    )
+  };
+  
+  service = new 'Property Management Service Implementation'();
+  requests -> iterate r (Send(service, r));
+  
+}

@@ -1,0 +1,45 @@
+private import 'Property Management'::'Message Model'::*;
+private import 'Property Management'::'Service Model'::'Property Management Service';
+
+private import Utility::WriteReply;
+private import Utility::WriteError;
+
+activity Send(in service: 'Property Management Service', in request: Request) {
+
+  WriteLine("Request: " + request.identifier);
+  
+  let reply: 'Property Management Success Reply' = null;
+  let error: 'Error Reply' = null;
+  
+  if (request instanceof 'Property Record Establishment') {
+    WriteLine("Property Record Establishment");
+    service.establish(('Property Record Establishment')request, reply, error);
+  } else if (request instanceof 'Property Record Update') {
+    WriteLine("Property Record Update");
+    service.update(('Property Record Update')request, reply, error);
+  } else if (request instanceof 'Property Acquisition Notification') {
+    WriteLine("Property Acquisition Notification");
+    service.acquire(('Property Acquisition Notification')request, reply, error);
+  } else if (request instanceof 'Property Disposition Notification') {
+    WriteLine("Property Disposition Notification");
+    service.dispose(('Property Disposition Notification')request, reply, error);
+  } else if (request instanceof 'Property Record Deletion') {
+    WriteLine("Property Record Deletion");
+    service.delete(('Property Record Deletion')request, reply, error);
+  } else if (request instanceof 'Property Record Retrieval') {
+    WriteLine("Property Record Retrieval");
+    service.retrieve(('Property Record Retrieval')request, reply, error);
+  }
+  
+  if (reply->notEmpty()) {
+    WriteReply(reply);
+  } else if (error->notEmpty()) {
+    WriteError(error);
+  } else {
+    WriteLine("No response!");
+  }
+
+  WriteLine("");
+
+}
+
