@@ -1,0 +1,81 @@
+namespace 'Property Management'::'Service Model'::
+                           'Property Management Service Implementation';
+
+private import 'Property Management'::'Data Model'::Properties::*;
+private import 'Property Management'::'Data Model'::Locations::Location;
+private import 'Property Management'::'Message Model'::*;
+
+/** Update the attribute data of a property (other than acquisition or
+    disposition data). Only non-empty values in the update message cause
+    corresponding attribute updates. Note that none of these updates can
+    result in a property status change.
+*/
+activity update (
+  in request: 'Property Record Update',
+  out reply: 'Property Management Success Reply' [0..1],
+  out error: 'Error Reply' [0..1] ) {
+
+  property = Property -> select p 
+               (p.identifier == request.'property identifier')[1];
+
+  reply = null;
+  error = null;
+  
+  let location: Location = null; 
+
+  if (property -> isEmpty()) {
+    error = new 'Error Reply' (
+      identifier           => request.identifier + "/error",
+      'request identifier' => request.identifier,
+      'error code'         => "PRU-001",
+      'error message'      => "Property not found." );
+
+  } else if (property.status == 'Property Status'::disposed) {
+    error = new 'Error Reply' (
+      identifier           => request.identifier + "/error",
+      'request identifier' => request.identifier,
+      'error code'         => "PRU-002",
+      'error message'      => "Property already disposed." );
+
+  } else if ((request.'property serial number' -> notEmpty() && 
+              property instanceof 'Real Property') ||
+             (request.'property size' -> notEmpty() &&
+              property instanceof 'Personal Property')) {
+    error = new 'Error Reply' (
+      identifier           => request.identifier + "/error",
+      'request identifier' => request.identifier,
+      'error code'         => "PRU-002",
+      'error message'      => "Wrong property type." );
+
+  } else if (request.'property location identifier' -> notEmpty() &&
+              !(Location -> exists loc 
+                 (loc.identifier == request.'property location identifier'))) {
+    error = new 'Error Reply' (
+      identifier           => request.identifier + "/error",
+      'request identifier' => request.identifier,
+      'error code'         => "PRU-003",
+      'error message'      => "Location not found." );
+
+  } else {
+    if (request.'property location identifier' -> notEmpty()) {
+      location = Location -> select loc 
+                   (loc.identifier == request.'property location identifier')[1];
+      'Property Location'.createLink(property, location);
+    }
+    if (request.'property name' -> notEmpty()) {
+      property.name = request.'property name';
+    }
+    if (request.'property value' -> notEmpty()) {
+      property.value = request.'property value';
+    }
+    if (request.'property serial number' -> notEmpty()) {
+      (('Personal Property')property).'serial number' = 
+                                            request.'property serial number';
+    }
+    if (request.'property size' -> notEmpty()) {
+      (('Real Property')property).size = request.'property size';
+    }
+
+    reply = this.'create reply'(request.identifier, property);
+  }
+}
