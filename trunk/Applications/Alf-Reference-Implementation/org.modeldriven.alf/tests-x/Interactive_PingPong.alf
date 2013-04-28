@@ -44,13 +44,13 @@ active class Interactive_PingPong {
   
 } do {
 
+  a = new A();
+  b = new B();
+
   Write("Enter n: ");
   n = IntegerFunctions::ToInteger(ReadLine(error));
-  
+      
   if (n->notEmpty()) { 
-    a = new A();
-    b = new B();
-    
     a.Start(b);
     b.Start(a, n);
   }
