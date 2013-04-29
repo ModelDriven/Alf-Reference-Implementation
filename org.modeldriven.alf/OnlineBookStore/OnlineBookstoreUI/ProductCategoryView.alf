@@ -18,6 +18,7 @@ active class ProductCategoryView specializes View {
   protected display(): String[*] sequence {
     choices = String[]{"x", "b", "h", "s"};
     i = 1;
+    choice = "";
     for (product in ((ProductCategoryController)this.controller).products) {
       if (product.currentlyAvailable) {
         choice = IntegerFunctions::ToString(i++);

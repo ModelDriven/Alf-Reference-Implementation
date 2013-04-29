@@ -168,6 +168,7 @@ package Utility {
     out word: String[*]) {
     word = null;
     n = Size(text);
+    char = "";
     if (i <= n) {
       do {
         char = Substring(text, i, i);
