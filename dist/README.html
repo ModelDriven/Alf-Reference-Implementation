@@ -4,57 +4,108 @@
 </header>
 <body>
 <h1>Action Language for UML (Alf) Open Source Implementation<br>
-Version 0.3.0</h1>
+Version 0.4.0</h1>
 <em>Copyright &copy; 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)</em>
+<br>
+<em>Copyright &copy; 2013 Ivar Jacobson SA</em>
 <p>
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
-Syntax for a UML Action Language</em> Request for Proposals. The current
-version of the Alf specification document can be found at
-<a href="http://www.omg.org/spec/ALF/Current">http://www.omg.org/spec/ALF/Current</a>.
+Syntax for a UML Action Language</em> Request for Proposals. The Alf specification 
+document can be found at
+<a href="http://www.omg.org/spec/ALF">http://www.omg.org/spec/ALF</a>.
+(See also 
+<a href="http://www.omg.org/issues/alf-rtf.open.html">http://www.omg.org/issues/alf-rtf.open.html</a>
+for the list of open issues currently being addressed by the Alf Revision
+Task Force.)
 <p>
-This implementation is based on the Alf 1.0 Beta 1 specification but corrects a number
-of issues that are currently being addressed by the Alf 1.0 Finalization Task
-Force at OMG. (For the current list of formally submitted issues, see
-<a href="http://www.omg.org/issues/alf-ftf.html">http://www.omg.org/issues/alf-ftf.html</a>.)
-It uses version 1.0.2 of the fUML Reference Implementation execution 
-engine (see <a href="http://fuml.modeldriven.org">http://fuml.modeldriven.org</a>).
+This implementation is based on the Alf 1.0.1 specification.  It uses 
+the fUML Reference Implementation execution engine 
+(see <a href="http://fuml.modeldriven.org">http://fuml.modeldriven.org</a>), 
+which implements fUML 1.1. (The version of the fUML Reference Implementation
+used includes some additional issue corrections beyond the latest released 
+version 1.1.0.)
 
 <h2>Licensing</h2>
 <p>
-Data Access Technology, Inc., is the copyright owner of all source code for this
-implementation. For licensing terms, see
+Data Access Technology, Inc., and Ivar Jacobson Intenational SA are copyright 
+owners of the source code for this implementation. For licensing terms, see
 <p>
 <a href="http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/LICENSING.txt">
-http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/LICENSING.txt</a>.
+http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/LICENSING.txt</a>
 
 <h2>Installation</h2>
 <p>
 Download <tt>alf.zip</tt> from
 <p>
 <a href="http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/">
-http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/</a>.
+http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/</a>
 <p>
 This archive unzips into the installation directory for Alf. This directory
 includes a Unix (BASH) shell script and a DOS batch file for running Alf. By
 default, the <tt>Libraries</tt> subdirectory is expected to be in the same directory as
 the scripts. If you move it, set the environment variable ALF_LIB to its path.
 <p>
-The file <tt>alf-src.zip</tt> unzips into an Eclipse project the includes the
-full source of the implementation. The project may be built using the regular
-Java builder.
+The file <tt>alf-src.zip</tt> unzips into two Eclipse projects that, together,
+include the full source of the implementation.
+
+<ul>
+<li><tt>org.modeldriven.alf</tt> - This is the base project, including the
+Alf parser, static semantic checking and generic mapping to fUML. However,
+it is not dependent on any specific fUML implementation.</li>
+<li><tt>org.modeldriven.alf.fuml.impl</tt> - This project extends the base
+project to specialize the mapping to target the fUML Reference Implementation
+and to allow compiled Alf text to be executed. It does not depend on the
+fUML Reference Implementation project directly but, rather, uses an exported
+fuml.jar file.</li>
+</ul>
+
+<p>
+If you wish to track updates to the implementation between releases, read-only
+access to the Subversion repository for the source projects is available at
+<p>
+<a href="http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation">
+http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation
+</a>
 
 <h2>Release Notes</h2>
 <p>
 This implementation handles the full Alf syntax at the Extended compliance 
-level, as given in the <em>Consolidated LL Grammar</em> annex to the Alf 
+level, as given in Annex C <em>Consolidated LL Grammar</em> of the Alf 
 Specification.
 <p>
 Static semantic checking is directly based on validating the constraints
 defined in Part III of the Alf Specification. However, as errors were
 discovered in these definitions, or inconsistencies with the descriptions in
 Part II were identified, these were corrected in the implementation. All such
-issues are being reported to the Alf Finalization Task Force for correction in
-the final specification.
+issues have either been corrected in the latest version of the specification 
+or have been reported to the Alf Revision Task Force for correction in a future 
+version.
+
+<h3>Version 0.4.0</h4>
+NOTE: If statements without else clauses are not allowed to defined new local 
+names within their clauses. This has now been implemented per the specification,
+which may result in ifStatementAssignmentsAfter constraint violations that did
+not occur in previous versions.
+<ul>
+<li>Moved code specific to mapping to the fUML Reference Implementation into a
+separate project, to avoid including it in implementations of other mappings.</li>
+<li>Extensively updated and corrected the handling of external elements, as
+required for integration with other UML tooling.</li>
+<li>Corrected the parsing of stereotype annotations with tagged values.</li>
+<li>Corrected errors in the handling of a unit importing internal elements,
+template binding, local name assignments and other static semantic constraint 
+checking.</li>
+<li>Corrected the resolution of a constructor name that is the class name, to
+only search <em>owned</em> members of the class.</li>
+<li>Changed the resolution of association ends so that only end type conformance
+is required, not type equality.</li>
+<li>Updated mappings to target fUML 1.1 and corrected a number of mapping bugs.</li>
+<li>Implemented return statements without expressions.</li>
+<li>Updated the mapping for classify statements, so that, if any new classes are
+active, their classifier behaviors are started. (See OMG Issue 18281.)</li>
+<li>Completed the implementation of all "in place" behaviors in 
+CollectionFunctions.alf.</li>
+</ul>
 
 <h3>Version 0.3.0</h3>
 <ul>
@@ -94,7 +145,7 @@ structure based on the qualified names of the units.
 <p>
 The <em>library directory</em> contains Alf unit definitions for the fUML
 Foundational Model Library and the Alf Standard Model Library. These units
-should not be moved from the library directory structured or changed. By default, 
+should not be moved from the library directory structure or changed. By default, 
 the library directory is the <tt>Libraries</tt> subdirectory of the installation 
 directory, but this may be changed using a command line option or by setting the 
 ALF_LIB environment variable.
@@ -172,8 +223,8 @@ The <tt><em>constraintName</em></tt> is the name of the violated constraint, as 
 the Alf specification. <em>(Note 1: Some constraints have additional conditions
 implemented over what is currently given in the specification. Note 2: If the
 fileName has a suffix of the form <tt>&lt;...&gt;</tt>, then the constraint
-violation happened in a template instantiation. This should never happen, so,
-if it does, it indicates an implementation error.)</em></li>
+violation happened in a template instantiation. This should only happen if the
+error actually exists in the template being instantiated.)</em></li>
 
 <li>All parsed units are mapped to the in-memory representation used by the
 fUML Reference Implementation. <em>(Note: If a mapping error occurs, processing
@@ -204,6 +255,8 @@ Sets the debug level for trace output from the fUML execution engine. Useful
 levels are:
 <ul>
 <li><tt>OFF</tt> turns off trace output.</li>
+<li><tt>ERROR</tt> reports only serious errors (such as when a primitive
+behavior implementation cannot be found during execution).</li>
 <li><tt>INFO</tt> outputs basic trace information on the execution of activities
 and actions.</li>
 <li><tt>DEBUG</tt> outputs detailed trace information on activity execution.</li>
@@ -239,7 +292,7 @@ executable by themselves.
 <p>
 <tt>-P</tt>
 <br>
-Parse and constraint check, as for the <tt>-p</tt>, and then print out the
+Parse and constraint check, as for the <tt>-p</tt> option, and then print out the
 resulting abstract syntax tree. Note that the print out will occur even if there
 are constraint violations.
 <p>
@@ -249,6 +302,23 @@ Sets verbose mode, in which status messages are printed about parsing and other
 processing steps leading up to execution.
 
 <h2>Sample Code</h2>
+<p>
+The installation <tt>Models</tt> directory contains a "Hello World" activity.
+Zip archives with more extensive samples can be downladed from
+<p>
+<a href="http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/">
+http://lib.modeldriven.org/MDLibrary/trunk/Applications/Alf-Reference-Implementation/dist/</a>
+<p>
+These samples are described further below.
+<h3>Hello World</h3>
+<p>
+The <tt>Models</tt> directory included in the installation archive contains an
+Alf "Hello World" activity. To run this, use the command
+<p>
+<tt>alf Hello</tt>
+<p>
+from the installation directory.
+<h3>Tests</h3>
 <p>
 The archive <tt>tests-x.zip</tt> unzips into a directory containing a set of simple 
 execution tests. These can be run with a command of the following form
@@ -265,5 +335,33 @@ name, but without the <tt>.alf</tt> extension. I.e., the file
 <tt>Expressions_Assignment</tt>. However, the units <tt>AssertTrue</tt>, 
 <tt>AssertFalse</tt>, <tt>AssertList</tt> and <tt>Write</tt> are helper
 activities, not tests, and are not individually executable.
+<h3>Property Management Example</h3>
+<p>
+The archive <tt>PropertyManagementExample.zip</tt> unzips into a directory
+containing a complete Alf implementation of the Property Management example from
+Annex B.3 of the Alf specification. This example defines a service, rather than
+an application. However, the activity Test sends one of each of the service
+request, printing out the results. To run this activity, use the command
+<p>
+<tt>alf -m PropertyManagementExample Test</tt>
+<p>
+Replace <tt>PropertyMangementExample</tt> with the complete path to the model
+directory, as necessary.  (This should be run without trace output, 
+so use the <tt>-d OFF</tt> option if the debug level default has been 
+changed from <tt>OFF</tt>.)
+<h3>Online Bookstore</h3>
+<p>
+The archive <tt>OnlineBookstore.zip</tt> unzips into a directory containing a
+complete Alf implementation of the Online Bookstore example from Appendix B
+of the book <em>Executable UML</em> by Stephen Mellor and Marc Balcer. It also
+includes a simple graphical user interface for customer interaction. By default,
+the inventory consists of a single book (the <em>Executable UML</em> book,
+actually). To run the application, use the command
+<p>
+<tt>alf -m OnlineBookstore Main</tt>
+<p>
+Replace <tt>OnlineBookstore</tt> with the complete path to the model directory,
+as necessary. (This should be run without trace output, so use the <tt>-d OFF</tt>
+option if the debug level default has been changed from <tt>OFF</tt>.)
 </body>
 </html>
