@@ -25,7 +25,7 @@ public abstract class Namespace extends PackageableElement implements
 	public List<org.modeldriven.alf.uml.NamedElement> getMember() {
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (fUML.Syntax.Classes.Kernel.NamedElement element : this.getBase().member) {
-			list.add((NamedElement)this.wrap(element));
+			list.add((NamedElement)wrap(element));
 		}
 		return list;
 	}
@@ -33,7 +33,7 @@ public abstract class Namespace extends PackageableElement implements
 	public List<org.modeldriven.alf.uml.NamedElement> getOwnedMember() {
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (fUML.Syntax.Classes.Kernel.NamedElement element : this.getBase().ownedMember) {
-			list.add((NamedElement)this.wrap(element));
+			list.add((NamedElement)wrap(element));
 		}
 		return list;
 	}
@@ -68,7 +68,7 @@ public abstract class Namespace extends PackageableElement implements
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (fUML.Syntax.Classes.Kernel.PackageableElement element : this
 				.getBase().importedMember) {
-			list.add((PackageableElement)this.wrap(element));
+			list.add((PackageableElement)wrap(element));
 		}
 		return list;
 	}

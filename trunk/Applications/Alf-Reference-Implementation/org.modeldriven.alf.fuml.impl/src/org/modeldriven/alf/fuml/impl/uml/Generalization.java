@@ -32,11 +32,11 @@ public class Generalization extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.Classifier getSpecific() {
-		return (Classifier)this.wrap(this.getBase().specific);
+		return (Classifier)wrap(this.getBase().specific);
 	}
 
 	public org.modeldriven.alf.uml.Classifier getGeneral() {
-		return (Classifier)this.wrap(this.getBase().general);
+		return (Classifier)wrap(this.getBase().general);
 	}
 
 	public void setGeneral(org.modeldriven.alf.uml.Classifier general) {

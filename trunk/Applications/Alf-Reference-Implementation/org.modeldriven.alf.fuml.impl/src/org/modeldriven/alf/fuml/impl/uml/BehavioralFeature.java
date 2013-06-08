@@ -47,7 +47,7 @@ public abstract class BehavioralFeature extends Feature implements
 		List<org.modeldriven.alf.uml.Behavior> list = new ArrayList<org.modeldriven.alf.uml.Behavior>();
 		for (fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior element : this
 				.getBase().method) {
-			list.add((Behavior)this.wrap(element));
+			list.add((Behavior)wrap(element));
 		}
 		return list;
 	}

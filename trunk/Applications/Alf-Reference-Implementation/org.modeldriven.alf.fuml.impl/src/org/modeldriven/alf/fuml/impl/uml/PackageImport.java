@@ -36,11 +36,11 @@ public class PackageImport extends Element implements
     }
 
 	public org.modeldriven.alf.uml.Namespace getImportingNamespace() {
-		return (Namespace)this.wrap(this.getBase().importingNamespace);
+		return (Namespace)wrap(this.getBase().importingNamespace);
 	}
 
 	public org.modeldriven.alf.uml.Package getImportedPackage() {
-		return (Package)this.wrap(this.getBase().importedPackage);
+		return (Package)wrap(this.getBase().importedPackage);
 	}
 
 	public void setImportedPackage(org.modeldriven.alf.uml.Package importedPackage) {

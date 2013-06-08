@@ -29,7 +29,7 @@ public class InstanceSpecification extends NamedElement implements
 	public List<org.modeldriven.alf.uml.Classifier> getClassifier() {
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (fUML.Syntax.Classes.Kernel.Classifier element : this.getBase().classifier) {
-			list.add((Classifier)this.wrap(element));
+			list.add((Classifier)wrap(element));
 		}
 		return list;
 	}

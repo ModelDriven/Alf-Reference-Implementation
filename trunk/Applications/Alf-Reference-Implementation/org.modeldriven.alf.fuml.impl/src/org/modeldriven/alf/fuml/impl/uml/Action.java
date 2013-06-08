@@ -32,7 +32,7 @@ public abstract class Action extends ExecutableNode implements
 	}
 
 	public org.modeldriven.alf.uml.Classifier getContext() {
-		return (Classifier)this.wrap(this.getBase().context);
+		return (Classifier)wrap(this.getBase().context);
 	}
 
 	public List<org.modeldriven.alf.uml.InputPin> getInput() {

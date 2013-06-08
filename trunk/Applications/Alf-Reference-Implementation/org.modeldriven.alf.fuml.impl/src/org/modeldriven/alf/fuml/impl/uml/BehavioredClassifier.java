@@ -27,7 +27,7 @@ public abstract class BehavioredClassifier extends Classifier implements
 		List<org.modeldriven.alf.uml.Behavior> list = new ArrayList<org.modeldriven.alf.uml.Behavior>();
 		for (fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior element : this
 				.getBase().ownedBehavior) {
-			list.add((Behavior)this.wrap(element));
+			list.add((Behavior)wrap(element));
 		}
 		return list;
 	}
@@ -37,7 +37,7 @@ public abstract class BehavioredClassifier extends Classifier implements
 	}
 
 	public org.modeldriven.alf.uml.Behavior getClassifierBehavior() {
-		return (Behavior)this.wrap(this.getBase().classifierBehavior);
+		return (Behavior)wrap(this.getBase().classifierBehavior);
 	}
 
 	public void setClassifierBehavior(

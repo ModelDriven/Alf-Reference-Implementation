@@ -34,7 +34,7 @@ public abstract class RedefinableElement extends NamedElement implements
 		List<org.modeldriven.alf.uml.RedefinableElement> list = new ArrayList<org.modeldriven.alf.uml.RedefinableElement>();
 		for (fUML.Syntax.Classes.Kernel.RedefinableElement element : this
 				.getBase().redefinedElement) {
-			list.add((RedefinableElement)this.wrap(element));
+			list.add((RedefinableElement)wrap(element));
 		}
 		return list;
 	}
@@ -42,7 +42,7 @@ public abstract class RedefinableElement extends NamedElement implements
 	public List<org.modeldriven.alf.uml.Classifier> getRedefinitionContext() {
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (fUML.Syntax.Classes.Kernel.Classifier element : this.getBase().redefinitionContext) {
-			list.add((Classifier)this.wrap(element));
+			list.add((Classifier)wrap(element));
 		}
 		return list;
 	}

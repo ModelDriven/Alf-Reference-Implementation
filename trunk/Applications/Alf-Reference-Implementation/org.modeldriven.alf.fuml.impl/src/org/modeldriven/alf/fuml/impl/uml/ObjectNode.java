@@ -22,7 +22,7 @@ public abstract class ObjectNode extends ActivityNode implements
 	}
 
 	public org.modeldriven.alf.uml.Type getType() {
-		return (Type)this.wrap(this.getBase().typedElement.type);
+		return (Type)wrap(this.getBase().typedElement.type);
 	}
 
 	public void setType(org.modeldriven.alf.uml.Type type) {

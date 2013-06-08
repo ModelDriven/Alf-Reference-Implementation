@@ -33,7 +33,7 @@ public abstract class Feature extends RedefinableElement implements
 	public List<org.modeldriven.alf.uml.Classifier> getFeaturingClassifier() {
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (fUML.Syntax.Classes.Kernel.Classifier element : this.getBase().featuringClassifier) {
-			list.add((Classifier)this.wrap(element));
+			list.add((Classifier)wrap(element));
 		}
 		return list;
 	}

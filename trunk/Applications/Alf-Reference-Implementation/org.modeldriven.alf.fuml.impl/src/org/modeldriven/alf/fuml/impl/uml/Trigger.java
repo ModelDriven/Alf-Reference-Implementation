@@ -24,7 +24,7 @@ public class Trigger extends NamedElement implements
 	}
 
 	public org.modeldriven.alf.uml.Event getEvent() {
-		return (Event)this.wrap(this.getBase().event);
+		return (Event)wrap(this.getBase().event);
 	}
 
 	public void setEvent(org.modeldriven.alf.uml.Event event) {

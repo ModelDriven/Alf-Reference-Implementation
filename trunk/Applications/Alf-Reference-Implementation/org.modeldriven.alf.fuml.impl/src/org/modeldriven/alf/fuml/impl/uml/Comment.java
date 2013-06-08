@@ -27,7 +27,7 @@ public class Comment extends Element implements org.modeldriven.alf.uml.Comment 
 	public List<org.modeldriven.alf.uml.Element> getAnnotatedElement() {
 		List<org.modeldriven.alf.uml.Element> list = new ArrayList<org.modeldriven.alf.uml.Element>();
 		for (fUML.Syntax.Classes.Kernel.Element element : this.getBase().annotatedElement) {
-			list.add((Element)this.wrap(element));
+			list.add((Element)wrap(element));
 		}
 		return list;
 	}

@@ -52,7 +52,7 @@ public abstract class Pin extends ObjectNode implements org.modeldriven.alf.uml.
     }
 
 	public org.modeldriven.alf.uml.ValueSpecification getUpperValue() {
-		return (ValueSpecification)this.wrap(
+		return (ValueSpecification)wrap(
 				this.getBase().multiplicityElement.upperValue);
 	}
 
@@ -62,7 +62,7 @@ public abstract class Pin extends ObjectNode implements org.modeldriven.alf.uml.
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getLowerValue() {
-		return (ValueSpecification)this.wrap(
+		return (ValueSpecification)wrap(
 				this.getBase().multiplicityElement.lowerValue);
 	}
 

@@ -34,7 +34,7 @@ public class LinkEndDestructionData extends LinkEndData implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getDestroyAt() {
-		return (InputPin)this.wrap(this.getBase().destroyAt);
+		return (InputPin)wrap(this.getBase().destroyAt);
 	}
 
 	public void setDestroyAt(org.modeldriven.alf.uml.InputPin destroyAt) {

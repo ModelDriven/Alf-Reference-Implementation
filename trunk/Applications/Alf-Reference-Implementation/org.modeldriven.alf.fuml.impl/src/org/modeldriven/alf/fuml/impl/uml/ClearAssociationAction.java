@@ -26,7 +26,7 @@ public class ClearAssociationAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.Association getAssociation() {
-		return (Association)this.wrap(this.getBase().association);
+		return (Association)wrap(this.getBase().association);
 	}
 
 	public void setAssociation(org.modeldriven.alf.uml.Association association) {
@@ -34,7 +34,7 @@ public class ClearAssociationAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getObject() {
-		return (InputPin)this.wrap(this.getBase().object);
+		return (InputPin)wrap(this.getBase().object);
 	}
 
 	public void setObject(org.modeldriven.alf.uml.InputPin object) {

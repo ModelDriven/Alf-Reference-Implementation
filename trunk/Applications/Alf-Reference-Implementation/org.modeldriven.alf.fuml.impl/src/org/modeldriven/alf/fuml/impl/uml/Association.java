@@ -48,7 +48,7 @@ public class Association extends Classifier implements
 	public List<org.modeldriven.alf.uml.Type> getEndType() {
 		List<org.modeldriven.alf.uml.Type> list = new ArrayList<org.modeldriven.alf.uml.Type>();
 		for (fUML.Syntax.Classes.Kernel.Type element : this.getBase().endType) {
-			list.add((Type)this.wrap(element));
+			list.add((Type)wrap(element));
 		}
 		return list;
 	}
@@ -56,7 +56,7 @@ public class Association extends Classifier implements
 	public List<org.modeldriven.alf.uml.Property> getMemberEnd() {
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (fUML.Syntax.Classes.Kernel.Property element : this.getBase().memberEnd) {
-			list.add((Property)this.wrap(element));
+			list.add((Property)wrap(element));
 		}
 		return list;
 	}
@@ -64,7 +64,7 @@ public class Association extends Classifier implements
 	public List<org.modeldriven.alf.uml.Property> getNavigableOwnedEnd() {
 		List<org.modeldriven.alf.uml.Property> list = new ArrayList<org.modeldriven.alf.uml.Property>();
 		for (fUML.Syntax.Classes.Kernel.Property element : this.getBase().navigableOwnedEnd) {
-			list.add((Property)this.wrap(element));
+			list.add((Property)wrap(element));
 		}
 		return list;
 	}

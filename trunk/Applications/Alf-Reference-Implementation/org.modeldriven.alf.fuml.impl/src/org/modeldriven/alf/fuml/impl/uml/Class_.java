@@ -91,7 +91,7 @@ public class Class_ extends BehavioredClassifier implements
 	public List<org.modeldriven.alf.uml.Classifier> getNestedClassifier() {
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (fUML.Syntax.Classes.Kernel.Classifier element : this.getBase().nestedClassifier) {
-			list.add((Classifier)this.wrap(element));
+			list.add((Classifier)wrap(element));
 		}
 		return list;
 	}

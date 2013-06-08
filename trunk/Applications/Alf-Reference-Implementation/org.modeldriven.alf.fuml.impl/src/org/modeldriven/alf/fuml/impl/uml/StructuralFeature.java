@@ -29,7 +29,7 @@ public abstract class StructuralFeature extends Feature implements
 	}
 
 	public org.modeldriven.alf.uml.Type getType() {
-		return (Type)this.wrap(this.getBase().typedElement.type);
+		return (Type)wrap(this.getBase().typedElement.type);
 	}
 
 	public void setType(org.modeldriven.alf.uml.Type type) {
@@ -69,7 +69,7 @@ public abstract class StructuralFeature extends Feature implements
     }
 
 	public org.modeldriven.alf.uml.ValueSpecification getUpperValue() {
-		return (ValueSpecification)this.wrap(
+		return (ValueSpecification)wrap(
 				this.getBase().multiplicityElement.upperValue);
 	}
 
@@ -79,7 +79,7 @@ public abstract class StructuralFeature extends Feature implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getLowerValue() {
-		return (ValueSpecification)this.wrap(
+		return (ValueSpecification)wrap(
 				this.getBase().multiplicityElement.lowerValue);
 	}
 

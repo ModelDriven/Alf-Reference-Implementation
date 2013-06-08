@@ -50,7 +50,7 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
         return false;
     }
 
-    public Element wrap(Object base) {
+    public static Element wrap(Object base) {
         if (base == null) {
             return null;
         }
@@ -67,7 +67,7 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
 		List<org.modeldriven.alf.uml.Element> list = new ArrayList<org.modeldriven.alf.uml.Element>();
 		if (this.isElement()) {
     		for (fUML.Syntax.Classes.Kernel.Element element: this.getBaseAsElement().ownedElement) {
-    			list.add(this.wrap(element));
+    			list.add(wrap(element));
     		}
 		}
 		return list;
@@ -75,7 +75,7 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
 
     @Override
 	public org.modeldriven.alf.uml.Element getOwner() {
-		return this.wrap(this.isElement()? 
+		return wrap(this.isElement()? 
 		        this.getBaseAsElement().owner: 
 		        this.getBaseAsComment().annotatedElement.get(0));
 }

@@ -33,7 +33,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (fUML.Syntax.Classes.Kernel.PackageableElement element : this
 				.getBase().packagedElement) {
-			list.add((PackageableElement)this.wrap(element));
+			list.add((PackageableElement)wrap(element));
 		}
 		return list;
 	}
@@ -62,7 +62,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 	public List<org.modeldriven.alf.uml.Type> getOwnedType() {
 		List<org.modeldriven.alf.uml.Type> list = new ArrayList<org.modeldriven.alf.uml.Type>();
 		for (fUML.Syntax.Classes.Kernel.Type element : this.getBase().ownedType) {
-			list.add((Type)this.wrap(element));
+			list.add((Type)wrap(element));
 		}
 		return list;
 	}
@@ -78,7 +78,7 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
 
     @Override
 	public org.modeldriven.alf.uml.Package getNestingPackage() {
-		return (Package)this.wrap(this.getBase().nestingPackage);
+		return (Package)wrap(this.getBase().nestingPackage);
 	}
 
     @Override
@@ -88,7 +88,8 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
         fUML.Syntax.Classes.Kernel.Package base = this.getBase();
         for (fUML.Syntax.Classes.Kernel.NamedElement member: base.member) {
             boolean addMember = false;
-            if (base.ownedMember.contains(member)) {
+            if (base.ownedMember.contains(member) && 
+                    member.visibility == fUML.Syntax.Classes.Kernel.VisibilityKind.public_) {
                 addMember = true;;
             } else {
                 for (fUML.Syntax.Classes.Kernel.ElementImport elementImport: 
@@ -109,9 +110,9 @@ public class Package extends Namespace implements org.modeldriven.alf.uml.Packag
                         }
                     }
                 }
-                if (addMember) {
-                    visibleMembers.add((NamedElement)this.wrap(member));
-                }
+            }
+            if (addMember) {
+                visibleMembers.add((NamedElement)wrap(member));
             }
         }
         return visibleMembers;
