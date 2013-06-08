@@ -30,7 +30,7 @@ public abstract class Behavior extends Class_ implements org.modeldriven.alf.uml
 	}
 
 	public org.modeldriven.alf.uml.BehavioralFeature getSpecification() {
-		return (BehavioralFeature)this.wrap(this.getBase().specification);
+		return (BehavioralFeature)wrap(this.getBase().specification);
 	}
 
 	public void setSpecification(
@@ -52,7 +52,7 @@ public abstract class Behavior extends Class_ implements org.modeldriven.alf.uml
 	}
 
 	public org.modeldriven.alf.uml.BehavioredClassifier getContext() {
-		return (BehavioredClassifier)this.wrap(this.getBase().context);
+		return (BehavioredClassifier)wrap(this.getBase().context);
 	}
 
 }

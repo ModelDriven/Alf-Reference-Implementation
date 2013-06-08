@@ -26,7 +26,7 @@ public class StartClassifierBehaviorAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getObject() {
-		return (InputPin)this.wrap(this.getBase().object);
+		return (InputPin)wrap(this.getBase().object);
 	}
 
 	public void setObject(org.modeldriven.alf.uml.InputPin object) {

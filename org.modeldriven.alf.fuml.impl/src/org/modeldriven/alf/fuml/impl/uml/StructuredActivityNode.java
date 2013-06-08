@@ -31,7 +31,7 @@ public class StructuredActivityNode extends Action implements
 		List<org.modeldriven.alf.uml.ActivityNode> list = new ArrayList<org.modeldriven.alf.uml.ActivityNode>();
 		for (fUML.Syntax.Activities.IntermediateActivities.ActivityNode element : this
 				.getBase().node) {
-			list.add((ActivityNode)this.wrap(element));
+			list.add((ActivityNode)wrap(element));
 		}
 		return list;
 	}
@@ -41,7 +41,7 @@ public class StructuredActivityNode extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.Activity getActivity() {
-		return (Activity)this.wrap(this.getBase().activity);
+		return (Activity)wrap(this.getBase().activity);
 	}
 
 	public boolean getMustIsolate() {
@@ -56,7 +56,7 @@ public class StructuredActivityNode extends Action implements
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (fUML.Syntax.Activities.IntermediateActivities.ActivityEdge element : this
 				.getBase().edge) {
-			list.add((ActivityEdge)this.wrap(element));
+			list.add((ActivityEdge)wrap(element));
 		}
 		return list;
 	}

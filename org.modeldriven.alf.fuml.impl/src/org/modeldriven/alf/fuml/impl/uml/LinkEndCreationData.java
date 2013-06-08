@@ -33,7 +33,7 @@ public class LinkEndCreationData extends LinkEndData implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getInsertAt() {
-		return (InputPin)this.wrap(this.getBase().insertAt);
+		return (InputPin)wrap(this.getBase().insertAt);
 	}
 
 	public void setInsertAt(org.modeldriven.alf.uml.InputPin insertAt) {

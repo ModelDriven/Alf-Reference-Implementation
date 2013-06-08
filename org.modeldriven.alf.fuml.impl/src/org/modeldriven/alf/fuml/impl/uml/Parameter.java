@@ -35,7 +35,7 @@ public class Parameter extends TypedElement implements
 	}
 
 	public org.modeldriven.alf.uml.Operation getOperation() {
-		return (Operation)this.wrap(this.getBase().operation);
+		return (Operation)wrap(this.getBase().operation);
 	}
 
 	public boolean getIsOrdered() {
@@ -71,7 +71,7 @@ public class Parameter extends TypedElement implements
     }
 
 	public org.modeldriven.alf.uml.ValueSpecification getUpperValue() {
-		return (ValueSpecification)this.wrap(
+		return (ValueSpecification)wrap(
 				this.getBase().multiplicityElement.upperValue);
 	}
 
@@ -81,7 +81,7 @@ public class Parameter extends TypedElement implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getLowerValue() {
-		return (ValueSpecification)this.wrap(
+		return (ValueSpecification)wrap(
 				this.getBase().multiplicityElement.lowerValue);
 	}
 

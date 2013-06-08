@@ -44,7 +44,7 @@ public class ElementImport extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.PackageableElement getImportedElement() {
-		return (PackageableElement)this.wrap(this.getBase().importedElement);
+		return (PackageableElement)wrap(this.getBase().importedElement);
 	}
 
 	public void setImportedElement(
@@ -54,7 +54,7 @@ public class ElementImport extends Element implements
 	}
 
 	public org.modeldriven.alf.uml.Namespace getImportingNamespace() {
-		return (Namespace)this.wrap(this.getBase().importingNamespace);
+		return (Namespace)wrap(this.getBase().importingNamespace);
 	}
 
 }

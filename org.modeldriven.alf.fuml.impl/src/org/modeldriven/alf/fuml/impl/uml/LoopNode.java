@@ -35,7 +35,7 @@ public class LoopNode extends StructuredActivityNode implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getDecider() {
-		return (OutputPin)this.wrap(this.getBase().decider);
+		return (OutputPin)wrap(this.getBase().decider);
 	}
 
 	public void setDecider(org.modeldriven.alf.uml.OutputPin decider) {
@@ -46,7 +46,7 @@ public class LoopNode extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode element : this
 				.getBase().test) {
-			list.add((ExecutableNode)this.wrap(element));
+			list.add((ExecutableNode)wrap(element));
 		}
 		return list;
 	}
@@ -86,7 +86,7 @@ public class LoopNode extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode element : this
 				.getBase().bodyPart) {
-			list.add((ExecutableNode)this.wrap(element));
+			list.add((ExecutableNode)wrap(element));
 		}
 		return list;
 	}
@@ -125,7 +125,7 @@ public class LoopNode extends StructuredActivityNode implements
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode element : this
 				.getBase().setupPart) {
-			list.add((ExecutableNode)this.wrap(element));
+			list.add((ExecutableNode)wrap(element));
 		}
 		return list;
 	}

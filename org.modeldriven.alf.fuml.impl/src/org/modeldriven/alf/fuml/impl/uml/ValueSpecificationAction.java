@@ -26,7 +26,7 @@ public class ValueSpecificationAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.ValueSpecification getValue() {
-		return (ValueSpecification)this.wrap(this.getBase().value);
+		return (ValueSpecification)wrap(this.getBase().value);
 	}
 
 	public void setValue(org.modeldriven.alf.uml.ValueSpecification value) {
@@ -34,7 +34,7 @@ public class ValueSpecificationAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return (OutputPin)this.wrap(this.getBase().result);
+		return (OutputPin)wrap(this.getBase().result);
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {

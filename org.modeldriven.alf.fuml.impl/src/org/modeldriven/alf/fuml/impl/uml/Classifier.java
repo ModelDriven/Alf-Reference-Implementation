@@ -49,7 +49,7 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
 	public List<org.modeldriven.alf.uml.Feature> getFeature() {
 		List<org.modeldriven.alf.uml.Feature> list = new ArrayList<org.modeldriven.alf.uml.Feature>();
 		for (fUML.Syntax.Classes.Kernel.Feature element : this.getBase().feature) {
-			list.add((Feature)this.wrap(element));
+			list.add((Feature)wrap(element));
 		}
 		return list;
 	}
@@ -57,7 +57,7 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
 	public List<org.modeldriven.alf.uml.NamedElement> getInheritedMember() {
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (fUML.Syntax.Classes.Kernel.NamedElement element : this.getBase().inheritedMember) {
-			list.add((NamedElement)this.wrap(element));
+			list.add((NamedElement)wrap(element));
 		}
 		return list;
 	}
@@ -73,7 +73,7 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
 	public List<org.modeldriven.alf.uml.Classifier> getGeneral() {
 		List<org.modeldriven.alf.uml.Classifier> list = new ArrayList<org.modeldriven.alf.uml.Classifier>();
 		for (fUML.Syntax.Classes.Kernel.Classifier element : this.getBase().general) {
-			list.add((Classifier)this.wrap(element));
+			list.add((Classifier)wrap(element));
 		}
 		return list;
 	}
@@ -89,7 +89,7 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
 	public List<org.modeldriven.alf.uml.NamedElement> getMember() {
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (fUML.Syntax.Classes.Kernel.NamedElement element : this.getBase().member) {
-			list.add((NamedElement)this.wrap(element));
+			list.add((NamedElement)wrap(element));
 		}
 		return list;
 	}
@@ -97,7 +97,7 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
 	public List<org.modeldriven.alf.uml.NamedElement> getOwnedMember() {
 		List<org.modeldriven.alf.uml.NamedElement> list = new ArrayList<org.modeldriven.alf.uml.NamedElement>();
 		for (fUML.Syntax.Classes.Kernel.NamedElement element : this.getBase().ownedMember) {
-			list.add((NamedElement)this.wrap(element));
+			list.add((NamedElement)wrap(element));
 		}
 		return list;
 	}
@@ -132,7 +132,7 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
 		List<org.modeldriven.alf.uml.PackageableElement> list = new ArrayList<org.modeldriven.alf.uml.PackageableElement>();
 		for (fUML.Syntax.Classes.Kernel.PackageableElement element : this
 				.getBase().importedMember) {
-			list.add((PackageableElement)this.wrap(element));
+			list.add((PackageableElement)wrap(element));
 		}
 		return list;
 	}
@@ -186,7 +186,28 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
 
     @Override
     public List<String> getNamesOfMember(org.modeldriven.alf.uml.NamedElement member) {
-        return ((Namespace)this.wrap(this.getBase())).getNamesOfMember(member);
+    	List<String> names = new ArrayList<String>();
+    	if (this.getOwnedMember().contains(member)) {
+    		names.add(member.getName());
+    	} else {
+    		for (org.modeldriven.alf.uml.ElementImport elementImport: 
+    			this.getElementImport()) {
+    			if (elementImport.getImportedElement().equals(member)) {
+    				names.add(elementImport.getAlias());
+    			}
+    		}
+    		if (names.isEmpty()) {
+    			for (org.modeldriven.alf.uml.PackageImport packageImport: 
+    				this.getPackageImport()) {
+    				org.modeldriven.alf.uml.Package package_ = 
+    						packageImport.getImportedPackage();
+    				if (package_.visibleMembers().contains(member)) {
+    					names.addAll(package_.getNamesOfMember(member));
+    				}
+    			}
+    		}
+    	}
+        return names;
     }
     
     @Override
@@ -204,7 +225,7 @@ public abstract class Classifier extends Type implements org.modeldriven.alf.uml
     
     @Override
     public List<org.modeldriven.alf.uml.TemplateBinding> getTemplateBinding() {
-        return null;
+        return new ArrayList<org.modeldriven.alf.uml.TemplateBinding>();
     }
     
     @Override

@@ -24,7 +24,7 @@ public class ReduceAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.Behavior getReducer() {
-		return (Behavior)this.wrap(this.getBase().reducer);
+		return (Behavior)wrap(this.getBase().reducer);
 	}
 
 	public void setReducer(org.modeldriven.alf.uml.Behavior reducer) {
@@ -32,7 +32,7 @@ public class ReduceAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getResult() {
-		return (OutputPin)this.wrap(this.getBase().result);
+		return (OutputPin)wrap(this.getBase().result);
 	}
 
 	public void setResult(org.modeldriven.alf.uml.OutputPin result) {
@@ -40,7 +40,7 @@ public class ReduceAction extends Action implements
 	}
 
 	public org.modeldriven.alf.uml.InputPin getCollection() {
-		return (InputPin)this.wrap(this.getBase().collection);
+		return (InputPin)wrap(this.getBase().collection);
 	}
 
 	public void setCollection(org.modeldriven.alf.uml.InputPin collection) {

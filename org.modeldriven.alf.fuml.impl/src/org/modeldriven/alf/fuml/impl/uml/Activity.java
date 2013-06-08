@@ -37,7 +37,7 @@ public class Activity extends Behavior implements org.modeldriven.alf.uml.Activi
 		List<org.modeldriven.alf.uml.ActivityNode> list = new ArrayList<org.modeldriven.alf.uml.ActivityNode>();
 		for (fUML.Syntax.Activities.IntermediateActivities.ActivityNode element : this
 				.getBase().node) {
-			list.add((ActivityNode)this.wrap(element));
+			list.add((ActivityNode)wrap(element));
 		}
 		return list;
 	}
@@ -58,7 +58,7 @@ public class Activity extends Behavior implements org.modeldriven.alf.uml.Activi
 		List<org.modeldriven.alf.uml.ActivityEdge> list = new ArrayList<org.modeldriven.alf.uml.ActivityEdge>();
 		for (fUML.Syntax.Activities.IntermediateActivities.ActivityEdge element : this
 				.getBase().edge) {
-			list.add((ActivityEdge)this.wrap(element));
+			list.add((ActivityEdge)wrap(element));
 		}
 		return list;
 	}

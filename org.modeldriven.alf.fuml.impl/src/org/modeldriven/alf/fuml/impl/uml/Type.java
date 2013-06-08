@@ -21,7 +21,7 @@ public abstract class Type extends Namespace implements
 	}
 
 	public org.modeldriven.alf.uml.Package getPackage() {
-		return (Package)this.wrap(this.getBase().package_);
+		return (Package)wrap(this.getBase().package_);
 	}
 
 }

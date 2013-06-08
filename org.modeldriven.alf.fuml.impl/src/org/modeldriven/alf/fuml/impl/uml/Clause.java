@@ -29,7 +29,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode element : this
 				.getBase().test) {
-			list.add((ExecutableNode)this.wrap(element));
+			list.add((ExecutableNode)wrap(element));
 		}
 		return list;
 	}
@@ -42,7 +42,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 		List<org.modeldriven.alf.uml.ExecutableNode> list = new ArrayList<org.modeldriven.alf.uml.ExecutableNode>();
 		for (fUML.Syntax.Activities.CompleteStructuredActivities.ExecutableNode element : this
 				.getBase().body) {
-			list.add((ExecutableNode)this.wrap(element));
+			list.add((ExecutableNode)wrap(element));
 		}
 		return list;
 	}
@@ -80,7 +80,7 @@ public class Clause extends Element implements org.modeldriven.alf.uml.Clause {
 	}
 
 	public org.modeldriven.alf.uml.OutputPin getDecider() {
-		return (OutputPin)this.wrap(this.getBase().decider);
+		return (OutputPin)wrap(this.getBase().decider);
 	}
 
 	public void setDecider(org.modeldriven.alf.uml.OutputPin decider) {

@@ -35,8 +35,13 @@ public abstract class NamedElement extends Element implements
 
     @Override
 	public String getVisibility() {
-		String visibility = this.getBase().visibility.toString();
-		return visibility == null? null: visibility.substring(0, visibility.length() - 1);
+		fUML.Syntax.Classes.Kernel.VisibilityKind visibility = this.getBase().visibility;
+		if (visibility == null) {
+			return null;
+		} else {
+			String v = visibility.toString();
+			return visibility == null? null: v.substring(0, v.length() - 1);
+		}
 	}
 
     @Override
@@ -52,7 +57,7 @@ public abstract class NamedElement extends Element implements
 
     @Override
 	public org.modeldriven.alf.uml.Namespace getNamespace() {
-		return (Namespace)this.wrap(this.getBase().namespace);
+		return (Namespace)wrap(this.getBase().namespace);
 	}
     
     @Override

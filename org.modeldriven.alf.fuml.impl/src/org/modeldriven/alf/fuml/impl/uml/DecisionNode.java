@@ -25,7 +25,7 @@ public class DecisionNode extends ControlNode implements
 	}
 
 	public org.modeldriven.alf.uml.Behavior getDecisionInput() {
-		return (Behavior)this.wrap(this.getBase().decisionInput);
+		return (Behavior)wrap(this.getBase().decisionInput);
 	}
 
 	public void setDecisionInput(org.modeldriven.alf.uml.Behavior decisionInput) {
@@ -33,7 +33,7 @@ public class DecisionNode extends ControlNode implements
 	}
 
 	public org.modeldriven.alf.uml.ObjectFlow getDecisionInputFlow() {
-		return (ObjectFlow)this.wrap(this.getBase().decisionInputFlow);
+		return (ObjectFlow)wrap(this.getBase().decisionInputFlow);
 	}
 
 	public void setDecisionInputFlow(
