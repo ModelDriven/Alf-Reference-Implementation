@@ -25,7 +25,7 @@ import fUML.Syntax.Classes.Kernel.Namespace;
 public class ModelNamespaceImpl extends 
 	org.modeldriven.alf.fuml.units.ModelNamespaceImpl {
 
-	Namespace contextNamespace = null;
+	private Namespace contextNamespace = null;
     
     public ModelNamespaceImpl(ModelNamespace self) {
         super(self);
