@@ -24,9 +24,13 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     private ModelNamespace modelNamespace = null;
     
-    public RootNamespaceImpl() {
-        super(RootNamespace.getRootScope());
+    protected RootNamespaceImpl(RootNamespace self) {
+        super(self);
         RootNamespace.setRootImpl(this);
+    }
+    
+    public RootNamespaceImpl() {
+        this(RootNamespace.getRootScope());
         
         this.setLibraryDirectory("Libraries");
         
@@ -43,6 +47,10 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     @Override
     public RootNamespace getSelf() {
         return (RootNamespace)this.self;
+    }
+    
+    protected void setModelNamespace(ModelNamespace modelNamespace) {
+        this.modelNamespace = modelNamespace;
     }
 
     public ModelNamespace getModelNamespace() {
