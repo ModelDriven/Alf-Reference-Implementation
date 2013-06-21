@@ -23,6 +23,9 @@ import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
+import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.units.ActivityDefinition;
+import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
@@ -34,10 +37,10 @@ import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 import fUML.Syntax.Activities.IntermediateActivities.Activity;
 import fUML.Syntax.Classes.Kernel.Element;
-import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Parameter;
 import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 import fUML.Syntax.Classes.Kernel.ParameterList;
+import fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior;
 import fUML.Syntax.CommonBehaviors.BasicBehaviors.OpaqueBehavior;
 
 public class AlfOpaqueBehaviorExecution extends 
@@ -103,19 +106,19 @@ public class AlfOpaqueBehaviorExecution extends
 	}
 
 	public static UnitDefinition parse(
-			Element contextElement, String textualRepresentation) {
-		getRootScopeImpl().setContext(contextElement);
+			Behavior behavior, String textualRepresentation) {
+		getRootScopeImpl().setContext(behavior);
 		
 		ElementReferenceImpl.clearTemplateBindings();
 		StereotypeApplication.clearStereotypeApplications();
 
 		Parser parser = new Parser(new StringReader(textualRepresentation));
-		if (contextElement instanceof NamedElement) {
-			parser.setFileName(((NamedElement)contextElement).name);
-		}		
+		parser.setFileName(behavior.name);
+
 		try {
-			UnitDefinition unit = parser.UnitDefinition();
-			unit.getImpl().addImplicitImports();
+			Block body = parser.StatementSequenceEOF();
+			
+			UnitDefinition unit = makeUnitForBehavior(behavior, body);
 			
 			NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
             modelScope.deriveAll();
@@ -124,17 +127,44 @@ public class AlfOpaqueBehaviorExecution extends
             if (violations.isEmpty()) {
             	return unit;
             } else {
-            	StringBuffer msg = new StringBuffer();
+            	StringBuffer msg = new StringBuffer("Constraint violations:\n");
                 for (ConstraintViolation violation: violations) {
                     msg.append(violation + "\n");
                 }
                 throw new FumlException(msg.toString());
             }
         } catch (TokenMgrError e) {
-            throw new FumlException(e);
+            throw new FumlException(e.getMessage());
         } catch (ParseException e) {
-            throw new FumlException(e);
+            throw new FumlException(e.getMessage());
         }
+	}
+
+	protected static UnitDefinition makeUnitForBehavior(Behavior behavior,
+			Block body) {
+		ActivityDefinition activityDefinition = new ActivityDefinition();
+		activityDefinition.getImpl().setExactName(behavior.name);
+		
+		for (Parameter parameter: behavior.ownedParameter) {
+			FormalParameter formalParameter = new FormalParameter();
+			formalParameter.getImpl().setExactName(parameter.name);
+			formalParameter.setDirection(
+					parameter.direction == ParameterDirectionKind.return_? "return":
+						parameter.direction.toString());
+			formalParameter.setType(ElementReferenceImpl.makeElementReference(
+					org.modeldriven.alf.fuml.impl.uml.Element.wrap(parameter.type)));
+			formalParameter.setNamespace(activityDefinition);
+			activityDefinition.addOwnedMember(formalParameter);
+		}
+		
+		activityDefinition.setBody(body);
+		
+		UnitDefinition unit =  new UnitDefinition();
+		unit.setDefinition(activityDefinition);
+		unit.setIsModelLibrary(true);
+		activityDefinition.setUnit(unit);
+		
+		return unit;
 	}
 	
     public static FumlMapping map(
@@ -156,8 +186,8 @@ public class AlfOpaqueBehaviorExecution extends
     }
     
 	public static Element compile(
-			Element contextElement, String textualRepresentation) {
-		UnitDefinition unit = parse(contextElement, textualRepresentation);
+			Behavior behavior, String textualRepresentation) {
+		UnitDefinition unit = parse(behavior, textualRepresentation);
 		Collection<org.modeldriven.alf.uml.Element> otherElements =
 				new ArrayList<org.modeldriven.alf.uml.Element>();
 		FumlMapping mapping = map(unit.getDefinition(), otherElements);

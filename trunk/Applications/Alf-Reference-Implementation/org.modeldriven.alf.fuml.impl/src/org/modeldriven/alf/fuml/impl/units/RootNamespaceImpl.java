@@ -18,7 +18,6 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Namespace;
 
 import org.modeldriven.fuml.repository.Repository;
-import org.modeldriven.fuml.repository.RepositorylException;
 
 public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamespaceImpl {
 
@@ -65,16 +64,7 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
 		String pathName = qualifiedName.getPathName().replace("::", ".");
     	org.modeldriven.fuml.repository.Element repositoryElement = 
     			Repository.INSTANCE.findElementByQualifiedName(pathName);
-    	if (repositoryElement == null) {
-    		try {
-	    		repositoryElement = 
-	    				Repository.INSTANCE.getPackageByQualifiedName(pathName);
-    		} catch (RepositorylException e) {
-    			return null;
-    		}
-    	}
-    	return repositoryElement.getDelegate();
-
+    	return repositoryElement == null? null: repositoryElement.getDelegate();
 	}
     
     @Override
