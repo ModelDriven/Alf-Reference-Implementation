@@ -1913,6 +1913,16 @@ Block StatementSequence():
   { return b; }
 }
 
+/* For use in parsing the bodies of OpaqueBehaviors and OpaqueActions */
+Block StatementSequenceEOF():
+{ 
+    Block b;
+}
+{
+    b = StatementSequence() <EOF>
+    { return b; }
+}
+
 Statement DocumentedStatement():
 {
   Token t;
