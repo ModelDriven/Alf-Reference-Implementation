@@ -59,6 +59,7 @@ public abstract class Alf extends AlfBase {
     public Locus getLocus() {
         if (this.locus == null) {
             this.locus = this.createLocus();
+            setUpExecutionEnvironment();
         }
         return this.locus;
     }
@@ -133,6 +134,14 @@ public abstract class Alf extends AlfBase {
         return classifier;
     }
     
+    public void setUpExecutionEnvironment() {
+        this.addPrimitiveTypes(
+                DataTypeDefinitionMapping.getPrimitiveTypes());
+        this.addPrimitiveBehaviorPrototypes(
+                this.instantiatePrimitiveBehaviorPrototypes());
+        this.createSystemServices();
+    }
+    
     public UnitDefinition execute(UnitDefinition unit) {
         if (unit != null) {
             try {
@@ -147,46 +156,40 @@ public abstract class Alf extends AlfBase {
                         !((Class_)element).getIsAbstract() && 
                         ((Class_)element).getClassifierBehavior() != null) {
 
-                    // Set up execution environment
-                    Locus locus = this.getLocus();
-                    this.addPrimitiveTypes(
-                            DataTypeDefinitionMapping.getPrimitiveTypes());
-                    this.addPrimitiveBehaviorPrototypes(
-                            this.instantiatePrimitiveBehaviorPrototypes());
-                    this.createSystemServices();
+                   Locus locus = this.getLocus();
 
-                    this.printVerbose("Executing...");
-                    if (element instanceof Behavior) {
-                        locus.getExecutor().execute((Behavior)element, null);
-                        return unit;
-                    } else {
-                        ClassDefinition classDefinition = 
-                                (ClassDefinition)definition;
-                        OperationDefinition constructorDefinition = 
-                                classDefinition.getImpl().getDefaultConstructor();
-                        if (constructorDefinition == null) {
-                            this.println("Cannot instantiate: " + 
-                                    classDefinition.getName());
-                        } else {
-                            // Instantiate active class.
-                            Class_ class_ = (Class_)element;
-                            Object_ object = locus.instantiate(class_);
+                   this.printVerbose("Executing...");
+                   if (element instanceof Behavior) {
+                       locus.getExecutor().execute((Behavior)element, null);
+                       return unit;
+                   } else {
+                       ClassDefinition classDefinition = 
+                               (ClassDefinition)definition;
+                       OperationDefinition constructorDefinition = 
+                               classDefinition.getImpl().getDefaultConstructor();
+                       if (constructorDefinition == null) {
+                           this.println("Cannot instantiate: " + 
+                                   classDefinition.getName());
+                       } else {
+                           // Instantiate active class.
+                           Class_ class_ = (Class_)element;
+                           Object_ object = locus.instantiate(class_);
 
-                            // Initialize the object.
-                            ClassDefinitionMapping classMapping =
-                                    (ClassDefinitionMapping)elementMapping;
-                            Operation initializer = 
-                                    classMapping.getInitializationOperation();
-                            locus.getExecutor().execute(
-                                    ((Behavior)initializer.getMethod().get(0)), 
-                                    object);
+                           // Initialize the object.
+                           ClassDefinitionMapping classMapping =
+                                   (ClassDefinitionMapping)elementMapping;
+                           Operation initializer = 
+                                   classMapping.getInitializationOperation();
+                           locus.getExecutor().execute(
+                                   ((Behavior)initializer.getMethod().get(0)), 
+                                   object);
 
-                            // Execute the classifier behavior.
-                            object.startBehavior(class_);
+                           // Execute the classifier behavior.
+                           object.startBehavior(class_);
 
-                            return unit;
-                        }
-                    }
+                           return unit;
+                       }
+                   }
                 } else if (element instanceof Behavior) {
                     this.println("Cannot execute a behavior with parameters.");
                 } else if (element instanceof Class_) {
@@ -209,7 +212,7 @@ public abstract class Alf extends AlfBase {
         }
         return null;
     }
-    
+
     @Override
     public UnitDefinition process(UnitDefinition unit) {
         return this.execute(super.process(unit));
