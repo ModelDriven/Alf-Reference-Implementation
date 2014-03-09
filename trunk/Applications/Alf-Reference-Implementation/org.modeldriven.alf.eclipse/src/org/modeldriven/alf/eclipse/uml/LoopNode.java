@@ -105,14 +105,9 @@ public class LoopNode extends StructuredActivityNode implements
 
 	public List<org.modeldriven.alf.uml.OutputPin> getResult() {
 		List<org.modeldriven.alf.uml.OutputPin> list = new ArrayList<org.modeldriven.alf.uml.OutputPin>();
-		List<org.eclipse.uml2.uml.OutputPin> loopVariables = this.getBase().getLoopVariables();
 		for (org.eclipse.uml2.uml.OutputPin element : this.getBase()
 				.getResults()) {
-		    // NOTE: This test corrects for the loop variables that are stored
-		    // as structured node outputs.
-		    if (!loopVariables.contains(element)) {
-		        list.add((org.modeldriven.alf.uml.OutputPin) wrap(element));
-		    }
+			list.add((org.modeldriven.alf.uml.OutputPin) wrap(element));
 		}
 		return list;
 	}
@@ -134,13 +129,6 @@ public class LoopNode extends StructuredActivityNode implements
 	public void addLoopVariable(org.modeldriven.alf.uml.OutputPin loopVariable) {
 	    org.eclipse.uml2.uml.OutputPin element = ((OutputPin) loopVariable).getBase();
 		this.getBase().getLoopVariables().add(element);
-		
-		// NOTE: Since the UML 2.4.1 metamodel does not define any owner for
-		// loop variables, they are stored here in the structured node outputs
-		// for the loop node. However, this also results in them being added to
-		// the results for the loop node, since LoopNode::result redefines
-		// StructuredNodeOutput.
-		this.getBase().getStructuredNodeOutputs().add(element);
 	}
 
 	public List<org.modeldriven.alf.uml.ExecutableNode> getSetupPart() {
