@@ -4,18 +4,20 @@ import java.io.File;
 
 import org.modeldriven.alf.fuml.execution.Alf;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.StereotypeApplication;
 
-public class RunTests {
+public abstract class RunTests {
     
     private static final String TEST_DIR = "../org.modeldriven.alf/tests-x";
-    protected static Alf alf;
     
-    protected static void runTest(String unitName) {
+    protected static void runTest(Alf alf, String unitName) {
         System.out.println(unitName + "...");
+        ((RootNamespaceImpl)RootNamespace.getRootScope().getImpl()).resetModelNamespace();
+        alf.setModelDirectory(TEST_DIR);
         try {
             UnitDefinition unit = alf.parse(unitName, false);
             if (unit != null) {
@@ -31,11 +33,10 @@ public class RunTests {
         }
     }
     
-    protected static void runTests() {
+    protected static void runTests(Alf alf) {
         ElementReferenceImpl.clearTemplateBindings();
         StereotypeApplication.clearStereotypeApplications();
         alf.map(RootNamespace.getRootScope());
-        alf.setModelDirectory(TEST_DIR);
         
         File directory = new File(TEST_DIR);
         
@@ -47,7 +48,7 @@ public class RunTests {
                 if (prefix.equals("Expressions") || 
                     prefix.equals("Statements") ||
                     prefix.equals("Units")) {
-                    runTest(unitName);
+                    runTest(alf, unitName);
                 }
             }
         }
