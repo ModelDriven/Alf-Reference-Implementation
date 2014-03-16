@@ -31,17 +31,9 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     public RootNamespaceImpl() {
         this(RootNamespace.getRootScope());
-        
+        this.setName("Root");
         this.setLibraryDirectory("Libraries");
-        
-        this.modelNamespace = new ModelNamespace();
-        this.modelNamespace.setImpl(new ModelNamespaceImpl(this.modelNamespace));
-        this.modelNamespace.setName("Model");
-                
-        RootNamespace self = this.getSelf();
-        self.setName("Root");
-        self.addOwnedMember(this.modelNamespace);
-        this.modelNamespace.setNamespace(self);
+        this.resetModelNamespace();
     }
     
     @Override
@@ -49,8 +41,28 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         return (RootNamespace)this.self;
     }
     
+    public void resetModelNamespace() {
+        ModelNamespace modelNamespace = new ModelNamespace();
+        modelNamespace.setImpl(new ModelNamespaceImpl(modelNamespace));
+        modelNamespace.setName("Model");               
+        this.setModelNamespace(modelNamespace);
+        this.setMapping(null);
+    }
+    
     protected void setModelNamespace(ModelNamespace modelNamespace) {
+        RootNamespace self = this.getSelf();
+        
+        // NOTE: The following insures that there is always a non-null member list.
+        Collection<Member> members = self.getMember();
+        
+        if (this.modelNamespace != null) {
+            self.getOwnedMember().remove(this.modelNamespace);
+            members.remove(this.modelNamespace);
+        }        
         this.modelNamespace = modelNamespace;
+        self.addOwnedMember(modelNamespace);
+        self.addMember(modelNamespace);
+        modelNamespace.setNamespace(self);
     }
 
     public ModelNamespace getModelNamespace() {

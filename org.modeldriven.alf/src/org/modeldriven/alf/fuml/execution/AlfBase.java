@@ -28,7 +28,7 @@ import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
-
+import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
 import org.modeldriven.alf.uml.Classifier;
 
 public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
@@ -195,8 +195,20 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         return new RootNamespaceImpl();
     }
     
+    protected RootNamespaceImpl getCurrentRootScopeImpl() {
+        ModelNamespaceImpl rootScopeImpl = RootNamespace.getRootScope().getImpl();
+        return rootScopeImpl instanceof RootNamespaceImpl?
+                (RootNamespaceImpl)rootScopeImpl: null;
+    }
+    
     protected void configure() {
-        this.rootScopeImpl = this.createRootScopeImpl();
+        RootNamespaceImpl rootScopeImpl = this.getCurrentRootScopeImpl();
+        if (rootScopeImpl == null) {
+            this.rootScopeImpl = this.createRootScopeImpl();
+        } else {
+            rootScopeImpl.resetModelNamespace();
+            this.rootScopeImpl = rootScopeImpl;
+        }
     }
     
     public AlfBase() {

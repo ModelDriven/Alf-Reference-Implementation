@@ -21,7 +21,7 @@ import org.modeldriven.alf.uml.Package;
 
 public abstract class AlfCompiler extends AlfBase {
     
-    protected Package getModel(UnitDefinition unit) {
+    public Package getModel(UnitDefinition unit) {
         ModelNamespace modelScope = 
                 (ModelNamespace)RootNamespace.getModelScope(unit);
         
@@ -33,7 +33,7 @@ public abstract class AlfCompiler extends AlfBase {
         return (Package)mapping.getElement();        
     }
     
-    protected abstract void saveModel(String name, Package model) throws IOException;
+    public abstract void saveModel(String name, Package model) throws IOException;
     
     @Override
     public UnitDefinition process(UnitDefinition unit) {

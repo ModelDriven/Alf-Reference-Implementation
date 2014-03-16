@@ -9,6 +9,14 @@
 
 package org.modeldriven.alf.fuml.mapping.units;
 
+import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.NamedElement;
+
 public class RootNamespaceMapping extends ModelNamespaceMapping {
+    
+    @Override
+    public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
+    }
     
 }
