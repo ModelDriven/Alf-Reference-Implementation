@@ -34,7 +34,7 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     }
     
     @Override
-    protected void saveModel(String name, org.modeldriven.alf.uml.Package model) 
+    public void saveModel(String name, org.modeldriven.alf.uml.Package model) 
     		throws IOException {
     	Resource resource = ((RootNamespaceImpl)this.getRootScopeImpl()).createResource(
     			this.umlDirectory, name);
@@ -65,7 +65,6 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     protected void configure() {
     	super.configure();
     	this.umlDirectory = "UML";
-    	this.rootScopeImpl = new RootNamespaceImpl();
     }
     
     public AlfCompiler() {

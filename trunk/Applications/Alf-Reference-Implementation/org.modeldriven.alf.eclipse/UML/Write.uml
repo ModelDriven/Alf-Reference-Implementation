@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_TGpuEK1MEeOdBunZhTRw1w" name="Model" visibility="package">
+  <packagedElement xmi:type="uml:Activity" xmi:id="_TGpuEa1MEeOdBunZhTRw1w" name="Write" group="_TGpuHq1MEeOdBunZhTRw1w" node="_TGpuHK1MEeOdBunZhTRw1w _TGpuHa1MEeOdBunZhTRw1w _TGpuHq1MEeOdBunZhTRw1w">
+    <packageImport xmi:id="_TGpuEq1MEeOdBunZhTRw1w" visibility="private">
+      <importedPackage href="Libraries/Alf.library.uml#Alf-Library-PrimitiveTypes"/>
+    </packageImport>
+    <packageImport xmi:id="_TGpuE61MEeOdBunZhTRw1w" visibility="private">
+      <importedPackage href="Libraries/Alf.library.uml#Alf-Library-PrimitiveBehaviors"/>
+    </packageImport>
+    <packageImport xmi:id="_TGpuFK1MEeOdBunZhTRw1w" visibility="private">
+      <importedPackage href="Libraries/Alf.library.uml#Alf-Library-BasicInputOutput"/>
+    </packageImport>
+    <packageImport xmi:id="_TGpuFa1MEeOdBunZhTRw1w" visibility="private">
+      <importedPackage href="Libraries/Alf.library.uml#Alf-Library-PrimitiveBehaviors-CollectionFunctions"/>
+    </packageImport>
+    <packageImport xmi:id="_TGpuFq1MEeOdBunZhTRw1w" visibility="private">
+      <importedPackage href="Libraries/Alf.library.uml#Alf-Library-CollectionClasses"/>
+    </packageImport>
+    <ownedParameter xmi:id="_TGpuF61MEeOdBunZhTRw1w" name="value" visibility="package">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuGK1MEeOdBunZhTRw1w" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuGa1MEeOdBunZhTRw1w" value="1"/>
+    </ownedParameter>
+    <edge xmi:type="uml:ObjectFlow" xmi:id="_TGpuGq1MEeOdBunZhTRw1w" source="_TGpuHK1MEeOdBunZhTRw1w" target="_TGpuHa1MEeOdBunZhTRw1w"/>
+    <edge xmi:type="uml:ObjectFlow" xmi:id="_TGpuG61MEeOdBunZhTRw1w" source="_TGpuHa1MEeOdBunZhTRw1w" target="_TGpuK61MEeOdBunZhTRw1w"/>
+    <structuredNode xmi:id="_TGpuHq1MEeOdBunZhTRw1w" name="Body(Write)">
+      <node xmi:type="uml:StructuredActivityNode" xmi:id="_TGpuH61MEeOdBunZhTRw1w" name="ExpressionStatement@44e0dc96">
+        <node xmi:type="uml:ExpansionRegion" xmi:id="_TGpuIK1MEeOdBunZhTRw1w" name="Collect(Call(write))" incoming="_TGpuTK1MEeOdBunZhTRw1w" mode="parallel" inputElement="_TGpuMK1MEeOdBunZhTRw1w">
+          <node xmi:type="uml:CallOperationAction" xmi:id="_TGpuIa1MEeOdBunZhTRw1w" name="Call(write)">
+            <argument xmi:id="_TGpuIq1MEeOdBunZhTRw1w" name="Call(write).argument(value)" incoming="_TGpuLq1MEeOdBunZhTRw1w">
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuI61MEeOdBunZhTRw1w" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuJK1MEeOdBunZhTRw1w" value="1"/>
+            </argument>
+            <result xmi:id="_TGpuJa1MEeOdBunZhTRw1w" name="Call(write).result(errorStatus)">
+              <type xmi:type="uml:DataType" href="Libraries/fUML.library.uml#Common-Status"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuJq1MEeOdBunZhTRw1w"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuJ61MEeOdBunZhTRw1w" value="1"/>
+            </result>
+            <operation href="Libraries/fUML.library.uml#BasicInputOutput-OutputChannel-write"/>
+            <target xmi:id="_TGpuKK1MEeOdBunZhTRw1w" name="Call(write).target" incoming="_TGpuL61MEeOdBunZhTRw1w" isOrdered="true" isUnique="false">
+              <type xmi:type="uml:Class" href="Libraries/fUML.library.uml#BasicInputOutput-OutputChannel"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuKa1MEeOdBunZhTRw1w" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuKq1MEeOdBunZhTRw1w" value="1"/>
+            </target>
+          </node>
+          <structuredNodeInput xmi:id="_TGpuK61MEeOdBunZhTRw1w" name="Collect(Call(write)).input(Fork(value))" outgoing="_TGpuLq1MEeOdBunZhTRw1w" incoming="_TGpuG61MEeOdBunZhTRw1w" isOrdered="true" isUnique="false">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuLK1MEeOdBunZhTRw1w" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuLa1MEeOdBunZhTRw1w" value="1"/>
+          </structuredNodeInput>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_TGpuLq1MEeOdBunZhTRw1w" source="_TGpuK61MEeOdBunZhTRw1w" target="_TGpuIq1MEeOdBunZhTRw1w"/>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_TGpuL61MEeOdBunZhTRw1w" source="_TGpuMK1MEeOdBunZhTRw1w" target="_TGpuKK1MEeOdBunZhTRw1w"/>
+        </node>
+        <node xmi:type="uml:ExpansionNode" xmi:id="_TGpuMK1MEeOdBunZhTRw1w" name="Collect(Call(write)).inputElement" outgoing="_TGpuL61MEeOdBunZhTRw1w" incoming="_TGpuS61MEeOdBunZhTRw1w" regionAsInput="_TGpuIK1MEeOdBunZhTRw1w"/>
+        <node xmi:type="uml:StructuredActivityNode" xmi:id="_TGpuMa1MEeOdBunZhTRw1w" name="Feature(Call(At).result())" outgoing="_TGpuTK1MEeOdBunZhTRw1w">
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_TGpuMq1MEeOdBunZhTRw1w" name="Call(At)" incoming="_TGpuSa1MEeOdBunZhTRw1w">
+            <argument xmi:id="_TGpuM61MEeOdBunZhTRw1w" name="Call(At).argument(seq)" incoming="_TGpuR61MEeOdBunZhTRw1w" isOrdered="true" isUnique="false">
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuNK1MEeOdBunZhTRw1w"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuNa1MEeOdBunZhTRw1w" value="*"/>
+            </argument>
+            <argument xmi:id="_TGpuNq1MEeOdBunZhTRw1w" name="Call(At).argument(index)" incoming="_TGpuSq1MEeOdBunZhTRw1w">
+              <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuN61MEeOdBunZhTRw1w" value="1"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuOK1MEeOdBunZhTRw1w" value="1"/>
+            </argument>
+            <result xmi:id="_TGpuOa1MEeOdBunZhTRw1w" name="Call(At).result()" outgoing="_TGpuS61MEeOdBunZhTRw1w">
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuOq1MEeOdBunZhTRw1w"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuO61MEeOdBunZhTRw1w" value="1"/>
+            </result>
+            <behavior xmi:type="uml:Activity" href="Libraries/Alf.library.uml#Alf-Library-PrimitiveBehaviors-SequenceFunctions-At"/>
+          </node>
+          <node xmi:type="uml:StructuredActivityNode" xmi:id="_TGpuPK1MEeOdBunZhTRw1w" name="Tuple@50e7635e" outgoing="_TGpuSa1MEeOdBunZhTRw1w">
+            <node xmi:type="uml:ReadExtentAction" xmi:id="_TGpuPa1MEeOdBunZhTRw1w" name="ReadExtent(StandardOutputChannel)">
+              <classifier xmi:type="uml:Class" href="Libraries/fUML.library.uml#BasicInputOutput-StandardOutputChannel"/>
+              <result xmi:id="_TGpuPq1MEeOdBunZhTRw1w" name="ReadExtent(StandardOutputChannel).result" outgoing="_TGpuR61MEeOdBunZhTRw1w" isOrdered="true" isUnique="false">
+                <type xmi:type="uml:Class" href="Libraries/fUML.library.uml#BasicInputOutput-StandardOutputChannel"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuP61MEeOdBunZhTRw1w"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuQK1MEeOdBunZhTRw1w" value="*"/>
+              </result>
+            </node>
+            <node xmi:type="uml:ValueSpecificationAction" xmi:id="_TGpuQa1MEeOdBunZhTRw1w" name="Value(1)">
+              <result xmi:id="_TGpuQq1MEeOdBunZhTRw1w" name="Value(1).result" outgoing="_TGpuSK1MEeOdBunZhTRw1w" isOrdered="true" isUnique="false">
+                <type xmi:type="uml:PrimitiveType" href="Libraries/Alf.library.uml#Alf-Library-PrimitiveTypes-Natural"/>
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TGpuQ61MEeOdBunZhTRw1w" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TGpuRK1MEeOdBunZhTRw1w" value="1"/>
+              </result>
+              <value xmi:type="uml:LiteralInteger" xmi:id="_TGpuRa1MEeOdBunZhTRw1w" value="1">
+                <type xmi:type="uml:PrimitiveType" href="Libraries/Alf.library.uml#Alf-Library-PrimitiveTypes-Natural"/>
+              </value>
+            </node>
+          </node>
+          <node xmi:type="uml:ForkNode" xmi:id="_TGpuRq1MEeOdBunZhTRw1w" name="Fork(Call(At).argument(index))" outgoing="_TGpuSq1MEeOdBunZhTRw1w" incoming="_TGpuSK1MEeOdBunZhTRw1w"/>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_TGpuR61MEeOdBunZhTRw1w" source="_TGpuPq1MEeOdBunZhTRw1w" target="_TGpuM61MEeOdBunZhTRw1w"/>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_TGpuSK1MEeOdBunZhTRw1w" source="_TGpuQq1MEeOdBunZhTRw1w" target="_TGpuRq1MEeOdBunZhTRw1w"/>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_TGpuSa1MEeOdBunZhTRw1w" source="_TGpuPK1MEeOdBunZhTRw1w" target="_TGpuMq1MEeOdBunZhTRw1w"/>
+          <edge xmi:type="uml:ObjectFlow" xmi:id="_TGpuSq1MEeOdBunZhTRw1w" source="_TGpuRq1MEeOdBunZhTRw1w" target="_TGpuNq1MEeOdBunZhTRw1w"/>
+        </node>
+        <edge xmi:type="uml:ObjectFlow" xmi:id="_TGpuS61MEeOdBunZhTRw1w" source="_TGpuOa1MEeOdBunZhTRw1w" target="_TGpuMK1MEeOdBunZhTRw1w"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_TGpuTK1MEeOdBunZhTRw1w" source="_TGpuMa1MEeOdBunZhTRw1w" target="_TGpuIK1MEeOdBunZhTRw1w"/>
+      </node>
+    </structuredNode>
+    <node xmi:type="uml:ActivityParameterNode" xmi:id="_TGpuHK1MEeOdBunZhTRw1w" name="Input(value)" outgoing="_TGpuGq1MEeOdBunZhTRw1w" parameter="_TGpuF61MEeOdBunZhTRw1w"/>
+    <node xmi:type="uml:ForkNode" xmi:id="_TGpuHa1MEeOdBunZhTRw1w" name="Fork(value)" outgoing="_TGpuG61MEeOdBunZhTRw1w" incoming="_TGpuGq1MEeOdBunZhTRw1w"/>
+  </packagedElement>
+  <profileApplication xmi:id="_TGpuTa1MEeOdBunZhTRw1w">
+    <eAnnotations xmi:id="_TGpuTq1MEeOdBunZhTRw1w" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <references xmi:type="ecore:EPackage" href="pathmap://UML_PROFILES/StandardL2.profile.uml#_QLYqEHJLEeKLR_U6HVChUg"/>
+    </eAnnotations>
+    <appliedProfile href="pathmap://UML_PROFILES/StandardL2.profile.uml#_0"/>
+  </profileApplication>
+</uml:Model>

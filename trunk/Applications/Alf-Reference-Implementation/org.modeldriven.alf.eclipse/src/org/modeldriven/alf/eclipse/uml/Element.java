@@ -99,7 +99,10 @@ public class Element implements org.modeldriven.alf.uml.Element {
 		for (int i = 0; i < umlElements.size(); i++) {
 			org.eclipse.uml2.uml.Element umlElement = umlElements.get(i);
 			org.eclipse.uml2.uml.Element newUmlElement = newUmlElements.get(i);
-			replace(map.get(umlElement), umlElement, newUmlElement);
+			Collection<EStructuralFeature.Setting> settings = map.get(umlElement);
+			if (settings != null) {
+				replace(map.get(umlElement), umlElement, newUmlElement);
+			}
 		}
 
 	}

@@ -33,6 +33,7 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     
     private ResourceSet resourceSet;
     private URI baseURI;
+    private boolean uninitialized = true;
     
     public RootNamespaceImpl() {
         super();
@@ -42,14 +43,17 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     }
     
     public void initialize() {
-    	if (this.getLibraryDirectory() == null) {
-    		this.setLibraryDirectory("UML/Libraries");
+    	if (this.uninitialized) {
+	    	if (this.getLibraryDirectory() == null) {
+	    		this.setLibraryDirectory("UML/Libraries");
+	    	}
+	        this.getProfileResource("StandardL2.profile");
+	        // this.getLibraryResource("UMLPrimitiveTypes.library");
+	        this.getLibraryResource("fUML.library");
+	        this.getLibraryResource("CollectionClassesImpl.library");
+	        this.getLibraryResource("Alf.library");
+	        this.uninitialized = false;
     	}
-        this.getProfileResource("StandardL2.profile");
-        // this.getLibraryResource("UMLPrimitiveTypes.library");
-        this.getLibraryResource("fUML.library");
-        this.getLibraryResource("CollectionClassesImpl.library");
-        this.getLibraryResource("Alf.library");
     }
     
     public ResourceSet getResourceSet() {
