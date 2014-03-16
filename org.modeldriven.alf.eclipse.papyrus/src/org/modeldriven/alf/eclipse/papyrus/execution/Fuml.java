@@ -15,27 +15,23 @@ import java.util.Map;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
+import org.eclipse.papyrus.moka.fuml.FUMLExecutionEngine;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.FirstChoiceStrategy;
-
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.eclipse.uml2.uml.util.UMLUtil;
-
 import org.modeldriven.alf.eclipse.papyrus.library.channel.StandardInputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.channel.StandardOutputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.ImplementationObject;
 import org.modeldriven.alf.eclipse.units.RootNamespaceImpl;
-
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.execution.Object_;
-
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
@@ -538,6 +534,12 @@ public class Fuml {
 	   }
 
 	   this.setUmlLibraryDirectory("Libraries");
+	   
+	   try {
+		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
+	   } catch (CoreException e) {
+		   e.printStackTrace();
+	   }
    }
 
    public Fuml(String[] args) {
