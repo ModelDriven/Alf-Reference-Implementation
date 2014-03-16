@@ -22,7 +22,8 @@ import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.DataType;
 import org.modeldriven.alf.uml.ElementFactory;
-
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.papyrus.moka.fuml.FUMLExecutionEngine;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.FirstChoiceStrategy;
@@ -107,6 +108,20 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
                     " as " + object.getClass().getName());
         }
     }
+   
+   @Override
+   protected void configure() {
+	   super.configure();
+	   try {
+		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
+	   } catch (CoreException e) {
+		   e.printStackTrace();
+	   }
+   }
+   
+   public Alf() {
+	   super();
+   }
     
    public Alf(String[] args) {
         super(args);
