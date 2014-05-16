@@ -2,7 +2,7 @@ Action Language for UML (Alf) Open Source Implementation
 Licensing Information
 
 Data Access Technologies Inc.(Model Driven Solutions) and Ivar Jacobson 
-International SA are the copyright owner of the source code in this software 
+International SA are the copyright owners of the source code in this software 
 entitled the Action Language for UML (Alf) Open Source Implementation (the 
 "Software"). The copyright owners hereby license such Software to you for use 
 under the GNU General Public License (GPL) version 3 (at 
