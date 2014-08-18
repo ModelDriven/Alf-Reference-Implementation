@@ -17,6 +17,7 @@ import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
+import org.eclipse.uml2.uml.PrimitiveType;
 import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
 
 public class BitStringToOctalStringFunctionBehaviorExecution extends
@@ -32,7 +33,7 @@ public class BitStringToOctalStringFunctionBehaviorExecution extends
     	
     	StringValue result = new StringValue();
     	result.value = Integer.toOctalString(value);
-    	result.type = this.locus.factory.getBuiltInType("String");
+    	result.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
 
         Debug.println("[doBody] BitString ToOctalString result = " + result.value);
 

@@ -12,9 +12,9 @@ package org.modeldriven.alf.eclipse.papyrus.library.channel;
 import org.modeldriven.alf.eclipse.papyrus.library.channel.ChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.OperationExecution;
-
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.BooleanValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
+import org.eclipse.uml2.uml.PrimitiveType;
 
 public abstract class InputChannelObject extends ChannelObject {
 
@@ -30,7 +30,7 @@ public abstract class InputChannelObject extends ChannelObject {
         if (name.equals("hasMore")) {
             BooleanValue hasMoreValue = new BooleanValue();
             hasMoreValue.value = this.hasMore();
-            hasMoreValue.type = this.locus.factory.getBuiltInType("Boolean");
+            hasMoreValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("Boolean");
             execution.setReturnParameterValue(hasMoreValue);
         } else if (name.equals("read")) {
         	Value value = this.read(status);

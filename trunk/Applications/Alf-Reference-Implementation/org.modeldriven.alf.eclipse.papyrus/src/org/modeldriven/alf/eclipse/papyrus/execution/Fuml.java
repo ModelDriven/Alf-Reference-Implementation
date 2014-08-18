@@ -20,6 +20,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.papyrus.moka.fuml.FUMLExecutionEngine;
+import org.eclipse.papyrus.moka.fuml.Semantics.Actions.IntermediateActions.DefaultCreateObjectActionStrategy;
+import org.eclipse.papyrus.moka.fuml.Semantics.Actions.IntermediateActions.DefaultGetAssociationStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.FirstChoiceStrategy;
@@ -82,6 +84,8 @@ public class Fuml {
         factory.setStrategy(new RedefinitionBasedDispatchStrategy());
         factory.setStrategy(new FIFOGetNextEventStrategy());
         factory.setStrategy(new FirstChoiceStrategy());       
+		factory.setStrategy(new DefaultCreateObjectActionStrategy());
+		factory.setStrategy(new DefaultGetAssociationStrategy());
     }
     
     private void addPrimitiveTypes(ResourceSet resourceSet) {

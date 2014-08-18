@@ -12,12 +12,12 @@ package org.modeldriven.alf.eclipse.papyrus.library.channel;
 import org.modeldriven.alf.eclipse.papyrus.library.channel.InputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.OperationExecution;
-
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.BooleanValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IntegerValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.PrimitiveValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.StringValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.UnlimitedNaturalValue;
+import org.eclipse.uml2.uml.PrimitiveType;
 
 public abstract class TextInputChannelObject extends InputChannelObject {
 
@@ -38,7 +38,7 @@ public abstract class TextInputChannelObject extends InputChannelObject {
             String result = this.readCharacter(status);
             if (result != null) {
 	            resultValue = new StringValue();
-	            resultValue.type = this.locus.factory.getBuiltInType("String");
+	            resultValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
 	            ((StringValue)resultValue).value = result;
             }
             this.updateStatus(execution, status);
@@ -46,7 +46,7 @@ public abstract class TextInputChannelObject extends InputChannelObject {
             String result = this.peekCharacter(status);
             if (result != null) {
 	            resultValue = new StringValue();
-	            resultValue.type = this.locus.factory.getBuiltInType("String");
+	            resultValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
 	            ((StringValue)resultValue).value = result;
             }
             this.updateStatus(execution, status);
@@ -54,7 +54,7 @@ public abstract class TextInputChannelObject extends InputChannelObject {
             String result = this.readLine(status);
             if (result != null) {
 	            resultValue = new StringValue();
-	            resultValue.type = this.locus.factory.getBuiltInType("String");
+	            resultValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
 	            ((StringValue)resultValue).value = result;
             }
             this.updateStatus(execution, status);
@@ -62,7 +62,7 @@ public abstract class TextInputChannelObject extends InputChannelObject {
             Integer result = this.readInteger(status);
             if (result != null) {
 	            resultValue = new IntegerValue();
-	            resultValue.type = this.locus.factory.getBuiltInType("Integer");
+	            resultValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("Integer");
 	            ((IntegerValue)resultValue).value = result;
             }
             this.updateStatus(execution, status);
@@ -70,7 +70,7 @@ public abstract class TextInputChannelObject extends InputChannelObject {
             Boolean result = this.readBoolean(status);
             if (result != null) {
 	            resultValue = new BooleanValue();
-	            resultValue.type = this.locus.factory.getBuiltInType("Boolean");
+	            resultValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("Boolean");
 	            ((BooleanValue)resultValue).value = result;
             }
             this.updateStatus(execution, status);
@@ -78,7 +78,7 @@ public abstract class TextInputChannelObject extends InputChannelObject {
             Integer result = this.readUnlimitedNatural(status);
             if (result != null) {
 	            resultValue = new UnlimitedNaturalValue();
-	            resultValue.type = this.locus.factory.getBuiltInType("UnlimitedNatural");
+	            resultValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("UnlimitedNatural");
 	            ((UnlimitedNaturalValue)resultValue).value = result;
             }
             this.updateStatus(execution, status);

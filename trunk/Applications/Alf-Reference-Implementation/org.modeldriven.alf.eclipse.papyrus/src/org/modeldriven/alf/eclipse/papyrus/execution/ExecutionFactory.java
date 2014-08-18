@@ -33,8 +33,9 @@ public class ExecutionFactory implements org.modeldriven.alf.fuml.execution.Exec
     @Override
     public List<PrimitiveType> getBuiltInTypes() {
         List<PrimitiveType> builtInTypes = new ArrayList<PrimitiveType>();
-        for (org.eclipse.uml2.uml.PrimitiveType type: this.getBase().builtInTypes) {
-            builtInTypes.add(new org.modeldriven.alf.eclipse.uml.PrimitiveType(type));
+        for (org.eclipse.uml2.uml.Type type: this.getBase().builtInTypes) {
+            builtInTypes.add(new org.modeldriven.alf.eclipse.uml.PrimitiveType(
+            		(org.eclipse.uml2.uml.PrimitiveType)type));
         }
         return builtInTypes;
     }

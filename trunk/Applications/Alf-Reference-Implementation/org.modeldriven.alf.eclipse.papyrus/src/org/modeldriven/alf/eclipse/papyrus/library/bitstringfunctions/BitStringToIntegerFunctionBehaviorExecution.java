@@ -16,6 +16,7 @@ import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
+import org.eclipse.uml2.uml.PrimitiveType;
 import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
 
 public class BitStringToIntegerFunctionBehaviorExecution extends
@@ -31,7 +32,7 @@ public class BitStringToIntegerFunctionBehaviorExecution extends
     	
     	IntegerValue result = new IntegerValue();
     	result.value = value;
-    	result.type = this.locus.factory.getBuiltInType("Integer");
+    	result.type = (PrimitiveType) this.locus.factory.getBuiltInType("Integer");
 
         Debug.println("[doBody] BitString ToInteger result = " + result.value);
 

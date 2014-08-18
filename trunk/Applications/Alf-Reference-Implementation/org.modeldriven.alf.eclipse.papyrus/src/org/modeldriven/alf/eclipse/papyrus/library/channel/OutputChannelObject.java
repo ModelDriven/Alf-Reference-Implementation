@@ -12,9 +12,9 @@ package org.modeldriven.alf.eclipse.papyrus.library.channel;
 import org.modeldriven.alf.eclipse.papyrus.library.channel.ChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.OperationExecution;
-
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.BooleanValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
+import org.eclipse.uml2.uml.PrimitiveType;
 
 public abstract class OutputChannelObject extends ChannelObject {
 
@@ -31,7 +31,7 @@ public abstract class OutputChannelObject extends ChannelObject {
         } else if (name.equals("isFull")) {
             BooleanValue isFullValue = new BooleanValue();
             isFullValue.value = this.isFull();
-            isFullValue.type = this.locus.factory.getBuiltInType("Boolean");
+            isFullValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("Boolean");
             execution.setReturnParameterValue(isFullValue);
         } else {
             super.execute(execution);

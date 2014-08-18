@@ -56,8 +56,8 @@ public class Status {
 	}
 	
 	private void setPrimitiveTypes(Locus locus) {
-		this.stringType = locus.factory.getBuiltInType("String");
-		this.integerType = locus.factory.getBuiltInType("Integer");
+		this.stringType = (PrimitiveType) locus.factory.getBuiltInType("String");
+		this.integerType = (PrimitiveType) locus.factory.getBuiltInType("Integer");
 	}
 	
 	public boolean isNormal() {

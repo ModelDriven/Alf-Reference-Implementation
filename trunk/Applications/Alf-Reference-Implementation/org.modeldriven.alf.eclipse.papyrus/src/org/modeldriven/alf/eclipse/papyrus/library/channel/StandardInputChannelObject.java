@@ -14,9 +14,9 @@ import java.io.InputStreamReader;
 
 import org.modeldriven.alf.eclipse.papyrus.library.channel.TextInputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
-
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.StringValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
+import org.eclipse.uml2.uml.PrimitiveType;
 
 public class StandardInputChannelObject extends TextInputChannelObject {
 	
@@ -73,7 +73,7 @@ public class StandardInputChannelObject extends TextInputChannelObject {
 		if (s != null) {
 			v = new StringValue();
 			v.value = s;
-			v.type = this.locus.factory.getBuiltInType("String");
+			v.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
 		}
 		return v;
 	}
@@ -85,7 +85,7 @@ public class StandardInputChannelObject extends TextInputChannelObject {
 		if (s != null) {
 			v = new StringValue();
 			v.value = s;
-			v.type = this.locus.factory.getBuiltInType("String");
+			v.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
 		}
 		return v;
 	}

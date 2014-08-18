@@ -12,13 +12,13 @@ package org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions;
 import java.util.List;
 
 import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
-
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.BooleanValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IntegerValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
+import org.eclipse.uml2.uml.PrimitiveType;
 
 public class BitStringIsSetFunctionBehaviorExecution extends
         OpaqueBehaviorExecution {
@@ -35,7 +35,7 @@ public class BitStringIsSetFunctionBehaviorExecution extends
     	
     	BooleanValue result = new BooleanValue();
     	result.value = n >= 0 && ((b >> n) & 1) == 1;
-    	result.type = this.locus.factory.getBuiltInType("Boolean");
+    	result.type = (PrimitiveType) this.locus.factory.getBuiltInType("Boolean");
 
         Debug.println("[doBody] BitString IsSet result = " + result.value);
 
