@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2014 Ivar Jacobson International SA
+ * Copyright 2013-2014 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -25,6 +24,8 @@ import org.modeldriven.alf.uml.DataType;
 import org.modeldriven.alf.uml.ElementFactory;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.papyrus.moka.fuml.FUMLExecutionEngine;
+import org.eclipse.papyrus.moka.fuml.Semantics.Actions.IntermediateActions.DefaultCreateObjectActionStrategy;
+import org.eclipse.papyrus.moka.fuml.Semantics.Actions.IntermediateActions.DefaultGetAssociationStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.FirstChoiceStrategy;
@@ -46,6 +47,8 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
         factory.setStrategy(new RedefinitionBasedDispatchStrategy());
         factory.setStrategy(new FIFOGetNextEventStrategy());
         factory.setStrategy(new FirstChoiceStrategy());       
+		factory.setStrategy(new DefaultCreateObjectActionStrategy());
+		factory.setStrategy(new DefaultGetAssociationStrategy());
         
         return locus;
     }

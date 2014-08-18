@@ -12,12 +12,12 @@ package org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions;
 import java.util.List;
 
 import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
-
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IntegerValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
+import org.eclipse.uml2.uml.PrimitiveType;
 
 public class BitStringBitLengthFunctionBehaviorExecution extends
         OpaqueBehaviorExecution {
@@ -29,7 +29,7 @@ public class BitStringBitLengthFunctionBehaviorExecution extends
 
     	IntegerValue result = new IntegerValue();
     	result.value = Integer.SIZE;
-    	result.type = this.locus.factory.getBuiltInType("Integer");
+    	result.type = (PrimitiveType) this.locus.factory.getBuiltInType("Integer");
 
         Debug.println("[doBody] BitString BitLength result = " + result.value);
 

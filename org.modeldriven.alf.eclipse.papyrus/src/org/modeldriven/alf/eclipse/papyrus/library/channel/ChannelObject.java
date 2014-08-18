@@ -12,9 +12,9 @@ package org.modeldriven.alf.eclipse.papyrus.library.channel;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.ImplementationObject;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.OperationExecution;
-
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.BooleanValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.StringValue;
+import org.eclipse.uml2.uml.PrimitiveType;
 
 public abstract class ChannelObject extends ImplementationObject {
 	
@@ -49,7 +49,7 @@ public abstract class ChannelObject extends ImplementationObject {
         if (name.equals("getName")) {
             StringValue nameValue = new StringValue();
             nameValue.value = this.getName();
-            nameValue.type = this.locus.factory.getBuiltInType("String");
+            nameValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
             execution.setReturnParameterValue(nameValue);
         } else if (name.equals("open")) {
             this.open(status);
@@ -60,7 +60,7 @@ public abstract class ChannelObject extends ImplementationObject {
         } else if (name.equals("isOpen")) {
             BooleanValue isOpenValue = new BooleanValue();
             isOpenValue.value = this.isOpen();
-            isOpenValue.type = this.locus.factory.getBuiltInType("Boolean");
+            isOpenValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("Boolean");
             execution.setReturnParameterValue(isOpenValue);
         } else if (name.equals("getStatus")) {
         	Status result = this.getStatus();        	
