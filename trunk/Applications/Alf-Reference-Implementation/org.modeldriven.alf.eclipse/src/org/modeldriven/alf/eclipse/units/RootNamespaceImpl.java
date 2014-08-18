@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2014 Ivar Jacobson International SA
+ * Copyright 2013-2014 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -49,7 +48,7 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
 	    	if (this.getLibraryDirectory() == null) {
 	    		this.setLibraryDirectory("UML/Libraries");
 	    	}
-	        this.getProfileResource("StandardL2.profile");
+	        this.getProfileResource("Standard.profile");
 	        // this.getLibraryResource("UMLPrimitiveTypes.library");
 	        this.getLibraryResource("fUML.library");
 	        this.getLibraryResource("CollectionClassesImpl.library");
@@ -68,9 +67,15 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     }
     
     public URI createURI(String directory, String name) {
-        return URI.createURI(directory).
-                appendSegment(name).
-                appendFileExtension(UMLResource.FILE_EXTENSION);
+    	String path;
+    	if (directory == null) {
+    		path = "/";
+    	} else if (directory.endsWith("/")) {
+    		path = directory + name;
+    	} else {
+    		path = directory + "/" + name;
+    	}   	
+        return URI.createURI(path).appendFileExtension(UMLResource.FILE_EXTENSION);
     }
     
     public Resource createResource(String directory, String name) {
