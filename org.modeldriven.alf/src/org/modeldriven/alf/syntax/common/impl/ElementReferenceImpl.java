@@ -91,6 +91,7 @@ public abstract class ElementReferenceImpl {
 	public abstract boolean isDataType();
 	public abstract boolean isBehavior();
 	public abstract boolean isActivity();
+	public abstract boolean isMethod();
     public abstract boolean isEnumeration();
     public abstract boolean isPrimitive();
     public abstract boolean isSignal();
@@ -133,6 +134,7 @@ public abstract class ElementReferenceImpl {
     public abstract List<FormalParameter> getParameters();
     public abstract FormalParameter getReturnParameter();
     public abstract List<ElementReference> getMethods();
+    public abstract ElementReference getSpecification(); // Note: An Operation is considered its own specification.
     public abstract List<ElementReference> getTemplateParameters();
     public abstract List<ElementReference> getTemplateActuals();
     public abstract ElementReference getParameteredElement();
