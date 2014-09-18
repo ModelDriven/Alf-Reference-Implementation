@@ -175,6 +175,12 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public boolean isActivity() {
         return this.getSelf().getElement() instanceof Activity;
     }
+    
+    @Override
+    public boolean isMethod() {
+        return this.isBehavior() &&
+                ((Behavior)this.getSelf().getElement()).getSpecification() != null;
+    }
 
     @Override
     public boolean isEnumeration() {
@@ -436,8 +442,10 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public List<ElementReference> getAttributes() {
         List<ElementReference> attributes = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
-            for (Property attribute: ((Classifier)this.getSelf().getElement()).getAttribute()) {
-                attributes.add(ElementReferenceImpl.makeElementReference(attribute));
+            for (NamedElement member: ((Classifier)this.getSelf().getElement()).getMember()) {
+                if (member instanceof Property) {
+                    attributes.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
+                }
             }
         }
         return attributes;
@@ -515,6 +523,19 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
         return methods;
+    }
+    
+    @Override
+    public ElementReference getSpecification() {
+        if (this.isOperation()) {
+            return this.getSelf();
+        } else if (this.isBehavior()) {
+            return ElementReferenceImpl.makeElementReference(
+                    ((Behavior)this.getSelf().getElement()).getSpecification(), 
+                    this.namespace);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -700,17 +721,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public ElementReference getClassifierBehavior() {
         Element element = this.getSelf().getElement();
-        if (!(element instanceof BehavioredClassifier)) {
-            return null;
-        } else {
-             Behavior behavior =((BehavioredClassifier)element).
-                     getClassifierBehavior();
-             if (behavior == null) {
-                 return null;
-             } else {
-                 return ElementReferenceImpl.makeElementReference(behavior);
-             }
-        }
+        return !(element instanceof BehavioredClassifier)? null:
+            ElementReferenceImpl.makeElementReference(
+                    ((BehavioredClassifier)element).getClassifierBehavior());
     }
 
     @Override
@@ -755,11 +768,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public ElementReference getActiveClass() {
-        if (!this.isActivity()) {
+        if (!this.isBehavior()) {
             return null;
         } else {
             ExternalElementReference self = this.getSelf();
-            Activity element = (Activity)self.getElement();
+            Behavior element = (Behavior)self.getElement();
             if (element.getIsActive()) {
                 return self;
             } else {
