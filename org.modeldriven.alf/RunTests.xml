@@ -171,6 +171,9 @@
             <param name="file" value="ActiveClass_Receptions" />
         </antcall>
         <antcall target="run-test">
+            <param name="file" value="Activity_constructor" />
+        </antcall>
+        <antcall target="run-test">
             <param name="file" value="Activity_execute" />
         </antcall>
         <antcall target="run-test">
