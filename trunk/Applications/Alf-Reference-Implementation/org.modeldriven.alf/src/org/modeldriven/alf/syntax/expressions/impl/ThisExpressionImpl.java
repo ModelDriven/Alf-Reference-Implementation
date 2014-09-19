@@ -41,30 +41,9 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	                                    this.currentScope.getImpl().getReferent();
 	    if (context == null) {
 	        return null;
-	    } else if (context.getImpl().isOperation()) {
+	    } else if (context.getImpl().isOperation() || context.getImpl().isMethod()) {
 	        return context.getImpl().getNamespace();
-	    } else if (context.getImpl().isActivity()) {
-	        // Check if the context is an that activity definition is the 
-	        // subunit of a stub operation.
-	        // NOTE: This will also work in the case in which the activity
-	        // definition provides the textual definition of an external
-	        // operation.
-	        ElementReference stub = 
-	                context.getImpl().asNamespace().getImpl().getStubReference();
-	        if (stub != null) {
-	            context = stub;
-	            if (context.getImpl().isOperation()) {
-	                return context.getImpl().getNamespace();
-	            }
-	        }
-	        
-	        // Check if the context activity is the classifier behavior of an
-	        // active class.
-	        // NOTE: If the activity is a subunit, then the context will now be
-	        // the stub for that subunit. This ensures that getActiveClass
-	        // works even if the "stub" is an external activity for which the
-	        // original context activity definition provides a textual 
-	        // definition.
+	    } else if (context.getImpl().isBehavior()) {
 	        ElementReference activeClass = context.getImpl().getActiveClass();
 	        return activeClass != null? activeClass: context;
 	    } else if (context.getImpl().isClass()) {
