@@ -701,6 +701,14 @@ Parsed Models/Ordering1/Customer.alf
 Parsed Models/Ordering1/ProductSelection.alf
 Parsed Models/Ordering1/Order/Order_Behavior.alf
 No constraint violations.
+Activity_constructor...
+Alf v1.0 Parser
+Parsed tests/Activity_constructor.alf
+Parsed Models/ConstructorInSubunit.alf
+Parsed Models/ConstructorInSubunit/constructor.alf
+Resolved stub for ConstructorInSubunit::constructor
+Parsed Models/Super.alf
+No constraint violations.
 Activity_execute...
 Alf v1.0 Parser
 Parsed tests/Activity_execute.alf
