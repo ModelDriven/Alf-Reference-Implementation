@@ -16,6 +16,8 @@ import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Namespace;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.Element;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
@@ -26,7 +28,7 @@ import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
 public class ModelNamespaceImpl extends  
 	org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl {
 	
-	Namespace contextNamespace = null;	
+	Namespace contextNamespace = null;
     
     public ModelNamespaceImpl(ModelNamespace self) {
         super(self);
@@ -59,6 +61,12 @@ public class ModelNamespaceImpl extends
     @Override
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
         return RootNamespace.resolve(qualifiedName);
+    }
+    
+    @Override
+    public ElementReference getReferent() {
+    	return ElementReferenceImpl.makeElementReference(
+    			org.modeldriven.alf.eclipse.uml.Element.wrap(this.contextNamespace));
     }
 
 }
