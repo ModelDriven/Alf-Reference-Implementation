@@ -190,7 +190,8 @@ public class SuperInvocationExpressionImpl
         } else {
             // Note: This will work, even if the operation definition is not an
             // Alf unit.
-            ElementReference operation = currentScope.getImpl().getReferent();
+            ElementReference operation = 
+                    currentScope.getImpl().getReferent().getImpl().getSpecification();
             if (!operation.getImpl().isConstructor() || this.enclosingBlock == null || 
                     this.enclosingBlock.getImpl().hasEnclosingStatement()) {
                 return false;
@@ -288,7 +289,7 @@ public class SuperInvocationExpressionImpl
         NamespaceDefinition currentScope = this.getCurrentScope();
 	    if (this.context == null && currentScope != null) {
 	        this.context = currentScope.getImpl().getReferent().getImpl();
-            if (!context.isClassifier()) {
+            if (!this.context.isClassifier() || this.context.isMethod()) {
                 NamespaceDefinition outerScope = currentScope.getImpl().getOuterScope();
                 if (outerScope == null) {
                     this.context = null;
