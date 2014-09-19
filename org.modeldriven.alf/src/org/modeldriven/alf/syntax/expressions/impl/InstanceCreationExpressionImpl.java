@@ -119,7 +119,8 @@ public class InstanceCreationExpressionImpl
                     constructor = constructor.getImpl().copy().addName(name);
     	            for (ElementReference member: 
     	                classReferent.getImpl().getOwnedMembers()) {
-    	                if (name.equals(member.getImpl().getName())) {
+    	                if (name.equals(member.getImpl().getName()) &&
+    	                        member.getImpl().isOperation()) {
     	                    if (operationReferent != null) {
     	                        operationReferent = null;
     	                        break;
