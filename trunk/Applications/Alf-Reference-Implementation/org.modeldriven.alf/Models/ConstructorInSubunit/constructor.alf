@@ -1,0 +1,4 @@
+namespace ConstructorInSubunit;
+activity constructor() {
+	super();
+}
