@@ -1,0 +1,4 @@
+private import Super;
+class ConstructorInSubunit specializes Super {
+    @Create constructor();
+}
