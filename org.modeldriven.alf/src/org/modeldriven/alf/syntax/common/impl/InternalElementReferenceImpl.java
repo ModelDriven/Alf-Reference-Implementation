@@ -127,6 +127,12 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public boolean isMethod() {
+        return this.isActivity() && 
+                ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getStub() != null;
+    }
+    
+    @Override
     public boolean isEnumeration() {
         return this.getSelf().getElement() instanceof EnumerationDefinition;
     }
@@ -424,6 +430,18 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public ElementReference getSpecification() {
+        if (this.isOperation()) {
+            return this.getSelf();
+        } else if (this.isBehavior()) {
+            Member stub = ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getStub();
+            return stub == null? null: stub.getImpl().getReferent();
+        } else {
+            return null;
+        }
+    }
+    
+    @Override
     public List<ElementReference> getTemplateParameters() {
         List<ElementReference> members = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
@@ -568,9 +586,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         if (!(element instanceof ActivityDefinition)) {
             return null;
         } else {
-            ElementReference namespace = ((ActivityDefinition)element).getImpl().
-                                                        getNamespaceReference();
-            if (namespace != null && namespace.getImpl().isActiveClass() &&
+            ElementReference namespace = 
+                   ((ActivityDefinition)element).getImpl().getNamespaceReference();
+            if (namespace != null &&
                    this.equals(namespace.getImpl().getClassifierBehavior())) {
                 return namespace;
             } else {
