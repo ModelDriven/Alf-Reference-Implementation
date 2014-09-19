@@ -449,7 +449,7 @@ public class RootNamespace extends ModelNamespace {
     
     public static ElementReference getStandardProfile() {
         if (standardProfile == null) {
-            QualifiedName name = new QualifiedName().getImpl().addName("StandardProfileL2");
+            QualifiedName name = new QualifiedName().getImpl().addName("StandardProfile");
             name.getImpl().setCurrentScope(getRootScope());
             ElementReference namespace = name.getImpl().getNamespaceReferent();
             if (namespace != null && namespace.getImpl().isProfile()) {
