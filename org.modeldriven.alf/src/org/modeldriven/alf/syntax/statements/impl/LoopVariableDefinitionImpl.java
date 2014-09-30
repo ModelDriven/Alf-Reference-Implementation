@@ -211,7 +211,9 @@ public class LoopVariableDefinitionImpl extends
 	        Expression expression = self.getExpression1();
 	        return expression == null? null: expression.getType();
 	    } else {
-	        return typeName == null? null: typeName.getImpl().getClassifierReferent();
+	        QualifiedName typeName = this.getTypeName();
+	        return typeName == null? null: 
+	            typeName.getImpl().getNonTemplateClassifierReferent();
 	    }
 	}
 
@@ -377,8 +379,12 @@ public class LoopVariableDefinitionImpl extends
 
     public void setCurrentScope(NamespaceDefinition currentScope) {
         LoopVariableDefinition self = this.getSelf();
+        QualifiedName typeName = this.getTypeName();
         Expression expression1 = self.getExpression1();
         Expression expression2 = self.getExpression2();
+        if (typeName != null) {
+            typeName.getImpl().setCurrentScope(currentScope);
+        }
         if (expression1 != null) {
             expression1.getImpl().setCurrentScope(currentScope);
         }

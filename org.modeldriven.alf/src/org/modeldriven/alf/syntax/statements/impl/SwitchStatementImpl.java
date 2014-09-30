@@ -103,7 +103,7 @@ public class SwitchStatementImpl extends StatementImpl {
 
 	public Boolean getIsDeterminate() {
 		if (this.isDeterminate == null) {
-			this.setIsDeterminate(this.deriveIsDetermined());
+			this.setIsDeterminate(this.deriveIsDeterminate());
 		}
 		return this.isDeterminate;
 	}
@@ -120,10 +120,10 @@ public class SwitchStatementImpl extends StatementImpl {
 	}
 
     /**
-     * An switch statement is determined if it has an @determined annotation.
+     * An switch statement is determinate if it has an @determined annotation.
      **/
-	protected Boolean deriveIsDetermined() {
-		return this.hasAnnotation("determined");
+	protected Boolean deriveIsDeterminate() {
+		return this.hasAnnotation("determinate");
 	}
 	
     /**
@@ -287,23 +287,7 @@ public class SwitchStatementImpl extends StatementImpl {
 	public boolean switchStatementExpression() {
         SwitchStatement self = this.getSelf();
         Expression expression = self.getExpression();
-        if (expression == null || expression.getUpper() > 1) {
-            return false;
-        } else {
-            /*
-             * The case expressions of a switch statement must all have a
-             * multiplicity no greater than 1.
-             * (This should really be a constraint on SwitchClause.)
-             */
-            for (SwitchClause clause: self.getNonDefaultClause()) {
-                for (Expression caseExpression: clause.getCase()) {
-                    if (caseExpression.getUpper() > 1) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
+        return expression != null && expression.getUpper() <= 1;
 	}
 
 	public boolean switchStatementEnclosedStatements() {

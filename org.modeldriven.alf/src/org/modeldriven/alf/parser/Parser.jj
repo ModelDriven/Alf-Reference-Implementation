@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -9,8 +9,8 @@
 
  /*
    Parser for the 
-   Action Language for Foundational UML (Alf) v1.0
-   Revision 1
+   Action Language for Foundational UML (Alf) v1.0.1
+   Revision 1.1
 
    with construction of an Abstract Syntax Tree
    as an instance of the Alf Abstract Syntax model
@@ -2315,7 +2315,7 @@ LoopVariableDefinition LoopVariableDefinition():
   ( LOOKAHEAD(2)
     n = Name() <IN> e1 = Expression() [ <DOUBLE_DOT> e2 = Expression() ]
   | q = QualifiedName() n = Name() <COLON> e1 = Expression()
-    { d.setTypeIsInferred(true); }
+    { d.setTypeIsInferred(false); }
   )
   
   { d.setVariable(n);
