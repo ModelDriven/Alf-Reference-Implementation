@@ -84,7 +84,7 @@ public class IfStatementImpl extends StatementImpl {
 
 	public Boolean getIsDeterminate() {
 		if (this.isDeterminate == null) {
-			this.setIsDeterminate(this.deriveIsDetermined());
+			this.setIsDeterminate(this.deriveIsDeterminate());
 		}
 		return this.isDeterminate;
 	}
@@ -101,10 +101,10 @@ public class IfStatementImpl extends StatementImpl {
 	}
 
     /**
-     * An if statement is determined if it has an @determined annotation.
+     * An if statement is determinate if it has an @determinate annotation.
      **/
-	protected Boolean deriveIsDetermined() {
-		return this.hasAnnotation("determined");
+	protected Boolean deriveIsDeterminate() {
+		return this.hasAnnotation("determinate");
 	}
 	
     /**
@@ -256,13 +256,13 @@ public class IfStatementImpl extends StatementImpl {
 
 	/**
 	 * In addition to an @isolated annotation, an if statement may have @assured
-	 * and @determined annotations. They may not have arguments.
+	 * and @determinate annotations. They may not have arguments.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
 	    String identifier = annotation.getIdentifier();
 		return super.annotationAllowed(annotation) ||
 		            (identifier.equals("assured") || 
-		                    identifier.equals("determined")) &&
+		                    identifier.equals("determinate")) &&
 		             annotation.getArgument().isEmpty();
 	} // annotationAllowed
 	

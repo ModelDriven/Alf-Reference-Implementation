@@ -58,7 +58,7 @@ active class Statements_For_Looping {
   	    sum = sum + j;
   	  }
   	  
-  	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges, Token token: tokens) {
+  	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges, Integer token: tokens) {
   	    outgoingEdge.sendOffer(token);
   	  }
   	  

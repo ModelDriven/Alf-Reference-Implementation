@@ -519,17 +519,9 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     }
     
     public ElementReference getNonTemplateClassifierReferent() {
-        ElementReference classifier = null;
-        for (ElementReference referent: this.getSelf().getReferent()) {
-            if (referent.getImpl().isClassifier() && 
-                    !referent.getImpl().isTemplate()) {
-                if (classifier != null) {
-                    return null;
-                }
-                classifier = referent;
-            }
-        }
-        return classifier;
+        ElementReference classifier = this.getClassifierReferent();
+        return classifier == null || classifier.getImpl().isTemplate()? 
+                null: classifier;
     }
 
     public ElementReference getNamespaceReferent() {

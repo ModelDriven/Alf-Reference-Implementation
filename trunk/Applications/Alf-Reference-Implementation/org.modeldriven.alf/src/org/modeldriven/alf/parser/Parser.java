@@ -3141,7 +3141,7 @@ public class Parser implements ParserConstants {
         n = Name();
         jj_consume_token(COLON);
         e1 = Expression();
-      d.setTypeIsInferred(true);
+      d.setTypeIsInferred(false);
         break;
       default:
         jj_la1[86] = jj_gen;

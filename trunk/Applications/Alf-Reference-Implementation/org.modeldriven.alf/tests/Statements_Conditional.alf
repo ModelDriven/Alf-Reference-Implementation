@@ -32,7 +32,7 @@ class Statements_Conditional {
 	     monitor.raiseAlarm(sensorId); 
 	  }
 	  
-	  //@determined @assured
+	  //@determinate @assured
 	  if (reading <= safeLimit) {
 	    condition = Condition::normal; }
 	  or if (reading > safeLimit && reading <= criticalLimit) {
