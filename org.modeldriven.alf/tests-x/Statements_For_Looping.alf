@@ -24,7 +24,7 @@ active class Statements_For_Looping {
 	//**************************************************************************
 
     public test(
-    	out readings: Integer[*], out sum: Integer,
+    	out readings: Integer[*], out sum1: Integer,
     	out outgoingEdges: ActivityEdgeInstance[*],
     	out SnEven: Integer[*], out SnOdd: Integer[*]) {
     
@@ -57,6 +57,7 @@ active class Statements_For_Looping {
   	  for (j in 1..recordCount) {
   	    sum = sum + j;
   	  }
+  	  sum1 = sum;
   	  
   	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges, Integer token: tokens) {
   	    outgoingEdge.sendOffer(token);
