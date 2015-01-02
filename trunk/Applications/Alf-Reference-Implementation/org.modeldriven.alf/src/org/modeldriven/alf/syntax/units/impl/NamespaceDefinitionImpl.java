@@ -1,7 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2013 Ivar Jacobson International
+ * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -328,13 +327,10 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     public Collection<ElementReference> resolveAssociationEnd
         (ElementReference oppositeEndType, String name) {
         Collection<ElementReference> referents = new ArrayList<ElementReference>();
-        Collection<ElementReferenceImpl> associations = 
-            new ArrayList<ElementReferenceImpl>();
         for (Member member: this.getSelf().getMember()) {
             ElementReferenceImpl referent = 
                 member.getImpl().getReferent().getImpl();
             if (referent.isAssociation()) {
-                associations.add(referent);
                 List<ElementReference> associationEnds = 
                     referent.getAssociationEnds();
                 if (associationEnds.size() == 2) {
@@ -391,14 +387,18 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         if (definition != null) {
             for (Object object: this.getSelf().getOwnedMember().toArray()) {
                 Member member = (Member)object;
-                String name = member.getName();
-                if (name != null && name.equals(definition.getName()) && 
+                if (this.matchNameForStub(member, definition) && 
                         member.getIsStub() && member.matchForStub(unit)) {
                     return member;
                 }
             }
         }
         return null;
+    }
+    
+    protected Boolean matchNameForStub(Member stub, NamespaceDefinition definition) {
+        String stubName = stub.getName();
+        return stubName != null && stubName.equals(definition.getName());
     }
     
     
