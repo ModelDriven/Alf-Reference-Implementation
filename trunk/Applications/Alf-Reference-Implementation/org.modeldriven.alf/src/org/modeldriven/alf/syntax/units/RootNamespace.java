@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -33,8 +33,6 @@ public class RootNamespace extends ModelNamespace {
     private static QualifiedName sequenceFunctions = null;
     private static QualifiedName collectionFunctions = null;
     private static QualifiedName collectionClasses = null;
-    
-    private static QualifiedName umlPrimitiveTypes = null;
     
     private static ElementReference booleanType = null;
     private static ElementReference integerType = null;
@@ -160,18 +158,9 @@ public class RootNamespace extends ModelNamespace {
         return collectionClasses;
     }
     
-    public static QualifiedName getUmlPrimitiveTypes() {
-        if (umlPrimitiveTypes == null) {
-            umlPrimitiveTypes = new QualifiedName();
-            umlPrimitiveTypes = umlPrimitiveTypes.getImpl().addName("PrimitiveTypes");
-            umlPrimitiveTypes.getImpl().setCurrentScope(getRootScope());
-        }
-        return umlPrimitiveTypes;
-    }
-
    public static ElementReference getBooleanType() {
         if (booleanType == null) {
-            booleanType = getUmlPrimitiveTypes().getImpl().copy().
+            booleanType = getPrimitiveTypes().getImpl().copy().
                             addName("Boolean").getImpl().getClassifierReferent();
         }
         return booleanType;
@@ -179,7 +168,7 @@ public class RootNamespace extends ModelNamespace {
 
     public static ElementReference getIntegerType() {
         if (integerType == null) {
-            integerType = getUmlPrimitiveTypes().getImpl().copy().
+            integerType = getPrimitiveTypes().getImpl().copy().
                             addName("Integer").getImpl().getClassifierReferent();
         }
         return integerType;
@@ -187,7 +176,7 @@ public class RootNamespace extends ModelNamespace {
 
     public static ElementReference getStringType() {
         if (stringType == null) {
-            stringType = getUmlPrimitiveTypes().getImpl().copy().
+            stringType = getPrimitiveTypes().getImpl().copy().
                             addName("String").getImpl().getClassifierReferent();
         }
         return stringType;
@@ -195,7 +184,7 @@ public class RootNamespace extends ModelNamespace {
 
     public static ElementReference getUnlimitedNaturalType() {
         if (unlimitedNaturalType == null) {
-            unlimitedNaturalType = getUmlPrimitiveTypes().getImpl().copy().
+            unlimitedNaturalType = getPrimitiveTypes().getImpl().copy().
                             addName("UnlimitedNatural").getImpl().getClassifierReferent();
         }
         return unlimitedNaturalType;
