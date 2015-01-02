@@ -1,0 +1,14 @@
+namespace AsyncCreation::Request;
+
+active class Creator {
+   
+  public receive signal Submission { 
+    public client : String; 
+  }
+  
+} do {
+  while (true) {
+    accept (submission : Submission);
+    new Request(submission.client);
+  }
+}

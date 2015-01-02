@@ -1,0 +1,20 @@
+namespace AsyncCreation;
+
+active class Client {
+
+  public name : String = "Test";
+  
+  receive signal Continue { }
+
+} do {
+
+  WriteLine("[Client] Submitting request...\n");
+  Request::creator().Submission(this.name);
+  
+  WriteLine("[Client] Waiting to continue...\n");
+  accept (Continue);
+  
+  WriteLine("[Client] Validating request...\n");
+  Request->select request (request.client == "Test").Validated();
+  
+}
