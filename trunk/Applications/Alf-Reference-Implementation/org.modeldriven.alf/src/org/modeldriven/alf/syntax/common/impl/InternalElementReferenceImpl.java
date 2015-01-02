@@ -128,9 +128,22 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean isMethod() {
-        return this.isActivity() && 
-                ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getStub() != null;
-    }
+        if (!this.isActivity())
+            return false;
+        else {
+            Member stub = ((NamespaceDefinition)this.getSelf().getElement()).
+                    getImpl().getStub();
+            ElementReference referent = stub == null? null: 
+                stub.getImpl().getReferent();
+            return referent != null && 
+                    (referent.getImpl().isOperation() || 
+                        referent.getImpl().isActiveBehavior() ||
+                        // Note: The case of a property covers the use of an
+                        // activity definition to define the default value of
+                        // an external property.
+                        referent.getImpl().isProperty());
+        }
+     }
     
     @Override
     public boolean isEnumeration() {
