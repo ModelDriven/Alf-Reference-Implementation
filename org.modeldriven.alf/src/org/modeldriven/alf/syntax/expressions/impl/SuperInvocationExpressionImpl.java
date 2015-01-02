@@ -153,9 +153,6 @@ public class SuperInvocationExpressionImpl
 	    } else {
 	        ElementReference superclass = qualification.getImpl().getClassifierReferent();
 	        ElementReferenceImpl context = this.getContext();
-	        if (!(superclass != null && context != null &&
-                    superclass.getImpl().isContainedIn(context.parents()))) {
-	        }
 	        return superclass != null && context != null &&
 	                    superclass.getImpl().isContainedIn(context.parents());
         }
