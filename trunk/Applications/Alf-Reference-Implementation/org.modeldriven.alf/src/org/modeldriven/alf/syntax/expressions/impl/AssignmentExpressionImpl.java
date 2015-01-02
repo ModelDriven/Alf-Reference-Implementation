@@ -199,8 +199,6 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      * assignment expression. If the assignment is a definition, then the type
      * is given by the right hand side, the multiplicity upper bound is 1 if the
      * upper bound of the right hand side is 1 and otherwise * and the
-     * multiplicity lower bound is 0. Otherwise, the type and multiplicity are
-     * the same as the left hand side.
      * multiplicity lower bound is 0. Otherwise, the type is the same as the
      * left-hand side and the multiplicity is also the same as the left-hand
      * side, if the left-hand side is not indexed, and is * if it is indexed.
