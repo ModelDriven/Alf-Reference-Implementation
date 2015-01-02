@@ -1,0 +1,31 @@
+namespace AsyncCreation;
+
+active class Request {
+  
+  public activity creator() : Creator {
+    if (Creator->isEmpty()) {
+      new Creator();
+    }
+    return Creator->at(1);
+  }
+  
+  private active class Creator;
+  
+  public client : String;
+  
+  @Create private Request(in client: String) {
+    this.client = client;  
+  }
+  
+  public receive signal Validated { }
+  
+} do {
+  WriteLine("[Request] 1. Submitted");
+  WriteLine("[Request] client = " + this.client);
+  WriteLine("");
+  
+  Client->select client (client.name == this.client).Continue();
+  
+  accept (Validated);  
+  WriteLine("[Request] 2. Open");
+}

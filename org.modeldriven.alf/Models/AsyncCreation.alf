@@ -1,0 +1,10 @@
+active class AsyncCreation {
+
+  private active class Client;
+  private active class Request;
+  
+} do {
+
+  new Client();
+  
+}
