@@ -1,7 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2013 Ivar Jacobson International
+ * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -67,11 +66,13 @@ public class ImportedMemberImpl extends MemberImpl {
         } else if (this.isImported()) {
             return false;
         } else {
-            // Consider an external operation or activity to be a stub, since
-            // they can be specified using Alf subunits.
+            // Consider an external operation, activity or property (default
+            // value) to be a stub, since they can be specified using Alf 
+            // subunits.
             ElementReference referent = this.getReferent();
             return referent.getImpl().isOperation() || 
-                    referent.getImpl().isActivity();
+                    referent.getImpl().isActivity() ||
+                    referent.getImpl().isProperty();
         }
     }
     
@@ -174,9 +175,10 @@ public class ImportedMemberImpl extends MemberImpl {
 	} // isSameKindAst
 	
 	/**
-	 * Allow an external operation or active behavior (activity) to serve as the
-	 * "stub" for an activity definition. (Note that the names are already
-	 * assumed to match.)
+	 * Allow an external operation, active behavior (activity) or property to 
+	 * serve as the "stub" for an activity definition. The names are assumed to
+	 * already match. (Note: The case of a property covers the use of an 
+	 * activity definition to define the default value of an external property.)
 	 */
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
@@ -184,7 +186,8 @@ public class ImportedMemberImpl extends MemberImpl {
 	    return !this.isImported() && 
 	            unit.getDefinition() instanceof ActivityDefinition &&
 	            (referent.getImpl().isOperation() || 
-	                    referent.getImpl().isActiveBehavior());
+	                    referent.getImpl().isActiveBehavior() ||
+	                    referent.getImpl().isProperty());
 	}
 
 	

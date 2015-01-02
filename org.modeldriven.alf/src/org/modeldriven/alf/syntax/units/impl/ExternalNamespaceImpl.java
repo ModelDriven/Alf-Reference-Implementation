@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -112,7 +112,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                 members.add(ImportedMemberImpl.makeImportedMember(
                         member.getName(), member, self));
             } else {
-                for (String name: umlNamespace.getNamesOfMember(member)) {
+                for (String name: names) {
                     members.add(ImportedMemberImpl.makeImportedMember(
                             name, member, self));
                 }
@@ -201,6 +201,23 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
     @Override
     protected boolean allowPackageOnly() {
         return !(this.getSelf().getUmlNamespace() instanceof Package);
+    }
+    
+    @Override
+    protected Boolean matchNameForStub(Member stub, NamespaceDefinition definition) {
+        String stubName = stub.getName();
+        String subunitName = definition.getName();
+        ElementReference referent = stub.getImpl().getReferent();
+        return  stubName != null && subunitName != null &&
+                (referent.getImpl().isOperation()? 
+                    (subunitName.equals(stubName) || 
+                     subunitName.startsWith(stubName + "$method$")):
+                 referent.getImpl().isActiveBehavior()? 
+                    (subunitName.equals(stubName) || 
+                     subunitName.startsWith(stubName + "$behavior$")):
+                 referent.getImpl().isProperty()?
+                     subunitName.startsWith(stubName + "$defaultValue$"):
+                 super.matchNameForStub(stub, definition));
     }
     
     @Override
