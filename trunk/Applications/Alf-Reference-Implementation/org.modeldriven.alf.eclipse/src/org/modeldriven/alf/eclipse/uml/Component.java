@@ -8,8 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.uml;
 
-import org.eclipse.uml2.uml.Class;
-
 /**
  * @author seidewitz
  *
@@ -20,7 +18,7 @@ public class Component extends Class_ {
 		this(org.eclipse.uml2.uml.UMLFactory.eINSTANCE.createComponent());
 	}
 
-	public Component(Class base) {
+	public Component(org.eclipse.uml2.uml.Component base) {
 		super(base);
 	}
 
