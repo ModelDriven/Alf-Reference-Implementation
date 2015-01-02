@@ -77,7 +77,7 @@ active class Statements_Accept {
     public receive signal Start { }
     public receive signal Continue { }
 
-    private test(out test: Test) {
+    private run(out test: Test) {
       test = new Test(this);
       
       test.SignalTermination();
@@ -99,7 +99,7 @@ active class Statements_Accept {
     
   } do {
     accept(Start);
-    this.test(test);
+    this.run(test);
     accept (Continue);
   
     AssertTrue("test.sig instanceof SignalTermination", test.sig instanceof Test::SignalTermination);
