@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Ecore="http://www.eclipse.org/uml2/schemas/Ecore/5" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/uml2/schemas/Ecore/5 pathmap://UML_PROFILES/Ecore.profile.uml#_z1OFcHjqEdy8S4Cr8Rc_NA">
-  <uml:Profile xmi:id="_0" name="StandardProfileL2" URI="http://www.omg.org/spec/UML/20110701/StandardProfileL2" metamodelReference="_packageImport.0">
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Ecore="http://www.eclipse.org/uml2/schemas/Ecore/5" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/uml2/schemas/Ecore/5 pathmap://UML_PROFILES/Ecore.profile.uml#_z1OFcHjqEdy8S4Cr8Rc_NA">
+  <uml:Profile xmi:id="_0" name="StandardProfile" URI="http://www.omg.org/spec/UML/20110701/StandardProfileL2" metamodelReference="_packageImport.0">
     <eAnnotations xmi:id="_QLKAkHJLEeKLR_U6HVChUg" source="http://www.eclipse.org/uml2/2.0.0/UML">
       <contents xmi:type="ecore:EPackage" xmi:id="_QLYqEHJLEeKLR_U6HVChUg" name="l2" nsURI="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2" nsPrefix="l2">
         <eClassifiers xmi:type="ecore:EClass" xmi:id="_QLYqEXJLEeKLR_U6HVChUg" name="Auxiliary">
@@ -50,12 +50,12 @@
           <eAnnotations xmi:id="_QLYqL3JLEeKLR_U6HVChUg" source="duplicates">
             <contents xmi:type="ecore:EReference" xmi:id="_QLYqMHJLEeKLR_U6HVChUg" name="base_Artifact" ordered="false" lowerBound="1">
               <eAnnotations xmi:id="_QLYqMXJLEeKLR_U6HVChUg" source="redefines">
-                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File/base_Artifact"/>
+                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File/base_Artifact"/>
               </eAnnotations>
               <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/4.0.0/UML#//Artifact"/>
             </contents>
           </eAnnotations>
-          <eSuperTypes href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File"/>
+          <eSuperTypes href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File"/>
         </eClassifiers>
         <eClassifiers xmi:type="ecore:EClass" xmi:id="_QLYqNHJLEeKLR_U6HVChUg" name="Entity">
           <eAnnotations xmi:id="_QLYqNXJLEeKLR_U6HVChUg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="Entity"/>
@@ -68,12 +68,12 @@
           <eAnnotations xmi:id="_QLYqOnJLEeKLR_U6HVChUg" source="duplicates">
             <contents xmi:type="ecore:EReference" xmi:id="_QLYqO3JLEeKLR_U6HVChUg" name="base_Artifact" ordered="false" lowerBound="1">
               <eAnnotations xmi:id="_QLYqPHJLEeKLR_U6HVChUg" source="redefines">
-                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File/base_Artifact"/>
+                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File/base_Artifact"/>
               </eAnnotations>
               <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/4.0.0/UML#//Artifact"/>
             </contents>
           </eAnnotations>
-          <eSuperTypes href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File"/>
+          <eSuperTypes href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File"/>
         </eClassifiers>
         <eClassifiers xmi:type="ecore:EClass" xmi:id="_QLYqP3JLEeKLR_U6HVChUg" name="File" abstract="true">
           <eAnnotations xmi:id="_QLYqQHJLEeKLR_U6HVChUg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="File"/>
@@ -125,12 +125,12 @@
           <eAnnotations xmi:id="_QLYqX3JLEeKLR_U6HVChUg" source="duplicates">
             <contents xmi:type="ecore:EReference" xmi:id="_QLYqYHJLEeKLR_U6HVChUg" name="base_Artifact" ordered="false" lowerBound="1">
               <eAnnotations xmi:id="_QLYqYXJLEeKLR_U6HVChUg" source="redefines">
-                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File/base_Artifact"/>
+                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File/base_Artifact"/>
               </eAnnotations>
               <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/4.0.0/UML#//Artifact"/>
             </contents>
           </eAnnotations>
-          <eSuperTypes href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File"/>
+          <eSuperTypes href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File"/>
         </eClassifiers>
         <eClassifiers xmi:type="ecore:EClass" xmi:id="_QLYqZHJLEeKLR_U6HVChUg" name="Metaclass">
           <eAnnotations xmi:id="_QLYqZXJLEeKLR_U6HVChUg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="Metaclass"/>
@@ -176,12 +176,12 @@
           <eAnnotations xmi:id="_QLYqgHJLEeKLR_U6HVChUg" source="duplicates">
             <contents xmi:type="ecore:EReference" xmi:id="_QLYqgXJLEeKLR_U6HVChUg" name="base_Artifact" ordered="false" lowerBound="1">
               <eAnnotations xmi:id="_QLYqgnJLEeKLR_U6HVChUg" source="redefines">
-                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File/base_Artifact"/>
+                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File/base_Artifact"/>
               </eAnnotations>
               <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/4.0.0/UML#//Artifact"/>
             </contents>
           </eAnnotations>
-          <eSuperTypes href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File"/>
+          <eSuperTypes href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File"/>
         </eClassifiers>
         <eClassifiers xmi:type="ecore:EClass" xmi:id="_QLYqhXJLEeKLR_U6HVChUg" name="Send">
           <eAnnotations xmi:id="_QLYqhnJLEeKLR_U6HVChUg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="Send"/>
@@ -203,12 +203,12 @@
           <eAnnotations xmi:id="_QLYqkXJLEeKLR_U6HVChUg" source="duplicates">
             <contents xmi:type="ecore:EReference" xmi:id="_QLYqknJLEeKLR_U6HVChUg" name="base_Artifact" ordered="false" lowerBound="1">
               <eAnnotations xmi:id="_QLYqk3JLEeKLR_U6HVChUg" source="redefines">
-                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File/base_Artifact"/>
+                <references xmi:type="ecore:EReference" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File/base_Artifact"/>
               </eAnnotations>
               <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/4.0.0/UML#//Artifact"/>
             </contents>
           </eAnnotations>
-          <eSuperTypes href="http://www.eclipse.org/uml2/4.0.0/UML/Profile/L2#//File"/>
+          <eSuperTypes href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#//File"/>
         </eClassifiers>
         <eClassifiers xmi:type="ecore:EClass" xmi:id="_QLYqlnJLEeKLR_U6HVChUg" name="Specification">
           <eAnnotations xmi:id="_QLYql3JLEeKLR_U6HVChUg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="Specification"/>
