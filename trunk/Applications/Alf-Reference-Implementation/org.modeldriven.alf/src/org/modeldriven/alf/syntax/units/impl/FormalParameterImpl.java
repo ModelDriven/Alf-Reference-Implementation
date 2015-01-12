@@ -59,7 +59,9 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
 	 * Return true if the given member is a FormalParameter.
 	 **/
 	public Boolean isSameKindAs(Member member) {
-		return member instanceof FormalParameter;
+	    // NOTE: This should also account for the possibility of an
+	    // external parameter visible from an external outer scope.
+		return member.getImpl().getReferent().getImpl().isParameter();
 	} // isSameKindAs
 	
     /**
