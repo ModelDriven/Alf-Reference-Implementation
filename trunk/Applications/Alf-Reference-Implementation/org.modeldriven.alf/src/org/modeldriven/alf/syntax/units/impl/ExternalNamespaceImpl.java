@@ -457,9 +457,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            Namespace namespace = owner instanceof TemplateParameter?
                    (Namespace)((TemplateParameter)owner).getSignature().getTemplate():
                    reference.getNamespace();
-           if (namespace == null) {
-               newReferences.add(ElementReferenceImpl.makeElementReference(reference));
-           } else {
+           if (namespace != null) {
                for (ElementReference namespaceReference: getNewReferences(
                        instantiation, namespace, templateParameters, templateArguments)) {
                    NamespaceDefinition namespaceDefinition = 
@@ -501,10 +499,17 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                }
                actuals.add(actual);
            }
-           for (ElementReference templateReferent: getNewReferences(
-                   instantiation, template, templateParameters, templateArguments)) {
+           Collection<ElementReference> templateReferences = 
+                   getNewReferences(instantiation, template, templateParameters, templateArguments);
+           if (templateReferences.isEmpty()) {
                newReferences.add(QualifiedNameImpl.getBoundElement(
-                       templateReferent, formals, actuals));
+                       ElementReferenceImpl.makeElementReference(template), formals, actuals));
+           } else {
+               for (ElementReference templateReferent: getNewReferences(
+                       instantiation, template, templateParameters, templateArguments)) {
+                   newReferences.add(QualifiedNameImpl.getBoundElement(
+                           templateReferent, formals, actuals));
+               }
            }
        }
        return newReferences;
