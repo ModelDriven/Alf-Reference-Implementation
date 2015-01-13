@@ -29,8 +29,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 
 	private List<Member> ownedMember = new ArrayList<Member>();
 	private UnitDefinition unit = null;
-    private Collection<Member> member = null; // DERIVED
-    private Map<String, Collection<Member>> memberMap = null;
+    protected Collection<Member> member = null; // DERIVED
+    protected Map<String, Collection<Member>> memberMap = null;
 
 	public NamespaceDefinitionImpl(NamespaceDefinition self) {
 		super(self);

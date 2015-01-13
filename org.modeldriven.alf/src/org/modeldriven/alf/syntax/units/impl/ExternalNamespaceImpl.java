@@ -102,6 +102,13 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
+    public void addMember(Member member) {
+        if (this.member != null) {
+            super.addMember(member);
+        }
+    }
+    
+    @Override
     protected Collection<Member> deriveMember() {
         ExternalNamespace self = this.getSelf();
         List<Member> members = this.getTemplateParameterMembers();
@@ -218,6 +225,26 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                  referent.getImpl().isProperty()?
                      subunitName.startsWith(stubName + "$defaultValue$"):
                  super.matchNameForStub(stub, definition));
+    }
+    
+    @Override
+    public List<Member> resolveInScope(String name, boolean classifierOnly) {
+        ExternalNamespace self = this.getSelf();
+        List<NamedElement> elements = 
+                self.getUmlNamespace().resolveInScope(name, classifierOnly);
+        
+        // NOTE: Null, as opposed to an empty list, means external resolution
+        // is not directly supported.
+        if (elements == null) {
+            return super.resolveInScope(name, classifierOnly);
+        } else {
+            List<Member> members = new ArrayList<Member>();
+            for (NamedElement element: elements) {
+                members.add(ImportedMemberImpl.makeImportedMember(
+                        name, element, self));
+            }
+            return members;
+        }
     }
     
     @Override
