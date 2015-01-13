@@ -26,4 +26,6 @@ public interface Namespace extends NamedElement {
 	public List<PackageableElement> getImportedMember();
 	
     public List<String> getNamesOfMember(NamedElement member);
+    
+    public List<NamedElement> resolveInScope(String name, boolean classifierOnly);
 }
