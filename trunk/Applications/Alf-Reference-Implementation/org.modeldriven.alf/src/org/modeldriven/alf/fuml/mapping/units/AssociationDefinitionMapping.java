@@ -28,8 +28,9 @@ public class AssociationDefinitionMapping extends ClassifierDefinitionMapping {
      * 
      * Association Members
      * 
-     * 2. A property definition maps to an owned end of the association as All
-     * ends are navigable owned ends of the association.
+     * 2. A property definition maps to an owned end of the association as
+     * specified for a property. All ends are navigable owned ends of the 
+     * association.
      */
     
     // Visibility is handled in MemberMapping.
@@ -41,11 +42,13 @@ public class AssociationDefinitionMapping extends ClassifierDefinitionMapping {
 
     @Override
     public void addMemberTo(Element element, NamedElement namespace) throws MappingError {
+        Association association = (Association)namespace;        
         if (element instanceof Property) {
-            ((Association)namespace).addOwnedEnd((Property)element);
-          } else {
+            association.addOwnedEnd((Property)element);
+            association.addNavigableOwnedEnd((Property)element);
+        } else {
             this.throwError("Member not allowed for an association: " + element);
-          }
+        }
     }
 
 	public AssociationDefinition getAssociationDefinition() {
