@@ -292,7 +292,7 @@ public class ActivityGraph {
     
     public CreateLinkAction addCreateLinkAction(Association association) {
         CreateLinkAction createAction = this.create(CreateLinkAction.class);
-        createAction.setName("this.create(" + association.getName() + ")");
+        createAction.setName("Create(" + association.getName() + ")");
         for (Property end: association.getOwnedEnd()) {
             InputPin valuePin = createInputPin(
                     createAction.getName() + ".value(" + end.getName() + ")", 
@@ -576,7 +576,8 @@ public class ActivityGraph {
                     removeAction.getName() + ".value", property.getType(), 1, 1));
         } else {
             removeAction.setRemoveAt(createInputPin(
-                    removeAction.getName() + ".removeAt", property.getType(), 1, 1));
+                    removeAction.getName() + ".removeAt", 
+                        FumlMapping.getUnlimitedNaturalType(), 1, 1));
         }
         
         return removeAction;
