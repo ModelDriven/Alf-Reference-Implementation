@@ -122,7 +122,7 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
                         inputPin.setIsOrdered(end.getIsOrdered());
                         node.addStructuredNodeInput(inputPin);
                         ActivityNode forkNode = 
-                                subgraph.addForkNode("Fork" + end.getName() + ")");
+                                subgraph.addForkNode("Fork(" + end.getName() + ")");
                         subgraph.addObjectFlow(inputPin, forkNode);
                         subgraph.addObjectFlow(forkNode, endData.getValue());
                         if (end.getIsOrdered()) {
