@@ -185,7 +185,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * 14. A compound assignment is mapped like a simple assignment expression
      * for which the assigned value is the result of a call behavior action for
      * the primitive behavior corresponding to the compound assignment operator.
-     * The.getArgument()s to the call behavior action come from the result source
+     * The arguments to the call behavior action come from the result source
      * elements of the mapping of the effective expression for the left-hand
      * side and the right-hand side expression. However, if the left-hand side
      * is a property reference, then the primary expression for the reference
@@ -246,8 +246,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                                     rhsResultSource, 
                                     null, false, 
                                     rhsType != null && rhsType.getImpl().isInteger() && 
-                                    this.callAction.getArgument().get(1).getType() 
-                                        == getBitStringType());
+                                    this.callAction.getArgument().get(1).getType(). 
+                                        equals(getBitStringType()));
                             
                             this.graph.addObjectFlow(
                                     rhsResultSource,
