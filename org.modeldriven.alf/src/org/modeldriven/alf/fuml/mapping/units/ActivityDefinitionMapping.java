@@ -138,6 +138,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             FumlMapping mapping) {
         ActivityParameterNode node = mapping.create(ActivityParameterNode.class);
         node.setParameter(parameter);
+        node.setType(parameter.getType());
         activity.addNode(node);
 
         if (parameter.getDirection().equals("in") || 
@@ -153,6 +154,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
             if (parameter.getDirection().equals("inout")) {
                 node = mapping.create(ActivityParameterNode.class);
                 node.setParameter(parameter);
+                node.setType(parameter.getType());
                 activity.addNode(node);
             }
         }
