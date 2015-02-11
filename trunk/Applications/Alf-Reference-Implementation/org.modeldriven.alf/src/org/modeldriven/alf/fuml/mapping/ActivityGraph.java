@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2013 Ivar Jacobson International SA
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -601,6 +600,7 @@ public class ActivityGraph {
         startAction.setName("Start(" + (class_ == null? "any": class_.getName()) + ")");
         startAction.setObject(createInputPin(
                 startAction.getName() + ".object", class_, 1, 1));
+        startAction.setIsSynchronous(false);
         this.add(startAction);
         return startAction;
     }
