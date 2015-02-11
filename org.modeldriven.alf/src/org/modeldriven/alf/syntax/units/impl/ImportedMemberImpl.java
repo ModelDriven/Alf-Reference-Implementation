@@ -158,7 +158,7 @@ public class ImportedMemberImpl extends MemberImpl {
     	            return otherElement instanceof Member && ((Member)otherElement).isSameKindAs(self);
     	        } else {
     	            Element umlElement = referent.getImpl().getUml();
-    	            Element otherUmlElement = referent.getImpl().getUml();
+    	            Element otherUmlElement = otherReferent.getImpl().getUml();
     	            if (!(umlElement instanceof NamedElement && 
     	                    otherUmlElement instanceof NamedElement)) {
     	                return false;
@@ -166,7 +166,7 @@ public class ImportedMemberImpl extends MemberImpl {
     	                NamedElement namedElement = (NamedElement)umlElement;
     	                Namespace namespace = namedElement.getNamespace();
     	                return namespace != null && 
-    	                        namedElement.isDistinguishableFrom(
+    	                        !namedElement.isDistinguishableFrom(
     	                                (NamedElement)otherUmlElement, namespace);
     	            }
     	        }
