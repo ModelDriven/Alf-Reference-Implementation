@@ -43,7 +43,8 @@ public class ImportedMemberImpl extends MemberImpl {
 	public ElementReference getBoundReferent() {
 	    Element element = this.referent.getImpl().getUml();
 	    return element == null? this.referent: 
-	        ElementReferenceImpl.makeBoundReference(element, this.getNamespace());
+	        ElementReferenceImpl.makeBoundReference(element, 
+	                this.referent.getImpl().getNamespace().getImpl().asNamespace());
 	}
 
     public void setReferent(ElementReference referent) {
