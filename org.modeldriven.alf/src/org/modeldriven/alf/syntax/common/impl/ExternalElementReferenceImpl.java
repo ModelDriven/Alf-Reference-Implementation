@@ -473,9 +473,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                     names = Collections.singletonList(element.getName());
                 }
                 for (String name: names) {
+                    Namespace namespace = element.getNamespace();
+                    NamespaceDefinition namespaceDefinition = namespace == null? null:
+                        ElementReferenceImpl.makeElementReference(namespace).getImpl().asNamespace();
                     ImportedMember member = 
-                        ImportedMemberImpl.makeImportedMember(
-                                name, element, this.asNamespace());
+                        ImportedMemberImpl.makeImportedMember(name, element, namespaceDefinition);
                     member.setIsFeature(element instanceof Feature);
                     inheritableMembers.add(member);
                 }
