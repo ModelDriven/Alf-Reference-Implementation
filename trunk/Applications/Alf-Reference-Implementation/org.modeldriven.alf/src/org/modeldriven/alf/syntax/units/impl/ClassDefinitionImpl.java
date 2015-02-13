@@ -204,6 +204,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         OperationDefinition operation = new OperationDefinition(self);
         operation.setName(self.getName());
         operation.setNamespace(self);
+        operation.setVisibility("public");
         operation.setBody(new Block());
         
         StereotypeAnnotation annotation = new StereotypeAnnotation();
@@ -232,6 +233,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         OperationDefinition operation = new OperationDefinition(self);
         operation.setName("destroy");
         operation.setNamespace(self);
+        operation.setVisibility("public");
         operation.setBody(new Block());
         
         StereotypeAnnotation annotation = new StereotypeAnnotation();
