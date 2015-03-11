@@ -1092,8 +1092,8 @@ public class ActivityGraph {
     }
     
     /**
-     * Checks that an activity node is contained directly within a a given 
-     * collection of element or indirectly within a structured activity node 
+     * Checks that the owner of a pin is contained directly within a given 
+     * collection of elements or indirectly within a structured activity node 
      * that is one of those elements.
      */
     public static boolean isContainedIn(Pin pin, Collection<Element> elements) {
