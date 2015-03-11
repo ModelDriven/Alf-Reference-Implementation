@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -102,7 +102,7 @@ public abstract class SequenceExpansionExpressionMapping extends
                 argumentSource);
         
         this.region = this.graph.addExpansionRegion(
-                expression.getClass().getSimpleName()+ 
+                expression.getClass().getSimpleName() + 
                     "@" + expression.getId(), 
                 "parallel", 
                 nestedGraph.getModelElements(), 
@@ -127,7 +127,10 @@ public abstract class SequenceExpansionExpressionMapping extends
                     mapping.getErrorMessage());
         } else {
             ExpressionMapping primaryMapping = (ExpressionMapping)mapping;
-            this.graph.addAll(primaryMapping.getGraph());
+            ActivityNode primaryNode = this.graph.addStructuredActivityNode(
+                    "Primary(" + expression.getClass().getSimpleName() + 
+                        "@" + expression.getId() + ")", 
+                    primaryMapping.getModelElements());
             ActivityGraph nestedGraph = this.createActivityGraph();
             this.variableSource = nestedGraph.addForkNode(
                     "Fork(" + expression.getVariable() + ")");
@@ -148,6 +151,7 @@ public abstract class SequenceExpansionExpressionMapping extends
                         this.variableSource);
                 this.region.getInputElement().get(0).setType(primaryMapping.getType());
                 this.region.getOutputElement().get(0).setType(primaryMapping.getType());
+                this.graph.addControlFlow(primaryNode, this.region);
             }
         }
     }
