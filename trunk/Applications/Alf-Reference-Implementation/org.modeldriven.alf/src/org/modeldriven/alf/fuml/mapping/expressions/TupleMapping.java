@@ -140,7 +140,11 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         
                         if (expressionType != null && parameterType != null &&
                                 expressionType.getImpl().isNatural() &&
-                                parameter.getType().getImpl().isUnlimitedNatural()) {
+                                // NOTE: Check for "not Integer" excludes both Integer
+                                // and Natural. Checking just for "is UnlimitedNatural"
+                                // wouldn't exclude Natural, since it is a specialization
+                                // of UnlimitedNatural.
+                                !parameter.getType().getImpl().isInteger()) {
                             CallBehaviorAction callAction =
                                 this.tupleGraph.addCallBehaviorAction(getBehavior(
                                     RootNamespace.getIntegerFunctionToUnlimitedNatural()));
