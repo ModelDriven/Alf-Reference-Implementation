@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -247,11 +247,14 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                     }
                 }
 
-                CallBehaviorAction indexConversionAction = 
-                        this.graph.addCallBehaviorAction(getBehavior(
-                                RootNamespace.getIntegerFunctionToUnlimitedNatural()));
-                this.graph.addObjectFlow(
-                        indexSource, indexConversionAction.getArgument().get(0));
+                if (index.getType().getImpl().isInteger()) {
+                    CallBehaviorAction indexConversionAction = 
+                            this.graph.addCallBehaviorAction(getBehavior(
+                                    RootNamespace.getIntegerFunctionToUnlimitedNatural()));
+                    this.graph.addObjectFlow(
+                            indexSource, indexConversionAction.getArgument().get(0));
+                    indexSource = indexConversionAction.getResult().get(0);
+                }
 
                 if (this.rhsUpper == 0) {
                     RemoveStructuralFeatureValueAction removeAction =
@@ -261,15 +264,12 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                     this.graph.addObjectFlow(
                             objectSource, 
                             removeAction.getObject());
-                    this.graph.addObjectFlow(
-                            indexConversionAction.getResult().get(0),
-                            removeAction.getRemoveAt());
+                    this.graph.addObjectFlow(indexSource, removeAction.getRemoveAt());
                     resultNode = removeAction.getResult();                                
                 } else {
                     ForkNode indexFork = this.graph.addForkNode(
                             "Fork(" + indexSource.getName() + ")");
-                    this.graph.addObjectFlow(
-                            indexConversionAction.getResult().get(0), indexFork);
+                    this.graph.addObjectFlow(indexSource, indexFork);
 
                     RemoveStructuralFeatureValueAction removeAction =
                             this.graph.addRemoveStructuralFeatureValueAction(
