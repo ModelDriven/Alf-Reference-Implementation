@@ -71,14 +71,14 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	    if (expression instanceof NameExpression) {
 	        QualifiedName name = ((NameExpression)expression).getName();
 	        if (name != null && name.getIsFeatureReference()) {
-	            lhs = new FeatureLeftHandSide();
+	            lhs = new FeatureLeftHandSide(name);
 	            ((FeatureLeftHandSide)lhs).setFeature(name.getDisambiguation());
 	        } else {
-	            lhs = new NameLeftHandSide();
+	            lhs = new NameLeftHandSide(name);
 	            ((NameLeftHandSide)lhs).setTarget(name);
 	        }
 	    } else if (expression instanceof PropertyAccessExpression) {
-	        lhs = new FeatureLeftHandSide();
+	        lhs = new FeatureLeftHandSide(expression);
 	        ((FeatureLeftHandSide)lhs).setFeature
 	            (((PropertyAccessExpression)expression).getFeatureReference());
 	    }
