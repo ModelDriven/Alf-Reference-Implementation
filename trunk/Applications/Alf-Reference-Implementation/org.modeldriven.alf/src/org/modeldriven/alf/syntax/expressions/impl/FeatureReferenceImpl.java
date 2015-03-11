@@ -1,6 +1,7 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -104,8 +105,16 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 	                }
 	            }
     	        if (this.currentScope != null) {
-    	            referents.addAll(this.currentScope.getImpl().
-    	                    resolveAssociationEnd(targetType, name));
+    	            for (ElementReference referent: this.currentScope.getImpl().
+                            resolveAssociationEnd(targetType, name)) {
+    	                // NOTE: Even though fUML does not allow associations that don't
+    	                // own their ends, this allows for ths possibility that a model
+    	                // might have a non-association owned end that is being used
+    	                // as a property of the owning classifier.
+    	                if (!referent.getImpl().isContainedIn(referents)) {
+    	                    referents.add(referent);
+    	                }
+    	            }
     	        }
 	        }
 	    }
