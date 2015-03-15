@@ -22,3 +22,4 @@ Require-Bundle: org.eclipse.uml2;bundle-version="4.0.2",
  org.eclipse.core.runtime;bundle-version="3.10.0"
 Bundle-Vendor: Model Driven Solutions
 Bundle-ClassPath: .
+Export-Package: org.modeldriven.alf.eclipse.papyrus.execution
