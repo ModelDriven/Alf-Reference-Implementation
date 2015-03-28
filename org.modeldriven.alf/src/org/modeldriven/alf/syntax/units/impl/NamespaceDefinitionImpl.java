@@ -540,10 +540,11 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                 unit.setDefinition(self);
             }
             
-            for (Member ownedMember: baseNamespace.getOwnedMember()) {
+            for (Object ownedMember: baseNamespace.getOwnedMember().toArray()) {
                 // Note: If a boundMember is created, it will be added to
                 // the given namespace.
-                ownedMember.getImpl().bind(ownedMember.getName(), self, false,
+                ((Member)ownedMember).getImpl().bind(((Member)ownedMember).getName(), 
+                        self, false,
                         templateParameters, templateArguments);
             }
             
