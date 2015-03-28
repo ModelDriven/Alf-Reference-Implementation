@@ -87,7 +87,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
                 } else {
                     SwitchClauseMapping clauseMapping = 
                         (SwitchClauseMapping)mapping;
-                    clauseMapping.setSwitchSource(resultSource);
+                    clauseMapping.setSwitchSource(forkNode);
                     clauseMapping.setAssignedNames(assignedNames);
                     graph.addToStructuredNode(
                             node, clauseMapping.getModelElements());
