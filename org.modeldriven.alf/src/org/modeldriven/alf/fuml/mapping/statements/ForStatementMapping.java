@@ -45,7 +45,7 @@ public class ForStatementMapping extends LoopStatementMapping {
      * the loop variable expressions are connected by object flows to input
      * expansion nodes on the expansion region.
      * 
-     * 3. Otherewise, an iterative for statement is mapped to a loop node . A
+     * 3. Otherwise, an iterative for statement is mapped to a loop node. A
      * for statement of the form
      * 
      * for (v1 in expr1, v2 in expr2,...) { stmts } 
@@ -84,7 +84,7 @@ public class ForStatementMapping extends LoopStatementMapping {
         ForStatement statement = this.getForStatement();
         boolean isParallel = statement.getIsParallel();
         
-        // Map loop variable definitions, bit don't add to loop mapping yet.
+        // Map loop variable definitions, but don't add to loop mapping yet.
         List<LoopVariableDefinitionMapping> variableDefinitionMappings = 
                 new ArrayList<LoopVariableDefinitionMapping>();
         ActivityGraph setupSubgraph = this.createActivityGraph();
@@ -379,7 +379,7 @@ public class ForStatementMapping extends LoopStatementMapping {
                     bodyGraph.addObjectFlow(valueAction.getResult(), callAction.getArgument().get(1));
                     node.addBodyOutput(callAction.getResult().get(0));
                 } else {
-                    // Otherwise, the loop variable input list must simple be
+                    // Otherwise, the loop variable input list must simply be
                     // passed through to the next iteration unchanged.
                     StructuredActivityNode passthruNode = 
                             this.graph.createPassthruNode(
