@@ -18,11 +18,9 @@ import org.modeldriven.alf.fuml.mapping.statements.StatementMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.ClassifyStatement;
-
 import org.modeldriven.alf.uml.ActivityNode;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.ForkNode;
@@ -32,6 +30,7 @@ import org.modeldriven.alf.uml.StartObjectBehaviorAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 public class ClassifyStatementMapping extends StatementMapping {
     
@@ -88,9 +87,10 @@ public class ClassifyStatementMapping extends StatementMapping {
             ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
             subgraph.addAll(expressionMapping.getGraph());
             
+            Classifier type = expressionMapping.getType();
             this.reclassifyAction = 
                     subgraph.addReclassifyObjectAction(
-                            expressionMapping.getType(), 
+                            type, 
                             this.mapClassifiers(statement.getFromClass()), 
                             this.mapClassifiers(statement.getToClass()),
                             statement.getIsReclassifyAll());
@@ -100,6 +100,7 @@ public class ClassifyStatementMapping extends StatementMapping {
                     expressionMapping.getResultSource(), 
                     this.reclassifyAction.getObject());
             
+            Set<Classifier> typeParents = type.allParents();
             for (Classifier classifier: this.reclassifyAction.getNewClassifier()) {
                 if (((Class_)classifier).getIsActive()) {
                     ForkNode fork = 
@@ -107,21 +108,23 @@ public class ClassifyStatementMapping extends StatementMapping {
                     subgraph.addObjectFlow(resultSource, fork);
 
                     StartObjectBehaviorAction startAction = 
-                            subgraph.addStartObjectBehaviorAction((Class_)classifier);                
+                            subgraph.addStartObjectBehaviorAction(null);                
                     subgraph.addControlFlow(this.reclassifyAction, startAction);
                     subgraph.addObjectFlow(fork, startAction.getObject());
                     
-                    for (Classifier parent: classifier.allParents()) {
+                    Set<Classifier> parents = classifier.allParents();
+                    parents.remove(type);
+                    parents.removeAll(typeParents);
+                    for (Classifier parent: parents) {
                         if (parent instanceof Class_ && 
                                 ((Class_) parent).getClassifierBehavior() != null) {
-                            startAction = this.graph.addStartObjectBehaviorAction(
+                            startAction = subgraph.addStartObjectBehaviorAction(
                                     (Class_)parent);         
                             subgraph.addControlFlow(this.reclassifyAction, startAction);
                             subgraph.addObjectFlow(fork, startAction.getObject());
                         }
                     }
                     
-                    break;
                 }
             }
             
