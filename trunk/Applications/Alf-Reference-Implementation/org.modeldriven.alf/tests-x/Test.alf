@@ -1,0 +1,16 @@
+abstract class Test {
+	public abstract active class Tester {
+		receive signal Continue {}
+	}
+	
+	private tester : Tester [0..1];
+	
+	@Create protected Test(in tester : Tester[0..1]) {
+		this.tester = tester;
+	}
+	
+	public done() {
+		WriteLine("Done.");
+		this.tester.Continue();
+	}
+}

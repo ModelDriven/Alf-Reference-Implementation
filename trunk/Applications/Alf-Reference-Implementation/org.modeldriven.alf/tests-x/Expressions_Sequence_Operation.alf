@@ -1,13 +1,33 @@
 /**
  * Test sequence operation expressions.
  **/
-active class Expressions_Sequence_Operation {
+class Expressions_Sequence_Operation specializes Test {
+
+	@Create public Expressions_Sequence_Operation() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    this.test(notEmpty, includes, n, m, customers, list);
+	    
+	    AssertFalse("notEmpty", notEmpty);
+	    AssertFalse("includes", includes);
+	    AssertEqual("n", n, 3);
+	    AssertEqual("m", m, 3);
+	    
+	    AssertList("customers.name", customers.name, "C");
+	    AssertList("list", list, any[]{"Blah", 1});
+	
+	    this.done();
+	}
 
     // Supporting declarations *************************************************
     
   	class Customer { 
   		public name: String;
-  		@Create Customer(in name: String) { this.name = name; }
+  		@Create public Customer(in name: String) { this.name = name; }
 	}
   	
 	//**************************************************************************
@@ -38,17 +58,4 @@ active class Expressions_Sequence_Operation {
 	  list->add(1);
 	  list->removeAll(customer);
 	}
-	
-} do {
-    this.test(notEmpty, includes, n, m, customers, list);
-    
-    AssertFalse("notEmpty", notEmpty);
-    AssertFalse("includes", includes);
-    AssertEqual("n", n, 3);
-    AssertEqual("m", m, 3);
-    
-    AssertList("customers.name", customers.name, "C");
-    AssertList("list", list, any[]{"Blah", 1});
-
-    WriteLine("Done");
 }

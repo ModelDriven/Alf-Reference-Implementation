@@ -2,7 +2,40 @@ private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::*;
 /**
  * Test sequence expansion and reduction expressions.
  **/
-active class Expressions_Sequence_Expansion_Reduction {
+class Expressions_Sequence_Expansion_Reduction specializes Test {
+
+	@Create public Expressions_Sequence_Expansion_Reduction() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    test(sum, remainder, bad, 
+	    select, reject, collect, iterate, forAll, exists, one, unique, 
+	    jack, joan, something, obj);
+	    
+	    AssertEqual("sum",sum, 6);
+	    AssertEqual("remainder", remainder, 1);
+	    AssertEqual("bad", bad, 2);
+	    
+	    AssertList("select.name", select.name, String[]{"Joan"});
+	    AssertList("reject.name", reject.name, String[]{"Jack"});
+	    AssertList("collect.name", collect, String[]{"Joan","Jack"});
+	    AssertList("iterate.name", iterate, String[]{"Joan","Jack"});
+	    AssertTrue("forAll", forAll);
+	    AssertTrue("exists", exists);
+	    AssertTrue("one", one);
+	    AssertFalse("unique", unique);
+	    
+	    AssertEqual("jack.name", jack.name, "Jack");
+	    AssertEqual("joan.name", joan.name, "Joan");
+	
+	    AssertList("something.attribute.type", something.attribute.type, 1);
+	    AssertEqual("obj.attr.type", obj.attr.type, 1); 
+	    
+	    this.done();
+	}
 
     // Supporting declarations *************************************************
     
@@ -92,29 +125,4 @@ active class Expressions_Sequence_Expansion_Reduction {
     something.attribute->iterate attr (obj.init(attr));
     
 	}
-} do {
-    test(sum, remainder, bad, 
-    select, reject, collect, iterate, forAll, exists, one, unique, 
-    jack, joan, something, obj);
-    
-    AssertEqual("sum",sum, 6);
-    AssertEqual("remainder", remainder, 1);
-    AssertEqual("bad", bad, 2);
-    
-    AssertList("select.name", select.name, String[]{"Joan"});
-    AssertList("reject.name", reject.name, String[]{"Jack"});
-    AssertList("collect.name", collect, String[]{"Joan","Jack"});
-    AssertList("iterate.name", iterate, String[]{"Joan","Jack"});
-    AssertTrue("forAll", forAll);
-    AssertTrue("exists", exists);
-    AssertTrue("one", one);
-    AssertFalse("unique", unique);
-    
-    AssertEqual("jack.name", jack.name, "Jack");
-    AssertEqual("joan.name", joan.name, "Joan");
-
-    AssertList("something.attribute.type", something.attribute.type, 1);
-    AssertEqual("obj.attr.type", obj.attr.type, 1); 
-    
-    WriteLine("Done");
 }

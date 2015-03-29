@@ -1,7 +1,34 @@
 /**
  * Test non-indexed feature assignment expressions
  **/
-active class Expressions_Assignment_Feature {
+class Expressions_Assignment_Feature specializes Test {
+	
+	@Create public run(in tester : Tester[0..1]) {
+		super(tester);
+	    this.test(c,d,n,m,self);
+	    
+	    AssertEqual("c.x", c.x, 2);
+	    AssertEqual("c.y[1]", c.y[1], 1);
+	    AssertEqual("c.y[2]", c.y[2], 2);
+	    AssertEqual("c.n", c.n, 3);
+	    AssertEqual("n", n, 3);    
+	    
+	    AssertEqual("d.x", d.x, 2);
+	    AssertEqual("d.y[1]", d.y[1], 1);
+	    AssertEqual("d.y[2]", d.y[2], 2);
+	    AssertEqual("d.m", d.m, 3);
+	    AssertEqual("m", m, 3); 
+	    
+	    AssertEqual("self.x", self.x, 2);
+	    AssertEqual("self.y[1]", self.y[1], 1);
+	    AssertEqual("self.y[2]", self.y[2], 2);
+	
+	    this.done();
+	}
+
+	@Create public Expressions_Assignment_Feature() {
+		this.run(null);
+	}
 
     private x: Integer;
     private y: Integer[] sequence;
@@ -52,26 +79,5 @@ active class Expressions_Assignment_Feature {
       this.y = Integer[]{1,2};
       self = this;
     }
-  
-} do {
-    this.test(c,d,n,m,self);
-    
-    AssertEqual("c.x", c.x, 2);
-    AssertEqual("c.y[1]", c.y[1], 1);
-    AssertEqual("c.y[2]", c.y[2], 2);
-    AssertEqual("c.n", c.n, 3);
-    AssertEqual("n", n, 3);    
-    
-    AssertEqual("d.x", d.x, 2);
-    AssertEqual("d.y[1]", d.y[1], 1);
-    AssertEqual("d.y[2]", d.y[2], 2);
-    AssertEqual("d.m", d.m, 3);
-    AssertEqual("m", m, 3); 
-    
-    AssertEqual("self.x", self.x, 2);
-    AssertEqual("self.y[1]", self.y[1], 1);
-    AssertEqual("self.y[2]", self.y[2], 2);
-
-    WriteLine("Done");
 }
       

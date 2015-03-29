@@ -1,7 +1,25 @@
 /**
  * Test non-indexed assignment expressions.
  **/
-active class Expressions_Assignment {
+class Expressions_Assignment specializes Test {
+
+    @Create public run(in tester: Tester[0..1]) {
+      	super(tester);
+      
+		this.test(i,f,h,filename,a);
+		
+		AssertEqual("i", i, 5);
+		AssertFalse("f", f);
+		AssertEqual("h", h, 0x55);
+		AssertEqual("filename", filename, "xyz.doc");
+		AssertEqual("a", a, 2);
+		
+		this.done();
+    }
+    
+    @Create public Expressions_Assignment() {
+      	this.run(null);
+    }
 
     public test(out i: Integer, out f: Boolean, out h: BitString, out filename: String, out a: Integer) {
     
@@ -38,15 +56,4 @@ active class Expressions_Assignment {
       test.a += 1;
     
     }
-    
-} do {
-    this.test(i,f,h,filename,a);
-    
-    AssertEqual("i", i, 5);
-    AssertFalse("f", f);
-    AssertEqual("h", h, 0x55);
-    AssertEqual("filename", filename, "xyz.doc");
-    AssertEqual("a", a, 2);
-
-    WriteLine("Done");
 }

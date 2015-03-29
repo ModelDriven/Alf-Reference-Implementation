@@ -1,9 +1,16 @@
 /**
  * Test expressions involving templates.
  **/
-active class Expressions_Template {
+class Expressions_Template specializes Test {
 
-    public receive signal Continue { }
+	@Create public Expressions_Template() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+   		new TestRunner(this).Start();
+	}
 
     public activity A<T specializes B>(in x: T): Integer { 
       return x.i;
@@ -37,6 +44,13 @@ active class Expressions_Template {
     }
     
     public active class TestRunner {
+    	
+      private outer : Test;
+      
+      @Create public TestRunner(in outer: Test) {
+      	this.outer = outer;
+      }
+      
       public receive signal Start { }
       public receive signal Continue { }
       
@@ -68,9 +82,6 @@ active class Expressions_Template {
       AssertList("s", s.toSequence(), 1);
       AssertList("list", list.toSequence(), Integer[]{1,2,3});
       
-      WriteLine("Done");
+      this.outer.done();
     }
-    
-} do {
-   new TestRunner().Start();
 }

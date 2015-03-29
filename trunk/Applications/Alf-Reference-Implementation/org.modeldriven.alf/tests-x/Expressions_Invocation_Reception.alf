@@ -1,7 +1,16 @@
 /**
  * Test reception invocation expressions.
  */
-active class Expressions_Invocation_Reception {
+class Expressions_Invocation_Reception specializes Test {
+
+	@Create public Expressions_Invocation_Reception() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+  		new TestRunner(this).Start();
+	}
 
   public active class Receiver {
   
@@ -45,6 +54,12 @@ active class Expressions_Invocation_Reception {
   }
   
   public active class TestRunner {
+  	
+  	private outer: Test;
+  	
+  	@Create public TestRunner(in outer: Test) {
+  		this.outer = outer;
+  	}
   
     public receive signal Start { }
     public receive signal SignalLoop { }
@@ -74,9 +89,6 @@ active class Expressions_Invocation_Reception {
     AssertList("receiver.x", receiver.x, Integer[]{1,2,3});
     AssertList("receiver.y", receiver.y, Integer[]{3,4});
   
-    WriteLine("Done");
+    this.outer.done();
   }
-  
-} do {
-  new TestRunner().Start();
 }

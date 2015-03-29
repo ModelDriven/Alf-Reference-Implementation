@@ -1,7 +1,16 @@
 /**
  * Test active class instantiation
  */
-active class Units_ActiveClass {
+class Units_ActiveClass specializes Test {
+
+	@Create public Units_ActiveClass() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+  		new TestRunner(this).Start();
+	}
 
   public active class C {
     public i: Integer;
@@ -17,6 +26,12 @@ active class Units_ActiveClass {
   }
   
   public active class TestRunner {
+  	
+  	private outer: Test;
+  	
+  	@Create public TestRunner(in outer: Test) {
+  		this.outer = outer;
+  	}
   
     public receive signal Start { }
     public receive signal Continue { }
@@ -32,9 +47,7 @@ active class Units_ActiveClass {
       
       AssertEqual("c.j", c.j, 1);
       
-      WriteLine("Done");
+      this.outer.done();
     }
 
-} do {
-  new TestRunner().Start();
 }

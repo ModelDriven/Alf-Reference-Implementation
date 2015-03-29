@@ -1,7 +1,28 @@
 /**
  * Test indexed assignment expressions.
  **/
-active class Expressions_Assignment_Indexed {
+class Expressions_Assignment_Indexed specializes Test {
+	
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+	    this.test(i,a);
+	    
+	    AssertEqual("i[1]", i[1], 0);
+	    AssertEqual("i[2]", i[2], 5);
+	    AssertEqual("i[3]", i[3], 3);
+	    AssertEqual("i[4]", i[4], 4);
+	    
+	    AssertEqual("a[1]", a[1], 0);
+	    AssertEqual("a[2]", a[2], 5);
+	    AssertEqual("a[3]", a[3], 5);
+	    AssertEqual("a[4]", a[4], 7);
+	
+	    this.done();
+	}
+
+	@Create public Expressions_Assignment_Indexed() {
+		this.run(null);
+	}
 
     public test(out i: Integer[], out a: Integer[]) {
     
@@ -18,18 +39,4 @@ active class Expressions_Assignment_Indexed {
  
     }
     
-} do {
-    this.test(i,a);
-    
-    AssertEqual("i[1]", i[1], 0);
-    AssertEqual("i[2]", i[2], 5);
-    AssertEqual("i[3]", i[3], 3);
-    AssertEqual("i[4]", i[4], 4);
-    
-    AssertEqual("a[1]", a[1], 0);
-    AssertEqual("a[2]", a[2], 5);
-    AssertEqual("a[3]", a[3], 5);
-    AssertEqual("a[4]", a[4], 7);
-
-    WriteLine("Done");
 }

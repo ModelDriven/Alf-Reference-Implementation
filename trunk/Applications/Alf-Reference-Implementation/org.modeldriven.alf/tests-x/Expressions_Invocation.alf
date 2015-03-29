@@ -2,7 +2,44 @@ private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToString;
 /**
  * Test behavior, operation and super invocation expressions.
  **/
-active class Expressions_Invocation {
+class Expressions_Invocation specializes Test {
+
+	@Create public Expressions_Invocation() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    status1 = "Blah";
+	    this.test(c, b, status1, status2, statuses, i, j, k, l, m, n, n1, obj, list, ns);
+	    
+	    AssertEqual("b", b, 5);
+	    AssertEqual("c", c, 5);
+	    
+	    AssertEqual("status1", status1, "Hello");
+	    AssertEqual("status2", status2, "Hello");
+	    AssertList("statuses", statuses, "Hello");
+	    
+	    AssertEqual("i", i, 1);
+	    AssertEqual("j", j, 2);
+	    AssertEqual("k", k, 3);
+	    AssertEqual("l", l, 4);
+	    AssertEqual("m", m, 5);
+	    
+	    AssertEqual("n", n, 3);
+	    AssertEqual("n1", n1, 3);
+	    
+	    AssertEqual("obj.value", obj.value, 3);
+	    AssertEqual("obj.name", obj.name, "Fred");
+	    
+	    AssertEqual("list->size()", list->size(), 1);
+	    AssertTrue("list[1]==obj", list[1]==obj);
+	    
+	    AssertEqual("ns", ns, 2);
+	
+	    this.done();
+	}
 
     // Supporting declarations *************************************************
     
@@ -62,34 +99,5 @@ active class Expressions_Invocation {
         list = (Super)null;
         list = including(list, obj);
         ns = size(Super.allInstances());
-	  }
-} do {
-    status1 = "Blah";
-    this.test(c, b, status1, status2, statuses, i, j, k, l, m, n, n1, obj, list, ns);
-    
-    AssertEqual("b", b, 5);
-    AssertEqual("c", c, 5);
-    
-    AssertEqual("status1", status1, "Hello");
-    AssertEqual("status2", status2, "Hello");
-    AssertList("statuses", statuses, "Hello");
-    
-    AssertEqual("i", i, 1);
-    AssertEqual("j", j, 2);
-    AssertEqual("k", k, 3);
-    AssertEqual("l", l, 4);
-    AssertEqual("m", m, 5);
-    
-    AssertEqual("n", n, 3);
-    AssertEqual("n1", n1, 3);
-    
-    AssertEqual("obj.value", obj.value, 3);
-    AssertEqual("obj.name", obj.name, "Fred");
-    
-    AssertEqual("list->size()", list->size(), 1);
-    AssertTrue("list[1]==obj", list[1]==obj);
-    
-    AssertEqual("ns", ns, 2);
-
-    WriteLine("Done");
+	}
 }

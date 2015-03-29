@@ -1,7 +1,16 @@
 /**
  * Test classify statements.
  **/
-active class Statements_Classify {
+class Statements_Classify specializes Test {
+
+	@Create public Statements_Classify() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+  		new TestRunner(this).Start();
+	}
 
     // Supporting declarations *************************************************
     
@@ -27,6 +36,12 @@ active class Statements_Classify {
 	//**************************************************************************
 
     active class TestRunner {
+      private outer: Test;
+      
+      @Create public TestRunner(in outer: Test) {
+      	this.outer = outer;
+      }
+      
       public receive signal Start { }
       public receive signal Continue { }
       
@@ -49,7 +64,7 @@ active class Statements_Classify {
       }
     
     } do {
-      accept (Start);
+        accept (Start);
     	this.test(employee, monitor, issue);
     	accept (Continue);
     	
@@ -69,9 +84,6 @@ active class Statements_Classify {
     	AssertTrue("issue hastype Resolved", issue hastype Resolved);
     	AssertTrue("issue hastype InProcess", issue hastype InProcess);
 
-      WriteLine("Done");
+        this.outer.done();
     }
-    
-} do {
-  new TestRunner().Start();
 }

@@ -1,7 +1,33 @@
 /**
  * Test literal and name expressions.
  **/
-active class Expressions_Literal_Name {
+class Expressions_Literal_Name specializes Test {
+
+	@Create public Expressions_Literal_Name() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    this.test(1,i,j,k,l,m,n,x,y,b,c,d);
+	    
+	    AssertEqual("i", i, 1234);
+	    AssertEqual("j", j, 0);
+	    AssertEqual("k", k, 44_560);
+	    AssertEqual("l", l, 19_035);
+	    AssertEqual("m", m, 44_560);
+	    AssertEqual("n", n, 19_035);
+	    AssertEqual("x", x, 24_328);
+	    AssertEqual("y", y, 19_035);
+	    
+	    AssertEqual("b", b, 1);
+	    AssertEqual("c", c, 1);
+	    AssertEqual("d", d, 1);
+	
+	    this.done();
+	}
+
     test(in a: Integer,
       out i: any, out j: any, out k: any, out l: any, out m: any, out n: any, out x: any, out y: any,
       out b: Integer, out c: Integer, out d: Integer) {
@@ -20,21 +46,4 @@ active class Expressions_Literal_Name {
       d = Expressions_Literal_Name.test.a;
     
     }
-} do {
-    this.test(1,i,j,k,l,m,n,x,y,b,c,d);
-    
-    AssertEqual("i", i, 1234);
-    AssertEqual("j", j, 0);
-    AssertEqual("k", k, 44_560);
-    AssertEqual("l", l, 19_035);
-    AssertEqual("m", m, 44_560);
-    AssertEqual("n", n, 19_035);
-    AssertEqual("x", x, 24_328);
-    AssertEqual("y", y, 19_035);
-    
-    AssertEqual("b", b, 1);
-    AssertEqual("c", c, 1);
-    AssertEqual("d", d, 1);
-
-    WriteLine("Done");
 }

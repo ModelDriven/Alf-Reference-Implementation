@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2014 Ivar Jacobson International SA
+ * Copyright 2013-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -18,9 +17,9 @@ import org.apache.log4j.PropertyConfigurator;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
-import org.modeldriven.alf.fuml.mapping.units.ClassDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.DataTypeDefinitionMapping;
+import org.modeldriven.alf.fuml.mapping.units.OperationDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
@@ -30,7 +29,6 @@ import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
-
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.Element;
@@ -149,61 +147,53 @@ public abstract class Alf extends AlfBase {
                 NamespaceDefinition definition = unit.getDefinition();
                 Mapping elementMapping = definition.getImpl().getMapping();
                 Element element = ((FumlMapping)elementMapping).getElement();
-
-                if (element instanceof Behavior && 
-                        ((Behavior)element).getOwnedParameter().isEmpty() ||
-                        element instanceof Class_ && 
-                        ((Class_)element).getIsActive() && 
-                        !((Class_)element).getIsAbstract() && 
-                        ((Class_)element).getClassifierBehavior() != null) {
-
-                   Locus locus = this.getLocus();
-
-                   this.printVerbose("Executing...");
-                   if (element instanceof Behavior) {
-                       locus.getExecutor().execute((Behavior)element, null);
-                       return unit;
-                   } else {
-                       ClassDefinition classDefinition = 
-                               (ClassDefinition)definition;
-                       OperationDefinition constructorDefinition = 
-                               classDefinition.getImpl().getDefaultConstructor();
-                       if (constructorDefinition == null) {
-                           this.println("Cannot instantiate: " + 
-                                   classDefinition.getName());
-                       } else {
-                           // Instantiate active class.
-                           Class_ class_ = (Class_)element;
-                           Object_ object = locus.instantiate(class_);
-
-                           // Initialize the object.
-                           ClassDefinitionMapping classMapping =
-                                   (ClassDefinitionMapping)elementMapping;
-                           Operation initializer = 
-                                   classMapping.getInitializationOperation();
-                           locus.getExecutor().execute(
-                                   ((Behavior)initializer.getMethod().get(0)), 
-                                   object);
-
-                           // Execute the classifier behavior.
-                           object.startBehavior(class_);
-
-                           return unit;
-                       }
-                   }
-                } else if (element instanceof Behavior) {
-                    this.println("Cannot execute a behavior with parameters.");
-                } else if (element instanceof Class_) {
-                    Class_ class_ = (Class_)element;
-                    if (!class_.getIsActive()) {
-                        this.println("Cannot execute a class that is not active.");
-                    } else if (class_.getIsAbstract()) {
-                        this.println("Cannot execute an abstract class.");
+                
+                if (element instanceof Behavior) {
+                    Behavior behavior = (Behavior)element;
+                    if (!behavior.getOwnedParameter().isEmpty()) {
+                        this.println("Cannot execute a behavior with parameters.");                        
                     } else {
-                        this.println("Cannot execute a class without a classifier behavior.");
+                        this.printVerbose("Executing...");
+                        this.getLocus().getExecutor().execute(behavior, null);
+                        return unit;
+                    }
+                } else if (element instanceof Class_) { 
+                    Class_ class_ = (Class_)element;
+                    if (class_.getIsAbstract()) {
+                        this.println("Cannot instantiate an abstract class.");
+                    } else {
+                        ClassDefinition classDefinition = 
+                                (ClassDefinition)definition;
+                        OperationDefinition constructorDefinition = 
+                                classDefinition.getImpl().getDefaultConstructor();
+                        if (constructorDefinition == null) {
+                            this.println("Class does not have a default constructor.");
+                        } else {
+                            Locus locus = this.getLocus();
+                            
+                            // Instantiate the class.
+                            this.printVerbose("Instantiating...");
+                            Object_ object = locus.instantiate(class_);
+
+                            // Execute the default constructor.
+                            Operation constructor = 
+                                    ((OperationDefinitionMapping)constructorDefinition.getImpl().getMapping()).
+                                        getOperation();
+                            locus.getExecutor().execute(
+                                    ((Behavior)constructor.getMethod().get(0)), 
+                                    object);
+                            
+                            if (class_.getIsActive() && class_.getClassifierBehavior() !=null ) {
+                                // Execute the classifier behavior.
+                                this.printVerbose("Executing...");
+                                object.startBehavior(class_);
+                            }
+    
+                            return unit;
+                        }
                     }
                 } else {
-                    this.println("Unit not executable.");
+                    println("Unit is not executable.");
                 }
             } catch (MappingError e) {
                 this.println("Mapping failed.");

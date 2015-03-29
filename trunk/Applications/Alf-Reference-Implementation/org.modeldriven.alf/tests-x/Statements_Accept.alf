@@ -1,14 +1,23 @@
 /**
  * Test accept statements.
  **/
-active class Statements_Accept {
+class Statements_Accept specializes Test {
+
+	@Create public Statements_Accept() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+  		new TestRunner(this).Start();
+	}
 
   private abstract active class Super {
     public signal SignalNewArrival { public name: String; }
     public receive signal SignalTermination { }
   }
 
-  private active class Test specializes Super {
+  private active class MyTest specializes Super {
   
     public sig: any;
     public sig1: any;
@@ -26,7 +35,7 @@ active class Statements_Accept {
     public tester: TestRunner;
     
     @Create
-    public Test(in tester: TestRunner) {
+    public MyTest(in tester: TestRunner) {
       this.tester = tester;
     }
   
@@ -74,11 +83,17 @@ active class Statements_Accept {
   }
   
   public active class TestRunner {
+  	private outer: Test;
+  	
+  	@Create public TestRunner(in outer: Test) {
+  		this.outer = outer;
+  	}
+  	
     public receive signal Start { }
     public receive signal Continue { }
 
-    private run(out test: Test) {
-      test = new Test(this);
+    private run(out test: MyTest) {
+      test = new MyTest(this);
       
       test.SignalTermination();
       test.SignalNewArrival("Arrival1");
@@ -102,21 +117,18 @@ active class Statements_Accept {
     this.run(test);
     accept (Continue);
   
-    AssertTrue("test.sig instanceof SignalTermination", test.sig instanceof Test::SignalTermination);
+    AssertTrue("test.sig instanceof SignalTermination", test.sig instanceof MyTest::SignalTermination);
     AssertEqual("test.name", test.name, "Arrival1");
     AssertFalse("test.terminate", test.terminate);
     AssertEqual("test.arrival.name", test.arrival.name, "Arrival3");
     
-    AssertTrue("test.signals[1] hastype SignalArrival", test.signals[1] hastype Test::SignalNewArrival);
-    AssertTrue("test.signals[2] hastype SignalTermination", test.signals[2] hastype Test::SignalTermination);
+    AssertTrue("test.signals[1] hastype SignalArrival", test.signals[1] hastype MyTest::SignalNewArrival);
+    AssertTrue("test.signals[2] hastype SignalTermination", test.signals[2] hastype MyTest::SignalTermination);
     
     AssertEqual("test.count", test.count, 3);
     AssertTrue("test.flag", test.flag);
-    AssertTrue("test.sig1 instanceof SignalTermination", test.sig1 instanceof Test::SignalTermination);
+    AssertTrue("test.sig1 instanceof SignalTermination", test.sig1 instanceof MyTest::SignalTermination);
     
-    WriteLine("Done");
+    this.outer.done();
   }
-
-} do {
-  new TestRunner().Start();
 }
