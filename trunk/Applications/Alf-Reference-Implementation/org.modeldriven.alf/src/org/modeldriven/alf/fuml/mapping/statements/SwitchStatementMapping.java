@@ -75,9 +75,12 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
             ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
             ActivityNode resultSource = expressionMapping.getResultSource();
             graph.addAll(expressionMapping.getGraph());
+            
+            ActivityGraph subgraph = this.createActivityGraph();
             ActivityNode forkNode = 
-                graph.addForkNode("Fork(" + resultSource.getName() + ")");
-            graph.addObjectFlow(resultSource, forkNode);
+                subgraph.addForkNode("Fork(" + resultSource.getName() + ")");
+            subgraph.addObjectFlow(resultSource, forkNode);
+            graph.addToStructuredNode(node, subgraph.getModelElements());
             
             for (SwitchClause switchClause: statement.getNonDefaultClause()) {
                 mapping = this.fumlMap(switchClause);
@@ -96,6 +99,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
                     clauses.add(clause);
                 }
             }
+            
         }
         
         this.mapFinalClause(
