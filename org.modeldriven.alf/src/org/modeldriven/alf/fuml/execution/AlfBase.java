@@ -184,7 +184,10 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
             if (this.isPrint) {
                 unit.print(true);
             } else if (!this.isParseOnly && violations.isEmpty()) {
-                if (this.map(RootNamespace.getRootScope()) != null) {
+                NamespaceDefinition definition = unit.getDefinition();
+                if (definition.getImpl().isTemplate()) {
+                    this.println(definition.getName() + " is a template.");
+                } else if (this.map(RootNamespace.getRootScope()) != null) {
                     return unit;
                 }
             }
