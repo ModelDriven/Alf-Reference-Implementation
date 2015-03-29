@@ -1,0 +1,7 @@
+private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToString;
+activity ListTest() {
+   List<String> list1 = new List<String>();
+   list1 = new List<String>(list1->including(""));
+   list1.add("second");
+   Write(list1.size());
+}
