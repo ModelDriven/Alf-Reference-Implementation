@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-02015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,6 +10,7 @@
 package org.modeldriven.alf.eclipse.papyrus.execution;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Level;
@@ -32,6 +33,7 @@ import org.modeldriven.alf.eclipse.papyrus.library.channel.StandardOutputChannel
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.ImplementationObject;
 import org.modeldriven.alf.eclipse.units.RootNamespaceImpl;
+import org.modeldriven.alf.fuml.execution.Locus;
 import org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.execution.Object_;
 import org.modeldriven.alf.uml.Behavior;
@@ -43,6 +45,7 @@ import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.OpaqueBehavior;
 import org.modeldriven.alf.uml.Operation;
 import org.modeldriven.alf.uml.Package;
+import org.modeldriven.alf.uml.Parameter;
 import org.modeldriven.alf.uml.PrimitiveType;
 
 public class Fuml {
@@ -459,47 +462,63 @@ public class Fuml {
     	return resource;	
     }
     
+    public static boolean isConstructor(Operation operation) {
+    	return ((org.modeldriven.alf.eclipse.uml.Operation)operation).getBase().
+    				getAppliedStereotype("StandardProfile::Create") != null;
+    }
+    
+    public static Operation getDefaultConstructor(Class_ class_) {
+    	for (Operation operation: class_.getOwnedOperation()) {
+    		if (isConstructor(operation) &&
+    			operation.getName().equals(class_.getName())) {
+    			List<Parameter> parameters = operation.getOwnedParameter();
+    			if (parameters.size() == 1 && 
+    					parameters.get(0).getDirection().equals("return")) {
+    				return operation;
+    			}
+    		}
+    	}
+    	return null;
+    }
+    
     public void execute(Classifier element) {
-        if (element instanceof Behavior && 
-        		((Behavior)element).getOwnedParameter().isEmpty() ||
-        		element instanceof Class_ && 
-        		((Class_)element).getIsActive() && 
-        		!((Class_)element).getIsAbstract() && 
-        		((Class_)element).getClassifierBehavior() != null) {
+        if (element instanceof Behavior) {
+            Behavior behavior = (Behavior)element;
+            if (!behavior.getOwnedParameter().isEmpty()) {
+                this.println("Cannot execute a behavior with parameters.");                        
+            } else {
+                this.printVerbose("Executing...");
+                this.getLocus().getExecutor().execute(behavior, null);
+            }
+        } else if (element instanceof Class_) { 
+            Class_ class_ = (Class_)element;
+            if (class_.getIsAbstract()) {
+                this.println("Cannot instantiate an abstract class.");
+            } else {
+                Operation constructor = getDefaultConstructor(class_);
+                if (constructor == null) {
+                    this.println("Class does not have a default constructor.");
+                } else {
+                    Locus locus = this.getLocus();
+                    
+                    // Instantiate the class.
+                    this.printVerbose("Instantiating...");
+                    Object_ object = locus.instantiate(class_);
 
-        	this.printVerbose("Executing...");
-        	if (element instanceof Behavior) {
-        		this.locus.getExecutor().execute((Behavior)element, null);
-        	} else {
-        		// Instantiate active class.
-        		Class_ class_ = (Class_)element;
-        		Object_ object = locus.instantiate(class_);
-
-        		// Initialize the object.
-        		Operation initializer = getInitializationOperation(class_);        		
-        		if (initializer != null) {
-        			this.locus.getExecutor().execute(
-        					((Behavior)initializer.getMethod().get(0)), 
-        					object);
-        		}
-
-        		// Execute the classifier behavior.
-        		object.startBehavior(class_);
-        	}
-
-        } else if (element instanceof Behavior) {
-        	this.println("Cannot execute a behavior with parameters.");
-        } else if (element instanceof Class_) {
-        	Class_ class_ = (Class_)element;
-        	if (!class_.getIsActive()) {
-        		this.println("Cannot execute a class that is not active.");
-        	} else if (class_.getIsAbstract()) {
-        		this.println("Cannot execute an abstract class.");
-        	} else {
-        		this.println("Cannot execute a class without a classifier behavior.");
-        	}
+                    // Execute the default constructor.
+                    locus.getExecutor().execute(
+                            ((Behavior)constructor.getMethod().get(0)), 
+                            object);
+                    
+                    if (class_.getIsActive() && class_.getClassifierBehavior() !=null ) {
+                        // Execute the classifier behavior.
+                        this.printVerbose("Executing...");
+                        object.startBehavior(class_);
+                    }
+                }
+            }
         } else {
-        	this.println("Unit not executable.");
+            this.println("Unit is not executable.");
         }
     }
     
