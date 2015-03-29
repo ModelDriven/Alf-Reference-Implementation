@@ -1,7 +1,30 @@
 /** 
  * Test block, empty and local name declaration statements.
  **/
-active class Statements_Simple {
+class Statements_Simple specializes Test {
+
+	@Create public Statements_Simple() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    this.test(i, last, collection, offer, money, members, properties, assets, point);
+	    
+	    AssertEqual("i", i, 1);
+	    AssertEqual("last", last, 2);
+	    AssertList("collection", collection, Integer[]{1,2});
+	    
+	    AssertEqual("offer->size()", offer->size(), 1);
+	    AssertEqual("money.amount", money.amount, 50);
+	    AssertList("members.name", members.name, String[]{"A","C"});
+	    AssertList("properties.name", properties.name, assets.name);
+	    AssertEqual("point.x", point.x, 0);
+	    AssertEqual("point.y", point.y, 0);
+	
+	    this.done();
+	}
 
     // Supporting declarations *************************************************
     
@@ -69,19 +92,4 @@ active class Statements_Simple {
 	  assets = fixedAssets;
 	  point = origin;
 	}
-} do {
-    this.test(i, last, collection, offer, money, members, properties, assets, point);
-    
-    AssertEqual("i", i, 1);
-    AssertEqual("last", last, 2);
-    AssertList("collection", collection, Integer[]{1,2});
-    
-    AssertEqual("offer->size()", offer->size(), 1);
-    AssertEqual("money.amount", money.amount, 50);
-    AssertList("members.name", members.name, String[]{"A","C"});
-    AssertList("properties.name", properties.name, assets.name);
-    AssertEqual("point.x", point.x, 0);
-    AssertEqual("point.y", point.y, 0);
-
-    WriteLine("Done");
 }

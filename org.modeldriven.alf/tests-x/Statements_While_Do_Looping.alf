@@ -1,7 +1,28 @@
 /**
  * Test while and do statements.
  **/
-active class Statements_While_Do_Looping {
+class Statements_While_Do_Looping specializes Test {
+
+	@Create public Statements_While_Do_Looping() {
+	  this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+	  super(tester);
+
+	  this.test(count, checksum, nextRecord, file, lines, readings, i, j, self);
+	  
+	  AssertEqual("count", count, 2);
+	  AssertEqual("checksum", checksum, 1);
+	  AssertEqual("nextRecord.label", nextRecord.label, "Record");
+	  AssertList("lines", lines, String[]{"Record","End"});
+	  AssertList("readings", readings, Integer[]{2,1,0});
+	  AssertEqual("i", i, 2);
+	  AssertEqual("j", j, 3);
+	  AssertTrue("self.list->isEmpty()", self.list->isEmpty());
+	
+	  this.done();
+	}
 
   // Supporting declarations *************************************************
 
@@ -120,17 +141,4 @@ active class Statements_While_Do_Looping {
     
     self = this;
   }
-} do {
-  this.test(count, checksum, nextRecord, file, lines, readings, i, j, self);
-  
-  AssertEqual("count", count, 2);
-  AssertEqual("checksum", checksum, 1);
-  AssertEqual("nextRecord.label", nextRecord.label, "Record");
-  AssertList("lines", lines, String[]{"Record","End"});
-  AssertList("readings", readings, Integer[]{2,1,0});
-  AssertEqual("i", i, 2);
-  AssertEqual("j", j, 3);
-  AssertTrue("self.list->isEmpty()", self.list->isEmpty());
-
-  WriteLine("Done");
 }

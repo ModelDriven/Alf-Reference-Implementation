@@ -1,7 +1,29 @@
 /**
  * Test return statements.
  **/
-active class Statements_Return {
+class Statements_Return specializes Test {
+
+	@Create public Statements_Return() {
+	  this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+	  super(tester);
+
+	  this.test(a, b, c, x, y, z, n);
+	  
+	  AssertEqual("a", a, 4);
+	  AssertEqual("b", b, 2);
+	  AssertEqual("c", c, "xx");
+	  
+	  AssertEqual("x", x, 1);
+	  AssertEqual("y", y, 2);
+	  AssertEqual("z", z, 3);
+	  
+	  AssertEqual("n", n, 1);
+	
+	  this.done();
+	}
 
   public activity test1(): Integer {
     item = 4;
@@ -42,18 +64,4 @@ active class Statements_Return {
     return;
     n = 2;
   }
-} do {
-  this.test(a, b, c, x, y, z, n);
-  
-  AssertEqual("a", a, 4);
-  AssertEqual("b", b, 2);
-  AssertEqual("c", c, "xx");
-  
-  AssertEqual("x", x, 1);
-  AssertEqual("y", y, 2);
-  AssertEqual("z", z, 3);
-  
-  AssertEqual("n", n, 1);
-
-  WriteLine("Done");
 }

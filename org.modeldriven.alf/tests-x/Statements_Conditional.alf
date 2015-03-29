@@ -1,7 +1,26 @@
 /**
  * Test if and switch statements.
  **/  
-active class Statements_Conditional {
+class Statements_Conditional specializes Test {
+
+	@Create public Statements_Conditional() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+		
+		this.test(condition1, condition2, condition3, year, month, numDays);
+		
+		AssertEqual("condition1", condition1, Condition::alert);
+		AssertEqual("condition2", condition2, Condition::critical);
+		AssertEqual("condition3", condition3, Condition::critical);
+		AssertEqual("year", year, 2012);
+		AssertEqual("month", month, 2);
+		AssertEqual("numDays", numDays, 29);
+	
+	  	this.done();
+	}
 
     // Supporting declarations *************************************************
     
@@ -63,14 +82,14 @@ active class Statements_Conditional {
       switch (year) {
       	case 2012:
       	  month = 2;
-    		default:
-    		  month = 3;
+		default:
+		  month = 3;
       }
       
       switch (month) {
         case 1: case 3: case 5: case 7: case 8: case 10: case 12:
           numDays = 31; 
-         case 4: case 6: case 9: case 11:
+        case 4: case 6: case 9: case 11:
           numDays = 30; 
         case 2:
           if ( ((year % 4 == 0) && !(year % 100 == 0))
@@ -86,15 +105,4 @@ active class Statements_Conditional {
       }
 	  
     }
-} do {
-	this.test(condition1, condition2, condition3, year, month, numDays);
-	
-	AssertEqual("condition1", condition1, Condition::alert);
-	AssertEqual("condition2", condition2, Condition::critical);
-	AssertEqual("condition3", condition3, Condition::critical);
-	AssertEqual("year", year, 2012);
-	AssertEqual("month", month, 2);
-	AssertEqual("numDays", numDays, 29);
-
-  WriteLine("Done");
 }

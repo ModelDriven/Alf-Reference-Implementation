@@ -1,7 +1,51 @@
 /**
  * Test various operator expressions.
  **/
-active class Expressions_Operator {
+class Expressions_Operator specializes Test {
+
+	@Create public Expressions_Operator() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    this.test(i, j, bs, h, a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, e9,
+	      f, f1, f2, x, y, z, r);
+	      
+	    AssertEqual("i", i, -1);
+	    AssertEqual("j", j, 2);
+	    AssertEqual("bs", bs, (BitString)0b00111000);
+	    AssertEqual("h", h, 0x38);
+	    
+	    AssertFalse("a", a);
+	    AssertTrue("b", b);
+	    AssertFalse("c", c);
+	    AssertTrue("d", d);
+	    AssertFalse("e", e);
+	    
+	    AssertTrue("e1", e1);
+	    AssertTrue("e2", e2);
+	    AssertTrue("e3", e3);
+	    AssertFalse("e4", e4);
+	    AssertFalse("e5", e5);
+	    AssertFalse("e6", e6);
+	    AssertTrue("e7", e7);
+	    AssertFalse("e8", e8);
+	    AssertTrue("e9", e9);
+	    
+	    AssertTrue("f", f);
+	    AssertFalse("f1", f1);
+	    AssertTrue("f2", f2);
+	    
+	    AssertEqual("x", x, +2);
+	    AssertList("y", y, Integer[]{1,2});
+	    AssertList("z", z, Integer[]{1,2});
+	    
+	    AssertEqual("r", r, 2);
+	
+	    this.done();
+	}
 
     // Supporting declarations *************************************************
     
@@ -95,40 +139,4 @@ active class Expressions_Operator {
     
     r = $monitor.getActiveSensor().getReading();    
   }
-} do {
-    this.test(i, j, bs, h, a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, e9,
-      f, f1, f2, x, y, z, r);
-      
-    AssertEqual("i", i, -1);
-    AssertEqual("j", j, 2);
-    AssertEqual("bs", bs, (BitString)0b00111000);
-    AssertEqual("h", h, 0x38);
-    
-    AssertFalse("a", a);
-    AssertTrue("b", b);
-    AssertFalse("c", c);
-    AssertTrue("d", d);
-    AssertFalse("e", e);
-    
-    AssertTrue("e1", e1);
-    AssertTrue("e2", e2);
-    AssertTrue("e3", e3);
-    AssertFalse("e4", e4);
-    AssertFalse("e5", e5);
-    AssertFalse("e6", e6);
-    AssertTrue("e7", e7);
-    AssertFalse("e8", e8);
-    AssertTrue("e9", e9);
-    
-    AssertTrue("f", f);
-    AssertFalse("f1", f1);
-    AssertTrue("f2", f2);
-    
-    AssertEqual("x", x, +2);
-    AssertList("y", y, Integer[]{1,2});
-    AssertList("z", z, Integer[]{1,2});
-    
-    AssertEqual("r", r, 2);
-
-    WriteLine("Done");
 }

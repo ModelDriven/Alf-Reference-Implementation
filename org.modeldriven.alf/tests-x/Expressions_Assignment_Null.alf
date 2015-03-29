@@ -1,7 +1,23 @@
 /**
  * Test non-literal assignment of null.
  **/
-active class Expressions_Assignment_Null {
+class Expressions_Assignment_Null specializes Test {
+
+	@Create public Expressions_Assignment_Null() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+	  super(tester);
+	  this.test(i, j, k);
+	  
+	  AssertEqual("i", i, null);
+	  AssertEqual("j", j, 2);
+	  AssertEqual("k", k, null);
+	  AssertTrue("this.d->notEmpty()", this.d->notEmpty());
+	  
+	  this.done();
+	}
 
   private i: Integer[0..1];
   private j: Integer[*] sequence;
@@ -54,16 +70,5 @@ active class Expressions_Assignment_Null {
     this.setData(null);
     k = this.getData();
   }
-  
-} do {
-
-  this.test(i, j, k);
-  
-  AssertEqual("i", i, null);
-  AssertEqual("j", j, 2);
-  AssertEqual("k", k, null);
-  AssertTrue("this.d->notEmpty()", this.d->notEmpty());
-  
-  WriteLine("Done");
   
 }

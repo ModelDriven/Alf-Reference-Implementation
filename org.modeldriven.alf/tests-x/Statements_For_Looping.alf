@@ -1,7 +1,25 @@
 /**
  * Test for statements.
  **/
-active class Statements_For_Looping {
+class Statements_For_Looping specializes Test {
+
+	@Create public Statements_For_Looping() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+		this.test(readings, sum, outgoingEdges, SnEven, SnOdd);
+		
+		AssertList("readings", readings, Integer[]{1,2});
+		AssertEqual("sum", sum, 55);
+		AssertList("outgoingEdges.token", outgoingEdges.token, Integer[]{2,4});
+		AssertList("SnEven", SnEven, Integer[]{5,7,9});
+		AssertList("SnOdd", SnOdd, Integer[]{30,60,90});
+	
+	  	this.done();
+	}
 
     // Supporting declarations *************************************************
     
@@ -78,14 +96,4 @@ active class Statements_For_Looping {
   	  }
   	  
     }
-} do {
-	this.test(readings, sum, outgoingEdges, SnEven, SnOdd);
-	
-	AssertList("readings", readings, Integer[]{1,2});
-	AssertEqual("sum", sum, 55);
-	AssertList("outgoingEdges.token", outgoingEdges.token, Integer[]{2,4});
-	AssertList("SnEven", SnEven, Integer[]{5,7,9});
-	AssertList("SnOdd", SnOdd, Integer[]{30,60,90});
-
-  WriteLine("Done");
 }

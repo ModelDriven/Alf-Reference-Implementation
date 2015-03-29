@@ -1,0 +1,3 @@
+activity _RunTests() {
+	new _TestRunner().Continue();
+}

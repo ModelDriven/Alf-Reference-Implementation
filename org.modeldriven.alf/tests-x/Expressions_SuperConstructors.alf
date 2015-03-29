@@ -1,7 +1,44 @@
 /**
  * Test super constructor invocation expressions.
  **/
-active class Expressions_SuperConstructors {
+class Expressions_SuperConstructors specializes Test {
+
+	@Create public Expressions_SuperConstructors() {
+	  this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+	  super(tester);
+
+	  this.test(super0, super1, s0, s1, s2, s00, s10, s11, s3);
+	  
+	  AssertEqual("super0.x", super0.x, 0);
+	  AssertEqual("super1.x", super1.x, 1);
+	  
+	  AssertEqual("s0.x", s0.x, 0);
+	  AssertEqual("s0.z1", s0.z1, 1);
+	  AssertEqual("s1.x", s1.x, 1);
+	  AssertEqual("s1.z1", s1.z1, 2);
+	  AssertEqual("s2.x", s2.x, 2);
+	  AssertEqual("s2.z1", s2.z1, 3);
+	  
+	  AssertEqual("s00.x", s00.x, 0);
+	  AssertEqual("s00.y", s00.y, 0);
+	  AssertEqual("s00.z2", s00.z2, 0);
+	  AssertEqual("s10.x", s10.x, 1);
+	  AssertEqual("s10.y", s10.y, 0);
+	  AssertEqual("s10.z2", s10.z2, 1);
+	  AssertEqual("s11.x", s11.x, 1);
+	  AssertEqual("s11.y", s11.y, 1);
+	  AssertEqual("s11.z2", s11.z2, 2);
+	  
+	  AssertEqual("s3.x", s3.x, 3);
+	  AssertEqual("s3.y", s3.y, 2);
+	  AssertEqual("s3.z1", s3.z1, 4);
+	  AssertEqual("s3.z2", s3.z2, 5);
+	
+	  this.done();
+	}
 
     // Supporting declarations *************************************************
     class Super1 {
@@ -81,35 +118,5 @@ active class Expressions_SuperConstructors {
       
       s3 = new Sub3();
     }
-      
-} do {
-  this.test(super0, super1, s0, s1, s2, s00, s10, s11, s3);
-  
-  AssertEqual("super0.x", super0.x, 0);
-  AssertEqual("super1.x", super1.x, 1);
-  
-  AssertEqual("s0.x", s0.x, 0);
-  AssertEqual("s0.z1", s0.z1, 1);
-  AssertEqual("s1.x", s1.x, 1);
-  AssertEqual("s1.z1", s1.z1, 2);
-  AssertEqual("s2.x", s2.x, 2);
-  AssertEqual("s2.z1", s2.z1, 3);
-  
-  AssertEqual("s00.x", s00.x, 0);
-  AssertEqual("s00.y", s00.y, 0);
-  AssertEqual("s00.z2", s00.z2, 0);
-  AssertEqual("s10.x", s10.x, 1);
-  AssertEqual("s10.y", s10.y, 0);
-  AssertEqual("s10.z2", s10.z2, 1);
-  AssertEqual("s11.x", s11.x, 1);
-  AssertEqual("s11.y", s11.y, 1);
-  AssertEqual("s11.z2", s11.z2, 2);
-  
-  AssertEqual("s3.x", s3.x, 3);
-  AssertEqual("s3.y", s3.y, 2);
-  AssertEqual("s3.z1", s3.z1, 4);
-  AssertEqual("s3.z2", s3.z2, 5);
-
-  WriteLine("Done");
 }
     
