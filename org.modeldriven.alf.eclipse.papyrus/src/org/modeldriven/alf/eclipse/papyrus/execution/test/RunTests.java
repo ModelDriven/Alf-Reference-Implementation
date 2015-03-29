@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright 2014 Ivar Jacobson International SA
+ * Copyright 2015 Data Access Technologies (Model Driven Solutions)
+ * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License
  * (GPL) version 3 that accompanies this distribution and is available at     
