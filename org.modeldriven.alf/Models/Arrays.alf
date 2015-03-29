@@ -1,0 +1,36 @@
+package Arrays {
+	public class Array<T> {
+		
+		// This data type is used to allow for null elements in the array.
+		private datatype Value<T> {
+			public value : T[0..1];
+		}
+		
+		private content : Value<T>[*] sequence;
+		
+		@Create
+		public Array(in size : Integer) {
+			for (i in 1..size) {
+				this.content->add(new Value<T>(null));
+			}
+		}
+		
+		// This will automatically return null for indices outside the
+		// bounds of the array.
+		public get(in i : Integer) : T[0..1] {
+			return this.content[i].value;
+		}
+		
+		// This will have no effect for indices outside the bounds of
+		// the array.
+		public put(in i : Integer, in value : T[0..1]) {
+			this.content[i] = new Value<T>(value);
+		}
+		
+		// This will return the elements of the array with null elements
+		// removed.
+		public toSequence() : T[*] {
+			return this.content.value;
+		}
+	}
+}

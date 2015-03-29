@@ -1,0 +1,15 @@
+private import Arrays::Array;
+private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToString;
+activity ArrayTest() {
+	a = new Array<Integer>(42);
+	a.put(1,1);
+	a.put(2,2);
+	a.put(42,42);
+	
+	WriteLine("a[1] = " + (a.get(1) == null? "null": ToString(a.get(1))));
+	WriteLine("a[2] = " + (a.get(2) == null? "null": ToString(a.get(2))));
+	WriteLine("a[3] = " + (a.get(3) == null? "null": ToString(a.get(3))));
+	WriteLine("a[42] = " + (a.get(42) == null? "null": ToString(a.get(42))));
+
+	a.toSequence()->iterate i (WriteLine(ToString(i)));
+}
