@@ -275,7 +275,7 @@ public class SequenceOperationExpressionImpl
      **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
         Expression expression = this.getExpression();
-        ElementReference expressionType = this.getType();
+        ElementReference expressionType = expression.getType();
         LeftHandSide lhs = this.getLeftHandSide();
         ElementReference type = this.getFirstParameterType();
         return expression == null || !this.isInPlace() ||
