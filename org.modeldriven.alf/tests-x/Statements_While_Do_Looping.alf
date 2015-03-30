@@ -83,7 +83,7 @@ class Statements_While_Do_Looping specializes Test {
   test(
     out count: Integer, out checksum: Integer, 
     out nextRecord: FileRecord[0..1], out file: File, 
-    out lines: String[*] sequence, out readings: Reading[*] sequence, 
+    out lines: String[*] sequence, out readings: Integer[*] sequence, 
     out i: Integer, out j: Integer,
     out self: Statements_While_Do_Looping) {
   
