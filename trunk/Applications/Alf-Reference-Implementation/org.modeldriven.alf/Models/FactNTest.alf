@@ -1,0 +1,6 @@
+private import Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToString;
+activity FactNTest() {
+	for (x in Natural[]{0, 3, 10}) {
+		WriteLine("FactN(" + ToString(x) + ") = " + ToString(FactN(x)));
+	}	
+}
