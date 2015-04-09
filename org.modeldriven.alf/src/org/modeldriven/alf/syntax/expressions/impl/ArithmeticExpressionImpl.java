@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 /**
  * A binary expression with an arithmetic operator.
@@ -54,17 +55,23 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
      * The type of an arithmetic expression is the same as the type of its
      * operands.
      **/
+	// Actually, the type of the expression should be either Integer or String, 
+	// depending on the type of its operands, even if the operands have types that
+	// are actually subtypes of Integer or String (e.g., Natural).
 	@Override
 	protected ElementReference deriveType() {
 	    ArithmeticExpression self = this.getSelf();
 	    Expression operand1 = self.getOperand1();
 	    Expression operand2 = self.getOperand2();
-	    if (operand1 != null) {
-	        return operand1.getType();
-	    } else if (operand2 != null) {
-	        return operand2.getType();
-	    } else {
+	    Expression operand = operand1 != null? operand1: operand2;
+	    if (operand == null) {
 	        return null;
+	    } else {
+	        ElementReference type = operand.getType();
+	        return type == null? null:
+	               type.getImpl().isInteger()? RootNamespace.getIntegerType():
+	               type.getImpl().isString()? RootNamespace.getStringType():
+	               null;
 	    }
 	}
 	

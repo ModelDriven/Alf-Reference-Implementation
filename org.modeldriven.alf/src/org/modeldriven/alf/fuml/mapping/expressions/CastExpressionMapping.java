@@ -15,12 +15,10 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.CastExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
-
 import org.modeldriven.alf.uml.CallBehaviorAction;
 import org.modeldriven.alf.uml.Pin;
 import org.modeldriven.alf.uml.ReadIsClassifiedObjectAction;
@@ -29,6 +27,7 @@ import org.modeldriven.alf.uml.ExpansionRegion;
 import org.modeldriven.alf.uml.ActivityNode;
 import org.modeldriven.alf.uml.ForkNode;
 import org.modeldriven.alf.uml.Classifier;
+import org.modeldriven.alf.uml.ValueSpecificationAction;
 
 public class CastExpressionMapping extends ExpressionMapping {
     
@@ -76,6 +75,26 @@ public class CastExpressionMapping extends ExpressionMapping {
         return forkNode;
     }
     
+    protected static ActivityNode addNaturalCheck(
+            ActivityGraph graph,
+            ActivityNode target) throws MappingError {
+        ValueSpecificationAction valueAction =
+                graph.addNaturalValueSpecificationAction(0);
+        CallBehaviorAction callAction =
+                graph.addCallBehaviorAction(getBehavior(RootNamespace.getIntegerFunction(">=")));
+        graph.addObjectFlow(valueAction.getResult(), callAction.getArgument().get(1));
+        
+        ForkNode forkNode = graph.addForkNode("Fork(" + callAction.getArgument().get(0).getName() + ")");
+        graph.addObjectFlow(forkNode, callAction.getArgument().get(0));
+        
+        graph.addObjectDecisionNode(
+                callAction.getResult().get(0).getName(), 
+                forkNode, callAction.getResult().get(0), 
+                target, null);
+        
+        return forkNode;        
+    }
+    
     protected ActivityNode mapNestedGraph(
             ActivityNode target, 
             ActivityGraph nestedGraph) throws MappingError {
@@ -94,6 +113,17 @@ public class CastExpressionMapping extends ExpressionMapping {
             // addClassificationDecision.
             
             if (type.getImpl().isInteger()) {
+                // For a downcast to Natural (other than from UnlimitedNatural), add a check
+                // that the operand is greater than or equal to zero.
+                if (type.getImpl().isNatural() && 
+                        !operandType.getImpl().isUnlimitedNatural()) {
+                    target = addNaturalCheck(nestedGraph, target);
+                    if (operandType.getImpl().isInteger()) {
+                        // If the operand type is Integer, than the bounds check is
+                        // all that is needed.
+                        return target;
+                    }
+                }
                 // NOTE: For Integer, the test for an UnlimitedNatural operand
                 // must come after the test of for an Integer operand
                 // in order to properly handle Natural values. Even though 
