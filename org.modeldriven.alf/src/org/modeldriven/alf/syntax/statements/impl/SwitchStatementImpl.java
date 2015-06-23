@@ -148,24 +148,25 @@ public class SwitchStatementImpl extends StatementImpl {
 	protected Map<String, AssignedSource> deriveAssignmentAfter() {
         SwitchStatement self = this.getSelf();
         Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
+        Map<String, AssignedSource> assignmentsBeforeClauses = assignmentsBefore;
         Expression expression = self.getExpression();
         if (expression != null) {
             expression.getImpl().setAssignmentBefore(assignmentsBefore);
-            assignmentsBefore = expression.getImpl().getAssignmentAfterMap();
+            assignmentsBeforeClauses = expression.getImpl().getAssignmentAfterMap();
         }
         Collection<Block> blocks = new ArrayList<Block>();
         for (SwitchClause clause: self.getNonDefaultClause()) {
-            clause.getImpl().setAssignmentBefore(assignmentsBefore);
+            clause.getImpl().setAssignmentBefore(assignmentsBeforeClauses);
             blocks.add(clause.getImpl().getBlock());
         }
         Block defaultClause = self.getDefaultClause();
         if (defaultClause != null) {
-            defaultClause.getImpl().setAssignmentBefore(assignmentsBefore);
+            defaultClause.getImpl().setAssignmentBefore(assignmentsBeforeClauses);
             blocks.add(defaultClause);
         }
         Map<String, AssignedSource> assignmentsAfter = 
             new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
-        assignmentsAfter.putAll(this.mergeAssignments(blocks));
+        assignmentsAfter.putAll(this.mergeAssignments(blocks, assignmentsBefore));
         return assignmentsAfter;
 	}
 	

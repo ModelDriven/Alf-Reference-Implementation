@@ -10,8 +10,9 @@ class Statements_Conditional specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 		
-		this.test(condition1, condition2, condition3, year, month, numDays);
+		this.test(reading, condition1, condition2, condition3, year, month, numDays);
 		
+		AssertEqual("reading", reading, 150);
 		AssertEqual("condition1", condition1, Condition::alert);
 		AssertEqual("condition2", condition2, Condition::critical);
 		AssertEqual("condition3", condition3, Condition::critical);
@@ -32,10 +33,12 @@ class Statements_Conditional specializes Test {
     
     //**************************************************************************
 
-    test(out condition1: Condition, out condition2: Condition, out condition3: Condition,
+    test(out reading1 : Integer, 
+    	 out condition1: Condition, out condition2: Condition, out condition3: Condition,
     	 out year: Integer, out month: Integer, out numDays: Integer ) {
     
       // Setup
+      reading1 = 0;
       reading = 150;
       threshold = 10;
       safeLimit = 100;
@@ -46,7 +49,7 @@ class Statements_Conditional specializes Test {
       year = 2012;
       // *****
       
-      if (reading > threshold) {
+      if ((reading1 = reading) > threshold) {
          monitor.raiseAlarm(sensorId); 
       }
       
