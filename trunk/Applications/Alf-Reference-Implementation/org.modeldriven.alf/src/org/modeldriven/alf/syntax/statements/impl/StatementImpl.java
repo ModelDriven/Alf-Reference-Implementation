@@ -257,13 +257,14 @@ public abstract class StatementImpl extends DocumentedElementImpl {
      * Merge the assignments made in a collection of blocks, such as occur in an
      * accept or if statement.
      */
-    protected Map<String, AssignedSource> mergeAssignments(Collection<Block> blocks) {
+    protected Map<String, AssignedSource> mergeAssignments(
+            Collection<Block> blocks,
+            Map<String, AssignedSource> assignmentsBefore) {
         Map<String, AssignedSource> mergedAssignments = new HashMap<String, AssignedSource>();
         Map<String, Collection<AssignedSource>> assignmentMap = new HashMap<String, Collection<AssignedSource>>();
         
         // Collect assignments made in each block and group by local name.
         for (Block block: blocks) {
-            Map<String, AssignedSource> assignmentsBefore = block.getImpl().getAssignmentBeforeMap();
             for (AssignedSource assignment: block.getAssignmentAfter()) {
                 String name = assignment.getName();
                 AssignedSource oldAssignment = assignmentsBefore.get(name);
