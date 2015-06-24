@@ -15,11 +15,10 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
+import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.SwitchClause;
 import org.modeldriven.alf.syntax.statements.SwitchStatement;
-
 import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
@@ -66,15 +65,19 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         
         List<String> assignedNames = this.mapConditionalNode(node, graph);
         
-        Collection<Clause> clauses = new ArrayList<Clause>();        
-        FumlMapping mapping = this.fumlMap(statement.getExpression());
+        Collection<Clause> clauses = new ArrayList<Clause>(); 
+        Expression expression = statement.getExpression();
+        FumlMapping mapping = this.fumlMap(expression);
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping switch expression: " + 
                     mapping.getErrorMessage());
         } else {
             ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
             ActivityNode resultSource = expressionMapping.getResultSource();
-            graph.addAll(expressionMapping.getGraph());
+            ActivityNode switchNode = graph.addStructuredActivityNode(
+                    "Switch((SwitchStatement@" + statement.getId() + ")", 
+                    expressionMapping.getModelElements());
+            graph.addControlFlow(switchNode, node);
             
             ActivityGraph subgraph = this.createActivityGraph();
             ActivityNode forkNode = 
@@ -91,6 +94,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
                     SwitchClauseMapping clauseMapping = 
                         (SwitchClauseMapping)mapping;
                     clauseMapping.setSwitchSource(forkNode);
+                    clauseMapping.setSwitchLower(expression.getLower());
                     clauseMapping.setAssignedNames(assignedNames);
                     graph.addToStructuredNode(
                             node, clauseMapping.getModelElements());
