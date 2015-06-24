@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -271,18 +271,20 @@ public class SequenceOperationExpressionImpl
      * 
      * Note: This constraint also needs to require that the primary expression
      * has the form of a left-hand side and, if for a local name or data value
-     * update, the assigned name must already exist.
+     * update, the assigned name must already exist. The first parameter must
+     * be assignable to the effective left-hand side.
      **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
         Expression expression = this.getExpression();
-        ElementReference expressionType = expression.getType();
         LeftHandSide lhs = this.getLeftHandSide();
-        ElementReference type = this.getFirstParameterType();
+        FormalParameter parameter = this.getFirstParameter();
         return expression == null || !this.isInPlace() ||
                     lhs != null && (lhs.getImpl().getAssignedName() == null || 
                             this.getOldAssignment() != null) &&
-                    (type != null && type.getImpl().equals(expressionType) ||
-                            type == null && expressionType == null);
+                    lhs.getImpl().isAssignableFrom(
+                            new AssignableTypedElementImpl(parameter.getImpl()));
+//                    (type != null && type.getImpl().equals(expressionType) ||
+//                            type == null && expressionType == null);
 	}
 
     /**
