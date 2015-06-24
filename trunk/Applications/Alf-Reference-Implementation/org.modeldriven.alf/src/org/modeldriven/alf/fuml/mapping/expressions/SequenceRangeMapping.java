@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -165,7 +165,7 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
         // Preserve the range upper bound.
         StructuredActivityNode node =
             loopGraph.addStructuredActivityNode(
-                    "Node(" + loopNode.getLoopVariable().get(1).getName(), 
+                    "Node(" + loopNode.getLoopVariable().get(1).getName() + ")", 
                     new ArrayList<Element>());
         node.addStructuredNodeInput(graph.createInputPin(
                 node.getName() + ".input", getIntegerType(), 1, 1));
