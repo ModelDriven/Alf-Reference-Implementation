@@ -10,13 +10,12 @@
 
 package org.modeldriven.alf.fuml.mapping.expressions;
 
+import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.expressions.BinaryExpressionMapping;
 import org.modeldriven.alf.mapping.MappingError;
-
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.EqualityExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
-
 import org.modeldriven.alf.uml.CallBehaviorAction;
 import org.modeldriven.alf.uml.InputPin;
 import org.modeldriven.alf.uml.TestIdentityAction;
@@ -61,41 +60,12 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
             ActivityNode operand2Result) throws MappingError {
         EqualityExpression expression = this.getEqualityExpression();
         
-        TestIdentityAction testAction = 
-            this.graph.addTestIdentityAction("==");
-        this.action = testAction;
-        this.resultSource = testAction.getResult();
-        
-        int operand1Lower = expression.getOperand1().getLower();
-        int operand2Lower = expression.getOperand2().getLower();
-        if (operand1Lower == 0 && operand2Lower > 0) {
-            ActivityNode testResult = 
-                this.mapNonEmptyTest(testAction.getFirst(), operand1Result);
-            this.mapNonEmptyResult(testAction, testResult);
-            this.graph.addObjectFlow(
-                    operand2Result, 
-                    testAction.getSecond());
-        } else if (operand2Lower > 0 && operand2Lower == 0) {
-            this.graph.addObjectFlow(
-                    operand1Result, 
-                    testAction.getFirst());
-            ActivityNode testResult = 
-                this.mapNonEmptyTest(testAction.getSecond(), operand2Result);
-            this.mapNonEmptyResult(testAction, testResult);
-        } else if (operand1Lower == 0 && operand2Lower == 0) {
-            ActivityNode test1Result = 
-                this.mapNonEmptyTest(testAction.getFirst(), operand1Result);
-            ActivityNode test2Result = 
-                this.mapNonEmptyTest(testAction.getSecond(), operand2Result);
-            this.mapDoubleEmptyResult(testAction, test1Result, test2Result);
-        } else {
-            this.graph.addObjectFlow(
-                    operand1Result, 
-                    testAction.getFirst());
-            this.graph.addObjectFlow(
-                    operand2Result, 
-                    testAction.getSecond());
-        }
+        this.action = this.graph.addTestIdentityAction("==");
+        this.resultSource = mapEquality(
+            this.graph, (TestIdentityAction) this.action, 
+            operand1Result, operand2Result,
+            expression.getOperand1().getLower(),
+            expression.getOperand2().getUpper());
         
         if (expression.getIsNegated()) {
             CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
@@ -134,75 +104,122 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
         }
     }
 
-    private ActivityNode mapNonEmptyTest(
+    // This operation is also used in SwitchStatementMapping.
+    public static ActivityNode mapEquality(
+            ActivityGraph graph,
+            TestIdentityAction testAction,
+            ActivityNode operand1Result, 
+            ActivityNode operand2Result,
+            int operand1Lower,
+            int operand2Lower) throws MappingError {
+        
+        ActivityNode resultSource = testAction.getResult();
+        
+        if (operand1Lower == 0 && operand2Lower > 0) {
+            ActivityNode testResult = 
+                mapNonEmptyTest(graph, testAction.getFirst(), operand1Result);
+            resultSource = mapNonEmptyResult(graph, testAction, testResult);
+            graph.addObjectFlow(
+                    operand2Result, 
+                    testAction.getSecond());
+        } else if (operand1Lower > 0 && operand2Lower == 0) {
+            graph.addObjectFlow(
+                    operand1Result, 
+                    testAction.getFirst());
+            ActivityNode testResult = 
+                mapNonEmptyTest(graph, testAction.getSecond(), operand2Result);
+            resultSource = mapNonEmptyResult(graph, testAction, testResult);
+        } else if (operand1Lower == 0 && operand2Lower == 0) {
+            ActivityNode test1Result = 
+                mapNonEmptyTest(graph, testAction.getFirst(), operand1Result);
+            ActivityNode test2Result = 
+                mapNonEmptyTest(graph, testAction.getSecond(), operand2Result);
+            resultSource = 
+                mapDoubleEmptyResult(graph, testAction, test1Result, test2Result);
+        } else {
+            graph.addObjectFlow(
+                    operand1Result, 
+                    testAction.getFirst());
+            graph.addObjectFlow(
+                    operand2Result, 
+                    testAction.getSecond());
+        }
+        
+        return resultSource;
+    }
+    
+    private static ActivityNode mapNonEmptyTest(
+            ActivityGraph graph,
 	        InputPin inputPin,
             ActivityNode operandResult) throws MappingError {
         ActivityNode forkNode = 
-            this.graph.addForkNode("Fork(" + operandResult.getName() + ")");
-        this.graph.addObjectFlow(operandResult, forkNode);
-        this.graph.addObjectFlow(forkNode, inputPin);
+            graph.addForkNode("Fork(" + operandResult.getName() + ")");
+        graph.addObjectFlow(operandResult, forkNode);
+        graph.addObjectFlow(forkNode, inputPin);
         
-        CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
+        CallBehaviorAction callAction = graph.addCallBehaviorAction(
                 getBehavior(RootNamespace.getSequenceFunctionNotEmpty()));
-        this.graph.addObjectFlow(forkNode, callAction.getArgument().get(0));
+        graph.addObjectFlow(forkNode, callAction.getArgument().get(0));
         
         return callAction.getResult().get(0);
     }
 
-    private void mapNonEmptyResult(
+    private static ActivityNode mapNonEmptyResult(
+            ActivityGraph graph,
             TestIdentityAction testAction, 
             ActivityNode testResult) {
         ActivityNode forkNode = 
-            this.graph.addForkNode("Fork(" + testResult.getName() + ")");
-        this.graph.addObjectFlow(testResult, forkNode);
+            graph.addForkNode("Fork(" + testResult.getName() + ")");
+        graph.addObjectFlow(testResult, forkNode);
 
-        ActivityNode mergeNode = this.graph.addMergeNode(
+        ActivityNode mergeNode = graph.addMergeNode(
                 "Merge(" + testAction.getResult().getName() + ", " + testResult.getName() + ")");
-        this.graph.addObjectFlow(testAction.getResult(), mergeNode);
+        graph.addObjectFlow(testAction.getResult(), mergeNode);
         
-        this.graph.addObjectDecisionNode(
+        graph.addObjectDecisionNode(
                 testResult.getName(), forkNode, forkNode, null, mergeNode);
         
-        this.resultSource = mergeNode;
+        return mergeNode;
     }
 
-    private void mapDoubleEmptyResult(
+    private static ActivityNode mapDoubleEmptyResult(
+            ActivityGraph graph,
             TestIdentityAction testAction, 
             ActivityNode test1Result,
             ActivityNode test2Result) throws MappingError {
         ActivityNode initialNode = 
-            this.graph.addInitialNode("Initial(" + testAction.getName() + ")");
+            graph.addInitialNode("Initial(" + testAction.getName() + ")");
         
         ActivityNode fork1 = 
-            this.graph.addForkNode("Fork(" + test1Result.getName() + ")");
-        this.graph.addObjectFlow(test1Result, fork1);
+            graph.addForkNode("Fork(" + test1Result.getName() + ")");
+        graph.addObjectFlow(test1Result, fork1);
         
         ActivityNode fork2 = 
-            this.graph.addForkNode("Fork(" + test2Result.getName() + ")");
-        this.graph.addObjectFlow(test2Result, fork2);
+            graph.addForkNode("Fork(" + test2Result.getName() + ")");
+        graph.addObjectFlow(test2Result, fork2);
 
         Behavior booleanFunctionNot = 
             getBehavior(RootNamespace.getBooleanFunctionNot());
         CallBehaviorAction not1Action = 
-            this.graph.addCallBehaviorAction(booleanFunctionNot);
-        this.graph.addObjectFlow(fork1, not1Action.getArgument().get(0));        
+            graph.addCallBehaviorAction(booleanFunctionNot);
+        graph.addObjectFlow(fork1, not1Action.getArgument().get(0));        
         CallBehaviorAction not2Action = 
-            this.graph.addCallBehaviorAction(booleanFunctionNot);
-        this.graph.addObjectFlow(fork2, not2Action.getArgument().get(0));        
+            graph.addCallBehaviorAction(booleanFunctionNot);
+        graph.addObjectFlow(fork2, not2Action.getArgument().get(0));        
 
-        ActivityNode decision2 = this.graph.addControlDecisionNode(
+        ActivityNode decision2 = graph.addControlDecisionNode(
                 test2Result.getName(), null, fork2, testAction, not1Action);
-        this.graph.addControlDecisionNode(
+        graph.addControlDecisionNode(
                 test1Result.getName(), initialNode, fork1, decision2, not2Action);
         
-        ActivityNode mergeNode = this.graph.addMergeNode(
+        ActivityNode mergeNode = graph.addMergeNode(
                 "Merge(" + testAction.getResult().getName() + ", !" + 
                 test1Result.getName() + " && !" + test2Result.getName() + ")");
-        this.graph.addObjectFlow(testAction.getResult(), mergeNode);
-        this.graph.addObjectFlow(not1Action.getResult().get(0), mergeNode);
-        this.graph.addObjectFlow(not2Action.getResult().get(0), mergeNode);
+        graph.addObjectFlow(testAction.getResult(), mergeNode);
+        graph.addObjectFlow(not1Action.getResult().get(0), mergeNode);
+        graph.addObjectFlow(not2Action.getResult().get(0), mergeNode);
         
-        this.resultSource = mergeNode;        
+        return mergeNode;        
     }
 
     public EqualityExpression getEqualityExpression() {

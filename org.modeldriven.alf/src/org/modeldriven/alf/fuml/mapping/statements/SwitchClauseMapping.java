@@ -13,15 +13,14 @@ package org.modeldriven.alf.fuml.mapping.statements;
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
+import org.modeldriven.alf.fuml.mapping.expressions.EqualityExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.SwitchClause;
 import org.modeldriven.alf.syntax.units.RootNamespace;
-
 import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
     private Clause clause = null;
     private Collection<Element> modelElements = null;
     private ActivityNode switchSource = null;
+    private int switchLower = 0;
     private List<String> assignedNames = null;
     
     /**
@@ -44,6 +44,11 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
     // NOTE: This should be called before mapping.
     public void setSwitchSource(ActivityNode switchSource) {
         this.switchSource = switchSource;
+    }
+    
+    // NOTE: This should be called before mapping.
+    public void setSwitchLower(int switchLower) {
+        this.switchLower = switchLower;
     }
     
     // NOTE: This should be called before mapping.
@@ -69,10 +74,12 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
                 testGraph.addAll(caseMapping.getGraph());
                 TestIdentityAction testAction = testGraph.addTestIdentityAction(
                         "Case(" + resultSource.getName() + ")");
-                testGraph.addObjectFlow(this.switchSource, testAction.getFirst());
-                testGraph.addObjectFlow(resultSource, testAction.getSecond());
+                resultSource = EqualityExpressionMapping.mapEquality(
+                        testGraph, testAction, 
+                        this.switchSource, resultSource, 
+                        this.switchLower, switchCase.getLower());
                 if (testSource == null) {
-                    testSource = testAction.getResult();
+                    testSource = resultSource;
                 } else {
                     CallBehaviorAction callAction = 
                         testGraph.addCallBehaviorAction(
@@ -80,7 +87,7 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
                     testGraph.addObjectFlow(
                             testSource, callAction.getArgument().get(0));
                     testGraph.addObjectFlow(
-                            testAction.getResult(), callAction.getArgument().get(1));
+                            resultSource, callAction.getArgument().get(1));
                     testSource = callAction.getResult().get(0);
                 }
             }
@@ -100,7 +107,7 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
     public Clause getClause() throws MappingError {
         if (this.clause == null) {
             this.mapClause();
-            this.map(clause);
+            this.map(this.clause);
         }
         return this.clause;
     }

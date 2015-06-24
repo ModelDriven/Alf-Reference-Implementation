@@ -10,7 +10,11 @@ class Statements_Conditional specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 		
-		this.test(reading, condition1, condition2, condition3, year, month, numDays);
+		this.test(
+			reading, condition1, condition2, condition3, 
+			year, month, numDays,
+			switch1, switch2, switch3
+		);
 		
 		AssertEqual("reading", reading, 150);
 		AssertEqual("condition1", condition1, Condition::alert);
@@ -19,6 +23,9 @@ class Statements_Conditional specializes Test {
 		AssertEqual("year", year, 2012);
 		AssertEqual("month", month, 2);
 		AssertEqual("numDays", numDays, 29);
+		AssertEqual("switch1", switch1, 3);
+		AssertEqual("switch2", switch2, 1);
+		AssertEqual("switch3", switch3, 1);
 	
 	  	this.done();
 	}
@@ -35,7 +42,8 @@ class Statements_Conditional specializes Test {
 
     test(out reading1 : Integer, 
     	 out condition1: Condition, out condition2: Condition, out condition3: Condition,
-    	 out year: Integer, out month: Integer, out numDays: Integer ) {
+    	 out year: Integer, out month: Integer, out numDays: Integer,
+    	 out switch1: Integer, out switch2: Integer, out switch3: Integer ) {
     
       // Setup
       reading1 = 0;
@@ -105,6 +113,24 @@ class Statements_Conditional specializes Test {
         default:
           WriteLine("Invalid month.");
           numDays = 0;
+      }
+      
+      switch1 = 1;
+      switch (switch1 + 2) {
+      	case 1: switch1 = 1;
+      	case 2: switch1 = 2;
+      	case 3: switch1 = 3;
+      	default: switch1 = 0;
+      }
+      
+      switch2 = 0;
+      switch (switch2/0) {
+      	case switch2/0: switch2 = 1;
+      }
+      
+      switch (switch2) {
+      	case 0: switch3 = 0;
+      	default: switch3 = 1;
       }
 	  
     }
