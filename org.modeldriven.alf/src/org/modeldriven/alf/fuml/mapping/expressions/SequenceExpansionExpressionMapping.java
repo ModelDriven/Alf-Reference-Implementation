@@ -174,7 +174,7 @@ public abstract class SequenceExpansionExpressionMapping extends
         ActivityNode joinNode = nestedGraph.addJoinNode(
                 "Join(" + resultSource.getName() + ")");
         ActivityNode finalNode = 
-            nestedGraph.addMergeNode(
+            nestedGraph.addActivityFinalNode(
                     "ActivityFinal(" + resultSource.getName() + ")");
         nestedGraph.addObjectFlow(forkNode, joinNode);
         nestedGraph.addControlFlow(structuredNode, joinNode);
