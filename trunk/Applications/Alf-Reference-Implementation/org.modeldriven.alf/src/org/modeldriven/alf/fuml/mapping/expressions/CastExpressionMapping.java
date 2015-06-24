@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -116,9 +116,10 @@ public class CastExpressionMapping extends ExpressionMapping {
                 // For a downcast to Natural (other than from UnlimitedNatural), add a check
                 // that the operand is greater than or equal to zero.
                 if (type.getImpl().isNatural() && 
-                        !operandType.getImpl().isUnlimitedNatural()) {
+                        (operandType == null ||
+                         !operandType.getImpl().isUnlimitedNatural())) {
                     target = addNaturalCheck(nestedGraph, target);
-                    if (operandType.getImpl().isInteger()) {
+                    if (operandType != null && operandType.getImpl().isInteger()) {
                         // If the operand type is Integer, than the bounds check is
                         // all that is needed.
                         return target;
