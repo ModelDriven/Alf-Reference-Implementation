@@ -384,7 +384,7 @@ public class ActivityGraph {
             input.setName(loopNode.getName() + ".loopVariableInput(" + variableName + ")");
             loopNode.addLoopVariableInput(input);
             loopNode.addLoopVariable(createOutputPin(
-                    loopNode.getName() + ".loopVariable()(" + variableName + ")", 
+                    loopNode.getName() + ".loopVariable(" + variableName + ")", 
                     input.getType(), 
                     input.getLower(), 
                     input.getUpper()));
