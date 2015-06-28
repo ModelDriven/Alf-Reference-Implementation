@@ -215,14 +215,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         }
     }
     
-    public AlfBase() {
-        super();
-        this.configure();
-    }
-    
-    public AlfBase(String[] args) {
-        this();
-        
+    public void run(String[] args) {
         String unitName = this.parseArgs(args);        
         if (unitName != null) {
             this.process(this.parse(unitName, this.isFileName));
@@ -241,6 +234,16 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
             this.println("  -P        Parse, constraint check and print abstract syntax tree");
             this.println("  -v        Set verbose mode");
         }         
+    }
+    
+    public AlfBase() {
+        super();
+        this.configure();
+    }
+    
+    public AlfBase(String[] args) {
+        this();
+        this.run(args);
     }
     
 }

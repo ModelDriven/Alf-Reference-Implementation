@@ -52,10 +52,10 @@ public class TestRunnerGenerator {
        return buffer.toString(); 
     }
     
-    public static void main(String[] args) {
+    public static void generate(String testDirectory) {
         TestRunnerGenerator testRunnerGen = new TestRunnerGenerator();
         
-        File directory = new File(TEST_DIR);        
+        File directory = new File(testDirectory);        
         for (String fileName: directory.list()) {
             String unitName = fileName.substring(0, fileName.length()-4);
             int i = unitName.indexOf('_');
@@ -69,11 +69,15 @@ public class TestRunnerGenerator {
             }
         }
         
-        System.out.println("Writing to " + TEST_DIR + "/" + FILE_NAME);
+        System.out.println("Generated " + testDirectory + "/" + FILE_NAME);
         try {
-            Files.write(Paths.get(TEST_DIR, FILE_NAME), testRunnerGen.getText(), Charset.defaultCharset());
+            Files.write(Paths.get(testDirectory, FILE_NAME), testRunnerGen.getText(), Charset.defaultCharset());
         } catch (IOException e) {
             System.out.println(e);
         }
+    }
+    
+    public static void main(String[] args) {
+        generate(TEST_DIR);
     }
 }
