@@ -458,7 +458,7 @@ public class SequenceOperationExpressionImpl
             // avoid having to deal with the implicit template binding of the
             // invocation referent.
             ElementReference collectionFunctionAdd = 
-                    RootNamespace.getCollectionFunctionAdd();
+                    RootNamespace.getRootScope().getCollectionFunctionAdd();
             if (operation != null && this.expression != null &&
                     collectionFunctionAdd != null && 
                     collectionFunctionAdd.getImpl().

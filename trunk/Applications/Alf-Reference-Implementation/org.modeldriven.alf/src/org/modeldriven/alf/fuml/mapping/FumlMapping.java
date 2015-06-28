@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -31,13 +31,6 @@ public abstract class FumlMapping extends Mapping {
     private static ElementFactory fumlElementFactory = null;
     private static SyntaxElement parsedElement = null;
     
-    private static PrimitiveType booleanType = null;
-    private static PrimitiveType integerType = null;
-    private static PrimitiveType unlimitedNaturalType = null;
-    private static PrimitiveType naturalType = null;
-    private static PrimitiveType stringType = null;
-    private static PrimitiveType bitStringType = null;
-    
     public static FumlMappingFactory getFumlFactory() {
         if (fumlFactory == null) {
             fumlFactory = new FumlMappingFactory();
@@ -61,85 +54,41 @@ public abstract class FumlMapping extends Mapping {
     }
     
     public static PrimitiveType getBooleanType() {
-        if (booleanType == null) {
-            try {
-                booleanType = getPrimitiveType(RootNamespace.getBooleanType());
-            } catch (Exception e) {
-                System.out.println("Error mapping primitive type Boolean: " +
-                        e.getMessage());
-            }
-        }
-        return booleanType;
+        return getPrimitiveType(RootNamespace.getRootScope().getBooleanType());
     }
     
     public static PrimitiveType getIntegerType() {
-        if (integerType == null) {
-            try {
-                integerType = getPrimitiveType(RootNamespace.getIntegerType());
-            } catch (Exception e) {
-                System.out.println("Error mapping primitive type Integer: " +
-                        e.getMessage());
-            }
-        }
-        return integerType;
+        return getPrimitiveType(RootNamespace.getRootScope().getIntegerType());
     }
     
     public static PrimitiveType getUnlimitedNaturalType() {
-        if (unlimitedNaturalType == null) {
-            try {
-                unlimitedNaturalType = getPrimitiveType(RootNamespace.getUnlimitedNaturalType());
-            } catch (Exception e) {
-                System.out.println("Error mapping primitive type UnlimitedNatural: " +
-                        e.getMessage());
-            }
-        }
-        return unlimitedNaturalType;
+        return getPrimitiveType(RootNamespace.getRootScope().getUnlimitedNaturalType());
     }
     
     public static PrimitiveType getNaturalType() {
-        if (naturalType == null) {
-            try {
-                naturalType = getPrimitiveType(RootNamespace.getNaturalType());
-            } catch (Exception e) {
-                System.out.println("Error mapping primitive type Integer: " +
-                        e.getMessage());
-            }
-        }
-        return naturalType;
+        return getPrimitiveType(RootNamespace.getRootScope().getNaturalType());
     }
     
     public static PrimitiveType getStringType() {
-        if (stringType == null) {
-            try {
-                stringType = getPrimitiveType(RootNamespace.getStringType());
-            } catch (Exception e) {
-                System.out.println("Error mapping primitive type String: " +
-                        e.getMessage());
-            }
-        }
-        return stringType;
+        return getPrimitiveType(RootNamespace.getRootScope().getStringType());
     }
     
     public static PrimitiveType getBitStringType() {
-        if (bitStringType == null) {
-            try {
-                bitStringType = getPrimitiveType(RootNamespace.getBitStringType());
-            } catch (Exception e) {
-                System.out.println("Error mapping primitive type BitString: " +
-                        e.getMessage());
-            }
-        }
-        return bitStringType;
+        return getPrimitiveType(RootNamespace.getRootScope().getBitStringType());
     }
     
-    public static PrimitiveType getPrimitiveType(ElementReference typeReference) 
-    throws MappingError {
+    public static PrimitiveType getPrimitiveType(ElementReference typeReference) {
         PrimitiveType primitiveType = (PrimitiveType)typeReference.getImpl().getUml();
         if (primitiveType == null) {
             DataTypeDefinitionMapping mapping = 
                     (DataTypeDefinitionMapping)((ElementReferenceMapping)getFumlFactory().
                             getMapping(typeReference)).getMapping();
-            primitiveType = (PrimitiveType)mapping.getClassifier();
+            try {
+                primitiveType = (PrimitiveType)mapping.getClassifier();
+            } catch (MappingError e) {
+                System.out.println("Error mapping primitive type " + 
+                        typeReference.getImpl().getName() + ": " + e.getMessage());
+            }
         } 
         return primitiveType;
     }

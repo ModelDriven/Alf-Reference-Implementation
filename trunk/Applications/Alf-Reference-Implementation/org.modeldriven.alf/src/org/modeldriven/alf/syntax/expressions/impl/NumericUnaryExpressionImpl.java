@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -34,7 +34,7 @@ public class NumericUnaryExpressionImpl extends UnaryExpressionImpl {
 	 **/
 	@Override
 	protected ElementReference deriveType() {
-	    return RootNamespace.getIntegerType();
+	    return RootNamespace.getRootScope().getIntegerType();
 	}
 
 	/**

@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -89,11 +89,11 @@ public class ForAllOrExistsOrOneExpressionMapping extends
         String operation = this.getForAllOrExistsOrOneExpression().getOperation();
         
         if ("forAll".equals(operation)) {
-            this.addBehaviorCall(RootNamespace.getSequenceFunctionIsEmpty());
+            this.addBehaviorCall(RootNamespace.getRootScope().getSequenceFunctionIsEmpty());
         } else if ("exists".equals(operation)) {
-            this.addBehaviorCall(RootNamespace.getSequenceFunctionNotEmpty());
+            this.addBehaviorCall(RootNamespace.getRootScope().getSequenceFunctionNotEmpty());
         } else if ("one".equals(operation)) {
-            this.addBehaviorCall(RootNamespace.getListFunctionSize());
+            this.addBehaviorCall(RootNamespace.getRootScope().getListFunctionSize());
             ValueSpecificationAction valueAction = 
                 this.graph.addNaturalValueSpecificationAction(1);
             TestIdentityAction testAction = 

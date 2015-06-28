@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -206,7 +206,7 @@ public class ForStatementMapping extends LoopStatementMapping {
                 // loop is determined by the list size of the first loop
                 // variable input.
                 callAction = setupSubgraph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getListFunctionSize()));
+                        getBehavior(RootNamespace.getRootScope().getListFunctionSize()));
                 setupSubgraph.addObjectFlow(forkNode, callAction.getArgument().get(0));                
             } else {
                 // If the first loop variable definition is a sequence
@@ -215,11 +215,11 @@ public class ForStatementMapping extends LoopStatementMapping {
                 inputPin.setLower(1);
                 inputPin.setUpper(1);
                 CallBehaviorAction minusAction = setupSubgraph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getIntegerFunctionMinus()));
+                        getBehavior(RootNamespace.getRootScope().getIntegerFunctionMinus()));
                 ValueSpecificationAction valueAction = 
                         setupSubgraph.addNaturalValueSpecificationAction(1);
                 callAction = setupSubgraph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getIntegerFunctionPlus()));
+                        getBehavior(RootNamespace.getRootScope().getIntegerFunctionPlus()));
                 setupSubgraph.addObjectFlow(resultSource2, minusAction.getArgument().get(0));
                 setupSubgraph.addObjectFlow(forkNode, minusAction.getArgument().get(1));
                 setupSubgraph.addObjectFlow(minusAction.getResult().get(0), callAction.getArgument().get(0));
@@ -242,7 +242,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             ActivityGraph subgraph = this.createActivityGraph();
             CallBehaviorAction testCall = 
                 subgraph.addCallBehaviorAction(getBehavior(
-                        RootNamespace.getIntegerFunctionLessThanOrEqual()));
+                        RootNamespace.getRootScope().getIntegerFunctionLessThanOrEqual()));
             subgraph.addObjectFlow(
                     counterFork, testCall.getArgument().get(0));
             subgraph.addObjectFlow(
@@ -282,7 +282,7 @@ public class ForStatementMapping extends LoopStatementMapping {
                     ActivityNode variableFork = 
                             subgraph.addForkNode("Fork(" + loopVariable.getName() + ")");
                     callAction = subgraph.addCallBehaviorAction(
-                            getBehavior(RootNamespace.getListFunctionGet()));
+                            getBehavior(RootNamespace.getRootScope().getListFunctionGet()));
                     subgraph.addObjectFlow(loopVariable, variableFork);
                     subgraph.addObjectFlow(variableFork, callAction.getArgument().get(0));
                     subgraph.addObjectFlow(counterFork, callAction.getArgument().get(1));
@@ -373,7 +373,7 @@ public class ForStatementMapping extends LoopStatementMapping {
                     // definition is a sequence construction shorthand, then
                     // its value must be incremented for the next iteration.
                     callAction = bodyGraph.addCallBehaviorAction(
-                            getBehavior(RootNamespace.getIntegerFunctionPlus()));
+                            getBehavior(RootNamespace.getRootScope().getIntegerFunctionPlus()));
                     valueAction = bodyGraph.addNaturalValueSpecificationAction(1);
                     bodyGraph.addObjectFlow(forkNode, callAction.getArgument().get(0));
                     bodyGraph.addObjectFlow(valueAction.getResult(), callAction.getArgument().get(1));
@@ -395,7 +395,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             
             // Map the incrementing of the loop iteration count.
             callAction = bodyGraph.addCallBehaviorAction(
-                    getBehavior(RootNamespace.getIntegerFunctionPlus()));
+                    getBehavior(RootNamespace.getRootScope().getIntegerFunctionPlus()));
             valueAction = bodyGraph.addNaturalValueSpecificationAction(1);
             bodyGraph.addObjectFlow(counterFork, callAction.getArgument().get(0));
             bodyGraph.addObjectFlow(valueAction.getResult(), callAction.getArgument().get(1));

@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -30,7 +30,7 @@ public class RelationalExpressionMapping extends BinaryExpressionMapping {
         if (this.getRelationalExpression().getIsUnlimitedNatural() && 
                 operand.getType().getImpl().isInteger()) {
             CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
-                    getBehavior(RootNamespace.getIntegerFunctionToUnlimitedNatural()));
+                    getBehavior(RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural()));
             this.graph.addObjectFlow(resultSource, callAction.getArgument().get(0));
             resultSource = callAction.getResult().get(0);
         }
@@ -41,8 +41,8 @@ public class RelationalExpressionMapping extends BinaryExpressionMapping {
     @Override
     protected ElementReference getOperatorFunction(String operator) {
         return this.getRelationalExpression().getIsUnlimitedNatural()?
-                RootNamespace.getUnlimitedNaturalFunction(operator):
-                RootNamespace.getIntegerFunction(operator);
+                RootNamespace.getRootScope().getUnlimitedNaturalFunction(operator):
+                RootNamespace.getRootScope().getIntegerFunction(operator);
     }
 
 	public RelationalExpression getRelationalExpression() {

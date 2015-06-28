@@ -59,7 +59,7 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
         }
         
         if (package_ instanceof Model) {
-            ElementReference standardProfile = RootNamespace.getStandardProfile();
+            ElementReference standardProfile = RootNamespace.getRootScope().getStandardProfile();
             if (standardProfile != null) {
                 ProfileApplication profileApplication = this.create(ProfileApplication.class);
                 profileApplication.setAppliedProfile((Profile)standardProfile.getImpl().getUml());
@@ -72,7 +72,7 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
         if (packageDefinition != null && 
                 packageDefinition.getImpl().isModelLibrary()) {
             ModelNamespaceMapping.applyStereotype(
-                    packageDefinition, RootNamespace.getModelLibraryStereotype());
+                    packageDefinition, RootNamespace.getRootScope().getModelLibraryStereotype());
         }
     }
     

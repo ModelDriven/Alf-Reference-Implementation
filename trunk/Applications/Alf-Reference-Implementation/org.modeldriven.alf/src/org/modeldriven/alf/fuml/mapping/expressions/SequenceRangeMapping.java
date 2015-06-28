@@ -138,7 +138,7 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
         
         CallBehaviorAction testCall = 
             loopGraph.addCallBehaviorAction(getBehavior(
-                    RootNamespace.getIntegerFunctionLessThanOrEqual()));
+                    RootNamespace.getRootScope().getIntegerFunctionLessThanOrEqual()));
         loopGraph.addObjectFlow(
                 fork0, testCall.getArgument().get(0));
         loopGraph.addObjectFlow(
@@ -156,7 +156,7 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
             loopGraph.addNaturalValueSpecificationAction(1);
         CallBehaviorAction incrementCall =
             loopGraph.addCallBehaviorAction(getBehavior(
-                    RootNamespace.getIntegerFunctionPlus()));
+                    RootNamespace.getRootScope().getIntegerFunctionPlus()));
         loopGraph.addObjectFlow(
                 fork0, incrementCall.getArgument().get(0));
         loopGraph.addObjectFlow(
@@ -179,7 +179,7 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
         // Append the counter to the list.
         CallBehaviorAction appendCall =
             loopGraph.addCallBehaviorAction(getBehavior(
-                    RootNamespace.getSequenceFunctionIncluding()));
+                    RootNamespace.getRootScope().getSequenceFunctionIncluding()));
         loopGraph.addObjectFlow(
                 loopNode.getLoopVariable().get(2), appendCall.getArgument().get(0));
         loopGraph.addObjectFlow(

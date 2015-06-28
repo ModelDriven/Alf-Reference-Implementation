@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -288,11 +288,11 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
         UnitDefinition self = this.getSelf();
         if (!this.hasImplicitImports() && this.isModelUnit() &&
                 !self.getIsModelLibrary()) {
-            this.addImplicitImport(RootNamespace.getPrimitiveTypes());
-            this.addImplicitImport(RootNamespace.getPrimitiveBehaviors());
-            this.addImplicitImport(RootNamespace.getBasicInputOutput());
-            this.addImplicitImport(RootNamespace.getCollectionFunctions());
-            this.addImplicitImport(RootNamespace.getCollectionClasses());   
+            this.addImplicitImport(RootNamespace.getRootScope().getPrimitiveTypes());
+            this.addImplicitImport(RootNamespace.getRootScope().getPrimitiveBehaviors());
+            this.addImplicitImport(RootNamespace.getRootScope().getBasicInputOutput());
+            this.addImplicitImport(RootNamespace.getRootScope().getCollectionFunctions());
+            this.addImplicitImport(RootNamespace.getRootScope().getCollectionClasses());   
             this.setHasImplicitImports(true);
         }
     }

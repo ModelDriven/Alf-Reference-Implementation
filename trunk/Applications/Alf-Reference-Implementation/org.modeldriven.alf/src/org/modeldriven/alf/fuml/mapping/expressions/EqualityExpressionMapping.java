@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -69,7 +69,7 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
         
         if (expression.getIsNegated()) {
             CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
-                    getBehavior(RootNamespace.getBooleanFunctionNot()));
+                    getBehavior(RootNamespace.getRootScope().getBooleanFunctionNot()));
             this.graph.addObjectFlow(this.resultSource, callAction.getArgument().get(0));
             this.resultSource = callAction.getResult().get(0);
         }
@@ -92,8 +92,8 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
             ActivityNode operandResult = this.mapOperand(operand2IsNull? 
                     expression.getOperand1(): expression.getOperand2());
             ElementReference function = expression.getIsNegated()?
-                    RootNamespace.getSequenceFunctionNotEmpty():
-                    RootNamespace.getSequenceFunctionIsEmpty();
+                    RootNamespace.getRootScope().getSequenceFunctionNotEmpty():
+                    RootNamespace.getRootScope().getSequenceFunctionIsEmpty();
             CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
                     getBehavior(function));
             this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
@@ -158,7 +158,7 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
         graph.addObjectFlow(forkNode, inputPin);
         
         CallBehaviorAction callAction = graph.addCallBehaviorAction(
-                getBehavior(RootNamespace.getSequenceFunctionNotEmpty()));
+                getBehavior(RootNamespace.getRootScope().getSequenceFunctionNotEmpty()));
         graph.addObjectFlow(forkNode, callAction.getArgument().get(0));
         
         return callAction.getResult().get(0);
@@ -199,7 +199,7 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
         graph.addObjectFlow(test2Result, fork2);
 
         Behavior booleanFunctionNot = 
-            getBehavior(RootNamespace.getBooleanFunctionNot());
+            getBehavior(RootNamespace.getRootScope().getBooleanFunctionNot());
         CallBehaviorAction not1Action = 
             graph.addCallBehaviorAction(booleanFunctionNot);
         graph.addObjectFlow(fork1, not1Action.getArgument().get(0));        

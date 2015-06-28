@@ -148,10 +148,10 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
         
         if (definition.getIsConstructor()) {
             ModelNamespaceMapping.applyStereotype(
-                    definition, RootNamespace.getCreateStereotype());
+                    definition, RootNamespace.getRootScope().getCreateStereotype());
         } else if (definition.getIsDestructor()) {
             ModelNamespaceMapping.applyStereotype(
-                    definition, RootNamespace.getDestroyStereotype());
+                    definition, RootNamespace.getRootScope().getDestroyStereotype());
         }
         
     }
@@ -240,7 +240,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                         graph.addObjectFlow(selfFork, readAction.getObject());
                         
                         CallBehaviorAction sizeAction = graph.addCallBehaviorAction(
-                                getBehavior(RootNamespace.getListFunctionSize()));
+                                getBehavior(RootNamespace.getRootScope().getListFunctionSize()));
                         graph.addObjectFlow(readAction.getResult(), sizeAction.getArgument().get(0));
                         
                         ValueSpecificationAction valueAction = 

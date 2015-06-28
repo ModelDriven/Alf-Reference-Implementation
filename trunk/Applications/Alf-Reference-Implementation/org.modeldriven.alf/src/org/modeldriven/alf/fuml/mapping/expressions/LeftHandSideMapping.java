@@ -250,7 +250,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                 if (index.getType().getImpl().isInteger()) {
                     CallBehaviorAction indexConversionAction = 
                             this.graph.addCallBehaviorAction(getBehavior(
-                                    RootNamespace.getIntegerFunctionToUnlimitedNatural()));
+                                    RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural()));
                     this.graph.addObjectFlow(
                             indexSource, indexConversionAction.getArgument().get(0));
                     indexSource = indexConversionAction.getResult().get(0);

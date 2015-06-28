@@ -69,8 +69,8 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	    } else {
 	        ElementReference type = operand.getType();
 	        return type == null? null:
-	               type.getImpl().isInteger()? RootNamespace.getIntegerType():
-	               type.getImpl().isString()? RootNamespace.getStringType():
+	               type.getImpl().isInteger()? RootNamespace.getRootScope().getIntegerType():
+	               type.getImpl().isString()? RootNamespace.getRootScope().getStringType():
 	               null;
 	    }
 	}
