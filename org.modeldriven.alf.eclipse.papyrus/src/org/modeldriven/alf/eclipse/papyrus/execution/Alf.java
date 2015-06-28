@@ -77,19 +77,19 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     @Override
     protected void createSystemServices() {
         QualifiedName standardOutputChannel = 
-            RootNamespace.getBasicInputOutput().getImpl().copy().
+            RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
                 addName("StandardOutputChannel");
         this.createSystemService
             (standardOutputChannel, new StandardOutputChannelObject());
         
         QualifiedName standardInputChannel = 
-            RootNamespace.getBasicInputOutput().getImpl().copy().
+            RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
                 addName("StandardInputChannel");
         this.createSystemService
             (standardInputChannel, new StandardInputChannelObject());
         
         QualifiedName status = 
-            RootNamespace.getBasicInputOutput().getImpl().copy().
+            RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
                 addName("Status");
         Classifier statusType = getClassifier(status);
         if (statusType instanceof DataType) {
