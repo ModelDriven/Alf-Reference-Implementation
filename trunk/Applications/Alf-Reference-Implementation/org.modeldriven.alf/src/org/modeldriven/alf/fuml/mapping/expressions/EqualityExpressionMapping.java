@@ -65,7 +65,7 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
             this.graph, (TestIdentityAction) this.action, 
             operand1Result, operand2Result,
             expression.getOperand1().getLower(),
-            expression.getOperand2().getUpper());
+            expression.getOperand2().getLower());
         
         if (expression.getIsNegated()) {
             CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
