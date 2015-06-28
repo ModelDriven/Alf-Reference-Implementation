@@ -223,7 +223,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         graph.addObjectFlow(selfFork, readAction.getObject());
         
         CallBehaviorAction sizeAction = graph.addCallBehaviorAction(
-                getBehavior(RootNamespace.getListFunctionSize()));
+                getBehavior(RootNamespace.getRootScope().getListFunctionSize()));
         graph.addObjectFlow(readAction.getResult(), sizeAction.getArgument().get(0));
         
         valueAction = 

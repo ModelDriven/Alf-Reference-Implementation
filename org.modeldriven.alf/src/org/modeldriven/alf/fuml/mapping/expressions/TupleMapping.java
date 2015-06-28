@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -147,7 +147,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                 !parameter.getType().getImpl().isInteger()) {
                             CallBehaviorAction callAction =
                                 this.tupleGraph.addCallBehaviorAction(getBehavior(
-                                    RootNamespace.getIntegerFunctionToUnlimitedNatural()));
+                                    RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural()));
                             this.tupleGraph.addObjectFlow(
                                     resultSource, callAction.getArgument().get(0));
                             resultSource = callAction.getResult().get(0);
@@ -186,10 +186,10 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                     this.throwError("No result Source: " + mapping);
                                 } else {
                                     if (index.getType().getImpl().conformsTo(
-                                            RootNamespace.getIntegerType())) {
+                                            RootNamespace.getRootScope().getIntegerType())) {
                                         CallBehaviorAction callAction = 
                                             subgraph.addCallBehaviorAction(
-                                            getBehavior(RootNamespace.
+                                            getBehavior(RootNamespace.getRootScope().
                                             getIntegerFunctionToUnlimitedNatural()));
                                         subgraph.addObjectFlow(
                                                 resultSource, 

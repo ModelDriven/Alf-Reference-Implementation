@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -91,9 +91,9 @@ public abstract class UnaryExpressionMapping extends ExpressionMapping {
     
     private ElementReference getOperatorFunction(String operator) {
         switch (operator.charAt(0)) {
-            case '!': return RootNamespace.getBooleanFunctionNot();
-            case '~': return RootNamespace.getBitStringFunctionComplement();
-            case '-': return RootNamespace.getIntegerFunctionNeg();
+            case '!': return RootNamespace.getRootScope().getBooleanFunctionNot();
+            case '~': return RootNamespace.getRootScope().getBitStringFunctionComplement();
+            case '-': return RootNamespace.getRootScope().getIntegerFunctionNeg();
             default: return null;
         }
     }

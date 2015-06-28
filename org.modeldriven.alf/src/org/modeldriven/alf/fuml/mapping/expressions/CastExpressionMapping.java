@@ -81,7 +81,7 @@ public class CastExpressionMapping extends ExpressionMapping {
         ValueSpecificationAction valueAction =
                 graph.addNaturalValueSpecificationAction(0);
         CallBehaviorAction callAction =
-                graph.addCallBehaviorAction(getBehavior(RootNamespace.getIntegerFunction(">=")));
+                graph.addCallBehaviorAction(getBehavior(RootNamespace.getRootScope().getIntegerFunction(">=")));
         graph.addObjectFlow(valueAction.getResult(), callAction.getArgument().get(1));
         
         ForkNode forkNode = graph.addForkNode("Fork(" + callAction.getArgument().get(0).getName() + ")");
@@ -135,14 +135,14 @@ public class CastExpressionMapping extends ExpressionMapping {
                     source = addClassificationDecision(
                             nestedGraph, getUnlimitedNaturalType(), 
                             target, source, 
-                            RootNamespace.getUnlimitedNaturalFunctionToInteger());
+                            RootNamespace.getRootScope().getUnlimitedNaturalFunctionToInteger());
                 }
                 if (operandType == null ||
                         operandType.getImpl().isBitString()) {
                     source = addClassificationDecision(
                             nestedGraph, getBitStringType(), 
                             target, source, 
-                            RootNamespace.getBitStringFunctionToInteger());
+                            RootNamespace.getRootScope().getBitStringFunctionToInteger());
                 }
                 if (operandType == null || 
                         !operandType.getImpl().isUnlimitedNatural() && 
@@ -165,14 +165,14 @@ public class CastExpressionMapping extends ExpressionMapping {
                     source = addClassificationDecision(
                             nestedGraph, getIntegerType(), 
                             target, source, 
-                            RootNamespace.getIntegerFunctionToUnlimitedNatural());
+                            RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural());
                 }
             } else if (type.getImpl().isBitString()) {
                 if (operandType == null || 
                         operandType.getImpl().isInteger()) {
                     source = addClassificationDecision(
                             nestedGraph, getIntegerType(), target, 
-                            source, RootNamespace.getBitStringFunctionToBitString());
+                            source, RootNamespace.getRootScope().getBitStringFunctionToBitString());
                 }
                 if (operandType == null || !operandType.getImpl().isInteger()) {
                     source = addClassificationDecision(

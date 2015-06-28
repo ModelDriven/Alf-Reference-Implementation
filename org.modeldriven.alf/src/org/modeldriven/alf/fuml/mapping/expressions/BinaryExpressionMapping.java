@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -111,7 +111,7 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
     protected ActivityNode addBitStringConversion(ActivityNode operandResult) 
         throws MappingError {
         CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
-                getBehavior(RootNamespace.getBitStringFunctionToBitString()));
+                getBehavior(RootNamespace.getRootScope().getBitStringFunctionToBitString()));
         this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
         return callAction.getResult().get(0);
     }

@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -299,13 +299,13 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
         operator = operator.substring(0, operator.length()-1);
         return getBehavior(
             type.getImpl().isInteger()?
-                    RootNamespace.getIntegerFunction(operator):
+                    RootNamespace.getRootScope().getIntegerFunction(operator):
             type.getImpl().isBitString()?
-                    RootNamespace.getBitStringFunction(operator):
+                    RootNamespace.getRootScope().getBitStringFunction(operator):
             type.getImpl().isBoolean()?
-                    RootNamespace.getBooleanFunction(operator):
+                    RootNamespace.getRootScope().getBooleanFunction(operator):
             type.getImpl().isString()?
-                    RootNamespace.getStringFunction(operator):
+                    RootNamespace.getRootScope().getStringFunction(operator):
                     null
         );
     }
@@ -407,7 +407,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
             }
             if (isBitStringConversion) {
                 CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getBitStringFunctionToBitString()));
+                        getBehavior(RootNamespace.getRootScope().getBitStringFunctionToBitString()));
                 subgraph.addObjectFlow(
                         rhsResultSource, callAction.getArgument().get(0));
                 rhsResultSource = callAction.getResult().get(0);
@@ -493,9 +493,9 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 ActivityNode value1Fork = subgraph.addForkNode(
                         "Fork(" + value1Action.getResult().getName() + ")");
                 CallBehaviorAction getAction = subgraph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getListFunctionGet()));
+                        getBehavior(RootNamespace.getRootScope().getListFunctionGet()));
                 CallBehaviorAction removeAction = subgraph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getSequenceFunctionExcludeAt()));
+                        getBehavior(RootNamespace.getRootScope().getSequenceFunctionExcludeAt()));
                 subgraph.addObjectFlow(loopNode.getLoopVariable().get(0), writeAction.getObject());
                 subgraph.addObjectFlow(loopNode.getLoopVariable().get(1), valueFork);
                 subgraph.addObjectFlow(value1Action.getResult(), value1Fork);
@@ -511,7 +511,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 
                 subgraph = mapping.createActivityGraph();
                 CallBehaviorAction testAction = subgraph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getSequenceFunctionNotEmpty()));
+                        getBehavior(RootNamespace.getRootScope().getSequenceFunctionNotEmpty()));
                 subgraph.addObjectFlow(valueFork, testAction.getArgument().get(0));
                 
                 graph.addLoopTest(

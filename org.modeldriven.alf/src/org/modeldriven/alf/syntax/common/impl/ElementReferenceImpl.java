@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -196,7 +196,7 @@ public abstract class ElementReferenceImpl {
 
     public boolean isCollectionClass() {
         ElementReference collectionClasses = 
-            RootNamespace.getCollectionClassesPackage();
+            RootNamespace.getRootScope().getCollectionClassesPackage();
         if (collectionClasses == null) {
             return false;
         } else {
@@ -238,27 +238,27 @@ public abstract class ElementReferenceImpl {
     }
 
     public boolean isInteger() {
-        return this.conformsTo(RootNamespace.getIntegerType());
+        return this.conformsTo(RootNamespace.getRootScope().getIntegerType());
     }
 
     public boolean isBoolean() {
-        return this.conformsTo(RootNamespace.getBooleanType());
+        return this.conformsTo(RootNamespace.getRootScope().getBooleanType());
     }
 
     public boolean isString() {
-        return this.conformsTo(RootNamespace.getStringType());
+        return this.conformsTo(RootNamespace.getRootScope().getStringType());
     }
 
     public boolean isUnlimitedNatural() {
-        return this.conformsTo(RootNamespace.getUnlimitedNaturalType());
+        return this.conformsTo(RootNamespace.getRootScope().getUnlimitedNaturalType());
     }
 
     public boolean isBitString() {
-        return this.conformsTo(RootNamespace.getBitStringType());
+        return this.conformsTo(RootNamespace.getRootScope().getBitStringType());
     }
 
     public boolean isNatural() {
-        return this.conformsTo(RootNamespace.getNaturalType());
+        return this.conformsTo(RootNamespace.getRootScope().getNaturalType());
     }
 
     public boolean isNumeric() {

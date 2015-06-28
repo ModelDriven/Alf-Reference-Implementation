@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -67,7 +67,7 @@ public class IsUniqueExpressionMapping extends
         nestedGraph = this.createActivityGraph();
         ForkNode variableSource = nestedGraph.addForkNode("Fork(each)");
         CallBehaviorAction callAction = nestedGraph.addCallBehaviorAction(
-                getBehavior(RootNamespace.getSequenceFunctionCount()));
+                getBehavior(RootNamespace.getRootScope().getSequenceFunctionCount()));
         ValueSpecificationAction valueAction = 
             nestedGraph.addNaturalValueSpecificationAction(1);
         TestIdentityAction testAction = nestedGraph.addTestIdentityAction("=1");
@@ -96,7 +96,7 @@ public class IsUniqueExpressionMapping extends
         this.resultSource = region.getOutputElement().get(0);
         
         // Add the final check that there are no elements with a count != 1.
-        this.addBehaviorCall(RootNamespace.getSequenceFunctionIsEmpty());
+        this.addBehaviorCall(RootNamespace.getRootScope().getSequenceFunctionIsEmpty());
     }
     
 	public IsUniqueExpression getIsUniqueExpression() {
