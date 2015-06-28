@@ -60,7 +60,7 @@ public class ModelNamespaceImpl extends
     
     @Override
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-        return RootNamespace.resolve(qualifiedName);
+        return RootNamespace.getRootScope().resolveUnit(qualifiedName);
     }
     
     @Override

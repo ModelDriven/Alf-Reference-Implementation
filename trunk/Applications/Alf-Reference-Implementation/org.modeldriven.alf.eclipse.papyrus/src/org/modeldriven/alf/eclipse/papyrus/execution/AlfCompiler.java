@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.papyrus.alf.compiler.IAlfCompiler;
+//import org.eclipse.papyrus.alf.compiler.IAlfCompiler;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityNode;
@@ -43,7 +43,7 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.StereotypeApplication;
 
-public class AlfCompiler implements IAlfCompiler  {
+public class AlfCompiler {
 	
 	private static RootNamespaceImpl rootScopeImpl = null;
 
@@ -105,30 +105,31 @@ public class AlfCompiler implements IAlfCompiler  {
         }
     }
     
-	@Override
+	// @Override
 	public boolean validate(
 			Element contextElement, String textualRepresentation, Object[] args) {
 		return this.parse(contextElement, textualRepresentation, args) != null;
 	}
 	
-	@Override
+	// @Override
 	public boolean compile(
 			Element contextElement, String textualRepresentation, Object[] args) {
 		boolean succeeded = false;
 		UnitDefinition unit = this.parse(contextElement, textualRepresentation, args);
+		FumlMapping mapping = null;
+		Collection<org.modeldriven.alf.uml.Element> otherElements =
+				new ArrayList<org.modeldriven.alf.uml.Element>();
 		if (unit != null) {
-			Collection<org.modeldriven.alf.uml.Element> otherElements =
-					new ArrayList<org.modeldriven.alf.uml.Element>();
-			FumlMapping mapping = this.map(unit.getDefinition(), otherElements);
-			if (mapping != null) {
-				rootScopeImpl.replaceTemplateBindings();
-				StereotypeApplication.applyStereotypes();
-				succeeded = this.update(contextElement, 
-						((org.modeldriven.alf.eclipse.uml.Element)mapping.
-								getElement()).getBase());
-				if (succeeded) {
-					this.updateOtherElements(contextElement, otherElements);
-				}
+			mapping = this.map(unit.getDefinition(), otherElements);
+		}
+		rootScopeImpl.replaceTemplateBindings();
+		StereotypeApplication.applyStereotypes();
+		if (mapping != null) {
+			succeeded = this.update(contextElement, 
+					((org.modeldriven.alf.eclipse.uml.Element)mapping.
+							getElement()).getBase());
+			if (succeeded) {
+				this.updateOtherElements(contextElement, otherElements);
 			}
 		}
 		return succeeded;
