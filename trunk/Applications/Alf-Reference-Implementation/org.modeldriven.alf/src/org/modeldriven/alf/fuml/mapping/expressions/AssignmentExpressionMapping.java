@@ -215,77 +215,79 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 ExpressionMapping rhsMapping = (ExpressionMapping)mapping;
                 ActivityGraph rhsSubgraph = this.createActivityGraph(rhsMapping.getGraph());
                 ActivityNode rhsResultSource = rhsMapping.getResultSource();
-                if (rhsResultSource != null) {
-                    if (!assignmentExpression.getIsSimple()) {
-                        Expression expression = lhs.getImpl().getExpression();
-                        mapping = this.fumlMap(expression);
-                        if (!(mapping instanceof ExpressionMapping)) {
-                            this.throwError("Error mapping left hand side as an expression: " +
-                                    mapping.getErrorMessage());
-                        } else {
-                            this.lhsExpressionMapping =
+                
+                if (rhsResultSource != null && !assignmentExpression.getIsSimple()) {
+                    Expression expression = lhs.getImpl().getExpression();
+                    mapping = this.fumlMap(expression);
+                    if (!(mapping instanceof ExpressionMapping)) {
+                        this.throwError("Error mapping left hand side as an expression: " +
+                                mapping.getErrorMessage());
+                    } else {
+                        this.lhsExpressionMapping =
                                 (ExpressionMapping)mapping;
-                            this.graph.addAll(this.lhsExpressionMapping.getGraph());
-                            this.lhsMapping.setIndexSource(
-                                    this.lhsExpressionMapping.getIndexSource());
-                            this.lhsMapping.setObjectSource(
-                                    this.lhsExpressionMapping.getObjectSource());
+                        this.graph.addAll(this.lhsExpressionMapping.getGraph());
+                        this.lhsMapping.setIndexSource(
+                                this.lhsExpressionMapping.getIndexSource());
+                        this.lhsMapping.setObjectSource(
+                                this.lhsExpressionMapping.getObjectSource());
 
-                            this.callAction = 
+                        this.callAction = 
                                 this.graph.addCallBehaviorAction(
                                         this.getCompoundExpressionBehavior());
-                            this.graph.addObjectFlow(
-                                    this.lhsExpressionMapping.getResultSource(), 
-                                    this.callAction.getArgument().get(0));
+                        this.graph.addObjectFlow(
+                                this.lhsExpressionMapping.getResultSource(), 
+                                this.callAction.getArgument().get(0));
 
-                            // Apply bit string conversion to the right-hand
-                            // side, if necessary.
-                            ElementReference rhsType = rhs.getType();
-                            rhsResultSource = mapConversions(
-                                    this, this.graph, 
-                                    rhsResultSource, 
-                                    null, false, 
-                                    rhsType != null && rhsType.getImpl().isInteger() && 
-                                    this.callAction.getArgument().get(1).getType(). 
-                                        equals(getBitStringType()));
-                            
-                            this.graph.addObjectFlow(
-                                    rhsResultSource,
-                                    this.callAction.getArgument().get(1));
-                            
-                            rhsResultSource = this.callAction.getResult().get(0);                                
-                        }
+                        // Apply bit string conversion to the right-hand
+                        // side, if necessary.
+                        ElementReference rhsType = rhs.getType();
+                        rhsResultSource = mapConversions(
+                                this, this.graph, 
+                                rhsResultSource, 
+                                null, false, 
+                                rhsType != null && rhsType.getImpl().isInteger() && 
+                                this.callAction.getArgument().get(1).getType(). 
+                                equals(getBitStringType()));
+
+                        this.graph.addObjectFlow(
+                                rhsResultSource,
+                                this.callAction.getArgument().get(1));
+
+                        rhsResultSource = this.callAction.getResult().get(0);                                
                     }
-                    
+                }
+
+                if (rhsResultSource == null) {
+                    rhsResultSource = rhsSubgraph.addNullValueSpecificationAction().getResult();
+                } else {
                     rhsResultSource = mapConversions(
                             this, rhsSubgraph, rhsResultSource, 
                             assignmentExpression.getType(), 
                             assignmentExpression.getIsCollectionConversion(), 
                             assignmentExpression.getIsBitStringConversion());
+                }
 
-                    this.graph.addAll(this.lhsMapping.getGraph());                    
-                    ActivityNode assignmentTarget = 
+                this.graph.addAll(this.lhsMapping.getGraph());
+                ActivityNode assignmentTarget = 
                         this.lhsMapping.getAssignmentTarget();
-                    ActivityNode controlTarget =
+                ActivityNode controlTarget =
                         this.lhsMapping.getControlTarget();
 
-                    StructuredActivityNode rhsNode = 
-                        assignmentTarget == null && 
-                        rhs instanceof SequenceConstructionExpression ? null: 
-                            this.graph.addStructuredActivityNode(
-                                    "RightHandSide@" + rhs.getId(), 
-                                    rhsSubgraph.getModelElements());
+                StructuredActivityNode rhsNode = 
+                         assignmentTarget == null && 
+                         rhs instanceof SequenceConstructionExpression ? null: 
+                             this.graph.addStructuredActivityNode(
+                                     "RightHandSide@" + rhs.getId(), 
+                                     rhsSubgraph.getModelElements());
 
-                    if (assignmentTarget != null) {
-                        this.graph.addObjectFlow(
-                                rhsResultSource,
-                                this.lhsMapping.getAssignmentTarget());
-                    }
+                 if (assignmentTarget != null) {
+                     this.graph.addObjectFlow(
+                             rhsResultSource, assignmentTarget);
+                 }
 
-                    if (rhsNode != null && controlTarget != null) {
-                        this.graph.addControlFlow(rhsNode, controlTarget);
-                    }
-                }
+                 if (rhsNode != null && controlTarget != null) {
+                     this.graph.addControlFlow(rhsNode, controlTarget);
+                 }
             }
         }
         

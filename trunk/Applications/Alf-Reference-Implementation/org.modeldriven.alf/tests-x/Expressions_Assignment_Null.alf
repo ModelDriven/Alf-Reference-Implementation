@@ -9,11 +9,12 @@ class Expressions_Assignment_Null specializes Test {
 
 	@Create public run(in tester: Tester[0..1]) {
 	  super(tester);
-	  this.test(i, j, k);
+	  this.test(i, j, k, n);
 	  
 	  AssertEqual("i", i, null);
 	  AssertEqual("j", j, 2);
 	  AssertEqual("k", k, null);
+	  AssertEqual("n", n, null);
 	  AssertTrue("this.d->notEmpty()", this.d->notEmpty());
 	  
 	  this.done();
@@ -54,7 +55,9 @@ class Expressions_Assignment_Null specializes Test {
     return this.d.k;
   }
   
-  public test(out i: Integer[0..1], out j: Integer[0..1], out k: Integer[0..1]) {
+  public activity A() { }
+  
+  public test(out i: Integer[0..1], out j: Integer[0..1], out k: Integer[0..1], out n: Integer[0..1]) {
   
     this.set(5);
     this.set(null);
@@ -69,6 +72,8 @@ class Expressions_Assignment_Null specializes Test {
     this.setData(5);
     this.setData(null);
     k = this.getData();
+    
+    n = A();
   }
   
 }
