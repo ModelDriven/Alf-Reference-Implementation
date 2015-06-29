@@ -193,11 +193,14 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
     * If a feature left-hand side is indexed, then its lower bound is 1.
     * Otherwise, its lower bound is that of its referent.
     **/
+   // The lower bound of an indexed LHS should actually be 0, since it
+   // is legal to assign null to it.
+    
    // NOTE: This is overridden for a name left-hand side.
    protected Integer deriveLower() {
         LeftHandSide self = this.getSelf();
         if (self.getIndex() != null) {
-            return 1;
+            return 0;
         } else {
             ElementReference referent = self.getReferent();
             return referent == null? 0: referent.getImpl().getLower();
