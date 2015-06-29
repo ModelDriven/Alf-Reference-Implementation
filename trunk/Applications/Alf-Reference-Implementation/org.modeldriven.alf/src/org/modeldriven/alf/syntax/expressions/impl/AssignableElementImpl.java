@@ -36,11 +36,12 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
     public boolean isTypeConformantWith(AssignableElementImpl source) {
         ElementReference sourceType = source.getType();
         int sourceUpper = source.getUpper();
+        int targetLower = this.getLower();
         int targetUpper = this.getUpper();
         
         return
             // Null conversion
-            source.isNull() ||
+            source.isNull() && targetLower == 0 ||
             
             // Type conformance
             this.isTypeConformantWith(sourceType) ||
