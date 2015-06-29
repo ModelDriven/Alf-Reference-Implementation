@@ -684,39 +684,35 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     public Integer getLower() {
-        Integer lower = null;
+        int lower = 0;
         if (this.isProperty()) {
             lower = ((Property)this.getSelf().getElement()).getLower();
         } else if (this.isParameter()) {
             lower = ((Parameter)this.getSelf().getElement()).getLower();
-        } else if (this.isOperation()) {
-            lower = ((Operation)this.getSelf().getElement()).getLower();
-        } else if (this.isBehavior()) {
+        } else if (this.isBehavior() || this.isOperation()) {
             FormalParameter parameter = this.getReturnParameter();
             if (parameter != null) {
                 lower = parameter.getLower();
             }
         }
-        // Note: This will return 0 for an operation with no return parameter.
-        return lower == null? 0: lower;
+        
+        return lower;
     }
 
     public Integer getUpper() {
-        Integer upper = null;
+        int upper = 0;
         if (this.isProperty()) {
             upper = ((Property)this.getSelf().getElement()).getUpper();
         } else if (this.isParameter()) {
             upper = ((Parameter)this.getSelf().getElement()).getUpper();
-        } else if (this.isOperation()) {
-            upper = ((Operation)this.getSelf().getElement()).getUpper();
-        } else if (this.isBehavior()) {
+        } else if (this.isBehavior() || this.isOperation()) {
             FormalParameter parameter = this.getReturnParameter();
             if (parameter != null) {
                 upper = parameter.getUpper();
             }
         }
-        // Note: This will return 0 for an operation with no return parameter.
-        return upper == null? 0: upper;
+        
+        return upper;
     }
     
     @Override
