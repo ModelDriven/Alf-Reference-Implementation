@@ -225,7 +225,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                     } else {
                         this.lhsExpressionMapping =
                                 (ExpressionMapping)mapping;
-                        this.graph.addAll(this.lhsExpressionMapping.getGraph());
+                        rhsSubgraph.addAll(this.lhsExpressionMapping.getGraph());
                         this.lhsMapping.setIndexSource(
                                 this.lhsExpressionMapping.getIndexSource());
                         this.lhsMapping.setObjectSource(
@@ -234,7 +234,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                         this.callAction = 
                                 this.graph.addCallBehaviorAction(
                                         this.getCompoundExpressionBehavior());
-                        this.graph.addObjectFlow(
+                        rhsSubgraph.addObjectFlow(
                                 this.lhsExpressionMapping.getResultSource(), 
                                 this.callAction.getArgument().get(0));
 
@@ -242,14 +242,14 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                         // side, if necessary.
                         ElementReference rhsType = rhs.getType();
                         rhsResultSource = mapConversions(
-                                this, this.graph, 
+                                this, rhsSubgraph, 
                                 rhsResultSource, 
                                 null, false, 
                                 rhsType != null && rhsType.getImpl().isInteger() && 
                                 this.callAction.getArgument().get(1).getType(). 
                                 equals(getBitStringType()));
 
-                        this.graph.addObjectFlow(
+                        rhsSubgraph.addObjectFlow(
                                 rhsResultSource,
                                 this.callAction.getArgument().get(1));
 
