@@ -98,6 +98,12 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
                                     indexSource, callAction.getArgument().get(1));
                             this.graph.addObjectFlow(
                                     this.resultSource, callAction.getArgument().get(2));
+                            
+                            if (this.controlTarget == null) {
+                                this.controlTarget = callAction;
+                            } else {
+                                this.graph.addControlFlow(this.controlTarget, callAction);
+                            }
 
                             this.assignedValueSource =
                                 this.graph.addForkNode(
