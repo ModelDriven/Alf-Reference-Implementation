@@ -45,9 +45,9 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
     // Stubs are handled in NamespaceDefinitionMapping. 
     
     protected Package mapPackage() {
-        return this.create(
-                this.getPackageDefinition().getImpl().isModelLibrary()? 
-                        Model.class: Package.class);
+        return this.getPackageDefinition().getImpl().isModelLibrary()? 
+                        this.create(Model.class): 
+                        this.create(Package.class);
     }
     
     public void mapTo(Package package_) throws MappingError {
