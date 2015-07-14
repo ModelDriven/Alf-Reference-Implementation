@@ -5,4 +5,4 @@ else
   lib="-l $ALF_LIB"
 fi
 
-java -jar lib/alf.jar $lib $@
+java -jar dist/alf.jar $lib $@
