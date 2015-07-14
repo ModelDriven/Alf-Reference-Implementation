@@ -11,4 +11,4 @@
 set lib=
 if not "%ALF_LIB%" == "" set lib=-l %ALF_LIB%
 
-java -jar lib/alf.jar %lib% %*
+java -jar dist/alf.jar %lib% %*
