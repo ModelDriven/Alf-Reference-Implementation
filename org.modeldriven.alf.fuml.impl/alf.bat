@@ -1,6 +1,5 @@
 @rem ***************************************************************************
-@rem Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
-@rem Copyright 2013 Ivar Jacobson International
+@rem Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
 @rem
 @rem All rights reserved worldwide. This program and the accompanying materials
 @rem are made available for under the terms of the GNU General Public License 
