@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-02015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -50,7 +50,7 @@ import org.modeldriven.alf.uml.PrimitiveType;
 
 public class Fuml {
 	
-	private String umlDirectory = ".";
+	private String umlDirectory = "UML";
 	private boolean isVerbose = false;
 	
 	private final RootNamespaceImpl rootScopeImpl = new RootNamespaceImpl();
@@ -556,7 +556,7 @@ public class Fuml {
 		   PropertyConfigurator.configure("log4j.properties");
 	   }
 
-	   this.setUmlLibraryDirectory("Libraries");
+	   this.setUmlLibraryDirectory("UML/Libraries");
 	   
 	   try {
 		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
@@ -588,8 +588,8 @@ public class Fuml {
 		   this.println("allowable options are:");
 		   this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
 		   this.println("            Set debug logging level (default is as configured)");
-		   this.println("  -l path   Set UML library directory (default is \"Libraries\"");
-		   this.println("  -u path   Set UML directory path (default is \".\"");
+		   this.println("  -l path   Set UML library directory (default is \"UML/Libraries\")");
+		   this.println("  -u path   Set UML directory path (default is \"UML\")");
 		   this.println("  -v        Set verbose mode");
 	   }         
    }
