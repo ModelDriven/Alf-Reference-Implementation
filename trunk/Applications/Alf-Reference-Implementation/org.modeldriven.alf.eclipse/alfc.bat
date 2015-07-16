@@ -11,4 +11,4 @@
 set lib=./UML/Libraries
 if not "%UML_LIB%" == "" set lib=%UML_LIB%
 
-java -jar dist/alf-eclipse.jar -l %UML_LIB% %*
+java -jar dist/alf-eclipse.jar -l %lib% %*
