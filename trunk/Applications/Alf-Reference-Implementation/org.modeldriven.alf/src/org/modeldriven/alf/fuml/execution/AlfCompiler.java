@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2014 Ivar Jacobson International SA
+ * Copyright 2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -28,7 +27,8 @@ public abstract class AlfCompiler extends AlfBase {
         
         SyntaxElement modelDefinition = 
                 unit.getIsModelLibrary() && 
-                unit.getDefinition().getNamespace() == modelScope?
+                unit.getDefinition().getNamespace() == modelScope &&
+                modelScope.getOwnedMember().size() == 1?
                         unit: modelScope;
         FumlMapping mapping = FumlMapping.getMapping(modelDefinition);
         return (Package)mapping.getElement();        
