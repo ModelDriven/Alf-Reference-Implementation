@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2014 Ivar Jacobson International SA
+ * Copyright 2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -49,9 +48,6 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     
     public void setLibraryDirectory(String libraryDirectory) {
         this.getRootScopeImpl().setLibraryDirectory(libraryDirectory);
-    }
-    
-    public void setDebugLevel(String level) {
     }
     
     public void setIsParseOnly(boolean isParseOnly) {
@@ -148,27 +144,15 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
             String option = arg.substring(1);
             i++;
             if (i < args.length) {
-                if (option.equals("v")) {
-                    this.setIsVerbose(true);
-                } else if (option.equals("f")) {
-                    this.setIsFileName(true);
-                } else if (option.equals("p")) {
-                    this.setIsParseOnly(true);
-                } else if (option.equals("P")) {
-                    this.setIsPrint(true);
-                } else if (option.matches("[mld]")) {
+                if (this.matchesNoArg(option)) {
+                   this.parseOption(option); 
+                } else if (this.matchesWithArg(option)) {
                     arg = args[i];
                     if (arg.charAt(0) == '-') {
                         return null;
                     }
                     i++;
-                    if (option.equals("m")) {
-                        this.setModelDirectory(arg);
-                    } else if (option.equals("l")) {
-                        this.setLibraryDirectory(arg);
-                    } else if (option.equals("d")) {
-                        this.setDebugLevel(arg);
-                    }
+                    this.parseOptionWithArg(option, arg);
                 } else {
                     return null;
                 }
@@ -176,6 +160,34 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         }
         
         return i == args.length - 1? args[i]: null;
+    }
+    
+    protected boolean matchesNoArg(String option) {
+        return option.matches("[vfpP]");
+    }
+    
+    protected boolean matchesWithArg(String option) {
+        return option.matches("[ml]");
+    }
+    
+    protected void parseOption(String option) {
+        if (option.equals("v")) {
+            this.setIsVerbose(true);
+        } else if (option.equals("f")) {
+            this.setIsFileName(true);
+        } else if (option.equals("p")) {
+            this.setIsParseOnly(true);
+        } else if (option.equals("P")) {
+            this.setIsPrint(true);
+        }
+    }
+    
+    protected void parseOptionWithArg(String option, String arg) {
+        if (option.equals("m")) {
+            this.setModelDirectory(arg);
+        } else if (option.equals("l")) {
+            this.setLibraryDirectory(arg);
+        }
     }
     
     public UnitDefinition process(UnitDefinition unit) {
@@ -218,23 +230,13 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     public void run(String[] args) {
         String unitName = this.parseArgs(args);        
         if (unitName != null) {
-            this.process(this.parse(unitName, this.isFileName));
-            
+            this.process(this.parse(unitName, this.isFileName));            
         } else {
-            this.println("Usage is");
-            this.println("  alf [options] unit");
-            this.println("where unit is the qualified name of an Alf unit and");
-            this.println("allowable options are:");
-            this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
-            this.println("            Set debug logging level (default is as configured)");
-            this.println("  -f        Treat unit as a file name rather than a qualifed name");
-            this.println("  -l path   Set library directory path (default is \"Libraries\")");
-            this.println("  -m path   Set model directory path (default is \"Models\")");
-            this.println("  -p        Parse and constraint check only");
-            this.println("  -P        Parse, constraint check and print abstract syntax tree");
-            this.println("  -v        Set verbose mode");
+            this.printUsage();
         }         
     }
+    
+    protected abstract void printUsage();
     
     public AlfBase() {
         super();

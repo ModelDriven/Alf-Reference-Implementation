@@ -13,9 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -61,13 +58,6 @@ public class Fuml {
 		return this.locus;
 	}
 
-    public static void setDebugLevel(Level level) {
-        Logger logger = Logger.getLogger(org.eclipse.papyrus.moka.fuml.debug.Debug.class);
-        if (logger != null) {
-        	logger.setLevel(level);
-        }
-    }
-    
     public void setUmlLibraryDirectory(String umlLibraryDirectory) {
     	this.rootScopeImpl.setLibraryDirectory(umlLibraryDirectory);
     }
@@ -386,9 +376,6 @@ public class Fuml {
     }
     
     public String parseArgs(String[] args) {
-        Logger logger = Logger.getLogger(org.eclipse.papyrus.moka.fuml.debug.Debug.class);
-        Level level = logger.getLevel();
-
         int i = 0;
         while (i < args.length) {
             String arg = args[i];
@@ -406,10 +393,7 @@ public class Fuml {
                         return null;
                     }
                     i++;
-                    if (option.equals("d")) {
-                    	setDebugLevel(Level.toLevel(arg, level));
-                    	level = logger.getLevel();
-                    } else if (option.equals("l")) {
+                    if (option.equals("l")) {
                     	this.setUmlLibraryDirectory(arg);
                     } else if (option.equals("u")) {
                     	this.setUmlDirectory(arg);
@@ -551,11 +535,6 @@ public class Fuml {
    }
 
    public Fuml() {
-	   Logger logger = Logger.getLogger(org.eclipse.papyrus.moka.fuml.debug.Debug.class);
-	   if (logger != null) {
-		   PropertyConfigurator.configure("log4j.properties");
-	   }
-
 	   this.setUmlLibraryDirectory("UML/Libraries");
 	   
 	   try {
@@ -586,9 +565,7 @@ public class Fuml {
 		   this.println("  fuml [options] file");
 		   this.println("where file is the name of an executable unit and");
 		   this.println("allowable options are:");
-		   this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
-		   this.println("            Set debug logging level (default is as configured)");
-		   this.println("  -l path   Set UML library directory (default is \"UML/Libraries\")");
+		   this.println("  -l path   Set UML library directory path (default is \"UML/Libraries\")");
 		   this.println("  -u path   Set UML directory path (default is \"UML\")");
 		   this.println("  -v        Set verbose mode");
 	   }         
