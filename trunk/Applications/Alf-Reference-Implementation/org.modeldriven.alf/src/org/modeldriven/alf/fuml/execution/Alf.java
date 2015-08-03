@@ -41,7 +41,6 @@ public abstract class Alf extends AlfBase {
     
     protected Level debugLevel = Level.OFF;
     
-    @Override
     public void setDebugLevel(String level) {
         this.debugLevel = Level.toLevel(level, this.debugLevel);
     }
@@ -212,6 +211,36 @@ public abstract class Alf extends AlfBase {
     protected void configure() {
         super.configure();
         PropertyConfigurator.configure("log4j.properties");
+    }
+    
+    @Override
+    protected boolean matchesWithArg(String option) {
+        return super.matchesWithArg(option) || "d".equals(option);
+    }
+    
+    @Override
+    protected void parseOptionWithArg(String option, String arg) {
+        if (option.equals("d")) {
+            this.setDebugLevel(arg);
+        } else {
+            super.parseOptionWithArg(option, arg);
+        }
+    }
+    
+    @Override
+    protected void printUsage() {
+        this.println("Usage is");
+        this.println("  alf [options] unit");
+        this.println("where unit is the qualified name of an Alf unit and");
+        this.println("allowable options are:");
+        this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
+        this.println("            Set debug logging level (default is as configured)");
+        this.println("  -f        Treat unit as a file name rather than a qualifed name");
+        this.println("  -l path   Set library directory path (default is \"Libraries\")");
+        this.println("  -m path   Set model directory path (default is \"Models\")");
+        this.println("  -p        Parse and constraint check only");
+        this.println("  -P        Parse, constraint check and print abstract syntax tree");
+        this.println("  -v        Set verbose mode");
     }
     
     public Alf() {
