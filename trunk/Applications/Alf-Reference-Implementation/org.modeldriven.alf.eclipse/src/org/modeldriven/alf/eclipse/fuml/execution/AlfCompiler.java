@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler {
     
-	protected String umlDirectory = "UML";
+	protected String umlDirectory;
 	
 	protected void setUmlDirectory(String umlDirectory) {
 		this.umlDirectory = umlDirectory;
@@ -77,6 +77,12 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
         } else {
             super.parseOptionWithArg(option, arg);
         }
+    }
+    
+    @Override
+    protected void configure() {
+    	super.configure();
+    	this.umlDirectory = "UML";
     }
     
     @Override
