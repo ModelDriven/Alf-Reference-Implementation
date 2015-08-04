@@ -15,8 +15,16 @@ attached hereto as Apache-License-2.0.txt):
 Apache log4j, http://logging.apache.org/
 Apache commons logging, http://commons.apache.org/logging/
 
-The Software also uses the Foundational UML Reference Implementation
+The Software uses the Foundational UML Reference Implementation
 (http://fuml.modeldriven.org) under the Academic Free License version 3.0
 (at http://www.opensource.org/licenses/afl-3.0.php and attached hereto as 
 afl-3.0.txt). For further licensing information on the Foundation UML
 Reference Implementation, see the file fUML-LICENSING.txt.
+
+The Software uses software licensed under the Eclipse Public License version 
+1.0 (at https://www.eclipse.org/org/documents/epl-v10.php and attached herto 
+as epl-1.0.txt) related to:
+
+Eclipse Modeling Framework, https://projects.eclipse.org/projects/modeling.emf.emf
+Eclipse UML2, https://projects.eclipse.org/projects/modeling.mdt.uml2
+Papyrus modeling tool, http://www.eclipse.org/papyrus
