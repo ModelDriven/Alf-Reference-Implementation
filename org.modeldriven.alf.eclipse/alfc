@@ -10,9 +10,9 @@
 
 if [ "$UML_LIB" = "" ] 
 then
-  lib="./UML/Libraries"
+  lib=""
 else
-  lib="$UML_LIB"
+  lib="-l $UML_LIB"
 fi
 
-java -jar dist/alf-eclipse.jar -l $lib $@
+java -jar dist/alf-eclipse.jar $lib $@

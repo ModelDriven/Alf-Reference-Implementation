@@ -240,7 +240,7 @@ public abstract class Alf extends AlfBase {
         this.println("  -m path   Set model directory path (default is \"Models\")");
         this.println("  -p        Parse and constraint check only");
         this.println("  -P        Parse, constraint check and print abstract syntax tree");
-        this.println("  -v        Set verbose mode");
+        this.println("  -v        Set verbose mode (if used alone without unit, prints version info)");
     }
     
     public Alf() {

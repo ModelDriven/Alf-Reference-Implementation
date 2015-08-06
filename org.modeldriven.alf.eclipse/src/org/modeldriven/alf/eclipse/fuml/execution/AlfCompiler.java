@@ -83,6 +83,7 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     protected void configure() {
     	super.configure();
     	this.umlDirectory = "UML";
+    	this.getRootScopeImpl().setLibraryDirectory("UML/Libraries");
     }
     
     @Override
@@ -96,8 +97,8 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
         this.println("  -m path   Set model directory path (default is \"Models\")");
         this.println("  -p        Parse and constraint check only");
         this.println("  -P        Parse, constraint check and print abstract syntax tree");
-        this.println("  -u        Set UML output directory path (default is \"UML\")");
-        this.println("  -v        Set verbose mode");
+        this.println("  -u path   Set UML output directory path (default is \"UML\")");
+        this.println("  -v        Set verbose mode (if used alone without unit, prints version info)");
     }
     
     public AlfCompiler() {

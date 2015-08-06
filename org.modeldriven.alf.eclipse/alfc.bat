@@ -8,7 +8,7 @@
 @rem ***************************************************************************
 @echo off
 
-set lib=./UML/Libraries
-if not "%UML_LIB%" == "" set lib=%UML_LIB%
+set lib=
+if not "%UML_LIB%" == "" set lib=-l %UML_LIB%
 
-java -jar dist/alf-eclipse.jar -l %lib% %*
+java -jar dist/alf-eclipse.jar %lib% %*

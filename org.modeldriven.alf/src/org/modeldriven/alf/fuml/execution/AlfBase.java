@@ -143,19 +143,17 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
             }
             String option = arg.substring(1);
             i++;
-            if (i < args.length) {
-                if (this.matchesNoArg(option)) {
-                   this.parseOption(option); 
-                } else if (this.matchesWithArg(option)) {
-                    arg = args[i];
-                    if (arg.charAt(0) == '-') {
-                        return null;
-                    }
-                    i++;
-                    this.parseOptionWithArg(option, arg);
-                } else {
+            if (this.matchesNoArg(option)) {
+               this.parseOption(option); 
+            } else if (this.matchesWithArg(option) && i < args.length) {
+                arg = args[i];
+                if (arg.charAt(0) == '-') {
                     return null;
                 }
+                i++;
+                this.parseOptionWithArg(option, arg);
+            } else {
+                return null;
             }
         }
         
@@ -228,9 +226,12 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     }
     
     public void run(String[] args) {
-        String unitName = this.parseArgs(args);        
-        if (unitName != null) {
-            this.process(this.parse(unitName, this.isFileName));            
+        String unitName = this.parseArgs(args);
+        if (unitName != null || args.length == 1 && this.isVerbose) {
+            this.printVerbose("Alf Reference Implementation v" + ALF_VERSION);
+            if (unitName != null) {
+                this.process(this.parse(unitName, this.isFileName));
+            }
         } else {
             this.printUsage();
         }         
