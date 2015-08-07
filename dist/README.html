@@ -4,7 +4,7 @@
 </header>
 <body>
 <h1>Action Language for UML (Alf) Open Source Implementation<br>
-Version 0.5.0</h1>
+Version 0.5.1</h1>
 <em>Copyright &copy; 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)</em>
 <br>
 <p>
@@ -100,6 +100,10 @@ Part II were identified, these were corrected in the implementation. All such
 issues have either been corrected in the latest version of the specification 
 or have been reported to the Alf Revision Task Force for correction in a future 
 version.
+
+<h3>Version 0.5.1</h3>
+<p>
+Added the printing of version info using the "-v" option.
 
 <h3>Version 0.5.0</h3>
 
@@ -388,7 +392,9 @@ are constraint violations.
 <tt>-v</tt>
 <br>
 Sets verbose mode, in which status messages are printed about parsing and other
-processing steps leading up to execution.
+processing steps leading up to execution. If this option is used alone without
+specifying a unit name (i.e., <tt>alf -v</tt>), then just version information is
+printed.
 
 <h3><tt>alfc</tt>: Model compilation to an Eclipse UML2 file</h3>
 
@@ -446,7 +452,9 @@ option is not given, the default of <tt>UML</tt> is used.
 <tt>-v</tt>
 <br>
 Sets verbose mode, in which status messages are printed about parsing and other
-processing steps leading up to execution.
+steps in the compilation process. If this option is used alone without
+specifying a unit name (i.e., <tt>alfc -v</tt>), then just version information is
+printed.
 
 <h3><tt>fuml</tt>: Model execution using Moka</h3>
 
