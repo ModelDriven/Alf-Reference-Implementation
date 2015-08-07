@@ -10,5 +10,6 @@
 
 set lib=
 if not "%UML_LIB%" == "" set lib=-l %UML_LIB%
+if "%*" == "-v" set lib=
 
 java -jar dist/alf-eclipse.jar %lib% %*

@@ -1,6 +1,6 @@
 #!/bin/bash
 # ***************************************************************************
-# Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+# Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
 #
 # All rights reserved worldwide. This program and the accompanying materials
 # are made available for under the terms of the GNU General Public License 
@@ -8,7 +8,7 @@
 # http://www.gnu.org/licenses/gpl-3.0.html.
 # ***************************************************************************
 
-if [ "$ALF_LIB" = "" ] 
+if [[ "$ALF_LIB" == "" || "-v" = $@ ]]
 then
   lib=""
 else
