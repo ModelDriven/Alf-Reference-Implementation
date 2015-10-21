@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_0" name="FoundationalModelLibrary">
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_0" name="FoundationalModelLibrary">
   <packagedElement xmi:type="uml:Package" xmi:id="PrimitiveBehaviors" name="PrimitiveBehaviors">
     <packageImport xmi:id="PrimitiveBehaviors-_packageImport.0">
       <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
@@ -781,19 +781,19 @@
       <ownedParameter xmi:id="BasicInputOutput-WriteLine-errorStatus" name="errorStatus" direction="out">
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-errorStatus-_lowerValue"/>
       </ownedParameter>
-      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.0" source="BasicInputOutput-WriteLine-StandardOutputChannel-_result" target="BasicInputOutput-WriteLine-writeLine-_target">
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.0" target="BasicInputOutput-WriteLine-writeLine-_target" source="BasicInputOutput-WriteLine-StandardOutputChannel-_result">
         <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-WriteLine-_edge.0-_guard">
           <body></body>
         </guard>
         <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-_edge.0-_weight" value="1"/>
       </edge>
-      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.1" source="BasicInputOutput-WriteLine-value.1" target="BasicInputOutput-WriteLine-writeLine-value">
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.1" target="BasicInputOutput-WriteLine-writeLine-value" source="BasicInputOutput-WriteLine-value.1">
         <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-WriteLine-_edge.1-_guard">
           <body></body>
         </guard>
         <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-WriteLine-_edge.1-_weight" value="1"/>
       </edge>
-      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.2" source="BasicInputOutput-WriteLine-writeLine-errorStatus" target="BasicInputOutput-WriteLine-errorStatus.1">
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-WriteLine-_edge.2" target="BasicInputOutput-WriteLine-errorStatus.1" source="BasicInputOutput-WriteLine-writeLine-errorStatus">
         <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-WriteLine-_edge.2-_guard">
           <body></body>
         </guard>
@@ -843,19 +843,19 @@
       <ownedParameter xmi:id="BasicInputOutput-ReadLine-result" name="result" direction="return">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
       </ownedParameter>
-      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.0" source="BasicInputOutput-ReadLine-StandardInputChannel-_result" target="BasicInputOutput-ReadLine-readLine-_target">
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.0" target="BasicInputOutput-ReadLine-readLine-_target" source="BasicInputOutput-ReadLine-StandardInputChannel-_result">
         <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-ReadLine-_edge.0-_guard">
           <body></body>
         </guard>
         <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-_edge.0-_weight" value="1"/>
       </edge>
-      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.1" source="BasicInputOutput-ReadLine-readLine-errorStatus" target="BasicInputOutput-ReadLine-errorStatus.1">
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.1" target="BasicInputOutput-ReadLine-errorStatus.1" source="BasicInputOutput-ReadLine-readLine-errorStatus">
         <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-ReadLine-_edge.1-_guard">
           <body></body>
         </guard>
         <weight xmi:type="uml:LiteralInteger" xmi:id="BasicInputOutput-ReadLine-_edge.1-_weight" value="1"/>
       </edge>
-      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.2" source="BasicInputOutput-ReadLine-readLine-_result.0" target="BasicInputOutput-ReadLine-result.1">
+      <edge xmi:type="uml:ObjectFlow" xmi:id="BasicInputOutput-ReadLine-_edge.2" target="BasicInputOutput-ReadLine-result.1" source="BasicInputOutput-ReadLine-readLine-_result.0">
         <guard xmi:type="uml:OpaqueExpression" xmi:id="BasicInputOutput-ReadLine-_edge.2-_guard">
           <body></body>
         </guard>

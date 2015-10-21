@@ -51,7 +51,7 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
 	        this.getProfileResource("Standard.profile");
 	        // this.getLibraryResource("UMLPrimitiveTypes.library");
 	        this.getLibraryResource("fUML.library");
-	        this.getLibraryResource("CollectionClassesImpl.library");
+	        // this.getLibraryResource("CollectionClassesImpl.library");
 	        this.getLibraryResource("Alf.library");
 	        this.uninitialized = false;
     	}

@@ -21,7 +21,7 @@ public class CompileTests {
 	private static final String LIBRARY_DIR = UML_DIR + "/Libraries";
 	private static final String TEST_DIR = "../org.modeldriven.alf/tests-x";
 	
-	private static String[] args = {"-l", LIBRARY_DIR, "-m", TEST_DIR, "-d", "ERROR", ""};
+	private static String[] args = {"-l", LIBRARY_DIR, "-m", TEST_DIR, ""};
 	
 	public static void compileTest(String unitName) {
 		System.out.println(unitName + "...");
