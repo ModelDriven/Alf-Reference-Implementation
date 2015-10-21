@@ -156,19 +156,16 @@ public abstract class LoopStatementMapping extends StatementMapping {
             mapping = this.fumlMap(this.getBody());
             Collection<Element> bodyElements = mapping.getModelElements();
             
+            ActivityGraph subsubgraph = this.createActivityGraph();
+            StructuredActivityNode conditionNode = subsubgraph.addStructuredActivityNode(
+                    "Condition(" + node.getName() + ")", conditionElements);
+            
             if (node.getIsTestedFirst()) {
-                this.addToNode(conditionElements);
-                for (Element element: conditionElements) {
-                    if (element instanceof ExecutableNode) {
-                        node.addTest((ExecutableNode)element);
-                    }
-                }
+                this.addToNode(subsubgraph.getModelElements());
+                node.addTest(conditionNode);
             } else {
-                ActivityGraph subsubgraph = this.createActivityGraph();
                 ActivityNode bodyNode = subsubgraph.addStructuredActivityNode(
                         "Body(" + node.getName() + ")", bodyElements);
-                ActivityNode conditionNode = subsubgraph.addStructuredActivityNode(
-                        "Condition(" + node.getName() + ")", conditionElements);
                 subsubgraph.addControlFlow(bodyNode, conditionNode);
                 bodyElements = subsubgraph.getModelElements();
                 conditionElements = new ArrayList<Element>();
