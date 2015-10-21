@@ -1,7 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2013 Ivar Jacobson International
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -15,21 +14,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
-
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.QualifiedNameList;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.StereotypeAnnotation;
-
 import org.modeldriven.alf.uml.Activity;
 import org.modeldriven.alf.uml.ActivityEdge;
 import org.modeldriven.alf.uml.ActivityFinalNode;
@@ -39,6 +34,8 @@ import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.ForkNode;
+import org.modeldriven.alf.uml.InputPin;
+import org.modeldriven.alf.uml.JoinNode;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.OpaqueBehavior;
 import org.modeldriven.alf.uml.OutputPin;
@@ -144,12 +141,27 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         if (parameter.getDirection().equals("in") || 
                 parameter.getDirection().equals("inout")) {
             node.setName("Input(" + parameter.getName() + ")");
+            
+            ActivityGraph graph = mapping.createActivityGraph();
+            
+            // The fork nodes are nested inside structured activity nodes
+            // to ensure that input activity parameter nodes fire before the body
+            // of the activity (since at least a null token is required on the
+            // input pin to fire the structured activity node).
+            // NOTE: This is a workaround for a current problem with fUML
+            // semantics, in which nodes within an activity may fire before
+            // activity parameter nodes for optional input parameters.           
+            ForkNode fork = graph.addForkNode("Fork(" + parameter.getName() + ")");
+            StructuredActivityNode structuredNode = graph.addStructuredActivityNode(
+                    "Node(" + node.getName() + ")", graph.getModelElements());
+            InputPin inputPin = graph.createInputPin(
+                    node.getName(), 
+                    parameter.getType(), parameter.getLower(), parameter.getUpper());
+            structuredNode.addStructuredNodeInput(inputPin);
+            structuredNode.addEdge(graph.createObjectFlow(inputPin, fork));
 
-            ForkNode fork = mapping.create(ForkNode.class);
-            fork.setName("Fork(" + parameter.getName() + ")");
-            activity.addNode(fork);
-
-            activity.addEdge(mapping.createActivityGraph().createObjectFlow(node, fork));
+            activity.addNode(structuredNode);
+            activity.addEdge(graph.createObjectFlow(node, inputPin));
 
             if (parameter.getDirection().equals("inout")) {
                 node = mapping.create(ActivityParameterNode.class);
@@ -204,21 +216,28 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
 	        Block body,
 	        FumlMapping mapping) throws MappingError {
 	    
-	    StructuredActivityNode structuredNode = null;
-	    for (ActivityNode node: activity.getNode()) {
-	        if (node instanceof StructuredActivityNode) {
-	            structuredNode = (StructuredActivityNode)node;
-	        }
-	    }
-	    if (structuredNode == null) {
-	        structuredNode = (StructuredActivityNode)mapping.
-	                create(StructuredActivityNode.class);
-	        structuredNode.setName("Body(" + activity.getName() + ")");
-	        activity.addNode(structuredNode);
-	    }
-	    
         ActivityGraph graph = mapping.createActivityGraph();
-        graph.addToStructuredNode(structuredNode, elements);
+        StructuredActivityNode structuredNode = graph.addStructuredActivityNode(
+                "Body(" + activity.getName() + ")", elements);
+        
+        // If there are inputs, add a join node to ensure that the body
+        // structured activity node does not fire until all input
+        // activity parameter nodes have fired.
+        JoinNode join = null;
+        for (Parameter parameter: activity.getOwnedParameter()) {
+            if (parameter.getDirection().equals("in") ||
+                    parameter.getDirection().equals("inout")) {
+                if (join == null) {
+                    join = graph.addJoinNode("Join(Input))");
+                }
+                ForkNode fork = getInputParameterFork(activity, parameter);
+                ActivityNode node = fork.getInStructuredNode();
+                graph.addControlFlow(node, join);
+            }
+        }
+        if (join != null) {
+            graph.addControlFlow(join, structuredNode);
+        }
         
         List<Element> otherElements = new ArrayList<Element>();
         for (Element element: graph.getModelElements()) {
@@ -290,7 +309,8 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                 if (node instanceof ActivityParameterNode && 
                         ((ActivityParameterNode)node).getParameter().equals(parameter) &&
                         node.getOutgoing().size() > 0) {
-                    return (ForkNode)node.getOutgoing().get(0).getTarget();
+                    return (ForkNode)node.getOutgoing().get(0).getTarget().
+                            getOutgoing().get(0).getTarget();
                 }
             }
         }
