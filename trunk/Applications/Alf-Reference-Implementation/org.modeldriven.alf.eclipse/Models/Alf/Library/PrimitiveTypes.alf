@@ -1,0 +1,16 @@
+namespace Alf::Library;
+public import FoundationalModelLibrary::PrimitiveBehaviors::Boolean;
+public import FoundationalModelLibrary::PrimitiveBehaviors::String;
+public import FoundationalModelLibrary::PrimitiveBehaviors::Integer;
+public import FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNatural;
+public import FoundationalModelLibrary::PrimitiveBehaviors::Real;
+
+package PrimitiveTypes {
+
+   @primitive
+   public datatype Natural specializes Integer, UnlimitedNatural {}
+   
+   @primitive
+   public datatype BitString {}
+
+}
