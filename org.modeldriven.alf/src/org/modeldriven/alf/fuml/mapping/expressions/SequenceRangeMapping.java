@@ -124,17 +124,14 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
                 label, true, 
                 rangeLowerInputPin, rangeUpperInputPin, accumulatorInputPin);
         
-        // Test if counter is still less than the range upper limit.
+        // Test if counter is still less than or equal to the range upper limit.
         ActivityGraph loopGraph = new ActivityGraph(graph.getElementFactory());
         ForkNode fork0 = loopGraph.addForkNode(
                 "Fork(" + loopNode.getLoopVariable().get(0).getName() + ")");
         ForkNode fork1 = loopGraph.addForkNode(
                 "Fork(" + loopNode.getLoopVariable().get(1).getName() + ")");
-        ForkNode fork2 = loopGraph.addForkNode(
-                "Fork(" + loopNode.getLoopVariable().get(2).getName() + ")");
         loopGraph.addObjectFlow(loopNode.getLoopVariable().get(0), fork0);
         loopGraph.addObjectFlow(loopNode.getLoopVariable().get(1), fork1);
-        loopGraph.addObjectFlow(loopNode.getLoopVariable().get(2), fork2);
         
         CallBehaviorAction testCall = 
             loopGraph.addCallBehaviorAction(getBehavior(
@@ -165,7 +162,7 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
         // Preserve the range upper bound.
         StructuredActivityNode node =
             loopGraph.addStructuredActivityNode(
-                    "Node(" + loopNode.getLoopVariable().get(1).getName() + ")", 
+                    "PassThru(" + loopNode.getLoopVariable().get(1).getName() + ")", 
                     new ArrayList<Element>());
         node.addStructuredNodeInput(graph.createInputPin(
                 node.getName() + ".input", getIntegerType(), 1, 1));
