@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -110,14 +110,25 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	        FumlMapping parentMapping) throws MappingError {
         Clause clause = parentMapping.create(Clause.class);
         
-        modelElements.addAll(testElements);
-        for (Element element: testElements) {
-            if (element instanceof ExecutableNode) {
-                clause.addTest((ExecutableNode)element);
+        if (testElements.size() == 1 && 
+                testElements.toArray()[0] instanceof ExecutableNode && 
+                decider instanceof OutputPin) {
+            modelElements.addAll(testElements);
+            clause.addTest((ExecutableNode)testElements.toArray()[0]);
+        } else if (!testElements.isEmpty()) {
+            ActivityGraph testGraph = parentMapping.createActivityGraph();
+            StructuredActivityNode testNode = testGraph.addStructuredActivityNode(
+                    "Test(" + decider.getName() + ")", testElements);
+            if (!(decider instanceof OutputPin)) {
+                OutputPin outputPin = testGraph.createOutputPin( 
+                        "Decider(" + decider.getName() + ")", getBooleanType(), 1, 1);
+                testNode.addStructuredNodeOutput(outputPin);
+                testGraph.addObjectFlow(decider, outputPin);
+                decider = outputPin;
             }
-        }
-        
-        if (testElements.isEmpty() || !(decider instanceof OutputPin)) {
+            modelElements.addAll(testGraph.getModelElements());
+            clause.addTest(testNode);
+        } else {
             StructuredActivityNode passthruNode = 
                     parentMapping.createActivityGraph().createPassthruNode(
                         decider.getName(), getBooleanType(), 1, 1);
