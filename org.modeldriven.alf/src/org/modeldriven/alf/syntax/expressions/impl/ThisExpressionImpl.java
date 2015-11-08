@@ -37,17 +37,17 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	 **/
 	@Override
 	protected ElementReference deriveType() {
-	    ElementReference context = this.currentScope == null? null: 
+	    ElementReference currentScope = this.currentScope == null? null: 
 	                                    this.currentScope.getImpl().getReferent();
-	    if (context == null) {
+	    if (currentScope == null) {
 	        return null;
-	    } else if (context.getImpl().isOperation() || context.getImpl().isMethod()) {
-	        return context.getImpl().getNamespace();
-	    } else if (context.getImpl().isBehavior()) {
-	        ElementReference activeClass = context.getImpl().getActiveClass();
-	        return activeClass != null? activeClass: context;
-	    } else if (context.getImpl().isClass()) {
-	        return context;
+	    } else if (currentScope.getImpl().isOperation() || currentScope.getImpl().isMethod()) {
+	        return currentScope.getImpl().getNamespace();
+	    } else if (currentScope.getImpl().isBehavior()) {
+	        ElementReference context = currentScope.getImpl().getContext();
+	        return context != null? context: currentScope;
+	    } else if (currentScope.getImpl().isClass()) {
+	        return currentScope;
 	    } else {
 	        return null;
 	    }

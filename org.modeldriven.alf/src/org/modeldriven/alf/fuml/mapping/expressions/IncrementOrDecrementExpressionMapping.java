@@ -87,7 +87,10 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
                     mapping.getErrorMessage());
         } else {
             ExpressionMapping operandMapping = (ExpressionMapping)mapping;
-            this.graph.addAll(operandMapping.getGraph());
+//            this.graph.addAll(operandMapping.getGraph());
+            ActivityNode rhsNode = this.graph.addStructuredActivityNode(
+                    "RightHandSide@" + operand.getId(), 
+                    operandMapping.getModelElements());
 
             mapping = this.fumlMap(operand);
             if (!(mapping instanceof LeftHandSideMapping)) {
@@ -102,6 +105,10 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
                 this.graph.addObjectFlow(
                         this.action.getResult().get(0),
                         lhsMapping.getAssignmentTarget());
+                ActivityNode controlTarget = lhsMapping.getControlTarget();
+                if (controlTarget != null) {
+                    this.graph.addControlFlow(rhsNode, controlTarget);
+                }
                 
                 ActivityNode operandResultSource = operandMapping.getResultSource();
                 if (expression.getIsPrefix()) {

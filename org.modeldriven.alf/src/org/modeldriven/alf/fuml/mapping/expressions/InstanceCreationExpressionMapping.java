@@ -1,7 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2013 Ivar Jacobson International SA
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -101,8 +100,10 @@ public class InstanceCreationExpressionMapping extends
         
         // Add a start behavior action if creating an instance of an active
         // class.
-        if (action instanceof CallOperationAction) {
-            Class_ class_ = ((CallOperationAction)action).getOperation().getClass_();
+        if (action instanceof CallOperationAction || action instanceof CreateObjectAction) {
+            Class_ class_ = action instanceof CallOperationAction?
+                    ((CallOperationAction)action).getOperation().getClass_():
+                    (Class_)(((CreateObjectAction)action).getClassifier());
             
             if (class_.getIsActive()) {
                 ForkNode fork = 
@@ -248,9 +249,29 @@ public class InstanceCreationExpressionMapping extends
             this.graph.addObjectFlow(createAction.getResult(), callAction.getTarget());
 
         } else {
+            // TODO: Handle attribute initialization for constructorless instance
+            // creation.
             // NOTE: Instance creation expressions for classes defined in
             // Alf notation should never be constructorless.
-            this.throwError("Constructorless instance creation expression mapping not implemented.");
+            
+            ElementReference referent = instanceCreationExpression.getReferent();
+            Class_ class_ = (Class_)referent.getImpl().getUml();
+            if (class_ == null) {
+                FumlMapping mapping = this.fumlMap(referent);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof ClassDefinitionMapping)) {
+                    this.throwError("Error mapping class referent: " + 
+                            mapping.getErrorMessage());
+                } else {
+                    class_ = (Class_)
+                        ((ClassDefinitionMapping)mapping).getClassifier();
+                }
+            }
+            CreateObjectAction createAction = this.graph.addCreateObjectAction(class_);
+            this.resultSource = createAction.getResult();
+            action = createAction;
         }
         return action;
     }

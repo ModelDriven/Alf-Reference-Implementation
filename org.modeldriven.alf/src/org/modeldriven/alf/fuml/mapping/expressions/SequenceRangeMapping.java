@@ -10,8 +10,6 @@
 
 package org.modeldriven.alf.fuml.mapping.expressions;
 
-import java.util.ArrayList;
-
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.SequenceElementsMapping;
@@ -146,41 +144,35 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
                 loopGraph.getModelElements(), 
                 testCall.getResult().get(0));
         
-        loopGraph = new ActivityGraph(graph.getElementFactory());
+        ActivityGraph bodyGraph = new ActivityGraph(graph.getElementFactory());
         
         // Increment the counter.
         ValueSpecificationAction valueOne =
-            loopGraph.addNaturalValueSpecificationAction(1);
+            bodyGraph.addNaturalValueSpecificationAction(1);
         CallBehaviorAction incrementCall =
-            loopGraph.addCallBehaviorAction(getBehavior(
+            bodyGraph.addCallBehaviorAction(getBehavior(
                     RootNamespace.getRootScope().getIntegerFunctionPlus()));
-        loopGraph.addObjectFlow(
-                fork0, incrementCall.getArgument().get(0));
-        loopGraph.addObjectFlow(
+        bodyGraph.addObjectFlow(fork0, incrementCall.getArgument().get(0));
+        bodyGraph.addObjectFlow(
                 valueOne.getResult(), incrementCall.getArgument().get(1));
         
         // Preserve the range upper bound.
-        StructuredActivityNode node =
-            loopGraph.addStructuredActivityNode(
-                    "PassThru(" + loopNode.getLoopVariable().get(1).getName() + ")", 
-                    new ArrayList<Element>());
-        node.addStructuredNodeInput(graph.createInputPin(
-                node.getName() + ".input", getIntegerType(), 1, 1));
-        node.addStructuredNodeOutput(graph.createOutputPin(
-                node.getName() + ".output", getIntegerType(), 1, 1));
-        node.addEdge(graph.createObjectFlow(
-                node.getStructuredNodeInput().get(0), 
-                node.getStructuredNodeOutput().get(0)));
-        loopGraph.addObjectFlow(fork1, node.getStructuredNodeInput().get(0));
+        StructuredActivityNode node = bodyGraph.createPassthruNode(
+                loopNode.getLoopVariable().get(1).getName(), getIntegerType(), 1, 1);
+        bodyGraph.add(node);
+        bodyGraph.addObjectFlow(fork1, node.getStructuredNodeInput().get(0));
         
         // Append the counter to the list.
         CallBehaviorAction appendCall =
-            loopGraph.addCallBehaviorAction(getBehavior(
+            bodyGraph.addCallBehaviorAction(getBehavior(
                     RootNamespace.getRootScope().getSequenceFunctionIncluding()));
-        loopGraph.addObjectFlow(
+        bodyGraph.addObjectFlow(
                 loopNode.getLoopVariable().get(2), appendCall.getArgument().get(0));
-        loopGraph.addObjectFlow(
-                fork0, appendCall.getArgument().get(1));
+        bodyGraph.addObjectFlow(fork0, appendCall.getArgument().get(1));
+        
+        loopGraph = new ActivityGraph(graph.getElementFactory());
+        loopGraph.addStructuredActivityNode(
+                "Body(" + loopNode.getName() + ")", bodyGraph.getModelElements());
         
         graph.addLoopBodyPart(
                 loopNode, 

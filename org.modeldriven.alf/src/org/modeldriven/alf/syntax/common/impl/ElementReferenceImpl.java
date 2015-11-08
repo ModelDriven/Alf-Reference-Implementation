@@ -148,6 +148,7 @@ public abstract class ElementReferenceImpl {
     public abstract ElementReference getNamespace();
     public abstract Collection<ElementReference> getRedefinedElements();
     public abstract ElementReference getSignal();
+    public abstract ElementReference getContext();
 
     
     public QualifiedName getQualifiedName() {
