@@ -230,9 +230,17 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	 * If a left-hand side has an index, then the index expression must have a
 	 * multiplicity upper bound no greater than 1.
 	 **/
+    // NOTE: And it must have type Integer or UnlimitedInteger.
 	public boolean leftHandSideIndexExpression() {
 	    Expression index = this.getSelf().getIndex();
-		return index == null || index.getUpper() <= 1;
+	    if (index == null) {
+	        return true;
+	    } else {
+	        ElementReference indexType = index == null? null: index.getType();
+	        return index.getUpper() <= 1 && indexType != null && 
+	                (indexType.getImpl().isInteger() || 
+	                 indexType.getImpl().isUnlimitedNatural());
+	    }
 	}
 	
 	/*
