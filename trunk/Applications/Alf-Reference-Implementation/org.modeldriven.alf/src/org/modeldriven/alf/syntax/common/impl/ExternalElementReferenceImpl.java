@@ -781,6 +781,16 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
     }
+    
+    public ElementReference getContext() {
+        if (!this.isBehavior()) {
+            return null;
+        } else {
+            ExternalElementReference self = this.getSelf();
+            BehavioredClassifier context = ((Behavior)self.getElement()).getContext();
+            return context == null? self: ElementReferenceImpl.makeElementReference(context);
+        }
+    }
 
     @Override
     public boolean equals(Object object) {

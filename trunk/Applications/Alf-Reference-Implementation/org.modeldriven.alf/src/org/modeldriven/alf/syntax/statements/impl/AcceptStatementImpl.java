@@ -187,7 +187,7 @@ public class AcceptStatementImpl extends StatementImpl {
 	 **/
 	public boolean acceptStatementSignals() {
 	    ElementReference behavior = this.getEffectiveBehavior();
-	    behavior = behavior == null? null: behavior.getImpl().getActiveClass();
+	    behavior = behavior == null? null: behavior.getImpl().getContext();
 	    if (behavior == null) {
 	        return false;
 	    } else {

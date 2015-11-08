@@ -609,6 +609,28 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
     }
+    
+    @Override
+    public ElementReference getContext() {
+        SyntaxElement element = this.getSelf().getElement();
+        if (!(element instanceof ActivityDefinition)) {
+            return null;
+        } else {
+            ElementReference namespace = 
+                   ((ActivityDefinition)element).getImpl().getNamespaceReference();
+            if (namespace == null) {
+                return null;
+            } else if (namespace.getImpl().isBehavior()) {
+                // Note: This can never happen for a namespace that is an internal 
+                // element reference.
+                return namespace.getImpl().getContext();
+            } else if (this.equals(namespace.getImpl().getClassifierBehavior())) {
+                return namespace;
+            } else {
+                return null;
+            }
+        }
+    }
 
     @Override
     public boolean equals(Object object) {
