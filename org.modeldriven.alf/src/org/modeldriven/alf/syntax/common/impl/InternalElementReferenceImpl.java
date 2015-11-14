@@ -137,7 +137,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
                 stub.getImpl().getReferent();
             return referent != null && 
                     (referent.getImpl().isOperation() || 
-                        referent.getImpl().isActiveBehavior() ||
+                        referent.getImpl().isOwnedBehavior() ||
                         // Note: The case of a property covers the use of an
                         // activity definition to define the default value of
                         // an external property.

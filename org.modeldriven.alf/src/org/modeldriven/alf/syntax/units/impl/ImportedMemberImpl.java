@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -176,7 +176,7 @@ public class ImportedMemberImpl extends MemberImpl {
 	} // isSameKindAst
 	
 	/**
-	 * Allow an external operation, active behavior (activity) or property to 
+	 * Allow an external operation, owned behavior (activity) or property to 
 	 * serve as the "stub" for an activity definition. The names are assumed to
 	 * already match. (Note: The case of a property covers the use of an 
 	 * activity definition to define the default value of an external property.)
@@ -187,7 +187,7 @@ public class ImportedMemberImpl extends MemberImpl {
 	    return !this.isImported() && 
 	            unit.getDefinition() instanceof ActivityDefinition &&
 	            (referent.getImpl().isOperation() || 
-	                    referent.getImpl().isActiveBehavior() ||
+	                    referent.getImpl().isOwnedBehavior() ||
 	                    referent.getImpl().isProperty());
 	}
 
