@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -219,7 +219,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                 (referent.getImpl().isOperation()? 
                     (subunitName.equals(stubName) || 
                      subunitName.startsWith(stubName + "$method$")):
-                 referent.getImpl().isActiveBehavior()? 
+                 referent.getImpl().isOwnedBehavior()? 
                     (subunitName.equals(stubName) || 
                      subunitName.startsWith(stubName + "$behavior$")):
                  referent.getImpl().isProperty()?

@@ -194,6 +194,10 @@ public abstract class ElementReferenceImpl {
     public boolean isActiveBehavior() {
         return this.getActiveClass() != null;
     }
+    
+    public boolean isOwnedBehavior() {
+        return this.getContext() != null;
+    }
 
     public boolean isCollectionClass() {
         ElementReference collectionClasses = 
