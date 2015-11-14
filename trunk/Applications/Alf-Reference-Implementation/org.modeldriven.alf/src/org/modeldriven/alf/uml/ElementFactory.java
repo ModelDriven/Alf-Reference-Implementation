@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -16,15 +16,34 @@ public abstract class ElementFactory {
     }
     
     public Element newInstance(String className) {
-        String implementationClassName = this.getWrapperClassName(className);
         try {
-            return (Element)Class.forName(implementationClassName).newInstance();
+            return (Element)this.createInstance(className);
         } catch (Exception e) {
             System.out.println("Could not instantiate " + 
-                    implementationClassName + ": " + e);
+                    this.getWrapperClassName(className) + ": " + e);
             e.printStackTrace();
             return null;
         }
+    }
+    
+    public Element newInstance(Object base, Class<?> classClass, Class<?> namedElementClass) {
+        final String baseClassName = base.getClass().getSimpleName();
+        Element newInstance = null;
+        try {
+            newInstance = (Element)this.createInstance(baseClassName);
+        } catch (Exception e) {
+            final String className =
+                    classClass.isInstance(base)? "Class":
+                    namedElementClass.isInstance(base)? "NamedElement":
+                    "Element";
+            newInstance = (Element)this.newInstance(className);
+        }
+        return newInstance;
+    }
+        
+    public Element createInstance(String className) 
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        return (Element)Class.forName(this.getWrapperClassName(className)).newInstance();
     }
     
     public boolean supportsTemplates() {
@@ -36,6 +55,19 @@ public abstract class ElementFactory {
         }
     }
     
-    public abstract String getWrapperClassName(String className);
+    public String getWrapperClassName(String className) {
+        int len = className.length();
+        if (len > 4 && className.substring(len-4).equals("Impl")) {
+            className = className.substring(0, len-4);
+        }
+        if (className.equals("Class")) {
+            className = "Class_";
+        }
+        return this.getPackageName() + "." + className;
+    }
+    
+    public String getPackageName() {
+        return this.getClass().getPackage().getName();
+    }
     
 }
