@@ -256,6 +256,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             return false;
         } else {
             ElementReference namespace = member.getImpl().getNamespace();
+            if (namespace == null) {
+                namespace = member.getImpl().getContext();
+            }
             return namespace != null && 
                     (namespace.getImpl().equals(this.getReferent()) || 
                      this.containsMember(namespace));
