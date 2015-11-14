@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2014 Ivar Jacobson International SA
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -42,8 +41,9 @@ public class Element implements org.modeldriven.alf.uml.Element {
         if (base == null) {
             return null;
         }
-        Element newInstance = 
-        		(Element)factory.newInstance(base.getClass().getSimpleName());
+        Element newInstance = (Element)factory.newInstance(base, 
+        		org.eclipse.uml2.uml.Class.class, 
+        		org.eclipse.uml2.uml.NamedElement.class);
         if (newInstance != null) {
             newInstance.setBase(base);
         }
