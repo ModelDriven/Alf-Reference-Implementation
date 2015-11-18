@@ -162,9 +162,12 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                             mapping.getErrorMessage());
                 } else {
                     ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
-                    this.controlTarget = this.graph.addStructuredActivityNode(
-                            "Expression(LeftHandSide@" + lhs.getId() +")", 
-                            expressionMapping.getModelElements());
+                    Collection<Element> elements = expressionMapping.getModelElements();
+                    if (!elements.isEmpty()) {
+                        this.controlTarget = this.graph.addStructuredActivityNode(
+                                "Expression(LeftHandSide@" + lhs.getId() +")", 
+                                elements);
+                    }
                     objectSource = expressionMapping.getResultSource();
                 }
             }
