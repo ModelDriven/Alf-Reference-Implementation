@@ -10,12 +10,12 @@ class Expressions_Sequence_Operation specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 
-	    this.test(notEmpty, includes, n, m, customers, list);
+	    this.test(notEmpty, includes, m, n, customers, list);
 	    
 	    AssertFalse("notEmpty", notEmpty);
 	    AssertFalse("includes", includes);
-	    AssertEqual("n", n, 3);
 	    AssertEqual("m", m, 3);
+	    AssertEqual("n", n, 3);
 	    
 	    AssertList("customers.name", customers.name, "C");
 	    AssertList("list", list, any[]{"Blah", 1});
