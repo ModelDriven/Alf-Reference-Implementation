@@ -265,25 +265,22 @@ public class ForStatementMapping extends LoopStatementMapping {
             for (LoopVariableDefinitionMapping variableDefinitionMapping: 
                 variableDefinitionMappings) {
                 OutputPin loopVariable = node.getLoopVariable().get(i);
-                forkNode = 
-                        subgraph.addForkNode("Fork(" + 
-                                variableDefinitionMapping.
-                                getLoopVariableDefinition().getVariable() + ")");
+                ActivityNode variableFork = loopVariable.getOutgoing().get(0).getTarget();
                 if (i == n && 
                         variableDefinitionMapping.getResultSource2() != null) {
                     // If this is the first loop variable, and its definition
                     // is a sequence construction shorthand, then its assigned
                     // value is just the value of the loop variable pin
-                    subgraph.addObjectFlow(loopVariable, forkNode);
+                    forkNode = variableFork;
                 } else {
                     // Otherwise, the assigned value of the loop variable is
                     // the value at the position in the loop variable input list
                     // given by the current iteration count.
-                    ActivityNode variableFork = 
-                            subgraph.addForkNode("Fork(" + loopVariable.getName() + ")");
+                    forkNode = subgraph.addForkNode("Fork(" + 
+                                    variableDefinitionMapping.
+                                    getLoopVariableDefinition().getVariable() + ")");
                     callAction = subgraph.addCallBehaviorAction(
                             getBehavior(RootNamespace.getRootScope().getListFunctionGet()));
-                    subgraph.addObjectFlow(loopVariable, variableFork);
                     subgraph.addObjectFlow(variableFork, callAction.getArgument().get(0));
                     subgraph.addObjectFlow(counterFork, callAction.getArgument().get(1));
                     subgraph.addObjectFlow(callAction.getResult().get(0), forkNode);
@@ -297,7 +294,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             StructuredActivityNode valuesNode = 
                     bodyGraph.addStructuredActivityNode(
                             "Values(" + name + ")", subgraph.getModelElements());
-
+            
             // Map the body of the for statement.
             
             // NOTE: The loop variable value model elements and the body model
@@ -305,6 +302,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             // with the former having a control flow to the latter, to ensure
             // all the loop variables have the proper values before the main
             // body executes.
+
             StructuredActivityNode bodyNode = 
                     bodyGraph.addStructuredActivityNode(
                             "Body(" + name + ")", null);
@@ -361,6 +359,8 @@ public class ForStatementMapping extends LoopStatementMapping {
             
             bodyGraph.addToStructuredNode(bodyNode, bodyElements);
             
+            subgraph = this.createActivityGraph();
+            
             // Identify the body output corresponding to each loop variable.
             i = n;
             for (LoopVariableDefinitionMapping variableDefinitionMapping:
@@ -382,34 +382,33 @@ public class ForStatementMapping extends LoopStatementMapping {
                     // Otherwise, the loop variable input list must simply be
                     // passed through to the next iteration unchanged.
                     StructuredActivityNode passthruNode = 
-                            this.graph.createPassthruNode(
-                                    "Passthru(" + loopVariable.getName() + ")", 
+                            this.graph.createPassthruNode(loopVariable.getName(), 
                                     loopVariable.getType(), 0, -1);
-                    bodyGraph.add(passthruNode);
-                    bodyGraph.addObjectFlow(
+                    subgraph.add(passthruNode);
+                    subgraph.addObjectFlow(
                             forkNode, passthruNode.getStructuredNodeInput().get(0));
                     node.addBodyOutput(passthruNode.getStructuredNodeOutput().get(0));
                 }
                 i++;
             }
-            
+
             // Map the incrementing of the loop iteration count.
-            callAction = bodyGraph.addCallBehaviorAction(
+            callAction = subgraph.addCallBehaviorAction(
                     getBehavior(RootNamespace.getRootScope().getIntegerFunctionPlus()));
-            valueAction = bodyGraph.addNaturalValueSpecificationAction(1);
-            bodyGraph.addObjectFlow(counterFork, callAction.getArgument().get(0));
-            bodyGraph.addObjectFlow(valueAction.getResult(), callAction.getArgument().get(1));
+            valueAction = subgraph.addNaturalValueSpecificationAction(1);
+            subgraph.addObjectFlow(counterFork, callAction.getArgument().get(0));
+            subgraph.addObjectFlow(valueAction.getResult(), callAction.getArgument().get(1));
             node.addBodyOutput(callAction.getResult().get(0));
             
             // Map the passing through of the upper bound value.
             StructuredActivityNode passthruNode = 
-                    this.graph.createPassthruNode(
-                            "Passthru(upper)", getIntegerType(), 1, 1);
-            bodyGraph.add(passthruNode);
-            bodyGraph.addObjectFlow(
+                    this.graph.createPassthruNode("upper", getIntegerType(), 1, 1);
+            subgraph.add(passthruNode);
+            subgraph.addObjectFlow(
                     upperFork, passthruNode.getStructuredNodeInput().get(0));
             node.addBodyOutput(passthruNode.getStructuredNodeOutput().get(0));
-
+            
+            bodyGraph.addToStructuredNode(bodyNode, subgraph.getModelElements());
 
             this.addToNode(bodyGraph.getModelElements());
             for (Element element: bodyGraph.getModelElements()) {
