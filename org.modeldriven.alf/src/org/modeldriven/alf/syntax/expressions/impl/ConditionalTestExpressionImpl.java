@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -117,7 +117,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
         Expression operand3 = self.getOperand3();
         int upper2 = operand2 == null? 0: operand2.getUpper();
         int upper3 = operand3 == null? 0: operand3.getUpper();
-        return upper2 > upper3? upper2: upper3;
+        return upper2 == -1 || upper3 != -1 && upper2 > upper3? upper2: upper3;
     }
 
 	/*
