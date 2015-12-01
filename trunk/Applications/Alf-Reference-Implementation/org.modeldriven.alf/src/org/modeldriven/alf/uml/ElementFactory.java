@@ -8,16 +8,16 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 public abstract class ElementFactory {
     
     @SuppressWarnings("unchecked")
     public <T extends org.modeldriven.alf.uml.Element> T newInstance(Class<T> class_) {
-        return (T)this.newInstance(class_.getSimpleName());
-    }
-    
-    public Element newInstance(String className) {
+        final String className = class_.getSimpleName();
         try {
-            return (Element)this.createInstance(className);
+            return (T)Class.forName(this.getWrapperClassName(className)).newInstance();
         } catch (Exception e) {
             System.out.println("Could not instantiate " + 
                     this.getWrapperClassName(className) + ": " + e);
@@ -26,24 +26,49 @@ public abstract class ElementFactory {
         }
     }
     
-    public Element newInstance(Object base, Class<?> classClass, Class<?> namedElementClass) {
-        final String baseClassName = base.getClass().getSimpleName();
+    public Element newInstanceFor(Object base) {
+        return this.newInstanceFor(base.getClass().getSimpleName(), base);
+    }
+    
+    public Element newInstanceFor(Object base, Class<?> behaviorClass, Class<?> classClass, Class<?> namedElementClass) {
         Element newInstance = null;
         try {
-            newInstance = (Element)this.createInstance(baseClassName);
+            newInstance = (Element)this.createInstanceFor(base.getClass().getSimpleName(), base);
         } catch (Exception e) {
             final String className =
+                    behaviorClass.isInstance(base)? "Behavior":
                     classClass.isInstance(base)? "Class":
                     namedElementClass.isInstance(base)? "NamedElement":
                     "Element";
-            newInstance = (Element)this.newInstance(className);
+            newInstance = (Element)this.newInstanceFor(className, base);
         }
         return newInstance;
     }
-        
-    public Element createInstance(String className) 
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        return (Element)Class.forName(this.getWrapperClassName(className)).newInstance();
+    
+    private Element newInstanceFor(String className, Object base) {
+        try {
+            return (Element)this.createInstanceFor(className, base);
+        } catch (Exception e) {
+            System.out.println("Could not instantiate " + 
+                    this.getWrapperClassName(className) + ": " + e);
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    private Element createInstanceFor(String className, Object base) 
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException, 
+                   IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return (Element)getConstructor(Class.forName(this.getWrapperClassName(className))).newInstance(base);
+    }
+    
+    static private Constructor<?> getConstructor(Class<?> class_) {
+        for (Constructor<?> constructor: class_.getConstructors()) {
+            if (constructor.getParameterTypes().length == 1) {
+                return constructor;
+            }
+        }
+        return null;
     }
     
     public boolean supportsTemplates() {
