@@ -57,6 +57,8 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     				": " + ioe.getMessage());
     		// ioe.printStackTrace();
     		throw ioe;
+    	} finally {
+    		resource.unload();
     	}
     }
     
