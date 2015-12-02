@@ -19,7 +19,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public abstract class AlfBase {
     
-    public static final String ALF_VERSION = "0.5.1e";
+    public static final String ALF_VERSION = "0.6.0";
     
     protected boolean isVerbose = false;
 

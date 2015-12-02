@@ -41,11 +41,14 @@ public class CompileTests {
         File directory = new File(TEST_DIR);        
         for (String fileName: directory.list()) {
         	int l = fileName.length();
-        	if (l > 4 && fileName.substring(l-4, l).equals(".alf")) {
+        	if (fileName.startsWith("Expressions_") || fileName.startsWith("Statements_") || 
+        			fileName.startsWith("Units_") || fileName.startsWith("Interactive_")) {
 	            String unitName = fileName.substring(0, l-4);
 	            compileTest(unitName);
         	}
         }
+        
+        compileTest("_RunTests");
         
         System.out.println("All done!");
     }

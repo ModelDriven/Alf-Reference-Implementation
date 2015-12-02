@@ -51,15 +51,7 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
     }
 
     public static Element wrap(Object base) {
-        if (base == null) {
-            return null;
-        }
-        Element newInstance = 
-                (Element)factory.newInstance(base.getClass().getSimpleName());
-        if (newInstance != null) {
-            newInstance.setBase(base);
-        }
-        return newInstance;
+        return base == null? null: (Element)factory.newInstanceFor(base);
     }
     
    @Override
