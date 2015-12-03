@@ -4,7 +4,7 @@
 </header>
 <body>
 <h1>Action Language for UML (Alf) Open Source Implementation<br>
-Version 0.5.1</h1>
+Version 0.6.0</h1>
 <em>Copyright &copy; 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)</em>
 <br>
 <p>
@@ -21,10 +21,10 @@ This implementation is based on the Alf 1.0.1 specification.  It compiles Alf so
 Foundational UML (fUML) subset of UML. The compilation can target either of two fUML execution engine implementations:
 <ul>
 <li> The fUML Reference Implementation execution engine 
-(see <a href="http://fuml.modeldriven.org">http://fuml.modeldriven.org</a>), v1.1.1.  
-<a href="https://github.com/ModelDriven/fUML-Reference-Implementation/releases/tag/v1.1.1">
-Version 1.1.1</a>  includes some additional issue corrections beyond the
-base version 1.1.0, which conforms to fUML 1.1. </li>
+(see <a href="http://fuml.modeldriven.org">http://fuml.modeldriven.org</a>), v1.1.4.  
+<a href="https://github.com/ModelDriven/fUML-Reference-Implementation/releases/tag/v1.1.4">
+Version 1.1.4</a> (this version includes updates for all issue resolutions approved for fUML 1.2, as well
+as an "urgent issue" resolution to be included in fUML 1.2.1). </li>
 <li> The fUML execution engine from the Moka framework for model execution in the Eclipse Papyrus tool
 (see <a href="http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution">http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution</a>),
 v1.0.0 or later.</li>
@@ -100,6 +100,29 @@ Part II were identified, these were corrected in the implementation. All such
 issues have either been corrected in the latest version of the specification 
 or have been reported to the Alf Revision Task Force for correction in a future 
 version.
+
+<h3>Version 0.6.0</h3>
+
+<ul>
+<li>Added the ability to generically wrap external elements not in the fUML subset.
+<li>Added a mapping for constructorless instance creation (but without attribute initialization).</li>
+<li>Allowed the external stub for an activity to be any owned behavior, not just a method or classifier behavior.</li>
+<li>Corrected the static semantics for:
+	<ul>
+	<li>conditional test expressions</li>
+	<li>indexed left-hand sides</li>
+	</ul>
+</li>
+<li>Corrected the mappings for:
+	<ul>
+	<li>left-hand sides</li>
+	<li>increment or decrement expressions</li>
+	<li>this expressions (for external contexts)</li>
+	<li>loop statements</li>
+	<li>activity definitions</li>
+	</ul>
+</li>
+</ul>
 
 <h3>Version 0.5.1</h3>
 <p>
