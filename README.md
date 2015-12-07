@@ -3,10 +3,8 @@ _Copyright &copy; 2011-2015 Data Access Technologies, Inc. (Model Driven Solutio
 
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
 Syntax for a UML Action Language</em> Request for Proposals. The Alf specification 
-document can be found at http://www.omg.org/spec/ALF.
-(See also http://solitaire.omg.org/issues/task-force/ALF11
-for the list of open issues currently being addressed by the Alf 1.1 Revision
-Task Force.)
+document can be found at http://www.omg.org/spec/ALF. (See also http://solitaire.omg.org/issues/task-force/ALF11
+for the list of open issues currently being addressed by the Alf 1.1 Revision Task Force.)
 
 This implementation is based on the Alf 1.0.1 specification.  It compiles Alf source text to the executable 
 Foundational UML (fUML) subset of UML. The compilation can target either of two fUML execution engine implementations:
@@ -30,18 +28,22 @@ The latest version of the implementation is availabel at http://alf.modeldriven.
 
 ## Licensing
 
-Data Access Technology, Inc. is copyright owner of the source code for this implementation. 
-For licensing terms, see `LICENSING.txt`.
+Data Access Technology, Inc. is copyright owner of the source code for this implementation. For licensing terms, see 
+the file [`LICENSING.txt`](https://github.com/ModelDriven/Alf-Reference-Implementation/blob/master/dist/LICENSING.txt).
 
 ## Installation
 
-This file `alf.zip` unzips into the installation directory for Alf. This directory
-includes Unix (BASH) shell scripts and DOS batch files for running Alf. By
-default, the `Libraries` and `UML/Libraries` subdirectories are expected 
+The latest packged distribution of the implmentation is available in the 
+[`dist`](https://github.com/ModelDriven/Alf-Reference-Implementation/tree/master/dist)
+directory.
+
+Within this directory, the file `alf.zip` unzips into the installation directory for Alf. 
+The installation directory includes Unix (BASH) shell scripts and DOS batch files for running Alf. 
+By default, the `Libraries` and `UML/Libraries` subdirectories are expected 
 to be in the same directory as the scripts. If you move them, set the environment variables 
 `ALF_LIB` and `UML_LIB`, respectively, to their paths.
 
-The file `alf-src.zip` unzips into four (Eclipse)[http://www.eclipse.org] projects that, together,
+The file `alf-src.zip` unzips into four [Eclipse](http://www.eclipse.org) projects that, together,
 include the full source of the implementation. Eclipse 4.4 or later is required.
 
 * `org.modeldriven.alf` - This is the base project, including the
@@ -60,7 +62,7 @@ metamodel implementation (v5.0.1 or later). It depends on Eclipse plugins and mu
 	
 * `org.modeldriven.alf.eclipse.papyrus` - This project extends the
 `org.modeldriven.alf.eclipse` project to allow compiled Alf text to be executed
-using the fUML execution engine from the [Moke framework] (http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution)
+using the fUML execution engine from the [Moka framework] (http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution)
 for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (v1.0.0 or later).
 It depends on Eclipse plugins and must be built in an Eclipse environment.
 
