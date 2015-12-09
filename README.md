@@ -68,4 +68,4 @@ It depends on Eclipse plugins and must be built in an Eclipse environment.
 
 ## Further Information
 
-For further information on using the implementation, see the [wiki](https://github.com/ModelDriven/Alf-Reference-Implementation/wiki/Alf-Reference-Implementation-Wiki). 
+For further information on using the implementation, see the [wiki](https://github.com/ModelDriven/Alf-Reference-Implementation/wiki/Home). 
