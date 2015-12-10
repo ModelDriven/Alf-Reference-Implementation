@@ -33,7 +33,7 @@ the file [`LICENSING.txt`](https://github.com/ModelDriven/Alf-Reference-Implemen
 
 ## Installation
 
-The latest packged distribution of the implmentation is available in the 
+The latest packaged distribution of the implementation is available in the 
 [`dist`](https://github.com/ModelDriven/Alf-Reference-Implementation/tree/master/dist)
 directory.
 
