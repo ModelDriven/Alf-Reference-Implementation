@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Alf Reference Implementation : An open-source implementation of the OMG Action Language for fUML (Alf) specification.">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Alf Reference Implementation</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ModelDriven/Alf-Reference-Implementation">View on GitHub</a>
+
+          <h1 id="project_title">Alf Reference Implementation</h1>
+          <h2 id="project_tagline">An open-source implementation of the OMG Action Language for fUML (Alf) specification.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/ModelDriven/Alf-Reference-Implementation/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/ModelDriven/Alf-Reference-Implementation/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a id="current-release" class="anchor" href="#current-release" aria-hidden="true"><span class="octicon octicon-link"></span></a>Current Release</h3>
+
+<p><a href="https://github.com/ModelDriven/Alf-Reference-Implementation/releases">Version 0.6.0</a>, conforms to <a href="http://www.omg.org/spec/ALF/1.0.1">Alf 1.0.1</a></p>
+
+<h3>
+<a id="what-is-alf" class="anchor" href="#what-is-alf" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Alf?</h3>
+
+<p>Alf is a textual language for representing [Unified Modeling Language (UML)](<a href="http://www.uml.org">http://www.uml.org</a>] models. It was developed with the primary purpose of acting as the notation for specifying executable behaviors within an overall graphical UML model. However, it also provides an extended notation for structural modeling. This makes it possible to represent complete, executable models using Alf.</p>
+
+<p>Like UML, Alf is standardized by the [Object Management Group (OMG)](<a href="http://www.omg.org">http://www.omg.org</a>], which maintains the <a href="http://www.omg.org/spec/Alf">Alf specification</a>. The underlying semantics of Alf are provided by the <a href="http://www.omg.org/spec/FUML">Foundational UML (fUML)</a>, which provides precise execution semantics for a subset of UML. Alf notation covers this fUML subset, which includes the typical structural modeling constructs of UML (classes, associations, data types and enumerations), as well as behavioral modeling using UML activities composed from a rich set of primitive actions.</p>
+
+<h3>
+<a id="what-is-the-alf-reference-implementation" class="anchor" href="#what-is-the-alf-reference-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is the Alf Reference Implementation?</h3>
+
+<p>The Alf Reference Implementation is a complete, open source implementation of the Alf language. It compiles Alf source text to fUML. The compilation can target either of two fUML execution engine implementations:</p>
+
+<ul>
+<li>The <a href="http://fuml.modeldriven.org">fUML Reference Implementation</a> execution engine</li>
+<li>The fUML execution engine from the <a href="http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution">Moka framework</a> for model execution in the Eclipse Papyrus tool.</li>
+</ul>
+
+<p>The implementation handles the full Alf syntax at the Extended compliance level, as given in Annex C Consolidated LL Grammar of the <a href="http://www.omg.org/spec/ALF/Current">Alf Specification</a>.</p>
+
+<p>Static semantic checking is directly based on validating the constraints defined in Part III of the <a href="http://www.omg.org/spec/ALF/Current">Alf Specification</a>. However, as errors were discovered in these definitions, or inconsistencies with the descriptions in Part II were identified, these were corrected in the implementation. All such issues have either been corrected in the latest version of the specification or have been reported to the Alf Revision Task Force for correction in a future version.</p>
+
+<h3>
+<a id="further-information" class="anchor" href="#further-information" aria-hidden="true"><span class="octicon octicon-link"></span></a>Further Information</h3>
+
+<p>For further information, see the <a href="https://github.com/ModelDriven/Alf-Reference-Implementation/wiki">Alf Reference Implementation Wiki</a>.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Alf Reference Implementation maintained by <a href="https://github.com/ModelDriven">ModelDriven</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
