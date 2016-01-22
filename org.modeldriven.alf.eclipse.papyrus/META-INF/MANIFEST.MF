@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Alf Compiler
 Bundle-SymbolicName: org.modeldriven.alf.eclipse.papyrus;singleton:=true
 Bundle-Version: 0.1.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.uml2;bundle-version="4.0.2",
- org.eclipse.uml2.uml.ecore.exporter;bundle-version="2.6.1",
- org.eclipse.uml2.uml.ecore.importer;bundle-version="2.6.0",
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.eclipse.uml2;bundle-version="4.0.2";resolution:=optional,
+ org.eclipse.uml2.uml.ecore.exporter;bundle-version="2.6.1";resolution:=optional,
+ org.eclipse.uml2.uml.ecore.importer;bundle-version="2.6.0";resolution:=optional,
  org.eclipse.uml2.uml.resources;bundle-version="4.0.1",
  org.eclipse.papyrus.uml.tools.utils;bundle-version="0.10.1",
  org.apache.log4j;bundle-version="1.2.15",

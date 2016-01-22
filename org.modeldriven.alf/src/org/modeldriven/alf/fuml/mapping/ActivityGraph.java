@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -999,9 +999,13 @@ public class ActivityGraph {
         if (pin instanceof InputPin) {
             InputPin inputPin = (InputPin)pin;
             if (action instanceof SendSignalAction) {
+                pin.setLower(property.getLower());
+                pin.setUpper(property.getUpper());
                 inputPin.setName(action.getName() + ".argument(" + property.getName() + ")");
                 ((InvocationAction) action).addArgument(inputPin);
             } else if (action instanceof ReadLinkAction) {
+                pin.setLower(1);
+                pin.setUpper(1);
                 inputPin.setName(action.getName() + ".inputValue(" + property.getName() + ")");
                 LinkEndData endData = this.create(LinkEndData.class);
                 endData.setEnd(property);
@@ -1010,6 +1014,8 @@ public class ActivityGraph {
                 ((ReadLinkAction) action).addEndData(endData);
             }
         } else if (action instanceof ReadLinkAction) {
+            pin.setLower(property.getLower());
+            pin.setUpper(property.getUpper());
             pin.setName(action.getName() + ".result");
             ((ReadLinkAction) action).setResult((OutputPin) pin);
         }
