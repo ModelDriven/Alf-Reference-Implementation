@@ -352,6 +352,7 @@ public class LoopVariableDefinitionImpl extends
 	    LoopVariableDefinition self = this.getSelf();
 	    Expression expression = self.getExpression1();
 		return self.getTypeIsInferred() || expression == null || 
+		            expression.getType() != null &&
 		            expression.getType().getImpl().conformsTo(self.getType());
 	}
 
