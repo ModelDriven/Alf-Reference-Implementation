@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2015-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -10,6 +10,7 @@
 package org.modeldriven.alf.fuml.execution;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 
 import org.modeldriven.alf.uml.ElementFactory;
@@ -225,10 +226,26 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         }
     }
     
+    protected String getErrorMessageFilePath() {
+        return this.getRootScopeImpl().getLibraryDirectory() + "/" + 
+                ConstraintViolation.DEFAULT_ERROR_MESSAGE_FILE_PATH;
+    }
+    
+    protected void loadResources() {
+        String errorMessageFilePath = this.getErrorMessageFilePath();
+        try {
+            ConstraintViolation.loadErrorMessageFile(errorMessageFilePath);
+            this.printVerbose("Loaded " + errorMessageFilePath);
+        } catch (IOException e) {
+            this.printVerbose("Error reading error message file: " + errorMessageFilePath);
+        }
+    }
+    
     public void run(String[] args) {
         String unitName = this.parseArgs(args);
         if (unitName != null || args.length == 1 && this.isVerbose) {
             this.printVerbose("Alf Reference Implementation v" + ALF_VERSION);
+            this.loadResources();
             if (unitName != null) {
                 this.process(this.parse(unitName, this.isFileName));
             }

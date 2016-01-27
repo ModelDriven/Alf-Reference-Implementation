@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,7 +8,59 @@
  *******************************************************************************/
 package org.modeldriven.alf.syntax.common;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
 public class ConstraintViolation implements Comparable<ConstraintViolation> {
+    
+    public static final String DEFAULT_ERROR_MESSAGE_FILE_DIRECTORY = "resources";
+    public static final String DEFAULT_ERROR_MESSAGE_FILE_NAME = "error-messages.txt";
+    public static final String DEFAULT_ERROR_MESSAGE_FILE_PATH = 
+            DEFAULT_ERROR_MESSAGE_FILE_DIRECTORY + "/" + DEFAULT_ERROR_MESSAGE_FILE_NAME;
+    
+    protected static String errorMessageFileName = null;
+    protected static Map<String, String> errorMessages = null;
+
+    public static void loadErrorMessageFile(String path) throws IOException {
+        if (path == null) {
+            errorMessages = null;
+        } else if (errorMessages == null || path != errorMessageFileName) {            
+            BufferedReader reader = 
+                    Files.newBufferedReader(Paths.get(path), Charset.defaultCharset());
+            errorMessages = new HashMap<String, String>();
+            String line;
+            do {
+                do {
+                    line = reader.readLine();
+                } while (line != null && line.equals(""));
+                if (line != null) {
+                    String constraintName = line;
+                    line = reader.readLine();
+                    if (line != null && !line.equals("")) {
+                        errorMessages.put(constraintName, line);
+                    }
+                }
+            } while (line != null);
+            errorMessageFileName = path;
+            reader.close();
+        }
+    }
+    
+    public static void loadErrorMessageFile() throws IOException {
+        loadErrorMessageFile(DEFAULT_ERROR_MESSAGE_FILE_NAME);
+    }
+    
+    public String getErrorMessage(String constraintName) {
+        String errorMessage = errorMessages == null? null: 
+            errorMessages.get(constraintName);
+        return errorMessage == null? constraintName: 
+            errorMessage + " (" + constraintName + ")";
+    }
     
     private String constraintName = null;
     private ParsedElement violatingElement = null;
@@ -22,15 +74,30 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
         return this.constraintName;
     }
     
+    public String getErrorMessage() {
+        return getErrorMessage(this.constraintName);
+    }
+    
     public ParsedElement getViolatingElement() {
         return this.violatingElement;
     }
     
+    public String getFileName() {
+        return this.getViolatingElement().getFileName();
+    }
+    
+    public int getLine() {
+        return this.getViolatingElement().getLine();
+    }
+    
+    public int getColumn() {
+        return this.getViolatingElement().getColumn();
+    }
+    
     @Override
     public String toString() {
-        ParsedElement element = this.getViolatingElement();
-        return this.getConstraintName() + " in " + element.getFileName() + 
-            " at line " + element.getLine() + ", column " + element.getColumn();
+        return this.getErrorMessage() + " in " + this.getFileName() + 
+            " at line " + this.getLine() + ", column " + this.getColumn();
     }
     
     @Override
