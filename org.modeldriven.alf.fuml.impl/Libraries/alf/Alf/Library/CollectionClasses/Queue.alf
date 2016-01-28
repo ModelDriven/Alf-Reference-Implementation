@@ -1,0 +1,21 @@
+namespace Alf::Library::CollectionClasses;
+abstract class Queue<T> specializes Collection<T> {
+
+  @Create public Queue (in seq: T[0..*] sequence) { }
+  @Destroy public abstract destroy ();
+
+  public abstract add (in element: T): Boolean;
+  public abstract addAll (in seq: T[0..*] sequence): Boolean;
+  public abstract addLast (in element : T): Boolean;
+  public abstract equals (in seq: T[0..*] sequence): Boolean;
+  public abstract first(): T[0..1];
+  public abstract remove (in element: T): Integer;
+  public abstract removeFirst (): T[0..1];
+  public abstract removeFirstOne (in element: T): T[0..1];
+  public abstract removeAll (in seq: T[0..*] sequence): Boolean;
+  public abstract removeOne (in element: T): Boolean;
+  public abstract replace (in element: T, in newElement: T): Integer;
+  public abstract replaceOne (in element: T, in newElement: T): Boolean;
+  public abstract retainAll (in seq: T[0..*] sequence): Boolean;
+  
+}

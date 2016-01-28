@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2014 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -31,6 +31,8 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Namespace;
 
 public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamespaceImpl {
+	
+	public static final String ALF_LIBRARIES_PATHMAP = "pathmap://ALF_LIBRARIES/";
     
     private ResourceSet resourceSet;
     private URI baseURI;
@@ -46,13 +48,12 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     public void initialize() {
     	if (this.uninitialized) {
 	    	if (this.getLibraryDirectory() == null) {
-	    		this.setLibraryDirectory("UML/Libraries");
+	    		this.setLibraryDirectory("Libraries");
 	    	}
 	        this.getProfileResource("Standard.profile");
 	        // this.getLibraryResource("UMLPrimitiveTypes.library");
-	        this.getLibraryResource("fUML.library");
-	        // this.getLibraryResource("CollectionClassesImpl.library");
-	        this.getLibraryResource("Alf.library");
+	        this.getAlfLibraryResource("fUML.library");
+	        this.getAlfLibraryResource("Alf.library");
 	        this.uninitialized = false;
     	}
     }
@@ -110,14 +111,17 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     	return this.getResource(UMLResource.PROFILES_PATHMAP, name);
     }
     
-    public Resource getLibraryResource(String name) {
-    	return this.getNormalizedResource(UMLResource.LIBRARIES_PATHMAP, name);
+    public Resource getUMLLibraryResource(String name) {
+    	return this.getResource(UMLResource.LIBRARIES_PATHMAP, name);
+    }
+    public Resource getAlfLibraryResource(String name) {
+    	return this.getResource(ALF_LIBRARIES_PATHMAP, name);
     }
     
     @Override
     public void setLibraryDirectory(String libraryDirectory) {
     	super.setLibraryDirectory(libraryDirectory);
-    	URI libraryURI = URI.createFileURI(libraryDirectory +"/");
+    	URI libraryURI = URI.createFileURI(libraryDirectory +"/uml/");
     	if (this.baseURI != null) {
     		libraryURI = libraryURI.resolve(this.baseURI);
     	}
@@ -126,8 +130,8 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
 	    	uriMap.put(URI.createURI(UMLResource.METAMODELS_PATHMAP), libraryURI);
 	    	uriMap.put(URI.createURI(UMLResource.PROFILES_PATHMAP), libraryURI);
 	    	uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP), libraryURI);
-	    	// TODO: Make the following a real pathmap.
-			uriMap.put(URI.createFileURI("Libraries/"), libraryURI);
+	    	uriMap.put(URI.createURI(ALF_LIBRARIES_PATHMAP), libraryURI);
+			// uriMap.put(URI.createFileURI("Libraries/"), libraryURI);
     	}
     }
     

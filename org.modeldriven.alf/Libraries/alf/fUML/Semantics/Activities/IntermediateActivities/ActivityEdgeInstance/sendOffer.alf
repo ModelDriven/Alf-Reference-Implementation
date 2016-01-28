@@ -1,0 +1,5 @@
+namespace fUML::Semantics::Activities::IntermediateActivities::
+          ActivityEdgeInstance;
+          
+activity sendOffer(in tokens: Token[*]) {
+}

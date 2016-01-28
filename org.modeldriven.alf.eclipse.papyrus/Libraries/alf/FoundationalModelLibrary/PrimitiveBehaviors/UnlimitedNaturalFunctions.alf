@@ -1,0 +1,32 @@
+namespace FoundationalModelLibrary::PrimitiveBehaviors;
+
+package UnlimitedNaturalFunctions {
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.Max")
+  public activity Max(in x: UnlimitedNatural, in y: UnlimitedNatural): UnlimitedNatural { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.Min")
+  public activity Min(in x: UnlimitedNatural, in y: UnlimitedNatural): UnlimitedNatural { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.Lower")
+  public activity '<'(in x: UnlimitedNatural, in y: UnlimitedNatural): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.Greater")
+  public activity '>'(in x: UnlimitedNatural, in y: UnlimitedNatural): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.LowerOrEqual")
+  public activity '<='(in x: UnlimitedNatural, in y: UnlimitedNatural): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.GreaterOrEqual")
+  public activity '>='(in x: UnlimitedNatural, in y: UnlimitedNatural): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.ToString")
+  public activity ToString(in x: UnlimitedNatural): String {}
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.ToInteger")
+  public activity ToInteger(in x: UnlimitedNatural): Integer[0..1] {}
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.unlimitednatural.ToUnlimitedNatural")
+  public activity ToUnlimitedNatural(in x: String): UnlimitedNatural[0..1] {}
+
+}

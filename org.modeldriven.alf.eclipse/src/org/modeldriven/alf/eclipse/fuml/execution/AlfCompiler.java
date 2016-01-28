@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -85,7 +85,7 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     protected void configure() {
     	super.configure();
     	this.umlDirectory = "UML";
-    	this.getRootScopeImpl().setLibraryDirectory("UML/Libraries");
+    	this.getRootScopeImpl().setLibraryDirectory("Libraries");
     }
     
     @Override
@@ -95,7 +95,7 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
         this.println("where unit is the qualified name of an Alf unit and");
         this.println("allowable options are:");
         this.println("  -f        Treat unit as a file name rather than a qualifed name");
-        this.println("  -l path   Set UML library directory path (default is \"UML/Libraries\")");
+        this.println("  -l path   Set library directory path (default is \"Libraries\")");
         this.println("  -m path   Set model directory path (default is \"Models\")");
         this.println("  -p        Parse and constraint check only");
         this.println("  -P        Parse, constraint check and print abstract syntax tree");

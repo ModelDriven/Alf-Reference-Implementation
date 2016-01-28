@@ -1,0 +1,15 @@
+namespace FoundationalModelLibrary::PrimitiveBehaviors;
+
+package StringFunctions {
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.string.Concat")
+  public activity Concat(in x: String, in y: String): String { }
+  
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.string.Size")
+  public activity Size(in x: String): Integer { }
+  
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.string.Substring")
+  public activity Substring(in x: String, 
+    in lower: Integer, in upper:Integer): String[0..1] { }
+
+}

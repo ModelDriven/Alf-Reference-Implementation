@@ -1,7 +1,0 @@
-namespace fUML::Semantics;
-
-package Actions {
-
-  public package BasicActions;
-  
-}

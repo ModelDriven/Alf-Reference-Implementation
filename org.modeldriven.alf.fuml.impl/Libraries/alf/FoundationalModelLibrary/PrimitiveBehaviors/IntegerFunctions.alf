@@ -1,0 +1,53 @@
+namespace FoundationalModelLibrary::PrimitiveBehaviors;
+
+package IntegerFunctions {
+
+  @primitive(IntegerNegateFunctionBehaviorExecution)
+  public activity Neg(in x: Integer): Integer { }
+
+  @primitive(IntegerAbsFunctionBehaviorExecution)
+  public activity Abs(in x: Integer): Integer { }
+
+  @primitive(IntegerPlusFunctionBehaviorExecution)
+  public activity '+'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(IntegerMinusFunctionBehaviorExecution)
+  public activity '-'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(IntegerTimesFunctionBehaviorExecution)
+  public activity '*'(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(IntegerDivFunctionBehaviorExecution)
+  public activity Div(in x: Integer, in y: Integer): Integer[0..1] { }
+
+  @primitive(IntegerModFunctionBehaviorExecution)
+  public activity Mod(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(IntegerMaxFunctionBehaviorExecution)
+  public activity Max(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(IntegerMinFunctionBehaviorExecution)
+  public activity Min(in x: Integer, in y: Integer): Integer { }
+
+  @primitive(IntegerLessThanFunctionBehaviorExecution)
+  public activity '<'(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive(IntegerGreaterThanFunctionBehaviorExecution)
+  public activity '>'(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive(IntegerLessThanEqualFunctionBehaviorExecution)
+  public activity '<='(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive(IntegerGreaterThanEqualFunctionBehaviorExecution)
+  public activity '>='(in x: Integer, in y: Integer): Boolean { }
+
+  @primitive(IntegerToStringFunctionBehaviorExecution)
+  public activity ToString(in x: Integer): String {}
+
+  @primitive(IntegerToUnlimitedNaturalFunctionBehaviorExecution)
+  public activity ToUnlimitedNatural(in x: Integer): UnlimitedNatural[0..1] {}
+
+  @primitive(IntegerToIntegerFunctionBehaviorExecution)
+  public activity ToInteger(in x: String): Integer[0..1] {}
+
+}

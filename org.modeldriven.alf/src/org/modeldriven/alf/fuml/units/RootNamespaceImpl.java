@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2014 Ivar Jacobson International SA
+ * Copyright 2013-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -25,6 +24,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     private ModelNamespace modelNamespace = null;
+    private String libraryDirectory = null;
     
     protected RootNamespaceImpl(RootNamespace self) {
         super(self);
@@ -86,11 +86,12 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     }
     
     public void setLibraryDirectory(String libraryDirectory) {
-        super.setModelDirectory(libraryDirectory);
+        this.libraryDirectory = libraryDirectory;
+        super.setModelDirectory(libraryDirectory + "/alf");
     }
     
     public String getLibraryDirectory() {
-        return super.getModelDirectory();
+        return this.libraryDirectory;
     }
     
     @Override

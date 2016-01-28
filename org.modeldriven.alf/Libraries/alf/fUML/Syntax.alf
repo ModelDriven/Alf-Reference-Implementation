@@ -1,0 +1,9 @@
+namespace fUML;
+
+@ModelLibrary
+package Syntax {
+
+  public package Activities;
+  public package Actions;
+  
+}

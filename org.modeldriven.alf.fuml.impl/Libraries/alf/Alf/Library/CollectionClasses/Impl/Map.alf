@@ -1,0 +1,91 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+The concrete implementation of the standard library template Map class.
+*/
+class Map<Key, Value> specializes MapImpl, CollectionClasses::Map<Key,Value> {
+
+  @Create public Map (in entries: Entry[0..*]) redefines CollectionClasses::Map<Key,Value>::Map { 
+    super.MapImpl(ToEntryImpls(entries));
+  }
+
+  @Destroy public destroy () { 
+  }
+  
+  private activity ToEntryImpls (in entries: Entry[0..*]): EntryImpl[0..*] {
+    return entries->collect e (new EntryImpl(e.key, e.value));
+  }
+  
+  private activity ToEntries (in entryImpls: EntryImpl[0..*]): Entry[0..*] {
+    return entryImpls->collect e (new Entry((Key)e.key, (Value)e.value));
+  }
+
+  public entries (): CollectionClasses::Set<Entry> { 
+    return new Set<Entry>(ToEntries(super.entriesImpl()));
+  }
+
+  public clear () { 
+    super.clearImpl();
+  }
+
+  public excludesAll (in entries: Entry[0..*]): Boolean { 
+    return super.excludesAllImpl();
+  }
+
+  public get (in key: Key): Value[0..1] { 
+    return (Value)super.getImpl(key);
+  }
+
+  public includesAll (in entries: Entry[0..*]): Boolean { 
+    return super.includesAllImpl(ToEntryImpls(entries));
+  }
+
+  public includesKey (in key: Key): Boolean { 
+    return super.includesKeyImpl(key);
+  }
+
+  public includesValue (in value: Value[0..1]): Boolean { 
+    return super.includesValueImpl(value);
+  }
+
+  public isEmpty (): Boolean { 
+    return super.isEmptyImpl();
+  }
+
+  public keys (): CollectionClasses::Set<Key> { 
+    return new Set<Key>((Key)super.keysImpl());
+  }
+
+  public notEmpty (): Boolean { 
+    return super.notEmptyImpl();
+  }
+
+  public put (in key: Key, in value: Value[0..1]): Value[0..1] { 
+    return (Value)super.putImpl(key, value);
+  }
+
+  public putAll (in entries: Entry[0..*]) { 
+    super.putAllImpl(ToEntryImpls(entries));
+  }
+
+  public remove (in key: Key): Value[0..1] { 
+    return (Value)super.removeImpl(key);
+  }
+
+  public removeAll (in keys: Key[0..*]) { 
+    super.removeAllImpl(keys);
+  }
+
+  public size (): Integer { 
+    return super.sizeImpl();
+  }
+
+  public toSequence (): Entry[0..*] sequence { 
+    return ToEntries(super.entriesImpl());
+  }
+
+  public values (): CollectionClasses::Bag<Value> { 
+    return new Bag<Value>((Value)super.valuesImpl());
+  }
+}
+

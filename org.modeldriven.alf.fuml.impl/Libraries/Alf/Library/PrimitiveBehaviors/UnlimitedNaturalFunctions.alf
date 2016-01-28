@@ -1,5 +1,0 @@
-namespace Alf::Library::PrimitiveBehaviors;
-public import FoundationalModelLibrary::PrimitiveBehaviors::UnlimitedNaturalFunctions::*;
-
-package UnlimitedNaturalFunctions {
-}

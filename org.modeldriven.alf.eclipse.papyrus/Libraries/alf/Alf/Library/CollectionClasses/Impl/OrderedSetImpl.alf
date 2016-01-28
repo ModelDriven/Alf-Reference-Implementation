@@ -1,0 +1,58 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+The implementation of ordered sets.
+*/
+abstract class OrderedSetImpl specializes OrderedCollectionImpl {
+  
+  private content: any[0..*] ordered;
+  
+  @Create protected OrderedSetImpl (in seq: any[0..*] sequence) { 
+    super.OrderedCollectionImpl(seq->ToOrderedSet());
+  }
+
+  @Destroy public destroy () { 
+  }
+
+  protected setContent(in seq: any[0..*] sequence) {
+    this.content = seq;
+  }
+
+  protected getContent (): any[0..*] sequence {
+    return this.content;
+  }                                                                      
+
+  protected addAllImpl (in seq: any[0..*] sequence): Boolean {
+    return super.addAllImpl(seq->ToOrderedSet());
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  protected addAllAtImpl (in index: Integer, in seq: any[0..*] sequence): Boolean {
+    return super.addAllAtImpl(index, seq->ToOrderedSet());
+  }
+                                                                                                                                                                                                                                                                                                                                                 
+  protected equalsImpl (in seq: any[0..*] sequence): Boolean { 
+    return super.equalsImpl(seq->ToOrderedSet());
+  }
+
+  protected excludesAllImpl (in seq: any[0..*] sequence): Boolean {
+    return super.excludesAllImpl(seq->ToOrderedSet());
+  }
+  
+  protected includesAllImpl (in seq: any[0..*] sequence): Boolean {
+    return super.includesAllImpl(seq->ToOrderedSet());
+  }
+  
+  protected replaceAtImpl (in index: Integer, in element: any): any[0..1] {
+    result = this.atImpl(index);
+    if (result->NotEmpty()) {
+      this.removeImpl(result);
+      this.addAtImpl(index, element);
+    }
+    return result;
+  }
+  
+  protected subOrderedSetImpl (in lower: Integer, in upper: Integer): any[0..*] sequence {
+    return this.content->Subsequence(lower, upper);
+  }
+  
+}

@@ -1,6 +1,0 @@
-@ModelLibrary
-package Alf {
-
-   public package Library;
-   
-}

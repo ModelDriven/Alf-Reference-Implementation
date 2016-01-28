@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2015-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -17,8 +17,7 @@ import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class CompileTests {
 	
-	private static final String UML_DIR = "../org.modeldriven.alf.eclipse/UML";
-	private static final String LIBRARY_DIR = UML_DIR + "/Libraries";
+	private static final String LIBRARY_DIR = "../org.modeldriven.alf.eclipse/Libraries";
 	private static final String TEST_DIR = "../org.modeldriven.alf/tests-x";
 	
 	private static String[] args = {"-l", LIBRARY_DIR, "-m", TEST_DIR, ""};

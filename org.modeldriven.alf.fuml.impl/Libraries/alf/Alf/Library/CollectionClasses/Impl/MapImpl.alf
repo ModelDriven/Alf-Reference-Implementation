@@ -1,0 +1,91 @@
+namespace Alf::Library::CollectionClasses::Impl;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+The implementation of maps.
+*/
+abstract class MapImpl {
+
+  protected datatype EntryImpl {
+    public key: any;
+    public value: any;
+  }
+
+  private entries: EntryImpl[0..*];
+
+  @Create protected MapImpl (in entries: EntryImpl[0..*]) { 
+    this.putAllImpl(entries);
+  }
+
+  private indexOf(in key: any): Integer[0..1] {
+    return this.entries.key->IndexOf(key);
+  }
+  
+  protected entriesImpl (): EntryImpl[0..*] { 
+    return this.entries;
+  }
+
+  protected clearImpl () { 
+    this.entries = null;
+  }
+
+  protected excludesAllImpl (in entries: EntryImpl[0..*]): Boolean { 
+    return this.entries->ExcludesAll(entries);
+  }
+
+  protected getImpl (in key: any): any[0..1] { 
+    return this.entries->select e (e.key == key)[1].value;
+  }
+
+  protected includesAllImpl (in entries: EntryImpl[0..*]): Boolean { 
+    return this.entries->IncludesAll(entries);
+  }
+
+  protected includesKeyImpl (in key: any): Boolean { 
+    return this.entries.key->Includes(key);
+  }
+
+  protected includesValueImpl (in value: any[0..1]): Boolean { 
+    return this.entries.value->Includes(value);
+  }
+
+  protected isEmptyImpl (): Boolean { 
+    return this.entries->IsEmpty();
+  }
+
+  protected keysImpl (): any[0..*] { 
+    return this.entries.key;
+  }
+
+  protected notEmptyImpl (): Boolean { 
+    return this.entries->NotEmpty();
+  }
+
+  protected putImpl (in key: any, in value: any[0..1]): any[0..1] { 
+    result = this.removeImpl(key);
+    this.entries = (EntryImpl)this.entries->Including(new EntryImpl(key,value));
+    return result;
+  }
+
+  protected putAllImpl (in entries: EntryImpl[0..*]) { 
+    entries->iterate e (this.putImpl(e.key, e.value));
+  }
+
+  protected removeImpl (in key: any): any[0..1] { 
+    result = this.getImpl(key);
+    this.entries = this.entries->reject e (e.key == key);
+    return result;
+  }
+
+  protected removeAllImpl (in keys: any[0..*]) { 
+    keys->iterate k (this.removeImpl(k));
+  }
+
+  protected sizeImpl (): Integer { 
+    this.entries->Size();
+  }
+
+  protected valuesImpl (): any[0..*] nonunique { 
+    return this.entries.value;
+  }
+}
+

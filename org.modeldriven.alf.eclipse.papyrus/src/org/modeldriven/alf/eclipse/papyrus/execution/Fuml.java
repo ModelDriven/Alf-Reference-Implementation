@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -16,7 +16,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.papyrus.moka.fuml.FUMLExecutionEngine;
 import org.eclipse.papyrus.moka.fuml.Semantics.Actions.IntermediateActions.DefaultCreateObjectActionStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.Actions.IntermediateActions.DefaultGetAssociationStrategy;
@@ -81,7 +80,7 @@ public class Fuml {
 		factory.setStrategy(new DefaultGetAssociationStrategy());
     }
     
-    private void addPrimitiveTypes(ResourceSet resourceSet) {
+    private void addPrimitiveTypes() {
     	try {
 	    	Package primitiveTypes = this.getPackage(
 	    			"Alf::Library::PrimitiveTypes");
@@ -96,7 +95,7 @@ public class Fuml {
     	}
     }
     
-    private void addPrimitiveBehaviorPrototypes(ResourceSet resourceSet) {
+    private void addPrimitiveBehaviorPrototypes() {
     	this.createPrimitiveBehaviorPrototype(
     			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::Or", 
     			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Or.class);
@@ -284,8 +283,8 @@ public class Fuml {
     	}
     }
         
-    protected void createSystemServices(ResourceSet resourceSet) {
-    	String basicInputOutput = "Alf::Library::BasicInputOutput";
+    protected void createSystemServices() {
+    	String basicInputOutput = "FoundationalModelLibrary::BasicInputOutput";
     	
     	try {
 	    	Classifier standardOutputChannel = this.getClassifier(
@@ -307,7 +306,7 @@ public class Fuml {
         
     	try {
 	        Classifier statusType = this.getClassifier(
-	        		basicInputOutput + "::Status");
+	        		"FoundationalModelLibrary::Common::Status");
 	        if (statusType instanceof DataType) {
 	            Status.setStatusType(((org.modeldriven.alf.eclipse.uml.DataType)statusType).getBase());
 	        } else {
@@ -370,7 +369,7 @@ public class Fuml {
     		throw new ElementResolutionError("More than one " + qualifiedName);
     	} else {
     		element = org.modeldriven.alf.eclipse.uml.Element.
-    				wrap((org.eclipse.uml2.uml.Element)elements.toArray()[0]);
+    				wrap(((org.eclipse.uml2.uml.Element)elements.toArray()[0]));
     	}
     	return element;    	
     }
@@ -428,12 +427,10 @@ public class Fuml {
     public void initializeEnvironment() {
         this.rootScopeImpl.initialize();	
         
-        ResourceSet resourceSet = this.rootScopeImpl.getResourceSet();
-        
     	this.createLocus();
-    	this.addPrimitiveTypes(resourceSet);
-    	this.addPrimitiveBehaviorPrototypes(resourceSet);
-    	this.createSystemServices(resourceSet);
+    	this.addPrimitiveTypes();
+    	this.addPrimitiveBehaviorPrototypes();
+    	this.createSystemServices();
     }
     
     public Resource getResource(String name) {
@@ -535,7 +532,7 @@ public class Fuml {
    }
 
    public Fuml() {
-	   this.setUmlLibraryDirectory("UML/Libraries");
+	   this.setUmlLibraryDirectory("Libraries");
 	   
 	   try {
 		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
@@ -565,7 +562,7 @@ public class Fuml {
 		   this.println("  fuml [options] file");
 		   this.println("where file is the name of an executable unit and");
 		   this.println("allowable options are:");
-		   this.println("  -l path   Set UML library directory path (default is \"UML/Libraries\")");
+		   this.println("  -l path   Set library directory path (default is \"Libraries\")");
 		   this.println("  -u path   Set UML directory path (default is \"UML\")");
 		   this.println("  -v        Set verbose mode");
 	   }         

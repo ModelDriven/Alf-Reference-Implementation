@@ -1,0 +1,44 @@
+namespace Alf::Library::PrimitiveBehaviors;
+
+package BitStringFunctions {
+
+  @primitive(BitStringIsSetFunctionExecution)
+  public activity IsSet(in b: BitString, in n: Integer): Boolean { }
+  
+  @primitive(BitStringBitLengthFunctionExecuton)
+  public activity BitLength(): Integer { }
+  
+  @primitive(BitStringToBitStringFunctionBehaviorExecution)
+  public activity ToBitString(in n: Integer): BitString { }
+  
+  @primitive(BitStringToIntegerFunctionBehaviorExecution)
+  public activity ToInteger(in b: BitString): Integer { }
+
+  @primitive(BitStringToHexStringFunctionBehaviorExecution)
+  public activity ToHexString(in b: BitString): String { }
+
+  @primitive(BitStringToOctalStringFunctionBehaviorExecution)
+  public activity ToOctalString(in b: BitString): String { }
+
+  @primitive(BitStringComplementFunctionBehaviorExecution)
+  public activity '~'(in b: BitString): BitString { }
+
+  @primitive(BitStringOrFunctionBehaviorExecution)
+  public activity '|'(in b1: BitString, in b2: BitString): BitString { }
+
+  @primitive(BitStringXorFunctionBehaviorExecution)
+  public activity '^'(in b1: BitString, in b2: BitString): BitString { }
+
+  @primitive(BitStringAndFunctionBehaviorExecution)
+  public activity '&'(in b1: BitString, in b2: BitString): BitString { }
+  
+  @primitive(BitStringShiftLeftFunctionBehaviorExecution)
+  public activity '<<'(in x: BitString, in n: Integer): BitString { }
+  
+  @primitive(BitStringShiftRightFunctionBehaviorExecution)
+  public activity '>>'(in x: BitString, in n: Integer): BitString { }
+  
+  @primitive(BitStringUnsignedShiftRightFunctionBehaviorExecution)
+  public activity '>>>'(in x: BitString, in n: Integer): BitString[0..1] { }
+  
+}

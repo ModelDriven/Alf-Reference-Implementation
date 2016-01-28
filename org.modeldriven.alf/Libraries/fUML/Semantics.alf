@@ -1,9 +1,0 @@
-namespace fUML;
-
-@ModelLibrary
-package Semantics {
-
-  public package Activities;
-  public package Actions;
-  
-}
