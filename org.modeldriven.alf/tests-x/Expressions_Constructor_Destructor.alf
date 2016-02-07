@@ -10,22 +10,31 @@ class Expressions_Constructor_Destructor specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 
-	    this.test(employee1, employee2, employee3, init, log, monitor1, monitor2, d);
+	    this.test(employee1, employee2, employee3, employee4, init, log, monitor1, monitor2, d);
 	    
 	    AssertEqual("employee1.id", employee1.id, 100);
 	    AssertEqual("employee1.name", employee1.name, "Fred");
 	    AssertFalse("employee1.transferred", employee1.transferred);
 	    AssertFalse("employee1.relocated", employee1.relocated);
+	    AssertEqual("employee1.supervisor", employee1.supervisor, null);
 	    
 	    AssertEqual("employee2.id", employee2.id, 100);
 	    AssertEqual("employee2.name", employee2.name, "Fred");
 	    AssertTrue("employee2.transferred", employee2.transferred);
 	    AssertFalse("employee2.relocated", employee2.relocated);
+	    AssertEqual("employee2.supervisor", employee2.supervisor, null);
 	    
 	    AssertEqual("employee3.id", employee3.id, 100);
 	    AssertEqual("employee3.name", employee3.name, "Fred");
 	    AssertTrue("employee3.transferred", employee3.transferred);
 	    AssertTrue("employee3.relocated", employee3.relocated);
+	    AssertEqual("employee3.supervisor", employee3.supervisor, null);
+	    
+	    AssertEqual("employee4.id", employee4.id, 100);
+	    AssertEqual("employee4.name", employee4.name, "Fred");
+	    AssertTrue("employee4.transferred", employee4.transferred);
+	    AssertTrue("employee4.relocated", employee4.relocated);
+	    AssertEqual("employee4.supervisor", employee4.supervisor, employee1);
 	    
 	    AssertFalse("init instanceof Initialization", init instanceof Initialization);
 	    
@@ -63,6 +72,8 @@ class Expressions_Constructor_Destructor specializes Test {
      	  public name: String;
    	    public transferred: Boolean = false;
    	    public relocated: Boolean = false;
+   	    
+   	    public supervisor: Employee[0..1] = null; // (Added to verify "null" initializer bug fix.)
    		
         @Create public Employee(in id: Integer, in name: String) { 
             this.id = id;
@@ -76,6 +87,12 @@ class Expressions_Constructor_Destructor specializes Test {
             this.transferred(employeeInfo);
             this.relocated = true;
         }
+   	    @Create public assigned(in employeeInfo: Employee, in supervisor: Employee) {
+  	        this(employeeInfo.id, employeeInfo.name);
+  	        this.transferred = employeeInfo.transferred;
+  	        this.relocated = employeeInfo.relocated;
+  	        this.supervisor = supervisor;
+   	    }
     }
     
     datatype D0 {
@@ -89,7 +106,7 @@ class Expressions_Constructor_Destructor specializes Test {
     //**************************************************************************
 
     test(
-    	out employee1: Employee, out employee2: Employee, out employee3: Employee,
+    	out employee1: Employee, out employee2: Employee, out employee3: Employee, out employee4: Employee,
     	out init: Initialization, 
     	out log: Log, out monitor1: Monitor, out monitor2: Monitor,
     	out d: D) {
@@ -100,6 +117,7 @@ class Expressions_Constructor_Destructor specializes Test {
       employee1 = new Employee(i, name);
       employee2 = new Employee::transferred(employee1);
       employee3 = new Employee::relocated(employee2);
+      employee4 = new Employee::assigned(employee3, employee1);
       init = new Initialization2();
       log = new Log();
       monitor1 = new Monitor();

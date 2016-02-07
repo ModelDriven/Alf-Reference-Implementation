@@ -64,7 +64,7 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 		} else if (this.initializer instanceof SequenceConstructionExpression) {
 		    SequenceConstructionExpression expression =
 		        (SequenceConstructionExpression)this.initializer;
-		    if (expression.getTypeName() == null) {
+		    if (!expression.getImpl().isNull() && expression.getTypeName() == null) {
 		        expression.setTypeName(self.getTypeName());
 		        int upperBound = self.getUpper();
 	            expression.setHasMultiplicity(upperBound == -1 || upperBound > 1);
