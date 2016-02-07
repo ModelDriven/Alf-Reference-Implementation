@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -135,28 +135,7 @@ public class BehaviorInvocationExpressionImpl
 	 **/
 	public boolean behaviorInvocationExpressionArgumentCompatibility() {
         BehaviorInvocationExpression self = this.getSelf();
-        // TODO: Once overloading resolution is implemented, change this to only
-        // be for non-feature invocations.
-        // if (self.getFeature() == null) {
-            Tuple tuple = self.getTuple();
-            if (tuple == null || 
-                    tuple.getImpl().size() > this.parameterCount()) {
-                return false;
-            } else {
-                this.getAssignmentAfterMap(); // Force computation of assignments.
-                for (NamedExpression input: tuple.getInput()) {
-                    if (!this.parameterIsAssignableFrom(input)) {
-                       return false;
-                    }
-                }
-                for (NamedExpression output: tuple.getOutput()) {
-                    if (!this.parameterIsAssignableTo(output)) {
-                        return false;
-                    }
-                }
-            }
-        // }
-		return true;
+        return self.getFeature() != null || this.isCompatibleWith(null);
 	}
 	
     /**

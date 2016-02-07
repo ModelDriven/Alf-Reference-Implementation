@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -112,30 +112,7 @@ public class FeatureInvocationExpressionImpl
 	 **/
 	public boolean featureInvocationExpressionReferentExists() {
         FeatureInvocationExpression self = this.getSelf();
-		// return self.getIsImplicit() || self.getReferent() != null;
-        if (self.getReferent() == null) {
-            return self.getIsImplicit();
-        } else {
-            // TODO: Remove this check once overloading resolution is implemented.
-            Tuple tuple = self.getTuple();
-            if (tuple == null || 
-                    tuple.getImpl().size() > this.parameterCount()) {
-                return false;
-            } else {
-                this.getAssignmentAfterMap(); // Force computation of assignments.
-                for (NamedExpression input: tuple.getInput()) {
-                    if (!this.parameterIsAssignableFrom(input)) {
-                       return false;
-                    }
-                }
-                for (NamedExpression output: tuple.getOutput()) {
-                    if (!this.parameterIsAssignableTo(output)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
+        return self.getIsImplicit() || self.getReferent() != null;
 	}
 
 	/**

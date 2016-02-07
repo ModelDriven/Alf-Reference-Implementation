@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -371,36 +371,48 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         }
         return parameters;
     }
+	
+	public List<FormalParameter> parameters() {
+	    return this.parametersFor(null);
+	}
     
-    public List<FormalParameter> parameters() {
-        InvocationExpression self = this.getSelf();
-        ElementReference referent = self.getReferent();
+    public List<FormalParameter> parametersFor(ElementReference referent) {
+        if (referent == null) {
+            referent = this.getSelf().getReferent();
+        }
         List<FormalParameter> parameters = new ArrayList<FormalParameter>();
-        if (self.getIsBehavior() || self.getIsOperation()) {
-            parameters = referent.getImpl().getParameters();
-        } else if (self.getIsAssociationEnd()) {
-            ElementReference association = referent.getImpl().getAssociation();
-            String referentName = referent.getImpl().getName();
-            for (ElementReference property: association.getImpl().getAssociationEnds()) {
-                if (!property.getImpl().getName().equals(referentName)) {
-                    FormalParameter parameter = parameterFromProperty(property);
-                    parameter.setLower(1);
-                    parameter.setUpper(1);
-                    parameters.add(parameter);
+        if (referent != null) {
+            if (referent.getImpl().isBehavior() || referent.getImpl().isOperation()) {
+                parameters = referent.getImpl().getParameters();
+            } else if (referent.getImpl().isAssociationEnd()) {
+                ElementReference association = referent.getImpl().getAssociation();
+                String referentName = referent.getImpl().getName();
+                for (ElementReference property: association.getImpl().getAssociationEnds()) {
+                    if (!property.getImpl().getName().equals(referentName)) {
+                        FormalParameter parameter = parameterFromProperty(property);
+                        parameter.setLower(1);
+                        parameter.setUpper(1);
+                        parameters.add(parameter);
+                    }
                 }
-            }
-        } else if (referent != null) {
-             for (ElementReference property: referent.getImpl().getAttributes()) {
-                parameters.add(parameterFromProperty(property));
+            } else {
+                 for (ElementReference property: referent.getImpl().getAttributes()) {
+                    parameters.add(parameterFromProperty(property));
+                }
             }
         }
         return parameters;
     }
-    
+
     // Returns the number of parameters, excluding return parameters.
     public int parameterCount() {
-        int n = this.parameters().size();
-        for (FormalParameter parameter: this.parameters()) {
+        return this.countParametersOf(null);
+    }
+
+    public int countParametersOf(ElementReference referent) {
+        List<FormalParameter> parameters = parametersFor(referent);
+        int n = parameters.size();
+        for (FormalParameter parameter: parameters) {
             if ("return".equals(parameter.getDirection())) {
                 n--;
             }
@@ -424,6 +436,12 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	 * after the tuple of the expression.
 	 **/
 	public Map<String, AssignedSource> updateAssignmentMap() {
+	    // NOTE: Defer computation of referent until the assignments before
+	    // the feature and tuple are set.
+	    return this.updateAssignmentsFor(null);
+	}
+	
+	public Map<String, AssignedSource> updateAssignmentsFor(ElementReference referent) {
 	    InvocationExpression self = this.getSelf();
 	    FeatureReference feature = self.getFeature();
 	    Tuple tuple = self.getTuple();
@@ -434,13 +452,17 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	    }
 	    if (tuple != null) {
 	        tuple.getImpl().setAssignmentsBefore(assignments);
-	        assignments = tuple.getImpl().getAssignmentsAfterMap();
+	        assignments = tuple.getImpl().getAssignmentsAfterMap(referent);
 	    }
 	    return assignments;
-	} // updateAssignments
+	}
 	
 	protected boolean parameterIsAssignableFrom(NamedExpression input) {
-	    FormalParameter namedParameter = this.parameterNamed(input.getName());
+	    return this.parameterIsAssignableFrom(input, null);
+	}
+	
+	protected boolean parameterIsAssignableFrom(NamedExpression input, ElementReference referent) {
+	    FormalParameter namedParameter = this.parameterNamed(input.getName(), referent);
         if (namedParameter == null) {
 	        return false;
 	    } else {
@@ -450,9 +472,13 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	                    namedParameter.getImpl().isAssignableFrom(input.getExpression());
 	    }
 	}
-
+	
     protected boolean parameterIsAssignableTo(NamedExpression output) {
-        FormalParameter namedParameter = this.parameterNamed(output.getName());
+        return parameterIsAssignableTo(output, null);
+    }
+
+    protected boolean parameterIsAssignableTo(NamedExpression output, ElementReference referent) {
+        FormalParameter namedParameter = this.parameterNamed(output.getName(), referent);
         if (namedParameter == null || 
                 !(output instanceof OutputNamedExpression)) {
             return false;
@@ -467,12 +493,43 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     }
     
     public FormalParameter parameterNamed(String name) {
-        for (FormalParameter parameter: this.parameters()) {
+        return parameterNamed(name, null);
+    }
+    
+    public FormalParameter parameterNamed(String name, ElementReference referent) {
+        if (referent == null) {
+            referent = this.getSelf().getReferent();
+        }
+        for (FormalParameter parameter: this.parametersFor(referent)) {
             if (parameter.getName().equals(name)) {
                 return parameter;
             }
         }
         return null;
+    }
+    
+    public boolean isCompatibleWith(ElementReference referent) {
+        // NOTE: If referent is null, then the invocation referent is used,
+        // which is cached, along with tuple inputs and outputs.
+        InvocationExpression self = this.getSelf();
+        Tuple tuple = self.getTuple();
+        if (tuple == null || 
+                tuple.getImpl().size() > countParametersOf(referent)) {
+            return false;
+        } else {
+            this.updateAssignmentsFor(referent);
+            for (NamedExpression input: tuple.getImpl().deriveInput(referent)) {
+                if (!parameterIsAssignableFrom(input, referent)) {
+                   return false;
+                }
+            }
+            for (NamedExpression output: tuple.getImpl().deriveOutput(referent)) {
+                if (!parameterIsAssignableTo(output, referent)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     
     @Override

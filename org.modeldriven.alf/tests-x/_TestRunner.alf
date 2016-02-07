@@ -40,6 +40,9 @@ active class _TestRunner specializes Test::Tester {
     WriteLine("Expressions_Operator...");
     new Expressions_Operator::run(this);
     accept(Continue);
+    WriteLine("Expressions_Overloading...");
+    new Expressions_Overloading::run(this);
+    accept(Continue);
     WriteLine("Expressions_Sequence_Construction...");
     new Expressions_Sequence_Construction::run(this);
     accept(Continue);

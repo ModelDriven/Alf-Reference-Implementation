@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -57,12 +57,12 @@ public class PositionalTupleImpl extends TupleImpl {
      * expression if there is no matching argument.
      **/
     @Override
-    protected Collection<NamedExpression> deriveInput() {
+    protected Collection<NamedExpression> deriveInput(ElementReference referent) {
         PositionalTuple self = this.getSelf();
         InvocationExpression invocation = self.getInvocation();
         Collection<NamedExpression> inputs = new ArrayList<NamedExpression>();
         if (invocation != null) {
-            List<FormalParameter> parameters = invocation.getImpl().parameters();
+            List<FormalParameter> parameters = invocation.getImpl().parametersFor(referent);
             List<Expression> expressions = self.getExpression();
             int i = 0;
             for (FormalParameter parameter: parameters) {
@@ -93,12 +93,12 @@ public class PositionalTupleImpl extends TupleImpl {
      * expression if there is no matching argument.
      **/
     @Override
-    protected Collection<OutputNamedExpression> deriveOutput() {
+    protected Collection<OutputNamedExpression> deriveOutput(ElementReference referent) {
         PositionalTuple self = this.getSelf();
         InvocationExpression invocation = self.getInvocation();
         Collection<OutputNamedExpression> outputs = new ArrayList<OutputNamedExpression>();
         if (invocation != null) {
-            List<FormalParameter> parameters = invocation.getImpl().parameters();
+            List<FormalParameter> parameters = invocation.getImpl().parametersFor(referent);
             boolean isAddInvocation = invocation.getImpl().isAddInvocation();
             List<Expression> expressions = self.getExpression();
             int i = 0;
@@ -150,6 +150,10 @@ public class PositionalTupleImpl extends TupleImpl {
         List<Expression> expression = self.getExpression();
         InvocationExpression invocation = self.getInvocation();
         return expression == null || invocation == null ||
+                
+                // Don't check parameters if a referent cannot be resolved.
+                invocation.getReferent() == null ||
+                
                 expression.size() <= invocation.getImpl().parameterCount();
     }
 

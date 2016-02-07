@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -102,7 +102,17 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * matching argument from the tuple, or an empty sequence construction
 	 * expression if there is no matching argument.
 	 **/
-	protected abstract Collection<NamedExpression> deriveInput();
+	protected Collection<NamedExpression> deriveInput() {
+	    return this.deriveInput(this.getSelf().getInvocation().getReferent());
+	}
+	
+	public Collection<NamedExpression> getInput(ElementReference referent) {
+	    // NOTE: In the case of referent == null, this will cache the
+	    // derivation using the invocation referent.
+	    return referent == null? this.getInput(): this.deriveInput(referent);
+	}
+	
+    protected abstract Collection<NamedExpression> deriveInput(ElementReference referent);
 
 	/**
 	 * A tuple has the same number of outputs as its invocation has output
@@ -111,7 +121,17 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * matching argument from the tuple, or an empty sequence construction
 	 * expression if there is no matching argument.
 	 **/
-	protected abstract Collection<OutputNamedExpression> deriveOutput();
+	protected Collection<OutputNamedExpression> deriveOutput() {
+        return this.deriveOutput(this.getSelf().getInvocation().getReferent());
+    }
+
+    public Collection<OutputNamedExpression> getOutput(ElementReference referent) {
+        // NOTE: In the case of referent == null, this will cache the
+        // derivation using the invocation referent.
+        return referent == null? this.getOutput(): this.deriveOutput(referent);
+    }
+    
+    protected abstract Collection<OutputNamedExpression> deriveOutput(ElementReference referent);
 
 	/*
 	 * Derivations
@@ -245,110 +265,116 @@ public abstract class TupleImpl extends SyntaxElementImpl {
     public Map<String, AssignedSource> getAssignmentsBeforeMap() {
         return this.assignmentsBefore;
     }
-
+    
     public Map<String, AssignedSource> getAssignmentsAfterMap() {
+        if (this.assignmentsAfter == null) {
+            this.assignmentsAfter = this.getAssignmentsAfterMap(null);
+        }
+        return this.assignmentsAfter;
+    }
+    
+    public Map<String, AssignedSource> getAssignmentsAfterMap(ElementReference referent) {
         Tuple self = this.getSelf();
         InvocationExpression invocation = self.getInvocation();
         if (invocation == null) {
             return new HashMap<String, AssignedSource>();
         } else {
-            if (this.assignmentsAfter == null) {
-                Map<String, AssignedSource> assignmentsBefore = 
+            Map<String, AssignedSource> assignmentsBefore = 
                     this.getAssignmentsBeforeMap();
-                Collection<NamedExpression> inputs = self.getInput();
-                Collection<OutputNamedExpression> outputs = self.getOutput();
-                Set<Expression> expressions = new HashSet<Expression>();
-                for (NamedExpression input: inputs) {
-                    expressions.add(input.getExpression());
-                    Expression index = input.getIndex();
-                    if (index != null) {
-                        expressions.add(index);
-                    }
+            Collection<NamedExpression> inputs = this.getInput(referent);
+            Collection<OutputNamedExpression> outputs = this.getOutput(referent);
+            Set<Expression> expressions = new HashSet<Expression>();
+            for (NamedExpression input: inputs) {
+                expressions.add(input.getExpression());
+                Expression index = input.getIndex();
+                if (index != null) {
+                    expressions.add(index);
                 }
-                Map<String, AssignedSource> newLocalAssignments = 
+            }
+            Map<String, AssignedSource> newLocalAssignments = 
                     new HashMap<String, AssignedSource>();
-                for (OutputNamedExpression output: outputs) {
-                    Expression expression = output.getExpression();
-                    expressions.add(expression);
-                                        
-                    LeftHandSide lhs = output.getLeftHandSide();
-                    
-                    if (lhs != null) {
-                        lhs.getImpl().setAssignmentBefore(assignmentsBefore);
-                        lhs.getImpl().setCurrentScope(this.currentScope);
-                        
-                        FormalParameter parameter = 
-                            invocation.getImpl().parameterNamed(output.getName());
-                        String direction = 
+            for (OutputNamedExpression output: outputs) {
+                Expression expression = output.getExpression();
+                expressions.add(expression);
+
+                LeftHandSide lhs = output.getLeftHandSide();
+
+                if (lhs != null) {
+                    lhs.getImpl().setAssignmentBefore(assignmentsBefore);
+                    lhs.getImpl().setCurrentScope(this.currentScope);
+
+                    FormalParameter parameter = 
+                            invocation.getImpl().parameterNamed(output.getName(), referent);
+                    String direction = 
                             parameter == null? null: parameter.getDirection();
-                        
-                        // A new assignment is created for a local name 
-                        // defined as an output argument or a parameter that is
-                        // assigned for the first time as an output argument.
-                        if ("out".equals(direction)) {
-                            String localName = lhs.getImpl().getLocalName();
-                            if (localName != null && lhs.getIndex() == null) {
-                                ElementReference referent = lhs.getImpl().getReferent();
-                                AssignedSource assignment = null;
-                                if (referent == null) {
-                                    assignment = AssignedSourceImpl.makeAssignment
-                                    (localName, invocation, 
-                                            parameter.getType(), 
-                                            0, 
-                                            parameter.getUpper() == 1? 1: -1);
-                                    newLocalAssignments.put(localName, assignment);
-                                } else if (referent.getImpl().isParameter() &&
-                                        !assignmentsBefore.containsKey(localName)){
-                                    assignment = AssignedSourceImpl.
+
+                    // A new assignment is created for a local name 
+                    // defined as an output argument or a parameter that is
+                    // assigned for the first time as an output argument.
+                    if ("out".equals(direction)) {
+                        String localName = lhs.getImpl().getLocalName();
+                        if (localName != null && lhs.getIndex() == null) {
+                            ElementReference lhsReferent = lhs.getImpl().getReferent();
+                            AssignedSource assignment = null;
+                            if (lhsReferent == null) {
+                                assignment = AssignedSourceImpl.makeAssignment
+                                        (localName, invocation, 
+                                                parameter.getType(), 
+                                                0, 
+                                                parameter.getUpper() == 1? 1: -1);
+                                newLocalAssignments.put(localName, assignment);
+                            } else if (lhsReferent.getImpl().isParameter() &&
+                                    !assignmentsBefore.containsKey(localName)){
+                                assignment = AssignedSourceImpl.
                                         makeAssignment(localName, self, 
-                                                referent.getImpl().getType(),
-                                                referent.getImpl().getLower(), 
-                                                referent.getImpl().getUpper());                                    
-                                    newLocalAssignments.put(localName, assignment);
-                                }
+                                                lhsReferent.getImpl().getType(),
+                                                lhsReferent.getImpl().getLower(), 
+                                                lhsReferent.getImpl().getUpper());                                    
+                                newLocalAssignments.put(localName, assignment);
                             }
                         }
-                        
                     }
+
                 }
-                if (expressions.isEmpty()) {
-                    this.assignmentsAfter = assignmentsBefore;
-                } else {
-                    this.assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
-                    // Only copy assignmentsBefore if it is necessary to add new local
-                    // assignments.
-                    if (!newLocalAssignments.isEmpty()) {
-                        assignmentsBefore = new HashMap<String, AssignedSource>(assignmentsBefore);
-                        assignmentsBefore.putAll(newLocalAssignments);
-                    }
-                    for (Expression expression: expressions) {
-                        expression.getImpl().setAssignmentBefore(assignmentsBefore);
-                        this.assignmentsAfter.putAll(expression.getImpl().getAssignmentAfterMap());
-                    }
-                    for (OutputNamedExpression output: outputs) {
-                        LeftHandSide lhs = output.getLeftHandSide();
-                        if (lhs != null) {
-                            lhs.getImpl().setAssignmentBefore(assignmentsBefore);
-                            String assignedName = lhs == null? null: lhs.getImpl().getAssignedName();
-                            if (assignedName != null) {
-                                AssignedSource assignmentBefore = 
+            }
+            Map<String, AssignedSource> assignmentsAfter;
+            if (expressions.isEmpty()) {
+                assignmentsAfter = assignmentsBefore;
+            } else {
+                assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
+                // Only copy assignmentsBefore if it is necessary to add new local
+                // assignments.
+                if (!newLocalAssignments.isEmpty()) {
+                    assignmentsBefore = new HashMap<String, AssignedSource>(assignmentsBefore);
+                    assignmentsBefore.putAll(newLocalAssignments);
+                }
+                for (Expression expression: expressions) {
+                    expression.getImpl().setAssignmentBefore(assignmentsBefore);
+                    assignmentsAfter.putAll(expression.getImpl().getAssignmentAfterMap());
+                }
+                for (OutputNamedExpression output: outputs) {
+                    LeftHandSide lhs = output.getLeftHandSide();
+                    if (lhs != null) {
+                        lhs.getImpl().setAssignmentBefore(assignmentsBefore);
+                        String assignedName = lhs == null? null: lhs.getImpl().getAssignedName();
+                        if (assignedName != null) {
+                            AssignedSource assignmentBefore = 
                                     assignmentsBefore.get(assignedName);
-                                if (assignmentBefore != null && 
-                                        !assignmentBefore.getImpl().getIsParallelLocalName()){
-                                    // Update the assignment of an already existing
-                                    // local name, unless it is an @parallel local
-                                    // name of a for statement.
-                                    AssignedSource assignment = AssignedSourceImpl.
+                            if (assignmentBefore != null && 
+                                    !assignmentBefore.getImpl().getIsParallelLocalName()){
+                                // Update the assignment of an already existing
+                                // local name, unless it is an @parallel local
+                                // name of a for statement.
+                                AssignedSource assignment = AssignedSourceImpl.
                                         makeAssignment(assignmentBefore);
-                                    assignment.setSource(self.getInvocation());
-                                    this.assignmentsAfter.put(assignedName, assignment);
-                                }
+                                assignment.setSource(self.getInvocation());
+                                assignmentsAfter.put(assignedName, assignment);
                             }
                         }
                     }
                 }
             }
-            return this.assignmentsAfter;
+            return assignmentsAfter;
         }
     }
     

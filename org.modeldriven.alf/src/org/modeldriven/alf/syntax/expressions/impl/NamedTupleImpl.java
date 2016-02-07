@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -57,12 +57,12 @@ public class NamedTupleImpl extends TupleImpl {
      * expression if there is no matching argument.
      **/
 	@Override
-    protected Collection<NamedExpression> deriveInput() {
+    protected Collection<NamedExpression> deriveInput(ElementReference referent) {
 	    NamedTuple self = this.getSelf();
 	    InvocationExpression invocation = self.getInvocation();
 	    Collection<NamedExpression> inputs = new ArrayList<NamedExpression>();
 	    if (invocation != null) {
-	        List<FormalParameter> parameters = invocation.getImpl().parameters();
+	        List<FormalParameter> parameters = invocation.getImpl().parametersFor(referent);
 	        for (FormalParameter parameter: parameters) {
                 String direction = parameter == null? null: parameter.getDirection();
                 if (direction != null && 
@@ -89,12 +89,12 @@ public class NamedTupleImpl extends TupleImpl {
      * expression if there is no matching argument.
      **/
     @Override
-    protected Collection<OutputNamedExpression> deriveOutput() {
+    protected Collection<OutputNamedExpression> deriveOutput(ElementReference referent) {
         NamedTuple self = this.getSelf();
         InvocationExpression invocation = self.getInvocation();
         Collection<OutputNamedExpression> outputs = new ArrayList<OutputNamedExpression>();
         if (invocation != null) {
-            List<FormalParameter> parameters = invocation.getImpl().parameters();
+            List<FormalParameter> parameters = invocation.getImpl().parametersFor(referent);
             boolean isAddInvocation = invocation.getImpl().isAddInvocation();
             for (FormalParameter parameter: parameters) {
                 String direction = parameter == null? null: parameter.getDirection();
@@ -137,7 +137,8 @@ public class NamedTupleImpl extends TupleImpl {
     public boolean namedTupleArgumentNames() {
         NamedTuple self = this.getSelf();
         InvocationExpression invocation = self.getInvocation();
-        if (invocation == null) {
+        // NOTE: Don't check arguments if a referent cannot be resolved.
+        if (invocation == null || invocation.getReferent() == null) {
             return true;
         } else {
             Collection<FormalParameter> parameters = 
