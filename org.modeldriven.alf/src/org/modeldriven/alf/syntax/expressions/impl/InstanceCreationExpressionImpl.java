@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -15,6 +15,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -72,11 +73,9 @@ public class InstanceCreationExpressionImpl
 	 * class.
 	 **/
 	protected Boolean deriveIsConstructorless() {
-	    InstanceCreationExpression self = this.getSelf();
-	    ElementReference referent = self.getReferent();
-		return referent != null && referent.getImpl().isClass();
+		return this.isConstructorless(null);
 	}
-
+	
 	/**
 	 * An instance creation expression is an object creation if its referent is
 	 * not a data type.
@@ -109,11 +108,16 @@ public class InstanceCreationExpressionImpl
 	        if (dataTypeReferent != null) {
 	            return classReferent != null? null: dataTypeReferent;
 	        } else {
-                // TODO: Handle overloading resolution.
 	            ElementReference operationReferent = null;
     	        if (classReferent == null) {
-                    operationReferent = 
-                            constructor.getImpl().getOperationReferent();
+    	            Collection<ElementReference> constructorReferents = 
+    	                    new ArrayList<ElementReference>();
+    	            for (ElementReference referent: constructor.getReferent()) {
+    	                if (referent.getImpl().isConstructor()) {
+    	                    constructorReferents.add(referent);
+    	                }
+    	            }
+                    operationReferent = this.resolveOverloading(constructorReferents);
     	        } else {
     	            String name = constructor.getUnqualifiedName().getName();
                     constructor = constructor.getImpl().copy().addName(name);
@@ -316,26 +320,8 @@ public class InstanceCreationExpressionImpl
 	 * the attributes of the named type.
 	 **/
 	public boolean instanceCreationExpressionDataTypeCompatibility() {
-	    // TODO: Once overloading resolution is implemented, change this to only
-	    // be for data value creation.
         InstanceCreationExpression self = this.getSelf();
-        Tuple tuple = self.getTuple();
-        if (tuple == null || 
-                tuple.getImpl().size() > this.parameters().size()) {
-            return false;
-        } else {
-            for (NamedExpression input: tuple.getInput()) {
-                if (!this.parameterIsAssignableFrom(input)) {
-                    return false;
-                }
-            }
-            for (NamedExpression output: tuple.getOutput()) {
-                if (!this.parameterIsAssignableTo(output)) {
-                    return false;
-                }
-            }
-            return true;
-        }
+        return self.getIsObjectCreation() || this.isCompatibleWith(null);
 	}
 	
     /**
@@ -361,14 +347,21 @@ public class InstanceCreationExpressionImpl
      * data type, or an empty set for a constructorless instance creation.
      **/
     @Override
-    public List<FormalParameter> parameters() {
-        if (this.getSelf().getIsConstructorless()) {
+    public List<FormalParameter> parametersFor(ElementReference referent) {
+        if (this.isConstructorless(referent)) {
             return new ArrayList<FormalParameter>();
         } else {
-            return super.parameters();
+            return super.parametersFor(referent);
         }
     }
     
+    protected boolean isConstructorless(ElementReference referent) {
+        if (referent == null) {
+            referent = this.getSelf().getReferent();
+        }
+        return referent != null && referent.getImpl().isClass();
+    }
+
 	private boolean referentHasNoConstructors() {
 	    for (ElementReference feature: 
 	        this.getSelf().getReferent().getImpl().getOwnedMembers()) {

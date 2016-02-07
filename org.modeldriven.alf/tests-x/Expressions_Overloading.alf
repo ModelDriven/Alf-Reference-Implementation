@@ -11,19 +11,19 @@ class Expressions_Overloading specializes Test {
 		@Create public run(in tester: Tester[0..1]) {
 				super(tester);
 				
-				this.test(s, i, n, j);
+				this.test(a, s, i, n, j, b1, b2, b3, b_i, b_n, c);
 				
-				AssertEqual("this.s1", this.s1, "test1");
-				AssertEqual("this.i1", this.i1, 1);
-				AssertEqual("this.n1", this.n1, 5);
+				AssertEqual("a.s1", a.s1, "test1");
+				AssertEqual("a.i1", a.i1, 1);
+				AssertEqual("a.n1", a.n1, 5);
 				
-				AssertEqual("this.s2", this.s2, "test4");
-				AssertEqual("this.i2", this.i2, 7);
-				AssertEqual("this.n2", this.n2, 6);
+				AssertEqual("a.s2", a.s2, "test4");
+				AssertEqual("a.i2", a.i2, 7);
+				AssertEqual("a.n2", a.n2, 6);
 				
-				AssertEqual("this.s3", this.s3, "test6");
-				AssertEqual("this.i3", this.i3, 7);
-				AssertEqual("this.n3", this.n3, 6);
+				AssertEqual("a.s3", a.s3, "test6");
+				AssertEqual("a.i3", a.i3, 7);
+				AssertEqual("a.n3", a.n3, 6);
 				
 				AssertEqual("j", j, 1);
 				
@@ -31,96 +31,229 @@ class Expressions_Overloading specializes Test {
 				AssertEqual("i", i, 7);
 				AssertEqual("n", n, 6);
 				
+				AssertEqual("b1.s", b1.s, null);
+				AssertEqual("b1.i", b1.i, 0);
+				AssertEqual("b1.n", b1.n, 1);
+				AssertEqual("b2.s", b2.s, null);
+				AssertEqual("b2.i", b2.i, 2);
+				AssertEqual("b2.n", b2.n, 1);
+				AssertEqual("b3.s", b3.s, null);
+				AssertEqual("b3.i", b2.i, 2);
+				AssertEqual("b3.i", b3.i, 0);
+				AssertEqual("b3.n", b3.n, 3);
+				
+				AssertEqual("b_i", b_i, 0);
+				AssertEqual("b_n", b_n, 1);
+				
+				AssertEqual("c.s1", c.s1, "test1");
+				AssertEqual("c.i1", c.i1, 1);
+				AssertEqual("c.n1", c.n1, 5);
+				
+				AssertEqual("c.s2", c.s2, "test4");
+				AssertEqual("c.i2", c.i2, 7);
+				AssertEqual("c.n2", c.n2, 6);
+				
+				AssertEqual("c.s3", c.s3, "test6");
+				AssertEqual("c.i3", c.i3, 7);
+				AssertEqual("c.n3", c.n3, 6);
+				
+				AssertEqual("c.j", c.j, 1);
+				
+				AssertEqual("c.s", c.s, "test4");
+				AssertEqual("c.i", c.i, 7);
+				AssertEqual("c.n", c.n, 6);
+				
+				AssertEqual("c.a", c.a, null);
+				AssertEqual("c.c", c.c, c);
+				
 				this.done();
 		}
 		
 		// Supporting declarations ************************************
+		
+		class A {
 
-    public s1: String[0..1];
-    public i1: Integer[0..1];
-    public n1: Natural[0..1];
+		    public s1: String[0..1];
+		    public i1: Integer[0..1];
+		    public n1: Natural[0..1];
+		    
+		    public set(in s: String) { this.s1 = s; }
+		    public set(in i: Integer) { this.i1 = i; }
+		    public set(in n: Natural) { this.n1 = n; }
+		    
+		    public get1(): Integer { return this.i1; }
+		    public get1(): Natural { return this.n1; }
+		    
+		    public s2: String[0..1];
+		    public i2: Integer[0..1];
+		    public n2: Natural[0..1];
+		    
+		    public set(in s: String, in i: Integer) { 
+		    		this.s2 = s;
+		    		this.i2 = i;
+		    }
+		    
+		    public set(in s: String, in n: Natural) { 
+		    		this.s2 = s;
+		    		this.n2 = n;
+		    }
+		    
+		    public set(in m: Natural, in i: Integer[0..1]) { 
+		    		this.i2 = i;
+		    		this.n2 = m;
+		    }
+		    
+		    public get2(out s: String) { s = this.s2; }
+		    public get2(out i: Integer) { i = this.i2; }
+		    public get2(out n: Natural) { n = this.n2; }
+		    
+		    public s3: String[0..1];
+		    public i3: Integer[0..1];
+		    public n3: Natural[0..1];
+		    
+		    public setGet1(inout s: String, in i: Integer) {
+		    		this.s3 = s;
+		    		this.i3 = i;
+		    }
+		    
+		    public setGet1(inout s: String, in n: Natural) {
+		    	  this.s3 = s;
+		    	  this.n3 = n;
+		    }
+		    
+		    public setGet2(in s: String, inout i: Integer) {
+		    		this.s3 = s;
+		    		this.i3 = i;
+		    }
+		    
+		    public setGet2(in s: String, inout n: Natural) {
+		    	  this.s3 = s;
+		    	  this.n3 = n;
+		    }
+		    
+		    public a: A; // = null;
+		    
+				public setA(in a: A) { this.a = a; }
+				
+				public test() {
+				
+		        this.set("test1");
+		        this.set(+1);
+		        this.set(2);
+		        
+		        this.set("test2", +3);
+		        this.set("test3", 4);
+		        
+		        this.set(n=>5);
+		        this.set(m=>6);
+		        this.set(i=>7, s=>"test4");
+		        
+				}
+		}
+		
+		class B {
+		
+		    public s: String;
+    		public i: Integer = 0;
+    		public n: Natural = 1;
+    		
+    		public j: Integer;
     
-    public set(in s: String) { this.s1 = s; }
-    public set(in i: Integer) { this.i1 = i; }
-    public set(in n: Natural) { this.n1 = n; }
+    		@Create create() { }
+    		@Create create(in i: Integer) { this.i = i; }
+    		@Create create(in n: Natural) { this.n = n; }
+    		@Create get(out i: Integer) { i = this.i; }
+    		@Create get(out n: Natural) { n = this.n; }
+    		
+				public c: C;
+				
+				public setA(in c: C) { this.c = c; }
+				
+	  }
     
-    public get1(): Integer { return this.i1; }
-    public get1(): Natural { return this.n1; }
+    class C specializes A, B {
     
-    public s2: String[0..1];
-    public i2: Integer[0..1];
-    public n2: Natural[0..1];
-    
-    public set(in s: String, in i: Integer) { 
-    		this.s2 = s;
-    		this.i2 = i;
+		    public set(in s: String) { }
+		    public set(in i: Integer) { }
+		    public set(in n: Natural) { }
+		    public get1(): Integer { }
+		    public get1(): Natural { }
+		    public set(in s: String, in i: Integer) { }
+		    public set(in s: String, in n: Natural) { }
+		    public set(in m: Natural, in i: Integer[0..1]) { }
+		    public get2(out s: String) { }
+		    public get2(out i: Integer) { }
+		    public get2(out n: Natural) { }
+		    public setGet1(inout s: String, in i: Integer) { }
+		    public setGet1(inout s: String, in n: Natural) { }
+		    public setGet2(in s: String, inout i: Integer) { }
+		    public setGet2(in s: String, inout n: Natural) { }
+
+    		public test() {
+    		    super.set("test1");
+		        super.set(+1);
+		        super.set(2);
+		        
+		        this.j = super.get1();
+		                
+		        super.set("test2", +3);
+		        super.set("test3", 4);
+		        
+		        super.set(n=>5);
+		        super.set(m=>6);
+		        super.set(i=>7, s=>"test4");
+		        
+		        super.get2(this.s);
+		        super.get2(this.i);
+		        super.get2(this.n);
+		        
+		        super.setGet1(this.s, +8);
+		        super.setGet1(this.s, 9);
+		        
+		        super.setGet2("test5", this.i);
+		        super.setGet2("test6", this.n);
+		        
+		        super.setA(this);
+    		}
+    		
     }
     
-    public set(in s: String, in n: Natural) { 
-    		this.s2 = s;
-    		this.n2 = n;
-    }
     
-    public set(in m: Natural, in i: Integer[0..1]) { 
-    		this.i2 = i;
-    		this.n2 = m;
-    }
-    
-    public get2(out s: String) { s = this.s2; }
-    public get2(out i: Integer) { i = this.i2; }
-    public get2(out n: Natural) { n = this.n2; }
-    
-    public s3: String[0..1];
-    public i3: Integer[0..1];
-    public n3: Natural[0..1];
-    
-    public setGet1(inout s: String, in i: Integer) {
-    		this.s3 = s;
-    		this.i3 = i;
-    }
-    
-    public setGet1(inout s: String, in n: Natural) {
-    	  this.s3 = s;
-    	  this.n3 = n;
-    }
-    
-    public setGet2(in s: String, inout i: Integer) {
-    		this.s3 = s;
-    		this.i3 = i;
-    }
-    
-    public setGet2(in s: String, inout n: Natural) {
-    	  this.s3 = s;
-    	  this.n3 = n;
-    }
     
     // ************************************************************
     
     public test(
+    		out a: A,
     		out s: String, out i: Integer, out n: Natural,
-    		out j: Integer
+    		out j: Integer,
+    		out b1: B, out b2: B, out b3: B,
+    		out b_i: Integer, out b_n: Natural,
+    		out c: C
     ) {
-        this.set("test1");
-        this.set(+1);
-        this.set(2);
+    
+    		a = new A();
+    		a.test();
+    		
+		    j = a.get1();
+		            		
+        a.get2(s);
+        a.get2(i);
+        a.get2(n);
         
-        j = this.get1();
-                
-        this.set("test2", +3);
-        this.set("test3", 4);
+        a.setGet1(s, +8);
+        a.setGet1(s, 9);
         
-        this.set(n=>5);
-        this.set(m=>6);
-        this.set(i=>7, s=>"test4");
+        a.setGet2("test5", i);
+        a.setGet2("test6", n);
         
-        this.get2(s);
-        this.get2(i);
-        this.get2(n);
+        b1 = new B::create();
+        b2 = new B::create(+2);
+        b3 = new B::create(3);
+       
+        new B::get(b_i);
+        new B::get(b_n);
         
-        this.setGet1(s, +8);
-        this.setGet1(s, 9);
-        
-        this.setGet2("test5", i);
-        this.setGet2("test6", n);
+        c = new C();
+        c.test();
     }
 }

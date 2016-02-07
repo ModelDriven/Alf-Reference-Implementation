@@ -15,8 +15,6 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.alf.syntax.units.impl.AssignableTypedElementImpl;
-import org.modeldriven.alf.syntax.units.impl.OperationDefinitionImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -169,86 +167,9 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 
     public ElementReference getBehavioralFeatureReferent(InvocationExpression invocation) {
         FeatureReference self = this.getSelf();
-        ElementReference signal = null;
-        List<ElementReference> operations = new ArrayList<ElementReference>();
-        for (ElementReference referent: self.getReferent()) {
-            if (referent.getImpl().isReception()) {
-                // NOTE: If the feature is a reception, then the referent should be the
-                // signal being received, not the reception itself.
-                referent = referent.getImpl().getSignal();
-            }
-            if (invocation.getImpl().isCompatibleWith(referent)) {
-                if (referent.getImpl().isOperation()) {
-                    if (signal != null) {
-                        return null;
-                    }
-                    operations.add(referent);
-                } else if (referent.getImpl().isSignal()) {
-                    if (signal != null || operations.size() > 0) {
-                        return null;
-                    }
-                    signal = referent;
-                }
-            }
-        }
-        return signal != null? signal: selectMostSpecificOperation(operations);
+        return invocation.getImpl().resolveOverloading(self.getReferent());
     }
     
-    public static ElementReference selectMostSpecificOperation(List<ElementReference> operations) {
-        ElementReference selectedOperation = null;
-        if (operations.size() > 0) {
-            for (ElementReference operation1: operations) {
-                boolean isMostSpecific = true;
-                for (ElementReference operation2: operations) {
-                    if (!operation1.equals(operation2) && !isMoreSpecificThan(operation1, operation2)) {
-                        isMostSpecific = false;
-                        break;
-                    }
-                }
-                if (isMostSpecific) {
-                    if (selectedOperation != null) {
-                        return null;
-                    }
-                    selectedOperation = operation1;
-                }
-            }
-        }
-        return selectedOperation;
-    }
-    
-    public static boolean isMoreSpecificThan(ElementReference operation1, ElementReference operation2) {
-        List<FormalParameter> parameters1 = 
-                OperationDefinitionImpl.removeReturnParameter(operation1.getImpl().getParameters());
-        List<FormalParameter> parameters2 = 
-                OperationDefinitionImpl.removeReturnParameter(operation2.getImpl().getParameters());
-        if (parameters1.size() > parameters2.size()) {
-            return false;
-        } else {
-            for (int i = 0; i < parameters1.size(); i++) {
-                FormalParameter parameter1 = parameters1.get(i);
-                String direction = parameter1.getDirection();
-                FormalParameter parameter2 = parameters2.get(i);
-                if ("in".equals(direction)) {
-                    if (!new AssignableTypedElementImpl(parameter2.getImpl()).isAssignableFrom(
-                            new AssignableTypedElementImpl(parameter1.getImpl()))) {
-                        return false;
-                    }
-                } else if ("out".equals(direction)) {
-                    if (!new AssignableTypedElementImpl(parameter1.getImpl()).isAssignableFrom(
-                            new AssignableTypedElementImpl(parameter2.getImpl()))) {
-                        return false;
-                    }
-                }
-            }
-            FormalParameter returnParameter1 = operation1.getImpl().getReturnParameter();
-            FormalParameter returnParameter2 = operation2.getImpl().getReturnParameter();
-            return returnParameter1 == null ||
-                    returnParameter2 != null &&
-                    new AssignableTypedElementImpl(returnParameter1.getImpl()).isAssignableFrom(
-                            new AssignableTypedElementImpl(returnParameter2.getImpl()));
-        }
-    }
-
     public void setCurrentScope(NamespaceDefinition currentScope) {
         this.currentScope = currentScope;
         

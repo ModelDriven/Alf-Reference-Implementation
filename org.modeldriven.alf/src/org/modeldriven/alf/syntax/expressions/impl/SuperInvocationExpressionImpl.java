@@ -94,16 +94,12 @@ public class SuperInvocationExpressionImpl
 	            }
 	        }
 	        
-	        // TODO: Handle overloading resolution.
-	        ElementReference referent = null;
+	        Collection<ElementReference> operations = new ArrayList<ElementReference>();
 	        for (ElementReference superclass: superclasses) {
 	            for (ElementReference member: superclass.getImpl().getMembers()) {
 	                if (member.getImpl().isOperation() && 
 	                        member.getImpl().getName().equals(name)) {
-	                    if (referent != null) {
-	                        return null;
-	                    }
-	                    referent = member;
+	                    operations.add(member);
 	                }
 	            }
 	        }
@@ -111,7 +107,7 @@ public class SuperInvocationExpressionImpl
 	        // Note: This returns the operation, not the method. This is because
 	        // if the feature is an Alf operation definition, there will not be
 	        // a method for it yet.
-	        return referent;
+	        return this.resolveOverloading(operations);
 	    }
 	}
 	
