@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Alf
 Bundle-SymbolicName: org.modeldriven.alf.eclipse
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.6.0.qualifier
 Bundle-Vendor: Model Driven Solutions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.8.3",
@@ -18,8 +18,10 @@ Export-Package: org.modeldriven.alf.eclipse.fuml.execution,
  org.modeldriven.alf.eclipse.units,
  org.modeldriven.alf.execution,
  org.modeldriven.alf.fuml.execution,
- org.modeldriven.alf.fuml.execution.test,
  org.modeldriven.alf.fuml.mapping,
+ org.modeldriven.alf.fuml.mapping.common,
+ org.modeldriven.alf.fuml.mapping.expressions,
+ org.modeldriven.alf.fuml.mapping.statements,
  org.modeldriven.alf.fuml.mapping.units,
  org.modeldriven.alf.fuml.units,
  org.modeldriven.alf.mapping,
@@ -28,6 +30,8 @@ Export-Package: org.modeldriven.alf.eclipse.fuml.execution,
  org.modeldriven.alf.syntax.common.impl,
  org.modeldriven.alf.syntax.expressions,
  org.modeldriven.alf.syntax.expressions.impl,
+ org.modeldriven.alf.syntax.statements,
+ org.modeldriven.alf.syntax.statements.impl,
  org.modeldriven.alf.syntax.units,
  org.modeldriven.alf.syntax.units.impl,
  org.modeldriven.alf.uml

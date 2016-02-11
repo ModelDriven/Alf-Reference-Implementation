@@ -2,16 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Alf Compiler
 Bundle-SymbolicName: org.modeldriven.alf.eclipse.papyrus;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.6.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.uml2;bundle-version="4.0.2";resolution:=optional,
  org.eclipse.uml2.uml.ecore.exporter;bundle-version="2.6.1";resolution:=optional,
  org.eclipse.uml2.uml.ecore.importer;bundle-version="2.6.0";resolution:=optional,
  org.eclipse.uml2.uml.resources;bundle-version="4.0.1",
- org.eclipse.papyrus.uml.tools.utils;bundle-version="0.10.1",
+ org.eclipse.papyrus.uml.tools.utils;bundle-version="1.0.0",
  org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.logging;bundle-version="1.0.4",
- org.modeldriven.alf.eclipse;bundle-version="0.1.0",
+ org.modeldriven.alf.eclipse;bundle-version="0.6.0",
  org.eclipse.equinox.registry,
  org.junit,
  org.eclipse.papyrus.moka;bundle-version="1.0.0",
@@ -21,4 +21,5 @@ Require-Bundle: org.eclipse.uml2;bundle-version="4.0.2";resolution:=optional,
  org.eclipse.core.runtime;bundle-version="3.10.0"
 Bundle-Vendor: Model Driven Solutions
 Bundle-ClassPath: .
-Export-Package: org.modeldriven.alf.eclipse.papyrus.execution
+Export-Package: org.modeldriven.alf.eclipse.papyrus.execution,
+ org.modeldriven.alf.eclipse.papyrus.units
