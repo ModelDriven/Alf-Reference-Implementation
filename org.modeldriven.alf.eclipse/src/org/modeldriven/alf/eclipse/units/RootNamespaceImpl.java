@@ -35,6 +35,7 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
 	public static final String ALF_LIBRARIES_PATHMAP = "pathmap://ALF_LIBRARIES/";
 	public static final String DEFAULT_LIBRARY_DIRECTORY = "Libraries";
 	public static final String UML_LIBRARY_SUBDIRECTORY = "uml";
+	public static final String STANDARD_PROFILE_FILE_NAME = "Standard.profile";
 	public static final String FUML_LIBRARY_FILE_NAME = "fUML.library";
 	public static final String ALF_LIBRARY_FILE_NAME = "Alf.library";
     
@@ -54,7 +55,7 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
 	    	if (this.getLibraryDirectory() == null) {
 	    		this.setLibraryDirectory(DEFAULT_LIBRARY_DIRECTORY);
 	    	}
-	        this.getResource(UMLResource.STANDARD_PROFILE_URI);
+	        this.getProfileResource(STANDARD_PROFILE_FILE_NAME);
 	        this.getAlfLibraryResource(FUML_LIBRARY_FILE_NAME);
 	        this.getAlfLibraryResource(ALF_LIBRARY_FILE_NAME);
 	        this.uninitialized = false;
