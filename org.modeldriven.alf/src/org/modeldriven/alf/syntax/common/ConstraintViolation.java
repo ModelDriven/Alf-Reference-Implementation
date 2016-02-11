@@ -35,13 +35,13 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
     public static void loadErrorMessageFile(String path) throws IOException {
         if (path == null) {
             clearErrorMessages();
-        } else if (path != errorMessageFileName) {
+        } else if (!path.equals(errorMessageFileName)) {
             loadErrorMessageFile(Files.newInputStream(Paths.get(path)));
             errorMessageFileName = path;
         }
     }
 
-    private static void loadErrorMessageFile(InputStream inputStream) throws IOException {
+    public static void loadErrorMessageFile(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 inputStream, Charset.defaultCharset()));
         clearErrorMessages();
