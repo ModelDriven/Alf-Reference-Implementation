@@ -102,8 +102,7 @@ public abstract class AlfBase {
             lineNum = violation.getLine();
             this.println("");
             line = this.printLine(reader, line, prevLineNum, lineNum);
-            this.printConstraintViolation(
-                    lineNum, violation.getColumn(), violation.getErrorMessage());;
+            this.printConstraintViolation(violation);
         }
     }
     
@@ -127,13 +126,13 @@ public abstract class AlfBase {
         return line;
     }
     
-    protected void printConstraintViolation(int lineNum, int columnNum, String errorMessage) {
+    protected void printConstraintViolation(ConstraintViolation violation) {
         StringBuffer indent = new StringBuffer();
-        for (int n = columnNum; n > 1; n--) {
+        for (int n = violation.getColumn(); n > 1; n--) {
             indent.append(" ");
         }
         this.println(indent + "^");
-        this.println("[" + lineNum + ":" + columnNum + "] " + errorMessage);
+        this.println(violation.getErrorMessage());
     }
     
     protected void printVerbose(String message) {

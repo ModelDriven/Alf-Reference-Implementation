@@ -10,6 +10,8 @@ package org.modeldriven.alf.syntax.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,40 +26,52 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
             DEFAULT_ERROR_MESSAGE_FILE_DIRECTORY + "/" + DEFAULT_ERROR_MESSAGE_FILE_NAME;
     
     protected static String errorMessageFileName = null;
-    protected static Map<String, String> errorMessages = null;
+    protected static Map<String, String> errorMessages = new HashMap<String, String>();
 
-    public static void loadErrorMessageFile(String path) throws IOException {
-        if (path == null) {
-            errorMessages = null;
-        } else if (errorMessages == null || path != errorMessageFileName) {            
-            BufferedReader reader = 
-                    Files.newBufferedReader(Paths.get(path), Charset.defaultCharset());
-            errorMessages = new HashMap<String, String>();
-            String line;
-            do {
-                do {
-                    line = reader.readLine();
-                } while (line != null && line.equals(""));
-                if (line != null) {
-                    String constraintName = line;
-                    line = reader.readLine();
-                    if (line != null && !line.equals("")) {
-                        errorMessages.put(constraintName, line);
-                    }
-                }
-            } while (line != null);
-            errorMessageFileName = path;
-            reader.close();
-        }
-    }
-    
     public static void loadErrorMessageFile() throws IOException {
         loadErrorMessageFile(DEFAULT_ERROR_MESSAGE_FILE_NAME);
     }
     
-    public String getErrorMessage(String constraintName) {
-        String errorMessage = errorMessages == null? null: 
-            errorMessages.get(constraintName);
+    public static void loadErrorMessageFile(String path) throws IOException {
+        if (path == null) {
+            clearErrorMessages();
+        } else if (path != errorMessageFileName) {
+            loadErrorMessageFile(Files.newInputStream(Paths.get(path)));
+            errorMessageFileName = path;
+        }
+    }
+
+    private static void loadErrorMessageFile(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                inputStream, Charset.defaultCharset()));
+        clearErrorMessages();
+        String line;
+        do {
+            do {
+                line = reader.readLine();
+            } while (line != null && line.equals(""));
+            if (line != null) {
+                String constraintName = line;
+                line = reader.readLine();
+                if (line != null && !line.equals("")) {
+                    putErrorMessage(constraintName, line);
+                }
+            }
+        } while (line != null);
+        reader.close();
+    }
+    
+    public static void clearErrorMessages() {
+        errorMessageFileName = null;
+        errorMessages = new HashMap<String, String>();
+    }
+    
+    public static void putErrorMessage(String constraintName, String errorMessage) {
+        errorMessages.put(constraintName, errorMessage);
+    }
+    
+    public static String getErrorMessage(String constraintName) {
+        String errorMessage = errorMessages.get(constraintName);
         return errorMessage == null? constraintName: 
             errorMessage + " (" + constraintName + ")";
     }
@@ -75,7 +89,8 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
     }
     
     public String getErrorMessage() {
-        return getErrorMessage(this.constraintName);
+        return "[" + this.getLine() + ":" + this.getColumn() + "] " + 
+                getErrorMessage(this.constraintName);
     }
     
     public ParsedElement getViolatingElement() {
@@ -96,8 +111,7 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
     
     @Override
     public String toString() {
-        return this.getErrorMessage() + " in " + this.getFileName() + 
-            " at line " + this.getLine() + ", column " + this.getColumn();
+        return this.getFileName() + this.getErrorMessage();
     }
     
     @Override
