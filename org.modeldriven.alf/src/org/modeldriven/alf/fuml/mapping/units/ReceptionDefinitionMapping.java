@@ -20,6 +20,8 @@ import org.modeldriven.alf.syntax.units.ReceptionDefinition;
 
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Parameter;
+import org.modeldriven.alf.uml.Property;
 import org.modeldriven.alf.uml.Reception;
 import org.modeldriven.alf.uml.Signal;
 
@@ -55,10 +57,22 @@ public class ReceptionDefinitionMapping extends MemberMapping {
                 } else {
                     signal = 
                         (Signal)((SignalDefinitionMapping)mapping).getClassifier();
-                 }
+                }
             }
         }
         reception.setSignal(signal);
+        
+        for (Property attribute: signal.getAttribute()) {
+            Parameter parameter = this.create(Parameter.class);
+            parameter.setName(attribute.getName());
+            parameter.setDirection("in");
+            parameter.setType(attribute.getType());
+            parameter.setLower(attribute.getLower());
+            parameter.setUpper(attribute.getUpper());
+            parameter.setIsOrdered(attribute.getIsOrdered());
+            parameter.setIsUnique(attribute.getIsUnique());
+            reception.addOwnedParameter(parameter);
+        }
     }
     
     @Override
