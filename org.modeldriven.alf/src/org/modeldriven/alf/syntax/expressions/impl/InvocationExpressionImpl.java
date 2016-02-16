@@ -11,7 +11,6 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ExpressionStatement;
@@ -249,7 +248,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	protected Boolean deriveIsSignal() {
         InvocationExpression self = this.getSelf();
         ElementReference referent = self.getReferent();
-        return referent != null && referent.getImpl().isSignal();
+        return referent != null && referent.getImpl().isReception();
 	}
 	
     /**
@@ -381,28 +380,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         if (referent == null) {
             referent = this.getSelf().getReferent();
         }
-        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
-        if (referent != null) {
-            if (referent.getImpl().isBehavior() || referent.getImpl().isOperation()) {
-                parameters = referent.getImpl().getParameters();
-            } else if (referent.getImpl().isAssociationEnd()) {
-                ElementReference association = referent.getImpl().getAssociation();
-                String referentName = referent.getImpl().getName();
-                for (ElementReference property: association.getImpl().getAssociationEnds()) {
-                    if (!property.getImpl().getName().equals(referentName)) {
-                        FormalParameter parameter = parameterFromProperty(property);
-                        parameter.setLower(1);
-                        parameter.setUpper(1);
-                        parameters.add(parameter);
-                    }
-                }
-            } else {
-                 for (ElementReference property: referent.getImpl().getAttributes()) {
-                    parameters.add(parameterFromProperty(property));
-                }
-            }
-        }
-        return parameters;
+        return referent == null? new ArrayList<FormalParameter>(): 
+            referent.getImpl().getEffectiveParameters();
     }
 
     // Returns the number of parameters, excluding return parameters.
@@ -421,17 +400,6 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         return n;
     }
     
-    protected static FormalParameter parameterFromProperty(ElementReference property) {
-        ElementReferenceImpl propertyImpl = property.getImpl();
-        FormalParameter parameter = new FormalParameter();
-        parameter.setName(propertyImpl.getName());
-        parameter.setType(propertyImpl.getType());
-        parameter.setLower(propertyImpl.getLower());
-        parameter.setUpper(propertyImpl.getUpper());
-        parameter.setDirection("in");
-        return parameter;
-    }
-
 	/**
 	 * The assignments after an invocation expression are the same as those
 	 * after the tuple of the expression.
@@ -511,58 +479,42 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     
     public ElementReference resolveOverloading(Collection<ElementReference> referents) {
         InvocationExpression self = this.getSelf();
-        ElementReference signal = null;
-        List<ElementReference> operations = new ArrayList<ElementReference>();
+        List<ElementReference> features = new ArrayList<ElementReference>();
         for (ElementReference referent: referents) {
-            if (referent.getImpl().isReception()) {
-                // NOTE: If the feature is a reception, then the referent should be the
-                // signal being received, not the reception itself.
-                referent = referent.getImpl().getSignal();
-            }
             if (self.getImpl().isCompatibleWith(referent)) {
-                if (referent.getImpl().isOperation()) {
-                    if (signal != null) {
-                        return null;
-                    }
-                    operations.add(referent);
-                } else if (referent.getImpl().isSignal()) {
-                    if (signal != null || operations.size() > 0) {
-                        return null;
-                    }
-                    signal = referent;
-                }
+                features.add(referent);
             }
         }
-        return signal != null? signal: selectMostSpecificOperation(operations);
+        return selectMostSpecific(features);
     }
     
-    public static ElementReference selectMostSpecificOperation(List<ElementReference> operations) {
-        ElementReference selectedOperation = null;
-        if (operations.size() > 0) {
-            for (ElementReference operation1: operations) {
+    public static ElementReference selectMostSpecific(List<ElementReference> features) {
+        ElementReference selectedFeature = null;
+        if (features.size() > 0) {
+            for (ElementReference feature1: features) {
                 boolean isMostSpecific = true;
-                for (ElementReference operation2: operations) {
-                    if (!operation1.equals(operation2) && !isMoreSpecificThan(operation1, operation2)) {
+                for (ElementReference feature2: features) {
+                    if (!feature1.equals(feature2) && !isMoreSpecificThan(feature1, feature2)) {
                         isMostSpecific = false;
                         break;
                     }
                 }
                 if (isMostSpecific) {
-                    if (selectedOperation != null) {
+                    if (selectedFeature != null) {
                         return null;
                     }
-                    selectedOperation = operation1;
+                    selectedFeature = feature1;
                 }
             }
         }
-        return selectedOperation;
+        return selectedFeature;
     }
     
-    public static boolean isMoreSpecificThan(ElementReference operation1, ElementReference operation2) {
+    public static boolean isMoreSpecificThan(ElementReference feature1, ElementReference feature2) {
         List<FormalParameter> parameters1 = 
-                OperationDefinitionImpl.removeReturnParameter(operation1.getImpl().getParameters());
+                OperationDefinitionImpl.removeReturnParameter(feature1.getImpl().getEffectiveParameters());
         List<FormalParameter> parameters2 = 
-                OperationDefinitionImpl.removeReturnParameter(operation2.getImpl().getParameters());
+                OperationDefinitionImpl.removeReturnParameter(feature2.getImpl().getEffectiveParameters());
         if (parameters1.size() > parameters2.size()) {
             return false;
         } else {
@@ -582,8 +534,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
                     }
                 }
             }
-            FormalParameter returnParameter1 = operation1.getImpl().getReturnParameter();
-            FormalParameter returnParameter2 = operation2.getImpl().getReturnParameter();
+            FormalParameter returnParameter1 = feature1.getImpl().getReturnParameter();
+            FormalParameter returnParameter2 = feature2.getImpl().getReturnParameter();
             return returnParameter1 == null ||
                     returnParameter2 != null &&
                     new AssignableTypedElementImpl(returnParameter1.getImpl()).isAssignableFrom(

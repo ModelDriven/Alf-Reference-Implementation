@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -19,7 +19,8 @@ import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.OperationDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.PropertyDefinitionMapping;
-import org.modeldriven.alf.fuml.mapping.units.SignalDefinitionMapping;
+import org.modeldriven.alf.fuml.mapping.units.ReceptionDefinitionMapping;
+import org.modeldriven.alf.fuml.mapping.units.SignalReceptionDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
@@ -197,9 +198,10 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                 if (mapping instanceof OperationDefinitionMapping) {
                     element = 
                         ((OperationDefinitionMapping) mapping).getOperation();
-                } else if (mapping instanceof SignalDefinitionMapping) {
-                    element = ((SignalDefinitionMapping) mapping).getSignal();
-                    
+                } else if (mapping instanceof ReceptionDefinitionMapping) {
+                    element = ((ReceptionDefinitionMapping) mapping).getReception().getSignal();
+                } else if (mapping instanceof SignalReceptionDefinitionMapping) {
+                    element = ((SignalReceptionDefinitionMapping) mapping).getSignal();                    
                 } else if (mapping instanceof ActivityDefinitionMapping) {
                     element = 
                         ((ActivityDefinitionMapping) mapping).getBehavior();

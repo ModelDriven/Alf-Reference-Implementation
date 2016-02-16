@@ -10,63 +10,7 @@ class Expressions_Overloading specializes Test {
 		
 		@Create public run(in tester: Tester[0..1]) {
 				super(tester);
-				
-				this.test(a, s, i, n, j, b1, b2, b3, b_i, b_n, c);
-				
-				AssertEqual("a.s1", a.s1, "test1");
-				AssertEqual("a.i1", a.i1, 1);
-				AssertEqual("a.n1", a.n1, 5);
-				
-				AssertEqual("a.s2", a.s2, "test4");
-				AssertEqual("a.i2", a.i2, 7);
-				AssertEqual("a.n2", a.n2, 6);
-				
-				AssertEqual("a.s3", a.s3, "test6");
-				AssertEqual("a.i3", a.i3, 7);
-				AssertEqual("a.n3", a.n3, 6);
-				
-				AssertEqual("j", j, 1);
-				
-				AssertEqual("s", s, "test4");
-				AssertEqual("i", i, 7);
-				AssertEqual("n", n, 6);
-				
-				AssertEqual("b1.s", b1.s, null);
-				AssertEqual("b1.i", b1.i, 0);
-				AssertEqual("b1.n", b1.n, 1);
-				AssertEqual("b2.s", b2.s, null);
-				AssertEqual("b2.i", b2.i, 2);
-				AssertEqual("b2.n", b2.n, 1);
-				AssertEqual("b3.s", b3.s, null);
-				AssertEqual("b3.i", b2.i, 2);
-				AssertEqual("b3.i", b3.i, 0);
-				AssertEqual("b3.n", b3.n, 3);
-				
-				AssertEqual("b_i", b_i, 0);
-				AssertEqual("b_n", b_n, 1);
-				
-				AssertEqual("c.s1", c.s1, "test1");
-				AssertEqual("c.i1", c.i1, 1);
-				AssertEqual("c.n1", c.n1, 5);
-				
-				AssertEqual("c.s2", c.s2, "test4");
-				AssertEqual("c.i2", c.i2, 7);
-				AssertEqual("c.n2", c.n2, 6);
-				
-				AssertEqual("c.s3", c.s3, "test6");
-				AssertEqual("c.i3", c.i3, 7);
-				AssertEqual("c.n3", c.n3, 6);
-				
-				AssertEqual("c.j", c.j, 1);
-				
-				AssertEqual("c.s", c.s, "test4");
-				AssertEqual("c.i", c.i, 7);
-				AssertEqual("c.n", c.n, 6);
-				
-				AssertEqual("c.a", c.a, null);
-				AssertEqual("c.c", c.c, c);
-				
-				this.done();
+				new TestRunner(this).Start();
 		}
 		
 		// Supporting declarations ************************************
@@ -170,8 +114,16 @@ class Expressions_Overloading specializes Test {
 				public setA(in c: C) { this.c = c; }
 				
 	  }
+	  
+	  signal set { public x: any; }
     
-    class C specializes A, B {
+    active class C specializes A, B {
+    
+    		private testRunner: TestRunner;
+    
+    		@Create C(in testRunner: TestRunner) { 
+    			this.testRunner = testRunner; 
+    		}
     
 		    public set(in s: String) { }
 		    public set(in i: Integer) { }
@@ -188,6 +140,11 @@ class Expressions_Overloading specializes Test {
 		    public setGet1(inout s: String, in n: Natural) { }
 		    public setGet2(in s: String, inout i: Integer) { }
 		    public setGet2(in s: String, inout n: Natural) { }
+		    
+		    public b: Boolean = false;
+		    
+		    receive signal set { public b: Boolean; }
+		    receive Expressions_Overloading::set;
 
     		public test() {
     		    super.set("test1");
@@ -216,44 +173,121 @@ class Expressions_Overloading specializes Test {
 		        super.setA(this);
     		}
     		
+    } do {    
+    		accept (s: set);
+    		this.b = s.b;
+    		
+    		this.test();
+    		
+    		this.testRunner.Continue();    		
     }
-    
-    
     
     // ************************************************************
     
-    public test(
-    		out a: A,
-    		out s: String, out i: Integer, out n: Natural,
-    		out j: Integer,
-    		out b1: B, out b2: B, out b3: B,
-    		out b_i: Integer, out b_n: Natural,
-    		out c: C
-    ) {
+    active class TestRunner {
     
-    		a = new A();
-    		a.test();
+    		private outer: Test;
     		
-		    j = a.get1();
-		            		
-        a.get2(s);
-        a.get2(i);
-        a.get2(n);
-        
-        a.setGet1(s, +8);
-        a.setGet1(s, 9);
-        
-        a.setGet2("test5", i);
-        a.setGet2("test6", n);
-        
-        b1 = new B::create();
-        b2 = new B::create(+2);
-        b3 = new B::create(3);
-       
-        new B::get(b_i);
-        new B::get(b_n);
-        
-        c = new C();
-        c.test();
-    }
+    		@Create TestRunner(in outer: Test) {
+    				this.outer = outer;
+    		}
+    
+    		receive signal Start { }
+    		receive signal Continue { }
+    
+		    public test(
+		    		out a: A,
+		    		out s: String, out i: Integer, out n: Natural,
+		    		out j: Integer,
+		    		out b1: B, out b2: B, out b3: B,
+		    		out b_i: Integer, out b_n: Natural,
+		    		out c: C
+		    ) {
+		    
+		    		a = new A();
+		    		a.test();
+		    		
+				    j = a.get1();
+				            		
+		        a.get2(s);
+		        a.get2(i);
+		        a.get2(n);
+		        
+		        a.setGet1(s, +8);
+		        a.setGet1(s, 9);
+		        
+		        a.setGet2("test5", i);
+		        a.setGet2("test6", n);
+		        
+		        b1 = new B::create();
+		        b2 = new B::create(+2);
+		        b3 = new B::create(3);
+		       
+		        new B::get(b_i);
+		        new B::get(b_n);
+		        
+		        c = new C(this);
+		        c.set(true);
+		    }
+    } do {
+    		accept(Start);
+				this.test(a, s, i, n, j, b1, b2, b3, b_i, b_n, c);
+				accept(Continue);
+				
+				AssertEqual("a.s1", a.s1, "test1");
+				AssertEqual("a.i1", a.i1, 1);
+				AssertEqual("a.n1", a.n1, 5);
+				
+				AssertEqual("a.s2", a.s2, "test4");
+				AssertEqual("a.i2", a.i2, 7);
+				AssertEqual("a.n2", a.n2, 6);
+				
+				AssertEqual("a.s3", a.s3, "test6");
+				AssertEqual("a.i3", a.i3, 7);
+				AssertEqual("a.n3", a.n3, 6);
+				
+				AssertEqual("j", j, 1);
+				
+				AssertEqual("s", s, "test4");
+				AssertEqual("i", i, 7);
+				AssertEqual("n", n, 6);
+				
+				AssertEqual("b1.s", b1.s, null);
+				AssertEqual("b1.i", b1.i, 0);
+				AssertEqual("b1.n", b1.n, 1);
+				AssertEqual("b2.s", b2.s, null);
+				AssertEqual("b2.i", b2.i, 2);
+				AssertEqual("b2.n", b2.n, 1);
+				AssertEqual("b3.s", b3.s, null);
+				AssertEqual("b3.i", b2.i, 2);
+				AssertEqual("b3.i", b3.i, 0);
+				AssertEqual("b3.n", b3.n, 3);
+				
+				AssertEqual("b_i", b_i, 0);
+				AssertEqual("b_n", b_n, 1);
+				
+				AssertEqual("c.s1", c.s1, "test1");
+				AssertEqual("c.i1", c.i1, 1);
+				AssertEqual("c.n1", c.n1, 5);
+				
+				AssertEqual("c.s2", c.s2, "test4");
+				AssertEqual("c.i2", c.i2, 7);
+				AssertEqual("c.n2", c.n2, 6);
+				
+				AssertEqual("c.s3", c.s3, "test6");
+				AssertEqual("c.i3", c.i3, 7);
+				AssertEqual("c.n3", c.n3, 6);
+				
+				AssertEqual("c.j", c.j, 1);
+				
+				AssertEqual("c.s", c.s, "test4");
+				AssertEqual("c.i", c.i, 7);
+				AssertEqual("c.n", c.n, 6);
+				AssertTrue("c.b", c.b);
+				
+				AssertEqual("c.a", c.a, null);
+				AssertEqual("c.c", c.c, c);
+				
+				this.outer.done();
+		}
 }

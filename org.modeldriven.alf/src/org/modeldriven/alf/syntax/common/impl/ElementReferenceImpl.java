@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -149,7 +149,53 @@ public abstract class ElementReferenceImpl {
     public abstract Collection<ElementReference> getRedefinedElements();
     public abstract ElementReference getSignal();
     public abstract ElementReference getContext();
+    
+    public List<FormalParameter> getEffectiveParameters() {
+        if (this.isBehavior() || this.isOperation()) {
+            return this.getParameters();
+        } else {
+            List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+            if (this.isReception()){
+                for (ElementReference property: this.getSignal().getImpl().getAttributes()) {
+                    parameters.add(parameterFromProperty(property));
+                }
+            } else if (this.isDataType() || this.isSignal()){
+                for (ElementReference property: this.getAttributes()) {
+                    parameters.add(parameterFromProperty(property));
+                }
+            } else if (this.isAssociation()) {
+                for (ElementReference property: this.getAssociationEnds()) {
+                    FormalParameter parameter = parameterFromProperty(property);
+                    parameter.setLower(1);
+                    parameter.setUpper(1);
+                    parameters.add(parameter);
+                }
+            } else if (this.isAssociationEnd()) {
+                ElementReference association = this.getAssociation();
+                String referentName = this.getName();
+                for (ElementReference property: association.getImpl().getAssociationEnds()) {
+                    if (!property.getImpl().getName().equals(referentName)) {
+                        FormalParameter parameter = parameterFromProperty(property);
+                        parameter.setLower(1);
+                        parameter.setUpper(1);
+                        parameters.add(parameter);
+                    }
+                }
+            }
+            return parameters;
+        }
+    }
 
+    public static FormalParameter parameterFromProperty(ElementReference property) {
+        ElementReferenceImpl propertyImpl = property.getImpl();
+        FormalParameter parameter = new FormalParameter();
+        parameter.setName(propertyImpl.getName());
+        parameter.setType(propertyImpl.getType());
+        parameter.setLower(propertyImpl.getLower());
+        parameter.setUpper(propertyImpl.getUpper());
+        parameter.setDirection("in");
+        return parameter;
+    }
     
     public QualifiedName getQualifiedName() {
         QualifiedName qualifiedName;

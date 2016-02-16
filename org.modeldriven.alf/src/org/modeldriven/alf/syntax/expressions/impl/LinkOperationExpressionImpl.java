@@ -181,23 +181,19 @@ public class LinkOperationExpressionImpl
 	        referent = this.getSelf().getReferent();
 	    }
         LinkOperationExpression self = this.getSelf();
-        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
         if (self.getIsClear()) {
+            List<FormalParameter> parameters = new ArrayList<FormalParameter>();
             FormalParameter parameter = new FormalParameter();
             parameter.setDirection("in");
             parameter.setLower(1);
             parameter.setUpper(1);
             parameters.add(parameter);
+            return parameters;
         } else if (referent != null) {
-            for (ElementReference property: referent.getImpl().getAssociationEnds()) {
-                FormalParameter parameter = parameterFromProperty(property);
-                // NOTE: Arguments for a link operation have multiplicity 1..1.
-                parameter.setLower(1);
-                parameter.setUpper(1);
-                parameters.add(parameter);
-            }
+            return referent.getImpl().getEffectiveParameters();
+        } else {
+            return new ArrayList<FormalParameter>();
         }
-		return parameters;
 	} // parameterElements
 	
 	@Override
