@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -24,7 +24,7 @@ import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
-
+import org.modeldriven.alf.uml.BehavioralFeature;
 import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.Element;
@@ -33,6 +33,7 @@ import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
 import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageableElement;
+import org.modeldriven.alf.uml.Parameter;
 import org.modeldriven.alf.uml.ParameterableElement;
 import org.modeldriven.alf.uml.Signal;
 import org.modeldriven.alf.uml.SignalEvent;
@@ -377,7 +378,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                            (InstanceSpecification)reference.getClass().newInstance();
                    for (Classifier classifier: 
                        ((InstanceSpecification)reference).getClassifier()) {
-                       Classifier newClassifier = (Classifier)getNewReference(
+                       Classifier newClassifier = (Classifier)getNewElement(
                                instantiation, classifier, templateParameters, templateArguments);
                        if (newClassifier == null) {
                            newInstanceSpecification.addClassifier(classifier);
@@ -393,7 +394,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                }
            } else if (reference instanceof SignalEvent) {
                Signal signal = (Signal)((SignalEvent) reference).getSignal();
-               Signal newSignal = (Signal)getNewReference(
+               Signal newSignal = (Signal)getNewElement(
                        instantiation, signal, templateParameters, templateArguments);
                if (newSignal != null) {
                    try {
@@ -406,7 +407,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                    }
                }
            } else if (reference instanceof NamedElement) {
-               newReference = getNewReference(
+               newReference = getNewElement(
                        instantiation,
                        (NamedElement)reference, 
                        templateParameters, templateArguments);
@@ -418,65 +419,24 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            }
        }
        
-       /*
-       TemplateSignature instantiationSignature = 
-               instantiation.getOwnedTemplateSignature();
-       TemplateSignature originalSignature = 
-               template.getOwnedTemplateSignature();
-       List<TemplateParameter> instantiationParameters =
-               instantiationSignature.getOwnedParameter();
-       List<TemplateParameter> originalParameters =
-               originalSignature.getOwnedParameter();
-       references.add(instantiationSignature);
-       newReferences.add(originalSignature);
-       for (int i = 0; i < instantiationParameters.size(); i++) {
-           references.add(instantiationParameters.get(i));
-           newReferences.add(originalParameters.get(i));
-       }
-       */
-       
        instantiation.replaceAll(references, newReferences);
    }
    
-   private static Element getNewReference(
+   private static Element getNewElement(
            TemplateableElement instantiation,
            NamedElement reference,
            List<ElementReference> templateParameters,
            List<ElementReference> templateArguments) {
-       /*
-       QualifiedName qualifiedName = 
-               makeQualifiedName((NamedElement)reference);
-       qualifiedName = qualifiedName.getImpl().updateBindings(
-               templateParameters, templateArguments);
-       for (ElementReference referent: qualifiedName.getReferent()) {
-           Element element = referent.getImpl().getUml();
-           if (element != null && !element.equals(reference) && 
-                   isSameKind(element, reference)) {
-               return element;
-           }
-       }
-       */
-       // System.out.println("[getNewReference] reference=" + reference);
-       for (ElementReference referent: getNewReferences(
-               instantiation, reference, templateParameters, templateArguments)) {
-           Element element = referent.getImpl().getUml();
-           if (element != null && !element.equals(reference) && 
-                   isSameKind(element, reference)) {
-               // System.out.println("[getNewReference] element=" + element);
-               return element;
-           }
-       }
-       return null;
+       ElementReference newReference = getNewReference(instantiation, reference, templateParameters, templateArguments);
+       return newReference == null? null: newReference.getImpl().getUml();
    }
    
-   private static Collection<ElementReference> getNewReferences(
+   private static ElementReference getNewReference(
            TemplateableElement instantiation,
            NamedElement reference,
            List<ElementReference> templateParameters,
            List<ElementReference> templateArguments) {
-       Collection<ElementReference> newReferences = 
-               new ArrayList<ElementReference>();
-       String name = reference.getName();
+       ElementReference newReference = null;
        org.modeldriven.alf.uml.TemplateBinding templateBinding = 
                ExternalElementReferenceImpl.getTemplateBinding(reference);
        if (templateBinding == null) {
@@ -485,18 +445,26 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                    (Namespace)((TemplateParameter)owner).getSignature().getTemplate():
                    reference.getNamespace();
            if (namespace != null) {
-               for (ElementReference namespaceReference: getNewReferences(
-                       instantiation, namespace, templateParameters, templateArguments)) {
+               ElementReference namespaceReference = getNewReference(
+                       instantiation, namespace, templateParameters, templateArguments);
+               if (namespaceReference != null) {
                    NamespaceDefinition namespaceDefinition = 
                            namespaceReference.getImpl().asNamespace();
                    if (namespaceDefinition != null) {
-                       for (Member member: namespaceDefinition.getImpl().
-                               resolveVisible(name, null, false)) {
+                       String name = reference.getName();
+                       for (Member member: namespaceDefinition.getOwnedMember()) {
                            ElementReference referent = member.getImpl().getReferent();
-                           if (referent.getImpl().isClassifierTemplateParameter()) {
-                               referent = referent.getImpl().getParameteredElement();
+                           if (name == null && referent.getImpl().getName() == null ||
+                                   name != null && name.equals(referent.getImpl().getName())) {
+                               if (referent.getImpl().isClassifierTemplateParameter()) {
+                                   referent = referent.getImpl().getParameteredElement();
+                               }
+                               Element element = referent.getImpl().getUml();
+                               if (element != null && !element.equals(reference) && 
+                                       isSameKind(element, reference, instantiation, templateParameters, templateArguments)) {
+                                   newReference = referent;
+                               }
                            }
-                           newReferences.add(referent);
                        }
                    }
                }
@@ -512,91 +480,96 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            List<ElementReference> actuals = new ArrayList<ElementReference>();
            for (org.modeldriven.alf.uml.TemplateParameterSubstitution parameterSubstitution: 
                templateBinding.getParameterSubstitution()) {
-               formals.add(ElementReferenceImpl.
-                       makeElementReference(parameterSubstitution.getFormal()));
-               ElementReference actual = ElementReferenceImpl.
-                       makeElementReference(parameterSubstitution.getActual());
-               for (int i = 0; i < templateParameters.size(); i++) {
-                   if (actual.getImpl().equals(
-                           templateParameters.get(i).getImpl().getParameteredElement())) {
-                       actual = i >= templateArguments.size()? null: 
-                               templateArguments.get(i);
-                       break;
+               formals.add(
+                       ElementReferenceImpl.makeElementReference(parameterSubstitution.getFormal()));
+               actuals.add(makeSubstitution(
+                       ElementReferenceImpl.makeElementReference(parameterSubstitution.getActual()),
+                       templateParameters, templateArguments));
+           }
+           ElementReference templateReference = 
+                   getNewReference(instantiation, template, templateParameters, templateArguments);
+           if (templateReference == null) {
+               newReference = QualifiedNameImpl.getBoundElement(
+                       ElementReferenceImpl.makeElementReference(template), formals, actuals);
+           } else {
+               newReference = QualifiedNameImpl.getBoundElement(
+                       templateReference, formals, actuals);
+           }
+       }
+       return newReference;
+   }
+   
+   private static boolean isSameKind(
+           Element element1, Element element2,
+           TemplateableElement instantiation,
+           List<ElementReference> templateParameters,
+           List<ElementReference> templateArguments) {
+       if (element1.getClass() != element2.getClass()) {
+           return false;
+       } else if (!(element1 instanceof BehavioralFeature)){
+           return true;
+       } else {
+           List<Parameter> parameters1 = ((BehavioralFeature)element1).getOwnedParameter();
+           List<Parameter> parameters2 = ((BehavioralFeature)element2).getOwnedParameter();
+           if (parameters1.size() != parameters2.size()) {
+               return false;
+           } else {
+               for (int i = 0; i < parameters1.size(); i++) {
+                   Parameter parameter1 = parameters1.get(i);
+                   Parameter parameter2 = parameters2.get(i);
+                   if (
+                       parameter1.getName() == null && parameter2.getName() != null ||
+                       parameter1.getName() != null && !parameter1.getName().equals(parameter2.getName()) ||
+                       !parameter1.getDirection().equals(parameter2.getDirection()) ||
+                       parameter1.getLower() != parameter2.getLower() ||
+                       parameter1.getUpper() != parameter2.getUpper() ||
+                       parameter1.getIsOrdered() != parameter2.getIsOrdered() ||
+                       parameter1.getIsUnique() != parameter2.getIsUnique() ||
+                       !matches(parameter1.getType(), parameter2.getType(), 
+                               instantiation, templateParameters, templateArguments)
+                   ) {
+                       return false;
                    }
                }
-               actuals.add(actual);
-           }
-           Collection<ElementReference> templateReferences = 
-                   getNewReferences(instantiation, template, templateParameters, templateArguments);
-           if (templateReferences.isEmpty()) {
-               newReferences.add(QualifiedNameImpl.getBoundElement(
-                       ElementReferenceImpl.makeElementReference(template), formals, actuals));
-           } else {
-               for (ElementReference templateReferent: getNewReferences(
-                       instantiation, template, templateParameters, templateArguments)) {
-                   newReferences.add(QualifiedNameImpl.getBoundElement(
-                           templateReferent, formals, actuals));
-               }
+               return true;
            }
        }
-       return newReferences;
    }
    
-   /**
-    * Return a qualified name for the given element, including template
-    * bindings. All templates involved must be named elements.
-    */
-   /*
-   private static QualifiedName makeQualifiedName(
-           NamedElement element) {
-       QualifiedName qualifiedName;
-       org.modeldriven.alf.uml.TemplateBinding templateBinding = 
-               ExternalElementReferenceImpl.getTemplateBinding(element);
-       
-       if (templateBinding == null) {
-           Element owner = element.getOwner();
-           Namespace namespace = owner instanceof TemplateParameter?
-                   (Namespace)((TemplateParameter)owner).getSignature().getTemplate():
-                   element.getNamespace();
-                   
-           qualifiedName = namespace == null? 
-                   new QualifiedName(): makeQualifiedName(namespace).getImpl().copy().getSelf();
-           NameBinding nameBinding = new NameBinding();
-           nameBinding.getImpl().setExactName(element.getName());
-           qualifiedName.addNameBinding(nameBinding);
-           
-       } else {
-           qualifiedName = makeQualifiedName(
-                   (NamedElement)templateBinding.getSignature().getTemplate());
-           List<NameBinding> nameBindings = qualifiedName.getNameBinding();
-           NameBinding nameBinding = nameBindings.get(nameBindings.size() - 1);
-           NamedTemplateBinding binding = new NamedTemplateBinding();
-           nameBinding.setBinding(binding);
-           for (org.modeldriven.alf.uml.TemplateParameterSubstitution parameterSubstitution: 
-               templateBinding.getParameterSubstitution()) {
-               TemplateParameterSubstitution substitution = new 
-                       TemplateParameterSubstitution();
-               substitution.setParameterName(
-                       ((NamedElement)parameterSubstitution.getFormal().
-                               getParameteredElement()).getName());
-               NamedElement actual = (NamedElement)parameterSubstitution.getActual();
-               substitution.setArgumentName(actual == null? new QualifiedName():
-                       makeQualifiedName(actual));
-               binding.addSubstitution(substitution);
+   private static boolean matches(
+           NamedElement element1, NamedElement element2,
+           TemplateableElement instantiation,
+           List<ElementReference> templateParameters,
+           List<ElementReference> templateArguments) {
+       if (element1 != null) {
+           // NOTE: This accounts for possible deferred template bindings.
+           ElementReference reference = ElementReferenceImpl.makeElementReference(element1);
+           element1 = reference == null? null: (NamedElement)reference.getImpl().getUml();
+       }
+       if (element2 != null) {
+           ElementReference reference = getNewReference(instantiation, element2, templateParameters, templateArguments);
+           if (reference == null) {
+               reference = ElementReferenceImpl.makeBoundReference(element2);
+           }
+           reference = makeSubstitution(reference, templateParameters, templateArguments);
+           element2 = reference == null? null: (NamedElement)reference.getImpl().getUml();
+       }
+       return element1 == null && element2 == null ||
+              element1 != null && element1.equals(element2);
+   }
+   
+   private static ElementReference makeSubstitution(
+           ElementReference reference,
+           List<ElementReference> templateParameters,
+           List<ElementReference> templateArguments) {
+       for (int i = 0; i < templateParameters.size(); i++) {
+           if (reference.getImpl().equals(
+                   templateParameters.get(i).getImpl().getParameteredElement())) {
+               return i >= templateArguments.size()? null: 
+                       templateArguments.get(i);
            }
        }
-       
-       System.out.println("[makeQualifiedName] element=" + element);
-       System.out.println("[makeQualifiedName] qualifiedName=" + qualifiedName.getPathName());
-       qualifiedName.getImpl().setCurrentScope(RootNamespace.getRootScope());
-       qualifiedName.getImpl().setIsVisibleOnly(false);
-       return qualifiedName;
-   }
-   */
-   
-   private static boolean isSameKind(Element element1, Element element2) {
-       // TODO: Allow for overloading of operations.
-       return element1.getClass() == element2.getClass();
+       return reference;
    }
 
 }

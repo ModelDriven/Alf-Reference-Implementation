@@ -194,7 +194,8 @@ public class InstanceCreationExpressionImpl
                                 ElementReference implOperationReferent = 
                                         implConstructor.getImpl().getOperationReferent();
 
-                                if (implOperationReferent != null) {
+                                if (implOperationReferent != null && 
+                                        implOperationReferent.getImpl().isConstructor()) {
                                     operationReferent = implOperationReferent;
                                 }                            
                             }
