@@ -41,10 +41,7 @@ public class Element implements org.modeldriven.alf.uml.Element {
         if (base == null) {
             return null;
         }
-        Element newInstance = (Element)factory.newInstanceFor(base, 
-        		org.eclipse.uml2.uml.Behavior.class,
-        		org.eclipse.uml2.uml.Class.class, 
-        		org.eclipse.uml2.uml.NamedElement.class);
+        Element newInstance = (Element)factory.newInstanceFor(base);
         if (newInstance != null) {
             newInstance.setBase(base);
         }

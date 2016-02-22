@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,6 +12,22 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public abstract class ElementFactory {
+    
+    private Class<?> behaviorClass = null;
+    private Class<?> classClass = null;
+    private Class<?> classifierClass = null;
+    private Class<?> namedElementClass = null;
+    
+    public ElementFactory(
+            Class<?> behaviorClass, 
+            Class<?> classClass, 
+            Class<?> classifierClass,
+            Class<?> namedElementClass) {
+        this.behaviorClass = behaviorClass;
+        this.classClass = classClass;
+        this.classifierClass = classifierClass;
+        this.namedElementClass = namedElementClass;
+    }
     
     @SuppressWarnings("unchecked")
     public <T extends org.modeldriven.alf.uml.Element> T newInstance(Class<T> class_) {
@@ -27,18 +43,15 @@ public abstract class ElementFactory {
     }
     
     public Element newInstanceFor(Object base) {
-        return this.newInstanceFor(base.getClass().getSimpleName(), base);
-    }
-    
-    public Element newInstanceFor(Object base, Class<?> behaviorClass, Class<?> classClass, Class<?> namedElementClass) {
         Element newInstance = null;
         try {
             newInstance = (Element)this.createInstanceFor(base.getClass().getSimpleName(), base);
         } catch (Exception e) {
             final String className =
-                    behaviorClass.isInstance(base)? "Behavior":
-                    classClass.isInstance(base)? "Class":
-                    namedElementClass.isInstance(base)? "NamedElement":
+                    this.behaviorClass.isInstance(base)? "Behavior":
+                    this.classClass.isInstance(base)? "Class":
+                    this.classifierClass.isInstance(base)? "Classifier":
+                    this.namedElementClass.isInstance(base)? "NamedElement":
                     "Element";
             newInstance = (Element)this.newInstanceFor(className, base);
         }
