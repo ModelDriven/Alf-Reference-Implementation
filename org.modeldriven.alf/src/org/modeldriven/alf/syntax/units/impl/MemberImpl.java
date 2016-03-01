@@ -86,12 +86,16 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         return this.annotation;
     }
 
-    public void setAnnotation(Collection<StereotypeAnnotation> annotation) {
-        this.annotation = annotation;
+    public void setAnnotation(Collection<StereotypeAnnotation> annotations) {
+        this.annotation = annotations;
+        for (StereotypeAnnotation annotation: annotations) {
+            annotation.getImpl().setOwningMember(this.getSelf());
+        }
     }
 
     public void addAnnotation(StereotypeAnnotation annotation) {
         this.annotation.add(annotation);
+        annotation.getImpl().setOwningMember(this.getSelf());
     }
 
     public Boolean getIsFeature() {
@@ -346,12 +350,19 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         return visibility != null && visibility.equals("private");
     }
     
-    public boolean hasAnnotation(String name) {
+    public Collection<StereotypeAnnotation> getAllAnnotations() {
         Member self = this.getSelf();
+        Collection<StereotypeAnnotation> annotations = self.getAnnotation();
         UnitDefinition subunit = self.getSubunit();
         NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
-        return hasAnnotation(name, this.getSelf().getAnnotation()) ||
-                definition != null && hasAnnotation(name, definition.getAnnotation());
+        if (definition != null) {
+            annotations.addAll(definition.getAnnotation());
+        }
+        return annotations;
+    }
+    
+    public boolean hasAnnotation(String name) {
+        return hasAnnotation(name, this.getAllAnnotations());
     }
     
     private static boolean hasAnnotation(String name, Collection<StereotypeAnnotation> annotations) {
@@ -363,8 +374,25 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         return false;
     }
     
+    public boolean isStereotyped(ElementReference stereotype) {
+        for (StereotypeAnnotation annotation: this.getAllAnnotations()) {
+            if (annotation.getImpl().isStereotype(stereotype)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean isTemplate() {
         return false;
+    }
+    
+    public boolean isProfile() {
+        return this.hasAnnotation("profile");
+    }
+    
+    public boolean isStereotype() {
+        return this.hasAnnotation("stereotype");
     }
     
     public boolean isCompletelyBound() {
@@ -402,10 +430,17 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         }
     }
     
+    // This is overridden for namespaces, which may be definitions of units.
     public NamespaceDefinition getOuterScope() {
         return this.getSelf().getNamespace();
     }
 
+    // This is valid for every kind of member other than a model namespace.
+    public ModelNamespace getModelScope() {
+        NamespaceDefinition outerScope = this.getOuterScope();
+        return outerScope == null? null: outerScope.getImpl().getModelScope();
+    }
+    
     public ElementReference getReferent() {
         Member self = this.getSelf();
         UnitDefinition subunit = self.getSubunit();

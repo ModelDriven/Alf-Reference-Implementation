@@ -1,3 +1,14 @@
 @ModelLibrary
+@profile
 package StandardProfile {
+	
+	@stereotype(Class)
+	public class Create { }
+	
+	@stereotype(Class)
+	public class Destroy {	}
+	
+	@stereotype(Package)
+	public class ModelLibrary { }
+	
 }

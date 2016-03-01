@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2012-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2012-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -77,7 +77,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean isProfile() {
-        return false;
+        SyntaxElement element = this.getSelf().getElement();
+        return element != null && element instanceof Member &&
+                ((Member)element).getImpl().isProfile();
     }
 
     @Override
@@ -163,7 +165,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean isStereotype() {
-        return false;
+        SyntaxElement element = this.getSelf().getElement();
+        return element != null && element instanceof Member &&
+                ((Member)element).getImpl().isStereotype();
     }
 
     @Override
@@ -358,8 +362,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public List<ElementReference> getOwnedMembers() {
         List<ElementReference> members = new ArrayList<ElementReference>();
-        if (this.isClassifier()) {
-            for (Member member: ((ClassifierDefinition)this.getSelf().getElement()).getOwnedMember()) {
+        if (this.isNamespace()) {
+            for (Member member: ((NamespaceDefinition)this.getSelf().getElement()).getOwnedMember()) {
                 members.add(member.getImpl().getReferent());
             }
         }
@@ -370,7 +374,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     public List<ElementReference> getMembers() {
         List<ElementReference> members = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
-            for (Member member: ((ClassifierDefinition)this.getSelf().getElement()).getMember()) {
+            for (Member member: ((NamespaceDefinition)this.getSelf().getElement()).getMember()) {
                 members.add(member.getImpl().getReferent());
             }
         }

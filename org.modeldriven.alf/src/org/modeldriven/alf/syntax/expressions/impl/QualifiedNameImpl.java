@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -714,6 +714,16 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         return template;
     }
 
+    public ElementReference getProfileReferent() {
+        for (ElementReference referent: this.getSelf().getReferent()) {
+            if (referent.getImpl().isProfile()) {
+                return referent;
+            }
+        }
+        return null;
+    }
+    
+
     public boolean isNamespaceReferent() {
         for (ElementReference referent: this.getSelf().getReferent()) {
             if (referent.getImpl().isNamespace()) {
@@ -724,12 +734,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
     }
     
     public boolean isProfileReferent() {
-        for (ElementReference referent: this.getSelf().getReferent()) {
-            if (referent.getImpl().isProfile()) {
-                return true;
-            }
-        }
-        return false;
+        return this.getProfileReferent() != null;
     }
     
     private void addReferentsTo(List<ElementReference> referents, 

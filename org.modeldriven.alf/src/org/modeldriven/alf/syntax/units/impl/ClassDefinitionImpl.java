@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -104,7 +104,12 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 	    // TODO: Allow stereotypes consistent with classes.
-		return super.annotationAllowed(annotation);
+		return super.annotationAllowed(annotation) ||
+		       // The following allows the non-standard annotation
+		       // of a class definition as defining a stereotype.
+		       annotation.getStereotypeName().getImpl().equals("stereotype") &&
+		       annotation.getNames() != null &&
+		       annotation.getNames().getName().size() == 1;
 	} // annotationAllowed
 
 	/**

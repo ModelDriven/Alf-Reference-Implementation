@@ -35,8 +35,10 @@ import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageableElement;
 import org.modeldriven.alf.uml.Parameter;
 import org.modeldriven.alf.uml.ParameterableElement;
+import org.modeldriven.alf.uml.Profile;
 import org.modeldriven.alf.uml.Signal;
 import org.modeldriven.alf.uml.SignalEvent;
+import org.modeldriven.alf.uml.Stereotype;
 import org.modeldriven.alf.uml.TemplateParameter;
 import org.modeldriven.alf.uml.TemplateableElement;
 
@@ -246,6 +248,16 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
             }
             return members;
         }
+    }
+    
+    @Override
+    public boolean isProfile() {
+        return this.getSelf().getUmlNamespace() instanceof Profile;
+    }
+    
+    @Override
+    public boolean isStereotype() {
+        return this.getSelf().getUmlNamespace() instanceof Stereotype;
     }
     
     @Override

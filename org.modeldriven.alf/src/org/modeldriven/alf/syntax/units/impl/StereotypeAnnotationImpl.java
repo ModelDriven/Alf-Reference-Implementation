@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,12 +11,14 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.uml.Stereotype;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -29,8 +31,16 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	private TaggedValueList taggedValues = null;
 	private QualifiedNameList names = null;
 	private QualifiedName stereotypeName = null;
-	private Stereotype stereotype = null; // DERIVED
-
+	
+	// NOTE: An ElementReference is used here to allow for the
+	// (non-standard) possibility of a stereotype defined using
+	// Alf.
+	private ElementReference stereotype = null; // DERIVED
+	
+	private Member owningMember = null;
+	private NamespaceDefinition currentScope = null;
+	private boolean unscoped = true;
+	
 	public StereotypeAnnotationImpl(StereotypeAnnotation self) {
 		super(self);
 	}
@@ -70,14 +80,24 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	}
 
 	public Stereotype getStereotype() {
-		if (this.stereotype == null) {
-			this.setStereotype(this.deriveStereotype());
-		}
-		return this.stereotype;
+	    ElementReference reference = this.getStereotypeReference();
+		return reference == null? null: (Stereotype)reference.getImpl().getUml();
 	}
 
 	public void setStereotype(Stereotype stereotype) {
-		this.stereotype = stereotype;
+		this.setStereotypeReference(ElementReferenceImpl.makeElementReference(stereotype));
+	}
+	
+	public ElementReference getStereotypeReference() {
+        if (this.stereotype == null) {
+            this.setStereotypeReference(this.deriveStereotype());
+        }
+        return this.stereotype;
+	}
+	
+	// The element reference must be a reference to a stereotype.
+	public void setStereotypeReference(ElementReference stereotype) {
+	    this.stereotype = stereotype;
 	}
 
     /**
@@ -85,19 +105,11 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
      * stereotype for a stereotype annotation is the stereotype denoted by the
      * stereotype name.
      **/
-	protected Stereotype deriveStereotype() {
-	    // TODO Allow unqualified stereotype names for standard profiles or
-	    //      if there is only one applied profile.
-	    Stereotype stereotype = null;
+	protected ElementReference deriveStereotype() {
 	    QualifiedName stereotypeName = this.getSelf().getStereotypeName();
-	    if (stereotypeName != null && !this.isNonstereotypeAnnotation()) {
-	        stereotypeName.getImpl().setCurrentScope(RootNamespace.getRootScope());
-	        ElementReference stereotypeReferent = stereotypeName.getImpl().getStereotypeReferent();
-	        if (stereotypeReferent != null) {
-	            stereotype = (Stereotype)stereotypeReferent.getImpl().getUml();
-	        }
-	    }
-		return stereotype;
+	    NamespaceDefinition currentScope = this.getCurrentScope();
+	    return stereotypeName == null || this.isNonstereotypeAnnotation() || currentScope == null? null:
+	        currentScope.getImpl().resolveStereotype(stereotypeName);
 	}
 	
 	/*
@@ -123,7 +135,7 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	 **/
 	public boolean stereotypeAnnotationStereotypeName() {
 		return this.isNonstereotypeAnnotation() ||
-		            this.getSelf().getStereotype() != null;
+		            this.getStereotypeReference() != null;
 	}
 
 	/**
@@ -133,16 +145,10 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	 **/
 	public boolean stereotypeAnnotationApply() {
 	    StereotypeAnnotation self = this.getSelf();
-	    if (self.getStereotypeName().equals("apply")) {
-	        QualifiedNameList names = self.getNames();
-	        if (names == null) {
-	            return false;
-	        } else {
-	            for (QualifiedName name: names.getName()) {
-	                name.getImpl().setCurrentScope(RootNamespace.getRootScope());
-	                if (!name.getImpl().isProfileReferent()) {
-	                    return false;
-	                }
+	    if (self.getStereotypeName().getImpl().equals("apply")) {
+	        for (QualifiedName name: this.getNamesWithScope()) {
+	            if (!name.getImpl().isProfileReferent()) {
+	                return false;
 	            }
 	        }
 	    }
@@ -155,8 +161,14 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	 **/
 	public boolean stereotypeAnnotationPrimitive() {
         StereotypeAnnotation self = this.getSelf();
-		return !self.getStereotypeName().equals("primitive") ||
-		            self.getNames() == null && self.getTaggedValues() == null;
+		return !self.getStereotypeName().getImpl().equals("primitive") ||
+		            // Allow the @primitive annotation to have an implementation name
+		            // as a single (non-standard) argument.
+		            (self.getNames() == null || self.getNames().getName().size() == 1) &&
+		            (self.getTaggedValues() == null || 
+		                self.getTaggedValues().getTaggedValue().size() == 1 &&
+		                ((TaggedValue)self.getTaggedValues().getTaggedValue().toArray()[0]).
+		                    getName().equals("implementation"));
 	}
 
 	/**
@@ -167,7 +179,7 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	public boolean stereotypeAnnotationExternal() {
         StereotypeAnnotation self = this.getSelf();
         TaggedValueList taggedValueList = self.getTaggedValues();
-        if (!self.getStereotypeName().equals("external")) {
+        if (!self.getStereotypeName().getImpl().equals("external")) {
             return true;
         } else {
             if (self.getNames() != null) {
@@ -217,11 +229,50 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	    return stereotypeName.getImpl().equals("apply") ||
         	   stereotypeName.getImpl().equals("primitive") ||
         	   stereotypeName.getImpl().equals("external") ||
-        	   // The following are temporary until the standard profiles are
-        	   // specially allowed for.
-               stereotypeName.getImpl().equals("ModelLibrary") ||
-               stereotypeName.getImpl().equals("Create") ||
-               stereotypeName.getImpl().equals("Destroy");
+        	   // The following are non-standard, to allow for the standard
+        	   // profile to be specified in Alf.
+        	   stereotypeName.getImpl().equals("profile") ||
+        	   stereotypeName.getImpl().equals("stereotype");
+	}
+	
+	public boolean isStereotype(ElementReference stereotype) {
+	    ElementReference reference = this.getStereotypeReference();
+	    return reference != null && reference.getImpl().equals(stereotype);
+	}
+	
+	public Collection<QualifiedName> getNamesWithScope() {
+	    QualifiedNameList nameList = this.getSelf().getNames();
+	    if (nameList == null) {
+	        return new ArrayList<QualifiedName>();
+	    } else {
+	        Collection<QualifiedName> names = nameList.getName();
+	        if (this.unscoped) {
+    	        NamespaceDefinition scope = this.getCurrentScope();
+    	        for (QualifiedName name: names) {
+    	            name.getImpl().setCurrentScope(scope);
+    	        }
+    	        this.unscoped = false;
+	        }
+	        return names;
+	    }
+	}
+	
+	public NamespaceDefinition getCurrentScope() {
+	    if (this.currentScope == null && this.owningMember != null) {
+	        if (this.owningMember.getNamespace() == null) {
+    	        this.currentScope = this.owningMember.getImpl().getModelScope();
+    	    } else {
+    	        this.currentScope = this.owningMember.getNamespace();
+    	    }
+	    }
+	    return this.currentScope;
+	}
+	
+	public void setOwningMember(Member owningMember) {
+	    this.owningMember = owningMember;
+	    // NOTE: Defer computation of current scope until parsing is complete.
+	    this.currentScope = null;
+	    this.unscoped = true;
 	}
 
 } // StereotypeAnnotationImpl

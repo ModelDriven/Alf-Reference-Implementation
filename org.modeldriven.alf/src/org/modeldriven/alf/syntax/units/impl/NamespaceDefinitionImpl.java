@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -14,6 +14,10 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.uml.Package;
+import org.modeldriven.alf.uml.PackageableElement;
+import org.modeldriven.alf.uml.Profile;
+import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -218,12 +222,15 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return unit == null || unit.getImpl().noExcludedImports();
     }
 
-	@Override
-	public boolean hasAnnotation(String name) {
+	@Override 
+	public Collection<StereotypeAnnotation> getAllAnnotations() {
+	    Collection<StereotypeAnnotation> annotations = super.getAllAnnotations();
 	    UnitDefinition unit = this.getSelf().getUnit();
 	    Member stub = unit == null? null: unit.getImpl().getStub();
-	    return stub == null? super.hasAnnotation(name): 
-	        stub.getImpl().hasAnnotation(name);
+	    if (stub != null) {
+	        annotations.addAll(stub.getImpl().getAnnotation());
+	    }
+	    return annotations;
 	}
 
     public Collection<Member> resolveVisible(String name, 
@@ -249,6 +256,72 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         }
         
         return members;
+    }
+    
+    public ElementReference resolveStereotype(QualifiedName name) {
+        // First check if it is a standard stereotype.
+        ElementReference stereotype = ModelNamespaceImpl.resolveStandardStereotype(name);
+        if (stereotype == null) {
+        QualifiedName qualification = name.getQualification();
+        String stereotypeName = name.getUnqualifiedName().getName();
+        if (qualification == null) {
+            // If the stereotype name is unqualified, there must be exactly one
+            // applied profile that contains a stereotype of that name.
+            for (Profile profile: this.getAllAppliedProfiles()) {
+                Stereotype profileStereotype = findStereotype(stereotypeName, profile);
+                if (profileStereotype != null) {
+                    if (stereotype != null) {
+                        stereotype = null;
+                        break;
+                    }
+                    stereotype = ElementReferenceImpl.makeElementReference(profileStereotype);
+                }
+            }
+        } else {
+            // If the stereotype name is qualified, then there must be an
+            // applied profile whose qualified name is the qualification of
+            // the stereotype and that contains a stereotype of that name.
+            // NOTE: This means that if the stereotype not directly owned by
+            // the profile, then the names of any subpackages in which it is
+            // nested are NOT to be included in the qualification when
+            // naming the stereotype.
+            for (Profile profile: this.getAllAppliedProfiles()) {
+                if (profile.getQualifiedName().equals(qualification)) {
+                    stereotype = ElementReferenceImpl.makeElementReference(
+                            findStereotype(stereotypeName, profile));
+                    break;
+                }
+            }
+        }
+        }
+        return stereotype;
+    }
+    
+    // This method is used to find stereotypes that are not only directly owned by
+    // a profile, but also those that are indirectly nested in packages within the
+    // profile (but not within nested profiles).
+    private static Stereotype findStereotype(String name, Package package_) {
+        Collection<PackageableElement> packagedElements = package_.getPackagedElement();
+        for (PackageableElement element: packagedElements) {
+            if (element instanceof Stereotype && name.equals(element.getName())) {
+                return (Stereotype)element;
+            }
+        }
+        for (PackageableElement element: packagedElements) {
+            if (element instanceof Package && !(element instanceof Profile)) {
+                Stereotype stereotype = findStereotype(name, (Package)element);
+                if (stereotype != null) {
+                    return stereotype;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public Collection<Profile> getAllAppliedProfiles() {
+        NamespaceDefinition outerScope = this.getOuterScope();
+        return outerScope == null? new ArrayList<Profile>(): 
+            outerScope.getImpl().getAllAppliedProfiles();
     }
     
     private boolean containsMember(ElementReference member) {
@@ -377,8 +450,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     }
     
     public boolean isModelLibrary() {
-        // TODO: Require reference to standard UML ModelLibary stereotype.
-        return this.hasAnnotation("ModelLibrary");
+        // NOTE: A profile definition is automatically treated as a model library.
+        return this.isProfile() || 
+               this.isStereotyped(RootNamespace.getRootScope().getModelLibraryStereotype());
     }
 
     public boolean hasSubunitFor(UnitDefinition unit) {
@@ -458,12 +532,6 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
             }
         }
         return outerScope;
-    }
-    
-    // This is valid for every namespace other than a model namespace.
-    public ModelNamespace getModelScope() {
-        NamespaceDefinition outerScope = this.getOuterScope();
-        return outerScope == null? null: outerScope.getImpl().getModelScope();
     }
     
     @Override

@@ -403,8 +403,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public List<ElementReference> getOwnedMembers() {
         List<ElementReference> features = new ArrayList<ElementReference>();
-        if (this.isClassifier()) {
-            for (NamedElement member: ((Classifier)this.getSelf().getElement()).getOwnedMember()) {
+        if (this.isNamespace()) {
+            for (NamedElement member: ((Namespace)this.getSelf().getElement()).getOwnedMember()) {
                  features.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
             }
         }
@@ -414,8 +414,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public List<ElementReference> getMembers() {
         List<ElementReference> features = new ArrayList<ElementReference>();
-        if (this.isClassifier()) {
-            for (NamedElement member: ((Classifier)this.getSelf().getElement()).getMember()) {
+        if (this.isNamespace()) {
+            for (NamedElement member: ((Namespace)this.getSelf().getElement()).getMember()) {
                features.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
             }
         }

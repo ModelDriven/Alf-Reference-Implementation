@@ -133,14 +133,14 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
      * An operation definition is a constructor if it has a @Create annotation.
      **/
 	protected Boolean deriveIsConstructor() {
-		return this.hasAnnotation("Create");
+		return this.isStereotyped(RootNamespace.getRootScope().getCreateStereotype());
 	}
 
     /**
      * An operation definition is a destructor if it has a @Destroy annotation.
      **/
 	protected Boolean deriveIsDestructor() {
-        return this.hasAnnotation("Destroy");
+        return this.isStereotyped(RootNamespace.getRootScope().getDestroyStereotype());
 	}
 	
     /**

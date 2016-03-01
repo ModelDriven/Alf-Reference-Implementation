@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public class ModelNamespaceImpl extends PackageDefinitionImpl {
@@ -56,6 +57,28 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
     
     @Override
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+        return null;
+    }
+    
+    @Override
+    public ElementReference resolveStereotype(QualifiedName name) {
+        return resolveStandardStereotype(name);
+    }
+    
+    public static ElementReference resolveStandardStereotype(QualifiedName name) {
+        ElementReference standardProfile = RootNamespace.getRootScope().getStandardProfile();
+        QualifiedName qualification = name.getQualification();
+        String stereotypeName = name.getUnqualifiedName().getName();
+        if (qualification != null && 
+                !qualification.equals(standardProfile.getImpl().getQualifiedName())) {
+            return null;
+        }
+        for (ElementReference member: standardProfile.getImpl().getOwnedMembers()) {
+            if (member.getImpl().isStereotype() && 
+                    member.getImpl().getName().equals(stereotypeName)) {
+                return member;
+            }
+        }
         return null;
     }
     

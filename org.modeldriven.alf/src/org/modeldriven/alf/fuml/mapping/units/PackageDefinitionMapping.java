@@ -61,9 +61,12 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
         if (package_ instanceof Model) {
             ElementReference standardProfile = RootNamespace.getRootScope().getStandardProfile();
             if (standardProfile != null) {
-                ProfileApplication profileApplication = this.create(ProfileApplication.class);
-                profileApplication.setAppliedProfile((Profile)standardProfile.getImpl().getUml());
-                package_.addProfileApplication(profileApplication);
+                Profile profile = (Profile)standardProfile.getImpl().getUml();
+                if (profile != null) {
+                    ProfileApplication profileApplication = this.create(ProfileApplication.class);
+                    profileApplication.setAppliedProfile(profile);
+                    package_.addProfileApplication(profileApplication);
+                }
             }
         }
         

@@ -63,7 +63,9 @@ public abstract class NamespaceDefinitionMapping extends MemberMapping {
             // are supported in the target UML implementation. Always ignore
             // template parameters (which are handled during classifier mapping).
             if ((supportsTemplates || member.getImpl().isCompletelyBound()) && 
-                    !(member instanceof ClassifierTemplateParameter)) {
+                    !(member instanceof ClassifierTemplateParameter) &&
+                    // Ignore stereotypes, which cannot be mapped to fUML.
+                    !member.getImpl().isStereotype()) {
                 // System.out.println("[mapTo] member=" + member);
                 FumlMapping mapping = this.fumlMap(getNonfeatureSubunit(member));
                 for (Element element: mapping.getModelElements()) {

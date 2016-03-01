@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.uml.Profile;
 
@@ -56,8 +57,18 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	 * any @apply annotations on the package.
 	 **/
 	protected Collection<Profile> deriveAppliedProfile() {
-	    // TODO: Handle applied profiles.
-		return new ArrayList<Profile>();
+	    Collection<Profile> appliedProfiles = new ArrayList<Profile>();
+	    for (StereotypeAnnotation annotation: this.getAllAnnotations()) {
+	        if (annotation.getImpl().getStereotypeName().getImpl().equals("apply")) {
+	            for (QualifiedName name: annotation.getImpl().getNamesWithScope()) {
+	                ElementReference profile = name.getImpl().getProfileReferent();
+	                if (profile != null) {
+	                    appliedProfiles.add((Profile)profile.getImpl().getUml());
+	                }
+	            }
+	        }
+	    }
+		return appliedProfiles;
 	}
 	
 	/*
@@ -80,12 +91,16 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	 **/
 	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO: Allow profile and stereotype applications on packages.
-		return super.annotationAllowed(annotation) ||
-		       // The following is a temporary special check until true
-		       // stereotype resolution is implementation.
-		       annotation.getStereotypeName().getImpl().equals("ModelLibrary");
-	} // annotationAllowed
+	    return super.annotationAllowed(annotation) ||
+	            annotation.getStereotypeName().getImpl().equals("apply") ||
+	            // The following allows the non-standard annotation of a
+	            // package definition as a profile.
+	            annotation.getStereotypeName().getImpl().equals("profile") &&
+	            annotation.getNames() == null && annotation.getTaggedValues() == null ||
+	            // The following is a temporary special check until true
+	            // stereotype resolution is implementation.
+	            annotation.getStereotypeName().getImpl().equals("ModelLibrary");
+	}
 
 	/**
 	 * Returns true if the namespace definition associated with the given unit
@@ -94,7 +109,7 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
 		return unit.getDefinition() instanceof PackageDefinition;
-	} // matchForStub
+	}
 
 	/**
 	 * Return true if the given member is either a PackageDefinition or an
@@ -103,7 +118,7 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	@Override
 	public Boolean isSameKindAs(Member member) {
 	    return member.getImpl().getReferent().getImpl().isPackage();
-	} // isSameKindAs
+	}
 	
 	// Package-only members are limited to visibility within this package 
 	// definition.
@@ -120,6 +135,13 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
             }
         }
         return publicMembers;
+    }
+    
+    @Override
+    public Collection<Profile> getAllAppliedProfiles() {
+        Collection<Profile> appliedProfiles = super.getAllAppliedProfiles();
+        appliedProfiles.addAll(this.getSelf().getAppliedProfile());
+        return appliedProfiles;
     }
     
     @Override

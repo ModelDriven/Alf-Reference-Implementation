@@ -173,7 +173,7 @@ public class ImportedMemberImpl extends MemberImpl {
     	        }
 	        }
 	    }
-	} // isSameKindAst
+	}
 	
 	/**
 	 * Allow an external operation, owned behavior (activity) or property to 
@@ -191,7 +191,16 @@ public class ImportedMemberImpl extends MemberImpl {
 	                    referent.getImpl().isProperty());
 	}
 
-	
+    @Override
+    public boolean isProfile() {
+        return this.getReferent().getImpl().isProfile();
+    }
+    
+    @Override
+    public boolean isStereotype() {
+        return this.getReferent().getImpl().isStereotype();
+    }
+    
     public static ImportedMember makeImportedMember(Member member) {
         ImportedMember importedMember = new ImportedMember();
         importedMember.setReferent(member.getImpl().getReferent());

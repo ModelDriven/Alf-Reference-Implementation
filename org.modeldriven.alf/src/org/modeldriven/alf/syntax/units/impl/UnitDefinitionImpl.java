@@ -155,8 +155,8 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
      * include the applied profiles for its associated package definition.
      **/
 	protected Collection<Profile> deriveAppliedProfile() {
-	    // TODO: Implement profile application.
-		return new ArrayList<Profile>(); // STUB
+	    NamespaceDefinition definition = this.getSelf().getDefinition();
+		return definition == null? null: definition.getImpl().getAllAppliedProfiles();
 	}
 	
 	/*
