@@ -100,13 +100,12 @@ public abstract class AlfBase {
             }
             int prevLineNum = lineNum;
             lineNum = violation.getLine();
-            this.println("");
-            line = this.printLine(reader, line, prevLineNum, lineNum);
-            this.printConstraintViolation(violation);
+            line = this.getLine(reader, line, prevLineNum, lineNum);
+            this.printConstraintViolation(line, violation);
         }
     }
     
-    protected String printLine(BufferedReader reader, String prevLine, int prevLineNum, int thisLineNum) {
+    protected String getLine(BufferedReader reader, String prevLine, int prevLineNum, int thisLineNum) {
         String line = prevLine;
         if (reader != null) {
             try {
@@ -116,9 +115,6 @@ public abstract class AlfBase {
                     }
                     line = reader.readLine();
                 }
-                if (line != null) {
-                    this.println(line);
-                }
             } catch (IOException e) {
                 line = null;
             }
@@ -126,12 +122,16 @@ public abstract class AlfBase {
         return line;
     }
     
-    protected void printConstraintViolation(ConstraintViolation violation) {
-        StringBuffer indent = new StringBuffer();
-        for (int n = violation.getColumn(); n > 1; n--) {
-            indent.append(" ");
+    protected void printConstraintViolation(String line, ConstraintViolation violation) {
+        this.println("");
+        if (line != null) {
+            this.println(line);
+            StringBuffer indent = new StringBuffer();
+            for (int n = violation.getColumn(); n > 1; n--) {
+                indent.append(" ");
+            }
+            this.println(indent + "^");
         }
-        this.println(indent + "^");
         this.println(violation.getErrorMessage());
     }
     
