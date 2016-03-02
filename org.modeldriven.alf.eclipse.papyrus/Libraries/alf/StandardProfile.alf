@@ -2,10 +2,10 @@
 @profile
 package StandardProfile {
 	
-	@stereotype(Class)
+	@stereotype(Operation)
 	public class Create { }
 	
-	@stereotype(Class)
+	@stereotype(Operation)
 	public class Destroy {	}
 	
 	@stereotype(Package)

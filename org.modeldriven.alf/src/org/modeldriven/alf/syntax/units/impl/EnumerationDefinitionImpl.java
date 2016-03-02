@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -63,18 +63,18 @@ public class EnumerationDefinitionImpl extends ClassifierDefinitionImpl {
 	public Boolean matchForStub(UnitDefinition unit) {
 		return unit.getDefinition() instanceof EnumerationDefinition &&
 		        super.matchForStub(unit);
-	} // matchForStub
+	}
 
 	/**
 	 * In addition to the annotations allowed for classifiers in general, an
 	 * enumeration definition allows an annotation for any stereotype whose
 	 * metaclass is consistent with Enumeration.
 	 **/
-	@Override
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO: Allow stereotypes consistent with enumerations.
-		return super.annotationAllowed(annotation);
-	} // annotationAllowed
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.Enumeration.class;
+    }
+
 
 	/**
 	 * Return true if the given member is either an EnumerationDefinition or an

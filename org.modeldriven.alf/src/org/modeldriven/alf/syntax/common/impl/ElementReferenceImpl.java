@@ -150,6 +150,8 @@ public abstract class ElementReferenceImpl {
     public abstract ElementReference getSignal();
     public abstract ElementReference getContext();
     
+    public abstract Collection<Class<?>> getStereotypeMetaclasses();
+    
     public List<FormalParameter> getEffectiveParameters() {
         if (this.isBehavior() || this.isOperation()) {
             return this.getParameters();

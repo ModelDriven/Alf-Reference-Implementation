@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -81,10 +81,14 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	 **/
     @Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO: Allow activity stereotypes.
 		return super.annotationAllowed(annotation) || 
 		    annotation.getStereotypeName().getPathName().equals("primitive");
-	} // annotationAllowed
+	}
+    
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.Activity.class;
+    }
 
 	/**
 	 * Returns true if the given unit definition matches this activity

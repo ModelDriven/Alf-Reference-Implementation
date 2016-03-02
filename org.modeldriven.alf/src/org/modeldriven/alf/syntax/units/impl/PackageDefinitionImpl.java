@@ -96,11 +96,13 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	            // The following allows the non-standard annotation of a
 	            // package definition as a profile.
 	            annotation.getStereotypeName().getImpl().equals("profile") &&
-	            annotation.getNames() == null && annotation.getTaggedValues() == null ||
-	            // The following is a temporary special check until true
-	            // stereotype resolution is implementation.
-	            annotation.getStereotypeName().getImpl().equals("ModelLibrary");
+	            annotation.getNames() == null && annotation.getTaggedValues() == null;
 	}
+
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.Package.class;
+    }
 
 	/**
 	 * Returns true if the namespace definition associated with the given unit

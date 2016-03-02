@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -66,7 +66,7 @@ public class DataTypeDefinitionImpl extends
 	public Boolean matchForStub(UnitDefinition unit) {
 		return unit.getDefinition() instanceof DataTypeDefinition &&
 		        super.matchForStub(unit);
-	} // matchForStub
+	}
 
 	/**
 	 * In addition to the annotations allowed for classifiers in general, a data
@@ -75,10 +75,14 @@ public class DataTypeDefinitionImpl extends
 	 **/
 	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO: Allow stereotypes consistent with data types.
 		return annotation.getStereotypeName().getImpl().equals("primitive") ||
 		        super.annotationAllowed(annotation);
-	} // annotationAllowed
+	}
+
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.DataType.class;
+    }
 
 	/**
 	 * Return true if the given member is either a DataTypeDefinition or an
@@ -86,6 +90,6 @@ public class DataTypeDefinitionImpl extends
 	 **/
 	public Boolean isSameKindAs(Member member) {
 		return member.getImpl().getReferent().getImpl().isDataType();
-	} // isSameKindAs
+	}
 
-} // DataTypeDefinitionImpl
+}

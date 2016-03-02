@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -13,7 +13,7 @@ import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.PackageDefinition;
 import org.modeldriven.alf.uml.Model;
 import org.modeldriven.alf.uml.NamedElement;
@@ -38,13 +38,13 @@ public class ModelNamespaceMapping extends PackageDefinitionMapping {
     }
     
     public static void applyStereotype(
-            NamespaceDefinition definition, ElementReference stereotypeReference) {
+            Member member, ElementReference stereotypeReference) {
         if (stereotypeReference != null) {
             Element stereotype = stereotypeReference.getImpl().getUml();
             if (stereotype instanceof Stereotype) {
                 FumlMapping elementMapping = 
                         (FumlMapping)FumlMapping.getFumlFactory().
-                            getMapping(definition);
+                            getMapping(member);
                 StereotypeApplication.addStereotypeApplication(
                         elementMapping.getElement(), (Stereotype)stereotype);
             }

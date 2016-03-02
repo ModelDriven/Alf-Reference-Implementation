@@ -782,6 +782,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         }
     }
     
+    @Override
     public ElementReference getContext() {
         if (!this.isBehavior()) {
             return null;
@@ -789,6 +790,15 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             ExternalElementReference self = this.getSelf();
             BehavioredClassifier context = ((Behavior)self.getElement()).getContext();
             return context == null? self: ElementReferenceImpl.makeElementReference(context);
+        }
+    }
+    
+    @Override
+    public Collection<Class<?>> getStereotypeMetaclasses() {
+        if (!this.isStereotype()) {
+            return new ArrayList<Class<?>>();
+        } else {
+            return ((Stereotype)this.getSelf().getElement()).getExtendedMetaclass();
         }
     }
 

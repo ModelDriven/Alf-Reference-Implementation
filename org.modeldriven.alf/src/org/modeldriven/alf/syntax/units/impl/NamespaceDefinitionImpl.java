@@ -173,7 +173,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	 **/
 	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    return annotation.getStereotypeName().getImpl().equals("external");
+	    return annotation.getStereotypeName().getImpl().equals("external") ||
+	           super.annotationAllowed(annotation);
 	}
 	
 	/*

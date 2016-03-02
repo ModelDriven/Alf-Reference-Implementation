@@ -635,6 +635,15 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             }
         }
     }
+    
+    @Override
+    public Collection<Class<?>> getStereotypeMetaclasses() {
+        if (!this.isStereotype()) {
+            return new ArrayList<Class<?>>();
+        } else {
+            return ((ClassDefinition)this.getSelf().getElement()).getImpl().getStereotypeMetaclasses();
+        }
+    }
 
     @Override
     public boolean equals(Object object) {

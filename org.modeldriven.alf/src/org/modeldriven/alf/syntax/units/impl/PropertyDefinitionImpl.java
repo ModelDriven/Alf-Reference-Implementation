@@ -197,10 +197,10 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Property.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO Allow stereotypes consistent with properties.
-		return false;
-	} // annotationAllowed
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.Property.class;
+    }
 
 	/**
 	 * Return true if the given member is either a PropertyDefinition or an
@@ -208,7 +208,7 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	 **/
 	public Boolean isSameKindAs(Member member) {
 		return member.getImpl().getReferent().getImpl().isProperty();
-	} // isSameKindAs
+	}
 
     @Override
     protected void bindTo(SyntaxElement base,
@@ -235,4 +235,4 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
         }
     }
 
-} // PropertyDefinitionImpl
+}

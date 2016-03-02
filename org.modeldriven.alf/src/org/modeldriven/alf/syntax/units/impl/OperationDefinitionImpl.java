@@ -276,11 +276,10 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Operation.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO: Allow stereotypes consistent with operations.
-		return annotation.getStereotypeName().getImpl().equals("Create") || 
-		       annotation.getStereotypeName().getImpl().equals("Destroy");
-	} // annotationAllowed
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.Operation.class;
+    }
 
 	/**
 	 * The namespace definition associated with the given unit definition must
@@ -297,7 +296,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
             !((ActivityDefinition)definition).getImpl().isTemplate() &&
             FormalParameterImpl.equals(this.getFormalParameters(), 
                     ((ActivityDefinition)definition).getImpl().getFormalParameters());
-	} // matchForStub
+	}
 
 	/**
 	 * Return true if the given member is either an OperationDefinition or an
@@ -310,7 +309,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	public Boolean isSameKindAs(Member member) {
 	    ElementReference operation = member.getImpl().getReferent();
 	    return operation.getImpl().isOperation() && this.matchParameters(operation);
-	} // isSameKindAs
+	}
 	
 	public ElementReference getType() {
 	    FormalParameter returnParameter = this.getReturnParameter();
@@ -517,4 +516,4 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         }
     }
 
-} // OperationDefinitionImpl
+}

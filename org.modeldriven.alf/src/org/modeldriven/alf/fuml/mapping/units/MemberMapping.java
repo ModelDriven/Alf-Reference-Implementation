@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -17,7 +17,7 @@ import org.modeldriven.alf.fuml.mapping.common.DocumentedElementMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.units.Member;
-
+import org.modeldriven.alf.syntax.units.StereotypeAnnotation;
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.NamedElement;
 
@@ -37,6 +37,11 @@ public abstract class MemberMapping extends DocumentedElementMapping {
         String visibility = member.getVisibility();
         namedElement.setVisibility(
                 visibility == null || visibility.equals("")? "package": visibility);
+        
+        for (StereotypeAnnotation annotation: member.getImpl().getAllAnnotations()) {
+            ModelNamespaceMapping.applyStereotype(
+                    member, annotation.getImpl().getStereotypeReference());
+        }
             
     }
     

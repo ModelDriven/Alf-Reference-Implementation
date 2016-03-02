@@ -72,11 +72,6 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
         
         super.mapTo(package_);
         
-        if (packageDefinition != null && 
-                packageDefinition.getImpl().isModelLibrary()) {
-            ModelNamespaceMapping.applyStereotype(
-                    packageDefinition, RootNamespace.getRootScope().getModelLibraryStereotype());
-        }
     }
     
     @Override

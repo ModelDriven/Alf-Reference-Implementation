@@ -13,6 +13,17 @@ import java.lang.reflect.InvocationTargetException;
 
 public abstract class ElementFactory {
     
+    public static final String INTERFACE_PACKAGE_NAME = 
+            org.modeldriven.alf.uml.Element.class.getPackage().getName();
+    
+    public static Class<?> interfaceForName(String name) {
+        try {
+            return Class.forName(INTERFACE_PACKAGE_NAME + "." + name);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private Class<?> behaviorClass = null;
     private Class<?> classClass = null;
     private Class<?> classifierClass = null;

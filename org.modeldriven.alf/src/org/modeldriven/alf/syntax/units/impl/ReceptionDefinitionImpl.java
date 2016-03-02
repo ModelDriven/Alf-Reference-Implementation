@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -111,10 +111,10 @@ public class ReceptionDefinitionImpl extends MemberImpl {
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Reception.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO Allow stereotypes consistent with signal definitions.
-		return false;
-	} // annotationAllowed
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.Reception.class;
+    }
 
 	/**
 	 * Return true if the given member is either a ReceptionDefinition, a

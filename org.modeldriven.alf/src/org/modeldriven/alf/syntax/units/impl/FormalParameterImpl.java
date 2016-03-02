@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -50,10 +50,10 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Parameter.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO: Allow stereotypes consistent with formal parameters.
-		return false;
-	} // annotationAllowed
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.Parameter.class;
+    }
 
 	/**
 	 * Return true if the given member is a FormalParameter.
@@ -62,7 +62,7 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
 	    // NOTE: This should also account for the possibility of an
 	    // external parameter visible from an external outer scope.
 		return member.getImpl().getReferent().getImpl().isParameter();
-	} // isSameKindAs
+	}
 	
     /**
      * Check if one list of formal parameters equals another, element by 
@@ -169,4 +169,4 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
         }
     }
 
-} // FormalParameterImpl
+}

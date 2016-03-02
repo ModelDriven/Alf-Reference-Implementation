@@ -13,7 +13,9 @@ package org.modeldriven.alf.syntax.units.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.QualifiedNameList;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.uml.ElementFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -103,14 +105,18 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	 **/
 	@Override
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
-	    // TODO: Allow stereotypes consistent with classes.
 		return super.annotationAllowed(annotation) ||
 		       // The following allows the non-standard annotation
 		       // of a class definition as defining a stereotype.
 		       annotation.getStereotypeName().getImpl().equals("stereotype") &&
 		       annotation.getNames() != null &&
 		       annotation.getNames().getName().size() == 1;
-	} // annotationAllowed
+	}
+
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return org.modeldriven.alf.uml.Class_.class;
+    }
 
 	/**
 	 * Returns true if the given unit definition matches this class definition
@@ -121,7 +127,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	public Boolean matchForStub(UnitDefinition unit) {
 		return unit.getDefinition() instanceof ClassDefinition &&
 		    super.matchForStub(unit);
-	} // matchForStub
+	}
 
 	/**
 	 * Return true if the given member is either a ClassDefinition or an
@@ -130,7 +136,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	@Override
 	public Boolean isSameKindAs(Member member) {
 	    return member.getImpl().getReferent().getImpl().isClass();
-	} // isSameKindAs
+	}
 
 	@Override
 	// Removes redefined members from inheritableMembers.
@@ -246,6 +252,24 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         operation.addAnnotation(annotation);
         
         return operation;
+    }
+    
+    public Collection<Class<?>> getStereotypeMetaclasses() {
+        Collection<Class<?>> metaclasses = new ArrayList<Class<?>>();
+        StereotypeAnnotation annotation = this.getAnnotation("stereotype");
+        if (annotation != null) {
+            QualifiedNameList names = annotation.getNames();
+            if (names != null) {
+                for (QualifiedName name: names.getName()) {
+                    Class<?> metaclass = ElementFactory.interfaceForName(
+                            name.getUnqualifiedName().getName());
+                    if (metaclass != null) {
+                        metaclasses.add(metaclass);
+                    }
+                }
+            }
+        }
+        return metaclasses;
     }
     
 } // ClassDefinitionImpl

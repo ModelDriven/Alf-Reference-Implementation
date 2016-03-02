@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -27,7 +27,7 @@ import java.util.List;
  **/
 
 public abstract class MemberImpl extends DocumentedElementImpl {
-
+    
     private String name = "";
     private String visibility = "";
     private Boolean isStub = false;
@@ -293,7 +293,29 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	 * Returns true of the given stereotype annotation is allowed for this kind
 	 * of element.
 	 **/
-	public abstract Boolean annotationAllowed(StereotypeAnnotation annotation);
+	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+	    ElementReference stereotype = annotation.getImpl().getStereotypeReference();
+	    if (stereotype != null) {
+	        Class<?> metaclass = this.getUMLMetaclass();
+	        for (Class<?> extendedMetaclass: 
+	            stereotype.getImpl().getStereotypeMetaclasses()) {
+	            if (extendedMetaclass.isAssignableFrom(metaclass)) {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
+	
+	
+	/**
+	 * Returns the class object for the wrapper interface of the UML metaclass
+	 * that corresponds to each kind of Alf member. (By default, this is just
+	 * NamedElement.)
+	 */
+	public Class<?> getUMLMetaclass() {
+	    return org.modeldriven.alf.uml.NamedElement.class;
+	}
 
 	/**
 	 * Returns true if the given unit definition is a legal match for this
@@ -301,7 +323,7 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	 **/
 	public Boolean matchForStub(UnitDefinition unit) {
 		return false;
-	} // matchForStub
+	}
 
 	/**
 	 * Returns true if this member is distinguishable from the given member. Two
@@ -372,6 +394,15 @@ public abstract class MemberImpl extends DocumentedElementImpl {
             }
         }
         return false;
+    }
+    
+    public StereotypeAnnotation getAnnotation(String stereotypeName) {
+        for (StereotypeAnnotation annotation: this.getAllAnnotations()) {
+            if (annotation.getStereotypeName().getImpl().equals(stereotypeName)) {
+                return annotation;
+            }
+        }
+        return null;
     }
     
     public boolean isStereotyped(ElementReference stereotype) {
