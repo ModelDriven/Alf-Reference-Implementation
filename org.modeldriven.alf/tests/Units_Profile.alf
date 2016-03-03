@@ -1,0 +1,38 @@
+package Units_Profile {
+
+	@profile
+	public package Profile {
+	
+		@stereotype(Class)
+		public class S1 {
+		}
+		
+		@stereotype(Property)
+		public class S2 {
+			public tag1: Integer;
+			public tag2: Boolean[0..1];
+			public tag3: String[0..1];
+		}
+		
+	}
+	
+	@apply(Profile)
+	public package P {
+	
+		@Profile::S1
+		public class A {
+		
+			@StandardProfile::Create
+			public A() { }
+
+			@Profile::S2(tag1=>3)
+			private x: Boolean;
+			
+			@Profile::S2(tag1=>-3, tag2=>true, tag3=>"blah")
+			private y: Boolean;
+			
+		}
+	
+	}
+	
+}

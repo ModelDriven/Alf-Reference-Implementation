@@ -70,7 +70,7 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
         QualifiedName qualification = name.getQualification();
         String stereotypeName = name.getUnqualifiedName().getName();
         if (qualification != null && 
-                !qualification.equals(standardProfile.getImpl().getQualifiedName())) {
+                !qualification.getImpl().equals(standardProfile.getImpl().getName())) {
             return null;
         }
         for (ElementReference member: standardProfile.getImpl().getOwnedMembers()) {

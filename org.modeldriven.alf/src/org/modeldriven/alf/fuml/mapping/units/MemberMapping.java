@@ -39,8 +39,8 @@ public abstract class MemberMapping extends DocumentedElementMapping {
                 visibility == null || visibility.equals("")? "package": visibility);
         
         for (StereotypeAnnotation annotation: member.getImpl().getAllAnnotations()) {
-            ModelNamespaceMapping.applyStereotype(
-                    member, annotation.getImpl().getStereotypeReference());
+            ((StereotypeAnnotationMapping)this.fumlMap(annotation)).
+                mapApplicationTo(namedElement);
         }
             
     }

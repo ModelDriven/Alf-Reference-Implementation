@@ -638,12 +638,16 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public Collection<Class<?>> getStereotypeMetaclasses() {
-        if (!this.isStereotype()) {
-            return new ArrayList<Class<?>>();
-        } else {
-            return ((ClassDefinition)this.getSelf().getElement()).getImpl().getStereotypeMetaclasses();
-        }
+        return !this.isStereotype()? new ArrayList<Class<?>>():
+            ((ClassDefinition)this.getSelf().getElement()).getImpl().getStereotypeMetaclasses();
     }
+    
+    @Override
+    public Class<?> getUMLMetaclass() {
+        SyntaxElement element = this.getSelf().getElement();
+        return !(element instanceof Member)? null:
+            ((Member)element).getImpl().getUMLMetaclass();
+     }
 
     @Override
     public boolean equals(Object object) {

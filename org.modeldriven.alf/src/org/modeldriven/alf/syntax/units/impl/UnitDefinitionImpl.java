@@ -156,7 +156,16 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
      **/
 	protected Collection<Profile> deriveAppliedProfile() {
 	    NamespaceDefinition definition = this.getSelf().getDefinition();
-		return definition == null? null: definition.getImpl().getAllAppliedProfiles();
+	    Collection<Profile> profiles = new ArrayList<Profile>();
+	    if (definition != null) {
+	        for (ElementReference reference: definition.getImpl().getAllAppliedProfiles()) {
+	            Profile profile = (Profile)reference.getImpl().getUml();
+	            if (profile != null) {
+	                profiles.add(profile);
+	            }
+	        }
+	    }
+		return profiles;
 	}
 	
 	/*

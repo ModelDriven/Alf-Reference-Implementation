@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.uml.Profile;
@@ -27,7 +28,9 @@ import java.util.List;
 
 public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 
-	private Collection<Profile> appliedProfile = null; // DERIVED
+    // NOTE: A collection of element references is used here to allow
+    // for the (non-standard) possibility of profiles defined using Alf.
+	private Collection<ElementReference> appliedProfile = null; // DERIVED
 
 	public PackageDefinitionImpl(PackageDefinition self) {
 		super(self);
@@ -38,32 +41,54 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	}
 
 	public Collection<Profile> getAppliedProfile() {
-		if (this.appliedProfile == null) {
-			this.setAppliedProfile(this.deriveAppliedProfile());
+		Collection<Profile> profiles = new ArrayList<Profile>();
+		for (ElementReference reference: this.getAppliedProfileReference()) {
+		    Profile profile = (Profile)reference.getImpl().getUml();
+		    if (profile != null) {
+		        profiles.add(profile);
+		    }
 		}
-		return this.appliedProfile;
+		return profiles;
 	}
 
 	public void setAppliedProfile(Collection<Profile> appliedProfile) {
-		this.appliedProfile = appliedProfile;
+	    this.appliedProfile.clear();
+	    for (Profile profile: appliedProfile) {
+	        this.addAppliedProfile(profile);
+	    }
 	}
 
 	public void addAppliedProfile(Profile appliedProfile) {
-		this.appliedProfile.add(appliedProfile);
+		this.appliedProfile.add(ElementReferenceImpl.makeElementReference(appliedProfile));
 	}
+	
+    public Collection<ElementReference> getAppliedProfileReference() {
+        if (this.appliedProfile == null) {
+            this.setAppliedProfileReference(this.deriveAppliedProfile());
+        }
+        return this.appliedProfile;
+    }
 
+    public void setAppliedProfileReference(Collection<ElementReference> appliedProfile) {
+        this.appliedProfile = appliedProfile;
+    }
+
+    public void addAppliedProfileReference(ElementReference appliedProfile) {
+        this.appliedProfile.add(appliedProfile);
+    }
+    
 	/**
 	 * The applied profiles of a package definition are the profiles listed in
 	 * any @apply annotations on the package.
 	 **/
-	protected Collection<Profile> deriveAppliedProfile() {
-	    Collection<Profile> appliedProfiles = new ArrayList<Profile>();
+	protected Collection<ElementReference> deriveAppliedProfile() {
+	    Collection<ElementReference> appliedProfiles = new ArrayList<ElementReference>();
 	    for (StereotypeAnnotation annotation: this.getAllAnnotations()) {
 	        if (annotation.getImpl().getStereotypeName().getImpl().equals("apply")) {
 	            for (QualifiedName name: annotation.getImpl().getNamesWithScope()) {
 	                ElementReference profile = name.getImpl().getProfileReferent();
 	                if (profile != null) {
-	                    appliedProfiles.add((Profile)profile.getImpl().getUml());
+	                    appliedProfiles.add(profile);
 	                }
 	            }
 	        }
@@ -140,9 +165,9 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
-    public Collection<Profile> getAllAppliedProfiles() {
-        Collection<Profile> appliedProfiles = super.getAllAppliedProfiles();
-        appliedProfiles.addAll(this.getSelf().getAppliedProfile());
+    public Collection<ElementReference> getAllAppliedProfiles() {
+        Collection<ElementReference> appliedProfiles = super.getAllAppliedProfiles();
+        appliedProfiles.addAll(this.getAppliedProfileReference());
         return appliedProfiles;
     }
     

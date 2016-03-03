@@ -16,10 +16,12 @@ import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * An annotation of a member definition indicating the application of a
@@ -161,14 +163,27 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	 **/
 	public boolean stereotypeAnnotationPrimitive() {
         StereotypeAnnotation self = this.getSelf();
-		return !self.getStereotypeName().getImpl().equals("primitive") ||
-		            // Allow the @primitive annotation to have an implementation name
-		            // as a single (non-standard) argument.
-		            (self.getNames() == null || self.getNames().getName().size() == 1) &&
-		            (self.getTaggedValues() == null || 
-		                self.getTaggedValues().getTaggedValue().size() == 1 &&
-		                ((TaggedValue)self.getTaggedValues().getTaggedValue().toArray()[0]).
-		                    getName().equals("implementation"));
+        QualifiedNameList nameList = self.getNames();
+        TaggedValueList taggedValueList = self.getTaggedValues();
+		if (!self.getStereotypeName().getImpl().equals("primitive")) {
+		    return true;
+		    
+	    // Allow the @primitive annotation to have an implementation name
+	    // as a single (non-standard) argument.
+		} else if (nameList != null){
+		    return nameList.getName().size() == 1;
+		} else if (taggedValueList != null) {
+            Collection<TaggedValue> taggedValues = taggedValueList.getTaggedValue();
+		    if (taggedValues.size() > 1) {
+		        return false;
+		    } else {
+		        TaggedValue taggedValue = (TaggedValue)taggedValues.toArray()[0];
+		        return taggedValue.getName().equals("implementation") &&
+		               taggedValue.getImpl().isStringValue();
+		    }
+		} else {
+		    return true;
+		}
 	}
 
 	/**
@@ -176,6 +191,7 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	 * may optionally have a single tagged value with the name "file" and no
 	 * operator.
 	 **/
+	// And tagged value must be a string.
 	public boolean stereotypeAnnotationExternal() {
         StereotypeAnnotation self = this.getSelf();
         TaggedValueList taggedValueList = self.getTaggedValues();
@@ -191,7 +207,7 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
                 } else {
                     TaggedValue taggedValue = (TaggedValue)taggedValues.toArray()[0];
                     return  taggedValue.getName().equals("file") &&
-                            taggedValue.getOperator() == null;
+                            taggedValue.getImpl().isStringValue();
                 }
             } else {
                 return true;
@@ -200,13 +216,51 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	}
 
 	/**
-	 * If a stereotype annotation has a stereotype and tagged values, then the
+	 * If a stereotype annotation has a stereotype and tagged values, then
 	 * each tagged value must have the name of an attribute of the stereotype
 	 * and a value that is legally interpretable for the type of that attribute.
 	 **/
+	// Also checks stereotype attribute multiplicity constraints.
 	public boolean stereotypeAnnotationTaggedValues() {
-	    // TODO Check names and types of tagged values.
-		return true;
+        StereotypeAnnotation self = this.getSelf();
+        ElementReference stereotype = this.getStereotypeReference();
+        if (stereotype == null || self.getNames() != null) {
+            return true;
+        } else {
+            Collection<ElementReference> attributes = stereotype.getImpl().getAttributes();
+            TaggedValueList taggedValues = self.getTaggedValues();
+            if (taggedValues != null) {
+                for (TaggedValue taggedValue: taggedValues.getTaggedValue()) {
+                    ElementReference namedAttribute = null;
+                    for (ElementReference attribute: attributes) {
+                        if (taggedValue.getName().equals(attribute.getImpl().getName())) {
+                            namedAttribute = attribute;
+                            break;
+                        }
+                    }
+                    if (namedAttribute == null ||
+                        namedAttribute.getImpl().getLower() > 1 ||
+                        namedAttribute.getImpl().getUpper() == 0 ||
+                        !taggedValue.getImpl().getType().getImpl().conformsTo(
+                                namedAttribute.getImpl().getType())) {
+                        return false;
+                    }
+                    
+                    // NOTE: Removing the attribute ensures that there can be at most 
+                    // one tagged value for it.
+                    attributes.remove(namedAttribute);
+                }
+            }
+            
+            // Check that all required attributes have been given values.
+            for (ElementReference attribute: attributes) {
+                if (attribute.getImpl().getLower() > 0) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
 	}
 
 	/**
@@ -217,8 +271,39 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	 * elements denoted by the given names.
 	 **/
 	public boolean stereotypeAnnotationNames() {
-	    // TODO Check validity of names in a stereotype name list.
-		return true;
+	    StereotypeAnnotation self = this.getSelf();
+        ElementReference stereotype = this.getStereotypeReference();
+	    if (stereotype == null || self.getNames() == null) {
+	        return true;
+	    } else {
+	        List<ElementReference> attributes = stereotype.getImpl().getAttributes();
+	        if (attributes.size() != 1) {
+	            return false;
+	        } else {
+	            ElementReference attribute = attributes.get(0);
+	            ElementReference type = attribute.getImpl().getType();
+	            int lower = attribute.getImpl().getLower();
+	            int upper = attribute.getImpl().getUpper();
+	            int size = self.getNames().getName().size();
+                Class<?> metaclass = type == null? null:
+                    ElementFactory.interfaceForName(type.getImpl().getName());
+	            if (metaclass == null || size < lower || upper != -1 && size > upper) {
+	                return false;
+	            }
+	            for (QualifiedName name: this.getNamesWithScope()) {
+	                Collection<ElementReference> referents = name.getReferent();
+	                if (referents.size() != 1) {
+	                    return false;
+	                }
+	                ElementReference referent = (ElementReference)referents.toArray()[0];
+	                Class<?> referentMetaclass = referent.getImpl().getUMLMetaclass();
+	                if (referentMetaclass == null || !metaclass.isAssignableFrom(referentMetaclass)) {
+	                    return false;
+	                }
+	            }
+	            return true;
+	        }
+	    }
 	}
 	
 	/*

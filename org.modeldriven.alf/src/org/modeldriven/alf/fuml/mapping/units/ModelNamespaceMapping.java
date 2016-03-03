@@ -10,16 +10,11 @@
 package org.modeldriven.alf.fuml.mapping.units;
 
 import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.PackageDefinition;
 import org.modeldriven.alf.uml.Model;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Package;
-import org.modeldriven.alf.uml.Stereotype;
-import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class ModelNamespaceMapping extends PackageDefinitionMapping {
     
@@ -36,21 +31,7 @@ public class ModelNamespaceMapping extends PackageDefinitionMapping {
             ((NamedElement)element).setVisibility("public");
         }
     }
-    
-    public static void applyStereotype(
-            Member member, ElementReference stereotypeReference) {
-        if (stereotypeReference != null) {
-            Element stereotype = stereotypeReference.getImpl().getUml();
-            if (stereotype instanceof Stereotype) {
-                FumlMapping elementMapping = 
-                        (FumlMapping)FumlMapping.getFumlFactory().
-                            getMapping(member);
-                StereotypeApplication.addStereotypeApplication(
-                        elementMapping.getElement(), (Stereotype)stereotype);
-            }
-        }
-    }
-    
+        
     @Override
     public PackageDefinition getPackageDefinition() {
         return null;

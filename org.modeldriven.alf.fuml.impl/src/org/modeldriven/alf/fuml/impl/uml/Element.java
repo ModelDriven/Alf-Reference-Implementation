@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -9,7 +9,10 @@
 package org.modeldriven.alf.fuml.impl.uml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.modeldriven.alf.uml.StereotypeApplication;
 
 public abstract class Element implements org.modeldriven.alf.uml.Element {
     
@@ -42,7 +45,9 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
     }
     
     @Override
-    public void applyStereotype(org.modeldriven.alf.uml.Stereotype stereotype) {
+    public void applyStereotype(
+    		org.modeldriven.alf.uml.Stereotype stereotype,
+    		Collection<StereotypeApplication.TaggedValue> taggedValues) {
     }
     
     @Override

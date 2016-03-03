@@ -36,6 +36,7 @@ import org.modeldriven.alf.uml.ClassifierTemplateParameter;
 import org.modeldriven.alf.uml.DataType;
 import org.modeldriven.alf.uml.Dependency;
 import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.uml.Enumeration;
 import org.modeldriven.alf.uml.EnumerationLiteral;
 import org.modeldriven.alf.uml.Feature;
@@ -442,7 +443,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         List<ElementReference> attributes = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
             for (NamedElement member: ((Classifier)this.getSelf().getElement()).getMember()) {
-                if (member instanceof Property) {
+                if (member instanceof Property && !((Property) member).isStereotypeBaseProperty()) {
                     attributes.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
                 }
             }
@@ -801,6 +802,12 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             return ((Stereotype)this.getSelf().getElement()).getExtendedMetaclass();
         }
     }
+
+    @Override
+    public Class<?> getUMLMetaclass() {
+        return ElementFactory.interfaceForName(
+                this.getSelf().getElement().getClass().getSimpleName());
+     }
 
     @Override
     public boolean equals(Object object) {

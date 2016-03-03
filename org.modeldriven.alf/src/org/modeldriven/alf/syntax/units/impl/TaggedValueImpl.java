@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,7 +10,9 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.TaggedValue;
 
 /**
@@ -56,4 +58,36 @@ public class TaggedValueImpl extends SyntaxElementImpl {
 		this.operator = operator;
 	}
 
-} // TaggedValueImpl
+    /*
+     * Helper Methods
+     */
+
+	public ElementReference getType() {
+	    RootNamespace rootScope = RootNamespace.getRootScope();
+	    return this.isBooleanValue()? rootScope.getBooleanType():
+               this.isStringValue()? rootScope.getStringType():
+	           this.isUnboundedValue()? rootScope.getUnlimitedNaturalType():
+	               rootScope.getNaturalType();
+	}
+	public boolean isBooleanValue() {
+	    String value = this.getSelf().getValue();
+	    return "true".equals(value) || "false".equals(value);
+	}
+	
+    public boolean isNaturalValue() {
+        String value = this.getSelf().getValue();
+        return value != null && value.length() > 1 && 
+                value.charAt(0) >= '0' && value.charAt(0) <= '9';       
+    }
+    
+    public boolean isUnboundedValue() {
+        String value = this.getSelf().getValue();
+        return "*".equals(value);
+    }
+    
+    public boolean isStringValue() {
+        String value = this.getSelf().getValue();
+        return value != null && value.length() > 1 && value.charAt(0) == '"';       
+    }
+    
+}

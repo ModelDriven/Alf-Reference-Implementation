@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -18,10 +18,12 @@ import org.modeldriven.alf.syntax.expressions.UnboundedLiteralExpression;
 import org.modeldriven.alf.uml.ValueSpecificationAction;
 
 public class UnboundedLiteralExpressionMapping extends LiteralExpressionMapping {
+    
+    public static int UNBOUNDED_VALUE = -1;
 
     @Override
     public ValueSpecificationAction mapValueSpecificationAction() throws MappingError {
-        return this.graph.addUnlimitedNaturalValueSpecificationAction(-1);
+        return this.graph.addUnlimitedNaturalValueSpecificationAction(UNBOUNDED_VALUE);
     }
 
 	public UnboundedLiteralExpression getUnboundedLiteralExpression() {

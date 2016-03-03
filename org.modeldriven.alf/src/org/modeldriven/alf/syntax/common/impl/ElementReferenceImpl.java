@@ -151,6 +151,7 @@ public abstract class ElementReferenceImpl {
     public abstract ElementReference getContext();
     
     public abstract Collection<Class<?>> getStereotypeMetaclasses();
+    public abstract Class<?> getUMLMetaclass();
     
     public List<FormalParameter> getEffectiveParameters() {
         if (this.isBehavior() || this.isOperation()) {

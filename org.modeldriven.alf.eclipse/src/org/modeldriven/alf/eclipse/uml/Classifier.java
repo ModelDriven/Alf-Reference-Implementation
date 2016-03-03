@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,11 +11,13 @@ package org.modeldriven.alf.eclipse.uml;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class Classifier extends Type implements
 		org.modeldriven.alf.uml.Classifier {
@@ -265,14 +267,27 @@ public class Classifier extends Type implements
 				EObject result = super.createCopy(eObject);
 				org.modeldriven.alf.uml.Element copy = 
 						wrap((org.eclipse.uml2.uml.Element)result);
-				// TODO: Handle copying of tagged values.
-				for (org.eclipse.uml2.uml.Stereotype stereotype: 
-					((org.eclipse.uml2.uml.Element)eObject).getAppliedStereotypes()) {
+				org.eclipse.uml2.uml.Element element = (org.eclipse.uml2.uml.Element)eObject;
+				for (org.eclipse.uml2.uml.Stereotype stereotype: element.getAppliedStereotypes()) {
 					org.modeldriven.alf.uml.StereotypeApplication.
 					addStereotypeApplication(
-									copy, (Stereotype)wrap(stereotype));
+							copy, (Stereotype)wrap(stereotype), this.getTaggedValues(element, stereotype));
 				}
 				return result;
+			}
+			
+			protected Collection<org.modeldriven.alf.uml.StereotypeApplication.TaggedValue> getTaggedValues(
+					org.eclipse.uml2.uml.Element element, org.eclipse.uml2.uml.Stereotype stereotype) {
+				ArrayList<StereotypeApplication.TaggedValue> taggedValues = 
+						new ArrayList<StereotypeApplication.TaggedValue>();
+				for (org.eclipse.uml2.uml.Property attribute: stereotype.getAllAttributes()) {
+					String name = attribute.getName();
+					Object value = element.getValue(stereotype, name);
+					if (value != null) {
+						taggedValues.add(new StereotypeApplication.TaggedValue(name, value));
+					}
+				}
+				return taggedValues;
 			}
 			
 			// Add to the set of external references any reference that is not

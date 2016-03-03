@@ -14,13 +14,10 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.alf.uml.Package;
-import org.modeldriven.alf.uml.PackageableElement;
-import org.modeldriven.alf.uml.Profile;
-import org.modeldriven.alf.uml.Stereotype;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -263,37 +260,39 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         // First check if it is a standard stereotype.
         ElementReference stereotype = ModelNamespaceImpl.resolveStandardStereotype(name);
         if (stereotype == null) {
-        QualifiedName qualification = name.getQualification();
-        String stereotypeName = name.getUnqualifiedName().getName();
-        if (qualification == null) {
-            // If the stereotype name is unqualified, there must be exactly one
-            // applied profile that contains a stereotype of that name.
-            for (Profile profile: this.getAllAppliedProfiles()) {
-                Stereotype profileStereotype = findStereotype(stereotypeName, profile);
-                if (profileStereotype != null) {
-                    if (stereotype != null) {
-                        stereotype = null;
-                        break;
+            QualifiedName qualification = name.getQualification();
+            String stereotypeName = name.getUnqualifiedName().getName();
+            if (qualification == null) {
+                // If the stereotype name is unqualified, there must be exactly one
+                // applied profile that contains a stereotype of that name.
+                for (ElementReference profile: this.getAllAppliedProfiles()) {
+                    ElementReference profileStereotype = findStereotype(stereotypeName, profile);
+                    if (profileStereotype != null) {
+                        if (stereotype != null) {
+                            stereotype = null;
+                            break;
+                        }
+                        stereotype = profileStereotype;
                     }
-                    stereotype = ElementReferenceImpl.makeElementReference(profileStereotype);
                 }
-            }
-        } else {
-            // If the stereotype name is qualified, then there must be an
-            // applied profile whose qualified name is the qualification of
-            // the stereotype and that contains a stereotype of that name.
-            // NOTE: This means that if the stereotype not directly owned by
-            // the profile, then the names of any subpackages in which it is
-            // nested are NOT to be included in the qualification when
-            // naming the stereotype.
-            for (Profile profile: this.getAllAppliedProfiles()) {
-                if (profile.getQualifiedName().equals(qualification)) {
-                    stereotype = ElementReferenceImpl.makeElementReference(
-                            findStereotype(stereotypeName, profile));
-                    break;
+            } else {
+                // If the stereotype name is qualified, then there must be an
+                // applied profile that is named by the qualification of
+                // the stereotype and that contains a stereotype of that name.
+                // NOTE: This means that if the stereotype not directly owned by
+                // the profile, then the names of any subpackages in which it is
+                // nested are NOT to be included in the qualification when
+                // naming the stereotype.
+                qualification.getImpl().setCurrentScope(this.getOuterScope());
+                ElementReference profile = qualification.getImpl().getProfileReferent();
+                if (profile != null && profile.getImpl().isContainedIn(this.getAllAppliedProfiles())) {
+                            stereotype = findStereotype(stereotypeName, profile);
                 }
             }
         }
+        if (stereotype != null) {
+            // NOTE: This avoids a qualifiedNameQualifiedResolution violation for name.
+            name.setReferent(Collections.singleton(stereotype));
         }
         return stereotype;
     }
@@ -301,16 +300,16 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     // This method is used to find stereotypes that are not only directly owned by
     // a profile, but also those that are indirectly nested in packages within the
     // profile (but not within nested profiles).
-    private static Stereotype findStereotype(String name, Package package_) {
-        Collection<PackageableElement> packagedElements = package_.getPackagedElement();
-        for (PackageableElement element: packagedElements) {
-            if (element instanceof Stereotype && name.equals(element.getName())) {
-                return (Stereotype)element;
+    private static ElementReference findStereotype(String name, ElementReference package_) {
+        Collection<ElementReference> packagedElements = package_.getImpl().getOwnedMembers();
+        for (ElementReference element: packagedElements) {
+            if (element.getImpl().isStereotype() && name.equals(element.getImpl().getName())) {
+                return element;
             }
         }
-        for (PackageableElement element: packagedElements) {
-            if (element instanceof Package && !(element instanceof Profile)) {
-                Stereotype stereotype = findStereotype(name, (Package)element);
+        for (ElementReference element: packagedElements) {
+            if (element.getImpl().isPackage() && !element.getImpl().isProfile()) {
+                ElementReference stereotype = findStereotype(name, element);
                 if (stereotype != null) {
                     return stereotype;
                 }
@@ -319,9 +318,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return null;
     }
     
-    public Collection<Profile> getAllAppliedProfiles() {
+    public Collection<ElementReference> getAllAppliedProfiles() {
         NamespaceDefinition outerScope = this.getOuterScope();
-        return outerScope == null? new ArrayList<Profile>(): 
+        return outerScope == null? new ArrayList<ElementReference>(): 
             outerScope.getImpl().getAllAppliedProfiles();
     }
     

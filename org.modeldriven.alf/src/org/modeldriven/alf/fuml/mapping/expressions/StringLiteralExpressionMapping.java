@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -19,12 +19,15 @@ import org.modeldriven.alf.uml.ValueSpecificationAction;
 import org.modeldriven.alf.uml.LiteralString;
 
 public class StringLiteralExpressionMapping extends LiteralExpressionMapping {
+    
+    public static String valueOf(String image) {
+        return image.length() < 2? "": image.substring(1,image.length()-1);
+    }
 
     @Override
     public ValueSpecificationAction mapValueSpecificationAction() throws MappingError {
         String image = this.getStringLiteralExpression().getImage();
-        return this.graph.addStringValueSpecificationAction(
-                image.substring(1,image.length()-1));
+        return this.graph.addStringValueSpecificationAction(valueOf(image));
     }
 
 	public StringLiteralExpression getStringLiteralExpression() {

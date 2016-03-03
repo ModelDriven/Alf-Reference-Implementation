@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class Element implements org.modeldriven.alf.uml.Element {
 	
@@ -49,9 +50,17 @@ public class Element implements org.modeldriven.alf.uml.Element {
     }
     
     @Override
-    public void applyStereotype(org.modeldriven.alf.uml.Stereotype stereotype) {
-    	this.getBase().applyStereotype(stereotype == null? null: 
-    		((Stereotype)stereotype).getBase());
+    public void applyStereotype(
+    		org.modeldriven.alf.uml.Stereotype stereotype, 
+    		Collection<StereotypeApplication.TaggedValue> taggedValues) {
+    	org.eclipse.uml2.uml.Element base = this.getBase();
+    	if (stereotype != null) {
+    		org.eclipse.uml2.uml.Stereotype baseStereotype = ((Stereotype)stereotype).getBase();
+	    	base.applyStereotype(baseStereotype);
+	    	for (StereotypeApplication.TaggedValue taggedValue: taggedValues) {
+	    		base.setValue(baseStereotype, taggedValue.getName(), taggedValue.getValue());
+	    	}
+    	}
     }
     
     @Override

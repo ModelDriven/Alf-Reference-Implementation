@@ -17,10 +17,17 @@ public abstract class ElementFactory {
             org.modeldriven.alf.uml.Element.class.getPackage().getName();
     
     public static Class<?> interfaceForName(String name) {
-        try {
-            return Class.forName(INTERFACE_PACKAGE_NAME + "." + name);
-        } catch (Exception e) {
+        if (name == null) {
             return null;
+        } else {
+            if (name.equals("Class")) {
+                name = "Class_";
+            }
+            try {
+                return Class.forName(INTERFACE_PACKAGE_NAME + "." + name);
+            } catch (Exception e) {
+                return null;
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -19,10 +19,8 @@ import org.modeldriven.alf.uml.ValueSpecificationAction;
 import org.modeldriven.alf.uml.LiteralInteger;
 
 public class NaturalLiteralExpressionMapping extends LiteralExpressionMapping {
-
-    @Override
-    public ValueSpecificationAction mapValueSpecificationAction() throws MappingError {
-        String image = this.getNaturalLiteralExpression().getImage();
+    
+    public static int valueOf(String image) {
         int radix = 10;
         if (image.length() > 1 && image.charAt(0) == '0') {
             char radixChar = image.charAt(1);
@@ -33,8 +31,13 @@ public class NaturalLiteralExpressionMapping extends LiteralExpressionMapping {
                 image = image.substring(2);
             }
         }
-        return this.graph.addNaturalValueSpecificationAction(
-                Integer.parseInt(image.replaceAll("_", ""), radix));
+        return Integer.parseInt(image.replaceAll("_", ""), radix);
+    }
+
+    @Override
+    public ValueSpecificationAction mapValueSpecificationAction() throws MappingError {
+        String image = this.getNaturalLiteralExpression().getImage();
+        return this.graph.addNaturalValueSpecificationAction(valueOf(image));
     }
 
 	public NaturalLiteralExpression getNaturalLiteralExpression() {
