@@ -22,8 +22,6 @@ import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class Element implements org.modeldriven.alf.uml.Element {
 	
-	private static final ElementFactory factory = new ElementFactory();
-
 	protected org.eclipse.uml2.uml.Element base;
 
 	public Element(org.eclipse.uml2.uml.Element base) {
@@ -34,19 +32,8 @@ public class Element implements org.modeldriven.alf.uml.Element {
 		return (org.eclipse.uml2.uml.Element) this.base;
 	}
 
-    private void setBase(org.eclipse.uml2.uml.Element base) {
-        this.base = base;
-    }
-    
     public static Element wrap(org.eclipse.uml2.uml.Element base) {
-        if (base == null) {
-            return null;
-        }
-        Element newInstance = (Element)factory.newInstanceFor(base);
-        if (newInstance != null) {
-            newInstance.setBase(base);
-        }
-        return newInstance;
+        return (Element)ElementFactory.wrap(base);
     }
     
     @Override

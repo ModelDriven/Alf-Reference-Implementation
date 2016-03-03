@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Ivar Jacobson International SA
+ * Copyright 2016 Data Access Technologies (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License
  * (GPL) version 3 that accompanies this distribution and is available at     
@@ -18,91 +18,71 @@ import org.eclipse.debug.core.model.ISourceLocator;
 public class DummyLaunch implements ILaunch {
 
 	public DummyLaunch() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public boolean canTerminate() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isTerminated() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void terminate() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object[] getChildren() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IDebugTarget getDebugTarget() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IProcess[] getProcesses() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IDebugTarget[] getDebugTargets() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void addDebugTarget(IDebugTarget target) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void removeDebugTarget(IDebugTarget target) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void addProcess(IProcess process) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void removeProcess(IProcess process) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public ISourceLocator getSourceLocator() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setSourceLocator(ISourceLocator sourceLocator) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -112,25 +92,20 @@ public class DummyLaunch implements ILaunch {
 
 	@Override
 	public ILaunchConfiguration getLaunchConfiguration() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setAttribute(String key, String value) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public String getAttribute(String key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean hasChildren() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

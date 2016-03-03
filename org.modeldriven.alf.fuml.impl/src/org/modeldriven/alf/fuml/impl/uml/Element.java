@@ -16,20 +16,14 @@ import org.modeldriven.alf.uml.StereotypeApplication;
 
 public abstract class Element implements org.modeldriven.alf.uml.Element {
     
-    private static final ElementFactory factory = new ElementFactory();
-
 	protected Object base;
 
 	public Element(Object base) {
-		this.setBase(base);
+		this.base = base;
 	}
 
 	public Object getBase() {
 		return this.base;
-	}
-	
-	private void setBase(Object base) {
-	    this.base = base;
 	}
 	
     public fUML.Syntax.Classes.Kernel.Element getBaseAsElement() {
@@ -56,7 +50,7 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
     }
 
     public static Element wrap(Object base) {
-        return base == null? null: (Element)factory.newInstanceFor(base);
+        return (Element)ElementFactory.wrap(base);
     }
     
    @Override

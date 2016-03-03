@@ -100,8 +100,6 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         if (definition.getImpl().isTemplate()) { 
             this.println(definition.getName() + " is a template.");
         } else {
-            FumlMapping.setFumlFactory(this.createFumlFactory());
-            FumlMapping.setElementFactory(this.createElementFactory());
             mapping = FumlMapping.getMapping(definition);
             try {
                 mapping.getModelElements();
@@ -224,6 +222,8 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
             rootScopeImpl.resetModelNamespace();
             this.rootScopeImpl = rootScopeImpl;
         }
+        FumlMapping.setFumlFactory(this.createFumlFactory());
+        FumlMapping.setElementFactory(this.createElementFactory());
     }
     
     protected String getErrorMessageFilePath() {

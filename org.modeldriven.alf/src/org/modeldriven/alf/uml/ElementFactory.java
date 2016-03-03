@@ -30,6 +30,12 @@ public abstract class ElementFactory {
             }
         }
     }
+    
+    private static ElementFactory elementFactory = null;
+    
+    public static Element wrap(Object base) {
+        return base == null? null: elementFactory.newInstanceFor(base);
+    }
 
     private Class<?> behaviorClass = null;
     private Class<?> classClass = null;
@@ -45,6 +51,8 @@ public abstract class ElementFactory {
         this.classClass = classClass;
         this.classifierClass = classifierClass;
         this.namedElementClass = namedElementClass;
+        
+        elementFactory = this;
     }
     
     @SuppressWarnings("unchecked")
