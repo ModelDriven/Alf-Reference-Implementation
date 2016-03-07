@@ -20,6 +20,7 @@ import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.DataTypeDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.OperationDefinitionMapping;
+import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
@@ -236,19 +237,13 @@ public abstract class Alf extends AlfBase {
         this.println("  -d OFF|FATAL|ERROR|WARN|INFO|DEBUG|ALL");
         this.println("            Set debug logging level (default is as configured)");
         this.println("  -f        Treat unit as a file name rather than a qualifed name");
-        this.println("  -l path   Set library directory path (default is \"Libraries\")");
-        this.println("  -m path   Set model directory path (default is \"Models\")");
+        this.println("  -l path   Set library directory path (default is \"" + 
+                                    RootNamespaceImpl.DEFAULT_LIBRARY_DIRECTORY + "\")");
+        this.println("  -m path   Set model directory path (default is \"" + 
+                                    RootNamespaceImpl.DEFAULT_MODEL_DIRECTORY + "\")");
         this.println("  -p        Parse and constraint check only");
         this.println("  -P        Parse, constraint check and print abstract syntax tree");
         this.println("  -v        Set verbose mode (if used alone without unit, prints version info)");
-    }
-    
-    public Alf() {
-        super();
-    }
-    
-    public Alf(String[] args) {
-        super(args);
     }
     
 }

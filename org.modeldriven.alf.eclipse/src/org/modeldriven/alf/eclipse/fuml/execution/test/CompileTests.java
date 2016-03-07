@@ -30,7 +30,7 @@ public class CompileTests {
         
         try {
         	args[args.length-1] = unitName;
-        	new AlfCompiler(args);
+        	new AlfCompiler().run(args);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -18,8 +18,10 @@ import org.modeldriven.alf.uml.StereotypeApplication;
 import org.eclipse.emf.ecore.resource.Resource;
 
 public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler {
+	
+	public static final String DEFAULT_UML_DIRECTORY = "UML";
     
-	protected String umlDirectory;
+	protected String umlDirectory = DEFAULT_UML_DIRECTORY;
 	
 	protected void setUmlDirectory(String umlDirectory) {
 		this.umlDirectory = umlDirectory;
@@ -82,24 +84,20 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     }
     
     @Override
-    protected void configure() {
-    	super.configure();
-    	this.umlDirectory = "UML";
-    	this.getRootScopeImpl().setLibraryDirectory("Libraries");
-    }
-    
-    @Override
     protected void printUsage() {
         this.println("Usage is");
         this.println("  alfc [options] unit");
         this.println("where unit is the qualified name of an Alf unit and");
         this.println("allowable options are:");
         this.println("  -f        Treat unit as a file name rather than a qualifed name");
-        this.println("  -l path   Set library directory path (default is \"Libraries\")");
-        this.println("  -m path   Set model directory path (default is \"Models\")");
+        this.println("  -l path   Set library directory path (default is \"" +
+        							RootNamespaceImpl.DEFAULT_LIBRARY_DIRECTORY + "\")");
+        this.println("  -m path   Set model directory path (default is \"" +
+        							RootNamespaceImpl.DEFAULT_MODEL_DIRECTORY + "\")");
         this.println("  -p        Parse and constraint check only");
         this.println("  -P        Parse, constraint check and print abstract syntax tree");
-        this.println("  -u path   Set UML output directory path (default is \"UML\")");
+        this.println("  -u path   Set UML output directory path (default is \"" +
+        							DEFAULT_UML_DIRECTORY + "\")");
         this.println("  -v        Set verbose mode (if used alone without unit, prints version info)");
     }
     
@@ -107,11 +105,7 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     	super();
     }
     
-    public AlfCompiler(String[] args) {
-        super(args);
-    }
-    
     public static void main(String[] args) {
-        new AlfCompiler(args);
+        new AlfCompiler().run(args);
     }
 }

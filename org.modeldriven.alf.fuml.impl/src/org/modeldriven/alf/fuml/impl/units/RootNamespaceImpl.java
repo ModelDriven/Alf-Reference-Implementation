@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2015 Data Access Technologies (Model Driven Solutions)
+ * Copyright 2015-2016 Data Access Technologies (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License
  * (GPL) version 3 that accompanies this distribution and is available at     
@@ -25,7 +25,6 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     
 	public RootNamespaceImpl() {
 		super(RootNamespace.getRootScope());
-		super.setLibraryDirectory("Libraries");
 	}
 
     public void setContext(fUML.Syntax.Classes.Kernel.Element contextElement) {

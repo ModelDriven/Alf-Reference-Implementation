@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -28,7 +28,9 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 public class ModelNamespaceImpl extends 
     org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl {
     
-    private String modelDirectory = "Models";
+    public static final String DEFAULT_MODEL_DIRECTORY = "Models";
+    
+    private String modelDirectory = DEFAULT_MODEL_DIRECTORY;
     protected boolean isVerbose = false;
     
     // Cache ensures that no unit is parsed more than once.

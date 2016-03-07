@@ -23,6 +23,11 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public class RootNamespaceImpl extends ModelNamespaceImpl {
     
+    public static final String ROOT_NAMESPACE_NAME = "Root";
+    public static final String MODEL_NAMESPACE_NAME = "Model";
+    public static final String DEFAULT_LIBRARY_DIRECTORY = "Libraries";
+    public static final String ALF_LIBRARY_SUBDIRECTORY = "alf";
+    
     private ModelNamespace modelNamespace = null;
     private String libraryDirectory = null;
     
@@ -33,8 +38,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     public RootNamespaceImpl() {
         this(RootNamespace.getRootScope());
-        this.setName("Root");
-        this.setLibraryDirectory("Libraries");
+        this.setName(ROOT_NAMESPACE_NAME);
         this.resetModelNamespace();
     }
     
@@ -46,7 +50,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     public void resetModelNamespace() {
         ModelNamespace modelNamespace = new ModelNamespace();
         modelNamespace.setImpl(new ModelNamespaceImpl(modelNamespace));
-        modelNamespace.setName("Model");               
+        modelNamespace.setName(MODEL_NAMESPACE_NAME);               
         this.setModelNamespace(modelNamespace);
         this.setMapping(null);
     }
@@ -87,10 +91,13 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     
     public void setLibraryDirectory(String libraryDirectory) {
         this.libraryDirectory = libraryDirectory;
-        super.setModelDirectory(libraryDirectory + "/alf");
+        super.setModelDirectory(libraryDirectory + "/" + ALF_LIBRARY_SUBDIRECTORY);
     }
     
     public String getLibraryDirectory() {
+        if (this.libraryDirectory == null) {
+            this.setLibraryDirectory(DEFAULT_LIBRARY_DIRECTORY);
+        }
         return this.libraryDirectory;
     }
     

@@ -113,15 +113,7 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
         }
     }
     
-    public Alf() {
-        super();
-    }
-    
-    public Alf(String[] args) {
-        super(args);
-    }
-    
     public static void main(String[] args) {
-        new Alf(args);
+        new Alf().run(args);
     }
 }

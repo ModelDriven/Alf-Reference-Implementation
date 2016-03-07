@@ -55,12 +55,4 @@ public abstract class AlfCompiler extends AlfBase {
         return unit;
     }
     
-    public AlfCompiler() {
-        super();
-    }
-    
-    public AlfCompiler(String[] args) {
-        super(args);
-    }
-    
 }

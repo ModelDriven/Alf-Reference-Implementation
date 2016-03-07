@@ -261,9 +261,4 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         this.configure();
     }
     
-    public AlfBase(String[] args) {
-        this();
-        this.run(args);
-    }
-    
 }
