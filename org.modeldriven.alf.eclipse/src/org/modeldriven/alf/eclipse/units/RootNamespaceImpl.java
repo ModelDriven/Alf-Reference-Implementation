@@ -44,10 +44,23 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     private boolean uninitialized = true;
     
     public RootNamespaceImpl() {
+        this(System.getProperty("user.dir"));
+    }
+    
+    public RootNamespaceImpl(String baseDirectory) {
+    	this(URI.createFileURI(baseDirectory + "/"));
+    }
+    
+    public RootNamespaceImpl(URI baseURI) {
+    	this(new ResourceSetImpl(), baseURI);
+    	UMLResourcesUtil.init(this.resourceSet);
+    }
+    
+    // NOTE: The resourceSet must be initialized for UML resources.
+    public RootNamespaceImpl(ResourceSet resourceSet, URI baseURI) {
         super();
-        this.resourceSet = new ResourceSetImpl();
-        this.baseURI = URI.createFileURI(System.getProperty("user.dir") + "/");
-        UMLResourcesUtil.init(this.resourceSet);
+        this.resourceSet = resourceSet;
+        this.baseURI = baseURI;
     }
     
     public void initialize() {
