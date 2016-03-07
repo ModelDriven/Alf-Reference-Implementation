@@ -12,9 +12,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.uml.StereotypeApplication;
 
 public abstract class Element implements org.modeldriven.alf.uml.Element {
+	
+	public static final ElementFactory FACTORY = new ElementFactory(
+			Element.class,
+			fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior.class, 
+			fUML.Syntax.Classes.Kernel.Class_.class, 
+			fUML.Syntax.Classes.Kernel.Classifier.class, 
+			fUML.Syntax.Classes.Kernel.NamedElement.class);
     
 	protected Object base;
 
@@ -50,7 +58,7 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
     }
 
     public static Element wrap(Object base) {
-        return (Element)ElementFactory.wrap(base);
+        return (Element)FACTORY.newInstanceFor(base);
     }
     
    @Override

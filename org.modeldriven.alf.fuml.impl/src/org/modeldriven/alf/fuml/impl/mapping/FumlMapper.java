@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.impl.mapping;
 
-import org.modeldriven.alf.fuml.impl.uml.ElementFactory;
+import org.modeldriven.alf.fuml.impl.uml.Element;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.mapping.Mapping;
@@ -25,7 +25,7 @@ public class FumlMapper {
         }
         
         FumlMapping.setFumlFactory(new FumlMappingFactory());
-        FumlMapping.setElementFactory(new ElementFactory());
+        FumlMapping.setElementFactory(Element.FACTORY);
         FumlMapping mapping = null;
         try {
             mapping = FumlMapping.parseAndMap(fileName);

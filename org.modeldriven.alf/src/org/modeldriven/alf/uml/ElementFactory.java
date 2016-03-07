@@ -11,7 +11,7 @@ package org.modeldriven.alf.uml;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public abstract class ElementFactory {
+public class ElementFactory {
     
     public static final String INTERFACE_PACKAGE_NAME = 
             org.modeldriven.alf.uml.Element.class.getPackage().getName();
@@ -30,29 +30,25 @@ public abstract class ElementFactory {
             }
         }
     }
-    
-    private static ElementFactory elementFactory = null;
-    
-    public static Element wrap(Object base) {
-        return base == null? null: elementFactory.newInstanceFor(base);
-    }
 
+    private String packageName = "";
+    
     private Class<?> behaviorClass = null;
     private Class<?> classClass = null;
     private Class<?> classifierClass = null;
     private Class<?> namedElementClass = null;
     
     public ElementFactory(
+            Class<?> elementClass,
             Class<?> behaviorClass, 
             Class<?> classClass, 
             Class<?> classifierClass,
             Class<?> namedElementClass) {
+        this.packageName = elementClass.getPackage().getName();
         this.behaviorClass = behaviorClass;
         this.classClass = classClass;
         this.classifierClass = classifierClass;
-        this.namedElementClass = namedElementClass;
-        
-        elementFactory = this;
+        this.namedElementClass = namedElementClass;        
     }
     
     @SuppressWarnings("unchecked")
@@ -70,16 +66,18 @@ public abstract class ElementFactory {
     
     public Element newInstanceFor(Object base) {
         Element newInstance = null;
-        try {
-            newInstance = (Element)this.createInstanceFor(base.getClass().getSimpleName(), base);
-        } catch (Exception e) {
-            final String className =
-                    this.behaviorClass.isInstance(base)? "Behavior":
-                    this.classClass.isInstance(base)? "Class":
-                    this.classifierClass.isInstance(base)? "Classifier":
-                    this.namedElementClass.isInstance(base)? "NamedElement":
-                    "Element";
-            newInstance = (Element)this.newInstanceFor(className, base);
+        if (base != null) {
+            try {
+                newInstance = (Element)this.createInstanceFor(base.getClass().getSimpleName(), base);
+            } catch (Exception e) {
+                final String className =
+                        this.behaviorClass.isInstance(base)? "Behavior":
+                        this.classClass.isInstance(base)? "Class":
+                        this.classifierClass.isInstance(base)? "Classifier":
+                        this.namedElementClass.isInstance(base)? "NamedElement":
+                        "Element";
+                newInstance = (Element)this.newInstanceFor(className, base);
+            }
         }
         return newInstance;
     }
@@ -131,7 +129,7 @@ public abstract class ElementFactory {
     }
     
     public String getPackageName() {
-        return this.getClass().getPackage().getName();
+        return this.packageName;
     }
     
 }

@@ -55,7 +55,7 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     
     @Override
     protected ElementFactory createElementFactory() {
-        return new org.modeldriven.alf.eclipse.uml.ElementFactory();
+        return org.modeldriven.alf.eclipse.uml.Element.FACTORY;
     }
     
     @Override

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.uml2.uml.UMLFactory;
+import org.modeldriven.alf.uml.ElementFactory;
 
 public class Stereotype extends Class_ implements org.modeldriven.alf.uml.Stereotype {
 

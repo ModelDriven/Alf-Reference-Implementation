@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -50,7 +50,7 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     
     @Override
     protected ElementFactory createElementFactory() {
-        return new org.modeldriven.alf.fuml.impl.uml.ElementFactory();
+        return org.modeldriven.alf.fuml.impl.uml.Element.FACTORY;
     }
     
     @Override

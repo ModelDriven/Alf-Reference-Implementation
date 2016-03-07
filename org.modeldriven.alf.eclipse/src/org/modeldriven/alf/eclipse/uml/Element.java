@@ -18,9 +18,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.uml.StereotypeApplication;
 
 public class Element implements org.modeldriven.alf.uml.Element {
+	
+	public static final ElementFactory FACTORY = new ElementFactory(
+			Element.class,
+			org.eclipse.uml2.uml.Behavior.class, 
+			org.eclipse.uml2.uml.Class.class, 
+			org.eclipse.uml2.uml.Classifier.class, 
+			org.eclipse.uml2.uml.NamedElement.class);
 	
 	protected org.eclipse.uml2.uml.Element base;
 
@@ -33,7 +41,7 @@ public class Element implements org.modeldriven.alf.uml.Element {
 	}
 
     public static Element wrap(org.eclipse.uml2.uml.Element base) {
-        return (Element)ElementFactory.wrap(base);
+        return (Element)FACTORY.newInstanceFor(base);
     }
     
     @Override

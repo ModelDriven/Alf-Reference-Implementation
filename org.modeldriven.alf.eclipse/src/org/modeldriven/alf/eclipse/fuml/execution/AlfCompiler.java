@@ -27,7 +27,7 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     
     @Override
     protected ElementFactory createElementFactory() {
-        return new org.modeldriven.alf.eclipse.uml.ElementFactory();
+        return org.modeldriven.alf.eclipse.uml.Element.FACTORY;
     }
     
     @Override

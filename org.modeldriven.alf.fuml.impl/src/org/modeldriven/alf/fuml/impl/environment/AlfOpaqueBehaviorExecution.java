@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Ivar Jacobson International SA
+ * Copyright 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License
  * (GPL) version 3 that accompanies this distribution and is available at     
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.modeldriven.alf.fuml.impl.uml.ElementFactory;
 import org.modeldriven.alf.fuml.impl.units.RootNamespaceImpl;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
@@ -52,7 +51,7 @@ public class AlfOpaqueBehaviorExecution extends
 		if (rootScopeImpl == null) {
 			rootScopeImpl = new RootNamespaceImpl();
 			FumlMapping.setFumlFactory(new FumlMappingFactory());
-			FumlMapping.setElementFactory(new ElementFactory());
+			FumlMapping.setElementFactory(org.modeldriven.alf.fuml.impl.uml.Element.FACTORY);
 		}
 		return rootScopeImpl;
 	}

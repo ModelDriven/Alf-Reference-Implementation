@@ -533,7 +533,6 @@ public class Fuml {
 
    public Fuml() {
 	   this.setUmlLibraryDirectory("Libraries");
-	   new org.modeldriven.alf.eclipse.uml.ElementFactory();
 	   
 	   try {
 		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
