@@ -252,7 +252,10 @@ public abstract class MemberImpl extends DocumentedElementImpl {
                     subunitAnnotations != null && subunitAnnotations.size() > 0) {
                 for (StereotypeAnnotation stubAnnotation: stubAnnotations) {
                     for (StereotypeAnnotation subunitAnnotation: subunitAnnotations) {
-                        if (stubAnnotation.getStereotype() == subunitAnnotation.getStereotype()) {
+                        ElementReference stereotype = stubAnnotation.getImpl().getStereotypeReference();
+                        if (stereotype != null && 
+                                stereotype.getImpl().equals(
+                                        subunitAnnotation.getImpl().getStereotypeReference())) {
                             return false;
                         }
                     }
@@ -374,7 +377,8 @@ public abstract class MemberImpl extends DocumentedElementImpl {
     
     public Collection<StereotypeAnnotation> getAllAnnotations() {
         Member self = this.getSelf();
-        Collection<StereotypeAnnotation> annotations = self.getAnnotation();
+        Collection<StereotypeAnnotation> annotations = 
+                new ArrayList<StereotypeAnnotation>(self.getAnnotation());
         UnitDefinition subunit = self.getSubunit();
         NamespaceDefinition definition = subunit == null? null: subunit.getDefinition();
         if (definition != null) {
@@ -567,8 +571,13 @@ public abstract class MemberImpl extends DocumentedElementImpl {
             Member self = this.getSelf();
             Member member = (Member)base;
             self.setVisibility(member.getVisibility());
-            self.setIsStub(false);
-            self.setAnnotation(member.getAnnotation());
+            self.setIsStub(false);            
+            for (StereotypeAnnotation annotation: member.getAnnotation()) {
+                // NOTE: Stereotype annotations must be copied, because they will
+                // have a different owner.
+                self.addAnnotation((StereotypeAnnotation)
+                        annotation.getImpl().bind(templateParameters, templateArguments));
+            }
         }
     }
     

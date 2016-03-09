@@ -11,6 +11,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -360,4 +361,18 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	    this.unscoped = true;
 	}
 
+    @Override
+    protected void bindTo(SyntaxElement base,
+            List<ElementReference> templateParameters, 
+            List<ElementReference> templateArguments) {
+        super.bindTo(base, templateParameters, templateArguments);
+        if (base instanceof StereotypeAnnotation) {
+            StereotypeAnnotation self = this.getSelf();
+            StereotypeAnnotation annotation = (StereotypeAnnotation)base;
+            self.setStereotypeName(annotation.getStereotypeName());
+            self.setNames(annotation.getNames());
+            self.setTaggedValues(self.getTaggedValues());
+        }
+    }
+    
 } // StereotypeAnnotationImpl
