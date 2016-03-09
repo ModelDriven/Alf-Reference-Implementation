@@ -481,7 +481,9 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         InvocationExpression self = this.getSelf();
         List<ElementReference> features = new ArrayList<ElementReference>();
         for (ElementReference referent: referents) {
-            if (self.getImpl().isCompatibleWith(referent)) {
+            if ((referent.getImpl().isOperation() || 
+                    referent.getImpl().isReception()) &&
+               self.getImpl().isCompatibleWith(referent)) {
                 features.add(referent);
             }
         }

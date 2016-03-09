@@ -199,9 +199,9 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                     element = 
                         ((OperationDefinitionMapping) mapping).getOperation();
                 } else if (mapping instanceof ReceptionDefinitionMapping) {
-                    element = ((ReceptionDefinitionMapping) mapping).getReception().getSignal();
+                    element = ((ReceptionDefinitionMapping) mapping).getReception();
                 } else if (mapping instanceof SignalReceptionDefinitionMapping) {
-                    element = ((SignalReceptionDefinitionMapping) mapping).getSignal();                    
+                    element = ((SignalReceptionDefinitionMapping) mapping).getReception();                    
                 } else if (mapping instanceof ActivityDefinitionMapping) {
                     element = 
                         ((ActivityDefinitionMapping) mapping).getBehavior();
@@ -218,8 +218,8 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                 action = this.graph.addCallOperationAction((Operation)element);
                 this.resultSource = ActivityGraph.getReturnPin(action);
 
-            } else if (element instanceof Signal) {
-                action = this.graph.addSendSignalAction((Signal)element);
+            } else if (element instanceof Reception) {
+                action = this.graph.addSendSignalAction(((Reception)element).getSignal());
                 
             } else if (element instanceof Behavior) {
                 action = this.graph.addCallBehaviorAction((Behavior)element);

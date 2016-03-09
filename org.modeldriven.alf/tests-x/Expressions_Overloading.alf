@@ -25,6 +25,7 @@ class Expressions_Overloading specializes Test {
 		    public set(in i: Integer) { this.i1 = i; }
 		    public set(in n: Natural) { this.n1 = n; }
 		    
+		    public get1 : Integer; // Make sure overloading resolution on considers behavioral features.
 		    public get1(): Integer { return this.i1; }
 		    public get1(): Natural { return this.n1; }
 		    
