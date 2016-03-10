@@ -46,7 +46,7 @@ The implementation source is organized into four [Eclipse](http://www.eclipse.or
 
 * `org.modeldriven.alf` - This is the base project, including the
 Alf parser, static semantic checking and generic mapping to fUML.
-The generic is not dependent on any specific UML metamodel or fUML implementation, 
+The generic mapping is not dependent on any specific UML metamodel or fUML implementation, 
 but it must be extended with a specific UML metamodel implementation in order to generate
 actual UML model output.
 	
