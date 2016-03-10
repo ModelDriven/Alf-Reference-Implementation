@@ -1,6 +1,6 @@
 #!/bin/bash
 # ***************************************************************************
-# Copyright 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+# Copyright 2015-2016 Data Access Technologies, Inc. (Model Driven Solutions)
 #
 # All rights reserved worldwide. This program and the accompanying materials
 # are made available for under the terms of the GNU General Public License 
@@ -8,11 +8,11 @@
 # http://www.gnu.org/licenses/gpl-3.0.html.
 # ***************************************************************************
 
-if [[ "$UML_LIB" == "" || "-v" = $@ ]]
+if [[ "$ALF_LIB" == "" || "-v" = $@ ]]
 then
   lib=""
 else
-  lib="-l $UML_LIB"
+  lib="-l $ALF_LIB"
 fi
 
 java -jar dist/alf-eclipse.jar $lib $@

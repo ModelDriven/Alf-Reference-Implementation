@@ -245,8 +245,8 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         String unitName = this.parseArgs(args);
         if (unitName != null || args.length == 1 && this.isVerbose) {
             this.printVerbose("Alf Reference Implementation v" + ALF_VERSION);
-            this.loadResources();
             if (unitName != null) {
+                this.loadResources();
                 this.process(this.parse(unitName, this.isFileName));
             }
         } else {

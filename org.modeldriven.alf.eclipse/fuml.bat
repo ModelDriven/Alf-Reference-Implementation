@@ -1,5 +1,5 @@
 @rem ***************************************************************************
-@rem Copyright 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+@rem Copyright 2015-2016 Data Access Technologies, Inc. (Model Driven Solutions)
 @rem
 @rem All rights reserved worldwide. This program and the accompanying materials
 @rem are made available for under the terms of the GNU General Public License 
@@ -9,6 +9,6 @@
 @echo off
 
 set lib=
-if not "%UML_LIB%" == "" set lib=-l %UML_LIB%
+if not "%ALF_LIB%" == "" set lib=-l %ALF_LIB%
 
 java -jar dist/fuml-eclipse.jar %lib% %*
