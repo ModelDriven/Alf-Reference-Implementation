@@ -98,8 +98,8 @@ public class NamedExpression extends SyntaxElement {
 
 	/**
 	 * Bit string conversion is required if the type of the type of the
-	 * corresponding parameter is BitString, or a collection class instantiated
-	 * with a BitString type, and the type of the argument expression is not
+	 * corresponding parameter is BitString, or a collection class whose sequence
+	 * type is BitString, and the type of the argument expression is not
 	 * BitString.
 	 **/
 	public boolean namedExpressionIsBitStringConversionDerivation() {

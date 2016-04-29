@@ -336,7 +336,7 @@ public class AssignmentExpression extends Expression {
 	 * An assignment requires BitString conversion if the type of the left-hand
 	 * side is BitString and either the type of the right-hand side is Integer
 	 * or collection conversion is required and the type of the right-hand side
-	 * is a collection class whose argument type is Integer.
+	 * is a collection class whose sequence type is Integer.
 	 **/
 	public boolean assignmentExpressionIsBitStringConversionDerivation() {
 		return this.getImpl()

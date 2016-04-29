@@ -131,7 +131,7 @@ public class SequenceOperationExpressionImpl
      * referent of a sequence operation expression is BitString and either the
      * type of its primary expression is Integer or collection conversion is
      * required and the type of its primary expression is a collection class
-     * whose argument type is Integer.
+     * whose sequence type is Integer.
      **/
 	protected Boolean deriveIsBitStringConversion() {
 	    SequenceOperationExpression self = this.getSelf();

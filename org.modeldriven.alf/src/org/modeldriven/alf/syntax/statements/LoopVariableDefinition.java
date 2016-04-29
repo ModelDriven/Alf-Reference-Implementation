@@ -145,7 +145,7 @@ public class LoopVariableDefinition extends SyntaxElement {
 	 * loop variable definition is the first in a for statement and 0 otherwise.
 	 * If collection conversion is not required, then the variable has the
 	 * inferred or declared type from the definition. If collection conversion
-	 * is required, then the variable has the argument type of the collection
+	 * is required, then the variable has the sequence type of the collection
 	 * class.
 	 **/
 	public boolean loopVariableDefinitionAssignmentAfterDerivation() {
@@ -198,9 +198,8 @@ public class LoopVariableDefinition extends SyntaxElement {
 
 	/**
 	 * Collection conversion is required for a loop variable definition if the
-	 * type for the definition is the instantiation of a collection class and
-	 * the multiplicity upper bound of the first expression is no greater than
-	 * 1.
+	 * type for the definition is a collection class and the multiplicity
+	 * upper bound of the first expression is no greater than 1.
 	 **/
 	public boolean loopVariableDefinitionIsCollectionConversionDerivation() {
 		return this.getImpl()

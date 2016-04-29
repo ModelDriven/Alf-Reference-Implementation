@@ -187,9 +187,8 @@ public class LoopVariableDefinitionImpl extends
 
     /**
      * Collection conversion is required for a loop variable definition if the
-     * type for the definition is the instantiation of a collection class and
-     * the multiplicity upper bound of the first expression is no greater than
-     * 1.
+     * type for the definition is a collection class and the multiplicity
+     * upper bound of the first expression is no greater than 1.
      **/
 	protected Boolean deriveIsCollectionConversion() {
 	    LoopVariableDefinition self = this.getSelf();
@@ -241,7 +240,7 @@ public class LoopVariableDefinitionImpl extends
 	 * loop variable definition is the first in a for statement and 0 otherwise.
 	 * If collection conversion is not required, then the variable has the
 	 * inferred or declared type from the definition. If collection conversion
-	 * is required, then the variable has the argument type of the collection
+	 * is required, then the variable has the sequence type of the collection
 	 * class.
 	 **/
 	protected Map<String, AssignedSource> deriveAssignmentAfter() {

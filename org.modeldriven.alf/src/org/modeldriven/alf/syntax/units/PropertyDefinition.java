@@ -101,7 +101,7 @@ public class PropertyDefinition extends TypedElementDefinition {
 	/**
 	 * A property definition requires BitString conversion if its type is
 	 * BitString and the type of its initializer is Integer or a collection
-	 * class whose argument type is Integer.
+	 * class whose sequence type is Integer.
 	 **/
 	public boolean propertyDefinitionIsBitStringConversionDerivation() {
 		return this.getImpl()
