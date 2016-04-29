@@ -160,7 +160,7 @@ public class SuperInvocationExpressionImpl
 	 **/
 	public boolean superInvocationExpressionImplicitTarget() {
 	    SuperInvocationExpression self = this.getSelf();
-	    ElementReference referent = self.getReferent();
+	    ElementReference referent = self.getBoundReferent();
         ElementReferenceImpl context = this.getContext();
 		return self.getTarget() != null || 
 		            referent != null && referent.getImpl().isConstructor() &&
@@ -175,7 +175,7 @@ public class SuperInvocationExpressionImpl
 	 **/
 	public boolean superInvocationExpressionConstructorCall() {
 	    SuperInvocationExpression self = this.getSelf();
-        ElementReference referent = self.getReferent();
+        ElementReference referent = self.getBoundReferent();
         NamespaceDefinition currentScope = this.getCurrentScope();
         if (referent == null || !referent.getImpl().isConstructor() || 
                 currentScope == null) {
@@ -207,7 +207,7 @@ public class SuperInvocationExpressionImpl
                                 // superclass.
                                 classReference.getImpl().equals(
                                         ((SuperInvocationExpression)expression).
-                                            getReferent().getImpl().getNamespace())) {
+                                            getBoundReferent().getImpl().getNamespace())) {
                             return false;
                         }
                     }
@@ -223,7 +223,7 @@ public class SuperInvocationExpressionImpl
 	 * operation.
 	 **/
 	public boolean superInvocationExpressionDestructorCall() {
-        ElementReference referent = this.getSelf().getReferent();
+        ElementReference referent = this.getSelf().getBoundReferent();
         NamespaceDefinition currentScope = this.getCurrentScope();
         ElementReference operation = currentScope == null? null:
             currentScope.getImpl().getReferent();
@@ -237,7 +237,7 @@ public class SuperInvocationExpressionImpl
 	 * resolution rules.
 	 **/
 	public boolean superInvocationExpressionOperation() {
-		return this.getSelf().getReferent() != null;
+		return this.getSelf().getBoundReferent() != null;
 	}
 	
 	/*

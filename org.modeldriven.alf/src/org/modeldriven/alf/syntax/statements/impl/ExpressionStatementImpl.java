@@ -101,7 +101,7 @@ public class ExpressionStatementImpl extends StatementImpl {
 	public boolean isSuperConstructorInvocation() {
 	    Expression expression = this.getSelf().getExpression();
 	    return expression instanceof SuperInvocationExpression &&
-	            ((SuperInvocationExpression)expression).getReferent().getImpl().
+	            ((SuperInvocationExpression)expression).getBoundReferent().getImpl().
 	                isConstructor();
 	}
 

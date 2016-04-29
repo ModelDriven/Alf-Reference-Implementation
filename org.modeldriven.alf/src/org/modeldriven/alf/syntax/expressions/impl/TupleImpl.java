@@ -103,7 +103,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * expression if there is no matching argument.
 	 **/
 	protected Collection<NamedExpression> deriveInput() {
-	    return this.deriveInput(this.getSelf().getInvocation().getReferent());
+	    return this.deriveInput(this.getSelf().getInvocation().getBoundReferent());
 	}
 	
 	public Collection<NamedExpression> getInput(ElementReference referent) {
@@ -122,7 +122,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
 	 * expression if there is no matching argument.
 	 **/
 	protected Collection<OutputNamedExpression> deriveOutput() {
-        return this.deriveOutput(this.getSelf().getInvocation().getReferent());
+        return this.deriveOutput(this.getSelf().getInvocation().getBoundReferent());
     }
 
     public Collection<OutputNamedExpression> getOutput(ElementReference referent) {

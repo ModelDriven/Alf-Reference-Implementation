@@ -57,12 +57,12 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
     @Override
     public Action mapTarget() throws MappingError {
         LinkOperationExpression expression = this.getLinkOperationExpression();
-        ElementReference referent = expression.getReferent();
+        ElementReference referent = expression.getBoundReferent();
         
         Action action = null;
         Association association = (Association)referent.getImpl().getUml();
         if (association == null) {
-            FumlMapping mapping = this.fumlMap(expression.getReferent());
+            FumlMapping mapping = this.fumlMap(expression.getBoundReferent());
             if (mapping instanceof ElementReferenceMapping) {
                 mapping = ((ElementReferenceMapping)mapping).getMapping();
             }

@@ -75,13 +75,14 @@ public class BehaviorInvocationExpression extends InvocationExpression {
 		return this.getImpl().behaviorInvocationExpressionFeatureDerivation();
 	}
 
-	/**
-	 * If the target qualified name does not disambiguate to a feature
-	 * reference, then it must resolve to a behavior or an association end.
-	 * Otherwise it must resolve to a single feature referent according to the
-	 * overloading resolution rules, unless it is an implicit destructor call
-	 * (in which case it has no referent).
-	 **/
+    /**
+     * If the target qualified name does not disambiguate to a feature
+     * reference, then it must resolve to a behavior or an association end, and,
+     * if it is a template behavior, then the implicit binding of this template
+     * must be legal. Otherwise it must resolve to a single feature referent
+     * according to the overloading resolution rules, unless it is an implicit
+     * destructor call (in which case it has no referent).
+     **/
 	public boolean behaviorInvocationExpressionReferentConstraint() {
 		return this.getImpl().behaviorInvocationExpressionReferentConstraint();
 	}

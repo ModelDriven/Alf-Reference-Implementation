@@ -135,7 +135,7 @@ public class SequenceOperationExpressionImpl
      **/
 	protected Boolean deriveIsBitStringConversion() {
 	    SequenceOperationExpression self = this.getSelf();
-	    ElementReference referent = self.getReferent();
+	    ElementReference referent = self.getBoundReferent();
 	    if (referent == null) {
 	        return false;
 	    } else {
@@ -159,19 +159,18 @@ public class SequenceOperationExpressionImpl
 	 **/
 	@Override
 	protected ElementReference deriveReferent() {
-	    SequenceOperationExpression self = this.getSelf();
-	    QualifiedName operation = self.getOperation();
-	    ElementReference referent = null;
-	    if (operation != null) {
-	        referent = operation.getImpl().getBehaviorReferent();
-	        if (referent != null && referent.getImpl().isTemplate()) {
-	            referent = bindTemplateImplicitArguments(operation, referent, 
-	                    this.getExpression());
-	        }
-	    }
-	    return referent;
+	    QualifiedName operation = this.getSelf().getOperation();
+	    return operation == null? null: operation.getImpl().getBehaviorReferent();
 	}
 	
+    @Override
+    protected ElementReference deriveBoundReferent() {
+        SequenceOperationExpression self = this.getSelf();
+        ElementReference referent = self.getReferent();
+        return referent == null || !referent.getImpl().isTemplate()? referent:
+               this.bindTemplateImplicitArguments(self.getOperation(), referent, this.getExpression());
+    }
+    
 	/**
 	 * There is no feature for a sequence operation expression.
 	 **/
@@ -297,7 +296,7 @@ public class SequenceOperationExpressionImpl
 	 **/
 	public boolean sequenceOperationExpressionArgumentCompatibility() {
         SequenceOperationExpression self = this.getSelf();
-        ElementReference referent = self.getReferent();
+        ElementReference referent = self.getBoundReferent();
         if (referent != null) {
             Tuple tuple = self.getTuple();
             if (tuple == null) {
@@ -418,7 +417,7 @@ public class SequenceOperationExpressionImpl
 	}
 	
 	private FormalParameter getFirstParameter() {
-        ElementReference referent = this.getSelf().getReferent();
+        ElementReference referent = this.getSelf().getBoundReferent();
         if (referent == null) {
             return null;
         } else {
@@ -533,7 +532,7 @@ public class SequenceOperationExpressionImpl
         BehaviorInvocationExpression behaviorInvocationExpression = 
             new BehaviorInvocationExpression();
         behaviorInvocationExpression.setTarget(self.getOperation());
-        behaviorInvocationExpression.setReferent(self.getReferent());
+        behaviorInvocationExpression.setReferent(self.getBoundReferent());
         behaviorInvocationExpression.setTuple(namedTuple);
         namedTuple.setInvocation(behaviorInvocationExpression);       
         behaviorInvocationExpression.getImpl().setAssignmentBefore(

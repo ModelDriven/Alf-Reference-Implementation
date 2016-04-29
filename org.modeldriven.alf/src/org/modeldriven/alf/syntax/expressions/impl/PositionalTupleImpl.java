@@ -152,7 +152,7 @@ public class PositionalTupleImpl extends TupleImpl {
         return expression == null || invocation == null ||
                 
                 // Don't check parameters if a referent cannot be resolved.
-                invocation.getReferent() == null ||
+                invocation.getBoundReferent() == null ||
                 
                 expression.size() <= invocation.getImpl().parameterCount();
     }

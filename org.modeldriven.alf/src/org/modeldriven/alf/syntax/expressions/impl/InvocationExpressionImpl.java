@@ -42,6 +42,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	private ElementReference referent = null; // DERIVED
 	private List<ElementReference> parameter = null; // DERIVED
 	private Boolean isSignal = null; // DERIVED
+    private ElementReference boundReferent = null; // DERIVED
 	
 	private NamespaceDefinition currentScope = null;
 	private Block enclosingBlock = null;
@@ -166,6 +167,17 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 		this.isSignal = isSignal;
 	}
 
+    public ElementReference getBoundReferent() {
+        if (this.boundReferent == null) {
+            this.setBoundReferent(this.deriveBoundReferent());
+        }
+        return this.boundReferent;
+    }
+    
+    public void setBoundReferent(ElementReference boundReferent) {
+        this.boundReferent = boundReferent;
+    }
+
     /**
      * An invocation expression is a behavior invocation if its referent is a
      * behavior.
@@ -258,7 +270,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	@Override
 	protected ElementReference deriveType() {
         InvocationExpression self = this.getSelf();
-        ElementReference referent = self.getReferent();
+        ElementReference referent = self.getBoundReferent();
 	    return referent == null? null: referent.getImpl().getType();
 	}
 	
@@ -283,6 +295,21 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         ElementReference referent = self.getReferent();
         return referent == null? 0: referent.getImpl().getLower();
 	}
+    
+    /**
+     * If the referent of an invocation expression is a template behavior, then
+     * the bound referent is the implicit template binding of this template;
+     * otherwise it is the same as the referent. For an implicit template
+     * binding, the type arguments of for the template are inferred from the
+     * types of the arguments for in and inout parameters of the template
+     * behavior. If the resulting implicit template binding would not be a legal
+     * binding of the template behavior, then the invocation expression has no
+     * bound referent.
+     */
+    // Overridden by BehaviorInvocationExpressionImpl and SequenceOperationExpressionImpl
+    protected ElementReference deriveBoundReferent() {
+        return this.getSelf().getReferent();
+    }
     
     /*
      * Derivations
@@ -338,6 +365,11 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 		return true;
 	}
 	
+    public boolean invocationExpressionBoundReferentDerivation() {
+        this.getSelf().getBoundReferent();
+        return true;
+    }
+
 	/*
 	 * Constraints
 	 */
@@ -352,6 +384,26 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 		return true;
 	}
 	
+    /**
+     * If the referent of the invocation expression is a template, then all of
+     * its template parameters must be classifier template parameters. Note:
+     * This allows for the possibility that the referent is not an Alf unit, in
+     * which case it could have non-classifier template parameters.
+     */
+    public boolean invocationExpressionTemplateParameters() {
+        if (referent.getImpl().isTemplate()) {
+            for (ElementReference templateParameter: 
+                    referent.getImpl().getTemplateParameters()) {
+                ElementReference element = 
+                    templateParameter.getImpl().getParameteredElement();
+                if (element == null || !element.getImpl().isClassifier()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 	/*
 	 * Helper Methods
 	 */
@@ -378,7 +430,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     
     public List<FormalParameter> parametersFor(ElementReference referent) {
         if (referent == null) {
-            referent = this.getSelf().getReferent();
+            referent = this.getSelf().getBoundReferent();
         }
         return referent == null? new ArrayList<FormalParameter>(): 
             referent.getImpl().getEffectiveParameters();
@@ -467,7 +519,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     
     public FormalParameter parameterNamed(String name, ElementReference referent) {
         if (referent == null) {
-            referent = this.getSelf().getReferent();
+            referent = this.getSelf().getBoundReferent();
         }
         for (FormalParameter parameter: this.parametersFor(referent)) {
             if (parameter.getName().equals(name)) {
@@ -653,19 +705,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         List<ElementReference> templateParameters = 
             referent.getImpl().getTemplateParameters();
         
-        // Note: This should really be a separate constraint.
-        for (ElementReference templateParameter: templateParameters) {
-            ElementReference element = 
-                templateParameter.getImpl().getParameteredElement();
-            if (element == null || !element.getImpl().isClassifier()) {
-                return null;
-            }
-        }
-        
-        // This is set in order to make the parameter list available for
-        // computing assignments and for determining the tuple inputs.
-        self.setReferent(referent);
-        this.updateAssignmentMap(); // Force computation of assignments.
+        this.updateAssignmentsFor(referent); // Force computation of assignments.
         
         
         // This is included to handle the primary expression in a sequence
@@ -685,8 +725,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
                     types.add(effectiveType(firstParameter, primary));
                 }
             }
-            for (NamedExpression input: self.getTuple().getInput()) {
-                FormalParameter parameter = this.parameterNamed(input.getName());
+            for (NamedExpression input: self.getTuple().getImpl().getInput(referent)) {
+                FormalParameter parameter = this.parameterNamed(input.getName(), referent);
                 if (templateParameter.getImpl().getParameteredElement().getImpl().
                         equals(parameter.getType())) {
                     types.add(effectiveType(parameter, input.getExpression()));                             

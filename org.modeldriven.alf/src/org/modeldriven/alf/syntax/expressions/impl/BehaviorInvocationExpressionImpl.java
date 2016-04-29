@@ -72,14 +72,20 @@ public class BehaviorInvocationExpressionImpl
 	                        !referent.getImpl().isAssociationEnd()) {
 	                    referent = null;
 	                }
-	            } else if (referent.getImpl().isTemplate()) {	                
-	                referent = bindTemplateImplicitArguments(target, referent, null);
 	            }
 	        }
 	    }
 	    return referent;
 	}
 	
+	@Override
+    protected ElementReference deriveBoundReferent() {
+	    BehaviorInvocationExpression self = this.getSelf();
+	    ElementReference referent = self.getReferent();
+	    return referent == null || !referent.getImpl().isTemplate()? referent:
+	           this.bindTemplateImplicitArguments(self.getTarget(), referent, null);
+	}
+    
 	/**
 	 * If the target qualified name disambiguates to a feature reference, then
 	 * the feature of a behavior invocation expression is that feature
@@ -109,18 +115,19 @@ public class BehaviorInvocationExpressionImpl
 	 * Constraints
 	 */
 
-	/**
-	 * If the target qualified name does not disambiguate to a feature
-	 * reference, then it must resolve to a behavior or an association end.
-	 * Otherwise it must resolve to a single feature referent according to the
-	 * overloading resolution rules, unless it is an implicit destructor call
-	 * (in which case it has no referent).
-	 **/
+    /**
+     * If the target qualified name does not disambiguate to a feature
+     * reference, then it must resolve to a behavior or an association end, and,
+     * if it is a template behavior, then the implicit binding of this template
+     * must be legal. Otherwise it must resolve to a single feature referent
+     * according to the overloading resolution rules, unless it is an implicit
+     * destructor call (in which case it has no referent).
+     **/
 	public boolean behaviorInvocationExpressionReferentConstraint() {
 	    BehaviorInvocationExpression self = this.getSelf();
-	    ElementReference referent = self.getReferent();
+	    ElementReference referent = self.getBoundReferent();
 		return self.getIsImplicit() || referent != null && 
-		        // NOTE: This prevents behavior invocation expression from
+		        // NOTE: This prevents the behavior invocation expression from
 		        // disambiguating to an illegal constructor invocation.
 		        !referent.getImpl().isConstructor();
 	}

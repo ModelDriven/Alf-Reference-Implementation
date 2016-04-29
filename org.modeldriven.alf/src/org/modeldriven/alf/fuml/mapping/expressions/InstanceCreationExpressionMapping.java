@@ -118,7 +118,7 @@ public class InstanceCreationExpressionMapping extends
                 // yet, so we need to go back to the abstract syntax to
                 // get parent class definitions.
                 ElementReference referent = 
-                        this.getInstanceCreationExpression().getReferent();
+                        this.getInstanceCreationExpression().getBoundReferent();
                 if (referent.getImpl().isOperation()) {
                     referent = referent.getImpl().getNamespace();
                 }                
@@ -175,7 +175,7 @@ public class InstanceCreationExpressionMapping extends
             this.getInstanceCreationExpression();
         Action action = null;
         if (!instanceCreationExpression.getIsObjectCreation()) {
-            ElementReference referent = instanceCreationExpression.getReferent();
+            ElementReference referent = instanceCreationExpression.getBoundReferent();
             DataType dataType = (DataType)referent.getImpl().getUml();
             if (dataType == null) {
                 FumlMapping mapping = this.fumlMap(referent);

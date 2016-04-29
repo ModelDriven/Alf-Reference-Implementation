@@ -188,7 +188,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         if (expression.getIsImplicit()) {
             action = this.graph.addDestroyObjectAction(null);
         } else {
-            ElementReference referent = expression.getReferent();
+            ElementReference referent = expression.getBoundReferent();
             Element element = referent.getImpl().getUml();
             if (element == null) {
                 FumlMapping mapping = this.fumlMap(referent);

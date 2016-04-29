@@ -38,7 +38,7 @@ public class SuperInvocationExpressionMapping extends
     public Action mapTarget() throws MappingError {
         CallBehaviorAction action = null;
         InvocationExpression expression = this.getInvocationExpression();
-        ElementReference referent = expression.getReferent();
+        ElementReference referent = expression.getBoundReferent();
         Operation operation = (Operation)referent.getImpl().getUml();
         if (operation == null) {
             FumlMapping mapping = this.fumlMap(referent);

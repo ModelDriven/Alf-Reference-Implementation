@@ -430,7 +430,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
                             ((ExpressionStatement)statement).getExpression();
                     return expression instanceof FeatureInvocationExpression &&
                             ((FeatureInvocationExpression)expression).
-                                getReferent().getImpl().isConstructor();
+                                getBoundReferent().getImpl().isConstructor();
                 }
             }
         }

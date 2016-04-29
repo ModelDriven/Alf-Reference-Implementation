@@ -138,7 +138,7 @@ public class NamedTupleImpl extends TupleImpl {
         NamedTuple self = this.getSelf();
         InvocationExpression invocation = self.getInvocation();
         // NOTE: Don't check arguments if a referent cannot be resolved.
-        if (invocation == null || invocation.getReferent() == null) {
+        if (invocation == null || invocation.getBoundReferent() == null) {
             return true;
         } else {
             Collection<FormalParameter> parameters = 
