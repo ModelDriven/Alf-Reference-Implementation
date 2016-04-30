@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -57,6 +56,18 @@ public class ConcurrentClauses extends SyntaxElement {
 
 	public void addClause(NonFinalClause clause) {
 		this.getImpl().addClause(clause);
+	}
+	
+	public Collection<AssignedSource> getAssignmentBefore() {
+	    return this.getImpl().getAssignmentBefore();
+	}
+	
+	public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+	    this.getImpl().setAssignmentBefore(assignmentBefore);
+	}
+	
+	public void addAssignmentBefore(AssignedSource assignmentBefore) {
+	    this.getImpl().addAssignmentBefore(assignmentBefore);
 	}
 
 	/**

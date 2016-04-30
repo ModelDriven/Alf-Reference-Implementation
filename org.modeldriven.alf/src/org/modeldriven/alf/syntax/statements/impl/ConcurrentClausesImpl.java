@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -18,6 +17,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +30,7 @@ import java.util.Set;
 public class ConcurrentClausesImpl extends SyntaxElementImpl {
 
 	private Collection<NonFinalClause> clause = new ArrayList<NonFinalClause>();
+    private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
 
 	public ConcurrentClausesImpl(ConcurrentClauses self) {
 		super(self);
@@ -52,6 +53,51 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
 		this.clause.add(clause);
 	}
 	
+    public Collection<AssignedSource> getAssignmentBefore() {
+        return this.getAssignmentBeforeMap().values();
+    }
+    
+    public Map<String, AssignedSource> getAssignmentBeforeMap() {
+        if (this.assignmentBefore == null) {
+            this.setAssignmentBefore(this.deriveAssignmentBefore());
+        }
+        return this.assignmentBefore;
+    }
+    
+    public AssignedSource getAssignmentBefore(String name) {
+        return this.getAssignmentBeforeMap().get(name);
+    }
+
+    public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
+        if (this.assignmentBefore == null) {
+            this.assignmentBefore = new HashMap<String, AssignedSource>();
+        } else {
+            this.assignmentBefore.clear();
+        }
+        for (AssignedSource assignment: assignmentBefore) {
+            this.addAssignmentBefore(assignment);
+        }
+    }
+    
+    public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
+        this.assignmentBefore = assignmentBefore;
+        
+        for (NonFinalClause clause: this.getSelf().getClause()) {
+            clause.getImpl().setAssignmentBefore(assignmentBefore);
+        }
+    }
+
+    public void addAssignmentBefore(AssignedSource assignmentBefore) {
+        this.assignmentBefore.put(assignmentBefore.getName(), assignmentBefore);
+    }
+
+    /**
+     * The assignments before are usually set externally.
+     */
+    protected Map<String, AssignedSource> deriveAssignmentBefore() {
+        return new HashMap<String, AssignedSource>();
+    }
+
 	/*
 	 * Constraints
 	 */
@@ -87,12 +133,6 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
 	/*
 	 * Helper Methods
 	 */
-	
-	public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
-	    for (NonFinalClause clause: this.getSelf().getClause()) {
-	        clause.getImpl().setAssignmentBefore(assignmentBefore);
-	    }
-	}
 	
 	public void setEnclosingStatement(Statement enclosingStatement) {
         for (NonFinalClause clause: this.getSelf().getClause()) {
