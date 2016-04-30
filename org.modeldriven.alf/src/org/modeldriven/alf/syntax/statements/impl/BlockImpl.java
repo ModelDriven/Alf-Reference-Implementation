@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -32,7 +32,7 @@ public class BlockImpl extends SyntaxElementImpl {
     private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
     private Map<String, AssignedSource> assignmentBefore = null; // DERIVED
     
-    private List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+    private List<ElementReference> parameters = new ArrayList<ElementReference>();
     private boolean hasEnclosingStatement = false;
 
 	public BlockImpl(Block self) {
@@ -133,16 +133,16 @@ public class BlockImpl extends SyntaxElementImpl {
         // This ensures that there is an initial assignment for each input
         // parameter for a block that is the body of an activity or operation.
         if (!this.hasEnclosingStatement()) {
-            for (FormalParameter parameter: parameters) {
-                String direction = parameter.getDirection();
+            for (ElementReference parameter: parameters) {
+                String direction = parameter.getImpl().getDirection();
                 if (direction != null &&
                         (direction.equals("in") || direction.equals("inout"))) {
-                    String name = parameter.getName();
+                    String name = parameter.getImpl().getName();
                     assignments.put(name, 
                             AssignedSourceImpl.makeAssignment(name, parameter, 
-                                    parameter.getType(), 
-                                    parameter.getLower(), 
-                                    parameter.getUpper()));
+                                    parameter.getImpl().getType(), 
+                                    parameter.getImpl().getLower(), 
+                                    parameter.getImpl().getUpper()));
                 }
             }
         }

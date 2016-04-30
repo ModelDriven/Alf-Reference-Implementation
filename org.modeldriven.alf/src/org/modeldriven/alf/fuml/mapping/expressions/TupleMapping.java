@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -31,7 +31,6 @@ import org.modeldriven.alf.syntax.expressions.NamedExpression;
 import org.modeldriven.alf.syntax.expressions.OutputNamedExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
 import org.modeldriven.alf.syntax.expressions.UnboundedLiteralExpression;
-import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import org.modeldriven.alf.uml.*;
@@ -116,10 +115,10 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 } else {
                     ExpressionMapping expressionMapping = 
                         (ExpressionMapping)mapping;
-                    FormalParameter parameter = 
+                    ElementReference parameter = 
                         invocation.getImpl().parameterNamed(name);
                     if (parameter != null && 
-                            "inout".equals(parameter.getDirection())) {
+                            "inout".equals(parameter.getImpl().getDirection())) {
                         this.inoutExpressionMap.put(
                                 name, expressionMapping);
                     }
@@ -136,7 +135,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         // has type UnlimitedNatural, then a conversion is
                         // required, because the representations are different.
                         ElementReference expressionType = expression.getType();
-                        ElementReference parameterType = parameter.getType();
+                        ElementReference parameterType = parameter.getImpl().getType();
                         
                         if (expressionType != null && parameterType != null &&
                                 expressionType.getImpl().isNatural() &&
@@ -144,7 +143,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                 // and Natural. Checking just for "is UnlimitedNatural"
                                 // wouldn't exclude Natural, since it is a specialization
                                 // of UnlimitedNatural.
-                                !parameter.getType().getImpl().isInteger()) {
+                                !parameter.getImpl().getType().getImpl().isInteger()) {
                             CallBehaviorAction callAction =
                                 this.tupleGraph.addCallBehaviorAction(getBehavior(
                                     RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural()));
@@ -249,11 +248,11 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                     
                     // Add collection and bit string conversions, if
                     // required.
-                    FormalParameter parameter = 
+                    ElementReference parameter = 
                         invocation.getImpl().parameterNamed(name);
                     outputPin = AssignmentExpressionMapping.mapConversions(
                             this, this.tupleGraph, 
-                            outputPin, parameter.getType(), 
+                            outputPin, parameter.getImpl().getType(), 
                             output.getImpl().getIsCollectionConversion(parameter), 
                             output.getImpl().getIsBitStringConversion(parameter));
                    

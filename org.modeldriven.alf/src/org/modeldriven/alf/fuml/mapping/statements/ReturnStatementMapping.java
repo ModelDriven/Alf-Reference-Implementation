@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -29,7 +29,6 @@ import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
-import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
@@ -109,16 +108,19 @@ public class ReturnStatementMapping extends StatementMapping {
             }
         }
         
-        for (FormalParameter parameter: 
+        for (ElementReference parameter: 
             behaviorReference.getImpl().getParameters()) {
-            if (parameter.getDirection().equals("out") ||
-                    parameter.getDirection().equals("inout")) {
-                String name = parameter.getName();
+            if (parameter.getImpl().getDirection().equals("out") ||
+                    parameter.getImpl().getDirection().equals("inout")) {
+                String name = parameter.getImpl().getName();
                 AssignedSource assignment = 
                     returnStatement.getImpl().getAssignmentAfter(name);
                 if (assignment != null) {
                     FumlMapping sourceMapping = 
                         this.fumlMap(assignment.getSource());
+                    if (sourceMapping instanceof ElementReferenceMapping) {
+                        sourceMapping = ((ElementReferenceMapping)sourceMapping).getMapping();
+                    }
                     if (!(sourceMapping instanceof SyntaxElementMapping)) {
                         this.throwError("Error mapping parameter " + 
                                 name + ": " + sourceMapping.getErrorMessage());
@@ -137,7 +139,7 @@ public class ReturnStatementMapping extends StatementMapping {
                                 }
                                 if (!(mapping instanceof ClassifierDefinitionMapping)) {
                                     this.throwError("Error mapping type of parameter " +
-                                            parameter.getName() + ": " + 
+                                            name + ": " + 
                                             mapping.getErrorMessage());
                                 } else {
                                     type = 
@@ -158,7 +160,7 @@ public class ReturnStatementMapping extends StatementMapping {
     
     private void mapOutput(
             ActivityNode source, Type type, int lower, int upper,
-            FormalParameter outputParameter, 
+            ElementReference outputParameter, 
             Activity activity, Operation operation) throws MappingError {
         OutputPin pin = this.graph.createOutputPin(
                 this.node.getName() + ".output", 
@@ -183,6 +185,9 @@ public class ReturnStatementMapping extends StatementMapping {
                 source, pin));
 
         FumlMapping parameterMapping = this.fumlMap(outputParameter);
+        if (parameterMapping instanceof ElementReferenceMapping) {
+            parameterMapping = ((ElementReferenceMapping)parameterMapping).getMapping();
+        }
         if (!(parameterMapping instanceof FormalParameterMapping)) {
             this.throwError("Error mapping parameter: " + 
                     parameterMapping.getErrorMessage());

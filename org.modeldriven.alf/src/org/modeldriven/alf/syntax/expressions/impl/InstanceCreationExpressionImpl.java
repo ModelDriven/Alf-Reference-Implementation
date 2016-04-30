@@ -348,9 +348,9 @@ public class InstanceCreationExpressionImpl
      * data type, or an empty set for a constructorless instance creation.
      **/
     @Override
-    public List<FormalParameter> parametersFor(ElementReference referent) {
+    public List<ElementReference> parametersFor(ElementReference referent) {
         if (this.isConstructorless(referent)) {
-            return new ArrayList<FormalParameter>();
+            return new ArrayList<ElementReference>();
         } else {
             return super.parametersFor(referent);
         }

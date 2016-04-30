@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -132,13 +132,12 @@ public class NameExpressionImpl extends ExpressionImpl {
                 String localName = unqualifiedName.getName();
                 assignment = this.getAssignmentBefore(localName);
                 if (assignment == null && parameterReference != null) {
-                    FormalParameter parameter = parameterReference.getImpl().asParameter();
-                    if (!"out".equals(parameter.getDirection())) {
+                    if (!"out".equals(parameterReference.getImpl().getDirection())) {
                         assignment = AssignedSourceImpl.makeAssignment
-                                        (localName, parameter, 
-                                                parameter.getType(), 
-                                                parameter.getLower(), 
-                                                parameter.getUpper());
+                                        (localName, parameterReference, 
+                                                parameterReference.getImpl().getType(), 
+                                                parameterReference.getImpl().getLower(), 
+                                                parameterReference.getImpl().getUpper());
                     }
                 }
             }

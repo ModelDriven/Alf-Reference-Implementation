@@ -176,23 +176,23 @@ public class LinkOperationExpressionImpl
 	 * Otherwise, returns the ends of the named association.
 	 **/
 	@Override
-	public List<FormalParameter> parametersFor(ElementReference referent) {
+	public List<ElementReference> parametersFor(ElementReference referent) {
 	    if (referent == null) {
 	        referent = this.getSelf().getReferent();
 	    }
         LinkOperationExpression self = this.getSelf();
         if (self.getIsClear()) {
-            List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+            List<ElementReference> parameters = new ArrayList<ElementReference>();
             FormalParameter parameter = new FormalParameter();
             parameter.setDirection("in");
             parameter.setLower(1);
             parameter.setUpper(1);
-            parameters.add(parameter);
+            parameters.add(parameter.getImpl().getReferent());
             return parameters;
         } else if (referent != null) {
             return referent.getImpl().getEffectiveParameters();
         } else {
-            return new ArrayList<FormalParameter>();
+            return new ArrayList<ElementReference>();
         }
 	} // parameterElements
 	

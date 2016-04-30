@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -268,11 +268,11 @@ public class ForStatementImpl extends LoopStatementImpl {
             Collection<String> parallelNames = this.getParallelNames();
             for (AssignedSource assignment: assignmentsAfter.values()) {
                 String name = assignment.getName();
-                SyntaxElement source = assignment.getSource();
+                ElementReference source = assignment.getSource();
                 AssignedSource oldAssignment = assignmentsAfterVariables.get(name);
                 if (oldAssignment == null || 
-                        !self.getVariableDefinition().contains(source) &&
-                        source != (parallelNames.contains(name)? self: oldAssignment.getSource())) {
+                        !self.getVariableDefinition().contains(source.getImpl().getAlf()) &&
+                        !source.getImpl().equals((parallelNames.contains(name)? self: oldAssignment.getSource()))) {
                     return false;
                 }
                     

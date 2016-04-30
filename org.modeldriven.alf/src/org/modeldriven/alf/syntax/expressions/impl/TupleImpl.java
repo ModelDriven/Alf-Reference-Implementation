@@ -162,7 +162,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
     	    for (NamedExpression argument: self.getInput()){
     	        if (argument.getExpression().getImpl().isNull()) {
     	            if (invocation.getImpl().parameterNamed
-    	                    (argument.getName()).getLower() > 0) { 
+    	                    (argument.getName()).getImpl().getLower() > 0) { 
     	                return false;
     	            }
     	        }
@@ -182,7 +182,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
             for (NamedExpression argument: self.getOutput()){
                 if (argument.getExpression().getImpl().isNull()) {
                     if (!"out".equals(invocation.getImpl().parameterNamed
-                            (argument.getName()).getDirection())) { 
+                            (argument.getName()).getImpl().getDirection())) { 
                         return false;
                     }
                 }
@@ -303,10 +303,10 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                     lhs.getImpl().setAssignmentBefore(assignmentsBefore);
                     lhs.getImpl().setCurrentScope(this.currentScope);
 
-                    FormalParameter parameter = 
+                    ElementReference parameter = 
                             invocation.getImpl().parameterNamed(output.getName(), referent);
                     String direction = 
-                            parameter == null? null: parameter.getDirection();
+                            parameter == null? null: parameter.getImpl().getDirection();
 
                     // A new assignment is created for a local name 
                     // defined as an output argument or a parameter that is
@@ -319,9 +319,9 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                             if (lhsReferent == null) {
                                 assignment = AssignedSourceImpl.makeAssignment
                                         (localName, invocation, 
-                                                parameter.getType(), 
+                                                parameter.getImpl().getType(), 
                                                 0, 
-                                                parameter.getUpper() == 1? 1: -1);
+                                                parameter.getImpl().getUpper() == 1? 1: -1);
                                 newLocalAssignments.put(localName, assignment);
                             } else if (lhsReferent.getImpl().isParameter() &&
                                     !assignmentsBefore.containsKey(localName)){

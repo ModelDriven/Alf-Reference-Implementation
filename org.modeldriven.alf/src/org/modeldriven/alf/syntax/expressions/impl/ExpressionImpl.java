@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -215,7 +215,7 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
 	/**
 	 * Get the syntax element assigned to the given name before this expression.
 	 */
-    public SyntaxElement resolve(String name) {
+    public ElementReference resolve(String name) {
         AssignedSource assignment = this.getAssignmentBefore(name);
         return assignment == null? null: assignment.getSource();
     }

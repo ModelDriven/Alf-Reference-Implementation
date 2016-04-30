@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -84,6 +84,9 @@ public abstract class LoopStatementMapping extends StatementMapping {
             lower = 0;
         } else {
             FumlMapping mapping = this.fumlMap(assignment.getSource());
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
             if (!(mapping instanceof SyntaxElementMapping)) {
                 this.throwError("Error mapping assigned source for " + name + 
                         ": " + this.getErrorMessage());

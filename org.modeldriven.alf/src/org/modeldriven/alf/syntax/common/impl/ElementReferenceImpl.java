@@ -21,9 +21,12 @@ import java.util.Set;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.expressions.AssignableElement;
+import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.PositionalTemplateBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.expressions.impl.AssignableElementImpl;
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
@@ -42,7 +45,7 @@ import org.modeldriven.alf.uml.TemplateableElement;
  * ElementReference are specific to its subclasses.)
  **/
 
-public abstract class ElementReferenceImpl {
+public abstract class ElementReferenceImpl implements AssignableElement {
     
     // Used as a non-null value to represent the "any" type.
     private static final ElementReference any = new InternalElementReference();
@@ -114,7 +117,6 @@ public abstract class ElementReferenceImpl {
     public abstract boolean isAssociationEnd();
     public abstract boolean isParameter();
 
-    public abstract FormalParameter asParameter();
     public abstract NamespaceDefinition asNamespace();
     public abstract boolean isInNamespace(NamespaceDefinition namespace);
 
@@ -131,8 +133,8 @@ public abstract class ElementReferenceImpl {
     public abstract List<ElementReference> getAttributes();
     public abstract List<ElementReference> getAssociationEnds();
     public abstract List<Member> getInheritableMembers();
-    public abstract List<FormalParameter> getParameters();
-    public abstract FormalParameter getReturnParameter();
+    public abstract List<ElementReference> getParameters();
+    public abstract ElementReference getReturnParameter();
     public abstract List<ElementReference> getMethods();
     public abstract ElementReference getSpecification(); // Note: An Operation is considered its own specification.
     public abstract List<ElementReference> getTemplateParameters();
@@ -144,6 +146,7 @@ public abstract class ElementReferenceImpl {
     public abstract ElementReference getAssociation();
     public abstract Integer getLower();
     public abstract Integer getUpper();
+    public abstract String getDirection();
     public abstract ElementReference getClassifierBehavior();
     public abstract ElementReference getNamespace();
     public abstract Collection<ElementReference> getRedefinedElements();
@@ -153,25 +156,25 @@ public abstract class ElementReferenceImpl {
     public abstract Collection<Class<?>> getStereotypeMetaclasses();
     public abstract Class<?> getUMLMetaclass();
     
-    public List<FormalParameter> getEffectiveParameters() {
+    public List<ElementReference> getEffectiveParameters() {
         if (this.isBehavior() || this.isOperation()) {
             return this.getParameters();
         } else {
-            List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+            List<ElementReference> parameters = new ArrayList<ElementReference>();
             if (this.isReception()){
                 for (ElementReference property: this.getSignal().getImpl().getAttributes()) {
-                    parameters.add(parameterFromProperty(property));
+                    parameters.add(parameterFromProperty(property).getImpl().getReferent());
                 }
             } else if (this.isDataType() || this.isSignal()){
                 for (ElementReference property: this.getAttributes()) {
-                    parameters.add(parameterFromProperty(property));
+                    parameters.add(parameterFromProperty(property).getImpl().getReferent());
                 }
             } else if (this.isAssociation()) {
                 for (ElementReference property: this.getAssociationEnds()) {
                     FormalParameter parameter = parameterFromProperty(property);
                     parameter.setLower(1);
                     parameter.setUpper(1);
-                    parameters.add(parameter);
+                    parameters.add(parameter.getImpl().getReferent());
                 }
             } else if (this.isAssociationEnd()) {
                 ElementReference association = this.getAssociation();
@@ -181,7 +184,7 @@ public abstract class ElementReferenceImpl {
                         FormalParameter parameter = parameterFromProperty(property);
                         parameter.setLower(1);
                         parameter.setUpper(1);
-                        parameters.add(parameter);
+                        parameters.add(parameter.getImpl().getReferent());
                     }
                 }
             }
@@ -330,6 +333,18 @@ public abstract class ElementReferenceImpl {
             }
         }
         return false;
+    }
+    
+    public boolean isAssignableFrom(ElementReference source) {
+        return this.isAssignableFrom(source.getImpl());
+    }
+    
+    public boolean isAssignableFrom(Expression source) {
+        return this.isAssignableFrom(source.getImpl());
+    }
+    
+    public boolean isAssignableFrom(AssignableElement source) {
+        return AssignableElementImpl.isAssignable(this, source);
     }
     
     public static void clearTemplateBindings() {        

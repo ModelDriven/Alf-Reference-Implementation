@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -16,7 +15,6 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ExpressionStatement;
 import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.alf.syntax.units.impl.AssignableTypedElementImpl;
 import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 import org.modeldriven.alf.syntax.units.impl.OperationDefinitionImpl;
 
@@ -417,22 +415,14 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	 * overridden by subclasses of InvocationExpression, if necessary.)
 	 **/
 	public List<ElementReference> parameterElements() {
-        List<ElementReference> parameters = new ArrayList<ElementReference>();
-        for (FormalParameter parameter: this.parameters()) {
-            parameters.add(parameter.getImpl().getReferent());
-        }
-        return parameters;
+        return this.parametersFor(null);
     }
 	
-	public List<FormalParameter> parameters() {
-	    return this.parametersFor(null);
-	}
-    
-    public List<FormalParameter> parametersFor(ElementReference referent) {
+    public List<ElementReference> parametersFor(ElementReference referent) {
         if (referent == null) {
             referent = this.getSelf().getBoundReferent();
         }
-        return referent == null? new ArrayList<FormalParameter>(): 
+        return referent == null? new ArrayList<ElementReference>(): 
             referent.getImpl().getEffectiveParameters();
     }
 
@@ -442,10 +432,10 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     }
 
     public int countParametersOf(ElementReference referent) {
-        List<FormalParameter> parameters = parametersFor(referent);
+        List<ElementReference> parameters = parametersFor(referent);
         int n = parameters.size();
-        for (FormalParameter parameter: parameters) {
-            if ("return".equals(parameter.getDirection())) {
+        for (ElementReference parameter: parameters) {
+            if ("return".equals(parameter.getImpl().getDirection())) {
                 n--;
             }
         }
@@ -483,11 +473,11 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 	}
 	
 	protected boolean parameterIsAssignableFrom(NamedExpression input, ElementReference referent) {
-	    FormalParameter namedParameter = this.parameterNamed(input.getName(), referent);
+	    ElementReference namedParameter = this.parameterNamed(input.getName(), referent);
         if (namedParameter == null) {
 	        return false;
 	    } else {
-	        String direction = namedParameter.getDirection();
+	        String direction = namedParameter.getImpl().getDirection();
 	        return direction != null && 
 	                    (direction.equals("in") || direction.equals("inout")) &&
 	                    namedParameter.getImpl().isAssignableFrom(input.getExpression());
@@ -499,30 +489,29 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     }
 
     protected boolean parameterIsAssignableTo(NamedExpression output, ElementReference referent) {
-        FormalParameter namedParameter = this.parameterNamed(output.getName(), referent);
+        ElementReference namedParameter = this.parameterNamed(output.getName(), referent);
         if (namedParameter == null || 
                 !(output instanceof OutputNamedExpression)) {
             return false;
         } else {
-            String direction = namedParameter.getDirection();
+            String direction = namedParameter.getImpl().getDirection();
             LeftHandSide lhs = ((OutputNamedExpression)output).getLeftHandSide();
             return direction != null && lhs != null &&
                         (direction.equals("out") || direction.equals("inout")) &&
-                        lhs.getImpl().isAssignableFrom
-                            (new AssignableTypedElementImpl(namedParameter.getImpl()));
+                        lhs.getImpl().isAssignableFrom(namedParameter);
         }
     }
     
-    public FormalParameter parameterNamed(String name) {
+    public ElementReference parameterNamed(String name) {
         return parameterNamed(name, null);
     }
     
-    public FormalParameter parameterNamed(String name, ElementReference referent) {
+    public ElementReference parameterNamed(String name, ElementReference referent) {
         if (referent == null) {
             referent = this.getSelf().getBoundReferent();
         }
-        for (FormalParameter parameter: this.parametersFor(referent)) {
-            if (parameter.getName().equals(name)) {
+        for (ElementReference parameter: this.parametersFor(referent)) {
+            if (parameter.getImpl().getName().equals(name)) {
                 return parameter;
             }
         }
@@ -565,35 +554,32 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     }
     
     public static boolean isMoreSpecificThan(ElementReference feature1, ElementReference feature2) {
-        List<FormalParameter> parameters1 = 
+        List<ElementReference> parameters1 = 
                 OperationDefinitionImpl.removeReturnParameter(feature1.getImpl().getEffectiveParameters());
-        List<FormalParameter> parameters2 = 
+        List<ElementReference> parameters2 = 
                 OperationDefinitionImpl.removeReturnParameter(feature2.getImpl().getEffectiveParameters());
         if (parameters1.size() > parameters2.size()) {
             return false;
         } else {
             for (int i = 0; i < parameters1.size(); i++) {
-                FormalParameter parameter1 = parameters1.get(i);
-                String direction = parameter1.getDirection();
-                FormalParameter parameter2 = parameters2.get(i);
+                ElementReference parameter1 = parameters1.get(i);
+                String direction = parameter1.getImpl().getDirection();
+                ElementReference parameter2 = parameters2.get(i);
                 if ("in".equals(direction)) {
-                    if (!new AssignableTypedElementImpl(parameter2.getImpl()).isAssignableFrom(
-                            new AssignableTypedElementImpl(parameter1.getImpl()))) {
+                    if (!parameter2.getImpl().isAssignableFrom(parameter1)) {
                         return false;
                     }
                 } else if ("out".equals(direction)) {
-                    if (!new AssignableTypedElementImpl(parameter1.getImpl()).isAssignableFrom(
-                            new AssignableTypedElementImpl(parameter2.getImpl()))) {
+                    if (!parameter1.getImpl().isAssignableFrom(parameter2)) {
                         return false;
                     }
                 }
             }
-            FormalParameter returnParameter1 = feature1.getImpl().getReturnParameter();
-            FormalParameter returnParameter2 = feature2.getImpl().getReturnParameter();
+            ElementReference returnParameter1 = feature1.getImpl().getReturnParameter();
+            ElementReference returnParameter2 = feature2.getImpl().getReturnParameter();
             return returnParameter1 == null ||
                     returnParameter2 != null &&
-                    new AssignableTypedElementImpl(returnParameter1.getImpl()).isAssignableFrom(
-                            new AssignableTypedElementImpl(returnParameter2.getImpl()));
+                    returnParameter1.getImpl().isAssignableFrom(returnParameter2);
         }
     }
 
@@ -710,9 +696,9 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         
         // This is included to handle the primary expression in a sequence
         // operation expression.
-        FormalParameter firstParameter = null;
+        ElementReference firstParameter = null;
         if (primary != null) {
-            List<FormalParameter> parameters = referent.getImpl().getParameters();
+            List<ElementReference> parameters = referent.getImpl().getParameters();
             firstParameter = parameters.size() == 0? null: parameters.get(0);
         }
         
@@ -721,14 +707,14 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             Collection<ElementReference> types = new ArrayList<ElementReference>();
             if (firstParameter != null) {
                 if (templateParameter.getImpl().getParameteredElement().getImpl().
-                        equals(firstParameter.getType())) {
+                        equals(firstParameter.getImpl().getType())) {
                     types.add(effectiveType(firstParameter, primary));
                 }
             }
             for (NamedExpression input: self.getTuple().getImpl().getInput(referent)) {
-                FormalParameter parameter = this.parameterNamed(input.getName(), referent);
+                ElementReference parameter = this.parameterNamed(input.getName(), referent);
                 if (templateParameter.getImpl().getParameteredElement().getImpl().
-                        equals(parameter.getType())) {
+                        equals(parameter.getImpl().getType())) {
                     types.add(effectiveType(parameter, input.getExpression()));                             
                 }
             }
@@ -751,11 +737,11 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
      * return type, rather than the expression type.
      */
     private static ElementReference effectiveType(
-            FormalParameter parameter, 
+            ElementReference parameter, 
             Expression expression) {
         ElementReference type = expression.getType();
         int expressionUpper = expression.getUpper();
-        int paremeterUpper = parameter.getUpper();
+        int paremeterUpper = parameter.getImpl().getUpper();
         if ((paremeterUpper == -1 || paremeterUpper > 1) && 
                 expressionUpper == 1 &&
                 type != null && type.getImpl().isCollectionClass()) {

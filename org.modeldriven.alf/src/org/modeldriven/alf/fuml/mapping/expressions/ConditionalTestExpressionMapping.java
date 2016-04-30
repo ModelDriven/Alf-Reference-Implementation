@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -27,7 +27,6 @@ import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.ConditionalTestExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 
@@ -129,7 +128,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
             ElementReference type = assignment.getType();
             int lower = assignment.getLower();
             int upper = assignment.getUpper();
-            SyntaxElement source = assignment.getSource();
+            ElementReference source = assignment.getSource();
 
             Classifier classifier = null;
             if (type != null) {
@@ -153,6 +152,9 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
                     classifier, lower, upper);
             operandNode.addStructuredNodeOutput(outputPin);
             FumlMapping mapping = this.fumlMap(source);
+            if (mapping instanceof ElementReferenceMapping) {
+                mapping = ((ElementReferenceMapping)mapping).getMapping();
+            }
             if (!(mapping instanceof SyntaxElementMapping)) {
                 this.throwError("Error mapping source for " + name + ": " + 
                         mapping.getErrorMessage());

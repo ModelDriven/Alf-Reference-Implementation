@@ -19,8 +19,6 @@ import java.util.Set;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
-import org.modeldriven.alf.syntax.units.ExternalParameter;
-import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.ImportedMember;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -312,15 +310,6 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public FormalParameter asParameter() {
-        if (this.isParameter()) {
-            return new ExternalParameter((Parameter)this.getSelf().getElement());
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public NamespaceDefinition asNamespace() {
         Element element = this.getSelf().getElement();
         if (element instanceof TemplateParameter) {
@@ -487,7 +476,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public List<FormalParameter> getParameters() {
+    public List<ElementReference> getParameters() {
         List<Parameter> ownedParameters = null;
         if (this.isBehavior()) {
             ownedParameters = ((Behavior)this.getSelf().getElement()).
@@ -498,17 +487,17 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         } else {
             ownedParameters = new ArrayList<Parameter>();
         }
-        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
+        List<ElementReference> parameters = new ArrayList<ElementReference>();
         for (Parameter parameter: ownedParameters) {
-            parameters.add(new ExternalParameter(parameter));
+            parameters.add(ElementReferenceImpl.makeElementReference(parameter));
         }
         return parameters;
     }
 
     @Override
-    public FormalParameter getReturnParameter() {
-        for (FormalParameter parameter: this.getParameters()) {
-            if (parameter.getDirection().equals("return")) {
+    public ElementReference getReturnParameter() {
+        for (ElementReference parameter: this.getParameters()) {
+            if (parameter.getImpl().getDirection().equals("return")) {
                 return parameter;
             }
         }
@@ -662,8 +651,8 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             return ElementReferenceImpl.makeBoundReference(
                     ((Operation)this.getSelf().getElement()).getType());
         } else if (this.isBehavior()) {
-            FormalParameter parameter = this.getReturnParameter();
-            return parameter == null? null: parameter.getType();
+            ElementReference parameter = this.getReturnParameter();
+            return parameter == null? null: parameter.getImpl().getType();
         } else if (this.isEnumerationLiteral()) {
             return ElementReferenceImpl.makeBoundReference(
                     ((EnumerationLiteral)this.getSelf().getElement()).
@@ -691,9 +680,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         } else if (this.isParameter()) {
             lower = ((Parameter)this.getSelf().getElement()).getLower();
         } else if (this.isBehavior() || this.isOperation()) {
-            FormalParameter parameter = this.getReturnParameter();
+            ElementReference parameter = this.getReturnParameter();
             if (parameter != null) {
-                lower = parameter.getLower();
+                lower = parameter.getImpl().getLower();
             }
         }
         
@@ -707,13 +696,22 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         } else if (this.isParameter()) {
             upper = ((Parameter)this.getSelf().getElement()).getUpper();
         } else if (this.isBehavior() || this.isOperation()) {
-            FormalParameter parameter = this.getReturnParameter();
+            ElementReference parameter = this.getReturnParameter();
             if (parameter != null) {
-                upper = parameter.getUpper();
+                upper = parameter.getImpl().getUpper();
             }
         }
         
         return upper;
+    }
+    
+    @Override
+    public String getDirection() {
+        if (!this.isParameter()) {
+            return null;
+        } else {
+            return ((Parameter)this.getElement()).getDirection();
+        }
     }
     
     @Override

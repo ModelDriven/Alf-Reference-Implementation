@@ -19,9 +19,9 @@ import java.util.TreeSet;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 
 /**
- * An assignment of a source element that gives the value of a local name, along
- * with a record of the defined type (if any) and multiplicity of the local
- * name.
+ * An assignment of a source element that gives the value of a local name or
+ * input parameter, along with a record of the defined type (if any) and
+ * multiplicity of the name.
  **/
 
 public class AssignedSource implements ParsedElement {
@@ -82,13 +82,19 @@ public class AssignedSource implements ParsedElement {
 		this.getImpl().setName(name);
 	}
 
-	public SyntaxElement getSource() {
+	public ElementReference getSource() {
 		return this.getImpl().getSource();
 	}
 
-	public void setSource(SyntaxElement source) {
-		this.getImpl().setSource(source);
-	}
+    public void setSource(ElementReference source) {
+        this.getImpl().setSource(source);
+    }
+
+    public void setSource(SyntaxElement source) {
+        InternalElementReference elementReference = new InternalElementReference();
+        elementReference.setElement(source);
+        this.setSource(elementReference);
+    }
 
 	public Integer getUpper() {
 		return this.getImpl().getUpper();
@@ -173,7 +179,7 @@ public class AssignedSource implements ParsedElement {
 	public void print(String prefix, boolean includeDerived) {
 		System.out.println(prefix + "[" + this.getId() + "]"
 				+ this._toString(includeDerived));
-		SyntaxElement source = this.getSource();
+		ElementReference source = this.getSource();
 		if (source != null) {
 			System.out.println(prefix + " source:"
 					+ source.toString(includeDerived));

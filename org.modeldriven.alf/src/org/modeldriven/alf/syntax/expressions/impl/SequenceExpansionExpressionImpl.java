@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -169,7 +169,7 @@ public abstract class SequenceExpansionExpressionImpl extends ExpressionImpl {
                 AssignedSource assignmentBefore = 
                     argument.getImpl().getAssignmentBefore(assignmentAfter.getName());
                 if (assignmentBefore != null && 
-                        assignmentBefore.getSource() != assignmentAfter.getSource()) {
+                        !assignmentBefore.getSource().getImpl().equals(assignmentAfter.getSource())) {
                     return false;
                 }
             }

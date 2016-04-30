@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -95,9 +95,7 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
         if (feature != null) {
             return feature.getImpl().getStructuralFeatureReferent();
         } else if (oldAssignment != null) {
-            InternalElementReference referent = new InternalElementReference();
-            referent.setElement(oldAssignment.getSource());
-            return referent;
+            return oldAssignment.getSource();
         } else if (parameter != null) {
             return parameter;
         } else {
@@ -186,7 +184,7 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	    if (referent == null) {
 	        return true;
 	    } else if (referent.getImpl().isParameter()) {
-	        return !"in".equals(referent.getImpl().asParameter().getDirection());
+	        return !"in".equals(referent.getImpl().getDirection());
 	    } else if (referent.getImpl().isProperty()) {
             // Note: This constraint ensures that there will be an
             // assigned name for an assignment to an attribute of a

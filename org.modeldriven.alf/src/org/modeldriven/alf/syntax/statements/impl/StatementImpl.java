@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -239,7 +239,7 @@ public abstract class StatementImpl extends DocumentedElementImpl {
         return new HashSet<AssignedSource>(assignments).size() == assignments.size();
     }
 
-    public SyntaxElement resolve(String name) {
+    public ElementReference resolve(String name) {
         AssignedSource assignment = this.getAssignmentBefore(name);
         return assignment == null? null: assignment.getSource();
     }
@@ -269,7 +269,7 @@ public abstract class StatementImpl extends DocumentedElementImpl {
                 String name = assignment.getName();
                 AssignedSource oldAssignment = assignmentsBefore.get(name);
                 if (oldAssignment == null || 
-                        oldAssignment.getSource() != assignment.getSource()) {
+                        !oldAssignment.getSource().getImpl().equals(assignment.getSource())) {
                     Collection<AssignedSource> assignments = assignmentMap.get(name);
                     if (assignments == null) {
                         assignments = new ArrayList<AssignedSource>();

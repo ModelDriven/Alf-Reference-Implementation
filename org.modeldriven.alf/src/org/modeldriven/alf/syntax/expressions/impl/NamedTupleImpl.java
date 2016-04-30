@@ -62,12 +62,12 @@ public class NamedTupleImpl extends TupleImpl {
 	    InvocationExpression invocation = self.getInvocation();
 	    Collection<NamedExpression> inputs = new ArrayList<NamedExpression>();
 	    if (invocation != null) {
-	        List<FormalParameter> parameters = invocation.getImpl().parametersFor(referent);
-	        for (FormalParameter parameter: parameters) {
-                String direction = parameter == null? null: parameter.getDirection();
+	        List<ElementReference> parameters = invocation.getImpl().parametersFor(referent);
+	        for (ElementReference parameter: parameters) {
+                String direction = parameter == null? null: parameter.getImpl().getDirection();
                 if (direction != null && 
                         (direction.equals("in") || direction.equals("inout"))) {
-                    String name = parameter.getName();
+                    String name = parameter.getImpl().getName();
                     NamedExpression argument = this.getNamedExpression(name);
                     if (argument == null) {
                         argument = new NamedExpression();
@@ -94,13 +94,13 @@ public class NamedTupleImpl extends TupleImpl {
         InvocationExpression invocation = self.getInvocation();
         Collection<OutputNamedExpression> outputs = new ArrayList<OutputNamedExpression>();
         if (invocation != null) {
-            List<FormalParameter> parameters = invocation.getImpl().parametersFor(referent);
+            List<ElementReference> parameters = invocation.getImpl().parametersFor(referent);
             boolean isAddInvocation = invocation.getImpl().isAddInvocation();
-            for (FormalParameter parameter: parameters) {
-                String direction = parameter == null? null: parameter.getDirection();
+            for (ElementReference parameter: parameters) {
+                String direction = parameter == null? null: parameter.getImpl().getDirection();
                 if (direction != null && 
                         (direction.equals("out") || direction.equals("inout"))) {
-                    String name = parameter.getName();
+                    String name = parameter.getImpl().getName();
                     NamedExpression argument = this.getNamedExpression(name);
                     Expression expression = null;
                     if (argument == null) {
@@ -141,13 +141,13 @@ public class NamedTupleImpl extends TupleImpl {
         if (invocation == null || invocation.getBoundReferent() == null) {
             return true;
         } else {
-            Collection<FormalParameter> parameters = 
-                new ArrayList<FormalParameter>(invocation.getImpl().parameters());
+            Collection<ElementReference> parameters = 
+                new ArrayList<ElementReference>(invocation.getImpl().parameterElements());
             for (NamedExpression namedExpression: self.getNamedExpression()) {
                 String name = namedExpression.getName();
                 boolean found = false;
-                for (FormalParameter parameter: parameters) {
-                    if (name.equals(parameter.getName())) {
+                for (ElementReference parameter: parameters) {
+                    if (name.equals(parameter.getImpl().getName())) {
                         parameters.remove(parameter);
                         found = true;
                         break;

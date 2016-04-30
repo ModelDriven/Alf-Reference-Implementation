@@ -103,7 +103,7 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	    NamespaceDefinition definition = unit.getDefinition();
 		return definition instanceof ActivityDefinition && 
 		    super.matchForStub(unit) &&
-		    FormalParameterImpl.equals(this.getFormalParameters(), 
+		    FormalParameterImpl.equal(this.getFormalParameters(), 
 		            ((ActivityDefinition)definition).getImpl().getFormalParameters());
 	} // matchForStub
 
@@ -137,18 +137,18 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
     }
     
     public ElementReference getType() {
-        FormalParameter returnParameter = this.getReturnParameter();
-        return returnParameter == null? null: returnParameter.getType();
+        ElementReference returnParameter = this.getReturnParameter();
+        return returnParameter == null? null: returnParameter.getImpl().getType();
     }
 
     public int getLower() {
-        FormalParameter returnParameter = this.getReturnParameter();
-        return returnParameter == null? 0: returnParameter.getLower();
+        ElementReference returnParameter = this.getReturnParameter();
+        return returnParameter == null? 0: returnParameter.getImpl().getLower();
     }
     
     public int getUpper() {
-        FormalParameter returnParameter = this.getReturnParameter();
-        return returnParameter == null? 0: returnParameter.getUpper();
+        ElementReference returnParameter = this.getReturnParameter();
+        return returnParameter == null? 0: returnParameter.getImpl().getUpper();
     }
     
     public boolean isClassifierBehavior() {

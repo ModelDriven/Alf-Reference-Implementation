@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -160,21 +160,21 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	    if (referent == null) {
 	        return false;
 	    } else {
-	        List<FormalParameter> parameters = referent.getImpl().getParameters();
-            FormalParameter returnParameter = referent.getImpl().getReturnParameter();
+	        List<ElementReference> parameters = referent.getImpl().getParameters();
+            ElementReference returnParameter = referent.getImpl().getReturnParameter();
 	        if (parameters.size() != 3 || returnParameter == null) {
 	            return false;
 	        } else {
 	            ElementReference type = self.getType();
-	            for (FormalParameter parameter: parameters) {
-	                ElementReference parameterType = parameter.getType();
-	                if (!((parameter.equals(returnParameter) ||
-	                            "in".equals(parameter.getDirection())) &&
+	            for (ElementReference parameter: parameters) {
+	                ElementReference parameterType = parameter.getImpl().getType();
+	                if (!((parameter.getImpl().equals(returnParameter) ||
+	                            "in".equals(parameter.getImpl().getDirection())) &&
 	                       (type == null && parameterType == null ||
 	                           parameterType != null && 
 	                           parameterType.getImpl().equals(type)) &&
-	                       parameter.getLower() == 1 && 
-	                       parameter.getUpper() == 1)) {
+	                       parameter.getImpl().getLower() == 1 && 
+	                       parameter.getImpl().getUpper() == 1)) {
 	                    return false;
 	                }
 	            }

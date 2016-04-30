@@ -307,13 +307,10 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         	    int n = self.getNameBinding().size();
         	    
         	    if (n == 1) {
-        	        SyntaxElement source = this.getLocalSource();
+        	        ElementReference source = this.getLocalSource();
         	        if (source != null) {
         	            // Resolve as a local name
-        	            InternalElementReference sourceReference = 
-        	                    new InternalElementReference();
-        	            sourceReference.setElement(source);
-        	            referents.add(sourceReference);
+        	            referents.add(source);
         	        } else if (currentScope != null) {
         	            this.addReferentsTo(referents, currentScope.getImpl().
         	                    resolve(self.getUnqualifiedName().getName(), 
@@ -509,9 +506,9 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 	 * Helper Methods
 	 */
 
-    private SyntaxElement getLocalSource() {
+    private ElementReference getLocalSource() {
         Expression containingExpression = this.getContainingExpression();
-        SyntaxElement source = null;
+        ElementReference source = null;
         if (containingExpression != null) {
             source = containingExpression.getImpl().resolve(getSelf().getUnqualifiedName().getName());
         }

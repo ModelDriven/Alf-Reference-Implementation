@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -18,15 +18,15 @@ import java.util.Set;
 import org.modeldriven.alf.syntax.common.*;
 
 /**
- * An assignment of a source element that gives the value of a local name, along
- * with a record of the defined type (if any) and multiplicity of the local
- * name.
+ * An assignment of a source element that gives the value of a local name or
+ * input parameter, along with a record of the defined type (if any) and
+ * multiplicity of the name.
  **/
 
 public class AssignedSourceImpl {
 
     private String name = "";
-    private SyntaxElement source = null;
+    private ElementReference source = null;
     private Integer upper = 0;
     private Integer lower = 0;
     private ElementReference type = null;
@@ -69,11 +69,11 @@ public class AssignedSourceImpl {
         this.name = name;
     }
 
-    public SyntaxElement getSource() {
+    public ElementReference getSource() {
         return this.source;
     }
 
-    public void setSource(SyntaxElement source) {
+    public void setSource(ElementReference source) {
         this.source = source;
     }
 
@@ -114,7 +114,19 @@ public class AssignedSourceImpl {
      */
     
     public static AssignedSource makeAssignment
-        (String name, SyntaxElement source, 
+    (String name, SyntaxElement source, 
+     ElementReference type, int lower, int upper) {
+    AssignedSource assignment = new AssignedSource();
+    assignment.setName(name);
+    assignment.setSource(source);
+    assignment.setType(type);
+    assignment.setLower(lower);
+    assignment.setUpper(upper);
+    return assignment;
+}
+
+   public static AssignedSource makeAssignment
+        (String name, ElementReference source, 
          ElementReference type, int lower, int upper) {
         AssignedSource assignment = new AssignedSource();
         assignment.setName(name);
@@ -141,7 +153,7 @@ public class AssignedSourceImpl {
         for (AssignedSource assignment: assignmentsAfter) {
             AssignedSource assignmentBefore = assignmentsBefore.get(assignment.getName());
             if (assignmentBefore == null ||
-                    assignment.getSource() != assignmentBefore.getSource()) {
+                    !assignment.getSource().getImpl().equals(assignmentBefore.getSource())) {
                 newAssignments.add(assignment);
             }
         }

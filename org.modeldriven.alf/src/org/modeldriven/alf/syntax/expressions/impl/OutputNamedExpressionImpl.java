@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,8 +10,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.units.FormalParameter;
 
 /**
  * A named argument expression for an output parameter.
@@ -132,11 +132,11 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
      * output from the given parameter.
      */
 	@Override
-    public boolean getIsCollectionConversion(FormalParameter parameter) {
+    public boolean getIsCollectionConversion(ElementReference parameter) {
         OutputNamedExpression self = this.getSelf();
         Expression expression = self.getExpression();
         return isCollectionConversion(
-                expression.getType(), parameter.getType(), parameter.getUpper());
+                expression.getType(), parameter.getImpl().getType(), parameter.getImpl().getUpper());
     }
 
 	/**
@@ -144,10 +144,10 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
      * output from the given parameter.
      */
 	@Override
-    public boolean getIsBitStringConversion(FormalParameter parameter) {
+    public boolean getIsBitStringConversion(ElementReference parameter) {
         OutputNamedExpression self = this.getSelf();
         return isBitStringConversion(
-                self.getExpression().getType(), parameter.getType());
+                self.getExpression().getType(), parameter.getImpl().getType());
     }
 
 } // OutputNamedExpressionImpl

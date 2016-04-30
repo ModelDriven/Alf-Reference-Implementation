@@ -19,7 +19,6 @@ import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Block;
-import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -76,9 +75,12 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
         // NOTE: Using getReturnParameter ensures that a constructor gets
         // a return parameter even if one is not given explicitly in the
         // operation definition.
-        FormalParameter returnFormalParameter = definition.getImpl().getReturnParameter();
+        ElementReference returnFormalParameter = definition.getImpl().getReturnParameter();
         if (returnFormalParameter != null) {
             FumlMapping returnParameterMapping = this.fumlMap(returnFormalParameter);
+            if (returnParameterMapping instanceof ElementReferenceMapping) {
+                returnParameterMapping = ((ElementReferenceMapping)returnParameterMapping).getMapping();
+            }
             if (!(returnParameterMapping instanceof FormalParameterMapping)) {
                 this.throwError("Error mapping return parameter: " + 
                         returnParameterMapping.getErrorMessage());

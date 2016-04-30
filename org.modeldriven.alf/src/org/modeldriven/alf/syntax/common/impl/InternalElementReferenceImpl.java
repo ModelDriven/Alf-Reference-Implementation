@@ -261,15 +261,6 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public FormalParameter asParameter() {
-        if (this.isParameter()) {
-            return (FormalParameter)this.getSelf().getElement();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public NamespaceDefinition asNamespace() {
         if (this.isNamespace()) {
             return (NamespaceDefinition)this.getSelf().getElement();
@@ -414,16 +405,16 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public List<FormalParameter> getParameters() {
+    public List<ElementReference> getParameters() {
         if (this.isBehavior() || this.isOperation()) {
             return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getFormalParameters();
         } else {
-            return new ArrayList<FormalParameter>();
+            return new ArrayList<ElementReference>();
         }
     }
     
     @Override
-    public FormalParameter getReturnParameter() {
+    public ElementReference getReturnParameter() {
         if (this.isBehavior() || this.isOperation()) {
             return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getReturnParameter();
         } else {
@@ -557,6 +548,15 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public String getDirection() {
+        if (!this.isParameter()) {
+            return null;
+        } else {
+            return ((FormalParameter)this.getElement()).getDirection();
+        }
+    }
+    
+    @Override
     public ElementReference getClassifierBehavior() {
         if (!this.isActiveClass()) {
             return null;
@@ -662,7 +662,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             } else if (object instanceof SyntaxElement) {
                 element = (SyntaxElement)object;
             }
-            return element != null && this.getSelf().getElement() == element;
+            return element != null && this.getSelf().getElement().equals(element);
         }
     }
 

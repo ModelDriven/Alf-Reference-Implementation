@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -16,6 +15,7 @@ import java.util.List;
 
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
@@ -265,6 +265,9 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                 if (assignment != null) {
                     FumlMapping sourceMapping = 
                         mapping.fumlMap(assignment.getSource());
+                    if (sourceMapping instanceof ElementReferenceMapping) {
+                        sourceMapping = ((ElementReferenceMapping)sourceMapping).getMapping();
+                    }
                     if (!(sourceMapping instanceof SyntaxElementMapping)) {
                         mapping.throwError("Error mapping parameter " + 
                                 name + ": " + mapping.getErrorMessage());

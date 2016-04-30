@@ -294,7 +294,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         NamespaceDefinition definition = unit.getDefinition();
         return definition instanceof ActivityDefinition && 
             !((ActivityDefinition)definition).getImpl().isTemplate() &&
-            FormalParameterImpl.equals(this.getFormalParameters(), 
+            FormalParameterImpl.equal(this.getFormalParameters(), 
                     ((ActivityDefinition)definition).getImpl().getFormalParameters());
 	}
 
@@ -312,18 +312,18 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	}
 	
 	public ElementReference getType() {
-	    FormalParameter returnParameter = this.getReturnParameter();
-	    return returnParameter == null? null: returnParameter.getType();
+	    ElementReference returnParameter = this.getReturnParameter();
+	    return returnParameter == null? null: returnParameter.getImpl().getType();
 	}
 
     public int getLower() {
-        FormalParameter returnParameter = this.getReturnParameter();
-        return returnParameter == null? 0: returnParameter.getLower();
+        ElementReference returnParameter = this.getReturnParameter();
+        return returnParameter == null? 0: returnParameter.getImpl().getLower();
     }
     
     public int getUpper() {
-        FormalParameter returnParameter = this.getReturnParameter();
-        return returnParameter == null? 0: returnParameter.getUpper();
+        ElementReference returnParameter = this.getReturnParameter();
+        return returnParameter == null? 0: returnParameter.getImpl().getUpper();
     }
     
     /*
@@ -354,12 +354,13 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
      * For a constructor, return an implicit return parameter if none is given
      * explicitly.
      */
-    public FormalParameter getReturnParameter() {
-        FormalParameter returnParameter = super.getReturnParameter();
+    public ElementReference getReturnParameter() {
+        ElementReference returnParameter = super.getReturnParameter();
         if (returnParameter == null && this.getSelf().getIsConstructor()) {
-            returnParameter = new FormalParameter();
-            returnParameter.setType(this.getNamespaceReference());
-            returnParameter.setDirection("return");
+            FormalParameter parameter = new FormalParameter();
+            parameter.setType(this.getNamespaceReference());
+            parameter.setDirection("return");
+            returnParameter = parameter.getImpl().getReferent();
         }
         return returnParameter;
     }
@@ -367,10 +368,10 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     private boolean equateParameters(ElementReference operation) {
         // NOTE: Return parameters are handled separately, so they are not
         // presumed to be at the end.
-        FormalParameter myReturnParameter = this.getReturnParameter();
-        FormalParameter otherReturnParameter = operation.getImpl().getReturnParameter();
+        ElementReference myReturnParameter = this.getReturnParameter();
+        ElementReference otherReturnParameter = operation.getImpl().getReturnParameter();
         return operation != null &&
-                    FormalParameterImpl.equals(
+                    FormalParameterImpl.equal(
                         removeReturnParameter(this.getFormalParameters()), 
                         removeReturnParameter(operation.getImpl().getParameters())) &&
                         
@@ -380,14 +381,14 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
                                 operation.getImpl().isConstructor() ||
                                 
                          myReturnParameter != null && 
-                            myReturnParameter.getImpl().equals(otherReturnParameter) ||
+                             FormalParameterImpl.equal(myReturnParameter, otherReturnParameter) ||
                          myReturnParameter == null && otherReturnParameter == null);
     }
     
-    public static List<FormalParameter> removeReturnParameter(List<FormalParameter> parameters) {
-        List<FormalParameter> list = new ArrayList<FormalParameter>();
-        for (FormalParameter parameter: parameters) {
-            if (!"return".equals(parameter.getDirection())) {
+    public static List<ElementReference> removeReturnParameter(List<ElementReference> parameters) {
+        List<ElementReference> list = new ArrayList<ElementReference>();
+        for (ElementReference parameter: parameters) {
+            if (!"return".equals(parameter.getImpl().getDirection())) {
                 list.add(parameter);
             }
         }

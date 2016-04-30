@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -21,7 +21,6 @@ import org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.NamedExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
-import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import org.modeldriven.alf.uml.Action;
@@ -40,17 +39,17 @@ public class BehaviorInvocationExpressionMapping extends
             ElementReference collectionFunctionAdd = 
                     RootNamespace.getRootScope().getCollectionFunctionAdd();
             if (collectionFunctionAdd != null) {
-                List<FormalParameter> parameters = 
+                List<ElementReference> parameters = 
                         collectionFunctionAdd.getImpl().getParameters();
                 Tuple tuple = invocation.getTuple();
                 FumlMapping mapping = this.fumlMap(
-                        tuple.getImpl().getInput(parameters.get(0).getName()));
+                        tuple.getImpl().getInput(parameters.get(0).getImpl().getName()));
                 if (mapping instanceof NameExpressionMapping) {
                     ActivityNode resultSource = 
                             ((NameExpressionMapping)mapping).getResultSource();
                     if (resultSource instanceof ExpansionNode) {
                         mapping = this.fumlMap(
-                                tuple.getImpl().getInput(parameters.get(1).getName()));
+                                tuple.getImpl().getInput(parameters.get(1).getImpl().getName()));
                         if (!(mapping instanceof ExpressionMapping)) {
                             this.throwError("Error mapping parallel add expression: " + 
                                     mapping.getErrorMessage());

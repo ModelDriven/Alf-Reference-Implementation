@@ -62,18 +62,18 @@ public class PositionalTupleImpl extends TupleImpl {
         InvocationExpression invocation = self.getInvocation();
         Collection<NamedExpression> inputs = new ArrayList<NamedExpression>();
         if (invocation != null) {
-            List<FormalParameter> parameters = invocation.getImpl().parametersFor(referent);
+            List<ElementReference> parameters = invocation.getImpl().parametersFor(referent);
             List<Expression> expressions = self.getExpression();
             int i = 0;
-            for (FormalParameter parameter: parameters) {
-                String direction = parameter.getDirection();
+            for (ElementReference parameter: parameters) {
+                String direction = parameter.getImpl().getDirection();
                 if (direction != null && 
                         (direction.equals("in") || direction.equals("inout"))) {
                     Expression expression = i < expressions.size()?
                             expressions.get(i):
                             SequenceConstructionExpressionImpl.makeNull();
                     NamedExpression namedExpression = new NamedExpression();
-                    namedExpression.setName(parameter.getName());
+                    namedExpression.setName(parameter.getImpl().getName());
                     namedExpression.setExpression(expression);
                     inputs.add(namedExpression);
                 }
@@ -98,15 +98,15 @@ public class PositionalTupleImpl extends TupleImpl {
         InvocationExpression invocation = self.getInvocation();
         Collection<OutputNamedExpression> outputs = new ArrayList<OutputNamedExpression>();
         if (invocation != null) {
-            List<FormalParameter> parameters = invocation.getImpl().parametersFor(referent);
+            List<ElementReference> parameters = invocation.getImpl().parametersFor(referent);
             boolean isAddInvocation = invocation.getImpl().isAddInvocation();
             List<Expression> expressions = self.getExpression();
             int i = 0;
-            for (FormalParameter parameter: parameters) {
+            for (ElementReference parameter: parameters) {
                 if (i >= expressions.size()) {
                     break;
                 }
-                String direction = parameter.getDirection();
+                String direction = parameter.getImpl().getDirection();
                 if (direction != null && 
                         (direction.equals("inout") || direction.equals("out"))) {
                     
@@ -124,7 +124,7 @@ public class PositionalTupleImpl extends TupleImpl {
                         }
                         
                         OutputNamedExpression namedExpression = new OutputNamedExpression();
-                        namedExpression.setName(parameter.getName());
+                        namedExpression.setName(parameter.getImpl().getName());
                         namedExpression.setExpression(expression);
                         outputs.add(namedExpression);
                     }

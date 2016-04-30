@@ -14,7 +14,6 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
-import org.modeldriven.alf.syntax.units.impl.AssignableTypedElementImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -197,10 +196,10 @@ public class SequenceOperationExpressionImpl
         LeftHandSide lhs = null;
         if (this.isInPlace()) {
             Expression expression = this.getExpression();
-            FormalParameter parameter = this.getFirstParameter();
+            ElementReference parameter = this.getFirstParameter();
             if (expression != null && parameter != null) {
                 OutputNamedExpression namedExpression = new OutputNamedExpression();
-                namedExpression.setName(parameter.getName());
+                namedExpression.setName(parameter.getImpl().getName());
                 namedExpression.setExpression(expression);
                 lhs = namedExpression.getLeftHandSide();
             }
@@ -250,17 +249,16 @@ public class SequenceOperationExpressionImpl
 	 **/
 	public boolean sequenceOperationExpressionOperationReferent() {
         Expression expression = this.getExpression();
-        FormalParameter parameter = this.getFirstParameter();
+        ElementReference parameter = this.getFirstParameter();
         if (expression == null || parameter == null) {
             return false;
         } else {
-            String direction = parameter.getDirection();
+            String direction = parameter.getImpl().getDirection();
             return direction != null && 
                         (direction.equals("in") || direction.equals("inout")) &&
-                        parameter.getLower() == 0 && 
-                        parameter.getUpper() == -1 &&
-                        new AssignableTypedElementImpl(parameter.getImpl()).
-                            isAssignableFrom(expression);
+                        parameter.getImpl().getLower() == 0 && 
+                        parameter.getImpl().getUpper() == -1 &&
+                        parameter.getImpl().isAssignableFrom(expression);
     }
 	}
 
@@ -276,12 +274,11 @@ public class SequenceOperationExpressionImpl
 	public boolean sequenceOperationExpressionTargetCompatibility() {
         Expression expression = this.getExpression();
         LeftHandSide lhs = this.getLeftHandSide();
-        FormalParameter parameter = this.getFirstParameter();
+        ElementReference parameter = this.getFirstParameter();
         return expression == null || !this.isInPlace() ||
                     lhs != null && (lhs.getImpl().getAssignedName() == null || 
                             this.getOldAssignment() != null) &&
-                    lhs.getImpl().isAssignableFrom(
-                            new AssignableTypedElementImpl(parameter.getImpl()));
+                    lhs.getImpl().isAssignableFrom(parameter);
 //                    (type != null && type.getImpl().equals(expressionType) ||
 //                            type == null && expressionType == null);
 	}
@@ -400,8 +397,8 @@ public class SequenceOperationExpressionImpl
 	 * do not include the first parameter of the behavior of the expression.
 	 **/
 	@Override
-	public List<FormalParameter> parametersFor(ElementReference referent) {
-	    List<FormalParameter> parameters = super.parametersFor(referent);
+	public List<ElementReference> parametersFor(ElementReference referent) {
+	    List<ElementReference> parameters = super.parametersFor(referent);
 	    return parameters.size() < 1? parameters: 
 	        parameters.subList(1, parameters.size());
 	}
@@ -411,24 +408,24 @@ public class SequenceOperationExpressionImpl
 	 * the referent is inout.
 	 */
 	public boolean isInPlace() {
-	    FormalParameter firstParameter = this.getFirstParameter();
+	    ElementReference firstParameter = this.getFirstParameter();
 	    return firstParameter != null && 
-	                firstParameter.getDirection().equals("inout");
+	                firstParameter.getImpl().getDirection().equals("inout");
 	}
 	
-	private FormalParameter getFirstParameter() {
+	private ElementReference getFirstParameter() {
         ElementReference referent = this.getSelf().getBoundReferent();
         if (referent == null) {
             return null;
         } else {
-            List<FormalParameter> parameters = referent.getImpl().getParameters();
+            List<ElementReference> parameters = referent.getImpl().getParameters();
             return parameters.size() == 0? null: parameters.get(0);
         }
 	}
 	
     private ElementReference getFirstParameterType() {
-        FormalParameter firstParameter = this.getFirstParameter();
-        return firstParameter == null? null: firstParameter.getType();
+        ElementReference firstParameter = this.getFirstParameter();
+        return firstParameter == null? null: firstParameter.getImpl().getType();
     }
     
     private Expression getExpression() {
@@ -513,10 +510,10 @@ public class SequenceOperationExpressionImpl
     private BehaviorInvocationExpression deriveInvocation() {
         SequenceOperationExpression self = this.getSelf();
         
-        FormalParameter firstParameter = this.getFirstParameter();
+        ElementReference firstParameter = this.getFirstParameter();
         NamedExpression namedExpression = new NamedExpression();
         if (firstParameter != null) {
-            namedExpression.setName(firstParameter.getName());
+            namedExpression.setName(firstParameter.getImpl().getName());
         }
         namedExpression.setExpression(this.getExpression());
         

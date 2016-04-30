@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,48 +12,66 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.Expression;
+import org.modeldriven.alf.syntax.expressions.AssignableElement;
 
-public abstract class AssignableElementImpl extends SyntaxElementImpl {
+public abstract class AssignableElementImpl extends SyntaxElementImpl 
+    implements AssignableElement {
 
     public AssignableElementImpl(SyntaxElement self) {
         super(self);
     }
     
-    public abstract ElementReference getType();
-    public abstract Integer getLower();
-    public abstract Integer getUpper();
+    public boolean isAssignableFrom(ElementReference source) {
+        return this.isAssignableFrom(source.getImpl());
+    }
     
     public boolean isAssignableFrom(Expression source) {
         return this.isAssignableFrom(source.getImpl());
     }
     
-    public boolean isAssignableFrom(AssignableElementImpl source) {
-        return source == null ||
-            this.isTypeConformantWith(source) && 
-            this.isMultiplicityConformantWith(source);
+    public boolean isAssignableFrom(AssignableElement source) {
+        return isAssignable(this, source);
     }
     
-    public boolean isTypeConformantWith(AssignableElementImpl source) {
+    public boolean isTypeConformantWith(AssignableElement source) {
+        return isTypeConformant(this, source);
+    }
+    
+    public boolean isMultiplicityConformantWith(AssignableElement source) {
+        return isMultiplicityConformant(this, source);
+    }
+    
+    public boolean isNull() {
+        return isNull(this);
+    }
+    
+    public static boolean isAssignable(AssignableElement target, AssignableElement source) {
+        return source == null ||
+                isTypeConformant(target, source) && 
+                isMultiplicityConformant(target, source);
+    }
+    
+    public static boolean isTypeConformant(AssignableElement target, AssignableElement source) {
         ElementReference sourceType = source.getType();
         int sourceUpper = source.getUpper();
-        int targetLower = this.getLower();
-        int targetUpper = this.getUpper();
+        int targetLower = target.getLower();
+        int targetUpper = target.getUpper();
         
         return
             // Null conversion
-            source.isNull() && targetLower == 0 ||
+            isNull(source) && targetLower == 0 ||
             
             // Type conformance
-            this.isTypeConformantWith(sourceType) ||
+            isTypeConformant(target, sourceType) ||
             
             // Collection conversion
             sourceType != null && sourceType.getImpl().isCollectionClass() && 
             sourceUpper == 1 && (targetUpper == -1 || targetUpper > 1) &&
-            this.isTypeConformantWith(sourceType.getImpl().getCollectionArgument());
+            isTypeConformant(target, sourceType.getImpl().getCollectionArgument());
     }
     
-    public boolean isTypeConformantWith(ElementReference sourceType) {
-        ElementReference targetType = this.getType();
+    public static boolean isTypeConformant(AssignableElement target, ElementReference sourceType) {
+        ElementReference targetType = target.getType();
         return
             // Untyped target is conformant with anything.
             targetType == null ||
@@ -68,8 +86,8 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
             sourceType.getImpl().isInteger() && targetType.getImpl().isBitString());
     }
     
-    public boolean isMultiplicityConformantWith(AssignableElementImpl source) {
-        int targetUpper = this.getUpper();
+    public static boolean isMultiplicityConformant(AssignableElement target, AssignableElement source) {
+        int targetUpper = target.getUpper();
         int sourceUpper = source.getUpper();
         return targetUpper == -1 || targetUpper > 1 || 
                sourceUpper != -1 && sourceUpper <= targetUpper;
@@ -79,9 +97,9 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl {
      * Check whether this element is guaranteed to evaluate to a "null"
      * value, e.g., untyped and with multiplicity 0..0.
      */
-    public boolean isNull() {
-        return this.getLower() == 0 && this.getUpper() == 0 && 
-               this.getType() == null ;
+    public static boolean isNull(AssignableElement element) {
+        return element.getLower() == 0 && element.getUpper() == 0 && 
+               element.getType() == null ;
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.expressions.impl.AssignableElementImpl;
 import org.modeldriven.alf.syntax.units.*;
 
 /**
@@ -185,7 +186,7 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	        return true;
 	    } else {
 	        initializer.getImpl().setCurrentScope(this.getOuterScope());
-    		return new AssignableTypedElementImpl(this).isAssignableFrom(initializer);
+    		return AssignableElementImpl.isAssignable(this, initializer.getImpl());
 	    }
 	}
 	

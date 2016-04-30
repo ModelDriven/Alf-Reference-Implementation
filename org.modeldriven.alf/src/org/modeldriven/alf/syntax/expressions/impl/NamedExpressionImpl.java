@@ -158,11 +158,11 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
     
     // Derives isCollectionConversion for this named expression as an input for
     // the given parameter.
-    public boolean getIsCollectionConversion(FormalParameter parameter) {
+    public boolean getIsCollectionConversion(ElementReference parameter) {
         NamedExpression self = this.getSelf();
         Expression expression = self.getExpression();
         return isCollectionConversion(
-                parameter.getType(), expression.getType(), expression.getUpper());
+                parameter.getImpl().getType(), expression.getType(), expression.getUpper());
     }
 
     protected static boolean isCollectionConversion(
@@ -176,10 +176,10 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
     
     // Derives isBitStringConversion for this named expression as an input for
     // the given parameter.
-    public boolean getIsBitStringConversion(FormalParameter parameter) {
+    public boolean getIsBitStringConversion(ElementReference parameter) {
         NamedExpression self = this.getSelf();
         return isBitStringConversion(
-                parameter.getType(), self.getExpression().getType());
+                parameter.getImpl().getType(), self.getExpression().getType());
     }
     
     protected static boolean isBitStringConversion(
