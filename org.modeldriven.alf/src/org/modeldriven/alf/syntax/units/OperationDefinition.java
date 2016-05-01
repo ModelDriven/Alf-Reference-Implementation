@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -102,6 +101,14 @@ public class OperationDefinition extends NamespaceDefinition {
 		this.getImpl().setIsDestructor(isDestructor);
 	}
 
+    public Block getEffectiveBody() {
+        return this.getImpl().getEffectiveBody();
+    }
+    
+    public void setEffectiveBody(Block effectiveBody) {
+        this.getImpl().setEffectiveBody(effectiveBody);
+    }
+
 	/**
 	 * The namespace for an operation definition must be a class definition.
 	 **/
@@ -188,6 +195,23 @@ public class OperationDefinition extends NamespaceDefinition {
 		return this.getImpl().operationDefinitionDestructor();
 	}
 
+    /**
+     * There are no assignments before the effective body of an operation
+     * definition.
+     */
+    public boolean operationDefinitionEffectiveBodyAssignmentsBefore() {
+        return this.getImpl().operationDefinitionEffectiveBodyAssignmentsBefore();
+    }
+
+    /**
+     * If an operation definition is a stub, then its effective body is the body
+     * of the corresponding subunit. Otherwise, the effective body is the same
+     * as the body of the operation definition.
+     */
+    public boolean operationDefinitionEffectiveBodyDerivation() {
+        return this.getImpl().operationDefinitionEffectiveBodyDerivation();
+    }
+
 	/**
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Operation.
@@ -230,6 +254,7 @@ public class OperationDefinition extends NamespaceDefinition {
 		this.getRedefinedOperation();
 		this.getIsConstructor();
 		this.getIsDestructor();
+		this.getEffectiveBody();
 		super._deriveAll();
 		QualifiedNameList redefinition = this.getRedefinition();
 		if (redefinition != null) {
@@ -283,6 +308,14 @@ public class OperationDefinition extends NamespaceDefinition {
 			violations.add(new ConstraintViolation(
 					"operationDefinitionDestructor", this));
 		}
+        if (!this.operationDefinitionEffectiveBodyAssignmentsBefore()) {
+            violations.add(new ConstraintViolation(
+                    "operationDefinitionEffectiveBodyAssignmentsBefore", this));
+        }
+        if (!this.operationDefinitionEffectiveBodyDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "operationDefinitionEffectiveBodyDerivation", this));
+        }
 		QualifiedNameList redefinition = this.getRedefinition();
 		if (redefinition != null) {
 			redefinition.checkConstraints(violations);

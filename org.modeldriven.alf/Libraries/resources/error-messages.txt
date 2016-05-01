@@ -673,6 +673,10 @@ The enclosing statement for all statements in the body of a while statement are 
 activeClassDefinitionClassifierBehavior
 Concrete active class must have classifier behavior.
 If an active class definition is not abstract, then it must have a classifier behavior.
+
+activityDefinitionEffectiveBodyAssignmentsBefore
+
+There are no assignments before the effective body of an activity definition.
  
 activityDefinitionPrimitive
 Primitive activity definition cannot have a body.
@@ -761,6 +765,10 @@ An operation definition cannot be both a constructor and a destructor.
 operationDefinitionDestructor
 Redefined operations must be destructors.
 If an operation definition is a destructor, any redefined operation for it must also be a destructor. 
+ 
+operationDefinitionEffectiveBodyAssignmentsBefore
+
+There are no assignments before the effective body of an operation definition.
  
 operationDefinitionNamespace
 Namespace must be a class.

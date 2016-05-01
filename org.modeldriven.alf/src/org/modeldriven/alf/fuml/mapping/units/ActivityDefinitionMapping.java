@@ -105,7 +105,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         Classifier classifier = this.getClassifier();
         if (!(classifier instanceof OpaqueBehavior)) {
             Block body = 
-                this.getActivityDefinition().getImpl().getEffectiveBody();
+                this.getActivityDefinition().getEffectiveBody();
             if (body != null) {
                 FumlMapping bodyMapping = this.fumlMap(body);
                 Collection<Element> elements = bodyMapping.getModelElements();
@@ -369,7 +369,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
         super.print(prefix);
         
         ActivityDefinition source = this.getActivityDefinition();
-        Block body = source.getImpl().getEffectiveBody();
+        Block body = source.getEffectiveBody();
         if (body != null) {
             System.out.println(prefix + " body:");
             Mapping mapping = body.getImpl().getMapping();

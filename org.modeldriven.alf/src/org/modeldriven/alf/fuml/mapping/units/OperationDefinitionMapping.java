@@ -160,7 +160,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 
             Collection<Element> elements;
 
-            Block body = definition.getImpl().getEffectiveBody();
+            Block body = definition.getEffectiveBody();
             if (!definition.getIsConstructor()) {
                 FumlMapping bodyMapping = this.fumlMap(body);
                 elements = bodyMapping.getModelElements();
@@ -324,7 +324,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
 	    
         OperationDefinition definition = this.getOperationDefinition();
         if (!definition.getIsAbstract()) {
-            Block body = definition.getImpl().getEffectiveBody();
+            Block body = definition.getEffectiveBody();
             if (body != null) {
                 Mapping bodyMapping = 
                     body.getImpl().getMapping();

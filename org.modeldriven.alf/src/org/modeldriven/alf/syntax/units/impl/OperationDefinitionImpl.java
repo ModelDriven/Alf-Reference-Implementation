@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -32,6 +31,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	private Collection<ElementReference> redefinedOperation = null; // DERIVED
 	private Boolean isConstructor = null; // DERIVED
 	private Boolean isDestructor = null; // DERIVED
+	private Block effectiveBody = null; // DERIVED
 
 	public OperationDefinitionImpl(OperationDefinition self) {
 		super(self);
@@ -106,6 +106,17 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 		this.isDestructor = isDestructor;
 	}
 
+    public Block getEffectiveBody() {
+        if (this.effectiveBody == null) {
+            this.setEffectiveBody(this.deriveEffectiveBody());
+        }
+        return this.effectiveBody;
+    }
+    
+    public void setEffectiveBody(Block effectiveBody) {
+        this.effectiveBody = effectiveBody;
+    }
+    
     /**
      * If an operation definition has a redefinition list, its redefined
      * operations are the referent operations of the names in the redefinition
@@ -151,6 +162,24 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	    return true;
 	}
 	
+    /**
+     * If an operation definition is a stub, then its effective body is the body
+     * of the corresponding subunit. Otherwise, the operation body is the same
+     * as the body of the operation definition.
+     */
+    public Block deriveEffectiveBody() {
+        OperationDefinition self = this.getSelf();
+        UnitDefinition subunit = self.getSubunit();
+        if (subunit == null) {
+            return self.getBody();
+        } else {
+            NamespaceDefinition definition = subunit.getDefinition();
+            return definition instanceof ActivityDefinition?
+                        ((ActivityDefinition)definition).getBody():
+                        null;
+        }
+    }
+        
 	/*
 	 * Derivations
 	 */
@@ -172,6 +201,11 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 
     public boolean operationDefinitionIsDestructorDerivation() {
         this.getSelf().getIsDestructor();
+        return true;
+    }
+    
+    public boolean operationDefinitionEffectiveBodyDerivation() {
+        this.getSelf().getEffectiveBody();
         return true;
     }
     
@@ -268,6 +302,14 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         return true;
 	}
 	
+    /**
+     * There are no assignments before the effective body of an operation
+     * definition.
+     */
+    public boolean operationDefinitionEffectiveBodyAssignmentsBefore() {
+        return true;
+    }
+
 	/*
 	 * Helper Methods
 	 */
@@ -474,22 +516,6 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         }
     }
     
-    public Block getEffectiveBody() {
-        return this.getEffectiveBody(this.getSelf().getSubunit());
-    }
-    
-    private Block getEffectiveBody(UnitDefinition subunit) {
-        OperationDefinition self = this.getSelf();
-        if (subunit == null) {
-            return self.getBody();
-        } else {
-            NamespaceDefinition definition = subunit.getDefinition();
-            return definition instanceof ActivityDefinition?
-                        ((ActivityDefinition)definition).getBody():
-                        null;
-        }
-    }
-
     @Override
     protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 

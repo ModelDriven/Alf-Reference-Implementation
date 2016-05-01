@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -56,6 +55,14 @@ public class ActivityDefinition extends ClassifierDefinition {
 	public void setBody(Block body) {
 		this.getImpl().setBody(body);
 	}
+	
+	public Block getEffectiveBody() {
+	    return this.getImpl().getEffectiveBody();
+	}
+	
+    public void setEffectiveBody(Block effectiveBody) {
+        this.getImpl().setEffectiveBody(effectiveBody);
+    }
 
 	/**
 	 * An activity definition may not have a specialization list.
@@ -72,6 +79,23 @@ public class ActivityDefinition extends ClassifierDefinition {
 		return this.getImpl().activityDefinitionPrimitive();
 	}
 
+    /**
+     * There are no assignments before the effective body of an activity
+     * definition.
+     */
+    public boolean activityDefinitionEffectiveBodyAssignmentsBefore() {
+        return this.getImpl().activityDefinitionEffectiveBodyAssignmentsBefore();
+    }
+
+    /**
+     * If an activity definition is a stub, then its effective body is the body
+     * of the corresponding subunit. Otherwise, the effective body is the same
+     * as the body of the activity definition.
+     */
+    public boolean activityDefinitionEffectiveBodyDerivation() {
+        return this.getImpl().activityDefinitionEffectiveBodyDerivation();
+    }
+
 	/**
 	 * In addition to the annotations allowed for classifiers in general, an
 	 * activity definition allows @primitive annotations and any stereotype
@@ -80,7 +104,7 @@ public class ActivityDefinition extends ClassifierDefinition {
 	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
 	}
-
+	
 	/**
 	 * Returns true if the given unit definition matches this activity
 	 * definition considered as a classifier definition and the subunit is for
@@ -99,11 +123,12 @@ public class ActivityDefinition extends ClassifierDefinition {
 	}
 
 	public void _deriveAll() {
+        this.getEffectiveBody();
 		super._deriveAll();
-		Block body = this.getBody();
-		if (body != null) {
-			body.deriveAll();
-		}
+        Block body = this.getBody();
+        if (body != null) {
+            body.deriveAll();
+        }
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
@@ -112,10 +137,18 @@ public class ActivityDefinition extends ClassifierDefinition {
 			violations.add(new ConstraintViolation(
 					"activityDefinitionSpecialization", this));
 		}
-		if (!this.activityDefinitionPrimitive()) {
-			violations.add(new ConstraintViolation(
-					"activityDefinitionPrimitive", this));
-		}
+        if (!this.activityDefinitionPrimitive()) {
+            violations.add(new ConstraintViolation(
+                    "activityDefinitionPrimitive", this));
+        }
+        if (!this.activityDefinitionEffectiveBodyAssignmentsBefore()) {
+            violations.add(new ConstraintViolation(
+                    "activityDefinitionEffectiveBodyAssignmentsBefore", this));
+        }
+        if (!this.activityDefinitionEffectiveBodyDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "activityDefinitionEffectiveBodyDerivation", this));
+        }
 		Block body = this.getBody();
 		if (body != null) {
 			body.checkConstraints(violations);

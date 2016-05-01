@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -28,6 +27,7 @@ import org.modeldriven.alf.syntax.units.*;
 public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 
     private Block body = null;
+    private Block effectiveBody = null; // DERIVED
 
 	public ActivityDefinitionImpl(ActivityDefinition self) {
 		super(self);
@@ -47,6 +47,44 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
         if (body != null) {
             body.getImpl().setCurrentScope(this.getSelf());
         }
+    }
+    
+    public Block getEffectiveBody() {
+        if (this.effectiveBody == null) {
+            this.setEffectiveBody(this.deriveEffectiveBody());
+        }
+        return this.effectiveBody;
+    }
+    
+    public void setEffectiveBody(Block effectiveBody) {
+        this.effectiveBody = effectiveBody;
+    }
+    
+    /**
+     * If an activity definition is a stub, then its effective body is the body
+     * of the corresponding subunit. Otherwise, the effective body is the same
+     * as the body of the activity definition.
+     */
+    public Block deriveEffectiveBody() {
+        ActivityDefinition self = this.getSelf();
+        UnitDefinition subunit = self.getSubunit();
+        if (subunit == null) {
+            return self.getBody();
+        } else {
+            NamespaceDefinition definition = subunit.getDefinition();
+            return definition instanceof ActivityDefinition?
+                        ((ActivityDefinition)definition).getBody():
+                        null;
+        }
+    }
+        
+    /*
+     * Derivations
+     */
+
+    public boolean activityDefinitionEffectiveBodyDerivation() {
+        this.getSelf().getEffectiveBody();
+        return true;
     }
 
     /*
@@ -70,6 +108,15 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 		        self.getBody().getStatement().isEmpty();
 	}
 	
+    /**
+     * There are no assignments before the effective body of an activity
+     * definition.
+     */
+    public boolean activityDefinitionEffectiveBodyAssignmentsBefore() {
+        // This is true by default.
+        return true;
+    }
+
 	/*
 	 * Helper Methods
 	 */
@@ -120,22 +167,6 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	 * Helper Methods
 	 */
 
-    public Block getEffectiveBody() {
-        return this.getEffectiveBody(this.getSelf().getSubunit());
-    }
-    
-    private Block getEffectiveBody(UnitDefinition subunit) {
-        ActivityDefinition self = this.getSelf();
-        if (subunit == null) {
-            return self.getBody();
-        } else {
-            NamespaceDefinition definition = subunit.getDefinition();
-            return definition instanceof ActivityDefinition?
-                        ((ActivityDefinition)definition).getBody():
-                        null;
-        }
-    }
-    
     public ElementReference getType() {
         ElementReference returnParameter = this.getReturnParameter();
         return returnParameter == null? null: returnParameter.getImpl().getType();
