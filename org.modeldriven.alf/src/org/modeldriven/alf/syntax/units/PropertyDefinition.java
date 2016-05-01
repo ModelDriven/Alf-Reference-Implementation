@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -114,6 +113,21 @@ public class PropertyDefinition extends TypedElementDefinition {
 	public boolean propertyDefinitionIsFeatureDerivation() {
 		return this.getImpl().propertyDefinitionIsFeatureDerivation();
 	}
+	
+    /**
+     * If the initializer of a property definition is an instance creation
+     * expression with no constructor, and the type of the property definition
+     * is a class or (structured) data type, then the referent of the expression
+     * is the type of the property definition. If the initializer of a property
+     * definition is a sequence construction expression with no type name, but
+     * with non-empty elements, then the type of the expression is the type of
+     * the property definition and the expression has multiplicity if and only
+     * if the multiplicity upper bound of the property definition is greater
+     * than 1.
+     */
+	public boolean propertyDefinitionInitializerType() {
+	    return this.getImpl().propertyDefinitionInitializerType();
+	}
 
 	/**
 	 * Returns true if the annotation is for a stereotype that has a metaclass
@@ -161,6 +175,10 @@ public class PropertyDefinition extends TypedElementDefinition {
 			violations.add(new ConstraintViolation(
 					"propertyDefinitionIsFeatureDerivation", this));
 		}
+        if (!this.propertyDefinitionInitializerType()) {
+            violations.add(new ConstraintViolation(
+                    "propertyDefinitionInitializerType", this));
+        }
 		Expression initializer = this.getInitializer();
 		if (initializer != null) {
 			initializer.checkConstraints(violations);

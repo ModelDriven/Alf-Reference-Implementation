@@ -170,8 +170,7 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
     /**
      * If the type name of a sequence construction expression is not empty, then
      * it must resolve to a non-template classifier. If the expression does not
-     * have multiplicity, then the type name must not be empty and the
-     * classifier to which it resolves must be a collection class.
+     * have multiplicity, then its type must be a collection class.
      **/
 	public boolean sequenceConstructionExpressionType() {
 	    SequenceConstructionExpression self = this.getSelf();

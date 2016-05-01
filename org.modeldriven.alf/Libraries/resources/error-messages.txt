@@ -268,7 +268,7 @@ If the elements of a sequence construction expression are given by a sequence ex
  
 sequenceConstructionExpressionElementType
 Element types not compatible with the expression type.
-If the elements of a sequence construction expression are given by a sequence range, then the expression must have type Integer. If the elements are given by a sequence element list, and the sequence construction expression has a non-empty type, then each expression in the list must have a type that either conforms to the type of the sequence construction expression or is convertible to it by bit string conversion.
+If the elements of a sequence construction expression are given by a sequence range, then the expression must have type Integer. If the expression does not have multiplicity, then its type must be a collection class.
  
 sequenceConstructionExpressionType
 Type cannot be empty, cannot be a template and must either have a multiplicity indicator or be a template class instantiation.
@@ -562,6 +562,10 @@ localNameDeclarationStatementType
 Type name must resolve to a non-template classifier compatible with the right-hand side.
 If the type name in a local name declaration statement is not empty, then it must resolve to a non-template classifier and the expression must be assignable to that classifier.
  
+localNameDeclarationExpressionType
+
+If the expression of a local name declaration statement is an instance creation expression with no constructor, and the type of the statement is a class or (structured) data type, then the referent of the expression is the type of the statement. If the expression of a local name declaration statement is a sequence construction expression with no type name, but with non-empty elements, then the type of the expression is the type of the statement and the expression has multiplicity if and only if the statement does.
+
 loopVariableDefinitionAssignmentsBefore
 
 The assignments before the expressions of a loop variable definition are the assignments before the loop variable definition. 
@@ -777,6 +781,10 @@ The referent of a package import must be a package.
 propertyDefinitionInitializer
 Initializer expression must be compatible.
 If a property definition has an initializer, then the initializer expression must be assignable to the property definition. There are no assignments before an initializer expression.
+
+propertyDefinitionInitializerType
+
+If the initializer of a property definition is an instance creation expression with no constructor, and the type of the property definition is a class or (structured) data type, then the referent of the expression is the type of the property definition. If the initializer of a property definition is a sequence construction expression with no type name, but with non-empty elements, then the type of the expression is the type of the property definition and the expression has multiplicity if and only if the multiplicity upper bound of the property definition is greater than 1.
 
 receptionDefinitionSignalName
 Signal name must resolve to a non-template signal.

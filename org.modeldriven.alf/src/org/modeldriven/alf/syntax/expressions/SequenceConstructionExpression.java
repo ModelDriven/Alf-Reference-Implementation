@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -100,12 +99,11 @@ public class SequenceConstructionExpression extends Expression {
 		return this.getImpl().sequenceConstructionExpressionLowerDerivation();
 	}
 
-	/**
-	 * If the type name of a sequence construction expression is not empty, then
-	 * it must resolve to a non-template classifier. If the expression does not
-	 * have multiplicity, then the type name must not be empty and the
-	 * classifier to which it resolves must be a collection class.
-	 **/
+    /**
+     * If the type name of a sequence construction expression is not empty, then
+     * it must resolve to a non-template classifier. If the expression does not
+     * have multiplicity, then its type must be a collection class.
+     **/
 	public boolean sequenceConstructionExpressionType() {
 		return this.getImpl().sequenceConstructionExpressionType();
 	}

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -145,6 +144,20 @@ public class LocalNameDeclarationStatement extends Statement {
 	public boolean localNameDeclarationStatementTypeDerivation() {
 		return this.getImpl().localNameDeclarationStatementTypeDerivation();
 	}
+	
+    /**
+     * If the expression of a local name declaration statement is an instance
+     * creation expression with no constructor, and the type of the statement is
+     * a class or (structured) data type, then the referent of the expression is
+     * the type of the statement. If the expression of a local name declaration
+     * statement is a sequence construction expression with no type name, but
+     * with non-empty elements, then the type of the expression is the type of
+     * the statement and the expression has multiplicity if and only if the
+     * statement does.
+     */
+	public boolean localNameDeclarationStatementExpressionType() {
+	    return this.getImpl().localNameDeclarationStatementExpressionType();
+	}
 
 	public void _deriveAll() {
 		this.getType();
@@ -183,10 +196,14 @@ public class LocalNameDeclarationStatement extends Statement {
 							"localNameDeclarationStatementExpressionMultiplicity",
 							this));
 		}
-		if (!this.localNameDeclarationStatementTypeDerivation()) {
-			violations.add(new ConstraintViolation(
-					"localNameDeclarationStatementTypeDerivation", this));
-		}
+        if (!this.localNameDeclarationStatementTypeDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "localNameDeclarationStatementTypeDerivation", this));
+        }
+        if (!this.localNameDeclarationStatementExpressionType()) {
+            violations.add(new ConstraintViolation(
+                    "localNameDeclarationStatementExpressionType", this));
+        }
 		Expression expression = this.getExpression();
 		if (expression != null) {
 			expression.checkConstraints(violations);

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -228,6 +227,21 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	    return self.getHasMultiplicity() || expression == null || 
 	            expression.getUpper() <= 1;
 	}
+
+    /**
+     * If the expression of a local name declaration statement is an instance
+     * creation expression with no constructor, and the type of the statement is
+     * a class or (structured) data type, then the referent of the expression is
+     * the type of the statement. If the expression of a local name declaration
+     * statement is a sequence construction expression with no type name, but
+     * with non-empty elements, then the type of the expression is the type of
+     * the statement and the expression has multiplicity if and only if the
+     * statement does.
+     */
+    public boolean localNameDeclarationStatementExpressionType() {
+        // Note: This is handled by setExpression.
+        return true;
+    }
 
 	/*
 	 * Helper Methods

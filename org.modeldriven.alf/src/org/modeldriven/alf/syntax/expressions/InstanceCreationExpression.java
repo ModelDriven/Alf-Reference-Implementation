@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -90,14 +89,16 @@ public class InstanceCreationExpression extends InvocationExpression {
 				.instanceCreationExpressionIsConstructorlessDerivation();
 	}
 
-	/**
-	 * The referent of an instance creation expression is normally the
-	 * constructor operation, class or data type to which the constructor name
-	 * resolves. However, if the referent is an operation whose class is
-	 * abstract or is a class that is itself abstract, and there is an
-	 * associated Impl class constructor, then the referent is the Impl class
-	 * constructor.
-	 **/
+    /**
+     * The referent of an instance creation expression is normally the
+     * constructor operation, class or data type to which the constructor name
+     * resolves. However, if the referent is an operation whose class is
+     * abstract or is a class that is itself abstract, and there is an
+     * associated Impl class constructor, then the referent is the Impl class
+     * constructor. Further, if the constructor name of an instance creation
+     * expression is empty, then the referent must be determined from the
+     * context of use of the expression.
+     **/
 	public boolean instanceCreationExpressionReferentDerivation() {
 		return this.getImpl().instanceCreationExpressionReferentDerivation();
 	}

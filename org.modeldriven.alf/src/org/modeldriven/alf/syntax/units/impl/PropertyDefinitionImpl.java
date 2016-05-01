@@ -190,6 +190,22 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	    }
 	}
 	
+    /**
+     * If the initializer of a property definition is an instance creation
+     * expression with no constructor, and the type of the property definition
+     * is a class or (structured) data type, then the referent of the expression
+     * is the type of the property definition. If the initializer of a property
+     * definition is a sequence construction expression with no type name, but
+     * with non-empty elements, then the type of the expression is the type of
+     * the property definition and the expression has multiplicity if and only
+     * if the multiplicity upper bound of the property definition is greater
+     * than 1.
+     */
+    public boolean propertyDefinitionInitializerType() {
+        // Note: This is handled by setInitializer.
+        return true;
+    }
+
 	/*
 	 * Helper Methods
 	 */
