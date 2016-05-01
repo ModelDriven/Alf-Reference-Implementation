@@ -100,7 +100,8 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 	 * The members of a classifier definition include non-private members
 	 * inherited from the classifiers it specializes. The visibility of
 	 * inherited members is as specified in the UML Superstructure, Subclause
-	 * 7.3.8.
+	 * 7.3.8. Elements inherited from external classifiers are treated as
+	 * imported members.
 	 **/
 	public boolean classifierDefinitionInheritedMembers() {
 		return this.getImpl().classifierDefinitionInheritedMembers();

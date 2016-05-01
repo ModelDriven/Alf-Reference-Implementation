@@ -696,7 +696,7 @@ The specialization referents of a class definition must all be classes. A class 
  
 classifierDefinitionInheritedMembers
 
-The members of a classifier definition include non-private members inherited from the classifiers it specializes. The visibility of inherited members is as specified in the UML Superstructure, 7.3.8.
+The members of a classifier definition include non-private members inherited from the classifiers it specializes. The visibility of inherited members is as specified in the UML Superstructure, 7.3.8. Elements inherited from external classifiers are treated as imported members.
  
 classifierDefinitionSpecialization
 Can only specialize non-template classifiers.

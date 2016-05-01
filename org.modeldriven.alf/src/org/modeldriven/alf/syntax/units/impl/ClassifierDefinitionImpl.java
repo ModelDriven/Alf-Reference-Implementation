@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -93,7 +93,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
      * The members of a classifier definition include non-private members
      * inherited from the classifiers it specializes. The visibility of
      * inherited members is as specified in the UML Superstructure, Subclause
-     * 7.3.8.
+     * 7.3.8. Elements inherited from external classifiers are treated as
+     * imported members.
      **/
 	@Override
 	protected Collection<Member> deriveMember(Collection<ElementReference> excluded) {
