@@ -70,10 +70,11 @@ public class ConcurrentClauses extends SyntaxElement {
 	    this.getImpl().addAssignmentBefore(assignmentBefore);
 	}
 
-	/**
-	 * The assignments before each of the clauses in a set of concurrent clauses
-	 * are the same as the assignments before the concurrent clauses.
-	 **/
+    /**
+     * The assignments before the condition of each of the clauses in a set of
+     * concurrent clauses are the same as the assignments before the concurrent
+     * clauses.
+     **/
 	public boolean concurrentClausesAssignmentsBefore() {
 		return this.getImpl().concurrentClausesAssignmentsBefore();
 	}

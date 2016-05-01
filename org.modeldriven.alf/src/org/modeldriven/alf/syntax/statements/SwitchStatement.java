@@ -93,10 +93,11 @@ public class SwitchStatement extends Statement {
 		this.getImpl().setIsDeterminate(isDeterminate);
 	}
 
-	/**
-	 * The assignments before all clauses of a switch statement are the same as
-	 * the assignments after the expression of the switch statement.
-	 **/
+    /**
+     * The assignments before the case expressions of all clauses of a switch
+     * statement are the same as the assignments after the expression of the
+     * switch statement.
+     **/
 	public boolean switchStatementAssignmentsBefore() {
 		return this.getImpl().switchStatementAssignmentsBefore();
 	}

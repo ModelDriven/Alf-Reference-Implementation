@@ -1,7 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2015 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2013 Ivar Jacobson International SA
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -189,8 +188,9 @@ public class SwitchStatementImpl extends StatementImpl {
 	 */
 
 	/**
-	 * The assignments before all clauses of a switch statement are the same as
-	 * the assignments before the switch statement.
+     * The assignments before the case expressions of all clauses of a switch
+     * statement are the same as the assignments after the expression of the
+     * switch statement.
 	 **/
 	public boolean switchStatementAssignmentsBefore() {
 	    // Note: This is handled by deriveAssignmentAfter.
