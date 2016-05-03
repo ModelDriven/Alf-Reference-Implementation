@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -258,6 +257,15 @@ public abstract class InvocationExpression extends Expression {
     public boolean invocationExpressionTemplateParameters() {
         return this.getImpl().invocationExpressionTemplateParameters();
     }
+    
+    /**
+     * If invocation is a sequence feature invocation, then the assignments
+     * after the tuple of the invocation expression must be the same as the
+     * assignments before.
+     */
+    public boolean invocationExpressionAssignmentsAfter() {
+        return this.getImpl().invocationExpressionAssignmentsAfter();
+    }
 
     /**
      * Returns references to the elements that act as the parameters of the
@@ -346,6 +354,9 @@ public abstract class InvocationExpression extends Expression {
         }
         if (!this.invocationExpressionTemplateParameters()) {
             violations.add(new ConstraintViolation("invocationExpressionTemplateParameters", this));
+        }
+        if (!this.invocationExpressionAssignmentsAfter()) {
+            violations.add(new ConstraintViolation("invocationExpressionAssignmentsAfter", this));
         }
         Tuple tuple = this.getTuple();
         if (tuple != null) {

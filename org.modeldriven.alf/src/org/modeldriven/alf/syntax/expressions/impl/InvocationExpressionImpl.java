@@ -389,7 +389,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
      * which case it could have non-classifier template parameters.
      */
     public boolean invocationExpressionTemplateParameters() {
-        if (referent.getImpl().isTemplate()) {
+        ElementReference referent = this.getSelf().getReferent();
+        if (referent != null && referent.getImpl().isTemplate()) {
             for (ElementReference templateParameter: 
                     referent.getImpl().getTemplateParameters()) {
                 ElementReference element = 
@@ -400,6 +401,27 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             }
         }
         return true;
+    }
+
+    /**
+     * If invocation is a sequence feature invocation, then the assignments
+     * after the tuple of the invocation expression must be the same as the
+     * assignments before.
+     */
+    // NOTE: Until better handling of multiplicity is implemented, this
+    // constraint is limited to not apply if the the feature multiplicity
+    // upper bound is 1, even if the lower bound is 0.
+    public boolean invocationExpressionAssignmentsAfter() {
+        if (!this.isSequenceFeatureInvocation() || 
+                this.getSelf().getFeature().getExpression().getUpper() == 1) {
+            return true;
+        } else {
+            InvocationExpression self = this.getSelf();
+            Tuple tuple = self.getTuple();
+            this.getAssignmentAfterMap(); // Force computation of assignments.
+            return tuple == null || 
+                    tuple.getImpl().getNewAssignments().isEmpty();
+        }        
     }
 
 	/*
@@ -652,7 +674,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
                 currentScope == null) {
             return true;
         } else {
-            // Note: This will work, even it the operation definition is not an
+            // Note: This will work, even if the operation definition is not an
             // Alf unit.
             ElementReference operation = currentScope.getImpl().getReferent();
             if (!operation.getImpl().isConstructor() || this.enclosingBlock == null) {
@@ -726,7 +748,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     }
     
     public boolean isSequenceFeatureInvocation() {
-        FeatureReference feature = this.getFeature();
+        FeatureReference feature = this.getSelf().getFeature();
         Expression primary = feature == null? null: feature.getExpression();
         return primary != null && 
                 (primary.getLower() !=1 || primary.getUpper() != 1);

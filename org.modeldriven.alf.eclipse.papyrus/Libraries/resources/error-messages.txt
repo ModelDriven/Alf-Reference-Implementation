@@ -162,6 +162,11 @@ invocationExpressionTemplateParameters
 Only classifier template parameters allowed for an implicit template instantiation.
 If the referent of the invocation expression is a template, then all of its template parameters must be classifier template parameters. Note: This allows for the possibility that the referent is not an Alf unit, in which case it could have non-classifier template parameters.
 
+invocationExpressionAssignmentsAfter
+Assignments not allowed in tuple of sequence feature invocation.
+If invocation is a sequence feature invocation, then the assignments after the tuple of the invocation expression must be the same as the assignments before.
+
+
 isUniqueExpressionExpressionArgument
 Argument must have a multiplicity upper bound of 1.
 The argument of an isUnique expression must have a multiplicity upper bound of 1.
@@ -268,7 +273,7 @@ If the elements of a sequence construction expression are given by a sequence ex
  
 sequenceConstructionExpressionElementType
 Element types not compatible with the expression type.
-If the elements of a sequence construction expression are given by a sequence range, then the expression must have type Integer. If the elements are given by a sequence element list, and the sequence construction expression has a non-empty type, then each expression in the list must have a type that either conforms to the type of the sequence construction expression or is convertible to it by bit string conversion.
+If the elements of a sequence construction expression are given by a sequence range, then the expression must have type Integer. If the expression does not have multiplicity, then its type must be a collection class.
  
 sequenceConstructionExpressionType
 Type cannot be empty, cannot be a template and must either have a multiplicity indicator or be a template class instantiation.
@@ -464,7 +469,7 @@ The expression in a classify statement must have a class as its type and multipl
  
 concurrentClausesAssignmentsBefore
 
-The assignments before each of the clauses in a set of concurrent clauses are the same as the assignments before the concurrent clauses.
+The assignments before the condition of each of the clauses in a set of concurrent clauses are the same as the assignments before the concurrent clauses.
  
 concurrentClausesConditionAssignments
 
@@ -562,6 +567,10 @@ localNameDeclarationStatementType
 Type name must resolve to a non-template classifier compatible with the right-hand side.
 If the type name in a local name declaration statement is not empty, then it must resolve to a non-template classifier and the expression must be assignable to that classifier.
  
+localNameDeclarationExpressionType
+
+If the expression of a local name declaration statement is an instance creation expression with no constructor, and the type of the statement is a class or (structured) data type, then the referent of the expression is the type of the statement. If the expression of a local name declaration statement is a sequence construction expression with no type name, but with non-empty elements, then the type of the expression is the type of the statement and the expression has multiplicity if and only if the statement does.
+
 loopVariableDefinitionAssignmentsBefore
 
 The assignments before the expressions of a loop variable definition are the assignments before the loop variable definition. 
@@ -636,7 +645,7 @@ If a name has an assigned source after any clause of a switch statement that is 
  
 switchStatementAssignmentsBefore
 
-The assignments before all clauses of a switch statement are the same as the assignments after the expression of the switch statement.
+The assignments before the condition of all clauses of a switch statement are the same as the assignments after the expression of the switch statement.
  
 switchStatementCaseAssignments
 A local name cannot be assigned in more than one case expression.
@@ -669,6 +678,10 @@ The enclosing statement for all statements in the body of a while statement are 
 activeClassDefinitionClassifierBehavior
 Concrete active class must have classifier behavior.
 If an active class definition is not abstract, then it must have a classifier behavior.
+
+activityDefinitionEffectiveBodyAssignmentsBefore
+
+There are no assignments before the effective body of an activity definition.
  
 activityDefinitionPrimitive
 Primitive activity definition cannot have a body.
@@ -692,7 +705,7 @@ The specialization referents of a class definition must all be classes. A class 
  
 classifierDefinitionInheritedMembers
 
-The members of a classifier definition include non-private members inherited from the classifiers it specializes. The visibility of inherited members is as specified in the UML Superstructure, 7.3.8.
+The members of a classifier definition include non-private members inherited from the classifiers it specializes. The visibility of inherited members is as specified in the UML Superstructure, 7.3.8. Elements inherited from external classifiers are treated as imported members.
  
 classifierDefinitionSpecialization
 Can only specialize non-template classifiers.
@@ -758,6 +771,10 @@ operationDefinitionDestructor
 Redefined operations must be destructors.
 If an operation definition is a destructor, any redefined operation for it must also be a destructor. 
  
+operationDefinitionEffectiveBodyAssignmentsBefore
+
+There are no assignments before the effective body of an operation definition.
+ 
 operationDefinitionNamespace
 Namespace must be a class.
 The namespace for an operation definition must be a class definition.
@@ -777,6 +794,10 @@ The referent of a package import must be a package.
 propertyDefinitionInitializer
 Initializer expression must be compatible.
 If a property definition has an initializer, then the initializer expression must be assignable to the property definition. There are no assignments before an initializer expression.
+
+propertyDefinitionInitializerType
+
+If the initializer of a property definition is an instance creation expression with no constructor, and the type of the property definition is a class or (structured) data type, then the referent of the expression is the type of the property definition. If the initializer of a property definition is a sequence construction expression with no type name, but with non-empty elements, then the type of the expression is the type of the property definition and the expression has multiplicity if and only if the multiplicity upper bound of the property definition is greater than 1.
 
 receptionDefinitionSignalName
 Signal name must resolve to a non-template signal.

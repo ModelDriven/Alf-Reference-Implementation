@@ -162,6 +162,11 @@ invocationExpressionTemplateParameters
 Only classifier template parameters allowed for an implicit template instantiation.
 If the referent of the invocation expression is a template, then all of its template parameters must be classifier template parameters. Note: This allows for the possibility that the referent is not an Alf unit, in which case it could have non-classifier template parameters.
 
+invocationExpressionAssignmentsAfter
+Assignments not allowed in tuple of sequence feature invocation.
+If invocation is a sequence feature invocation, then the assignments after the tuple of the invocation expression must be the same as the assignments before.
+
+
 isUniqueExpressionExpressionArgument
 Argument must have a multiplicity upper bound of 1.
 The argument of an isUnique expression must have a multiplicity upper bound of 1.
