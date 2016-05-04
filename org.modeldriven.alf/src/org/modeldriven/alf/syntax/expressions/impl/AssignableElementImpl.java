@@ -53,6 +53,7 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
     
     public static boolean isTypeConformant(AssignableElement target, AssignableElement source) {
         ElementReference sourceType = source.getType();
+        ElementReference targetType = target.getType();
         int sourceUpper = source.getUpper();
         int targetLower = target.getLower();
         int targetUpper = target.getUpper();
@@ -62,16 +63,15 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
             isNull(source) && targetLower == 0 ||
             
             // Type conformance
-            isTypeConformant(target, sourceType) ||
+            isConformant(targetType, sourceType) ||
             
             // Collection conversion
             sourceType != null && sourceType.getImpl().isCollectionClass() && 
             sourceUpper == 1 && (targetUpper == -1 || targetUpper > 1) &&
-            isTypeConformant(target, sourceType.getImpl().getCollectionArgument());
+            isConformant(targetType, sourceType.getImpl().getCollectionArgument());
     }
     
-    public static boolean isTypeConformant(AssignableElement target, ElementReference sourceType) {
-        ElementReference targetType = target.getType();
+    public static boolean isConformant(ElementReference targetType, ElementReference sourceType) {
         return
             // Untyped target is conformant with anything.
             targetType == null ||
