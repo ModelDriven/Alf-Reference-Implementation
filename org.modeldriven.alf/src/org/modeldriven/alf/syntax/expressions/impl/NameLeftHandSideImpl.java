@@ -222,12 +222,8 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
      **/
     public boolean nameLeftHandSideTargetResolution() {
         NameLeftHandSide self = this.getSelf();
-        FeatureReference feature = this.getFeature();
-        Expression expression = feature == null? null: feature.getExpression();
         return self.getTarget().getQualification() == null ||
-                self.getReferent() != null &&
-                // TODO: This needs to be specified as a separate constraint.
-                (expression == null || expression.getUpper() == 1 );
+                self.getReferent() != null;
     }
 
     /**
@@ -252,6 +248,17 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
     public boolean nameLeftHandSideNontemplateTarget() {
         QualifiedName target = this.getSelf().getTarget();
         return target == null || target.getImpl().getTemplateName() == null;
+    }
+
+    /**
+     * If the target of a name left-hand side disambiguates to a feature
+     * reference, then the expression of the feature reference must have a
+     * multiplicity upper bound of 1.
+     */
+    public boolean nameLeftHandSideFeatureExpression() {
+        FeatureReference feature = this.getFeature();
+        Expression expression = feature == null? null: feature.getExpression();
+        return expression == null || expression.getUpper() == 1;
     }
 
 	/*

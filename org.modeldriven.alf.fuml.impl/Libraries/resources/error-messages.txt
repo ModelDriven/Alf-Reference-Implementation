@@ -214,6 +214,10 @@ The target of a name left hand side may not already have an assigned source that
 nameLeftHandSideTargetResolution
 Target cannot be resolved or resolves to a feature that is not a property.
 If the target of a name left-hand side is qualified, then, if it does not disambiguate to a feature, it must have a referent that is a parameter of an operation or behavior that is the current scope the left-hand is in, and, if it does disambiguate to a feature, it must have a single referent that is a structural feature.
+
+nameLeftHandSideFeatureExpression
+Target expression must have a multiplicity upper bound of 1.
+If the target of a name left-hand side disambiguates to a feature reference, then the expression of the feature reference must have a multiplicity upper bound of 1.
  
 numericUnaryExpressionOperand
 Operand must have type Integer and multiplicity upper bound of 1.

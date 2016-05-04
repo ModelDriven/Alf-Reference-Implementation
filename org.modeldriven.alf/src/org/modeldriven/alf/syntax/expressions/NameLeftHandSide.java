@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -157,6 +156,15 @@ public class NameLeftHandSide extends LeftHandSide {
 	public boolean nameLeftHandSideNontemplateTarget() {
 		return this.getImpl().nameLeftHandSideNontemplateTarget();
 	}
+	
+    /**
+     * If the target of a name left-hand side disambiguates to a feature
+     * reference, then the expression of the feature reference must have a
+     * multiplicity upper bound of 1.
+     */
+	public boolean nameLeftHandSideFeatureExpression() {
+	    return this.getImpl().nameLeftHandSideFeatureExpression();
+	}
 
 	public void _deriveAll() {
 		super._deriveAll();
@@ -204,10 +212,14 @@ public class NameLeftHandSide extends LeftHandSide {
 			violations.add(new ConstraintViolation(
 					"nameLeftHandSideIndexedFeature", this));
 		}
-		if (!this.nameLeftHandSideNontemplateTarget()) {
-			violations.add(new ConstraintViolation(
-					"nameLeftHandSideNontemplateTarget", this));
-		}
+        if (!this.nameLeftHandSideNontemplateTarget()) {
+            violations.add(new ConstraintViolation(
+                    "nameLeftHandSideNontemplateTarget", this));
+        }
+        if (!this.nameLeftHandSideFeatureExpression()) {
+            violations.add(new ConstraintViolation(
+                    "nameLeftHandSideFeatureExpression", this));
+        }
 		QualifiedName target = this.getTarget();
 		if (target != null) {
 			target.checkConstraints(violations);
