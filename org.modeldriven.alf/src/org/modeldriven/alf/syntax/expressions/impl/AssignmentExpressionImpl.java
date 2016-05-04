@@ -496,7 +496,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 
 	/**
      * If the left-hand side of a simple assignment is not a new local name, and
-     * the right-hand side is not null, then the left-hand side must either be
+     * the right-hand side is not null, then the either left-hand side must be
      * untyped or the right-hand side expression must have a type that conforms
      * to the type of the left-hand side.
      **/
