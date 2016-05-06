@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -47,12 +46,14 @@ public class SelectOrRejectExpressionImpl
 	    return 0;
 	}
 	
-	/**
-	 * A select or reject expression has a multiplicity upper bound of *.
-	 **/
+    /**
+     * A select or reject expression has the same multiplicity upper bound as
+     * its primary expression.
+     **/
     @Override
     protected Integer deriveUpper() {
-        return -1;
+        Expression primary = this.getExpression();
+        return primary == null? -1: primary.getUpper();
     }
     
 	/*
