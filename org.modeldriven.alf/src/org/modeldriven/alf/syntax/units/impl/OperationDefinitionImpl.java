@@ -310,6 +310,14 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         return true;
     }
 
+    /**
+     * If an operation definition is abstract, then its body must be empty.
+     */
+    public boolean operationDefinitionAbstractOperation() {
+        OperationDefinition self = this.getSelf();
+        return !self.getIsAbstract() || self.getBody() == null;
+    }
+
 	/*
 	 * Helper Methods
 	 */

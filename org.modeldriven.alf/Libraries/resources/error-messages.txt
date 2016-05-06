@@ -762,6 +762,10 @@ If a member is a stub, then it must not have any stereotype annotations that are
 namespaceDefinitionMemberDistinguishability
 Members must be distinguishable.
 The members of a namespace must be distinguishable as determined by the Member::isDistinguishableFrom operation.
+
+operationDefinitionAbstractOperation
+Abstract operation cannot have a body.
+If an operation definition is abstract, then its body must be empty.
  
 operationDefinitionConstructor
 Redefined operations must be constructors.

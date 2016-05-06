@@ -211,6 +211,13 @@ public class OperationDefinition extends NamespaceDefinition {
     public boolean operationDefinitionEffectiveBodyDerivation() {
         return this.getImpl().operationDefinitionEffectiveBodyDerivation();
     }
+    
+    /**
+     * If an operation definition is abstract, then its body must be empty.
+     */
+    public boolean operationDefinitionAbstractOperation() {
+        return this.getImpl().operationDefinitionAbstractOperation();
+    }
 
 	/**
 	 * Returns true if the annotation is for a stereotype that has a metaclass
@@ -315,6 +322,10 @@ public class OperationDefinition extends NamespaceDefinition {
         if (!this.operationDefinitionEffectiveBodyDerivation()) {
             violations.add(new ConstraintViolation(
                     "operationDefinitionEffectiveBodyDerivation", this));
+        }
+        if (!this.operationDefinitionAbstractOperation()) {
+            violations.add(new ConstraintViolation(
+                    "operationDefinitionAbstractOperation", this));
         }
 		QualifiedNameList redefinition = this.getRedefinition();
 		if (redefinition != null) {
