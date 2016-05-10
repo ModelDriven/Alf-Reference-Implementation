@@ -310,6 +310,10 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         return this.conformsTo(RootNamespace.getRootScope().getUnlimitedNaturalType());
     }
 
+    public boolean isReal() {
+        return this.conformsTo(RootNamespace.getRootScope().getRealType());
+    }
+
     public boolean isBitString() {
         return this.conformsTo(RootNamespace.getRootScope().getBitStringType());
     }
@@ -318,10 +322,9 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         return this.conformsTo(RootNamespace.getRootScope().getNaturalType());
     }
 
-    public boolean isNumeric() {
+    public boolean isIntegerOrReal() {
         return this.isInteger() || 
-               this.isUnlimitedNatural() || 
-               this.isNatural();
+               this.isReal();
     }
 
     public abstract boolean conformsTo(ElementReference type);

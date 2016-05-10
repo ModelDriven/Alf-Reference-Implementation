@@ -48,7 +48,9 @@ public class NumericUnaryExpression extends UnaryExpression {
 	}
 
 	/**
-	 * A numeric unary expression must have type Integer.
+     * If the operand of a numeric unary expression is of type Integer, then the
+     * type of the expression is Integer. If the operand is of type Real, then
+     * the type of the expression is Real. Otherwise it has no type.
 	 **/
 	public boolean numericUnaryExpressionTypeDerivation() {
 		return this.getImpl().numericUnaryExpressionTypeDerivation();
@@ -70,8 +72,8 @@ public class NumericUnaryExpression extends UnaryExpression {
 	}
 
 	/**
-	 * The operand expression must have type Integer and a multiplicity upper
-	 * bound of 1.
+     * The operand expression must have type Integer or Real and a multiplicity
+     * upper bound of 1.
 	 **/
 	public boolean numericUnaryExpressionOperand() {
 		return this.getImpl().numericUnaryExpressionOperand();

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -176,9 +175,11 @@ public class IncrementOrDecrementExpression extends Expression {
 				.incrementOrDecrementExpressionExpressionDerivation();
 	}
 
-	/**
-	 * An increment or decrement expression has type Integer.
-	 **/
+    /**
+     * If the operand of an increment or decrement expression is of type Integer
+     * or Real, then the type of the expression is Real. Otherwise the
+     * expression has no type.
+     **/
 	public boolean incrementOrDecrementExpressionTypeDerivation() {
 		return this.getImpl().incrementOrDecrementExpressionTypeDerivation();
 	}
@@ -199,8 +200,8 @@ public class IncrementOrDecrementExpression extends Expression {
 	}
 
 	/**
-	 * The operand expression must have type Integer and a multiplicity upper
-	 * bound of 1.
+     * The operand expression must have type Integer or Real and a multiplicity
+     * upper bound of 1.
 	 **/
 	public boolean incrementOrDecrementExpressionOperand() {
 		return this.getImpl().incrementOrDecrementExpressionOperand();

@@ -63,10 +63,13 @@ public class ArithmeticExpression extends BinaryExpression {
 		return this.getImpl().arithmeticExpressionIsConcatenationDerivation();
 	}
 
-	/**
-	 * The type of an arithmetic expression is the same as the type of its
-	 * operands.
-	 **/
+    /**
+     * If both operands of an arithmetic expression operator are of type
+     * Integer, then the type of the expression is Integer. If one operand is of
+     * type Real and the other Integer or both are of type Real, then the type
+     * of the expression is Real. If both operands are of type String, then the
+     * type of the expression is String. Otherwise the expression has no type.
+     **/
 	public boolean arithmeticExpressionTypeDerivation() {
 		return this.getImpl().arithmeticExpressionTypeDerivation();
 	}
@@ -87,9 +90,9 @@ public class ArithmeticExpression extends BinaryExpression {
 	}
 
 	/**
-	 * The operands of an arithmetic expression must both have type Integer,
-	 * unless the operator is +, in which case they may also both have type
-	 * String.
+     * The operands of an arithmetic expression must both have type Integer or
+     * Real, unless the operator is +, in which case they may also both have
+     * type String.
 	 **/
 	public boolean arithmeticExpressionOperandTypes() {
 		return this.getImpl().arithmeticExpressionOperandTypes();

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -87,10 +86,10 @@ public class RelationalExpression extends BinaryExpression {
 	}
 
 	/**
-	 * The operand expressions for a comparison operator must have type Integer,
-	 * UnlimitedNatural or Natural. However, it is not allowed to have one
-	 * operand expression be Integer and the other be UnlimitedNatural.
-	 **/
+    /**
+     * The operand expressions for a comparison operator must both be of type
+     * Integer or Real, or both be of type UnlimitedNatural.
+     **/
 	public boolean relationalExpressionOperandTypes() {
 		return this.getImpl().relationalExpressionOperandTypes();
 	}

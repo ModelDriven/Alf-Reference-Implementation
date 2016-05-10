@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -52,25 +51,29 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	}
 	
     /**
-     * The type of an arithmetic expression is the same as the type of its
-     * operands.
+     * If both operands of an arithmetic expression operator are of type
+     * Integer, then the type of the expression is Integer. If one operand is of
+     * type Real and the other Integer or both are of type Real, then the type
+     * of the expression is Real. If both operands are of type String, then the
+     * type of the expression is String. Otherwise the expression has no type.
      **/
-	// Actually, the type of the expression should be either Integer or String, 
-	// depending on the type of its operands, even if the operands have types that
-	// are actually subtypes of Integer or String (e.g., Natural).
 	@Override
 	protected ElementReference deriveType() {
 	    ArithmeticExpression self = this.getSelf();
 	    Expression operand1 = self.getOperand1();
 	    Expression operand2 = self.getOperand2();
-	    Expression operand = operand1 != null? operand1: operand2;
-	    if (operand == null) {
+	    if (operand1 == null || operand2 == null) {
 	        return null;
 	    } else {
-	        ElementReference type = operand.getType();
-	        return type == null? null:
-	               type.getImpl().isInteger()? RootNamespace.getRootScope().getIntegerType():
-	               type.getImpl().isString()? RootNamespace.getRootScope().getStringType():
+            ElementReference type1 = operand1.getType();
+            ElementReference type2 = operand1.getType();
+	        return type1 == null || type2 == null? null:
+	               type1.getImpl().isInteger() && type2.getImpl().isInteger()? 
+                        RootNamespace.getRootScope().getIntegerType():
+                   type1.getImpl().isIntegerOrReal() && type2.getImpl().isIntegerOrReal()? 
+                        RootNamespace.getRootScope().getRealType():
+	               type1.getImpl().isString() && type2.getImpl().isString()? 
+	                    RootNamespace.getRootScope().getStringType():
 	               null;
 	    }
 	}
@@ -85,6 +88,7 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
         Expression operand1 = self.getOperand1();
         Expression operand2 = self.getOperand2();
         String operator = self.getOperator();
+        // TODO: Update specification of arithmeticExpressionLowerDerivation for division.
         // NOTE: A division by zero will return null, so division should have
         // a multiplicity lower bound of 0.
 	    return operator.equals("/") || 
@@ -128,11 +132,11 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	 * Constraints
 	 */
 
-	/**
-	 * The operands of an arithmetic expression must both have type Integer,
-	 * unless the operator is +, in which case they may also both have type
-	 * String.
-	 **/
+    /**
+     * The operands of an arithmetic expression must both have type Integer or
+     * Real, unless the operator is +, in which case they may also both have
+     * type String.
+     **/
 	public boolean arithmeticExpressionOperandTypes() {
 	    ArithmeticExpression self = this.getSelf();
 	    Expression operand1 = self.getOperand1();
@@ -144,12 +148,12 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 		    ElementReference type1 = operand1.getType();
 		    ElementReference type2 = operand2.getType();
 		    return type1 != null && type2 != null && (
-		           type1.getImpl().isInteger() &&
-		               type2.getImpl().isInteger() ||
+		           type1.getImpl().isIntegerOrReal()  &&
+		               type2.getImpl().isIntegerOrReal() ||
 		           operator != null && operator.equals("+") &&
 		               type1.getImpl().isString() &&
 		               type2.getImpl().isString());
 		}
 	}
 	
-} // ArithmeticExpressionImpl
+}

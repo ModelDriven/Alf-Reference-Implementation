@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,7 +11,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
-import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 
 /**
  * A unary expression with a numeric operator.
@@ -29,12 +28,18 @@ public class NumericUnaryExpressionImpl extends UnaryExpressionImpl {
 		return (NumericUnaryExpression) this.self;
 	}
 	
-	/**
-	 * A numeric unary expression must have type Integer.
-	 **/
+    /**
+     * If the operand of a numeric unary expression is of type Integer, then the
+     * type of the expression is Integer. If the operand is of type Real, then
+     * the type of the expression is Real. Otherwise it has no type.
+     **/
 	@Override
 	protected ElementReference deriveType() {
-	    return RootNamespace.getRootScope().getIntegerType();
+	    Expression operand = this.getSelf().getOperand();
+	    ElementReference type = operand == null? null: operand.getType();
+	    return type.getImpl().isInteger()? RootNamespace.getRootScope().getIntegerType(): 
+	           type.getImpl().isReal()? RootNamespace.getRootScope().getRealType():
+	           null;
 	}
 
 	/**
@@ -78,14 +83,14 @@ public class NumericUnaryExpressionImpl extends UnaryExpressionImpl {
 	 * Constraints
 	 */
 
-	/**
-	 * The operand expression must have type Integer and a multiplicity upper
-	 * bound of 1.
-	 **/
+    /**
+     * The operand expression must have type Integer or Real and a multiplicity
+     * upper bound of 1.
+     **/
 	public boolean numericUnaryExpressionOperand() {
 	    Expression operand = this.getSelf().getOperand();
 	    ElementReference type = operand == null? null: operand.getType();
-		return type != null && type.getImpl().isInteger() &&
+		return type != null && type.getImpl().isIntegerOrReal() &&
 		            operand.getUpper() == 1;
 	}
 

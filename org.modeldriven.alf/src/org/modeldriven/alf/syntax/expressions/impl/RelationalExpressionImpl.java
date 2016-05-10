@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -114,11 +113,10 @@ public class RelationalExpressionImpl extends BinaryExpressionImpl {
 	 * Constraints
 	 */
 
-	/**
-	 * The operand expressions for a comparison operator must have type Integer,
-	 * UnlimitedNatural or Natural. However, it is not allowed to have one
-	 * operand expression be Integer and the other be UnlimitedNatural.
-	 **/
+    /**
+     * The operand expressions for a comparison operator must both be of type
+     * Integer or Real, or both be of type UnlimitedNatural.
+     **/
 	public boolean relationalExpressionOperandTypes() {
         RelationalExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
@@ -129,7 +127,7 @@ public class RelationalExpressionImpl extends BinaryExpressionImpl {
 		       // Note: The condition below checks for type conformance, not 
 		       // equality. Therefore, the case of a Natural value is covered, 
 		       // since it is both an Integer and UnlimitedNatural value.
-		       (type1.getImpl().isInteger() && type2.getImpl().isInteger() ||
+		       (type1.getImpl().isIntegerOrReal() && type2.getImpl().isIntegerOrReal() ||
 		        type1.getImpl().isUnlimitedNatural() && type2.getImpl().isUnlimitedNatural());
 	}
 

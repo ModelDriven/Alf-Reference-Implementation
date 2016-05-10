@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -524,16 +523,17 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                lhs.getImpl().isMultiplicityConformantWith(rhs.getImpl());
 	}
 
-	/**
+    /**
      * For a compound assignment, if the operator is an arithmetic operator,
      * then either the left-hand side and the right-hand side both have type
-     * Integer or they both have type String and the operator is +. If the
-     * operator is a logical operator, then either the left-hand side and the
-     * right-hand side both have type Boolean or Bit String or the left-hand
-     * side has type Bit String and the right-hand side has type Integer. If the
-     * operator is a shift operator, then the left-hand side must have type Bit
-     * String and the right-hand side must have type Integer.
-	 **/
+     * Integer, the left-hand side has type Real and the right-hand side has
+     * type Integer or Real, or they both have type String and the operator is
+     * +. If the operator is a logical operator, then either the left-hand side
+     * and the right-hand side both have type Boolean or Bit String or the
+     * left-hand side has type Bit String and the right-hand side has type
+     * Integer. If the operator is a shift operator, then the left-hand side
+     * must have type Bit String and the right-hand side must have type Integer.
+     **/
 	public boolean assignmentExpressionCompoundAssignmentTypeConformance() {
 	    AssignmentExpression self = this.getSelf();
 	    if (self.getIsSimple()) {
@@ -548,8 +548,10 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
     	        ElementReference rhsType = rhs.getType();
     	        return lhsType != null && rhsType != null &&
     	               (this.isArithmeticOperator() && 
-    	                       lhsType.getImpl().isInteger() &&
-    	                       rhsType.getImpl().isInteger() ||
+    	                       (lhsType.getImpl().isInteger() &&
+    	                        rhsType.getImpl().isInteger() ||
+    	                        lhsType.getImpl().isReal() &&
+                                rhsType.getImpl().isIntegerOrReal()) ||
     	                this.isLogicalOperator() &&
     	                       (lhsType.getImpl().isBoolean() &&
     	                        rhsType.getImpl().isBoolean() ||

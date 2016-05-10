@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -58,6 +58,7 @@ public class RootNamespace extends ModelNamespace {
     private QualifiedName integerFunctions = null;
     private QualifiedName stringFunctions = null;
     private QualifiedName unlimitedNaturalFunctions = null;
+    private QualifiedName realFunctions = null;
     private QualifiedName bitStringFunctions = null;
     private QualifiedName basicInputOutput = null;
     private QualifiedName sequenceFunctions = null;
@@ -68,6 +69,7 @@ public class RootNamespace extends ModelNamespace {
     private ElementReference integerType = null;
     private ElementReference stringType = null;
     private ElementReference unlimitedNaturalType = null;
+    private ElementReference realType = null;
     private ElementReference bitStringType = null;
     private ElementReference naturalType = null;
     
@@ -78,7 +80,9 @@ public class RootNamespace extends ModelNamespace {
     private Map<String, ElementReference> stringFunctionMap = 
         new HashMap<String, ElementReference>();    
     private Map<String, ElementReference> unlimitedNaturalFunctionMap = 
-        new HashMap<String, ElementReference>();    
+            new HashMap<String, ElementReference>();    
+    private Map<String, ElementReference> realFunctionMap = 
+            new HashMap<String, ElementReference>();    
     private Map<String, ElementReference> bitStringFunctionMap = 
         new HashMap<String, ElementReference>();
     
@@ -213,6 +217,14 @@ public class RootNamespace extends ModelNamespace {
                             addName("UnlimitedNatural").getImpl().getClassifierReferent();
         }
         return unlimitedNaturalType;
+    }
+
+    public ElementReference getRealType() {
+        if (realType == null) {
+            realType = getPrimitiveTypes().getImpl().copy().
+                            addName("Real").getImpl().getClassifierReferent();
+        }
+        return realType;
     }
 
     public ElementReference getBitStringType() {
@@ -415,6 +427,25 @@ public class RootNamespace extends ModelNamespace {
         return unlimitedNaturalFunctions;
     }
     
+    public QualifiedName getRealFunctions() {
+        if (realFunctions == null) {
+            realFunctions = getPrimitiveBehaviors().getImpl().copy().
+                addName("RealFunctions");
+            realFunctions.getImpl().setCurrentScope(getRootScope());
+        }
+        return stringFunctions;
+    }
+    
+    public ElementReference getRealFunction(String name) {
+        ElementReference realFunction = realFunctionMap.get(name);
+        if (realFunction == null) {
+            realFunction = getStringFunctions().getImpl().copy().
+                addName(name).getImpl().getBehaviorReferent();
+            realFunctionMap.put(name, realFunction);
+        }
+        return realFunction;
+    }
+
     public ElementReference getUnlimitedNaturalFunction(String name) {
         ElementReference unlimitedNaturalFunction = 
             unlimitedNaturalFunctionMap.get(name);

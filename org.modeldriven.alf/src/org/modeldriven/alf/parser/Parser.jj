@@ -255,6 +255,12 @@ TOKEN:
 {
   < BOOLEAN_LITERAL: "true" | "false" >
 |
+  < REAL_LITERAL : ( <DECIMAL_NUMERAL> )? "." <DECIMAL_NUMERAL> ( <EXPONENT_PART> )? | <DECIMAL_NUMERAL> <EXPONENT_PART> >
+|
+  < #DECIMAL_NUMERAL : <DIGIT> ( ( "_" )? <DIGIT> )* >
+|
+  < #EXPONENT_PART : ( "e" | "E" ) ( "+" | "-" )? <DECIMAL_NUMERAL> > 
+|
   < BINARY_LITERAL:  ( "0b" | "0B" ) <BINARY_DIGIT> ( ( "_" )? <BINARY_DIGIT> )* >
 |
   < #BINARY_DIGIT: [ "0", "1" ] >
@@ -685,6 +691,8 @@ Expression LiteralExpression():
     { e = new NaturalLiteralExpression(this); ((NaturalLiteralExpression)e).setImage(t.image); }
   | t = <STRING_LITERAL>  
     { e = new StringLiteralExpression(this); ((StringLiteralExpression)e).setImage(t.image); }
+  | t = <REAL_LITERAL>  
+    { e = new RealLiteralExpression(this); ((RealLiteralExpression)e).setImage(t.image); }
   | t = <STAR>
     { e = new UnboundedLiteralExpression(this); }
   )

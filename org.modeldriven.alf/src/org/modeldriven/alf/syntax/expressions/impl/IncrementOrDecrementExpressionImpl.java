@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -211,11 +210,15 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
 	}
 
     /**
-     * An increment or decrement expression has type Integer.
+     * If the operand of an increment or decrement expression is of type Integer
+     * or Real, then the type of the expression is Real. Otherwise the
+     * expression has no type.
      **/
 	@Override
 	protected ElementReference deriveType() {
-	    return RootNamespace.getRootScope().getIntegerType();
+        LeftHandSide operand = this.getSelf().getOperand();
+        ElementReference type = operand == null? null: operand.getType();
+        return type.getImpl().isIntegerOrReal()? type: null;
 	}
 	
     /**
@@ -287,16 +290,16 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
      * Constraints
      */
 
-	/**
-	 * The operand expression must have type Integer and a multiplicity upper
-	 * bound of 1.
-	 **/
+    /**
+     * The operand expression must have type Integer or Real and a multiplicity
+     * upper bound of 1.
+     **/
 	public boolean incrementOrDecrementExpressionOperand() {
         IncrementOrDecrementExpression self = this.getSelf();
         LeftHandSide operand = self.getOperand();
         ElementReference type = operand == null? null: operand.getImpl().getType();
         return operand != null && operand.getImpl().getUpper() == 1 &&
-                    type != null && type.getImpl().isInteger();
+                    type != null && type.getImpl().isIntegerOrReal();
 	}
 
 	/**
