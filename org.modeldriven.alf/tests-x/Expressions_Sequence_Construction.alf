@@ -10,7 +10,7 @@ class Expressions_Sequence_Construction specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 
-	    this.test(seq1,seq2,seq3,seq4,seq5,seq6,seq7,x,customers,set1,set2,list);    
+	    this.test(seq1,seq2,seq3,seq4,seq5,seq6,seq7,x,customers,set1,set2,list,conv1,conv2);    
 	    
 	    AssertList("seq1", seq1, any[]{"apple","orange","strawberry"});
 	    AssertList("seq2", seq2, any[]{"apple","orange","strawberry"});
@@ -35,6 +35,9 @@ class Expressions_Sequence_Construction specializes Test {
 	    AssertEqual("list.size()", list.size(), 2);
 	    AssertList("list.at(1)", list.at(1).toSequence(), any[]{"apple","orange"});
 	    AssertList("list.at(2)", list.at(2).toSequence(), any[]{"strawberry","raspberry"});
+	    
+	    AssertEqual("conv1->size()", conv1->size(), 3);
+	    AssertEqual("conv2->size()", conv2->size(), 3);
 	
 	    this.done();
 	}
@@ -61,7 +64,9 @@ class Expressions_Sequence_Construction specializes Test {
       out customers: Customer[] sequence,
       out set1: Set<Integer>,
       out set2: Set<Integer>,
-      out list: List< List<String> >
+      out list: List< List<String> >,
+      out conv1: Integer[],
+      out conv2: Integer[]
     ) {
 	  
 	    seq1 = String[]{"apple","orange","strawberry"};
@@ -81,5 +86,10 @@ class Expressions_Sequence_Construction specializes Test {
       set1 = new Set<Integer>(Integer[]{1,3,45});
       set2 = Set<Integer>{1, 3, 45};
       list = new List< List<String> >{{"apple","orange"},{"strawberry","raspberry"}};
+      
+      // Collection conversion
+      conv1 = set2;
+      let seq_set2: Integer[] = set2;
+      conv2 = seq_set2;
     }	  
 }

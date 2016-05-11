@@ -247,6 +247,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
         
         NameLeftHandSide lhs = new NameLeftHandSide();
         lhs.setTarget(target);
+        lhs.setType(self.getType());
         
         AssignmentExpression assignmentExpression = new AssignmentExpression();
         assignmentExpression.setOperator("=");
