@@ -38,6 +38,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	private Boolean isDataValueUpdate = null; // DERIVED
 	private Boolean isCollectionConversion = null; // DERIVED
 	private Boolean isBitStringConversion = null; // DERIVED
+	private Boolean isRealConversion = null; // DERIVED
 
 	public AssignmentExpressionImpl(AssignmentExpression self) {
 		super(self);
@@ -193,6 +194,17 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 		this.isBitStringConversion = isBitStringConversion;
 	}
 
+    public Boolean getIsRealConversion() {
+        if (this.isRealConversion == null) {
+            this.setIsRealConversion(this.deriveIsRealConversion());
+        }
+        return this.isRealConversion;
+    }
+
+    public void setIsRealConversion(Boolean isRealConversion) {
+        this.isRealConversion = isRealConversion;
+    }
+
     /**
      * The new assigned source for an assignment to a local name is the
      * assignment expression. If the assignment is a definition, then the type
@@ -247,7 +259,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	        if (feature == null) {
 	            return null;
 	        } else {
-	            this.getAssignmentAfterMap(); // Force computatio of assignments.
+	            this.getAssignmentAfterMap(); // Force computation of assignments.
 	            Object[] referents = feature.getReferent().toArray();
 	            if (referents.length == 0) {
 	                return null;
@@ -356,11 +368,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	protected Boolean deriveIsBitStringConversion() {
         AssignmentExpression self = this.getSelf();
         LeftHandSide lhs = self.getLeftHandSide();
-        ElementReference lhsType = lhs == null? null: lhs.getImpl().getType();
-        
-        // NOTE: Using self.getType() as the rhsType works for both simple and
-        // compound assignments.
-        ElementReference rhsType = self.getType();
+        Expression rhs = self.getRightHandSide();
+        ElementReference lhsType = lhs == null? null: lhs.getImpl().getType();        
+        ElementReference rhsType = rhs == null? null: rhs.getImpl().getType();
         
         return rhsType != null && lhsType != null && 
                 lhsType.getImpl().isBitString() &&
@@ -369,6 +379,26 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                         rhsType.getImpl().isIntegerCollection());
 	}
 	
+    /**
+     * An assignment requires Real conversion if the type of the left-hand
+     * side is Real and either the type of the right-hand side is Integer
+     * or collection conversion is required and the type of the right-hand side
+     * is a collection class whose sequence type is Integer.
+     **/
+    protected Boolean deriveIsRealConversion() {
+        AssignmentExpression self = this.getSelf();
+        LeftHandSide lhs = self.getLeftHandSide();
+        Expression rhs = self.getRightHandSide();
+        ElementReference lhsType = lhs == null? null: lhs.getImpl().getType();        
+        ElementReference rhsType = rhs == null? null: rhs.getImpl().getType();
+        
+        return rhsType != null && lhsType != null && 
+                lhsType.getImpl().isReal() &&
+                (rhsType.getImpl().isInteger() ||
+                        self.getIsCollectionConversion() &&
+                        rhsType.getImpl().isIntegerCollection());
+    }
+
 	/**
      * A simple assignment expression has the same type as its right-hand side
      * expression. A compound assignment expression has the same type as its
@@ -489,6 +519,11 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         return true;
     }
     
+    public boolean assignmentExpressionIsRealConversionDerivation() {
+        this.getSelf().getIsRealConversion();
+        return true;
+    }
+
 	/*
 	 * Constraints
 	 */

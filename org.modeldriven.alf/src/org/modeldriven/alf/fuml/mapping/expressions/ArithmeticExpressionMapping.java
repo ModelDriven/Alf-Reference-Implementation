@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,22 +10,41 @@
 package org.modeldriven.alf.fuml.mapping.expressions;
 
 import org.modeldriven.alf.fuml.mapping.expressions.BinaryExpressionMapping;
-
+import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.ArithmeticExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
+import org.modeldriven.alf.uml.ActivityNode;
 
 public class ArithmeticExpressionMapping extends BinaryExpressionMapping {
 
     @Override
+    protected void mapOperator(
+            String operator,
+            ActivityNode operand1Result, 
+            ActivityNode operand2Result) throws MappingError {
+        ArithmeticExpression expression = this.getArithmeticExpression();
+        if (expression.getIsRealConversion1()) {
+            operand1Result = this.addRealConversion(operand1Result);
+        }
+        if (expression.getIsRealConversion2()) {
+            operand2Result = this.addRealConversion(operand2Result);
+        }
+        super.mapOperator(operator, operand1Result, operand2Result);
+    }
+
+    @Override
     protected ElementReference getOperatorFunction(String operator) {
-        return this.getArithmeticExpression().getIsConcatenation()?
-                RootNamespace.getRootScope().getStringFunction(operator):
-                RootNamespace.getRootScope().getIntegerFunction(operator);
+        ArithmeticExpression expression = this.getArithmeticExpression();
+        return expression.getIsConcatenation()?
+                    RootNamespace.getRootScope().getStringFunction(operator):
+               expression.getType().getImpl().isInteger()?
+                    RootNamespace.getRootScope().getIntegerFunction(operator):
+                    RootNamespace.getRootScope().getRealFunction(operator);
     }
 
 	public ArithmeticExpression getArithmeticExpression() {
 		return (ArithmeticExpression) this.getSource();
 	}
 
-} // ArithmeticExpressionMapping
+}

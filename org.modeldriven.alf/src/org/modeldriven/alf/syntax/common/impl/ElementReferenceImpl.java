@@ -269,6 +269,12 @@ public abstract class ElementReferenceImpl implements AssignableElement {
                     collectionArgument.getImpl().isInteger();
     }
     
+    public boolean isRealCollection() {
+        ElementReference collectionArgument = this.getCollectionArgument();
+        return collectionArgument != null && 
+                    collectionArgument.getImpl().isReal();
+    }
+    
     public ElementReference getCollectionArgument() {
         ElementReference toSequenceOperation = this.getToSequenceOperation();
         return toSequenceOperation == null? null: 

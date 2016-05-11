@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -54,6 +53,22 @@ public class ArithmeticExpression extends BinaryExpression {
 	public void setIsConcatenation(Boolean isConcatenation) {
 		this.getImpl().setIsConcatenation(isConcatenation);
 	}
+	
+    public Boolean getIsRealConversion1() {
+        return this.getImpl().getIsRealConversion1();
+    }
+    
+    public void setIsRealConversion1(Boolean isRealConversion1) {
+        this.getImpl().setIsRealConversion1(isRealConversion1);
+    }
+
+    public Boolean getIsRealConversion2() {
+        return this.getImpl().getIsRealConversion2();
+    }
+    
+    public void setIsRealConversion2(Boolean isRealConversion2) {
+        this.getImpl().setIsRealConversion2(isRealConversion2);
+    }
 
 	/**
 	 * An arithmetic expression is a string concatenation expression if its type
@@ -98,8 +113,28 @@ public class ArithmeticExpression extends BinaryExpression {
 		return this.getImpl().arithmeticExpressionOperandTypes();
 	}
 
+    /**
+     * Real conversion is required if the type of an arithmetic expression is
+     * Real and the first operand expression has type Integer.
+     **/
+    public boolean arithmeticExpressionIsRealConversion1Derivation() {
+        return this.getImpl()
+                .arithmeticExpressionIsRealConversion1Derivation();
+    }
+
+    /**
+     * Real conversion is required if the type of an arithmetic expression is
+     * Real and the second operand expression has type Integer.
+     **/
+    public boolean arithmeticExpressionIsRealConversion2Derivation() {
+        return this.getImpl()
+                .arithmeticExpressionIsRealConversion2Derivation();
+    }
+
 	public void _deriveAll() {
 		this.getIsConcatenation();
+		this.getIsRealConversion1();
+		this.getIsRealConversion2();
 		super._deriveAll();
 	}
 
@@ -125,6 +160,14 @@ public class ArithmeticExpression extends BinaryExpression {
 			violations.add(new ConstraintViolation(
 					"arithmeticExpressionOperandTypes", this));
 		}
+        if (!this.arithmeticExpressionIsRealConversion1Derivation()) {
+            violations.add(new ConstraintViolation(
+                    "arithmeticExpressionIsRealConversion1Derivation", this));
+        }
+        if (!this.arithmeticExpressionIsRealConversion2Derivation()) {
+            violations.add(new ConstraintViolation(
+                    "arithmeticExpressionIsRealConversion2Derivation", this));
+        }
 	}
 
 	public String _toString(boolean includeDerived) {

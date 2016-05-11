@@ -399,6 +399,10 @@ public class RootNamespace extends ModelNamespace {
         return getIntegerFunction("ToUnlimitedNatural");
     }
 
+    public ElementReference getIntegerFunctionToReal() {
+        return getIntegerFunction("ToReal");
+    }
+
     public QualifiedName getStringFunctions() {
         if (stringFunctions == null) {
             stringFunctions = getPrimitiveBehaviors().getImpl().copy().
@@ -433,17 +437,29 @@ public class RootNamespace extends ModelNamespace {
                 addName("RealFunctions");
             realFunctions.getImpl().setCurrentScope(getRootScope());
         }
-        return stringFunctions;
+        return realFunctions;
     }
     
     public ElementReference getRealFunction(String name) {
         ElementReference realFunction = realFunctionMap.get(name);
         if (realFunction == null) {
-            realFunction = getStringFunctions().getImpl().copy().
+            realFunction = getRealFunctions().getImpl().copy().
                 addName(name).getImpl().getBehaviorReferent();
             realFunctionMap.put(name, realFunction);
         }
         return realFunction;
+    }
+
+    public ElementReference getRealFunctionNeg() {
+        return getRealFunction("Neg");
+    }
+
+    public ElementReference getRealFunctionPlus() {
+        return getRealFunction("+");
+    }
+
+    public ElementReference getRealFunctionMinus() {
+        return getRealFunction("-");
     }
 
     public ElementReference getUnlimitedNaturalFunction(String name) {

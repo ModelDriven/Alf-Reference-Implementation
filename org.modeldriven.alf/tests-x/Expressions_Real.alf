@@ -64,7 +64,7 @@ class Expressions_Real specializes Test {
 		
 		x = +x; // 1.0
 		x = -x; // -1.0
-		x = x * 2; // -2.0;
+		x = 2 * x; // -2.0;
 		x = x * i; // -10.0;
 		x = x / y; // 0.5
 		x = x + z; // 3.64;
@@ -87,7 +87,7 @@ class Expressions_Real specializes Test {
 		f2 = x > y;
 		f3 = x <= y;
 		f4 = x >= y;
-		f5 = i/1.0 == i;
+		f5 = IntegerFunctions::ToReal(i) == i;
 		f6 = y == ToInteger(y);		
 		
 		g1 = t < i;

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -10,7 +9,6 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
-import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 
 /**
@@ -125,29 +123,4 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	    }
 	}
 	
-	// Helper methods
-	
-    /**
-     * Derives isCollectionConversion for this output named expression as an
-     * output from the given parameter.
-     */
-	@Override
-    public boolean getIsCollectionConversion(ElementReference parameter) {
-        OutputNamedExpression self = this.getSelf();
-        Expression expression = self.getExpression();
-        return isCollectionConversion(
-                expression.getType(), parameter.getImpl().getType(), parameter.getImpl().getUpper());
-    }
-
-	/**
-     * Derives isBitStringConversion for this output named expression as an 
-     * output from the given parameter.
-     */
-	@Override
-    public boolean getIsBitStringConversion(ElementReference parameter) {
-        OutputNamedExpression self = this.getSelf();
-        return isBitStringConversion(
-                self.getExpression().getType(), parameter.getImpl().getType());
-    }
-
 } // OutputNamedExpressionImpl

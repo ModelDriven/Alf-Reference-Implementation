@@ -20,6 +20,8 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 
 	private Boolean isConcatenation = null; // DERIVED
+    private Boolean isRealConversion1 = null; // DERIVED
+    private Boolean isRealConversion2 = null; // DERIVED
 
 	public ArithmeticExpressionImpl(ArithmeticExpression self) {
 		super(self);
@@ -40,6 +42,28 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	public void setIsConcatenation(Boolean isConcatenation) {
 		this.isConcatenation = isConcatenation;
 	}
+
+    public Boolean getIsRealConversion1() {
+        if (this.isRealConversion1 == null) {
+            this.setIsRealConversion1(this.deriveIsRealConversion1());
+        }
+        return this.isRealConversion1;
+    }
+    
+    public void setIsRealConversion1(Boolean isRealConversion1) {
+        this.isRealConversion1 = isRealConversion1;
+    }
+
+    public Boolean getIsRealConversion2() {
+        if (this.isRealConversion2 == null) {
+            this.setIsRealConversion2(this.deriveIsRealConversion2());
+        }
+        return this.isRealConversion2;
+    }
+    
+    public void setIsRealConversion2(Boolean isRealConversion2) {
+        this.isRealConversion2 = isRealConversion2;
+    }
 
 	/**
 	 * An arithmetic expression is a string concatenation expression if its type
@@ -66,7 +90,7 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	        return null;
 	    } else {
             ElementReference type1 = operand1.getType();
-            ElementReference type2 = operand1.getType();
+            ElementReference type2 = operand2.getType();
 	        return type1 == null || type2 == null? null:
 	               type1.getImpl().isInteger() && type2.getImpl().isInteger()? 
                         RootNamespace.getRootScope().getIntegerType():
@@ -104,7 +128,33 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	    return 1;
 	}
 
-	/*
+    /**
+     * Real conversion is required if the type of an arithmetic expression is
+     * Real and the first operand expression has type Integer.
+     **/
+    protected Boolean deriveIsRealConversion1() {
+        ArithmeticExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        ElementReference type = self.getType();
+        ElementReference type1 = operand1 == null? null: operand1.getType();
+        return type != null && type1 != null && 
+               type.getImpl().isReal() && type1.getImpl().isInteger();
+    }
+
+    /**
+     * Real conversion is required if the type of an arithmetic expression is
+     * Real and the first operand expression has type Integer.
+     **/
+    protected Boolean deriveIsRealConversion2() {
+        ArithmeticExpression self = this.getSelf();
+        Expression operand2 = self.getOperand2();
+        ElementReference type = self.getType();
+        ElementReference type2 = operand2 == null? null: operand2.getType();
+        return type != null && type2 != null && 
+               type.getImpl().isReal() && type2.getImpl().isInteger();
+    }
+
+    /*
 	 * Derivations
 	 */
 	
@@ -128,6 +178,16 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 		return true;
 	}
 	
+    public boolean arithmeticExpressionIsRealConversion1Derivation() {
+        this.getSelf().getIsRealConversion1();
+        return true;
+    }
+
+    public boolean arithmeticExpressionIsRealConversion2Derivation() {
+        this.getSelf().getIsRealConversion2();
+        return true;
+    }
+
 	/*
 	 * Constraints
 	 */

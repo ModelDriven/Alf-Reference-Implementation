@@ -62,13 +62,15 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * the result source element of the right-hand side expression is connect by
      * an object flow to an invocation of the Collection::toSequence operation,
      * and the result of that invocation acts as the result source element for
-     * the right-hand side, unless bit string conversion is also require. If bit
-     * string conversion is required, then either the result source element of
-     * the argument expression or the result of the toSequence invocation, if
-     * collection conversion was required, is connected by an object flow to an
-     * invocation of the BitStringFunctions::ToBitString function, and the
-     * result of that invocation acts as the result source element for the
-     * right-hand side.
+     * the right-hand side, unless bit string or real conversion is also
+     * require. If bit string or real conversion is required, then either the
+     * result source element of the argument expression or the result of the
+     * toSequence invocation, if collection conversion was required, is
+     * connected by an object flow to an invocation of the
+     * BitStringFunctions::ToBitString (for bit string conversion) or
+     * IntegerFunctions::ToReal (for real conversion) function, and the result
+     * of that invocation acts as the result source element for the right-hand
+     * side.
      * 
      * Simple Assignment: Name Left-Hand Side, without Index
      * 
@@ -238,7 +240,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                                 this.lhsExpressionMapping.getResultSource(), 
                                 this.callAction.getArgument().get(0));
 
-                        // Apply bit string conversion to the right-hand
+                        // Apply bit string or real conversion to the right-hand
                         // side, if necessary.
                         ElementReference rhsType = rhs.getType();
                         rhsResultSource = mapConversions(
@@ -247,7 +249,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                                 null, false, 
                                 rhsType != null && rhsType.getImpl().isInteger() && 
                                 this.callAction.getArgument().get(1).getType(). 
-                                equals(getBitStringType()));
+                                equals(getBitStringType()),
+                                assignmentExpression.getIsRealConversion());
 
                         rhsSubgraph.addObjectFlow(
                                 rhsResultSource,
@@ -259,12 +262,13 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 
                 if (rhsResultSource == null) {
                     rhsResultSource = rhsSubgraph.addNullValueSpecificationAction().getResult();
-                } else {
+                } else if (assignmentExpression.getIsSimple()) {
                     rhsResultSource = mapConversions(
                             this, rhsSubgraph, rhsResultSource, 
                             assignmentExpression.getType(), 
                             assignmentExpression.getIsCollectionConversion(), 
-                            assignmentExpression.getIsBitStringConversion());
+                            assignmentExpression.getIsBitStringConversion(),
+                            assignmentExpression.getIsRealConversion());
                 }
 
                 this.graph.addAll(this.lhsMapping.getGraph());
@@ -302,6 +306,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
         return getBehavior(
             type.getImpl().isInteger()?
                     RootNamespace.getRootScope().getIntegerFunction(operator):
+            type.getImpl().isReal()?
+                    RootNamespace.getRootScope().getRealFunction(operator):
             type.getImpl().isBitString()?
                     RootNamespace.getRootScope().getBitStringFunction(operator):
             type.getImpl().isBoolean()?
@@ -379,7 +385,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 	        ActivityNode rhsResultSource, 
 	        ElementReference rhsType,
 	        boolean isCollectionConversion, 
-	        boolean isBitStringConversion) throws MappingError {
+	        boolean isBitStringConversion,
+	        boolean isRealConversion) throws MappingError {
         if (rhsResultSource != null) {
             if (isCollectionConversion) {
                 ElementReference toSequenceOperation = rhsType == null? null: 
@@ -407,9 +414,12 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                     rhsResultSource = callAction.getResult().get(0);
                 }
             }
-            if (isBitStringConversion) {
+            if (isBitStringConversion || isRealConversion) {
+                ElementReference conversionFunction = isBitStringConversion? 
+                        RootNamespace.getRootScope().getBitStringFunctionToBitString(): 
+                        RootNamespace.getRootScope().getIntegerFunctionToReal();
                 CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
-                        getBehavior(RootNamespace.getRootScope().getBitStringFunctionToBitString()));
+                        getBehavior(conversionFunction));
                 subgraph.addObjectFlow(
                         rhsResultSource, callAction.getArgument().get(0));
                 rhsResultSource = callAction.getResult().get(0);

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -35,7 +34,9 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
      * 
      * 1. An arithmetic expression is mapped as a behavior invocation for the
      * corresponding primitive behavior from the
-     * Alf::Library::PrimitiveBehaviors package.
+     * Alf::Library::PrimitiveBehaviors package. Note that this includes the
+     * possibility of applying real conversion to one or both operands, as
+     * required.
      * 
      * Shift Expressions
      * 
@@ -48,7 +49,9 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
      * 
      * 3. A relational expression is mapped as a behavior invocation for the
      * corresponding primitive behavior from the
-     * Alf::Library::PrimitiveBehaviors package.
+     * Alf::Library::PrimitiveBehaviors package. Note that this includes the
+     * possibility of applying real conversion to one or both operands, as
+     * required.
      * 
      * Logical Expressions
      * 
@@ -112,6 +115,15 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
         throws MappingError {
         CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
                 getBehavior(RootNamespace.getRootScope().getBitStringFunctionToBitString()));
+        this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
+        return callAction.getResult().get(0);
+    }
+
+    // Used by subclasses.
+    protected ActivityNode addRealConversion(ActivityNode operandResult) 
+        throws MappingError {
+        CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
+                getBehavior(RootNamespace.getRootScope().getIntegerFunctionToReal()));
         this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
         return callAction.getResult().get(0);
     }

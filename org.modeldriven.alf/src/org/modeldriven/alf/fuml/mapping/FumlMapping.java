@@ -61,6 +61,10 @@ public abstract class FumlMapping extends Mapping {
         return getPrimitiveType(RootNamespace.getRootScope().getIntegerType());
     }
     
+    public static PrimitiveType getRealType() {
+        return getPrimitiveType(RootNamespace.getRootScope().getRealType());
+    }
+    
     public static PrimitiveType getUnlimitedNaturalType() {
         return getPrimitiveType(RootNamespace.getRootScope().getUnlimitedNaturalType());
     }

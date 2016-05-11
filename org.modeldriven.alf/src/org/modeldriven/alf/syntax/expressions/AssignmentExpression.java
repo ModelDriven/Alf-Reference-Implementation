@@ -150,13 +150,21 @@ public class AssignmentExpression extends Expression {
 		this.getImpl().setIsCollectionConversion(isCollectionConversion);
 	}
 
-	public Boolean getIsBitStringConversion() {
-		return this.getImpl().getIsBitStringConversion();
-	}
+    public Boolean getIsBitStringConversion() {
+        return this.getImpl().getIsBitStringConversion();
+    }
 
-	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.getImpl().setIsBitStringConversion(isBitStringConversion);
-	}
+    public void setIsBitStringConversion(Boolean isBitStringConversion) {
+        this.getImpl().setIsBitStringConversion(isBitStringConversion);
+    }
+
+    public Boolean getIsRealConversion() {
+        return this.getImpl().getIsRealConversion();
+    }
+
+    public void setIsRealConversion(Boolean isRealConversion) {
+        this.getImpl().setIsRealConversion(isRealConversion);
+    }
 
 	/**
 	 * An assignment expression is a simple assignment if the assignment
@@ -332,16 +340,27 @@ public class AssignmentExpression extends Expression {
 				.assignmentExpressionIsCollectionConversionDerivation();
 	}
 
-	/**
-	 * An assignment requires BitString conversion if the type of the left-hand
-	 * side is BitString and either the type of the right-hand side is Integer
-	 * or collection conversion is required and the type of the right-hand side
-	 * is a collection class whose sequence type is Integer.
-	 **/
-	public boolean assignmentExpressionIsBitStringConversionDerivation() {
-		return this.getImpl()
-				.assignmentExpressionIsBitStringConversionDerivation();
-	}
+    /**
+     * An assignment requires BitString conversion if the type of the left-hand
+     * side is BitString and either the type of the right-hand side is Integer
+     * or collection conversion is required and the type of the right-hand side
+     * is a collection class whose sequence type is Integer.
+     **/
+    public boolean assignmentExpressionIsBitStringConversionDerivation() {
+        return this.getImpl()
+                .assignmentExpressionIsBitStringConversionDerivation();
+    }
+
+    /**
+     * An assignment requires Real conversion if the type of the left-hand
+     * side is Real and either the type of the right-hand side is Integer
+     * or collection conversion is required and the type of the right-hand side
+     * is a collection class whose sequence type is Integer.
+     **/
+    public boolean assignmentExpressionIsRealConversionDerivation() {
+        return this.getImpl()
+                .assignmentExpressionIsRealConversionDerivation();
+    }
 
 	/**
 	 * If an assignment expression has a feature with a primary expression whose
@@ -373,6 +392,7 @@ public class AssignmentExpression extends Expression {
 		this.getIsDataValueUpdate();
 		this.getIsCollectionConversion();
 		this.getIsBitStringConversion();
+		this.getIsRealConversion();
 		super._deriveAll();
 		LeftHandSide leftHandSide = this.getLeftHandSide();
 		if (leftHandSide != null) {

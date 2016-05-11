@@ -256,8 +256,8 @@ Name must resolved to a template and arguments must be compatible with template 
 If the unqualified name of a qualified name has a template binding, then the template name must resolve to a template. The template binding must have an argument name for each of the template parameters and each argument name must resolve to a classifier. If the template parameter has constraining classifiers, then the referent of the corresponding argument name must conform to all those constraining classifiers.
  
 relationalExpressionOperandTypes
-Operands must either be both have type Real or Integer, or both have type UnlimitedNatural.
-The operand expressions for a comparison operator must both be of type Integer or Real, or both be of type UnlimitedNatural.
+Operands must either both have type Natural, Integer or Real, or both have type Natural or UnlimitedNatural.
+The operand expressions for a comparison operator must both be of type Natural, Integer or Real, or both be of type Natural or UnlimitedNatural.
  
 selectOrRejectExpressionArgument
 Argument must have type Boolean and multiplicity upper bound of 1.
