@@ -31,17 +31,17 @@ class Expressions_Real specializes Test {
 		AssertFalse("g2", g2);
 		
 		AssertEqual("a", a, 20.0);
-		AssertEqual("b1", b1, 2.0);
-		AssertEqual("b2", b2, -3.0);
-		AssertEqual("c1", c1, 2.0);
-		AssertEqual("c2", c2, -2.0);
-		AssertEqual("d1", d1, 2.0);
-		AssertEqual("d2", d2, -2.0);
-		AssertEqual("m1", m1, 1.0);
+		AssertEqual("b1", b1, 2);
+		AssertEqual("b2", b2, -3);
+		AssertEqual("c1", c1, 2);
+		AssertEqual("c2", c2, -2);
+		AssertEqual("d1", d1, 2);
+		AssertEqual("d2", d2, -2);
+		AssertEqual("m1", m1, 2.5);
 		AssertEqual("m2", m2, -20.0);
 		
-		AssertEqual("z1", 2);
-		AssertEqual("z2", 2.0);
+		AssertEqual("z1", z1, 2);
+		AssertEqual("z2", z1, 2.0);
 		
 	}
 	
