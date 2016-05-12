@@ -211,14 +211,17 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
 
     /**
      * If the operand of an increment or decrement expression is of type Integer
-     * or Real, then the type of the expression is Real. Otherwise the
-     * expression has no type.
+     * or Real, then the type of the expression is Integer or Real,
+     * respectively. Otherwise the expression has no type.
      **/
 	@Override
 	protected ElementReference deriveType() {
         LeftHandSide operand = this.getSelf().getOperand();
         ElementReference type = operand == null? null: operand.getType();
-        return type.getImpl().isIntegerOrReal()? type: null;
+        return type == null? null:
+               type.getImpl().isInteger()? RootNamespace.getRootScope().getIntegerType(): 
+               type.getImpl().isReal()? RootNamespace.getRootScope().getRealType(): 
+               null;
 	}
 	
     /**

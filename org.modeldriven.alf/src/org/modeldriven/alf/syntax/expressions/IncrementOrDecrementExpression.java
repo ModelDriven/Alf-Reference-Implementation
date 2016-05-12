@@ -177,8 +177,8 @@ public class IncrementOrDecrementExpression extends Expression {
 
     /**
      * If the operand of an increment or decrement expression is of type Integer
-     * or Real, then the type of the expression is Real. Otherwise the
-     * expression has no type.
+     * or Real, then the type of the expression is Integer or Real,
+     * respectively. Otherwise the expression has no type.
      **/
 	public boolean incrementOrDecrementExpressionTypeDerivation() {
 		return this.getImpl().incrementOrDecrementExpressionTypeDerivation();
