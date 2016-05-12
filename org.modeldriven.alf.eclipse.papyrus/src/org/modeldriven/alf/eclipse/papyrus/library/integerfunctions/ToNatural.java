@@ -21,7 +21,7 @@ import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.Op
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import org.eclipse.uml2.uml.PrimitiveType;
 
-public class IntegerToNaturalFunctionBehaviorExecution extends OpaqueBehaviorExecution {
+public class ToNatural extends OpaqueBehaviorExecution {
 
     public void doBody(
             List<ParameterValue> inputParameters,
@@ -61,7 +61,7 @@ public class IntegerToNaturalFunctionBehaviorExecution extends OpaqueBehaviorExe
     }
     
     public org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value new_() {
-        return new IntegerToNaturalFunctionBehaviorExecution();
+        return new ToNatural();
     }   
 
 }

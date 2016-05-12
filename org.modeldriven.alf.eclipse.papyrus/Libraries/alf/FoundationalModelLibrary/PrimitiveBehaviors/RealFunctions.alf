@@ -1,0 +1,59 @@
+namespace FoundationalModelLibrary::PrimitiveBehaviors;
+
+package RealFunctions {
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Neg")
+  public activity Neg(in x: Real): Real { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Abs")
+  public activity Abs(in x: Real): Real { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Inv")
+  public activity Inv(in x: Real): Real { }
+
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Floor")
+  public activity Floor(in x: Real): Integer { }
+
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Round")
+  public activity Round(in x: Real): Integer { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Add")
+  public activity '+'(in x: Real, in y: Real): Real { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Minus")
+  public activity '-'(in x: Real, in y: Real): Real { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Times")
+  public activity '*'(in x: Real, in y: Real): Real { }
+
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Divide")
+  public activity '/'(in x: Real, in y: Real): Real[0..1] { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Max")
+  public activity Max(in x: Real, in y: Real): Real { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Min")
+  public activity Min(in x: Real, in y: Real): Real { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Lower")
+  public activity '<'(in x: Real, in y: Real): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Greater")
+  public activity '>'(in x: Real, in y: Real): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.LowerOrEqual")
+  public activity '<='(in x: Real, in y: Real): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.GreaterOrEqual")
+  public activity '>='(in x: Real, in y: Real): Boolean { }
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.ToString")
+  public activity ToString(in x: Real): String {}
+
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.realfunctions.ToInteger")
+  public activity ToInteger(in x: Real): Integer {}
+
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.ToReal")
+  public activity ToReal(in x: String): Real[0..1] {}
+
+}

@@ -16,7 +16,7 @@ class Expressions_Real specializes Test {
 		AssertEqual("x", x, 2.5);
 		AssertEqual("y", y, -20.0);
 		AssertEqual("z", z, 2.14);
-		AssertEqual("xx", xx, 10.1);
+		AssertEqual("xx", Floor(xx * 10), 101); // To avoid rounding problems
 		AssertEqual("r", r, 4.0);
 		AssertEqual("s", s, null);
 		

@@ -16,9 +16,15 @@ public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::To
 public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToUnlimitedNatural;
 public import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToInteger;
 
+private import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'/' as Divide;
+
 package IntegerFunctions {
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.IntegerToNaturalFunctionBehaviorExecution")
+  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.ToNatural")
   public activity ToNatural(in x: String): Integer[0..1] {}
+  
+  public activity ToReal(in x: Integer): Real {
+  	return Divide(x, 1);
+  }
   
 }
