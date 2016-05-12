@@ -37,7 +37,8 @@ public class NumericUnaryExpressionImpl extends UnaryExpressionImpl {
 	protected ElementReference deriveType() {
 	    Expression operand = this.getSelf().getOperand();
 	    ElementReference type = operand == null? null: operand.getType();
-	    return type.getImpl().isInteger()? RootNamespace.getRootScope().getIntegerType(): 
+	    return type == null? null:
+	           type.getImpl().isInteger()? RootNamespace.getRootScope().getIntegerType(): 
 	           type.getImpl().isReal()? RootNamespace.getRootScope().getRealType():
 	           null;
 	}

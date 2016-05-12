@@ -41,7 +41,9 @@ class Expressions_Real specializes Test {
 		AssertEqual("m2", m2, -20.0);
 		
 		AssertEqual("z1", z1, 2);
-		AssertEqual("z2", z1, 2.0);
+		AssertEqual("z2", z2, 2.0);
+		
+		this.done();
 		
 	}
 	

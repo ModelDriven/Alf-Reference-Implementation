@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -21,6 +20,8 @@ import org.modeldriven.alf.syntax.units.*;
 public class EqualityExpressionImpl extends BinaryExpressionImpl {
 
 	private Boolean isNegated = null; // DERIVED
+	private Boolean isRealConversion1 = null; // DERIVED
+	private Boolean isRealConversion2 = null; // DERIVED
 
 	public EqualityExpressionImpl(EqualityExpression self) {
 		super(self);
@@ -41,6 +42,28 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
 	public void setIsNegated(Boolean isNegated) {
 		this.isNegated = isNegated;
 	}
+
+    public Boolean getIsRealConversion1() {
+        if (this.isRealConversion1 == null) {
+            this.setIsRealConversion1(this.deriveIsRealConversion1());
+        }
+        return this.isRealConversion1;
+    }
+    
+    public void setIsRealConversion1(Boolean isRealConversion1) {
+        this.isRealConversion1 = isRealConversion1;
+    }
+
+    public Boolean getIsRealConversion2() {
+        if (this.isRealConversion2 == null) {
+            this.setIsRealConversion2(this.deriveIsRealConversion2());
+        }
+        return this.isRealConversion2;
+    }
+
+    public void setIsRealConversion2(Boolean isRealConversion2) {
+        this.isRealConversion2 = isRealConversion2;
+    }
 
 	/**
 	 * An equality expression is negated if its operator is "!=".
@@ -74,7 +97,35 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
         return 1;
     }
 	
-	/*
+    /**
+     * An equality expression requires real conversion if the first operand is
+     * of type Integer and the second is of type Real.
+     */
+    protected Boolean deriveIsRealConversion1() {
+        EqualityExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        ElementReference type1 = operand1 == null? null: operand1.getType();
+        ElementReference type2 = operand2 == null? null: operand2.getType();
+        return type1 != null && type2 != null &&
+               type1.getImpl().isInteger() && type2.getImpl().isReal();
+    }
+    
+    /**
+     * An equality expression requires real conversion if the first operand is
+     * of type Real and the second is of type Integer.
+     */
+    protected Boolean deriveIsRealConversion2() {
+        EqualityExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        ElementReference type1 = operand1 == null? null: operand1.getType();
+        ElementReference type2 = operand2 == null? null: operand2.getType();
+        return type1 != null && type2 != null &&
+               type1.getImpl().isReal() && type2.getImpl().isInteger();
+    }
+
+    /*
 	 * Derivations
 	 */
 	
@@ -98,6 +149,16 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
 		return true;
 	}
 	
+    public boolean equalityExpressionIsRealConversion1Derivation() {
+        this.getSelf().getIsRealConversion1();
+        return true;
+    }
+
+    public boolean equalityExpressionIsRealConversion2Derivation() {
+        this.getSelf().getIsRealConversion2();
+        return true;
+    }
+
 	/*
 	 * Helper methods
 	 */

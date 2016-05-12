@@ -1,6 +1,6 @@
 arithmeticExpressionOperandTypes
-Operand types must be Integer (or String for concatenation).
-The operands of an arithmetic expression must both have type Integer, unless the operator is +, in which case they may also both have type String.
+Operand types must be Integer or Real (or String for concatenation).
+The operands of an arithmetic expression must both have type Integer or Real, unless the operator is +, in which case they may also both have type String.
  
 assignmentExpressionAssignmentsBefore
 
@@ -12,7 +12,7 @@ For a compound assignment, both the left-hand and right-hand sides must have a m
  
 assignmentExpressionCompoundAssignmentTypeConformance
 Illegal types for the operator used.
-For a compound assignment, if the operator is an arithmetic operator, then either the left-hand side and the right-hand side both have type Integer or they both have type String and the operator is +. If the operator is a logical operator, then either the left-hand side and the right-hand side both have type Boolean or Bit String or the left-hand side has type Bit String and the right-hand side has type Integer. If the operator is a shift operator, then the left-hand side must have type Bit String and the right-hand side must have type Integer.
+For a compound assignment, if the operator is an arithmetic operator, then either the left-hand side and the right-hand side both have type Integer or Real, the left-hand side has type Real and the right-hand side has type Integer or Real, or they both have type String and the operator is +. If the operator is a logical operator, then either the left-hand side and the right-hand side both have type Boolean or Bit String or the left-hand side has type Bit String and the right-hand side has type Integer. If the operator is a shift operator, then the left-hand side must have type Bit String and the right-hand side must have type Integer.
  
 assignmentExpressionDataValueUpdateLegality
 Illegal data value update.
@@ -135,8 +135,8 @@ incrementOrDecrementExpressionAssignmentsBefore
 The assignments before the operand of an increment or decrement expression are the same as those before the increment or decrement expression.
  
 incrementOrDecrementExpressionOperand
-Operand must have type Integer and multiplicity upper bound of 1.
-The operand expression must have type Integer and a multiplicity upper bound of 1.
+Operand must have a type Integer or Real and multiplicity upper bound of 1.
+The operand expression must have type Integer or Real and a multiplicity upper bound of 1.
  
 instanceCreationExpressionConstructor
 Constructor name must resolve to a compatible constructor operation, class or data type.
@@ -220,8 +220,8 @@ Target expression must have a multiplicity upper bound of 1.
 If the target of a name left-hand side disambiguates to a feature reference, then the expression of the feature reference must have a multiplicity upper bound of 1.
  
 numericUnaryExpressionOperand
-Operand must have type Integer and multiplicity upper bound of 1.
-The operand expression must have type Integer and a multiplicity upper bound of 1.
+Operand must have a type Integer or Real and multiplicity upper bound of 1.
+The operand expression must have type Integer or Real and a multiplicity upper bound of 1.
  
 outputNamedExpressionForm
 Illegal for output named expression.
@@ -256,8 +256,8 @@ Name must resolved to a template and arguments must be compatible with template 
 If the unqualified name of a qualified name has a template binding, then the template name must resolve to a template. The template binding must have an argument name for each of the template parameters and each argument name must resolve to a classifier. If the template parameter has constraining classifiers, then the referent of the corresponding argument name must conform to all those constraining classifiers.
  
 relationalExpressionOperandTypes
-Operands must have type Integer, UnlimitedNatural or Natural (but not one Integer and the other UnlimitedNatural).
-The operand expressions for a comparison operator must have type Integer, UnlimitedNatural or Natural. However, it is not allowed to have one operand expression be Integer and the other be UnlimitedNatural.
+Operands must either both have type Natural, Integer or Real, or both have type Natural or UnlimitedNatural.
+The operand expressions for a comparison operator must both be of type Natural, Integer or Real, or both be of type Natural or UnlimitedNatural.
  
 selectOrRejectExpressionArgument
 Argument must have type Boolean and multiplicity upper bound of 1.

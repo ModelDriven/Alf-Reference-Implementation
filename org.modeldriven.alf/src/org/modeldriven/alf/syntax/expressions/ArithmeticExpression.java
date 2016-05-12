@@ -175,6 +175,10 @@ public class ArithmeticExpression extends BinaryExpression {
 		if (includeDerived) {
 			s.append(" /isConcatenation:");
 			s.append(this.getIsConcatenation());
+            s.append(" /isRealConversion1:");
+            s.append(this.getIsRealConversion1());
+            s.append(" /isRealConversion2:");
+            s.append(this.getIsRealConversion2());
 		}
 		return s.toString();
 	}

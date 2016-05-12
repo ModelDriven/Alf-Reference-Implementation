@@ -462,6 +462,10 @@ public class RootNamespace extends ModelNamespace {
         return getRealFunction("-");
     }
 
+    public ElementReference getRealFunctionToInteger() {
+        return getRealFunction("ToInteger");
+    }
+
     public ElementReference getUnlimitedNaturalFunction(String name) {
         ElementReference unlimitedNaturalFunction = 
             unlimitedNaturalFunctionMap.get(name);

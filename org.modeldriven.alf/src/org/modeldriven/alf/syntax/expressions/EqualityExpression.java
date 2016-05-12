@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -54,6 +53,22 @@ public class EqualityExpression extends BinaryExpression {
 	public void setIsNegated(Boolean isNegated) {
 		this.getImpl().setIsNegated(isNegated);
 	}
+	
+    public Boolean getIsRealConversion1() {
+        return this.getImpl().getIsRealConversion1();
+    }
+    
+    public void setIsRealConversion1(Boolean isRealConversion1) {
+        this.getImpl().setIsRealConversion1(isRealConversion1);
+    }
+
+    public Boolean getIsRealConversion2() {
+        return this.getImpl().getIsRealConversion2();
+    }
+
+    public void setIsRealConversion2(Boolean isRealConversion2) {
+        this.getImpl().setIsRealConversion2(isRealConversion2);
+    }
 
 	/**
 	 * An equality expression is negated if its operator is "!=".
@@ -82,6 +97,22 @@ public class EqualityExpression extends BinaryExpression {
 	public boolean equalityExpressionUpperDerivation() {
 		return this.getImpl().equalityExpressionUpperDerivation();
 	}
+	
+    /**
+     * An equality expression requires real conversion if the first operand is
+     * of type Integer and the second is of type Real.
+     */
+    public boolean equalityExpressionIsRealConversion1Derivation() {
+        return this.getImpl().equalityExpressionIsRealConversion1Derivation();
+    }
+
+    /**
+     * An equality expression requires real conversion if the first operand is
+     * of type Real and the second is of type Integer.
+     */
+    public boolean equalityExpressionIsRealConversion2Derivation() {
+        return this.getImpl().equalityExpressionIsRealConversion2Derivation();
+    }
 
 	/**
 	 * Returns false for an equality expression.
@@ -92,6 +123,8 @@ public class EqualityExpression extends BinaryExpression {
 
 	public void _deriveAll() {
 		this.getIsNegated();
+		this.getIsRealConversion1();
+		this.getIsRealConversion2();
 		super._deriveAll();
 	}
 
@@ -109,10 +142,18 @@ public class EqualityExpression extends BinaryExpression {
 			violations.add(new ConstraintViolation(
 					"equalityExpressionLowerDerivation", this));
 		}
-		if (!this.equalityExpressionUpperDerivation()) {
-			violations.add(new ConstraintViolation(
-					"equalityExpressionUpperDerivation", this));
-		}
+        if (!this.equalityExpressionUpperDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "equalityExpressionUpperDerivation", this));
+        }
+        if (!this.equalityExpressionIsRealConversion1Derivation()) {
+            violations.add(new ConstraintViolation(
+                    "equalityExpressionIsRealConversion1Derivation", this));
+        }
+        if (!this.equalityExpressionIsRealConversion2Derivation()) {
+            violations.add(new ConstraintViolation(
+                    "equalityExpressionIsRealConversion2Derivation", this));
+        }
 	}
 
 	public String _toString(boolean includeDerived) {
@@ -120,6 +161,10 @@ public class EqualityExpression extends BinaryExpression {
 		if (includeDerived) {
 			s.append(" /isNegated:");
 			s.append(this.getIsNegated());
+            s.append(" /isRealConversion1:");
+            s.append(this.getIsRealConversion1());
+            s.append(" /isRealConversion2:");
+            s.append(this.getIsRealConversion2());
 		}
 		return s.toString();
 	}

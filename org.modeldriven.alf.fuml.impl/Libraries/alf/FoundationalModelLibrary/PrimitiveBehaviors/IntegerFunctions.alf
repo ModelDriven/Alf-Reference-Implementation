@@ -17,6 +17,9 @@ package IntegerFunctions {
   @primitive(IntegerTimesFunctionBehaviorExecution)
   public activity '*'(in x: Integer, in y: Integer): Integer { }
 
+  @primitive(IntegerDivideFunctionBehaviorExecution)
+  public activity '/'(in x: Integer, in y: Integer): Real[0..1] { }
+
   @primitive(IntegerDivFunctionBehaviorExecution)
   public activity Div(in x: Integer, in y: Integer): Integer[0..1] { }
 

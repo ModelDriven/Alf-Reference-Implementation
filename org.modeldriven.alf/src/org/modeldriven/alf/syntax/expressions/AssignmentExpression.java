@@ -539,10 +539,14 @@ public class AssignmentExpression extends Expression {
 			s.append(" /isCollectionConversion:");
 			s.append(this.getIsCollectionConversion());
 		}
-		if (includeDerived) {
-			s.append(" /isBitStringConversion:");
-			s.append(this.getIsBitStringConversion());
-		}
+        if (includeDerived) {
+            s.append(" /isBitStringConversion:");
+            s.append(this.getIsBitStringConversion());
+        }
+        if (includeDerived) {
+            s.append(" /isRealConversion:");
+            s.append(this.getIsRealConversion());
+        }
 		return s.toString();
 	}
 

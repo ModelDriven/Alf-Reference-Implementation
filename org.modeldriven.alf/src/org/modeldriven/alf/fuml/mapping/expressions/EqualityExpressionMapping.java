@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -45,6 +44,12 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
      * equality expression still always evaluates the operand expressions
      * exactly once.
      * 
+     * 3. If real conversion is required on either operand, then this is mapped
+     * to a call to the
+     * Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToReal function, and
+     * the output of this call is used as the result source for the operation
+     * instead of the original operand result source.
+     * 
      * 3. An equality expression that uses the operator != is mapped as above,
      * but the result output pin of the test identity action is connected by an
      * object flow to the argument input pin of a call behavior action for the
@@ -59,6 +64,13 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
             ActivityNode operand1Result, 
             ActivityNode operand2Result) throws MappingError {
         EqualityExpression expression = this.getEqualityExpression();
+
+        if (expression.getIsRealConversion1()) {
+            operand1Result = this.addRealConversion(operand1Result);
+        }
+        if (expression.getIsRealConversion2()) {
+            operand2Result = this.addRealConversion(operand2Result);
+        }
         
         this.action = this.graph.addTestIdentityAction("==");
         this.resultSource = mapEquality(

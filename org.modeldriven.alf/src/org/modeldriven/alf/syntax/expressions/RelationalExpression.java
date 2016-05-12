@@ -188,10 +188,22 @@ public class RelationalExpression extends BinaryExpression {
 
 	public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
-		if (includeDerived) {
-			s.append(" /isUnlimitedNatural:");
-			s.append(this.getIsUnlimitedNatural());
-		}
+        if (includeDerived) {
+            s.append(" /isUnlimitedNatural:");
+            s.append(this.getIsUnlimitedNatural());
+        }
+        if (includeDerived) {
+            s.append(" /isReal:");
+            s.append(this.getIsReal());
+        }
+        if (includeDerived) {
+            s.append(" /isRealConversion1:");
+            s.append(this.getIsRealConversion1());
+        }
+        if (includeDerived) {
+            s.append(" /isRealConversion2:");
+            s.append(this.getIsRealConversion2());
+        }
 		return s.toString();
 	}
 

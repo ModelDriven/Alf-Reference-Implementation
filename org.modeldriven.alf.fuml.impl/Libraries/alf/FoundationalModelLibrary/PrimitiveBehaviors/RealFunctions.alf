@@ -1,0 +1,59 @@
+namespace FoundationalModelLibrary::PrimitiveBehaviors;
+
+package RealFunctions {
+
+  @primitive(RealNegateFunctionBehaviorExecution)
+  public activity Neg(in x: Real): Real { }
+
+  @primitive(RealAbsFunctionBehaviorExecution)
+  public activity Abs(in x: Real): Real { }
+
+  @primitive(RealInvFunctionBehaviorExecution)
+  public activity Inv(in x: Real): Real { }
+
+  @primitive(RealFloorFunctionBehaviorExecution)
+  public activity Floor(in x: Real): Integer { }
+
+  @primitive(RealRoundFunctionBehaviorExecution)
+  public activity Round(in x: Real): Integer { }
+
+  @primitive(RealPlusFunctionBehaviorExecution)
+  public activity '+'(in x: Real, in y: Real): Real { }
+
+  @primitive(RealMinusFunctionBehaviorExecution)
+  public activity '-'(in x: Real, in y: Real): Real { }
+
+  @primitive(RealTimesFunctionBehaviorExecution)
+  public activity '*'(in x: Real, in y: Real): Real { }
+
+  @primitive(RealDivideFunctionBehaviorExecution)
+  public activity '/'(in x: Real, in y: Real): Real[0..1] { }
+
+  @primitive(RealMaxFunctionBehaviorExecution)
+  public activity Max(in x: Real, in y: Real): Real { }
+
+  @primitive(RealMinFunctionBehaviorExecution)
+  public activity Min(in x: Real, in y: Real): Real { }
+
+  @primitive(RealLessThanFunctionBehaviorExecution)
+  public activity '<'(in x: Real, in y: Real): Boolean { }
+
+  @primitive(RealGreaterThanFunctionBehaviorExecution)
+  public activity '>'(in x: Real, in y: Real): Boolean { }
+
+  @primitive(RealLessThanEqualFunctionBehaviorExecution)
+  public activity '<='(in x: Real, in y: Real): Boolean { }
+
+  @primitive(RealGreaterThanEqualFunctionBehaviorExecution)
+  public activity '>='(in x: Real, in y: Real): Boolean { }
+
+  @primitive(RealToStringFunctionBehaviorExecution)
+  public activity ToString(in x: Real): String {}
+
+  @primitive(RealToIntegerFunctionBehaviorExecution)
+  public activity ToInteger(in x: Real): Integer {}
+
+  @primitive(RealToRealFunctionBehaviorExecution)
+  public activity ToReal(in x: String): Real[0..1] {}
+
+}
