@@ -8,12 +8,12 @@ activity Interactive_Read() {
     
     WriteLine("read Integer, Boolean, UnlimitedNatural:");
     
-    WriteLine(IntegerFunctions::ToString(StandardInputChannel.allInstances().readInteger(status)));
+    WriteLine(IntegerFunctions::ToString(StandardInputChannel.allInstances()[1].readInteger(status)));
     WriteLine(status.description);
     
-    WriteLine(BooleanFunctions::ToString(StandardInputChannel.allInstances().readBoolean(status)));
+    WriteLine(BooleanFunctions::ToString(StandardInputChannel.allInstances()[1].readBoolean(status)));
     WriteLine(status.description);
     
-    WriteLine(UnlimitedNaturalFunctions::ToString(StandardInputChannel.allInstances().readUnlimitedNatural(status)));
+    WriteLine(UnlimitedNaturalFunctions::ToString(StandardInputChannel.allInstances()[1].readUnlimitedNatural(status)));
     WriteLine(status.description);
 }
