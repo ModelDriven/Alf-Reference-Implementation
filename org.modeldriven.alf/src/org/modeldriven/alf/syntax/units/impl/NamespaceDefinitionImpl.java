@@ -551,18 +551,26 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return definition == null? self.getOwnedMember(): definition.getOwnedMember();
     }
     
-    public List<ElementReference> getFormalParameters() {
-        List<ElementReference> parameters = new ArrayList<ElementReference>();
+    public List<FormalParameter> getFormalParameters() {
+        List<FormalParameter> parameters = new ArrayList<FormalParameter>();
         for (Member member: this.getSelf().getOwnedMember()) {
             if (member instanceof FormalParameter) {
-                parameters.add(member.getImpl().getReferent());
+                parameters.add((FormalParameter)member);
             }
         }
         return parameters;
     }
 
+    public List<ElementReference> getParameters() {
+        List<ElementReference> parameters = new ArrayList<ElementReference>();
+        for (FormalParameter formalParameter: this.getFormalParameters()) {
+            parameters.add(formalParameter.getImpl().getReferent());
+        }
+        return parameters;
+    }
+
     public ElementReference getReturnParameter() {
-        Collection<ElementReference> parameters = this.getFormalParameters();
+        Collection<ElementReference> parameters = this.getParameters();
         for (ElementReference parameter: parameters) {
             if (parameter.getImpl().getDirection().equals("return")) {
                 return parameter;

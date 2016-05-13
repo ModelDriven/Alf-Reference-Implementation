@@ -196,7 +196,7 @@ public class BlockImpl extends SyntaxElementImpl {
 
     public void setCurrentScope(NamespaceDefinition currentScope) {
         if (currentScope != null) {
-            this.parameters = currentScope.getImpl().getFormalParameters();
+            this.parameters = currentScope.getImpl().getParameters();
         }
         for (Statement statement: this.getSelf().getStatement()) {
             statement.getImpl().setCurrentScope(currentScope);

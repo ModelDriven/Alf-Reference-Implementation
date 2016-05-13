@@ -201,7 +201,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         OperationDefinition constructor = null;
         for (Member member: this.resolveInScope(this.getSelf().getName(), false)) {
             if (member instanceof OperationDefinition && 
-                    ((OperationDefinition)member).getImpl().getFormalParameters().isEmpty()) {
+                    ((OperationDefinition)member).getImpl().getParameters().isEmpty()) {
                 constructor = (OperationDefinition)member;
                 break;
             }

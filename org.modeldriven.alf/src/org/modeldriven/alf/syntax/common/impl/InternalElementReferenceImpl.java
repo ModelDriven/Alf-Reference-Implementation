@@ -407,7 +407,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public List<ElementReference> getParameters() {
         if (this.isBehavior() || this.isOperation()) {
-            return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getFormalParameters();
+            return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getParameters();
         } else {
             return new ArrayList<ElementReference>();
         }
