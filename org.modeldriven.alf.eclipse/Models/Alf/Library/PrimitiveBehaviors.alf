@@ -6,6 +6,7 @@ package PrimitiveBehaviors {
 
    public package BooleanFunctions;
    public package IntegerFunctions;
+   public package RealFunctions;
    public package StringFunctions;
    public package UnlimitedNaturalFunctions;
 
