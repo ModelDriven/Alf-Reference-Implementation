@@ -22,11 +22,11 @@ public class LiteralReal extends LiteralSpecification implements
 		return (org.eclipse.uml2.uml.LiteralReal) this.base;
 	}
 
-	public float getValue() {
-		return (float)this.getBase().getValue();
+	public double getValue() {
+		return this.getBase().getValue();
 	}
 
-	public void setValue(float value) {
+	public void setValue(double value) {
 		this.getBase().setValue(value);
 	}
 

@@ -22,12 +22,12 @@ public class LiteralReal extends LiteralSpecification implements
 		return (fUML.Syntax.Classes.Kernel.LiteralReal) this.base;
 	}
 
-	public float getValue() {
+	public double getValue() {
 		return this.getBase().value;
 	}
 
-	public void setValue(float value) {
-		this.getBase().setValue(value);
+	public void setValue(double value) {
+		this.getBase().setValue((float)value);
 	}
 
 }

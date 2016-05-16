@@ -9,7 +9,7 @@
 package org.modeldriven.alf.uml;
 
 public interface LiteralReal extends LiteralSpecification {
-	public float getValue();
+	public double getValue();
 
-	public void setValue(float value);
+	public void setValue(double value);
 }
