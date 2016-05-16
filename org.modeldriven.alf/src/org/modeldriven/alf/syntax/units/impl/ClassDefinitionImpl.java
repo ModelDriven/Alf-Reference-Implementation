@@ -218,7 +218,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         operation.setVisibility("public");
         operation.setBody(new Block());
         
-        StereotypeAnnotation annotation = new StereotypeAnnotation();
+        StereotypeAnnotation annotation = new StereotypeAnnotation(self);
         annotation.setStereotypeName(new QualifiedName().getImpl().addName("Create"));
         operation.addAnnotation(annotation);
         
@@ -247,7 +247,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         operation.setVisibility("public");
         operation.setBody(new Block());
         
-        StereotypeAnnotation annotation = new StereotypeAnnotation();
+        StereotypeAnnotation annotation = new StereotypeAnnotation(self);
         annotation.setStereotypeName(new QualifiedName().getImpl().addName("Destroy"));
         operation.addAnnotation(annotation);
         
