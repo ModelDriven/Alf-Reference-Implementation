@@ -51,6 +51,29 @@ public class RootNamespace extends ModelNamespace {
     
     public static RootScopeRegistry rootRegistry = null;
     
+    public static RootScopeRegistry getRootRegistry() {
+        if (rootRegistry == null) {
+            rootRegistry = new GlobalRootScopeRegistry();
+        }
+        return rootRegistry;
+    }
+    
+    public static void setRootRegistry(RootScopeRegistry registry) {
+        rootRegistry = registry;
+    }
+    
+    public static RootNamespace getRootScope() {
+        return getRootRegistry().getRootScope();
+    }
+    
+    public static void setRootImpl(ModelNamespaceImpl impl) {
+        getRootScope().setImpl(impl);
+    }
+    
+    public static NamespaceDefinition getModelScope(UnitDefinition unit) {
+        return getRootScope().getModelNamespace(unit);
+    }
+    
     private QualifiedName alfStandardLibrary = null;
     private QualifiedName primitiveTypes = null;   
     private QualifiedName primitiveBehaviors = null;
@@ -100,40 +123,22 @@ public class RootNamespace extends ModelNamespace {
     
     private ElementReference listFunctionGet = null;
     private ElementReference listFunctionSize = null;
-      
+    
     private ElementReference standardProfile = null;
     
     private ElementReference createStereotype = null;
     private ElementReference destroyStereotype = null;
     private ElementReference modelLibraryStereotype = null;
     
-    public static RootScopeRegistry getRootRegistry() {
-        if (rootRegistry == null) {
-            rootRegistry = new GlobalRootScopeRegistry();
-        }
-        return rootRegistry;
-    }
-    
-    public static void setRootRegistry(RootScopeRegistry registry) {
-        rootRegistry = registry;
-    }
-    
-    public static RootNamespace getRootScope() {
-        return getRootRegistry().getRootScope();
-    }
-    
-    public static void setRootImpl(ModelNamespaceImpl impl) {
-        getRootScope().setImpl(impl);
-    }
-    
-    public static NamespaceDefinition getModelScope(UnitDefinition unit) {
-        return getRootScope().getModelNamespace(unit);
+    protected QualifiedName getAlfStandardLibraryName() {
+        return new QualifiedName().getImpl().
+                addName("Alf").getImpl().
+                addName("Library");
     }
     
     public QualifiedName getAlfStandardLibrary() {
         if (alfStandardLibrary == null) {
-            alfStandardLibrary = new QualifiedName();
-            alfStandardLibrary.getImpl().addName("Alf").getImpl().addName("Library");
+            alfStandardLibrary = getAlfStandardLibraryName();
             alfStandardLibrary.getImpl().setCurrentScope(getRootScope());
         }
         return alfStandardLibrary;
@@ -142,7 +147,6 @@ public class RootNamespace extends ModelNamespace {
     public QualifiedName getPrimitiveTypes() {
         if (primitiveTypes == null) {
             primitiveTypes = getAlfStandardLibrary().getImpl().copy().addName("PrimitiveTypes");
-            primitiveTypes.getImpl().setCurrentScope(getRootScope());
         }
         return primitiveTypes;
     }
@@ -150,7 +154,6 @@ public class RootNamespace extends ModelNamespace {
    public QualifiedName getPrimitiveBehaviors() {
         if (primitiveBehaviors == null) {
             primitiveBehaviors = getAlfStandardLibrary().getImpl().copy().addName("PrimitiveBehaviors");
-            primitiveBehaviors.getImpl().setCurrentScope(getRootScope());
         }
         return primitiveBehaviors;
     }
@@ -158,7 +161,6 @@ public class RootNamespace extends ModelNamespace {
     public QualifiedName getBasicInputOutput() {
         if (basicInputOutput == null) {
             basicInputOutput = getAlfStandardLibrary().getImpl().copy().addName("BasicInputOutput");
-            basicInputOutput.getImpl().setCurrentScope(getRootScope());
         }
         return basicInputOutput;
     }
@@ -166,7 +168,6 @@ public class RootNamespace extends ModelNamespace {
     public QualifiedName getSequenceFunctions() {
         if (sequenceFunctions == null) {
             sequenceFunctions = getPrimitiveBehaviors().getImpl().copy().addName("SequenceFunctions");
-            sequenceFunctions.getImpl().setCurrentScope(getRootScope());
         }
         return sequenceFunctions;
     }
@@ -174,7 +175,6 @@ public class RootNamespace extends ModelNamespace {
     public QualifiedName getCollectionFunctions() {
         if (collectionFunctions == null) {
             collectionFunctions = getAlfStandardLibrary().getImpl().copy().addName("CollectionFunctions");
-            collectionFunctions.getImpl().setCurrentScope(getRootScope());
         }
         return collectionFunctions;
     }
@@ -182,7 +182,6 @@ public class RootNamespace extends ModelNamespace {
     public QualifiedName getCollectionClasses() {
         if (collectionClasses == null) {
             collectionClasses = getAlfStandardLibrary().getImpl().copy().addName("CollectionClasses");
-            collectionClasses.getImpl().setCurrentScope(getRootScope());
         }
         return collectionClasses;
     }
@@ -307,12 +306,16 @@ public class RootNamespace extends ModelNamespace {
         return collectionClassesPackage;
     }
     
+    protected QualifiedName getFoundationalModelLibraryName() {
+        return new QualifiedName().getImpl().addName("FoundationalModelLibrary");
+    }
+    
     public QualifiedName getListFunctions() {
         if (listFunctions == null) {
-            listFunctions = new QualifiedName();
-            listFunctions.getImpl().addName("FoundationalModelLibrary").getImpl().
+            QualifiedName foundationalModelLibraryName = getFoundationalModelLibraryName();
+            foundationalModelLibraryName.getImpl().setCurrentScope(getRootScope());
+            listFunctions = foundationalModelLibraryName.getImpl().
                 addName("PrimitiveBehaviors").getImpl().addName("ListFunctions");
-            listFunctions.getImpl().setCurrentScope(getRootScope());
         }
         return listFunctions;
     }
@@ -512,11 +515,15 @@ public class RootNamespace extends ModelNamespace {
         return getBitStringFunction("ToInteger");
     }
     
+    protected QualifiedName getStandardProfileName() {
+        return new QualifiedName().getImpl().addName("StandardProfile");        
+    }
+    
     public ElementReference getStandardProfile() {
         if (standardProfile == null) {
-            QualifiedName name = new QualifiedName().getImpl().addName("StandardProfile");
-            name.getImpl().setCurrentScope(getRootScope());
-            ElementReference namespace = name.getImpl().getNamespaceReferent();
+            QualifiedName standardProfileName = getStandardProfileName();
+            standardProfileName.getImpl().setCurrentScope(getRootScope());
+            ElementReference namespace = standardProfileName.getImpl().getNamespaceReferent();
             if (namespace != null && namespace.getImpl().isProfile()) {
                 standardProfile = namespace;
             }
