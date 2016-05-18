@@ -90,22 +90,14 @@ public class ParseException extends Exception {
                            int[][] expectedTokenSequences,
                            String[] tokenImage) {
     String eol = System.getProperty("line.separator", "\n");
-    StringBuffer expected = new StringBuffer();
     int maxSize = 0;
     for (int i = 0; i < expectedTokenSequences.length; i++) {
       if (maxSize < expectedTokenSequences[i].length) {
         maxSize = expectedTokenSequences[i].length;
       }
-      for (int j = 0; j < expectedTokenSequences[i].length; j++) {
-        expected.append(tokenImage[expectedTokenSequences[i][j]]).append(' ');
-      }
-      if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0) {
-        expected.append("...");
-      }
-      expected.append(eol).append("    ");
     }
-    String retval = "Encountered \"";
     Token tok = currentToken.next;
+    String retval = "[" + tok.beginLine + ":" + tok.beginColumn + "] Encountered \"";
     for (int i = 0; i < maxSize; i++) {
       if (i != 0) retval += " ";
       if (tok.kind == 0) {
@@ -118,14 +110,7 @@ public class ParseException extends Exception {
       retval += " \"";
       tok = tok.next;
     }
-    retval += "\" at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
-    retval += "." + eol;
-    if (expectedTokenSequences.length == 1) {
-      retval += "Was expecting:" + eol + "    ";
-    } else {
-      retval += "Was expecting one of:" + eol + "    ";
-    }
-    retval += expected.toString();
+    retval += "\".";
     return retval;
   }
 
