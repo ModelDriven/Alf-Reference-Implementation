@@ -36,6 +36,7 @@ public class ElementFactory {
     private Class<?> behaviorClass = null;
     private Class<?> classClass = null;
     private Class<?> classifierClass = null;
+    private Class<?> namespaceClass = null;
     private Class<?> namedElementClass = null;
     
     public ElementFactory(
@@ -43,11 +44,13 @@ public class ElementFactory {
             Class<?> behaviorClass, 
             Class<?> classClass, 
             Class<?> classifierClass,
+            Class<?> namespaceClass,
             Class<?> namedElementClass) {
         this.packageName = elementClass.getPackage().getName();
         this.behaviorClass = behaviorClass;
         this.classClass = classClass;
         this.classifierClass = classifierClass;
+        this.namespaceClass = namespaceClass;
         this.namedElementClass = namedElementClass;        
     }
     
@@ -74,6 +77,7 @@ public class ElementFactory {
                         this.behaviorClass.isInstance(base)? "Behavior":
                         this.classClass.isInstance(base)? "Class":
                         this.classifierClass.isInstance(base)? "Classifier":
+                        this.namespaceClass.isInstance(base)? "Namespace":
                         this.namedElementClass.isInstance(base)? "NamedElement":
                         "Element";
                 newInstance = (Element)this.newInstanceFor(className, base);

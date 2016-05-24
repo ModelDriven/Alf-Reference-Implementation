@@ -22,6 +22,7 @@ public abstract class Element implements org.modeldriven.alf.uml.Element {
 			fUML.Syntax.CommonBehaviors.BasicBehaviors.Behavior.class, 
 			fUML.Syntax.Classes.Kernel.Class_.class, 
 			fUML.Syntax.Classes.Kernel.Classifier.class, 
+			fUML.Syntax.Classes.Kernel.Namespace.class,
 			fUML.Syntax.Classes.Kernel.NamedElement.class);
     
 	protected Object base;
