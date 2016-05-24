@@ -143,7 +143,7 @@ Constructor name must resolve to a compatible constructor operation, class or da
 The constructor name must resolve to a constructor operation (that is compatible with the tuple argument expressions), a class or a data type, but not both a class and a data type.
  
 instanceCreationExpressionConstructorlessLegality
-Arguments not allowed; named class must not have any constructors.
+No matching constructor found.
 If the expression is constructorless, then its tuple must be empty and the referent class must not have any owned operations that are constructors.
 
 instanceCreationExpressionDataTypeCompatibility

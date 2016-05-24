@@ -10,7 +10,13 @@ class Expressions_Constructor_Destructor specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 
-	    this.test(employee1, employee2, employee3, employee4, init, log, monitor1, monitor2, d);
+	    this.test(employee0, employee1, employee2, employee3, employee4, init, log, monitor1, monitor2, d);
+	    
+	    AssertEqual("employee0.id", employee0.id, -100);
+	    AssertEqual("employee0.name", employee0.name, "Jane");
+	    AssertFalse("employee0.transferred", employee0.transferred);
+	    AssertFalse("employee0.relocated", employee0.relocated);
+	    AssertEqual("employee0.supervisor", employee0.supervisor, null);
 	    
 	    AssertEqual("employee1.id", employee1.id, 100);
 	    AssertEqual("employee1.name", employee1.name, "Fred");
@@ -79,6 +85,9 @@ class Expressions_Constructor_Destructor specializes Test {
             this.id = id;
    	        this.name = name;
    	    }
+   	    @Create public Employee(in id: Natural, in name: String) {  // Check overload resolution.
+   	    		this(-id, name);
+   	    }
   	    @Create public transferred(in employeeInfo: Employee) { 
   	        this(employeeInfo.id, employeeInfo.name);
   	        this.transferred = true;
@@ -106,7 +115,7 @@ class Expressions_Constructor_Destructor specializes Test {
     //**************************************************************************
 
     test(
-    	out employee1: Employee, out employee2: Employee, out employee3: Employee, out employee4: Employee,
+    	out employee0: Employee, out employee1: Employee, out employee2: Employee, out employee3: Employee, out employee4: Employee,
     	out init: Initialization, 
     	out log: Log, out monitor1: Monitor, out monitor2: Monitor,
     	out d: D) {
@@ -114,7 +123,8 @@ class Expressions_Constructor_Destructor specializes Test {
       i = 100;
       name = "Fred";
 
-      employee1 = new Employee(i, name);
+      employee0 = new Employee(i, "Jane");
+      employee1 = new Employee(+i, name);
       employee2 = new Employee::transferred(employee1);
       employee3 = new Employee::relocated(employee2);
       employee4 = new Employee::assigned(employee3, employee1);
