@@ -117,10 +117,9 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	}
 
     /**
-     * Bit string conversion is required if the type of the type of the
-     * corresponding parameter is BitString, or a collection class whose sequence
-     * type is BitString, and the type of the argument expression is not
-     * BitString.
+     * Bit string conversion is required if the type of the corresponding
+     * parameter is BitString, or a collection class whose sequence type is
+     * BitString, and the type of the argument expression is not BitString.
      **/
     protected Boolean deriveIsBitStringConversion() {
         // This needs to be set externally using setIsBitStringConversion.
@@ -128,10 +127,9 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
     }
     
     /**
-     * Real conversion is required if the type of the type of the
-     * corresponding parameter is Real, or a collection class whose sequence
-     * type is Real, and the type of the argument expression is not
-     * Real.
+     * Real conversion is required if the type of the corresponding parameter is
+     * Real, or a collection class whose sequence type is Real, and the type of
+     * the argument expression is not Real.
      **/
     protected Boolean deriveIsRealConversion() {
         // This needs to be set externally using setIsRealConversion.
