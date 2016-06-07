@@ -13,6 +13,7 @@ import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.BooleanLiteralExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.NaturalLiteralExpressionMapping;
+import org.modeldriven.alf.fuml.mapping.expressions.RealLiteralExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.UnboundedLiteralExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.StringLiteralExpressionMapping;
 import org.modeldriven.alf.mapping.MappingError;
@@ -88,6 +89,9 @@ public class StereotypeAnnotationMapping extends SyntaxElementMapping {
                taggedValue.getImpl().isNaturalValue()? 
                        ("-".equals(taggedValue.getOperator())? -1: +1) *
                        NaturalLiteralExpressionMapping.valueOf(value):
+               taggedValue.getImpl().isRealValue()? 
+                       ("-".equals(taggedValue.getOperator())? -1.0: +1.0) *
+                       RealLiteralExpressionMapping.valueOf(value):
                taggedValue.getImpl().isUnboundedValue()? UnboundedLiteralExpressionMapping.UNBOUNDED_VALUE:
                taggedValue.getImpl().isStringValue()? StringLiteralExpressionMapping.valueOf(value):
                null;

@@ -66,6 +66,7 @@ public class TaggedValueImpl extends SyntaxElementImpl {
 	    RootNamespace rootScope = RootNamespace.getRootScope();
 	    return this.isBooleanValue()? rootScope.getBooleanType():
                this.isStringValue()? rootScope.getStringType():
+               this.isRealValue()? rootScope.getRealType():
 	           this.isUnboundedValue()? rootScope.getUnlimitedNaturalType():
 	               rootScope.getNaturalType();
 	}
@@ -77,7 +78,16 @@ public class TaggedValueImpl extends SyntaxElementImpl {
     public boolean isNaturalValue() {
         String value = this.getSelf().getValue();
         return value != null && value.length() > 1 && 
-                value.charAt(0) >= '0' && value.charAt(0) <= '9';       
+                value.charAt(0) >= '0' && value.charAt(0) <= '9' &&
+                !value.contains(".") && !value.contains("e") && !value.contains("E");       
+    }
+    
+    public boolean isRealValue() {
+        String value = this.getSelf().getValue();
+        return value != null && value.length() > 1 && 
+                (value.charAt(0) == '.' || 
+                 value.charAt(0) >= '0' && value.charAt(0) <= '9' &&
+                 (value.contains(".") || value.contains("e")  || value.contains("E")));       
     }
     
     public boolean isUnboundedValue() {

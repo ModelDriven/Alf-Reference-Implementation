@@ -2568,7 +2568,8 @@ TaggedValue TaggedValue():
     ( t = <DECIMAL_LITERAL> 
     | t = <BINARY_LITERAL> 
     | t = <OCTAL_LITERAL> 
-    | t = <HEX_LITERAL> )
+    | t = <HEX_LITERAL>
+    | t = <REAL_LITERAL> )
   )
   
   { v.setValue(t.image);
