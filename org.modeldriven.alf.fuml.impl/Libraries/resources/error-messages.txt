@@ -1,7 +1,7 @@
 arithmeticExpressionOperandTypes
-Operand types must be Integer or Real (or String for concatenation).
-The operands of an arithmetic expression must both have type Integer or Real, unless the operator is +, in which case they may also both have type String.
- 
+Illegal operand types.
+The operands of an arithmetic expression must both have type Integer or Real, unless the operator is + or %. If the operator is +, then both operands may also both have type String. If the operator is %, then both operands must have type Integer. 
+
 assignmentExpressionAssignmentsBefore
 
 The assigned source of a name before the right-hand side expression of an assignment expression is the same as the assigned source before the assignment expression. The assigned source of a name before the left-hand side is the assigned source after the right-hand side expression.
@@ -12,7 +12,7 @@ For a compound assignment, both the left-hand and right-hand sides must have a m
  
 assignmentExpressionCompoundAssignmentTypeConformance
 Illegal types for the operator used.
-For a compound assignment, if the operator is an arithmetic operator, then either the left-hand side and the right-hand side both have type Integer or Real, the left-hand side has type Real and the right-hand side has type Integer or Real, or they both have type String and the operator is +. If the operator is a logical operator, then either the left-hand side and the right-hand side both have type Boolean or Bit String or the left-hand side has type Bit String and the right-hand side has type Integer. If the operator is a shift operator, then the left-hand side must have type Bit String and the right-hand side must have type Integer.
+For a compound assignment, if the operator is an arithmetic operator, then either the left-hand side and the right-hand side both have type Integer, the left-hand side has type Real and the right-hand side has type Integer or Real, or they both have type String and the operator is +. If the operator is a logical operator, then either the left-hand side and the right-hand side both have type Boolean or Bit String or the left-hand side has type Bit String and the right-hand side has type Integer. If the operator is a shift operator, then the left-hand side must have type Bit String and the right-hand side must have type Integer.
  
 assignmentExpressionDataValueUpdateLegality
 Illegal data value update.
