@@ -20,6 +20,7 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 
 	private Boolean isConcatenation = null; // DERIVED
+	private Boolean isReal = null; // DERIVED
     private Boolean isRealConversion1 = null; // DERIVED
     private Boolean isRealConversion2 = null; // DERIVED
 
@@ -39,6 +40,17 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 		return this.isConcatenation;
 	}
 
+    public Boolean getIsReal() {
+        if (this.isReal == null) {
+            this.setIsReal(this.deriveIsReal());
+        }
+        return this.isReal;
+    }
+    
+    public void setIsReal(Boolean isReal) {
+        this.isReal = isReal;
+    }
+    
 	public void setIsConcatenation(Boolean isConcatenation) {
 		this.isConcatenation = isConcatenation;
 	}
@@ -129,16 +141,22 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	}
 
     /**
+     * An arithmetic expression is a real computation if its type is Real.
+     */
+    protected Boolean deriveIsReal() {
+        ElementReference type = this.getSelf().getType();
+        return type != null && type.getImpl().isReal();
+    }
+    
+    /**
      * Real conversion is required if the type of an arithmetic expression is
      * Real and the first operand expression has type Integer.
      **/
     protected Boolean deriveIsRealConversion1() {
         ArithmeticExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
-        ElementReference type = self.getType();
         ElementReference type1 = operand1 == null? null: operand1.getType();
-        return type != null && type1 != null && 
-               type.getImpl().isReal() && type1.getImpl().isInteger();
+        return self.getIsReal() && type1 != null && type1.getImpl().isInteger();
     }
 
     /**
@@ -148,10 +166,8 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
     protected Boolean deriveIsRealConversion2() {
         ArithmeticExpression self = this.getSelf();
         Expression operand2 = self.getOperand2();
-        ElementReference type = self.getType();
         ElementReference type2 = operand2 == null? null: operand2.getType();
-        return type != null && type2 != null && 
-               type.getImpl().isReal() && type2.getImpl().isInteger();
+        return self.getIsReal() && type2 != null && type2.getImpl().isInteger();
     }
 
     /*
@@ -178,6 +194,10 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 		return true;
 	}
 	
+    public boolean arithmeticExpressionIsRealDerivation() {
+        this.getSelf().getIsReal();
+        return true;
+    }
     public boolean arithmeticExpressionIsRealConversion1Derivation() {
         this.getSelf().getIsRealConversion1();
         return true;
@@ -194,8 +214,9 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 
     /**
      * The operands of an arithmetic expression must both have type Integer or
-     * Real, unless the operator is +, in which case they may also both have
-     * type String.
+     * Real, unless the operator is + or %. If the operator is +, then both
+     * operands may also both have type String. If the operator is %, then both
+     * operands must have type Integer.
      **/
 	public boolean arithmeticExpressionOperandTypes() {
 	    ArithmeticExpression self = this.getSelf();
@@ -207,12 +228,16 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 		} else {
 		    ElementReference type1 = operand1.getType();
 		    ElementReference type2 = operand2.getType();
-		    return type1 != null && type2 != null && (
+		    return operator == null || type1 != null && type2 != null && (
+		           !operator.equals("%") &&
 		           type1.getImpl().isIntegerOrReal()  &&
-		               type2.getImpl().isIntegerOrReal() ||
-		           operator != null && operator.equals("+") &&
-		               type1.getImpl().isString() &&
-		               type2.getImpl().isString());
+		           type2.getImpl().isIntegerOrReal() ||
+                   operator.equals("+") &&
+                   type1.getImpl().isString() &&
+                   type2.getImpl().isString() ||
+                   operator.equals("%") &&
+                   type1.getImpl().isInteger() &&
+                   type2.getImpl().isInteger());
 		}
 	}
 	

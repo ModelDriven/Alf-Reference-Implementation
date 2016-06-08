@@ -54,6 +54,14 @@ public class ArithmeticExpression extends BinaryExpression {
 		this.getImpl().setIsConcatenation(isConcatenation);
 	}
 	
+	public Boolean getIsReal() {
+	    return this.getImpl().getIsReal();
+	}
+	
+	public void setIsReal(Boolean isReal) {
+	    this.getImpl().setIsReal(isReal);
+	}
+	
     public Boolean getIsRealConversion1() {
         return this.getImpl().getIsRealConversion1();
     }
@@ -104,13 +112,21 @@ public class ArithmeticExpression extends BinaryExpression {
 		return this.getImpl().arithmeticExpressionUpperDerivation();
 	}
 
-	/**
+    /**
      * The operands of an arithmetic expression must both have type Integer or
-     * Real, unless the operator is +, in which case they may also both have
-     * type String.
-	 **/
+     * Real, unless the operator is + or %. If the operator is +, then both
+     * operands may also both have type String. If the operator is %, then both
+     * operands must have type Integer.
+     **/
 	public boolean arithmeticExpressionOperandTypes() {
 		return this.getImpl().arithmeticExpressionOperandTypes();
+	}
+	
+    /**
+     * An arithmetic expression is a real computation if its type is Real.
+     */
+	public boolean arithmeticExpressionIsRealDerivation() {
+	    return this.getImpl().arithmeticExpressionIsRealDerivation();
 	}
 
     /**
@@ -160,6 +176,10 @@ public class ArithmeticExpression extends BinaryExpression {
 			violations.add(new ConstraintViolation(
 					"arithmeticExpressionOperandTypes", this));
 		}
+        if (!this.arithmeticExpressionIsRealDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "arithmeticExpressionIsRealDerivation", this));
+        }
         if (!this.arithmeticExpressionIsRealConversion1Derivation()) {
             violations.add(new ConstraintViolation(
                     "arithmeticExpressionIsRealConversion1Derivation", this));
@@ -175,6 +195,8 @@ public class ArithmeticExpression extends BinaryExpression {
 		if (includeDerived) {
 			s.append(" /isConcatenation:");
 			s.append(this.getIsConcatenation());
+			s.append(" /isReal:");
+			s.append(this.getIsReal());
             s.append(" /isRealConversion1:");
             s.append(this.getIsRealConversion1());
             s.append(" /isRealConversion2:");

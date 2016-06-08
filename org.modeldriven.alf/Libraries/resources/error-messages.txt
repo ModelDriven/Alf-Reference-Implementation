@@ -1,7 +1,7 @@
 arithmeticExpressionOperandTypes
-Operand types must be Integer or Real (or String for concatenation).
-The operands of an arithmetic expression must both have type Integer or Real, unless the operator is +, in which case they may also both have type String.
- 
+Illegal operand types.
+The operands of an arithmetic expression must both have type Integer or Real, unless the operator is + or %. If the operator is +, then both operands may also both have type String. If the operator is %, then both operands must have type Integer. 
+
 assignmentExpressionAssignmentsBefore
 
 The assigned source of a name before the right-hand side expression of an assignment expression is the same as the assigned source before the assignment expression. The assigned source of a name before the left-hand side is the assigned source after the right-hand side expression.

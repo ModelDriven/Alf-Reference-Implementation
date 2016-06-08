@@ -38,9 +38,9 @@ public class ArithmeticExpressionMapping extends BinaryExpressionMapping {
         ArithmeticExpression expression = this.getArithmeticExpression();
         return expression.getIsConcatenation()?
                     RootNamespace.getRootScope().getStringFunction(operator):
-               expression.getType().getImpl().isInteger()?
-                    RootNamespace.getRootScope().getIntegerFunction(operator):
-                    RootNamespace.getRootScope().getRealFunction(operator);
+               expression.getIsReal()?
+                    RootNamespace.getRootScope().getRealFunction(operator):
+                    RootNamespace.getRootScope().getIntegerFunction(operator);
     }
 
 	public ArithmeticExpression getArithmeticExpression() {
