@@ -450,6 +450,10 @@ In a parallel block statement, any name assigned in one statement of the block m
 breakStatementNonparallelTarget
 Target cannot have @parallel annotation.
 The target of a break statement may not have a @parallel annotation.
+
+breakStatementTargetDerivation
+Break only allowed in a switch, while, do or for statement.
+The target of a break statement is the innermost switch, while, do or for statement enclosing the break statement (which must exist).
  
 classifyStatementAssignmentsAfter
 
