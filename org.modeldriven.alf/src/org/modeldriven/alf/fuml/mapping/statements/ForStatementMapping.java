@@ -44,7 +44,12 @@ public class ForStatementMapping extends LoopStatementMapping {
      * region with mode=iterative. The result source element from the mapping of
      * the loop variable expressions are connected by object flows to input
      * expansion nodes on the expansion region.
-     * 
+     */
+     // TODO: Update mapping in the spec.
+     // NOTE: The for statement can also not immediately contain a return statement, 
+     // since this would require a control flow out of the expansion region, which 
+     // is not allowed in fUML.
+     /**
      * 3. Otherwise, an iterative for statement is mapped to a loop node. A
      * for statement of the form
      * 
@@ -110,7 +115,9 @@ public class ForStatementMapping extends LoopStatementMapping {
 
         if (isParallel || 
                 resultSource2 == null && 
-                    statement.getImpl().getNewAssignments().isEmpty()) {
+                    statement.getImpl().getNewAssignments().isEmpty() &&
+                    !statement.getImpl().containsReturn()) {
+            
             // If this is a parallel for statement, or the first loop variable
             // definition is not a sequence construction shortcut and there
             // are no new assignments in the body, map as an expansion region.

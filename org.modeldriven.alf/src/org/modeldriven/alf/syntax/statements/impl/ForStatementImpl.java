@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -31,6 +30,8 @@ public class ForStatementImpl extends LoopStatementImpl {
 	private Block body = null;
 	private List<LoopVariableDefinition> variableDefinition = new ArrayList<LoopVariableDefinition>();
 	private Boolean isParallel = null; // DERIVED
+	
+	private boolean containsReturn = false;
 
 	public ForStatementImpl(ForStatement self) {
 		super(self);
@@ -326,6 +327,20 @@ public class ForStatementImpl extends LoopStatementImpl {
     @Override
     protected Statement getLoopStatement() {
         return this.getSelf();
+    }
+    
+    @Override
+    protected void setContainsReturn() {
+        this.containsReturn = true;
+        Statement loopStatement = super.getLoopStatement();
+        if (loopStatement != null) {
+            loopStatement.getImpl().setContainsReturn();
+        }
+    }
+    
+    @Override
+    public boolean containsReturn() {
+        return this.containsReturn;
     }
     
     @Override

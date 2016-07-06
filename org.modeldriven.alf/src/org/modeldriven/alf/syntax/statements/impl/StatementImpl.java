@@ -318,6 +318,14 @@ public abstract class StatementImpl extends DocumentedElementImpl {
                     enclosingStatement.getImpl().getLoopStatement();
     }
     
+    // Note: These are redefined in for statements to record if they contain
+    // a return statement.
+    protected void setContainsReturn() { 
+    }
+    protected boolean containsReturn() {
+        return false;
+    }
+    
     // Note: This is redefined to set the enclosing block in the expression of
     // an expression statement.
     public void setEnclosingBlock(Block enclosingBlock) {
