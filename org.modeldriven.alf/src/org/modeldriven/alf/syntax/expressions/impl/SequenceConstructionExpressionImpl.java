@@ -84,7 +84,10 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 		// Note: This requires that the elements be set BEFORE the type name.
         SequenceConstructionExpression self = this.getSelf();
         if (!self.getHasMultiplicity() && typeName != null) {
-            self.getElements().getImpl().setCollectionTypeName(typeName);
+            SequenceElements elements = self.getElements();
+            if (elements != null) {
+                elements.getImpl().setCollectionTypeName(typeName);
+            }
         }
 	}
 

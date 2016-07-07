@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -15,7 +14,7 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.SequenceElementsMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.SequenceExpressionList;
 
@@ -56,6 +55,14 @@ public class SequenceExpressionListMapping extends SequenceElementsMapping {
                 ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
                 ActivityNode resultSource = expressionMapping.getResultSource();
                 ActivityGraph subgraph = expressionMapping.getGraph();
+                ElementReference type = expressionList.getImpl().getType(owner);
+                ElementReference elementType = element.getType();
+                if (type != null && elementType != null) {
+                resultSource = AssignmentExpressionMapping.mapConversions(
+                        subgraph, resultSource,
+                        type.getImpl().isBitString() && elementType.getImpl().isInteger(), 
+                        type.getImpl().isReal() && elementType.getImpl().isInteger());
+                }
                 if (subgraph.isEmpty()) {
                     subgraph = this.createActivityGraph();
                     ActivityNode mergeNode = 

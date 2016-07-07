@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -121,28 +120,34 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
     public boolean isEmpty() {
         return element.isEmpty();
     }
+    
+    public ElementReference getType(SequenceConstructionExpression owner) {
+        ElementReference type = owner.getType();
+        if (!owner.getHasMultiplicity() && type != null) {
+            type = type.getImpl().getCollectionArgument();
+        }
+        return type;
+    }
 
     /**
      * Each expression in the list must have a multiplicity upper bound of no 
      * more than 1. The the type of each expression in the list must conform to 
      * the given type of the owning sequence construction expression (with 
-     * allowance for bit string conversion), if that expression has a 
+     * allowance for bit string and real conversion), if that expression has a 
      * multiplicity indicator, or to the collection argument type of the given 
      * collection class, otherwise.
      */
     @Override
     public boolean checkElements(SequenceConstructionExpression owner) {
-        ElementReference type = owner.getType();
-        if (!owner.getHasMultiplicity() && type != null) {
-            type = type.getImpl().getCollectionArgument();
-        }
+        ElementReference type = this.getType(owner);
         for (Expression element: this.getSelf().getElement()) {
             ElementReference elementType = element.getType();
             if (element.getUpper() > 1 || elementType == null && type != null ||
                     elementType != null && 
                     !elementType.getImpl().conformsTo(type) &&
                     !(elementType.getImpl().isInteger() && 
-                            type.getImpl().isBitString())) {
+                            (type.getImpl().isBitString() ||
+                             type.getImpl().isReal()))) {
                 return false;
             }
         }

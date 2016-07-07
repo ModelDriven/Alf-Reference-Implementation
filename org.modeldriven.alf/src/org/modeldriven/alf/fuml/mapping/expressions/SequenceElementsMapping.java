@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -17,16 +16,25 @@ import java.util.List;
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
 import org.modeldriven.alf.mapping.MappingError;
-
+import org.modeldriven.alf.syntax.expressions.SequenceConstructionExpression;
 import org.modeldriven.alf.syntax.expressions.SequenceElements;
 
 import org.modeldriven.alf.uml.ActivityNode;
 import org.modeldriven.alf.uml.Element;
 
 public abstract class SequenceElementsMapping extends SyntaxElementMapping {
+    
+    protected SequenceConstructionExpression owner = null;
 
     protected ActivityGraph graph = null;
     protected List<ActivityNode> resultSources = null;
+    
+    /*
+     * This should be called before map().
+     */
+    public void setOwner(SequenceConstructionExpression owner) {
+        this.owner = owner;
+    }
     
     protected abstract void map() throws MappingError; 
     

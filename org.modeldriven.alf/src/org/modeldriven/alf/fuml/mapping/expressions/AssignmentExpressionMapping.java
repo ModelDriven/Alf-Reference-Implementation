@@ -414,16 +414,26 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                     rhsResultSource = callAction.getResult().get(0);
                 }
             }
-            if (isBitStringConversion || isRealConversion) {
-                ElementReference conversionFunction = isBitStringConversion? 
-                        RootNamespace.getRootScope().getBitStringFunctionToBitString(): 
-                        RootNamespace.getRootScope().getIntegerFunctionToReal();
-                CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
-                        getBehavior(conversionFunction));
-                subgraph.addObjectFlow(
-                        rhsResultSource, callAction.getArgument().get(0));
-                rhsResultSource = callAction.getResult().get(0);
-            }
+            rhsResultSource = mapConversions(
+                    subgraph, rhsResultSource, isBitStringConversion, isRealConversion);
+        }
+        return rhsResultSource;
+	}
+	
+	public static ActivityNode mapConversions(
+	        ActivityGraph subgraph,
+	        ActivityNode rhsResultSource,
+	        boolean isBitStringConversion,
+	        boolean isRealConversion) throws MappingError {
+        if (isBitStringConversion || isRealConversion) {
+            ElementReference conversionFunction = isBitStringConversion? 
+                    RootNamespace.getRootScope().getBitStringFunctionToBitString(): 
+                    RootNamespace.getRootScope().getIntegerFunctionToReal();
+            CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
+                    getBehavior(conversionFunction));
+            subgraph.addObjectFlow(
+                    rhsResultSource, callAction.getArgument().get(0));
+            rhsResultSource = callAction.getResult().get(0);
         }
         return rhsResultSource;
 	}
