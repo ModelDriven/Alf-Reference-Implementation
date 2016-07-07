@@ -212,9 +212,9 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
         ElementReference lhsType = parameter.getImpl().getType();
         ElementReference rhsType = self.getExpression().getType(); 
         return rhsType != null && lhsType != null && 
-            lhsType.getImpl().isBitString() &&
-            (rhsType.getImpl().isReal() ||
-                    rhsType.getImpl().isRealCollection());
+            lhsType.getImpl().isReal() &&
+            (rhsType.getImpl().isInteger() ||
+                    rhsType.getImpl().isIntegerCollection());
     }
 
     @Override

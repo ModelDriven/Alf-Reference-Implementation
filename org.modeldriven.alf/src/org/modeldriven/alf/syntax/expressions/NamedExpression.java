@@ -91,8 +91,8 @@ public class NamedExpression extends SyntaxElement {
         return this.getImpl().getIsRealConversion();
     }
 
-    public void setIsRealConversion(Boolean isBitStringConversion) {
-        this.getImpl().setIsRealConversion(isBitStringConversion);
+    public void setIsRealConversion(Boolean isRealConversion) {
+        this.getImpl().setIsRealConversion(isRealConversion);
     }
 
 	/**

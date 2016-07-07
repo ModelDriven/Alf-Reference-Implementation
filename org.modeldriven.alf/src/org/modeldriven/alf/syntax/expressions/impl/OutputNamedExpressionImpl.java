@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.*;
 
 /**
@@ -123,4 +124,45 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	    }
 	}
 	
+	/*
+	 * Helper Methods
+	 */
+	
+    // Derives isCollectionConversion for this named expression as an output for
+    // the given parameter.
+    public boolean getIsCollectionConversion(ElementReference parameter) {
+        NamedExpression self = this.getSelf();
+        Expression expression = self.getExpression();
+        ElementReference rhsType = parameter.getImpl().getType();
+        ElementReference lhsType = self.getExpression().getType(); 
+        int rhsUpper = expression.getUpper();
+        return rhsType != null && lhsType != null && 
+            rhsType.getImpl().isCollectionClass() && rhsUpper == 1 &&
+            !lhsType.getImpl().isCollectionClass();
+    }
+    
+    // Derives isBitStringConversion for this named expression as an output for
+    // the given parameter.
+    public boolean getIsBitStringConversion(ElementReference parameter) {
+        NamedExpression self = this.getSelf();
+        ElementReference rhsType = parameter.getImpl().getType();
+        ElementReference lhsType = self.getExpression().getType(); 
+        return rhsType != null && lhsType != null && 
+            lhsType.getImpl().isBitString() &&
+            (rhsType.getImpl().isInteger() ||
+                    rhsType.getImpl().isIntegerCollection());
+    }
+
+    // Derives isRealConversion for this named expression as an output for
+    // the given parameter.
+    public boolean getIsRealConversion(ElementReference parameter) {
+        NamedExpression self = this.getSelf();
+        ElementReference rhsType = parameter.getImpl().getType();
+        ElementReference lhsType = self.getExpression().getType(); 
+        return rhsType != null && lhsType != null && 
+            lhsType.getImpl().isReal() &&
+            (rhsType.getImpl().isInteger() ||
+                    rhsType.getImpl().isIntegerCollection());
+    }
+
 } // OutputNamedExpressionImpl
