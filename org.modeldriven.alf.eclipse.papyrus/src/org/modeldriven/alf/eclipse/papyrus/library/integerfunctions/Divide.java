@@ -9,6 +9,7 @@ import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
 import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
+import org.eclipse.uml2.uml.PrimitiveType;
 import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
 
 public class Divide extends OpaqueBehaviorExecution {
@@ -23,6 +24,7 @@ public class Divide extends OpaqueBehaviorExecution {
 			} else {
 				RealValue result = new RealValue();
 				result.value = ((float)x)/((float)y);
+				result.type = (PrimitiveType) this.locus.factory.getBuiltInType("Real");
 				List<Value> outputs = new ArrayList<Value>();
 				outputs.add(result);
 				outputParameters.get(0).values = outputs;
