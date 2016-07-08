@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -84,10 +83,10 @@ public class DoStatement extends Statement {
 		return this.getImpl().doStatementAssignmentsAfter();
 	}
 
-	/**
-	 * The condition expression of a do statement must have type Boolean and a
-	 * multiplicity upper bound of 1.
-	 **/
+    /**
+     * The condition expression of a do statement must have a type that conforms
+     * to type Boolean and a multiplicity upper bound of 1.
+     **/
 	public boolean doStatementCondition() {
 		return this.getImpl().doStatementCondition();
 	}

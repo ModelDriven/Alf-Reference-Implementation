@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -160,11 +159,12 @@ public class LoopVariableDefinition extends SyntaxElement {
 		return this.getImpl().loopVariableDefinitionAssignmentsBefore();
 	}
 
-	/**
-	 * If a loop variable definition has two expressions, then both expressions
-	 * must have type Integer and a multiplicity upper bound of 1, and no name
-	 * may be newly assigned or reassigned in more than one of the expressions.
-	 **/
+    /**
+     * If a loop variable definition has two expressions, then both expressions
+     * must have a type that conforms to type Integer and a multiplicity upper
+     * bound of 1, and no name may be newly assigned or reassigned in more than
+     * one of the expressions.
+     **/
 	public boolean loopVariableDefinitionRangeExpressions() {
 		return this.getImpl().loopVariableDefinitionRangeExpressions();
 	}

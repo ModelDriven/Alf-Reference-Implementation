@@ -213,10 +213,11 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	 */
 
     /**
-     * The operands of an arithmetic expression must both have type Integer or
-     * Real, unless the operator is + or %. If the operator is +, then both
-     * operands may also both have type String. If the operator is %, then both
-     * operands must have type Integer.
+     * The operands of an arithmetic expression must both have types that
+     * conform to type Integer or Real, unless the operator is + or %. If the
+     * operator is +, then both operands may also both have types that conform
+     * to type String. If the operator is %, then both operands must have types
+     * that conform to type Integer.
      **/
 	public boolean arithmeticExpressionOperandTypes() {
 	    ArithmeticExpression self = this.getSelf();

@@ -79,10 +79,10 @@ public class BooleanUnaryExpressionImpl extends UnaryExpressionImpl {
 	 * Constraints
 	 */
 
-	/**
-	 * The operand expression of a Boolean unary expression must have type
-	 * Boolean and a multiplicity upper bound of 1.
-	 **/
+    /**
+     * The operand expression of a Boolean unary expression must have a type
+     * that conforms to type Boolean and a multiplicity upper bound of 1.
+     **/
 	public boolean booleanUnaryExpressionOperand() {
         BooleanUnaryExpression self = this.getSelf();
         Expression operand = self.getOperand();

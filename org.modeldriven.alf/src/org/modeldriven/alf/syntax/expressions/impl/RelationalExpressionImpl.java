@@ -201,8 +201,9 @@ public class RelationalExpressionImpl extends BinaryExpressionImpl {
 	 */
 
     /**
-     * The operand expressions for a comparison operator must both be of type
-     * Natural, Integer or Real, or both be of type Natural or UnlimitedNatural.
+     * The operand expressions for a comparison operator must both be of a type
+     * that conforms to type Natural, Integer or Real, or both be of a type that
+     * conforms to type Natural or UnlimitedNatural.
      **/
 	public boolean relationalExpressionOperandTypes() {
         RelationalExpression self = this.getSelf();

@@ -199,10 +199,10 @@ public class IncrementOrDecrementExpression extends Expression {
 		return this.getImpl().incrementOrDecrementExpressionUpperDerivation();
 	}
 
-	/**
-     * The operand expression must have type Integer or Real and a multiplicity
-     * upper bound of 1.
-	 **/
+    /**
+     * The operand expression must have a type that conforms to type Integer or
+     * Real and a multiplicity upper bound of 1.
+     **/
 	public boolean incrementOrDecrementExpressionOperand() {
 		return this.getImpl().incrementOrDecrementExpressionOperand();
 	}

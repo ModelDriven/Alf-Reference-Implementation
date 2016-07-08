@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -94,18 +93,18 @@ public class LogicalExpression extends BinaryExpression {
 		return this.getImpl().logicalExpressionUpperDerivation();
 	}
 
-	/**
-	 * The operands of a logical expression must have type Boolean, Integer or
-	 * BitString. However, if one of the operands is Boolean, then the other
-	 * must also be Boolean.
-	 **/
+    /**
+     * The operands of a logical expression must have a type that conforms to
+     * type Boolean, Integer or BitString. However, if one of the operands is
+     * Boolean, then the other must also be Boolean.
+     **/
 	public boolean logicalExpressionOperands() {
 		return this.getImpl().logicalExpressionOperands();
 	}
 
 	/**
 	 * BitString conversion is required if the first operand expression of a
-	 * logical expression has type Integer.
+	 * logical expression has a type that conforms to type Integer.
 	 **/
 	public boolean logicalExpressionIsBitStringConversion1Derivation() {
 		return this.getImpl()
@@ -114,7 +113,7 @@ public class LogicalExpression extends BinaryExpression {
 
 	/**
 	 * BitString conversion is required if the second operand expression of a
-	 * logical expression has type Integer.
+	 * logical expression has a type that conforms to type Integer.
 	 **/
 	public boolean logicalExpressionIsBitStringConversion2Derivation() {
 		return this.getImpl()

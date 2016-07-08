@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -69,10 +68,10 @@ public class SelectOrRejectExpression extends SequenceExpansionExpression {
 		return this.getImpl().selectOrRejectExpressionUpperDerivation();
 	}
 
-	/**
-	 * The argument of a select or reject expression must have type Boolean and
-	 * a multiplicity upper bound of 1.
-	 **/
+    /**
+     * The argument of a select or reject expression must have a type that
+     * conforms to type Boolean and a multiplicity upper bound of 1.
+     **/
 	public boolean selectOrRejectExpressionArgument() {
 		return this.getImpl().selectOrRejectExpressionArgument();
 	}

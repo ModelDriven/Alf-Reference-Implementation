@@ -1,6 +1,6 @@
 arithmeticExpressionOperandTypes
 Illegal operand types.
-The operands of an arithmetic expression must both have type Integer or Real, unless the operator is + or %. If the operator is +, then both operands may also both have type String. If the operator is %, then both operands must have type Integer. 
+The operands of an arithmetic expression must both have a type that conforms to type Integer or Real, unless the operator is + or %. If the operator is +, then both operands may also both have type a type that conforms to String. If the operator is %, then both operands must have a type that conforms to type Integer. 
 
 assignmentExpressionAssignmentsBefore
 
@@ -12,7 +12,7 @@ For a compound assignment, both the left-hand and right-hand sides must have a m
  
 assignmentExpressionCompoundAssignmentTypeConformance
 Illegal types for the operator used.
-For a compound assignment, if the operator is an arithmetic operator, then either the left-hand side and the right-hand side both have type Integer, the left-hand side has type Real and the right-hand side has type Integer or Real, or they both have type String and the operator is +. If the operator is a logical operator, then either the left-hand side and the right-hand side both have type Boolean or Bit String or the left-hand side has type Bit String and the right-hand side has type Integer. If the operator is a shift operator, then the left-hand side must have type Bit String and the right-hand side must have type Integer.
+For a compound assignment, if the operator is an arithmetic operator, then either the left-hand side and the right-hand side both have a type that conforms to type Integer, the left-hand side has a type that conforms to type Real and the right-hand side has a type that conforms to type Integer or Real, or they both have a type that conforms to type String and the operator is +. If the operator is a logical operator, then either the left-hand side and the right-hand side both have a type that conforms to type Boolean or Bit String or the left-hand side has type Bit String and the right-hand side has a type that conforms to type Integer. If the operator is a shift operator, then the left-hand side must have a type that conforms to type Bit String and the right-hand side must have a type that conforms to type Integer.
  
 assignmentExpressionDataValueUpdateLegality
 Illegal data value update.
@@ -48,11 +48,11 @@ The operands of a binary expression must both have a multiplicity upper bound no
  
 bitStringUnaryExpressionOperand
 Operand must have type BitString or Integer and multiplicity upper bound of 1.
-The operand expression of a BitString unary expression must have type BitString or Integer and a multiplicity upper bound of 1.
+The operand expression of a BitString unary expression must have a type that conforms to type BitString or Integer and a multiplicity upper bound of 1.
  
 booleanUnaryExpressionOperand
 Operand must have type Boolean and multiplicity upper bound of 1.
-The operand expression of a Boolean unary expression must have type Boolean and a multiplicity upper bound of 1.
+The operand expression of a Boolean unary expression must have a type that conforms to type Boolean and a multiplicity upper bound of 1.
  
 castExpressionAssignmentsBefore
 
@@ -76,7 +76,7 @@ The type name in a classification expression must resolve to a non-template clas
  
 conditionalLogicalExpressionOperands
 Operands must have type Boolean.
-The operands of a conditional logical expression must have type Boolean.
+The operands of a conditional logical expression must have a type that conforms to type Boolean.
  
 conditionalTestExpressionAssignmentsAfter
 
@@ -88,7 +88,7 @@ The assignments before the first operand expression of a conditional-test expres
  
 conditionalTestExpressionCondition
 First operand must have type Boolean and multiplicity upper bound of 1.
-The first operand expression of a conditional-test expression must be of type Boolean and have a multiplicity upper bound of 1.
+The first operand expression of a conditional-test expression must be of a type that conforms to type Boolean and have a multiplicity upper bound of 1.
  
 expressionUniqueAssignments
 
@@ -128,7 +128,7 @@ The target expression of the feature reference may not be untyped, nor may it ha
  
 forAllOrExistsOrOneExpressionArgument
 Argument must have type Boolean and multiplicity upper bound of 1.
-The argument of a forAll, exists or one expression must have type Boolean and a multiplicity upper bound of 1.
+The argument of a forAll, exists or one expression must have a type that conforms to type Boolean and a multiplicity upper bound of 1.
  
 incrementOrDecrementExpressionAssignmentsBefore
 
@@ -136,7 +136,7 @@ The assignments before the operand of an increment or decrement expression are t
  
 incrementOrDecrementExpressionOperand
 Operand must have a type Integer or Real and multiplicity upper bound of 1.
-The operand expression must have type Integer or Real and a multiplicity upper bound of 1.
+The operand expression must have a type that conforms to type Integer or Real and a multiplicity upper bound of 1.
  
 instanceCreationExpressionConstructor
 Constructor name must resolve to a compatible constructor operation, class or data type.
@@ -221,7 +221,7 @@ If the target of a name left-hand side disambiguates to a feature reference, the
  
 numericUnaryExpressionOperand
 Operand must have a type Integer or Real and multiplicity upper bound of 1.
-The operand expression must have type Integer or Real and a multiplicity upper bound of 1.
+The operand expression must have a type that conforms to type Integer or Real and a multiplicity upper bound of 1.
  
 outputNamedExpressionForm
 Illegal for output named expression.
@@ -257,11 +257,11 @@ If the unqualified name of a qualified name has a template binding, then the tem
  
 relationalExpressionOperandTypes
 Operands must either both have type Natural, Integer or Real, or both have type Natural or UnlimitedNatural.
-The operand expressions for a comparison operator must both be of type Natural, Integer or Real, or both be of type Natural or UnlimitedNatural.
+The operand expressions for a comparison operator must both be of a type that conforms to type Natural, Integer or Real, or both be of a type that conforms to type Natural or UnlimitedNatural.
  
 selectOrRejectExpressionArgument
 Argument must have type Boolean and multiplicity upper bound of 1.
-The argument of a select or reject expression must have type Boolean and a multiplicity upper bound of 1.
+The argument of a select or reject expression must have a type that conforms to type Boolean and a multiplicity upper bound of 1.
  
 sequenceAccessExpressionIndexMultiplicity
 Index expression multiplicity upper bound must be 1.
@@ -277,7 +277,7 @@ If the elements of a sequence construction expression are given by a sequence ex
  
 sequenceConstructionExpressionElementType
 Element types not compatible with the expression type.
-If the elements of a sequence construction expression are given by a sequence range, then the expression must have type Integer. If the expression does not have multiplicity, then its type must be a collection class.
+If the elements of a sequence construction expression are given by a sequence range, then the expression must have a type that conforms to type Integer. If the elements are given by a sequence element list, and the sequence construction expression has a non-empty type, then each expression in the list must have a type that either conforms to the type of the sequence construction expression or is convertible to it by bit string conversion or real conversion.
  
 sequenceConstructionExpressionType
 Type cannot be empty, cannot be a template and must either have a multiplicity indicator or be a template class instantiation.
@@ -341,7 +341,7 @@ The referent behavior must have two in parameters, a return parameter and no oth
  
 shiftExpressionOperands
 First operand must have type BitString or Integer; second operand must have type Integer.
-The first operand expression of a shift expression must have the type BitString or Integer. The second operand expression must have the type Integer.
+The first operand expression of a shift expression must have a type that conforms to the type BitString or Integer. The second operand expression must have that conforms to the type Integer.
  
 superInvocationExpressionConstructorCall
 Superclass constructor call not allowed here.
@@ -493,7 +493,7 @@ The assignments before the block of a do statement are the same as the assignmen
  
 doStatementCondition
 Condition expression must have type Boolean and multiplicity upper bound of 1.
-The condition expression of a do statement must have type Boolean and a multiplicity upper bound of 1.
+The condition expression of a do statement must have that conforms to type Boolean and a multiplicity upper bound of 1.
  
 doStatementEnclosedStatements
 
@@ -588,8 +588,8 @@ Expression type must conform to declared loop variable type.
 If the type of a loop variable definition is not inferred, then the first expression of the definition must have a type that conforms to the declared type.
  
 loopVariableDefinitionRangeExpressions
-Range expressions must have type Integer and multiplicity upper bound of 1; same name cannot be assigned in both expressions
-If a loop variable definition has two expressions, then both expressions must have type Integer and a multiplicity upper bound of 1, and  no name may be newly assigned or reassigned in more than one of the expressions.
+Range expressions must have type Integer and multiplicity upper bound of 1; same name cannot be assigned in both expressions.
+If a loop variable definition has two expressions, then both expressions must have that conforms to type Integer and a multiplicity upper bound of 1, and  no name may be newly assigned or reassigned in more than one of the expressions.
  
 loopVariableDefinitionTypeName
 Type name must resolve to a non-template classifier.
@@ -609,7 +609,7 @@ If a name is unassigned before the condition expression of a non-final clause, t
  
 nonFinalClauseConditionType
 Condition expression must have type Boolean and multiplicity upper bound of 1.
-The condition of a non-final clause must have type Boolean and a multiplicity upper bound no greater than 1.
+The condition of a non-final clause must have that conforms to type Boolean and a multiplicity upper bound no greater than 1.
  
 returnStatementAssignmentsAfter
 
@@ -676,7 +676,7 @@ whileStatementAssignmentsBefore
 The assignments before the condition expression of a while statement are the same as the assignments before the while statement. The assignments before the block of the while statement are the same as the assignments after the condition expression.
  
 whileStatementCondition
-Condition expression must have type Boolean and multiplicity upper bound of 1.
+Condition expression must have that conforms to type Boolean and multiplicity upper bound of 1.
 The condition expression of a while statement must have type Boolean and a multiplicity upper bound of 1.
  
 whileStatementEnclosedStatements

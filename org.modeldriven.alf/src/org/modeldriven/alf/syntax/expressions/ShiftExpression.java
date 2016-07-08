@@ -73,18 +73,18 @@ public class ShiftExpression extends BinaryExpression {
 		return this.getImpl().shiftExpressionUpperDerivation();
 	}
 
-	/**
-	 * The first operand expression of a shift expression must have the type
-	 * BitString or Integer. The second operand expression must have the type
-	 * Integer.
-	 **/
+    /**
+     * The first operand expression of a shift expression must have a type that
+     * conforms to the type BitString or Integer. The second operand expression
+     * must have a type that conforms to the type Integer.
+     **/
 	public boolean shiftExpressionOperands() {
 		return this.getImpl().shiftExpressionOperands();
 	}
 
 	/**
 	 * BitString conversion is required if the first operand expression of a
-	 * shift expression has type Integer.
+	 * shift expression has a type that conforms to type Integer.
 	 **/
 	public boolean shiftExpressionIsBitStringConversionDerivation() {
 		return this.getImpl().shiftExpressionIsBitStringConversionDerivation();

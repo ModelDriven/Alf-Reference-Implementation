@@ -106,9 +106,9 @@ public class ShiftExpressionImpl extends BinaryExpressionImpl {
 	 */
 	
 	/**
-	 * The first operand expression of a shift expression must have the type 
-	 * BitString or Integer. The second operand expression must have the type 
-	 * Integer.
+     * The first operand expression of a shift expression must have a type that
+     * conforms to the type BitString or Integer. The second operand expression
+     * must have a type that conforms to the type Integer.
 	 **/
 	public boolean shiftExpressionOperands() {
         ShiftExpression self = this.getSelf();

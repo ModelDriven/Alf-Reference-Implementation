@@ -87,8 +87,8 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
 	}
 
 	/**
-	 * The condition of a non-final clause must have type Boolean and a
-	 * multiplicity upper bound no greater than 1.
+     * The condition of a non-final clause must have that conforms to type
+     * Boolean and a multiplicity upper bound no greater than 1.
 	 **/
 	public boolean nonFinalClauseConditionType() {
         Expression condition = this.getSelf().getCondition();

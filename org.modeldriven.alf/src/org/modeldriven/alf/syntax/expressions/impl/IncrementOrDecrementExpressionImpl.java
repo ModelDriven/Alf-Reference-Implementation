@@ -294,8 +294,8 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
      */
 
     /**
-     * The operand expression must have type Integer or Real and a multiplicity
-     * upper bound of 1.
+     * The operand expression must have a type that conforms to type Integer or
+     * Real and a multiplicity upper bound of 1.
      **/
 	public boolean incrementOrDecrementExpressionOperand() {
         IncrementOrDecrementExpression self = this.getSelf();

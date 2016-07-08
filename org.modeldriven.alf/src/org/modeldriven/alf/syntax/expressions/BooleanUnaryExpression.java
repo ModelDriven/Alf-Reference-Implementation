@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -69,10 +68,10 @@ public class BooleanUnaryExpression extends UnaryExpression {
 		return this.getImpl().booleanUnaryExpressionUpperDerivation();
 	}
 
-	/**
-	 * The operand expression of a Boolean unary expression must have type
-	 * Boolean and a multiplicity upper bound of 1.
-	 **/
+    /**
+     * The operand expression of a Boolean unary expression must have a type
+     * that conforms to type Boolean and a multiplicity upper bound of 1.
+     **/
 	public boolean booleanUnaryExpressionOperand() {
 		return this.getImpl().booleanUnaryExpressionOperand();
 	}

@@ -85,8 +85,8 @@ public class NumericUnaryExpressionImpl extends UnaryExpressionImpl {
 	 */
 
     /**
-     * The operand expression must have type Integer or Real and a multiplicity
-     * upper bound of 1.
+     * The operand expression must have a type that conforms to type Integer or
+     * Real and a multiplicity upper bound of 1.
      **/
 	public boolean numericUnaryExpressionOperand() {
 	    Expression operand = this.getSelf().getOperand();

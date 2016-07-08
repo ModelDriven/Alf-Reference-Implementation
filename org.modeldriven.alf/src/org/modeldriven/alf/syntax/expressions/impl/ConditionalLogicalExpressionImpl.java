@@ -87,7 +87,8 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
 	 */
 
 	/**
-	 * The operands of a conditional logical expression must have type Boolean.
+     * The operands of a conditional logical expression must have a type that 
+     * conforms to type Boolean.
 	 **/
 	public boolean conditionalLogicalExpressionOperands() {
         ConditionalLogicalExpression self = this.getSelf();

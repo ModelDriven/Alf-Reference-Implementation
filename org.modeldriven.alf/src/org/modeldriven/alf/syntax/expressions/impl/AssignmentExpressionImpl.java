@@ -560,14 +560,17 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 
     /**
      * For a compound assignment, if the operator is an arithmetic operator,
-     * then either the left-hand side and the right-hand side both have type
-     * Integer, the left-hand side has type Real and the right-hand side has
-     * type Integer or Real, or they both have type String and the operator is
-     * +. If the operator is a logical operator, then either the left-hand side
-     * and the right-hand side both have type Boolean or Bit String or the
-     * left-hand side has type Bit String and the right-hand side has type
-     * Integer. If the operator is a shift operator, then the left-hand side
-     * must have type Bit String and the right-hand side must have type Integer.
+     * then either the left-hand side and the right-hand side both have types
+     * that conform to type Integer, the left-hand side has a type that conforms
+     * to type Real and the right-hand side has a type that conforms to type
+     * Integer or Real, or they both have types that conform to type String and
+     * the operator is +. If the operator is a logical operator, then either the
+     * left-hand side and the right-hand side both have types that conform to
+     * type Boolean or Bit String or the left-hand side has a type that conforms
+     * to type Bit String and the right-hand side has a type that conforms to
+     * type Integer. If the operator is a shift operator, then the left-hand
+     * side must have a type that conforms to type Bit String and the right-hand
+     * side must have a type that conforms to type Integer.
      **/
 	public boolean assignmentExpressionCompoundAssignmentTypeConformance() {
 	    AssignmentExpression self = this.getSelf();

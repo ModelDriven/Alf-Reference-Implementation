@@ -78,7 +78,7 @@ public class LogicalExpressionImpl extends BinaryExpressionImpl {
 
     /**
      * BitString conversion is required if the first operand expression of a
-     * logical expression has type Integer.
+     * logical expression has a type that conforms to type Integer.
      **/
 	protected Boolean deriveIsBitStringConversion1() {
         Expression operand1 = this.getSelf().getOperand1();
@@ -88,7 +88,7 @@ public class LogicalExpressionImpl extends BinaryExpressionImpl {
 
     /**
      * BitString conversion is required if the second operand expression of a
-     * logical expression has type Integer.
+     * logical expression has a type that conforms to type Integer.
      **/
 	protected Boolean deriveIsBitStringConversion2() {
         Expression operand2 = this.getSelf().getOperand2();
@@ -166,9 +166,9 @@ public class LogicalExpressionImpl extends BinaryExpressionImpl {
 	 */
 
 	/**
-	 * The operands of a logical expression must have type Boolean, BitString or
-	 * Integer. However, if one of the operands is Boolean, the other must be 
-	 * also.
+     * The operands of a logical expression must have a type that conforms to
+     * type Boolean, Integer or BitString. However, if one of the operands is
+     * Boolean, then the other must also be Boolean.
 	 **/
 	public boolean logicalExpressionOperands() {
         LogicalExpression self = this.getSelf();
