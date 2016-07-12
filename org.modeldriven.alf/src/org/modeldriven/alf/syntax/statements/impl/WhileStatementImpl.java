@@ -68,12 +68,12 @@ public class WhileStatementImpl extends LoopStatementImpl {
      * before the block of the while statement are the same as the assignments
      * after the condition expression.
      *
-     * If a name is assigned before the block, but the assigned source for the
-     * name after the block is different than before the block, then the
-     * assigned source of the name after the while statement is the while
-     * statement. Otherwise it is the same as before the block. If a name is
-     * unassigned before the block of a while statement, then it is unassigned
-     * after the while statement, even if it is assigned after the block.
+     * If the assigned source for a name after the block of a while statement is
+     * different than before the block, then the assigned source of the name
+     * after the while statement is the while statement. Otherwise it is the
+     * same as before the block. If a name is unassigned before the block of a
+     * while statement and assigned after the block, then it has multiplicity
+     * lower bound of 0 after the while statement.
      **/
     @Override
     public Map<String, AssignedSource> deriveAssignmentAfter() {
@@ -92,11 +92,12 @@ public class WhileStatementImpl extends LoopStatementImpl {
                     assignmentsAfter = new HashMap<String,AssignedSource>(assignmentsAfter);
                     for (AssignedSource assignment: newAssignments) {
                         String name = assignment.getName();
-                        if (assignmentsAfter.containsKey(name) || this.isParameter(name)) {
-                            AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
-                            assignmentAfter.setSource(self);
-                            assignmentsAfter.put(name, assignmentAfter);
+                        AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
+                        assignmentAfter.setSource(self);
+                        if (!(assignmentsAfter.containsKey(name) || this.isParameter(name))) {
+                            assignmentAfter.setLower(0);
                         }
+                        assignmentsAfter.put(name, assignmentAfter);
                     }
                 }
             }
@@ -120,12 +121,12 @@ public class WhileStatementImpl extends LoopStatementImpl {
 	}
 
 	/**
-	 * If a name is assigned before the block, but the assigned source for the
-	 * name after the block is different than before the block, then the
-	 * assigned source of the name after the while statement is the while
-	 * statement. Otherwise it is the same as before the block. If a name is
-	 * unassigned before the block of a while statement, then it is unassigned
-	 * after the while statement, even if it is assigned after the block.
+     * If the assigned source for a name after the block of a while statement is
+     * different than before the block, then the assigned source of the name
+     * after the while statement is the while statement. Otherwise it is the
+     * same as before the block. If a name is unassigned before the block of a
+     * while statement and assigned after the block, then it has multiplicity
+     * lower bound of 0 after the while statement.
 	 **/
 	public boolean whileStatementAssignmentsAfter() {
 	    // Note: This is handled by overriding deriveAssignmentAfter.

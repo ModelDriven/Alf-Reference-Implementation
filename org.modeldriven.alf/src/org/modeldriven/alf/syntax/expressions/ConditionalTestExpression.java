@@ -119,22 +119,13 @@ public class ConditionalTestExpression extends Expression {
 	}
 
 	/**
-	 * If a name is unassigned after the first operand expression and has an
-	 * assigned source after one of the other operand expression, then it must
-	 * have an assigned source after both of those expressions.
-	 **/
-	public boolean conditionalTestExpressionAssignmentsAfter() {
-		return this.getImpl().conditionalTestExpressionAssignmentsAfter();
-	}
-
-	/**
 	 * Returns the assignments after the first operand expression, plus
 	 * assignments for any newly defined local names in the second and third
 	 * operand expressions. Local names that exist after the first operand
 	 * expression but are reassigned in the second or third operand expressions
 	 * are adjusted to have the conditional-test expression as their assigned
 	 * source. Local names that are newly defined in the second and third
-	 * operand expressions have the conditional-text expression as their source
+	 * operand expressions have the conditional-test expression as their source
 	 * and a type that is the effective common ancestor (if one exists) of the
 	 * types from the assignments after each of the second and third operands.
 	 **/
@@ -179,10 +170,6 @@ public class ConditionalTestExpression extends Expression {
 		if (!this.conditionalTestExpressionAssignmentsBefore()) {
 			violations.add(new ConstraintViolation(
 					"conditionalTestExpressionAssignmentsBefore", this));
-		}
-		if (!this.conditionalTestExpressionAssignmentsAfter()) {
-			violations.add(new ConstraintViolation(
-					"conditionalTestExpressionAssignmentsAfter", this));
 		}
 		Expression operand1 = this.getOperand1();
 		if (operand1 != null) {

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -15,6 +14,7 @@ import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -75,10 +75,12 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
 	}
 
 	public boolean conditionalLogicalExpressionLower() {
+	    this.getSelf().getLower();
 		return true;
 	}
 
 	public boolean conditionalLogicalExpressionUpper() {
+	    this.getSelf().getUpper();
 		return true;
 	}
 	
@@ -115,16 +117,15 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
 		return true;
 	} // validateAssignments
 
-	/**
-	 * If a name has the same assigned source after the second operand
-	 * expression as before it, then that is its assigned source after the
-	 * conditional logical expression. If a name is unassigned before the second
-	 * operand expression, then it is considered unassigned after the
-	 * conditional logical expression, even if it has an assigned source after
-	 * the second operand expression. Otherwise its assigned source after the
-	 * conditional logical expression is the conditional logical expression
-	 * itself.
-	 **/
+    /**
+     * If a name has the same assigned source after the second operand
+     * expression as before it, then that is its assigned source after the
+     * conditional logical expression. Otherwise its assigned source after the
+     * conditional logical expression is the conditional logical expression
+     * itself. If a name is unassigned before the second operand expression but
+     * assigned after it, then it has a multiplicity lower bound of 0 after the
+     * conditional logical expression.
+     **/
 	@Override
 	public Map<String, AssignedSource> updateAssignmentMap() {
         ConditionalLogicalExpression self = this.getSelf();
@@ -138,13 +139,15 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
         }
         if (operand2 != null) {
             operand2.getImpl().setAssignmentBefore(assignmentsAfter);
+            assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
             for (AssignedSource assignment: operand2.getImpl().getNewAssignments()) {
                 String name = assignment.getName();
-                if (assignmentsBefore.containsKey(name)) {
-                    AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(assignment);
-                    newAssignment.setSource(self);
-                    assignmentsAfter.put(name, newAssignment);
+                AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(assignment);
+                newAssignment.setSource(self);
+                if (!assignmentsBefore.containsKey(name)) {
+                    newAssignment.setLower(0);
                 }
+                assignmentsAfter.put(name, newAssignment);
             }
         }
         return assignmentsAfter;
@@ -164,14 +167,17 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
 	public ConditionalTestExpression getConditionalTestExpression() {
 	    if (this.conditionalTestExpression == null) {
 	        ConditionalLogicalExpression self = this.getSelf();
+	        Expression operand1 = self.getOperand1();
 
 	        boolean isAnd = "&&".equals(self.getOperator());
 	        BooleanLiteralExpression literalExpression = 
 	            new BooleanLiteralExpression();
 	        literalExpression.setImage(isAnd? "false": "true");
+	        literalExpression.getImpl().setAssignmentAfter(
+	                operand1.getImpl().getAssignmentAfterMap());
 
 	        this.conditionalTestExpression = new ConditionalTestExpression();
-	        this.conditionalTestExpression.setOperand1(self.getOperand1());
+	        this.conditionalTestExpression.setOperand1(operand1);
 	        if (isAnd) {
 	            this.conditionalTestExpression.setOperand2(self.getOperand2());
 	            this.conditionalTestExpression.setOperand3(literalExpression);

@@ -74,14 +74,14 @@ public class WhileStatement extends Statement {
 		return this.getImpl().whileStatementAssignmentsBefore();
 	}
 
-	/**
-	 * If a name is assigned before the block, but the assigned source for the
-	 * name after the block is different than before the block, then the
-	 * assigned source of the name after the while statement is the while
-	 * statement. Otherwise it is the same as before the block. If a name is
-	 * unassigned before the block of a while statement, then it is unassigned
-	 * after the while statement, even if it is assigned after the block.
-	 **/
+    /**
+     * If the assigned source for a name after the block of a while statement is
+     * different than before the block, then the assigned source of the name
+     * after the while statement is the while statement. Otherwise it is the
+     * same as before the block. If a name is unassigned before the block of a
+     * while statement and assigned after the block, then it has multiplicity
+     * lower bound of 0 after the while statement.
+     **/
 	public boolean whileStatementAssignmentsAfter() {
 		return this.getImpl().whileStatementAssignmentsAfter();
 	}

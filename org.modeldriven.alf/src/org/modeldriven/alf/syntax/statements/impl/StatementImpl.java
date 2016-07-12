@@ -298,6 +298,10 @@ public abstract class StatementImpl extends DocumentedElementImpl {
                        high;
                 types.add(assignment.getType());
             }
+            if (assignments.size() < blocks.size() && 
+                    assignmentsBefore.get(name) == null) {
+                low = 0;
+            }
             mergedAssignments.put(name, AssignedSourceImpl.makeAssignment(name,
                     this.getSelf(),
                     ClassifierDefinitionImpl.commonAncestor(types),

@@ -13,7 +13,8 @@ class Statements_Conditional specializes Test {
 		this.test(
 			reading, condition1, condition2, condition3, 
 			year, month, numDays,
-			switch1, switch2, switch3
+			switch1, switch2, switch3,
+			empty, nonEmpty
 		);
 		
 		AssertEqual("reading", reading, 150);
@@ -26,6 +27,8 @@ class Statements_Conditional specializes Test {
 		AssertEqual("switch1", switch1, 3);
 		AssertEqual("switch2", switch2, 1);
 		AssertEqual("switch3", switch3, 1);
+		AssertEqual("empty", empty, null);
+		AssertEqual("nonEmpty", nonEmpty, 1);
 	
 	  	this.done();
 	}
@@ -43,7 +46,8 @@ class Statements_Conditional specializes Test {
     test(out reading1 : Integer, 
     	 out condition1: Condition, out condition2: Condition, out condition3: Condition,
     	 out year: Integer, out month: Integer, out numDays: Integer,
-    	 out switch1: Integer, out switch2: Integer, out switch3: Integer ) {
+    	 out switch1: Integer, out switch2: Integer, out switch3: Integer,
+    	 out empty: Integer[0..1], out nonEmpty: Integer[0..1] ) {
     
       // Setup
       reading1 = 0;
@@ -89,6 +93,12 @@ class Statements_Conditional specializes Test {
         condition3 = Condition::critical; }
       else {
         condition3 = Condition::error; }
+        
+      if (false) {
+        a = 0;
+      } else {
+        b = 1;
+      }
       
       switch (year) {
       	case 2012:
@@ -132,6 +142,12 @@ class Statements_Conditional specializes Test {
       	case 0: switch3 = 0;
       	default: switch3 = 1;
       }
+      
+      switch (false) {
+        case true: a = 1;
+	  }
 	  
+	  empty = a;
+	  nonEmpty = b;
     }
 }

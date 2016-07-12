@@ -78,10 +78,6 @@ conditionalLogicalExpressionOperands
 Operands must have type Boolean.
 The operands of a conditional logical expression must have a type that conforms to type Boolean.
  
-conditionalTestExpressionAssignmentsAfter
-
-If a name is unassigned after the first operand expression and has an assigned source after one of the other operand expression, then it must have an assigned source after both of those expressions.
- 
 conditionalTestExpressionAssignmentsBefore
 
 The assignments before the first operand expression of a conditional-test expression are the same as those before the conditional-test expression. The assignments before the second and third operand expressions are the same as those after the first operand expression.
@@ -412,9 +408,9 @@ One or more signal instance names already assigned.
 Any name defined in an accept block of an accept statement must be unassigned before the accept statement.
  
 acceptStatementNewAssignments
-New names must be defined in every accept block.
-If a name is unassigned before an accept statement and assigned in any block of an accept statement, then it must be assigned in every block.
- 
+
+Any name that is unassigned before an accept statement and is assigned in one or more blocks of the accept statement, has, after the accept statement, a type that is is the effective common ancestor of the types of the name in each block in which it is defined, with a multiplicity lower bound that is the minimum of the lower bound for the name in each block (where it is considered to have multiplicity lower bound of zero for blocks in which it is not defined), and a multiplicity upper bound that is the maximum for the name in each block in which it is defined. 
+
 acceptStatementSignals
 Referenced signals must have receptions; signals cannot be referenced in more than one accept block.
 The containing behavior of an accept statement must have receptions for all signals from all accept blocks of the accept statement. No signal may be referenced in more than one accept block of an accept statement.
@@ -513,7 +509,7 @@ The assignments before the expression of an expression statement are the same as
  
 forStatementAssignmentsAfter
 
-The loop variables are unassigned after a for statement. Other than the loop variables, if the assigned source for a name after the body of a for statement is the same as after the for variable definitions, then the assigned source for the name after the for statement is the same as after the for variable definitions. If a name is unassigned after the for variable definitions, then it is unassigned after the for statement (even if it is assigned in the body of the for statement). If, after the loop variable definitions, a name has an assigned source, and it has a different assigned source after the body of the for statement, then the assigned source after the for statement is the for statement itself.
+The loop variables are unassigned after a for statement. Other than the loop variables, if the assigned source for a name after the body of a for statement is the same as after the for variable definitions, then the assigned source for the name after the for statement is the same as after the for variable definitions. If name has a different assigned source after the body of the for statement than after the for variable definitions, then the assigned source after the for statement is the for statement itself.
  
 forStatementAssignmentsBefore
 
@@ -532,7 +528,7 @@ forStatementParallelAnnotationNames
 A @parallel annotation of a for statement may include a list of names. Each such name must be already assigned after the loop variable definitions of the for statement, with a multiplicity of [0..*]. These names may only be used within the body of the for statement as the first argument to for the CollectionFunctions::add behavior.
  
 forStatementParallelAssignmentsAfter
-
+Only @parallel names can be updated in a parallel for statement.
 If, after the loop variable definitions of a parallel for statement, a name has an assigned source, then it must have the same assigned source after the block of the for statement. Other than for names defined in the @parallel annotation of the for statement, the assigned source for such names is the same after the for statement as before it. Any names defined in the @parallel annotation have the for statement itself as their assigned source after the for statement. Other than names given in the @parallel annotation, if a name is unassigned after the loop variable definitions, then it is considered unassigned after the for statement, even if it is assigned in the block of the for statement.
  
 forStatementVariableDefinitions
@@ -540,9 +536,9 @@ forStatementVariableDefinitions
 The isFirst attribute of the first loop variable definition for a for statement is true while the isFirst attribute is false for any other definitions.
  
 ifStatementAssignmentsAfter
-A new local name must be defined in all clauses, including an else clause.
-If an if statement does not have a final else clause, then any name that is not an out parameter and is unassigned before the if statement is unassigned after the if statement. If an if statement does have a final else clause, then any name that is unassigned before the if statement and is assigned after any one clause of the if statement must also be assigned after every other clause. The type of such names after the if statement is the effective common ancestor of the types of the name in each clause with a multiplicity lower bound that is the minimum of the lower bound for the name in each clause and a multiplicity upper bound that is the maximum for the name in each clause. For a name that has an assigned source after any clause of an if statement that is different than before that clause, then the assigned source after the if statement is the if statement. Otherwise, the assigned source of a name after the if statement is the same as before the if statement.
- 
+
+Any name that is unassigned before an if statement and is assigned in one or more clauses of the if statement, has, after the if statement, a type that is is the effective common ancestor of the types of the name in each clause in which it is defined, with a multiplicity lower bound that is the minimum of the lower bound for the name in each clause (where it is considered to have multiplicity lower bound of zero for clauses in which it is not defined), and a multiplicity upper bound that is the maximum for the name in each clause in which it is defined. For a name that has an assigned source after any clause of an if statement that is different than before that clause, then the assigned source after the if statement is the if statement. Otherwise, the assigned source of a name after the if statement is the same as before the if statement.
+
 ifStatementAssignmentsBefore
 
 The assignments before all the non-final clauses of an if statement are the same as the assignments before the if statement. If the statement has a final clause, then the assignments before that clause are also the same as the assignments before the if statement.
@@ -644,8 +640,8 @@ Case expressions multiplicity upper bounds must be no greater than 1.
 All the case expressions of a switch clause must have a multiplicity no greater than 1.
  
 switchStatementAssignments
-A new local name must be defined in all clauses, including a final clause.
-If a switch statement does not have a final default clause, then any name that is not an out parameter and is unassigned before the switch statement is unassigned after the switch statement. If a switch statement does have a final default clause, then any name that is unassigned before the switch statement and is assigned after any one clause of the switch statement must also be assigned after every other clause. The type of such names after the switch statement is the effective common ancestor of the types of the name in each clause with a multiplicity lower bound that is the minimum of the lower bound for the name in each clause and a multiplicity upper bound that is the maximum for the name in each clause. 
+
+Any name that is unassigned before a switch statement and is assigned in one or more clauses of the switch statement, has, after the switch statement, a type that is is the effective common ancestor of the types of the name in each clause in which it is defined, with a multiplicity lower bound that is the minimum of the lower bound for the name in each clause (where it is considered to have multiplicity lower bound of zero for clauses in which it is not defined), and a multiplicity upper bound that is the maximum for the name in each clause in which it is defined.
  
 switchStatementAssignmentsAfter
 
@@ -669,7 +665,7 @@ A switch statement expression must have a multiplicity no greater than 1.
 
 whileStatementAssignmentsAfter
 
-If a name is assigned before the block, but the assigned source for the name after the block is different than before the block, then the assigned source of the name after the while statement is the while statement. Otherwise it is the same as before the block.  If a name is unassigned before the block of a while statement, then it is unassigned after the while statement, even if it is assigned after the block.
+f the assigned source for a name after the block of a while statement, then the assigned source of the name after the while statement is the while statement. Otherwise it is the same as before the block.  If a name is unassigned before the block of a while statement and assigned after the block, then it has multiplicity lower bound of 0 after the while statement.
  
 whileStatementAssignmentsBefore
 

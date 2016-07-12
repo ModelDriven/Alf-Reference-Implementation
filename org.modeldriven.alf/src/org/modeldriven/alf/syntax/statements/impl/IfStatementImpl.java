@@ -1,18 +1,15 @@
-
 /*******************************************************************************
- * Copyright 2011, 2015 Data Access Technologies, Inc. (Model Driven Solutions)
- * Copyright 2013 Ivar Jacobson International SA
- * 
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
- * http://www.gnu.org/licenses/gpl-3.0.html. 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
  *******************************************************************************/
 
 package org.modeldriven.alf.syntax.statements.impl;
 
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -34,8 +31,6 @@ public class IfStatementImpl extends StatementImpl {
 	private Boolean isAssured = null; // DERIVED
 	private Boolean isDeterminate = null; // DERIVED
 	
-	private NamespaceDefinition currentScope = null;
-
 	public IfStatementImpl(IfStatement self) {
 		super(self);
 	}
@@ -143,16 +138,6 @@ public class IfStatementImpl extends StatementImpl {
         Map<String, AssignedSource> assignmentsAfter = 
             new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
         assignmentsAfter.putAll(this.mergeAssignments(blocks, assignmentsBefore));
-        /*
-        if (finalClause == null) {
-            for (Object name: assignmentsAfter.keySet().toArray()) {
-                if (!(assignmentsBefore.containsKey(name) ||
-                        this.isParameter((String)name))) {
-                    assignmentsAfter.remove(name);
-                }
-            }
-        }
-        */
         return assignmentsAfter;
     }
     
@@ -186,57 +171,21 @@ public class IfStatementImpl extends StatementImpl {
 	}
 
     /**
-     * If an if statement does not have a final else clause, then any name that
-     * is not an out parameter and is unassigned before the if statement is
-     * unassigned after the if statement. If an if statement does have a final
-     * else clause, then any name that is unassigned before the if statement and
-     * is assigned after any one clause of the if statement must also be
-     * assigned after every other clause. The type of such names after the if
-     * statement is the effective common ancestor of the types of the name in
-     * each clause with a multiplicity lower bound that is the minimum of the
-     * lower bound for the name in each clause and a multiplicity upper bound
-     * that is the maximum for the name in each clause. For a name that has an
-     * assigned source after any clause of an if statement that is different
+     * Any name that is unassigned before an if statement and is assigned in one
+     * or more clauses of the if statement, has, after the if statement, a type
+     * that is is the effective common ancestor of the types of the name in each
+     * clause in which it is defined, with a multiplicity lower bound that is
+     * the minimum of the lower bound for the name in each clause (where it is
+     * considered to have multiplicity lower bound of zero for clauses in which
+     * it is not defined), and a multiplicity upper bound that is the maximum
+     * for the name in each clause in which it is defined. For a name that has
+     * an assigned source after any clause of an if statement that is different
      * than before that clause, then the assigned source after the if statement
      * is the if statement. Otherwise, the assigned source of a name after the
      * if statement is the same as before the if statement.
      **/
 	public boolean ifStatementAssignmentsAfter() {
-	    // Note: This is partly handled by overriding deriveAssignmentAfter.
-	    IfStatement self = this.getSelf();
-	    Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
-	    Map<String, AssignedSource> assignmentsAfter = this.getAssignmentAfterMap();
-	    if (self.getFinalClause() == null) {
-	        for (String name: assignmentsAfter.keySet()) {
-	            if (!(assignmentsBefore.containsKey(name) || 
-	                    this.isParameter(name))) {
-	                return false;
-	            }
-	        }
-	    } else {
-	        Collection<Block> blocks = this.getAllBlocks();
-	        if (blocks.size() > 1) {
-	            Map<String, Integer> definitionCount = new HashMap<String, Integer>();
-	            for (Block block: blocks) {
-	                for (AssignedSource assignment: block.getImpl().getNewAssignments()) {
-	                    String name = assignment.getName();
-	                    Integer count = definitionCount.get(name);
-	                    if (count == null) {
-	                        definitionCount.put(name, 1);
-	                    } else {
-	                        definitionCount.put(name, count+1);
-	                    }
-	                }
-	            }
-	            int n = blocks.size();
-	            for (String name: definitionCount.keySet()) {
-	                if (!assignmentsBefore.containsKey(name) && 
-	                        definitionCount.get(name) != n) {
-	                    return false;
-	                }
-	            }
-	        }
-	    }
+	    // Note: This is handled by overriding deriveAssignmentAfter.
 		return true;
 	}
 
@@ -267,7 +216,6 @@ public class IfStatementImpl extends StatementImpl {
 	} // annotationAllowed
 	
 	public void setCurrentScope(NamespaceDefinition currentScope) {
-	    this.currentScope = currentScope;
 	    IfStatement self = this.getSelf();
 	    for (ConcurrentClauses clause: self.getNonFinalClauses()) {
 	        clause.getImpl().setCurrentScope(currentScope);
@@ -278,26 +226,6 @@ public class IfStatementImpl extends StatementImpl {
 	    }
 	}
 	
-	private boolean isParameter(String name) {
-	    QualifiedName qualifiedName = new QualifiedName();
-	    qualifiedName.getImpl().addName(name);
-	    qualifiedName.getImpl().setCurrentScope(currentScope);
-	    return qualifiedName.getImpl().getParameterReferent() != null;
-	}
-	
-	private Collection<Block> getAllBlocks() {
-	    IfStatement self = this.getSelf();
-        Collection<Block> blocks = new ArrayList<Block>();
-        for (ConcurrentClauses clauses: self.getNonFinalClauses()) {
-            blocks.addAll(clauses.getImpl().getBlocks());
-        }
-        Block finalClause = self.getFinalClause();
-        if (finalClause != null) {
-            blocks.add(finalClause);
-        }
-	    return blocks;
-	}
-
     @Override
     protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
