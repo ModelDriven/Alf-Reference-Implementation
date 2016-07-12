@@ -106,12 +106,10 @@ public class ForStatementImpl extends LoopStatementImpl {
      * loop variables, if the assigned source for a name after the body of a for
      * statement is the same as after the for variable definitions, then the
      * assigned source for the name after the for statement is the same as after
-     * the for variable definitions. If a name is unassigned after the for
-     * variable definitions, then it is unassigned after the for statement (even
-     * if it is assigned in the body of the for statement). If, after the loop
-     * variable definitions, a name has an assigned source, and it has a
-     * different assigned source after the body of the for statement, then the
-     * assigned source after the for statement is the for statement itself.
+     * the for variable definitions. If name has a different assigned source
+     * after the body of the for statement than after the for variable
+     * definitions, then the assigned source after the for statement is the for
+     * statement itself.
      *
      * If, after the loop variable definitions of a parallel for statement, a
      * name has an assigned source, then it must have the same assigned source
@@ -153,11 +151,12 @@ public class ForStatementImpl extends LoopStatementImpl {
 	        body.getImpl().setAssignmentBefore(assignmentsBefore);
 	        for (AssignedSource newAssignment: body.getImpl().getNewAssignments()) {
 	            String name = newAssignment.getName();
-	            if (assignmentsBefore.containsKey(name) || this.isParameter(name)) {
-	                AssignedSource assignment = AssignedSourceImpl.makeAssignment(newAssignment);
-	                assignment.setSource(self);
-	                assignmentsAfter.put(name, assignment);
+                AssignedSource assignment = AssignedSourceImpl.makeAssignment(newAssignment);
+                assignment.setSource(self);
+	            if (!(assignmentsBefore.containsKey(name) || this.isParameter(name))) {
+	                assignment.setLower(0);
 	            }
+                assignmentsAfter.put(name, assignment);
 	        }
 	    }
 	    for (LoopVariableDefinition variableDefinition: variableDefinitions) {
@@ -197,16 +196,14 @@ public class ForStatementImpl extends LoopStatementImpl {
 	}
 
 	/**
-	 * The loop variables are unassigned after a for statement. Other than the
-	 * loop variables, if the assigned source for a name after the body of a for
-	 * statement is the same as after the for variable definitions, then the
-	 * assigned source for the name after the for statement is the same as after
-	 * the for variable definitions. If a name is unassigned after the for
-	 * variable definitions, then it is unassigned after the for statement (even
-	 * if it is assigned in the body of the for statement). If, after the loop
-	 * variable definitions, a name has an assigned source, and it has a
-	 * different assigned source after the body of the for statement, then the
-	 * assigned source after the for statement is the for statement itself.
+     * The loop variables are unassigned after a for statement. Other than the
+     * loop variables, if the assigned source for a name after the body of a for
+     * statement is the same as after the for variable definitions, then the
+     * assigned source for the name after the for statement is the same as after
+     * the for variable definitions. If name has a different assigned source
+     * after the body of the for statement than after the for variable
+     * definitions, then the assigned source after the for statement is the for
+     * statement itself.
 	 **/
 	public boolean forStatementAssignmentsAfter() {
 	    // Note: This is handled by overriding deriveAssignmentAfter.

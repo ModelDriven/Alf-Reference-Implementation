@@ -167,31 +167,6 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 		return true;
 	}
 
-	/**
-	 * If a name is unassigned after the first operand expression and has an
-	 * assigned source after one of the other operand expression, then it must
-	 * have an assigned source after both of those expressions.
-	 **/
-	public boolean conditionalTestExpressionAssignmentsAfter() {
-        ConditionalTestExpression self = this.getSelf();
-        Expression operand1 = self.getOperand1();
-        Expression operand2 = self.getOperand2();
-        Expression operand3 = self.getOperand3();
-        Map<String, AssignedSource> assignmentsAfter1 = operand1 == null?
-                this.getAssignmentBeforeMap(): 
-                operand1.getImpl().getAssignmentAfterMap();
-        for (AssignedSource assignment: this.getNewAssignments()) {
-            String name = assignment.getName();
-            if (!assignmentsAfter1.containsKey(name)) {
-                if (operand2 == null || operand2.getImpl().getAssignmentAfter(name) == null ||
-                    operand3 == null || operand3.getImpl().getAssignmentAfter(name) == null) {
-                    return false;
-                }
-            }
-        }
-		return true;
-	}
-	
 	/*
 	 * Helper Methods
 	 */

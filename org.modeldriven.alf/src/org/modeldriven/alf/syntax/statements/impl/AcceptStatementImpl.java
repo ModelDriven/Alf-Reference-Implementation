@@ -264,40 +264,18 @@ public class AcceptStatementImpl extends StatementImpl {
 		return true;
 	}
 
-	/**
-	 * If a name is unassigned before an accept statement and assigned in any
-	 * block of an accept statement, then it must be assigned in every block.
-	 **/
+    /**
+     * Any name that is unassigned before an accept statement and is assigned in
+     * one or more blocks of the accept statement, has, after the accept
+     * statement, a type that is is the effective common ancestor of the types
+     * of the name in each block in which it is defined, with a multiplicity
+     * lower bound that is the minimum of the lower bound for the name in each
+     * block (where it is considered to have multiplicity lower bound of zero
+     * for blocks in which it is not defined), and a multiplicity upper bound
+     * that is the maximum for the name in each block in which it is defined.
+     **/
 	public boolean acceptStatementNewAssignments() {
-	    AcceptStatement self = this.getSelf();
-	    Collection<AcceptBlock> acceptBlocks = self.getAcceptBlock();
-	    if (acceptBlocks.size() > 1) {
-	        this.deriveAssignmentAfter(); // Force computing of assignments.
-	        Map<String, Integer> definitionCount = new HashMap<String, Integer>();
-	        for (AcceptBlock acceptBlock: acceptBlocks) {
-	            Block block = acceptBlock.getBlock();
-	            if (block != null) {
-	                for (AssignedSource assignment: block.getImpl().getNewAssignments()) {
-	                    String name = assignment.getName();
-	                    Integer count = definitionCount.get(name);
-	                    if (count == null) {
-	                        definitionCount.put(name, 1);
-	                    } else {
-	                        definitionCount.put(name, count+1);
-	                    }
-	                }
-	            }
-	        }
-            Map<String, AssignedSource> assignmentsBefore = 
-                this.getAssignmentBeforeMap();
-	        int n = acceptBlocks.size();
-	        for (String name: definitionCount.keySet()) {
-	            if (!assignmentsBefore.containsKey(name) && 
-	                    definitionCount.get(name) != n) {
-	                return false;
-	            }
-	        }
-	    }
+        // Note: This is handled by deriveAssignmentsAfter.
 		return true;
 	}
 

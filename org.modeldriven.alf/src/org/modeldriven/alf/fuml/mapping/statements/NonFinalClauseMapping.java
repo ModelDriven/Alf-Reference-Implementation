@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -42,19 +41,24 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
     /**
      * 1. Each if clause maps to a clause of the conditional node.
      * 
-     * 2. each clause of the conditional node also must have a body output pin
+     * 2. Each clause of the conditional node also must have a body output pin
      * from within the clause identified for each result pin of the conditional
-     * node. If a name is assigned within a clause and the assigned source for
-     * that name within the clause is a pin on an action within the body of the
-     * clause, then that pin is used as the clause body output pin corresponding
-     * to that local name. Otherwise, a structured activity node is added to the
-     * mapping of the clause as follows: The structured activity node has one
-     * input pin and one output pin, with an object flow from the input pin to
-     * the output pin contained within the structured activity node. There is an
-     * object flow from the assigned source for the name after the clause (which
-     * may be from inside or outside the clause) to the input pin of the
-     * structured activity node. The output pin of the structured activity node
-     * is then used as the clause body output pin corresponding to the name.
+     * node. If a name corresponding to a conditional-node result pin is
+     * unassigned before a clause not assigned within the clause, then a value
+     * specification action with a literal null value is added to the mapping of
+     * the clause, and the result pin of that action is used as the clause body
+     * output pin corresponding to the local name. If a name is assigned within
+     * a clause and the assigned source for that name within the clause is a pin
+     * on an action within the body of the clause, then that pin is used as the
+     * clause body output pin corresponding to that local name. Otherwise, a
+     * structured activity node is added to the mapping of the clause as
+     * follows: The structured activity node has one input pin and one output
+     * pin, with an object flow from the input pin to the output pin contained
+     * within the structured activity node. There is an object flow from the
+     * assigned source for the name after the clause (which may be from inside
+     * or outside the clause) to the input pin of the structured activity node.
+     * The output pin of the structured activity node is then used as the clause
+     * body output pin corresponding to the name.
      */
     
     // NOTE: This should be called before mapping.
@@ -167,16 +171,21 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	    List<OutputPin> bodyOutputs = new ArrayList<OutputPin>();
         if (assignedNames != null) {
             for (String name: assignedNames) {
+                ActivityNode bodyOutput = null;
                 AssignedSource assignment = assignments.get(name);
-                if (assignment != null) {
+                if (assignment == null) {
+                    ValueSpecificationAction nullAction = 
+                            parentMapping.createActivityGraph().addNullValueSpecificationAction();
+                    bodyElements.add(nullAction);
+                    bodyOutput = nullAction.getResult();
+                } else {
                     ElementReference type = assignment.getType();
                     FumlMapping mapping = parentMapping.fumlMap(assignment);
                     if (!(mapping instanceof AssignedSourceMapping)) {
                         parentMapping.throwError("Error mapping source for " + 
                                 name + ": " + mapping.getErrorMessage());
                     } else {
-                        ActivityNode bodyOutput = 
-                            ((AssignedSourceMapping)mapping).getActivityNode();
+                        bodyOutput = ((AssignedSourceMapping)mapping).getActivityNode();
                         if (!(bodyOutput instanceof OutputPin && 
                                 ActivityGraph.isContainedIn(
                                         (OutputPin)bodyOutput, bodyElements))) {
@@ -211,9 +220,9 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                             bodyOutput = passthruNode.getStructuredNodeOutput().get(0);
                         }
                         
-                        bodyOutputs.add((OutputPin)bodyOutput);
                     }
                 }
+                bodyOutputs.add((OutputPin)bodyOutput);
             }
         }
         

@@ -121,18 +121,16 @@ public class SwitchStatement extends Statement {
 		return this.getImpl().switchStatementAssignmentsAfter();
 	}
 
-	/**
-	 * If a switch statement does not have a final default clause, then any name
-	 * that is not an out parameter and is unassigned before the switch
-	 * statement is unassigned after the switch statement. If a switch statement
-	 * does have a final default clause, then any name that is unassigned before
-	 * the switch statement and is assigned after any one clause of the switch
-	 * statement must also be assigned after every other clause. The type of
-	 * such names after the switch statement is the effective common ancestor of
-	 * the types of the name in each clause with a multiplicity lower bound that
-	 * is the minimum of the lower bound for the name in each clause and a
-	 * multiplicity upper bound that is the maximum for the name in each clause.
-	 **/
+    /**
+     * Any name that is unassigned before a switch statement and is assigned in
+     * one or more clauses of the switch statement, has, after the switch
+     * statement, a type that is is the effective common ancestor of the types
+     * of the name in each clause in which it is defined, with a multiplicity
+     * lower bound that is the minimum of the lower bound for the name in each
+     * clause (where it is considered to have multiplicity lower bound of zero
+     * for clauses in which it is not defined), and a multiplicity upper bound
+     * that is the maximum for the name in each clause in which it is defined.
+     **/
 	public boolean switchStatementAssignments() {
 		return this.getImpl().switchStatementAssignments();
 	}

@@ -233,51 +233,17 @@ public class SwitchStatementImpl extends StatementImpl {
 	}
 
 	/**
-	 * If a switch statement does not have a final default clause, then any name
-	 * that is unassigned before the switch statement is unassigned after the
-	 * switch statement. If a switch statement does have a final default clause,
-	 * then any name that is unassigned before the switch statement and is
-	 * assigned after any one clause of the switch statement must also be
-	 * assigned after every other clause. The type of such names after the
-	 * switch statement is the effective common ancestor of the types of the
-	 * name in each clause with a multiplicity lower bound that is the minimum
-	 * of the lower bound for the name in each clause and a multiplicity upper
-	 * bound that is the maximum for the name in each clause.
+     * Any name that is unassigned before a switch statement and is assigned in
+     * one or more clauses of the switch statement, has, after the switch
+     * statement, a type that is is the effective common ancestor of the types
+     * of the name in each clause in which it is defined, with a multiplicity
+     * lower bound that is the minimum of the lower bound for the name in each
+     * clause (where it is considered to have multiplicity lower bound of zero
+     * for clauses in which it is not defined), and a multiplicity upper bound
+     * that is the maximum for the name in each clause in which it is defined.
 	 **/
 	public boolean switchStatementAssignments() {
-        // Note: This is partly handled by overriding deriveAssignmentAfter.
-        SwitchStatement self = this.getSelf();
-        Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
-        Map<String, AssignedSource> assignmentsAfter = this.getAssignmentAfterMap();
-        if (self.getDefaultClause() == null) {
-            for (String name: assignmentsAfter.keySet()) {
-                if (!assignmentsBefore.containsKey(name)) {
-                    return false;
-                }
-            }
-        } else {
-            Collection<Block> blocks = this.getAllBlocks();
-            if (blocks.size() > 1) {
-                Map<String, Integer> definitionCount = new HashMap<String, Integer>();
-                for (Block block: blocks) {
-                    for (AssignedSource assignment: block.getImpl().getNewAssignments()) {
-                        String name = assignment.getName();
-                        Integer count = definitionCount.get(name);
-                        if (count == null) {
-                            definitionCount.put(name, 1);
-                        } else {
-                            definitionCount.put(name, count + 1);
-                        }
-                    }
-                }
-                int n = blocks.size();
-                for (int count: definitionCount.values()) {
-                    if (count != n) {
-                        return false;
-                    }
-                }
-            }
-        }
+        // Note: This is handled by overriding deriveAssignmentAfter.
         return true;
 	}
 
@@ -334,19 +300,6 @@ public class SwitchStatementImpl extends StatementImpl {
         }
 	    
 	}
-
-    private Collection<Block> getAllBlocks() {
-        SwitchStatement self = this.getSelf();
-        Collection<Block> blocks = new ArrayList<Block>();
-        for (SwitchClause clause: self.getNonDefaultClause()) {
-            blocks.add(clause.getImpl().getBlock());
-        }
-        Block defaultClause = self.getDefaultClause();
-        if (defaultClause != null) {
-            blocks.add(defaultClause);
-        }
-        return blocks;
-    }
 
     @Override
     protected void bindTo(SyntaxElement base,

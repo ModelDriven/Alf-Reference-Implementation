@@ -11,7 +11,7 @@ class Expressions_Operator specializes Test {
 		super(tester);
 
 	    this.test(i, j, bs, h, a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, e9,
-	      f, f1, f2, x, y, z, r);
+	      f, f1, f2, x, y, z, r, k1, k2, k3, k4);
 	      
 	    AssertEqual("i", i, -1);
 	    AssertEqual("j", j, 2);
@@ -43,6 +43,11 @@ class Expressions_Operator specializes Test {
 	    AssertList("z", z, Integer[]{1,2});
 	    
 	    AssertEqual("r", r, 2);
+	    
+	    AssertEqual("k1", k1, 1);
+	    AssertEqual("k2", k2, 1);
+	    AssertEqual("k3", k3, 1);
+	    AssertEqual("k4", k4, null);
 	
 	    this.done();
 	}
@@ -70,7 +75,8 @@ class Expressions_Operator specializes Test {
      out e1: Boolean, out e2: Boolean, out e3: Boolean, out e4: Boolean, out e5: Boolean,
      out e6: Boolean, out e7: Boolean, out e8: Boolean, out e9: Boolean,
      out f: Boolean, out f1: Boolean, out f2: Boolean,
-     out x: any, out y: any[*] sequence, out z: Integer[], out r: Integer) {
+     out x: any, out y: any[*] sequence, out z: Integer[], out r: Integer,
+     out k1: Integer[0..1], out k2: Integer[0..1], out k3: Integer[0..1], out k4: Integer[0..1]) {
     
     employee = new Employee();
     monitor = new Monitor();
@@ -128,14 +134,23 @@ class Expressions_Operator specializes Test {
     e8 = null!=employee.name;
     e9 = null==null;
     
-    f = i < j & (i > j | f);    
+    f = i < j & (i > j | f); 
       
     f1 = i > 0 && 2 < j;
     f2 = i == 0 || 2 >= j;
     
+    false || (k = 1) > 2;
+    k1 = k;
+    false && (k = 2) > 1;
+    k2 = k;
+    
     x = !f? 1: +2;
     y = f? Integer[]{1,2}: 0;    
     z = (Integer)any[]{1,"banana",2};
+    
+    true? (l1 = 1): (l2 = 2);
+    k3 = l1;
+    k4 = l2;
     
     r = $monitor.getActiveSensor().getReading();    
   }

@@ -89,14 +89,13 @@ public class ConditionalLogicalExpression extends BinaryExpression {
 	}
 
 	/**
-	 * If a name has the same assigned source after the second operand
-	 * expression as before it, then that is its assigned source after the
-	 * conditional logical expression. If a name is unassigned before the second
-	 * operand expression, then it is considered unassigned after the
-	 * conditional logical expression, even if it has an assigned source after
-	 * the second operand expression. Otherwise its assigned source after the
-	 * conditional logical expression is the conditional logical expression
-	 * itself.
+     * If a name has the same assigned source after the second operand
+     * expression as before it, then that is its assigned source after the
+     * conditional logical expression. Otherwise its assigned source after the
+     * conditional logical expression is the conditional logical expression
+     * itself. If a name is unassigned before the second operand expression but
+     * assigned after it, then it has a multiplicity lower bound of 0 after the
+     * conditional logical expression.
 	 **/
 	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();

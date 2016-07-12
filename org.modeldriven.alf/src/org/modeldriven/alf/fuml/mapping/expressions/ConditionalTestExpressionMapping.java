@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -63,9 +62,10 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
      * structured activity node, if the name is assigned in the corresponding
      * operand expression, then the assigned source for the name after the
      * operand expression is connected to the output pin. If the name is not
-     * assigned in the corresponding operand expression, then an additional
-     * structured activity node is added to the mapping of the operand
-     * expression as follows: 
+     * assigned in the corresponding operand expression, but has an assigned
+     * source before the operand expression, then an additional structured
+     * activity node is added to the mapping of the operand expression as
+     * follows:
      * 
      * - The structured activity node has one input pin and one output pin, with
      * an object flow from the input pin to the output pin contained within the
@@ -79,8 +79,9 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
      * enclosing structured activity node for the argument expression. Each pair
      * of output pins on the structured activity nodes for the operand
      * expressions corresponding to the same name are connected by object flows
-     * to a merge node. This merge node is the source for the assigned value of
-     * the name after the conditional-test expression.
+     * to a merge node, which is connected by an object flow to a fork node. The
+     * fork node is the source for the assigned value of the name after the
+     * conditional-test expression.
      */
     
     private ExpressionMapping mapOperand(Expression operand) 
@@ -124,64 +125,73 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         
         // Map local name assignments.
         for (String name: assignments) {
+            outputPin = this.graph.createOutputPin(
+                    label + ".output(" + name + ")", 
+                    null, 0, 0);
+            operandNode.addStructuredNodeOutput(outputPin);
+            
             AssignedSource assignment = operand.getImpl().getAssignmentAfter(name);
-            ElementReference type = assignment.getType();
-            int lower = assignment.getLower();
-            int upper = assignment.getUpper();
-            ElementReference source = assignment.getSource();
-
-            Classifier classifier = null;
-            if (type != null) {
-                classifier = (Classifier)type.getImpl().getUml();
-                if (classifier == null) {
-                    FumlMapping mapping = this.fumlMap(type);
-                    if (mapping instanceof ElementReferenceMapping) {
-                        mapping = ((ElementReferenceMapping) mapping).getMapping();
-                    }
-                    if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                        this.throwError("Error mapping type for " + name + ": " +
-                                mapping.getErrorMessage());
-                    } else {
-                        classifier = ((ClassifierDefinitionMapping)mapping).
-                                getClassifierOnly();
+            if (assignment != null) {
+                ElementReference type = assignment.getType();
+                int lower = assignment.getLower();
+                int upper = assignment.getUpper();
+                ElementReference source = assignment.getSource();
+    
+                Classifier classifier = null;
+                if (type != null) {
+                    classifier = (Classifier)type.getImpl().getUml();
+                    if (classifier == null) {
+                        FumlMapping mapping = this.fumlMap(type);
+                        if (mapping instanceof ElementReferenceMapping) {
+                            mapping = ((ElementReferenceMapping) mapping).getMapping();
+                        }
+                        if (!(mapping instanceof ClassifierDefinitionMapping)) {
+                            this.throwError("Error mapping type for " + name + ": " +
+                                    mapping.getErrorMessage());
+                        } else {
+                            classifier = ((ClassifierDefinitionMapping)mapping).
+                                    getClassifierOnly();
+                        }
                     }
                 }
-            }
-            outputPin = this.graph.createOutputPin(
-                    label + ".output(" + assignment.getName() + ")", 
-                    classifier, lower, upper);
-            operandNode.addStructuredNodeOutput(outputPin);
-            FumlMapping mapping = this.fumlMap(source);
-            if (mapping instanceof ElementReferenceMapping) {
-                mapping = ((ElementReferenceMapping)mapping).getMapping();
-            }
-            if (!(mapping instanceof SyntaxElementMapping)) {
-                this.throwError("Error mapping source for " + name + ": " + 
-                        mapping.getErrorMessage());
-            } else {
-                ActivityNode sourceNode = ((SyntaxElementMapping)mapping).
-                        getAssignedValueSource(name);
                 
-                if (sourceNode != null) {
-
-                    // Check if the local name was assigned within the
-                    // operand expression.
-                    // NOTE: If the name was assigned in the operand, then
-                    // the source node for the name will be one of the
-                    // elements mapped from the operand.
-                    if (!ActivityGraph.isContainedIn(sourceNode, operandNode)) {
-                        StructuredActivityNode passthruNode = 
-                                this.graph.createPassthruNode(
-                                        name, classifier, lower, upper);
-                        operandNode.addNode(passthruNode);
-                        this.graph.addObjectFlow(
-                                sourceNode, passthruNode.getStructuredNodeInput().get(0));
-                        sourceNode = passthruNode.getStructuredNodeOutput().get(0);
+                outputPin.setType(classifier);
+                outputPin.setLower(lower);
+                outputPin.setUpper(upper);
+                
+                FumlMapping mapping = this.fumlMap(source);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (!(mapping instanceof SyntaxElementMapping)) {
+                    this.throwError("Error mapping source for " + name + ": " + 
+                            mapping.getErrorMessage());
+                } else {
+                    ActivityNode sourceNode = ((SyntaxElementMapping)mapping).
+                            getAssignedValueSource(name);
+                    
+                    if (sourceNode != null) {
+    
+                        // Check if the local name was assigned within the
+                        // operand expression.
+                        // NOTE: If the name was assigned in the operand, then
+                        // the source node for the name will be one of the
+                        // elements mapped from the operand.
+                        if (!ActivityGraph.isContainedIn(sourceNode, operandNode)) {
+                            StructuredActivityNode passthruNode = 
+                                    this.graph.createPassthruNode(
+                                            name, classifier, lower, upper);
+                            operandNode.addNode(passthruNode);
+                            this.graph.addObjectFlow(
+                                    sourceNode, 
+                                    passthruNode.getStructuredNodeInput().get(0));
+                            sourceNode = passthruNode.getStructuredNodeOutput().get(0);
+                        }
+    
+                        operandNode.addEdge(this.graph.createObjectFlow(
+                                sourceNode, outputPin));
+    
                     }
-
-                    operandNode.addEdge(this.graph.createObjectFlow(
-                            sourceNode, outputPin));
-
                 }
             }
         }

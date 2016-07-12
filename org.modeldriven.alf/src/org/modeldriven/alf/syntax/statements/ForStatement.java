@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -90,18 +89,16 @@ public class ForStatement extends Statement {
 		return this.getImpl().forStatementAssignmentsBefore();
 	}
 
-	/**
-	 * The loop variables are unassigned after a for statement. Other than the
-	 * loop variables, if the assigned source for a name after the body of a for
-	 * statement is the same as after the for variable definitions, then the
-	 * assigned source for the name after the for statement is the same as after
-	 * the for variable definitions. If a name is unassigned after the for
-	 * variable definitions, then it is unassigned after the for statement (even
-	 * if it is assigned in the body of the for statement). If, after the loop
-	 * variable definitions, a name has an assigned source, and it has a
-	 * different assigned source after the body of the for statement, then the
-	 * assigned source after the for statement is the for statement itself.
-	 **/
+    /**
+     * The loop variables are unassigned after a for statement. Other than the
+     * loop variables, if the assigned source for a name after the body of a for
+     * statement is the same as after the for variable definitions, then the
+     * assigned source for the name after the for statement is the same as after
+     * the for variable definitions. If name has a different assigned source
+     * after the body of the for statement than after the for variable
+     * definitions, then the assigned source after the for statement is the for
+     * statement itself.
+     **/
 	public boolean forStatementAssignmentsAfter() {
 		return this.getImpl().forStatementAssignmentsAfter();
 	}

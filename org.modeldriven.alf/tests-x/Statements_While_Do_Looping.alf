@@ -10,7 +10,7 @@ class Statements_While_Do_Looping specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 	  super(tester);
 
-	  this.test(count, checksum, nextRecord, file, lines, readings, i, j, self);
+	  this.test(count, checksum, nextRecord, file, lines, readings, i, j, empty);
 	  
 	  AssertEqual("count", count, 2);
 	  AssertEqual("checksum", checksum, 1);
@@ -19,7 +19,9 @@ class Statements_While_Do_Looping specializes Test {
 	  AssertList("readings", readings, Integer[]{2,1,0});
 	  AssertEqual("i", i, 2);
 	  AssertEqual("j", j, 3);
-	  AssertTrue("self.list->isEmpty()", self.list->isEmpty());
+	  AssertEqual("empty", empty, null);
+	  
+	  AssertTrue("this.list->isEmpty()", this.list->isEmpty());
 	
 	  this.done();
 	}
@@ -84,8 +86,7 @@ class Statements_While_Do_Looping specializes Test {
     out count: Integer, out checksum: Integer, 
     out nextRecord: FileRecord[0..1], out file: File, 
     out lines: String[*] sequence, out readings: Integer[*] sequence, 
-    out i: Integer, out j: Integer,
-    out self: Statements_While_Do_Looping) {
+    out i: Integer, out j: Integer, out empty: Integer[0..1]) {
   
     // Setup
     count = 0;
@@ -114,6 +115,11 @@ class Statements_While_Do_Looping specializes Test {
       continue = file.hasMore();
     }
     
+    while (false) {
+      dummy = 0;
+    }
+    empty = dummy;
+    
     file.reset();
     do {
       line = file.readNext();
@@ -139,6 +145,5 @@ class Statements_While_Do_Looping specializes Test {
       }
     } while (true);
     
-    self = this;
   }
 }

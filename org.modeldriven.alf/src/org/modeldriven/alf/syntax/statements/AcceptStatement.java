@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -139,10 +138,16 @@ public class AcceptStatement extends Statement {
 		return this.getImpl().acceptStatementAssignmentsAfter();
 	}
 
-	/**
-	 * If a name is unassigned before an accept statement and assigned in any
-	 * block of an accept statement, then it must be assigned in every block.
-	 **/
+    /**
+     * Any name that is unassigned before an accept statement and is assigned in
+     * one or more blocks of the accept statement, has, after the accept
+     * statement, a type that is is the effective common ancestor of the types
+     * of the name in each block in which it is defined, with a multiplicity
+     * lower bound that is the minimum of the lower bound for the name in each
+     * block (where it is considered to have multiplicity lower bound of zero
+     * for blocks in which it is not defined), and a multiplicity upper bound
+     * that is the maximum for the name in each block in which it is defined.
+     **/
 	public boolean acceptStatementNewAssignments() {
 		return this.getImpl().acceptStatementNewAssignments();
 	}
