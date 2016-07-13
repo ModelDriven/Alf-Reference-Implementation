@@ -84,7 +84,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
      * conditional-test expression.
      */
     
-    private ExpressionMapping mapOperand(Expression operand) 
+    protected ExpressionMapping mapOperand(Expression operand) 
         throws MappingError {
         ExpressionMapping operandMapping = null;
         FumlMapping mapping = this.fumlMap(operand);
@@ -97,7 +97,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         return operandMapping;
     }
     
-    private StructuredActivityNode mapOperandNode (
+    protected StructuredActivityNode mapOperandNode (
             String label,
             List<String> assignments,
             Expression operand) throws MappingError {
@@ -105,7 +105,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         ExpressionMapping operandMapping = this.mapOperand(operand);
         Collection<Element> modelElements = operandMapping.getModelElements();
         ActivityNode resultSource = operandMapping.getResultSource();
-        if (modelElements.isEmpty()) {
+        if (modelElements.isEmpty() && resultSource != null) {
             // This ensures that, even if the operand mapping is empty, there is
             // something by which to control the flow through the operand node.
             MergeNode mergeNode = this.create(MergeNode.class);
@@ -121,7 +121,9 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         OutputPin outputPin = this.graph.createOutputPin(
                 label + ".result", null, 0, -1);
         operandNode.addStructuredNodeOutput(outputPin);
-        operandNode.addEdge(this.graph.createObjectFlow(resultSource, outputPin));
+        if (resultSource != null) {
+            operandNode.addEdge(this.graph.createObjectFlow(resultSource, outputPin));
+        }
         
         // Map local name assignments.
         for (String name: assignments) {
