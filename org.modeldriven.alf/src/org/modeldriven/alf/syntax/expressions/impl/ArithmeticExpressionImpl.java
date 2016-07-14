@@ -115,21 +115,13 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	}
 	
     /**
-     * An arithmetic expression has a multiplicity lower bound of 0 if the lower
-     * bound if either operand expression is 0 and 1 otherwise.
+     * An arithmetic expression has a multiplicity lower bound of 0 if its
+     * operator is "/" or if the lower bound if either operand expression is 0,
+     * and 1 otherwise.
      **/
     @Override
 	protected Integer deriveLower() {
-        ArithmeticExpression self = this.getSelf();
-        Expression operand1 = self.getOperand1();
-        Expression operand2 = self.getOperand2();
-        String operator = self.getOperator();
-        // TODO: Update specification of arithmeticExpressionLowerDerivation for division.
-        // NOTE: A division by zero will return null, so division should have
-        // a multiplicity lower bound of 0.
-	    return operator.equals("/") || 
-	           (operand1 != null && operand1.getLower() == 0) ||
-	           (operand2 != null && operand2.getLower() == 0)? 0: 1;
+        return this.getSelf().getOperator().equals("/")? 0: super.deriveLower();
 	}
 	
     /**
@@ -242,4 +234,29 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 		}
 	}
 	
+    /**
+     * The operands of an arithmetic expression must both have multiplicity
+     * upper bounds of 1.
+     */
+    public boolean arithmeticExpressionOperandMultiplicity() {
+        ArithmeticExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        return (operand1 == null || operand1.getUpper() == 1) &&
+               (operand2 == null || operand2.getUpper() == 1);
+    }
+    
+    /*
+     * Helper Methods
+     */
+	
+	/**
+	 * Null arguments are allowed for arithmetic expressions to allow the
+	 * propagation of null returned from a divide by zero.
+	 */
+	@Override
+	public Boolean noNullArguments() {
+	    return false;
+	}
+    
 }

@@ -98,8 +98,9 @@ public class ArithmeticExpression extends BinaryExpression {
 	}
 
 	/**
-	 * An arithmetic expression has a multiplicity lower bound of 0 if the lower
-	 * bound if either operand expression is 0 and 1 otherwise.
+     * An arithmetic expression has a multiplicity lower bound of 0 if its
+     * operator is "/" or if the lower bound if either operand expression is 0,
+     * and 1 otherwise.
 	 **/
 	public boolean arithmeticExpressionLowerDerivation() {
 		return this.getImpl().arithmeticExpressionLowerDerivation();
@@ -122,6 +123,14 @@ public class ArithmeticExpression extends BinaryExpression {
 	public boolean arithmeticExpressionOperandTypes() {
 		return this.getImpl().arithmeticExpressionOperandTypes();
 	}
+	
+	/**
+	 * The operands of an arithmetic expression must both have multiplicity
+	 * upper bounds of 1.
+	 */
+    public boolean arithmeticExpressionOperandMultiplicity() {
+        return this.getImpl().arithmeticExpressionOperandMultiplicity();
+    }
 	
     /**
      * An arithmetic expression is a real computation if its type is Real.
@@ -148,7 +157,15 @@ public class ArithmeticExpression extends BinaryExpression {
                 .arithmeticExpressionIsRealConversion2Derivation();
     }
 
-	public void _deriveAll() {
+    /**
+     * Null arguments are allowed for arithmetic expressions to allow the
+     * propagation of null returned from a divide by zero.
+     */
+    public Boolean noNullArguments() {
+        return this.getImpl().noNullArguments();
+    }
+
+    public void _deriveAll() {
 		this.getIsConcatenation();
 		this.getIsRealConversion1();
 		this.getIsRealConversion2();
@@ -173,10 +190,14 @@ public class ArithmeticExpression extends BinaryExpression {
 			violations.add(new ConstraintViolation(
 					"arithmeticExpressionUpperDerivation", this));
 		}
-		if (!this.arithmeticExpressionOperandTypes()) {
-			violations.add(new ConstraintViolation(
-					"arithmeticExpressionOperandTypes", this));
-		}
+        if (!this.arithmeticExpressionOperandTypes()) {
+            violations.add(new ConstraintViolation(
+                    "arithmeticExpressionOperandTypes", this));
+        }
+        if (!this.arithmeticExpressionOperandMultiplicity()) {
+            violations.add(new ConstraintViolation(
+                    "arithmeticExpressionOperandMultiplicity", this));
+        }
         if (!this.arithmeticExpressionIsRealDerivation()) {
             violations.add(new ConstraintViolation(
                     "arithmeticExpressionIsRealDerivation", this));

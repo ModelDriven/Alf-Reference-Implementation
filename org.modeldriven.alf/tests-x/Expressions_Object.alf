@@ -53,7 +53,7 @@ class Expressions_Object specializes Test {
   	
 	//**************************************************************************
 
-	test (out member: Member, out customer0: Customer, out customer1: Customer,
+	test (out member: Member[0..1], out customer0: Customer, out customer1: Customer,
 		  out names: String[*], out self: Expressions_Object) {
 	
 	  this.members[1] = new Member();
@@ -70,7 +70,7 @@ class Expressions_Object specializes Test {
 	  
 	  this.principal = 1000;
 	  this.rate = 5;
-	  this.interest = (this.principal * this.rate) / 100 * 10;  
+	  this.interest = (this.principal * this.rate) / 100 * 10 ??;  
 
 	  names = this.members.name;	  
 	  self = this;

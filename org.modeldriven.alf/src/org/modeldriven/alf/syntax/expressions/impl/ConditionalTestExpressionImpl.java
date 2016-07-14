@@ -145,15 +145,15 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 
 	/**
      * The first operand expression of a conditional-test expression must be of
-     * a type that conforms to type Boolean and have a multiplicity upper bound 
-     * of 1.
+     * a type that conforms to type Boolean and have a multiplicity lower and upper 
+     * bounds of 1.
 	 **/
 	public boolean conditionalTestExpressionCondition() {
         ConditionalTestExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
         ElementReference type = operand1 == null? null: operand1.getType();
 		return type != null && type.getImpl().isBoolean() &&
-		            operand1.getUpper() == 1;
+		            operand1.getLower() == 1 && operand1.getUpper() == 1;
 	}
 
 	/**

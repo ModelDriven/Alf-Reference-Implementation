@@ -215,15 +215,18 @@ public class AssignmentExpression extends Expression {
 		return this.getImpl().assignmentExpressionIsDataValueUpdateDerivation();
 	}
 
-	/**
-	 * The new assigned source for an assignment to a local name is the
-	 * assignment expression. If the assignment is a definition, then the type
-	 * is given by the right hand side, the multiplicity upper bound is 1 if the
-	 * upper bound of the right hand side is 1 and otherwise * and the
-	 * multiplicity lower bound is 0. Otherwise, the type is the same as the
-	 * left-hand side and the multiplicity is also the same as the left-hand
-	 * side, if the left-hand side is not indexed, and is * if it is indexed.
-	 **/
+    /**
+     * The new assigned source for an assignment to a local name by the
+     * assignment expression (including a data value update). If the assignment
+     * is a definition, then the type is given by the right-side, otherwise the
+     * type is the same as for the previous assigned source for the local name.
+     * The multiplicity lower bound is 0 if the lower bound of the right-hand
+     * side is 0 and otherwise 1, and the multiplicity upper bound is 1 if the
+     * upper bound of the right-hand side is 1 and * otherwise, except that: if
+     * the left-hand side is a data-value update, the multiplicity is the same
+     * as for the previous assignment, and, if the left-hand side is indexed
+     * (but not a data-value update), the multiplicity is 0..*.
+     **/
 	public boolean assignmentExpressionAssignmentDerivation() {
 		return this.getImpl().assignmentExpressionAssignmentDerivation();
 	}
@@ -283,12 +286,15 @@ public class AssignmentExpression extends Expression {
 				.assignmentExpressionSimpleAssignmentTypeConformance();
 	}
 
-	/**
-	 * If the left-hand side of a simple assignment is not a new local name and
-	 * the multiplicity upper bound of the left-hand side is less than or equal
-	 * to 1, then the multiplicity upper bound of the right-hand side cannot be
-	 * greater than that of the left-hand side.
-	 **/
+    /**
+     * If the left-hand side of a simple assignment is not a non-indexed local
+     * name and the multiplicity lower bound of the left is greater than 0, then
+     * the multiplicity lower bound of the right-hand side cannot be 0. If the
+     * left-hand side is not a new local name and the multiplicity upper bound
+     * of the left-hand side is less than or equal to 1, then the multiplicity
+     * upper bound of the right-hand side cannot be greater than that of the
+     * left-hand side.
+     **/
 	public boolean assignmentExpressionSimpleAssignmentMultiplicityConformance() {
 		return this.getImpl()
 				.assignmentExpressionSimpleAssignmentMultiplicityConformance();

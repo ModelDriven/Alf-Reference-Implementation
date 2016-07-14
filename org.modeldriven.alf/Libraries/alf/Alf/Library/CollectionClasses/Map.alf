@@ -3,7 +3,7 @@ abstract class Map<Key, Value> {
 
   public datatype Entry {
     public key: Key;
-    public value: Value;
+    public value: Value[0..1];
   }
 
   @Create public Map (in entries: Entry[0..*]) { }

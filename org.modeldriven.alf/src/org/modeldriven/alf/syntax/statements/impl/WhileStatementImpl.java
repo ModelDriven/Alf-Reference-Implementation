@@ -69,11 +69,11 @@ public class WhileStatementImpl extends LoopStatementImpl {
      * after the condition expression.
      *
      * If the assigned source for a name after the block of a while statement is
-     * different than before the block, then the assigned source of the name
-     * after the while statement is the while statement. Otherwise it is the
-     * same as before the block. If a name is unassigned before the block of a
-     * while statement and assigned after the block, then it has multiplicity
-     * lower bound of 0 after the while statement.
+     * different than before the while statement, then the assigned source of
+     * the name after the while statement is the while statement. Otherwise it
+     * is the same as before the while statement. If a name is unassigned before
+     * the block of a while statement and assigned after the block, then it has
+     * multiplicity lower bound of 0 after the while statement.
      **/
     @Override
     public Map<String, AssignedSource> deriveAssignmentAfter() {
@@ -83,22 +83,24 @@ public class WhileStatementImpl extends LoopStatementImpl {
         Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
         Map<String, AssignedSource> assignmentsAfter = assignmentsBefore;
         if (condition != null) {
-            condition.getImpl().setAssignmentBefore(assignmentsBefore);            
-            assignmentsAfter = condition.getImpl().getAssignmentAfterMap();
+            condition.getImpl().setAssignmentBefore(assignmentsBefore);        
+            Map<String, AssignedSource> assignmentsAfterCondition = 
+                    condition.getImpl().getAssignmentAfterMap();
+            Collection<AssignedSource> newAssignments = condition.getImpl().getNewAssignments();
             if (body != null) {
-                body.getImpl().setAssignmentBefore(assignmentsAfter);
-                Collection<AssignedSource> newAssignments = body.getImpl().getNewAssignments();
-                if (!newAssignments.isEmpty()) {
-                    assignmentsAfter = new HashMap<String,AssignedSource>(assignmentsAfter);
-                    for (AssignedSource assignment: newAssignments) {
-                        String name = assignment.getName();
-                        AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
-                        assignmentAfter.setSource(self);
-                        if (!(assignmentsAfter.containsKey(name) || this.isParameter(name))) {
-                            assignmentAfter.setLower(0);
-                        }
-                        assignmentsAfter.put(name, assignmentAfter);
+                body.getImpl().setAssignmentBefore(assignmentsAfterCondition);
+                newAssignments.addAll(body.getImpl().getNewAssignments());
+            }
+            if (!newAssignments.isEmpty()) {
+                assignmentsAfter = new HashMap<String,AssignedSource>(assignmentsBefore);
+                for (AssignedSource assignment: newAssignments) {
+                    AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
+                    assignmentAfter.setSource(self);
+                    String name = assignment.getName();
+                    if (!(assignmentsAfterCondition.containsKey(name) || this.isParameter(name))) {
+                        assignmentAfter.setLower(0);
                     }
+                    assignmentsAfter.put(name, assignmentAfter);
                 }
             }
         }

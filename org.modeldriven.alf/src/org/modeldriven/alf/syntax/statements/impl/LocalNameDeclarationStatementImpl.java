@@ -124,9 +124,11 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
      * assignments after the expression plus a new assignment for the local name
      * defined by the statement. The assigned source for the local name is the
      * local name declaration statement. The local name has the type denoted by
-     * the type name if this is not empty and is untyped otherwise. If the
-     * statement has multiplicity, then the multiplicity of the local name is
-     * [0..*], otherwise it is [0..1].
+     * the type name if this is not empty and is untyped otherwise. The
+     * multiplicity lower bound of the local name is 0 if the expression has a
+     * lower bound of 0, otherwise it is 1. If the statement has multiplicity, 
+     * then the multiplicity upper bound of the local name is *, otherwise it
+     * is 1.
      **/
 	@Override
 	protected Map<String, AssignedSource> deriveAssignmentAfter() {
@@ -141,10 +143,11 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	    }
 	    String name = self.getName();
 	    if (name != null) {
+	        int lower = expression == null || expression.getLower() == 0? 0: 1;
+	        int upper = !self.getHasMultiplicity()? 1: -1;
 	        assignmentsAfter.put(name, 
 	                AssignedSourceImpl.makeAssignment(
-	                        name, self, self.getType(), 
-	                        0, self.getHasMultiplicity()? -1: 1));
+	                        name, self, self.getType(), lower, upper));
 	    }
 	    return assignmentsAfter;
 	}

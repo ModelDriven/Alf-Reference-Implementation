@@ -116,16 +116,19 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	}
 	
     /**
-     * If a name left-hand side is indexed, then its lower bound is 1.
+     * If a name left-hand side is indexed, then its lower bound is 0.
      * Otherwise, if the left-hand side is for a local name with an assignment,
      * than its lower bound is that of the assignment, else, if it has a
      * referent, then its lower bound is that of the referent.
      **/
 	@Override
 	public Integer deriveLower() {
+	    ElementReference parameter = this.getParameter();
 	    AssignedSource oldAssignment = this.getOldAssignment();
-	    return this.getSelf().getIndex() != null || oldAssignment == null? 
-	            super.deriveLower(): oldAssignment.getLower();
+	    return this.getSelf().getIndex() != null? 0:
+	           parameter != null? parameter.getImpl().getLower():
+	           oldAssignment != null? oldAssignment.getLower():
+	           super.deriveLower();
 	}
 	
     /**
@@ -136,9 +139,12 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
      **/
     @Override
     public Integer deriveUpper() {
+        ElementReference parameter = this.getParameter();
         AssignedSource oldAssignment = this.getOldAssignment();
-        return this.getSelf().getIndex() != null || oldAssignment == null? 
-                super.deriveUpper(): oldAssignment.getUpper();
+        return this.getSelf().getIndex() != null? 1:
+               parameter != null? parameter.getImpl().getUpper():
+               oldAssignment != null? oldAssignment.getUpper():
+               super.deriveUpper();
     }
     
 	/*
@@ -293,7 +299,7 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
         QualifiedName target = this.getSelf().getTarget();
         ElementReference parameter = target == null? null: 
                                         target.getImpl().getParameterReferent();
-        // Note: The check on the namespace of a parameter needs to be in the spec.               
+        // TODO: The check on the namespace of a parameter needs to be in the spec.               
         return parameter == null || 
                     !parameter.getImpl().isInNamespace(this.currentScope)? null: 
                         parameter;
@@ -311,6 +317,13 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
                     target.getUnqualifiedName().getBinding() != null)? null: 
                         target.getUnqualifiedName().getName();
         }
+    }
+    
+    @Override
+    public boolean isNullable() {
+        return this.getSelf().getIndex() == null &&
+               this.getLocalName() != null && 
+               this.getParameter() == null;
     }
     
     public AssignedSource getOldAssignment() {

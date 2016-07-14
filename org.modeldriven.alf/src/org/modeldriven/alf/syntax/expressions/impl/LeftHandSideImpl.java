@@ -190,12 +190,9 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
     }
 
    /**
-    * If a feature left-hand side is indexed, then its lower bound is 1.
+    * If a feature left-hand side is indexed, then its lower bound is 0.
     * Otherwise, its lower bound is that of its referent.
-    **/
-   // The lower bound of an indexed LHS should actually be 0, since it
-   // is legal to assign null to it.
-    
+    **/    
    // NOTE: This is overridden for a name left-hand side.
    protected Integer deriveLower() {
         LeftHandSide self = this.getSelf();
@@ -331,6 +328,11 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
     }
     
     public abstract String getLocalName();
+    
+    // NOTE: This is overridden by NameLeftHandSide.
+    public boolean isNullable() {
+        return false;
+    }
     
     public void setCurrentScope(NamespaceDefinition currentScope) {
         this.currentScope = currentScope;

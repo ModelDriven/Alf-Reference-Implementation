@@ -1,0 +1,63 @@
+/**
+ * Test null-coalescing expressions.
+ **/
+class Expressions_Null_Coalescing specializes Test {
+
+	@Create public Expressions_Null_Coalescing() {
+		this.run(null);
+	}
+	
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+		
+		this.test(a, b, c, d, e, l1, l2, i1, i2, i3, i4);
+		
+		AssertEqual("a", a, 1);
+		AssertEqual("b", b, 1);
+		AssertEqual("c", c, 1);
+		AssertEqual("d", d, 2);
+		AssertEqual("e", e, null);
+		
+		AssertList("l1", l1, Integer[]{1, 2});
+		AssertList("l2", l2, Integer[]{1, 2});
+		
+		AssertEqual("i1", i1, 1);
+		AssertEqual("i2", i2, 1);
+		AssertEqual("i3", i3, 1);
+		AssertEqual("i4", i4, null);
+		
+		this.done();
+	}
+	
+    // Supporting declarations *************************************************
+	
+	private activity A(in x: Integer): Integer { return x; }
+	private activity B(in x: Integer): Integer[0..1] { return x; }
+  	
+	//**************************************************************************
+
+	private test ( 
+		out a: Integer[0..1], out b: Integer[0..1], out c: Integer[0..1],
+		out d: Integer, out e: any, out l1: Integer[] sequence, out l2: Integer[] sequence,
+		out i1: Integer[0..1], out i2: Integer[0..1], out i3: Integer[0..1], out i4: Integer[0..1]) {
+		
+		a = null ?? 1;
+		b = B(1) ?? 2;
+		c = A(b);
+		
+		list = Integer[]{1,2};
+		d = list[3] ?? list[2] ?? list[1] ??;
+		e = null ?? null ??;
+		l1 = null ?? list;
+		l2 = list ?? Integer[]{3, 2, 1};
+		
+		null ?? (i = 1);
+		i1 = i;
+		x = String[]{"non", "null"};
+	    list ?? (i = 2);
+		i2 = i;
+		B(j = 1) ?? (k = 2);
+		i3 = j;
+		i4 = k;
+	}
+}

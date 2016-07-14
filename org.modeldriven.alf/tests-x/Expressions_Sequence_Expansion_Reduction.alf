@@ -69,7 +69,7 @@ class Expressions_Sequence_Expansion_Reduction specializes Test {
       
     }
     
-    activity Bad(in x: Integer, in y: Integer): Integer { return x/y; }
+    activity Bad(in x: Integer, in y: Integer): Integer { return x/y ??; }
 
 	//**************************************************************************
 
@@ -85,8 +85,8 @@ class Expressions_Sequence_Expansion_Reduction specializes Test {
 	  out exists: Boolean,
 	  out one: Boolean,
 	  out unique: Boolean,
-	  out jack: Employee,
-	  out joan: Employee,
+	  out jack: Employee[0..1],
+	  out joan: Employee[0..1],
 	  out something: Something,
 	  out obj: Object) {
 	  

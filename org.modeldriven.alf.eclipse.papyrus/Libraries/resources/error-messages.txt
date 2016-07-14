@@ -78,10 +78,6 @@ conditionalLogicalExpressionOperands
 Operands must have type Boolean.
 The operands of a conditional logical expression must have a type that conforms to type Boolean.
  
-conditionalTestExpressionAssignmentsAfter
-
-If a name is unassigned after the first operand expression and has an assigned source after one of the other operand expression, then it must have an assigned source after both of those expressions.
- 
 conditionalTestExpressionAssignmentsBefore
 
 The assignments before the first operand expression of a conditional-test expression are the same as those before the conditional-test expression. The assignments before the second and third operand expressions are the same as those after the first operand expression.
@@ -219,6 +215,10 @@ nameLeftHandSideFeatureExpression
 Target expression must have a multiplicity upper bound of 1.
 If the target of a name left-hand side disambiguates to a feature reference, then the expression of the feature reference must have a multiplicity upper bound of 1.
  
+nullCoalescingExpressionOperand
+Second operand must have a multiplicity lower bound greater than 0.
+If a null-coalescing expression has a second operand expression, then that operand expression must have a multiplicity lower bound greater than 0.
+
 numericUnaryExpressionOperand
 Operand must have a type Integer or Real and multiplicity upper bound of 1.
 The operand expression must have a type that conforms to type Integer or Real and a multiplicity upper bound of 1.
@@ -312,11 +312,11 @@ sequenceOperationExpressionAssignmentsBefore
 The assignments before the primary expression of a sequence operation expression are the same as the assignments before the sequence operation expression.
  
 sequenceOperationExpressionOperationReferent
-Operation name must resolve to a behavior whose first parameter has direction in or inout, has multiplicity * and is compatible with the target expression.
+Behavior name cannot be resolved or behavior is not compatible as a sequence operation.
 There must be a single behavior that is a resolution of the operation qualified name of a sequence operation expression with a least one parameter, whose first parameter has direction in or inout, has multiplicity * and to which the target primary expression is assignable.
  
 sequenceOperationExpressionTargetCompatibility
-
+The target expression is not compatible with the operation.
 If the first parameter of the referent has direction inout, then the parameter type must have the same type as the primary expression, the primary expression must have the form of a left-hand side and, if the equivalent left-hand side is for a local name, that name must already exist.
  
 sequenceRangeAssignments

@@ -68,7 +68,7 @@ class Expressions_Real specializes Test {
 		x = -x; // -1.0
 		x = 2 * x; // -2.0;
 		x = x * i; // -10.0;
-		x = x / y; // 0.5
+		x = x / y ??; // 0.5
 		x = x + z; // 3.64;
 		x = x - 2.14; // 1.5
 		

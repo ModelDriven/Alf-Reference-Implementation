@@ -201,7 +201,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         return operandNode;
     }
     
-    private static void addToAssignedNames(
+    protected static void addToAssignedNames(
             List<String> assignedNames, 
             Expression operand) {
         for (AssignedSource assignment: operand.getImpl().getNewAssignments()) {

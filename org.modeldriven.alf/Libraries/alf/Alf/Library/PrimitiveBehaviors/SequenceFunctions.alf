@@ -108,7 +108,7 @@ package SequenceFunctions {
   
   public activity ExcludingOne(in seq: any[*] sequence, in element: any): any[*] sequence { 
     i = IndexOf(seq, element);
-    return i == null? seq: ExcludeAt(seq, i);
+    return i == null? seq: ExcludeAt(seq, i??);
   }
   
   public activity ExcludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { 
@@ -123,7 +123,7 @@ package SequenceFunctions {
   
   public activity ReplacingOne(in seq: any[*] sequence, in element: any, in newElement: any[0..1]): any[*] sequence { 
     i = IndexOf(seq, element);
-    return i == null? seq: ReplacingAt(seq, i, newElement);
+    return i == null? seq: ReplacingAt(seq, i??, newElement);
   }
   
   public activity ReplacingAt(in seq: any[*] sequence, in index: Integer, in element: any[0..1]): any[*] sequence {

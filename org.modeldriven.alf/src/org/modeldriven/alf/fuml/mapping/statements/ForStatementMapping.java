@@ -46,9 +46,9 @@ public class ForStatementMapping extends LoopStatementMapping {
      * expansion nodes on the expansion region.
      */
      // TODO: Update mapping in the spec.
-     // NOTE: The for statement can also not immediately contain a return statement, 
-     // since this would require a control flow out of the expansion region, which 
-     // is not allowed in fUML.
+     // NOTE: To be mapped as an expansion region, the for statement can also not
+     // directly or indirectly contain a return statement, since this would require 
+     // a control flow out of the expansion region, which is not allowed in fUML.
      /**
      * 3. Otherwise, an iterative for statement is mapped to a loop node. A
      * for statement of the form

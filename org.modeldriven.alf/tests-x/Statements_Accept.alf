@@ -122,8 +122,8 @@ class Statements_Accept specializes Test {
     AssertFalse("test.terminate", test.terminate);
     AssertEqual("test.arrival.name", test.arrival.name, "Arrival3");
     
-    AssertTrue("test.signals[1] hastype SignalArrival", test.signals[1] hastype MyTest::SignalNewArrival);
-    AssertTrue("test.signals[2] hastype SignalTermination", test.signals[2] hastype MyTest::SignalTermination);
+    AssertTrue("test.signals[1] hastype SignalArrival", (test.signals[1]??0) hastype MyTest::SignalNewArrival);
+    AssertTrue("test.signals[2] hastype SignalTermination", (test.signals[2]??0) hastype MyTest::SignalTermination);
     
     AssertEqual("test.count", test.count, 3);
     AssertTrue("test.flag", test.flag);

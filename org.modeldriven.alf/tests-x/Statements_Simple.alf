@@ -53,7 +53,7 @@ class Statements_Simple specializes Test {
 	//**************************************************************************
 
 	test(out i: Integer, out last: Integer, out collection: Integer[*] sequence,
-	  out offer: Offer, out money: Money, out members: Member[*] sequence,
+	  out offer: Offer[0..1], out money: Money, out members: Member[*] sequence,
 	  out properties: RealProperty[*] sequence, out assets: RealProperty[*] sequence, 
 	  out point: Point) {
 	  
@@ -79,7 +79,7 @@ class Statements_Simple specializes Test {
 	  ;
 	  
 	  let currentOffer : Offer = this.offers[1];
-	  Money interest = new (this.principal * this.rate * period/100);
+	  Money interest = new (this.principal * this.rate * period/100 ??);
 	  let inactiveMembers : Member[] = members -> select member (!member.isActive);
 	  RealProperty[] realProperties = (RealProperty)things;
 	  let fixedAssets: RealProperty[] = new { land, home, condominium };

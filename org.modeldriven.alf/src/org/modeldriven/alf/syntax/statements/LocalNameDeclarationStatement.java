@@ -115,13 +115,15 @@ public class LocalNameDeclarationStatement extends Statement {
 	}
 
 	/**
-	 * The assignments after a local name declaration statement are the
-	 * assignments after the expression of the statement plus a new assignment
-	 * for the local name defined by the statement. The assigned source for the
-	 * local name is the local name declaration statement. The local name has
-	 * the type denoted by the type name if this is not empty and is untyped
-	 * otherwise. If the statement has multiplicity, then the multiplicity of
-	 * the local name is [0..*], otherwise it is [0..1].
+     * The assignments after a local name declaration statement are the
+     * assignments after the expression plus a new assignment for the local name
+     * defined by the statement. The assigned source for the local name is the
+     * local name declaration statement. The local name has the type denoted by
+     * the type name if this is not empty and is untyped otherwise. The
+     * multiplicity lower bound of the local name is 0 if the expression has a
+     * lower bound of 0, otherwise it is 1. If the statement has multiplicity, 
+     * then the multiplicity upper bound of the local name is *, otherwise it
+     * is 1.
 	 **/
 	public boolean localNameDeclarationStatementAssignmentsAfter() {
 		return this.getImpl().localNameDeclarationStatementAssignmentsAfter();

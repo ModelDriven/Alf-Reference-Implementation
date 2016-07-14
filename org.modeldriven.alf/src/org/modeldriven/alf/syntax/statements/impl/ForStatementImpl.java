@@ -210,13 +210,13 @@ public class ForStatementImpl extends LoopStatementImpl {
 		return true;
 	}
 
-	/**
-	 * A @parallel annotation of a for statement may include a list of names.
-	 * Each such name must be already assigned after the loop variable
-	 * definitions of the for statement, with a multiplicity of [0..*]. These
-	 * names may only be used within the body of the for statement as the first
-	 * argument to for the CollectionFunctions::add behavior.
-	 **/
+    /**
+     * A @parallel annotation of a for statement may include a list of names.
+     * Each such name must be already assigned after the loop variable
+     * definitions of the for statement, with a multiplicity upper bound other
+     * than 1. These names may only be used within the body of the for statement
+     * as the first argument for the CollectionFunctions::add behavior.
+     **/
 	// Note: Checking that @parallel annotation names are only used with add
 	// behaviors is done in NameExpression, BehaviorInvocationExpression and
 	// SequenceOperationExpression.
@@ -228,9 +228,7 @@ public class ForStatementImpl extends LoopStatementImpl {
 	            this.getAssignmentAfterVariables();
 	        for (String name: parallelNames) {
 	            AssignedSource assignment = assignments.get(name);
-	            if (assignment == null || 
-	                    assignment.getLower() != 0 || 
-	                    assignment.getUpper() != -1) {
+	            if (assignment == null || assignment.getUpper() == 1) {
 	                return false;
 	            }
 	        }

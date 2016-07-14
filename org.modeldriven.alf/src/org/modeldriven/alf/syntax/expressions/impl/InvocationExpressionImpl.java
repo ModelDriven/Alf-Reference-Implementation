@@ -520,7 +520,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             LeftHandSide lhs = ((OutputNamedExpression)output).getLeftHandSide();
             return direction != null && lhs != null &&
                         (direction.equals("out") || direction.equals("inout")) &&
-                        lhs.getImpl().isAssignableFrom(namedParameter);
+                        lhs.getImpl().isAssignableFrom(namedParameter, lhs.getImpl().isNullable());
         }
     }
     

@@ -104,8 +104,7 @@ public class RelationalExpression extends BinaryExpression {
 	}
 
 	/**
-	 * A relational expression has a multiplicity lower bound of 0 if the lower
-	 * bound if either operand expression is 0 and 1 otherwise.
+	 * A relational expression has a multiplicity lower bound of 1.
 	 **/
 	public boolean relationalExpressionLowerDerivation() {
 		return this.getImpl().relationalExpressionLowerDerivation();

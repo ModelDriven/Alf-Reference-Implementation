@@ -16,12 +16,12 @@ package BasicInputOutput {
   public abstract class TextOutputChannel specializes OutputChannel;
   public abstract class StandardOutputChannel specializes TextOutputChannel {}
   
-  public activity ReadLine(out errorStatus: Status[0..1]): String {
-    return StandardInputChannel.allInstances()[1].readLine(errorStatus);
+  public activity ReadLine(out errorStatus: Status[0..1]): String[0..1] {
+    return (StandardInputChannel.allInstances()[1]??).readLine(errorStatus);
   }
   
   public activity WriteLine(in value: String, out errorStatus: Status[0..1]) {
-    StandardOutputChannel.allInstances()[1].writeLine(value, errorStatus);
+    (StandardOutputChannel.allInstances()[1]??).writeLine(value, errorStatus);
   }
   
 }

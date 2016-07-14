@@ -17,7 +17,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.expressions.AssignableElement;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.syntax.units.impl.ActivityDefinitionImpl;
+import org.modeldriven.alf.syntax.units.impl.OperationDefinitionImpl;
 import org.modeldriven.alf.uml.Element;
 
 
@@ -521,28 +524,26 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     
     public Integer getLower() {
         int lower = 0;
-        if (this.isProperty()) {
-            lower = ((PropertyDefinition)this.getSelf().getElement()).getLower();
-        } else if (this.isParameter()) {
-                lower = ((FormalParameter)this.getSelf().getElement()).getLower();
+        SyntaxElementImpl element = this.getSelf().getElement().getImpl();
+        if (element instanceof AssignableElement) {
+            lower = ((AssignableElement)element).getLower();
         } else if (this.isOperation()) {
-            lower = ((OperationDefinition)this.getSelf().getElement()).getImpl().getLower();
+            lower = ((OperationDefinitionImpl)element).getLower();
         } else if (this.isBehavior()) {
-            lower = ((ActivityDefinition)this.getSelf().getElement()).getImpl().getLower();
+            lower = ((ActivityDefinitionImpl)element).getLower();
         }
         return lower;
     }
 
     public Integer getUpper() {
         int upper = 0;
-        if (this.isProperty()) {
-            upper = ((PropertyDefinition)this.getSelf().getElement()).getUpper();
-        } else if (this.isParameter()) {
-            upper = ((FormalParameter)this.getSelf().getElement()).getUpper();
+        SyntaxElementImpl element = this.getSelf().getElement().getImpl();
+        if (element instanceof AssignableElement) {
+            upper = ((AssignableElement)element).getUpper();
         } else if (this.isOperation()) {
-            upper = ((OperationDefinition)this.getSelf().getElement()).getImpl().getUpper();
+            upper = ((OperationDefinitionImpl)element).getUpper();
         } else if (this.isBehavior()) {
-            upper = ((ActivityDefinition)this.getSelf().getElement()).getImpl().getUpper();
+            upper = ((ActivityDefinitionImpl)element).getUpper();
         }
         return upper;
     }

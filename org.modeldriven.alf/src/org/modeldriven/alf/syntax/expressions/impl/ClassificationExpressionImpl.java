@@ -91,13 +91,11 @@ public class ClassificationExpressionImpl extends UnaryExpressionImpl {
 	}
 	
     /**
-     * A classification expression has a multiplicity lower bound that is the
-     * same as the lower bound of its operand expression.
+     * A classification expression has a multiplicity lower bound of 1.
      **/
 	@Override
 	protected Integer deriveLower() {
-	    Expression operand = this.getSelf().getOperand();
-	    return operand == null? 1: operand.getLower();
+	    return 1;
 	}
 	
     /**
@@ -150,12 +148,12 @@ public class ClassificationExpressionImpl extends UnaryExpressionImpl {
 	}
 
 	/**
-	 * The operand expression of a classification expression must have a
-	 * multiplicity upper bound of 1.
+	 * The operand expression of a classification expression must have
+	 * multiplicity lower and upper bounds of 1.
 	 **/
 	public boolean classificationExpressionOperand() {
 	    Expression operand = this.getSelf().getOperand();
-		return operand != null && operand.getUpper() == 1;
+		return operand != null && operand.getLower() == 1 && operand.getUpper() == 1;
 	}
 	
 	/*

@@ -91,6 +91,30 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
         }
     }
 
+    /**
+     * If no null arguments are allowed, then a binary expression has a
+     * multiplicity lower bound of 1. Otherwise, the expression has a
+     * multiplicity lower bound of 0 if the lower bound of either operand
+     * expression is 0 and 1 otherwise.
+     **/
+    @Override
+    protected Integer deriveLower() {
+        BinaryExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        return self.noNullArguments()? 1: 
+               (operand1 != null && operand1.getLower() == 0) ||
+               (operand2 != null && operand2.getLower() == 0)? 0: 1;
+    }
+    
+    /**
+     * A binary expression has multiplicity upper bound of 1.
+     */
+    @Override
+    protected Integer deriveUpper() {
+        return 1;
+    }
+    
 	/*
 	 * Constraints
 	 */
@@ -98,8 +122,8 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
     /**
      * The operands of a binary expression must both have a multiplicity upper
      * bound no greater than 1. If null arguments are not allowed (as given by
-     * the noNullArguments helper operation), then the upper bounds must be
-     * exactly 1.
+     * the noNullArguments helper operation), then both the upper and lower
+     * bounds must be exactly 1.
      **/
 	public boolean binaryExpressionOperandMultiplicity() {
 	    BinaryExpression self = this.getSelf();
@@ -107,6 +131,7 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	    Expression operand2 = self.getOperand2();
 		return operand1 != null && operand2 != null && 
 		    (self.noNullArguments()?
+		            operand1.getLower() == 1 && operand1.getLower() == 1 &&
 		            operand1.getUpper() == 1 && operand2.getUpper() == 1:
 		            operand1.getUpper() != -1 && operand1.getUpper() <= 1 &&
 		            operand2.getUpper() != -1 && operand2.getUpper() <= 1);
@@ -171,8 +196,7 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	} // updateAssignments
 
     /**
-     * By default, null arguments are not allowed for binary expressions. (This
-     * is overridden for equality expressions.)
+     * By default, null arguments are not allowed for binary expressions.
      **/
     public Boolean noNullArguments() {
         return true;

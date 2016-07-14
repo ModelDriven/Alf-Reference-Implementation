@@ -264,12 +264,11 @@ public class SequenceOperationExpressionImpl
 
     /**
      * If the first parameter of the referent has direction inout, then the
-     * parameter type must have the same type as the primary expression.
-     * 
-     * Note: This constraint also needs to require that the primary expression
-     * has the form of a left-hand side and, if for a local name or data value
-     * update, the assigned name must already exist. The first parameter must
-     * be assignable to the effective left-hand side.
+     * parameter type must have the same type as the primary expression, the
+     * primary expression must have the form of a left-hand side and, if the
+     * equivalent left-hand side is for a local name, that name must already
+     * exist. The first parameter must be assignable to the effective left-
+     * hand side.
      **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
         Expression expression = this.getExpression();
@@ -278,7 +277,7 @@ public class SequenceOperationExpressionImpl
         return expression == null || !this.isInPlace() ||
                     lhs != null && (lhs.getImpl().getAssignedName() == null || 
                             this.getOldAssignment() != null) &&
-                    lhs.getImpl().isAssignableFrom(parameter);
+                    lhs.getImpl().isAssignableFrom(parameter, lhs.getImpl().isNullable());
 //                    (type != null && type.getImpl().equals(expressionType) ||
 //                            type == null && expressionType == null);
 	}

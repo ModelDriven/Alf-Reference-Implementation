@@ -79,8 +79,7 @@ public class LogicalExpression extends BinaryExpression {
 	}
 
 	/**
-	 * A logical expression has a multiplicity lower bound of 0 if the lower
-	 * bound if either operand expression is 0 and 1 otherwise.
+	 * A logical expression has a multiplicity lower bound of 1.
 	 **/
 	public boolean logicalExpressionLowerDerivation() {
 		return this.getImpl().logicalExpressionLowerDerivation();

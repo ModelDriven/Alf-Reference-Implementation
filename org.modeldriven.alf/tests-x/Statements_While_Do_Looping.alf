@@ -99,7 +99,7 @@ class Statements_While_Do_Looping specializes Test {
     i = 4;
     j = 0;
     // *****
-    
+   
     while ((last = this.list->size()) > 0) {
       this.list[last].cleanUp();
       this.list->removeAt(last);

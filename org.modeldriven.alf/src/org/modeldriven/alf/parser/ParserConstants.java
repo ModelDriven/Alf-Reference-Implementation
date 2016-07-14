@@ -214,69 +214,71 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int HOOK = 119;
   /** RegularExpression Id. */
-  int AT = 120;
+  int DOUBLE_HOOK = 120;
   /** RegularExpression Id. */
-  int DOLLAR = 121;
+  int AT = 121;
   /** RegularExpression Id. */
-  int EQ = 122;
+  int DOLLAR = 122;
   /** RegularExpression Id. */
-  int LE = 123;
+  int EQ = 123;
   /** RegularExpression Id. */
-  int GE = 124;
+  int LE = 124;
   /** RegularExpression Id. */
-  int NE = 125;
+  int GE = 125;
   /** RegularExpression Id. */
-  int SC_OR = 126;
+  int NE = 126;
   /** RegularExpression Id. */
-  int SC_AND = 127;
+  int SC_OR = 127;
   /** RegularExpression Id. */
-  int INCR = 128;
+  int SC_AND = 128;
   /** RegularExpression Id. */
-  int DECR = 129;
+  int INCR = 129;
   /** RegularExpression Id. */
-  int PLUS = 130;
+  int DECR = 130;
   /** RegularExpression Id. */
-  int MINUS = 131;
+  int PLUS = 131;
   /** RegularExpression Id. */
-  int STAR = 132;
+  int MINUS = 132;
   /** RegularExpression Id. */
-  int SLASH = 133;
+  int STAR = 133;
   /** RegularExpression Id. */
-  int LOGICAL_AND = 134;
+  int SLASH = 134;
   /** RegularExpression Id. */
-  int LOGICAL_OR = 135;
+  int LOGICAL_AND = 135;
   /** RegularExpression Id. */
-  int XOR = 136;
+  int LOGICAL_OR = 136;
   /** RegularExpression Id. */
-  int REM = 137;
+  int XOR = 137;
   /** RegularExpression Id. */
-  int LSHIFT = 138;
+  int REM = 138;
   /** RegularExpression Id. */
-  int RSHIFT = 139;
+  int LSHIFT = 139;
   /** RegularExpression Id. */
-  int URSHIFT = 140;
+  int RSHIFT = 140;
   /** RegularExpression Id. */
-  int PLUSASSIGN = 141;
+  int URSHIFT = 141;
   /** RegularExpression Id. */
-  int MINUSASSIGN = 142;
+  int PLUSASSIGN = 142;
   /** RegularExpression Id. */
-  int STARASSIGN = 143;
+  int MINUSASSIGN = 143;
   /** RegularExpression Id. */
-  int SLASHASSIGN = 144;
+  int STARASSIGN = 144;
   /** RegularExpression Id. */
-  int ANDASSIGN = 145;
+  int SLASHASSIGN = 145;
   /** RegularExpression Id. */
-  int ORASSIGN = 146;
+  int ANDASSIGN = 146;
   /** RegularExpression Id. */
-  int XORASSIGN = 147;
+  int ORASSIGN = 147;
   /** RegularExpression Id. */
-  int REMASSIGN = 148;
+  int XORASSIGN = 148;
   /** RegularExpression Id. */
-  int LSHIFTASSIGN = 149;
+  int REMASSIGN = 149;
   /** RegularExpression Id. */
-  int RSHIFTASSIGN = 150;
+  int LSHIFTASSIGN = 150;
   /** RegularExpression Id. */
-  int URSHIFTASSIGN = 151;
+  int RSHIFTASSIGN = 151;
+  /** RegularExpression Id. */
+  int URSHIFTASSIGN = 152;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -417,6 +419,7 @@ public interface ParserConstants {
     "\"!\"",
     "\"~\"",
     "\"?\"",
+    "\"??\"",
     "\"@\"",
     "\"$\"",
     "\"==\"",
