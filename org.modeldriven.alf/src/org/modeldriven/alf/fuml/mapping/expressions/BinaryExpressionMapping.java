@@ -79,20 +79,21 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
             this.graph.addAll(operandMapping.getGraph());
         }
         
-        ActivityNode resultSource = operandMapping.getResultSource();
-        if (resultSource == null) {
-            this.throwError("Operand mapping has no result source: " + operand);
-        }
-        
-        return resultSource;
+        return operandMapping.getResultSource();
     }
     
-    // NOTE: This is overridden in LogicalExpressionMapping and
-    // ShiftExpressionMapping to implement bit string conversion.
     protected void mapOperator(
             String operator,
             ActivityNode operand1Result, 
             ActivityNode operand2Result) throws MappingError {
+        if (operand1Result == null) {
+            this.throwError("Operand mapping has no result source: " + 
+                                this.getBinaryExpression().getOperand1());
+        }
+        if (operand2Result == null) {
+            this.throwError("Operand mapping has no result source: " + 
+                                this.getBinaryExpression().getOperand2());
+        }
         ElementReference operatorFunction = this.getOperatorFunction(operator);
         if (operatorFunction == null) {
             this.resultSource = operand1Result;
@@ -113,19 +114,27 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
     // Used by subclasses.
     protected ActivityNode addBitStringConversion(ActivityNode operandResult) 
         throws MappingError {
-        CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
-                getBehavior(RootNamespace.getRootScope().getBitStringFunctionToBitString()));
-        this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
-        return callAction.getResult().get(0);
+        if (operandResult == null) {
+            return null;
+        } else {
+            CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
+                    getBehavior(RootNamespace.getRootScope().getBitStringFunctionToBitString()));
+            this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
+            return callAction.getResult().get(0);
+        }
     }
 
     // Used by subclasses.
     protected ActivityNode addRealConversion(ActivityNode operandResult) 
         throws MappingError {
-        CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
-                getBehavior(RootNamespace.getRootScope().getIntegerFunctionToReal()));
-        this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
-        return callAction.getResult().get(0);
+        if (operandResult == null) {
+            return null;
+        } else {
+            CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
+                    getBehavior(RootNamespace.getRootScope().getIntegerFunctionToReal()));
+            this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
+            return callAction.getResult().get(0);
+        }
     }
 
     protected ElementReference getOperatorFunction(String operator) {

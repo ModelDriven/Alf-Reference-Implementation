@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.fuml.mapping.expressions;
 
+import java.util.Collection;
+
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.expressions.BinaryExpressionMapping;
 import org.modeldriven.alf.mapping.MappingError;
@@ -16,6 +18,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.EqualityExpression;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.InputPin;
 import org.modeldriven.alf.uml.TestIdentityAction;
 import org.modeldriven.alf.uml.ValueSpecificationAction;
@@ -58,51 +61,36 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
      * of the call behavior action.
      */
     
+    private ActivityNode addOperandsNode() {
+        Collection<Element> elements = this.graph.getModelElements();
+        this.graph = this.createActivityGraph();
+        return this.graph.addStructuredActivityNode(
+                "Operands(EqualityExpression@" + 
+                        this.getEqualityExpression().getId() + ")", 
+                elements);
+    }
+    
     @Override
     protected void mapOperator(
             String operator,
             ActivityNode operand1Result, 
             ActivityNode operand2Result) throws MappingError {
-        EqualityExpression expression = this.getEqualityExpression();
-
-        if (expression.getIsRealConversion1()) {
-            operand1Result = this.addRealConversion(operand1Result);
-        }
-        if (expression.getIsRealConversion2()) {
-            operand2Result = this.addRealConversion(operand2Result);
-        }
-        
-        this.action = this.graph.addTestIdentityAction("==");
-        this.resultSource = mapEquality(
-            this.graph, (TestIdentityAction) this.action, 
-            operand1Result, operand2Result,
-            expression.getOperand1().getLower(),
-            expression.getOperand2().getLower());
-        
-        if (expression.getIsNegated()) {
-            CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
-                    getBehavior(RootNamespace.getRootScope().getBooleanFunctionNot()));
-            this.graph.addObjectFlow(this.resultSource, callAction.getArgument().get(0));
-            this.resultSource = callAction.getResult().get(0);
-        }
-    }
-    
-    @Override
-    protected void map() throws MappingError {
         // The following optimizes the cases when one or both operands are
         // known to be null.
         
         EqualityExpression expression = this.getEqualityExpression();
         boolean operand1IsNull = expression.getOperand1().getImpl().isNull();
         boolean operand2IsNull = expression.getOperand2().getImpl().isNull();
-        
+
         if (operand1IsNull && operand2IsNull) {
+            ActivityNode operandsNode = this.addOperandsNode();
             this.action = this.graph.addBooleanValueSpecificationAction(
                     !expression.getIsNegated());
             this.resultSource = ((ValueSpecificationAction)this.action).getResult();
+            this.graph.addControlFlow(operandsNode, this.action);
         } else if (operand1IsNull || operand2IsNull) {
-            ActivityNode operandResult = this.mapOperand(operand2IsNull? 
-                    expression.getOperand1(): expression.getOperand2());
+            ActivityNode operandsNode = this.addOperandsNode();
+            ActivityNode operandResult = operand2IsNull? operand1Result: operand2Result;
             ElementReference function = expression.getIsNegated()?
                     RootNamespace.getRootScope().getSequenceFunctionNotEmpty():
                     RootNamespace.getRootScope().getSequenceFunctionIsEmpty();
@@ -111,11 +99,31 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
             this.graph.addObjectFlow(operandResult, callAction.getArgument().get(0));
             this.action = callAction;
             this.resultSource = callAction.getResult().get(0);
+            this.graph.addControlFlow(operandsNode, this.action);
         } else {
-            super.map();
+            if (expression.getIsRealConversion1()) {
+                operand1Result = this.addRealConversion(operand1Result);
+            }
+            if (expression.getIsRealConversion2()) {
+                operand2Result = this.addRealConversion(operand2Result);
+            }
+            
+            this.action = this.graph.addTestIdentityAction("==");
+            this.resultSource = mapEquality(
+                this.graph, (TestIdentityAction) this.action, 
+                operand1Result, operand2Result,
+                expression.getOperand1().getLower(),
+                expression.getOperand2().getLower());
+            
+            if (expression.getIsNegated()) {
+                CallBehaviorAction callAction = this.graph.addCallBehaviorAction(
+                        getBehavior(RootNamespace.getRootScope().getBooleanFunctionNot()));
+                this.graph.addObjectFlow(this.resultSource, callAction.getArgument().get(0));
+                this.resultSource = callAction.getResult().get(0);
+            }
         }
     }
-
+    
     // This operation is also used in SwitchStatementMapping.
     public static ActivityNode mapEquality(
             ActivityGraph graph,
