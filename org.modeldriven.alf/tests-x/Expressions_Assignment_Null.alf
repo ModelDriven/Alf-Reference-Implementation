@@ -52,7 +52,7 @@ class Expressions_Assignment_Null specializes Test {
     this.d = d;
   }
   
-  public getData(): Integer {
+  public getData(): Integer[0..1] {
     return this.d.k;
   }
   

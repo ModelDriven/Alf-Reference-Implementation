@@ -58,8 +58,7 @@ public class BitStringUnaryExpression extends UnaryExpression {
 	}
 
 	/**
-	 * A BitString unary expression has the same multiplicity lower bound as its
-	 * operand expression.
+	 * A BitString unary expression has a multiplicity lower bound of 1.
 	 **/
 	public boolean bitStringUnaryExpressionLowerDerivation() {
 		return this.getImpl().bitStringUnaryExpressionLowerDerivation();
@@ -74,7 +73,7 @@ public class BitStringUnaryExpression extends UnaryExpression {
 
 	/**
 	 * The operand expression of a BitString unary expression must have type
-	 * BitString or Integer and a multiplicity upper bound of 1.
+	 * BitString or Integer and multiplicity lower and upper bounds of 1.
 	 **/
 	public boolean bitStringUnaryExpressionOperand() {
 		return this.getImpl().bitStringUnaryExpressionOperand();

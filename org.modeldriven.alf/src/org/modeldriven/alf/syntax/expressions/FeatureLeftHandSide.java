@@ -106,7 +106,7 @@ public class FeatureLeftHandSide extends LeftHandSide {
 	}
 
 	/**
-	 * If a feature left-hand side is indexed, then its lower bound is 1.
+	 * If a feature left-hand side is indexed, then its lower bound is 0.
 	 * Otherwise, its lower bound is that of its referent.
 	 **/
 	public boolean featureLeftHandSideLowerDerivation() {

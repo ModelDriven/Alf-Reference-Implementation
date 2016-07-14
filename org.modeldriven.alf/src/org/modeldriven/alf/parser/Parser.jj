@@ -335,6 +335,7 @@ TOKEN:
 | < BANG: "!" >
 | < TILDE: "~" >
 | < HOOK: "?" >
+| < DOUBLE_HOOK: "??" >
 | < AT: "@" >
 | < DOLLAR: "$" >
 | < EQ: "==" >
@@ -1812,6 +1813,35 @@ Expression ConditionalOrExpressionCompletion(Expression u):
   { return e1; }
 }
 
+/* NULL-COALESCING EXPRESSIONS */
+
+Expression NullCoalescingExpression():
+{
+   Expression u;
+   Expression e;
+}
+{
+  u = UnaryExpression() e = NullCoalescingExpressionCompletion(u)
+  { return e; }
+}
+
+Expression NullCoalescingExpressionCompletion(Expression u):
+{
+  Expression e1;
+  Expression e2;
+}
+{
+  e1 = ConditionalOrExpressionCompletion(u)
+  [ <DOUBLE_HOOK> 
+  	{ NullCoalescingExpression b =
+  	    new NullCoalescingExpression(u);
+  	  b.setOperand1(e1);
+  	  e1 = b; }
+  	[ e2 = NullCoalescingExpression()
+  	  { ((NullCoalescingExpression)e1).setOperand2(e2); } ] ]
+  { return e1; }
+}
+
 /* CONDITIONAL-TEST EXPRESSIONS */
 
 Expression ConditionalExpression():
@@ -1831,7 +1861,7 @@ Expression ConditionalExpressionCompletion(Expression u):
   Expression e3;
 }
 {
-  e1 = ConditionalOrExpressionCompletion(u) 
+  e1 = NullCoalescingExpressionCompletion(u) 
   [ <HOOK> e2 = Expression() <COLON> e3 = ConditionalExpression() 
     { ConditionalTestExpression c = 
     	new ConditionalTestExpression(u);

@@ -38,7 +38,7 @@ class Units_Map specializes Test {
   public test(out listener: Listener) {
     listener = new Listener("Listener");
     this.register(listener, 1);
-    listener = this.listeners.get(1);
+    listener = this.listeners.get(1) ??;
     listener.notify();
   } 
 

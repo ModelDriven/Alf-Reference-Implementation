@@ -46,9 +46,14 @@ public abstract class LoopStatementMapping extends StatementMapping {
     protected OutputPin addLoopVariable(
             LoopNode loopNode, String name, Classifier classifier,
             int lower, int upper, ActivityNode sourceNode) throws MappingError {
+        
+        // Note: Setting the multiplicity lower bound of all loop variable input
+        // pins to 0 ensures that a loop will execute even if an input value is
+        // null despite having an expected multiplicity lower bound greater than 0.
         InputPin inputPin = this.graph.createInputPin(
                 loopNode.getName() + ".loopVariableInput(" + name + ")", 
-                classifier, lower, upper);
+                classifier, 0, upper);
+        
         loopNode.addLoopVariableInput(inputPin);
         if (sourceNode != null) {
             this.graph.addObjectFlow(sourceNode, inputPin);

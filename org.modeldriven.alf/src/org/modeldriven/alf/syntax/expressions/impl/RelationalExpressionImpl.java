@@ -114,27 +114,6 @@ public class RelationalExpressionImpl extends BinaryExpressionImpl {
 	    return RootNamespace.getRootScope().getBooleanType();
 	}
 	
-	/**
-	 * A relational expression has a multiplicity lower bound of 0 if the lower
-	 * bound if either operand expression is 0 and 1 otherwise.
-	 **/
-    @Override
-    protected Integer deriveLower() {
-        RelationalExpression self = this.getSelf();
-        Expression operand1 = self.getOperand1();
-        Expression operand2 = self.getOperand2();
-        return operand1 != null && operand1.getLower() == 0 ||
-               operand2 != null && operand2.getLower() == 0? 0: 1;
-    }
-	
-	/**
-	 * A relational expression has a multiplicity upper bound of 1.
-	 **/
-	@Override
-	protected Integer deriveUpper() {
-	    return 1;
-	}
-	
     /**
      * A relational expression requires Real conversion of it is a Real
      * comparison and its first operand is of type Integer.

@@ -106,9 +106,9 @@ public class ForStatement extends Statement {
 	/**
 	 * A @parallel annotation of a for statement may include a list of names.
 	 * Each such name must be already assigned after the loop variable
-	 * definitions of the for statement, with a multiplicity of [0..*]. These
-	 * names may only be used within the body of the for statement as the first
-	 * argument to for the CollectionFunctions::add behavior.
+	 * definitions of the for statement, with a multiplicity upper bound other
+	 * than 1. These names may only be used within the body of the for statement
+	 * as the first argument for the CollectionFunctions::add behavior.
 	 **/
 	public boolean forStatementParallelAnnotationNames() {
 		return this.getImpl().forStatementParallelAnnotationNames();

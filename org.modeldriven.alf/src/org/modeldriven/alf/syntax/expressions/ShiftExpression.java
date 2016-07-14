@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -59,8 +58,7 @@ public class ShiftExpression extends BinaryExpression {
 	}
 
 	/**
-	 * A shift expression has a multiplicity lower bound of 0 if the lower bound
-	 * if either operand expression is 0 and 1 otherwise.
+	 * A shift expression has a multiplicity lower bound of 1.
 	 **/
 	public boolean shiftExpressionLowerDerivation() {
 		return this.getImpl().shiftExpressionLowerDerivation();

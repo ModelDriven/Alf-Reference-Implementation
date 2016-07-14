@@ -120,7 +120,8 @@ public class SequenceOperationExpression extends InvocationExpression {
 	 * parameter type must have the same type as the primary expression, the
 	 * primary expression must have the form of a left-hand side and, if the
 	 * equivalent left-hand side is for a local name, that name must already
-	 * exist.
+	 * exist. The first parameter must be assignable to the effective left-
+     * hand side.
 	 **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
 		return this.getImpl().sequenceOperationExpressionTargetCompatibility();

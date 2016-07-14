@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -94,8 +93,7 @@ public class ClassificationExpression extends UnaryExpression {
 	}
 
 	/**
-	 * A classification expression has a multiplicity lower bound that is the
-	 * same as the lower bound of its operand expression.
+	 * A classification expression has a multiplicity lower bound of 1.
 	 **/
 	public boolean classificationExpressionLowerDerivation() {
 		return this.getImpl().classificationExpressionLowerDerivation();
@@ -117,8 +115,8 @@ public class ClassificationExpression extends UnaryExpression {
 	}
 
 	/**
-	 * The operand expression of a classification expression must have a
-	 * multiplicity upper bound of 1.
+	 * The operand expression of a classification expression must have
+	 * multiplicity lower and upper bounds of 1.
 	 **/
 	public boolean classificationExpressionOperand() {
 		return this.getImpl().classificationExpressionOperand();

@@ -56,18 +56,17 @@ public class ConditionalLogicalExpression extends BinaryExpression {
 	}
 
 	/**
-	 * A conditional logical expression has a multiplicity lower bound of 0 if
-	 * the lower bound if either operand expression is 0 and 1 otherwise.
+	 * A conditional logical expression has a multiplicity lower bound of 1.
 	 **/
-	public boolean conditionalLogicalExpressionLower() {
-		return this.getImpl().conditionalLogicalExpressionLower();
+	public boolean conditionalLogicalExpressionLowerDerivation() {
+		return this.getImpl().conditionalLogicalExpressionLowerDerivation();
 	}
 
 	/**
 	 * A conditional logical expression has a multiplicity upper bound of 1.
 	 **/
-	public boolean conditionalLogicalExpressionUpper() {
-		return this.getImpl().conditionalLogicalExpressionUpper();
+	public boolean conditionalLogicalExpressionUpperDerivation() {
+		return this.getImpl().conditionalLogicalExpressionUpperDerivation();
 	}
 
 	/**
@@ -111,13 +110,13 @@ public class ConditionalLogicalExpression extends BinaryExpression {
 			violations.add(new ConstraintViolation(
 					"conditionalLogicalExpressionTypeDerivation", this));
 		}
-		if (!this.conditionalLogicalExpressionLower()) {
+		if (!this.conditionalLogicalExpressionLowerDerivation()) {
 			violations.add(new ConstraintViolation(
-					"conditionalLogicalExpressionLower", this));
+					"conditionalLogicalExpressionLowerDerivation", this));
 		}
-		if (!this.conditionalLogicalExpressionUpper()) {
+		if (!this.conditionalLogicalExpressionUpperDerivation()) {
 			violations.add(new ConstraintViolation(
-					"conditionalLogicalExpressionUpper", this));
+					"conditionalLogicalExpressionUpperDerivation", this));
 		}
 		if (!this.conditionalLogicalExpressionOperands()) {
 			violations.add(new ConstraintViolation(

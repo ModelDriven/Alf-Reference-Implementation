@@ -83,8 +83,8 @@ class Statements_For_Looping specializes Test {
   	    if (reading->isEmpty()) {
   	      break;
   	    }
-  	    if (reading > noiseLimit) {
-  	      readings->add(reading);
+  	    if ((reading??) > noiseLimit) {
+  	      readings->add(reading??);
   	    }
   	  }
   	  
@@ -94,20 +94,20 @@ class Statements_For_Looping specializes Test {
   	  sum1 = sum;
   	  
   	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges, Integer token: tokens) {
-  	    outgoingEdge.sendOffer(token);
+  	    outgoingEdge.sendOffer(token??);
   	  }
   	  
   	  //@parallel 
   	  for (outgoingEdge in outgoingEdges, token in tokens) {
-  	    outgoingEdge.sendOffer(outgoingEdge.token + token);
+  	    outgoingEdge.sendOffer(outgoingEdge.token + token??);
   	  }
   	  
   	  //@parallel(SnEven,SnOdd)
   	  for (lower in SLower, upper in SUpper, root in V) {
   	    //@parallel 
   	    {
-  	      add(SnEven, lower+upper);
-  	      SnOdd->add((lower-upper)*root);
+  	      add(SnEven, lower+upper??);
+  	      SnOdd->add((lower-upper)*root??);
   	    }
   	  }
   	  

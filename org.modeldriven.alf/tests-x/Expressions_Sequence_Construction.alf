@@ -71,7 +71,7 @@ class Expressions_Sequence_Construction specializes Test {
       out seq6: Integer[] sequence,
       out seq7: Integer[] sequence,
       out seq8: Real[] sequence,
-      out x: Integer,
+      out x: Integer[0..1],
       out customers: Customer[] sequence,
       out set1: Set<Integer>,
       out set2: Set<Integer>,

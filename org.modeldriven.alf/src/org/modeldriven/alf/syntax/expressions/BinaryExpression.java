@@ -73,8 +73,8 @@ public abstract class BinaryExpression extends Expression {
 	/**
 	 * The operands of a binary expression must both have a multiplicity upper
 	 * bound no greater than 1. If null arguments are not allowed (as given by
-	 * the noNullArguments helper operation), then the upper bounds must be
-	 * exactly 1.
+	 * the noNullArguments helper operation), then both the lower and upper
+	 * bounds must be exactly 1.
 	 **/
 	public boolean binaryExpressionOperandMultiplicity() {
 		return this.getImpl().binaryExpressionOperandMultiplicity();
@@ -110,8 +110,7 @@ public abstract class BinaryExpression extends Expression {
 	}
 
 	/**
-	 * By default, null arguments are not allowed for binary expressions. (This
-	 * is overridden for equality expressions.)
+	 * By default, null arguments are not allowed for binary expressions.
 	 **/
 	public Boolean noNullArguments() {
 		return this.getImpl().noNullArguments();

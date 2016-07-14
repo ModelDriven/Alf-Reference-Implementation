@@ -206,13 +206,16 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
     }
 
     /**
-     * The new assigned source for an assignment to a local name is the
-     * assignment expression. If the assignment is a definition, then the type
-     * is given by the right hand side, the multiplicity upper bound is 1 if the
-     * upper bound of the right hand side is 1 and otherwise * and the
-     * multiplicity lower bound is 0. Otherwise, the type is the same as the
-     * left-hand side and the multiplicity is also the same as the left-hand
-     * side, if the left-hand side is not indexed, and is * if it is indexed.
+     * The new assigned source for an assignment to a local name by the
+     * assignment expression (including a data value update). If the assignment
+     * is a definition, then the type is given by the right-side, otherwise the
+     * type is the same as for the previous assigned source for the local name.
+     * The multiplicity lower bound is 0 if the lower bound of the right-hand
+     * side is 0 and otherwise 1, and the multiplicity upper bound is 1 if the
+     * upper bound of the right-hand side is 1 and * otherwise, except that: if
+     * the left-hand side is a data-value update, the multiplicity is the same
+     * as for the previous assignment, and, if the left-hand side is indexed
+     * (but not a data-value update), the multiplicity is 0..*.
      **/
 	protected AssignedSource deriveAssignment() {
 	    AssignmentExpression self = this.getSelf();
@@ -221,26 +224,37 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	    String name = lhs == null? null: lhs.getImpl().getAssignedName();
 	    if (name == null || rhs == null) {
 	        return null;
-	    } else if (self.getIsDefinition()) {
-	        int upper = rhs.getUpper() == 1? 1: -1;
-	        return AssignedSourceImpl.makeAssignment(name, self, rhs.getType(), 0, upper);
+	    } 
+        int lower = self.getIsCollectionConversion() || rhs.getLower() == 0? 0: 1;
+        int upper = !self.getIsCollectionConversion() && rhs.getUpper() == 1? 1: -1;
+	    if (self.getIsDefinition()) {
+	        return AssignedSourceImpl.makeAssignment(
+	                name, self, rhs.getType(), lower, upper);
 	    } else {
 	        AssignedSource oldAssignment = this.getAssignmentBefore(name);
+            ElementReference referent = lhs.getImpl().getReferent();
 	        if (oldAssignment == null) {
-	            ElementReference referent = lhs.getImpl().getReferent();
 	            if (referent != null && referent.getImpl().isParameter() &&
 	                    !self.getIsIndexed()) {
 	                return AssignedSourceImpl.makeAssignment
 	                        (referent.getImpl().getName(), self, 
 	                         referent.getImpl().getType(), 
-	                         referent.getImpl().getLower(), 
-	                         referent.getImpl().getUpper());
+	                         lower, upper);
 	            } else {
 	                return null;
 	            }
 	        } else {
     	        AssignedSource assignment = AssignedSourceImpl.makeAssignment(oldAssignment);
-    	        assignment.setSource(self);
+                assignment.setSource(self);
+                if (!self.getIsDataValueUpdate()) {
+                    if (self.getIsIndexed()) {
+                        assignment.setLower(0);
+                        assignment.setLower(-1);
+                    } else {
+                        assignment.setLower(lower);
+                        assignment.setLower(upper);
+        	        }
+                }
     	        return assignment;
 	        }
 	    }
@@ -544,10 +558,13 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	}
 
 	/**
-	 * If the left-hand side of a simple assignment is not a new local name and
-	 * the multiplicity upper bound of the left-hand side is less than or equal
-	 * to 1, then the multiplicity upper bound of the right-hand side cannot be
-	 * greater than that of the left-hand side.
+     * If the left-hand side of a simple assignment is not a non-indexed local
+     * name and the multiplicity lower bound of the left is greater than 0, then
+     * the multiplicity lower bound of the right-hand side cannot be 0. If the
+     * left-hand side is not a new local name and the multiplicity upper bound
+     * of the left-hand side is less than or equal to 1, then the multiplicity
+     * upper bound of the right-hand side cannot be greater than that of the
+     * left-hand side.
 	 **/
 	public boolean assignmentExpressionSimpleAssignmentMultiplicityConformance() {
         AssignmentExpression self = this.getSelf();
@@ -555,7 +572,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         Expression rhs = self.getRightHandSide();
         return !self.getIsSimple() || lhs == null || rhs == null || 
                self.getIsDefinition() ||
-               lhs.getImpl().isMultiplicityConformantWith(rhs.getImpl());
+               lhs.getImpl().isMultiplicityConformantWith(rhs.getImpl(), lhs.getImpl().isNullable());
 	}
 
     /**

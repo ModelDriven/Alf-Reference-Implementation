@@ -320,7 +320,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                                 assignment = AssignedSourceImpl.makeAssignment
                                         (localName, invocation, 
                                                 parameter.getImpl().getType(), 
-                                                0, 
+                                                parameter.getImpl().getLower() == 0? 0: 1, 
                                                 parameter.getImpl().getUpper() == 1? 1: -1);
                                 newLocalAssignments.put(localName, assignment);
                             } else if (lhsReferent.getImpl().isParameter() &&
@@ -328,8 +328,8 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                                 assignment = AssignedSourceImpl.
                                         makeAssignment(localName, self, 
                                                 lhsReferent.getImpl().getType(),
-                                                lhsReferent.getImpl().getLower(), 
-                                                lhsReferent.getImpl().getUpper());                                    
+                                                lhsReferent.getImpl().getLower() == 0? 0: 1, 
+                                                lhsReferent.getImpl().getUpper() == 1? 1: -1);
                                 newLocalAssignments.put(localName, assignment);
                             }
                         }

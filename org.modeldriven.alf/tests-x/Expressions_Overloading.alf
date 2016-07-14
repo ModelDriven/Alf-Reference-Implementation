@@ -25,9 +25,9 @@ class Expressions_Overloading specializes Test {
 		    public set(in i: Integer) { this.i1 = i; }
 		    public set(in n: Natural) { this.n1 = n; }
 		    
-		    public get1 : Integer; // Make sure overloading resolution on considers behavioral features.
-		    public get1(): Integer { return this.i1; }
-		    public get1(): Natural { return this.n1; }
+		    public get1 : Integer[0..1]; // Make sure overloading resolution on considers behavioral features.
+		    public get1(): Integer[0..1] { return this.i1; }
+		    public get1(): Natural[0..1] { return this.n1; }
 		    
 		    public s2: String[0..1];
 		    public i2: Integer[0..1];
@@ -48,30 +48,30 @@ class Expressions_Overloading specializes Test {
 		    		this.n2 = m;
 		    }
 		    
-		    public get2(out s: String) { s = this.s2; }
-		    public get2(out i: Integer) { i = this.i2; }
-		    public get2(out n: Natural) { n = this.n2; }
+		    public get2(out s: String[0..1]) { s = this.s2; }
+		    public get2(out i: Integer[0..1]) { i = this.i2; }
+		    public get2(out n: Natural[0..1]) { n = this.n2; }
 		    
 		    public s3: String[0..1];
 		    public i3: Integer[0..1];
 		    public n3: Natural[0..1];
 		    
-		    public setGet1(inout s: String, in i: Integer) {
+		    public setGet1(inout s: String[0..1], in i: Integer[0..1]) {
 		    		this.s3 = s;
 		    		this.i3 = i;
 		    }
 		    
-		    public setGet1(inout s: String, in n: Natural) {
+		    public setGet1(inout s: String[0..1], in n: Natural[0..1]) {
 		    	  this.s3 = s;
 		    	  this.n3 = n;
 		    }
 		    
-		    public setGet2(in s: String, inout i: Integer) {
+		    public setGet2(in s: String[0..1], inout i: Integer[0..1]) {
 		    		this.s3 = s;
 		    		this.i3 = i;
 		    }
 		    
-		    public setGet2(in s: String, inout n: Natural) {
+		    public setGet2(in s: String[0..1], inout n: Natural[0..1]) {
 		    	  this.s3 = s;
 		    	  this.n3 = n;
 		    }
@@ -98,17 +98,17 @@ class Expressions_Overloading specializes Test {
 		
 		class B {
 		
-		    public s: String;
-    		public i: Integer = 0;
-    		public n: Natural = 1;
+		    public s: String[0..1];
+    		public i: Integer[0..1] = 0;
+    		public n: Natural[0..1] = 1;
     		
-    		public j: Integer;
+    		public j: Integer[0..1];
     
     		@Create create() { }
     		@Create create(in i: Integer) { this.i = i; }
     		@Create create(in n: Natural) { this.n = n; }
-    		@Create get(out i: Integer) { i = this.i; }
-    		@Create get(out n: Natural) { n = this.n; }
+    		@Create get(out i: Integer[0..1]) { i = this.i; }
+    		@Create get(out n: Natural[0..1]) { n = this.n; }
     		
 				public c: C;
 				
@@ -129,18 +129,18 @@ class Expressions_Overloading specializes Test {
 		    public set(in s: String) { }
 		    public set(in i: Integer) { }
 		    public set(in n: Natural) { }
-		    public get1(): Integer { }
-		    public get1(): Natural { }
+		    public get1(): Integer[0..1] { }
+		    public get1(): Natural[0..1] { }
 		    public set(in s: String, in i: Integer) { }
 		    public set(in s: String, in n: Natural) { }
 		    public set(in m: Natural, in i: Integer[0..1]) { }
-		    public get2(out s: String) { }
-		    public get2(out i: Integer) { }
-		    public get2(out n: Natural) { }
-		    public setGet1(inout s: String, in i: Integer) { }
-		    public setGet1(inout s: String, in n: Natural) { }
-		    public setGet2(in s: String, inout i: Integer) { }
-		    public setGet2(in s: String, inout n: Natural) { }
+		    public get2(out s: String[0..1]) { }
+		    public get2(out i: Integer[0..1]) { }
+		    public get2(out n: Natural[0..1]) { }
+		    public setGet1(inout s: String[0..1], in i: Integer[0..1]) { }
+		    public setGet1(inout s: String[0..1], in n: Natural[0..1]) { }
+		    public setGet2(in s: String[0..1], inout i: Integer[0..1]) { }
+		    public setGet2(in s: String[0..1], inout n: Natural[0..1]) { }
 		    
 		    public b: Boolean = false;
 		    
@@ -198,10 +198,10 @@ class Expressions_Overloading specializes Test {
     
 		    public test(
 		    		out a: A,
-		    		out s: String, out i: Integer, out n: Natural,
-		    		out j: Integer,
+		    		out s: String[0..1], out i: Integer[0..1], out n: Natural[0..1],
+		    		out j: Integer[0..1],
 		    		out b1: B, out b2: B, out b3: B,
-		    		out b_i: Integer, out b_n: Natural,
+		    		out b_i: Integer[0..1], out b_n: Natural[0..1],
 		    		out c: C
 		    ) {
 		    

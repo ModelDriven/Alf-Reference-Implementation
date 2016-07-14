@@ -34,6 +34,9 @@ active class _TestRunner specializes Test::Tester {
     WriteLine("Expressions_Literal_Name...");
     new Expressions_Literal_Name::run(this);
     accept(Continue);
+    WriteLine("Expressions_Null_Coalescing...");
+    new Expressions_Null_Coalescing::run(this);
+    accept(Continue);
     WriteLine("Expressions_Object...");
     new Expressions_Object::run(this);
     accept(Continue);

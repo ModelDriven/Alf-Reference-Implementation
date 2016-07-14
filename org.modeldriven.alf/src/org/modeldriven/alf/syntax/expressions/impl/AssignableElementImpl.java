@@ -25,6 +25,10 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
         return this.isAssignableFrom(source.getImpl());
     }
     
+    public boolean isAssignableFrom(ElementReference source, boolean isNullable) {
+        return isAssignable(this, source.getImpl(), isNullable);
+    }
+    
     public boolean isAssignableFrom(Expression source) {
         return this.isAssignableFrom(source.getImpl());
     }
@@ -41,14 +45,22 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
         return isMultiplicityConformant(this, source);
     }
     
+    public boolean isMultiplicityConformantWith(AssignableElement source, boolean isNullable) {
+        return isMultiplicityConformant(this, source, isNullable);
+    }
+    
     public boolean isNull() {
         return isNull(this);
     }
     
     public static boolean isAssignable(AssignableElement target, AssignableElement source) {
+        return isAssignable(target, source, false);
+    }
+    
+    public static boolean isAssignable(AssignableElement target, AssignableElement source, boolean isNullable) {
         return source == null ||
                 isTypeConformant(target, source) && 
-                isMultiplicityConformant(target, source);
+                isMultiplicityConformant(target, source, isNullable);
     }
     
     public static boolean isTypeConformant(AssignableElement target, AssignableElement source) {
@@ -90,10 +102,17 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
     }
     
     public static boolean isMultiplicityConformant(AssignableElement target, AssignableElement source) {
+        return isMultiplicityConformant(target, source, false);
+    }
+    
+    public static boolean isMultiplicityConformant(AssignableElement target, AssignableElement source, boolean isNullable) {
+        int targetLower = target.getLower();
+        int sourceLower = source.getLower();
         int targetUpper = target.getUpper();
         int sourceUpper = source.getUpper();
-        return targetUpper == -1 || targetUpper > 1 || 
-               sourceUpper != -1 && sourceUpper <= targetUpper;
+        return (isNullable || targetLower == 0 || sourceLower > 0) &&
+               (targetUpper == -1 || targetUpper > 1 || 
+                sourceUpper != -1 && sourceUpper <= targetUpper);
     }
     
     /**
