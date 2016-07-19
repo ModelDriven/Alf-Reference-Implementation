@@ -46,7 +46,8 @@ class BookProduct specializes Product {
     in productCategory: ProductCategory
   ) {
     super(
-      productID, title + ": " + subtitle, copyright, unitPrice, description, website, 
+      productID, title + (subtitle == null? "": ": " + (subtitle??)), 
+      copyright, unitPrice, description, website, 
       isStocked, publisher, productCategory);
     
     this.titleCode = titleCode;

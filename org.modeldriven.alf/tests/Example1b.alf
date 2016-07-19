@@ -1,16 +1,15 @@
 activity QuicksortInPlace                                  // See Note 1
   (inout list: Integer[0..*] sequence, in low: Integer, in high: Integer) 
 {
-  l = low;                                               // See Note 2
-  h = high;
-  p = list[high];
-  t = +0;
-  if (l < h) {
+  if (low < high && low >= 1 && high <= list->size()) {
+    l = low;                                               // See Note 2
+    h = high;
+    p = list[high]??;
     do {                                                   // See Note 3
-      while ((l < h) && (list[l] <= p)) {                  // See Note 4
+      while ((l < h) && ((list[l]??) <= p)) {              // See Note 4
         l = l+1;
       }
-      while ((h > l) && (list[h] >= p)) {
+      while ((h > l) && ((list[h]??) >= p)) {
         h = h-1;
       }
       if (l < h) {

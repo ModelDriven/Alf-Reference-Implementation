@@ -4,7 +4,7 @@ activity Quicksort(in list: Integer[0..*] sequence):
    if (list->isEmpty()) {                                  
     return null;                                          
   } else {
-    x = list[1]; 
+    x = list[1]??; 
     list1 = list->excludeAt(1);                                         
     return Quicksort(list1->select a (a < x))->           
            including(x)->

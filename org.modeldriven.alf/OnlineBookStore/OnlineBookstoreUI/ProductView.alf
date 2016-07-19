@@ -35,7 +35,7 @@ active class ProductView specializes View {
       case "b": controller.Back();
       case "h": controller.Home();
       case "s": controller.ShowShoppingCart();
-      case "a": controller.AddProduct(GetQuantity("Enter quantity:", 1));
+      case "a": controller.AddProduct(GetQuantity("Enter quantity:", 1)??);
     }
   }
   

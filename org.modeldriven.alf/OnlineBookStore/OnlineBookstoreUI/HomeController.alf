@@ -32,10 +32,11 @@ active class HomeController specializes Controller {
     accept (Display);
     new HomeView(this);
     
-    let category : ProductCategory = null;
     accept (event: ShowCategory) {
-      category = this.topLevelCategories->at(event.choice);
-      if (category.'is divided into'->isEmpty()) {
+      category = this.topLevelCategories->at(event.choice)??;
+      if (category->isEmpty()) {
+        this.Display();
+      } else if (category.'is divided into'->isEmpty()) {
         new ProductCategoryController("Home", category, this).Display();
       } else {
         new SubcategoryController("Home", category, this).Display();

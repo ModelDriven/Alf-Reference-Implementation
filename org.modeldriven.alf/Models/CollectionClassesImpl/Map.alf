@@ -43,7 +43,7 @@ class Map<Key, Value> specializes CollectionClasses::Map<Key,Value> {
   }
 
   public includesValue (in value: Value[0..1]): Boolean { 
-    return this.entries.value->includes(value);
+    return this.entries->exists e (e.value == value);
   }
 
   public isEmpty (): Boolean { 

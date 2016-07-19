@@ -60,7 +60,7 @@ active class ShippingClerk specializes WarehouseClerk {
   /**
   External entity references.
   */
-  private EE: ExternalEntities = ExternalEntities::GetInstance();
+  private EE: ExternalEntities[0..1] = ExternalEntities::GetInstance();
   
   /*
    * State entry behaviors

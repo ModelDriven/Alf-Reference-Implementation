@@ -14,7 +14,7 @@ abstract class ExternalEntities {
   public shippingCompany: ShippingCompany;
   public shippingClerk: ShippingClerk;
   
-  public activity GetInstance(): ExternalEntities {
+  public activity GetInstance(): ExternalEntities[0..1] {
     return ExternalEntities.allInstances()[1];
   }
   
