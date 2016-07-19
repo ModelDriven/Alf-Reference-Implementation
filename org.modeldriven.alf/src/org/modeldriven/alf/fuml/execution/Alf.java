@@ -145,6 +145,10 @@ public abstract class Alf extends AlfBase {
         if (unit != null) {
             try {
                 NamespaceDefinition definition = unit.getDefinition();
+                Member stub = definition.getImpl().getStub();
+                if (stub != null) {
+                    definition = (NamespaceDefinition)stub;
+                }
                 Mapping elementMapping = definition.getImpl().getMapping();
                 Element element = ((FumlMapping)elementMapping).getElement();
                 
