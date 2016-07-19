@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -131,7 +130,7 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
 	    Expression operand2 = self.getOperand2();
 		return operand1 != null && operand2 != null && 
 		    (self.noNullArguments()?
-		            operand1.getLower() == 1 && operand1.getLower() == 1 &&
+		            operand1.getLower() == 1 && operand2.getLower() == 1 &&
 		            operand1.getUpper() == 1 && operand2.getUpper() == 1:
 		            operand1.getUpper() != -1 && operand1.getUpper() <= 1 &&
 		            operand2.getUpper() != -1 && operand2.getUpper() <= 1);
