@@ -80,7 +80,7 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
                 activity = (Activity)methods.get(0);
                 int i = stub == null?
                     operation.getOwnedParameter().indexOf(this.getParameter()):
-                    ((ActivityDefinition)context).getImpl().getParameters().
+                    ((ActivityDefinition)context).getImpl().getFormalParameters().
                                 indexOf(formalParameter);
                 parameter = activity.getOwnedParameter().get(i);
             } else {
