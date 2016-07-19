@@ -250,13 +250,14 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
      * Helper Methods
      */
 	
-	/**
-	 * Null arguments are allowed for arithmetic expressions to allow the
-	 * propagation of null returned from a divide by zero.
-	 */
+    /**
+     * Null arguments are allowed for arithmetic expressions other than
+     * concatenations (this allows for the propagation of a null returned from a
+     * division by zero in an operand).
+     */
 	@Override
 	public Boolean noNullArguments() {
-	    return false;
+	    return this.getSelf().getIsConcatenation();
 	}
     
 }

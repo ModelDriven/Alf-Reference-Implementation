@@ -158,8 +158,9 @@ public class ArithmeticExpression extends BinaryExpression {
     }
 
     /**
-     * Null arguments are allowed for arithmetic expressions to allow the
-     * propagation of null returned from a divide by zero.
+     * Null arguments are allowed for arithmetic expressions other than
+     * concatenations (this allows for the propagation of a null returned from a
+     * division by zero in an operand).
      */
     public Boolean noNullArguments() {
         return this.getImpl().noNullArguments();
