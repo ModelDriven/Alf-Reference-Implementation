@@ -17,7 +17,7 @@ package Utility {
   }
 
   public activity NullToString(in string: String[0..1]): String {
-    return string == null? "": string;
+    return string ?? "";
   }
   
   public activity Ask(in query: String): Boolean {
@@ -30,8 +30,8 @@ package Utility {
     return answer == "y";
   }
   
-  public activity GetString(in prompt: String[0..1]): String {
-    Write(prompt);
+  public activity GetString(in prompt: String[0..1]): String[0..1] {
+    Write(prompt??);
     s = ReadLine();
     return s == ""? null: s;
   }
@@ -39,7 +39,7 @@ package Utility {
   public activity GetCustomerEmail(): InternetEmailAddress[0..1] {
     do {
       Write("Enter your email address:");
-      response = ReadLine();
+      response = ReadLine()??"";
       if (response == "") {
         return null;
       } else if (IsValidEmail(response)) {
@@ -69,11 +69,11 @@ package Utility {
     in minimum: Count): Count[0..1] {
     do {
       Write(message);
-      response = ReadLine();
+      response = ReadLine()??"";
       if (response == "") {
         return null;
       }
-      quantity = IntegerFunctions::ToInteger(response);
+      quantity = IntegerFunctions::ToInteger(response)??;
       if (quantity->isEmpty() || quantity < minimum) {
         WriteLine("That is not a valid quantity.\n");
       } else {        
@@ -83,36 +83,36 @@ package Utility {
   }
   
   public activity GetPersonalName(in prompt: String[0..1]): PersonalName {
-    WriteLine(prompt);
-    Write("  Title:"); title = BlankToNull(ReadLine());
-    Write("  First name:"); firstName = ReadLine();
-    Write("  Middle name:"); middleName = BlankToNull(ReadLine());
-    Write("  Last name:"); lastName = ReadLine();
-    Write("  Suffix:"); suffix = BlankToNull(ReadLine());
+    WriteLine(prompt??);
+    Write("  Title:"); title = BlankToNull(ReadLine()??"");
+    Write("  First name:"); firstName = ReadLine()??"";
+    Write("  Middle name:"); middleName = BlankToNull(ReadLine()??"");
+    Write("  Last name:"); lastName = ReadLine()??"";
+    Write("  Suffix:"); suffix = BlankToNull(ReadLine()??"");
     return new PersonalName(title, firstName, middleName, lastName, suffix);
   }
   
   public activity GetMailingAddress(in prompt: String[0..1]): MailingAddress {
-    WriteLine(prompt);
-    Write("  Address Line 1:"); addressLine1 = ReadLine();
-    Write("  Address Line 2:"); addressLine2 = BlankToNull(ReadLine());
-    Write("  City:"); city = BlankToNull(ReadLine());
-    Write("  State Or Province:"); stateOrProvince = BlankToNull(ReadLine());
-    Write("  Postal Code:"); postalCode = BlankToNull(ReadLine());
-    Write("  Country:"); country = BlankToNull(ReadLine());
+    WriteLine(prompt??);
+    Write("  Address Line 1:"); addressLine1 = ReadLine()??"";
+    Write("  Address Line 2:"); addressLine2 = BlankToNull(ReadLine()??"");
+    Write("  City:"); city = BlankToNull(ReadLine()??"");
+    Write("  State Or Province:"); stateOrProvince = BlankToNull(ReadLine()??"");
+    Write("  Postal Code:"); postalCode = BlankToNull(ReadLine()??"");
+    Write("  Country:"); country = BlankToNull(ReadLine()??"");
     return new MailingAddress(
       addressLine1, addressLine2, city, stateOrProvince, country, postalCode);
   }
 
   public activity GetMonthYear(in prompt: String[0..1]): MonthYear[0..1] {
-    WriteLine(prompt);
+    WriteLine(prompt??);
     do {
       Write("  Month:");
-      response = ReadLine();
-      if (response->isEmpty()) {
+      response = ReadLine()??"";
+      if (response == "") {
         return null;
       }
-      month = IntegerFunctions::ToInteger(response);
+      month = IntegerFunctions::ToInteger(response)??;
       if (month->isEmpty() || month < 1 || month > 12) {
         WriteLine("  That is not a valid month.\n");
       }
@@ -120,11 +120,11 @@ package Utility {
     
     do {
       Write("  Year:");
-      response = ReadLine();
-      if (response->isEmpty()) {
+      response = ReadLine()??"";
+      if (response == "") {
         return null;
       }
-      year = IntegerFunctions::ToInteger(response);
+      year = IntegerFunctions::ToInteger(response)??;
       if (year->isEmpty() || year < 2000 || year > 2099) {
         WriteLine("  That is not a valid year.\n");
       }

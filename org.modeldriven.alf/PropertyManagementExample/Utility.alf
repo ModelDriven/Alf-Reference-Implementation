@@ -20,56 +20,53 @@ package Utility {
       for (i in len..decimalPlaces + 1) {
         image = "0" + image;
       }    
-      return Substring(image, 1, len - decimalPlaces) + "." + 
-             Substring(image, len - decimalPlaces + 1, len);
+      return (Substring(image, 1, len - decimalPlaces)??) + "." + 
+             (Substring(image, len - decimalPlaces + 1, len)??);
     }
   }
   
   public activity CurrencyAmountToString(in currencyAmount: 'Currency Amount'[0..1]): String {
-    return currencyAmount->isEmpty()? "n/a":
-      currencyAmount.currencyCode + " " + FixedPointNumberToString(currencyAmount.amount);
+    return currencyAmount == null? "n/a":
+      (currencyAmount.currencyCode??) + " " + FixedPointNumberToString(currencyAmount.amount??);
   }
   
   public activity AreaToString(in area: Area[0..1]): String {
-    return area->isEmpty()? "n/a":
-      FixedPointNumberToString(area.value) + " " + area.units;
+    return area == null? "n/a":
+      FixedPointNumberToString(area.value??) + " " + (area.units??);
   }
   
-  public activity DateToString(in date: Date): String {
-    return ToString(date.month) + "/" + ToString(date.day) + "/" + ToString(date.year);
+  public activity DateToString(in date: Date[0..1]): String {
+    return date == null? "n/a": ToString(date.month??) + "/" + ToString(date.day??) + "/" + ToString(date.year??);
   }
   
-  public activity PropertyTypeToString(in type: 'Property Type'): String {
+  public activity PropertyTypeToString(in type: 'Property Type'[0..1]): String {
   
-    switch (type) {
-      case 'Property Type'::personal: return "Personal";
-      case 'Property Type'::real: return "Real";
-    }
-  
-  }
-  
-  public activity PropertyStatusToString(in status: 'Property Status'): String {
-  
-    switch (status) {
-      case 'Property Status'::pending: return "Pending";
-      case 'Property Status'::acquired: return "Acquired";
-      case 'Property Status'::disposed: return "Disposed";
-    }
+    return type == 'Property Type'::personal? "Personal":
+           type == 'Property Type'::real? "Real":
+           "n/a";
   
   }
   
-  public activity DispositionTypeToString(in type: 'Property Disposition Type'): String {
+  public activity PropertyStatusToString(in status: 'Property Status'[0..1]): String {
   
-    switch (type) {
-      case 'Property Disposition Type'::transferred: return "Transferred";
-      case 'Property Disposition Type'::sold: return "Sold";
-      case 'Property Disposition Type'::destroyed: return "Destroyed";
-    }
+    return status == 'Property Status'::pending? "Pending":
+           status == 'Property Status'::acquired? "Acquired":
+           status == 'Property Status'::disposed? "Disposed":
+           "n/a";
+  
+  }
+  
+  public activity DispositionTypeToString(in type: 'Property Disposition Type'[0..1]): String {
+  
+    return type == 'Property Disposition Type'::transferred? "Transferred":
+           type == 'Property Disposition Type'::sold? "Sold":
+           type == 'Property Disposition Type'::destroyed? "Destroyed":
+           "n/a";
   
   }
   
   public activity OptionalString(in string: String[0..1]): String {
-    return string->notEmpty()? string: "n/a";
+    return string ?? "n/a";
   }
   
   public activity WriteReply(in reply: 'Property Management Success Reply') {
@@ -86,17 +83,17 @@ package Utility {
     WriteLine("Value: " + CurrencyAmountToString(property.'property value'));
     WriteLine("Type: " + PropertyTypeToString(property.'property type'));
     WriteLine("Serial Number: " + OptionalString(property.'property serial number'));
-    WriteLine("Size: " + OptionalString(AreaToString(property.'property size')));
-    WriteLine("Acquisition Date: " + OptionalString(DateToString(acquisitionData.'acquisition date')));
-    WriteLine("Acquisition Cost: " + OptionalString(CurrencyAmountToString(acquisitionData.'acquisition cost')));
-    WriteLine("Disposition Date: " + OptionalString(DateToString(dispositionData.'disposition date')));
-    WriteLine("Disposition Revenue: " + OptionalString(CurrencyAmountToString(dispositionData.'disposition revenue')));
-    WriteLine("Disposition Type: " + OptionalString(DispositionTypeToString(dispositionData.'disposition type')));
+    WriteLine("Size: " + AreaToString(property.'property size'));
+    WriteLine("Acquisition Date: " + DateToString(acquisitionData.'acquisition date'));
+    WriteLine("Acquisition Cost: " + CurrencyAmountToString(acquisitionData.'acquisition cost'));
+    WriteLine("Disposition Date: " + DateToString(dispositionData.'disposition date'));
+    WriteLine("Disposition Revenue: " + CurrencyAmountToString(dispositionData.'disposition revenue'));
+    WriteLine("Disposition Type: " + DispositionTypeToString(dispositionData.'disposition type'));
     WriteLine("Location: " + OptionalString(location.'location identifier'));
     
     if (location->notEmpty()) {
       WriteLine("Address: ");
-      WriteLine(location.'location address');
+      WriteLine(location.'location address'??);
     }
     
   }

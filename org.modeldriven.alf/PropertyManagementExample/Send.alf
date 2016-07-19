@@ -32,9 +32,9 @@ activity Send(in service: 'Property Management Service', in request: Request) {
   }
   
   if (reply->notEmpty()) {
-    WriteReply(reply);
+    WriteReply(reply??);
   } else if (error->notEmpty()) {
-    WriteError(error);
+    WriteError(error??);
   } else {
     WriteLine("No response!");
   }

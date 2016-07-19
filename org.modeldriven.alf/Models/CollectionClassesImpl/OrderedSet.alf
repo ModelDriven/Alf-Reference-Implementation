@@ -110,7 +110,7 @@ class OrderedSet<T>
   public replaceAt (in index: Integer, in element: T): T[0..1] {
     result = this.at(index);
     if (result->notEmpty()) {
-      this.remove(result);
+      this.remove(result??);
       this.addAt(index, element);
     }
     return result;

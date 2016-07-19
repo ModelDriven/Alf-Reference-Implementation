@@ -19,7 +19,7 @@ active class CheckOutController specializes Controller {
     this.customerEmail = customerEmail;
     
     customer = Customer->
-      select selected (selected.email == customerEmail)[1];
+      select selected (selected.email == customerEmail)[1]??;
     if (customer->notEmpty()) {
       this.customerName = customer.name;
       this.customerPhone = customer.phone;
@@ -65,18 +65,10 @@ active class CheckOutController specializes Controller {
       new CheckOutView(this);
       
       accept (event: Update) {
-        if (event.customerEmail->notEmpty()) {
-          this.customerEmail = event.customerEmail;
-        }
-        if (event.customerName->notEmpty()) {
-          this.customerName = event.customerName;
-        }
-        if (event.customerPhone->notEmpty()) {
-          this.customerPhone = event.customerPhone;
-        }
-        if (event.shippingAddress->notEmpty()) {
-          this.shippingAddress = event.shippingAddress;
-        }
+        this.customerEmail = event.customerEmail ?? this.customerEmail;
+        this.customerName = event.customerName ?? this.customerName;
+        this.customerPhone = event.customerPhone ?? this.customerPhone ??;
+        this.shippingAddress = event.shippingAddress ?? this.shippingAddress;
       } or accept (Next) {
         if (this.isValid()) {
           new PaymentController(this).Display();

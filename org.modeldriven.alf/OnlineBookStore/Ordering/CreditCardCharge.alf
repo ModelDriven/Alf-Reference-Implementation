@@ -59,7 +59,7 @@ active class CreditCardCharge specializes Timer::Observer {
   /**
   External entity references.
   */
-  private EE: ExternalEntities = ExternalEntities::GetInstance();
+  private EE: ExternalEntities[0..1] = ExternalEntities::GetInstance();
   
   
   /*

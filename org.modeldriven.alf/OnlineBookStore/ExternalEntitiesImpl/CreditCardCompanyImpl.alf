@@ -12,7 +12,7 @@ active class CreditCardCompanyImpl specializes CreditCardCompany {
       selected.chargeID == requestChargeApproval.transactionID)[1];
     SendMessage(
       "CREDIT CARD COMPANY",
-      "Charge to: " + charge.accountNumber + " for: " + 
+      "Charge to: " + (charge.accountNumber??"ERROR!") + " for: " + 
           ToMoneyString(charge.chargeAmount) + "\n" +
       "Charge APPROVED"
     );

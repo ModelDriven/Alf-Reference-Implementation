@@ -50,7 +50,7 @@ active class Order {
   /**
   External entity references.
   */
-  private EE: ExternalEntities = ExternalEntities::GetInstance();
+  private EE: ExternalEntities[0..1] = ExternalEntities::GetInstance();
   
   /*
    * Signal receptions
@@ -145,7 +145,7 @@ active class Order {
   
   private '3. Payment Not Approved'(in rcvd_evt: PaymentDeclined) {
     // Notify the customer that the card was rejected.
-    customer = this.'is placed by';
+    customer = this.'is placed by'??;
     this.EE.onlineCustomer.ChargeDeclined(
       customerEmail => customer.email
     );
@@ -154,7 +154,7 @@ active class Order {
   private '4. Being Packed And Shipped'(in rcvd_evt: PaymentApproved) {
     // Notify the customer that the charge was approved and the order will be
     // shipped.
-    customer = this.'is placed by';
+    customer = this.'is placed by'??;
     customer.purchasesMade++;
     this.EE.onlineCustomer.ChargeApproved(
       customerEmail => customer.email
@@ -168,7 +168,7 @@ active class Order {
   
   private '5. Delivered to Customer'(in rcvd_evt: OrderDelivered) {
     // Notify the customer that we think the order has been delivered.
-    customer = this.'is placed by';
+    customer = this.'is placed by'??;
     this.EE.onlineCustomer.OrderReportedDelivered(
       customerEmail => customer.email
     );

@@ -11,7 +11,7 @@ activity retrieve (
   out error: 'Error Reply' [0..1] ) {
 
   property = Property -> select p 
-               (p.identifier == request.'property identifier')[1];
+               (p.identifier == request.'property identifier')[1]??;
 
   reply = null;
   error = null;

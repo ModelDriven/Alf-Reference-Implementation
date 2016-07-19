@@ -25,21 +25,21 @@ package ContactDataTypes {
   
   public activity ToNameString(in name: PersonalName): String {
     return 
-      (name.title == null? "": name.title + " ") +
+      (name.title == null? "": (name.title??) + " ") +
       name.firstName + " " +
-      (name.middleName == null? "": name.middleName + " ") +
+      (name.middleName == null? "": (name.middleName??) + " ") +
       name.lastName +
-      (name.suffix == null? "" : " " + name.suffix);
+      (name.suffix == null? "" : " " + (name.suffix??));
   }
   
   public activity ToAddressString(in address: MailingAddress): String {
     return
       address.addressLine1 + "\n" +
-      (address.addressLine2 == null? "": address.addressLine2 + "\n") +
-      (address.city == null? "": address.city + " ") + 
-      (address.stateOrProvince == null? "": address.stateOrProvince + " ") + 
-      (address.postalCode == null? "": address.postalCode) + "\n" +
-      (address.country == null? "": address.country + "\n");
+      (address.addressLine2 == null? "": (address.addressLine2??) + "\n") +
+      (address.city == null? "": (address.city??) + " ") + 
+      (address.stateOrProvince == null? "": (address.stateOrProvince??) + " ") + 
+      (address.postalCode == null? "": address.postalCode??) + "\n" +
+      (address.country == null? "": (address.country??) + "\n");
   }
 
 }

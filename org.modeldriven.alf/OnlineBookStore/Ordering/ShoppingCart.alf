@@ -20,7 +20,7 @@ active class ShoppingCart {
   /**
   External entity references.
   */
-  private EE: ExternalEntities = ExternalEntities::GetInstance();
+  private EE: ExternalEntities[0..1] = ExternalEntities::GetInstance();
   
   /*
    * Signal receptions
@@ -68,7 +68,7 @@ active class ShoppingCart {
   private '2. Adding Selection to Cart'(in rcvd_evt: AddSelection) {
     // Add the next selection to the cart.
     productSelection = this.'includes selection'-> select selected (
-      selected.'is selection of'.productID == rcvd_evt.productID)[1];
+      selected.'is selection of'.productID == rcvd_evt.productID)[1]??;
     if (productSelection->isEmpty()) {
       new ProductSelection().AddSelection(
         cartID =>    this.cartID,

@@ -8,8 +8,8 @@ active class ShippingClerkImpl specializes ShippingClerk {
     accept (shipmentReadyToPack: ShipmentReadyToPack);
     
     shippingClerk = Shipping::ShippingClerk->select selected (
-      selected.clerkID == shipmentReadyToPack.clerkID)[1];
-      
+      selected.clerkID == shipmentReadyToPack.clerkID)[1]??;
+    
     title = "SHIPPING CLERK: " + IntegerFunctions::ToString(shippingClerk.clerkID);
       
     SendMessage(title, "Books selected.");

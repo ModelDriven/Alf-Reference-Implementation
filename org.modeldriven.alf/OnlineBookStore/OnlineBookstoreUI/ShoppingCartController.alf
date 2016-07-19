@@ -4,14 +4,14 @@ private import Ordering::*;
 
 active class ShoppingCartController specializes Controller {
 
-  public EE: ExternalEntities = ExternalEntities::GetInstance();
+  public EE: ExternalEntities[0..1] = ExternalEntities::GetInstance();
 
   @Create
   public ShoppingCartController(in previous: Controller) {
     super.following(previous);
     cart = this.getCart();
     if (cart->notEmpty()) {
-      this.EE.onlineCustomer.registerForCart(this, cart.cartID);
+      this.EE.onlineCustomer.registerForCart(this, cart.cartID??);
     }
   }
   
@@ -19,13 +19,13 @@ active class ShoppingCartController specializes Controller {
   public destroy() {
     cart = this.getCart();
     if (cart->notEmpty()) {
-      this.EE.onlineCustomer.unregisterForCart(this, cart.cartID);
+      this.EE.onlineCustomer.unregisterForCart(this, cart.cartID??);
     }
     super.destroy();
   }
   
-  public getCart(): ShoppingCart[0..1] {
-    return ((ShoppingSession)this.session).cart;
+  public getCart(): ShoppingCart {
+    return ((ShoppingSession)this.session).cart??;
   }
   
   public setCart(in cart: ShoppingCart[0..1]) {
@@ -100,7 +100,7 @@ active class ShoppingCartController specializes Controller {
         break;
       } or accept (event: CheckOut) {
         if (event.customerEmail->notEmpty()) {
-          new CheckOutController(event.customerEmail, this).Display();
+          new CheckOutController(event.customerEmail??, this).Display();
           break;
         }
       } or accept (event: Cancel) {
@@ -113,7 +113,7 @@ active class ShoppingCartController specializes Controller {
       } or accept (event: ChangeQuantity) {
         if (event.quantity->notEmpty()) {
           cart.'includes selection'->at(event.choice).
-            ChangeQuantity(event.quantity);
+            ChangeQuantity(event.quantity??);
           accept (Notification);
         }
       }

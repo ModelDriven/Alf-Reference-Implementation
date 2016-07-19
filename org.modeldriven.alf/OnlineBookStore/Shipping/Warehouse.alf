@@ -70,9 +70,9 @@ active class Warehouse {
     {
     
     readyShipment = this.'is origin point for'->
-      select selected (selected.waitingToBePacked)[1];
+      select selected (selected.waitingToBePacked)[1]??;
     freeClerk = ((ShippingClerk)this.employs)-> 
-      select selected (selected.awaitingAssignment)[1];
+      select selected (selected.awaitingAssignment)[1]??;
     
     R23.createLink(freeClerk, readyShipment);
     readyShipment.waitingToBePacked = false;

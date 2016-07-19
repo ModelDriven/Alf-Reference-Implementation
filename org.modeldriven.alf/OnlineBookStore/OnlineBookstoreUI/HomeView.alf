@@ -30,7 +30,7 @@ active class HomeView specializes View {
     switch (choice) {
       case "x": controller.Exit();
       case "s": controller.ShowShoppingCart();
-      default: controller.ShowCategory(IntegerFunctions::ToInteger(choice));
+      default: controller.ShowCategory(IntegerFunctions::ToInteger(choice)??1);
     }
   }
 

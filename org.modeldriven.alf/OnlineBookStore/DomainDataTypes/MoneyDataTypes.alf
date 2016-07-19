@@ -21,17 +21,17 @@ package MoneyDataTypes {
   
   public activity Normalize(in amount: Money): Money {
     return new Money(
-      amount.dollars + amount.cents / 100,
+      amount.dollars + amount.cents / 100??,
       amount.cents % 100
     );
   }
   
-  public activity ToMoneyString(in x: Money): String {
-    cents = IntegerFunctions::ToString(x.cents);
+  public activity ToMoneyString(in x: Money[0..1]): String {
+    cents = IntegerFunctions::ToString(x.cents??0);
     if (StringFunctions::Size(cents) < 2) {
       cents = "0" + cents;
     }
-    return "$" + IntegerFunctions::ToString(x.dollars) + "." + cents;
+    return "$" + IntegerFunctions::ToString(x.dollars??0) + "." + cents;
   }
 
 }

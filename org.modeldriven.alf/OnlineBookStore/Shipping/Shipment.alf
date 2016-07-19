@@ -89,7 +89,7 @@ active class Shipment {
   /**
   External entity references.
   */
-  private EE: ExternalEntities = ExternalEntities::GetInstance();
+  private EE: ExternalEntities[0..1] = ExternalEntities::GetInstance();
   
   /*
    * State entry behaviors
@@ -108,7 +108,7 @@ active class Shipment {
     
     warehouseName = this.EE.logistics.assignWarehouse(this.shipmentID);
     warehouse = Warehouse->select selected (
-      selected.warehouseName == warehouseName)[1];
+      selected.warehouseName == warehouseName)[1]??;
     R24.createLink(this, warehouse);
     
     // Notify a shipping clerk to pack the order.
@@ -161,7 +161,7 @@ active class Shipment {
     
     // Relate the shipment to the selected shipping company.
     shippingCompany = ShippingCompany->select selected (
-      selected.companyName == rcvd_evt.shippingCompany)[1];
+      selected.companyName == rcvd_evt.shippingCompany)[1]??;
     R21.createLink(shippingCompany, this);
     
     }
@@ -190,7 +190,7 @@ active class Shipment {
     
     // Relate the shipment to the selected shipping company.
     shippingCompany = ShippingCompany->select selected (
-      selected.companyName == rcvd_evt.shippingCompany)[1];
+      selected.companyName == rcvd_evt.shippingCompany)[1]??;
     R21.createLink(shippingCompany, this);
     
     }

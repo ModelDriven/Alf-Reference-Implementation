@@ -44,7 +44,7 @@ active class ProductCategoryController specializes Controller {
     } or accept (ShowShoppingCart) {
       new ShoppingCartController(this).Display();
     } or accept (event: ShowProduct) {
-      new ProductController(this.title, this.products->at(event.choice), this).Display();
+      new ProductController(this.title, this.products->at(event.choice)??, this).Display();
     }
     
     this.view.destroy();
