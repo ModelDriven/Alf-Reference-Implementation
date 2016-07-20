@@ -23,7 +23,7 @@ active class Order {
   }
   
   public removeProduct(in product: Product) {
-    lineItem = this.lineItems->select item (item.product == product)[1];
+    lineItem = this.lineItems->select item (item.product == product)[1]??;
     this.lineItems->remove(lineItem);
     lineItem.destroy();
   }

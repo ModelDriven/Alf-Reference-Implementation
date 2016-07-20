@@ -408,12 +408,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
      * after the tuple of the invocation expression must be the same as the
      * assignments before.
      */
-    // NOTE: Until better handling of multiplicity is implemented, this
-    // constraint is limited to not apply if the the feature multiplicity
-    // upper bound is 1, even if the lower bound is 0.
     public boolean invocationExpressionAssignmentsAfter() {
-        if (!this.isSequenceFeatureInvocation() || 
-                this.getSelf().getFeature().getExpression().getUpper() == 1) {
+        if (!this.isSequenceFeatureInvocation()) {
             return true;
         } else {
             InvocationExpression self = this.getSelf();
