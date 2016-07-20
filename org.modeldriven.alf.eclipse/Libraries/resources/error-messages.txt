@@ -1,3 +1,7 @@
+arithmeticExpressionOperandMultiplicity
+Multiplicity upper bounds of both operands must be 1.
+The operand expressions of an arithmetic expressions must both have multiplicity upper bounds of 1.
+
 arithmeticExpressionOperandTypes
 Illegal operand types.
 The operands of an arithmetic expression must both have a type that conforms to type Integer or Real, unless the operator is + or %. If the operator is +, then both operands may also both have type a type that conforms to String. If the operator is %, then both operands must have a type that conforms to type Integer. 
@@ -19,8 +23,8 @@ Illegal data value update.
 If an assignment expression has a feature with a primary expression whose type is a data type, then the assignment expression must be a data value update.
  
 assignmentExpressionSimpleAssignmentMultiplicityConformance
-Multiplicity upper bound of the right-hand side cannot be greater than that of the left-hand side.
-If the left-hand side of a simple assignment is not a new local name and the multiplicity upper bound of the left-hand side is less than or equal to 1, then the multiplicity upper bound of the right-hand side cannot be greater than that of the left-hand side.
+Multiplicities must conform.
+If the left-hand side of a simple assignment is not a local name and the multiplicity lower bound of the left-hand side is greater than 0, then the multiplicity lower bound of the right-hand side cannot be 0. If the left-hand side is not a new local name and the multiplicity upper bound of the left-hand side is less than or equal to 1, then the multiplicity upper bound of the right-hand side cannot be greater than that of the left-hand side.
  
 assignmentExpressionSimpleAssignmentTypeConformance
 Right-hand side must have a type that conforms to the type of the left-hand side.
@@ -31,7 +35,7 @@ Constructor invocation not allowed here.
 The referent may only be a constructor (as a result of the target disambiguating to a feature reference) if this behavior invocation expression is the expression of an expression statement that is the first statement in the definition for the method of a constructor operation.
  
 behaviorInvocationExpressionArgumentCompatibility
-One or more arguments are not compatible with the behavior parameters.
+One or more arguments are not compatible (in type and/or multiplicity) with the behavior parameters.
 If the target qualified name does not disambiguate to a feature reference, then each input argument expression must be assignable to its corresponding parameter and each output argument expression must be assignable from its corresponding parameter. (Note that this implies that the type of an argument expression for an inout parameter must be the same as the type of that parameter.)
  
 behaviorInvocationExpressionReferentConstraint
@@ -43,12 +47,12 @@ Invalid assignments in expression operands.
 The assignments in the operand expressions of a binary expression must be valid (as determined by the validateAssignments helper operation).
  
 binaryExpressionOperandMultiplicity
-Operand multiplicity must be no greater than (or exactly) 1.
-The operands of a binary expression must both have a multiplicity upper bound no greater than 1. If null arguments are not allowed (as given by the noNullArguments helper operation), then the upper bounds must be exactly 1.
+One or both operands have illegal multiplicity.
+The operands of a binary expression must both have a multiplicity upper bound no greater than 1. If null arguments are not allowed (as given by the noNullArguments helper operation), then the lower and upper bounds must be exactly 1.
  
 bitStringUnaryExpressionOperand
-Operand must have type BitString or Integer and multiplicity upper bound of 1.
-The operand expression of a BitString unary expression must have a type that conforms to type BitString or Integer and a multiplicity upper bound of 1.
+Operand must have type BitString or Integer and multiplicity 1..1.
+The operand expression of a BitString unary expression must have a type that conforms to type BitString or Integer and multiplicity lower and upper bounds of 1.
  
 booleanUnaryExpressionOperand
 Operand must have type Boolean and multiplicity upper bound of 1.
@@ -67,8 +71,8 @@ Type name must resolve to a non-template class.
 The given type name must resolve to a non-template class.
  
 classificationExpressionOperand
-Operand multiplicity upper bound must be 1.
-The operand expression of a classification expression must have a multiplicity upper bound of 1.
+Operand multiplicity must be 1..1.
+The operand expression of a classification expression must have multiplicity lower and upper bounds of 1.
  
 classificationExpressionTypeName
 Type name must resolve to a non-template classifier.
@@ -83,8 +87,8 @@ conditionalTestExpressionAssignmentsBefore
 The assignments before the first operand expression of a conditional-test expression are the same as those before the conditional-test expression. The assignments before the second and third operand expressions are the same as those after the first operand expression.
  
 conditionalTestExpressionCondition
-First operand must have type Boolean and multiplicity upper bound of 1.
-The first operand expression of a conditional-test expression must be of a type that conforms to type Boolean and have a multiplicity upper bound of 1.
+First operand must have type Boolean and multiplicity 1..1.
+The first operand expression of a conditional-test expression must be of a type that conforms to type Boolean and multiplicity lower and upper bounds of 1.
  
 expressionUniqueAssignments
 
@@ -99,7 +103,7 @@ Target type must have a constructor with the same name.
 If there is no target feature expression, then the implicit feature with the same name as the target type must be a constructor.
  
 featureInvocationExpressionReferentExists
-Feature reference cannot be resolved.
+Feature reference cannot be resolved or arguments are not compatible (in type and/or multiplicity) with corresponding parameters.
 If a feature invocation expression is not an implicit destructor call, then it must be possible to determine a single valid referent for it according to the overloading resolution rules.
  
 featureLeftHandSideAssignmentsBefore
@@ -172,7 +176,7 @@ Index expression must have a multiplicity upper bound no greater than 1.
 If a left-hand side has an index, then the index expression must have a multiplicity upper bound no greater than 1.
  
 linkOperationExpressionArgumentCompatibility
-One or more arguments incompatible with corresponding association ends.
+One or more arguments incompatible (in type and/or multipicity) with corresponding association ends.
 Each argument expression must be assignable to its corresponding association end.
  
 linkOperationExpressionAssociationReference
@@ -300,7 +304,7 @@ Variable name already assigned.
 The expansion variable name may not conflict with any name already assigned after the primary expression.
  
 sequenceOperationExpressionArgumentCompatibility
-One or more arguments are not compatible with corresponding parameters.
+One or more arguments are not compatible (in type and/or multipicity) with corresponding parameters.
 The type of an input argument expression of a sequence operation parameter must be assignable to its corresponding parameter. The type of an output parameter must be assignable to its corresponding argument expression. (Note that this implies that the type of an argument expression for an inout parameter must be the same as the type of that parameter.)
  
 sequenceOperationExpressionAssignmentsAfter
@@ -317,7 +321,7 @@ There must be a single behavior that is a resolution of the operation qualified 
  
 sequenceOperationExpressionTargetCompatibility
 The target expression is not compatible with the operation.
-If the first parameter of the referent has direction inout, then the parameter type must have the same type as the primary expression, the primary expression must have the form of a left-hand side and, if the equivalent left-hand side is for a local name, that name must already exist.
+If the first parameter of the referent has direction inout, then the parameter type must have the same type as the primary expression, the primary expression must have the form of a left-hand side and, if the equivalent left-hand side is for a local name, that name must already exist. The first parameter must be assignable to the effective left-hand side.
  
 sequenceRangeAssignments
 Local name cannot be assigned in more than one range expression.
@@ -528,8 +532,8 @@ forStatementLoopVariables
 The assigned sources for loop variables after the body of a for statement must be the for statement (the same as before the body). 
  
 forStatementParallelAnnotationNames
-@parallel names must have multiplicity * and can only by used with an add behavior.
-A @parallel annotation of a for statement may include a list of names. Each such name must be already assigned after the loop variable definitions of the for statement, with a multiplicity of [0..*]. These names may only be used within the body of the for statement as the first argument to for the CollectionFunctions::add behavior.
+@parallel names cannot have multiplicity upper bound 1 and can only by used with an add behavior.
+A @parallel annotation of a for statement may include a list of names. Each such name must be already assigned after the loop variable definitions of the for statement, with a multiplicity upper bound 1. These names may only be used within the body of the for statement as the first argument for the CollectionFunctions::add behavior.
  
 forStatementParallelAssignmentsAfter
 Only @parallel names can be updated in a parallel for statement.
@@ -557,7 +561,7 @@ The assignments after an in-line statement are the same as the assignments befor
  
 localNameDeclarationStatementAssignmentsAfter
 
-The assignments after a local name declaration statement are the assignments after the expression of the statement plus a new assignment for the local name defined by the statement. The assigned source for the local name is the local name declaration statement. The local name has the type denoted by the type name if this is not empty and is untyped otherwise. If the statement has multiplicity,  then the multiplicity of the local name is [0..*], otherwise it is [0..1].
+The assignments after a local name declaration statement are the assignments after the expression of the statement plus a new assignment for the local name defined by the statement. The assigned source for the local name is the local name declaration statement. The local name has the type denoted by the type name if this is not empty and is untyped otherwise. The multiplicity lower bound of the local name is 0 if the expression has a lower bound of 0, otherwise it is 1. If the statement has multiplicity, then the multiplicity upper bound of the local name is *, otherwise it is 1.
  
 localNameDeclarationStatementAssignmentsBefore
 

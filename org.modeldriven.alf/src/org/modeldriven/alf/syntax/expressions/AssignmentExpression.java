@@ -287,8 +287,8 @@ public class AssignmentExpression extends Expression {
 	}
 
     /**
-     * If the left-hand side of a simple assignment is not a non-indexed local
-     * name and the multiplicity lower bound of the left is greater than 0, then
+     * If the left-hand side of a simple assignment is not a local name and the
+     * multiplicity lower bound of the left-hand side is greater than 0, then
      * the multiplicity lower bound of the right-hand side cannot be 0. If the
      * left-hand side is not a new local name and the multiplicity upper bound
      * of the left-hand side is less than or equal to 1, then the multiplicity
