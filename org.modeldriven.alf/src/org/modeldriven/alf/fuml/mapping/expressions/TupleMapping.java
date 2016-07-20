@@ -52,6 +52,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
      * a control flow from the structured activity node to the invocation action
      * taking input from the tuple mapping.
      */
+    // TODO: Update tuple mapping in the spec.
     /*
      * Actually, output arguments should not be mapped inside the structured
      * activity node.
@@ -139,11 +140,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         
                         if (expressionType != null && parameterType != null &&
                                 expressionType.getImpl().isNatural() &&
-                                // NOTE: Check for "not Integer" excludes both Integer
-                                // and Natural. Checking just for "is UnlimitedNatural"
-                                // wouldn't exclude Natural, since it is a specialization
-                                // of UnlimitedNatural.
-                                !parameter.getImpl().getType().getImpl().isInteger()) {
+                                parameterType.getImpl().isUnlimitedNatural() &&
+                                !parameterType.getImpl().isNatural()) {
                             CallBehaviorAction callAction =
                                 this.tupleGraph.addCallBehaviorAction(getBehavior(
                                     RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural()));
@@ -158,7 +156,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                 this, subgraph, 
                                 resultSource, expressionType, 
                                 input.getImpl().getIsCollectionConversion(parameter), 
-                                input.getImpl().getIsBitStringConversion(parameter));
+                                input.getImpl().getIsBitStringConversion(parameter),
+                                input.getImpl().getIsRealConversion(parameter));
                         
                         InputPin inputPin = inputPins.get(i);
                         this.tupleGraph.addObjectFlow(resultSource, inputPin);
@@ -254,7 +253,8 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                             this, this.tupleGraph, 
                             outputPin, parameter.getImpl().getType(), 
                             output.getImpl().getIsCollectionConversion(parameter), 
-                            output.getImpl().getIsBitStringConversion(parameter));
+                            output.getImpl().getIsBitStringConversion(parameter),
+                            output.getImpl().getIsRealConversion(parameter));
                    
                     // NOTE: These activity edges are part of the tuple graph, 
                     // NOT the LHS graph.

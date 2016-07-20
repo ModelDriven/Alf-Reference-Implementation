@@ -110,31 +110,19 @@ public class InstanceCreationExpressionImpl
 	            return classReferent != null? null: dataTypeReferent;
 	        } else {
 	            ElementReference operationReferent = null;
-    	        if (classReferent == null) {
-    	            Collection<ElementReference> constructorReferents = 
-    	                    new ArrayList<ElementReference>();
-    	            for (ElementReference referent: constructor.getReferent()) {
-    	                if (referent.getImpl().isConstructor()) {
-    	                    constructorReferents.add(referent);
-    	                }
-    	            }
-                    operationReferent = this.resolveOverloading(constructorReferents);
-    	        } else {
-    	            String name = constructor.getUnqualifiedName().getName();
+    	        if (classReferent != null) {
+                    String name = constructor.getUnqualifiedName().getName();
                     constructor = constructor.getImpl().copy().addName(name);
-    	            for (ElementReference member: 
-    	                classReferent.getImpl().getOwnedMembers()) {
-    	                if (name.equals(member.getImpl().getName()) &&
-    	                        member.getImpl().isOperation()) {
-    	                    if (operationReferent != null) {
-    	                        operationReferent = null;
-    	                        break;
-    	                    }
-    	                    operationReferent = member;
-    	                }
-    	            }
     	        }
-    	        
+	            Collection<ElementReference> constructorReferents = 
+	                    new ArrayList<ElementReference>();
+	            for (ElementReference referent: constructor.getReferent()) {
+	                if (referent.getImpl().isConstructor()) {
+	                    constructorReferents.add(referent);
+	                }
+	            }
+                operationReferent = this.resolveOverloading(constructorReferents);
+     	        
                 if (operationReferent == null || 
                         !operationReferent.getImpl().isConstructor()) {
                     return classReferent;

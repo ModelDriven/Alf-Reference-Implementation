@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -83,7 +82,7 @@ public class BitStringUnaryExpression extends UnaryExpression {
 
 	/**
 	 * BitString conversion is required if the operand expression of a BitString
-	 * unary expression has type Integer.
+	 * unary expression has a type that conforms to type Integer.
 	 **/
 	public boolean bitStringUnaryExpressionIsBitStringConversionDerivation() {
 		return this.getImpl()

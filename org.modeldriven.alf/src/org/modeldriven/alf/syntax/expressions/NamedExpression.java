@@ -79,13 +79,21 @@ public class NamedExpression extends SyntaxElement {
 		this.getImpl().setIsCollectionConversion(isCollectionConversion);
 	}
 
-	public Boolean getIsBitStringConversion() {
-		return this.getImpl().getIsBitStringConversion();
-	}
+    public Boolean getIsBitStringConversion() {
+        return this.getImpl().getIsBitStringConversion();
+    }
 
-	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.getImpl().setIsBitStringConversion(isBitStringConversion);
-	}
+    public void setIsBitStringConversion(Boolean isBitStringConversion) {
+        this.getImpl().setIsBitStringConversion(isBitStringConversion);
+    }
+
+    public Boolean getIsRealConversion() {
+        return this.getImpl().getIsRealConversion();
+    }
+
+    public void setIsRealConversion(Boolean isRealConversion) {
+        this.getImpl().setIsRealConversion(isRealConversion);
+    }
 
 	/**
 	 * Collection conversion is required if the type of the corresponding
@@ -96,19 +104,28 @@ public class NamedExpression extends SyntaxElement {
 		return this.getImpl().namedExpressionIsCollectionConversionDerivation();
 	}
 
-	/**
-	 * Bit string conversion is required if the type of the type of the
-	 * corresponding parameter is BitString, or a collection class whose sequence
-	 * type is BitString, and the type of the argument expression is not
-	 * BitString.
-	 **/
-	public boolean namedExpressionIsBitStringConversionDerivation() {
-		return this.getImpl().namedExpressionIsBitStringConversionDerivation();
-	}
+    /**
+     * Bit string conversion is required if the type of the corresponding
+     * parameter is BitString, or a collection class whose sequence type is
+     * BitString, and the type of the argument expression is not BitString.
+     **/
+    public boolean namedExpressionIsBitStringConversionDerivation() {
+        return this.getImpl().namedExpressionIsBitStringConversionDerivation();
+    }
+
+    /**
+     * Real conversion is required if the type of the corresponding parameter is
+     * Real, or a collection class whose sequence type is Real, and the type of
+     * the argument expression is not Real.
+     **/
+    public boolean namedExpressionIsRealConversionDerivation() {
+        return this.getImpl().namedExpressionIsRealConversionDerivation();
+    }
 
 	public void _deriveAll() {
 		this.getIsCollectionConversion();
 		this.getIsBitStringConversion();
+		this.getIsRealConversion();
 		super._deriveAll();
 		Expression expression = this.getExpression();
 		if (expression != null) {
@@ -126,10 +143,14 @@ public class NamedExpression extends SyntaxElement {
 			violations.add(new ConstraintViolation(
 					"namedExpressionIsCollectionConversionDerivation", this));
 		}
-		if (!this.namedExpressionIsBitStringConversionDerivation()) {
-			violations.add(new ConstraintViolation(
-					"namedExpressionIsBitStringConversionDerivation", this));
-		}
+        if (!this.namedExpressionIsBitStringConversionDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "namedExpressionIsBitStringConversionDerivation", this));
+        }
+        if (!this.namedExpressionIsRealConversionDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "namedExpressionIsRealConversionDerivation", this));
+        }
 		Expression expression = this.getExpression();
 		if (expression != null) {
 			expression.checkConstraints(violations);
@@ -148,10 +169,14 @@ public class NamedExpression extends SyntaxElement {
 			s.append(" /isCollectionConversion:");
 			s.append(this.getIsCollectionConversion());
 		}
-		if (includeDerived) {
-			s.append(" /isBitStringConversion:");
-			s.append(this.getIsBitStringConversion());
-		}
+        if (includeDerived) {
+            s.append(" /isBitStringConversion:");
+            s.append(this.getIsBitStringConversion());
+        }
+        if (includeDerived) {
+            s.append(" /isRealConversion:");
+            s.append(this.getIsRealConversion());
+        }
 		return s.toString();
 	}
 

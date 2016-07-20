@@ -28,6 +28,7 @@ public class Element implements org.modeldriven.alf.uml.Element {
 			org.eclipse.uml2.uml.Behavior.class, 
 			org.eclipse.uml2.uml.Class.class, 
 			org.eclipse.uml2.uml.Classifier.class, 
+			org.eclipse.uml2.uml.Namespace.class,
 			org.eclipse.uml2.uml.NamedElement.class);
 	
 	protected org.eclipse.uml2.uml.Element base;

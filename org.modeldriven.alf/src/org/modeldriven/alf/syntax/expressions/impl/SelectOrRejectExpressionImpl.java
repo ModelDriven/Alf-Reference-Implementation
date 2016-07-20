@@ -80,8 +80,8 @@ public class SelectOrRejectExpressionImpl
 	 */
 
 	/**
-	 * The argument of a select or reject expression must have type Boolean and
-	 * a multiplicity upper bound of 1.
+     * The argument of a select or reject expression must have a type that
+     * conforms to type Boolean and a multiplicity upper bound of 1.
 	 **/
 	public boolean selectOrRejectExpressionArgument() {
 	    Expression argument = this.getSelf().getArgument();

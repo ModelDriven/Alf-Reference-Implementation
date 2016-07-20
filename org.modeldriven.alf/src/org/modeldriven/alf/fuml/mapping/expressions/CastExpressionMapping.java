@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -144,9 +143,17 @@ public class CastExpressionMapping extends ExpressionMapping {
                             target, source, 
                             RootNamespace.getRootScope().getBitStringFunctionToInteger());
                 }
+                if (operandType == null ||
+                        operandType.getImpl().isReal()) {
+                    source = addClassificationDecision(
+                            nestedGraph, getRealType(), 
+                            target, source, 
+                            RootNamespace.getRootScope().getRealFunctionToInteger());
+                }
                 if (operandType == null || 
                         !operandType.getImpl().isUnlimitedNatural() && 
-                        !operandType.getImpl().isBitString()) {
+                        !operandType.getImpl().isBitString() &&
+                        !operandType.getImpl().isReal()) {
                     source = addClassificationDecision(
                             nestedGraph, this.getType(), target, source, null);
                 }
@@ -173,6 +180,17 @@ public class CastExpressionMapping extends ExpressionMapping {
                     source = addClassificationDecision(
                             nestedGraph, getIntegerType(), target, 
                             source, RootNamespace.getRootScope().getBitStringFunctionToBitString());
+                }
+                if (operandType == null || !operandType.getImpl().isInteger()) {
+                    source = addClassificationDecision(
+                            nestedGraph, this.getType(), target, source, null);
+                }
+            } else if (type.getImpl().isReal()) {
+                if (operandType == null || operandType.getImpl().isInteger()) {
+                    source = addClassificationDecision(
+                            nestedGraph, getIntegerType(), 
+                            target, source, 
+                            RootNamespace.getRootScope().getIntegerFunctionToReal());
                 }
                 if (operandType == null || !operandType.getImpl().isInteger()) {
                     source = addClassificationDecision(

@@ -83,7 +83,10 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
             sourceType.getImpl().conformsTo(targetType) ||
             
             // Bit string conversion
-            sourceType.getImpl().isInteger() && targetType.getImpl().isBitString());
+            sourceType.getImpl().isInteger() && targetType.getImpl().isBitString() ||
+            
+            // Real conversion
+            sourceType.getImpl().isInteger() && targetType.getImpl().isReal());
     }
     
     public static boolean isMultiplicityConformant(AssignableElement target, AssignableElement source) {

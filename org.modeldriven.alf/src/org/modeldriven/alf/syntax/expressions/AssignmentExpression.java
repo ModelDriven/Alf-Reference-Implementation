@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -151,13 +150,21 @@ public class AssignmentExpression extends Expression {
 		this.getImpl().setIsCollectionConversion(isCollectionConversion);
 	}
 
-	public Boolean getIsBitStringConversion() {
-		return this.getImpl().getIsBitStringConversion();
-	}
+    public Boolean getIsBitStringConversion() {
+        return this.getImpl().getIsBitStringConversion();
+    }
 
-	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.getImpl().setIsBitStringConversion(isBitStringConversion);
-	}
+    public void setIsBitStringConversion(Boolean isBitStringConversion) {
+        this.getImpl().setIsBitStringConversion(isBitStringConversion);
+    }
+
+    public Boolean getIsRealConversion() {
+        return this.getImpl().getIsRealConversion();
+    }
+
+    public void setIsRealConversion(Boolean isRealConversion) {
+        this.getImpl().setIsRealConversion(isRealConversion);
+    }
 
 	/**
 	 * An assignment expression is a simple assignment if the assignment
@@ -287,16 +294,20 @@ public class AssignmentExpression extends Expression {
 				.assignmentExpressionSimpleAssignmentMultiplicityConformance();
 	}
 
-	/**
-	 * For a compound assignment, if the operator is an arithmetic operator,
-	 * then either the left-hand side and the right-hand side both have type
-	 * Integer or they both have type String and the operator is +. If the
-	 * operator is a logical operator, then either the left-hand side and the
-	 * right-hand side both have type Boolean or Bit String or the left-hand
-	 * side has type Bit String and the right-hand side has type Integer. If the
-	 * operator is a shift operator, then the left-hand side must have type Bit
-	 * String and the right-hand side must have type Integer.
-	 **/
+    /**
+     * For a compound assignment, if the operator is an arithmetic operator,
+     * then either the left-hand side and the right-hand side both have types
+     * that conform to type Integer, the left-hand side has a type that conforms
+     * to type Real and the right-hand side has a type that conforms to type
+     * Integer or Real, or they both have types that conform to type String and
+     * the operator is +. If the operator is a logical operator, then either the
+     * left-hand side and the right-hand side both have types that conform to
+     * type Boolean or Bit String or the left-hand side has a type that conforms
+     * to type Bit String and the right-hand side has a type that conforms to
+     * type Integer. If the operator is a shift operator, then the left-hand
+     * side must have a type that conforms to type Bit String and the right-hand
+     * side must have a type that conforms to type Integer.
+     **/
 	public boolean assignmentExpressionCompoundAssignmentTypeConformance() {
 		return this.getImpl()
 				.assignmentExpressionCompoundAssignmentTypeConformance();
@@ -332,16 +343,27 @@ public class AssignmentExpression extends Expression {
 				.assignmentExpressionIsCollectionConversionDerivation();
 	}
 
-	/**
-	 * An assignment requires BitString conversion if the type of the left-hand
-	 * side is BitString and either the type of the right-hand side is Integer
-	 * or collection conversion is required and the type of the right-hand side
-	 * is a collection class whose sequence type is Integer.
-	 **/
-	public boolean assignmentExpressionIsBitStringConversionDerivation() {
-		return this.getImpl()
-				.assignmentExpressionIsBitStringConversionDerivation();
-	}
+    /**
+     * An assignment requires BitString conversion if the type of the left-hand
+     * side is BitString and either the type of the right-hand side is Integer
+     * or collection conversion is required and the type of the right-hand side
+     * is a collection class whose sequence type is Integer.
+     **/
+    public boolean assignmentExpressionIsBitStringConversionDerivation() {
+        return this.getImpl()
+                .assignmentExpressionIsBitStringConversionDerivation();
+    }
+
+    /**
+     * An assignment requires Real conversion if the type of the left-hand
+     * side is Real and either the type of the right-hand side is Integer
+     * or collection conversion is required and the type of the right-hand side
+     * is a collection class whose sequence type is Integer.
+     **/
+    public boolean assignmentExpressionIsRealConversionDerivation() {
+        return this.getImpl()
+                .assignmentExpressionIsRealConversionDerivation();
+    }
 
 	/**
 	 * If an assignment expression has a feature with a primary expression whose
@@ -373,6 +395,7 @@ public class AssignmentExpression extends Expression {
 		this.getIsDataValueUpdate();
 		this.getIsCollectionConversion();
 		this.getIsBitStringConversion();
+		this.getIsRealConversion();
 		super._deriveAll();
 		LeftHandSide leftHandSide = this.getLeftHandSide();
 		if (leftHandSide != null) {
@@ -519,10 +542,14 @@ public class AssignmentExpression extends Expression {
 			s.append(" /isCollectionConversion:");
 			s.append(this.getIsCollectionConversion());
 		}
-		if (includeDerived) {
-			s.append(" /isBitStringConversion:");
-			s.append(this.getIsBitStringConversion());
-		}
+        if (includeDerived) {
+            s.append(" /isBitStringConversion:");
+            s.append(this.getIsBitStringConversion());
+        }
+        if (includeDerived) {
+            s.append(" /isRealConversion:");
+            s.append(this.getIsRealConversion());
+        }
 		return s.toString();
 	}
 

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -125,29 +124,45 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
 	    }
 	}
 	
-	// Helper methods
+	/*
+	 * Helper Methods
+	 */
 	
-    /**
-     * Derives isCollectionConversion for this output named expression as an
-     * output from the given parameter.
-     */
-	@Override
+    // Derives isCollectionConversion for this named expression as an output for
+    // the given parameter.
     public boolean getIsCollectionConversion(ElementReference parameter) {
-        OutputNamedExpression self = this.getSelf();
+        NamedExpression self = this.getSelf();
         Expression expression = self.getExpression();
-        return isCollectionConversion(
-                expression.getType(), parameter.getImpl().getType(), parameter.getImpl().getUpper());
+        ElementReference rhsType = parameter.getImpl().getType();
+        ElementReference lhsType = self.getExpression().getType(); 
+        int rhsUpper = expression.getUpper();
+        return rhsType != null && lhsType != null && 
+            rhsType.getImpl().isCollectionClass() && rhsUpper == 1 &&
+            !lhsType.getImpl().isCollectionClass();
+    }
+    
+    // Derives isBitStringConversion for this named expression as an output for
+    // the given parameter.
+    public boolean getIsBitStringConversion(ElementReference parameter) {
+        NamedExpression self = this.getSelf();
+        ElementReference rhsType = parameter.getImpl().getType();
+        ElementReference lhsType = self.getExpression().getType(); 
+        return rhsType != null && lhsType != null && 
+            lhsType.getImpl().isBitString() &&
+            (rhsType.getImpl().isInteger() ||
+                    rhsType.getImpl().isIntegerCollection());
     }
 
-	/**
-     * Derives isBitStringConversion for this output named expression as an 
-     * output from the given parameter.
-     */
-	@Override
-    public boolean getIsBitStringConversion(ElementReference parameter) {
-        OutputNamedExpression self = this.getSelf();
-        return isBitStringConversion(
-                self.getExpression().getType(), parameter.getImpl().getType());
+    // Derives isRealConversion for this named expression as an output for
+    // the given parameter.
+    public boolean getIsRealConversion(ElementReference parameter) {
+        NamedExpression self = this.getSelf();
+        ElementReference rhsType = parameter.getImpl().getType();
+        ElementReference lhsType = self.getExpression().getType(); 
+        return rhsType != null && lhsType != null && 
+            lhsType.getImpl().isReal() &&
+            (rhsType.getImpl().isInteger() ||
+                    rhsType.getImpl().isIntegerCollection());
     }
 
 } // OutputNamedExpressionImpl

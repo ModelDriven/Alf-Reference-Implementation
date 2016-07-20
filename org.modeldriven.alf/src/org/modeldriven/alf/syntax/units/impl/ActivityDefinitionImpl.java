@@ -150,8 +150,8 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	    NamespaceDefinition definition = unit.getDefinition();
 		return definition instanceof ActivityDefinition && 
 		    super.matchForStub(unit) &&
-		    FormalParameterImpl.equal(this.getFormalParameters(), 
-		            ((ActivityDefinition)definition).getImpl().getFormalParameters());
+		    FormalParameterImpl.equal(this.getParameters(), 
+		            ((ActivityDefinition)definition).getImpl().getParameters());
 	} // matchForStub
 
     /**

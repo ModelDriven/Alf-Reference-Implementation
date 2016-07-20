@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -55,6 +54,30 @@ public class RelationalExpression extends BinaryExpression {
 		this.getImpl().setIsUnlimitedNatural(isUnlimitedNatural);
 	}
 
+    public Boolean getIsReal() {
+        return this.getImpl().getIsReal();
+    }
+
+    public void setIsReal(Boolean isReal) {
+        this.getImpl().setIsReal(isReal);
+    }
+
+    public Boolean getIsRealConversion1() {
+        return this.getImpl().getIsRealConversion1();
+    }
+
+    public void setIsRealConversion1(Boolean isRealConversion1) {
+        this.getImpl().setIsRealConversion1(isRealConversion1);
+    }
+
+    public Boolean getIsRealConversion2() {
+        return this.getImpl().getIsRealConversion2();
+    }
+
+    public void setIsRealConversion2(Boolean isRealConversion2) {
+        this.getImpl().setIsRealConversion2(isRealConversion2);
+    }
+
 	/**
 	 * A relational expression is an UnlimitedNatural comparison if either one
 	 * of its operands has type UnlimitedNatural.
@@ -63,6 +86,15 @@ public class RelationalExpression extends BinaryExpression {
 		return this.getImpl()
 				.relationalExpressionIsUnlimitedNaturalDerivation();
 	}
+
+    /**
+     * A relational expression is a Real comparison if either one
+     * of its operands has type Real.
+     **/
+    public boolean relationalExpressionIsRealDerivation() {
+        return this.getImpl()
+                .relationalExpressionIsRealDerivation();
+    }
 
 	/**
 	 * The type of a relational expression is Boolean.
@@ -86,26 +118,49 @@ public class RelationalExpression extends BinaryExpression {
 		return this.getImpl().relationalExpressionUpperDerivation();
 	}
 
-	/**
-	 * The operand expressions for a comparison operator must have type Integer,
-	 * UnlimitedNatural or Natural. However, it is not allowed to have one
-	 * operand expression be Integer and the other be UnlimitedNatural.
-	 **/
+    /**
+     * The operand expressions for a comparison operator must both be of a type
+     * that conforms to type Natural, Integer or Real, or both be of a type that
+     * conforms to type Natural or UnlimitedNatural.
+     **/
 	public boolean relationalExpressionOperandTypes() {
 		return this.getImpl().relationalExpressionOperandTypes();
 	}
+	
+    /**
+     * A relational expression requires Real conversion of it is a Real
+     * comparison and its first operand is of type Integer.
+     */
+    public boolean relationalExpressionIsRealConversion1Derivation() {
+        return this.getImpl().relationalExpressionIsRealConversion1Derivation();
+    }
+
+    /**
+     * A relational expression requires Real conversion of it is a Real
+     * comparison and its second operand is of type Integer.
+     */
+    public boolean relationalExpressionIsRealConversion2Derivation() {
+        return this.getImpl().relationalExpressionIsRealConversion2Derivation();
+    }
 
 	public void _deriveAll() {
 		this.getIsUnlimitedNatural();
+		this.getIsReal();
+		this.getIsRealConversion1();
+		this.getIsRealConversion2();
 		super._deriveAll();
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
-		if (!this.relationalExpressionIsUnlimitedNaturalDerivation()) {
-			violations.add(new ConstraintViolation(
-					"relationalExpressionIsUnlimitedNaturalDerivation", this));
-		}
+        if (!this.relationalExpressionIsUnlimitedNaturalDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "relationalExpressionIsUnlimitedNaturalDerivation", this));
+        }
+        if (!this.relationalExpressionIsRealDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "relationalExpressionIsRealDerivation", this));
+        }
 		if (!this.relationalExpressionTypeDerivation()) {
 			violations.add(new ConstraintViolation(
 					"relationalExpressionTypeDerivation", this));
@@ -122,14 +177,34 @@ public class RelationalExpression extends BinaryExpression {
 			violations.add(new ConstraintViolation(
 					"relationalExpressionOperandTypes", this));
 		}
+        if (!this.relationalExpressionIsRealConversion1Derivation()) {
+            violations.add(new ConstraintViolation(
+                    "relationalExpressionIsRealConversion1Derivation", this));
+        }
+        if (!this.relationalExpressionIsRealConversion2Derivation()) {
+            violations.add(new ConstraintViolation(
+                    "relationalExpressionIsRealConversion2Derivation", this));
+        }
 	}
 
 	public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
-		if (includeDerived) {
-			s.append(" /isUnlimitedNatural:");
-			s.append(this.getIsUnlimitedNatural());
-		}
+        if (includeDerived) {
+            s.append(" /isUnlimitedNatural:");
+            s.append(this.getIsUnlimitedNatural());
+        }
+        if (includeDerived) {
+            s.append(" /isReal:");
+            s.append(this.getIsReal());
+        }
+        if (includeDerived) {
+            s.append(" /isRealConversion1:");
+            s.append(this.getIsRealConversion1());
+        }
+        if (includeDerived) {
+            s.append(" /isRealConversion2:");
+            s.append(this.getIsRealConversion2());
+        }
 		return s.toString();
 	}
 

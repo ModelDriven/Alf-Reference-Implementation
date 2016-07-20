@@ -10,13 +10,14 @@ class Statements_For_Looping specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 
-		this.test(readings, sum, outgoingEdges, SnEven, SnOdd);
+		this.test(readings, sum, outgoingEdges, SnEven, SnOdd, testReturn);
 		
 		AssertList("readings", readings, Integer[]{1,2});
 		AssertEqual("sum", sum, 55);
 		AssertList("outgoingEdges.token", outgoingEdges.token, Integer[]{2,4});
 		AssertList("SnEven", SnEven, Integer[]{5,7,9});
 		AssertList("SnOdd", SnOdd, Integer[]{30,60,90});
+		AssertTrue("testReturn", testReturn);
 	
 	  	this.done();
 	}
@@ -39,12 +40,26 @@ class Statements_For_Looping specializes Test {
 	
     private activity processRecord(in index: Integer) { }
     
+    // Test that the for loop is mapped as a loop node,
+    // not an expansion region, if it contains a return.
+    private activity TestReturn() : Boolean {
+  	  for (x in Integer[]{1,2}) {
+  	    if (false) {
+  	      for (y in 1) {
+  	        return false;
+  	      }
+  	    }
+  	  }
+  	  return true;
+    }
+    
 	//**************************************************************************
 
     public test(
     	out readings: Integer[*], out sum1: Integer,
     	out outgoingEdges: ActivityEdgeInstance[*],
-    	out SnEven: Integer[*], out SnOdd: Integer[*]) {
+    	out SnEven: Integer[*], out SnOdd: Integer[*],
+    	out testReturn: Boolean) {
     
       // Setup
   	  noiseLimit = 0;
@@ -94,6 +109,8 @@ class Statements_For_Looping specializes Test {
   	      SnOdd->add((lower-upper)*root);
   	    }
   	  }
+  	  
+  	  testReturn = TestReturn();
   	  
     }
 }

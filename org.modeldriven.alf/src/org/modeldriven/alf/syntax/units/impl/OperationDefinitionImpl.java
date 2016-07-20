@@ -344,8 +344,8 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         NamespaceDefinition definition = unit.getDefinition();
         return definition instanceof ActivityDefinition && 
             !((ActivityDefinition)definition).getImpl().isTemplate() &&
-            FormalParameterImpl.equal(this.getFormalParameters(), 
-                    ((ActivityDefinition)definition).getImpl().getFormalParameters());
+            FormalParameterImpl.equal(this.getParameters(), 
+                    ((ActivityDefinition)definition).getImpl().getParameters());
 	}
 
 	/**
@@ -422,7 +422,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         ElementReference otherReturnParameter = operation.getImpl().getReturnParameter();
         return operation != null &&
                     FormalParameterImpl.equal(
-                        removeReturnParameter(this.getFormalParameters()), 
+                        removeReturnParameter(this.getParameters()), 
                         removeReturnParameter(operation.getImpl().getParameters())) &&
                         
                         // Presume that return parameters conform for two
@@ -448,7 +448,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     private boolean matchParameters(ElementReference operation) {
         return operation != null && 
                     FormalParameterImpl.match(
-                        this.getFormalParameters(), 
+                        this.getParameters(), 
                         operation.getImpl().getParameters());
     }
     

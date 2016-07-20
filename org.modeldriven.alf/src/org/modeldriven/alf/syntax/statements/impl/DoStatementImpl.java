@@ -127,8 +127,8 @@ public class DoStatementImpl extends StatementImpl {
 	}
 
 	/**
-	 * The condition expression of a do statement must have type Boolean and a
-	 * multiplicity upper bound of 1.
+     * The condition expression of a do statement must have a type that conforms
+     * to type Boolean and a multiplicity upper bound of 1.
 	 **/
 	public boolean doStatementCondition() {
 	    Expression condition = this.getSelf().getCondition();

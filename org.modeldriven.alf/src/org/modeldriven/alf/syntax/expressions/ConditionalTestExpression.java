@@ -101,7 +101,8 @@ public class ConditionalTestExpression extends Expression {
 
 	/**
 	 * The first operand expression of a conditional-test expression must be of
-	 * type Boolean and have a multiplicity upper bound of 1.
+	 * a type that conforms to type Boolean and have a multiplicity upper bound 
+	 * of 1.
 	 **/
 	public boolean conditionalTestExpressionCondition() {
 		return this.getImpl().conditionalTestExpressionCondition();

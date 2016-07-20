@@ -29,6 +29,7 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	private Expression index = null;
 	private Boolean isCollectionConversion = null; // DERIVED
 	private Boolean isBitStringConversion = null; // DERIVED
+	private Boolean isRealConversion = null; // DERIVED
 
 	public NamedExpressionImpl(NamedExpression self) {
 		super(self);
@@ -83,16 +84,27 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 		this.isCollectionConversion = isCollectionConversion;
 	}
 
-	public Boolean getIsBitStringConversion() {
-		if (this.isBitStringConversion == null) {
-			this.setIsBitStringConversion(this.deriveIsBitStringConversion());
-		}
-		return this.isBitStringConversion;
-	}
+    public Boolean getIsBitStringConversion() {
+        if (this.isBitStringConversion == null) {
+            this.setIsBitStringConversion(this.deriveIsBitStringConversion());
+        }
+        return this.isBitStringConversion;
+    }
 
-	public void setIsBitStringConversion(Boolean isBitStringConversion) {
-		this.isBitStringConversion = isBitStringConversion;
-	}
+    public void setIsBitStringConversion(Boolean isBitStringConversion) {
+        this.isBitStringConversion = isBitStringConversion;
+    }
+
+    public Boolean getIsRealConversion() {
+        if (this.isRealConversion == null) {
+            this.setIsRealConversion(this.deriveIsRealConversion());
+        }
+        return this.isRealConversion;
+    }
+
+    public void setIsRealConversion(Boolean isRealConversion) {
+        this.isRealConversion = isRealConversion;
+    }
 
 	/**
 	 * Collection conversion is required if the type of the corresponding
@@ -100,23 +112,30 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 	 * is not.
 	 **/
 	protected Boolean deriveIsCollectionConversion() {
-	    // This needs to be set externally using 
-	    // setIsCollectionConversion(FormalParameter).
+	    // This needs to be set externally using setIsCollectionConversion.
 		return null;
 	}
 
-	/**
-	 * Bit string conversion is required if the type of the type of the
-	 * corresponding parameter is BitString, or a collection class whose sequence
-	 * type is a BitString, and the type of the argument expression is not
-	 * BitString.
-	 **/
-	protected Boolean deriveIsBitStringConversion() {
-	    // This needs to be set externally using
-	    // setIsBitStringConversion(FormalParameter).
-		return null;
-	}
-	
+    /**
+     * Bit string conversion is required if the type of the corresponding
+     * parameter is BitString, or a collection class whose sequence type is
+     * BitString, and the type of the argument expression is not BitString.
+     **/
+    protected Boolean deriveIsBitStringConversion() {
+        // This needs to be set externally using setIsBitStringConversion.
+        return null;
+    }
+    
+    /**
+     * Real conversion is required if the type of the corresponding parameter is
+     * Real, or a collection class whose sequence type is Real, and the type of
+     * the argument expression is not Real.
+     **/
+    protected Boolean deriveIsRealConversion() {
+        // This needs to be set externally using setIsRealConversion.
+        return null;
+    }
+    
 	/*
 	 * Derivations
 	 */
@@ -126,11 +145,16 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
 		return true;
 	}
 
-	public boolean namedExpressionIsBitStringConversionDerivation() {
-		this.getSelf().getIsBitStringConversion();
-		return true;
-	}
-	
+    public boolean namedExpressionIsBitStringConversionDerivation() {
+        this.getSelf().getIsBitStringConversion();
+        return true;
+    }
+    
+    public boolean namedExpressionIsRealConversionDerivation() {
+        this.getSelf().getIsRealConversion();
+        return true;
+    }
+    
 	/*
 	 * Helper Methods
 	 */
@@ -161,14 +185,9 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
     public boolean getIsCollectionConversion(ElementReference parameter) {
         NamedExpression self = this.getSelf();
         Expression expression = self.getExpression();
-        return isCollectionConversion(
-                parameter.getImpl().getType(), expression.getType(), expression.getUpper());
-    }
-
-    protected static boolean isCollectionConversion(
-            ElementReference lhsType, 
-            ElementReference rhsType, 
-            int rhsUpper) {
+        ElementReference lhsType = parameter.getImpl().getType();
+        ElementReference rhsType = self.getExpression().getType(); 
+        int rhsUpper = expression.getUpper();
         return rhsType != null && lhsType != null && 
             rhsType.getImpl().isCollectionClass() && rhsUpper == 1 &&
             !lhsType.getImpl().isCollectionClass();
@@ -178,15 +197,22 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
     // the given parameter.
     public boolean getIsBitStringConversion(ElementReference parameter) {
         NamedExpression self = this.getSelf();
-        return isBitStringConversion(
-                parameter.getImpl().getType(), self.getExpression().getType());
-    }
-    
-    protected static boolean isBitStringConversion(
-            ElementReference lhsType, 
-            ElementReference rhsType) {
+        ElementReference lhsType = parameter.getImpl().getType();
+        ElementReference rhsType = self.getExpression().getType(); 
         return rhsType != null && lhsType != null && 
             lhsType.getImpl().isBitString() &&
+            (rhsType.getImpl().isInteger() ||
+                    rhsType.getImpl().isIntegerCollection());
+    }
+
+    // Derives isRealConversion for this named expression as an input for
+    // the given parameter.
+    public boolean getIsRealConversion(ElementReference parameter) {
+        NamedExpression self = this.getSelf();
+        ElementReference lhsType = parameter.getImpl().getType();
+        ElementReference rhsType = self.getExpression().getType(); 
+        return rhsType != null && lhsType != null && 
+            lhsType.getImpl().isReal() &&
             (rhsType.getImpl().isInteger() ||
                     rhsType.getImpl().isIntegerCollection());
     }

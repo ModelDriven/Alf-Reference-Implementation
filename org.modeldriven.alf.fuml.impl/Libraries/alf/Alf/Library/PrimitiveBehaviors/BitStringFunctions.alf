@@ -2,10 +2,10 @@ namespace Alf::Library::PrimitiveBehaviors;
 
 package BitStringFunctions {
 
-  @primitive(BitStringIsSetFunctionExecution)
+  @primitive(BitStringIsSetFunctionBehaviorExecution)
   public activity IsSet(in b: BitString, in n: Integer): Boolean { }
   
-  @primitive(BitStringBitLengthFunctionExecuton)
+  @primitive(BitStringBitLengthFunctionBehaviorExecuton)
   public activity BitLength(): Integer { }
   
   @primitive(BitStringToBitStringFunctionBehaviorExecution)

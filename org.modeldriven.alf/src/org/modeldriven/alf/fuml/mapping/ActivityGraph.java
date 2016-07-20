@@ -666,6 +666,14 @@ public class ActivityGraph {
         return this.addValueSpecificationAction(literal, Integer.toString(value));
     }
 
+    public ValueSpecificationAction addRealValueSpecificationAction(
+            float value) {
+        LiteralReal literal = this.create(LiteralReal.class);
+        literal.setValue(value);
+        literal.setType(FumlMapping.getRealType());
+        return this.addValueSpecificationAction(literal, Float.toString(value));
+    }
+
     public ValueSpecificationAction addStringValueSpecificationAction(
             String value) {
         LiteralString literal = this.create(LiteralString.class);

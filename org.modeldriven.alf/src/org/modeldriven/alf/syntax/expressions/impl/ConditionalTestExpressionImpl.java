@@ -144,8 +144,9 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	 */
 
 	/**
-	 * The first operand expression of a conditional-test expression must be of
-	 * type Boolean and have a multiplicity upper bound of 1.
+     * The first operand expression of a conditional-test expression must be of
+     * a type that conforms to type Boolean and have a multiplicity upper bound 
+     * of 1.
 	 **/
 	public boolean conditionalTestExpressionCondition() {
         ConditionalTestExpression self = this.getSelf();

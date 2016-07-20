@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2014 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -9,8 +9,7 @@
 
  /*
    Parser for the 
-   Action Language for Foundational UML (Alf) v1.0.1
-   Revision 1.1
+   Action Language for Foundational UML (Alf) v1.1
 
    with construction of an Abstract Syntax Tree
    as an instance of the Alf Abstract Syntax model
@@ -254,6 +253,12 @@ TOKEN:
 TOKEN:
 {
   < BOOLEAN_LITERAL: "true" | "false" >
+|
+  < REAL_LITERAL : ( <DECIMAL_NUMERAL> )? "." <DECIMAL_NUMERAL> ( <EXPONENT_PART> )? | <DECIMAL_NUMERAL> <EXPONENT_PART> >
+|
+  < #DECIMAL_NUMERAL : <DIGIT> ( ( "_" )? <DIGIT> )* >
+|
+  < #EXPONENT_PART : ( "e" | "E" ) ( "+" | "-" )? <DECIMAL_NUMERAL> > 
 |
   < BINARY_LITERAL:  ( "0b" | "0B" ) <BINARY_DIGIT> ( ( "_" )? <BINARY_DIGIT> )* >
 |
@@ -685,6 +690,8 @@ Expression LiteralExpression():
     { e = new NaturalLiteralExpression(this); ((NaturalLiteralExpression)e).setImage(t.image); }
   | t = <STRING_LITERAL>  
     { e = new StringLiteralExpression(this); ((StringLiteralExpression)e).setImage(t.image); }
+  | t = <REAL_LITERAL>  
+    { e = new RealLiteralExpression(this); ((RealLiteralExpression)e).setImage(t.image); }
   | t = <STAR>
     { e = new UnboundedLiteralExpression(this); }
   )
@@ -2561,7 +2568,8 @@ TaggedValue TaggedValue():
     ( t = <DECIMAL_LITERAL> 
     | t = <BINARY_LITERAL> 
     | t = <OCTAL_LITERAL> 
-    | t = <HEX_LITERAL> )
+    | t = <HEX_LITERAL>
+    | t = <REAL_LITERAL> )
   )
   
   { v.setValue(t.image);

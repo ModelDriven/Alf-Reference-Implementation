@@ -134,6 +134,9 @@ public class Fuml {
     			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::*", 
     			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Times.class);
     	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::/", 
+    			org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.Divide.class);
+    	this.createPrimitiveBehaviorPrototype(
     			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Div", 
     			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Div.class);
     	this.createPrimitiveBehaviorPrototype(
@@ -166,6 +169,61 @@ public class Fuml {
     	this.createPrimitiveBehaviorPrototype(
     			"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::ToInteger", 
     			org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.ToInteger.class);
+    	
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Neg", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Neg.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Abs", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Abs.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Inv", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Abs.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::+", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Add.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::-", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Minus.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::*", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Times.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::/", 
+    			org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Divide.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Floor", 
+    			org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Floor.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Round", 
+    			org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Round.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Max", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Max.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Min", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Min.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::<", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Lower.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::>", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Greater.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::<=", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.LowerOrEqual.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::>=", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.GreaterOrEqual.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::ToString", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.ToString.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::ToReal", 
+    			org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.ToReal.class);
+    	this.createPrimitiveBehaviorPrototype(
+    			"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::ToInteger", 
+    			org.modeldriven.alf.eclipse.papyrus.library.realfunctions.ToInteger.class);
     	
     	this.createPrimitiveBehaviorPrototype(
     			"FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::ListSize", 
@@ -257,7 +315,7 @@ public class Fuml {
     	
     	this.createPrimitiveBehaviorPrototype(
     			"Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToNatural", 
-    			org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.IntegerToNaturalFunctionBehaviorExecution.class);
+    			org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.ToNatural.class);
 }
     
     private void createPrimitiveBehaviorPrototype(

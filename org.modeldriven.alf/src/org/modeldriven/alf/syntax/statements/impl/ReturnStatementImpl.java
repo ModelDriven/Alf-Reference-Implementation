@@ -137,6 +137,10 @@ public class ReturnStatementImpl extends StatementImpl {
         if (currentScope != null) {
             this.getSelf().setBehavior(currentScope.getImpl().getReferent());
         }
+        Statement loopStatement = this.getLoopStatement();
+        if (loopStatement != null) {
+            loopStatement.getImpl().setContainsReturn();
+        }
     }
 
     @Override

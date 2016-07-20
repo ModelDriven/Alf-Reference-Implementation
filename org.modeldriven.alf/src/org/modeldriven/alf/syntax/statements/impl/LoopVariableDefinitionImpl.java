@@ -305,9 +305,10 @@ public class LoopVariableDefinitionImpl extends
 	}
 
 	/**
-	 * If a loop variable definition has two expressions, then both expressions
-	 * must have type Integer and a multiplicity upper bound of 1, and no name
-	 * may be newly assigned or reassigned in more than one of the expressions.
+     * If a loop variable definition has two expressions, then both expressions
+     * must have a type that conforms to type Integer and a multiplicity upper
+     * bound of 1, and no name may be newly assigned or reassigned in more than
+     * one of the expressions.
 	 **/
 	public boolean loopVariableDefinitionRangeExpressions() {
 	    LoopVariableDefinition self = this.getSelf();

@@ -108,14 +108,15 @@ public class SequenceConstructionExpression extends Expression {
 		return this.getImpl().sequenceConstructionExpressionType();
 	}
 
-	/**
-	 * If the elements of a sequence construction expression are given by a
-	 * sequence range, then the expression must have type Integer. If the
-	 * elements are given by a sequence element list, and the sequence
-	 * construction expression has a non-empty type, then each expression in the
-	 * list must have a type that either conforms to the type of the sequence
-	 * construction expression or is convertible to it by bit string conversion.
-	 **/
+    /**
+     * If the elements of a sequence construction expression are given by a
+     * sequence range, then the expression must have a type that conforms to
+     * type Integer. If the elements are given by a sequence element list, and
+     * the sequence construction expression has a non-empty type, then each
+     * expression in the list must have a type that either conforms to the type
+     * of the sequence construction expression or is convertible to it by bit
+     * string conversion or real conversion.
+     **/
 	public boolean sequenceConstructionExpressionElementType() {
 		return this.getImpl().sequenceConstructionExpressionElementType();
 	}

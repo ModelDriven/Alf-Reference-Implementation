@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -41,8 +40,8 @@ public abstract class UnaryExpressionMapping extends ExpressionMapping {
      * 
      * 2. A BitString unary expression with a BitString negation operator is
      * mapped as the equivalent behavior invocation for the function
-     * Alf::Library::PrimitiveBehaviors::BitStringFunctions::'~' on the
-     * operand expression. Note that this includes the possibility of bit string
+     * Alf::Library::PrimitiveBehaviors::BitStringFunctions::'~' on the operand
+     * expression. Note that this includes the possibility of bit string
      * conversion on the operand expression.
      * 
      * Numeric Unary Expressions
@@ -50,8 +49,9 @@ public abstract class UnaryExpressionMapping extends ExpressionMapping {
      * 3. A numeric unary expression with a plus operator is mapped as its
      * operand expression. A numeric unary expression with a minus operator is
      * mapped as the equivalent behavior invocation for the function
-     * Alf::Library::PrimitiveBehaviors::IntegerFunctions::Neg on the operand
-     * expression.
+     * Alf::Library::PrimitiveBehaviors::IntegerFunctions::Neg or
+     * Alf::Library::PrimitiveBehaviors::RealFunctions::Neg (depending on its
+     * type) on the operand expression.
      * 
      */
     
@@ -93,7 +93,9 @@ public abstract class UnaryExpressionMapping extends ExpressionMapping {
         switch (operator.charAt(0)) {
             case '!': return RootNamespace.getRootScope().getBooleanFunctionNot();
             case '~': return RootNamespace.getRootScope().getBitStringFunctionComplement();
-            case '-': return RootNamespace.getRootScope().getIntegerFunctionNeg();
+            case '-': return this.getUnaryExpression().getType().getImpl().isInteger()?
+                                RootNamespace.getRootScope().getIntegerFunctionNeg():
+                                RootNamespace.getRootScope().getRealFunctionNeg();
             default: return null;
         }
     }

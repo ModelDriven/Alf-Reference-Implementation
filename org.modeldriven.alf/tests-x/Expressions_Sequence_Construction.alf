@@ -10,7 +10,9 @@ class Expressions_Sequence_Construction specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 
-	    this.test(seq1,seq2,seq3,seq4,seq5,seq6,seq7,x,customers,set1,set2,list,conv1,conv2);    
+	    this.test(seq1,seq2,seq3,seq4,seq5,seq6,seq7,seq8,
+	              x,customers,set1,set2,list1,list2,n,test1,test2,test3,test4,test5,
+	              conv1,conv2);    
 	    
 	    AssertList("seq1", seq1, any[]{"apple","orange","strawberry"});
 	    AssertList("seq2", seq2, any[]{"apple","orange","strawberry"});
@@ -20,7 +22,7 @@ class Expressions_Sequence_Construction specializes Test {
 	    AssertList("seq6", seq6, any[]{1,2,3});
 	    AssertTrue("seq7->isEmpty()", seq7->isEmpty());
 	    
-	    AssertEqual("x5", x, 5);
+	    AssertEqual("x", x, 5);
 	    
 	    AssertList("customers.name", customers.name, String[]{"A", "C"});
 	    
@@ -32,9 +34,17 @@ class Expressions_Sequence_Construction specializes Test {
 	    AssertTrue("set2.includes(3)", set2.includes(3));
 	    AssertTrue("set2.includes(45)", set2.includes(45));
 	    
-	    AssertEqual("list.size()", list.size(), 2);
-	    AssertList("list.at(1)", list.at(1).toSequence(), any[]{"apple","orange"});
-	    AssertList("list.at(2)", list.at(2).toSequence(), any[]{"strawberry","raspberry"});
+	    AssertEqual("list1.size()", list1.size(), 2);
+	    AssertList("list1.at(1)", list1.at(1).toSequence(), any[]{"apple","orange"});
+	    AssertList("list1.at(2)", list1.at(2).toSequence(), any[]{"strawberry","raspberry"});
+	    
+	    AssertList("seq8", seq8, Real[]{1.0, 1.5, 2.0});
+	    AssertEqual("n", n, 1);
+	    AssertTrue("test1", test1);
+	    AssertTrue("test2", test2);
+	    AssertTrue("test3", test3);
+	    AssertTrue("test4", test4);
+	    AssertTrue("test5", test5);
 	    
 	    AssertEqual("conv1->size()", conv1->size(), 3);
 	    AssertEqual("conv2->size()", conv2->size(), 3);
@@ -60,36 +70,56 @@ class Expressions_Sequence_Construction specializes Test {
       out seq5: Integer[] sequence,
       out seq6: Integer[] sequence,
       out seq7: Integer[] sequence,
+      out seq8: Real[] sequence,
       out x: Integer,
       out customers: Customer[] sequence,
       out set1: Set<Integer>,
       out set2: Set<Integer>,
-      out list: List< List<String> >,
+      out list1: List< List<String> >,
+      out list2: List<Real>,
+      out n: Integer,
+      out test1: Boolean,
+      out test2: Boolean,
+      out test3: Boolean,
+      out test4: Boolean,
+      out test5: Boolean,
       out conv1: Integer[],
       out conv2: Integer[]
     ) {
 	  
-	    seq1 = String[]{"apple","orange","strawberry"};
-	    seq2 = new String[]{"apple","orange","strawberry",};
+	  seq1 = String[]{"apple","orange","strawberry"};
+	  seq2 = new String[]{"apple","orange","strawberry",};
       seq3 = any[]{1, true, "blah"};
       seq4 = Integer[]{1, 2, 3,};
-	    seq5 = Integer[]{1, 2, 3};
-	    seq6 = Integer[]{1..3};
-	    seq7 = null;
+	  seq5 = Integer[]{1, 2, 3};
+	  seq6 = Integer[]{1..3};
+	  seq7 = null;
 	  
-	    x = this.getList()[2];
+	  x = this.getList()[2];
 	
-	    i = 2;
-	    customers = Customer[]{ new Customer("A"), new Customer("B") };
-	    customers[i] = new Customer("C");
+	  i = 2;
+	  customers = Customer[]{ new Customer("A"), new Customer("B") };
+	  customers[i] = new Customer("C");
 	  
       set1 = new Set<Integer>(Integer[]{1,3,45});
       set2 = Set<Integer>{1, 3, 45};
-      list = new List< List<String> >{{"apple","orange"},{"strawberry","raspberry"}};
+      list1 = new List< List<String> >{{"apple","orange"},{"strawberry","raspberry"}};
+      
+       // Real conversion
+      seq8 = Real[]{1, 1.5, 2};
+      test1 = Real[]{1.0,2.0}->equals(Real[]{1,2});
+      test2 = Real[]{1.0,2.0}->equals<Real>(Integer[]{1,2}); // Explicit instantiation required to force Real equality test.
+      test3 = Real[]{1.0,2.0}->equals((Real)Integer[]{1,2});
+            
+      list2 = List<Real>{1, 1.5, 2};
+      n = Set<Real>{1, 1.0}.size();
+      test4 = Set<Real>{1.0,2.0}.equals(Set<Real>{1,2});
+      test5 = Set<Real>{1.0,2.0}.equals(Set<Integer>{1,2});
       
       // Collection conversion
       conv1 = set2;
       let seq_set2: Integer[] = set2;
       conv2 = seq_set2;
+      
     }	  
 }

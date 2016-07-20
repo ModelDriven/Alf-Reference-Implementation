@@ -269,6 +269,12 @@ public abstract class ElementReferenceImpl implements AssignableElement {
                     collectionArgument.getImpl().isInteger();
     }
     
+    public boolean isRealCollection() {
+        ElementReference collectionArgument = this.getCollectionArgument();
+        return collectionArgument != null && 
+                    collectionArgument.getImpl().isReal();
+    }
+    
     public ElementReference getCollectionArgument() {
         ElementReference toSequenceOperation = this.getToSequenceOperation();
         return toSequenceOperation == null? null: 
@@ -310,6 +316,10 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         return this.conformsTo(RootNamespace.getRootScope().getUnlimitedNaturalType());
     }
 
+    public boolean isReal() {
+        return this.conformsTo(RootNamespace.getRootScope().getRealType());
+    }
+
     public boolean isBitString() {
         return this.conformsTo(RootNamespace.getRootScope().getBitStringType());
     }
@@ -318,10 +328,9 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         return this.conformsTo(RootNamespace.getRootScope().getNaturalType());
     }
 
-    public boolean isNumeric() {
+    public boolean isIntegerOrReal() {
         return this.isInteger() || 
-               this.isUnlimitedNatural() || 
-               this.isNatural();
+               this.isReal();
     }
 
     public abstract boolean conformsTo(ElementReference type);

@@ -40,7 +40,7 @@ public class BitStringUnaryExpressionImpl extends UnaryExpressionImpl {
 
     /**
      * BitString conversion is required if the operand expression of a BitString
-     * unary expression has type Integer.
+     * unary expression has a type that conforms to type Integer.
      **/
 	protected Boolean deriveIsBitStringConversion() {
 	    BitStringUnaryExpression self = this.getSelf();

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -39,14 +38,32 @@ public class RelationalExpressionMapping extends BinaryExpressionMapping {
     }
 
     @Override
+    protected void mapOperator(
+            String operator,
+            ActivityNode operand1Result, 
+            ActivityNode operand2Result) throws MappingError {
+        RelationalExpression expression = this.getRelationalExpression();
+        if (expression.getIsRealConversion1()) {
+            operand1Result = this.addRealConversion(operand1Result);
+        }
+        if (expression.getIsRealConversion2()) {
+            operand2Result = this.addRealConversion(operand2Result);
+        }
+        super.mapOperator(operator, operand1Result, operand2Result);
+    }
+
+    @Override
     protected ElementReference getOperatorFunction(String operator) {
-        return this.getRelationalExpression().getIsUnlimitedNatural()?
-                RootNamespace.getRootScope().getUnlimitedNaturalFunction(operator):
-                RootNamespace.getRootScope().getIntegerFunction(operator);
+        RelationalExpression expression = this.getRelationalExpression();
+        return expression.getIsUnlimitedNatural()?
+                    RootNamespace.getRootScope().getUnlimitedNaturalFunction(operator):
+               expression.getIsReal()?
+                    RootNamespace.getRootScope().getRealFunction(operator):
+                    RootNamespace.getRootScope().getIntegerFunction(operator);
     }
 
 	public RelationalExpression getRelationalExpression() {
 		return (RelationalExpression) this.getSource();
 	}
 
-} // RelationalExpressionMapping
+}

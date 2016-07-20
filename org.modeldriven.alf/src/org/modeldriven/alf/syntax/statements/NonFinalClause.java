@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -82,10 +81,10 @@ public class NonFinalClause extends SyntaxElement {
 		return this.getImpl().nonFinalClauseConditionLocalNames();
 	}
 
-	/**
-	 * The condition of a non-final clause must have type Boolean and a
-	 * multiplicity upper bound no greater than 1.
-	 **/
+    /**
+     * The condition of a non-final clause must have that conforms to type
+     * Boolean and a multiplicity upper bound no greater than 1.
+     **/
 	public boolean nonFinalClauseConditionType() {
 		return this.getImpl().nonFinalClauseConditionType();
 	}

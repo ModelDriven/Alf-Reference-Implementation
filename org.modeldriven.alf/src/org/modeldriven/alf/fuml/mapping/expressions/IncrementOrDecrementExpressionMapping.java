@@ -15,7 +15,7 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.IncrementOrDecrementExpression;
 import org.modeldriven.alf.syntax.expressions.LeftHandSide;
@@ -38,12 +38,13 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
     /**
      * An increment or decrement expression is mapped to a call behavior action
      * for the + function (for increment) or the - function (for decrement) from
-     * the library package Alf::Library::PrimitiveBehaviors::IntegerFunctions.
-     * The second argument input pin of the call behavior action is connected by
-     * an object flow to the result output pin of a value specification action
-     * for the value 1. The result output pin of the call behavior action is
-     * connected by an object flow to a fork node, which acts as the the source
-     * element when the expression is an assigned source.
+     * the library package Alf::Library::PrimitiveBehaviors::IntegerFunctions or
+     * Alf::Library::PrimitiveBehaviors::RealFunctions (depending on the type of
+     * the operand). The second argument input pin of the call behavior action
+     * is connected by an object flow to the result output pin of a value
+     * specification action for the value 1. The result output pin of the call
+     * behavior action is connected by an object flow to a fork node, which acts
+     * as the the source element when the expression is an assigned source.
      * 
      * 2. The operand is mapped first considered as an effective argument
      * expression. If the increment or decrement expression is a prefix
@@ -69,13 +70,11 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
         IncrementOrDecrementExpression expression = 
             this.getIncrementOrDecrementExpression();
         LeftHandSide operand = expression.getOperand();
+        ElementReference operandType = operand == null? null: operand.getType();
         
-        Behavior behavior = getBehavior("++".equals(expression.getOperator())?
-                RootNamespace.getRootScope().getIntegerFunctionPlus():
-                RootNamespace.getRootScope().getIntegerFunctionMinus());
+        Behavior behavior = getBehavior(getOperatorFunction(expression.getOperator(), operandType));
         this.action = this.graph.addCallBehaviorAction(behavior);       
-        ValueSpecificationAction valueAction = 
-            this.graph.addNaturalValueSpecificationAction(1);
+        ValueSpecificationAction valueAction = this.getValueAction(operandType);
         this.graph.addObjectFlow(
                 valueAction.getResult(), 
                 this.action.getArgument().get(1));
@@ -87,7 +86,6 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
                     mapping.getErrorMessage());
         } else {
             ExpressionMapping operandMapping = (ExpressionMapping)mapping;
-//            this.graph.addAll(operandMapping.getGraph());
             ActivityNode rhsNode = this.graph.addStructuredActivityNode(
                     "RightHandSide@" + operand.getId(), 
                     operandMapping.getModelElements());
@@ -127,6 +125,25 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
                 this.assignedValueSource = lhsMapping.getAssignedValueSource();
             }
         }        
+    }
+    
+    public static ElementReference getOperatorFunction(String operator, ElementReference type) {
+        return type != null && type.getImpl().isInteger()?
+                "++".equals(operator)?
+                    RootNamespace.getRootScope().getIntegerFunctionPlus():
+                    RootNamespace.getRootScope().getIntegerFunctionMinus():
+               type != null && type.getImpl().isReal()?
+                "++".equals(operator)?
+                    RootNamespace.getRootScope().getRealFunctionPlus():
+                    RootNamespace.getRootScope().getRealFunctionMinus():
+               null;
+            
+    }
+    
+    public ValueSpecificationAction getValueAction(ElementReference type) {
+        return type != null && type.getImpl().isInteger()?
+                this.graph.addNaturalValueSpecificationAction(1):
+                this.graph.addRealValueSpecificationAction(1.0f);
     }
     
     public CallBehaviorAction getAction() throws MappingError {

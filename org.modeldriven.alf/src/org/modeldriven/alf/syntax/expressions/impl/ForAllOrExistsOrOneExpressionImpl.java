@@ -79,8 +79,8 @@ public class ForAllOrExistsOrOneExpressionImpl
 	 */
 
 	/**
-	 * The argument of a forAll, exists or one expression must have type Boolean
-	 * and a multiplicity upper bound of 1.
+     * The argument of a forAll, exists or one expression must have a type that
+     * conforms to type Boolean and a multiplicity upper bound of 1.
 	 **/
 	public boolean forAllOrExistsOrOneExpressionArgument() {
 	    ForAllOrExistsOrOneExpression self = this.getSelf();
