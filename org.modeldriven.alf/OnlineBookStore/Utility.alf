@@ -39,7 +39,7 @@ package Utility {
   public activity GetCustomerEmail(): InternetEmailAddress[0..1] {
     do {
       Write("Enter your email address:");
-      response = ReadLine()??"";
+      response = ReadLine();
       if (response == "") {
         return null;
       } else if (IsValidEmail(response)) {
@@ -69,7 +69,7 @@ package Utility {
     in minimum: Count): Count[0..1] {
     do {
       Write(message);
-      response = ReadLine()??"";
+      response = ReadLine();
       if (response == "") {
         return null;
       }
@@ -84,22 +84,22 @@ package Utility {
   
   public activity GetPersonalName(in prompt: String[0..1]): PersonalName {
     WriteLine(prompt??);
-    Write("  Title:"); title = BlankToNull(ReadLine()??"");
-    Write("  First name:"); firstName = ReadLine()??"";
-    Write("  Middle name:"); middleName = BlankToNull(ReadLine()??"");
-    Write("  Last name:"); lastName = ReadLine()??"";
-    Write("  Suffix:"); suffix = BlankToNull(ReadLine()??"");
+    Write("  Title:"); title = BlankToNull(ReadLine());
+    Write("  First name:"); firstName = ReadLine();
+    Write("  Middle name:"); middleName = BlankToNull(ReadLine());
+    Write("  Last name:"); lastName = ReadLine();
+    Write("  Suffix:"); suffix = BlankToNull(ReadLine());
     return new PersonalName(title, firstName, middleName, lastName, suffix);
   }
   
   public activity GetMailingAddress(in prompt: String[0..1]): MailingAddress {
     WriteLine(prompt??);
-    Write("  Address Line 1:"); addressLine1 = ReadLine()??"";
-    Write("  Address Line 2:"); addressLine2 = BlankToNull(ReadLine()??"");
-    Write("  City:"); city = BlankToNull(ReadLine()??"");
-    Write("  State Or Province:"); stateOrProvince = BlankToNull(ReadLine()??"");
-    Write("  Postal Code:"); postalCode = BlankToNull(ReadLine()??"");
-    Write("  Country:"); country = BlankToNull(ReadLine()??"");
+    Write("  Address Line 1:"); addressLine1 = ReadLine();
+    Write("  Address Line 2:"); addressLine2 = BlankToNull(ReadLine());
+    Write("  City:"); city = BlankToNull(ReadLine());
+    Write("  State Or Province:"); stateOrProvince = BlankToNull(ReadLine());
+    Write("  Postal Code:"); postalCode = BlankToNull(ReadLine());
+    Write("  Country:"); country = BlankToNull(ReadLine());
     return new MailingAddress(
       addressLine1, addressLine2, city, stateOrProvince, country, postalCode);
   }
@@ -108,7 +108,7 @@ package Utility {
     WriteLine(prompt??);
     do {
       Write("  Month:");
-      response = ReadLine()??"";
+      response = ReadLine();
       if (response == "") {
         return null;
       }
@@ -120,7 +120,7 @@ package Utility {
     
     do {
       Write("  Year:");
-      response = ReadLine()??"";
+      response = ReadLine();
       if (response == "") {
         return null;
       }
