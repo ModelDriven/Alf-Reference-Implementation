@@ -45,7 +45,7 @@ abstract class OrderedSetImpl specializes OrderedCollectionImpl {
   protected replaceAtImpl (in index: Integer, in element: any): any[0..1] {
     result = this.atImpl(index);
     if (result->NotEmpty()) {
-      this.removeImpl(result);
+      this.removeImpl(result??);
       this.addAtImpl(index, element);
     }
     return result;
