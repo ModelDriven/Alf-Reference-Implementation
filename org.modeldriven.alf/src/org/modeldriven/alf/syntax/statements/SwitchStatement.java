@@ -110,13 +110,18 @@ public class SwitchStatement extends Statement {
 		return this.getImpl().switchStatementCaseAssignments();
 	}
 
-	/**
-	 * If a name has an assigned source after any clause of a switch statement
-	 * that is different than before that clause (including newly defined
-	 * names), the assigned source after the switch statement is the switch
-	 * statement. Otherwise, the assigned source of a name after the switch
-	 * statement is the same as before the switch statement.
-	 **/
+    /**
+     * If a name has an assigned source after any clause of a switch statement
+     * that is different than before that clause (including newly defined
+     * names), the assigned source after the switch statement is the switch
+     * statement, with a multiplicity lower bound that is the minimum of the
+     * lower bound for the name in each clause and a multiplicity upper bound
+     * that is the maximum for the name in each clause (where the name is
+     * considered to have multiplicity [0..0] for clauses in which it is not
+     * defined and unchanged multiplicity for an implicit "default" clause).
+     * Otherwise, the assigned source of a name after the switch statement is
+     * the same as before the switch statement.
+     **/
 	public boolean switchStatementAssignmentsAfter() {
 		return this.getImpl().switchStatementAssignmentsAfter();
 	}
@@ -125,11 +130,7 @@ public class SwitchStatement extends Statement {
      * Any name that is unassigned before a switch statement and is assigned in
      * one or more clauses of the switch statement, has, after the switch
      * statement, a type that is is the effective common ancestor of the types
-     * of the name in each clause in which it is defined, with a multiplicity
-     * lower bound that is the minimum of the lower bound for the name in each
-     * clause (where it is considered to have multiplicity lower bound of zero
-     * for clauses in which it is not defined), and a multiplicity upper bound
-     * that is the maximum for the name in each clause in which it is defined.
+     * of the name in each clause in which it is defined.
      **/
 	public boolean switchStatementAssignments() {
 		return this.getImpl().switchStatementAssignments();

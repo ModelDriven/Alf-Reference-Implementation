@@ -108,18 +108,19 @@ public class IfStatementImpl extends StatementImpl {
      * a final clause, then the assignments before that clause are also the same
      * as the assignments before the if statement.
      *
-     * If an if statement does not have a final else clause, then any name that
-     * is unassigned before the if statement is unassigned after the if
-     * statement. If an if statement does have a final else clause, then names
-     * assigned in any clause of the if statement have a type after the if 
-     * statement that is the effective common ancestor of the types of the name 
-     * in each clause with a multiplicity lower bound that is the minimum of the 
-     * lower bound for the name in each clause and a multiplicity upper bound 
-     * that is the maximum for the name in each clause. For a name that has an 
-     * assigned source after any clause of an if statement that is different 
-     * than before that clause, then the assigned source after the if statement 
-     * is the if statement. Otherwise, the assigned source of a name after the 
-     * if statement is the same as before the if statement.
+     * Any name that is unassigned before an if statement and is assigned in one
+     * or more clauses of the if statement, has, after the if statement, a type
+     * that is is the effective common ancestor of the types of the name in each
+     * clause in which it is defined. For a name that has an assigned source
+     * after any clause of an if statement that is different than before that
+     * clause, then the assigned source after the if statement is the if
+     * statement, with a multiplicity lower bound that is the minimum of the
+     * lower bound for the name in each clause and a multiplicity upper bound
+     * that is the maximum for the name in each clause (where the name is
+     * considered to have multiplicity [0..0] for clauses in which it is not
+     * defined and unchanged multiplicity for an implicit "else" clause).
+     * Otherwise, the assigned source of a name after the if statement is the
+     * same as before the if statement.
      **/
     @Override
     protected Map<String, AssignedSource> deriveAssignmentAfter() {
@@ -131,10 +132,15 @@ public class IfStatementImpl extends StatementImpl {
             blocks.addAll(clauses.getImpl().getBlocks());
         }
         Block finalClause = self.getFinalClause();
-        if (finalClause != null) {
-            finalClause.getImpl().setAssignmentBefore(assignmentsBefore);
-            blocks.add(finalClause);
+        if (finalClause == null) {
+            // NOTE: This adds an empty block for an implicit "else", so that the
+            // final multiplicities for names assigned in the other clauses are
+            // set correctly on merging.
+            finalClause = new Block();
+            finalClause.setStatement(new ArrayList<Statement>());
         }
+        finalClause.getImpl().setAssignmentBefore(assignmentsBefore);
+        blocks.add(finalClause);
         Map<String, AssignedSource> assignmentsAfter = 
             new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
         assignmentsAfter.putAll(this.mergeAssignments(blocks, assignmentsBefore));
@@ -174,15 +180,16 @@ public class IfStatementImpl extends StatementImpl {
      * Any name that is unassigned before an if statement and is assigned in one
      * or more clauses of the if statement, has, after the if statement, a type
      * that is is the effective common ancestor of the types of the name in each
-     * clause in which it is defined, with a multiplicity lower bound that is
-     * the minimum of the lower bound for the name in each clause (where it is
-     * considered to have multiplicity lower bound of zero for clauses in which
-     * it is not defined), and a multiplicity upper bound that is the maximum
-     * for the name in each clause in which it is defined. For a name that has
-     * an assigned source after any clause of an if statement that is different
-     * than before that clause, then the assigned source after the if statement
-     * is the if statement. Otherwise, the assigned source of a name after the
-     * if statement is the same as before the if statement.
+     * clause in which it is defined. For a name that has an assigned source
+     * after any clause of an if statement that is different than before that
+     * clause, then the assigned source after the if statement is the if
+     * statement, with a multiplicity lower bound that is the minimum of the
+     * lower bound for the name in each clause and a multiplicity upper bound
+     * that is the maximum for the name in each clause (where the name is
+     * considered to have multiplicity [0..0] for clauses in which it is not
+     * defined and unchanged multiplicity for an implicit "else" clause).
+     * Otherwise, the assigned source of a name after the if statement is the
+     * same as before the if statement.
      **/
 	public boolean ifStatementAssignmentsAfter() {
 	    // Note: This is handled by overriding deriveAssignmentAfter.

@@ -99,15 +99,16 @@ public class IfStatement extends Statement {
      * Any name that is unassigned before an if statement and is assigned in one
      * or more clauses of the if statement, has, after the if statement, a type
      * that is is the effective common ancestor of the types of the name in each
-     * clause in which it is defined, with a multiplicity lower bound that is
-     * the minimum of the lower bound for the name in each clause (where it is
-     * considered to have multiplicity lower bound of zero for clauses in which
-     * it is not defined), and a multiplicity upper bound that is the maximum
-     * for the name in each clause in which it is defined. For a name that has
-     * an assigned source after any clause of an if statement that is different
-     * than before that clause, then the assigned source after the if statement
-     * is the if statement. Otherwise, the assigned source of a name after the
-     * if statement is the same as before the if statement.
+     * clause in which it is defined. For a name that has an assigned source
+     * after any clause of an if statement that is different than before that
+     * clause, then the assigned source after the if statement is the if
+     * statement, with a multiplicity lower bound that is the minimum of the
+     * lower bound for the name in each clause and a multiplicity upper bound
+     * that is the maximum for the name in each clause (where the name is
+     * considered to have multiplicity [0..0] for clauses in which it is not
+     * defined and unchanged multiplicity for an implicit "else" clause).
+     * Otherwise, the assigned source of a name after the if statement is the
+     * same as before the if statement.
      **/
 	public boolean ifStatementAssignmentsAfter() {
 		return this.getImpl().ifStatementAssignmentsAfter();
