@@ -71,9 +71,14 @@ public class CastExpression extends Expression {
 		return this.getImpl().castExpressionTypeDerivation();
 	}
 
-	/**
-	 * A cast expression has a multiplicity lower bound of 0.
-	 **/
+    /**
+     * If the type of a cast expression is empty, or its type conforms to
+     * Integer and the type of its operand expression conforms to BitString or
+     * Real, or its type conforms to BitString or Real and its operand's type
+     * conforms to Integer, or its operand's type conforms to its type, then the
+     * multiplicity lower bound of the cast expression is the same as that of
+     * its operand expression. Otherwise it is 0.
+     **/
 	public boolean castExpressionLowerDerivation() {
 		return this.getImpl().castExpressionLowerDerivation();
 	}

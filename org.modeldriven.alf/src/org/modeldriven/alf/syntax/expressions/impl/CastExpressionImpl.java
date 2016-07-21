@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -63,11 +62,17 @@ public class CastExpressionImpl extends ExpressionImpl {
 	}
 	
     /**
-     * A cast expression has a multiplicity lower bound of 0.
+     * If the type of a cast expression is empty, or its type conforms to
+     * Integer and the type of its operand expression conforms to BitString or
+     * Real, or its type conforms to BitString or Real and its operand's type
+     * conforms to Integer, or its operand's type conforms to its type, then the
+     * multiplicity lower bound of the cast expression is the same as that of
+     * its operand expression. Otherwise it is 0.
      **/
 	@Override
 	protected Integer deriveLower() {
-	    return 0;
+	    Expression operand = this.getSelf().getOperand();
+	    return operand != null && this.typesConform()? operand.getLower(): 0;
 	}
 	
     /**
@@ -76,8 +81,7 @@ public class CastExpressionImpl extends ExpressionImpl {
      **/
 	@Override
 	protected Integer deriveUpper() {
-	    CastExpression self = this.getSelf();
-	    Expression operand = self.getOperand();
+	    Expression operand = this.getSelf().getOperand();
 	    return operand == null? 1: operand.getUpper();
 	}
 	
@@ -138,6 +142,19 @@ public class CastExpressionImpl extends ExpressionImpl {
         operand.getImpl().setAssignmentBefore(this.getAssignmentBeforeMap());
 		return operand.getImpl().getAssignmentAfterMap();
 	} // updateAssignments
+	
+	public boolean typesConform() {
+	    CastExpression self = this.getSelf();
+	    Expression operand = self.getOperand();
+	    ElementReference operandType = operand == null? null: operand.getType();
+	    ElementReference type = self.getType();
+	    return type == null || operandType != null &&
+	           (operandType.getImpl().isInteger() &&
+	                (type.getImpl().isBitString() || type.getImpl().isReal()) ||
+	            (operandType.getImpl().isBitString() || operandType.getImpl().isReal()) &&
+	                type.getImpl().isInteger() ||
+	            operandType.getImpl().conformsTo(type));
+	}
 	
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
