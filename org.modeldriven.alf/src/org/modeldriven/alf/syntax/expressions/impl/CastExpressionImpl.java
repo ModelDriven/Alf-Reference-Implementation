@@ -67,7 +67,7 @@ public class CastExpressionImpl extends ExpressionImpl {
      **/
 	@Override
 	protected Integer deriveLower() {
-	    return 1;
+	    return 0;
 	}
 	
     /**
