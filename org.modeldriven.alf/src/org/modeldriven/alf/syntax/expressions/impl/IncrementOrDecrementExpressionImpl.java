@@ -176,16 +176,18 @@ public class IncrementOrDecrementExpressionImpl extends ExpressionImpl {
 	protected ElementReference deriveFeature() {
         IncrementOrDecrementExpression self = this.getSelf();
         LeftHandSide operand = self.getOperand();
-         return !self.getIsFeature()? null:
-                     ((FeatureLeftHandSide)operand).getImpl().getReferent();
+        return !self.getIsFeature()? null: operand.getReferent();
 	}
 
 	/**
 	 * An increment or decrement expression has a feature as its operand if the
-	 * operand is a kind of FeatureLeftHandSide.
+	 * operand is a feature left-hand side or a name left-hand side for a name 
+	 * that disambiguates to a feature.
 	 **/
 	protected Boolean deriveIsFeature() {
-		return this.getSelf().getOperand() instanceof FeatureLeftHandSide;
+        IncrementOrDecrementExpression self = this.getSelf();
+        LeftHandSide operand = self.getOperand();
+		return operand != null && operand.getImpl().getFeature() != null;
 	}
 
 	/**

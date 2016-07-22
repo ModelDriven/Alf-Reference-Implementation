@@ -129,8 +129,9 @@ public class IncrementOrDecrementExpression extends Expression {
 	}
 
 	/**
-	 * An increment or decrement expression has a feature as its operand if the
-	 * operand is a kind of FeatureLeftHandSide.
+     * An increment or decrement expression has a feature as its operand if the
+     * operand is a feature left-hand side or a name left-hand side for a name 
+     * that disambiguates to a feature.
 	 **/
 	public boolean incrementOrDecrementExpressionIsFeatureDerivation() {
 		return this.getImpl()
