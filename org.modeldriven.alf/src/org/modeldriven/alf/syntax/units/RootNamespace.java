@@ -117,6 +117,8 @@ public class RootNamespace extends ModelNamespace {
     private ElementReference sequenceFunctionReplacingAt = null;
     
     private ElementReference collectionFunctionAdd = null;
+    private ElementReference collectionFunctionIsEmpty = null;
+    private ElementReference collectionFunctionNotEmpty = null;
     private ElementReference collectionClassesPackage = null;
     
     private QualifiedName listFunctions = null;
@@ -296,6 +298,22 @@ public class RootNamespace extends ModelNamespace {
                             addName("add").getImpl().getBehaviorReferent();
         }
         return collectionFunctionAdd;
+    }
+
+    public ElementReference getCollectionFunctionIsEmpty() {
+        if (collectionFunctionIsEmpty == null) {
+            collectionFunctionIsEmpty = getCollectionFunctions().getImpl().copy().
+                            addName("isEmpty").getImpl().getBehaviorReferent();
+        }
+        return collectionFunctionIsEmpty;
+    }
+
+    public ElementReference getCollectionFunctionNotEmpty() {
+        if (collectionFunctionNotEmpty == null) {
+            collectionFunctionNotEmpty = getCollectionFunctions().getImpl().copy().
+                            addName("notEmpty").getImpl().getBehaviorReferent();
+        }
+        return collectionFunctionNotEmpty;
     }
 
     public ElementReference getCollectionClassesPackage() {

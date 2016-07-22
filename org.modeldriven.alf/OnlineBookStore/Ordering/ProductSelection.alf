@@ -52,11 +52,14 @@ active class ProductSelection {
     
     this.quantity = rcvd_evt.quantity;
     
-    cart = ShoppingCart -> select selected (selected.cartID == rcvd_evt.cartID)[1]??;
-    product = Product -> select selected (selected.productID == rcvd_evt.productID)[1]??;
-    R4a.createLink(product, this);
-    R4b.createLink(cart, this);
-    this.unitPriceOfSelection = product.unitPrice;
+    cart = ShoppingCart -> select selected (selected.cartID == rcvd_evt.cartID)[1];
+    product = Product -> select selected (selected.productID == rcvd_evt.productID)[1];
+    
+    if (cart->notEmpty() && product->notEmpty()) {
+      R4a.createLink(product, this);
+      R4b.createLink(cart, this);
+      this.unitPriceOfSelection = product.unitPrice;
+    }
     
     this.ChangeQuantity(
       quantity => rcvd_evt.quantity

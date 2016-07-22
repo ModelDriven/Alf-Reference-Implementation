@@ -16,7 +16,7 @@ active class ShippingCompanyImpl specializes ShippingCompany {
       shipment = Shipping::Shipment->select selected (
         selected.timePrepared->notEmpty() && selected.timePickedUp->isEmpty() &&
         (selected.shippingCompany->isEmpty() || selected.shippingCompany == this.companyName)
-      )[1]??;
+      )[1];
       
       if (shipment->notEmpty()) {
         title = "SHIPPING COMPANY: " + this.companyName;

@@ -100,10 +100,10 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
     }
 
     public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
-        if (this.assignmentBefore == null) {
-            this.assignmentBefore = new HashMap<String, AssignedSource>();
+        if (this.assignmentAfter == null) {
+            this.assignmentAfter = new HashMap<String, AssignedSource>();
         } else {
-            this.assignmentBefore.clear();
+            this.assignmentAfter.clear();
         }
         for (AssignedSource assignment: assignmentAfter) {
             this.addAssignmentAfter(assignment);
@@ -212,6 +212,48 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
 	    return this.getAssignmentBeforeMap();
 	}
 	
+    /**
+     * Returns the given assignments, updated for known nulls and non-nulls,
+     * based on the given truth condition. By default, no changes are made.
+     * (This operation is overridden by conditional logical, binary unary,
+     * equality, behavior invocation and sequence operation expressions that may
+     * be used to form checks for null and non-null values.)
+     */
+    public Collection<AssignedSource> updateMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        Map<String, AssignedSource> assignmentMap = new HashMap<String, AssignedSource>();
+        for (AssignedSource assignment: assignments) {
+            assignmentMap.put(assignment.getName(), assignment);
+        }
+        return this.updateMultiplicity(assignmentMap, condition).values();
+    }
+
+    /**
+     * Returns the given assignments, updated for known nulls and non-nulls,
+     * based on the given truth condition. By default, no changes are made.
+     * (This operation is overridden by name and assignment expression that
+     * may be used to provide the names that are checked for being null or
+     * non-null.)
+     */
+    public Map<String, AssignedSource> updateMultiplicity(
+            Map<String, AssignedSource> assignmentMap, boolean condition) {
+        return assignmentMap;
+    }
+
+    public Collection<AssignedSource> setMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        Map<String, AssignedSource> assignmentMap = new HashMap<String, AssignedSource>();
+        for (AssignedSource assignment: assignments) {
+            assignmentMap.put(assignment.getName(), assignment);
+        }
+        return this.setMultiplicity(assignmentMap, condition).values();
+    }
+
+    public Map<String, AssignedSource> setMultiplicity(
+            Map<String, AssignedSource> assignmentMap, boolean condition) {
+        return assignmentMap;
+    }
+
 	/**
 	 * Get the syntax element assigned to the given name before this expression.
 	 */

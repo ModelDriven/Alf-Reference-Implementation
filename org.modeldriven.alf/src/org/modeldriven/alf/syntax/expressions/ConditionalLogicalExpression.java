@@ -78,10 +78,13 @@ public class ConditionalLogicalExpression extends BinaryExpression {
 	}
 
 	/**
-	 * The assignments before the first operand expression of a conditional
-	 * logical expression are the same as those before the conditional logical
-	 * expression. The assignments before the second operand expression are the
-	 * same as those after the first operand expression.
+     * The assignments before the first operand expression of a conditional
+     * logical expression are the same as those before the conditional logical
+     * expression. The assignments before the second operand expression are the
+     * same as those after the first operand expression, adjusted for known
+     * nulls and non-nulls based on the first operand expression being true,
+     * for a conditional-and expression, or false, for a conditional-or
+     * expression.
 	 **/
 	public Boolean validateAssignments() {
 		return this.getImpl().validateAssignments();

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -317,6 +316,31 @@ public class NameExpressionImpl extends ExpressionImpl {
         return assignments;
     }
     
+    /**
+     * If the name dies not disambiguate to a feature reference, then it is
+     * considered known null if the condition is true and known non-null if
+     * the condition is false.
+     */
+    @Override
+    public Map<String, AssignedSource> setMultiplicity(
+            Map<String, AssignedSource> assignmentMap, boolean condition) {
+        QualifiedName name = this.getSelf().getName();
+        if (name != null && !name.getIsFeatureReference()) {
+            AssignedSource assignment = 
+                    assignmentMap.get(name.getUnqualifiedName().getName());
+            if (assignment != null) {
+                assignment = AssignedSourceImpl.makeAssignment(assignment);
+                if (condition) {
+                    assignment.setLower(0);
+                } else if (assignment.getLower() == 0) {
+                    assignment.setLower(1);
+                }
+                assignmentMap.put(assignment.getName(), assignment);
+            }
+        }
+        return assignmentMap;
+    }
+
     @Override
     public void setIsAddTarget() {
         this.isAddTarget = true;

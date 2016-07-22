@@ -20,23 +20,23 @@ package Utility {
       for (i in len..decimalPlaces + 1) {
         image = "0" + image;
       }    
-      return (Substring(image, 1, len - decimalPlaces)??) + "." + 
-             (Substring(image, len - decimalPlaces + 1, len)??);
+      return (Substring(image, 1, len - decimalPlaces)??"") + "." + 
+             (Substring(image, len - decimalPlaces + 1, len)??"");
     }
   }
   
   public activity CurrencyAmountToString(in currencyAmount: 'Currency Amount'[0..1]): String {
     return currencyAmount == null? "n/a":
-      (currencyAmount.currencyCode??) + " " + FixedPointNumberToString(currencyAmount.amount??);
+      currencyAmount.currencyCode + " " + FixedPointNumberToString(currencyAmount.amount);
   }
   
   public activity AreaToString(in area: Area[0..1]): String {
     return area == null? "n/a":
-      FixedPointNumberToString(area.value??) + " " + (area.units??);
+      FixedPointNumberToString(area.value) + " " + area.units;
   }
   
   public activity DateToString(in date: Date[0..1]): String {
-    return date == null? "n/a": ToString(date.month??) + "/" + ToString(date.day??) + "/" + ToString(date.year??);
+    return date == null? "n/a": ToString(date.month) + "/" + ToString(date.day) + "/" + ToString(date.year);
   }
   
   public activity PropertyTypeToString(in type: 'Property Type'[0..1]): String {
@@ -93,7 +93,7 @@ package Utility {
     
     if (location->notEmpty()) {
       WriteLine("Address: ");
-      WriteLine(location.'location address'??);
+      WriteLine(location.'location address');
     }
     
   }

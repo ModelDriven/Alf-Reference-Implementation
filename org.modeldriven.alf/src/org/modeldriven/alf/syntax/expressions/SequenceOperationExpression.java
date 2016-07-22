@@ -209,6 +209,19 @@ public class SequenceOperationExpression extends InvocationExpression {
 		return this.getImpl().updateAssignments();
 	}
 
+    /**
+     * If the invoked behavior is CollectionFunctions::isEmpty or
+     * SequenceFunctions::IsEmpty, then check the primary expression for known
+     * nulls and non-nulls using the given truth condition. If the invoked
+     * behavior is CollectionFunctions::notEmpty or SequenceFunctions::NotEmpty,
+     * then check the primary expression for known nulls and non-nulls using the
+     * negation of the given truth condition.
+     */
+    public Collection<AssignedSource> updateMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().updateMultiplicity(assignments, condition);
+    }
+
 	/**
 	 * Returns the list of parameter elements from the superclass operation,
 	 * with the first parameter removed (since the argument for the first

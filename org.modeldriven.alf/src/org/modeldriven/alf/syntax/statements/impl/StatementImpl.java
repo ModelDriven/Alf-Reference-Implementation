@@ -107,13 +107,13 @@ public abstract class StatementImpl extends DocumentedElementImpl {
     }
 
 	public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
-        if (this.assignmentBefore == null) {
-            this.assignmentBefore = new HashMap<String, AssignedSource>();
+        if (this.assignmentAfter == null) {
+            this.assignmentAfter = new HashMap<String, AssignedSource>();
         } else {
-            this.assignmentBefore.clear();
+            this.assignmentAfter.clear();
         }
         for (AssignedSource assignment: assignmentAfter) {
-            this.addAssignmentBefore(assignment);
+            this.addAssignmentAfter(assignment);
         }
 	}
 
@@ -299,7 +299,7 @@ public abstract class StatementImpl extends DocumentedElementImpl {
                 types.add(assignment.getType());
             }
             if (assignments.size() < blocks.size() && 
-                    assignmentsBefore.get(name) == null) {
+                    !assignmentsBefore.containsKey(name)) {
                 low = 0;
             }
             mergedAssignments.put(name, AssignedSourceImpl.makeAssignment(name,

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -110,6 +109,20 @@ public class BehaviorInvocationExpression extends InvocationExpression {
 		return this.getImpl()
 				.behaviorInvocationExpressionAlternativeConstructor();
 	}
+
+    /**
+     * If the invoked behavior is CollectionFunctions::isEmpty or
+     * SequenceFunctions::IsEmpty, then check the argument expression for known
+     * nulls and non-nulls using the given truth condition. If the invoked
+     * behavior is CollectionFunctions::notEmpty or SequenceFunctions::NotEmpty,
+     * then check the argument expression for known nulls and non-nulls using
+     * the negation of the given truth condition.
+     */
+    @Override
+    public Collection<AssignedSource> updateMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().updateMultiplicity(assignments, condition);
+    }
 
 	public void _deriveAll() {
 		super._deriveAll();

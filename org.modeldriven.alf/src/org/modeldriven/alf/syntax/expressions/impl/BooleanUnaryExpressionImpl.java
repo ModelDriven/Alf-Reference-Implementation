@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -9,6 +8,8 @@
  *******************************************************************************/
 
 package org.modeldriven.alf.syntax.expressions.impl;
+
+import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -95,4 +96,25 @@ public class BooleanUnaryExpressionImpl extends UnaryExpressionImpl {
         }
 	}
 
+    /*
+     * Helper Methods
+     */
+
+	/**
+	 * If the expression is a negation, then check the operand expression for
+	 * known nulls and non-nulls based on the negation of the given truth
+	 * condition.
+	 */
+    @Override
+    public Map<String, AssignedSource> updateMultiplicity(
+            Map<String, AssignedSource> assignmentsMap, boolean condition) {
+        BooleanUnaryExpression self = this.getSelf();
+        String operator = self.getOperator();
+        Expression operand = self.getOperand();
+        if ("!".equals(operator) && operand != null) {
+            assignmentsMap = operand.getImpl().updateMultiplicity(
+                    assignmentsMap, !condition);
+        }
+        return assignmentsMap;
+    }
 } // BooleanUnaryExpressionImpl

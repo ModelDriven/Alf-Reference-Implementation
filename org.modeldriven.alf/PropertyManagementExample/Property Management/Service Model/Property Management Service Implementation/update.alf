@@ -16,12 +16,7 @@ activity update (
   out error: 'Error Reply' [0..1] ) {
 
   property = Property -> select p 
-               (p.identifier == request.'property identifier')[1]??;
-
-  reply = null;
-  error = null;
-  
-  let location: Location = null; 
+               (p.identifier == request.'property identifier')[1];
 
   if (property -> isEmpty()) {
     error = new 'Error Reply' (
@@ -59,21 +54,26 @@ activity update (
   } else {
     if (request.'property location identifier' -> notEmpty()) {
       location = Location -> select loc 
-                   (loc.identifier == request.'property location identifier')[1]??;
-      'Property Location'.createLink(property, location);
+                   (loc.identifier == request.'property location identifier')[1];
+      if (location -> notEmpty()) {
+        'Property Location'.createLink(property, location);
+      }
     }
-    if (request.'property name' -> notEmpty()) {
-      property.name = request.'property name'??;
+    name = request.'property name';
+    if (name -> notEmpty()) {
+      property.name = name;
     }
-    if (request.'property value' -> notEmpty()) {
-      property.value = request.'property value';
+    value = request.'property value';
+    if (value -> notEmpty()) {
+      property.value = value;
     }
-    if (request.'property serial number' -> notEmpty()) {
-      (('Personal Property')property).'serial number' = 
-                                            request.'property serial number';
+    serialNumber = request.'property serial number';
+    if (serialNumber -> notEmpty()) {
+      (('Personal Property')property).'serial number' = serialNumber;
     }
-    if (request.'property size' -> notEmpty()) {
-      (('Real Property')property).size = request.'property size';
+    size = request.'property size';
+    if (size -> notEmpty()) {
+      (('Real Property')property).size = size;
     }
 
     reply = this.'create reply'(request.identifier, property);

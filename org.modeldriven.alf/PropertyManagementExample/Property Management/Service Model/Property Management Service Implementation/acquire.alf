@@ -12,7 +12,7 @@ activity acquire (
   out error: 'Error Reply' [0..1] ) {
 
   property = 
-    Property -> select p (p.identifier == request.'property identifier')[1]??; 
+    Property -> select p (p.identifier == request.'property identifier')[1]; 
 
   if (property -> isEmpty()) {
     error = new 'Error Reply' (
@@ -38,9 +38,11 @@ activity acquire (
 
   } else {
     location = Location -> select loc 
-                 (loc.identifier == request.'property location identifier')[1]??;
-    'Property Location'.createLink(property, location);
- 
+                 (loc.identifier == request.'property location identifier')[1];
+    if (location -> notEmpty()) {
+      'Property Location'.createLink(property, location);
+    }
+    
     property.'acquisition data' = request.'property acquisition data';    
     property.'update status'();
 

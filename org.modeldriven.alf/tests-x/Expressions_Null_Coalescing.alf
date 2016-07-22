@@ -10,7 +10,7 @@ class Expressions_Null_Coalescing specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 		
-		this.test(a, b, c, d, e, l1, l2, i1, i2, i3, i4);
+		this.test(a, b, c, d, e, l1, l2, i1, i2, i3, i4, b1, b2);
 		
 		AssertEqual("a", a, 1);
 		AssertEqual("b", b, 1);
@@ -26,6 +26,9 @@ class Expressions_Null_Coalescing specializes Test {
 		AssertEqual("i3", i3, 1);
 		AssertEqual("i4", i4, null);
 		
+		AssertTrue("b1", b1);
+		AssertFalse("b2", b2);
+		
 		this.done();
 	}
 	
@@ -37,13 +40,28 @@ class Expressions_Null_Coalescing specializes Test {
 	//**************************************************************************
 
 	private test ( 
-		out a: Integer[0..1], out b: Integer[0..1], out c: Integer[0..1],
-		out d: Integer, out e: any, out l1: Integer[] sequence, out l2: Integer[] sequence,
-		out i1: Integer[0..1], out i2: Integer[0..1], out i3: Integer[0..1], out i4: Integer[0..1]) {
+		out a: Integer[0..1], out b: Integer[0..1], out c: Integer[0..1], out d: Integer, out e: any, 
+		out l1: Integer[] sequence, out l2: Integer[] sequence,
+		out i1: Integer[0..1], out i2: Integer[0..1], out i3: Integer[0..1], out i4: Integer[0..1],
+		out b1: Boolean, out b2: Boolean) {
 		
 		a = null ?? 1;
+		b = B(1);
+		c = B(1);
+		
+		if ((c = b) != null) {
+		    c = A(c);
+			c = A(b);
+		} else if (c == null || b -> isEmpty()) {
+		    a = 2;
+		} else {
+		    b = A(b);
+		}
+		
 		b = B(1) ?? 2;
-		c = A(b);
+		
+		c = isEmpty(c)? c: A(c);
+		c = SequenceFunctions::NotEmpty(c)? A(c): c;
 		
 		list = Integer[]{1,2};
 		d = list[3] ?? list[2] ?? list[1] ??;
@@ -59,5 +77,8 @@ class Expressions_Null_Coalescing specializes Test {
 		B(j = 1) ?? (k = 2);
 		i3 = j;
 		i4 = k;
+		
+		b1 = i1 == null || A(i1) == 1; 
+		b2 = i1 != null && i2 != null && A(i1) == 2;
 	}
 }

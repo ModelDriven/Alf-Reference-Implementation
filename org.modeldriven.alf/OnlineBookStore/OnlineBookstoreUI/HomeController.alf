@@ -33,7 +33,7 @@ active class HomeController specializes Controller {
     new HomeView(this);
     
     accept (event: ShowCategory) {
-      category = this.topLevelCategories->at(event.choice)??;
+      category = this.topLevelCategories->at(event.choice);
       if (category->isEmpty()) {
         this.Display();
       } else if (category.'is divided into'->isEmpty()) {

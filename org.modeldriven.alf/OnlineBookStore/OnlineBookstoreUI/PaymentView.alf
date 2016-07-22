@@ -11,7 +11,7 @@ active class PaymentView specializes View {
     );
   }
   
-  public getController(): PaymentController {
+  public getController(): PaymentController[0..1] {
     return (PaymentController)this.controller;
   }
   

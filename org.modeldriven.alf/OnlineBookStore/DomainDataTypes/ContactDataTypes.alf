@@ -23,23 +23,28 @@ package ContactDataTypes {
     public postalCode: String[0..1];
   }
   
-  public activity ToNameString(in name: PersonalName): String {
-    return 
-      (name.title == null? "": (name.title??) + " ") +
-      name.firstName + " " +
-      (name.middleName == null? "": (name.middleName??) + " ") +
-      name.lastName +
-      (name.suffix == null? "" : " " + (name.suffix??));
+  public activity ToNameString(in name: PersonalName[0..1]): String {
+    return name == null? "":
+      FormatString(name.title, "", " ") +
+      FormatString(name.firstName, "", " ") +
+      FormatString(name.middleName, "", " ") +
+      FormatString(name.lastName) +
+      FormatString(name.suffix, " ", "");
   }
   
-  public activity ToAddressString(in address: MailingAddress): String {
-    return
-      address.addressLine1 + "\n" +
-      (address.addressLine2 == null? "": (address.addressLine2??) + "\n") +
-      (address.city == null? "": (address.city??) + " ") + 
-      (address.stateOrProvince == null? "": (address.stateOrProvince??) + " ") + 
-      (address.postalCode == null? "": address.postalCode??) + "\n" +
-      (address.country == null? "": (address.country??) + "\n");
+  public activity ToAddressString(in address: MailingAddress[0..1]): String {
+    return address == null? "":
+      FormatString(address.addressLine1, "", "\n") +
+      FormatString(address.addressLine2, "", "\n") +
+      FormatString(address.city, "", " ") +
+      FormatString(address.stateOrProvince, "", " ") +
+      FormatString(address.postalCode, "", "\n") +
+      FormatString(address.country, "", "\n");
+  }
+  
+  private activity FormatString(
+  	in string: String[0..1], in prefix: String[0..1], in suffix: String[0..1]) : String {
+  	return string == null? "": (prefix ?? "") + string + (suffix ?? "");
   }
 
 }

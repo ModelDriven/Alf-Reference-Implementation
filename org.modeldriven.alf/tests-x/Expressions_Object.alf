@@ -70,7 +70,7 @@ class Expressions_Object specializes Test {
 	  
 	  this.principal = 1000;
 	  this.rate = 5;
-	  this.interest = (this.principal * this.rate) / 100 * 10 ??;  
+	  this.interest = (this.principal * this.rate) / 100 * 10 ?? 0;  
 
 	  names = this.members.name;	  
 	  self = this;

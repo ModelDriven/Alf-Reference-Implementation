@@ -10,7 +10,9 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -159,6 +161,39 @@ public class BehaviorInvocationExpressionImpl
 	 * Helper Methods
 	 */
 	
+    /**
+     * If the invoked behavior is CollectionFunctions::isEmpty or
+     * SequenceFunctions::IsEmpty, then check the argument expression for known
+     * nulls and non-nulls using the given truth condition. If the invoked
+     * behavior is CollectionFunctions::notEmpty or SequenceFunctions::NotEmpty,
+     * then check the argument expression for known nulls and non-nulls using
+     * the negation of the given truth condition.
+     */
+    @Override
+    public Map<String, AssignedSource> updateMultiplicity(
+            Map<String, AssignedSource> assignmentsMap, boolean condition) {
+        BehaviorInvocationExpression self = this.getSelf();
+        Tuple tuple = self.getTuple();
+        ElementReference referent = self.getReferent();
+        if (referent != null && tuple != null) {
+            Collection<NamedExpression> inputs = tuple.getInput();
+            if (inputs.size() > 0) {
+                Expression expression = ((NamedExpression)inputs.toArray()[0]).getExpression();
+                RootNamespace rootScope = RootNamespace.getRootScope();
+                if (referent.getImpl().equals(rootScope.getSequenceFunctionIsEmpty()) ||
+                        referent.getImpl().equals(rootScope.getCollectionFunctionIsEmpty())) {
+                        assignmentsMap = expression.getImpl().setMultiplicity(
+                                assignmentsMap, condition);
+                    } else if (referent.getImpl().equals(rootScope.getSequenceFunctionNotEmpty()) ||
+                            referent.getImpl().equals(rootScope.getCollectionFunctionNotEmpty())) {
+                            assignmentsMap = expression.getImpl().setMultiplicity(
+                                    assignmentsMap, !condition);
+                    }       
+            }
+        }
+        return assignmentsMap;
+    }
+    
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    super.setCurrentScope(currentScope);

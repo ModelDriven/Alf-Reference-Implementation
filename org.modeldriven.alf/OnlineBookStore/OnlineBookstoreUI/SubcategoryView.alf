@@ -15,7 +15,7 @@ active class SubcategoryView specializes View {
     );
   }
   
-  public getController(): SubcategoryController {
+  public getController(): SubcategoryController[0..1] {
     return (SubcategoryController)this.controller;
   }
   
@@ -37,7 +37,7 @@ active class SubcategoryView specializes View {
       case "b": controller.Back();
       case "h": controller.Home();
       case "s": controller.ShowShoppingCart();
-      default:  controller.ShowCategory(IntegerFunctions::ToInteger(choice)??);
+      default:  controller.ShowCategory(IntegerFunctions::ToInteger(choice)??1);
     }
   }
   

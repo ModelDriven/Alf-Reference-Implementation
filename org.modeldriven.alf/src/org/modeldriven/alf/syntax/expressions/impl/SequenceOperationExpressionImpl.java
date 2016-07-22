@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -384,6 +383,36 @@ public class SequenceOperationExpressionImpl
 	    }
 	    return assignments;
 	} // updateAssignments
+	
+    /**
+     * If the invoked behavior is CollectionFunctions::isEmpty or
+     * SequenceFunctions::IsEmpty, then check the primary expression for known
+     * nulls and non-nulls using the given truth condition. If the invoked
+     * behavior is CollectionFunctions::notEmpty or SequenceFunctions::NotEmpty,
+     * then check the primary expression for known nulls and non-nulls using the
+     * negation of the given truth condition.
+     */
+	@Override
+    public Map<String, AssignedSource> updateMultiplicity(
+            Map<String, AssignedSource> assignmentsMap, boolean condition) {
+	    SequenceOperationExpression self = this.getSelf();
+	    ExtentOrExpression primary = self.getPrimary();
+	    Expression expression = primary == null? null: primary.getExpression();
+	    ElementReference referent = self.getReferent();
+	    RootNamespace rootScope = RootNamespace.getRootScope();
+	    if (expression != null && referent != null) {
+	        if (referent.getImpl().equals(rootScope.getSequenceFunctionIsEmpty()) ||
+	            referent.getImpl().equals(rootScope.getCollectionFunctionIsEmpty())) {
+	            assignmentsMap = expression.getImpl().setMultiplicity(
+	                    assignmentsMap, condition);
+	        } else if (referent.getImpl().equals(rootScope.getSequenceFunctionNotEmpty()) ||
+	                   referent.getImpl().equals(rootScope.getCollectionFunctionNotEmpty())) {
+	            assignmentsMap = expression.getImpl().setMultiplicity(
+	                    assignmentsMap, !condition);
+	        }       
+	    }
+	    return assignmentsMap;
+	}
 	
 	private AssignedSource getOldAssignment() {
         LeftHandSide lhs = this.getLeftHandSide();

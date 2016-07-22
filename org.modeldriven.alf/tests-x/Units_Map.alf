@@ -35,10 +35,10 @@ class Units_Map specializes Test {
     this.listeners.put(id, listener);
   }
    
-  public test(out listener: Listener) {
+  public test(out listener: Listener[0..1]) {
     listener = new Listener("Listener");
     this.register(listener, 1);
-    listener = this.listeners.get(1) ??;
+    listener = this.listeners.get(1);
     listener.notify();
   } 
 

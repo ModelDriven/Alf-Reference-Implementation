@@ -14,6 +14,7 @@ import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
 import org.modeldriven.alf.syntax.expressions.impl.EqualityExpressionImpl;
 
 /**
@@ -121,6 +122,18 @@ public class EqualityExpression extends BinaryExpression {
 		return this.getImpl().noNullArguments();
 	}
 
+    /**
+     * If the one operand expression has multiplicity 0..0, then check the other
+     * operand expression for known nulls and non-nulls, using the exclusive-or
+     * of the given truth condition and whether the equality expression is
+     * negated or not.
+     */
+    @Override
+    public Collection<AssignedSource> updateMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().updateMultiplicity(assignments, condition);
+    }
+    
 	public void _deriveAll() {
 		this.getIsNegated();
 		this.getIsRealConversion1();

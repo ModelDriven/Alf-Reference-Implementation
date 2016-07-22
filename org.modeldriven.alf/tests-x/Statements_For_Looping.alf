@@ -33,8 +33,8 @@ class Statements_For_Looping specializes Test {
 		public getNextReading(): Integer[0..1] { return this.reading; }
     }
 	private class ActivityEdgeInstance {
-		public token: Integer;
-		public sendOffer(in token: Integer) {
+		public token: Integer[0..1];
+		public sendOffer(in token: Integer[0..1]) {
 			this.token = token;
 		}
 	}
@@ -82,9 +82,8 @@ class Statements_For_Looping specializes Test {
         reading = s.getNextReading();
   	    if (reading->isEmpty()) {
   	      break;
-  	    }
-  	    if ((reading??) > noiseLimit) {
-  	      readings->add(reading??);
+  	    } else if (reading > noiseLimit) {
+  	      readings->add(reading);
   	    }
   	  }
   	  
@@ -94,20 +93,20 @@ class Statements_For_Looping specializes Test {
   	  sum1 = sum;
   	  
   	  for (ActivityEdgeInstance outgoingEdge: outgoingEdges, Integer token: tokens) {
-  	    outgoingEdge.sendOffer(token??);
+  	    outgoingEdge.sendOffer(token);
   	  }
   	  
   	  //@parallel 
   	  for (outgoingEdge in outgoingEdges, token in tokens) {
-  	    outgoingEdge.sendOffer(outgoingEdge.token + token??);
+  	    outgoingEdge.sendOffer(outgoingEdge.token + token);
   	  }
   	  
   	  //@parallel(SnEven,SnOdd)
   	  for (lower in SLower, upper in SUpper, root in V) {
   	    //@parallel 
   	    {
-  	      add(SnEven, lower+upper??);
-  	      SnOdd->add((lower-upper)*root??);
+  	      add(SnEven, lower+upper ?? 0);
+  	      SnOdd->add((lower-upper)*root ?? 0);
   	    }
   	  }
   	  

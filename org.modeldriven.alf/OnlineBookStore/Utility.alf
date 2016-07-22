@@ -73,7 +73,7 @@ package Utility {
       if (response == "") {
         return null;
       }
-      quantity = IntegerFunctions::ToInteger(response)??;
+      quantity = IntegerFunctions::ToInteger(response);
       if (quantity->isEmpty() || quantity < minimum) {
         WriteLine("That is not a valid quantity.\n");
       } else {        
@@ -83,7 +83,9 @@ package Utility {
   }
   
   public activity GetPersonalName(in prompt: String[0..1]): PersonalName {
-    WriteLine(prompt??);
+    if (prompt->notEmpty()) {
+      WriteLine(prompt);
+    }
     Write("  Title:"); title = BlankToNull(ReadLine());
     Write("  First name:"); firstName = ReadLine();
     Write("  Middle name:"); middleName = BlankToNull(ReadLine());
@@ -93,7 +95,9 @@ package Utility {
   }
   
   public activity GetMailingAddress(in prompt: String[0..1]): MailingAddress {
-    WriteLine(prompt??);
+    if (prompt->notEmpty()) {
+      WriteLine(prompt);
+    }
     Write("  Address Line 1:"); addressLine1 = ReadLine();
     Write("  Address Line 2:"); addressLine2 = BlankToNull(ReadLine());
     Write("  City:"); city = BlankToNull(ReadLine());
@@ -105,14 +109,16 @@ package Utility {
   }
 
   public activity GetMonthYear(in prompt: String[0..1]): MonthYear[0..1] {
-    WriteLine(prompt??);
+    if (prompt->notEmpty()) {
+      WriteLine(prompt);
+    }
     do {
       Write("  Month:");
       response = ReadLine();
       if (response == "") {
         return null;
       }
-      month = IntegerFunctions::ToInteger(response)??;
+      month = IntegerFunctions::ToInteger(response);
       if (month->isEmpty() || month < 1 || month > 12) {
         WriteLine("  That is not a valid month.\n");
       }
@@ -124,40 +130,42 @@ package Utility {
       if (response == "") {
         return null;
       }
-      year = IntegerFunctions::ToInteger(response)??;
+      year = IntegerFunctions::ToInteger(response);
       if (year->isEmpty() || year < 2000 || year > 2099) {
         WriteLine("  That is not a valid year.\n");
       }
     } while (year->isEmpty() || year < 2000 || year > 2099);
     
-    return new MonthYear(year, month);
+    return new MonthYear(year ?? 2000, month ?? 1);
   }
   
   public activity Write(in data: any) {
     StandardOutputChannel.allInstances().write(data);
   }
   
-  public activity WriteWrapped(in text: String, in length: Integer) {
-    l = +0;
-    i = +1;
-    GetWord(text, i, word);
-    while (word->size() > 0) {
-      if (word->at(1) == "\n") {
-        WriteLine("\n");
-        l = 0;
-      } else {
-        l = l + word->size();
-        if (l > length) {
-          WriteLine("");
-          l = word->size();
-        }
-        WriteWord(word);
-        if (l < length) {
-          Write(" ");
-          l++;
-        }
-      }
-      GetWord(text, i, word);
+  public activity WriteWrapped(in text: String[0..1], in length: Integer) {
+    if (text != null) {
+	    l = +0;
+	    i = +1;
+	    GetWord(text, i, word);
+	    while (word->size() > 0) {
+	      if (word->at(1) == "\n") {
+	        WriteLine("\n");
+	        l = 0;
+	      } else {
+	        l = l + word->size();
+	        if (l > length) {
+	          WriteLine("");
+	          l = word->size();
+	        }
+	        WriteWord(word);
+	        if (l < length) {
+	          Write(" ");
+	          l++;
+	        }
+	      }
+	      GetWord(text, i, word);
+	    }
     }
     WriteLine("");
   }

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -122,6 +121,30 @@ public abstract class Expression extends SyntaxElement {
 	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
+	
+    /**
+     * Returns the given assignments, updated for known nulls and non-nulls,
+     * based on the given truth condition. By default, no changes are made.
+     * (This operation is overridden by conditional logical, binary unary,
+     * equality, behavior invocation and sequence operation expressions that may
+     * be used to form checks for null and non-null values.)
+     */
+    public Collection<AssignedSource> updateMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().updateMultiplicity(assignments, condition);
+    }
+
+    /**
+     * Returns the given assignments, updated for known nulls and non-nulls,
+     * based on the given truth condition. By default, no changes are made.
+     * (This operation is overridden by name and assignment expression that
+     * may be used to provide the names that are checked for being null or
+     * non-null.)
+     */
+    public Collection<AssignedSource> setMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().setMultiplicity(assignments, condition);
+    }
 
 	public void _deriveAll() {
 		this.getAssignmentBefore();

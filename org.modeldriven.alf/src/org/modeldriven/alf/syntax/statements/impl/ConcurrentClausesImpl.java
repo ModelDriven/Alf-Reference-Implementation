@@ -135,6 +135,20 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
 	 * Helper Methods
 	 */
 	
+	public Map<String, AssignedSource> updateAssignmentsBefore() {
+	    ConcurrentClauses self = this.getSelf();
+	    Map<String, AssignedSource> assignments = 
+	            new HashMap<String, AssignedSource>(this.getAssignmentBeforeMap());
+	    for (NonFinalClause clause: self.getClause()) {
+	        Expression condition = clause.getCondition();
+	        if (condition != null) {
+	            assignments = condition.getImpl().
+	                    updateMultiplicity(assignments, false);
+	        }
+	    }
+	    return assignments;
+	}
+	
 	public void setEnclosingStatement(Statement enclosingStatement) {
         for (NonFinalClause clause: this.getSelf().getClause()) {
             clause.getImpl().setEnclosingStatement(enclosingStatement);

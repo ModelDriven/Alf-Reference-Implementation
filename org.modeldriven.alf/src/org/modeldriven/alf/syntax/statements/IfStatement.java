@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -85,12 +84,15 @@ public class IfStatement extends Statement {
 		this.getImpl().setIsDeterminate(isDeterminate);
 	}
 
-	/**
-	 * The assignments before all the non-final clauses of an if statement are
-	 * the same as the assignments before the if statement. If the statement has
-	 * a final clause, then the assignments before that clause are also the same
-	 * as the assignments before the if statement.
-	 **/
+    /**
+     * The assignments before each non-final clause of an if statement are the
+     * same as the assignments before the if statement, adjusted for known nulls
+     * and non-nulls due to the failure of the conditions in all previous sets
+     * of concurrent clauses. If the statement has a final clause, then the
+     * assignments before that clause are also the same as the assignments
+     * before the if statement, adjusted for the failure of the conditions of
+     * all previous clauses.
+     **/
 	public boolean ifStatementAssignmentsBefore() {
 		return this.getImpl().ifStatementAssignmentsBefore();
 	}

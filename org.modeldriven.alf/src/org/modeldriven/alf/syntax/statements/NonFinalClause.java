@@ -66,7 +66,8 @@ public class NonFinalClause extends SyntaxElement {
 
 	/**
 	 * The assignments before the body of a non-final clause are the assignments
-	 * after the condition.
+	 * after the condition, adjusted for known null and non-null names due to
+     * the condition being true.
 	 **/
 	public boolean nonFinalClauseAssignmentsBeforeBody() {
 		return this.getImpl().nonFinalClauseAssignmentsBeforeBody();

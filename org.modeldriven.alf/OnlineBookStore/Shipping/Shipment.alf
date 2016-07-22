@@ -108,11 +108,14 @@ active class Shipment {
     
     warehouseName = this.EE.logistics.assignWarehouse(this.shipmentID);
     warehouse = Warehouse->select selected (
-      selected.warehouseName == warehouseName)[1]??;
-    R24.createLink(this, warehouse);
+      selected.warehouseName == warehouseName)[1];
     
-    // Notify a shipping clerk to pack the order.
-    warehouse.ShipmentReadyToPack();
+    if (warehouse->notEmpty()) {
+      R24.createLink(this, warehouse);
+    
+      // Notify a shipping clerk to pack the order.
+      warehouse.ShipmentReadyToPack();
+    }
     
     }
   }
@@ -161,8 +164,10 @@ active class Shipment {
     
     // Relate the shipment to the selected shipping company.
     shippingCompany = ShippingCompany->select selected (
-      selected.companyName == rcvd_evt.shippingCompany)[1]??;
-    R21.createLink(shippingCompany, this);
+      selected.companyName == rcvd_evt.shippingCompany)[1];
+    if (shippingCompany->notEmpty()) {
+      R21.createLink(shippingCompany, this);
+    }
     
     }
   }
@@ -190,8 +195,10 @@ active class Shipment {
     
     // Relate the shipment to the selected shipping company.
     shippingCompany = ShippingCompany->select selected (
-      selected.companyName == rcvd_evt.shippingCompany)[1]??;
-    R21.createLink(shippingCompany, this);
+      selected.companyName == rcvd_evt.shippingCompany)[1];
+    if (shippingCompany->notEmpty()) {
+      R21.createLink(shippingCompany, this);
+    }
     
     }
   }

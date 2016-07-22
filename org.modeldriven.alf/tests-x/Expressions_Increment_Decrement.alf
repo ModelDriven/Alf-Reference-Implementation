@@ -40,9 +40,13 @@ class Expressions_Increment_Decrement specializes Test {
       s[i]++;
       s[i]++;
       s[i]--;
+      
       this.x++;
       this.x++;
-      this.x--;
+      
+      self = this;
+      self.x--; // Test use of name expression that disambiguates to a feature ref.
+      
       this.list[i]++;
       this.list[i]++;
       this.list[i]--;
@@ -50,12 +54,14 @@ class Expressions_Increment_Decrement specializes Test {
       ++i;
       k = --i;
       ++s[i];
-      --s[i];      
+      --s[i];
       ++this.x;
       --this.x;
       ++this.list[i];
       --this.list[i];
       x = this.x;
       list = this.list;
+      
+      
     }
 }

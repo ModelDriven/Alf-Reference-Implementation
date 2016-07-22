@@ -19,7 +19,7 @@ active class CheckOutController specializes Controller {
     this.customerEmail = customerEmail;
     
     customer = Customer->
-      select selected (selected.email == customerEmail)[1]??;
+      select selected (selected.email == customerEmail)[1];
     if (customer->notEmpty()) {
       this.customerName = customer.name;
       this.customerPhone = customer.phone;

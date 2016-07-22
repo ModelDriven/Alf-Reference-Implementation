@@ -68,19 +68,19 @@ class Expressions_Real specializes Test {
 		x = -x; // -1.0
 		x = 2 * x; // -2.0;
 		x = x * i; // -10.0;
-		x = x / y ??; // 0.5
+		x = x / y ?? 0.0; // 0.5
 		x = x + z; // 3.64;
 		x = x - 2.14; // 1.5
 		
 		x++; // 2.5
 		--z; // 2.14
 
-    xx = 1.1;
-    xx += 4.1; // 5.2
-    xx += 1; // 6.2
-    xx -= .2; // 6.0
-    xx *= 10.1; // 60.6
-    xx /= 6; // 10.1
+    	xx = 1.1;
+    	xx += 4.1; // 5.2
+    	xx += 1; // 6.2
+    	xx -= .2; // 6.0
+    	xx *= 10.1; // 60.6
+    	xx /= 6; // 10.1
 		
 		r = t;
 		s = r / 0; // null
@@ -105,8 +105,8 @@ class Expressions_Real specializes Test {
 		m1 = Max(x, y);
 		m2 = Min(x, y);
 	
-	  z1 = (Integer)z;
-	  z2 = (Real)z1;
+	 	z1 = (Integer)z;
+	  	z2 = (Real)z1;
 	  
 	}
 	

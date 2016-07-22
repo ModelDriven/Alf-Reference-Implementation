@@ -11,7 +11,7 @@ active class ShoppingCartController specializes Controller {
     super.following(previous);
     cart = this.getCart();
     if (cart->notEmpty()) {
-      this.EE.onlineCustomer.registerForCart(this, cart.cartID??);
+      this.EE.onlineCustomer.registerForCart(this, cart.cartID);
     }
   }
   
@@ -19,13 +19,13 @@ active class ShoppingCartController specializes Controller {
   public destroy() {
     cart = this.getCart();
     if (cart->notEmpty()) {
-      this.EE.onlineCustomer.unregisterForCart(this, cart.cartID??);
+      this.EE.onlineCustomer.unregisterForCart(this, cart.cartID);
     }
     super.destroy();
   }
   
-  public getCart(): ShoppingCart {
-    return ((ShoppingSession)this.session).cart??;
+  public getCart(): ShoppingCart[0..1] {
+    return ((ShoppingSession)this.session).cart;
   }
   
   public setCart(in cart: ShoppingCart[0..1]) {
@@ -99,21 +99,25 @@ active class ShoppingCartController specializes Controller {
         new HomeController(this).Display();
         break;
       } or accept (event: CheckOut) {
-        if (event.customerEmail->notEmpty()) {
-          new CheckOutController(event.customerEmail??, this).Display();
+      	email = event.customerEmail;
+        if (email->notEmpty()) {
+          new CheckOutController(email, this).Display();
           break;
         }
       } or accept (event: Cancel) {
         if (event.isConfirmed) {
-          cart.Cancel();
-          accept (Notification);
-          this.EE.onlineCustomer.unregisterForCart(this, cart.cartID);
+          if (cart->notEmpty()) {
+	        cart.Cancel();
+	        accept (Notification);
+	        this.EE.onlineCustomer.unregisterForCart(this, cart.cartID);
+          }
           this.setCart(null);
         }
       } or accept (event: ChangeQuantity) {
-        if (event.quantity->notEmpty()) {
+      	quantity = event.quantity;
+        if (quantity->notEmpty()) {
           cart.'includes selection'->at(event.choice).
-            ChangeQuantity(event.quantity??);
+            ChangeQuantity(quantity);
           accept (Notification);
         }
       }

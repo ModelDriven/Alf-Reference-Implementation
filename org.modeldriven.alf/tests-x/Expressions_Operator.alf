@@ -93,7 +93,7 @@ class Expressions_Operator specializes Test {
     i = +i; // 1
     i = -i; // -1
     i = i * j; // -2
-    i = i / j ??; // -1
+    i = i / j ?? 0; // -1
     i = i % j; // -1
     i = i + j; // 1
     i = i - j; // -1
@@ -129,7 +129,7 @@ class Expressions_Operator specializes Test {
     e = !e;
     
     e1 = 3 < *;
-    e2 = (UnlimitedNatural)(+3) < *;
+    e2 = ((UnlimitedNatural)(+3)??*) < *;
     
     e3 = employee instanceof Person;
     e4 = i hastype Employee;

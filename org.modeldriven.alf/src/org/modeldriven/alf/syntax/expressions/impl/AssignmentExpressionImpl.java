@@ -249,10 +249,10 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                 if (!self.getIsDataValueUpdate()) {
                     if (self.getIsIndexed()) {
                         assignment.setLower(0);
-                        assignment.setLower(-1);
+                        assignment.setUpper(-1);
                     } else {
                         assignment.setLower(lower);
-                        assignment.setLower(upper);
+                        assignment.setUpper(upper);
         	        }
                 }
     	        return assignment;
@@ -337,7 +337,8 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 
     /**
      * The left hand side of an assignment expression is a feature if it is a
-     * kind of FeatureLeftHandSide.
+     * feature left-hand side or a name left-hand side for a name that
+     * disambiguates to a feature.
      **/
 	protected Boolean deriveIsFeature() {
 	    LeftHandSide lhs = this.getSelf().getLeftHandSide();
@@ -697,7 +698,34 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         }
         return assignments;
 	} // updateAssignments
-		
+
+	/**
+	 * If the left-hand side is not indexed and is not a feature reference,
+	 * then the assigned name is considered be known null if the condition
+	 * is true, or known non-null if the condition is false. The right-
+	 * hand side is then also checked for known nulls or non-nulls.
+	 */
+    @Override
+    public Map<String, AssignedSource> setMultiplicity(
+            Map<String, AssignedSource> assignmentMap, boolean condition) {
+        AssignmentExpression self = this.getSelf();
+        LeftHandSide lhs = self.getLeftHandSide();
+        if (!self.getIsIndexed() && !self.getIsFeature()) {
+            String name = lhs.getImpl().getLocalName();
+            AssignedSource assignment = assignmentMap.get(name);
+            if (assignment != null) {
+                assignment = AssignedSourceImpl.makeAssignment(assignment);
+                if (condition) {
+                    assignment.setLower(0);
+                } else if (assignment.getLower() == 0) {
+                    assignment.setLower(1);
+                }
+                assignmentMap.put(name, assignment);
+            }
+        }
+        return self.getRightHandSide().getImpl().
+                setMultiplicity(assignmentMap, condition);
+    }
     public boolean isArithmeticOperator() {
         String operator = this.getSelf().getOperator();
         return operator != null && (

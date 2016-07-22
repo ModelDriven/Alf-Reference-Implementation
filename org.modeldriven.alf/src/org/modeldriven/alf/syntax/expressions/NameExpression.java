@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -152,6 +151,17 @@ public class NameExpression extends Expression {
 	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
+
+    /**
+     * If the name dies not disambiguate to a feature reference, then it is
+     * considered known null if the condition is true and known non-null if
+     * the condition is false.
+     */
+    @Override
+    public Collection<AssignedSource> updateMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().updateMultiplicity(assignments, condition);
+    }
 
 	public void _deriveAll() {
 		this.getEnumerationLiteral();

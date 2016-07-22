@@ -29,7 +29,7 @@ active class SubcategoryController specializes Controller {
   }
   
   private showCategory(in choice: Integer): Controller {
-    category = this.subcategories->at(choice)??;
+    category = this.subcategories->at(choice);
     if (category->isEmpty()) {
       this.Display();
     } else if (category.'is divided into'->isEmpty()) {

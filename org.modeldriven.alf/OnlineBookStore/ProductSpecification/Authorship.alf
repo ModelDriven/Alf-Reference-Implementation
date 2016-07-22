@@ -39,7 +39,7 @@ class Authorship {
     R2b.createLink(author, this);
     
     if (follows->notEmpty()) {
-      R3.createLink(follows??, this);
+      R3.createLink(follows, this);
     }
   }
   

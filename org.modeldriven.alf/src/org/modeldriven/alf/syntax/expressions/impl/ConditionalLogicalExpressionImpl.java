@@ -89,7 +89,10 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
 	 * The assignments before the first operand expression of a conditional
 	 * logical expression are the same as those before the conditional logical
 	 * expression. The assignments before the second operand expression are the
-	 * same as those after the first operand expression.
+	 * same as those after the first operand expression, adjusted for known
+	 * nulls and non-nulls based on the first operand expression being true,
+	 * for a conditional-and expression, or false, for a conditional-or
+	 * expression.
 	 **/
 	public Boolean validateAssignments() {
 	    this.getSelf().getAssignmentAfter(); // Force computation of assignments.
@@ -110,6 +113,7 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
         ConditionalLogicalExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
         Expression operand2 = self.getOperand2();
+        String operator = self.getOperator();
         Map<String, AssignedSource> assignmentsBefore = self.getImpl().getAssignmentBeforeMap();
         Map<String, AssignedSource> assignmentsAfter = assignmentsBefore;
         if (operand1 != null) {
@@ -117,7 +121,12 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
             assignmentsAfter = operand1.getImpl().getAssignmentAfterMap();
         }
         if (operand2 != null) {
-            operand2.getImpl().setAssignmentBefore(assignmentsAfter);
+            Map<String, AssignedSource> assignmentsBefore2 =
+                operand1 == null? assignmentsAfter:
+                operand1.getImpl().updateMultiplicity(
+                    new HashMap<String, AssignedSource>(assignmentsAfter),
+                    "&&".equals(operator));
+            operand2.getImpl().setAssignmentBefore(assignmentsBefore2);
             assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
             for (AssignedSource assignment: operand2.getImpl().getNewAssignments()) {
                 String name = assignment.getName();
@@ -132,13 +141,42 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
         return assignmentsAfter;
 	} // updateAssignments
 	
+    /**
+     * If the expression is a conditional-and expression and the truth condition
+     * is true, then check for known nulls and non-nulls based on both of the
+     * operand expressions being true. If the expression is a conditional-or
+     * expression, then check for known nulls and non-nulls based on both of the
+     * operand expressions being false.
+     */
+	@Override
+	public Map<String, AssignedSource> updateMultiplicity(Map<String, AssignedSource> assignments, boolean condition) {
+	    ConditionalLogicalExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+	    String operator = self.getOperator();
+	    if (operand2 != null) {
+	        if (condition && "&&".equals(operator)) {
+	            self.updateAssignments(); // Force updates to assignments.
+	            return operand2.getImpl().updateMultiplicity(
+	                    operand1.getImpl().updateMultiplicity(assignments, true), 
+	                    true);
+	        } else if (!condition && "||".equals(operator)) {
+	            self.updateAssignments(); // Force updates to assignments.
+                return operand2.getImpl().updateMultiplicity(
+                        operand1.getImpl().updateMultiplicity(assignments, false), 
+                        false);
+	        }
+	    }
+	    return assignments;
+	}
+	
 	/**
      * A conditional-and expression is equivalent to a conditional-test
      * expression whose first two operand expressions are the same as those of
      * the conditional-and expression and whose third operand expression is
      * false.
      * 
-     * A conditional-or operator expression is equivalent to a conditional-test
+     * A conditional-or expression is equivalent to a conditional-test
      * expression whose first and third operand expressions are the same as the
      * two operand expressions of the conditional-or expression and whose second
      * operand expression is true.

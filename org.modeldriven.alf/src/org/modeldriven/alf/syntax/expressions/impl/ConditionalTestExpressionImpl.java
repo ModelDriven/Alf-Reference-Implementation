@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -16,10 +15,13 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * An expression that uses the value of one operand expression to condition the
@@ -160,7 +162,10 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	 * The assignments before the first operand expression of a conditional-test
 	 * expression are the same as those before the conditional-test expression.
 	 * The assignments before the second and third operand expressions are the
-	 * same as those after the first operand expression.
+	 * same as those after the first operand expression, adjusted for known
+	 * null and non-null names from the first operand expression being true,
+	 * for the second operand expression, or false, for the third operand
+	 * expression.
 	 **/
 	public boolean conditionalTestExpressionAssignmentsBefore() {
 	    // Note: This is handled by updateAssignments.
@@ -176,7 +181,15 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	 * in either the second or third operand expressions. Any local names that
 	 * have different assignments after the second and third operand expressions
 	 * are adjusted to have the conditional-test expression as their assigned
-	 * source.
+	 * source. If such a local name is defined in one operand expression but not
+	 * the other, then it is adjusted to have multiplicity lower bound of 0 after
+	 * the conditional test expression. If a local name has a new assignment after
+	 * each of the second and third expressions, then, after the conditional-test
+	 * expression, it has a type that is the effective common ancestor of its type
+	 * after the second and third operand expressions, a multiplicity lower bound 
+	 * that is the minimum of the lower bounds after the second and third operand
+	 * expressions and a multiplicity upper bound that is the maximum of the upper
+	 * bounds after the second and third expressions.
 	 **/
 	@Override
 	public Map<String, AssignedSource> updateAssignmentMap() {
@@ -185,43 +198,91 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
         Expression operand2 = self.getOperand2();
         Expression operand3 = self.getOperand3();
         Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
-        Map<String, AssignedSource> assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
         
         if (operand1 != null) {
             operand1.getImpl().setAssignmentBefore(assignmentsBefore);
             assignmentsBefore = operand1.getImpl().getAssignmentAfterMap();
         }
+                
+        Collection<AssignedSource> newAssignments2 = new ArrayList<AssignedSource>();
+        Collection<AssignedSource> newAssignments3 = new ArrayList<AssignedSource>();
         
         if (operand2 != null) {
-            operand2.getImpl().setAssignmentBefore(assignmentsBefore);
-            this.putAssignments(assignmentsAfter, operand2.getImpl().getNewAssignments());
+            Map<String, AssignedSource> assignmentsBefore2 = 
+                operand1.getImpl().updateMultiplicity(
+                    new HashMap<String, AssignedSource>(assignmentsBefore), true);
+            operand2.getImpl().setAssignmentBefore(assignmentsBefore2);
+            newAssignments2 = operand2.getImpl().getNewAssignments();
         }
         
         if (operand3 != null) {
-            operand3.getImpl().setAssignmentBefore(assignmentsBefore);
-            this.putAssignments(assignmentsAfter, operand3.getImpl().getNewAssignments());
+            Map<String, AssignedSource> assignmentsBefore3 = 
+                operand1.getImpl().updateMultiplicity(
+                    new HashMap<String, AssignedSource>(assignmentsBefore), false);
+            operand3.getImpl().setAssignmentBefore(assignmentsBefore3);
+            newAssignments3 = operand3.getImpl().getNewAssignments();
         }
         
-		return assignmentsAfter;
+        return this.mergeAssignments(assignmentsBefore, newAssignments2, newAssignments3);
 	} // updateAssignments
 	
-	private void putAssignments(Map<String, AssignedSource> assignments, 
-	        Collection<AssignedSource> newAssignments) {
+	private Map<String, AssignedSource> mergeAssignments(
+	        Map<String, AssignedSource> assignmentsBefore, 
+	        Collection<AssignedSource> newAssignments2,
+	        Collection<AssignedSource> newAssignments3) {
 	    ConditionalTestExpression self = this.getSelf();
-	    for (AssignedSource newAssignment: newAssignments) {
-	        String name = newAssignment.getName();
-	        AssignedSource assignment = AssignedSourceImpl.makeAssignment(newAssignment);
-	        assignment.setSource(self);
-	        AssignedSource oldAssignment = assignments.get(name);
-	        if (oldAssignment != null) {
-	            ElementReference oldType = oldAssignment.getType();
-	            ElementReference newType = newAssignment.getType();
-	            if (newType != null && !newType.getImpl().equals(oldType)) {
-	                assignment.setType(ClassifierDefinitionImpl.commonAncestor(oldType, newType));
-	            }
-	        }
-	        assignments.put(name, assignment);
+	    
+        Map<String, AssignedSource> newAssignmentsMap2 = 
+                this.makeAssignmentMap(newAssignments2);
+        Map<String, AssignedSource> newAssignmentsMap3 = 
+                this.makeAssignmentMap(newAssignments3);
+        Map<String, AssignedSource> assignmentsAfter =
+                new HashMap<String, AssignedSource>(assignmentsBefore);
+        
+        Set<String> names = new HashSet<String>(newAssignmentsMap2.keySet());
+        names.addAll(newAssignmentsMap3.keySet());
+	    for (String name: names) {
+	        AssignedSource assignmentBefore = assignmentsBefore.get(name);
+            AssignedSource assignment2 = newAssignmentsMap2.get(name);
+            AssignedSource assignment3 = newAssignmentsMap3.get(name);
+            if (assignment2 == null) {
+                assignment2 = assignmentBefore != null? assignmentBefore:
+                    AssignedSourceImpl.makeAssignment(name, self, assignment3.getType(), 0, 0);
+            }
+            if (assignment3 == null) {
+                assignment3 = assignmentBefore != null? assignmentBefore:
+                    AssignedSourceImpl.makeAssignment(name, self, assignment2.getType(), 0, 0);
+            }
+            ElementReference type2 = assignment2.getType();
+            ElementReference type3 = assignment3.getType();
+            if (type2 != null && !type2.getImpl().equals(type3)) {
+                assignment2.setType(ClassifierDefinitionImpl.commonAncestor(type2, type3));
+            }
+            int lower2 = assignment2.getLower();
+            int upper2 = assignment2.getUpper();
+            int lower3 = assignment3.getLower();
+            int upper3 = assignment3.getUpper();
+            if (lower3 < lower2) {
+                assignment2.setLower(lower3);
+            }
+            if (upper3 == -1 || upper2 != -1 && upper2 < upper3) {
+                assignment2.setUpper(upper3);
+            }
+	        assignmentsAfter.put(name, assignment2);
 	    }
+	    
+	    return assignmentsAfter;
+	}
+	
+	private Map<String, AssignedSource> makeAssignmentMap(Collection<AssignedSource> assignments) {
+	    ConditionalTestExpression self = this.getSelf();
+	    Map<String, AssignedSource> assignmentMap = new HashMap<String, AssignedSource>();
+	    for (AssignedSource assignment: assignments) {
+            AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(assignment);
+            newAssignment.setSource(self);
+            assignmentMap.put(newAssignment.getName(), newAssignment);
+	    }
+	    return assignmentMap;
 	}
 	
 	@Override

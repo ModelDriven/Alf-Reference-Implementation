@@ -76,6 +76,17 @@ public class BooleanUnaryExpression extends UnaryExpression {
 		return this.getImpl().booleanUnaryExpressionOperand();
 	}
 
+    /**
+     * If the expression is a negation, then check the operand expression for
+     * known nulls and non-nulls based on the negation of the given truth
+     * condition.
+     */
+    @Override
+    public Collection<AssignedSource> updateMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().updateMultiplicity(assignments, condition);
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 	}

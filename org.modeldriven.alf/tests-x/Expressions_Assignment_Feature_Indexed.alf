@@ -45,7 +45,7 @@ class Expressions_Assignment_Feature_Indexed specializes Test {
         public m: Integer[] sequence;
     }
 
-    public test(out c: C, out d: D, out n: Integer, out m: Integer, 
+    public test(out c: C, out d: D, out n: Integer[0..1], out m: Integer[0..1], 
         out self: Expressions_Assignment_Feature_Indexed) {      
       c = new C();
       c.y = Integer[]{1,2,3};
@@ -53,7 +53,7 @@ class Expressions_Assignment_Feature_Indexed specializes Test {
       c.y[1] = null;
       
       c.n[1] = 4;
-      n = A::n(c)[1]??;
+      n = A::n(c)[1];
       
       d = new D(Integer[]{1,2,3});
       
@@ -61,7 +61,7 @@ class Expressions_Assignment_Feature_Indexed specializes Test {
       d.y[1] = null;
       
       d.m[1] = 4;
-      m = B::m(d)[1]??;
+      m = B::m(d)[1];
       
       this.y = Integer[]{1,2};
       this.y[2] = 4;

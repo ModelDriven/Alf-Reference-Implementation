@@ -15,7 +15,7 @@ active class ShoppingCartView specializes View {
     );
   }
   
-  public getController(): ShoppingCartController {
+  public getController(): ShoppingCartController[0..1] {
     return (ShoppingCartController)this.controller;
   }
 
@@ -46,7 +46,7 @@ active class ShoppingCartView specializes View {
       case "e": controller.Cancel(Ask("Are you sure you want to empty your cart"));
       case "c": controller.CheckOut(GetCustomerEmail());
       default:  controller.ChangeQuantity(
-                  IntegerFunctions.ToInteger(choice)??, 
+                  IntegerFunctions.ToInteger(choice)??1, 
                   GetQuantity("Enter new quantity:", 0));
     }
   }

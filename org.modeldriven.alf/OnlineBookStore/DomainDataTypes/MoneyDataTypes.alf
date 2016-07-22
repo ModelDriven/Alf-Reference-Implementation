@@ -21,7 +21,7 @@ package MoneyDataTypes {
   
   public activity Normalize(in amount: Money): Money {
     return new Money(
-      amount.dollars + amount.cents / 100??,
+      amount.dollars + amount.cents / 100 ?? 0,
       amount.cents % 100
     );
   }

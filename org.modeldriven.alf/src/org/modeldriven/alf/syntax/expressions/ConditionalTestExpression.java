@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -109,26 +108,33 @@ public class ConditionalTestExpression extends Expression {
 	}
 
 	/**
-	 * The assignments before the first operand expression of a conditional-test
-	 * expression are the same as those before the conditional-test expression.
-	 * The assignments before the second and third operand expressions are the
-	 * same as those after the first operand expression.
+     * The assignments before the first operand expression of a conditional-test
+     * expression are the same as those before the conditional-test expression.
+     * The assignments before the second and third operand expressions are the
+     * same as those after the first operand expression, adjusted for known
+     * null and non-null names from the first operand expression being true,
+     * for the second operand expression, or false, for the third operand
+     * expression.
 	 **/
 	public boolean conditionalTestExpressionAssignmentsBefore() {
 		return this.getImpl().conditionalTestExpressionAssignmentsBefore();
 	}
 
-	/**
-	 * Returns the assignments after the first operand expression, plus
-	 * assignments for any newly defined local names in the second and third
-	 * operand expressions. Local names that exist after the first operand
-	 * expression but are reassigned in the second or third operand expressions
-	 * are adjusted to have the conditional-test expression as their assigned
-	 * source. Local names that are newly defined in the second and third
-	 * operand expressions have the conditional-test expression as their source
-	 * and a type that is the effective common ancestor (if one exists) of the
-	 * types from the assignments after each of the second and third operands.
-	 **/
+    /**
+     * Returns unchanged all assignments for local names that are not reassigned
+     * in either the second or third operand expressions. Any local names that
+     * have different assignments after the second and third operand expressions
+     * are adjusted to have the conditional-test expression as their assigned
+     * source. If such a local name is defined in one operand expression but not
+     * the other, then it is adjusted to have multiplicity lower bound of 0 after
+     * the conditional test expression. If a local name has a new assignment after
+     * each of the second and third expressions, then, after the conditional-test
+     * expression, it has a type that is the effective common ancestor of its type
+     * after the second and third operand expressions, a multiplicity lower bound 
+     * that is the minimum of the lower bounds after the second and third operand
+     * expressions and a multiplicity upper bound that is the maximum of the upper
+     * bounds after the second and third expressions.
+     **/
 	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}

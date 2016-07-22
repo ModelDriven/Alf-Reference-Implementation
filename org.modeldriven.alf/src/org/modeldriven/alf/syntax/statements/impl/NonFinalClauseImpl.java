@@ -18,6 +18,7 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +68,8 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
 	
 	/**
 	 * The assignments before the body of a non-final clause are the assignments
-	 * after the condition.
+	 * after the condition, adjusted for known null and non-null names due to
+	 * the condition being true.
 	 **/
 	public boolean nonFinalClauseAssignmentsBeforeBody() {
 	    // Note: This is handled by setAssignmentBefore.
@@ -133,7 +135,10 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
         Block body = self.getBody();
         if (condition != null) {
             condition.getImpl().setAssignmentBefore(assignmentBefore);
-            assignmentBefore = condition.getImpl().getAssignmentAfterMap();
+            assignmentBefore = condition.getImpl().updateMultiplicity(
+               new HashMap<String, AssignedSource>(
+                    condition.getImpl().getAssignmentAfterMap()),
+               true);
         }
         if (body != null) {
             body.getImpl().setAssignmentBefore(assignmentBefore);

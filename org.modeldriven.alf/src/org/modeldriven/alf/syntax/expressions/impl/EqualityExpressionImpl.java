@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Map;
+
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -89,14 +91,6 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
         return 1;
     }
     
-	/**
-	 * An equality expression has a multiplicity upper bound of 1.
-	 **/
-    @Override
-    protected Integer deriveUpper() {
-        return 1;
-    }
-	
     /**
      * An equality expression requires real conversion if the first operand is
      * of type Integer and the second is of type Real.
@@ -166,8 +160,31 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
     /**
      * Returns false for an equality expression.
      **/
+    @Override
     public Boolean noNullArguments() {
         return false;
+    }
+    
+    /**
+     * If the one operand expression has multiplicity 0..0, then check the other
+     * operand expression for known nulls and non-nulls, using the exclusive-or
+     * of the given truth condition and whether the equality expression is
+     * negated or not.
+     */
+    @Override
+    public Map<String, AssignedSource> updateMultiplicity(
+            Map<String, AssignedSource> assignmentMap, boolean condition) {
+        EqualityExpression self = this.getSelf();
+        Expression operand1 = self.getOperand1();
+        Expression operand2 = self.getOperand2();
+        if (operand1 != null && operand1.getImpl().isNull()) {
+            assignmentMap = operand2.getImpl().setMultiplicity(
+                    assignmentMap, condition ^ self.getIsNegated());
+        } else if (operand2 != null && operand2.getImpl().isNull()) {
+            assignmentMap = operand1.getImpl().setMultiplicity(
+                    assignmentMap, condition ^ self.getIsNegated());
+        }
+        return assignmentMap;
     }
 
 } // EqualityExpressionImpl

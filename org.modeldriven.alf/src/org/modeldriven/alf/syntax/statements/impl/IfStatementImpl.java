@@ -103,10 +103,13 @@ public class IfStatementImpl extends StatementImpl {
 	}
 	
     /**
-     * The assignments before all the non-final clauses of an if statement are
-     * the same as the assignments before the if statement. If the statement has
-     * a final clause, then the assignments before that clause are also the same
-     * as the assignments before the if statement.
+     * The assignments before each non-final clause of an if statement are the
+     * same as the assignments before the if statement, adjusted for known nulls
+     * and non-nulls due to the failure of the conditions in all previous sets
+     * of concurrent clauses. If the statement has a final clause, then the
+     * assignments before that clause are also the same as the assignments
+     * before the if statement, adjusted for the failure of the conditions of
+     * all previous clauses.
      *
      * Any name that is unassigned before an if statement and is assigned in one
      * or more clauses of the if statement, has, after the if statement, a type
@@ -129,6 +132,7 @@ public class IfStatementImpl extends StatementImpl {
         Collection<Block> blocks = new ArrayList<Block>();
         for (ConcurrentClauses clauses: self.getNonFinalClauses()) {
             clauses.getImpl().setAssignmentBefore(assignmentsBefore);
+            assignmentsBefore = clauses.getImpl().updateAssignmentsBefore();
             blocks.addAll(clauses.getImpl().getBlocks());
         }
         Block finalClause = self.getFinalClause();
@@ -165,12 +169,15 @@ public class IfStatementImpl extends StatementImpl {
      * Constraints
      */
 
-	/**
-	 * The assignments before all the non-final clauses of an if statement are
-	 * the same as the assignments before the if statement. If the statement has
-	 * a final clause, then the assignments before that clause are also the same
-	 * as the assignments before the if statement.
-	 **/
+    /**
+     * The assignments before each non-final clause of an if statement are the
+     * same as the assignments before the if statement, adjusted for known nulls
+     * and non-nulls due to the failure of the conditions in all previous sets
+     * of concurrent clauses. If the statement has a final clause, then the
+     * assignments before that clause are also the same as the assignments
+     * before the if statement, adjusted for the failure of the conditions of
+     * all previous clauses.
+     **/
 	public boolean ifStatementAssignmentsBefore() {
 	    // Note: This is handled by deriveAssignmentsAfter.
 		return true;

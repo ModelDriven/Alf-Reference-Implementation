@@ -14,8 +14,8 @@ active class CheckOutView specializes View {
   protected display(): String[*] sequence {
     controller = (CheckOutController)this.controller;
     
-    WriteLine("1. Customer Email: " + controller.customerEmail);
-    WriteLine("2. Customer Name: " + NullToString(ToNameString(controller.customerName)));
+    WriteLine("1. Customer Email: " + NullToString(controller.customerEmail));
+    WriteLine("2. Customer Name: " + ToNameString(controller.customerName));
     WriteLine("3. Customer Phone: " + NullToString(controller.customerPhone));
     WriteLine("4. Shipping Address:");
     WriteLine("");

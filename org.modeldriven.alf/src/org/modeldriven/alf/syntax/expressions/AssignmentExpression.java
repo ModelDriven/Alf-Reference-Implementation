@@ -192,8 +192,9 @@ public class AssignmentExpression extends Expression {
 	}
 
 	/**
-	 * The left hand side of an assignment expression is a feature if it is a
-	 * kind of FeatureLeftHandSide.
+     * The left hand side of an assignment expression is a feature if it is a
+     * feature left-hand side or a name left-hand side for a name that
+     * disambiguates to a feature.
 	 **/
 	public boolean assignmentExpressionIsFeatureDerivation() {
 		return this.getImpl().assignmentExpressionIsFeatureDerivation();
@@ -389,7 +390,19 @@ public class AssignmentExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
-	public void _deriveAll() {
+    /**
+     * If the left-hand side is not indexed and is not a feature reference,
+     * then the assigned name is considered be known null if the condition
+     * is true, or known non-null if the condition is false. The right-
+     * hand side is then also checked for known nulls or non-nulls.
+     */
+    @Override
+    public Collection<AssignedSource> updateMultiplicity(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().updateMultiplicity(assignments, condition);
+    }
+
+    public void _deriveAll() {
 		this.getAssignment();
 		this.getFeature();
 		this.getIsIndexed();

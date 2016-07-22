@@ -36,8 +36,8 @@ package DateDataTypes {
   
   public activity ToMonthYearString(in my: MonthYear[0..1]): String {
     return my == null? "":
-           IntegerFunctions::ToString(my.month??) + "/" + 
-           IntegerFunctions::ToString(my.year??);
+           IntegerFunctions::ToString(my.month) + "/" + 
+           IntegerFunctions::ToString(my.year);
   }
   
 }
