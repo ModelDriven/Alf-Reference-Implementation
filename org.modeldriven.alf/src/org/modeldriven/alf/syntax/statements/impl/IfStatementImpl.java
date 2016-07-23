@@ -147,7 +147,7 @@ public class IfStatementImpl extends StatementImpl {
         blocks.add(finalClause);
         Map<String, AssignedSource> assignmentsAfter = 
             new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
-        assignmentsAfter.putAll(this.mergeAssignments(blocks, assignmentsBefore));
+        assignmentsAfter.putAll(this.mergeAssignments(blocks));
         return assignmentsAfter;
     }
     

@@ -258,49 +258,35 @@ public abstract class StatementImpl extends DocumentedElementImpl {
      * accept or if statement.
      */
     protected Map<String, AssignedSource> mergeAssignments(
-            Collection<Block> blocks,
-            Map<String, AssignedSource> assignmentsBefore) {
+            Collection<Block> blocks) {
         Map<String, AssignedSource> mergedAssignments = new HashMap<String, AssignedSource>();
-        Map<String, Collection<AssignedSource>> assignmentMap = new HashMap<String, Collection<AssignedSource>>();
+        Set<String> names = new HashSet<String>();
         
-        // Collect assignments made in each block and group by local name.
         for (Block block: blocks) {
-            for (AssignedSource assignment: block.getAssignmentAfter()) {
-                String name = assignment.getName();
-                AssignedSource oldAssignment = assignmentsBefore.get(name);
-                if (oldAssignment == null || 
-                        !oldAssignment.getSource().getImpl().equals(assignment.getSource())) {
-                    Collection<AssignedSource> assignments = assignmentMap.get(name);
-                    if (assignments == null) {
-                        assignments = new ArrayList<AssignedSource>();
-                        assignmentMap.put(name, assignments);
-                    }
-                    assignments.add(assignment);
-                }
-            }
+            names.addAll(block.getImpl().getAssignmentAfterMap().keySet());
         }
         
         // Merge the types and multiplicities of assignments to the same local name.
-        for (String name: assignmentMap.keySet()) {
-            Collection<AssignedSource> assignments = assignmentMap.get(name);
+        for (String name: names) {
             int low = -1;
             int high = 0;
             Set<ElementReference> types = new HashSet<ElementReference>();
-            for (AssignedSource assignment: assignments) {
-                int lower = assignment.getLower();
-                int upper = assignment.getUpper();
-                low = low == -1? lower: 
-                      lower == -1? low:
-                      lower < low? lower:
-                      low;
-                high = high == -1 || upper == -1? -1: 
-                       upper > high? upper:
-                       high;
-                types.add(assignment.getType());
-            }
-            if (assignments.size() < blocks.size() && 
-                    !assignmentsBefore.containsKey(name)) {
-                low = 0;
+            for (Block block: blocks) {
+                AssignedSource assignment = block.getImpl().getAssignmentAfter(name);
+                if (assignment == null) {
+                    low = 0;
+                } else {
+                    int lower = assignment.getLower();
+                    int upper = assignment.getUpper();
+                    low = low == -1? lower: 
+                          lower == -1? low:
+                          lower < low? lower:
+                          low;
+                    high = high == -1 || upper == -1? -1: 
+                           upper > high? upper:
+                           high;
+                    types.add(assignment.getType());
+                }
             }
             mergedAssignments.put(name, AssignedSourceImpl.makeAssignment(name,
                     this.getSelf(),

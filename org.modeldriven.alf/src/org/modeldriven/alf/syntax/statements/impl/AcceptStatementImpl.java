@@ -146,7 +146,7 @@ public class AcceptStatementImpl extends StatementImpl {
                     blocks.add(block);
                 }
             }
-            assignmentsAfter.putAll(this.mergeAssignments(blocks, this.getAssignmentBeforeMap()));
+            assignmentsAfter.putAll(this.mergeAssignments(blocks));
             for (AcceptBlock acceptBlock: acceptBlocks) {
                 String name = acceptBlock.getName();
                 if (name != null) {
