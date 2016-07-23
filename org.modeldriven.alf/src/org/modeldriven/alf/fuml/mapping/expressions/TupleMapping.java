@@ -131,33 +131,15 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         this.setErrorMessage("No result source for input expression for " 
                                 + name + ": " + mapping);
                     } else {
-                        
-                        // If the expression has type Natural, but the parameter
-                        // has type UnlimitedNatural, then a conversion is
-                        // required, because the representations are different.
-                        ElementReference expressionType = expression.getType();
-                        ElementReference parameterType = parameter.getImpl().getType();
-                        
-                        if (expressionType != null && parameterType != null &&
-                                expressionType.getImpl().isNatural() &&
-                                parameterType.getImpl().isUnlimitedNatural() &&
-                                !parameterType.getImpl().isNatural()) {
-                            CallBehaviorAction callAction =
-                                this.tupleGraph.addCallBehaviorAction(getBehavior(
-                                    RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural()));
-                            this.tupleGraph.addObjectFlow(
-                                    resultSource, callAction.getArgument().get(0));
-                            resultSource = callAction.getResult().get(0);
-                        }
-                        
-                        // Add collection and bit string conversions, if
-                        // required.
+                                               
+                        // Add conversions, if required.
                         resultSource = AssignmentExpressionMapping.mapConversions(
                                 this, subgraph, 
-                                resultSource, expressionType, 
+                                resultSource, expression.getType(), 
                                 input.getImpl().getIsCollectionConversion(parameter), 
                                 input.getImpl().getIsBitStringConversion(parameter),
-                                input.getImpl().getIsRealConversion(parameter));
+                                input.getImpl().getIsRealConversion(parameter),
+                                input.getImpl().isUnlimitedNaturalConversion(parameter));
                         
                         InputPin inputPin = inputPins.get(i);
                         this.tupleGraph.addObjectFlow(resultSource, inputPin);
@@ -245,16 +227,17 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         outputPin = action.getOutput().get(++i);
                     }
                     
-                    // Add collection and bit string conversions, if
-                    // required.
                     ElementReference parameter = 
                         invocation.getImpl().parameterNamed(name);
+                    
+                    // Add conversions, if required.
                     outputPin = AssignmentExpressionMapping.mapConversions(
                             this, this.tupleGraph, 
                             outputPin, parameter.getImpl().getType(), 
                             output.getImpl().getIsCollectionConversion(parameter), 
                             output.getImpl().getIsBitStringConversion(parameter),
-                            output.getImpl().getIsRealConversion(parameter));
+                            output.getImpl().getIsRealConversion(parameter),
+                            output.getImpl().isUnlimitedNaturalConversion(parameter));
                    
                     // NOTE: These activity edges are part of the tuple graph, 
                     // NOT the LHS graph.

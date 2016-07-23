@@ -112,22 +112,20 @@ public abstract class LoopStatementMapping extends StatementMapping {
         LoopNode node = (LoopNode)this.getElement();
         node.setIsTestedFirst(this.isTestedFirst());
         
-        List<String> assignedNames = 
+        List<AssignedSource> assignmentsAfter = 
             this.mapAssignedValueSources(node, this.graph, true);
               
         ActivityGraph subgraph = this.createActivityGraph();
         StructuredActivityNode bodyPart = 
                 subgraph.addStructuredActivityNode(
                         "BodyPart(" + node.getName() + ")", null);
-        Map<String, AssignedSource> assignmentsAfter = 
-                this.getStatement().getImpl().getAssignmentAfterMap();
-        
+
         // NOTE: Making every body output an output pin of a single body
         // part structured activity node is necessary for properly
         // setting these outputs in the case of a break statement within
         // the loop.
-        for (String name: assignedNames) {
-            AssignedSource assignment = assignmentsAfter.get(name);
+        for (AssignedSource assignment: assignmentsAfter) {
+            String name = assignment.getName();
             ElementReference type = assignment.getType();
             Classifier classifier = null;
             if (type != null) {
@@ -198,7 +196,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
             // to the node, because mapping body outputs may add passthru nodes
             // to bodyElements.
             List<OutputPin> bodyOutputs = NonFinalClauseMapping.mapBodyOutputs(
-                    bodyElements, this.getAssignments(), assignedNames, this);
+                    bodyElements, this.getAssignments(), assignmentsAfter, this);
             for (int i = 0; i < bodyOutputs.size(); i++) {
                 OutputPin bodyOutput = bodyOutputs.get(i);
                 OutputPin output = bodyPart.getStructuredNodeOutput().get(i);

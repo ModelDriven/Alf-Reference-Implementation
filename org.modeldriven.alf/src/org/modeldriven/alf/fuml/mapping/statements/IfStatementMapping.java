@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -13,7 +12,7 @@ package org.modeldriven.alf.fuml.mapping.statements;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ConcurrentClauses;
 import org.modeldriven.alf.syntax.statements.IfStatement;
@@ -80,7 +79,7 @@ public class IfStatementMapping extends ConditionalStatementMapping {
         ConditionalNode node = (ConditionalNode)this.getElement();
         IfStatement statement = this.getIfStatement();
         
-        List<String> assignedNames = 
+        List<AssignedSource> assignmentsAfter = 
             this.mapConditionalNode(node, this.graph);
         
         Collection<Clause> predecessorClauses = new ArrayList<Clause>();
@@ -92,7 +91,7 @@ public class IfStatementMapping extends ConditionalStatementMapping {
             } else {
                 ConcurrentClausesMapping clausesMapping =
                     (ConcurrentClausesMapping)mapping;
-                clausesMapping.setAssignedNames(assignedNames);
+                clausesMapping.setAssignmentsAfter(assignmentsAfter);
                 Collection<Clause> clauses = clausesMapping.getClauses();
                 for (Clause clause: clauses) {
                     for (Clause predecessorClause: predecessorClauses) {
@@ -107,7 +106,7 @@ public class IfStatementMapping extends ConditionalStatementMapping {
         
         this.mapFinalClause(
                 statement.getFinalClause(), node, 
-                assignedNames, predecessorClauses, this.graph);
+                assignmentsAfter, predecessorClauses, this.graph);
         
         node.setIsAssured(statement.getIsAssured());
         node.setIsDeterminate(statement.getIsDeterminate());

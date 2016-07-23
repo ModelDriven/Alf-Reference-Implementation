@@ -385,7 +385,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         LeftHandSide lhs = self.getLeftHandSide();
         Expression rhs = self.getRightHandSide();
         ElementReference lhsType = lhs == null? null: lhs.getImpl().getType();        
-        ElementReference rhsType = rhs == null? null: rhs.getImpl().getType();
+        ElementReference rhsType = rhs == null? null: rhs.getType();
         
         return rhsType != null && lhsType != null && 
                 lhsType.getImpl().isBitString() &&
@@ -405,7 +405,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         LeftHandSide lhs = self.getLeftHandSide();
         Expression rhs = self.getRightHandSide();
         ElementReference lhsType = lhs == null? null: lhs.getImpl().getType();        
-        ElementReference rhsType = rhs == null? null: rhs.getImpl().getType();
+        ElementReference rhsType = rhs == null? null: rhs.getType();
         
         return rhsType != null && lhsType != null && 
                 lhsType.getImpl().isReal() &&
@@ -726,6 +726,22 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
         return self.getRightHandSide().getImpl().
                 setMultiplicity(assignmentMap, condition);
     }
+    
+    public boolean isUnlimitedNaturalConversion() {
+        AssignmentExpression self = this.getSelf();
+        LeftHandSide lhs = self.getLeftHandSide();
+        Expression rhs = self.getRightHandSide();
+        ElementReference lhsType = lhs == null? null: lhs.getImpl().getType();        
+        ElementReference rhsType = rhs == null? null: rhs.getType();
+        
+        return rhsType != null && lhsType != null && 
+                lhsType.getImpl().isUnlimitedNatural() &&
+                !lhsType.getImpl().isNatural() &&
+                (rhsType.getImpl().isNatural() ||
+                        self.getIsCollectionConversion() &&
+                        rhsType.getImpl().isNaturalCollection());
+    }
+    
     public boolean isArithmeticOperator() {
         String operator = this.getSelf().getOperator();
         return operator != null && (

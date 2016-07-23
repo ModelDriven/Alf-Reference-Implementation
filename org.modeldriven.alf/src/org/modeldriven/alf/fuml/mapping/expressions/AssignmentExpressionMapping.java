@@ -250,7 +250,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                                 rhsType != null && rhsType.getImpl().isInteger() && 
                                 this.callAction.getArgument().get(1).getType(). 
                                 equals(getBitStringType()),
-                                assignmentExpression.getIsRealConversion());
+                                assignmentExpression.getIsRealConversion(),
+                                false);
 
                         rhsSubgraph.addObjectFlow(
                                 rhsResultSource,
@@ -268,7 +269,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                             assignmentExpression.getType(), 
                             assignmentExpression.getIsCollectionConversion(), 
                             assignmentExpression.getIsBitStringConversion(),
-                            assignmentExpression.getIsRealConversion());
+                            assignmentExpression.getIsRealConversion(),
+                            assignmentExpression.getImpl().isUnlimitedNaturalConversion());
                 }
 
                 this.graph.addAll(this.lhsMapping.getGraph());
@@ -386,7 +388,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 	        ElementReference rhsType,
 	        boolean isCollectionConversion, 
 	        boolean isBitStringConversion,
-	        boolean isRealConversion) throws MappingError {
+	        boolean isRealConversion,
+	        boolean isUnlimitedNaturalConversion) throws MappingError {
         if (rhsResultSource != null) {
             if (isCollectionConversion) {
                 ElementReference toSequenceOperation = rhsType == null? null: 
@@ -415,7 +418,8 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 }
             }
             rhsResultSource = mapConversions(
-                    subgraph, rhsResultSource, isBitStringConversion, isRealConversion);
+                    subgraph, rhsResultSource, 
+                    isBitStringConversion, isRealConversion, isUnlimitedNaturalConversion);
         }
         return rhsResultSource;
 	}
@@ -424,11 +428,15 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 	        ActivityGraph subgraph,
 	        ActivityNode rhsResultSource,
 	        boolean isBitStringConversion,
-	        boolean isRealConversion) throws MappingError {
-        if (isBitStringConversion || isRealConversion) {
-            ElementReference conversionFunction = isBitStringConversion? 
-                    RootNamespace.getRootScope().getBitStringFunctionToBitString(): 
-                    RootNamespace.getRootScope().getIntegerFunctionToReal();
+	        boolean isRealConversion,
+	        boolean isUnlimitedNaturalConversion) throws MappingError {
+        if (isBitStringConversion || isRealConversion || isUnlimitedNaturalConversion) {
+            ElementReference conversionFunction = 
+                    isBitStringConversion?
+                            RootNamespace.getRootScope().getBitStringFunctionToBitString(): 
+                    isRealConversion?
+                            RootNamespace.getRootScope().getIntegerFunctionToReal() :
+                            RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural();
             CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
                     getBehavior(conversionFunction));
             subgraph.addObjectFlow(

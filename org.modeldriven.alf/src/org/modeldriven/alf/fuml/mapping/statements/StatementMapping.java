@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -81,19 +80,19 @@ public abstract class StatementMapping extends DocumentedElementMapping {
      * from those assignments. (If mapAll is true, then map all assignments after
      * the statement, not just those with the statement as the source.)
      */
-    protected List<String> mapAssignedValueSources(
+    protected List<AssignedSource> mapAssignedValueSources(
             StructuredActivityNode node,
             ActivityGraph graph, 
             boolean mapAll) throws MappingError {
         Statement statement = this.getStatement();
         
-        List<String> assignedNames = new ArrayList<String>();
+        List<AssignedSource> assignments = new ArrayList<AssignedSource>();
         for (AssignedSource assignment: statement.getAssignmentAfter()) {
             boolean statementIsSource = assignment.getSource().getImpl().equals(statement);
             if (mapAll || statementIsSource) {
                 String name = assignment.getName();
                 ElementReference type = assignment.getType();
-                assignedNames.add(name);
+                assignments.add(assignment);
                 
                 Classifier classifier = null;
                 if (type != null) {
@@ -125,7 +124,7 @@ public abstract class StatementMapping extends DocumentedElementMapping {
                 }
             }
         }
-        return assignedNames;
+        return assignments;
     }
 
     protected OutputPin mapAssignment(

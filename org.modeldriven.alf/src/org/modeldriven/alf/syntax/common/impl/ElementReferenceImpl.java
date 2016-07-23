@@ -263,6 +263,12 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         }
     }
 
+    public boolean isNaturalCollection() {
+        ElementReference collectionArgument = this.getCollectionArgument();
+        return collectionArgument != null && 
+                    collectionArgument.getImpl().isNatural();
+    }
+    
     public boolean isIntegerCollection() {
         ElementReference collectionArgument = this.getCollectionArgument();
         return collectionArgument != null && 

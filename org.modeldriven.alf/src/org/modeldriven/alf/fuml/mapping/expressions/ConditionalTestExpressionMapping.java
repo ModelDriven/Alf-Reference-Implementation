@@ -101,6 +101,8 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
             String label,
             List<String> assignments,
             Expression operand) throws MappingError {
+        Map<String, AssignedSource> assignmentsAfter = 
+                this.getExpression().getImpl().getAssignmentAfterMap();
         
         ExpressionMapping operandMapping = this.mapOperand(operand);
         Collection<Element> modelElements = operandMapping.getModelElements();
@@ -132,9 +134,11 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
                     null, 0, 0);
             operandNode.addStructuredNodeOutput(outputPin);
             
+            AssignedSource assignmentAfter = assignmentsAfter.get(name);
             AssignedSource assignment = operand.getImpl().getAssignmentAfter(name);
             if (assignment != null) {
-                ElementReference type = assignment.getType();
+                ElementReference typeAfter = assignmentAfter.getType();
+                ElementReference type = assignmentAfter == null? null: assignment.getType();
                 int lower = assignment.getLower();
                 int upper = assignment.getUpper();
                 ElementReference source = assignment.getSource();
@@ -174,12 +178,22 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
                     
                     if (sourceNode != null) {
     
+                        // Check if UnlimitedNatural conversion is required.
+                        if (typeAfter != null && type != null && 
+                                typeAfter.getImpl().isUnlimitedNatural() &&
+                                type.getImpl().isNatural() && !type.getImpl().isUnlimitedNatural()) {
+                            ActivityGraph subgraph = this.createActivityGraph();
+                            sourceNode = AssignmentExpressionMapping.mapConversions(
+                                    subgraph, sourceNode, false, false, 
+                                    true);
+                            this.graph.addToStructuredNode(operandNode, subgraph.getModelElements());
+
                         // Check if the local name was assigned within the
                         // operand expression.
                         // NOTE: If the name was assigned in the operand, then
                         // the source node for the name will be one of the
                         // elements mapped from the operand.
-                        if (!ActivityGraph.isContainedIn(sourceNode, operandNode)) {
+                        } else if (!ActivityGraph.isContainedIn(sourceNode, operandNode)) {
                             StructuredActivityNode passthruNode = 
                                     this.graph.createPassthruNode(
                                             name, classifier, lower, upper);
@@ -189,6 +203,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
                                     passthruNode.getStructuredNodeInput().get(0));
                             sourceNode = passthruNode.getStructuredNodeOutput().get(0);
                         }
+                        
     
                         operandNode.addEdge(this.graph.createObjectFlow(
                                 sourceNode, outputPin));

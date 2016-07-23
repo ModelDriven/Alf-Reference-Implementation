@@ -66,7 +66,7 @@ public class LoopVariableDefinitionMapping extends SyntaxElementMapping {
                             this, this.graph, 
                             expression1Mapping.getResultSource(), 
                             expression1.getType(), 
-                            true, false, false);
+                            true, false, false, false);
                 }
             } else {
                 this.graph = this.createActivityGraph();

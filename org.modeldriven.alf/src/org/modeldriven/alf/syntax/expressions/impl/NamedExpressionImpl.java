@@ -202,6 +202,7 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
         return rhsType != null && lhsType != null && 
             lhsType.getImpl().isBitString() &&
             (rhsType.getImpl().isInteger() ||
+                    this.getIsCollectionConversion(parameter) &&
                     rhsType.getImpl().isIntegerCollection());
     }
 
@@ -214,7 +215,22 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
         return rhsType != null && lhsType != null && 
             lhsType.getImpl().isReal() &&
             (rhsType.getImpl().isInteger() ||
+                    this.getIsCollectionConversion(parameter) &&
                     rhsType.getImpl().isIntegerCollection());
+    }
+    
+    // Checks whether Natural to UnlimitedNatural conversion is required
+    // for this named expression as an input for the given parameter.
+    public boolean isUnlimitedNaturalConversion(ElementReference parameter) {
+        NamedExpression self = this.getSelf();
+        ElementReference lhsType = parameter.getImpl().getType();
+        ElementReference rhsType = self.getExpression().getType(); 
+        return rhsType != null && lhsType != null && 
+            lhsType.getImpl().isUnlimitedNatural() &&
+            !lhsType.getImpl().isNatural() &&
+            (rhsType.getImpl().isNatural() ||
+                    this.getIsCollectionConversion(parameter) &&
+                    rhsType.getImpl().isNaturalCollection());
     }
 
     @Override

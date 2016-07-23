@@ -14,6 +14,7 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.AssignedSourceMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
+import org.modeldriven.alf.fuml.mapping.expressions.AssignmentExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
@@ -36,7 +37,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 
     private Clause clause = null;
     private Collection<Element> modelElements = null;
-    private List<String> assignedNames = null;
+    private List<AssignedSource> assignmentsAfter = null;
 
     /**
      * 1. Each if clause maps to a clause of the conditional node.
@@ -62,8 +63,8 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
      */
     
     // NOTE: This should be called before mapping.
-    public void setAssignedNames(List<String> assignedNames) {
-        this.assignedNames = assignedNames;
+    public void setAssignmentsAfter(List<AssignedSource> assignmentsAfter) {
+        this.assignmentsAfter = assignmentsAfter;
     }
     
     public void mapClause() throws MappingError {
@@ -82,7 +83,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                     ((ExpressionMapping)mapping).getResultSource(), 
                     this.fumlMap(body).getModelElements(), 
                     body.getImpl().getAssignmentAfterMap(),
-                    this.assignedNames, 
+                    this.assignmentsAfter, 
                     this.modelElements, this);
         }            
      }
@@ -108,8 +109,8 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	public static Clause createClause(
 	        Collection<Element> testElements, ActivityNode decider,
 	        Collection<Element> bodyElements,
-	        Map<String, AssignedSource> assignments,
-	        List<String> assignedNames,
+	        Map<String, AssignedSource> bodyAssignments,
+	        List<AssignedSource> assignmentsAfter,
 	        Collection<Element> modelElements,
 	        FumlMapping parentMapping) throws MappingError {
         Clause clause = parentMapping.create(Clause.class);
@@ -149,7 +150,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         // to modelElements, because mapping body outputs may add passthru nodes
         // to bodyElements.
         for (OutputPin bodyOutput: mapBodyOutputs(
-                bodyElements, assignments, assignedNames, parentMapping)) {
+                bodyElements, bodyAssignments, assignmentsAfter, parentMapping)) {
             clause.addBodyOutput(bodyOutput);
         }
         
@@ -165,20 +166,22 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	
 	public static List<OutputPin> mapBodyOutputs(
             Collection<Element> bodyElements,
-            Map<String, AssignedSource> assignments,
-            List<String> assignedNames,
+            Map<String, AssignedSource> bodyAssignments,
+            List<AssignedSource> assignmentsAfter,
             FumlMapping parentMapping) throws MappingError {
 	    List<OutputPin> bodyOutputs = new ArrayList<OutputPin>();
-        if (assignedNames != null) {
-            for (String name: assignedNames) {
+        if (assignmentsAfter != null) {
+            for (AssignedSource assignmentAfter: assignmentsAfter) {
+                String name = assignmentAfter.getName();
                 ActivityNode bodyOutput = null;
-                AssignedSource assignment = assignments.get(name);
+                AssignedSource assignment = bodyAssignments.get(name);
                 if (assignment == null) {
                     ValueSpecificationAction nullAction = 
                             parentMapping.createActivityGraph().addNullValueSpecificationAction();
                     bodyElements.add(nullAction);
                     bodyOutput = nullAction.getResult();
                 } else {
+                    ElementReference outerType = assignmentAfter.getType();
                     ElementReference type = assignment.getType();
                     FumlMapping mapping = parentMapping.fumlMap(assignment);
                     if (!(mapping instanceof AssignedSourceMapping)) {
@@ -186,7 +189,14 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                                 name + ": " + mapping.getErrorMessage());
                     } else {
                         bodyOutput = ((AssignedSourceMapping)mapping).getActivityNode();
-                        if (!(bodyOutput instanceof OutputPin && 
+                        ActivityGraph subgraph = parentMapping.createActivityGraph();
+                        if (outerType != null && type != null &&
+                            outerType.getImpl().isUnlimitedNatural() &&
+                            type.getImpl().isNatural() && !type.getImpl().isUnlimitedNatural()) {
+                            bodyOutput = AssignmentExpressionMapping.mapConversions(
+                                    subgraph, bodyOutput, false, false, true);
+                            bodyElements.addAll(subgraph.getModelElements());
+                        } else if (!(bodyOutput instanceof OutputPin && 
                                 ActivityGraph.isContainedIn(
                                         (OutputPin)bodyOutput, bodyElements))) {
                             Classifier classifier = null;
@@ -209,13 +219,13 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                             }
         
                             StructuredActivityNode passthruNode = 
-                                    parentMapping.createActivityGraph().createPassthruNode(
+                                    subgraph.createPassthruNode(
                                             bodyOutput.getName(), 
                                             classifier, 
                                             assignment.getLower(), 
                                             assignment.getUpper());
                             bodyElements.add(passthruNode);
-                            bodyElements.add(parentMapping.createActivityGraph().createObjectFlow(
+                            bodyElements.add(subgraph.createObjectFlow(
                                     bodyOutput, passthruNode.getStructuredNodeInput().get(0)));
                             bodyOutput = passthruNode.getStructuredNodeOutput().get(0);
                         }

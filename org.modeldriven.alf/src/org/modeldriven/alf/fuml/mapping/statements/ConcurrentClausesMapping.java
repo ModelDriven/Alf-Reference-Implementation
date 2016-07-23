@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -14,7 +13,7 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.SyntaxElementMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.statements.ConcurrentClauses;
 import org.modeldriven.alf.syntax.statements.NonFinalClause;
 
@@ -29,11 +28,11 @@ public class ConcurrentClausesMapping extends SyntaxElementMapping {
     
     Collection<Clause> clauses = null;
     Collection<Element> modelElements = null;
-    List<String> assignedNames = null;
+    List<AssignedSource> assignmentsAfter = null;
     
     // NOTE: This should be called before mapping.
-    public void setAssignedNames(List<String> assignedNames) {
-        this.assignedNames = assignedNames;
+    public void setAssignmentsAfter(List<AssignedSource> assignmentsAfter) {
+        this.assignmentsAfter = assignmentsAfter;
     }
     
     public void map() throws MappingError {
@@ -50,7 +49,7 @@ public class ConcurrentClausesMapping extends SyntaxElementMapping {
             } else {
                 NonFinalClauseMapping nonFinalClauseMapping =
                     (NonFinalClauseMapping)mapping;
-                nonFinalClauseMapping.setAssignedNames(this.assignedNames);
+                nonFinalClauseMapping.setAssignmentsAfter(this.assignmentsAfter);
                 this.clauses.add(nonFinalClauseMapping.getClause());
                 this.modelElements.addAll(mapping.getModelElements());
             }

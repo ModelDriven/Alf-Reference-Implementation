@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -180,7 +180,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             // assigned within the for statement, so they can be made available
             // as loop variables for access within the body of the for 
             // statement.
-            List<String> assignedNames = 
+            List<AssignedSource> assignmentsAfter = 
                 this.mapAssignedValueSources(node, this.graph, true);
             
             // Create a loop variable pin corresponding to each loop
@@ -315,14 +315,11 @@ public class ForStatementMapping extends LoopStatementMapping {
                             "Body(" + name + ")", null);
             bodyGraph.addControlFlow(valuesNode, bodyNode);
             
-            Map<String, AssignedSource> assignmentsAfter = 
-                    this.getStatement().getImpl().getAssignmentAfterMap();
-            
             // NOTE: Making every body output (for an assigned name) an output 
             // pin of the single body node is necessary for properly setting
             // these outputs in the case of a break statement within the loop.
-            for (String assignedName: assignedNames) {
-                AssignedSource assignment = assignmentsAfter.get(assignedName);
+            for (AssignedSource assignment: assignmentsAfter) {
+                String assignedName = assignment.getName();
                 ElementReference type = assignment.getType();
                 Classifier classifier = null;
                 if (type != null) {
@@ -356,7 +353,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             // to the node, because mapping body outputs may add passthru nodes
             // to bodyElements.
             List<OutputPin> bodyOutputs = NonFinalClauseMapping.mapBodyOutputs(
-                    bodyElements, this.getAssignments(), assignedNames, this);
+                    bodyElements, this.getAssignments(), assignmentsAfter, this);
             for (int j = 0; j < bodyOutputs.size(); j++) {
                 OutputPin bodyOutput = bodyOutputs.get(j);
                 OutputPin output = bodyNode.getStructuredNodeOutput().get(j);

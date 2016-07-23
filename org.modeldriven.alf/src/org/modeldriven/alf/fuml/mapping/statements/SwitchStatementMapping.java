@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -15,6 +14,7 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.SwitchClause;
@@ -63,7 +63,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         node.setName("Conditional(SwitchStatement@" + statement.getId() + ")");
         graph.add(node);
         
-        List<String> assignedNames = this.mapConditionalNode(node, graph);
+        List<AssignedSource> assignmentsAfter = this.mapConditionalNode(node, graph);
         
         Collection<Clause> clauses = new ArrayList<Clause>(); 
         Expression expression = statement.getExpression();
@@ -95,7 +95,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
                         (SwitchClauseMapping)mapping;
                     clauseMapping.setSwitchSource(forkNode);
                     clauseMapping.setSwitchLower(expression.getLower());
-                    clauseMapping.setAssignedNames(assignedNames);
+                    clauseMapping.setAssignmentsAfter(assignmentsAfter);
                     graph.addToStructuredNode(
                             node, clauseMapping.getModelElements());
                     Clause clause = clauseMapping.getClause();
@@ -108,7 +108,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         
         this.mapFinalClause(
                 statement.getDefaultClause(), node, 
-                assignedNames, clauses, graph);
+                assignmentsAfter, clauses, graph);
         this.addToNode(graph.getModelElements());
         
         node.setIsAssured(statement.getIsAssured());

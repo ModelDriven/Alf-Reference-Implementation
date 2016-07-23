@@ -58,10 +58,12 @@ public class SequenceExpressionListMapping extends SequenceElementsMapping {
                 ElementReference type = expressionList.getImpl().getType(owner);
                 ElementReference elementType = element.getType();
                 if (type != null && elementType != null) {
-                resultSource = AssignmentExpressionMapping.mapConversions(
-                        subgraph, resultSource,
-                        type.getImpl().isBitString() && elementType.getImpl().isInteger(), 
-                        type.getImpl().isReal() && elementType.getImpl().isInteger());
+                    resultSource = AssignmentExpressionMapping.mapConversions(
+                            subgraph, resultSource,
+                            type.getImpl().isBitString() && elementType.getImpl().isInteger(), 
+                            type.getImpl().isReal() && elementType.getImpl().isInteger(),
+                            type.getImpl().isUnlimitedNatural() && elementType.getImpl().isNatural() && 
+                                !elementType.getImpl().isUnlimitedNatural());
                 }
                 if (subgraph.isEmpty()) {
                     subgraph = this.createActivityGraph();

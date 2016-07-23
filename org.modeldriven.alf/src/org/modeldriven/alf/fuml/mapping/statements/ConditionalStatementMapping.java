@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -13,7 +12,7 @@ package org.modeldriven.alf.fuml.mapping.statements;
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.statements.StatementMapping;
 import org.modeldriven.alf.mapping.MappingError;
-
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.statements.Block;
 
 import org.modeldriven.alf.uml.*;
@@ -28,7 +27,7 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
      * Common mapping for if and switch statements
      */
     
-    protected List<String> mapConditionalNode(
+    protected List<AssignedSource> mapConditionalNode(
             ConditionalNode node,
             ActivityGraph graph) throws MappingError {
         return super.mapAssignedValueSources(node, graph, false);
@@ -50,14 +49,14 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
     protected void mapFinalClause(
             Block block,
             ConditionalNode node,
-            List<String> assignedNames,
+            List<AssignedSource> assignmentsAfter,
             Collection<Clause> predecessorClauses,
             ActivityGraph graph
             ) throws MappingError {
         // NOTE: Even if the block is empty, a final clause is still needed
         // in order to pass through values of any names that may be assigned
         // in other clauses.
-        if (block != null || assignedNames != null) {
+        if (block != null || assignmentsAfter != null) {
             Collection<Element> modelElements = new ArrayList<Element>();
             ActivityGraph subgraph = this.createActivityGraph();
             ValueSpecificationAction valueAction = 
@@ -70,7 +69,7 @@ public abstract class ConditionalStatementMapping extends StatementMapping {
                     block == null? 
                         this.getStatement().getImpl().getAssignmentBeforeMap(): 
                         block.getImpl().getAssignmentAfterMap(),
-                    assignedNames, 
+                    assignmentsAfter, 
                     modelElements, this);
             for (Clause predecessorClause: predecessorClauses) {
                 clause.addPredecessorClause(predecessorClause);
