@@ -195,14 +195,14 @@ public class ClassifyStatementImpl extends
 	}
 
 	/**
-	 * All the from and to classes of a classify statement must be subclasses of
-	 * the type of the target expression and none of them may have a common
-	 * superclass that is a subclass of the type of the target expression (that
-	 * is, they must be disjoint subclasses).
+     * All the from and to classes of a classify statement must be subclasses of
+     * the declared type of the target expression and none of them may have a
+     * common superclass that is a subclass of the declared type of the target
+     * expression (that is, they must be disjoint subclasses).
 	 **/
 	public boolean classifyStatementClasses() {
 	    ClassifyStatement self = this.getSelf();
-	    ElementReference targetType = self.getExpression().getType();
+	    ElementReference targetType = self.getExpression().declaredType();
 	    if (targetType != null ) {
 	        Collection<ElementReference> fromClasses = self.getFromClass();
 	        Collection<ElementReference> toClasses = self.getToClass();

@@ -221,12 +221,15 @@ public class AssignmentExpression extends Expression {
      * assignment expression (including a data value update). If the assignment
      * is a definition, then the type is given by the right-side, otherwise the
      * type is the same as for the previous assigned source for the local name.
-     * The multiplicity lower bound is 0 if the lower bound of the right-hand
-     * side is 0 and otherwise 1, and the multiplicity upper bound is 1 if the
-     * upper bound of the right-hand side is 1 and * otherwise, except that: if
-     * the left-hand side is a data-value update, the multiplicity is the same
-     * as for the previous assignment, and, if the left-hand side is indexed
-     * (but not a data-value update), the multiplicity is 0..*.
+     * If the assignment expression does not require any conversions, then the
+     * subtype of the assignment is the type of the right-hand side expression;
+     * otherwise it is null. The multiplicity lower bound is 0 if the lower
+     * bound of the right-hand side is 0 and otherwise 1, and the multiplicity
+     * upper bound is 1 if the upper bound of the right-hand side is 1 and *
+     * otherwise, except that: if the left-hand side is a data-value update, the
+     * multiplicity is the same as for the previous assignment, and, if the
+     * left-hand side is indexed (but not a data-value update), the multiplicity
+     * is 0..*.
      **/
 	public boolean assignmentExpressionAssignmentDerivation() {
 		return this.getImpl().assignmentExpressionAssignmentDerivation();
@@ -397,11 +400,32 @@ public class AssignmentExpression extends Expression {
      * hand side is then also checked for known nulls or non-nulls.
      */
     @Override
-    public Collection<AssignedSource> updateMultiplicity(
+    public Collection<AssignedSource> adjustMultiplicity(
             Collection<AssignedSource> assignments, boolean condition) {
-        return this.getImpl().updateMultiplicity(assignments, condition);
+        return this.getImpl().adjustMultiplicity(assignments, condition);
     }
-
+    
+    /**
+     * If the left-hand side is not indexed and is not a feature reference,
+     * then the assigned name is considered to have the given subtype. The 
+     * type of the right-hand side is then also adjusted as appropriate.
+     */
+    @Override
+    public Collection<AssignedSource> adjustType(
+            Collection<AssignedSource> assignments, ElementReference subtype) {
+        return this.getImpl().adjustType(assignments, subtype);
+    }
+    
+    /**
+     * If an assignment expression is a simple assignment, then its declared type
+     * is the declared type of the right-hand side expression. Otherwise it is
+     * the type of the assignment expression.
+     */
+    @Override
+    public ElementReference declaredType() {
+        return this.getImpl().declaredType();
+    }
+    
     public void _deriveAll() {
 		this.getAssignment();
 		this.getFeature();

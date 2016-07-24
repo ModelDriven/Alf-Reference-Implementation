@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,19 +124,22 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
         if (operand2 != null) {
             Map<String, AssignedSource> assignmentsBefore2 =
                 operand1 == null? assignmentsAfter:
-                operand1.getImpl().updateMultiplicity(
+                operand1.getImpl().adjustAssignments(
                     new HashMap<String, AssignedSource>(assignmentsAfter),
                     "&&".equals(operator));
             operand2.getImpl().setAssignmentBefore(assignmentsBefore2);
-            assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
-            for (AssignedSource assignment: operand2.getImpl().getNewAssignments()) {
-                String name = assignment.getName();
-                AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(assignment);
-                newAssignment.setSource(self);
-                if (!assignmentsBefore.containsKey(name)) {
-                    newAssignment.setLower(0);
+            Collection<AssignedSource> newAssignments = operand2.getImpl().getNewAssignments();
+            if (!newAssignments.isEmpty()) {
+                assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
+                for (AssignedSource assignment: newAssignments) {
+                    String name = assignment.getName();
+                    AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(assignment);
+                    newAssignment.setSource(self);
+                    if (!assignmentsBefore.containsKey(name)) {
+                        newAssignment.setLower(0);
+                    }
+                    assignmentsAfter.put(name, newAssignment);
                 }
-                assignmentsAfter.put(name, newAssignment);
             }
         }
         return assignmentsAfter;
@@ -149,21 +153,21 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
      * operand expressions being false.
      */
 	@Override
-	public Map<String, AssignedSource> updateMultiplicity(Map<String, AssignedSource> assignments, boolean condition) {
+	public Map<String, AssignedSource> adjustAssignments(Map<String, AssignedSource> assignments, boolean condition) {
 	    ConditionalLogicalExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
         Expression operand2 = self.getOperand2();
 	    String operator = self.getOperator();
 	    if (operand2 != null) {
 	        if (condition && "&&".equals(operator)) {
-	            self.updateAssignments(); // Force updates to assignments.
-	            return operand2.getImpl().updateMultiplicity(
-	                    operand1.getImpl().updateMultiplicity(assignments, true), 
+	            self.getAssignmentAfter(); // Force updates to assignments.
+	            return operand2.getImpl().adjustAssignments(
+	                    operand1.getImpl().adjustAssignments(assignments, true), 
 	                    true);
 	        } else if (!condition && "||".equals(operator)) {
-	            self.updateAssignments(); // Force updates to assignments.
-                return operand2.getImpl().updateMultiplicity(
-                        operand1.getImpl().updateMultiplicity(assignments, false), 
+	            self.getAssignmentAfter(); // Force updates to assignments.
+                return operand2.getImpl().adjustAssignments(
+                        operand1.getImpl().adjustAssignments(assignments, false), 
                         false);
 	        }
 	    }

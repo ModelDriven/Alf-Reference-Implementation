@@ -110,6 +110,15 @@ public abstract class Expression extends SyntaxElement {
 	public boolean expressionUniqueAssignments() {
 		return this.getImpl().expressionUniqueAssignments();
 	}
+	
+	/**
+     * Return the type of the expression, based on the originally declared  
+     * types of names in the expression. By default, this is the expression
+     * type.
+     */
+	public ElementReference declaredType() {
+	    return this.getImpl().declaredType();
+	}
 
 	/**
 	 * Returns the assignments from before this expression updated for any
@@ -123,27 +132,38 @@ public abstract class Expression extends SyntaxElement {
 	}
 	
     /**
-     * Returns the given assignments, updated for known nulls and non-nulls,
-     * based on the given truth condition. By default, no changes are made.
-     * (This operation is overridden by conditional logical, binary unary,
-     * equality, behavior invocation and sequence operation expressions that may
-     * be used to form checks for null and non-null values.)
+     * Returns the given assignments, adjusted for known nulls, known non-nulls,
+     * and best known types, based on the given truth condition. By default, no
+     * changes are made. (This operation is overridden for conditional logical,
+     * binary unary, equality, behavior invocation, sequence operation and
+     * classification expressions that may be used to form checks for null and
+     * non-null values and type classification.)
      */
-    public Collection<AssignedSource> updateMultiplicity(
+    public Collection<AssignedSource> adjustAssignments(
             Collection<AssignedSource> assignments, boolean condition) {
-        return this.getImpl().updateMultiplicity(assignments, condition);
+        return this.getImpl().adjustAssignments(assignments, condition);
     }
 
     /**
-     * Returns the given assignments, updated for known nulls and non-nulls,
+     * Returns the given assignments, adjusted for known nulls and non-nulls,
      * based on the given truth condition. By default, no changes are made.
-     * (This operation is overridden by name and assignment expression that
-     * may be used to provide the names that are checked for being null or
-     * non-null.)
+     * (This operation is overridden for name and assignment expressions that
+     * may be used to provide the names that are checked for type classification.)
      */
-    public Collection<AssignedSource> setMultiplicity(
+    public Collection<AssignedSource> adjustMultiplicity(
             Collection<AssignedSource> assignments, boolean condition) {
-        return this.getImpl().setMultiplicity(assignments, condition);
+        return this.getImpl().adjustMultiplicity(assignments, condition);
+    }
+
+    /**
+     * Returns the given assignments, adjusted for the given best-known subtype.
+     * By default, no changes are made. (This operation is overridden by name
+     * and assignment expressions that may be used to provide the names that are
+     * checked for being null or non-null.)
+     */
+    public Collection<AssignedSource> adjustType(
+            Collection<AssignedSource> assignments, ElementReference subtype) {
+        return this.getImpl().adjustType(assignments, subtype);
     }
 
 	public void _deriveAll() {

@@ -122,7 +122,19 @@ public class ClassificationExpression extends UnaryExpression {
 		return this.getImpl().classificationExpressionOperand();
 	}
 
-	public void _deriveAll() {
+    /**
+     * If the truth condition is true and the type of the operand of a classification
+     * expression does not conform to the referent type of the classification
+     * expression, then set the known type of the operand of the classification
+     * expression to be the referent type of the classification expression.
+     */
+    @Override
+    public Collection<AssignedSource> adjustAssignments(
+            Collection<AssignedSource> assignments, boolean condition) {
+        return this.getImpl().adjustAssignments(assignments, condition);
+    }
+
+        public void _deriveAll() {
 		this.getReferent();
 		this.getIsDirect();
 		super._deriveAll();

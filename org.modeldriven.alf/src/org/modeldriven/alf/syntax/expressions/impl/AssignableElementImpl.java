@@ -67,12 +67,11 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
         ElementReference sourceType = source.getType();
         ElementReference targetType = target.getType();
         int sourceUpper = source.getUpper();
-        int targetLower = target.getLower();
         int targetUpper = target.getUpper();
         
         return
             // Null conversion
-            isNull(source) && targetLower == 0 ||
+            isNull(source) ||
             
             // Type conformance
             isConformant(targetType, sourceType) ||

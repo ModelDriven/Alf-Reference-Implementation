@@ -119,9 +119,9 @@ public class BehaviorInvocationExpression extends InvocationExpression {
      * the negation of the given truth condition.
      */
     @Override
-    public Collection<AssignedSource> updateMultiplicity(
+    public Collection<AssignedSource> adjustAssignments(
             Collection<AssignedSource> assignments, boolean condition) {
-        return this.getImpl().updateMultiplicity(assignments, condition);
+        return this.getImpl().adjustAssignments(assignments, condition);
     }
 
 	public void _deriveAll() {

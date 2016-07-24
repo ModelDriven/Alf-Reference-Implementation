@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -120,12 +119,12 @@ public class ClassifyStatement extends Statement {
 		return this.getImpl().classifyStatementClassNames();
 	}
 
-	/**
-	 * All the from and to classes of a classify statement must be subclasses of
-	 * the type of the target expression and none of them may have a common
-	 * superclass that is a subclass of the type of the target expression (that
-	 * is, they must be disjoint subclasses).
-	 **/
+    /**
+     * All the from and to classes of a classify statement must be subclasses of
+     * the declared type of the target expression and none of them may have a
+     * common superclass that is a subclass of the declared type of the target
+     * expression (that is, they must be disjoint subclasses).
+     **/
 	public boolean classifyStatementClasses() {
 		return this.getImpl().classifyStatementClasses();
 	}

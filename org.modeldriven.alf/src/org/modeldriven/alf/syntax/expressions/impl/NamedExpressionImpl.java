@@ -180,6 +180,14 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
         return output;
     }
     
+    // Checks whether this named expression requires collection,
+    // bit string and/or real conversion for the given parameter.
+    public boolean hasConversions(ElementReference parameter) {
+        return this.getIsCollectionConversion(parameter) ||
+               this.getIsBitStringConversion(parameter) ||
+               this.getIsRealConversion(parameter);
+    }
+    
     // Derives isCollectionConversion for this named expression as an input for
     // the given parameter.
     public boolean getIsCollectionConversion(ElementReference parameter) {

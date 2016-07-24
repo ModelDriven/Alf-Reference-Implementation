@@ -10,7 +10,7 @@ class Expressions_Null_Coalescing specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 		
-		this.test(a, b, c, d, e, l1, l2, i1, i2, i3, i4, b1, b2);
+		this.test(a, b, c, d, e, l1, l2, i1, i2, i3, i4, b1, b2, u, v);
 		
 		AssertEqual("a", a, 1);
 		AssertEqual("b", b, 1);
@@ -29,10 +29,16 @@ class Expressions_Null_Coalescing specializes Test {
 		AssertTrue("b1", b1);
 		AssertFalse("b2", b2);
 		
+		AssertTrue("u hastype C", u hastype C);
+		AssertTrue("v hastype C", v hastype C);
+		
 		this.done();
 	}
 	
     // Supporting declarations *************************************************
+    
+    class C { }
+    class D specializes C{ }
 	
 	private activity A(in x: Integer): Integer { return x; }
 	private activity B(in x: Integer): Integer[0..1] { return x; }
@@ -43,7 +49,7 @@ class Expressions_Null_Coalescing specializes Test {
 		out a: Integer[0..1], out b: Integer[0..1], out c: Integer[0..1], out d: Integer, out e: any, 
 		out l1: Integer[] sequence, out l2: Integer[] sequence,
 		out i1: Integer[0..1], out i2: Integer[0..1], out i3: Integer[0..1], out i4: Integer[0..1],
-		out b1: Boolean, out b2: Boolean) {
+		out b1: Boolean, out b2: Boolean, out u: C, out v: C) {
 		
 		a = null ?? 1;
 		b = B(1);
@@ -80,5 +86,20 @@ class Expressions_Null_Coalescing specializes Test {
 		
 		b1 = i1 == null || A(i1) == 1; 
 		b2 = i1 != null && i2 != null && A(i1) == 2;
+		
+		u = new D();
+		u = (D) u;
+		u = new C();
+		
+		let v1:C = new D();
+		
+		if (u instanceof D && (v = v1) hastype D) {
+			u = (D) u;
+			u = new C();
+			v1 = (D) v1;
+		}
+		
+		v1 = new C();
+		v = v1;
 	}
 }

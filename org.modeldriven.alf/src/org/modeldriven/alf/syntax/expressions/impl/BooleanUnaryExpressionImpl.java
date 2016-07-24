@@ -106,13 +106,13 @@ public class BooleanUnaryExpressionImpl extends UnaryExpressionImpl {
 	 * condition.
 	 */
     @Override
-    public Map<String, AssignedSource> updateMultiplicity(
+    public Map<String, AssignedSource> adjustAssignments(
             Map<String, AssignedSource> assignmentsMap, boolean condition) {
         BooleanUnaryExpression self = this.getSelf();
         String operator = self.getOperator();
         Expression operand = self.getOperand();
         if ("!".equals(operator) && operand != null) {
-            assignmentsMap = operand.getImpl().updateMultiplicity(
+            assignmentsMap = operand.getImpl().adjustAssignments(
                     assignmentsMap, !condition);
         }
         return assignmentsMap;

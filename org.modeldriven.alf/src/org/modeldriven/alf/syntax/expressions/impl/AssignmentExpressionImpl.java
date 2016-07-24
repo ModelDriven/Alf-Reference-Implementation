@@ -210,12 +210,15 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      * assignment expression (including a data value update). If the assignment
      * is a definition, then the type is given by the right-side, otherwise the
      * type is the same as for the previous assigned source for the local name.
-     * The multiplicity lower bound is 0 if the lower bound of the right-hand
-     * side is 0 and otherwise 1, and the multiplicity upper bound is 1 if the
-     * upper bound of the right-hand side is 1 and * otherwise, except that: if
-     * the left-hand side is a data-value update, the multiplicity is the same
-     * as for the previous assignment, and, if the left-hand side is indexed
-     * (but not a data-value update), the multiplicity is 0..*.
+     * If the assignment expression does not require any conversions, then the
+     * subtype of the assignment is the type of the right-hand side expression;
+     * otherwise it is null. The multiplicity lower bound is 0 if the lower
+     * bound of the right-hand side is 0 and otherwise 1, and the multiplicity
+     * upper bound is 1 if the upper bound of the right-hand side is 1 and *
+     * otherwise, except that: if the left-hand side is a data-value update, the
+     * multiplicity is the same as for the previous assignment, and, if the
+     * left-hand side is indexed (but not a data-value update), the multiplicity
+     * is 0..*.
      **/
 	protected AssignedSource deriveAssignment() {
 	    AssignmentExpression self = this.getSelf();
@@ -239,7 +242,8 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	                return AssignedSourceImpl.makeAssignment
 	                        (referent.getImpl().getName(), self, 
 	                         referent.getImpl().getType(), 
-	                         lower, upper);
+	                         this.hasConversions()? null: rhs.getImpl().getType(),
+	                         lower, referent.getImpl().getUpper(), true);
 	            } else {
 	                return null;
 	            }
@@ -252,7 +256,8 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                         assignment.setUpper(-1);
                     } else {
                         assignment.setLower(lower);
-                        assignment.setUpper(upper);
+                        assignment.setSubtype(
+                                this.hasConversions()? null: rhs.getImpl().getType());
         	        }
                 }
     	        return assignment;
@@ -672,6 +677,18 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 * Helper Methods
 	 */
 
+    /**
+     * If an assignment expression is a simple assignment, then its declared type
+     * is the declared type of the right-hand side expression. Otherwise it is
+     * the type of the assignment expression.
+     */
+    @Override
+    public ElementReference declaredType() {
+        AssignmentExpression self = this.getSelf();
+        Expression rhs = self.getRightHandSide();
+        return self.getIsSimple() && rhs != null? rhs.declaredType(): self.getType();
+    }
+    
 	/**
 	 * The assignments after an assignment expression are the assignments after
 	 * the left-hand side, updated by the assignment from the assignment
@@ -706,7 +723,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	 * hand side is then also checked for known nulls or non-nulls.
 	 */
     @Override
-    public Map<String, AssignedSource> setMultiplicity(
+    public Map<String, AssignedSource> adjustMultiplicity(
             Map<String, AssignedSource> assignmentMap, boolean condition) {
         AssignmentExpression self = this.getSelf();
         LeftHandSide lhs = self.getLeftHandSide();
@@ -724,9 +741,38 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
             }
         }
         return self.getRightHandSide().getImpl().
-                setMultiplicity(assignmentMap, condition);
+                adjustMultiplicity(assignmentMap, condition);
     }
     
+    /**
+     * If the left-hand side is not indexed and is not a feature reference,
+     * then the assigned name is considered to have the given subtype. The 
+     * type of the right-hand side is then also adjusted as appropriate.
+     */
+    @Override
+    public Map<String, AssignedSource> adjustType(
+            Map<String, AssignedSource> assignmentMap, ElementReference subtype) {
+        AssignmentExpression self = this.getSelf();
+        LeftHandSide lhs = self.getLeftHandSide();
+        if (!self.getIsIndexed() && !self.getIsFeature()) {
+            String name = lhs.getImpl().getLocalName();
+            AssignedSource assignment = assignmentMap.get(name);
+            if (assignment != null) {
+                assignment = AssignedSourceImpl.makeAssignment(assignment);
+                assignment.setSubtype(subtype);
+                assignmentMap.put(assignment.getName(), assignment);
+            }
+        }
+        return self.getRightHandSide().getImpl().adjustType(assignmentMap, subtype);
+    }
+    
+    public boolean hasConversions() {
+        AssignmentExpression self = this.getSelf();
+        return self.getIsCollectionConversion() || 
+                 self.getIsBitStringConversion() || 
+                 self.getIsRealConversion();
+    }
+
     public boolean isUnlimitedNaturalConversion() {
         AssignmentExpression self = this.getSelf();
         LeftHandSide lhs = self.getLeftHandSide();

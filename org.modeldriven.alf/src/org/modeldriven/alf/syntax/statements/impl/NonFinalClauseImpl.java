@@ -83,9 +83,18 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
 	 **/
 	public boolean nonFinalClauseConditionLocalNames() {
 	    Expression condition = this.getSelf().getCondition();
-	    return condition == null || 
-	            condition.getImpl().getAssignmentBeforeMap().keySet().
-	                containsAll(condition.getImpl().getAssignmentAfterMap().keySet());
+	    if (condition != null) {
+    	    Map<String, AssignedSource> assignmentsBefore = 
+    	            condition.getImpl().getAssignmentBeforeMap();
+    	    for (AssignedSource assignmentAfter: condition.getAssignmentAfter()) {
+    	        String name = assignmentAfter.getName();
+    	        if (!assignmentsBefore.containsKey(name) && 
+    	                !assignmentAfter.getImpl().isOutParameter()) {
+    	            return false;
+    	        }
+    	    }
+	    }
+	    return true;
 	}
 
 	/**
@@ -127,7 +136,8 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
 	
     /**
      * The assignments before the body of a non-final clause are the assignments
-     * after the condition.
+     * after the condition, adjusted for known null and non-null names and type
+     * classifications due to the condition being true.
      **/
     public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
         NonFinalClause self = this.getSelf();
@@ -135,7 +145,7 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
         Block body = self.getBody();
         if (condition != null) {
             condition.getImpl().setAssignmentBefore(assignmentBefore);
-            assignmentBefore = condition.getImpl().updateMultiplicity(
+            assignmentBefore = condition.getImpl().adjustAssignments(
                new HashMap<String, AssignedSource>(
                     condition.getImpl().getAssignmentAfterMap()),
                true);

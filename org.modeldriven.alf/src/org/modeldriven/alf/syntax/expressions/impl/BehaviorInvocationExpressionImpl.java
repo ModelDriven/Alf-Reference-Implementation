@@ -170,7 +170,7 @@ public class BehaviorInvocationExpressionImpl
      * the negation of the given truth condition.
      */
     @Override
-    public Map<String, AssignedSource> updateMultiplicity(
+    public Map<String, AssignedSource> adjustAssignments(
             Map<String, AssignedSource> assignmentsMap, boolean condition) {
         BehaviorInvocationExpression self = this.getSelf();
         Tuple tuple = self.getTuple();
@@ -182,11 +182,11 @@ public class BehaviorInvocationExpressionImpl
                 RootNamespace rootScope = RootNamespace.getRootScope();
                 if (referent.getImpl().equals(rootScope.getSequenceFunctionIsEmpty()) ||
                         referent.getImpl().equals(rootScope.getCollectionFunctionIsEmpty())) {
-                        assignmentsMap = expression.getImpl().setMultiplicity(
+                        assignmentsMap = expression.getImpl().adjustMultiplicity(
                                 assignmentsMap, condition);
                     } else if (referent.getImpl().equals(rootScope.getSequenceFunctionNotEmpty()) ||
                             referent.getImpl().equals(rootScope.getCollectionFunctionNotEmpty())) {
-                            assignmentsMap = expression.getImpl().setMultiplicity(
+                            assignmentsMap = expression.getImpl().adjustMultiplicity(
                                     assignmentsMap, !condition);
                     }       
             }

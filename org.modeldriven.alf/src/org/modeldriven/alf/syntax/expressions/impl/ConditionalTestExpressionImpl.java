@@ -209,7 +209,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
         
         if (operand2 != null) {
             Map<String, AssignedSource> assignmentsBefore2 = 
-                operand1.getImpl().updateMultiplicity(
+                operand1.getImpl().adjustAssignments(
                     new HashMap<String, AssignedSource>(assignmentsBefore), true);
             operand2.getImpl().setAssignmentBefore(assignmentsBefore2);
             newAssignments2 = operand2.getImpl().getNewAssignments();
@@ -217,7 +217,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
         
         if (operand3 != null) {
             Map<String, AssignedSource> assignmentsBefore3 = 
-                operand1.getImpl().updateMultiplicity(
+                operand1.getImpl().adjustAssignments(
                     new HashMap<String, AssignedSource>(assignmentsBefore), false);
             operand3.getImpl().setAssignmentBefore(assignmentsBefore3);
             newAssignments3 = operand3.getImpl().getNewAssignments();

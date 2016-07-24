@@ -328,8 +328,11 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                                 assignment = AssignedSourceImpl.
                                         makeAssignment(localName, self, 
                                                 lhsReferent.getImpl().getType(),
+                                                output.getImpl().hasConversions(parameter)? null: 
+                                                    parameter.getImpl().getType(),
                                                 lhsReferent.getImpl().getLower() == 0? 0: 1, 
-                                                lhsReferent.getImpl().getUpper() == 1? 1: -1);
+                                                lhsReferent.getImpl().getUpper() == 1? 1: -1,
+                                                true);
                                 newLocalAssignments.put(localName, assignment);
                             }
                         }
@@ -360,14 +363,20 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                         if (assignedName != null) {
                             AssignedSource assignmentBefore = 
                                     assignmentsBefore.get(assignedName);
+
+                            // Update the assignment of an already existing
+                            // local name, unless it is an @parallel local
+                            // name of a for statement.
                             if (assignmentBefore != null && 
                                     !assignmentBefore.getImpl().getIsParallelLocalName()){
-                                // Update the assignment of an already existing
-                                // local name, unless it is an @parallel local
-                                // name of a for statement.
+                                ElementReference parameter = invocation.getImpl().parameterNamed(
+                                        output.getName(), referent);
                                 AssignedSource assignment = AssignedSourceImpl.
                                         makeAssignment(assignmentBefore);
                                 assignment.setSource(self.getInvocation());
+                                assignment.setSubtype(
+                                        output.getImpl().hasConversions(parameter)? null: 
+                                            parameter.getImpl().getType());
                                 assignmentsAfter.put(assignedName, assignment);
                             }
                         }

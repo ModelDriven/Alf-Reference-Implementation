@@ -164,14 +164,13 @@ public class NameExpressionImpl extends ExpressionImpl {
 	}
 	
 	/**
-	 * The type of a name expression is determined by its name. If the name is a
-	 * local name, then the type of the name expression is the type of that 
-	 * assignment. If the name is a parameter, then the type of the name
-	 * expression is the type of that parameter. If the name is an enumeration
-	 * literal, then the type of the name expression is the corresponding
-	 * enumeration. If the name disambiguates to a feature reference, then the
-	 * type of the name expression is the type of the equivalent property access
-	 * expression.
+     * The type of a name expression is determined by its name. If the name is a
+     * local name or parameter with an assignment, then the type of the name
+     * expression is the best known type of that assignment. If the name is an
+     * enumeration literal, then the type of the name expression is the
+     * corresponding enumeration. If the name disambiguates to a feature
+     * reference, then the type of the name expression is the type of the
+     * equivalent property access expression.
 	 **/
 	@Override
 	protected ElementReference deriveType() {
@@ -181,7 +180,7 @@ public class NameExpressionImpl extends ExpressionImpl {
 	    ElementReference enumerationLiteral = self.getEnumerationLiteral();
 	    PropertyAccessExpression propertyAccess = self.getPropertyAccess();
 	    if (assignment != null) {
-	        return assignment.getType();
+	        return assignment.getKnownType();
 	    } else if (parameter != null) {
 	        return parameter.getImpl().getType();
 	    } else if (enumerationLiteral != null) {
@@ -294,10 +293,22 @@ public class NameExpressionImpl extends ExpressionImpl {
 	/*
 	 * Helper Methods
 	 */
-	
+
     public ElementReference getParameter() {
         QualifiedName name = this.getSelf().getName();
         return name == null? null: name.getImpl().getParameterReferent();
+    }
+    
+    /**
+     * If a name expression has a derived assignment, then its declared type is
+     * the type of that assignment. Otherwise it is the same as the type of the
+     * expression.
+     */
+    @Override
+    public ElementReference declaredType() {
+        NameExpression self = this.getSelf();
+        AssignedSource assignment = self.getAssignment();
+        return assignment != null? assignment.getType(): self.getType();
     }
     
     /**
@@ -317,12 +328,12 @@ public class NameExpressionImpl extends ExpressionImpl {
     }
     
     /**
-     * If the name dies not disambiguate to a feature reference, then it is
+     * If the name does not disambiguate to a feature reference, then it is
      * considered known null if the condition is true and known non-null if
      * the condition is false.
      */
     @Override
-    public Map<String, AssignedSource> setMultiplicity(
+    public Map<String, AssignedSource> adjustMultiplicity(
             Map<String, AssignedSource> assignmentMap, boolean condition) {
         QualifiedName name = this.getSelf().getName();
         if (name != null && !name.getIsFeatureReference()) {
@@ -335,6 +346,26 @@ public class NameExpressionImpl extends ExpressionImpl {
                 } else if (assignment.getLower() == 0) {
                     assignment.setLower(1);
                 }
+                assignmentMap.put(assignment.getName(), assignment);
+            }
+        }
+        return assignmentMap;
+    }
+
+    /**
+     * If the name does not disambiguate to a feature reference, then it is
+     * considered to have the given subtype.
+     */
+    @Override
+    public Map<String, AssignedSource> adjustType(
+            Map<String, AssignedSource> assignmentMap, ElementReference subtype) {
+        QualifiedName name = this.getSelf().getName();
+        if (name != null && !name.getIsFeatureReference()) {
+            AssignedSource assignment = 
+                    assignmentMap.get(name.getUnqualifiedName().getName());
+            if (assignment != null) {
+                assignment = AssignedSourceImpl.makeAssignment(assignment);
+                assignment.setSubtype(subtype);
                 assignmentMap.put(assignment.getName(), assignment);
             }
         }

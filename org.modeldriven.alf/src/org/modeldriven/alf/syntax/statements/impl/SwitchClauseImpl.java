@@ -81,10 +81,11 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
 	public boolean switchClauseCaseLocalNames() {
 	    SwitchClause self = this.getSelf();
 	    Collection<Expression> cases = self.getCase();
-	    Collection<AssignedSource> assignmentBefore = self.assignmentsBefore();
+	    Map<String, AssignedSource> assignmentsBefore = this.assignmentsBeforeMap();
 	    for (Expression expression: cases) {
 	        for (AssignedSource assignmentAfter: expression.getAssignmentAfter()) {
-    	        if (!assignmentAfter.getImpl().isAssignedIn(assignmentBefore)) {
+    	        if (!assignmentsBefore.containsKey(assignmentAfter.getName()) &&
+    	                !assignmentAfter.getImpl().isOutParameter()) {
     	            return false;
     	        }
 	        }
@@ -113,10 +114,14 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
 	 * The assignments before a switch clause are the assignments before any
 	 * case expression of the clause.
 	 **/
-	public Collection<AssignedSource> assignmentsBefore() {
+    public Collection<AssignedSource> assignmentsBefore() {
+        return this.assignmentsBeforeMap().values();
+    }
+    
+	public Map<String, AssignedSource> assignmentsBeforeMap() {
 	    Object[] cases = this.getSelf().getCase().toArray();
-	    return cases.length == 0? new ArrayList<AssignedSource>():
-	                              ((Expression)cases[0]).getAssignmentBefore();
+	    return cases.length == 0? new HashMap<String, AssignedSource>():
+	                              ((Expression)cases[0]).getImpl().getAssignmentBeforeMap();
 	} // assignmentsBefore
 
 	/**

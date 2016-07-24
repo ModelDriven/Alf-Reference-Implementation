@@ -104,15 +104,15 @@ public class NameExpression extends Expression {
 		return this.getImpl().nameExpressionPropertyAccessDerivation();
 	}
 
-	/**
-	 * The type of a name expression is determined by its name. If the name is a
-	 * local name or parameter with an assignment, then the type of the name
-	 * expression is the type of that assignment. If the name is an enumeration
-	 * literal, then the type of the name expression is the corresponding
-	 * enumeration. If the name disambiguates to a feature reference, then the
-	 * type of the name expression is the type of the equivalent property access
-	 * expression.
-	 **/
+    /**
+     * The type of a name expression is determined by its name. If the name is a
+     * local name or parameter with an assignment, then the type of the name
+     * expression is the best known type of that assignment. If the name is an
+     * enumeration literal, then the type of the name expression is the
+     * corresponding enumeration. If the name disambiguates to a feature
+     * reference, then the type of the name expression is the type of the
+     * equivalent property access expression.
+     **/
 	public boolean nameExpressionTypeDerivation() {
 		return this.getImpl().nameExpressionTypeDerivation();
 	}
@@ -153,14 +153,34 @@ public class NameExpression extends Expression {
 	}
 
     /**
-     * If the name dies not disambiguate to a feature reference, then it is
+     * If the name does not disambiguate to a feature reference, then it is
      * considered known null if the condition is true and known non-null if
      * the condition is false.
      */
     @Override
-    public Collection<AssignedSource> updateMultiplicity(
+    public Collection<AssignedSource> adjustMultiplicity(
             Collection<AssignedSource> assignments, boolean condition) {
-        return this.getImpl().updateMultiplicity(assignments, condition);
+        return this.getImpl().adjustMultiplicity(assignments, condition);
+    }
+    
+    /**
+     * If the name does not disambiguate to a feature reference, then it is
+     * considered to have the given subtype.
+     */
+    @Override
+    public Collection<AssignedSource> adjustType(
+            Collection<AssignedSource> assignments, ElementReference subtype) {
+        return this.getImpl().adjustType(assignments, subtype);
+    }
+    
+    /**
+     * If a name expression has a derived assignment, then its declared type is
+     * the type of that assignment. Otherwise it is the same as the type of the
+     * expression.
+     */
+    @Override
+    public ElementReference declaredType() {
+        return this.getImpl().declaredType();
     }
 
 	public void _deriveAll() {

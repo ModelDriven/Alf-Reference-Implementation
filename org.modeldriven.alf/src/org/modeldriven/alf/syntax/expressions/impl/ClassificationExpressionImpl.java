@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,6 +10,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -160,6 +160,27 @@ public class ClassificationExpressionImpl extends UnaryExpressionImpl {
 	 * Helper Methods
 	 */
 	
+	/**
+	 * If the truth condition is true and the type of the operand of a classification
+	 * expression does not conform to the referent type of the classification
+	 * expression, then set the known type of the operand of the classification
+	 * expression to be the referent type of the classification expression.
+	 */
+    @Override
+    public Map<String, AssignedSource> adjustAssignments(
+            Map<String, AssignedSource> assignmentMap, boolean condition) {
+        ClassificationExpression self = this.getSelf();
+        Expression operand = self.getOperand();
+        ElementReference referent = self.getReferent();
+        if (condition && operand != null && referent != null) {
+            ElementReference operandType = operand.getType();
+            if (operandType == null || !operandType.getImpl().conformsTo(referent)) {
+                assignmentMap = operand.getImpl().adjustType(assignmentMap, referent);
+            }
+        }
+        return assignmentMap;
+    }
+
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    super.setCurrentScope(currentScope);

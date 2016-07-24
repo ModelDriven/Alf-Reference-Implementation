@@ -217,9 +217,9 @@ public class SequenceOperationExpression extends InvocationExpression {
      * then check the primary expression for known nulls and non-nulls using the
      * negation of the given truth condition.
      */
-    public Collection<AssignedSource> updateMultiplicity(
+    public Collection<AssignedSource> adjustAssignments(
             Collection<AssignedSource> assignments, boolean condition) {
-        return this.getImpl().updateMultiplicity(assignments, condition);
+        return this.getImpl().adjustAssignments(assignments, condition);
     }
 
 	/**

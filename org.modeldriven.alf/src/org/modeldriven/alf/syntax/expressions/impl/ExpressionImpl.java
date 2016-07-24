@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -198,6 +197,15 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
 	 */
 
 	/**
+	 * Return the type of the expression, based on the originally declared  
+	 * types of names in the expression. By default, this is the expression
+	 * type.
+	 */
+	public ElementReference declaredType() {
+	    return this.getSelf().getType();
+	}
+
+	/**
 	 * Returns the assignments from before this expression updated for any
 	 * assignments made in the expression. By default, this is the same set as
 	 * the assignments before the expression. This operation is redefined only
@@ -213,44 +221,65 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
 	}
 	
     /**
-     * Returns the given assignments, updated for known nulls and non-nulls,
-     * based on the given truth condition. By default, no changes are made.
-     * (This operation is overridden by conditional logical, binary unary,
-     * equality, behavior invocation and sequence operation expressions that may
-     * be used to form checks for null and non-null values.)
+     * Returns the given assignments, adjusted for known nulls, known non-nulls,
+     * and best known types, based on the given truth condition. By default, no
+     * changes are made. (This operation is overridden for conditional logical,
+     * binary unary, equality, behavior invocation, sequence operation and
+     * classification expressions that may be used to form checks for null and
+     * non-null values ans types.)
      */
-    public Collection<AssignedSource> updateMultiplicity(
+    public Collection<AssignedSource> adjustAssignments(
             Collection<AssignedSource> assignments, boolean condition) {
         Map<String, AssignedSource> assignmentMap = new HashMap<String, AssignedSource>();
         for (AssignedSource assignment: assignments) {
             assignmentMap.put(assignment.getName(), assignment);
         }
-        return this.updateMultiplicity(assignmentMap, condition).values();
+        return this.adjustAssignments(assignmentMap, condition).values();
     }
 
-    /**
-     * Returns the given assignments, updated for known nulls and non-nulls,
-     * based on the given truth condition. By default, no changes are made.
-     * (This operation is overridden by name and assignment expression that
-     * may be used to provide the names that are checked for being null or
-     * non-null.)
-     */
-    public Map<String, AssignedSource> updateMultiplicity(
+    public Map<String, AssignedSource> adjustAssignments(
             Map<String, AssignedSource> assignmentMap, boolean condition) {
         return assignmentMap;
     }
 
-    public Collection<AssignedSource> setMultiplicity(
+    /**
+     * Returns the given assignments, adjusted for known nulls and non-nulls,
+     * based on the given truth condition. By default, no changes are made.
+     * (This operation is overridden for name and assignment expressions that
+     * may be used to provide the names that are checked for being null or
+     * non-null.)
+     */
+    public Collection<AssignedSource> adjustMultiplicity(
             Collection<AssignedSource> assignments, boolean condition) {
         Map<String, AssignedSource> assignmentMap = new HashMap<String, AssignedSource>();
         for (AssignedSource assignment: assignments) {
             assignmentMap.put(assignment.getName(), assignment);
         }
-        return this.setMultiplicity(assignmentMap, condition).values();
+        return this.adjustMultiplicity(assignmentMap, condition).values();
     }
 
-    public Map<String, AssignedSource> setMultiplicity(
+    public Map<String, AssignedSource> adjustMultiplicity(
             Map<String, AssignedSource> assignmentMap, boolean condition) {
+        return assignmentMap;
+    }
+
+    /**
+     * Returns the given assignments, adjusted for the given best-known subtype.
+     * By default, no changes are made. (This operation is overridden by name
+     * and assignment expressions that may be used to provide the names that are
+     * checked for type classification.)
+     */
+    public Collection<AssignedSource> adjustType(
+            Collection<AssignedSource> assignments, ElementReference subtype) {
+        Map<String, AssignedSource> assignmentMap = new HashMap<String, AssignedSource>();
+        for (AssignedSource assignment: assignments) {
+            assignmentMap.put(assignment.getName(), assignment);
+        }
+        return this.adjustType(assignmentMap, type).values();
+    }
+
+    public Map<String, AssignedSource> adjustType(
+            Map<String, AssignedSource> assignmentMap, ElementReference subtype) {
         return assignmentMap;
     }
 

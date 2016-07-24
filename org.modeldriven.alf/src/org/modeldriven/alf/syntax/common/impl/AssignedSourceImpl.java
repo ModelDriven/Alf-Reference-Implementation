@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -30,6 +29,10 @@ public class AssignedSourceImpl {
     private Integer upper = 0;
     private Integer lower = 0;
     private ElementReference type = null;
+    private ElementReference subtype = null;
+    private ElementReference knownType = null; // DERIVED
+    
+    private boolean isOutParameter = true;
     
     // Indicates whether this assignment is for a local name listed in an
     // @parallel annotation of a for statement.
@@ -51,9 +54,15 @@ public class AssignedSourceImpl {
 	}
 	
 	public String toString(boolean includeDerived) {
+	    ElementReference type = this.getType();
+	    ElementReference subtype = this.getSubtype();
+	    ElementReference knownType = this.getKnownType();
+	    ElementReference source = this.getSource();
 	    return this.getSelf()._toString(includeDerived) + 
-	                " type:(" + this.getType() + ")" +
-	                " source:(" + this.getSource() + ")" +
+                    (type == null? "": " type:(" + type + ")") +
+                    (subtype == null? "": " subtype:(" + subtype + ")") +
+                    (knownType == null || !includeDerived? "": " /knownType:(" + knownType + ")") +
+	                (source == null? "": " source:(" + source + ")") +
 	                " isParallelLocalName:" + this.isParallelLocalName;
 	}
 
@@ -101,6 +110,14 @@ public class AssignedSourceImpl {
         this.type = type;
     }
     
+    public ElementReference getSubtype() {
+        return this.subtype;
+    }
+
+    public void setSubtype(ElementReference subtype) {
+        this.subtype = subtype;
+    }
+    
     public boolean getIsParallelLocalName() {
         return this.isParallelLocalName;
     }
@@ -109,21 +126,60 @@ public class AssignedSourceImpl {
         this.isParallelLocalName = isParallelLocalName;
     }
     
+    public ElementReference getKnownType() {
+        if (this.knownType == null) {
+            this.setKnownType(this.deriveKnownType());
+        }
+        return this.knownType;
+    }
+
+    public void setKnownType(ElementReference knownType) {
+        this.knownType = knownType;
+    }
+    
+    /**
+     * If an assigned source has a subtype set, then this is the known type
+     * for the assigned source. Otherwise the type of the assigned source is
+     * also the known type.
+     */
+    protected ElementReference deriveKnownType() {
+        AssignedSource self = this.getSelf();
+        ElementReference subtype = self.getSubtype();
+        return subtype == null? self.getType(): subtype;
+    }
+    
+    /*
+     * Derivations
+     */
+    
+    public boolean assignedSourceKnownTypeDerivation() {
+        this.getSelf().getKnownType();
+        return true;
+    }
+    
     /*
      * Helper Methods
      */
     
+    public boolean isOutParameter() {
+        return this.isOutParameter;
+    }
+    
+    public void setIsOutParameter(boolean isOutParameter) {
+        this.isOutParameter = isOutParameter;
+    }
+    
     public static AssignedSource makeAssignment
-    (String name, SyntaxElement source, 
-     ElementReference type, int lower, int upper) {
-    AssignedSource assignment = new AssignedSource();
-    assignment.setName(name);
-    assignment.setSource(source);
-    assignment.setType(type);
-    assignment.setLower(lower);
-    assignment.setUpper(upper);
-    return assignment;
-}
+        (String name, SyntaxElement source, 
+         ElementReference type, int lower, int upper) {
+        AssignedSource assignment = new AssignedSource();
+        assignment.setName(name);
+        assignment.setSource(source);
+        assignment.setType(type);
+        assignment.setLower(lower);
+        assignment.setUpper(upper);
+        return assignment;
+    }
 
    public static AssignedSource makeAssignment
         (String name, ElementReference source, 
@@ -136,6 +192,22 @@ public class AssignedSourceImpl {
         assignment.setUpper(upper);
         return assignment;
     }
+
+   public static AssignedSource makeAssignment
+       (String name, SyntaxElement source, 
+           ElementReference type, ElementReference subtype,
+           int lower, int upper,
+           boolean isOutParameter) {
+       AssignedSource assignment = new AssignedSource();
+       assignment.setName(name);
+       assignment.setSource(source);
+       assignment.setType(type);
+       assignment.setSubtype(subtype);
+       assignment.setLower(lower);
+       assignment.setUpper(upper);
+       assignment.getImpl().setIsOutParameter(isOutParameter);
+       return assignment;
+   }
 
     public static AssignedSource makeAssignment(AssignedSource assignment) {
         return makeAssignment(

@@ -143,7 +143,7 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
 	        Expression condition = clause.getCondition();
 	        if (condition != null) {
 	            assignments = condition.getImpl().
-	                    updateMultiplicity(assignments, false);
+	                    adjustAssignments(assignments, false);
 	        }
 	    }
 	    return assignments;

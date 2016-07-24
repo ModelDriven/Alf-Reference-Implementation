@@ -172,16 +172,16 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
      * negated or not.
      */
     @Override
-    public Map<String, AssignedSource> updateMultiplicity(
+    public Map<String, AssignedSource> adjustAssignments(
             Map<String, AssignedSource> assignmentMap, boolean condition) {
         EqualityExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
         Expression operand2 = self.getOperand2();
         if (operand1 != null && operand1.getImpl().isNull()) {
-            assignmentMap = operand2.getImpl().setMultiplicity(
+            assignmentMap = operand2.getImpl().adjustMultiplicity(
                     assignmentMap, condition ^ self.getIsNegated());
         } else if (operand2 != null && operand2.getImpl().isNull()) {
-            assignmentMap = operand1.getImpl().setMultiplicity(
+            assignmentMap = operand1.getImpl().adjustMultiplicity(
                     assignmentMap, condition ^ self.getIsNegated());
         }
         return assignmentMap;

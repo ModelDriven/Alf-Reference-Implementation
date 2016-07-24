@@ -393,7 +393,7 @@ public class SequenceOperationExpressionImpl
      * negation of the given truth condition.
      */
 	@Override
-    public Map<String, AssignedSource> updateMultiplicity(
+    public Map<String, AssignedSource> adjustAssignments(
             Map<String, AssignedSource> assignmentsMap, boolean condition) {
 	    SequenceOperationExpression self = this.getSelf();
 	    ExtentOrExpression primary = self.getPrimary();
@@ -403,11 +403,11 @@ public class SequenceOperationExpressionImpl
 	    if (expression != null && referent != null) {
 	        if (referent.getImpl().equals(rootScope.getSequenceFunctionIsEmpty()) ||
 	            referent.getImpl().equals(rootScope.getCollectionFunctionIsEmpty())) {
-	            assignmentsMap = expression.getImpl().setMultiplicity(
+	            assignmentsMap = expression.getImpl().adjustMultiplicity(
 	                    assignmentsMap, condition);
 	        } else if (referent.getImpl().equals(rootScope.getSequenceFunctionNotEmpty()) ||
 	                   referent.getImpl().equals(rootScope.getCollectionFunctionNotEmpty())) {
-	            assignmentsMap = expression.getImpl().setMultiplicity(
+	            assignmentsMap = expression.getImpl().adjustMultiplicity(
 	                    assignmentsMap, !condition);
 	        }       
 	    }

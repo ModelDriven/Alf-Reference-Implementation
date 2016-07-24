@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -112,19 +111,45 @@ public class AssignedSource implements ParsedElement {
 		this.getImpl().setLower(lower);
 	}
 
-	public ElementReference getType() {
-		return this.getImpl().getType();
-	}
+    public ElementReference getType() {
+        return this.getImpl().getType();
+    }
 
-	public void setType(ElementReference type) {
-		this.getImpl().setType(type);
-	}
+    public void setType(ElementReference type) {
+        this.getImpl().setType(type);
+    }
+
+    public ElementReference getSubtype() {
+        return this.getImpl().getSubtype();
+    }
+
+    public void setSubtype(ElementReference subtype) {
+        this.getImpl().setSubtype(subtype);
+    }
+
+    public ElementReference getKnownType() {
+        return this.getImpl().getKnownType();
+    }
+
+    public void setKnownType(ElementReference knownType) {
+        this.getImpl().setKnownType(knownType);
+    }
+    
+    /**
+     * If an assigned source has a subtype set, then this is the known type
+     * for the assigned source. Otherwise the type of the assigned source is
+     * also the known type.
+     */
+    public boolean assignedSourceKnownTypeDerivation() {
+        return this.getImpl().assignedSourceKnownTypeDerivation();
+    }
 
 	public void deriveAll() {
 		this.getImpl().deriveAll();
 	}
 
 	public void _deriveAll() {
+	    this.getKnownType();
 		ElementReference type = this.getType();
 		if (type != null) {
 			type.deriveAll();
@@ -138,6 +163,10 @@ public class AssignedSource implements ParsedElement {
 	}
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
+        if (!this.assignedSourceKnownTypeDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "assignedSourceKnownTypeDerivation", this));
+        }
 		ElementReference type = this.getType();
 		if (type != null) {
 			type.checkConstraints(violations);

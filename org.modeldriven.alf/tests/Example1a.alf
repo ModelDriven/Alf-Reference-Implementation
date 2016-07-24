@@ -1,10 +1,10 @@
 activity Quicksort(in list: Integer[0..*] sequence):       
   Integer[0..*] sequence 
 {
-   if (list->isEmpty()) {                                  
+  x = list[1];
+  if (x == null) {                                  
     return null;                                          
   } else {
-    x = list[1]??; 
     list1 = list->excludeAt(1);                                         
     return Quicksort(list1->select a (a < x))->           
            including(x)->
