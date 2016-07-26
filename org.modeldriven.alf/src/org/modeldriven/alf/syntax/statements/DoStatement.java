@@ -65,19 +65,24 @@ public class DoStatement extends Statement {
 	}
 
 	/**
-	 * The assignments before the block of a do statement are the same as the
-	 * assignments before the do statement. The assignments before the condition
-	 * expression of a do statement are the same assignments after the block.
+     * The assignments before the block of a do statement are the same as the
+     * assignments before the do statement, except that any local names with a
+     * multiplicity lower bound of 0 after the condition expression are adjusted
+     * to also have a multiplicity lower bound of 0 before the block. The
+     * assignments before the condition expression of a do statement are the
+     * same assignments after the block.
 	 **/
 	public boolean doStatementAssignmentsBefore() {
 		return this.getImpl().doStatementAssignmentsBefore();
 	}
 
 	/**
-	 * If the assigned source for a name after the condition expression is
-	 * different than before the do statement, then the assigned source of the
-	 * name after the do statement is the do statement. Otherwise it is the same
-	 * as before the do statement.
+     * If the assigned source for a name after the condition expression is
+     * different than before the do statement, then the assigned source of the
+     * name after the do statement is the do statement. Otherwise it is the same
+     * as before the do statement. The assignments after the do statement
+     * are adjusted for known null and non-null names and type classifications
+     * due to the condition expression being false.
 	 **/
 	public boolean doStatementAssignmentsAfter() {
 		return this.getImpl().doStatementAssignmentsAfter();

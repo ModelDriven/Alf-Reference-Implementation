@@ -65,10 +65,14 @@ public class WhileStatement extends Statement {
 	}
 
 	/**
-	 * The assignments before the condition expression of a while statement are
-	 * the same as the assignments before the while statement. The assignments
-	 * before the block of the while statement are the same as the assignments
-	 * after the condition expression.
+     * The assignments before the condition expression of a while statement are
+     * the same as the assignments before the while statement, except that any
+     * local names with a multiplicity lower bound of 0 after the block are
+     * adjusted to also have a multiplicity lower bound of 0 before the
+     * condition expression. The assignments before the block of the while
+     * statement are the same as the assignments after the condition expression,
+     * adjusted for known null and non-null names and type classifications due
+     * to the condition expression being true.
 	 **/
 	public boolean whileStatementAssignmentsBefore() {
 		return this.getImpl().whileStatementAssignmentsBefore();
@@ -76,11 +80,14 @@ public class WhileStatement extends Statement {
 
     /**
      * If the assigned source for a name after the block of a while statement is
-     * different than before the block, then the assigned source of the name
-     * after the while statement is the while statement. Otherwise it is the
-     * same as before the block. If a name is unassigned before the block of a
-     * while statement and assigned after the block, then it has multiplicity
-     * lower bound of 0 after the while statement.
+     * different than before the while statement, then the assigned source of
+     * the name after the while statement is the while statement. Otherwise it
+     * is the same as before the while statement. If a name is unassigned before
+     * the block of a while statement and assigned after the block, then it has
+     * multiplicity lower bound of 0 after the while statement. Otherwise, the
+     * assignments after the while statement are adjusted for known null and non-
+     * null names and type classifications due to the condition expression being
+     * false.
      **/
 	public boolean whileStatementAssignmentsAfter() {
 		return this.getImpl().whileStatementAssignmentsAfter();

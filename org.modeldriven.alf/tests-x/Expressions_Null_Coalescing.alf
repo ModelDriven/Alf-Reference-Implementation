@@ -10,7 +10,7 @@ class Expressions_Null_Coalescing specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 		
-		this.test(a, b, c, d, e, l1, l2, i1, i2, i3, i4, b1, b2, u, v);
+		this.test(a, b, c, d, e, l1, l2, i1, i2, i3, i4, b1, b2, u, v, w);
 		
 		AssertEqual("a", a, 1);
 		AssertEqual("b", b, 1);
@@ -31,6 +31,7 @@ class Expressions_Null_Coalescing specializes Test {
 		
 		AssertTrue("u hastype C", u hastype C);
 		AssertTrue("v hastype C", v hastype C);
+		AssertTrue("w hastype C", w hastype C);
 		
 		this.done();
 	}
@@ -49,7 +50,7 @@ class Expressions_Null_Coalescing specializes Test {
 		out a: Integer[0..1], out b: Integer[0..1], out c: Integer[0..1], out d: Integer, out e: any, 
 		out l1: Integer[] sequence, out l2: Integer[] sequence,
 		out i1: Integer[0..1], out i2: Integer[0..1], out i3: Integer[0..1], out i4: Integer[0..1],
-		out b1: Boolean, out b2: Boolean, out u: C, out v: C) {
+		out b1: Boolean, out b2: Boolean, out u: C, out v: C, out w: C) {
 		
 		a = null ?? 1;
 		b = B(1);
@@ -101,5 +102,18 @@ class Expressions_Null_Coalescing specializes Test {
 		
 		v1 = new C();
 		v = v1;
+		
+		v1 = null;
+		do {
+		  v1 = new D();
+		} while (v1 == null || !(v1 instanceof D));
+		
+		w = (D) v1;
+		w = new C();
+		
+		while (w != null && w instanceof D) {
+		  w = (D) w;
+		}
+		
 	}
 }

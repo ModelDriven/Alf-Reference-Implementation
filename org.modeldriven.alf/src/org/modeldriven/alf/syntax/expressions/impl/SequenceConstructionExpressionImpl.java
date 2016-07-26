@@ -245,7 +245,7 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	    SequenceConstructionExpression self = this.getSelf();
 	    SequenceElements elements = self.getElements();
 	    SequenceConstructionExpression argument = 
-	        new SequenceConstructionExpression(elements);
+	        new SequenceConstructionExpression(elements == null? self: elements);
 	    argument.setElements(elements);
 	    argument.setHasMultiplicity(true);
 

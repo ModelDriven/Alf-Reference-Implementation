@@ -89,6 +89,13 @@ public class NameExpressionImpl extends ExpressionImpl {
 		}
 	}
 	
+	// Force recomputation of assignment if assignments before change.
+	@Override
+    public void afterSetAssignmentBefore() {
+        super.afterSetAssignmentBefore();
+        this.getSelf().setAssignment(null);
+    }
+
 	/**
 	 * If the source of a local name is a For Statement, it must be a @parallel
 	 * local name and it is only legal if this name expression is the target of

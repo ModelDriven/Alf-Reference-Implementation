@@ -133,11 +133,13 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
                 assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
                 for (AssignedSource assignment: newAssignments) {
                     String name = assignment.getName();
-                    AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(assignment);
-                    newAssignment.setSource(self);
-                    if (!assignmentsBefore.containsKey(name)) {
+                    AssignedSource oldAssignment = assignmentsAfter.get(name);
+                    AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(
+                            oldAssignment == null? assignment: oldAssignment);
+                    if (oldAssignment == null || assignment.getLower() == 0) {
                         newAssignment.setLower(0);
                     }
+                    newAssignment.setSource(self);
                     assignmentsAfter.put(name, newAssignment);
                 }
             }
@@ -194,7 +196,7 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
 	        BooleanLiteralExpression literalExpression = 
 	            new BooleanLiteralExpression();
 	        literalExpression.setImage(isAnd? "false": "true");
-	        literalExpression.getImpl().setAssignmentAfter(
+	        literalExpression.getImpl().setAssignmentBefore(
 	                operand1.getImpl().getAssignmentAfterMap());
 
 	        this.conditionalTestExpression = new ConditionalTestExpression();
@@ -206,6 +208,7 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
 	            this.conditionalTestExpression.setOperand2(literalExpression);
 	            this.conditionalTestExpression.setOperand3(self.getOperand2());
 	        }
+	        
 	    }
         return this.conditionalTestExpression;
 	}

@@ -562,6 +562,8 @@ public class SequenceOperationExpressionImpl
         namedTuple.setInvocation(behaviorInvocationExpression);       
         behaviorInvocationExpression.getImpl().setAssignmentBefore(
                 this.getAssignmentBeforeMap());
+        behaviorInvocationExpression.getImpl().setCurrentScope(
+                this.getCurrentScope());
         
         return behaviorInvocationExpression;
     }

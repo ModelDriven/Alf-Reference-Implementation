@@ -25,7 +25,7 @@ import java.util.Map;
  * variables on each iteration.
  **/
 
-public class ForStatementImpl extends LoopStatementImpl {
+public class ForStatementImpl extends StatementImpl {
 
 	private Block body = null;
 	private List<LoopVariableDefinition> variableDefinition = new ArrayList<LoopVariableDefinition>();
@@ -153,7 +153,7 @@ public class ForStatementImpl extends LoopStatementImpl {
 	            String name = newAssignment.getName();
                 AssignedSource assignment = AssignedSourceImpl.makeAssignment(newAssignment);
                 assignment.setSource(self);
-	            if (!(assignmentsBefore.containsKey(name) || this.isParameter(name))) {
+	            if (!assignmentsBefore.containsKey(name)) {
 	                assignment.setLower(0);
 	            }
                 assignmentsAfter.put(name, assignment);

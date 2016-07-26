@@ -26,7 +26,7 @@ import java.util.Map;
  * before the first iteration.
  **/
 
-public class WhileStatementImpl extends LoopStatementImpl {
+public class WhileStatementImpl extends StatementImpl {
 
 	private Block body = null;
 	private Expression condition = null;
@@ -64,59 +64,96 @@ public class WhileStatementImpl extends LoopStatementImpl {
     
     /**
      * The assignments before the condition expression of a while statement are
-     * the same as the assignments before the while statement. The assignments
-     * before the block of the while statement are the same as the assignments
-     * after the condition expression.
+     * the same as the assignments before the while statement, except that any
+     * local names with a multiplicity lower bound of 0 after the block are
+     * adjusted to also have a multiplicity lower bound of 0 before the
+     * condition expression. The assignments before the block of the while
+     * statement are the same as the assignments after the condition expression,
+     * adjusted for known null and non-null names and type classifications due
+     * to the condition expression being true.
      *
      * If the assigned source for a name after the block of a while statement is
      * different than before the while statement, then the assigned source of
      * the name after the while statement is the while statement. Otherwise it
      * is the same as before the while statement. If a name is unassigned before
      * the block of a while statement and assigned after the block, then it has
-     * multiplicity lower bound of 0 after the while statement.
+     * multiplicity lower bound of 0 after the while statement. Otherwise, the
+     * assignments after the while statement are adjusted for known null and non-
+     * null names and type classifications due to the condition expression being
+     * false.
      **/
     @Override
     public Map<String, AssignedSource> deriveAssignmentAfter() {
+        Map<String, AssignedSource> assignmentsBefore = 
+                new HashMap<String, AssignedSource>(this.getAssignmentBeforeMap());
+        Map<String, AssignedSource> assignmentsAfter = 
+                new HashMap<String,AssignedSource>(assignmentsBefore);
+        if (this.computeAssignmentsAfter(assignmentsBefore, assignmentsAfter)) {
+            assignmentsAfter = new HashMap<String,AssignedSource>(assignmentsBefore);
+            this.computeAssignmentsAfter(assignmentsBefore, assignmentsAfter);
+        }
+        
+        Expression condition = this.getSelf().getCondition();
+        if (condition != null) {
+            condition.getImpl().adjustAssignments(assignmentsAfter, false);
+        }
+        
+        return assignmentsAfter;
+    }
+    
+    protected boolean computeAssignmentsAfter(
+            Map<String, AssignedSource> assignmentsBefore, 
+            Map<String, AssignedSource> assignmentsAfter) {
         WhileStatement self = this.getSelf();
         Expression condition = self.getCondition();
         Block body = self.getBody();
-        Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
-        Map<String, AssignedSource> assignmentsAfter = assignmentsBefore;
+        boolean recompute = false;
         if (condition != null) {
             condition.getImpl().setAssignmentBefore(assignmentsBefore);        
             Map<String, AssignedSource> assignmentsAfterCondition = 
-                    condition.getImpl().getAssignmentAfterMap();
+                    condition.getImpl().adjustAssignments(
+                            new HashMap<String, AssignedSource>(condition.getImpl().getAssignmentAfterMap()),
+                            true);
             Collection<AssignedSource> newAssignments = condition.getImpl().getNewAssignments();
             if (body != null) {
                 body.getImpl().setAssignmentBefore(assignmentsAfterCondition);
                 newAssignments.addAll(body.getImpl().getNewAssignments());
             }
             if (!newAssignments.isEmpty()) {
-                assignmentsAfter = new HashMap<String,AssignedSource>(assignmentsBefore);
                 for (AssignedSource assignment: newAssignments) {
-                    AssignedSource assignmentAfter = AssignedSourceImpl.makeAssignment(assignment);
-                    assignmentAfter.setSource(self);
                     String name = assignment.getName();
-                    if (!(assignmentsAfterCondition.containsKey(name) || this.isParameter(name))) {
-                        assignmentAfter.setLower(0);
+                    AssignedSource oldAssignment = assignmentsAfterCondition.get(name);
+                    AssignedSource newAssignment = AssignedSourceImpl.makeAssignment(
+                            oldAssignment == null? assignment: oldAssignment);
+                    newAssignment.setSource(self);
+                    if (oldAssignment == null) {
+                        newAssignment.setLower(0);
+                    } else if (oldAssignment.getLower() > 0 && assignment.getLower() == 0) {
+                        newAssignment.setLower(0);
+                        assignmentsBefore.put(name, newAssignment);
+                        recompute = true;
                     }
-                    assignmentsAfter.put(name, assignmentAfter);
+                    assignmentsAfter.put(name, newAssignment);
                 }
             }
         }
-        return assignmentsAfter;
+        return recompute;
     }
     
     /*
      * Constraints
      */
     
-	/**
-	 * The assignments before the condition expression of a while statement are
-	 * the same as the assignments before the while statement. The assignments
-	 * before the block of the while statement are the same as the assignments
-	 * after the condition expression.
-	 **/
+    /**
+     * The assignments before the condition expression of a while statement are
+     * the same as the assignments before the while statement, except that any
+     * local names with a multiplicity lower bound of 0 after the block are
+     * adjusted to also have a multiplicity lower bound of 0 before the
+     * condition expression. The assignments before the block of the while
+     * statement are the same as the assignments after the condition expression,
+     * adjusted for known null and non-null names and type classifications due
+     * to the condition expression being true.
+     **/
 	public boolean whileStatementAssignmentsBefore() {
 	    // Note: This is handled by deriveAssignmentAfter.
 		return true;
@@ -124,11 +161,14 @@ public class WhileStatementImpl extends LoopStatementImpl {
 
 	/**
      * If the assigned source for a name after the block of a while statement is
-     * different than before the block, then the assigned source of the name
-     * after the while statement is the while statement. Otherwise it is the
-     * same as before the block. If a name is unassigned before the block of a
-     * while statement and assigned after the block, then it has multiplicity
-     * lower bound of 0 after the while statement.
+     * different than before the while statement, then the assigned source of
+     * the name after the while statement is the while statement. Otherwise it
+     * is the same as before the while statement. If a name is unassigned before
+     * the block of a while statement and assigned after the block, then it has
+     * multiplicity lower bound of 0 after the while statement. Otherwise, the
+     * assignments after the while statement are adjusted for known null and non-
+     * null names and type classifications due to the condition expression being
+     * false.
 	 **/
 	public boolean whileStatementAssignmentsAfter() {
 	    // Note: This is handled by overriding deriveAssignmentAfter.

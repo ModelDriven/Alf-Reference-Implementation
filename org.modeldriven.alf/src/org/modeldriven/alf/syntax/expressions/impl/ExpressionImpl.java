@@ -65,18 +65,35 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
     }
 
     public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
-        if (this.assignmentBefore == null) {
-            this.assignmentBefore = new HashMap<String, AssignedSource>();
+        if (assignmentBefore == null) {
+            this.assignmentBefore = null;
         } else {
-            this.assignmentBefore.clear();
+            if (this.assignmentBefore == null) {
+                this.assignmentBefore = new HashMap<String, AssignedSource>();
+            } else {
+                this.assignmentBefore.clear();
+            }
+            for (AssignedSource assignment: assignmentBefore) {
+                this.addAssignmentBefore(assignment);
+            }
         }
-        for (AssignedSource assignment: assignmentBefore) {
-            this.addAssignmentBefore(assignment);
-        }
+        
+        this.afterSetAssignmentBefore();
     }
     
     public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
         this.assignmentBefore = assignmentBefore;
+        this.afterSetAssignmentBefore();
+    }
+    
+    /**
+     * Derived values to be recomputed after assignmentBefore is set.
+     */
+    protected void afterSetAssignmentBefore() {
+        Expression self = this.getSelf();        
+        self.setAssignmentAfter(null);
+        self.setLower(null);
+        self.setUpper(null);        
     }
 
     public void addAssignmentBefore(AssignedSource assignmentBefore) {
@@ -99,13 +116,17 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
     }
 
     public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
-        if (this.assignmentAfter == null) {
-            this.assignmentAfter = new HashMap<String, AssignedSource>();
+        if (assignmentAfter == null) {
+            this.assignmentAfter = null;
         } else {
-            this.assignmentAfter.clear();
-        }
-        for (AssignedSource assignment: assignmentAfter) {
-            this.addAssignmentAfter(assignment);
+            if (this.assignmentAfter == null) {
+                this.assignmentAfter = new HashMap<String, AssignedSource>();
+            } else {
+                this.assignmentAfter.clear();
+            }
+            for (AssignedSource assignment: assignmentAfter) {
+                this.addAssignmentAfter(assignment);
+            }
         }
     }
 

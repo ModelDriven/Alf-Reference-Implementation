@@ -136,7 +136,7 @@ package Utility {
       }
     } while (year->isEmpty() || year < 2000 || year > 2099);
     
-    return new MonthYear(year ?? 2000, month ?? 1);
+    return new MonthYear(year, month);
   }
   
   public activity Write(in data: any) {

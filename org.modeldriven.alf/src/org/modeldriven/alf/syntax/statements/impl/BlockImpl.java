@@ -75,14 +75,28 @@ public class BlockImpl extends SyntaxElementImpl {
     }
 
     public void setAssignmentBefore(Collection<AssignedSource> assignmentBefore) {
-        this.setAssignmentBefore(new HashMap<String, AssignedSource>());
-        for (AssignedSource assignment: assignmentBefore) {
-            this.addAssignmentBefore(assignment);
+        if (assignmentBefore == null) {
+            this.assignmentBefore = null;
+        } else {
+            if (this.assignmentBefore == null) {
+                this.assignmentBefore = new HashMap<String, AssignedSource>();
+            } else {
+                this.assignmentBefore.clear();
+            }            
+            for (AssignedSource assignment: assignmentBefore) {
+                this.addAssignmentBefore(assignment);
+            }
         }
+        
+        // Force recomputation of assignments after if assignments before change.
+        this.assignmentAfter = null;
     }
     
     public void setAssignmentBefore(Map<String, AssignedSource> assignmentBefore) {
         this.assignmentBefore = assignmentBefore;
+        
+        // Force recomputation of assignments after if assignments before change.
+        this.assignmentAfter = null;
     }
 
     public void addAssignmentBefore(AssignedSource assignmentBefore) {
@@ -107,9 +121,17 @@ public class BlockImpl extends SyntaxElementImpl {
     }
 
     public void setAssignmentAfter(Collection<AssignedSource> assignmentAfter) {
-        this.assignmentAfter.clear();
-        for (AssignedSource assignment: assignmentAfter) {
-            this.addAssignmentBefore(assignment);
+        if (assignmentAfter == null) {
+            this.assignmentAfter = null;
+        } else {
+            if (this.assignmentAfter == null) {
+                this.assignmentAfter = new HashMap<String, AssignedSource>();
+            } else {
+                this.assignmentAfter.clear();
+            }            
+            for (AssignedSource assignment: assignmentAfter) {
+                this.addAssignmentAfter(assignment);
+            }
         }
     }
 
