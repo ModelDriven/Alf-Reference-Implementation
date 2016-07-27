@@ -7,7 +7,7 @@ abstract class MapImpl {
 
   protected datatype EntryImpl {
     public key: any;
-    public value: any;
+    public value: any[0..1];
   }
 
   private entries: EntryImpl[0..*];
@@ -45,7 +45,7 @@ abstract class MapImpl {
   }
 
   protected includesValueImpl (in value: any[0..1]): Boolean { 
-    return this.entries.value->Includes(value);
+    return this.entries->exists e (e.value == value);
   }
 
   protected isEmptyImpl (): Boolean { 
@@ -81,7 +81,7 @@ abstract class MapImpl {
   }
 
   protected sizeImpl (): Integer { 
-    this.entries->Size();
+    return this.entries->Size();
   }
 
   protected valuesImpl (): any[0..*] nonunique { 

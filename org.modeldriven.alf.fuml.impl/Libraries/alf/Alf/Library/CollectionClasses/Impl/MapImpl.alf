@@ -81,7 +81,7 @@ abstract class MapImpl {
   }
 
   protected sizeImpl (): Integer { 
-    this.entries->Size();
+    return this.entries->Size();
   }
 
   protected valuesImpl (): any[0..*] nonunique { 
