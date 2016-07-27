@@ -145,59 +145,59 @@ public abstract class Alf extends AlfBase {
         if (unit != null) {
             try {
                 NamespaceDefinition definition = unit.getDefinition();
-                Member stub = definition.getImpl().getStub();
-                if (stub != null) {
-                    definition = (NamespaceDefinition)stub;
-                }
                 Mapping elementMapping = definition.getImpl().getMapping();
-                Element element = ((FumlMapping)elementMapping).getElement();
-                
-                if (element instanceof Behavior) {
-                    Behavior behavior = (Behavior)element;
-                    if (!behavior.getOwnedParameter().isEmpty()) {
-                        this.println("Cannot execute a behavior with parameters.");                        
-                    } else {
-                        this.printVerbose("Executing...");
-                        this.getLocus().getExecutor().execute(behavior, null);
-                        return unit;
-                    }
-                } else if (element instanceof Class_) { 
-                    Class_ class_ = (Class_)element;
-                    if (class_.getIsAbstract()) {
-                        this.println("Cannot instantiate an abstract class.");
-                    } else {
-                        ClassDefinition classDefinition = 
-                                (ClassDefinition)definition;
-                        OperationDefinition constructorDefinition = 
-                                classDefinition.getImpl().getDefaultConstructor();
-                        if (constructorDefinition == null) {
-                            this.println("Class does not have a default constructor.");
-                        } else {
-                            Locus locus = this.getLocus();
-                            
-                            // Instantiate the class.
-                            this.printVerbose("Instantiating...");
-                            Object_ object = locus.instantiate(class_);
+                if (elementMapping == null) {
+                    this.println(definition.getName() + " is unmapped.");
+                } else {
+                    Element element = ((FumlMapping)elementMapping).getElement();
 
-                            // Execute the default constructor.
-                            Operation constructor = 
-                                    ((OperationDefinitionMapping)constructorDefinition.getImpl().getMapping()).
-                                        getOperation();
-                            locus.getExecutor().execute(
-                                    ((Behavior)constructor.getMethod().get(0)), 
-                                    object);
-                            
-                            if (class_.getIsActive() && class_.getClassifierBehavior() !=null ) {
-                                // Execute the classifier behavior.
-                                this.printVerbose("Executing...");
-                                object.startBehavior(class_);
-                            }
-    
+                    if (element instanceof Behavior) {
+                        Behavior behavior = (Behavior)element;
+                        if (!behavior.getOwnedParameter().isEmpty()) {
+                            this.println("Cannot execute a behavior with parameters.");                        
+                        } else {
+                            this.printVerbose("Executing...");
+                            this.getLocus().getExecutor().execute(behavior, null);
                             return unit;
                         }
+                    } else if (element instanceof Class_) { 
+                        Class_ class_ = (Class_)element;
+                        if (class_.getIsAbstract()) {
+                            this.println("Cannot instantiate an abstract class.");
+                        } else {
+                            ClassDefinition classDefinition = 
+                                    (ClassDefinition)definition;
+                            OperationDefinition constructorDefinition = 
+                                    classDefinition.getImpl().getDefaultConstructor();
+                            if (constructorDefinition == null) {
+                                this.println("Class does not have a default constructor.");
+                            } else {
+                                Locus locus = this.getLocus();
+
+                                // Instantiate the class.
+                                this.printVerbose("Instantiating...");
+                                Object_ object = locus.instantiate(class_);
+
+                                // Execute the default constructor.
+                                Operation constructor = 
+                                        ((OperationDefinitionMapping)constructorDefinition.getImpl().getMapping()).
+                                        getOperation();
+                                locus.getExecutor().execute(
+                                        ((Behavior)constructor.getMethod().get(0)), 
+                                        object);
+
+                                if (class_.getIsActive() && class_.getClassifierBehavior() !=null ) {
+                                    // Execute the classifier behavior.
+                                    this.printVerbose("Executing...");
+                                    object.startBehavior(class_);
+                                }
+
+                                return unit;
+                            }
+                        }
+                    } else {
+                        println("Unit is not executable.");
                     }
-                } else {
-                    println("Unit is not executable.");
                 }
             } catch (MappingError e) {
                 this.println("Mapping failed.");
