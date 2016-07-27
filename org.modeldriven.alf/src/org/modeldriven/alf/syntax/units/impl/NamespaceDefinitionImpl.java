@@ -13,6 +13,7 @@ package org.modeldriven.alf.syntax.units.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
@@ -576,6 +577,13 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                 return parameter;
             }
         }
+        return null;
+    }
+    
+    /**
+     * Overridden for activity and operation definitions, which have effective bodies.
+     */
+    public Block getEffectiveBody() {
         return null;
     }
 

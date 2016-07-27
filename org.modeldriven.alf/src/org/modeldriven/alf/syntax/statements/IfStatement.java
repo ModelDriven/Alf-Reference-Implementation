@@ -147,6 +147,14 @@ public class IfStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+    /**
+     * An if statement has a return value if the bodies of all its clauses
+     * have return values, and it either has a final clause or is assured.
+     */
+    public Boolean hasReturnValue() {
+        return this.getImpl().hasReturnValue();
+    }
+
 	public void _deriveAll() {
 		this.getIsAssured();
 		this.getIsDeterminate();

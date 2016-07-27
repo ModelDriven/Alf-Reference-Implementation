@@ -89,6 +89,14 @@ public class ReturnStatement extends Statement {
 		return this.getImpl().returnStatementAssignmentsAfter();
 	}
 
+    /**
+     * A return statement has a return value if it has an expression with a
+     * multiplicity upper bound greater than 0.
+     */
+    public Boolean hasReturnValue() {
+        return this.getImpl().hasReturnValue();
+    }
+
 	public void _deriveAll() {
 		this.getBehavior();
 		super._deriveAll();

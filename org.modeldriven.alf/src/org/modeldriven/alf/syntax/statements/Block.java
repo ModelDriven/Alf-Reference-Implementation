@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -108,6 +107,13 @@ public class Block extends SyntaxElement {
 	public boolean blockAssignmentAfterDerivation() {
 		return this.getImpl().blockAssignmentAfterDerivation();
 	}
+
+    /**
+     * A block has a return value if any of its statements has a return value.
+     */
+    public boolean hasReturnValue() {
+        return this.getImpl().hasReturnValue();
+    }
 
 	public void _deriveAll() {
 		this.getAssignmentAfter();

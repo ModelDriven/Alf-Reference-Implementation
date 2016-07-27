@@ -229,6 +229,26 @@ public class IfStatementImpl extends StatementImpl {
 		             annotation.getArgument().isEmpty();
 	} // annotationAllowed
 	
+    /**
+     * An if statement has a return value if the bodies of all its clauses
+     * have return values, and it either has a final clause or is assured.
+     */
+	@Override
+    public Boolean hasReturnValue() {
+        IfStatement self = this.getSelf();
+        for (ConcurrentClauses clauses: self.getNonFinalClauses()) {
+            for (NonFinalClause clause: clauses.getClause()) {
+                Block body = clause.getBody();
+                if (body != null && !body.hasReturnValue()) {
+                    return false;
+                }
+            }
+        }
+        Block finalClause = self.getFinalClause();
+        return finalClause == null? self.getIsAssured():
+               finalClause.hasReturnValue();            
+    }
+
 	public void setCurrentScope(NamespaceDefinition currentScope) {
 	    IfStatement self = this.getSelf();
 	    for (ConcurrentClauses clause: self.getNonFinalClauses()) {

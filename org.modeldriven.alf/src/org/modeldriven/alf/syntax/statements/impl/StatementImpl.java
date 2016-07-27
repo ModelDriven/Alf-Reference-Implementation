@@ -240,6 +240,15 @@ public abstract class StatementImpl extends DocumentedElementImpl {
 		            annotation.getArgument().size() == 0;
 	} // annotationAllowed
 	
+    /**
+     * Returns true if this statement is assured to generate a return with
+     * a non-null value. By default, a statement does generate have a return
+     * value.
+     */
+    public Boolean hasReturnValue() {
+        return false;
+    }
+
     public boolean hasAnnotation(String name) {
         for (Annotation annotation: this.getSelf().getAnnotation()) {
             if (annotation.getIdentifier().equals(name)) {

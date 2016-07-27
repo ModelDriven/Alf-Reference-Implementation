@@ -127,6 +127,15 @@ public class ReturnStatementImpl extends StatementImpl {
 	 * Helper Methods
 	 */
 
+    /**
+     * A return statement has a return value if it has an expression with a
+     * multiplicity upper bound greater than 0.
+     */
+    public Boolean hasReturnValue() {
+        Expression expression = this.getSelf().getExpression();
+        return expression != null && expression.getLower() > 0;
+    }
+
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
         ReturnStatement self = this.getSelf();

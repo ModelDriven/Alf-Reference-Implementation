@@ -167,6 +167,15 @@ public class AcceptStatement extends Statement {
 	public boolean acceptStatementEnclosedStatements() {
 		return this.getImpl().acceptStatementEnclosedStatements();
 	}
+	
+	/**
+	 * An accept statement has a return value if all of its accept clauses
+	 * have return values.
+	 */
+	@Override
+	public Boolean hasReturnValue() {
+	    return this.getImpl().hasReturnValue();
+	}
 
 	public void _deriveAll() {
 		this.getBehavior();

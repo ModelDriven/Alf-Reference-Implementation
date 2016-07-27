@@ -196,14 +196,24 @@ public class OperationDefinition extends NamespaceDefinition {
 	}
 
     /**
-     * There are no assignments before the effective body of an operation
-     * definition.
+     * The assignments before the effective body of an operation definition
+     * include an assignment for each "in" or "inout" formal parameter of the
+     * operation definition, with the formal parameter as the assigned source.
      */
     public boolean operationDefinitionEffectiveBodyAssignmentsBefore() {
         return this.getImpl().operationDefinitionEffectiveBodyAssignmentsBefore();
     }
 
     /**
+     * If an operation definition that is not a constructor or destructor has a
+     * return parameter with a multiplicity lower bound greater than 0, then the
+     * effective body of the operation definition must have a return value.
+     */
+    public boolean operationDefinitionReturn() {
+        return this.getImpl().operationDefinitionReturn();
+    }
+    
+   /**
      * If an operation definition is a stub, then its effective body is the body
      * of the corresponding subunit. Otherwise, the effective body is the same
      * as the body of the operation definition.
@@ -318,6 +328,10 @@ public class OperationDefinition extends NamespaceDefinition {
         if (!this.operationDefinitionEffectiveBodyAssignmentsBefore()) {
             violations.add(new ConstraintViolation(
                     "operationDefinitionEffectiveBodyAssignmentsBefore", this));
+        }
+        if (!this.operationDefinitionReturn()) {
+            violations.add(new ConstraintViolation(
+                    "operationDefinitionReturn", this));
         }
         if (!this.operationDefinitionEffectiveBodyDerivation()) {
             violations.add(new ConstraintViolation(

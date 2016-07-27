@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -109,6 +108,14 @@ public class BlockStatement extends Statement {
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
+	}
+	
+	/**
+	 * A block statement has a return value if its block has a return value.
+	 */
+	@Override
+	public Boolean hasReturnValue() {
+	    return this.getImpl().hasReturnValue();
 	}
 
 	public void _deriveAll() {

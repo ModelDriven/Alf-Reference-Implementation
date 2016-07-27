@@ -109,12 +109,27 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	}
 	
     /**
-     * There are no assignments before the effective body of an activity
-     * definition.
+     * The assignments before the effective body of an activity definition
+     * include an assignment for each "in" or "inout" formal parameter of the
+     * activity definition, with the formal parameter as the assigned source.
      */
     public boolean activityDefinitionEffectiveBodyAssignmentsBefore() {
-        // This is true by default.
+        // This handled by BlockImpl::deriveAssignmentsAfter.
         return true;
+    }
+    
+    /**
+     * If an activity definition is not primitive and has a return parameter
+     * with a multiplicity lower bound greater than 0, then the effective body
+     * of the activity definition must have a return value.
+     */
+    public boolean activityDefinitionReturn() {
+        ActivityDefinition self = this.getSelf();
+        ElementReference returnParameter = this.getReturnParameter();
+        Block body = self.getEffectiveBody();
+        return self.getIsPrimitive() || returnParameter == null || 
+               returnParameter.getImpl().getLower() == 0 ||
+               body == null || body.hasReturnValue();
     }
 
 	/*

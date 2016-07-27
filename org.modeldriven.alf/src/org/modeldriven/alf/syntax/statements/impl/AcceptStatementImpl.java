@@ -292,6 +292,21 @@ public class AcceptStatementImpl extends StatementImpl {
 	 * Helper Methods
 	 */
 
+    /**
+     * An accept statement has a return value if all of its accept clauses
+     * have return values.
+     */
+    @Override
+    public Boolean hasReturnValue() {
+        for (AcceptBlock acceptBlock: this.getSelf().getAcceptBlock()) {
+            Block block = acceptBlock.getBlock();
+            if (block != null && !block.hasReturnValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 	/**
 	 * If the behavior for this accept statement is a subunit, then return the
 	 * corresponding stub. Note that, if the original behavior is an Alf

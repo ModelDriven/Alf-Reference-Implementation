@@ -280,6 +280,24 @@ public class SwitchStatementImpl extends StatementImpl {
 		            annotation.getArgument().isEmpty();
 	} // annotationAllowed
 	
+    /**
+     * A switch statement has a return value if the blocks of all its clauses
+     * have return values, and it either as a default clause or is assured.
+     */
+    @Override
+    public Boolean hasReturnValue() {
+        SwitchStatement self = this.getSelf();
+        for (SwitchClause clause: self.getNonDefaultClause()) {
+                Block block = clause.getBlock();
+                if (block != null && !block.hasReturnValue()) {
+                    return false;
+                }
+        }
+        Block defaultClause = self.getDefaultClause();
+        return defaultClause == null? self.getIsAssured():
+               defaultClause.hasReturnValue();            
+    }
+
 	@Override
 	public void setCurrentScope(NamespaceDefinition currentScope) {
         SwitchStatement self = this.getSelf();

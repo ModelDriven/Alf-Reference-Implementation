@@ -56,7 +56,17 @@ public class FormalParameter extends TypedElementDefinition {
 		this.getImpl().setDirection(direction);
 	}
 
-	/**
+    /**
+     * If a formal parameter has direction "out" and a multiplicity lower bound
+     * greater than 0, and its owning activity or operation definition has an
+     * effective body, then there must be an assignment for the formal parameter
+     * after the effective body that has a multiplicity greater than 0.
+     */
+    public boolean formalParameterAssignmentAfterBody() {
+        return this.getImpl().formalParameterAssignmentAfterBody();
+    }
+
+        /**
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Parameter.
 	 **/
@@ -77,6 +87,10 @@ public class FormalParameter extends TypedElementDefinition {
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
+        if (!this.formalParameterAssignmentAfterBody()) {
+            violations.add(new ConstraintViolation(
+                    "formalParameterAssignmentAfterBody", this));
+        }
 	}
 
 	public String _toString(boolean includeDerived) {

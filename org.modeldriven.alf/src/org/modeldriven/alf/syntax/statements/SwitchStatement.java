@@ -173,6 +173,15 @@ public class SwitchStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+    /**
+     * A switch statement has a return value if the blocks of all its clauses
+     * have return values, and it either as a default clause or is assured.
+     */
+    @Override
+    public Boolean hasReturnValue() {
+        return this.getImpl().hasReturnValue();
+    }
+    
 	public void _deriveAll() {
 		this.getIsAssured();
 		this.getIsDeterminate();

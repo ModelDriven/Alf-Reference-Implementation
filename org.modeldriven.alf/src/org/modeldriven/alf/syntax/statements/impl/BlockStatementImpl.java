@@ -163,6 +163,15 @@ public class BlockStatementImpl extends StatementImpl {
 		            annotation.getIdentifier().equals("parallel"));
 	} // annotationAllowed
 
+    /**
+     * A block statement has a return value if its block has a return value.
+     */
+    @Override
+    public Boolean hasReturnValue() {
+        Block block = this.getSelf().getBlock();
+        return block == null || block.hasReturnValue();
+    }
+
     @Override
     public void setCurrentScope(NamespaceDefinition currentScope) {
         Block block = this.getSelf().getBlock();

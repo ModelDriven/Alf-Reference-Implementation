@@ -80,13 +80,23 @@ public class ActivityDefinition extends ClassifierDefinition {
 	}
 
     /**
-     * There are no assignments before the effective body of an activity
-     * definition.
+     * The assignments before the effective body of an activity definition
+     * include an assignment for each "in" or "inout" formal parameter of the
+     * activity definition, with the formal parameter as the assigned source.
      */
     public boolean activityDefinitionEffectiveBodyAssignmentsBefore() {
         return this.getImpl().activityDefinitionEffectiveBodyAssignmentsBefore();
     }
 
+    /**
+     * If an activity definition has a return parameter with a multiplicity
+     * lower bound greater than 0, then the effective body of the activity
+     * definition must have a return value.
+     */
+    public boolean activityDefinitionReturn() {
+        return this.getImpl().activityDefinitionReturn();
+    }
+    
     /**
      * If an activity definition is a stub, then its effective body is the body
      * of the corresponding subunit. Otherwise, the effective body is the same
@@ -144,6 +154,10 @@ public class ActivityDefinition extends ClassifierDefinition {
         if (!this.activityDefinitionEffectiveBodyAssignmentsBefore()) {
             violations.add(new ConstraintViolation(
                     "activityDefinitionEffectiveBodyAssignmentsBefore", this));
+        }
+        if (!this.activityDefinitionReturn()) {
+            violations.add(new ConstraintViolation(
+                    "activityDefinitionReturn", this));
         }
         if (!this.activityDefinitionEffectiveBodyDerivation()) {
             violations.add(new ConstraintViolation(

@@ -106,6 +106,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 		this.isDestructor = isDestructor;
 	}
 
+	@Override
     public Block getEffectiveBody() {
         if (this.effectiveBody == null) {
             this.setEffectiveBody(this.deriveEffectiveBody());
@@ -303,11 +304,28 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	}
 	
     /**
-     * There are no assignments before the effective body of an operation
-     * definition.
+     * The assignments before the effective body of an operation definition
+     * include an assignment for each "in" or "inout" formal parameter of the
+     * operation definition, with the formal parameter as the assigned source.
      */
     public boolean operationDefinitionEffectiveBodyAssignmentsBefore() {
+        // This handled by BlockImpl::deriveAssignmentsAfter.
         return true;
+    }
+    
+    /**
+     * If an operation definition that is not a constructor or destructor has a
+     * return parameter with a multiplicity lower bound greater than 0, then the
+     * effective body of the operation definition must have a return value.
+     */
+    public boolean operationDefinitionReturn() {
+        OperationDefinition self = this.getSelf();
+        ElementReference returnParameter = this.getReturnParameter();
+        Block body = self.getEffectiveBody();
+        return self.getIsConstructor() || self.getIsDestructor() ||
+               returnParameter == null || 
+               returnParameter.getImpl().getLower() == 0 ||
+               body == null || body.hasReturnValue();
     }
 
     /**

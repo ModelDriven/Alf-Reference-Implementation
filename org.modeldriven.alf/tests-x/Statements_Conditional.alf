@@ -44,7 +44,7 @@ class Statements_Conditional specializes Test {
     //**************************************************************************
 
     test(out reading1 : Integer, 
-    	 out condition1: Condition, out condition2: Condition, out condition3: Condition,
+    	 out condition1: Condition[0..1], out condition2: Condition, out condition3: Condition,
     	 out year: Integer, out month: Integer, out numDays: Integer,
     	 out switch1: Integer, out switch2: Integer, out switch3: Integer,
     	 out empty: Integer[0..1], out nonEmpty: Integer[0..1] ) {

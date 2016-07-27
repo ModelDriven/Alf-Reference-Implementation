@@ -2,11 +2,11 @@ namespace FoundationalModelLibrary::BasicInputOutput;
 
 abstract class TextInputChannel specializes InputChannel {
 
-  public readCharacter(out errorStatus: Status[0..1]): String[0..1] { }
-  public peekCharacter(out errorStatus: Status[0..1]): String[0..1] { }
-  public readLine(out errorStatus: Status[0..1]): String { }
-  public readInteger(out errorStatus: Status[0..1]): Integer[0..1] { }
-  public readBoolean(out errorStatus: Status[0..1]): Boolean[0..1] { }
-  public readUnlimitedNatural(out errorStatus: Status[0..1]): UnlimitedNatural[0..1] { }
+  public abstract readCharacter(out errorStatus: Status[0..1]): String[0..1];
+  public abstract peekCharacter(out errorStatus: Status[0..1]): String[0..1];
+  public abstract readLine(out errorStatus: Status[0..1]): String;
+  public abstract readInteger(out errorStatus: Status[0..1]): Integer[0..1];
+  public abstract readBoolean(out errorStatus: Status[0..1]): Boolean[0..1];
+  public abstract readUnlimitedNatural(out errorStatus: Status[0..1]): UnlimitedNatural[0..1];
 
 }

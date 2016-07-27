@@ -10,9 +10,11 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
+import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
 
 import java.util.List;
@@ -41,11 +43,39 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
     public void setDirection(String direction) {
         this.direction = direction;
     }
+    
+    /*
+     * Constraints
+     */
+    
+    /**
+     * If a formal parameter has direction "out" and a multiplicity lower bound
+     * greater than 0, and its owning activity or operation definition has an
+     * effective body, then there must be an assignment for the formal parameter
+     * after the effective body that has a multiplicity greater than 0.
+     */
+    public boolean formalParameterAssignmentAfterBody() {
+        FormalParameter self = this.getSelf();
+        NamespaceDefinition namespace = self.getNamespace();
+        if (namespace != null) {
+            Block body = namespace.getImpl().getEffectiveBody();
+            if (body != null) {
+                if ("out".equals(self.getDirection()) && self.getLower() > 0) {
+                    AssignedSource assignment = 
+                            body.getImpl().getAssignmentAfter(self.getName());
+                    if (assignment == null || assignment.getLower() == 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
 	/*
 	 * Helper Methods
 	 */
-
+    
 	/**
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Parameter.

@@ -130,6 +130,15 @@ public abstract class Statement extends DocumentedElement {
 	public Boolean annotationAllowed(Annotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
 	}
+	
+	/**
+     * Returns true if this statement is assured to generate a return with
+     * a non-null value. By default, a statement does generate have a return
+     * value.
+	 */
+	public Boolean hasReturnValue() {
+	    return this.getImpl().hasReturnValue();
+	}
 
 	public void _deriveAll() {
 		this.getAssignmentBefore();

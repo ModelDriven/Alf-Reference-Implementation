@@ -493,7 +493,7 @@ If the assigned source for a name after the condition expression is different th
  
 doStatementAssignmentsBefore
 
-The assignments before the block of a do statement are the same as the assignments before the do statement. The assignments before the condition expression of a do statement are the same assignments after the block.
+The assignments before the block of a do statement are the same as the assignments before the do statement, except that any local names with a multiplicity lower bound of 0 after the condition expression are adjusted to also have a multiplicity lower bound of 0 before the block. The assignments before the condition expression of a do statement are the same assignments after the block. The assignments after the do statement are adjusted for known null and non-null names and type classifications due to the condition expression being false.
  
 doStatementCondition
 Condition expression must have type Boolean and multiplicity upper bound of 1.
@@ -549,7 +549,7 @@ Any name that is unassigned before an if statement and is assigned in one or mor
 
 ifStatementAssignmentsBefore
 
-The assignments before all the non-final clauses of an if statement are the same as the assignments before the if statement. If the statement has a final clause, then the assignments before that clause are also the same as the assignments before the if statement.
+The assignments before each non-final clause of an if statement are the same as the assignments before the if statement, adjusted for known nulls and non-nulls and type classifications due to the failure of the conditions in all previous sets of concurrent clauses. If the statement has a final clause, then the assignments before that clause are also the same as the assignments before the if statement, adjusted for the failure of the conditions of all previous clauses.
  
 ifStatementEnclosedStatements
 
@@ -605,7 +605,7 @@ The variable name given in a loop variable definition must be unassigned after t
  
 nonFinalClauseAssignmentsBeforeBody
 
-The assignments before the body of a non-final clause are the assignments after the condition.
+The assignments before the body of a non-final clause are the assignments after the condition, adjusted for known null and non-null names and type classifications due to the condition being true.
  
 nonFinalClauseConditionLocalNames
 Local names cannot be defined in condition expression.
@@ -624,7 +624,7 @@ returnStatementAssignmentsBefore
 The assignments before the expression of a return statement are the same as the assignments before the statement.
  
 returnStatementContext
-Return statement must have an expression compatible with return parameter.
+Expression must be compatible with return parameter (in type and/or multiplicity).
 If the behavior containing the return statement has a return parameter, then the return statement must have an expression, and the expression must be assignable to that return parameter.
  
 statementAnnotationsAllowed
@@ -673,11 +673,11 @@ A switch statement expression must have a multiplicity no greater than 1.
 
 whileStatementAssignmentsAfter
 
-f the assigned source for a name after the block of a while statement, then the assigned source of the name after the while statement is the while statement. Otherwise it is the same as before the block.  If a name is unassigned before the block of a while statement and assigned after the block, then it has multiplicity lower bound of 0 after the while statement.
+f the assigned source for a name after the block of a while statement, then the assigned source of the name after the while statement is the while statement. Otherwise it is the same as before the block.  If a name is unassigned before the block of a while statement and assigned after the block, then it has multiplicity lower bound of 0 after the while statement. Otherwise, the assignments after the while statement are adjusted for known null and non-null names and type classifications due to the condition expression being false.
  
 whileStatementAssignmentsBefore
 
-The assignments before the condition expression of a while statement are the same as the assignments before the while statement. The assignments before the block of the while statement are the same as the assignments after the condition expression.
+The assignments before the condition expression of a while statement are the same as the assignments before the while statement, except that any local names with a multiplicity lower bound of 0 after the block are adjusted to also have a multiplicity lower bound of 0 before the condition expression. The assignments before the block of the while statement are the same as the assignments after the condition expression, adjusted for known null and non-null names and type classifications due to the condition expression being true.
  
 whileStatementCondition
 Condition expression must have that conforms to type Boolean and multiplicity upper bound of 1.
@@ -693,11 +693,15 @@ If an active class definition is not abstract, then it must have a classifier be
 
 activityDefinitionEffectiveBodyAssignmentsBefore
 
-There are no assignments before the effective body of an activity definition.
+The assignments before the effective body of an activity definition include an assignment for each "in" or "inout" formal parameter of the activity definition, with the formal parameter as the assigned source.
  
 activityDefinitionPrimitive
 Primitive activity definition cannot have a body.
 If an activity definition is primitive, then it must have a body that is empty.
+
+activityDefinitionReturn
+A return value is required.
+If an activity definition has a return parameter with a multiplicity lower bound greater than 0, then the effective body of the activity definition must have a return value.
  
 activityDefinitionSpecialization
 Cannot have a specialization list.
@@ -738,6 +742,10 @@ The referent of an element import reference must be a packageable element.
 enumerationDefinitionSpecializationReferent
 Can only specialize enumerations.
 The specialization referents of an enumeration definition must all be enumerations.
+
+formalParameterAssignmentAfterBody
+Out parameter must be assigned a value.
+If a formal parameter has direction "out" and a multiplicity lower bound greater than 0, and its owning activity or operation definition has an effective body, then there must be an assignment for the formal parameter after the effective body that has a multiplicity greater than 0.
  
 importedMemberNotStub
 
@@ -789,7 +797,7 @@ If an operation definition is a destructor, any redefined operation for it must 
  
 operationDefinitionEffectiveBodyAssignmentsBefore
 
-There are no assignments before the effective body of an operation definition.
+The assignments before the effective body of an operation definition include an assignment for each "in" or "inout" formal parameter of the operation definition, with the formal parameter as the assigned source.
  
 operationDefinitionNamespace
 Namespace must be a class.
@@ -802,6 +810,10 @@ The redefined operations of an operation definition must have formal parameters 
 operationDefinitionRedefinition
 Redefinition names must resolve to non-private superclass operations.
 Each name in the redefinition list of an operation definition must have a single referent that is an operation. This operation must be a non-private operation that is a member of a specialization referent of the class definition of the operation definition. 
+
+operationDefinitionReturn
+A return value is required.
+If an operation definition has a return parameter with a multiplicity lower bound greater than 0, then the effective body of the operation definition must have a return value.
 
 packageImportReferenceReferent
 Name must resolve to a package.

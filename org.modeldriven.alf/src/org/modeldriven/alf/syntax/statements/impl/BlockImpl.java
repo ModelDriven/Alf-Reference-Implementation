@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -155,7 +154,7 @@ public class BlockImpl extends SyntaxElementImpl {
         // This ensures that there is an initial assignment for each input
         // parameter for a block that is the body of an activity or operation.
         if (!this.hasEnclosingStatement()) {
-            for (ElementReference parameter: parameters) {
+            for (ElementReference parameter: this.parameters) {
                 String direction = parameter.getImpl().getDirection();
                 if (direction != null &&
                         (direction.equals("in") || direction.equals("inout"))) {
@@ -215,6 +214,18 @@ public class BlockImpl extends SyntaxElementImpl {
 	/*
 	 * Helper Methods
 	 */
+	
+	/**
+	 * A block has a return value if any of its statements has a return value.
+	 */
+	public boolean hasReturnValue() {
+	    for (Statement statement: this.getSelf().getStatement()) {
+	        if (statement.hasReturnValue()) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 
     public void setCurrentScope(NamespaceDefinition currentScope) {
         if (currentScope != null) {
