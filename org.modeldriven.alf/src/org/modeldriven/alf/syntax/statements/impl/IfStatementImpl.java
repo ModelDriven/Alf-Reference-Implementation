@@ -121,9 +121,9 @@ public class IfStatementImpl extends StatementImpl {
      * lower bound for the name in each clause and a multiplicity upper bound
      * that is the maximum for the name in each clause (where the name is
      * considered to have multiplicity [0..0] for clauses in which it is not
-     * defined and unchanged multiplicity for an implicit "else" clause).
-     * Otherwise, the assigned source of a name after the if statement is the
-     * same as before the if statement.
+     * defined and unchanged multiplicity for an implicit final clause, unless
+     * the if statement is assured). Otherwise, the assigned source of a name
+     * after the if statement is the same as before the if statement.
      **/
     @Override
     protected Map<String, AssignedSource> deriveAssignmentAfter() {
@@ -136,15 +136,17 @@ public class IfStatementImpl extends StatementImpl {
             blocks.addAll(clauses.getImpl().getBlocks());
         }
         Block finalClause = self.getFinalClause();
-        if (finalClause == null) {
-            // NOTE: This adds an empty block for an implicit "else", so that the
-            // final multiplicities for names assigned in the other clauses are
-            // set correctly on merging.
-            finalClause = new Block();
-            finalClause.setStatement(new ArrayList<Statement>());
-        }
-        finalClause.getImpl().setAssignmentBefore(assignmentsBefore);
-        blocks.add(finalClause);
+        if (finalClause != null || !self.getIsAssured()) {
+            if (finalClause == null) {
+                // NOTE: This adds an empty block for an implicit "else", so that the
+                // final multiplicities for names assigned in the other clauses are
+                // set correctly on merging.
+                finalClause = new Block();
+                finalClause.setStatement(new ArrayList<Statement>());
+            }
+            finalClause.getImpl().setAssignmentBefore(assignmentsBefore);
+            blocks.add(finalClause);
+       }
         Map<String, AssignedSource> assignmentsAfter = 
             new HashMap<String, AssignedSource>(super.deriveAssignmentAfter());
         assignmentsAfter.putAll(this.mergeAssignments(blocks));
@@ -194,9 +196,9 @@ public class IfStatementImpl extends StatementImpl {
      * lower bound for the name in each clause and a multiplicity upper bound
      * that is the maximum for the name in each clause (where the name is
      * considered to have multiplicity [0..0] for clauses in which it is not
-     * defined and unchanged multiplicity for an implicit "else" clause).
-     * Otherwise, the assigned source of a name after the if statement is the
-     * same as before the if statement.
+     * defined and unchanged multiplicity for an implicit final clause, unless
+     * the if statement is assured). Otherwise, the assigned source of a name
+     * after the if statement is the same as before the if statement.
      **/
 	public boolean ifStatementAssignmentsAfter() {
 	    // Note: This is handled by overriding deriveAssignmentAfter.

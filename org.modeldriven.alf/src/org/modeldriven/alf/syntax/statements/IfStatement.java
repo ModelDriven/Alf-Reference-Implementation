@@ -108,9 +108,9 @@ public class IfStatement extends Statement {
      * lower bound for the name in each clause and a multiplicity upper bound
      * that is the maximum for the name in each clause (where the name is
      * considered to have multiplicity [0..0] for clauses in which it is not
-     * defined and unchanged multiplicity for an implicit "else" clause).
-     * Otherwise, the assigned source of a name after the if statement is the
-     * same as before the if statement.
+     * defined and unchanged multiplicity for an implicit final clause, unless
+     * the if statement is assured). Otherwise, the assigned source of a name
+     * after the if statement is the same as before the if statement.
      **/
 	public boolean ifStatementAssignmentsAfter() {
 		return this.getImpl().ifStatementAssignmentsAfter();

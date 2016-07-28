@@ -136,9 +136,9 @@ public class SwitchStatementImpl extends StatementImpl {
      * lower bound for the name in each clause and a multiplicity upper bound
      * that is the maximum for the name in each clause (where the name is
      * considered to have multiplicity [0..0] for clauses in which it is not
-     * defined and unchanged multiplicity for an implicit "default" clause).
-     * Otherwise, the assigned source of a name after the switch statement is
-     * the same as before the switch statement.
+     * defined and unchanged multiplicity for an implicit default clause, unless
+     * the switch statement is assured). Otherwise, the assigned source of a name
+     * after the switch statement is the same as before the switch statement.
      * 
      * Any name that is unassigned before a switch statement and is assigned in
      * one or more clauses of the switch statement, has, after the switch
@@ -161,7 +161,14 @@ public class SwitchStatementImpl extends StatementImpl {
             blocks.add(clause.getImpl().getBlock());
         }
         Block defaultClause = self.getDefaultClause();
-        if (defaultClause != null) {
+        if (defaultClause != null || !self.getIsAssured()) {
+            if (defaultClause == null) {
+                // NOTE: This adds an empty block for an implicit "default", so that the
+                // final multiplicities for names assigned in the other clauses are
+                // set correctly on merging.
+                defaultClause = new Block();
+                defaultClause.setStatement(new ArrayList<Statement>());
+            }
             defaultClause.getImpl().setAssignmentBefore(assignmentsBeforeClauses);
             blocks.add(defaultClause);
         }
@@ -230,9 +237,9 @@ public class SwitchStatementImpl extends StatementImpl {
      * lower bound for the name in each clause and a multiplicity upper bound
      * that is the maximum for the name in each clause (where the name is
      * considered to have multiplicity [0..0] for clauses in which it is not
-     * defined and unchanged multiplicity for an implicit "default" clause).
-     * Otherwise, the assigned source of a name after the switch statement is
-     * the same as before the switch statement.
+     * defined and unchanged multiplicity for an implicit default clause, unless
+     * the switch statement is assured). Otherwise, the assigned source of a name
+     * after the switch statement is the same as before the switch statement.
      **/
 	public boolean switchStatementAssignmentsAfter() {
         // Note: This is handled by overriding deriveAssignmentAfter.

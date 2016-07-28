@@ -545,7 +545,7 @@ The isFirst attribute of the first loop variable definition for a for statement 
  
 ifStatementAssignmentsAfter
 
-Any name that is unassigned before an if statement and is assigned in one or more clauses of the if statement, has, after the if statement, a type that is is the effective common ancestor of the types of the name in each clause in which it is defined. For a name that has an assigned source after any clause of an if statement that is different than before that clause, then the assigned source after the if statement is the if statement, with a multiplicity lower bound that is the minimum of the lower bound for the name in each clause and a multiplicity upper bound that is the maximum for the name in each clause (where the name is considered to have multiplicity [0..0] for clauses in which it is not defined and unchanged multiplicity for an implicit "else" clause). Otherwise, the assigned source of a name after the if statement is the same as before the if statement.
+Any name that is unassigned before an if statement and is assigned in one or more clauses of the if statement, has, after the if statement, a type that is is the effective common ancestor of the types of the name in each clause in which it is defined. For a name that has an assigned source after any clause of an if statement that is different than before that clause, then the assigned source after the if statement is the if statement, with a multiplicity lower bound that is the minimum of the lower bound for the name in each clause and a multiplicity upper bound that is the maximum for the name in each clause (where the name is considered to have multiplicity [0..0] for clauses in which it is not defined and unchanged multiplicity for an implicit final clause, unless the if statement is assured). Otherwise, the assigned source of a name after the if statement is the same as before the if statement.
 
 ifStatementAssignmentsBefore
 
@@ -653,7 +653,7 @@ Any name that is unassigned before a switch statement and is assigned in one or 
 
 switchStatementAssignmentsAfter
 
-If a name has an assigned source after any clause of a switch statement that is different than before that clause (including newly defined names), the assigned source after the switch statement is the switch statement, with a multiplicity lower bound that is the minimum of the lower bound for the name in each clause and a multiplicity upper bound that is the maximum for the name in each clause (where the name is considered to have multiplicity [0..0] for clauses in which it is not defined and unchanged multiplicity for an implicit "default" clause). Otherwise, the assigned source of a name after the switch statement is the same as before the switch statement.
+If a name has an assigned source after any clause of a switch statement that is different than before that clause (including newly defined names), the assigned source after the switch statement is the switch statement, with a multiplicity lower bound that is the minimum of the lower bound for the name in each clause and a multiplicity upper bound that is the maximum for the name in each clause (where the name is considered to have multiplicity [0..0] for clauses in which it is not defined and unchanged multiplicity for an implicit defaul clause, unless the switch statement is assured). Otherwise, the assigned source of a name after the switch statement is the same as before the switch statement.
 
 switchStatementAssignmentsBefore
 

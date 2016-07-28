@@ -118,9 +118,9 @@ public class SwitchStatement extends Statement {
      * lower bound for the name in each clause and a multiplicity upper bound
      * that is the maximum for the name in each clause (where the name is
      * considered to have multiplicity [0..0] for clauses in which it is not
-     * defined and unchanged multiplicity for an implicit "default" clause).
-     * Otherwise, the assigned source of a name after the switch statement is
-     * the same as before the switch statement.
+     * defined and unchanged multiplicity for an implicit default clause, unless
+     * the switch statement is assured). Otherwise, the assigned source of a name
+     * after the switch statement is the same as before the switch statement.
      **/
 	public boolean switchStatementAssignmentsAfter() {
 		return this.getImpl().switchStatementAssignmentsAfter();
