@@ -62,9 +62,12 @@ public class NullCoalescingExpression extends Expression {
     }
     
     /**
-     * If a null-coalescing expression has a single operand, then its type is the
-     * type of that operand. Otherwise, its type is the effective common ancestor of
-     * the types of its operands, if one exists, and empty otherwise.
+     * If one of the operand expressions of a null-coalescing expression is
+     * identically null (untyped with multiplicity 0..0), then the type of the
+     * null-coalescing expression is the same as the type of the other operand
+     * expressions. Otherwise, the type of a null-coalescing expression is the
+     * effective common ancestor of the types of its operands, if one exists,
+     * and empty, if it does not.
      */
     public boolean nullCoalescingExpressionTypeDerivation() {
         return this.getImpl().nullCoalescingExpressionTypeDerivation();
@@ -72,9 +75,9 @@ public class NullCoalescingExpression extends Expression {
 
     /**
      * The multiplicity lower bound of a null-coalescing expression is the
-     * multiplicity lower bound of its first operand, if that is greater than 0.
-     * Otherwise, the multiplicity lower bound of the null-coalescing expression
-     * is 1.
+     * multiplicity lower bound of its first operand expression, if that is
+     * greater than 0; otherwise it is 1, if the multiplicity lower bound of its
+     * second operand expression is greater than 0; otherwise, it is 0.
      */
     public boolean nullCoalescingExpressionLowerDerivation() {
         return this.getImpl().nullCoalescingExpressionLowerDerivation();
@@ -87,15 +90,6 @@ public class NullCoalescingExpression extends Expression {
      */
     public boolean nullCoalescingExpressionUpperDerivation() {
         return this.getImpl().nullCoalescingExpressionUpperDerivation();
-    }
-    
-    /** 
-     * If a null-coalescing expression has a second operand expression, then
-     * that operand must have a multiplicity lower bound greater
-     * than 0.
-     */
-    public boolean nullCoalescingExpressionOperand() {
-        return this.getImpl().nullCoalescingExpressionOperand();
     }
     
    /**
@@ -152,10 +146,6 @@ public class NullCoalescingExpression extends Expression {
         if (!this.nullCoalescingExpressionUpperDerivation()) {
             violations.add(new ConstraintViolation(
                     "nullCoalescingExpressionUpperDerivation", this));
-        }
-        if (!this.nullCoalescingExpressionOperand()) {
-            violations.add(new ConstraintViolation(
-                    "nullCoalescingExpressionOperand", this));
         }
         if (!this.nullCoalescingExpressionAssignmentsBefore()) {
             violations.add(new ConstraintViolation(

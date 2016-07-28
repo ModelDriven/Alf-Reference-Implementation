@@ -62,9 +62,12 @@ public class NullCoalescingExpressionImpl extends ExpressionImpl {
     }
 
     /**
-     * If a null-coalescing expression has a single operand, then its type is the
-     * type of that operand. Otherwise, its type is the effective common ancestor of
-     * the types of its operands, if one exists, and empty otherwise.
+     * If one of the operand expressions of a null-coalescing expression is
+     * identically null (untyped with multiplicity 0..0), then the type of the
+     * null-coalescing expression is the same as the type of the other operand
+     * expressions. Otherwise, the type of a null-coalescing expression is the
+     * effective common ancestor of the types of its operands, if one exists,
+     * and empty, if it does not.
      */
     @Override
     protected ElementReference deriveType() {
@@ -72,9 +75,9 @@ public class NullCoalescingExpressionImpl extends ExpressionImpl {
         this.getAssignmentAfterMap(); // Force computation of assignments.
         Expression operand1 = self.getOperand1();
         Expression operand2 = self.getOperand2();
-        if (operand2 == null) {
-            return operand1 == null? null: operand1.getType();
-        } else if (operand1 == null || operand1.getImpl().isNull()) {
+        if (operand1 == null || operand2 == null) {
+            return null;
+        } else if (operand1.getImpl().isNull()) {
             return operand2.getType();
         } else if (operand2.getImpl().isNull()) {
             return operand1.getType();
@@ -86,22 +89,24 @@ public class NullCoalescingExpressionImpl extends ExpressionImpl {
 
     /**
      * The multiplicity lower bound of a null-coalescing expression is the
-     * multiplicity lower bound of its first operand, if that is greater than 0.
-     * Otherwise, the multiplicity lower bound of the null-coalescing expression
-     * is 1.
+     * multiplicity lower bound of its first operand expression, if that is
+     * greater than 0; otherwise it is 1, if the multiplicity lower bound of its
+     * second operand expression is greater than 0; otherwise, it is 0.
      */
     @Override
     protected Integer deriveLower() {
         NullCoalescingExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
-        int lower = operand1 == null? 0: operand1.getLower();
-        return lower < 1? 1: lower;
+        Expression operand2 = self.getOperand2();
+        int lower1 = operand1 == null? 0: operand1.getLower();
+        int lower2 = operand2 == null? 0: operand2.getLower();
+        return lower1 > 0? lower1:
+               lower2 > 0? 1: 0;
     }
 
     /**
      * The multiplicity upper bound of a null-coalescing expression is the
-     * maximum of the multiplicity upper bounds of its operands, but no less
-     * than 1.
+     * maximum of the multiplicity upper bounds of its operand expressions.
      */
     @Override
     protected Integer deriveUpper() {
@@ -112,9 +117,7 @@ public class NullCoalescingExpressionImpl extends ExpressionImpl {
         int upper2 = operand2 == null? 0: operand2.getUpper();
         return upper1 < 0? upper1:
                upper2 < 0? upper2:
-               upper1 > upper2? upper1:
-               upper2 > 0? upper2:
-               1;
+               upper1 > upper2? upper1: upper2;
     }
     
     /*
@@ -139,17 +142,6 @@ public class NullCoalescingExpressionImpl extends ExpressionImpl {
     /*
      * Constraints
      */
-    
-    /** 
-     * If a null-coalescing expression has a second operand expression, then
-     * that operand must have a multiplicity lower bound greater
-     * than 0.
-     */
-    public boolean nullCoalescingExpressionOperand() {
-        Expression operand2 = this.getSelf().getOperand2();
-        return operand2 == null || operand2.getLower() > 0 || 
-               operand2.getLower() == -1;
-    }
     
     /**
      * The assignments before the first operand expression of a null-coalescing

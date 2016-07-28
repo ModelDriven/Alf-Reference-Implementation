@@ -69,7 +69,7 @@ class Expressions_Sequence_Expansion_Reduction specializes Test {
       
     }
     
-    activity Bad(in x: Integer, in y: Integer): Integer { return x/y ??; }
+    activity Div(in x: Integer, in y: Integer): Integer { return x/y??0; }
 
 	//**************************************************************************
 
@@ -93,7 +93,7 @@ class Expressions_Sequence_Expansion_Reduction specializes Test {
 	  subtotals = Integer[]{1,2,3};
 	  sum = subtotals->reduce '+';
 	  remainder = subtotals->reduce ordered '%';
-	  bad = Integer[]{1,0,4,2}->reduce Bad;
+	  bad = Integer[]{16,2,4,1}->reduce Div;
 	  
 	  e1 = new Employee();
 	  e2 = new Employee();
@@ -118,11 +118,11 @@ class Expressions_Sequence_Expansion_Reduction specializes Test {
 	  joan = Employee.allInstances()->select e (e.name=="Joan")[1];
 	  
 	  myType = +1;
-    something = new Something();
-    something.attribute->iterate attr (attr.type = myType);
+      something = new Something();
+      something.attribute->iterate attr (attr.type = myType);
     
-    obj = new Object();
-    something.attribute->iterate attr (obj.init(attr));
+      obj = new Object();
+      something.attribute->iterate attr (obj.init(attr));
     
 	}
 }

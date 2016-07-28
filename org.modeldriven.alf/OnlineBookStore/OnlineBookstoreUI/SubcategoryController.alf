@@ -28,7 +28,7 @@ active class SubcategoryController specializes Controller {
     public choice: Integer;
   }
   
-  private showCategory(in choice: Integer): Controller {
+  private showCategory(in choice: Integer) {
     category = this.subcategories->at(choice);
     if (category->isEmpty()) {
       this.Display();

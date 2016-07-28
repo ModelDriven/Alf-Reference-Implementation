@@ -47,7 +47,7 @@ class Expressions_Null_Coalescing specializes Test {
 	//**************************************************************************
 
 	private test ( 
-		out a: Integer[0..1], out b: Integer[0..1], out c: Integer[0..1], out d: Integer, out e: any, 
+		out a: Integer[0..1], out b: Integer[0..1], out c: Integer[0..1], out d: Integer[0..1], out e: any[0..1], 
 		out l1: Integer[] sequence, out l2: Integer[] sequence,
 		out i1: Integer[0..1], out i2: Integer[0..1], out i3: Integer[0..1], out i4: Integer[0..1],
 		out b1: Boolean, out b2: Boolean, out u: C, out v: C, out w: C) {
@@ -71,8 +71,8 @@ class Expressions_Null_Coalescing specializes Test {
 		c = SequenceFunctions::NotEmpty(c)? A(c): c;
 		
 		list = Integer[]{1,2};
-		d = list[3] ?? list[2] ?? list[1] ??;
-		e = null ?? null ??;
+		d = list[3] ?? list[2] ?? list[1];
+		e = null ?? null;
 		l1 = null ?? list;
 		l2 = list ?? Integer[]{3, 2, 1};
 		

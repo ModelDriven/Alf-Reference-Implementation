@@ -17,11 +17,15 @@ package BasicInputOutput {
   public abstract class StandardOutputChannel specializes TextOutputChannel {}
   
   public activity ReadLine(out errorStatus: Status[0..1]): String {
-    return (StandardInputChannel.allInstances()[1]??).readLine(errorStatus) ?? "";
+    channel = StandardInputChannel.allInstances()[1];
+    return channel == null? "": channel.readLine(errorStatus) ?? "";
   }
   
   public activity WriteLine(in value: String, out errorStatus: Status[0..1]) {
-    (StandardOutputChannel.allInstances()[1]??).writeLine(value, errorStatus);
+    channel = StandardOutputChannel.allInstances()[1];
+    if (channel != null) {
+      channel.writeLine(value, errorStatus);
+    }
   }
   
 }

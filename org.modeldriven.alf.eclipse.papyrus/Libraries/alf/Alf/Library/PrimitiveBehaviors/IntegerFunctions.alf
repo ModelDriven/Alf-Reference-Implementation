@@ -20,11 +20,11 @@ private import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'
 
 package IntegerFunctions {
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.ToNatural")
+  @primitive(IntegerToNaturalFunctionBehaviorExecution)
   public activity ToNatural(in x: String): Integer[0..1] {}
   
   public activity ToReal(in x: Integer): Real {
-  	return Divide(x, 1)??;
+  	return Divide(x, 1)??0.0;
   }
   
 }

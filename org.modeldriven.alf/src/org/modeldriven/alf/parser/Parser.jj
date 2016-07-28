@@ -1837,8 +1837,8 @@ Expression NullCoalescingExpressionCompletion(Expression u):
   	    new NullCoalescingExpression(u);
   	  b.setOperand1(e1);
   	  e1 = b; }
-  	[ e2 = NullCoalescingExpression()
-  	  { ((NullCoalescingExpression)e1).setOperand2(e2); } ] ]
+  	e2 = NullCoalescingExpression()
+  	  { ((NullCoalescingExpression)e1).setOperand2(e2); } ]
   { return e1; }
 }
 

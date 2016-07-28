@@ -1,5 +1,5 @@
 namespace Alf::Library::CollectionClasses::Impl;
-private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+private import Alf::Library::CollectionFunctions::add;
 /**
 The concrete implementation of the standard library template Map class.
 */
@@ -17,7 +17,14 @@ class Map<Key, Value> specializes MapImpl, CollectionClasses::Map<Key,Value> {
   }
   
   private activity ToEntries (in entryImpls: EntryImpl[0..*]): Entry[0..*] {
-    return entryImpls->collect e (new Entry((Key)e.key??, (Value)e.value));
+    entries = (Entry)null;
+    for (e in entryImpls) {
+      key = (Key)e.key;
+      if (key != null) {
+        entries->add(new Entry(key, (Value)e.value));
+      }
+    }
+    return entries;
   }
 
   public entries (): CollectionClasses::Set<Entry> { 

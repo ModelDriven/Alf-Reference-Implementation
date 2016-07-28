@@ -176,7 +176,7 @@ Index expression must have a multiplicity upper bound no greater than 1.
 If a left-hand side has an index, then the index expression must have a multiplicity upper bound no greater than 1.
  
 linkOperationExpressionArgumentCompatibility
-One or more arguments incompatible (in type and/or multipicity) with corresponding association ends.
+One or more arguments are not compatible (in type and/or multipicity) with corresponding association ends.
 Each argument expression must be assignable to its corresponding association end.
  
 linkOperationExpressionAssociationReference
@@ -219,10 +219,6 @@ nameLeftHandSideFeatureExpression
 Target expression must have a multiplicity upper bound of 1.
 If the target of a name left-hand side disambiguates to a feature reference, then the expression of the feature reference must have a multiplicity upper bound of 1.
  
-nullCoalescingExpressionOperand
-Second operand must have a multiplicity lower bound greater than 0.
-If a null-coalescing expression has a second operand expression, then that operand expression must have a multiplicity lower bound greater than 0.
-
 numericUnaryExpressionOperand
 Operand must have a type Integer or Real and multiplicity upper bound of 1.
 The operand expression must have a type that conforms to type Integer or Real and a multiplicity upper bound of 1.
@@ -288,7 +284,7 @@ Type cannot be empty, cannot be a template and must either have a multiplicity i
 If the type name of a sequence construction expression is not empty, then it must resolve to a non-template classifier. If the expression does not have multiplicity, then the type name must not be empty and the classifier to which it resolves must be the instantiation of a collection class.
  
 sequenceExpansionExpressionAssignmentsAfterArgument
-
+Assignments not allowed in sequence expansion argument.
 The assignments after the argument expression of a sequence expansion expression must be the same as the assignments before the argument expression.
  
 sequenceExpansionExpressionAssignmentsBeforeArgument
@@ -624,7 +620,7 @@ returnStatementAssignmentsBefore
 The assignments before the expression of a return statement are the same as the assignments before the statement.
  
 returnStatementContext
-Expression must be compatible with return parameter (in type and/or multiplicity).
+Expression is not compatible (in type and/or multiplicity) with return parameter.
 If the behavior containing the return statement has a return parameter, then the return statement must have an expression, and the expression must be assignable to that return parameter.
  
 statementAnnotationsAllowed

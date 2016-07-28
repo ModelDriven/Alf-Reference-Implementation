@@ -241,9 +241,8 @@ public abstract class StatementImpl extends DocumentedElementImpl {
 	} // annotationAllowed
 	
     /**
-     * Returns true if this statement is assured to generate a return with
-     * a non-null value. By default, a statement does generate have a return
-     * value.
+     * Returns true if this statement is assured to generate a return value. By
+     * default, a statement does not have a return value.
      */
     public Boolean hasReturnValue() {
         return false;

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -90,8 +89,7 @@ public class ReturnStatement extends Statement {
 	}
 
     /**
-     * A return statement has a return value if it has an expression with a
-     * multiplicity upper bound greater than 0.
+     * A return statement is considered to have a return value.
      */
     public Boolean hasReturnValue() {
         return this.getImpl().hasReturnValue();

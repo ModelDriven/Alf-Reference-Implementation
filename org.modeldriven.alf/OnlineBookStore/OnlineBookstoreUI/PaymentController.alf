@@ -25,7 +25,7 @@ active class PaymentController specializes Controller {
     
     this.customerEmail = previous.customerEmail;
     this.customerName = previous.customerName;
-    this.customerPhone = previous.customerPhone??; // Telephone number is required to check out.
+    this.customerPhone = previous.customerPhone??""; // Telephone number is required to check out.
     this.shippingAddress = previous.shippingAddress;
     
     this.EE.onlineCustomer.registerForCustomer(this, this.customerEmail);
@@ -69,16 +69,20 @@ active class PaymentController specializes Controller {
   
   private completeCheckOut() {
     cart = ((ShoppingSession)this.session).cart;
-    cart.CheckOut(
-      accountNumber => this.accountNumber??,
-      billingAddress => this.billingAddress,
-      cardExpirationDate => this.cardExpirationDate??,
-      cardholderName => this.cardholderName,
-      customerEmail => this.customerEmail,
-      customerName => this.customerName,
-      customerPhone => this.customerPhone,
-      shippingAddress => this.shippingAddress
-    );
+    accountNumber = this.accountNumber;
+    cardExpirationDate = this.cardExpirationDate;
+    if (accountNumber->notEmpty() && cardExpirationDate->notEmpty()) {
+      cart.CheckOut(
+        accountNumber => accountNumber,
+        billingAddress => this.billingAddress,
+        cardExpirationDate => cardExpirationDate,
+        cardholderName => this.cardholderName,
+        customerEmail => this.customerEmail,
+        customerName => this.customerName,
+        customerPhone => this.customerPhone,
+        shippingAddress => this.shippingAddress
+      );
+    }
   }  
   
 } do {
@@ -91,15 +95,16 @@ active class PaymentController specializes Controller {
     
       accept (event: Update) {
         this.cardholderName = event.cardholderName ?? this.cardholderName;
-        this.accountNumber = event.accountNumber ?? this.accountNumber ??;
-        this.cardExpirationDate = event.cardExpirationDate ?? this.cardExpirationDate ??;
+        this.accountNumber = event.accountNumber ?? this.accountNumber;
+        this.cardExpirationDate = event.cardExpirationDate ?? this.cardExpirationDate;
         this.billingAddress = event.billingAddress ?? this.billingAddress;
       } or accept (PlaceOrder) {
         if (this.isValid()) {
           this.completeCheckOut();
           accept (notification: Notification) {
-            if (notification.content->notEmpty() && 
-                (notification.content??) instanceof OnlineCustomer::ChargeApproved) {
+            content = notification.content;
+            if (content->notEmpty() && 
+                content instanceof OnlineCustomer::ChargeApproved) {
               ((ShoppingSession)this.session).cart = null;
               new HomeController(this).Display();
               break;

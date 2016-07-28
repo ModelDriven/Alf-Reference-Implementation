@@ -67,7 +67,7 @@ active class CheckOutController specializes Controller {
       accept (event: Update) {
         this.customerEmail = event.customerEmail ?? this.customerEmail;
         this.customerName = event.customerName ?? this.customerName;
-        this.customerPhone = event.customerPhone ?? this.customerPhone ??;
+        this.customerPhone = event.customerPhone ?? this.customerPhone;
         this.shippingAddress = event.shippingAddress ?? this.shippingAddress;
       } or accept (Next) {
         if (this.isValid()) {

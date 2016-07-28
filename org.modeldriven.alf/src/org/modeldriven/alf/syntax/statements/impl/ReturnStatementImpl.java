@@ -128,12 +128,11 @@ public class ReturnStatementImpl extends StatementImpl {
 	 */
 
     /**
-     * A return statement has a return value if it has an expression with a
-     * multiplicity upper bound greater than 0.
+     * A return statement is considered to have a return value.
      */
+	@Override
     public Boolean hasReturnValue() {
-        Expression expression = this.getSelf().getExpression();
-        return expression != null && expression.getLower() > 0;
+        return true;
     }
 
     @Override
