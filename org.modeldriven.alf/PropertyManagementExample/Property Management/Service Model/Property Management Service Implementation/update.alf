@@ -42,20 +42,18 @@ activity update (
       'error code'         => "PRU-002",
       'error message'      => "Wrong property type." );
 
-  } else if (request.'property location identifier' -> notEmpty() &&
-              !(Location -> exists loc 
-                 (loc.identifier == request.'property location identifier'))) {
-    error = new 'Error Reply' (
-      identifier           => request.identifier + "/error",
-      'request identifier' => request.identifier,
-      'error code'         => "PRU-003",
-      'error message'      => "Location not found." );
-
   } else {
     if (request.'property location identifier' -> notEmpty()) {
       location = Location -> select loc 
                    (loc.identifier == request.'property location identifier')[1];
-      if (location -> notEmpty()) {
+      if (location -> isEmpty()) {
+        error = new 'Error Reply' (
+          identifier           => request.identifier + "/error",
+          'request identifier' => request.identifier,
+          'error code'         => "PRU-003",
+          'error message'      => "Location not found." );
+        return;
+      } else {
         'Property Location'.createLink(property, location);
       }
     }
