@@ -57,21 +57,16 @@ activity update (
         'Property Location'.createLink(property, location);
       }
     }
-    name = request.'property name';
-    if (name -> notEmpty()) {
-      property.name = name;
+    
+    property.name = request.'property name' ?? property.name;
+    property.value = request.'property value' ?? property.value;
+    
+    if (property instanceof 'Personal Property') {
+      property.'serial number' = request.'property serial number' ?? property.'serial number';
     }
-    value = request.'property value';
-    if (value -> notEmpty()) {
-      property.value = value;
-    }
-    serialNumber = request.'property serial number';
-    if (serialNumber -> notEmpty()) {
-      (('Personal Property')property).'serial number' = serialNumber;
-    }
-    size = request.'property size';
-    if (size -> notEmpty()) {
-      (('Real Property')property).size = size;
+    
+    if (property instanceof 'Real Property') {
+      property.size = request.'property size' ?? property.size;
     }
 
     reply = this.'create reply'(request.identifier, property);
