@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -187,10 +188,10 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl {
         Map<String, AssignedSource> assignmentsBefore = this.getAssignmentBeforeMap();
         Map<String, AssignedSource> assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsBefore);
         if (operand1 != null) {
-            assignmentsAfter.putAll(operand1.getImpl().getAssignmentAfterMap());
+            AssignedSourceImpl.putAssignments(assignmentsAfter, operand1.getImpl().getNewAssignments());            
         }
         if (operand2 != null) {
-            assignmentsAfter.putAll(operand1.getImpl().getAssignmentAfterMap());
+            AssignedSourceImpl.putAssignments(assignmentsAfter, operand2.getImpl().getNewAssignments());         
         }
 		return assignmentsAfter;
 	} // updateAssignments

@@ -232,6 +232,14 @@ public class AssignedSourceImpl {
         return newAssignments;
     }
     
+    public static void putAssignments(
+            Map<String, AssignedSource> assignmentMap, 
+            Collection<AssignedSource> assignments) {
+        for (AssignedSource assignment: assignments) {
+            assignmentMap.put(assignment.getName(), assignment);
+        }
+    }
+    
     public boolean isAssignedIn(Collection<AssignedSource> assignments) {
         for (AssignedSource assignment: assignments) {
             if (this.equals(assignment)) {

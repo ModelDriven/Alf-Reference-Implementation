@@ -87,8 +87,8 @@ class Expressions_Operator specializes Test {
     employee = new Employee();
     monitor = new Monitor();
 
-    i = 1;
-    j = 2;
+    +(i = 0);  // Check assignment in unary expression.
+    (i = 1) - (j = 2); // Check assignment in binary expression.
       
     i = +i; // 1
     i = -i; // -1

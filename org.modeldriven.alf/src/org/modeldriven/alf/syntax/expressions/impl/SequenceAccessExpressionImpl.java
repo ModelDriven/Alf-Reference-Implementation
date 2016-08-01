@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -143,9 +144,7 @@ public class SequenceAccessExpressionImpl extends ExpressionImpl {
 	    }
 	    if (!newAssignments.isEmpty()) {
 	        assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
-	        for (AssignedSource assignment: newAssignments) {
-	            assignmentsAfter.put(assignment.getName(), assignment);
-	        }
+	        AssignedSourceImpl.putAssignments(assignmentsAfter, newAssignments);
 	    }
 	    return assignmentsAfter;
 	}
