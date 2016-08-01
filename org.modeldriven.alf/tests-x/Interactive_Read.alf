@@ -1,19 +1,25 @@
 activity Interactive_Read() {
   	WriteLine("Read Line:");
-  	WriteLine(ReadLine(status));
-  	WriteLine("Status:");
-    WriteLine(status.description);
+  	WriteLine("Echo: " + ReadLine(status));
+    WriteLine("Status: " + (status.description??"null"));
     
-    WriteLine(StandardInputChannel.allInstances().getStatus().description);
+    input = StandardInputChannel.allInstances()[1];
     
-    WriteLine("read Integer, Boolean, UnlimitedNatural:");
+    if (input != null) {
     
-    WriteLine(IntegerFunctions::ToString(StandardInputChannel.allInstances()[1].readInteger(status)));
-    WriteLine(status.description);
+      WriteLine("\nStandardInputChannel Status: " + (input.getStatus().description??"null"));    
+      WriteLine("read Integer, Boolean, UnlimitedNatural:");
     
-    WriteLine(BooleanFunctions::ToString(StandardInputChannel.allInstances()[1].readBoolean(status)));
-    WriteLine(status.description);
+      i = input.readInteger(status);
+      WriteLine("\nInteger: " + (i == null? "none": IntegerFunctions::ToString(i)));
+      WriteLine("Status: " + (status.description??"null"));
     
-    WriteLine(UnlimitedNaturalFunctions::ToString(StandardInputChannel.allInstances()[1].readUnlimitedNatural(status)));
-    WriteLine(status.description);
+      b = input.readBoolean(status);
+      WriteLine("\nBoolean: " + (b == null? "none": BooleanFunctions::ToString(b)));
+      WriteLine("Status: " + (status.description??"null"));
+    
+      u = input.readUnlimitedNatural(status);
+      WriteLine("\nUnlimitedNatural: " + (u == null? "none": UnlimitedNaturalFunctions::ToString(u)));
+      WriteLine("Status: " + (status.description??"null"));
+    }
 }
