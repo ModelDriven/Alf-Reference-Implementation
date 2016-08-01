@@ -158,11 +158,11 @@ public class EqualityExpressionImpl extends BinaryExpressionImpl {
 	 */
 	
     /**
-     * Returns false for an equality expression.
+     * The minimum lower bound is 0 for operands of equality expressions.
      **/
     @Override
-    public Boolean noNullArguments() {
-        return false;
+    public Integer minLowerBound() {
+        return 0;
     }
     
     /**

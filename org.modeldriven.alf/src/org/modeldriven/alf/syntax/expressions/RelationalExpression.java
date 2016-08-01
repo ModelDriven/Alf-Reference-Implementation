@@ -149,6 +149,15 @@ public class RelationalExpression extends BinaryExpression {
 		this.getIsRealConversion2();
 		super._deriveAll();
 	}
+	
+    /**
+     * The minimum lower bound is 0 for operands of relational expressions (this
+     * allows for the propagation of a null returned from an arithmetic
+     * expression used as an operand).
+     */
+    public Integer minLowerBound() {
+        return this.getImpl().minLowerBound();
+    }
 
 	public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);

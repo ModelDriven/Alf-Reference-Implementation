@@ -48,7 +48,7 @@ The assignments in the operand expressions of a binary expression must be valid 
  
 binaryExpressionOperandMultiplicity
 One or both operands have illegal multiplicity.
-The operands of a binary expression must both have a multiplicity upper bound no greater than 1. If null arguments are not allowed (as given by the noNullArguments helper operation), then the lower and upper bounds must be exactly 1.
+The operands of a binary expression must both have a multiplicity lower bound no less than that given by the minLowerBound helper operation. The operands of a binary expression must both have a multiplicity upper bound no greater than that given by the maxUpperBound helper operation.
  
 bitStringUnaryExpressionOperand
 Operand must have type BitString or Integer and multiplicity 1..1.
@@ -218,6 +218,10 @@ If the target of a name left-hand side is qualified, then, if it does not disamb
 nameLeftHandSideFeatureExpression
 Target expression must have a multiplicity upper bound of 1.
 If the target of a name left-hand side disambiguates to a feature reference, then the expression of the feature reference must have a multiplicity upper bound of 1.
+
+nullCoalescingExpressionAssignmentsBefore
+
+The assignments before the first operand expression of a null-coalescing expression are the same as those before the null-coalescing expression. The assignments before the second operand expression are the same as those after the first operand expression.
  
 numericUnaryExpressionOperand
 Operand must have a type Integer or Real and multiplicity upper bound of 1.
@@ -300,7 +304,7 @@ Variable name already assigned.
 The expansion variable name may not conflict with any name already assigned after the primary expression.
  
 sequenceOperationExpressionArgumentCompatibility
-One or more arguments are not compatible (in type and/or multipicity) with corresponding parameters.
+One or more arguments are not compatible (in type and/or multiplicity) with corresponding parameters.
 The type of an input argument expression of a sequence operation parameter must be assignable to its corresponding parameter. The type of an output parameter must be assignable to its corresponding argument expression. (Note that this implies that the type of an argument expression for an inout parameter must be the same as the type of that parameter.)
  
 sequenceOperationExpressionAssignmentsAfter
@@ -492,8 +496,8 @@ doStatementAssignmentsBefore
 The assignments before the block of a do statement are the same as the assignments before the do statement, except that any local names with a multiplicity lower bound of 0 after the condition expression are adjusted to also have a multiplicity lower bound of 0 before the block. The assignments before the condition expression of a do statement are the same assignments after the block. The assignments after the do statement are adjusted for known null and non-null names and type classifications due to the condition expression being false.
  
 doStatementCondition
-Condition expression must have type Boolean and multiplicity upper bound of 1.
-The condition expression of a do statement must have that conforms to type Boolean and a multiplicity upper bound of 1.
+Condition expression must have type Boolean and multiplicity 1..1.
+The condition expression of a do statement must have a type that conforms to type Boolean and multiplicity [1..1].
  
 doStatementEnclosedStatements
 
@@ -608,8 +612,8 @@ Local names cannot be defined in condition expression.
 If a name is unassigned before the condition expression of a non-final clause, then it must be unassigned after that expression (i.e., new local names may not be defined in the condition).
  
 nonFinalClauseConditionType
-Condition expression must have type Boolean and multiplicity upper bound of 1.
-The condition of a non-final clause must have that conforms to type Boolean and a multiplicity upper bound no greater than 1.
+Condition expression must have type Boolean and multiplicity 1..1.
+The condition of a non-final clause must have a type that conforms to type Boolean and multiplicity [1..1].
  
 returnStatementAssignmentsAfter
 
@@ -664,7 +668,7 @@ switchStatementEnclosedStatements
 A switch statement is the enclosing statement for the statements in all of its switch clauses.
  
 switchStatementExpression
-Switch expression multiplicity muse be no greater than 1.
+Switch expression multiplicity must be no greater than 1.
 A switch statement expression must have a multiplicity no greater than 1.
 
 whileStatementAssignmentsAfter
@@ -676,8 +680,8 @@ whileStatementAssignmentsBefore
 The assignments before the condition expression of a while statement are the same as the assignments before the while statement, except that any local names with a multiplicity lower bound of 0 after the block are adjusted to also have a multiplicity lower bound of 0 before the condition expression. The assignments before the block of the while statement are the same as the assignments after the condition expression, adjusted for known null and non-null names and type classifications due to the condition expression being true.
  
 whileStatementCondition
-Condition expression must have that conforms to type Boolean and multiplicity upper bound of 1.
-The condition expression of a while statement must have type Boolean and a multiplicity upper bound of 1.
+Condition expression must have type Boolean and multiplicity 1..1.
+The condition expression of a while statement must have a type that conforms to type Boolean and multiplicity [1..1].
  
 whileStatementEnclosedStatements
 

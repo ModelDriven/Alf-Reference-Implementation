@@ -99,13 +99,13 @@ public class NonFinalClauseImpl extends SyntaxElementImpl {
 
 	/**
      * The condition of a non-final clause must have that conforms to type
-     * Boolean and a multiplicity upper bound no greater than 1.
+     * Boolean and multiplicity [1..1].
 	 **/
 	public boolean nonFinalClauseConditionType() {
         Expression condition = this.getSelf().getCondition();
         ElementReference type = condition == null? null: condition.getType();
 		return type != null && type.getImpl().isBoolean() && 
-		            condition.getUpper() <= 1;
+		       condition.getLower() == 1 && condition.getUpper() <= 1;
 	}
 
 	/*

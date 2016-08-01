@@ -198,5 +198,18 @@ public class RelationalExpressionImpl extends BinaryExpressionImpl {
 		       (type1.getImpl().isNatural() || type1.getImpl().isUnlimitedNatural()) && 
 		           (type2.getImpl().isNatural() || type2.getImpl().isUnlimitedNatural()));
 	}
+	
+	/*
+	 * Helper Methods
+	 */
+	
+    /**
+     * The minimum lower bound is 0 for operands of relational expressions (this
+     * allows for the propagation of a null returned from an arithmetic
+     * expression used as an operand).
+     */
+	public Integer minLowerBound() {
+	    return 0;
+	}
 
 }

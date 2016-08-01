@@ -70,12 +70,12 @@ public abstract class BinaryExpression extends Expression {
 		this.getImpl().setOperator(operator);
 	}
 
-	/**
-	 * The operands of a binary expression must both have a multiplicity upper
-	 * bound no greater than 1. If null arguments are not allowed (as given by
-	 * the noNullArguments helper operation), then both the lower and upper
-	 * bounds must be exactly 1.
-	 **/
+    /**
+     * The operands of a binary expression must both have a multiplicity lower
+     * bound no less than that given by the minLowerBound helper operation. The
+     * operands of a binary expression must both have a multiplicity upper bound
+     * no greater than that given by the maxUpperBound helper operation.
+     **/
 	public boolean binaryExpressionOperandMultiplicity() {
 		return this.getImpl().binaryExpressionOperandMultiplicity();
 	}
@@ -109,12 +109,21 @@ public abstract class BinaryExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
-	/**
-	 * By default, null arguments are not allowed for binary expressions.
-	 **/
-	public Boolean noNullArguments() {
-		return this.getImpl().noNullArguments();
+    /**
+     * By default, the minimum allowed lower bound for an operand of a binary
+     * expression is 1.
+     **/
+	public Integer minLowerBound() {
+		return this.getImpl().minLowerBound();
 	}
+
+    /**
+     * By default, the maximum allowed upper bound for an operand of a binary
+     * expression is 1.
+     **/
+    public Integer maxUpperBound() {
+        return this.getImpl().maxUpperBound();
+    }
 
 	public void _deriveAll() {
 		super._deriveAll();

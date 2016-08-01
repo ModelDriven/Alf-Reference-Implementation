@@ -95,7 +95,7 @@ public class WhileStatement extends Statement {
 
     /**
      * The condition expression of a while statement must have a type that
-     * conforms to type Boolean and a multiplicity upper bound of 1.
+     * conforms to type Boolean and multiplicity [1..1].
      **/
 	public boolean whileStatementCondition() {
 		return this.getImpl().whileStatementCondition();

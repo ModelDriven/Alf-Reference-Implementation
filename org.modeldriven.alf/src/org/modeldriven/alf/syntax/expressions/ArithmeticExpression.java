@@ -158,12 +158,13 @@ public class ArithmeticExpression extends BinaryExpression {
     }
 
     /**
-     * Null arguments are allowed for arithmetic expressions other than
-     * concatenations (this allows for the propagation of a null returned from a
-     * division by zero in an operand).
+     * The minimum lower bound is 0 for operands of arithmetic expressions other
+     * than concatenations (this allows for the propagation of a null returned
+     * from a division by zero in an operand).
      */
-    public Boolean noNullArguments() {
-        return this.getImpl().noNullArguments();
+    @Override
+    public Integer minLowerBound() {
+        return this.getImpl().minLowerBound();
     }
 
     public void _deriveAll() {

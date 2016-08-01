@@ -115,13 +115,14 @@ public class EqualityExpression extends BinaryExpression {
         return this.getImpl().equalityExpressionIsRealConversion2Derivation();
     }
 
-	/**
-	 * Returns false for an equality expression.
-	 **/
-	public Boolean noNullArguments() {
-		return this.getImpl().noNullArguments();
-	}
-
+    /**
+     * The minimum lower bound is 0 for operands of equality expressions.
+     **/
+    @Override
+    public Integer minLowerBound() {
+        return 0;
+    }
+    
     /**
      * If the one operand expression has multiplicity 0..0, then check the other
      * operand expression for known nulls and non-nulls, using the exclusive-or

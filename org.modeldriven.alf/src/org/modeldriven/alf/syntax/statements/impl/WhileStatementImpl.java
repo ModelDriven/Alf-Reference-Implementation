@@ -183,7 +183,7 @@ public class WhileStatementImpl extends StatementImpl {
         Expression condition = this.getSelf().getCondition();
         ElementReference type = condition == null? null: condition.getType();
         return type != null && type.getImpl().isBoolean() &&
-                    condition.getUpper() == 1;
+               condition.getLower() == 1 && condition.getUpper() == 1;
 	}
 
 	/**

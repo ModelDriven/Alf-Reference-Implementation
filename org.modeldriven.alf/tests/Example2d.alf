@@ -20,7 +20,7 @@ activity EstablishCustomer()
     customer = new Customer();                             // See Note 4
     customer.email = this.checkOutData.customerEmail;
   } else {
-    customer = matchingCustomers[1]??;                       // See Note 5
+    customer = matchingCustomers[1];                       // See Note 5
   } 
   
   // Use the name, address, etc. to update Customer

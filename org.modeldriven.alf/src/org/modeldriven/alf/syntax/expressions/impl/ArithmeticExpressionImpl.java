@@ -251,13 +251,13 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
      */
 	
     /**
-     * Null arguments are allowed for arithmetic expressions other than
-     * concatenations (this allows for the propagation of a null returned from a
-     * division by zero in an operand).
+     * The minimum lower bound is 0 for operands of arithmetic expressions other
+     * than concatenations (this allows for the propagation of a null returned
+     * from a division by zero in an operand).
      */
-	@Override
-	public Boolean noNullArguments() {
-	    return this.getSelf().getIsConcatenation();
-	}
+    @Override
+    public Integer minLowerBound() {
+        return 0;
+    }
     
 }

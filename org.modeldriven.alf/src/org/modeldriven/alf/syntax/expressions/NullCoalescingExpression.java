@@ -18,7 +18,7 @@ import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.expressions.impl.NullCoalescingExpressionImpl;
 
-public class NullCoalescingExpression extends Expression {
+public class NullCoalescingExpression extends BinaryExpression {
     
     public NullCoalescingExpression() {
         this.impl = new NullCoalescingExpressionImpl(this);
@@ -85,8 +85,7 @@ public class NullCoalescingExpression extends Expression {
 
     /**
      * The multiplicity upper bound of a null-coalescing expression is the
-     * maximum of the multiplicity upper bounds of its operands, but no less
-     * than 1.
+     * maximum of the multiplicity upper bounds of its operands.
      */
     public boolean nullCoalescingExpressionUpperDerivation() {
         return this.getImpl().nullCoalescingExpressionUpperDerivation();
@@ -117,6 +116,24 @@ public class NullCoalescingExpression extends Expression {
     @Override
     public Collection<AssignedSource> updateAssignments() {
         return this.getImpl().updateAssignments();
+    }
+    
+    /**
+     * The minimum lower bound of an operand of a null-coalescing expression
+     * is 0.
+     */
+    @Override
+    public Integer minLowerBound() {
+        return this.getImpl().minLowerBound();
+    }
+    
+    /**
+     * The maximum upper bound of an operand of a null-coalescing expression
+     * is * (unbounded).
+     */
+    @Override
+    public Integer maxUpperBound() {
+        return this.getImpl().minLowerBound();
     }
     
     @Override

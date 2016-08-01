@@ -164,13 +164,13 @@ public class DoStatementImpl extends StatementImpl {
 
 	/**
      * The condition expression of a do statement must have a type that conforms
-     * to type Boolean and a multiplicity upper bound of 1.
+     * to type Boolean and multiplicity [1..1].
 	 **/
 	public boolean doStatementCondition() {
 	    Expression condition = this.getSelf().getCondition();
 	    ElementReference type = condition == null? null: condition.getType();
 		return type != null && type.getImpl().isBoolean() &&
-		            condition.getUpper() == 1;
+		       condition.getLower() == 1 && condition.getUpper() == 1;
 	}
 
 	/**

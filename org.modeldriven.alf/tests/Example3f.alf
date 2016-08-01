@@ -31,6 +31,6 @@ activity acquire (
     property.'acquisition data' = request.'property acquisition data';    
     property.'update status'();
 
-    reply = this.'create reply'(request.identifier, property??);
+    reply = this.'create reply'(request.identifier, property);
   }
 }

@@ -29,11 +29,8 @@ import org.modeldriven.alf.syntax.expressions.SequenceConstructionExpression;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 
-public class NullCoalescingExpressionImpl extends ExpressionImpl {
+public class NullCoalescingExpressionImpl extends BinaryExpressionImpl {
 
-    private Expression operand1 = null;
-    private Expression operand2 = null;
-    
     private ConditionalTestExpression conditionalTestExpression = null;
 
     public NullCoalescingExpressionImpl(NullCoalescingExpression self) {
@@ -45,22 +42,6 @@ public class NullCoalescingExpressionImpl extends ExpressionImpl {
         return (NullCoalescingExpression)this.self;
     }
     
-    public Expression getOperand1() {
-        return this.operand1;
-    }
-
-    public void setOperand1(Expression operand1) {
-        this.operand1 = operand1;
-    }
-
-    public Expression getOperand2() {
-        return this.operand2;
-    }
-
-    public void setOperand2(Expression operand2) {
-        this.operand2 = operand2;
-    }
-
     /**
      * If one of the operand expressions of a null-coalescing expression is
      * identically null (untyped with multiplicity 0..0), then the type of the
@@ -196,6 +177,24 @@ public class NullCoalescingExpressionImpl extends ExpressionImpl {
             }
         }
         return assignmentsAfter;
+    }
+    
+    /**
+     * The minimum lower bound of an operand of a null-coalescing expression
+     * is 0.
+     */
+    @Override
+    public Integer minLowerBound() {
+        return 0;
+    }
+    
+    /**
+     * The maximum upper bound of an operand of a null-coalescing expression
+     * is * (unbounded).
+     */
+    @Override
+    public Integer maxUpperBound() {
+        return -1;
     }
     
     public ConditionalTestExpression getConditionalTestExpression() {
