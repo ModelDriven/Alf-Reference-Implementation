@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
@@ -97,13 +96,15 @@ public class InstanceCreationExpressionMapping extends
     @Override
     public Action mapAction() throws MappingError {
         Action action = super.mapAction();
+        ActivityNode callAction = !(action instanceof StructuredActivityNode)? action:
+            ((StructuredActivityNode)action).getNode().get(0);
         
         // Add a start behavior action if creating an instance of an active
         // class.
-        if (action instanceof CallOperationAction || action instanceof CreateObjectAction) {
-            Class_ class_ = action instanceof CallOperationAction?
-                    ((CallOperationAction)action).getOperation().getClass_():
-                    (Class_)(((CreateObjectAction)action).getClassifier());
+        if (callAction instanceof CallOperationAction || callAction instanceof CreateObjectAction) {
+            Class_ class_ = callAction instanceof CallOperationAction?
+                    ((CallOperationAction)callAction).getOperation().getClass_():
+                    (Class_)(((CreateObjectAction)callAction).getClassifier());
             
             if (class_.getIsActive()) {
                 ForkNode fork = 

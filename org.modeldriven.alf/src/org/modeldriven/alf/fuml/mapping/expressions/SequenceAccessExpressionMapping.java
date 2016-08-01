@@ -36,7 +36,7 @@ public class SequenceAccessExpressionMapping extends BehaviorInvocationExpressio
     
     @Override
     public Action mapAction() throws MappingError {
-        Action action = super.mapAction();
+        Action action = super.mapAction(false);
         
         /**
          * Add a fork node that allows the result of the index expression to also

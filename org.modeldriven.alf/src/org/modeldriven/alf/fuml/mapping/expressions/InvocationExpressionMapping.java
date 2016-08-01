@@ -10,6 +10,7 @@
 package org.modeldriven.alf.fuml.mapping.expressions;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
@@ -51,8 +52,12 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
      * result output pin with that name. (NOTE: This is actually handled by the
      * assignment mapping.)
      */
-
+    
     public Action mapAction() throws MappingError {
+        return this.mapAction(true);
+    }
+
+    public Action mapAction(boolean mayWrapAction) throws MappingError {
         Action action = this.mapTarget();
         
         InvocationExpression expression = this.getInvocationExpression();
@@ -70,12 +75,36 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
 
         action = this.mapFeature(action);
         
+        if (mayWrapAction && 
+           (action instanceof CallBehaviorAction || 
+            action instanceof CallOperationAction) && 
+           !((CallAction)action).getArgument().isEmpty() &&
+           this.resultSource instanceof OutputPin) {
+            action = wrapAction(
+                    this.graph, action, (OutputPin)this.resultSource);
+            this.resultSource = ((StructuredActivityNode)action).
+                    getStructuredNodeOutput().get(0);
+        }
+        
         // NOTE: Adding left-hand side elements here prevents them from being
         // wrapped in the expansion region mapped from a sequence feature
         // invocation.
         this.graph.addAll(this.lhsGraph);
         
         return action;
+    }
+    
+    public static StructuredActivityNode wrapAction(
+            ActivityGraph graph, Action action, OutputPin resultPin) {
+        graph.remove(action);
+        StructuredActivityNode node = graph.addStructuredActivityNode(
+                "Node(" + action.getName() + ")", Collections.singletonList(action));
+        OutputPin output = graph.createOutputPin(
+                "Output(" + resultPin.getName() + ")", 
+                resultPin.getType(), 0, resultPin.getUpper());
+        node.addStructuredNodeOutput(output);
+        node.addEdge(graph.createObjectFlow(resultPin, output));
+        return node;
     }
 
     /*
