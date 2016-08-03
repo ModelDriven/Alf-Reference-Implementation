@@ -98,7 +98,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
             ActivityGraph graph, Action action, OutputPin resultPin) {
         graph.remove(action);
         StructuredActivityNode node = graph.addStructuredActivityNode(
-                "Node(" + action.getName() + ")", Collections.singletonList(action));
+                "Node(" + action.getName() + ")", Collections.singletonList((Element)action));
         OutputPin output = graph.createOutputPin(
                 "Output(" + resultPin.getName() + ")", 
                 resultPin.getType(), 0, resultPin.getUpper());
