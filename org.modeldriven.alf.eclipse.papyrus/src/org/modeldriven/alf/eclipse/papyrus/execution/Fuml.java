@@ -95,7 +95,8 @@ public class Fuml {
     	}
     }
     
-    private void addPrimitiveBehaviorPrototypes() {
+    @SuppressWarnings("restriction")
+	private void addPrimitiveBehaviorPrototypes() {
     	this.createPrimitiveBehaviorPrototype(
     			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::Or", 
     			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Or.class);
