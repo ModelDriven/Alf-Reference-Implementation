@@ -839,5 +839,10 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                         getElement());
         }
     }
+    
+    @Override
+    public int hashCode() {
+        return this.getSelf().getElement().hashCode();
+    }
 
 } // ExternalElementReferenceImpl

@@ -18,6 +18,7 @@ import org.modeldriven.alf.fuml.mapping.units.DataTypeDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.InstanceCreationExpression;
 
 import org.modeldriven.alf.uml.Action;
@@ -38,6 +39,8 @@ import org.modeldriven.alf.uml.Property;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class InstanceCreationExpressionMapping extends
 		InvocationExpressionMapping {
@@ -74,9 +77,13 @@ public class InstanceCreationExpressionMapping extends
      * 5. If the class of the object being created is an active class, then a
      * fork node is added to the mapping with an object flow from the original
      * result source element, and that fork node becomes the new result source
-     * element. The fork node is connected by an object node to the object input
-     * pin of a start object behavior action. In this case, the entire mapping
-     * is always placed within a structured activity node.
+     * element. The fork node is connected by object flows to the object input
+     * pins of start object behavior actions for the class of the object being
+     * created and for each direct or indirect parent class that has a
+     * classifier behavior, unless that classifier behavior is redefined in
+     * another parent class or in the class of the object being created. In this
+     * case, the entire mapping is always placed within a structured activity
+     * node.
      * 
      * Data Value Creation Expression
      * 
@@ -92,6 +99,24 @@ public class InstanceCreationExpressionMapping extends
      * specification action. Otherwise, the result source element is the result
      * of the sequence of write structural feature actions.
      */
+    
+    /**
+     * Exclude classifiers whose classifier behaviors are redefined by the 
+     * classifier behavior of the given classifier.
+     */
+    private static void excludeRedefinitions(
+            Collection<ElementReferenceImpl> excluded, ElementReference classifier) {
+        ElementReference behavior = classifier.getImpl().getClassifierBehavior();
+        if (behavior != null) {
+            for (ElementReference redefinedBehavior: 
+                behavior.getImpl().getRedefinedElements()) {
+                ElementReference context = redefinedBehavior.getImpl().getContext();
+                if (context != null) {
+                    excluded.add(context.getImpl());
+                }
+            }
+        }
+    }
     
     @Override
     public Action mapAction() throws MappingError {
@@ -122,10 +147,23 @@ public class InstanceCreationExpressionMapping extends
                         this.getInstanceCreationExpression().getBoundReferent();
                 if (referent.getImpl().isOperation()) {
                     referent = referent.getImpl().getNamespace();
-                }                
-                for (ElementReference parent: referent.getImpl().allParents()) {
-                    if (parent.getImpl().isClass() && 
-                            parent.getImpl().getClassifierBehavior() != null) {
+                }
+                
+                Collection<ElementReference> allParents = referent.getImpl().allParents();
+
+                // Exclude parents whose classifier behaviors are redefined.
+                // NOTE: ElementReferenceImpl is used in the set because equals and hashCode
+                // are redefined to be in terms of the referenced element.
+                Set<ElementReferenceImpl> excludedParents = new HashSet<ElementReferenceImpl>();
+                excludeRedefinitions(excludedParents, referent);
+                for (ElementReference parent: allParents) {
+                    excludeRedefinitions(excludedParents, parent);
+                }
+                
+                for (ElementReference parent: allParents) {
+                    if (parent.getImpl().isClass() &&
+                        parent.getImpl().getClassifierBehavior() != null &&
+                        !excludedParents.contains(parent.getImpl())) {
                         class_ = (Class_)parent.getImpl().getUml();
                         if (class_ == null) {
                             FumlMapping mapping = this.fumlMap(parent);

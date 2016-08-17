@@ -12,20 +12,30 @@ class Units_ActiveClass specializes Test {
   		new TestRunner(this).Start();
 	}
 
-  public active class C {
+  private active class C {
     public i: Integer;
     public j: Integer;
-    public t: TestRunner;
-    @Create public C(in i: Integer, in t: TestRunner) { 
+    public t: Base;
+    @Create public C(in i: Integer, in t: Base) { 
       this.i = i;
       this.t = t;
     }
   } do {
     $(this.j = this.i);
-    this.t.Continue();
+    this.t.Continue(this);
   }
   
-  public active class TestRunner {
+  private abstract active class Base {
+  
+    public receive signal Start { }
+    public receive signal Continue { public c : C; }
+
+  } do {
+    accept(Start);
+    new C(1, this);
+  }
+  
+  public active class TestRunner specializes Base {
   	
   	private outer: Test;
   	
@@ -33,19 +43,10 @@ class Units_ActiveClass specializes Test {
   		this.outer = outer;
   	}
   
-    public receive signal Start { }
-    public receive signal Continue { }
-
-    public test(out c: C) {
-      c = new C(1, this);    
-    }  
-  
     } do {
-      accept(Start);
-      this.test(c);
-      accept (Continue);
+      accept (sig: Continue);
       
-      AssertEqual("c.j", c.j, 1);
+      AssertEqual("sig.c.j", sig.c.j, 1);
       
       this.outer.done();
     }

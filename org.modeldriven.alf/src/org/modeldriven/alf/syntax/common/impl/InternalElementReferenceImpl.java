@@ -674,4 +674,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
                 type.getImpl().isContainedIn(this.allParents()));
     }
 
+    @Override
+    public int hashCode() {
+        return this.getSelf().getElement().hashCode();
+    }
+
 } // InternalElementReferenceImpl
