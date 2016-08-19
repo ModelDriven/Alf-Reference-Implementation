@@ -18,7 +18,7 @@ package IntermediateActivities {
   
     public run() {}
     public receiveOffer() {}
-    public isSourceFor(in edgeInstance: ActivityEdgeInstance): Boolean {}
+    public isSourceFor(in edgeInstance: ActivityEdgeInstance): Boolean[0..1] {}
     
   }
   

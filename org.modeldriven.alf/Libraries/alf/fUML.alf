@@ -1,9 +1,0 @@
-private import Alf::Library::PrimitiveTypes::*;
-
-@ModelLibrary
-package fUML {
-
-  public package Syntax;
-  public package Semantics;
-  
-}
