@@ -99,7 +99,17 @@ public class ModelNamespaceImpl extends
         }
         pathBuilder.append(".alf");
         try {
-            return this.resolveModelFile(pathBuilder.toString());
+            UnitDefinition unit = this.resolveModelFile(pathBuilder.toString());
+            
+            // Exclude a unit if its name does not match that of the file name (besides
+            // just an improperly named file, this can also happen, if, for example,
+            // the file system treats file names as case insensitive).
+            if (unit != null && unit.getDefinition() != null && 
+                !unit.getDefinition().getName().equals(qualifiedName.getUnqualifiedName().getName())) {
+                unit = new MissingUnit(qualifiedName);
+            }
+            
+            return unit;
         } catch(java.io.FileNotFoundException e) {
             return new MissingUnit(qualifiedName);
         }
