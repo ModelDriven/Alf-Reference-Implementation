@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -20,6 +19,7 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.uml.TestIdentityAction;
 import org.modeldriven.alf.uml.ValueSpecificationAction;
 import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Classifier;
 
 public class ForAllOrExistsOrOneExpressionMapping extends
 		SequenceExpansionExpressionMapping {
@@ -83,8 +83,8 @@ public class ForAllOrExistsOrOneExpressionMapping extends
     }
     
     @Override
-    public void map() throws MappingError {
-        super.map();
+    public Classifier map() throws MappingError {
+        Classifier argumentType = super.map();
         
         String operation = this.getForAllOrExistsOrOneExpression().getOperation();
         
@@ -102,6 +102,8 @@ public class ForAllOrExistsOrOneExpressionMapping extends
             this.graph.addObjectFlow(valueAction.getResult(), testAction.getSecond());
             this.resultSource = testAction.getResult();
         }
+        
+        return argumentType;
     }
     
 	public ForAllOrExistsOrOneExpression getForAllOrExistsOrOneExpression() {

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -49,8 +48,9 @@ public class IsUniqueExpressionMapping extends
     }
     
     @Override
-    public void map() throws MappingError {
-        super.map();
+    public Classifier map() throws MappingError {
+        Classifier argumentType = super.map();
+        this.region.getOutputElement().get(0).setType(argumentType);
 
         ActivityGraph nestedGraph = this.createActivityGraph();
         ActivityNode forkNode = 
@@ -87,16 +87,20 @@ public class IsUniqueExpressionMapping extends
         // result in an input pin at the expansion region boundary.
         IsUniqueExpression expression = this.getIsUniqueExpression();
         ExpansionRegion region = this.graph.addExpansionRegion(
-                "Uniqueness(" + expression.getClass().getSimpleName()+ 
+                "Uniqueness(" + expression.getClass().getSimpleName() + 
                             "@" + expression.getId() + ")", 
                 "parallel", 
                 nestedGraph.getModelElements(), 
                 forkNode, variableSource, nestedResult);
+        region.getInputElement().get(0).setType(argumentType);
+        region.getOutputElement().get(0).setType(argumentType);
         this.graph.addControlFlow(forkStructureNode, region);
         this.resultSource = region.getOutputElement().get(0);
         
         // Add the final check that there are no elements with a count != 1.
         this.addBehaviorCall(RootNamespace.getRootScope().getSequenceFunctionIsEmpty());
+        
+        return argumentType;
     }
     
 	public IsUniqueExpression getIsUniqueExpression() {

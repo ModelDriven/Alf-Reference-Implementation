@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -17,6 +16,7 @@ import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.expressions.CollectOrIterateExpression;
 
 import org.modeldriven.alf.uml.ActivityNode;
+import org.modeldriven.alf.uml.Classifier;
 
 public class CollectOrIterateExpressionMapping extends
 		SequenceExpansionExpressionMapping {
@@ -42,11 +42,13 @@ public class CollectOrIterateExpressionMapping extends
     }
     
     @Override
-    public void map() throws MappingError {
-        super.map();
+    public Classifier map() throws MappingError {
+        Classifier argumentType = super.map();
+        this.region.getOutputElement().get(0).setType(argumentType);
         if ("iterate".equals(this.getCollectOrIterateExpression().getOperation())) {
             this.region.setMode("iterative");
         }
+        return argumentType;
     }
 
 	public CollectOrIterateExpression getCollectOrIterateExpression() {

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -115,9 +114,11 @@ public abstract class SequenceExpansionExpressionMapping extends
         this.mapTo(this.region);
     }
             
-    public void map() throws MappingError {
+    public Classifier map() throws MappingError {
         SequenceExpansionExpression expression = 
             this.getSequenceExpansionExpression();
+        
+        Classifier argumentType = null;
         
         ExtentOrExpression primary = expression.getPrimary();
         FumlMapping mapping = this.fumlMap(
@@ -127,10 +128,14 @@ public abstract class SequenceExpansionExpressionMapping extends
                     mapping.getErrorMessage());
         } else {
             ExpressionMapping primaryMapping = (ExpressionMapping)mapping;
-            ActivityNode primaryNode = this.graph.addStructuredActivityNode(
-                    "Primary(" + expression.getClass().getSimpleName() + 
-                        "@" + expression.getId() + ")", 
-                    primaryMapping.getModelElements());
+            Collection<Element> elements = primaryMapping.getModelElements();
+            ActivityNode primaryNode = null;
+            if (!elements.isEmpty()) {
+                primaryNode = this.graph.addStructuredActivityNode(
+                        "Primary(" + expression.getClass().getSimpleName() + 
+                            "@" + expression.getId() + ")", 
+                        primaryMapping.getModelElements());
+            }
             ActivityGraph nestedGraph = this.createActivityGraph();
             this.variableSource = nestedGraph.addForkNode(
                     "Fork(" + expression.getVariable() + ")");
@@ -140,7 +145,8 @@ public abstract class SequenceExpansionExpressionMapping extends
                 this.throwError("Error mapping argument: " + 
                         mapping.getErrorMessage());
             } else {
-                ExpressionMapping argumentMapping = (ExpressionMapping)mapping;                
+                ExpressionMapping argumentMapping = (ExpressionMapping)mapping;
+                argumentType = argumentMapping.getType();
                 nestedGraph.addAll(argumentMapping.getGraph());
                 
                 this.mapRegion(
@@ -151,9 +157,13 @@ public abstract class SequenceExpansionExpressionMapping extends
                         this.variableSource);
                 this.region.getInputElement().get(0).setType(primaryMapping.getType());
                 this.region.getOutputElement().get(0).setType(primaryMapping.getType());
-                this.graph.addControlFlow(primaryNode, this.region);
+                if (primaryNode != null) {
+                    this.graph.addControlFlow(primaryNode, this.region);
+                }
             }
         }
+        
+        return argumentType;
     }
         
     //Used by subclasses
