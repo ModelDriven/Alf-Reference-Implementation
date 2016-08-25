@@ -163,13 +163,19 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
      * Similarly, each output pin of the call behavior action (other than the
      * output pin for a return parameter) corresponds to an out or inout
      * parameter. If there is an argument expression for that parameter in the
-     * type, then the output pin is the source of an object flow whose target is
-     * assigned value input for the argument expression. NOTE: Call behavior
+     * tuple, then the output pin is the source of an object flow whose target
+     * is assigned value input for the argument expression. NOTE: Call behavior
      * action pins corresponding to unmatched parameters remain unconnected. If
-     * the behavior has a return parameter, then the output pin of the call
-     * behavior action corresponding to that parameter is the result source
-     * element for the behavior invocation action. Otherwise it has no result
-     * source element.
+     * the behavior does not have a return parameter, then the behavior
+     * invocation expression has no result source element. Otherwise, the output
+     * pin of the call behavior action corresponding to that parameter is the
+     * result source element for the behavior invocation expression, unless
+     * indexing from 0 applies to the behavior invocation expression and the
+     * invocation is of a library function whose return value is affected by
+     * this, in which case the output pin is connected by an object flow to an
+     * invocation of the IntegerFunctions::- function whose second argument is
+     * 1, and the result of that invocation provides the result source element
+     * for the behavior invocation expression.
      * 
      * 3. A behavior invocation expression whose qualified name resolves to an
      * association end maps to a read link action with end data for the ends of

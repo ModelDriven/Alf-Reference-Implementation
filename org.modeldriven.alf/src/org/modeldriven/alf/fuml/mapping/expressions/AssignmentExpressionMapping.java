@@ -88,11 +88,13 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * argument input pin of the call behavior action. The result source element
      * from the mapping of the right-hand side is connected to the element
      * argument input pin and the result source element from the mapping of the
-     * index expression is connected to the index argument input pin. The seq
-     * output pin of the call behavior action is connected by an object flow to
-     * a fork node, which is the result source element for the assignment
-     * expression and also the source for the assigned value for the name after
-     * the expression.
+     * index expression is connected to the index argument input pin (if
+     * indexing from 0 applies to the left-hand side, then the mapping of the
+     * index expression is adjusted as for the index expression of a sequence
+     * access expression). The seq output pin of the call behavior action is
+     * connected by an object flow to a fork node, which is the result source
+     * element for the assignment expression and also the source for the
+     * assigned value for the name after the expression.
      * 
      * Simple Assignment: Feature Left-Hand Side, without Index
      * 
@@ -133,9 +135,11 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
      * 
      * 10. If the left-hand side has an index, then the mapping of a simple
      * assignment includes a structured activity node containing the mapping of
-     * the index expression. The further mapping of the assignment expression
-     * then depends on the multiplicity upper bound of the right-hand side
-     * expression.
+     * the index expression (if indexing from 0 applies to the left-hand side,
+     * then the mapping of the index expression is adjusted as for the index
+     * expression of a sequence access expression). The further mapping of the
+     * assignment expression then depends on the multiplicity upper bound of the
+     * right-hand side expression.
      * 
      * 11. If the right-hand side expression has a multiplicity upper bound of
      * 0, then the simple assignment maps to a remove structural feature value

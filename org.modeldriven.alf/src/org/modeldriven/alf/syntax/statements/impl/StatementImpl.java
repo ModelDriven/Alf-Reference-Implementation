@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -36,6 +35,7 @@ public abstract class StatementImpl extends DocumentedElementImpl {
 	private Map<String, AssignedSource> assignmentAfter = null; // DERIVED
 	private Statement enclosingStatement = null; // DERIVED
 	private Boolean isIsolated = null; // DERIVED
+	private Boolean isIndexFrom0 = null; // DERIVED
 
 	public StatementImpl(Statement self) {
 		super(self);
@@ -161,6 +161,17 @@ public abstract class StatementImpl extends DocumentedElementImpl {
 		this.isIsolated = isIsolated;
 	}
 
+    public Boolean getIsIndexFrom0() {
+        if (this.isIndexFrom0 == null) {
+            this.setIsIndexFrom0(this.deriveIsIndexFrom0());
+        }
+        return this.isIndexFrom0;
+    }
+    
+    public void setIsIndexFrom0(Boolean isIndexFrom0) {
+        this.isIndexFrom0 = isIndexFrom0;
+    }
+
     /**
      * The assignments before are usually set externally.
      */
@@ -189,15 +200,37 @@ public abstract class StatementImpl extends DocumentedElementImpl {
 		return this.hasAnnotation("isolated");
 	}
 
+    /**
+     * A statement has indexing from 0 if it has an @indexFrom0 annotation, or
+     * it is contained in a statement with indexing from 0 and it does not have
+     * an @indexFrom1 annotation applied.
+     */
+    protected Boolean deriveIsIndexFrom0() {
+        if (this.hasAnnotation("indexFrom0")) {
+            return true;
+        } else if (this.hasAnnotation("indexFrom1")) {
+            return false;
+        } else {
+            Statement enclosingStatement = this.getSelf().getEnclosingStatement();
+            return enclosingStatement != null && 
+                   enclosingStatement.getIsIndexFrom0();
+        }
+    }
+    
 	/*
 	 * Derivations
 	 */
 	
-	public boolean statementIsIsolatedDerivation() {
-		this.getSelf().getIsIsolated();
-		return true;
-	}
-	
+    public boolean statementIsIsolatedDerivation() {
+        this.getSelf().getIsIsolated();
+        return true;
+    }
+    
+    public boolean statementIsIndexFrom0Derivation() {
+        this.getSelf().getIsIsolated();
+        return true;
+    }
+    
 	/*
 	 * Constraints
 	 */
@@ -257,18 +290,6 @@ public abstract class StatementImpl extends DocumentedElementImpl {
             }
         }
         return false;
-    }
-    
-    public boolean isIndexFrom0() {
-        if (this.hasAnnotation("indexFrom0")) {
-            return true;
-        } else if (this.hasAnnotation("indexFrom1")) {
-            return false;
-        } else {
-            Statement enclosingStatement = this.getSelf().getEnclosingStatement();
-            return enclosingStatement != null && 
-                    enclosingStatement.getImpl().isIndexFrom0();
-        }
     }
     
     private static boolean uniqueAssignments(Collection<AssignedSource> assignments) {

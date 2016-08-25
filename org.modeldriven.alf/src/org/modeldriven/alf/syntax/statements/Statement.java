@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -98,6 +97,14 @@ public abstract class Statement extends DocumentedElement {
 		this.getImpl().setIsIsolated(isIsolated);
 	}
 
+    public Boolean getIsIndexFrom0() {
+        return this.getImpl().getIsIndexFrom0();
+    }
+    
+    public void setIsIndexFrom0(Boolean isIndexFrom0) {
+        this.getImpl().setIsIndexFrom0(isIndexFrom0);
+    }
+
 	/**
 	 * All the annotations of a statement must be allowed, as given by the
 	 * annotationAllowed operation for the statement.
@@ -120,6 +127,15 @@ public abstract class Statement extends DocumentedElement {
 		return this.getImpl().statementIsIsolatedDerivation();
 	}
 
+    /**
+     * A statement has indexing from 0 if it has an @indexFrom0 annotation, or
+     * it is contained in a statement with indexing from 0 and it does not have
+     * an @indexFrom1 annotation applied.
+     */
+    public boolean statementIsIndexFrom0Derivation() {
+        return this.getImpl().statementIsIndexFrom0Derivation();
+    }
+    
 	/**
 	 * Returns true if the given annotation is allowed for this kind of
 	 * statement. By default, only an @isolated annotation is allowed, with no
@@ -144,6 +160,7 @@ public abstract class Statement extends DocumentedElement {
 		this.getAssignmentAfter();
 		this.getEnclosingStatement();
 		this.getIsIsolated();
+		this.getIsIndexFrom0();
 		super._deriveAll();
 		Collection<Annotation> annotation = this.getAnnotation();
 		if (annotation != null) {
@@ -163,10 +180,14 @@ public abstract class Statement extends DocumentedElement {
 			violations.add(new ConstraintViolation(
 					"statementUniqueAssignments", this));
 		}
-		if (!this.statementIsIsolatedDerivation()) {
-			violations.add(new ConstraintViolation(
-					"statementIsIsolatedDerivation", this));
-		}
+        if (!this.statementIsIsolatedDerivation()) {
+            violations.add(new ConstraintViolation(
+                    "statementIsIsolatedDerivation", this));
+        }
+        if (!this.statementIsIndexFrom0Derivation()) {
+            violations.add(new ConstraintViolation(
+                    "statementIsIndexFrom0Derivation", this));
+        }
 		Collection<Annotation> annotation = this.getAnnotation();
 		if (annotation != null) {
 			for (Object _annotation : annotation.toArray()) {
@@ -180,6 +201,8 @@ public abstract class Statement extends DocumentedElement {
 		if (includeDerived) {
 			s.append(" /isIsolated:");
 			s.append(this.getIsIsolated());
+			s.append(" /isIndexFrom0:");
+			s.append(this.getIsIndexFrom0());
 		}
 		return s.toString();
 	}

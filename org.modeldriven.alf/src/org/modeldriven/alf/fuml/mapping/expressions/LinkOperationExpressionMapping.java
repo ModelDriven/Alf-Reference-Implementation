@@ -35,7 +35,11 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
      * association end is ordered, then the insertAt input pin for that end is
      * the target of an object flow from the result source element of the
      * mapping of the corresponding index expression (which defaults to * if not
-     * given explicitly).
+     * given explicitly). If indexing from 0 applies to the link operation
+     * expression, then the mapping of the index expression is adjusted as for
+     * the index expression of a sequence access expression, except that the
+     * value is first tested whether it is equal to * and then converted to an
+     * integer and incremented only if it is not.
      * 
      * 2. A link operation expression for the operation destroyLink maps to a
      * destroy link action for the named association. The value input pin of the
@@ -46,7 +50,11 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
      * isDestroyDuplicates=false and the insertAt input pin for that end is the
      * target of an object flow from the result source element of the mapping of
      * the corresponding index expression (which defaults to * if not given
-     * explicitly).
+     * explicitly). If indexing from 0 applies to the link operation
+     * expression, then the mapping of the index expression is adjusted as for
+     * the index expression of a sequence access expression, except that the
+     * value is first tested whether it is equal to * and then converted to an
+     * integer and incremented only if it is not.
      * 
      * 3. A link operation expression for the link operation clearAssoc maps to
      * a clear association action for the named association. The object input

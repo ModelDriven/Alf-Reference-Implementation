@@ -253,7 +253,7 @@ public abstract class StatementMapping extends DocumentedElementMapping {
 	}
 	
 	public boolean isIndexFrom0() {
-	    return this.getStatement().getImpl().isIndexFrom0();
+	    return this.getStatement().getImpl().getIsIndexFrom0();
 	}
 	
     public FumlMapping exprMap(Expression expression) {

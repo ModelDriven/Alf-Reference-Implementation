@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -74,7 +73,11 @@ public abstract class TupleMapping extends SyntaxElementMapping {
      * connected by an object flow to an invocation of the
      * BitStringFunctions::toBitString function, and the result of that
      * invocation provides the source for setting the value of the associated
-     * parameter.
+     * parameter. If the tuple is in a behavior invocation expression or
+     * sequence operation expression to which indexing from 0 applies, and the
+     * parameter is an affected index parameter, then the mapping of the
+     * argument expression is adjusted as for the index expression of a sequence
+     * access expression.
      * 
      * 3. For an argument for an out parameter, the argument expression is
      * mapped as a left hand side of an assignment: an argument that is a local

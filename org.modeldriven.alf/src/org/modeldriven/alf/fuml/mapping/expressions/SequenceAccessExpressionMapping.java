@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -23,8 +22,8 @@ public class SequenceAccessExpressionMapping extends BehaviorInvocationExpressio
     private InvocationExpression invocation = null;
     private ActivityNode indexSource = null;
     
-    /*
-     * A sequence access expression is mapped to a call to the primitive
+    /**
+     * 1. A sequence access expression is mapped to a call to the primitive
      * behavior Alf::Library::PrimitiveBehaviors::SequenceFunctions::At. The
      * result source element of the primary expression of the sequence access
      * expression is connected by an object flow to the first argument input pin
@@ -32,6 +31,15 @@ public class SequenceAccessExpressionMapping extends BehaviorInvocationExpressio
      * expression is connected by an object flow to the second argument input
      * pin. The result output pin of the call behavior action is the result
      * source element for the sequence access expression.
+     * 
+     * 2. If indexing from 0 applies to the sequence access expression, then the
+     * mapping of its index expression is adjusted as follows. The result source
+     * element of the index expression is connected by an object flow to the
+     * first argument pin of a call to the primitive behavior
+     * Alf::Library::PrimitiveBehaviors::IntegerFunctions::+, and the result of
+     * a value specification action for the value 1 is connected to the second
+     * argument pin. The result output pin of the call behavior action is then
+     * used as the result source element for the index.
      */
     
     @Override
