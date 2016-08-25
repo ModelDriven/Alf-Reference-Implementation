@@ -67,7 +67,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         
         Collection<Clause> clauses = new ArrayList<Clause>(); 
         Expression expression = statement.getExpression();
-        FumlMapping mapping = this.fumlMap(expression);
+        FumlMapping mapping = this.exprMap(expression);
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping switch expression: " + 
                     mapping.getErrorMessage());
@@ -96,6 +96,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
                     clauseMapping.setSwitchSource(forkNode);
                     clauseMapping.setSwitchLower(expression.getLower());
                     clauseMapping.setAssignmentsAfter(assignmentsAfter);
+                    clauseMapping.setIsIndexFrom0(this.isIndexFrom0());
                     graph.addToStructuredNode(
                             node, clauseMapping.getModelElements());
                     Clause clause = clauseMapping.getClause();

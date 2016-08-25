@@ -236,7 +236,9 @@ public abstract class StatementImpl extends DocumentedElementImpl {
 	 * default.
 	 **/
 	public Boolean annotationAllowed(Annotation annotation) {
-		return annotation.getIdentifier().equals("isolated") && 
+		return (annotation.getIdentifier().equals("isolated") || 
+		        annotation.getIdentifier().equals("indexFrom0") ||
+		        annotation.getIdentifier().equals("indexFrom1")) && 
 		            annotation.getArgument().size() == 0;
 	} // annotationAllowed
 	
@@ -255,6 +257,18 @@ public abstract class StatementImpl extends DocumentedElementImpl {
             }
         }
         return false;
+    }
+    
+    public boolean isIndexFrom0() {
+        if (this.hasAnnotation("indexFrom0")) {
+            return true;
+        } else if (this.hasAnnotation("indexFrom1")) {
+            return false;
+        } else {
+            Statement enclosingStatement = this.getSelf().getEnclosingStatement();
+            return enclosingStatement != null && 
+                    enclosingStatement.getImpl().isIndexFrom0();
+        }
     }
     
     private static boolean uniqueAssignments(Collection<AssignedSource> assignments) {

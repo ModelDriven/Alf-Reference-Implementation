@@ -53,6 +53,7 @@ public class SequenceExpressionListMapping extends SequenceElementsMapping {
                         mapping.getErrorMessage());
             } else {
                 ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
+                expressionMapping.setIsIndexFrom0(this.isIndexFrom0());
                 ActivityNode resultSource = expressionMapping.getResultSource();
                 ActivityGraph subgraph = expressionMapping.getGraph();
                 ElementReference type = expressionList.getImpl().getType(owner);

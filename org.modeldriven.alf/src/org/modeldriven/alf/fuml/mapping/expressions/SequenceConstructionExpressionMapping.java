@@ -83,7 +83,7 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
         SequenceConstructionExpression expression = 
             this.getSequenceConstructionExpression();
         if (!expression.getHasMultiplicity()) {
-            FumlMapping mapping = this.fumlMap(
+            FumlMapping mapping = this.exprMap(
                     expression.getImpl().getInstanceCreationExpression());
             if (!(mapping instanceof InstanceCreationExpressionMapping)) {
                 this.throwError("Error mapping collection instance creation: " + 

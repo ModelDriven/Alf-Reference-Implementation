@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -28,11 +27,12 @@ import org.modeldriven.alf.uml.Element;
 
 public abstract class ExpressionMapping extends SyntaxElementMapping {
     
+    private boolean isIndexFrom0 = false;
     private Classifier type = null;
     protected ActivityGraph graph = this.createActivityGraph();
-
-    public ActivityNode getResultSource() throws MappingError {
-        return null;
+    
+    public boolean isIndexFrom0() {
+        return this.isIndexFrom0;
     }
     
     @Override
@@ -79,6 +79,22 @@ public abstract class ExpressionMapping extends SyntaxElementMapping {
 		return (Expression) this.getSource();
 	}
 	
+    public void setIsIndexFrom0(boolean isIndexFrom0) {
+        this.isIndexFrom0 = isIndexFrom0;
+    }
+
+    public ActivityNode getResultSource() throws MappingError {
+        return null;
+    }
+    
+    public FumlMapping exprMap(Expression expression) {
+        FumlMapping mapping = this.fumlMap(expression);
+        if (mapping instanceof ExpressionMapping) {
+            ((ExpressionMapping)mapping).setIsIndexFrom0(this.isIndexFrom0());
+        }
+        return mapping;
+    }
+    
 	/**
 	 * Return the source node for the value of an index of this expression, if
 	 * any.

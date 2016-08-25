@@ -213,7 +213,7 @@ public class CastExpressionMapping extends ExpressionMapping {
         ElementReference type = expression.getType();
         ElementReference operandType = operand == null? null: operand.getType();
         
-        FumlMapping mapping = this.fumlMap(operand);
+        FumlMapping mapping = this.exprMap(operand);
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping operand expression: " + 
                     mapping.getErrorMessage());

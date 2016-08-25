@@ -87,7 +87,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
     protected ExpressionMapping mapOperand(Expression operand) 
         throws MappingError {
         ExpressionMapping operandMapping = null;
-        FumlMapping mapping = this.fumlMap(operand);
+        FumlMapping mapping = this.exprMap(operand);
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping operand expression: " + 
                     mapping.getErrorMessage());

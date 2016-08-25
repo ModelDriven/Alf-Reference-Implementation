@@ -19,11 +19,13 @@ import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.DocumentedElementMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
+import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Statement;
 
 import org.modeldriven.alf.uml.*;
@@ -250,6 +252,18 @@ public abstract class StatementMapping extends DocumentedElementMapping {
 	    return this.getGraph().getModelElements();
 	}
 	
+	public boolean isIndexFrom0() {
+	    return this.getStatement().getImpl().isIndexFrom0();
+	}
+	
+    public FumlMapping exprMap(Expression expression) {
+        FumlMapping mapping = this.fumlMap(expression);
+        if (mapping instanceof ExpressionMapping) {
+            ((ExpressionMapping)mapping).setIsIndexFrom0(this.isIndexFrom0());
+        }
+        return mapping;
+    }
+    
 	@Override
 	public String toString() {
 	    return super.toString() + " node:" + this.node;

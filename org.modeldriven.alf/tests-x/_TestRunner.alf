@@ -25,6 +25,9 @@ active class _TestRunner specializes Test::Tester {
     WriteLine("Expressions_Increment_Decrement...");
     new Expressions_Increment_Decrement::run(this);
     accept(Continue);
+    WriteLine("Expressions_Indexing...");
+    new Expressions_Indexing::run(this);
+    accept(Continue);
     WriteLine("Expressions_Invocation...");
     new Expressions_Invocation::run(this);
     accept(Continue);

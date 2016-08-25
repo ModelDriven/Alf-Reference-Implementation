@@ -38,6 +38,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
     private Clause clause = null;
     private Collection<Element> modelElements = null;
     private List<AssignedSource> assignmentsAfter = null;
+    private boolean isIndexFrom0 = false;
 
     /**
      * 1. Each if clause maps to a clause of the conditional node.
@@ -67,6 +68,11 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         this.assignmentsAfter = assignmentsAfter;
     }
     
+    // NOTE: This should be called before mapping.
+    public void setIsIndexFrom0(boolean isIndexFrom0) {
+        this.isIndexFrom0 = isIndexFrom0;
+    }
+    
     public void mapClause() throws MappingError {
         NonFinalClause nonFinalClause = this.getNonFinalClause();
         Expression condition = nonFinalClause.getCondition();
@@ -77,6 +83,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
             this.throwError("Error mapping condition: " + 
                     mapping.getErrorMessage());
         } else {
+            ((ExpressionMapping)mapping).setIsIndexFrom0(this.isIndexFrom0);
             this.modelElements = new ArrayList<Element>();
             this.clause = createClause(
                     mapping.getModelElements(), 

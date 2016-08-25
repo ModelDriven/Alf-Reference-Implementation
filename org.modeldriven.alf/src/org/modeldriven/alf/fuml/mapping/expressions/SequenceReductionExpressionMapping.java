@@ -61,7 +61,7 @@ public class SequenceReductionExpressionMapping extends ExpressionMapping {
                 behavior, this.getType(), expression.getIsOrdered());
         ExtentOrExpression primary = expression.getPrimary();
         FumlMapping mapping = 
-                this.fumlMap(primary == null? null: primary.getExpression());
+                this.exprMap(primary == null? null: primary.getExpression());
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping primary expression: " + 
                     mapping.getErrorMessage());

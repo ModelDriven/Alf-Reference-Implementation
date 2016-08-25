@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -42,13 +41,13 @@ public class BehaviorInvocationExpressionMapping extends
                 List<ElementReference> parameters = 
                         collectionFunctionAdd.getImpl().getParameters();
                 Tuple tuple = invocation.getTuple();
-                FumlMapping mapping = this.fumlMap(
+                FumlMapping mapping = this.exprMap(
                         tuple.getImpl().getInput(parameters.get(0).getImpl().getName()));
                 if (mapping instanceof NameExpressionMapping) {
                     ActivityNode resultSource = 
                             ((NameExpressionMapping)mapping).getResultSource();
                     if (resultSource instanceof ExpansionNode) {
-                        mapping = this.fumlMap(
+                        mapping = this.exprMap(
                                 tuple.getImpl().getInput(parameters.get(1).getImpl().getName()));
                         if (!(mapping instanceof ExpressionMapping)) {
                             this.throwError("Error mapping parallel add expression: " + 

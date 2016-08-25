@@ -1,0 +1,108 @@
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+ * Test 0 and 1 based indexing.
+ **/
+class Expressions_Indexing specializes Test {
+ 
+    @Create public Expressions_Indexing() {
+        this.run(null);
+    }
+     
+    @Create public run(in tester: Tester[0..1]) {
+        super(tester);
+        
+        this.test(a0, b0, i0, listA0, listB0, a1, b1, i1, listA1, listB1);
+        
+        AssertEqual("a0", a0, 1);
+        AssertEqual("b0", b0, 2);
+        AssertEqual("i0", i0, 3);
+        AssertList("listA0", listA0, Integer[]{1, 0, -1, 2, -3, 4});
+        AssertList("listB0", listB0, Integer[]{1, 0, -1, -2, -3, 4});
+        
+        AssertEqual("a1", a1, a0);
+        AssertEqual("b1", b1, b0);
+        AssertEqual("i1", i1, i0);
+        AssertList("listA1", listA1, listA0);
+        AssertList("listB1", listB1, listB0);
+        
+        AssertList("this.list", this.list, Integer[]{1, 5, 3, 5});
+        AssertList("this.i", this.i, Integer[]{1, 2, 3});
+        
+        this.done();       
+    }
+    
+    private list: Integer[] sequence = {1, 2, 3, 4};
+    
+    assoc R {
+        public x: Expressions_Indexing;
+        public i: Integer[] sequence;
+    }
+     
+    public test (
+        out a0: Integer[0..1], out b0: Integer[0..1], out i0: Integer[0..1], 
+        out listA0: Integer[] sequence, out listB0: Integer[] sequence,
+        out a1: Integer[0..1], out b1: Integer[0..1], out i1: Integer[0..1], 
+        out listA1: Integer[] sequence, out listB1: Integer[] sequence
+        ) {
+        
+        //@indexFrom0
+        {
+            listA0 = Integer[]{1, 2, 3, 4};
+            listB0 = listA0;
+            
+            a0 = listA0[0];
+            b0 = listA0->at(1);
+            i0 = listA0->indexOf(4);
+            
+            listA0 = listA0->includeAt(2, -1); // {1, 2, -1, 3, 4}
+            listA0 = includeAllAt(listA0, 3, Integer[]{-2, -3}); // {1, 2, -1, -2, -3, 3, 4}
+            listA0 = (Integer)listA0->ExcludeAt(5); // {1, 2, -1, -2, -3, 4}
+            listA0 = (Integer)ReplacingAt(listA0, 1, 0); // {1, 0, -1, -2, -3, 4}
+            listA0[3] = 2; // {1, 0, -1, 2, -3, 4}
+            
+            listB0->addAt(2, -1);
+            listB0->addAllAt(3, Integer[]{-2, -3});
+            listB0->removeAt(5);
+            listB0->replaceAt(1, 0);
+            
+            //@indexFrom1
+            {
+	            listA1 = Integer[]{1, 2, 3, 4};
+	            listB1 = listA1;
+	            
+	            a1 = listA1[1];
+	            b1 = listA1->at(2);
+	            i1 = listA1->indexOf(3);
+	             
+	            listA1 = listA1->includeAt(3, -1); // {1, 2, -1, 3, 4}
+	            listA1 = includeAllAt(listA1, 4, Integer[]{-2, -3}); // {1, 2, -1, -2, -3, 3, 4}
+	            listA1 = (Integer)listA1->ExcludeAt(6); // {1, 2, -1, -2, -3, 4}
+	            listA1 = (Integer)ReplacingAt(listA1, 2, 0); // {1, 0, -1, -2, -3, 4}
+	            listA1[4] = 2; // {1, 0, -1, 2, -3, 4}
+	            
+	            listB1->addAt(3, -1);
+                listB1->addAllAt(4, Integer[]{-2, -3});
+	            listB1->removeAt(6);
+	            listB1->replaceAt(2, 0);
+            }
+            
+            if (true) {
+                this.list[this.list[0]] = this.list[1] + this.list[2]; // {1, 5, 3, 4}
+                this.list[this.list[2]]++; // {1, 5, 3, 5}
+            }
+            
+            //@indexFrom1
+            do {
+                R.createLink(x=>this, i[1]=>2);
+                //@indexFrom0
+                R.createLink(x=>this, i[0]=>1);
+                //@indexFrom0
+                R.createLink(x=>this, i[2]=>3);
+            } while(false);
+            
+	    }	     
+	}
+    
+}
+             
+             

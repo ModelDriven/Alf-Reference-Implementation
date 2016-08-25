@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,6 +9,7 @@
 
 package org.modeldriven.alf.fuml.mapping.expressions;
 
+import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.AssignedSourceMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.LeftHandSideMapping;
@@ -21,6 +21,7 @@ import org.modeldriven.alf.syntax.expressions.NameLeftHandSide;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.StructuredActivityNode;
 import org.modeldriven.alf.uml.ActivityNode;
 
 public class NameLeftHandSideMapping extends LeftHandSideMapping {
@@ -69,12 +70,23 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
                                 mapping.getErrorMessage());
                     } else {
                         ExpressionMapping indexMapping = (ExpressionMapping)mapping;
+                        indexMapping.setIsIndexFrom0(this.isIndexFrom0);
+                        indexSource = indexMapping.getResultSource();
                         this.controlTarget = 
                             this.graph.addStructuredActivityNode(
                                     "Index(LeftHandSide@" + lhs.getId() +")", 
                                     indexMapping.getModelElements());
-                        indexSource = indexMapping.getResultSource();
-                    }
+                        
+                        // Adjust for indexing from 0, if necessary.
+                        if (this.isIndexFrom0) {
+                            ActivityGraph subgraph = this.createActivityGraph();
+                            indexSource = TupleMapping.mapIncrement(subgraph, indexSource);
+                            this.graph.addToStructuredNode(
+                                    (StructuredActivityNode)this.controlTarget, 
+                                    subgraph.getModelElements());
+                        }
+                        
+                     }
                 }
                 String name = lhs.getTarget().getUnqualifiedName().getName();
                 AssignedSource assignment = lhs.getImpl().getAssignmentBefore(name);

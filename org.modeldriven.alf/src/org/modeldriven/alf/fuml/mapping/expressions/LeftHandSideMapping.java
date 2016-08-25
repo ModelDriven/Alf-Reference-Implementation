@@ -40,7 +40,8 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
     
     protected ActivityNode indexSource = null;
     protected ActivityNode objectSource = null;
-    
+    protected boolean isIndexFrom0 = false;
+
     private int rhsUpper = -1;
 
     /**
@@ -134,7 +135,11 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
     public void setRhsUpper(int rhsUpper) {
         this.rhsUpper = rhsUpper;
     }
-
+    
+    public void setIsIndexFrom0(boolean isIndexFrom0) {
+        this.isIndexFrom0 = isIndexFrom0;
+    }
+    
     public void map() throws MappingError {
         LeftHandSide lhs = this.getLeftHandSide();
         FeatureReference feature = lhs.getImpl().getFeature();
@@ -162,6 +167,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                             mapping.getErrorMessage());
                 } else {
                     ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
+                    expressionMapping.setIsIndexFrom0(this.isIndexFrom0);
                     Collection<Element> elements = expressionMapping.getModelElements();
                     if (!elements.isEmpty()) {
                         this.controlTarget = this.graph.addStructuredActivityNode(
@@ -222,7 +228,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                                     property, subgraph, 
                                     clearAction.getResult(), valuePin, this);
 
-                    graph.addToStructuredNode(
+                    this.graph.addToStructuredNode(
                             (StructuredActivityNode)this.node, 
                             subgraph.getModelElements());
                 }
@@ -236,30 +242,34 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                     } else {
                         ExpressionMapping indexMapping = 
                                 (ExpressionMapping)mapping;
+                        indexMapping.setIsIndexFrom0(this.isIndexFrom0);
+                        indexSource = indexMapping.getResultSource();
+
                         StructuredActivityNode indexNode = 
                                 this.graph.addStructuredActivityNode(
                                         "Index(LeftHandSide@" + lhs.getId() +")", 
                                         indexMapping.getModelElements());
+                        
+                        // Adjust for indexing from 0, if necessary.
+                        if (this.isIndexFrom0) {
+                            ActivityGraph subgraph = this.createActivityGraph();
+                            indexSource = TupleMapping.mapIncrement(subgraph, indexSource);
+                            this.graph.addToStructuredNode(
+                                    indexNode, subgraph.getModelElements());
+                        }
+                        
                         if (this.controlTarget == null) {
                             this.controlTarget = indexNode;
                         } else {
                             this.graph.addControlFlow(
                                     this.controlTarget, indexNode);
                         }
-                        indexSource = indexMapping.getResultSource();
                     }
                 }
                 
-                ElementReference indexType = index.getType();
-
-                if (indexType != null && indexType.getImpl().isInteger()) {
-                    CallBehaviorAction indexConversionAction = 
-                            this.graph.addCallBehaviorAction(getBehavior(
-                                    RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural()));
-                    this.graph.addObjectFlow(
-                            indexSource, indexConversionAction.getArgument().get(0));
-                    indexSource = indexConversionAction.getResult().get(0);
-                }
+                indexSource = AssignmentExpressionMapping.mapConversion(
+                        this.graph, indexSource, 
+                        RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural());
 
                 if (this.rhsUpper == 0) {
                     RemoveStructuralFeatureValueAction removeAction =

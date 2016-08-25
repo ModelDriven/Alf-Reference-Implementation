@@ -91,6 +91,7 @@ public class IfStatementMapping extends ConditionalStatementMapping {
             } else {
                 ConcurrentClausesMapping clausesMapping =
                     (ConcurrentClausesMapping)mapping;
+                clausesMapping.setIsIndexFrom0(this.isIndexFrom0());
                 clausesMapping.setAssignmentsAfter(assignmentsAfter);
                 Collection<Clause> clauses = clausesMapping.getClauses();
                 for (Clause clause: clauses) {

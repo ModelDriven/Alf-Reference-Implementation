@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -41,7 +40,7 @@ public class LocalNameDeclarationStatementMapping extends StatementMapping {
         AssignmentExpression expression = 
             statement.getImpl().getAssignmentExpression();
         
-        FumlMapping mapping = this.fumlMap(expression);
+        FumlMapping mapping = this.exprMap(expression);
         this.addToNode(mapping.getModelElements());
         this.assignmentMapping = (AssignmentExpressionMapping)mapping;
     }

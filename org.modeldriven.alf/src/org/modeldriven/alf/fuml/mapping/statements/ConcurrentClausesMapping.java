@@ -26,13 +26,20 @@ import java.util.List;
 
 public class ConcurrentClausesMapping extends SyntaxElementMapping {
     
-    Collection<Clause> clauses = null;
-    Collection<Element> modelElements = null;
-    List<AssignedSource> assignmentsAfter = null;
+    private Collection<Clause> clauses = null;
+    private Collection<Element> modelElements = null;
+    private List<AssignedSource> assignmentsAfter = null;
+    private boolean isIndexFrom0 = false;
+    
     
     // NOTE: This should be called before mapping.
     public void setAssignmentsAfter(List<AssignedSource> assignmentsAfter) {
         this.assignmentsAfter = assignmentsAfter;
+    }
+    
+    // NOTE: This should be called before mapping.
+    public void setIsIndexFrom0(boolean isIndexFrom0) {
+        this.isIndexFrom0 = isIndexFrom0;
     }
     
     public void map() throws MappingError {
@@ -49,6 +56,7 @@ public class ConcurrentClausesMapping extends SyntaxElementMapping {
             } else {
                 NonFinalClauseMapping nonFinalClauseMapping =
                     (NonFinalClauseMapping)mapping;
+                nonFinalClauseMapping.setIsIndexFrom0(this.isIndexFrom0);
                 nonFinalClauseMapping.setAssignmentsAfter(this.assignmentsAfter);
                 this.clauses.add(nonFinalClauseMapping.getClause());
                 this.modelElements.addAll(mapping.getModelElements());

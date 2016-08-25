@@ -84,7 +84,7 @@ public class ReturnStatementMapping extends StatementMapping {
         
         Expression expression = returnStatement.getExpression();
         if (expression != null) {
-            FumlMapping mapping = this.fumlMap(expression);
+            FumlMapping mapping = this.exprMap(expression);
             if (!(mapping instanceof ExpressionMapping)) {
                 this.throwError("Error mapping expression: " + 
                         mapping.getErrorMessage());

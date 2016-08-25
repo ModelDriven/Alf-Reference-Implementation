@@ -34,6 +34,7 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
     private ActivityNode switchSource = null;
     private int switchLower = 0;
     private List<AssignedSource> assignmentsAfter = null;
+    private boolean isIndexFrom0 = false;
     
     /**
      * A switch clause maps to a concurrent clause of the conditional node.
@@ -56,6 +57,11 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
         this.assignmentsAfter = assignmentsAfter;
     }
     
+    // NOTE: This should be called before mapping.
+    public void setIsIndexFrom0(boolean isIndexFrom0) {
+        this.isIndexFrom0 = isIndexFrom0;
+    }
+    
     public void mapClause() throws MappingError {
         SwitchClause switchClause = this.getSwitchClause();
         Block block = switchClause.getBlock();
@@ -70,6 +76,7 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
     
             } else {
                 ExpressionMapping caseMapping = (ExpressionMapping)mapping;
+                caseMapping.setIsIndexFrom0(this.isIndexFrom0);
                 ActivityNode resultSource = caseMapping.getResultSource();
                 testGraph.addAll(caseMapping.getGraph());
                 TestIdentityAction testAction = testGraph.addTestIdentityAction(

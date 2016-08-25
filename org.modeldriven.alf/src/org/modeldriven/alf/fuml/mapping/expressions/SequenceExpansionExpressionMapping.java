@@ -121,7 +121,7 @@ public abstract class SequenceExpansionExpressionMapping extends
         Classifier argumentType = null;
         
         ExtentOrExpression primary = expression.getPrimary();
-        FumlMapping mapping = this.fumlMap(
+        FumlMapping mapping = this.exprMap(
                 primary == null? null: primary.getExpression());
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping primary expression: " + 
@@ -140,7 +140,7 @@ public abstract class SequenceExpansionExpressionMapping extends
             this.variableSource = nestedGraph.addForkNode(
                     "Fork(" + expression.getVariable() + ")");
             
-            mapping = this.fumlMap(expression.getArgument());
+            mapping = this.exprMap(expression.getArgument());
             if (!(mapping instanceof ExpressionMapping)) {
                 this.throwError("Error mapping argument: " + 
                         mapping.getErrorMessage());

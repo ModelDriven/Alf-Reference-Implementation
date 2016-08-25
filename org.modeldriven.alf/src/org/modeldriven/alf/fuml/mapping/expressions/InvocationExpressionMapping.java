@@ -30,7 +30,7 @@ import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.FeatureReference;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.Tuple;
-
+import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.uml.*;
 
 public abstract class InvocationExpressionMapping extends ExpressionMapping {
@@ -61,10 +61,12 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         Action action = this.mapTarget();
         
         InvocationExpression expression = this.getInvocationExpression();
+        
         Tuple tuple = expression.getTuple();
         FumlMapping mapping = this.fumlMap(tuple);
         if (mapping instanceof TupleMapping) {
             TupleMapping tupleMapping = (TupleMapping)mapping;
+            tupleMapping.setIsIndexFrom0(this.isIndexFrom0());
             tupleMapping.mapTo(action);
             this.graph.addAll(tupleMapping.getTupleGraph());
             this.lhsGraph = tupleMapping.getLhsGraph();
@@ -75,15 +77,18 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
 
         action = this.mapFeature(action);
         
+        // NOTE: mayWrapAction is only set to false for the mapping of the
+        // equivalent invocation expression of a sequence access expression.
         if (mayWrapAction && 
            (action instanceof CallBehaviorAction || 
             action instanceof CallOperationAction) && 
            !((CallAction)action).getArgument().isEmpty() &&
            this.resultSource instanceof OutputPin) {
-            action = wrapAction(
+            action = this.adjustAction(
                     this.graph, action, (OutputPin)this.resultSource);
             this.resultSource = ((StructuredActivityNode)action).
                     getStructuredNodeOutput().get(0);
+            
         }
         
         // NOTE: Adding left-hand side elements here prevents them from being
@@ -94,11 +99,36 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         return action;
     }
     
+    private StructuredActivityNode adjustAction(
+            ActivityGraph graph, Action action, OutputPin resultPin) throws MappingError {
+        graph.remove(action);
+        ActivityGraph subgraph = this.createActivityGraph();
+        subgraph.add(action);
+        
+        // Adjust output for indexing from 0
+        if (this.isIndexFrom0() && 
+                this.getInvocationExpression().getImpl().isIndexResult()) {
+            ValueSpecificationAction valueAction = subgraph.addIntegerValueSpecificationAction(1);
+            CallBehaviorAction addAction = subgraph.addCallBehaviorAction(
+                    getBehavior(RootNamespace.getRootScope().getIntegerFunctionMinus()));
+            subgraph.addObjectFlow(resultPin, addAction.getArgument().get(0));
+            subgraph.addObjectFlow(valueAction.getResult(), addAction.getArgument().get(1));
+            resultPin = addAction.getResult().get(0);
+        }
+        
+        return wrapAction(action.getName(), graph, subgraph.getModelElements(), resultPin);
+    }
+    
     public static StructuredActivityNode wrapAction(
             ActivityGraph graph, Action action, OutputPin resultPin) {
         graph.remove(action);
+        return wrapAction(action.getName(), graph, Collections.singletonList(action), resultPin);
+    }
+    
+    public static StructuredActivityNode wrapAction(
+            String name, ActivityGraph graph, Collection<Element> elements, OutputPin resultPin) {
         StructuredActivityNode node = graph.addStructuredActivityNode(
-                "Node(" + action.getName() + ")", Collections.singletonList((Element)action));
+                "Node(" + name + ")", elements);
         OutputPin output = graph.createOutputPin(
                 "Output(" + resultPin.getName() + ")", 
                 resultPin.getType(), 0, resultPin.getUpper());
@@ -271,7 +301,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         Action thisAction = action;
         if (feature != null) {
             Expression primary = feature.getExpression();
-            FumlMapping mapping = this.fumlMap(primary);
+            FumlMapping mapping = this.exprMap(primary);
             if (!(mapping instanceof ExpressionMapping)) {
                 this.throwError("Error mapping expression: " + primary);
             } else {

@@ -298,7 +298,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
      * If the referent of an invocation expression is a template behavior, then
      * the bound referent is the implicit template binding of this template;
      * otherwise it is the same as the referent. For an implicit template
-     * binding, the type arguments of for the template are inferred from the
+     * binding, the type arguments for the template are inferred from the
      * types of the arguments for in and inout parameters of the template
      * behavior. If the resulting implicit template binding would not be a legal
      * binding of the template behavior, then the invocation expression has no
@@ -778,6 +778,59 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
      */
     public boolean isAddInvocation() {
         return false;
+    }
+    
+    private static final ElementReference[] indexingFunctions = { 
+            RootNamespace.getRootScope().getSequenceFunction("At"),
+            RootNamespace.getRootScope().getSequenceFunction("IncludeAt"),
+            RootNamespace.getRootScope().getSequenceFunction("InsertAt"),
+            RootNamespace.getRootScope().getSequenceFunction("IncludeAllAt"),
+            RootNamespace.getRootScope().getSequenceFunction("ExcludeAt"),
+            RootNamespace.getRootScope().getSequenceFunction("ReplacingAt"),
+            RootNamespace.getRootScope().getCollectionFunction("at"),
+            RootNamespace.getRootScope().getCollectionFunction("includeAt"),
+            RootNamespace.getRootScope().getCollectionFunction("insertAt"),
+            RootNamespace.getRootScope().getCollectionFunction("includeAllAt"),
+            RootNamespace.getRootScope().getCollectionFunction("excludeAt"),
+            RootNamespace.getRootScope().getCollectionFunction("replacingAt"),
+            RootNamespace.getRootScope().getCollectionFunction("addAt"),
+            RootNamespace.getRootScope().getCollectionFunction("addAllAt"),
+            RootNamespace.getRootScope().getCollectionFunction("removeAt"),
+            RootNamespace.getRootScope().getCollectionFunction("replaceAt"),
+    };
+    
+    /**
+     * Determine whether this is an invocation of a library function the
+     * needs adjustment if indexing is from 0.
+     */
+    public boolean isIndexingInvocation() {
+        InvocationExpression self = this.getSelf();
+        if (self.getIsBehavior()) {
+            ElementReference referent = self.getReferent();
+            for (ElementReference function: indexingFunctions) {
+                if (referent.getImpl().equals(function)) {
+                    return true;
+                }
+            }
+         }
+        return false;
+    }
+    
+    /**
+     * Determine whether this is an invocation of a library function
+     * whose output needs to be adjusted if indexing is from 0.
+     */
+    public boolean isIndexResult() {
+       InvocationExpression self = this.getSelf();
+       if (!self.getIsBehavior()) {
+           return false;
+       } else {
+           ElementReference referent = self.getReferent();
+           return referent.getImpl().equals(
+                   RootNamespace.getRootScope().getSequenceFunction("IndexOf")) ||
+                  referent.getImpl().equals(
+                   RootNamespace.getRootScope().getCollectionFunction("indexOf"));
+       }
     }
 
     @Override

@@ -107,18 +107,12 @@ public class RootNamespace extends ModelNamespace {
     private Map<String, ElementReference> realFunctionMap = 
             new HashMap<String, ElementReference>();    
     private Map<String, ElementReference> bitStringFunctionMap = 
-        new HashMap<String, ElementReference>();
+            new HashMap<String, ElementReference>();
+    private Map<String, ElementReference> sequenceFunctionMap = 
+            new HashMap<String, ElementReference>();
+    private Map<String, ElementReference> collectionFunctionMap = 
+            new HashMap<String, ElementReference>();
     
-    private ElementReference sequenceFunctionIncluding = null;
-    private ElementReference sequenceFunctionIsEmpty = null;
-    private ElementReference sequenceFunctionNotEmpty = null;
-    private ElementReference sequenceFunctionCount = null;
-    private ElementReference sequenceFunctionExcludeAt = null;
-    private ElementReference sequenceFunctionReplacingAt = null;
-    
-    private ElementReference collectionFunctionAdd = null;
-    private ElementReference collectionFunctionIsEmpty = null;
-    private ElementReference collectionFunctionNotEmpty = null;
     private ElementReference collectionClassesPackage = null;
     
     private QualifiedName listFunctions = null;
@@ -244,76 +238,60 @@ public class RootNamespace extends ModelNamespace {
         return naturalType;
     }
 
-    public ElementReference getSequenceFunctionIncluding() {
-        if (sequenceFunctionIncluding == null) {
-            sequenceFunctionIncluding = getSequenceFunctions().getImpl().copy().
-                            addName("Including").getImpl().getBehaviorReferent();
+    public ElementReference getSequenceFunction(String name) {
+        ElementReference sequenceFunction = sequenceFunctionMap.get(name);
+        if (sequenceFunction == null) {
+            sequenceFunction = getSequenceFunctions().getImpl().copy().
+                addName(name).getImpl().getBehaviorReferent();
+            sequenceFunctionMap.put(name, sequenceFunction);
         }
-        return sequenceFunctionIncluding;
+        return sequenceFunction;
+    }
+
+    public ElementReference getSequenceFunctionIncluding() {
+        return this.getSequenceFunction("Including");
     }
 
     public ElementReference getSequenceFunctionIsEmpty() {
-        if (sequenceFunctionIsEmpty == null) {
-            sequenceFunctionIsEmpty = getSequenceFunctions().getImpl().copy().
-                            addName("IsEmpty").getImpl().getBehaviorReferent();
-        }
-        return sequenceFunctionIsEmpty;
+        return this.getSequenceFunction("IsEmpty");
     }
 
     public ElementReference getSequenceFunctionNotEmpty() {
-        if (sequenceFunctionNotEmpty == null) {
-            sequenceFunctionNotEmpty = getSequenceFunctions().getImpl().copy().
-                            addName("NotEmpty").getImpl().getBehaviorReferent();
-        }
-        return sequenceFunctionNotEmpty;
+        return this.getSequenceFunction("NotEmpty");
     }
 
     public ElementReference getSequenceFunctionCount() {
-        if (sequenceFunctionCount == null) {
-            sequenceFunctionCount = getSequenceFunctions().getImpl().copy().
-                            addName("Count").getImpl().getBehaviorReferent();
-        }
-        return sequenceFunctionCount;
+        return this.getSequenceFunction("Count");
     }
 
     public ElementReference getSequenceFunctionExcludeAt() {
-        if (sequenceFunctionExcludeAt == null) {
-            sequenceFunctionExcludeAt = getSequenceFunctions().getImpl().copy().
-                            addName("ExcludeAt").getImpl().getBehaviorReferent();
-        }
-        return sequenceFunctionExcludeAt;
+        return this.getSequenceFunction("ExcludeAt");
     }
 
     public ElementReference getSequenceFunctionReplacingAt() {
-        if (sequenceFunctionReplacingAt == null) {
-            sequenceFunctionReplacingAt = getSequenceFunctions().getImpl().copy().
-                            addName("ReplacingAt").getImpl().getBehaviorReferent();
+        return this.getSequenceFunction("ReplacingAt");
+    }
+
+    public ElementReference getCollectionFunction(String name) {
+        ElementReference collectionFunction = collectionFunctionMap.get(name);
+        if (collectionFunction == null) {
+            collectionFunction = getCollectionFunctions().getImpl().copy().
+                addName(name).getImpl().getBehaviorReferent();
+            collectionFunctionMap.put(name, collectionFunction);
         }
-        return sequenceFunctionReplacingAt;
+        return collectionFunction;
     }
 
     public ElementReference getCollectionFunctionAdd() {
-        if (collectionFunctionAdd == null) {
-            collectionFunctionAdd = getCollectionFunctions().getImpl().copy().
-                            addName("add").getImpl().getBehaviorReferent();
-        }
-        return collectionFunctionAdd;
+        return this.getCollectionFunction("add");
     }
 
     public ElementReference getCollectionFunctionIsEmpty() {
-        if (collectionFunctionIsEmpty == null) {
-            collectionFunctionIsEmpty = getCollectionFunctions().getImpl().copy().
-                            addName("isEmpty").getImpl().getBehaviorReferent();
-        }
-        return collectionFunctionIsEmpty;
+        return this.getCollectionFunction("isEmpty");
     }
 
     public ElementReference getCollectionFunctionNotEmpty() {
-        if (collectionFunctionNotEmpty == null) {
-            collectionFunctionNotEmpty = getCollectionFunctions().getImpl().copy().
-                            addName("notEmpty").getImpl().getBehaviorReferent();
-        }
-        return collectionFunctionNotEmpty;
+        return this.getCollectionFunction("notEmpty");
     }
 
     public ElementReference getCollectionClassesPackage() {

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -48,6 +47,8 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
                     mapping.getErrorMessage());
         } else {
             ExpressionMapping rangeLowerMapping = (ExpressionMapping)mapping;
+            boolean isIndexFrom0 = this.isIndexFrom0();
+            rangeLowerMapping.setIsIndexFrom0(isIndexFrom0);
             this.graph.addAll(rangeLowerMapping.getGraph());
             mapping = this.fumlMap(sequenceRange.getRangeUpper());
             if (!(mapping instanceof ExpressionMapping)) {
@@ -55,6 +56,7 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
                         mapping.getErrorMessage());
             } else {
                 ExpressionMapping rangeUpperMapping = (ExpressionMapping)mapping;
+                rangeUpperMapping.setIsIndexFrom0(isIndexFrom0);
                 this.graph.addAll(rangeUpperMapping.getGraph());
                 
                 ActivityNode resultSource = mapSequenceRangeLoop(

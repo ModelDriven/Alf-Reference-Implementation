@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -29,12 +28,17 @@ import java.util.Collection;
 
 public class LoopVariableDefinitionMapping extends SyntaxElementMapping {
     
+    private boolean isIndexFrom0 = false;
     private boolean isParallel = false;
     private ActivityGraph graph = null;
     private ActivityNode resultSource1 = null;
     private ActivityNode resultSource2 = null;
     private ActivityNode assignedValueSource = null;
     private Classifier type = null;
+    
+    public void setIsIndexFrom0(boolean isIndexFrom0) {
+        this.isIndexFrom0 = isIndexFrom0;
+    }
     
     public void setIsParallel(boolean isParallel) {
         this.isParallel = isParallel;
@@ -53,6 +57,7 @@ public class LoopVariableDefinitionMapping extends SyntaxElementMapping {
                     mapping.getErrorMessage());
         } else {
             ExpressionMapping expression1Mapping = (ExpressionMapping)mapping;
+            expression1Mapping.setIsIndexFrom0(this.isIndexFrom0);
             this.type = expression1Mapping.getType();
             
             if (expression2 == null) {
@@ -74,6 +79,7 @@ public class LoopVariableDefinitionMapping extends SyntaxElementMapping {
                 this.resultSource1 = expression1Mapping.getResultSource();
                 
                 mapping = this.fumlMap(expression2);
+                expression1Mapping.setIsIndexFrom0(this.isIndexFrom0);
                 if (!(mapping instanceof ExpressionMapping)) {
                     this.throwError("Error mapping second expression: " + 
                             mapping.getErrorMessage());

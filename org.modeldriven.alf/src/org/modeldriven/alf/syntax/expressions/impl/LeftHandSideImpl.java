@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -241,7 +240,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	 * If a left-hand side has an index, then the index expression must have a
 	 * multiplicity upper bound no greater than 1.
 	 **/
-    // NOTE: And it must have type Integer or UnlimitedInteger.
+    // TODO: Update spec so constraint includes check for being of type Integer.
 	public boolean leftHandSideIndexExpression() {
 	    Expression index = this.getSelf().getIndex();
 	    if (index == null) {
@@ -249,8 +248,7 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	    } else {
 	        ElementReference indexType = index == null? null: index.getType();
 	        return index.getUpper() <= 1 && indexType != null && 
-	                (indexType.getImpl().isInteger() || 
-	                 indexType.getImpl().isUnlimitedNatural());
+	               indexType.getImpl().isInteger();
 	    }
 	}
 	

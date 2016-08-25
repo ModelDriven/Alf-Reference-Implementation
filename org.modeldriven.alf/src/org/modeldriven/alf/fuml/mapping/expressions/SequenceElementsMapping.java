@@ -36,6 +36,10 @@ public abstract class SequenceElementsMapping extends SyntaxElementMapping {
         this.owner = owner;
     }
     
+    protected boolean isIndexFrom0() {
+        return ((ExpressionMapping)this.owner.getImpl().getMapping()).isIndexFrom0();
+    }
+    
     protected abstract void map() throws MappingError; 
     
     @Override

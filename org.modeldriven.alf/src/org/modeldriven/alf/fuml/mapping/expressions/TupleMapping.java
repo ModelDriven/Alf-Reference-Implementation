@@ -44,6 +44,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
         new HashMap<String, ExpressionMapping>();
     private Map<String, ActivityNode> assignedValueSourceMap = 
         new HashMap<String, ActivityNode>();
+    private boolean isIndexFrom0 = false;
 
     /**
      * 1. An empty tuple (i.e., a positional tuple with no argument expressions)
@@ -87,6 +88,10 @@ public abstract class TupleMapping extends SyntaxElementMapping {
      * the input value for the parameter, and once as for an out parameter, to
      * provide the target for the output value.
      */
+    
+    public void setIsIndexFrom0(boolean isIndexFrom0) {
+        this.isIndexFrom0 = isIndexFrom0;
+    }
 
     public void mapTo(Action action) throws MappingError {
         Tuple tuple = this.getTuple();
@@ -116,12 +121,12 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 } else {
                     ExpressionMapping expressionMapping = 
                         (ExpressionMapping)mapping;
+                    expressionMapping.setIsIndexFrom0(this.isIndexFrom0);
                     ElementReference parameter = 
                         invocation.getImpl().parameterNamed(name);
                     if (parameter != null && 
                             "inout".equals(parameter.getImpl().getDirection())) {
-                        this.inoutExpressionMap.put(
-                                name, expressionMapping);
+                        this.inoutExpressionMap.put(name, expressionMapping);
                     }
 
                     subgraph.addAll(expressionMapping.getGraph());
@@ -131,7 +136,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                         this.setErrorMessage("No result source for input expression for " 
                                 + name + ": " + mapping);
                     } else {
-                                               
+                        
                         // Add conversions, if required.
                         resultSource = AssignmentExpressionMapping.mapConversions(
                                 this, subgraph, 
@@ -141,6 +146,12 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                 input.getImpl().getIsRealConversion(parameter),
                                 input.getImpl().isUnlimitedNaturalConversion(parameter));
                         
+                        // Adjust for indexing from 0, if necessary.
+                        if (this.isIndexFrom0 && "index".equals(name) && 
+                                invocation.getImpl().isIndexingInvocation()) {
+                            resultSource = mapIncrement(subgraph, resultSource);
+                        }
+                                               
                         InputPin inputPin = inputPins.get(i);
                         this.tupleGraph.addObjectFlow(resultSource, inputPin);
                         
@@ -158,24 +169,65 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                                 this.throwError("Error mapping index expression for " 
                                         + name + ": " + mapping.getErrorMessage());
                             } else {
+                                ((ExpressionMapping)mapping).setIsIndexFrom0(this.isIndexFrom0);
                                 subgraph.addAll(
                                         ((ExpressionMapping)mapping).getGraph());
                                 resultSource =
                                     ((ExpressionMapping)mapping).getResultSource();
+                                
                                 if (resultSource == null) {
                                     this.throwError("No result Source: " + mapping);
                                 } else {
+                                    
                                     if (index.getType().getImpl().conformsTo(
                                             RootNamespace.getRootScope().getIntegerType())) {
-                                        CallBehaviorAction callAction = 
-                                            subgraph.addCallBehaviorAction(
-                                            getBehavior(RootNamespace.getRootScope().
-                                            getIntegerFunctionToUnlimitedNatural()));
-                                        subgraph.addObjectFlow(
-                                                resultSource, 
-                                                callAction.getArgument().get(0));
-                                        resultSource = callAction.getResult().get(0);
+                                        
+                                        // Adjust for indexing from 0, if necessary.
+                                        if (this.isIndexFrom0) {
+                                            resultSource = mapIncrement(subgraph, resultSource);
+                                        }
+                                        
+                                        resultSource = AssignmentExpressionMapping.mapConversion(
+                                                subgraph, resultSource, 
+                                                RootNamespace.getRootScope().
+                                                    getIntegerFunctionToUnlimitedNatural());
+                                        
+                                    } else if (this.isIndexFrom0) {
+                                        // NOTE: Incoming index value is UnlimitedNatural here, so it
+                                        // must be converted to Integer to be incremented, and then
+                                        // back to UnlimitedNatural.
+                                        
+                                        // Test if value is "*".
+                                        ForkNode fork = subgraph.addForkNode(
+                                                "Fork(" + resultSource.getName() + ")");
+                                        subgraph.addObjectFlow(resultSource, fork);
+                                        ValueSpecificationAction valueAction = 
+                                                subgraph.addUnlimitedNaturalValueSpecificationAction(-1);
+                                        TestIdentityAction testAction =
+                                                subgraph.addTestIdentityAction("Test(" + resultSource.getName() + "=*)");
+                                        subgraph.addObjectFlow(fork, testAction.getFirst());
+                                        subgraph.addObjectFlow(valueAction.getResult(), testAction.getSecond());
+                                        
+                                        // Adjust for indexing from 0 (if value is not *).
+                                        CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
+                                                getBehavior(RootNamespace.getRootScope().
+                                                        getUnlimitedNaturalFunctionToInteger()));                                        
+                                        ActivityNode incrementedResult = mapIncrement(
+                                                subgraph, callAction.getResult().get(0));                                        
+                                        incrementedResult = AssignmentExpressionMapping.mapConversion(
+                                                subgraph, incrementedResult, 
+                                                RootNamespace.getRootScope().
+                                                    getIntegerFunctionToUnlimitedNatural());
+                                        
+                                        resultSource = subgraph.addMergeNode(
+                                                "Merge(" + resultSource.getName() + ")");
+                                        subgraph.addObjectDecisionNode(
+                                                "Decision(" + testAction.getName() + ")", 
+                                                fork, testAction.getResult(), 
+                                                resultSource, callAction.getArgument().get(0));
+                                        subgraph.addObjectFlow(incrementedResult, resultSource);                                        
                                     }
+                                    
                                     // NOTE: This presumes that the "insertAt"
                                     // or "destroyAt" pin comes directly after
                                     // the value pin in the list of input pins.
@@ -212,6 +264,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 } else {
                     LeftHandSideMapping lhsMapping = 
                         (LeftHandSideMapping)mapping;
+                    lhsMapping.setIsIndexFrom0(this.isIndexFrom0);
                     ExpressionMapping inputMapping = 
                         this.inoutExpressionMap.get(name);
                     if (inputMapping != null) {
@@ -259,6 +312,15 @@ public abstract class TupleMapping extends SyntaxElementMapping {
             }
             i++;
         }
+    }
+    
+    public static OutputPin mapIncrement(ActivityGraph graph, ActivityNode resultSource) throws MappingError {
+        ValueSpecificationAction valueAction = graph.addIntegerValueSpecificationAction(1);
+        CallBehaviorAction addAction = graph.addCallBehaviorAction(
+                getBehavior(RootNamespace.getRootScope().getIntegerFunctionPlus()));
+        graph.addObjectFlow(resultSource, addAction.getArgument().get(0));
+        graph.addObjectFlow(valueAction.getResult(), addAction.getArgument().get(1));
+        return addAction.getResult().get(0);
     }
     
     public Map<String, ActivityNode> getAssignedValueSourceMap() {

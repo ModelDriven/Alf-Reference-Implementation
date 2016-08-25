@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -208,8 +207,9 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
         } else {
             this.lhsMapping = (LeftHandSideMapping)mapping;
             this.lhsMapping.setRhsUpper(rhs.getUpper());
+            this.lhsMapping.setIsIndexFrom0(this.isIndexFrom0());
 
-            mapping = this.fumlMap(rhs);
+            mapping = this.exprMap(rhs);
             if (!(mapping instanceof ExpressionMapping)) {
                 this.throwError("Error mapping right hand side: " + 
                         mapping.getErrorMessage());
@@ -220,7 +220,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 
                 if (rhsResultSource != null && !assignmentExpression.getIsSimple()) {
                     Expression expression = lhs.getImpl().getExpression();
-                    mapping = this.fumlMap(expression);
+                    mapping = this.exprMap(expression);
                     if (!(mapping instanceof ExpressionMapping)) {
                         this.throwError("Error mapping left hand side as an expression: " +
                                 mapping.getErrorMessage());
@@ -437,13 +437,20 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                     isRealConversion?
                             RootNamespace.getRootScope().getIntegerFunctionToReal() :
                             RootNamespace.getRootScope().getIntegerFunctionToUnlimitedNatural();
-            CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
-                    getBehavior(conversionFunction));
-            subgraph.addObjectFlow(
-                    rhsResultSource, callAction.getArgument().get(0));
-            rhsResultSource = callAction.getResult().get(0);
+            rhsResultSource = mapConversion(subgraph, rhsResultSource, conversionFunction);
         }
         return rhsResultSource;
+	}
+	
+	public static ActivityNode mapConversion(
+	        ActivityGraph subgraph,
+	        ActivityNode resultSource,
+	        ElementReference conversionFunction) throws MappingError {
+        CallBehaviorAction callAction = subgraph.addCallBehaviorAction(
+                getBehavior(conversionFunction));
+        subgraph.addObjectFlow(
+                resultSource, callAction.getArgument().get(0));
+        return callAction.getResult().get(0);
 	}
 	
 	public static ActivityNode mapPropertyAssignment(

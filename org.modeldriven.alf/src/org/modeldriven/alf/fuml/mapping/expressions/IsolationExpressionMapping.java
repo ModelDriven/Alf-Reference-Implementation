@@ -37,7 +37,7 @@ public class IsolationExpressionMapping extends UnaryExpressionMapping {
     protected void map() throws MappingError {
         IsolationExpression expression = this.getIsolationExpression();
         Expression operand = expression.getOperand();
-        FumlMapping mapping = this.fumlMap(operand);
+        FumlMapping mapping = this.exprMap(operand);
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping operand expression: " + 
                     mapping.getErrorMessage());

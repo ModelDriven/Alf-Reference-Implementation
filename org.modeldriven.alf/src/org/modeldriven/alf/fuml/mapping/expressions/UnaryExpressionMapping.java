@@ -62,7 +62,7 @@ public abstract class UnaryExpressionMapping extends ExpressionMapping {
     // bit string conversion.
     protected ActivityNode mapOperand() throws MappingError {
         UnaryExpression expression = this.getUnaryExpression();
-        FumlMapping mapping = this.fumlMap(expression.getOperand());
+        FumlMapping mapping = this.exprMap(expression.getOperand());
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping operand expression: " + 
                     mapping.getErrorMessage());

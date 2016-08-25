@@ -151,7 +151,7 @@ public abstract class LoopStatementMapping extends StatementMapping {
             node.addBodyOutput(outputPin);
         }
         
-        FumlMapping mapping = this.fumlMap(this.getCondition());
+        FumlMapping mapping = this.exprMap(this.getCondition());
         if (!(mapping instanceof ExpressionMapping)) {
             this.throwError("Error mapping condition: " + 
                     mapping.getErrorMessage());

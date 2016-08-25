@@ -557,7 +557,8 @@ public class SequenceOperationExpressionImpl
         BehaviorInvocationExpression behaviorInvocationExpression = 
             new BehaviorInvocationExpression();
         behaviorInvocationExpression.setTarget(self.getOperation());
-        behaviorInvocationExpression.setReferent(self.getBoundReferent());
+        behaviorInvocationExpression.setReferent(self.getReferent());
+        behaviorInvocationExpression.setBoundReferent(self.getBoundReferent());
         behaviorInvocationExpression.setTuple(namedTuple);
         namedTuple.setInvocation(behaviorInvocationExpression);       
         behaviorInvocationExpression.getImpl().setAssignmentBefore(

@@ -102,6 +102,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             } else {
                 LoopVariableDefinitionMapping definitionMapping =
                         (LoopVariableDefinitionMapping)mapping;
+                definitionMapping.setIsIndexFrom0(this.isIndexFrom0());
                 definitionMapping.setIsParallel(isParallel);
                 setupSubgraph.addAll(definitionMapping.getGraph());
                 variableDefinitionMappings.add(definitionMapping);
