@@ -367,7 +367,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public List<ElementReference> getMembers() {
         List<ElementReference> members = new ArrayList<ElementReference>();
-        if (this.isClassifier()) {
+        if (this.isNamespace()) {
             for (Member member: ((NamespaceDefinition)this.getSelf().getElement()).getMember()) {
                 members.add(member.getImpl().getReferent());
             }

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -31,6 +30,8 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
     // NOTE: A collection of element references is used here to allow
     // for the (non-standard) possibility of profiles defined using Alf.
 	private Collection<ElementReference> appliedProfile = null; // DERIVED
+	
+	private Collection<ElementReference> allAppliedProfiles = null;
 
 	public PackageDefinitionImpl(PackageDefinition self) {
 		super(self);
@@ -166,9 +167,30 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
     
     @Override
     public Collection<ElementReference> getAllAppliedProfiles() {
-        Collection<ElementReference> appliedProfiles = super.getAllAppliedProfiles();
-        appliedProfiles.addAll(this.getAppliedProfileReference());
-        return appliedProfiles;
+        if (this.allAppliedProfiles == null) {
+            this.allAppliedProfiles = super.getAllAppliedProfiles();
+            Collection<ElementReference> appliedProfiles = this.getAppliedProfileReference();
+            this.allAppliedProfiles.addAll(appliedProfiles);
+            
+            // NOTE: Nested profiles are added here, because, according to the UML spec,
+            // "Applying a Profile means recursively applying all its nested and imported Profiles."
+            for (ElementReference profile: appliedProfiles) {
+                this.allAppliedProfiles.addAll(getNestedProfiles(profile));
+            }
+        }        
+        return this.allAppliedProfiles;
+    }
+    
+    // NOTE: By searching members, not just owned members, this also returns any imported profiles.
+    public static Collection<ElementReference> getNestedProfiles(ElementReference profile) {
+        Collection<ElementReference> nestedProfiles = new ArrayList<ElementReference>();
+        for (ElementReference member: profile.getImpl().getMembers()) {
+            if (member.getImpl().isProfile()) {
+                nestedProfiles.add(member);
+                nestedProfiles.addAll(getNestedProfiles(member));
+            }
+        }
+        return nestedProfiles;
     }
     
     @Override

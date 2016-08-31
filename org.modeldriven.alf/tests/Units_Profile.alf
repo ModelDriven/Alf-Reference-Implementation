@@ -14,12 +14,29 @@ package Units_Profile {
 			public tag3: String[0..1];
 		}
 		
+		@stereotype(Property)
+		public class S3 {
+		}
+		
+		@profile
+		public package NestedProfile {
+		
+			@stereotype(Property)
+			public class S3 {
+			}
+	
+			@stereotype(Property)
+			public class S4 {
+			}
+	
+		}
+		
 	}
 	
 	@apply(Profile)
 	public package P {
 	
-		@Profile::S1
+		@S1
 		public class A {
 		
 			@StandardProfile::Create
@@ -30,6 +47,15 @@ package Units_Profile {
 			
 			@Profile::S2(tag1=>-3, tag2=>true, tag3=>"blah")
 			private y: Boolean;
+			
+			@Profile::S3
+			private z: Boolean;
+			
+			@Profile::NestedProfile::S3
+			private a: Integer;
+			
+			@S4
+			private b: Integer;
 			
 		}
 	

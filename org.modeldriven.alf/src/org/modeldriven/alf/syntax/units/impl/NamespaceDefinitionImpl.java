@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
@@ -280,7 +279,7 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                 // If the stereotype name is qualified, then there must be an
                 // applied profile that is named by the qualification of
                 // the stereotype and that contains a stereotype of that name.
-                // NOTE: This means that if the stereotype not directly owned by
+                // NOTE: This means that if the stereotype is not directly owned by
                 // the profile, then the names of any subpackages in which it is
                 // nested are NOT to be included in the qualification when
                 // naming the stereotype.
@@ -319,6 +318,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return null;
     }
     
+    // NOTE: This is overridden in PackageDefinitionImpl, since profiles can only be 
+    // applied to packages.
     public Collection<ElementReference> getAllAppliedProfiles() {
         NamespaceDefinition outerScope = this.getOuterScope();
         return outerScope == null? new ArrayList<ElementReference>(): 
