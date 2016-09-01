@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -136,6 +136,10 @@ public abstract class FumlMapping extends Mapping {
     
     public boolean supportsTemplates() {
         return getElementFactory().supportsTemplates();
+    }
+    
+    public boolean supportsProfileApplication() {
+        return getElementFactory().supportsProfileApplication();
     }
     
     public ActivityGraph createActivityGraph() {

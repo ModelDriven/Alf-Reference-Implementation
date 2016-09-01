@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -52,20 +51,24 @@ public class PackageDefinitionMapping extends NamespaceDefinitionMapping {
     
     public void mapTo(Package package_) throws MappingError {
         PackageDefinition packageDefinition = this.getPackageDefinition();
-        if (packageDefinition != null && 
-                !packageDefinition.getAppliedProfile().isEmpty()) {
-            this.throwError("Cannot map profile application to fUML for package " + 
-                    packageDefinition.getName());
-        }
-        
-        if (package_ instanceof Model) {
-            ElementReference standardProfile = RootNamespace.getRootScope().getStandardProfile();
-            if (standardProfile != null) {
-                Profile profile = (Profile)standardProfile.getImpl().getUml();
-                if (profile != null) {
+        if (this.supportsProfileApplication()){
+            if (packageDefinition != null) {
+                for (Profile profile: packageDefinition.getAppliedProfile()) {
                     ProfileApplication profileApplication = this.create(ProfileApplication.class);
                     profileApplication.setAppliedProfile(profile);
                     package_.addProfileApplication(profileApplication);
+                }
+            }
+            
+            if (package_ instanceof Model) {
+                ElementReference standardProfile = RootNamespace.getRootScope().getStandardProfile();
+                if (standardProfile != null) {
+                    Profile profile = (Profile)standardProfile.getImpl().getUml();
+                    if (profile != null) {
+                        ProfileApplication profileApplication = this.create(ProfileApplication.class);
+                        profileApplication.setAppliedProfile(profile);
+                        package_.addProfileApplication(profileApplication);
+                    }
                 }
             }
         }

@@ -113,8 +113,16 @@ public class ElementFactory {
     }
     
     public boolean supportsTemplates() {
+        return this.supportsElement("RedefinableTemplateSignature");
+    }
+    
+    public boolean supportsProfileApplication() {
+        return this.supportsElement("ProfileApplication");
+    }
+    
+    public boolean supportsElement(String name) {
         try {
-            Class.forName(this.getWrapperClassName("RedefinableTemplateSignature"));
+            Class.forName(this.getWrapperClassName(name));
             return true;
         } catch (ClassNotFoundException e) {
             return false;
