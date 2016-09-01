@@ -41,8 +41,8 @@ public class Parser implements ParserConstants {
   }
 
   private String errorMessage(String message) {
-    return "Error at line " + this.getLine() + ", column " +
-           this.getColumn() + ". \u005cn" + message;
+    return "[" + this.getLine() + ":" + this.getColumn() + "] " +
+           message;
   }
 
 /***************

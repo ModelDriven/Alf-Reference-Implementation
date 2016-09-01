@@ -67,8 +67,8 @@ public class Parser {
   }
   
   private String errorMessage(String message) {
-    return "Error at line " + this.getLine() + ", column " + 
-           this.getColumn() + ". \n" + message;
+    return "[" + this.getLine() + ":" + this.getColumn() + "] " +
+           message;
   } 
   
 }
