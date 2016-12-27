@@ -1,0 +1,8 @@
+title: Alf Reference Implementation
+description: An open-source implementation of the OMG Action Language for fUML (Alf) specification.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-slate
+
+gems:
+  - jekyll-mentions
