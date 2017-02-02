@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,15 +10,21 @@
 
 package org.modeldriven.alf.fuml.mapping.units;
 
+import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.mapping.MappingError;
-
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.ClassifierTemplateParameter;
-
+import org.modeldriven.alf.uml.Activity;
+import org.modeldriven.alf.uml.Association;
+import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.DataType;
 import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Enumeration;
 import org.modeldriven.alf.uml.NamedElement;
+import org.modeldriven.alf.uml.Signal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +36,34 @@ public class ClassifierTemplateParameterMapping extends
     
     @Override
     public Classifier mapClassifier() {
+        ClassifierTemplateParameter source = this.getClassifierTemplateParameter();
+        
+        for (ElementReference specializationReferent: source.getSpecializationReferent()) {
+            Classifier constrainingClassifier = (Classifier)specializationReferent.getImpl().getUml();
+            if (constrainingClassifier == null) {
+                FumlMapping mapping = this.fumlMap(specializationReferent);
+                if (mapping instanceof ElementReferenceMapping) {
+                    mapping = ((ElementReferenceMapping)mapping).getMapping();
+                }
+                if (mapping instanceof ClassifierDefinitionMapping) {
+                    constrainingClassifier = ((ClassifierDefinitionMapping)mapping).getClassifierOnly();        
+                }
+            }
+            if (constrainingClassifier instanceof Activity) {
+                return (Classifier)this.create(Activity.class);
+            } else if (constrainingClassifier instanceof Class_) {
+                return (Classifier)this.create(Class_.class);
+            } else if (constrainingClassifier instanceof DataType) {
+                return (Classifier)this.create(DataType.class);
+            } else if (constrainingClassifier instanceof Association) {
+                return (Classifier)this.create(Association.class);
+            } else if (constrainingClassifier instanceof Enumeration) {
+                return (Classifier)this.create(Enumeration.class);
+            } else if (constrainingClassifier instanceof Signal) {
+                return (Classifier)this.create(Signal.class);
+           }
+        }
+        
         return (Classifier)this.create(DataType.class);
     }
 
