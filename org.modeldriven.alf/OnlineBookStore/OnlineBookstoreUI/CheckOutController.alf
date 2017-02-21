@@ -45,7 +45,7 @@ active class CheckOutController specializes Controller {
   
   private isValid(): Boolean {
     if (this.customerName.firstName == "" || this.customerName.lastName == "") {
-      WriteLine("*** Both your first and last are required. ***");
+      WriteLine("*** Both your first and last name are required. ***");
     } else if (this.customerPhone->isEmpty()) {
       WriteLine("*** Your telephone number is required. ***");
     } else if (this.shippingAddress.addressLine1 == "") {
