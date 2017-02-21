@@ -18,8 +18,8 @@ of two fUML execution engine implementations:
 The implementation handles the full Alf syntax at the Extended compliance level, as given in Annex C Consolidated 
 LL Grammar of the Alf Specification.
 
-Static semantic checking is directly based on validating the constraints defined in Part III of the Alf Specification. 
-However, as errors were discovered in these definitions, or inconsistencies with the descriptions in Part II were identified, 
+Static semantic checking is directly based on validating the constraints defined in the abstract syntax of the Alf Specification. 
+However, as errors were discovered in these definitions, or inconsistencies with corresponding feature descriptions were identified, 
 these were corrected in the implementation. All such issues have either been corrected in the latest version of the specification 
 or have been reported to the Alf Revision Task Force for correction in a future version.
 
