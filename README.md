@@ -1,12 +1,13 @@
 # Action Language for UML (Alf) <br> Open Source Reference Implementation
-_Copyright &copy; 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)_
+_Copyright &copy; 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)_
 
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
 Syntax for a UML Action Language</em> Request for Proposals. The Alf specification 
 document can be found at http://www.omg.org/spec/ALF. (See also http://solitaire.omg.org/issues/task-force/ALF11
 for the list of open issues currently being addressed by the Alf 1.1 Revision Task Force.)
 
-This implementation is based on the Alf 1.0.1 specification.  It compiles Alf source text to the executable 
+The current base release, [v1.0.0a](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.0.0a),
+is based on the Alf 1.0.1 specification.  It compiles Alf source text to the executable 
 Foundational UML (fUML) subset of UML. The compilation can target either of two fUML execution engine implementations:
 
 * The fUML Reference Implementation execution engine (see http://fuml.modeldriven.org), [v1.2.0](https://github.com/ModelDriven/fUML-Reference-Implementation/releases/tag/v1.2.0)
@@ -17,8 +18,8 @@ Foundational UML (fUML) subset of UML. The compilation can target either of two 
 The implementation handles the full Alf syntax at the Extended compliance level, as given in Annex C Consolidated 
 LL Grammar of the Alf Specification.
 
-Static semantic checking is directly based on validating the constraints defined in Part III of the Alf Specification. 
-However, as errors were discovered in these definitions, or inconsistencies with the descriptions in Part II were identified, 
+Static semantic checking is directly based on validating the constraints defined in the abstract syntax of the Alf Specification. 
+However, as errors were discovered in these definitions, or inconsistencies with corresponding feature descriptions were identified, 
 these were corrected in the implementation. All such issues have either been corrected in the latest version of the specification 
 or have been reported to the Alf Revision Task Force for correction in a future version.
 
