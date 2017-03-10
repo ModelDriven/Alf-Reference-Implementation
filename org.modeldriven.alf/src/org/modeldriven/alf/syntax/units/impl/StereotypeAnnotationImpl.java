@@ -11,6 +11,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
@@ -58,6 +59,12 @@ public class StereotypeAnnotationImpl extends SyntaxElementImpl {
 	    return super.toString(includeDerived) + " stereotypeName:" + stereotypeName.getPathName();
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getStereotypeReference());
+    }
+    
 	public TaggedValueList getTaggedValues() {
 		return this.taggedValues;
 	}

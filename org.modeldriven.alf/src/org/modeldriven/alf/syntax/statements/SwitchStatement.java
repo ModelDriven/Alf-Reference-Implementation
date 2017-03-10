@@ -182,6 +182,14 @@ public class SwitchStatement extends Statement {
         return this.getImpl().hasReturnValue();
     }
     
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getExpression());
+        addExternalReferencesFor(references, this.getNonDefaultClause());
+        addExternalReferencesFor(references, this.getDefaultClause());
+    }
+
 	public void _deriveAll() {
 		this.getIsAssured();
 		this.getIsDeterminate();

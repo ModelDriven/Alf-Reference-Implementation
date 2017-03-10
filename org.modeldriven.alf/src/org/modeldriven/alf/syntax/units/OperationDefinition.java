@@ -267,6 +267,13 @@ public class OperationDefinition extends NamespaceDefinition {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getRedefinition());
+        addExternalReferencesFor(references, this.getBody());
+    }
+
 	public void _deriveAll() {
 		this.getRedefinedOperation();
 		this.getIsConstructor();

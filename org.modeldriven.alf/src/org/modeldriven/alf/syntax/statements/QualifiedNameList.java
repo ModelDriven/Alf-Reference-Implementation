@@ -60,6 +60,12 @@ public class QualifiedNameList extends SyntaxElement {
 		this.getImpl().addName(name);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getName());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Collection<QualifiedName> name = this.getName();

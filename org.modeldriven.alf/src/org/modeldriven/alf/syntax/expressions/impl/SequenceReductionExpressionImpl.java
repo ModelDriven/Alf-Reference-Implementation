@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,12 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 		return (SequenceReductionExpression) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getReferent());
+    }
+    
 	public ElementReference getReferent() {
 		if (this.referent == null) {
 			this.setReferent(this.deriveReferent());

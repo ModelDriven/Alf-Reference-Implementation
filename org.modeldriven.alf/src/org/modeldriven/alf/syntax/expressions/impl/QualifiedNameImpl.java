@@ -51,6 +51,12 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
 		return (QualifiedName) this.self;
 	}
 	
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReferencesFor(references, this.getSelf().getDisambiguation());
+    }
+    
     public Boolean getIsAmbiguous() {
         return this.isAmbiguous;
     }

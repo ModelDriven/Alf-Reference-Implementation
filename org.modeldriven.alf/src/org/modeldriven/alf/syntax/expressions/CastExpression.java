@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -114,6 +113,13 @@ public class CastExpression extends Expression {
 	public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
+
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getOperand());
+        addExternalReferencesFor(references, this.getTypeName());
+    }
 
 	public void _deriveAll() {
 		super._deriveAll();

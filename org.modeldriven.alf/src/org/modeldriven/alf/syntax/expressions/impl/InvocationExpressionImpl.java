@@ -54,6 +54,13 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
 		return (InvocationExpression) this.self;
 	}
 	
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getReferent());
+        SyntaxElement.addExternalReferences(references, this.getSelf().getParameter());
+    }
+    
 	public Boolean getIsBehavior() {
 		if (this.isBehavior == null) {
 			this.setIsBehavior(this.deriveIsBehavior());

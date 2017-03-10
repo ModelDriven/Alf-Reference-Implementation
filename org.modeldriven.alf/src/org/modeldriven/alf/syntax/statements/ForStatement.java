@@ -170,6 +170,13 @@ public class ForStatement extends Statement {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getBody());
+        addExternalReferencesFor(references, this.getVariableDefinition());
+    }
+
 	public void _deriveAll() {
 		this.getIsParallel();
 		super._deriveAll();

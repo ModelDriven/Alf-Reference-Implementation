@@ -104,6 +104,12 @@ public class ReceptionDefinition extends Member {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getSignalName());
+    }
+
 	public void _deriveAll() {
 		this.getSignal();
 		super._deriveAll();

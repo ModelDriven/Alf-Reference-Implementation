@@ -124,6 +124,12 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 		return this.getImpl().matchForStub(unit);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getSpecialization());
+    }
+
 	public void _deriveAll() {
 		this.getSpecializationReferent();
 		super._deriveAll();

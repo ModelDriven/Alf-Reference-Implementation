@@ -177,6 +177,12 @@ public class AcceptStatement extends Statement {
 	    return this.getImpl().hasReturnValue();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getAcceptBlock());
+    }
+
 	public void _deriveAll() {
 		this.getBehavior();
 		this.getIsSimple();

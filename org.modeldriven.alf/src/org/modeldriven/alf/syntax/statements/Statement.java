@@ -155,6 +155,12 @@ public abstract class Statement extends DocumentedElement {
 	    return this.getImpl().hasReturnValue();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getAnnotation());
+    }
+
 	public void _deriveAll() {
 		this.getAssignmentBefore();
 		this.getAssignmentAfter();

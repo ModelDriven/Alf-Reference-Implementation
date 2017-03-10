@@ -121,6 +121,12 @@ public abstract class LeftHandSide extends SyntaxElement {
 		return this.getImpl().leftHandSideIndexExpression();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getIndex());
+    }
+
 	public void _deriveAll() {
 		this.getAssignmentBefore();
 		this.getAssignmentAfter();

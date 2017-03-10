@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,15 @@ public class NameExpressionImpl extends ExpressionImpl {
     public String toString(boolean includeDerived) {
         NameExpression self = this.getSelf();
         return super.toString(includeDerived) + " name:" + self.getName().getImpl().getPathName();
+    }
+    
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        NameExpression self = this.getSelf();
+        SyntaxElement.addExternalReference(references, self.getEnumerationLiteral());
+        SyntaxElement.addExternalReference(references, this.getParameter());
+        SyntaxElement.addExternalReferencesFor(references, self.getPropertyAccess());
     }
     
 	public ElementReference getEnumerationLiteral() {

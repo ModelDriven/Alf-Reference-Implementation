@@ -144,6 +144,13 @@ public abstract class SequenceExpansionExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getArgument());
+        ExtentOrExpression.addExternalReferencesFor(references, this.getPrimary());
+    }
+
 	public void _deriveAll() {
 		this.getVariableSource();
 		super._deriveAll();

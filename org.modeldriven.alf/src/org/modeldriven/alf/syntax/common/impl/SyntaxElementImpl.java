@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -10,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.common.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.mapping.Mapping;
@@ -67,6 +67,10 @@ public abstract class SyntaxElementImpl {
 	    this.getSelf()._deriveAll();
 	}
 	
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        this.getSelf()._addExternalReferences(references);
+    }
+    
 	/*
 	 * Helper Methods
 	 */

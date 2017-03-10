@@ -151,6 +151,13 @@ public class StereotypeAnnotation extends SyntaxElement {
 		return this.getImpl().stereotypeAnnotationNames();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getTaggedValues());
+        addExternalReferencesFor(references, this.getStereotypeName());
+    }
+
 	public void _deriveAll() {
 		this.getStereotype();
 		super._deriveAll();

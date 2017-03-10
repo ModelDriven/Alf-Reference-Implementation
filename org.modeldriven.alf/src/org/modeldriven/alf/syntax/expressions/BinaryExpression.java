@@ -125,6 +125,13 @@ public abstract class BinaryExpression extends Expression {
         return this.getImpl().maxUpperBound();
     }
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getOperand1());
+        addExternalReferencesFor(references, this.getOperand2());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Expression operand1 = this.getOperand1();

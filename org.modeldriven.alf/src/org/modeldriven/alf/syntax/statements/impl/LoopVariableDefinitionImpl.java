@@ -48,6 +48,12 @@ public class LoopVariableDefinitionImpl extends
 		return (LoopVariableDefinition) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getType());
+    }
+    
 	public String getVariable() {
 		return this.variable;
 	}

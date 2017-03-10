@@ -100,6 +100,13 @@ public class SequenceAccessExpression extends Expression {
 		return this.getImpl().sequenceAccessExpressionIndexMultiplicity();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getPrimary());
+        addExternalReferencesFor(references, this.getIndex());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Expression primary = this.getPrimary();

@@ -166,6 +166,12 @@ public class NameLeftHandSide extends LeftHandSide {
 	    return this.getImpl().nameLeftHandSideFeatureExpression();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getTarget());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		QualifiedName target = this.getTarget();

@@ -87,6 +87,12 @@ public class ConcurrentClauses extends SyntaxElement {
 		return this.getImpl().concurrentClausesConditionAssignments();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getClause());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Collection<NonFinalClause> clause = this.getClause();

@@ -10,9 +10,11 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -32,6 +34,13 @@ public class TemplateParameterSubstitutionImpl extends SyntaxElementImpl {
 		super(self);
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, 
+                this.getSelf().getArgumentName().getImpl().getClassifierReferent());
+    }
+    
 	@Override
 	public TemplateParameterSubstitution getSelf() {
 		return (TemplateParameterSubstitution) this.self;

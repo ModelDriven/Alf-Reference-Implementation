@@ -232,6 +232,14 @@ public class SequenceOperationExpression extends InvocationExpression {
 		return this.getImpl().parameterElements();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        
+        ExtentOrExpression.addExternalReferencesFor(references, this.getPrimary());
+        addExternalReferencesFor(references, this.getOperation());
+    }
+
 	public void _deriveAll() {
 		this.getIsCollectionConversion();
 		this.getIsBitStringConversion();

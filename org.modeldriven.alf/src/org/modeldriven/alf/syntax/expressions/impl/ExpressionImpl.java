@@ -49,6 +49,12 @@ public abstract class ExpressionImpl extends AssignableElementImpl {
 	    return super.toString(includesDerived) + " type:(" + self.getType() + ")";
 	}
 
+	@Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getType());
+    }
+    
     public Collection<AssignedSource> getAssignmentBefore() {
         return this.getAssignmentBeforeMap().values();
     }

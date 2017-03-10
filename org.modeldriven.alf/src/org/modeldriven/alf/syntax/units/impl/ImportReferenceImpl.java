@@ -40,6 +40,12 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
 		return (ImportReference) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getReferent());
+    }
+    
 	public String getVisibility() {
 		return this.visibility;
 	}

@@ -45,6 +45,13 @@ public class ClassifyStatementImpl extends
 		return (ClassifyStatement) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReferences(references, this.getSelf().getFromClass());
+        SyntaxElement.addExternalReferences(references, this.getSelf().getToClass());
+    }
+    
 	public Expression getExpression() {
 		return this.expression;
 	}

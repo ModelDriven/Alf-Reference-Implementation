@@ -41,6 +41,12 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 		return (ClassifierDefinition) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReferences(references, this.getSelf().getSpecializationReferent());
+    }
+    
     public Boolean getIsAbstract() {
         return this.isAbstract;
     }

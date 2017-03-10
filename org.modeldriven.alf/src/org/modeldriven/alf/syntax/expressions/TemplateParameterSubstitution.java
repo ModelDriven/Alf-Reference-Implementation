@@ -64,6 +64,12 @@ public class TemplateParameterSubstitution extends SyntaxElement {
 		this.getImpl().setArgumentName(argumentName);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getArgumentName());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		QualifiedName argumentName = this.getArgumentName();

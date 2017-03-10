@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,12 @@ public class ClassificationExpressionImpl extends UnaryExpressionImpl {
 		return (ClassificationExpression) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getReferent());
+    }
+    
 	public ElementReference getReferent() {
 		if (this.referent == null) {
 			this.setReferent(this.deriveReferent());

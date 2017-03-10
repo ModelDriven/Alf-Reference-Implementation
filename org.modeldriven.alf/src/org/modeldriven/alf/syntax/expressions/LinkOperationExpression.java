@@ -134,6 +134,12 @@ public class LinkOperationExpression extends InvocationExpression {
 		return this.getImpl().parameterElements();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getAssociationName());
+    }
+
 	public void _deriveAll() {
 		this.getIsCreation();
 		this.getIsClear();

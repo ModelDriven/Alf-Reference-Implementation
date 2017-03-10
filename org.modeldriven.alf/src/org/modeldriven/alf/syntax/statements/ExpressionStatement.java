@@ -72,6 +72,12 @@ public class ExpressionStatement extends Statement {
 		return this.getImpl().expressionStatementAssignmentsAfter();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getExpression());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Expression expression = this.getExpression();

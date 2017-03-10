@@ -132,6 +132,12 @@ public class ActivityDefinition extends ClassifierDefinition {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getBody());
+    }
+
 	public void _deriveAll() {
         this.getEffectiveBody();
 		super._deriveAll();

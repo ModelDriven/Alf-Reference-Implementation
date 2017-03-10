@@ -341,7 +341,7 @@ public abstract class ElementReferenceImpl implements AssignableElement {
 
     public abstract boolean conformsTo(ElementReference type);
     
-    public boolean isContainedIn(Collection<ElementReference> references) {
+    public boolean isContainedIn(Collection<? extends ElementReference> references) {
         for (ElementReference reference: references) {
             if (this.equals(reference)) {
                 return true;

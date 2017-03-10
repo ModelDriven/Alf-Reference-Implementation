@@ -115,6 +115,12 @@ public class SuperInvocationExpression extends InvocationExpression {
 		return this.getImpl().superInvocationExpressionOperation();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getTarget());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		QualifiedName target = this.getTarget();

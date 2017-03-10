@@ -161,6 +161,13 @@ public class LocalNameDeclarationStatement extends Statement {
 	    return this.getImpl().localNameDeclarationStatementExpressionType();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getExpression());
+        addExternalReferencesFor(references, this.getTypeName());
+    }
+
 	public void _deriveAll() {
 		this.getType();
 		super._deriveAll();

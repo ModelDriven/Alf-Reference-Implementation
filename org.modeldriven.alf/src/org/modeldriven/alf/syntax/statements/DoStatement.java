@@ -104,6 +104,13 @@ public class DoStatement extends Statement {
 		return this.getImpl().doStatementEnclosedStatements();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getCondition());
+        addExternalReferencesFor(references, this.getBody());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Expression condition = this.getCondition();

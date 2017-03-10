@@ -155,6 +155,12 @@ public class InstanceCreationExpression extends InvocationExpression {
 		return this.getImpl().parameterElements();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getConstructor());
+    }
+
 	public void _deriveAll() {
 		this.getIsConstructorless();
 		this.getIsObjectCreation();

@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,12 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 	    return super.toString(includeDerived) + " feature: (" + self.getFeature() + ")";
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getFeature());
+    }
+    
 	public FeatureReference getFeatureReference() {
 		return this.featureReference;
 	}

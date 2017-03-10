@@ -145,6 +145,12 @@ public class PropertyDefinition extends TypedElementDefinition {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getInitializer());
+    }
+
 	public void _deriveAll() {
 		this.getIsCollectionConversion();
 		this.getIsBitStringConversion();

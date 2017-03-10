@@ -137,6 +137,12 @@ public class FeatureLeftHandSide extends LeftHandSide {
 		return this.getImpl().featureLeftHandSideIndexedFeature();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getFeature());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		FeatureReference feature = this.getFeature();

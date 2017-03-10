@@ -226,6 +226,12 @@ public class IncrementOrDecrementExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getOperand());
+    }
+
 	public void _deriveAll() {
 		this.getAssignment();
 		this.getExpression();

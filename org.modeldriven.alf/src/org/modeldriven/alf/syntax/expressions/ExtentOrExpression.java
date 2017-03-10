@@ -14,6 +14,8 @@ import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.common.*;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -107,7 +109,30 @@ public class ExtentOrExpression implements ParsedElement {
 	public boolean extentOrExpressionExpressionDerivation() {
 		return this.getImpl().extentOrExpressionExpressionDerivation();
 	}
+	
+    public Collection<ExternalElementReference> getExternalReferences() {
+        Collection<ExternalElementReference> references = new ArrayList<ExternalElementReference>();
+        this.addExternalReferences(references);
+        return references;
+    }
 
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        this.getImpl().addExternalReferences(references);
+    }
+    
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        SyntaxElement.addExternalReferencesFor(references, this.getName());
+        SyntaxElement.addExternalReferencesFor(references, this.getNonNameExpression());
+    }
+    
+    public static void addExternalReferencesFor(
+            Collection<ExternalElementReference> references, 
+            ExtentOrExpression primary) {
+        if (primary != null) {
+            primary.addExternalReferences(references);
+        }
+    }
+    
 	public void deriveAll() {
 		this.getImpl().deriveAll();
 	}

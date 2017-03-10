@@ -63,6 +63,12 @@ public class NameBinding extends SyntaxElement {
 		this.getImpl().setName(name);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getBinding());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		TemplateBinding binding = this.getBinding();

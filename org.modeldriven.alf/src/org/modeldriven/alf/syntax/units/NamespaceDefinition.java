@@ -109,6 +109,12 @@ public abstract class NamespaceDefinition extends Member {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getOwnedMember());
+    }
+
 	public void _deriveAll() {
 		this.getMember();
 		super._deriveAll();

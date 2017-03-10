@@ -290,6 +290,12 @@ public abstract class InvocationExpression extends Expression {
         return this.getImpl().updateAssignments();
     }
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getTuple());
+    }
+
     public void _deriveAll() {
         this.getIsBehavior();
         this.getIsAssociationEnd();

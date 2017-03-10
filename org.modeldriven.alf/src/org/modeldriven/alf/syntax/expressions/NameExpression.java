@@ -183,6 +183,12 @@ public class NameExpression extends Expression {
         return this.getImpl().declaredType();
     }
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getName());
+    }
+
 	public void _deriveAll() {
 		this.getEnumerationLiteral();
 		this.getAssignment();

@@ -161,6 +161,14 @@ public class ClassifyStatement extends Statement {
 		return this.getImpl().classifyStatementToClassDerivation();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getExpression());
+        addExternalReferencesFor(references, this.getFromList());
+        addExternalReferencesFor(references, this.getToList());
+    }
+
 	public void _deriveAll() {
 		this.getFromClass();
 		this.getToClass();

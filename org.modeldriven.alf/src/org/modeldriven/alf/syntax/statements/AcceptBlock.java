@@ -97,6 +97,12 @@ public class AcceptBlock extends SyntaxElement {
 	public boolean acceptBlockSignalNames() {
 		return this.getImpl().acceptBlockSignalNames();
 	}
+	
+	@Override
+	public void _addExternalReferences(Collection<ExternalElementReference> references) {
+	    super._addExternalReferences(references);
+	    addExternalReferencesFor(references, this.getSignalNames());
+	}
 
 	public void _deriveAll() {
 		this.getSignal();

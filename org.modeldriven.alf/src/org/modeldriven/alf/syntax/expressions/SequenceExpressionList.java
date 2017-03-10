@@ -80,6 +80,12 @@ public class SequenceExpressionList extends SequenceElements {
 		return this.getImpl().sequenceExpressionListUpperDerivation();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getElement());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Collection<Expression> element = this.getElement();

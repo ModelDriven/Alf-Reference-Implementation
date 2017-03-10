@@ -134,7 +134,13 @@ public class ClassificationExpression extends UnaryExpression {
         return this.getImpl().adjustAssignments(assignments, condition);
     }
 
-        public void _deriveAll() {
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getTypeName());
+    }
+
+    public void _deriveAll() {
 		this.getReferent();
 		this.getIsDirect();
 		super._deriveAll();

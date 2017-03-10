@@ -10,6 +10,7 @@
 package org.modeldriven.alf.syntax.units.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
@@ -41,6 +42,12 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 		return (PackageDefinition) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReferences(references, this.getAllAppliedProfiles());
+    }
+    
 	public Collection<Profile> getAppliedProfile() {
 		Collection<Profile> profiles = new ArrayList<Profile>();
 		for (ElementReference reference: this.getAppliedProfileReference()) {

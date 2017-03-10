@@ -426,6 +426,13 @@ public class AssignmentExpression extends Expression {
         return this.getImpl().declaredType();
     }
     
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getLeftHandSide());
+        addExternalReferencesFor(references, this.getRightHandSide());
+    }
+
     public void _deriveAll() {
 		this.getAssignment();
 		this.getFeature();

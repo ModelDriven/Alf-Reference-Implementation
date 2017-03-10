@@ -10,11 +10,14 @@
 
 package org.modeldriven.alf.syntax.expressions.impl;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -50,6 +53,14 @@ public class ExtentOrExpressionImpl {
 	    return this.getSelf()._toString(includeDerived);
 	}
 
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        ExtentOrExpression self = this.getSelf();
+        self._addExternalReferences(references);
+        if (self.getNonNameExpression() == null) {
+            SyntaxElement.addExternalReferencesFor(references, self.getExpression());
+        }
+    }
+    
     public void deriveAll() {
         this.getSelf()._deriveAll();
     }

@@ -95,6 +95,13 @@ public class SequenceRange extends SequenceElements {
 		return this.getImpl().sequenceRangeAssignments();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getRangeLower());
+        addExternalReferencesFor(references, this.getRangeUpper());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Expression rangeLower = this.getRangeLower();

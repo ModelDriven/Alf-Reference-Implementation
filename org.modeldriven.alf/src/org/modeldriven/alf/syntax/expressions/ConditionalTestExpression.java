@@ -139,6 +139,14 @@ public class ConditionalTestExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getOperand1());
+        addExternalReferencesFor(references, this.getOperand2());
+        addExternalReferencesFor(references, this.getOperand3());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Expression operand1 = this.getOperand1();

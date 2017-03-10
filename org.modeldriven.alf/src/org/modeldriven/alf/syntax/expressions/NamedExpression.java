@@ -122,6 +122,13 @@ public class NamedExpression extends SyntaxElement {
         return this.getImpl().namedExpressionIsRealConversionDerivation();
     }
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getExpression());
+        addExternalReferencesFor(references, this.getIndex());
+    }
+
 	public void _deriveAll() {
 		this.getIsCollectionConversion();
 		this.getIsBitStringConversion();

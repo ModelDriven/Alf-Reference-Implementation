@@ -10,6 +10,7 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
@@ -41,6 +42,12 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl
 		return (TypedElementDefinition) this.self;
 	}
 	
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getType());
+    }
+    
 	/*
 	@Override
 	public void deriveAll() {

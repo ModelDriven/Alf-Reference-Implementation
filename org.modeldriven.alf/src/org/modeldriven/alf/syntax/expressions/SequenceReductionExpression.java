@@ -144,6 +144,13 @@ public class SequenceReductionExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        ExtentOrExpression.addExternalReferencesFor(references, this.getPrimary());
+        addExternalReferencesFor(references, this.getBehaviorName());
+    }
+
 	public void _deriveAll() {
 		this.getReferent();
 		super._deriveAll();

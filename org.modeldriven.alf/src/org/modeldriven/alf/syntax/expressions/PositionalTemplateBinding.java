@@ -60,6 +60,12 @@ public class PositionalTemplateBinding extends TemplateBinding {
 		this.getImpl().addArgumentName(argumentName);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getArgumentName());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Collection<QualifiedName> argumentName = this.getArgumentName();

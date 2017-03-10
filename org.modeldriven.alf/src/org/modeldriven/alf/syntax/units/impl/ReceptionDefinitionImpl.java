@@ -10,6 +10,7 @@
 
 package org.modeldriven.alf.syntax.units.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.modeldriven.alf.syntax.common.*;
@@ -34,6 +35,12 @@ public class ReceptionDefinitionImpl extends MemberImpl {
 		return (ReceptionDefinition) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getSignal());
+    }
+    
 	public QualifiedName getSignalName() {
 		return this.signalName;
 	}

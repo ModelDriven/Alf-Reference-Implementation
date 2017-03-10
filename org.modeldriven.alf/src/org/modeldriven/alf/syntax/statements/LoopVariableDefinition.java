@@ -214,6 +214,14 @@ public class LoopVariableDefinition extends SyntaxElement {
 		return this.getImpl().loopVariableDefinitionVariable();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getExpression1());
+        addExternalReferencesFor(references, this.getExpression2());
+        addExternalReferencesFor(references, this.getTypeName());
+    }
+
 	public void _deriveAll() {
 		this.getIsCollectionConversion();
 		this.getType();

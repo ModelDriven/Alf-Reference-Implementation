@@ -61,6 +61,12 @@ public class NamedTemplateBinding extends TemplateBinding {
 		this.getImpl().addSubstitution(substitution);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getSubstitution());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Collection<TemplateParameterSubstitution> substitution = this

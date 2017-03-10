@@ -101,6 +101,12 @@ public class FeatureInvocationExpression extends InvocationExpression {
 				.featureInvocationExpressionImplicitAlternativeConstructor();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getTarget());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		FeatureReference target = this.getTarget();

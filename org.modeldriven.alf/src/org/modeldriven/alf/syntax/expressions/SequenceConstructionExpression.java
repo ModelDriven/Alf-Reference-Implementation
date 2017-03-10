@@ -147,6 +147,13 @@ public class SequenceConstructionExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getElements());
+        addExternalReferencesFor(references, this.getTypeName());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		SequenceElements elements = this.getElements();

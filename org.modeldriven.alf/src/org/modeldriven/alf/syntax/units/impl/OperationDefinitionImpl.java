@@ -41,6 +41,12 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 		return (OperationDefinition) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReferences(references, this.getSelf().getRedefinedOperation());
+    }
+    
 	public QualifiedNameList getRedefinition() {
 		return this.redefinition;
 	}

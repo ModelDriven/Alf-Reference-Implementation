@@ -55,7 +55,7 @@ public class ReturnStatementImpl extends StatementImpl {
 	}
 
     /**
-     * The current scope for an accept statement should be the containing
+     * The current scope for a return statement should be the containing
      * behavior. It is implicitly set by setCurrentScope().
      */
 	protected ElementReference deriveBehavior() {

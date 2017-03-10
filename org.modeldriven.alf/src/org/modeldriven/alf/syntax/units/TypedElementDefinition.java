@@ -145,6 +145,12 @@ public abstract class TypedElementDefinition extends Member {
 		return this.getImpl().typedElementDefinitionTypeName();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getTypeName());
+    }
+
 	public void _deriveAll() {
 		this.getType();
 		this.getLower();

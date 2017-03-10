@@ -79,6 +79,12 @@ public abstract class UnaryExpression extends Expression {
 		return this.getImpl().updateAssignments();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getOperand());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Expression operand = this.getOperand();

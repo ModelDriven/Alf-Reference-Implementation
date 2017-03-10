@@ -15,6 +15,7 @@ import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,12 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 		return (LocalNameDeclarationStatement) this.self;
 	}
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReference(references, this.getSelf().getType());
+    }
+    
 	public String getName() {
 		return this.name;
 	}

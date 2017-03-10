@@ -241,6 +241,12 @@ public class QualifiedName extends SyntaxElement {
 		return this.getImpl().qualifiedNameTemplateNameDerivation();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getNameBinding());
+    }
+
 	public void _deriveAll() {
 		this.getPathName();
 		this.getIsFeatureReference();

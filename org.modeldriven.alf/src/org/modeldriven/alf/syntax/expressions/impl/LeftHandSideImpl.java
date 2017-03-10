@@ -48,6 +48,13 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 		return (LeftHandSide) this.self;
 	}
 
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        LeftHandSide self = this.getSelf();
+        SyntaxElement.addExternalReference(references, self.getReferent());
+        SyntaxElement.addExternalReference(references, self.getType());
+    }
+    
     public Collection<AssignedSource> getAssignmentBefore() {
         return this.getAssignmentBeforeMap().values();
     }

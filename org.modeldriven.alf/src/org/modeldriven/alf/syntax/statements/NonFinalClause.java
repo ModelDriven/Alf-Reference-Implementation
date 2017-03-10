@@ -106,6 +106,13 @@ public class NonFinalClause extends SyntaxElement {
 		return this.getImpl().assignmentsAfter();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getCondition());
+        addExternalReferencesFor(references, this.getBody());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Expression condition = this.getCondition();

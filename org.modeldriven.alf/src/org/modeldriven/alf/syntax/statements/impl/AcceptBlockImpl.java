@@ -39,6 +39,12 @@ public class AcceptBlockImpl extends SyntaxElementImpl {
         return (AcceptBlock) this.self;
     }
 
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        SyntaxElement.addExternalReferences(references, this.getSelf().getSignal());
+    }
+    
     public String getName() {
         return this.name;
     }

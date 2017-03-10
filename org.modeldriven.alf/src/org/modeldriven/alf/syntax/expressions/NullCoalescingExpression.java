@@ -139,14 +139,6 @@ public class NullCoalescingExpression extends BinaryExpression {
     @Override
     public void _deriveAll() {
         super._deriveAll();
-        Expression operand1 = this.getOperand1();
-        if (operand1 != null) {
-            operand1.deriveAll();
-        }
-        Expression operand2 = this.getOperand2();
-        if (operand2 != null) {
-            operand2.deriveAll();
-        }
     }
     
     @Override
@@ -168,29 +160,6 @@ public class NullCoalescingExpression extends BinaryExpression {
             violations.add(new ConstraintViolation(
                     "nullCoalescingExpressionAssignmentsBefore", this));
         }
-        Expression operand1 = this.getOperand1();
-        if (operand1 != null) {
-            operand1.checkConstraints(violations);
-        }
-        Expression operand2 = this.getOperand2();
-        if (operand2 != null) {
-            operand2.checkConstraints(violations);
-        }
     }
     
-    @Override
-    public void print(String prefix, boolean includeDerived) {
-        super.print(prefix, includeDerived);
-        Expression operand1 = this.getOperand1();
-        if (operand1 != null) {
-            System.out.println(prefix + " operand1:");
-            operand1.print(prefix + "  ", includeDerived);
-        }
-        Expression operand2 = this.getOperand2();
-        if (operand2 != null) {
-            System.out.println(prefix + " operand2:");
-            operand2.print(prefix + "  ", includeDerived);
-        }
-    }
-
 }

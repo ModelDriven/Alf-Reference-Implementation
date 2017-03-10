@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -13,6 +12,7 @@ package org.modeldriven.alf.syntax.common;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.Token;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -65,14 +65,64 @@ public abstract class SyntaxElement implements ParsedElement {
 	public int getColumn() {
 		return this.column;
 	}
-
+	
 	public void setParserInfo(String fileName, int line, int column) {
 		this.fileName = fileName;
 		this.line = line;
 		this.column = column;
 	}
 
-	public void deriveAll() {
+    public Collection<ExternalElementReference> getExternalReferences() {
+        Collection<ExternalElementReference> references = new ArrayList<ExternalElementReference>();
+        this.addExternalReferences(references);
+        return references;
+    }
+
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        this.getImpl().addExternalReferences(references);
+    }
+
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+    }
+    
+    public static void addExternalReference(
+            Collection<ExternalElementReference> externalReferences, 
+            ElementReference reference) {
+        if (reference instanceof ExternalElementReference &&
+                !reference.getImpl().isContainedIn(externalReferences)) {
+            externalReferences.add((ExternalElementReference)reference);
+        }
+    }
+    
+    public static void addExternalReferences(
+            Collection<ExternalElementReference> externalReferences, 
+            Collection<? extends ElementReference> references) {
+        if (references != null) {
+            for (ElementReference reference: references) {
+                addExternalReference(externalReferences, reference);
+            }
+        }
+    }
+    
+    public static void addExternalReferencesFor(
+            Collection<ExternalElementReference> references, 
+            SyntaxElement element) {
+        if (element != null) {
+            element.addExternalReferences(references);
+        }
+    }
+
+    public static void addExternalReferencesFor(
+            Collection<ExternalElementReference> references, 
+            Collection<? extends SyntaxElement> elements) {
+        if (elements != null) {
+            for (SyntaxElement element: elements) {
+                element.addExternalReferences(references);
+            }
+        }
+    }
+
+    public void deriveAll() {
 		this.getImpl().deriveAll();
 	}
 

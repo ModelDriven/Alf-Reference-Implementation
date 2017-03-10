@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -82,6 +81,12 @@ public class ClassExtentExpression extends Expression {
 	public boolean classExtentExpressionExtentType() {
 		return this.getImpl().classExtentExpressionExtentType();
 	}
+
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getClassName());
+    }
 
 	public void _deriveAll() {
 		super._deriveAll();

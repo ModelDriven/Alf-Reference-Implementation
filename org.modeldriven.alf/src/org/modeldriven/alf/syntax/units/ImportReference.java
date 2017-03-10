@@ -95,6 +95,12 @@ public abstract class ImportReference extends SyntaxElement {
 		return this.getImpl().importReferenceReferent();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getReferentName());
+    }
+
 	public void _deriveAll() {
 		this.getReferent();
 		super._deriveAll();

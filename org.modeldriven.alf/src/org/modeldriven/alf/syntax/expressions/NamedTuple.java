@@ -69,6 +69,12 @@ public class NamedTuple extends Tuple {
 		return this.getImpl().namedTupleArgumentNames();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getNamedExpression());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Collection<NamedExpression> namedExpression = this.getNamedExpression();

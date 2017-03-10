@@ -149,6 +149,14 @@ public class UnitDefinition extends DocumentedElement {
 		return this.getImpl().unitDefinitionAppliedProfileDerivation();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getNamespaceName());
+        addExternalReferencesFor(references, this.getDefinition());
+        addExternalReferencesFor(references, this.getImport());
+    }
+
 	public void _deriveAll() {
 		this.getNamespace();
 		this.getIsModelLibrary();

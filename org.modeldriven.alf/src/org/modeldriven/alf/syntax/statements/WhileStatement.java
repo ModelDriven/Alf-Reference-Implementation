@@ -109,6 +109,13 @@ public class WhileStatement extends Statement {
 		return this.getImpl().whileStatementEnclosedStatements();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getBody());
+        addExternalReferencesFor(references, this.getCondition());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Block body = this.getBody();

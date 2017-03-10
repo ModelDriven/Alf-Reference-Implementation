@@ -95,6 +95,13 @@ public class FeatureReference extends SyntaxElement {
 		return this.getImpl().featureReferenceTargetType();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getExpression());
+        addExternalReferencesFor(references, this.getNameBinding());
+    }
+
 	public void _deriveAll() {
 		this.getReferent();
 		super._deriveAll();

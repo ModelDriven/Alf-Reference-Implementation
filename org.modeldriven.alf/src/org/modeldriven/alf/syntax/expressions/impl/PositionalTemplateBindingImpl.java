@@ -11,6 +11,7 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
@@ -37,6 +38,15 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
 		return (PositionalTemplateBinding) this.self;
 	}
 	
+    @Override
+    public void addExternalReferences(Collection<ExternalElementReference> references) {
+        super.addExternalReferences(references);
+        for (QualifiedName argumentName: this.getSelf().getArgumentName()) {
+            SyntaxElement.addExternalReference(references, 
+                    argumentName.getImpl().getClassifierReferent());
+        }
+    }
+    
     public Collection<QualifiedName> getArgumentName() {
         return this.argumentName;
     }

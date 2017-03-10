@@ -111,6 +111,13 @@ public class SwitchClause extends SyntaxElement {
 		return this.getImpl().assignmentsAfter();
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getCase());
+        addExternalReferencesFor(references, this.getBlock());
+    }
+
 	public void _deriveAll() {
 		super._deriveAll();
 		Collection<Expression> case_ = this.getCase();

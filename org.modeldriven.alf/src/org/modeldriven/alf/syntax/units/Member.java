@@ -223,6 +223,12 @@ public abstract class Member extends DocumentedElement {
 		return this.getImpl().isSameKindAs(member);
 	}
 
+    @Override
+    public void _addExternalReferences(Collection<ExternalElementReference> references) {
+        super._addExternalReferences(references);
+        addExternalReferencesFor(references, this.getAnnotation());
+    }
+
 	public void _deriveAll() {
 		this.getIsFeature();
 		this.getIsPrimitive();
