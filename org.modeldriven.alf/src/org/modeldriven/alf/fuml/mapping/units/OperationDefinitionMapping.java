@@ -169,7 +169,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 
                 // Add constructor body.
                 Block bodySegment =
-                        definition.getImpl().getBodySegement();
+                        definition.getImpl().getBodySegment();
                 FumlMapping bodyMapping = this.fumlMap(bodySegment);
                 StructuredActivityNode bodyNode = 
                     graph.addStructuredActivityNode(

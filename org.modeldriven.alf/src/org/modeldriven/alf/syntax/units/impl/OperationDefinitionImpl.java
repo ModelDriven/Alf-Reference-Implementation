@@ -528,7 +528,7 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         }
     }
     
-    public Block getBodySegement() {
+    public Block getBodySegment() {
         Block body = this.getEffectiveBody();
         if (body == null) {
             return null;
