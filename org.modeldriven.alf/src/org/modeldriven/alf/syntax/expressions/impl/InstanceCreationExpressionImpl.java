@@ -207,8 +207,11 @@ public class InstanceCreationExpressionImpl
 	
 	/**
 	 * If the referent is a classifier, not a constructor operation, then the 
-	 * type of an instance creation expression is given by the referent itself,
-	 * not a return parameter type. 
+	 * type of an instance creation expression is given by the referent itself. 
+     * Otherwise, for a constructor operation, return the owning class of the 
+     * constructor (not the return type of the constructor). (This allows for 
+     * the use of external constructors that may not actually return the 
+     * constructed object, as they should according to UML rules.)
 	 */
 	@Override
 	protected ElementReference deriveType() {
@@ -216,38 +219,29 @@ public class InstanceCreationExpressionImpl
 	    if (referent != null && referent.getImpl().isClassifier()) {
 	        return referent;
 	    } else {
-	        return super.deriveType();
+	        // For a constructor operation, return the owning class of the
+	        // constructor, rather than the return type of the constructor.
+	        // This allows for the use of (external) constructors that may
+	        // not actually return the constructed object (as they should
+	        // according to UML rules).
+	        return referent.getImpl().getNamespace();
 	    }
 	}
 	
     /**
-     * If the referent is a classifier, not a constructor operation, then the 
-     * lower bound of an instance creation expression is 1, rather than being
-     * given a return parameter lower bound. 
+     * The lower bound of an instance creation expression should always be 1. 
      */
     @Override
     protected Integer deriveLower() {
-        ElementReference referent = this.getSelf().getReferent();
-        if (referent != null && referent.getImpl().isClassifier()) {
-            return 1;
-        } else {
-            return super.deriveLower();
-        }
+        return 1;
     }
     
     /**
-     * If the referent is a classifier, not a constructor operation, then the 
-     * upper bound of an instance creation expression is 1, rather than being
-     * given a return parameter lower bound. 
+     * The upper bound of an instance creation expression should always be 1. 
      */
     @Override
     protected Integer deriveUpper() {
-        ElementReference referent = this.getSelf().getReferent();
-        if (referent != null && referent.getImpl().isClassifier()) {
-            return 1;
-        } else {
-            return super.deriveUpper();
-        }
+        return 1;
     }
     
 	/*

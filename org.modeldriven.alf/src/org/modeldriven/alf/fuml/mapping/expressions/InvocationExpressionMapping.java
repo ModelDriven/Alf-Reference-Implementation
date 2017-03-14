@@ -127,13 +127,18 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
     
     public static StructuredActivityNode wrapAction(
             String name, ActivityGraph graph, Collection<Element> elements, OutputPin resultPin) {
+        return wrapAction(name, graph, elements, resultPin, resultPin.getType(), 0, resultPin.getUpper());
+    }
+    public static StructuredActivityNode wrapAction(
+            String name, ActivityGraph graph, Collection<Element> elements, 
+            ActivityNode result, Type type, int lower, int upper) {
         StructuredActivityNode node = graph.addStructuredActivityNode(
                 "Node(" + name + ")", elements);
         OutputPin output = graph.createOutputPin(
-                "Output(" + resultPin.getName() + ")", 
-                resultPin.getType(), 0, resultPin.getUpper());
+                "Output(" + result.getName() + ")", 
+                type, lower, upper);
         node.addStructuredNodeOutput(output);
-        node.addEdge(graph.createObjectFlow(resultPin, output));
+        node.addEdge(graph.createObjectFlow(result, output));
         return node;
     }
 

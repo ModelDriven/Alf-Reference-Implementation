@@ -276,16 +276,23 @@ public class InstanceCreationExpressionMapping extends
             action = super.mapTarget();                
             CallOperationAction callAction = (CallOperationAction)action;
 
-            if (this.resultSource == null) {
-                this.throwError("Constructor has no return result: " + 
-                        callAction.getOperation().getQualifiedName());
-            }
+//            if (this.resultSource == null) {
+//                this.throwError("Constructor has no return result: " + 
+//                        callAction.getOperation().getQualifiedName());
+//            }
 
             // Add a create object action to provide the target input to the
-            // constructor call.
+            // constructor call and the result of the expression.
             CreateObjectAction createAction = 
                 this.graph.addCreateObjectAction(callAction.getOperation().getClass_());
-            this.graph.addObjectFlow(createAction.getResult(), callAction.getTarget());
+            ForkNode fork = this.graph.addForkNode("Fork(" + createAction.getResult().getName() + ")");
+            this.graph.addObjectFlow(createAction.getResult(), fork);
+            this.graph.addObjectFlow(fork, callAction.getTarget());
+            
+            // NOTE: By making the result source the result of the create object action,
+            // this mapping will work even if the constructor operation does not return
+            // the constructed object, as it should according to UML rules.
+            this.resultSource = fork;
 
         } else {
             // TODO: Handle attribute initialization for constructorless instance
@@ -311,6 +318,23 @@ public class InstanceCreationExpressionMapping extends
             CreateObjectAction createAction = this.graph.addCreateObjectAction(class_);
             this.resultSource = createAction.getResult();
             action = createAction;
+        }
+        return action;
+    }
+    
+    public Action mapFeature(Action action) throws MappingError {
+        // NOTE: An instance creation expression has no feature, but the mapping of a constructor
+        // call needs to be wrapped at this point to ensure that the (forked) result of the object
+        // create action does not flow before the constructor call has completed.
+        if (!(this.resultSource instanceof OutputPin)) {
+            this.graph.remove(this.action);
+            this.graph.remove(this.resultSource);
+            Collection<Element> elements = new ArrayList<Element>();
+            elements.add(action);
+            elements.add(this.resultSource);
+            
+            action = wrapAction(action.getName(), this.graph, elements, this.resultSource, null, 1, 1);
+            this.resultSource = ((StructuredActivityNode)action).getStructuredNodeOutput().get(0);
         }
         return action;
     }
