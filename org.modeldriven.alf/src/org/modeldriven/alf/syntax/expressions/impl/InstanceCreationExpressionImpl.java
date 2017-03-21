@@ -224,7 +224,7 @@ public class InstanceCreationExpressionImpl
 	        // This allows for the use of (external) constructors that may
 	        // not actually return the constructed object (as they should
 	        // according to UML rules).
-	        return referent.getImpl().getNamespace();
+	        return referent == null? null: referent.getImpl().getNamespace();
 	    }
 	}
 	
