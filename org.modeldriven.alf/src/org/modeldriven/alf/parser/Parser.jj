@@ -554,6 +554,17 @@ Expression Expression():
   { return e; }
 }
 
+/* For use in the parsing of OpaqueExpressions. */
+Expression ExpressionEOF():
+{
+  Expression e;
+}
+{
+  e = Expression() <EOF>
+  
+  { return e; }
+}
+
 Expression NonNameExpression():
 {
   Expression e;
