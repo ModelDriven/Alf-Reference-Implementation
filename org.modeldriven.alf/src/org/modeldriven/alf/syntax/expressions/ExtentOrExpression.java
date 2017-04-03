@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -11,7 +10,6 @@
 package org.modeldriven.alf.syntax.expressions;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.common.*;
 
@@ -26,13 +24,9 @@ import org.modeldriven.alf.syntax.expressions.impl.ExtentOrExpressionImpl;
  * may be either a primary expression or a class name denoting the class extent.
  **/
 
-public class ExtentOrExpression implements ParsedElement {
+public class ExtentOrExpression extends ParsedElement {
 
 	protected ExtentOrExpressionImpl impl;
-
-	private String fileName = "";
-	private int line = 0;
-	private int column = 0;
 
 	public ExtentOrExpression() {
 		this.impl = new ExtentOrExpressionImpl(this);
@@ -40,40 +34,16 @@ public class ExtentOrExpression implements ParsedElement {
 
 	public ExtentOrExpression(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public ExtentOrExpression(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+        this.init(element);
 	}
 
 	public ExtentOrExpressionImpl getImpl() {
 		return (ExtentOrExpressionImpl) this.impl;
-	}
-
-	public String getFileName() {
-		return this.fileName;
-	}
-
-	public int getLine() {
-		return this.line;
-	}
-
-	public int getColumn() {
-		return this.column;
-	}
-
-	public void setParserInfo(String fileName, int line, int column) {
-		this.fileName = fileName;
-		this.line = line;
-		this.column = column;
 	}
 
 	public QualifiedName getName() {
@@ -182,7 +152,8 @@ public class ExtentOrExpression implements ParsedElement {
 		return Integer.toHexString(this.hashCode());
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return this.toString(false);
 	}
 

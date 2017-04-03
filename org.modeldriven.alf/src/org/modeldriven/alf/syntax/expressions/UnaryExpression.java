@@ -10,11 +10,11 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.expressions.impl.UnaryExpressionImpl;
 
 /**
@@ -24,26 +24,8 @@ import org.modeldriven.alf.syntax.expressions.impl.UnaryExpressionImpl;
 
 public abstract class UnaryExpression extends Expression {
 
-	public UnaryExpression() {
-	}
-
-	public UnaryExpression(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public UnaryExpression(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public UnaryExpressionImpl getImpl() {
+	@Override
+    public UnaryExpressionImpl getImpl() {
 		return (UnaryExpressionImpl) this.impl;
 	}
 
@@ -75,7 +57,8 @@ public abstract class UnaryExpression extends Expression {
 	 * By default, the assignments after a unary expression are the same as
 	 * those after its operand expression.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
+	@Override
+    public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 
@@ -85,7 +68,8 @@ public abstract class UnaryExpression extends Expression {
         addExternalReferencesFor(references, this.getOperand());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		super._deriveAll();
 		Expression operand = this.getOperand();
 		if (operand != null) {
@@ -93,7 +77,8 @@ public abstract class UnaryExpression extends Expression {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.unaryExpressionAssignmentsBefore()) {
 			violations.add(new ConstraintViolation(
@@ -105,22 +90,26 @@ public abstract class UnaryExpression extends Expression {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" operator:");
 		s.append(this.getOperator());
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Expression operand = this.getOperand();
 		if (operand != null) {

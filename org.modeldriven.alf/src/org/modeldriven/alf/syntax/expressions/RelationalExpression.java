@@ -9,11 +9,11 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.expressions.impl.RelationalExpressionImpl;
 
 /**
@@ -28,21 +28,16 @@ public class RelationalExpression extends BinaryExpression {
 
 	public RelationalExpression(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public RelationalExpression(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public RelationalExpressionImpl getImpl() {
+	@Override
+    public RelationalExpressionImpl getImpl() {
 		return (RelationalExpressionImpl) this.impl;
 	}
 
@@ -142,7 +137,8 @@ public class RelationalExpression extends BinaryExpression {
         return this.getImpl().relationalExpressionIsRealConversion2Derivation();
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getIsUnlimitedNatural();
 		this.getIsReal();
 		this.getIsRealConversion1();
@@ -155,11 +151,13 @@ public class RelationalExpression extends BinaryExpression {
      * allows for the propagation of a null returned from an arithmetic
      * expression used as an operand).
      */
+    @Override
     public Integer minLowerBound() {
         return this.getImpl().minLowerBound();
     }
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
         if (!this.relationalExpressionIsUnlimitedNaturalDerivation()) {
             violations.add(new ConstraintViolation(
@@ -195,7 +193,8 @@ public class RelationalExpression extends BinaryExpression {
         }
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
         if (includeDerived) {
             s.append(" /isUnlimitedNatural:");
@@ -216,15 +215,18 @@ public class RelationalExpression extends BinaryExpression {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 	}
 } // RelationalExpression

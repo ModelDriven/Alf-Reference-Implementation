@@ -9,12 +9,14 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
 import java.util.List;
+
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
+import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.expressions.impl.InstanceCreationExpressionImpl;
 
 /**
@@ -29,21 +31,16 @@ public class InstanceCreationExpression extends InvocationExpression {
 
 	public InstanceCreationExpression(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public InstanceCreationExpression(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public InstanceCreationExpressionImpl getImpl() {
+	@Override
+    public InstanceCreationExpressionImpl getImpl() {
 		return (InstanceCreationExpressionImpl) this.impl;
 	}
 
@@ -151,7 +148,8 @@ public class InstanceCreationExpression extends InvocationExpression {
 	 * Returns the parameters of a constructor operation or the attributes of a
 	 * data type, or an empty set for a constructorless instance creation.
 	 **/
-	public List<ElementReference> parameterElements() {
+	@Override
+    public List<ElementReference> parameterElements() {
 		return this.getImpl().parameterElements();
 	}
 
@@ -161,7 +159,8 @@ public class InstanceCreationExpression extends InvocationExpression {
         addExternalReferencesFor(references, this.getConstructor());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getIsConstructorless();
 		this.getIsObjectCreation();
 		super._deriveAll();
@@ -171,7 +170,8 @@ public class InstanceCreationExpression extends InvocationExpression {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.instanceCreationExpressionIsObjectCreationDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -213,7 +213,8 @@ public class InstanceCreationExpression extends InvocationExpression {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		if (includeDerived) {
 			s.append(" /isConstructorless:");
@@ -226,15 +227,18 @@ public class InstanceCreationExpression extends InvocationExpression {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		QualifiedName constructor = this.getConstructor();
 		if (constructor != null) {

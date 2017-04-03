@@ -9,11 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
+import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.expressions.impl.ConditionalTestExpressionImpl;
 
 /**
@@ -29,21 +31,16 @@ public class ConditionalTestExpression extends Expression {
 
 	public ConditionalTestExpression(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public ConditionalTestExpression(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public ConditionalTestExpressionImpl getImpl() {
+	@Override
+    public ConditionalTestExpressionImpl getImpl() {
 		return (ConditionalTestExpressionImpl) this.impl;
 	}
 
@@ -135,7 +132,8 @@ public class ConditionalTestExpression extends Expression {
      * expressions and a multiplicity upper bound that is the maximum of the upper
      * bounds after the second and third expressions.
      **/
-	public Collection<AssignedSource> updateAssignments() {
+	@Override
+    public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 
@@ -147,7 +145,8 @@ public class ConditionalTestExpression extends Expression {
         addExternalReferencesFor(references, this.getOperand3());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		super._deriveAll();
 		Expression operand1 = this.getOperand1();
 		if (operand1 != null) {
@@ -163,7 +162,8 @@ public class ConditionalTestExpression extends Expression {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.conditionalTestExpressionTypeDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -199,20 +199,24 @@ public class ConditionalTestExpression extends Expression {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Expression operand1 = this.getOperand1();
 		if (operand1 != null) {

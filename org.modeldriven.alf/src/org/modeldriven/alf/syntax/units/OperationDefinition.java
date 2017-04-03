@@ -10,8 +10,6 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.statements.*;
 import java.util.Collection;
@@ -30,21 +28,16 @@ public class OperationDefinition extends NamespaceDefinition {
 
 	public OperationDefinition(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public OperationDefinition(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public OperationDefinitionImpl getImpl() {
+	@Override
+    public OperationDefinitionImpl getImpl() {
 		return (OperationDefinitionImpl) this.impl;
 	}
 
@@ -233,7 +226,8 @@ public class OperationDefinition extends NamespaceDefinition {
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Operation.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+	@Override
+    public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
@@ -248,7 +242,8 @@ public class OperationDefinition extends NamespaceDefinition {
 	 * following any other formal parameters, with the same type as the class of
 	 * the operation definition and a multiplicity of 1..1.
 	 **/
-	public Boolean matchForStub(UnitDefinition unit) {
+	@Override
+    public Boolean matchForStub(UnitDefinition unit) {
 		return this.getImpl().matchForStub(unit);
 	}
 
@@ -263,7 +258,8 @@ public class OperationDefinition extends NamespaceDefinition {
 	 * any other formal parameters, of the same type as the owner of the
 	 * constructor operation.
 	 **/
-	public Boolean isSameKindAs(Member member) {
+	@Override
+    public Boolean isSameKindAs(Member member) {
 		return this.getImpl().isSameKindAs(member);
 	}
 
@@ -274,7 +270,8 @@ public class OperationDefinition extends NamespaceDefinition {
         addExternalReferencesFor(references, this.getBody());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getRedefinedOperation();
 		this.getIsConstructor();
 		this.getIsDestructor();
@@ -290,7 +287,8 @@ public class OperationDefinition extends NamespaceDefinition {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.operationDefinitionNamespace()) {
 			violations.add(new ConstraintViolation(
@@ -358,7 +356,8 @@ public class OperationDefinition extends NamespaceDefinition {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" isAbstract:");
 		s.append(this.getIsAbstract());
@@ -373,15 +372,18 @@ public class OperationDefinition extends NamespaceDefinition {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		QualifiedNameList redefinition = this.getRedefinition();
 		if (redefinition != null) {

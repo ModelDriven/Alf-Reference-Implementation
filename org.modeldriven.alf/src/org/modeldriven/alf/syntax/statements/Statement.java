@@ -9,9 +9,6 @@
 
 package org.modeldriven.alf.syntax.statements;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
 import org.modeldriven.alf.syntax.statements.impl.StatementImpl;
@@ -22,26 +19,8 @@ import org.modeldriven.alf.syntax.statements.impl.StatementImpl;
 
 public abstract class Statement extends DocumentedElement {
 
-	public Statement() {
-	}
-
-	public Statement(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public Statement(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public StatementImpl getImpl() {
+	@Override
+    public StatementImpl getImpl() {
 		return (StatementImpl) this.impl;
 	}
 
@@ -161,7 +140,8 @@ public abstract class Statement extends DocumentedElement {
         addExternalReferencesFor(references, this.getAnnotation());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getAssignmentBefore();
 		this.getAssignmentAfter();
 		this.getEnclosingStatement();
@@ -176,7 +156,8 @@ public abstract class Statement extends DocumentedElement {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.statementAnnotationsAllowed()) {
 			violations.add(new ConstraintViolation(
@@ -202,7 +183,8 @@ public abstract class Statement extends DocumentedElement {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		if (includeDerived) {
 			s.append(" /isIsolated:");
@@ -213,15 +195,18 @@ public abstract class Statement extends DocumentedElement {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Collection<Annotation> annotation = this.getAnnotation();
 		if (annotation != null && annotation.size() > 0) {

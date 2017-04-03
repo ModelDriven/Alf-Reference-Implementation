@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -9,11 +9,12 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl;
 
 /**
@@ -25,26 +26,8 @@ import org.modeldriven.alf.syntax.expressions.impl.ExpressionImpl;
 
 public abstract class Expression extends SyntaxElement {
 
-	public Expression() {
-	}
-
-	public Expression(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public Expression(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public ExpressionImpl getImpl() {
+	@Override
+    public ExpressionImpl getImpl() {
 		return (ExpressionImpl) this.impl;
 	}
 
@@ -166,7 +149,8 @@ public abstract class Expression extends SyntaxElement {
         return this.getImpl().adjustType(assignments, subtype);
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getAssignmentBefore();
 		this.getAssignmentAfter();
 		this.getUpper();
@@ -175,7 +159,8 @@ public abstract class Expression extends SyntaxElement {
 		super._deriveAll();
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.expressionAssignmentAfterDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -187,7 +172,8 @@ public abstract class Expression extends SyntaxElement {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		if (includeDerived) {
 			s.append(" /upper:");
@@ -200,15 +186,18 @@ public abstract class Expression extends SyntaxElement {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		if (includeDerived) {
 			Collection<AssignedSource> assignmentBefore = this

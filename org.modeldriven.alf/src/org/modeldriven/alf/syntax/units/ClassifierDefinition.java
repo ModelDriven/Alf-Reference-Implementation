@@ -10,9 +10,6 @@
 
 package org.modeldriven.alf.syntax.units;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.statements.*;
 import java.util.Collection;
@@ -24,26 +21,8 @@ import org.modeldriven.alf.syntax.units.impl.ClassifierDefinitionImpl;
 
 public abstract class ClassifierDefinition extends NamespaceDefinition {
 
-	public ClassifierDefinition() {
-	}
-
-	public ClassifierDefinition(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public ClassifierDefinition(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public ClassifierDefinitionImpl getImpl() {
+	@Override
+    public ClassifierDefinitionImpl getImpl() {
 		return (ClassifierDefinitionImpl) this.impl;
 	}
 
@@ -120,7 +99,8 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 	 * parameters match if they have same names and the same specialization
 	 * referents.
 	 **/
-	public Boolean matchForStub(UnitDefinition unit) {
+	@Override
+    public Boolean matchForStub(UnitDefinition unit) {
 		return this.getImpl().matchForStub(unit);
 	}
 
@@ -130,7 +110,8 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
         addExternalReferencesFor(references, this.getSpecialization());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getSpecializationReferent();
 		super._deriveAll();
 		QualifiedNameList specialization = this.getSpecialization();
@@ -139,7 +120,8 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.classifierDefinitionSpecialization()) {
 			violations.add(new ConstraintViolation(
@@ -160,22 +142,26 @@ public abstract class ClassifierDefinition extends NamespaceDefinition {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" isAbstract:");
 		s.append(this.getIsAbstract());
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		QualifiedNameList specialization = this.getSpecialization();
 		if (specialization != null) {

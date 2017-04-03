@@ -10,11 +10,13 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
+import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.expressions.impl.SequenceExpansionExpressionImpl;
 
 /**
@@ -29,21 +31,16 @@ public abstract class SequenceExpansionExpression extends Expression {
 
 	public SequenceExpansionExpression(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public SequenceExpansionExpression(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public SequenceExpansionExpressionImpl getImpl() {
+	@Override
+    public SequenceExpansionExpressionImpl getImpl() {
 		return (SequenceExpansionExpressionImpl) this.impl;
 	}
 
@@ -140,7 +137,8 @@ public abstract class SequenceExpansionExpression extends Expression {
 	 * The assignments after a sequence expansion expression are the same as
 	 * after its primary expression.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
+	@Override
+    public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 
@@ -151,7 +149,8 @@ public abstract class SequenceExpansionExpression extends Expression {
         ExtentOrExpression.addExternalReferencesFor(references, this.getPrimary());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getVariableSource();
 		super._deriveAll();
 		Expression argument = this.getArgument();
@@ -164,7 +163,8 @@ public abstract class SequenceExpansionExpression extends Expression {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.sequenceExpansionExpressionVariableSourceDerivation()) {
 			violations
@@ -203,7 +203,8 @@ public abstract class SequenceExpansionExpression extends Expression {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" operation:");
 		s.append(this.getOperation());
@@ -212,15 +213,18 @@ public abstract class SequenceExpansionExpression extends Expression {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		if (includeDerived) {
 			AssignedSource variableSource = this.getVariableSource();

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -9,9 +8,6 @@
  *******************************************************************************/
 
 package org.modeldriven.alf.syntax.units;
-
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
@@ -24,26 +20,8 @@ import org.modeldriven.alf.syntax.units.impl.NamespaceDefinitionImpl;
 
 public abstract class NamespaceDefinition extends Member {
 
-	public NamespaceDefinition() {
-	}
-
-	public NamespaceDefinition(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public NamespaceDefinition(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public NamespaceDefinitionImpl getImpl() {
+	@Override
+    public NamespaceDefinitionImpl getImpl() {
 		return (NamespaceDefinitionImpl) this.impl;
 	}
 
@@ -105,7 +83,8 @@ public abstract class NamespaceDefinition extends Member {
 	/**
 	 * Returns true if the annotation is @external.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+	@Override
+    public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
@@ -115,7 +94,8 @@ public abstract class NamespaceDefinition extends Member {
         addExternalReferencesFor(references, this.getOwnedMember());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getMember();
 		super._deriveAll();
 		Collection<Member> ownedMember = this.getOwnedMember();
@@ -126,7 +106,8 @@ public abstract class NamespaceDefinition extends Member {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.namespaceDefinitionMemberDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -144,20 +125,24 @@ public abstract class NamespaceDefinition extends Member {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		List<Member> ownedMember = this.getOwnedMember();
 		if (ownedMember != null && ownedMember.size() > 0) {

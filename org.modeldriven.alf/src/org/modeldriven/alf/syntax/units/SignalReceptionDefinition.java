@@ -11,8 +11,6 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
 import org.modeldriven.alf.syntax.units.impl.SignalReceptionDefinitionImpl;
@@ -30,21 +28,16 @@ public class SignalReceptionDefinition extends SignalDefinition {
 
 	public SignalReceptionDefinition(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public SignalReceptionDefinition(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public SignalReceptionDefinitionImpl getImpl() {
+	@Override
+    public SignalReceptionDefinitionImpl getImpl() {
 		return (SignalReceptionDefinitionImpl) this.impl;
 	}
 
@@ -55,11 +48,13 @@ public class SignalReceptionDefinition extends SignalDefinition {
 		return this.getImpl().signalReceptionDefinitionIsFeatureDerivation();
 	}
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		super._deriveAll();
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.signalReceptionDefinitionIsFeatureDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -67,20 +62,24 @@ public class SignalReceptionDefinition extends SignalDefinition {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 	}
 } // SignalReceptionDefinition

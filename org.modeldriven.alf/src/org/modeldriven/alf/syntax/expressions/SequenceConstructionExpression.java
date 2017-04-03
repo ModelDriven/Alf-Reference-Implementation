@@ -9,11 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
+import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.expressions.impl.SequenceConstructionExpressionImpl;
 
 /**
@@ -28,21 +30,16 @@ public class SequenceConstructionExpression extends Expression {
 
 	public SequenceConstructionExpression(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public SequenceConstructionExpression(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public SequenceConstructionExpressionImpl getImpl() {
+	@Override
+    public SequenceConstructionExpressionImpl getImpl() {
 		return (SequenceConstructionExpressionImpl) this.impl;
 	}
 
@@ -143,7 +140,8 @@ public class SequenceConstructionExpression extends Expression {
 	 * by a sequence range, then return the union of the assignments after each
 	 * of the expressions in the range.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
+	@Override
+    public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 
@@ -154,7 +152,8 @@ public class SequenceConstructionExpression extends Expression {
         addExternalReferencesFor(references, this.getTypeName());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		super._deriveAll();
 		SequenceElements elements = this.getElements();
 		if (elements != null) {
@@ -166,7 +165,8 @@ public class SequenceConstructionExpression extends Expression {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.sequenceConstructionExpressionTypeDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -202,22 +202,26 @@ public class SequenceConstructionExpression extends Expression {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" hasMultiplicity:");
 		s.append(this.getHasMultiplicity());
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		SequenceElements elements = this.getElements();
 		if (elements != null) {

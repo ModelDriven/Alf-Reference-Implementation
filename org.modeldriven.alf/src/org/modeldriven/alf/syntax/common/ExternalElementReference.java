@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,7 +10,6 @@
 package org.modeldriven.alf.syntax.common;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.uml.Element;
 import java.util.Collection;
@@ -29,18 +27,12 @@ public class ExternalElementReference extends ElementReference {
 
 	public ExternalElementReference(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public ExternalElementReference(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
 	public ExternalElementReferenceImpl getImpl() {

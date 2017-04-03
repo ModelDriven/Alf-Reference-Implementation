@@ -12,7 +12,6 @@ package org.modeldriven.alf.syntax.expressions;
 import java.util.Collection;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ParsedElement;
@@ -25,19 +24,13 @@ public class NullCoalescingExpression extends BinaryExpression {
     }
     
     public NullCoalescingExpression(Parser parser) {
-        this();
-        Token token = parser.getToken(0);
-        if (token.next != null) {
-            token = token.next;
-        }
-        this.setParserInfo(parser.getFileName(), token.beginLine,
-                token.beginColumn);        
+       this();
+       this.init(parser);
     }
     
     public NullCoalescingExpression(ParsedElement element) {
         this();
-        this.setParserInfo(element.getFileName(), element.getLine(), element
-                .getColumn());
+        this.init(element);
     }
     
     @Override
@@ -45,18 +38,22 @@ public class NullCoalescingExpression extends BinaryExpression {
         return (NullCoalescingExpressionImpl) this.impl;
     }
     
+    @Override
     public Expression getOperand1() {
         return this.getImpl().getOperand1();
     }
 
+    @Override
     public void setOperand1(Expression operand1) {
         this.getImpl().setOperand1(operand1);
     }
 
+    @Override
     public Expression getOperand2() {
         return this.getImpl().getOperand2();
     }
 
+    @Override
     public void setOperand2(Expression operand2) {
         this.getImpl().setOperand2(operand2);
     }

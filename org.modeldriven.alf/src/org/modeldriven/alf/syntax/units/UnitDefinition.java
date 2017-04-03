@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -11,7 +10,6 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
@@ -31,21 +29,16 @@ public class UnitDefinition extends DocumentedElement {
 
 	public UnitDefinition(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public UnitDefinition(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public UnitDefinitionImpl getImpl() {
+	@Override
+    public UnitDefinitionImpl getImpl() {
 		return (UnitDefinitionImpl) this.impl;
 	}
 
@@ -157,7 +150,8 @@ public class UnitDefinition extends DocumentedElement {
         addExternalReferencesFor(references, this.getImport());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getNamespace();
 		this.getIsModelLibrary();
 		this.getAppliedProfile();
@@ -178,7 +172,8 @@ public class UnitDefinition extends DocumentedElement {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.unitDefinitionNamespaceDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -216,7 +211,8 @@ public class UnitDefinition extends DocumentedElement {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		if (includeDerived) {
 			s.append(" /isModelLibrary:");
@@ -225,15 +221,18 @@ public class UnitDefinition extends DocumentedElement {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		QualifiedName namespaceName = this.getNamespaceName();
 		if (namespaceName != null) {

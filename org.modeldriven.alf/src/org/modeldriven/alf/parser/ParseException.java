@@ -86,6 +86,22 @@ public class ParseException extends Exception {
    * defined in the generated ...Constants interface.
    */
   public String[] tokenImage;
+  
+  public int getBeginLine() {
+      return this.currentToken.next.beginLine;
+  }
+
+  public int getBeginColumn() {
+      return this.currentToken.next.beginColumn;
+  }
+
+  public int getEndLine() {
+      return this.currentToken.next.endLine;
+  }
+
+  public int getEndColumn() {
+      return this.currentToken.next.endColumn;
+  }
 
   /**
    * It uses "currentToken" and "expectedTokenSequences" to generate a parse

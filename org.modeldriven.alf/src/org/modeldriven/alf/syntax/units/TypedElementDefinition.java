@@ -11,8 +11,6 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import java.util.Collection;
@@ -29,21 +27,16 @@ public abstract class TypedElementDefinition extends Member {
 
 	public TypedElementDefinition(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public TypedElementDefinition(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public TypedElementDefinitionImpl getImpl() {
+	@Override
+    public TypedElementDefinitionImpl getImpl() {
 		return (TypedElementDefinitionImpl) this.impl;
 	}
 
@@ -151,7 +144,8 @@ public abstract class TypedElementDefinition extends Member {
         addExternalReferencesFor(references, this.getTypeName());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getType();
 		this.getLower();
 		this.getUpper();
@@ -162,7 +156,8 @@ public abstract class TypedElementDefinition extends Member {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.typedElementDefinitionLowerDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -186,7 +181,8 @@ public abstract class TypedElementDefinition extends Member {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" lowerBound:");
 		s.append(this.getLowerBound());
@@ -207,15 +203,18 @@ public abstract class TypedElementDefinition extends Member {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		QualifiedName typeName = this.getTypeName();
 		if (typeName != null) {

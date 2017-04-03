@@ -118,6 +118,17 @@ public class TokenMgrError extends Error
           (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + "), ") +
           "after: \"" + addEscapes(errorAfter) + "\"");
   }
+  
+  private int errorLine = 0;
+  private int errorColumn = 0;
+  
+  public int getLine() {
+      return this.errorLine;
+  }
+  
+  public int getColumn() {
+      return this.errorColumn;
+  }
 
   /**
    * You can also modify the body of this method to customize your error messages.
@@ -149,6 +160,8 @@ public class TokenMgrError extends Error
   /** Full Constructor. */
   public TokenMgrError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar, int reason) {
     this(LexicalError(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
+    this.errorLine = errorLine;
+    this.errorColumn = errorColumn;
   }
 }
 /* JavaCC - OriginalChecksum=c1c6b3ec56ed5d0a4c0efc01fb23151e (do not edit this line) */

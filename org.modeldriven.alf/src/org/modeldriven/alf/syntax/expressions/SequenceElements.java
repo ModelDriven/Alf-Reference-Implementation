@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,11 +9,10 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.impl.SequenceElementsImpl;
 
 /**
@@ -23,26 +21,8 @@ import org.modeldriven.alf.syntax.expressions.impl.SequenceElementsImpl;
 
 public abstract class SequenceElements extends SyntaxElement {
 
-	public SequenceElements() {
-	}
-
-	public SequenceElements(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public SequenceElements(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public SequenceElementsImpl getImpl() {
+	@Override
+    public SequenceElementsImpl getImpl() {
 		return (SequenceElementsImpl) this.impl;
 	}
 
@@ -62,17 +42,20 @@ public abstract class SequenceElements extends SyntaxElement {
 		this.getImpl().setLower(lower);
 	}
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getUpper();
 		this.getLower();
 		super._deriveAll();
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		if (includeDerived) {
 			s.append(" /upper:");
@@ -85,15 +68,18 @@ public abstract class SequenceElements extends SyntaxElement {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 	}
 } // SequenceElements

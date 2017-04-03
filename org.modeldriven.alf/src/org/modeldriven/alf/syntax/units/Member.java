@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -9,9 +8,6 @@
  *******************************************************************************/
 
 package org.modeldriven.alf.syntax.units;
-
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
@@ -24,26 +20,8 @@ import org.modeldriven.alf.syntax.units.impl.MemberImpl;
 
 public abstract class Member extends DocumentedElement {
 
-	public Member() {
-	}
-
-	public Member(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public Member(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public MemberImpl getImpl() {
+	@Override
+    public MemberImpl getImpl() {
 		return (MemberImpl) this.impl;
 	}
 
@@ -229,7 +207,8 @@ public abstract class Member extends DocumentedElement {
         addExternalReferencesFor(references, this.getAnnotation());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getIsFeature();
 		this.getIsPrimitive();
 		this.getIsExternal();
@@ -247,7 +226,8 @@ public abstract class Member extends DocumentedElement {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.memberAnnotations()) {
 			violations.add(new ConstraintViolation("memberAnnotations", this));
@@ -290,7 +270,8 @@ public abstract class Member extends DocumentedElement {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" name:");
 		s.append(this.getName());
@@ -313,15 +294,18 @@ public abstract class Member extends DocumentedElement {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		NamespaceDefinition namespace = this.getNamespace();
 		if (namespace != null) {

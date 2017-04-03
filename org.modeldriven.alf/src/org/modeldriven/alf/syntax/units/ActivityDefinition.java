@@ -10,8 +10,6 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.statements.*;
 import java.util.Collection;
@@ -30,21 +28,16 @@ public class ActivityDefinition extends ClassifierDefinition {
 
 	public ActivityDefinition(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public ActivityDefinition(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public ActivityDefinitionImpl getImpl() {
+	@Override
+    public ActivityDefinitionImpl getImpl() {
 		return (ActivityDefinitionImpl) this.impl;
 	}
 
@@ -111,7 +104,8 @@ public class ActivityDefinition extends ClassifierDefinition {
 	 * activity definition allows @primitive annotations and any stereotype
 	 * whose metaclass is consistent with Activity.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+	@Override
+    public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 	
@@ -124,11 +118,13 @@ public class ActivityDefinition extends ClassifierDefinition {
 	 * direction, name, multiplicity bounds, ordering, uniqueness and type
 	 * reference.
 	 **/
-	public Boolean matchForStub(UnitDefinition unit) {
+	@Override
+    public Boolean matchForStub(UnitDefinition unit) {
 		return this.getImpl().matchForStub(unit);
 	}
 
-	public Boolean isSameKindAs(Member member) {
+	@Override
+    public Boolean isSameKindAs(Member member) {
 		return this.getImpl().isSameKindAs(member);
 	}
 
@@ -138,7 +134,8 @@ public class ActivityDefinition extends ClassifierDefinition {
         addExternalReferencesFor(references, this.getBody());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
         this.getEffectiveBody();
 		super._deriveAll();
         Block body = this.getBody();
@@ -147,7 +144,8 @@ public class ActivityDefinition extends ClassifierDefinition {
         }
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.activityDefinitionSpecialization()) {
 			violations.add(new ConstraintViolation(
@@ -175,20 +173,24 @@ public class ActivityDefinition extends ClassifierDefinition {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Block body = this.getBody();
 		if (body != null) {

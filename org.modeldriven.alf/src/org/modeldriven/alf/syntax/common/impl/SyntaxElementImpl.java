@@ -100,8 +100,10 @@ public abstract class SyntaxElementImpl {
         this.setBase(base);
         this.getSelf().setParserInfo(
                 base.getFileName() + "<" + this.getSelf().getId() + ">", 
-                base.getLine(), 
-                base.getColumn());
+                base.getBeginLine(), 
+                base.getBeginColumn(),
+                base.getEndLine(),
+                base.getEndColumn());
     }
     
 } // SyntaxElementImpl

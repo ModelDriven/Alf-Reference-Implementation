@@ -10,12 +10,15 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
 import java.util.List;
+
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
+import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.expressions.impl.SequenceOperationExpressionImpl;
 
 /**
@@ -31,21 +34,16 @@ public class SequenceOperationExpression extends InvocationExpression {
 
 	public SequenceOperationExpression(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public SequenceOperationExpression(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public SequenceOperationExpressionImpl getImpl() {
+	@Override
+    public SequenceOperationExpressionImpl getImpl() {
 		return (SequenceOperationExpressionImpl) this.impl;
 	}
 
@@ -205,7 +203,8 @@ public class SequenceOperationExpression extends InvocationExpression {
 	 * "in place" operation (one whose first parameter is inout), that made by
 	 * the sequence operation expression itself.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
+	@Override
+    public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 
@@ -217,6 +216,7 @@ public class SequenceOperationExpression extends InvocationExpression {
      * then check the primary expression for known nulls and non-nulls using the
      * negation of the given truth condition.
      */
+    @Override
     public Collection<AssignedSource> adjustAssignments(
             Collection<AssignedSource> assignments, boolean condition) {
         return this.getImpl().adjustAssignments(assignments, condition);
@@ -228,7 +228,8 @@ public class SequenceOperationExpression extends InvocationExpression {
 	 * parameter is given by the primary expression of a sequence operation
 	 * expression, not in its tuple).
 	 **/
-	public List<ElementReference> parameterElements() {
+	@Override
+    public List<ElementReference> parameterElements() {
 		return this.getImpl().parameterElements();
 	}
 
@@ -240,7 +241,8 @@ public class SequenceOperationExpression extends InvocationExpression {
         addExternalReferencesFor(references, this.getOperation());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getIsCollectionConversion();
 		this.getIsBitStringConversion();
 		this.getLeftHandSide();
@@ -259,7 +261,8 @@ public class SequenceOperationExpression extends InvocationExpression {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.sequenceOperationExpressionReferentDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -319,7 +322,8 @@ public class SequenceOperationExpression extends InvocationExpression {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		if (includeDerived) {
 			s.append(" /isCollectionConversion:");
@@ -332,15 +336,18 @@ public class SequenceOperationExpression extends InvocationExpression {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		ExtentOrExpression primary = this.getPrimary();
 		if (primary != null) {

@@ -9,12 +9,13 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
 import java.util.List;
+
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl;
 
 /**
@@ -24,23 +25,7 @@ import org.modeldriven.alf.syntax.expressions.impl.InvocationExpressionImpl;
 
 public abstract class InvocationExpression extends Expression {
 
-    public InvocationExpression() {
-    }
-
-    public InvocationExpression(Parser parser) {
-        this();
-        Token token = parser.getToken(0);
-        if (token.next != null) {
-            token = token.next;
-        }
-        this.setParserInfo(parser.getFileName(), token.beginLine, token.beginColumn);
-    }
-
-    public InvocationExpression(ParsedElement element) {
-        this();
-        this.setParserInfo(element.getFileName(), element.getLine(), element.getColumn());
-    }
-
+    @Override
     public InvocationExpressionImpl getImpl() {
         return (InvocationExpressionImpl) this.impl;
     }
@@ -286,6 +271,7 @@ public abstract class InvocationExpression extends Expression {
      * The assignments after an invocation expression are the same as those
      * after the tuple of the expression.
      **/
+    @Override
     public Collection<AssignedSource> updateAssignments() {
         return this.getImpl().updateAssignments();
     }
@@ -296,6 +282,7 @@ public abstract class InvocationExpression extends Expression {
         addExternalReferencesFor(references, this.getTuple());
     }
 
+    @Override
     public void _deriveAll() {
         this.getIsBehavior();
         this.getIsAssociationEnd();
@@ -314,6 +301,7 @@ public abstract class InvocationExpression extends Expression {
         }
     }
 
+    @Override
     public void checkConstraints(Collection<ConstraintViolation> violations) {
         super.checkConstraints(violations);
         if (!this.invocationExpressionIsBehaviorDerivation()) {
@@ -370,6 +358,7 @@ public abstract class InvocationExpression extends Expression {
         }
     }
 
+    @Override
     public String _toString(boolean includeDerived) {
         StringBuffer s = new StringBuffer(super._toString(includeDerived));
         if (includeDerived) {
@@ -399,14 +388,17 @@ public abstract class InvocationExpression extends Expression {
         return s.toString();
     }
 
+    @Override
     public void print() {
         this.print("", false);
     }
 
+    @Override
     public void print(boolean includeDerived) {
         this.print("", includeDerived);
     }
 
+    @Override
     public void print(String prefix, boolean includeDerived) {
         super.print(prefix, includeDerived);
         if (includeDerived) {

@@ -11,8 +11,6 @@
 package org.modeldriven.alf.syntax.statements;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import java.util.Collection;
@@ -31,21 +29,16 @@ public class SwitchStatement extends Statement {
 
 	public SwitchStatement(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public SwitchStatement(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public SwitchStatementImpl getImpl() {
+	@Override
+    public SwitchStatementImpl getImpl() {
 		return (SwitchStatementImpl) this.impl;
 	}
 
@@ -169,7 +162,8 @@ public class SwitchStatement extends Statement {
 	 * In addition to an @isolated annotation, a switch statement may have @assured
 	 * and @determinate annotations. They may not have arguments.
 	 **/
-	public Boolean annotationAllowed(Annotation annotation) {
+	@Override
+    public Boolean annotationAllowed(Annotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
@@ -190,7 +184,8 @@ public class SwitchStatement extends Statement {
         addExternalReferencesFor(references, this.getDefaultClause());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getIsAssured();
 		this.getIsDeterminate();
 		super._deriveAll();
@@ -210,7 +205,8 @@ public class SwitchStatement extends Statement {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.switchStatementAssignmentsBefore()) {
 			violations.add(new ConstraintViolation(
@@ -260,7 +256,8 @@ public class SwitchStatement extends Statement {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		if (includeDerived) {
 			s.append(" /isAssured:");
@@ -273,15 +270,18 @@ public class SwitchStatement extends Statement {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Collection<SwitchClause> nonDefaultClause = this.getNonDefaultClause();
 		if (nonDefaultClause != null && nonDefaultClause.size() > 0) {

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -10,11 +9,11 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl;
 
 /**
@@ -23,26 +22,8 @@ import org.modeldriven.alf.syntax.expressions.impl.BinaryExpressionImpl;
 
 public abstract class BinaryExpression extends Expression {
 
-	public BinaryExpression() {
-	}
-
-	public BinaryExpression(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public BinaryExpression(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public BinaryExpressionImpl getImpl() {
+	@Override
+    public BinaryExpressionImpl getImpl() {
 		return (BinaryExpressionImpl) this.impl;
 	}
 
@@ -105,7 +86,8 @@ public abstract class BinaryExpression extends Expression {
 	 * expression, plus the new assignments from each of the operand
 	 * expressions.
 	 **/
-	public Collection<AssignedSource> updateAssignments() {
+	@Override
+    public Collection<AssignedSource> updateAssignments() {
 		return this.getImpl().updateAssignments();
 	}
 
@@ -132,7 +114,8 @@ public abstract class BinaryExpression extends Expression {
         addExternalReferencesFor(references, this.getOperand2());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		super._deriveAll();
 		Expression operand1 = this.getOperand1();
 		if (operand1 != null) {
@@ -144,7 +127,8 @@ public abstract class BinaryExpression extends Expression {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.binaryExpressionOperandMultiplicity()) {
 			violations.add(new ConstraintViolation(
@@ -164,22 +148,26 @@ public abstract class BinaryExpression extends Expression {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" operator:");
 		s.append(this.getOperator());
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Expression operand1 = this.getOperand1();
 		if (operand1 != null) {

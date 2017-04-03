@@ -23,6 +23,7 @@ public class ModelNamespace extends PackageDefinition {
         this.impl = null;
     }
     
+    @Override
     public ModelNamespaceImpl getImpl() {
         if (this.impl == null) {
             this.impl = new ModelNamespaceImpl(this);

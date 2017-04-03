@@ -10,11 +10,11 @@
 
 package org.modeldriven.alf.syntax.units;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
-import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
+
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.units.impl.ActiveClassDefinitionImpl;
 
 /**
@@ -29,21 +29,16 @@ public class ActiveClassDefinition extends ClassDefinition {
 
 	public ActiveClassDefinition(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public ActiveClassDefinition(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public ActiveClassDefinitionImpl getImpl() {
+	@Override
+    public ActiveClassDefinitionImpl getImpl() {
 		return (ActiveClassDefinitionImpl) this.impl;
 	}
 
@@ -68,15 +63,18 @@ public class ActiveClassDefinition extends ClassDefinition {
 	 * definition considered as a class definition and the subunit is for an
 	 * active class definition.
 	 **/
-	public Boolean matchForStub(UnitDefinition unit) {
+	@Override
+    public Boolean matchForStub(UnitDefinition unit) {
 		return this.getImpl().matchForStub(unit);
 	}
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		super._deriveAll();
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.activeClassDefinitionClassifierBehavior()) {
 			violations.add(new ConstraintViolation(
@@ -84,20 +82,24 @@ public class ActiveClassDefinition extends ClassDefinition {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		ActivityDefinition classifierBehavior = this.getClassifierBehavior();
 		if (classifierBehavior != null) {

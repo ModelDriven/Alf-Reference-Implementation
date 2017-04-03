@@ -10,9 +10,6 @@
 
 package org.modeldriven.alf.syntax.units;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import java.util.Collection;
@@ -24,26 +21,8 @@ import org.modeldriven.alf.syntax.units.impl.ImportReferenceImpl;
 
 public abstract class ImportReference extends SyntaxElement {
 
-	public ImportReference() {
-	}
-
-	public ImportReference(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public ImportReference(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public ImportReferenceImpl getImpl() {
+	@Override
+    public ImportReferenceImpl getImpl() {
 		return (ImportReferenceImpl) this.impl;
 	}
 
@@ -101,7 +80,8 @@ public abstract class ImportReference extends SyntaxElement {
         addExternalReferencesFor(references, this.getReferentName());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getReferent();
 		super._deriveAll();
 		QualifiedName referentName = this.getReferentName();
@@ -110,7 +90,8 @@ public abstract class ImportReference extends SyntaxElement {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.importReferenceReferentDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -126,22 +107,26 @@ public abstract class ImportReference extends SyntaxElement {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" visibility:");
 		s.append(this.getVisibility());
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		QualifiedName referentName = this.getReferentName();
 		if (referentName != null) {

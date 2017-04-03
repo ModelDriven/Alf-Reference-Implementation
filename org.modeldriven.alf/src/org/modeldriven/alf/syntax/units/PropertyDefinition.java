@@ -10,8 +10,6 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import java.util.Collection;
@@ -29,21 +27,16 @@ public class PropertyDefinition extends TypedElementDefinition {
 
 	public PropertyDefinition(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public PropertyDefinition(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public PropertyDefinitionImpl getImpl() {
+	@Override
+    public PropertyDefinitionImpl getImpl() {
 		return (PropertyDefinitionImpl) this.impl;
 	}
 
@@ -133,7 +126,8 @@ public class PropertyDefinition extends TypedElementDefinition {
 	 * Returns true if the annotation is for a stereotype that has a metaclass
 	 * consistent with Property.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+	@Override
+    public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
@@ -141,7 +135,8 @@ public class PropertyDefinition extends TypedElementDefinition {
 	 * Return true if the given member is either a PropertyDefinition or an
 	 * imported member whose referent is a PropertyDefinition or a Property.
 	 **/
-	public Boolean isSameKindAs(Member member) {
+	@Override
+    public Boolean isSameKindAs(Member member) {
 		return this.getImpl().isSameKindAs(member);
 	}
 
@@ -151,7 +146,8 @@ public class PropertyDefinition extends TypedElementDefinition {
         addExternalReferencesFor(references, this.getInitializer());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getIsCollectionConversion();
 		this.getIsBitStringConversion();
 		super._deriveAll();
@@ -161,7 +157,8 @@ public class PropertyDefinition extends TypedElementDefinition {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.propertyDefinitionInitializer()) {
 			violations.add(new ConstraintViolation(
@@ -191,7 +188,8 @@ public class PropertyDefinition extends TypedElementDefinition {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" isComposite:");
 		s.append(this.getIsComposite());
@@ -206,15 +204,18 @@ public class PropertyDefinition extends TypedElementDefinition {
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Expression initializer = this.getInitializer();
 		if (initializer != null) {

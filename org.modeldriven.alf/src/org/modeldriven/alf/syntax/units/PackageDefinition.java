@@ -11,8 +11,6 @@
 package org.modeldriven.alf.syntax.units;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.uml.Profile;
 import java.util.Collection;
@@ -31,21 +29,16 @@ public class PackageDefinition extends NamespaceDefinition {
 
 	public PackageDefinition(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public PackageDefinition(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public PackageDefinitionImpl getImpl() {
+	@Override
+    public PackageDefinitionImpl getImpl() {
 		return (PackageDefinitionImpl) this.impl;
 	}
 
@@ -74,7 +67,8 @@ public class PackageDefinition extends NamespaceDefinition {
 	 * package definition allows @apply annotations plus any stereotype whose
 	 * metaclass is consistent with Package.
 	 **/
-	public Boolean annotationAllowed(StereotypeAnnotation annotation) {
+	@Override
+    public Boolean annotationAllowed(StereotypeAnnotation annotation) {
 		return this.getImpl().annotationAllowed(annotation);
 	}
 
@@ -82,7 +76,8 @@ public class PackageDefinition extends NamespaceDefinition {
 	 * Returns true of the namespace definition associated with the given unit
 	 * definition is a package definition.
 	 **/
-	public Boolean matchForStub(UnitDefinition unit) {
+	@Override
+    public Boolean matchForStub(UnitDefinition unit) {
 		return this.getImpl().matchForStub(unit);
 	}
 
@@ -90,16 +85,19 @@ public class PackageDefinition extends NamespaceDefinition {
 	 * Return true if the given member is either a PackageDefinition or an
 	 * imported member whose referent is a PackageDefinition or a Package.
 	 **/
-	public Boolean isSameKindAs(Member member) {
+	@Override
+    public Boolean isSameKindAs(Member member) {
 		return this.getImpl().isSameKindAs(member);
 	}
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getAppliedProfile();
 		super._deriveAll();
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.packageDefinitionAppliedProfileDerivation()) {
 			violations.add(new ConstraintViolation(
@@ -107,20 +105,24 @@ public class PackageDefinition extends NamespaceDefinition {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		if (includeDerived) {
 			Collection<Profile> appliedProfile = this.getAppliedProfile();

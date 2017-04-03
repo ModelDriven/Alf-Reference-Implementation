@@ -11,8 +11,6 @@
 package org.modeldriven.alf.syntax.statements;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import java.util.Collection;
@@ -31,21 +29,16 @@ public class SwitchClause extends SyntaxElement {
 
 	public SwitchClause(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public SwitchClause(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public SwitchClauseImpl getImpl() {
+	@Override
+    public SwitchClauseImpl getImpl() {
 		return (SwitchClauseImpl) this.impl;
 	}
 
@@ -118,7 +111,8 @@ public class SwitchClause extends SyntaxElement {
         addExternalReferencesFor(references, this.getBlock());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		super._deriveAll();
 		Collection<Expression> case_ = this.getCase();
 		if (case_ != null) {
@@ -132,7 +126,8 @@ public class SwitchClause extends SyntaxElement {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.switchClauseAssignmentsBefore()) {
 			violations.add(new ConstraintViolation(
@@ -157,20 +152,24 @@ public class SwitchClause extends SyntaxElement {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Collection<Expression> case_ = this.getCase();
 		if (case_ != null && case_.size() > 0) {

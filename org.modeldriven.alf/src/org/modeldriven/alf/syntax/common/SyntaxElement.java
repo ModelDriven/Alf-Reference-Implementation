@@ -9,9 +9,6 @@
 
 package org.modeldriven.alf.syntax.common;
 
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
@@ -23,54 +20,13 @@ import org.modeldriven.alf.syntax.common.impl.SyntaxElementImpl;
  * additional information determined during static semantic analysis.
  **/
 
-public abstract class SyntaxElement implements ParsedElement {
+public abstract class SyntaxElement extends ParsedElement {
 
 	protected SyntaxElementImpl impl;
 
-	private String fileName = "";
-	private int line = 0;
-	private int column = 0;
-
-	public SyntaxElement() {
-	}
-
-	public SyntaxElement(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
-	}
-
-	public SyntaxElement(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
-	}
-
-	public SyntaxElementImpl getImpl() {
-		return (SyntaxElementImpl) this.impl;
-	}
-
-	public String getFileName() {
-		return this.fileName;
-	}
-
-	public int getLine() {
-		return this.line;
-	}
-
-	public int getColumn() {
-		return this.column;
-	}
-	
-	public void setParserInfo(String fileName, int line, int column) {
-		this.fileName = fileName;
-		this.line = line;
-		this.column = column;
-	}
+    public SyntaxElementImpl getImpl() {
+        return (SyntaxElementImpl) this.impl;
+    }
 
     public Collection<ExternalElementReference> getExternalReferences() {
         Collection<ExternalElementReference> references = new ArrayList<ExternalElementReference>();

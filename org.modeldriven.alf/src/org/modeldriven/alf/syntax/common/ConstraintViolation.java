@@ -89,7 +89,7 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
     }
     
     public String getErrorMessage() {
-        return "[" + this.getLine() + ":" + this.getColumn() + "] " + 
+        return "[" + this.getBeginLine() + ":" + this.getBeginColumn() + "] " + 
                 getErrorMessage(this.constraintName);
     }
     
@@ -101,12 +101,20 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
         return this.getViolatingElement().getFileName();
     }
     
-    public int getLine() {
-        return this.getViolatingElement().getLine();
+    public int getBeginLine() {
+        return this.getViolatingElement().getBeginLine();
     }
     
-    public int getColumn() {
-        return this.getViolatingElement().getColumn();
+    public int getBeginColumn() {
+        return this.getViolatingElement().getBeginColumn();
+    }
+    
+    public int getEndLine() {
+        return this.getViolatingElement().getEndLine();
+    }
+    
+    public int getEndColumn() {
+        return this.getViolatingElement().getEndColumn();
     }
     
     @Override
@@ -139,13 +147,13 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
     public int compareTo(ConstraintViolation other) {
         ParsedElement element = this.getViolatingElement();
         String fileName = element.getFileName();
-        int line = element.getLine();
-        int column = element.getColumn();
+        int line = element.getBeginLine();
+        int column = element.getBeginColumn();
         
         element = other.getViolatingElement();
         String otherFileName = element.getFileName();
-        int otherLine = element.getLine();
-        int otherColumn = element.getColumn();
+        int otherLine = element.getBeginLine();
+        int otherColumn = element.getBeginColumn();
         
         int compare = fileName.compareTo(otherFileName);
         return compare != 0? compare:

@@ -10,8 +10,6 @@
 package org.modeldriven.alf.syntax.statements;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
-
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.expressions.*;
 import java.util.Collection;
@@ -29,21 +27,16 @@ public class ClassifyStatement extends Statement {
 
 	public ClassifyStatement(Parser parser) {
 		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+		this.init(parser);
 	}
 
 	public ClassifyStatement(ParsedElement element) {
 		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+		this.init(element);
 	}
 
-	public ClassifyStatementImpl getImpl() {
+	@Override
+    public ClassifyStatementImpl getImpl() {
 		return (ClassifyStatementImpl) this.impl;
 	}
 
@@ -169,7 +162,8 @@ public class ClassifyStatement extends Statement {
         addExternalReferencesFor(references, this.getToList());
     }
 
-	public void _deriveAll() {
+	@Override
+    public void _deriveAll() {
 		this.getFromClass();
 		this.getToClass();
 		super._deriveAll();
@@ -187,7 +181,8 @@ public class ClassifyStatement extends Statement {
 		}
 	}
 
-	public void checkConstraints(Collection<ConstraintViolation> violations) {
+	@Override
+    public void checkConstraints(Collection<ConstraintViolation> violations) {
 		super.checkConstraints(violations);
 		if (!this.classifyStatementExpression()) {
 			violations.add(new ConstraintViolation(
@@ -231,22 +226,26 @@ public class ClassifyStatement extends Statement {
 		}
 	}
 
-	public String _toString(boolean includeDerived) {
+	@Override
+    public String _toString(boolean includeDerived) {
 		StringBuffer s = new StringBuffer(super._toString(includeDerived));
 		s.append(" isReclassifyAll:");
 		s.append(this.getIsReclassifyAll());
 		return s.toString();
 	}
 
-	public void print() {
+	@Override
+    public void print() {
 		this.print("", false);
 	}
 
-	public void print(boolean includeDerived) {
+	@Override
+    public void print(boolean includeDerived) {
 		this.print("", includeDerived);
 	}
 
-	public void print(String prefix, boolean includeDerived) {
+	@Override
+    public void print(String prefix, boolean includeDerived) {
 		super.print(prefix, includeDerived);
 		Expression expression = this.getExpression();
 		if (expression != null) {

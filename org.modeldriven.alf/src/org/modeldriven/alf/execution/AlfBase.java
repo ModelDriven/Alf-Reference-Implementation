@@ -99,7 +99,7 @@ public abstract class AlfBase {
                 this.println("\n" + (fileName == null? "": fileName) + ":");
             }
             int prevLineNum = lineNum;
-            lineNum = violation.getLine();
+            lineNum = violation.getBeginLine();
             line = this.getLine(reader, line, prevLineNum, lineNum);
             this.printConstraintViolation(line, violation);
         }
@@ -127,7 +127,7 @@ public abstract class AlfBase {
         if (line != null) {
             this.println(line);
             StringBuffer indent = new StringBuffer();
-            for (int n = violation.getColumn(); n > 1; n--) {
+            for (int n = violation.getBeginColumn(); n > 1; n--) {
                 indent.append(" ");
             }
             this.println(indent + "^");

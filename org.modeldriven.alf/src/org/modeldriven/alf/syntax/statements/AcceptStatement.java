@@ -10,7 +10,6 @@
 package org.modeldriven.alf.syntax.statements;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
 
 import org.modeldriven.alf.syntax.common.*;
 import java.util.Collection;
@@ -27,19 +26,13 @@ public class AcceptStatement extends Statement {
 	}
 
 	public AcceptStatement(Parser parser) {
-		this();
-		Token token = parser.getToken(0);
-		if (token.next != null) {
-			token = token.next;
-		}
-		this.setParserInfo(parser.getFileName(), token.beginLine,
-				token.beginColumn);
+	    this();
+	    this.init(parser);
 	}
 
 	public AcceptStatement(ParsedElement element) {
-		this();
-		this.setParserInfo(element.getFileName(), element.getLine(), element
-				.getColumn());
+        this();
+        this.init(element);
 	}
 
 	public AcceptStatementImpl getImpl() {

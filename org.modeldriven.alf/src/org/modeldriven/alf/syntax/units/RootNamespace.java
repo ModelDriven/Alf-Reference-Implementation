@@ -44,6 +44,7 @@ public class RootNamespace extends ModelNamespace {
             this.rootNamespace = rootNamespace;
         }
         
+        @Override
         public RootNamespace getRootScope() {
             return this.rootNamespace;
         }
