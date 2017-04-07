@@ -126,12 +126,21 @@ public abstract class AlfBase {
         this.println("");
         if (line != null) {
             this.println(line);
-            StringBuffer indent = new StringBuffer();
-            for (int n = violation.getBeginColumn(); n > 1; n--) {
-                indent.append(" ");
+            StringBuffer marker = new StringBuffer();
+            int beginColumn = violation.getBeginColumn();
+            int endColumn = violation.getEndColumn();
+            for (int n = beginColumn; n > 1; n--) {
+                marker.append(" ");
             }
-            this.println(indent + "^");
-        }
+            marker.append("^");
+            if (violation.getBeginLine() == violation.getEndLine() && endColumn > beginColumn) {
+                for (int n = beginColumn+1; n < endColumn; n++ ) {
+                    marker.append("-");
+                }
+                marker.append("^");
+            }
+            this.println(marker.toString());
+       }
         this.println(violation.getErrorMessage());
     }
     

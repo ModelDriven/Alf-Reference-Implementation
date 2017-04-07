@@ -44,6 +44,11 @@ public class ParseException extends Exception {
     currentToken = currentTokenVal;
     expectedTokenSequences = expectedTokenSequencesVal;
     tokenImage = tokenImageVal;
+    
+    beginLine = currentToken.next.beginLine;
+    beginColumn = currentToken.next.beginColumn;
+    endLine = currentToken.next.endLine;
+    endColumn = currentToken.next.endColumn;
   }
 
   /**
@@ -69,7 +74,7 @@ public class ParseException extends Exception {
   /**
    * This is the last token that has been consumed successfully.  If
    * this object has been created due to a parse error, the token
-   * followng this token will (therefore) be the first error token.
+   * following this token will (therefore) be the first error token.
    */
   public Token currentToken;
 
@@ -87,20 +92,25 @@ public class ParseException extends Exception {
    */
   public String[] tokenImage;
   
+  private int beginLine = 0;
+  private int beginColumn = 0;
+  private int endLine = 0;
+  private int endColumn = 0;
+  
   public int getBeginLine() {
-      return this.currentToken.next.beginLine;
+      return this.beginLine;
   }
 
   public int getBeginColumn() {
-      return this.currentToken.next.beginColumn;
+      return this.beginColumn;
   }
 
   public int getEndLine() {
-      return this.currentToken.next.endLine;
+      return this.endLine;
   }
 
   public int getEndColumn() {
-      return this.currentToken.next.endColumn;
+      return this.endColumn;
   }
 
   /**

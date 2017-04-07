@@ -55,6 +55,17 @@ public abstract class ParsedElement {
         return this.endColumn;
     }
     
+    public void setBegin(Token token) {
+        this.beginLine = token.beginLine;
+        this.beginColumn = token.beginColumn;
+    }
+    
+    public void setEnd(Parser parser) {
+        Token token = parser.getToken(0);
+        this.endLine = token.endLine;
+        this.endColumn = token.endColumn;
+    }
+    
     public void setParserInfo(String fileName, int beginLine, int beginColumn, int endLine, int endColumn) {
         this.fileName = fileName;
         this.beginLine = beginLine;
