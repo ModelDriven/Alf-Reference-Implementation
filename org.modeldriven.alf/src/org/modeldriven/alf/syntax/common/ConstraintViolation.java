@@ -49,13 +49,16 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
         do {
             do {
                 line = reader.readLine();
-            } while (line != null && line.equals(""));
+            } while (line != null && line.trim().isEmpty());
             if (line != null) {
                 String constraintName = line;
                 line = reader.readLine();
-                if (line != null && !line.equals("")) {
+                if (line != null && !line.trim().isEmpty()) {
                     putErrorMessage(constraintName, line);
                 }
+                
+                // Skip constraint description
+                line = reader.readLine();
             }
         } while (line != null);
         reader.close();
