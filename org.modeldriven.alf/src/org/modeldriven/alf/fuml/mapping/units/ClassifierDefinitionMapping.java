@@ -66,7 +66,7 @@ public abstract class ClassifierDefinitionMapping extends
                 RedefinableTemplateSignature signature = 
                         this.create(RedefinableTemplateSignature.class);
                 for (ClassifierTemplateParameter templateParameter: 
-                    definition.getImpl().getTemplateParameters()) {
+                    definition.getImpl().getClassifierTemplateParameters()) {
                     FumlMapping mapping = this.fumlMap(templateParameter);
                     if (!(mapping instanceof ClassifierTemplateParameterMapping)) {
                         this.throwError("Error mapping template parameter " + 

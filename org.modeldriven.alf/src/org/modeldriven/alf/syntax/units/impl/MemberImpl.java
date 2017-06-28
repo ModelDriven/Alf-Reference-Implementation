@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -336,13 +335,16 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	public Boolean isDistinguishableFrom(Member member) {
 	    Member self = this.getSelf();
 		return !(self.getName().equals(member.getName()) &&
-		            self.isSameKindAs(member));
-	} // isDistinguishableFrom
+		            this.getReferent().getImpl().isSameKindAs(
+		                    member.getImpl().getReferent()));
+	}
 
 	/**
 	 * Returns true if this member is of the same kind as the given member.
 	 **/
-	public abstract Boolean isSameKindAs(Member member);
+	public Boolean isSameKindAs(Member member) {
+	    return this.getReferent().getImpl().isSameKindAs(member.getImpl().getReferent());
+	}
 	
 	/**
 	 * Returns true if this is imported.

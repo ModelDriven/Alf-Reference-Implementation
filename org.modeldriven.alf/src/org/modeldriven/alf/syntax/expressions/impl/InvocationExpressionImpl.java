@@ -746,8 +746,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             templateArguments.add(ClassifierDefinitionImpl.commonAncestor(types));
         }
         
-        return QualifiedNameImpl.getBoundElement
-            (referent, templateParameters, templateArguments);
+        return referent.getImpl().bind(templateArguments);
     }
     
     public boolean isSequenceFeatureInvocation() {

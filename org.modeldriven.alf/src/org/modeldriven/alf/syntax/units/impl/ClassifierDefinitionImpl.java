@@ -224,11 +224,11 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	    } else {
 	        ClassifierDefinition other = (ClassifierDefinition)namespace;
 	        Collection<ElementReference> otherSpecializations = other.getSpecializationReferent();
-	        List<ClassifierTemplateParameter> otherParameters = other.getImpl().getTemplateParameters();
+	        List<ClassifierTemplateParameter> otherParameters = other.getImpl().getClassifierTemplateParameters();
 	        
 	        ClassifierDefinition self = this.getSelf();
             Collection<ElementReference> mySpecializations = self.getSpecializationReferent();
-            List<ClassifierTemplateParameter> myParameters = self.getImpl().getTemplateParameters();
+            List<ClassifierTemplateParameter> myParameters = self.getImpl().getClassifierTemplateParameters();
             
             for (ElementReference specialization: mySpecializations) {
                 if (!specialization.getImpl().isContainedIn(otherSpecializations)) {
@@ -285,7 +285,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	    return false;
 	}
 	
-	public List<ClassifierTemplateParameter> getTemplateParameters() {
+	public List<ClassifierTemplateParameter> getClassifierTemplateParameters() {
 	    List<ClassifierTemplateParameter> templateParameters = 
 	        new ArrayList<ClassifierTemplateParameter>();
         for (Member member: this.getOnlyOwnedMembers()) {
@@ -309,6 +309,14 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
         return templateParameters;
     }
     
+    public List<ElementReference> getTemplateParameters() {
+        List<ElementReference> templateParameters = new ArrayList<ElementReference>();
+        for (ClassifierTemplateParameter templateParameter: this.getClassifierTemplateParameters()) {
+            templateParameters.add(templateParameter.getImpl().getReferent());
+        }
+        return templateParameters;
+    }
+    
 	public List<ElementReference> getTemplateActuals() {
 	    List<ElementReference> templateActuals = new ArrayList<ElementReference>();
         for (Member member: this.getOnlyOwnedMembers()) {
@@ -326,36 +334,32 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
         return templateActuals;
 	}
 	
-	/**
-	 * A completely bound classifier is one that has no unbound template
-	 * parameters and all of whose bound template parameters are bound to
-	 * arguments that are themselves completely bound.
-	 */
 	@Override
 	public boolean isCompletelyBound() {
-	    ClassifierDefinition self = this.getSelf();
-	    NamespaceDefinition namespace = self.getNamespace();
-	    if (namespace != null && !namespace.getImpl().isCompletelyBound()){
-	        return false;
-	    } else {
-            for (Member member: this.getOnlyOwnedMembers()) {
-                if (member instanceof ClassifierTemplateParameter) {
-                    ClassifierTemplateParameterImpl parameter = 
-                        ((ClassifierTemplateParameter)member).getImpl();
-                    if (!parameter.isBound()) {
-                        return false;
-                    } else {
-                        ElementReference boundArgument = 
-                            parameter.getBoundArgument();
-                        if (boundArgument != null && 
-                                !boundArgument.getImpl().isCompletelyBound()) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-	    }
+	    return !this.isTemplate();
+//	    ClassifierDefinition self = this.getSelf();
+//	    NamespaceDefinition namespace = self.getNamespace();
+//	    if (namespace != null && !namespace.getImpl().isCompletelyBound()){
+//	        return false;
+//	    } else {
+//            for (Member member: this.getOnlyOwnedMembers()) {
+//                if (member instanceof ClassifierTemplateParameter) {
+//                    ClassifierTemplateParameterImpl parameter = 
+//                        ((ClassifierTemplateParameter)member).getImpl();
+//                    if (!parameter.isBound()) {
+//                        return false;
+//                    } else {
+//                        ElementReference boundArgument = 
+//                            parameter.getBoundArgument();
+//                        if (boundArgument != null && 
+//                                !boundArgument.getImpl().isCompletelyBound()) {
+//                            return false;
+//                        }
+//                    }
+//                }
+//            }
+//            return true;
+//	    }
 	}
 
 	public List<Member> getInheritableMembers() {

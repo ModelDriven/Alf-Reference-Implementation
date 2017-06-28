@@ -24,7 +24,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public abstract class AlfBase {
     
-    public static final String ALF_VERSION = "1.0.5a";
+    public static final String ALF_VERSION = "1.0.5b/maint";
     
     protected boolean isVerbose = false;
 

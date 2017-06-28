@@ -26,12 +26,13 @@ import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.PositionalTemplateBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.expressions.impl.AssignableElementImpl;
-import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
+import org.modeldriven.alf.syntax.units.impl.BoundClassifierImpl;
+import org.modeldriven.alf.syntax.units.impl.FormalParameterImpl;
 import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.ParameterableElement;
 import org.modeldriven.alf.uml.TemplateParameter;
@@ -80,6 +81,10 @@ public abstract class ElementReferenceImpl implements AssignableElement {
 	public abstract SyntaxElement getAlf();
 	public abstract Element getUml();
 	
+	public ElementReference getReferent() {
+	    return this.getSelf();
+	}
+	
 	public abstract boolean isNamespace();
 	public abstract boolean isPackage();
     public abstract boolean isProfile();
@@ -102,8 +107,11 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     
     public abstract boolean isTemplate();
     public abstract boolean isClassifierTemplateParameter();
+    public abstract boolean isParameteredElement();
     public abstract boolean isCompletelyBound();
+    public abstract boolean isTemplateBinding();
 
+    public abstract boolean isNamedElement();
     public abstract boolean isPackageableElement();
     public abstract boolean isFeature();
     public abstract boolean isOrdered();
@@ -115,6 +123,7 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     public abstract boolean isProperty();
     public abstract boolean isAssociationEnd();
     public abstract boolean isParameter();
+    public abstract boolean isImported();
 
     public abstract NamespaceDefinition asNamespace();
     public abstract boolean isInNamespace(NamespaceDefinition namespace);
@@ -136,11 +145,17 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     public abstract ElementReference getReturnParameter();
     public abstract List<ElementReference> getMethods();
     public abstract ElementReference getSpecification(); // Note: An Operation is considered its own specification.
+    
     public abstract List<ElementReference> getTemplateParameters();
     public abstract List<ElementReference> getTemplateActuals();
+    public abstract List<ElementReference> getParameteredElements();
     public abstract ElementReference getParameteredElement();
     public abstract ElementReference getTemplate();
     public abstract Collection<ElementReference> getConstrainingClassifiers();
+    public ElementReference getTemplateBinding() {
+        return null;
+    }
+    
     public abstract ElementReference getType();
     public abstract ElementReference getAssociation();
     public abstract Integer getLower();
@@ -361,6 +376,20 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         return AssignableElementImpl.isAssignable(this, source);
     }
     
+    public boolean isSameKindAs(ElementReference other) {
+        Class<?> metaclass = this.getUMLMetaclass();
+        Class<?> otherMetaclass = other.getImpl().getUMLMetaclass();
+        return (metaclass.isAssignableFrom(otherMetaclass) ||
+                otherMetaclass.isAssignableFrom(metaclass)) &&
+               (!this.isOperation() || FormalParameterImpl.match(
+                       this.getParameters(), other.getImpl().getParameters()));
+    }
+    
+    public ElementReference bind(List<ElementReference> actuals) {
+         return BoundClassifierImpl.makeBoundClassifier(
+                 this.getSelf(), actuals).getImpl().getReferent();
+    }
+    
     public static void clearTemplateBindings() {        
         templateBindings.clear();
     }
@@ -446,8 +475,7 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     }
 
     /**
-     * For an element with template bindings, return a reference to the 
-     * expanded effective bound element.
+     * For an element with template bindings, return a bound element reference.
      */
     public static ElementReference makeBoundReference(
             Element element, NamespaceDefinition namespace) {
@@ -456,10 +484,12 @@ public abstract class ElementReferenceImpl implements AssignableElement {
                 !((TemplateableElement)element).getTemplateBinding().isEmpty()) {
             ElementReference templateReferent = 
                     reference.getImpl().getTemplate();
-            reference = QualifiedNameImpl.getBoundElement(
-                    templateReferent, 
-                    templateReferent.getImpl().getTemplateParameters(), 
-                    reference.getImpl().getTemplateActuals());
+            reference = templateReferent.getImpl().bind(reference.getImpl().getTemplateActuals());
+            // TODO: Clean up.
+//            reference = QualifiedNameImpl.getBoundElement(
+//                    templateReferent, 
+//                    templateReferent.getImpl().getTemplateParameters(), 
+//                    reference.getImpl().getTemplateActuals());
         }
         return reference;
     }

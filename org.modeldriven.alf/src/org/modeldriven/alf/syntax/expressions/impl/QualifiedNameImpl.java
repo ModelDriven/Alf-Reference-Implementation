@@ -816,10 +816,11 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
             List<ElementReference> templateArguments = 
                 self.getUnqualifiedName().getBinding().getImpl().getArgumentReferents
                     (templateParameters, this.getCurrentScope());
-            return getBoundElement(templateReferent, templateParameters, templateArguments);
+            return templateReferent.getImpl().bind(templateArguments);
         }
     }
     
+    // TODO: Clean up.
     public static ElementReference getBoundElement(
             ElementReference templateReferent,
             List<ElementReference> templateParameters,

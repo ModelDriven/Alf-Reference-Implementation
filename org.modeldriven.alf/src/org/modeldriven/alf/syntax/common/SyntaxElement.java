@@ -111,6 +111,11 @@ public abstract class SyntaxElement extends ParsedElement {
 		StringBuffer s = new StringBuffer(this.getClass().getSimpleName());
 		return s.toString();
 	}
+	
+    public boolean equals(Object other) {
+        return this.getImpl().equals(other instanceof SyntaxElement? 
+                ((SyntaxElement)other).getImpl(): other);
+    }
 
 	public void print() {
 		this.print("", false);

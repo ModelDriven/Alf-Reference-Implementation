@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2012-2016 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -22,7 +21,6 @@ import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.syntax.units.impl.ActivityDefinitionImpl;
 import org.modeldriven.alf.syntax.units.impl.OperationDefinitionImpl;
 import org.modeldriven.alf.uml.Element;
-
 
 /**
  * A direct reference to a UML model element.
@@ -174,6 +172,11 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
+    public boolean isNamedElement() {
+        return this.getSelf().getElement() instanceof Member;
+    }
+    
+   @Override
     public boolean isPackageableElement() {
         SyntaxElement element = this.getSelf().getElement();
         return element != null && element instanceof Member &&
@@ -240,6 +243,16 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public boolean isParameteredElement() {
+        return this.isClassifierTemplateParameter();
+    }
+    
+    @Override
+    public boolean isTemplateBinding() {
+        return this.getSelf().getElement() instanceof BoundClassifier;
+    }
+    
+    @Override
     public boolean isCompletelyBound() {
         return this.isClassifier() &&
                 ((ClassifierDefinition)this.getSelf().getElement()).getImpl().
@@ -261,6 +274,12 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isParameter() {
         return this.getSelf().getElement() instanceof FormalParameter;
+    }
+
+    @Override
+    public boolean isImported() {
+        SyntaxElement element = this.getSelf().getElement();
+        return element instanceof Member && ((Member)element).getImpl().isImported();
     }
 
     @Override
@@ -454,14 +473,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public List<ElementReference> getTemplateParameters() {
-        List<ElementReference> members = new ArrayList<ElementReference>();
-        if (this.isClassifier()) {
-            for (ClassifierTemplateParameter member: ((ClassifierDefinition)this.getSelf().getElement()).
-                    getImpl().getTemplateParameters()) {
-                members.add(member.getImpl().getReferent());
-            }
-        }
-        return members;
+        return !this.isClassifier()? new ArrayList<ElementReference>(): 
+            ((ClassifierDefinition)this.getSelf().getElement()).getImpl().getTemplateParameters();
     }
     
     @Override
@@ -472,6 +485,11 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public List<ElementReference> getParameteredElements() {
+        return this.getTemplateParameters();
+    }
+    
+    @Override
     public ElementReference getParameteredElement() {
         return this.isClassifierTemplateParameter()? this.getSelf(): null;
     }
@@ -479,16 +497,17 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public ElementReference getTemplate() {
         SyntaxElement element = this.getSelf().getElement();
-        if (!(element instanceof Member)) {
+        if (!(element instanceof BoundClassifier)) {
             return null;
         } else {
-            SyntaxElement base = ((Member)element).getImpl().getBase();
-            if (!(base instanceof Member)) {
-                return null;
-            } else {
-                ElementReference referent = ((Member)base).getImpl().getReferent();
-                return referent.getImpl().isTemplate()? referent: null;
-            }
+            return ((BoundClassifier)element).getTemplate();
+//            SyntaxElement base = ((Member)element).getImpl().getBase();
+//            if (!(base instanceof Member)) {
+//                return null;
+//            } else {
+//                ElementReference referent = ((Member)base).getImpl().getReferent();
+//                return referent.getImpl().isTemplate()? referent: null;
+//            }
         }
     }
     

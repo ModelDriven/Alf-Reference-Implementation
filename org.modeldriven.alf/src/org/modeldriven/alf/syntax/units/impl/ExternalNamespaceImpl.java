@@ -136,7 +136,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
         List<Member> members = new ArrayList<Member>();
         for (ElementReference templateParameter: 
             self.getImpl().getReferent().getImpl().getTemplateParameters()) {
-            Member member = ImportedMemberImpl.makeImportedMember(templateParameter);
+            Member member = ImportedMemberImpl.makeImportedMember(templateParameter, false);
             member.setVisibility("public");
             member.setNamespace(self);
             members.add(member);

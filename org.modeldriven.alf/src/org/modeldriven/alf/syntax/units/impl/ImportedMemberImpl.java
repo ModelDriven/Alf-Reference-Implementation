@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -16,8 +15,6 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.units.*;
 import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.NamedElement;
-import org.modeldriven.alf.uml.Namespace;
 
 public class ImportedMemberImpl extends MemberImpl {
 
@@ -139,41 +136,42 @@ public class ImportedMemberImpl extends MemberImpl {
 	 * return the result of checking their distinguishability according to the
 	 * rules of the UML superstructure.
 	 **/
-	public Boolean isSameKindAs(Member member) {
-	    ImportedMember self = this.getSelf();
-	    if (member == null) {
-	        return false;
-	    } else if (!(member instanceof ImportedMember)) {
-	        return member.isSameKindAs(self);
-	    } else {
-	        ElementReference referent = self.getReferent();
-	        ElementReference otherReferent = ((ImportedMember)member).getReferent();
-	        if (referent == null || otherReferent == null) {
-	            return false;
-	        } else {
-    	        SyntaxElement element = referent.getImpl().getAlf();
-    	        SyntaxElement otherElement = otherReferent.getImpl().getAlf();
-    	        if (element != null) {
-    	            return element instanceof Member && ((Member)element).isSameKindAs(member);
-    	        } else if (otherElement != null) {
-    	            return otherElement instanceof Member && ((Member)otherElement).isSameKindAs(self);
-    	        } else {
-    	            Element umlElement = referent.getImpl().getUml();
-    	            Element otherUmlElement = otherReferent.getImpl().getUml();
-    	            if (!(umlElement instanceof NamedElement && 
-    	                    otherUmlElement instanceof NamedElement)) {
-    	                return false;
-    	            } else {
-    	                NamedElement namedElement = (NamedElement)umlElement;
-    	                Namespace namespace = namedElement.getNamespace();
-    	                return namespace != null && 
-    	                        !namedElement.isDistinguishableFrom(
-    	                                (NamedElement)otherUmlElement, namespace);
-    	            }
-    	        }
-	        }
-	    }
-	}
+	// TODO: Clean up.
+//	public Boolean isSameKindAs(Member member) {
+//	    ImportedMember self = this.getSelf();
+//	    if (member == null) {
+//	        return false;
+//	    } else if (!(member instanceof ImportedMember)) {
+//	        return member.isSameKindAs(self);
+//	    } else {
+//	        ElementReference referent = self.getReferent();
+//	        ElementReference otherReferent = ((ImportedMember)member).getReferent();
+//	        if (referent == null || otherReferent == null) {
+//	            return false;
+//	        } else {
+//    	        SyntaxElement element = referent.getImpl().getAlf();
+//    	        SyntaxElement otherElement = otherReferent.getImpl().getAlf();
+//    	        if (element != null) {
+//    	            return element instanceof Member && ((Member)element).isSameKindAs(member);
+//    	        } else if (otherElement != null) {
+//    	            return otherElement instanceof Member && ((Member)otherElement).isSameKindAs(self);
+//    	        } else {
+//    	            Element umlElement = referent.getImpl().getUml();
+//    	            Element otherUmlElement = otherReferent.getImpl().getUml();
+//    	            if (!(umlElement instanceof NamedElement && 
+//    	                    otherUmlElement instanceof NamedElement)) {
+//    	                return false;
+//    	            } else {
+//    	                NamedElement namedElement = (NamedElement)umlElement;
+//    	                Namespace namespace = namedElement.getNamespace();
+//    	                return namespace != null && 
+//    	                        !namedElement.isDistinguishableFrom(
+//    	                                (NamedElement)otherUmlElement, namespace);
+//    	            }
+//    	        }
+//	        }
+//	    }
+//	}
 	
 	/**
 	 * Allow an external operation, owned behavior (activity) or property to 
@@ -210,9 +208,14 @@ public class ImportedMemberImpl extends MemberImpl {
     }
     
     public static ImportedMember makeImportedMember(ElementReference reference) {
+        return makeImportedMember(reference, true);        
+    }
+
+    public static ImportedMember makeImportedMember(ElementReference reference, boolean isImported) {
         ImportedMember importedMember = new ImportedMember();
         importedMember.setReferent(reference);
         importedMember.getImpl().setExactName(reference.getImpl().getName());
+        importedMember.getImpl().setIsImported(isImported);
         importedMember.setVisibility(reference.getImpl().getVisibility());
         return importedMember;        
     }
@@ -220,9 +223,8 @@ public class ImportedMemberImpl extends MemberImpl {
     public static ImportedMember makeImportedMember(
             String name, Element element, NamespaceDefinition namespace) {
         ImportedMember importedMember = makeImportedMember(
-                ElementReferenceImpl.makeElementReference(element, namespace));
+                ElementReferenceImpl.makeElementReference(element, namespace), false);
         importedMember.getImpl().setExactName(name == null? "": name);
-        importedMember.getImpl().setIsImported(false);
         importedMember.setNamespace(namespace);
         return importedMember;
     }

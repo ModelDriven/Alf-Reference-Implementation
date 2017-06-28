@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -201,6 +200,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public boolean isNamedElement() {
+        return this.getSelf().getElement() instanceof NamedElement;
+    }
+    
+    @Override
     public boolean isPackageableElement() {
         return this.getSelf().getElement() instanceof PackageableElement;
     }
@@ -289,6 +293,19 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public boolean isParameteredElement() {
+        return this.isClassifier() && 
+                ((Classifier)this.getSelf().getElement()).getTemplateParameter() != null;
+    }
+    
+    @Override
+    public boolean isTemplateBinding() {
+        Element element = this.getSelf().getElement();
+        return element instanceof TemplateableElement && 
+                !((TemplateableElement)element).getTemplateBinding().isEmpty();
+    }
+    
+    @Override
     public boolean isCompletelyBound() {
         return true;
     }
@@ -307,6 +324,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isParameter() {
         return this.getSelf().getElement() instanceof Parameter;
+    }
+    
+    @Override
+    public boolean isImported() {
+        return false;
     }
 
     @Override
@@ -554,7 +576,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public List<ElementReference> getTemplateActuals() {
         ArrayList<ElementReference> templateActuals = 
             new ArrayList<ElementReference>();
-        TemplateBinding templateBinding = this.getTemplateBinding();
+        TemplateBinding templateBinding = this.getUMLTemplateBinding();
         if (templateBinding != null) {
             Collection<TemplateParameterSubstitution> parameterSubstitutions =
                     templateBinding.getParameterSubstitution();
@@ -576,6 +598,19 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public List<ElementReference> getParameteredElements() {
+        List<ElementReference> elements = new ArrayList<ElementReference>();
+        if (this.isTemplate()) {
+            for (TemplateParameter parameter: ((TemplateableElement)this.getSelf().getElement()).
+                    getOwnedTemplateSignature().getParameter()) {
+                elements.add(ExternalElementReferenceImpl.makeElementReference(
+                        parameter.getParameteredElement()));
+            }
+        }
+        return elements;
+    }
+    
+    @Override
     public ElementReference getParameteredElement() {
         Element element = this.getSelf().getElement();
         if (!(element instanceof TemplateParameter)) {
@@ -589,14 +624,18 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public ElementReference getTemplate() {
-        TemplateBinding templateBinding = this.getTemplateBinding();
+        TemplateBinding templateBinding = this.getUMLTemplateBinding();
         TemplateSignature signature = templateBinding == null? null: 
             templateBinding.getSignature();
         return signature == null? null:
             ElementReferenceImpl.makeElementReference(signature.getTemplate());
     }
     
-    public TemplateBinding getTemplateBinding() {
+    public ElementReference getTemplateBinding() {
+        return ElementReferenceImpl.makeElementReference(this.getUMLTemplateBinding());
+    }
+    
+    public TemplateBinding getUMLTemplateBinding() {
         return getTemplateBinding(this.getSelf().getElement());
     }
     
