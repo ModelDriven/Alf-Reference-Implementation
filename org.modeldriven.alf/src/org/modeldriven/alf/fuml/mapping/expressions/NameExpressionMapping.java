@@ -77,8 +77,7 @@ public class NameExpressionMapping extends ExpressionMapping {
             if (assignment != null) {
                 FumlMapping mapping = this.fumlMap(assignment);
                 if (!(mapping instanceof AssignedSourceMapping)) {
-                    this.throwError("Error mapping assigned source: " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping assigned source", mapping);
                 } else {
                     this.activityNode = 
                         ((AssignedSourceMapping)mapping).getActivityNode();

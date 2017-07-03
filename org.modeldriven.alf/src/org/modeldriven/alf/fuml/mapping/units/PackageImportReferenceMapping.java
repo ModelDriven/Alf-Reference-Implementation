@@ -47,8 +47,7 @@ public class PackageImportReferenceMapping extends ImportReferenceMapping {
                 mapping = ((ElementReferenceMapping)mapping).getMapping();
             }
             if (!(mapping instanceof PackageDefinitionMapping)) {
-                this.throwError("Error mapping referent: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping referent", mapping);
             } else {
                 package_ = ((PackageDefinitionMapping)mapping).getPackage();
             }

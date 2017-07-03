@@ -89,8 +89,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
         ExpressionMapping operandMapping = null;
         FumlMapping mapping = this.exprMap(operand);
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping operand expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping operand expression", mapping);
         } else {
             operandMapping = (ExpressionMapping)mapping;
         }
@@ -152,8 +151,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
                             mapping = ((ElementReferenceMapping) mapping).getMapping();
                         }
                         if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                            this.throwError("Error mapping type for " + name + ": " +
-                                    mapping.getErrorMessage());
+                            this.throwError("Error mapping type for " + name, mapping);
                         } else {
                             classifier = ((ClassifierDefinitionMapping)mapping).
                                     getClassifierOnly();
@@ -170,8 +168,7 @@ public class ConditionalTestExpressionMapping extends ExpressionMapping {
                     mapping = ((ElementReferenceMapping)mapping).getMapping();
                 }
                 if (!(mapping instanceof SyntaxElementMapping)) {
-                    this.throwError("Error mapping source for " + name + ": " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping source for " + name, mapping);
                 } else {
                     ActivityNode sourceNode = ((SyntaxElementMapping)mapping).
                             getAssignedValueSource(name);

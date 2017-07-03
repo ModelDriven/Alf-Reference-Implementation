@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,7 +9,6 @@
 
 package org.modeldriven.alf.fuml.mapping.common;
 
-import org.modeldriven.alf.fuml.mapping.ErrorMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.mapping.MappingError;
 
@@ -38,8 +36,8 @@ public class AssignedSourceMapping extends FumlMapping {
             if (mapping instanceof SyntaxElementMapping) {
                 this.activityNode = ((SyntaxElementMapping)mapping).
                         getAssignedValueSource(assignment.getName());
-            } else if (mapping instanceof ErrorMapping) {
-                this.throwError("Error mapping source: " + mapping.getErrorMessage());
+            } else {
+                this.throwError("Error mapping source", mapping);
             }
         }
         return this.activityNode;

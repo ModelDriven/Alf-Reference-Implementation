@@ -97,8 +97,7 @@ public class ForStatementMapping extends LoopStatementMapping {
             FumlMapping mapping = this.fumlMap(definition);
             if (!(mapping instanceof LoopVariableDefinitionMapping)) {
                 this.throwError("Error mapping definition of " + 
-                        definition.getVariable() + ": " + 
-                        mapping.getErrorMessage());
+                        definition.getVariable(), mapping);
             } else {
                 LoopVariableDefinitionMapping definitionMapping =
                         (LoopVariableDefinitionMapping)mapping;
@@ -331,8 +330,8 @@ public class ForStatementMapping extends LoopStatementMapping {
                             mapping = ((ElementReferenceMapping)mapping).getMapping();
                         }
                         if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                            this.throwError("Error mapping type of " + assignedName + ": " + 
-                                    mapping.getErrorMessage());
+                            this.throwError("Error mapping type of " + assignedName,
+                                    mapping);
                         } else {
                             classifier = ((ClassifierDefinitionMapping)mapping).
                                     getClassifierOnly();

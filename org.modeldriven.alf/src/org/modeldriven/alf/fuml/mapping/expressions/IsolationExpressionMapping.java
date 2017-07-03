@@ -39,8 +39,7 @@ public class IsolationExpressionMapping extends UnaryExpressionMapping {
         Expression operand = expression.getOperand();
         FumlMapping mapping = this.exprMap(operand);
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping operand expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping operand expression", mapping);
         } else {
             ExpressionMapping operandMapping = (ExpressionMapping)mapping;
             StructuredActivityNode node = this.graph.addStructuredActivityNode(

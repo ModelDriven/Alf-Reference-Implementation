@@ -52,8 +52,7 @@ public class ReceptionDefinitionMapping extends MemberMapping {
                 mapping = ((ElementReferenceMapping)mapping).getMapping();
                 if (!(mapping instanceof SignalDefinitionMapping)) {
                     this.throwError("Error mapping signal " + 
-                            signalReference.getImpl().getName() + ": " + 
-                            mapping.getErrorMessage());
+                            signalReference.getImpl().getName(), mapping);
                 } else {
                     signal = 
                         (Signal)((SignalDefinitionMapping)mapping).getClassifier();

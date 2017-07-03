@@ -43,8 +43,7 @@ public class EnumerationLiteralNameMapping extends MemberMapping {
         
         FumlMapping mapping = this.fumlMap(literal.getNamespace());
         if (!(mapping instanceof ClassifierDefinitionMapping)) {
-            this.throwError("Error mapping enumeration: " +
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping enumeration", mapping);
         } else {
             Classifier classifier = 
                 ((ClassifierDefinitionMapping)mapping).getClassifier();

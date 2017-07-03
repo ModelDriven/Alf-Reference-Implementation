@@ -80,8 +80,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
         
         FumlMapping mapping = this.fumlMap(condition);
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping condition: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping condition", mapping);
         } else {
             ((ExpressionMapping)mapping).setIsIndexFrom0(this.isIndexFrom0);
             this.modelElements = new ArrayList<Element>();
@@ -192,8 +191,7 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                     ElementReference type = assignment.getType();
                     FumlMapping mapping = parentMapping.fumlMap(assignment);
                     if (!(mapping instanceof AssignedSourceMapping)) {
-                        parentMapping.throwError("Error mapping source for " + 
-                                name + ": " + mapping.getErrorMessage());
+                        parentMapping.throwError("Error mapping source for", mapping);
                     } else {
                         bodyOutput = ((AssignedSourceMapping)mapping).getActivityNode();
                         ActivityGraph subgraph = parentMapping.createActivityGraph();
@@ -216,8 +214,8 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
                                             getMapping();
                                     }
                                     if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                                        parentMapping.throwError("Error mapping type " + 
-                                                type + ": " + mapping.getErrorMessage());
+                                        parentMapping.throwError("Error mapping type " + type, 
+                                                mapping);
                                     }
                                     classifier = 
                                         ((ClassifierDefinitionMapping)mapping).

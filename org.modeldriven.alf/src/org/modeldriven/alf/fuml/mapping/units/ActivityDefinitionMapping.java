@@ -269,8 +269,7 @@ public class ActivityDefinitionMapping extends ClassifierDefinitionMapping {
                         sourceMapping = ((ElementReferenceMapping)sourceMapping).getMapping();
                     }
                     if (!(sourceMapping instanceof SyntaxElementMapping)) {
-                        mapping.throwError("Error mapping parameter " + 
-                                name + ": " + mapping.getErrorMessage());
+                        mapping.throwError("Error mapping parameter " + name, mapping);
                     } else {
                         ActivityNode source = ((SyntaxElementMapping)sourceMapping).
                                 getAssignedValueSource(name);

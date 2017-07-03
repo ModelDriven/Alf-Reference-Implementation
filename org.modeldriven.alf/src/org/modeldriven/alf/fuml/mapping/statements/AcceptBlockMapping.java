@@ -68,8 +68,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                     mapping = ((ElementReferenceMapping)mapping).getMapping();
                 }
                 if (!(mapping instanceof SignalDefinitionMapping)) {
-                    this.throwError("Error mapping signal " + signalReference + ": " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping signal " + signalReference, mapping);
                 } else {
                     signal = (Signal)((SignalDefinitionMapping)mapping).getClassifier();
                 }
@@ -112,7 +111,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                     mapping = this.fumlMap(assignment);
                     if (!(mapping instanceof AssignedSourceMapping)) {
                         this.throwError("Error mapping assigned source for " + 
-                                name + ": " + mapping.getErrorMessage());
+                                name, mapping);
                     } else {
                         ActivityNode source = 
                                 ((AssignedSourceMapping)mapping).getActivityNode();
@@ -128,7 +127,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                                     }
                                     if (!(mapping instanceof ClassifierDefinitionMapping)) {
                                         this.throwError("Error mapping type for " + 
-                                                name + ": " + mapping.getErrorMessage());
+                                                name, mapping);
                                     } else {
                                         classifier = 
                                                 ((ClassifierDefinitionMapping)mapping).

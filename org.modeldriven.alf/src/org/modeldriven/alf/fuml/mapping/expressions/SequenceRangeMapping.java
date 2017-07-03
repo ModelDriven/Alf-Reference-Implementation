@@ -43,8 +43,7 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
         SequenceRange sequenceRange = this.getSequenceRange();
         FumlMapping mapping = this.fumlMap(sequenceRange.getRangeLower());
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping range lower expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping range lower expression", mapping);
         } else {
             ExpressionMapping rangeLowerMapping = (ExpressionMapping)mapping;
             boolean isIndexFrom0 = this.isIndexFrom0();
@@ -52,8 +51,7 @@ public class SequenceRangeMapping extends SequenceElementsMapping {
             this.graph.addAll(rangeLowerMapping.getGraph());
             mapping = this.fumlMap(sequenceRange.getRangeUpper());
             if (!(mapping instanceof ExpressionMapping)) {
-                this.throwError("Error mapping range upper expression: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping range upper expression", mapping);
             } else {
                 ExpressionMapping rangeUpperMapping = (ExpressionMapping)mapping;
                 rangeUpperMapping.setIsIndexFrom0(isIndexFrom0);

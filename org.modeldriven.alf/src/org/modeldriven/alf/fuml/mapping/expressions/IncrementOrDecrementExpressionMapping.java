@@ -81,8 +81,7 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
         this.operandExpression = operand.getImpl().getExpression();
         FumlMapping mapping = this.exprMap(operandExpression);
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping operand as expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping operand as expression", mapping);
         } else {
             ExpressionMapping operandMapping = (ExpressionMapping)mapping;
             ActivityNode rhsNode = this.graph.addStructuredActivityNode(
@@ -91,8 +90,7 @@ public class IncrementOrDecrementExpressionMapping extends ExpressionMapping {
 
             mapping = this.fumlMap(operand);
             if (!(mapping instanceof LeftHandSideMapping)) {
-                this.throwError("Error mapping operand as left-hand side: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping operand as left-hand side", mapping);
             } else {
                 LeftHandSideMapping lhsMapping = (LeftHandSideMapping)mapping;
                 lhsMapping.setRhsUpper(1);

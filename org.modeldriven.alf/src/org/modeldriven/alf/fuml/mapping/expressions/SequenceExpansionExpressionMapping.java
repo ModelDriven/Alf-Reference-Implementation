@@ -124,8 +124,7 @@ public abstract class SequenceExpansionExpressionMapping extends
         FumlMapping mapping = this.exprMap(
                 primary == null? null: primary.getExpression());
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping primary expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping primary expression", mapping);
         } else {
             ExpressionMapping primaryMapping = (ExpressionMapping)mapping;
             Collection<Element> elements = primaryMapping.getModelElements();
@@ -142,8 +141,7 @@ public abstract class SequenceExpansionExpressionMapping extends
             
             mapping = this.exprMap(expression.getArgument());
             if (!(mapping instanceof ExpressionMapping)) {
-                this.throwError("Error mapping argument: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping argument", mapping);
             } else {
                 ExpressionMapping argumentMapping = (ExpressionMapping)mapping;
                 argumentType = argumentMapping.getType();

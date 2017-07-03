@@ -119,8 +119,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 Expression expression = input.getExpression();
                 FumlMapping mapping = this.fumlMap(expression);
                 if (!(mapping instanceof ExpressionMapping)) {
-                    this.throwError("Error mapping input expression for " + 
-                            name +": " + mapping.getErrorMessage());
+                    this.throwError("Error mapping input expression for " + name, mapping);
                 } else {
                     ExpressionMapping expressionMapping = 
                         (ExpressionMapping)mapping;
@@ -170,7 +169,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                             mapping = this.fumlMap(index);
                             if (!(mapping instanceof ExpressionMapping)) {
                                 this.throwError("Error mapping index expression for " 
-                                        + name + ": " + mapping.getErrorMessage());
+                                        + name, mapping);
                             } else {
                                 ((ExpressionMapping)mapping).setIsIndexFrom0(this.isIndexFrom0);
                                 subgraph.addAll(
@@ -262,8 +261,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                 FumlMapping mapping = this.fumlMap(lhs);
                 if (!(mapping instanceof LeftHandSideMapping)) {
                     this.throwError("Error mapping output for " + 
-                            name + " as left hand side: " + 
-                            mapping.getErrorMessage());
+                            name + " as left hand side", mapping);
                 } else {
                     LeftHandSideMapping lhsMapping = 
                         (LeftHandSideMapping)mapping;

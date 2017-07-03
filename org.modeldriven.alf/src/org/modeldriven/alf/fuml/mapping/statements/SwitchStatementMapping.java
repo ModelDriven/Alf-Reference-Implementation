@@ -69,8 +69,7 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
         Expression expression = statement.getExpression();
         FumlMapping mapping = this.exprMap(expression);
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping switch expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping switch expression", mapping);
         } else {
             ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
             ActivityNode resultSource = expressionMapping.getResultSource();
@@ -88,8 +87,8 @@ public class SwitchStatementMapping extends ConditionalStatementMapping {
             for (SwitchClause switchClause: statement.getNonDefaultClause()) {
                 mapping = this.fumlMap(switchClause);
                 if (!(mapping instanceof SwitchClauseMapping)) {
-                    this.throwError("Error mapping switch clause " + 
-                            switchClause + ": " + mapping.getErrorMessage());
+                    this.throwError("Error mapping switch clause " + switchClause, 
+                            mapping);
                 } else {
                     SwitchClauseMapping clauseMapping = 
                         (SwitchClauseMapping)mapping;

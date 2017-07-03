@@ -59,8 +59,7 @@ public class ReturnStatementMapping extends StatementMapping {
                 behavior = 
                     ((OperationDefinitionMapping)mapping).getOperation();
             } else {
-                this.throwError("Error mapping behavior: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping behavior", mapping);
             }
         }
             
@@ -86,8 +85,7 @@ public class ReturnStatementMapping extends StatementMapping {
         if (expression != null) {
             FumlMapping mapping = this.exprMap(expression);
             if (!(mapping instanceof ExpressionMapping)) {
-                this.throwError("Error mapping expression: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping expression", mapping);
             } else {
                 this.addToNode(mapping.getModelElements());
 
@@ -122,8 +120,7 @@ public class ReturnStatementMapping extends StatementMapping {
                         sourceMapping = ((ElementReferenceMapping)sourceMapping).getMapping();
                     }
                     if (!(sourceMapping instanceof SyntaxElementMapping)) {
-                        this.throwError("Error mapping parameter " + 
-                                name + ": " + sourceMapping.getErrorMessage());
+                        this.throwError("Error mapping parameter " + name, sourceMapping);
                     } else {
                         ActivityNode source = ((SyntaxElementMapping)sourceMapping).
                                 getAssignedValueSource(name);
@@ -138,9 +135,8 @@ public class ReturnStatementMapping extends StatementMapping {
                                             getMapping();
                                 }
                                 if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                                    this.throwError("Error mapping type of parameter " +
-                                            name + ": " + 
-                                            mapping.getErrorMessage());
+                                    this.throwError("Error mapping type of parameter " + name, 
+                                            mapping);
                                 } else {
                                     type = 
                                             ((ClassifierDefinitionMapping)mapping).
@@ -189,8 +185,7 @@ public class ReturnStatementMapping extends StatementMapping {
             parameterMapping = ((ElementReferenceMapping)parameterMapping).getMapping();
         }
         if (!(parameterMapping instanceof FormalParameterMapping)) {
-            this.throwError("Error mapping parameter: " + 
-                    parameterMapping.getErrorMessage());
+            this.throwError("Error mapping parameter", parameterMapping);
         } else {
             Parameter parameter = 
                     ((FormalParameterMapping)parameterMapping).getParameter();

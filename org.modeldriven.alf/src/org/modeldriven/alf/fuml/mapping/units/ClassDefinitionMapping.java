@@ -133,8 +133,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                 }
                 if (!(mapping instanceof ClassDefinitionMapping)) {
                     this.throwError("Error mapping superclass reference for " + 
-                            superclassReference.getImpl().getName() + ": " + 
-                            mapping.getErrorMessage());
+                            superclassReference.getImpl().getName(), mapping);
                 } else {
                     initializationOperation = ((ClassDefinitionMapping)mapping).
                             getInitializationOperation();
@@ -163,8 +162,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                     Mapping mapping = this.fumlMap(propertyDefinition);
                     if (!(mapping instanceof PropertyDefinitionMapping)) {
                         this.throwError("Error mapping property " + 
-                                propertyDefinition.getName() + ": " + 
-                                mapping.getErrorMessage());
+                                propertyDefinition.getName(), mapping);
                     } else {
                         Property property = 
                                 ((PropertyDefinitionMapping)mapping).
@@ -172,8 +170,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                         mapping = this.fumlMap(initializer);
                         if (!(mapping instanceof ExpressionMapping)) {
                             this.throwError("Error mapping initializer for " + 
-                                    propertyDefinition.getName() + ": " + 
-                                    mapping.getErrorMessage());
+                                    propertyDefinition.getName(), mapping);
                         } else {
                             ExpressionMapping expressionMapping =
                                     (ExpressionMapping)mapping;

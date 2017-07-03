@@ -53,8 +53,7 @@ public class LoopVariableDefinitionMapping extends SyntaxElementMapping {
         
         FumlMapping mapping = this.fumlMap(expression1);
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping first expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping first expression", mapping);
         } else {
             ExpressionMapping expression1Mapping = (ExpressionMapping)mapping;
             expression1Mapping.setIsIndexFrom0(this.isIndexFrom0);
@@ -81,8 +80,7 @@ public class LoopVariableDefinitionMapping extends SyntaxElementMapping {
                 mapping = this.fumlMap(expression2);
                 expression1Mapping.setIsIndexFrom0(this.isIndexFrom0);
                 if (!(mapping instanceof ExpressionMapping)) {
-                    this.throwError("Error mapping second expression: " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping second expression", mapping);
                 } else {
                     ExpressionMapping expression2Mapping = 
                             (ExpressionMapping)mapping;

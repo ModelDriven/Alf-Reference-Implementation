@@ -105,8 +105,8 @@ public abstract class StatementMapping extends DocumentedElementMapping {
                             mapping = ((ElementReferenceMapping)mapping).getMapping();
                         }
                         if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                            this.throwError("Error mapping type " + type + ": " + 
-                                    mapping.getErrorMessage());
+                            this.throwError("Error mapping type " + type,
+                                    mapping);
                         }
                         classifier = 
                             ((ClassifierDefinitionMapping)mapping).getClassifier();

@@ -172,8 +172,7 @@ public class InstanceCreationExpressionMapping extends
                                         getMapping();
                             }
                             if (!(mapping instanceof ClassDefinitionMapping)) {
-                                this.throwError("Error mapping parent class: " + 
-                                        mapping.getErrorMessage());
+                                this.throwError("Error mapping parent class", mapping);
                             }
                             class_ = (Class_)((ClassDefinitionMapping)mapping).
                                     getClassifierOnly();
@@ -222,8 +221,7 @@ public class InstanceCreationExpressionMapping extends
                     mapping = ((ElementReferenceMapping)mapping).getMapping();
                 }
                 if (!(mapping instanceof DataTypeDefinitionMapping)) {
-                    this.throwError("Error mapping data type referent: " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping data type referent", mapping);
                 } else {
                     dataType = (DataType)
                         ((DataTypeDefinitionMapping)mapping).getClassifier();
@@ -308,8 +306,7 @@ public class InstanceCreationExpressionMapping extends
                     mapping = ((ElementReferenceMapping)mapping).getMapping();
                 }
                 if (!(mapping instanceof ClassDefinitionMapping)) {
-                    this.throwError("Error mapping class referent: " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping class referent", mapping);
                 } else {
                     class_ = (Class_)
                         ((ClassDefinitionMapping)mapping).getClassifier();

@@ -75,7 +75,7 @@ public class LinkOperationExpressionMapping extends InvocationExpressionMapping 
                 mapping = ((ElementReferenceMapping)mapping).getMapping();
             }
             if (!(mapping instanceof AssociationDefinitionMapping)) {
-                this.throwError("Error mapping association: " + mapping.getErrorMessage());
+                this.throwError("Error mapping association", mapping);
             } else {
                 association = (Association)
                     ((AssociationDefinitionMapping)mapping).getClassifier();

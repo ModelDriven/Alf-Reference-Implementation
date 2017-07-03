@@ -38,8 +38,7 @@ public class ClassificationExpressionMapping extends UnaryExpressionMapping {
         ClassificationExpression expression = this.getClassificationExpression();
         FumlMapping mapping = this.exprMap(expression.getOperand());
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping operand expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping operand expression", mapping);
         } else {
             ExpressionMapping operandMapping = (ExpressionMapping)mapping;
             this.graph.addAll(operandMapping.getGraph());
@@ -53,8 +52,8 @@ public class ClassificationExpressionMapping extends UnaryExpressionMapping {
                 }
                 if (!(mapping instanceof ClassifierDefinitionMapping)) {
                     this.throwError("Error mapping referent for " + 
-                            expression.getTypeName().getPathName() + 
-                            ": " + mapping.getErrorMessage());
+                            expression.getTypeName().getPathName(),
+                            mapping);
                 } else {
                     ClassifierDefinitionMapping referentMapping = 
                             (ClassifierDefinitionMapping)mapping;

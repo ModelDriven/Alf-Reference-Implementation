@@ -70,8 +70,7 @@ public abstract class ClassifierDefinitionMapping extends
                     FumlMapping mapping = this.fumlMap(templateParameter);
                     if (!(mapping instanceof ClassifierTemplateParameterMapping)) {
                         this.throwError("Error mapping template parameter " + 
-                                definition.getName() + ": " + 
-                                mapping.getErrorMessage());
+                                definition.getName(), mapping);
                     } else {
                         org.modeldriven.alf.uml.ClassifierTemplateParameter parameter = 
                                 ((ClassifierTemplateParameterMapping)mapping).
@@ -90,8 +89,7 @@ public abstract class ClassifierDefinitionMapping extends
                 if (base != null) {
                     FumlMapping mapping = this.fumlMap(base);
                     if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                        this.throwError("Error mapping base template: " + 
-                                mapping.getErrorMessage());
+                        this.throwError("Error mapping base template", mapping);
                     } else {
                         Classifier template = ((ClassifierDefinitionMapping)mapping).
                                 getClassifier();
@@ -119,8 +117,7 @@ public abstract class ClassifierDefinitionMapping extends
                                         templateParameter.getImpl().getBase());
                                 if (!(mapping instanceof ClassifierTemplateParameterMapping)) {
                                     this.throwError("Error mapping template parameter " + 
-                                            templateParameter.getName() + ": " + 
-                                            mapping.getErrorMessage());
+                                            templateParameter.getName(), mapping);
                                 } else {
                                     substitution.setFormal( 
                                             ((ClassifierTemplateParameterMapping)mapping).
@@ -138,8 +135,7 @@ public abstract class ClassifierDefinitionMapping extends
                                             if (!(mapping instanceof ClassifierDefinitionMapping)) {
                                                 this.throwError("Error mapping template actual for " + 
                                                         definition.getName() + "::" + 
-                                                        templateParameter.getName() + ": " + 
-                                                        mapping.getErrorMessage());
+                                                        templateParameter.getName(), mapping);
                                             } else {
                                                 actual = ((ClassifierDefinitionMapping)mapping).
                                                         getClassifierOnly();

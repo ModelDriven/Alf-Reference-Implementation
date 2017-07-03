@@ -71,8 +71,7 @@ public class SwitchClauseMapping extends SyntaxElementMapping {
         for (Expression switchCase: switchClause.getCase()) {
             FumlMapping mapping = this.fumlMap(switchCase);
             if (!(mapping instanceof ExpressionMapping)) {
-                this.throwError("Error mapping condition: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping condition", mapping);
     
             } else {
                 ExpressionMapping caseMapping = (ExpressionMapping)mapping;

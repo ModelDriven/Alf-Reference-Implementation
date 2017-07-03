@@ -90,7 +90,7 @@ public class FormalParameterMapping extends TypedElementDefinitionMapping {
             activity = (Activity)((ActivityDefinitionMapping)mapping).getBehavior();
             parameter = this.getParameter();        
         } else {
-            this.throwError("Error mapping context: " + mapping.getErrorMessage());
+            this.throwError("Error mapping context", mapping);
         }
         
         activityNode = 

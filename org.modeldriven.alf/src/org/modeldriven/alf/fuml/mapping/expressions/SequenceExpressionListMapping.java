@@ -49,8 +49,7 @@ public class SequenceExpressionListMapping extends SequenceElementsMapping {
         for (Expression element: elements) {
             FumlMapping mapping = this.fumlMap(element);
             if (!(mapping instanceof ExpressionMapping)) {
-                this.throwError("Error mapping expression list element: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping expression list element", mapping);
             } else {
                 ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
                 expressionMapping.setIsIndexFrom0(this.isIndexFrom0());

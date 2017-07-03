@@ -73,8 +73,7 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
         ExpressionMapping operandMapping = null;
         FumlMapping mapping = this.exprMap(operand);
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping operand expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping operand expression", mapping);
         } else {
             operandMapping = (ExpressionMapping)mapping;
             this.graph.addAll(operandMapping.getGraph());

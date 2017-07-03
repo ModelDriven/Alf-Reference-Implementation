@@ -38,8 +38,7 @@ public class BreakStatementMapping extends StatementMapping {
         BreakStatement statement = this.getBreakStatement();
         FumlMapping mapping = this.fumlMap(statement.getImpl().getTarget());
         if (!(mapping instanceof LoopStatementMapping)) {
-            this.throwError("Error mapping target statement: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping target statement", mapping);
         } else {
             LoopStatementMapping loopMapping = (LoopStatementMapping)mapping;
             Element element = loopMapping.getElement();
@@ -73,7 +72,7 @@ public class BreakStatementMapping extends StatementMapping {
                             mapping = this.fumlMap(assignment);
                             if (!(mapping instanceof AssignedSourceMapping)) {
                                 this.throwError("Error mapping assigned source for " + 
-                                        name + ": " + mapping.getErrorMessage());
+                                        name, mapping);
                             } else {
                                 this.graph.addObjectFlow(
                                         ((AssignedSourceMapping)mapping).getActivityNode(),

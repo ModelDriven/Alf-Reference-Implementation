@@ -93,8 +93,8 @@ public abstract class LoopStatementMapping extends StatementMapping {
                 mapping = ((ElementReferenceMapping)mapping).getMapping();
             }
             if (!(mapping instanceof SyntaxElementMapping)) {
-                this.throwError("Error mapping assigned source for " + name + 
-                        ": " + this.getErrorMessage());
+                this.throwError("Error mapping assigned source for " + name,
+                        mapping);
             } else {
                 sourceNode = 
                     ((SyntaxElementMapping)mapping).getAssignedValueSource(name);

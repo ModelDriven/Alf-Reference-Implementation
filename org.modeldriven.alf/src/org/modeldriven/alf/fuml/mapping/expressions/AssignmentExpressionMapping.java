@@ -206,8 +206,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
         
         FumlMapping mapping = this.fumlMap(lhs);
         if (!(mapping instanceof LeftHandSideMapping)) {
-            this.throwError("Error mapping left hand side: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping left hand side", mapping);
         } else {
             this.lhsMapping = (LeftHandSideMapping)mapping;
             this.lhsMapping.setRhsUpper(rhs.getUpper());
@@ -215,8 +214,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 
             mapping = this.exprMap(rhs);
             if (!(mapping instanceof ExpressionMapping)) {
-                this.throwError("Error mapping right hand side: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping right hand side", mapping);
             } else {
                 ExpressionMapping rhsMapping = (ExpressionMapping)mapping;
                 ActivityGraph rhsSubgraph = this.createActivityGraph(rhsMapping.getGraph());
@@ -226,8 +224,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                     Expression expression = lhs.getImpl().getExpression();
                     mapping = this.exprMap(expression);
                     if (!(mapping instanceof ExpressionMapping)) {
-                        this.throwError("Error mapping left hand side as an expression: " +
-                                mapping.getErrorMessage());
+                        this.throwError("Error mapping left hand side as an expression", mapping);
                     } else {
                         this.lhsExpressionMapping =
                                 (ExpressionMapping)mapping;
@@ -408,8 +405,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                             mapping = ((ElementReferenceMapping)mapping).getMapping();
                         }
                         if (!(mapping instanceof OperationDefinitionMapping)) {
-                            outerMapping.throwError("Error mapping toSequence operation: " + 
-                                    mapping.getErrorMessage());
+                            outerMapping.throwError("Error mapping toSequence operation", mapping);
                         } else {
                             operation = ((OperationDefinitionMapping)mapping).getOperation();
                         }

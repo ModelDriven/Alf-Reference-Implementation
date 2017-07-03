@@ -101,8 +101,7 @@ public class AcceptStatementMapping extends StatementMapping {
         for (AcceptBlock acceptBlock: acceptBlocks) {
             FumlMapping mapping = this.fumlMap(acceptBlock);
             if (!(mapping instanceof AcceptBlockMapping)) {
-                this.throwError("Error mapping " + acceptBlock + ": " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping " + acceptBlock, mapping);
             } else {
                 AcceptBlockMapping acceptBlockMapping = 
                         (AcceptBlockMapping)mapping;

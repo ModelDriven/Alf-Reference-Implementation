@@ -86,8 +86,7 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
             FumlMapping mapping = this.exprMap(
                     expression.getImpl().getInstanceCreationExpression());
             if (!(mapping instanceof InstanceCreationExpressionMapping)) {
-                this.throwError("Error mapping collection instance creation: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping collection instance creation", mapping);
             } else {
                 this.instanceCreationMapping = 
                     (InstanceCreationExpressionMapping)mapping;
@@ -103,8 +102,7 @@ public class SequenceConstructionExpressionMapping extends ExpressionMapping {
             } else {
                 FumlMapping mapping = this.fumlMap(elements);
                 if (!(mapping instanceof SequenceElementsMapping)) {
-                    this.throwError("Error mapping sequence elements: " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping sequence elements", mapping);
                 } else {
                     ((SequenceElementsMapping)mapping).setOwner(expression);
                     StructuredActivityNode node = 

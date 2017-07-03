@@ -51,8 +51,8 @@ public class SequenceReductionExpressionMapping extends ExpressionMapping {
             }
             if (!(mapping instanceof ActivityDefinitionMapping)) {
                 this.throwError("Error mapping behavior " + 
-                        expression.getBehaviorName() + ": " + 
-                        mapping.getErrorMessage());
+                        expression.getBehaviorName(),
+                        mapping);
             } else {
                 behavior = ((ActivityDefinitionMapping)mapping).getBehavior();
             }
@@ -63,8 +63,7 @@ public class SequenceReductionExpressionMapping extends ExpressionMapping {
         FumlMapping mapping = 
                 this.exprMap(primary == null? null: primary.getExpression());
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping primary expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping primary expression", mapping);
         } else {
             ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
             this.graph.addAll(expressionMapping.getGraph());

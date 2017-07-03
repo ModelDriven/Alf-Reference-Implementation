@@ -152,8 +152,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                     mapping = ((ElementReferenceMapping)mapping).getMapping();
                 }
                 if (!(mapping instanceof PropertyDefinitionMapping)) {
-                    this.throwError("Error mapping feature: " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping feature", mapping);
                 } else {
                     property =
                             ((PropertyDefinitionMapping)mapping).getProperty();
@@ -163,8 +162,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
             if (objectSource == null) {
                 FumlMapping mapping = this.fumlMap(feature.getExpression());
                 if (!(mapping instanceof ExpressionMapping)) {
-                    this.throwError("Error mapping feature expression: " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Error mapping feature expression", mapping);
                 } else {
                     ExpressionMapping expressionMapping = (ExpressionMapping)mapping;
                     expressionMapping.setIsIndexFrom0(this.isIndexFrom0);
@@ -237,8 +235,7 @@ public abstract class LeftHandSideMapping extends SyntaxElementMapping {
                 if (indexSource == null) {
                     FumlMapping mapping = this.fumlMap(index);
                     if (!(mapping instanceof ExpressionMapping)) {
-                        this.throwError("Error mapping index expression: " + 
-                                mapping.getErrorMessage());
+                        this.throwError("Error mapping index expression", mapping);
                     } else {
                         ExpressionMapping indexMapping = 
                                 (ExpressionMapping)mapping;

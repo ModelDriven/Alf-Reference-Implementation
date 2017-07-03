@@ -51,8 +51,7 @@ public class ConcurrentClausesMapping extends SyntaxElementMapping {
         for (NonFinalClause clause: concurrentClauses.getClause()) {
             FumlMapping mapping = this.fumlMap(clause);
             if (!(mapping instanceof NonFinalClauseMapping)) {
-                this.throwError("Error mapping clause " + clause + ": " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping clause " + clause, mapping);
             } else {
                 NonFinalClauseMapping nonFinalClauseMapping =
                     (NonFinalClauseMapping)mapping;

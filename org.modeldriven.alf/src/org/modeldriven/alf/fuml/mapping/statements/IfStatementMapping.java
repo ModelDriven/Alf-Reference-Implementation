@@ -86,8 +86,8 @@ public class IfStatementMapping extends ConditionalStatementMapping {
         for (ConcurrentClauses nonFinalClauses: statement.getNonFinalClauses()) {
             FumlMapping mapping = this.fumlMap(nonFinalClauses);
             if (!(mapping instanceof ConcurrentClausesMapping)) {
-                this.throwError("Error mapping non final clauses " + 
-                        nonFinalClauses + ": " + mapping.getErrorMessage());
+                this.throwError("Error mapping non final clauses " + nonFinalClauses, 
+                        mapping);
             } else {
                 ConcurrentClausesMapping clausesMapping =
                     (ConcurrentClausesMapping)mapping;

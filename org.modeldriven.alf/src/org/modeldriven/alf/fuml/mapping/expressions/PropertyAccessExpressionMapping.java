@@ -70,8 +70,7 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
                 mapping = ((ElementReferenceMapping)mapping).getMapping();
             }
             if (!(mapping instanceof PropertyDefinitionMapping)) {
-                this.throwError("Error mapping feature: " + 
-                        mapping.getErrorMessage());
+                this.throwError("Error mapping feature", mapping);
             } else {
                 property = 
                         ((PropertyDefinitionMapping)mapping).getProperty();
@@ -80,8 +79,7 @@ public class PropertyAccessExpressionMapping extends ExpressionMapping {
             
         mapping = this.exprMap(expression);
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping expression", mapping);
         } else {
             ExpressionMapping expressionMapping = 
                     (ExpressionMapping)mapping;

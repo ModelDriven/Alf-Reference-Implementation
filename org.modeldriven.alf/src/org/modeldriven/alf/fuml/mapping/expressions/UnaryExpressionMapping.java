@@ -64,8 +64,7 @@ public abstract class UnaryExpressionMapping extends ExpressionMapping {
         UnaryExpression expression = this.getUnaryExpression();
         FumlMapping mapping = this.exprMap(expression.getOperand());
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping operand expression: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping operand expression", mapping);
         } 
         ExpressionMapping operandMapping = (ExpressionMapping)mapping;
         this.graph.addAll(operandMapping.getGraph());

@@ -60,8 +60,8 @@ public class ClassifyStatementMapping extends StatementMapping {
                 }
                 if (!(mapping instanceof ClassifierDefinitionMapping)) {
                     this.throwError("Error mapping classifier " + 
-                            reference.getImpl().getName() + ": " + 
-                            mapping.getErrorMessage());
+                            reference.getImpl().getName(),
+                            mapping);
                 } else {
                     classifier =
                             ((ClassifierDefinitionMapping)mapping).getClassifier();
@@ -79,7 +79,7 @@ public class ClassifyStatementMapping extends StatementMapping {
         
         FumlMapping mapping = this.exprMap(statement.getExpression());
         if (!(mapping instanceof ExpressionMapping)) {
-            this.throwError("Error mapping expression: " + mapping.getErrorMessage());
+            this.throwError("Error mapping expression", mapping);
         } else {
             ActivityGraph subgraph = this.createActivityGraph();
             

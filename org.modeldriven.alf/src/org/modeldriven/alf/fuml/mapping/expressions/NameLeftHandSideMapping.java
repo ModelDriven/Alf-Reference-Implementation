@@ -66,8 +66,7 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
                 if (indexSource == null) {
                     FumlMapping mapping = this.fumlMap(index);
                     if (!(mapping instanceof ExpressionMapping)) {
-                        this.throwError("Error mapping index expression: " + 
-                                mapping.getErrorMessage());
+                        this.throwError("Error mapping index expression", mapping);
                     } else {
                         ExpressionMapping indexMapping = (ExpressionMapping)mapping;
                         indexMapping.setIsIndexFrom0(this.isIndexFrom0);
@@ -93,8 +92,7 @@ public class NameLeftHandSideMapping extends LeftHandSideMapping {
                 if (assignment != null) {
                     FumlMapping mapping = this.fumlMap(assignment);
                     if (!(mapping instanceof AssignedSourceMapping)) {
-                        this.throwError("Error mapping assigned source: " + 
-                                mapping.getErrorMessage());
+                        this.throwError("Error mapping assigned source", mapping);
                     } else {
                         ActivityNode activityNode = 
                             ((AssignedSourceMapping)mapping).getActivityNode();

@@ -35,7 +35,7 @@ public class BlockStatementMapping extends StatementMapping {
         BlockStatement statement = this.getBlockStatement();
         FumlMapping mapping = this.fumlMap(statement.getBlock());
         if (!(mapping instanceof BlockMapping)) {
-            this.throwError("Error mapping block: " + mapping.getErrorMessage());
+            this.throwError("Error mapping block", mapping);
         } else {
             ((BlockMapping)mapping).setIsParallel(statement.getIsParallel());
             this.addToNode(mapping.getModelElements());
