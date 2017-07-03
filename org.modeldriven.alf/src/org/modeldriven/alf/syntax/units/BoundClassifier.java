@@ -68,6 +68,14 @@ public class BoundClassifier extends ClassifierDefinition {
         this.getImpl().setReferent(referent);
     }
 
+    public ElementReference getEffectiveBoundElement() {
+        return this.getImpl().getEffectiveBoundElement();
+    }
+    
+    public void setEffectiveBoundElement(ElementReference effectiveBoundElement) {
+        this.getImpl().setEffectiveBoundElement(effectiveBoundElement);
+    }
+
     @Override
     public String _toString(boolean includeDerived) {
         return "BoundClassifier template:" + 

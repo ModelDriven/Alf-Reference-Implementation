@@ -820,42 +820,6 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         }
     }
     
-    // TODO: Clean up.
-    public static ElementReference getBoundElement(
-            ElementReference templateReferent,
-            List<ElementReference> templateParameters,
-            List<ElementReference> templateArguments) {
-        ElementReference namespaceReference = 
-                RootNamespace.getRootScope().getInstantiationNamespace(templateReferent);        
-        if (namespaceReference == null) {
-            return null;
-        } else {
-            NamespaceDefinition instantiationNamespace = 
-                    namespaceReference.getImpl().asNamespace();
-            
-            String name = RootNamespace.getRootScope().makeBoundElementName(
-                    templateReferent, templateArguments);
-            Collection<Member> members = 
-                instantiationNamespace.getImpl().resolve(name);
-            for (Member member: members) {
-                if (member.getImpl().getNamespaceReference().getImpl().
-                        equals(namespaceReference)) {
-                    return member.getImpl().getReferent();
-                }
-            }
-            
-            Member boundElement = templateReferent.getImpl().asNamespace().getImpl().
-                    bind(name, instantiationNamespace, true,
-                        templateParameters, templateArguments);
-            if (boundElement == null) {
-                return null;
-            } else {
-                boundElement.deriveAll();
-                return boundElement.getImpl().getReferent();
-            }
-        }
-    }
-    
     @Override
     public SyntaxElement bind(
             List<ElementReference> templateParameters,

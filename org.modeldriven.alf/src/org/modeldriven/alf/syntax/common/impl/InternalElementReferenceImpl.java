@@ -497,18 +497,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public ElementReference getTemplate() {
         SyntaxElement element = this.getSelf().getElement();
-        if (!(element instanceof BoundClassifier)) {
-            return null;
-        } else {
-            return ((BoundClassifier)element).getTemplate();
-//            SyntaxElement base = ((Member)element).getImpl().getBase();
-//            if (!(base instanceof Member)) {
-//                return null;
-//            } else {
-//                ElementReference referent = ((Member)base).getImpl().getReferent();
-//                return referent.getImpl().isTemplate()? referent: null;
-//            }
-        }
+        return !(element instanceof BoundClassifier)? null:
+            ((BoundClassifier)element).getTemplate();
     }
     
     @Override
@@ -516,6 +506,12 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         return this.isClassifierTemplateParameter()? 
                 this.parents():
                 new ArrayList<ElementReference>();
+    }
+    
+    @Override
+    public ElementReference getTemplateBinding() {
+        InternalElementReference self = this.getSelf();
+        return self.getElement() instanceof BoundClassifier? self: null;
     }
 
     @Override
@@ -668,6 +664,27 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         return !(element instanceof Member)? null:
             ((Member)element).getImpl().getUMLMetaclass();
      }
+    
+    @Override
+    public ElementReference getEffectiveBoundElement() {
+        return !this.isTemplateBinding()? null: 
+            ((BoundClassifier)this.getSelf().getElement()).getEffectiveBoundElement();
+    }
+    
+    @Override
+    public ElementReference getEffectiveBoundElement(BoundElementReference boundElement) {
+        ElementReference referent = boundElement.getReferent();
+        for (ElementReference member: this.getOwnedMembers()) {
+            Member alfMember = (Member)member.getImpl().getAlf();
+            if (alfMember != null) {
+                Member base = (Member)alfMember.getImpl().getBase();
+                if (base != null && referent.getImpl().equals(base.getImpl().getReferent())) {
+                    return member;
+                }
+            }
+        }
+        return null;
+    }
 
     @Override
     public boolean equals(Object object) {

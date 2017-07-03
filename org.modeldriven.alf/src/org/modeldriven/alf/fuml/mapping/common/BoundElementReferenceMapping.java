@@ -24,15 +24,33 @@ public class BoundElementReferenceMapping extends ElementReferenceMapping {
 
     public FumlMapping getMapping() {
         if (this.mapping == null) {
-            ElementReference referent = this.getBoundElementReference().getReferent();
-            if (referent != null) {
+            BoundElementReference boundReference = this.getBoundElementReference();
+            ElementReference boundElement = getEffectiveBoundElement(boundReference);
+            if (boundElement != null) {
                 this.mapping = 
-                        ((ElementReferenceMapping)this.fumlMap(referent)).getMapping();
+                        ((ElementReferenceMapping)this.fumlMap(boundElement)).getMapping();
             }
         }
         return this.mapping;
     }
 
+    private static ElementReference getEffectiveBoundElement(ElementReference reference) {
+        if (!(reference instanceof BoundElementReference)) {
+            return reference;
+        } else {
+            BoundElementReference boundReference = (BoundElementReference)reference;
+            if (boundReference.getImpl().isTemplateBinding()) {
+                return boundReference.getImpl().getEffectiveBoundElement();
+            } else {
+                ElementReference namespace = getEffectiveBoundElement(boundReference.getNamespace());
+                if (namespace == null) {
+                    return null;
+                } else {
+                    return namespace.getImpl().getEffectiveBoundElement(boundReference);
+                }
+            }
+        }
+    }
     @Override
     public Element getElement() {
         return this.getMapping().getElement();

@@ -18,7 +18,6 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.common.impl.ExternalElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
-import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -450,7 +449,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            List<ElementReference> templateArguments) {
        ElementReference newReference = null;
        org.modeldriven.alf.uml.TemplateBinding templateBinding = 
-               ExternalElementReferenceImpl.getTemplateBinding(reference);
+               ExternalElementReferenceImpl.getUMLTemplateBinding(reference);
        if (templateBinding == null) {
            Element owner = reference.getOwner();
            Namespace namespace = owner instanceof TemplateParameter?
@@ -501,10 +500,10 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            ElementReference templateReference = 
                    getNewReference(instantiation, template, templateParameters, templateArguments);
            if (templateReference == null) {
-               newReference = QualifiedNameImpl.getBoundElement(
+               newReference = BoundClassifierImpl.getEffectiveBoundElement(
                        ElementReferenceImpl.makeElementReference(template), formals, actuals);
            } else {
-               newReference = QualifiedNameImpl.getBoundElement(
+               newReference = BoundClassifierImpl.getEffectiveBoundElement(
                        templateReference, formals, actuals);
            }
        }

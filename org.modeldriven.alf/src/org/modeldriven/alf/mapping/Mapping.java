@@ -52,6 +52,11 @@ public abstract class Mapping {
         throw new MappingError(this, errorMessage);
     }
     
+    public void throwError(String errorMessage, Mapping mapping) throws MappingError {
+        this.throwError(errorMessage + ": " + 
+                (mapping == null? "null": mapping.getErrorMessage()));
+    }
+    
     public String toString() {
         return this.getClass().getSimpleName();
     }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2015-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2015-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -23,12 +23,12 @@ import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
+import org.modeldriven.alf.syntax.units.impl.BoundClassifierImpl;
 import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
 import org.modeldriven.alf.uml.Classifier;
 
@@ -76,7 +76,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
    protected abstract ElementFactory createElementFactory();
 
     public UnitDefinition parse(String unitName, boolean isFileName) {
-        ElementReferenceImpl.clearTemplateBindings();
+        BoundClassifierImpl.clearBoundClassifiers();
         StereotypeApplication.clearStereotypeApplications();
         
         UnitDefinition unit = null;
@@ -100,6 +100,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         if (definition.getImpl().isTemplate()) { 
             this.println(definition.getName() + " is a template.");
         } else {
+            BoundClassifierImpl.makeBoundElements();
             mapping = FumlMapping.getMapping(definition);
             try {
                 mapping.getModelElements();

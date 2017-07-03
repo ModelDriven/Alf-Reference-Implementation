@@ -280,8 +280,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                         ((PropertyDefinitionMapping) mapping).getProperty();
                     
                 } else {
-                    this.throwError("Unknown referent mapping: " + 
-                            mapping.getErrorMessage());
+                    this.throwError("Unknown referent mapping", mapping);
                 }
             }
             if (element instanceof Operation) {

@@ -50,8 +50,7 @@ public class BehaviorInvocationExpressionMapping extends
                         mapping = this.exprMap(
                                 tuple.getImpl().getInput(parameters.get(1).getImpl().getName()));
                         if (!(mapping instanceof ExpressionMapping)) {
-                            this.throwError("Error mapping parallel add expression: " + 
-                                    mapping.getErrorMessage());
+                            this.throwError("Error mapping parallel add expression", mapping);
                         } else {
                             ExpressionMapping expressionMapping = 
                                     (ExpressionMapping)mapping;

@@ -17,6 +17,7 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.impl.BoundClassifierImpl;
 import org.modeldriven.alf.syntax.units.impl.BoundNamespaceImpl;
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
 import org.modeldriven.alf.uml.Element;
@@ -60,8 +61,8 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
     public ElementReference getNamespace() {
         if (this.namespace == null) {
             this.namespace = this.getSelf().getReferent().getImpl().getNamespace();
-            if (this.getTemplate() == null) {
-                this.namespace = this.makeBoundReference(this.namespace);
+            if (!this.isTemplateBinding()) {
+                this.namespace = makeBoundReference(this.namespace, null, this.getTemplateBinding());
             }
         }
         return this.namespace;
@@ -474,6 +475,12 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
     public Class<?> getUMLMetaclass() {
         return this.getSelf().getReferent().getImpl().getUMLMetaclass();
      }
+    
+    @Override
+    public ElementReference getEffectiveBoundElement(BoundElementReference boundElement) {
+        return null;
+    }
+
 
     @Override
     public boolean equals(Object object) {
@@ -503,6 +510,16 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
         }
     }
     
+    public ElementReference getEffectiveBoundElement() {
+        BoundElementReference self = this.getSelf();
+        if (self.getImpl().isTemplateBinding()) {
+            return self.getTemplateBinding().getImpl().getEffectiveBoundElement();
+        } else {
+            ElementReference namespace = self.getNamespace().getImpl().getEffectiveBoundElement();
+            return namespace == null? null: namespace.getImpl().getEffectiveBoundElement(self);
+        }
+    }
+    
     private ElementReference makeBoundReference(ElementReference element) {
         BoundElementReference self = this.getSelf();
         ElementReference reference = element;
@@ -513,7 +530,8 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
                         this.makeBoundReferences(element.getImpl().getTemplateActuals());
                 reference = element.getImpl().getTemplate().getImpl().bind(actuals);
             } else if (element.getImpl().isParameteredElement()) {
-                List<ElementReference> parameters = templateBinding.getImpl().getParameteredElements();
+                List<ElementReference> parameters = 
+                        templateBinding.getImpl().getTemplate().getImpl().getParameteredElements();
                 for (int i = 0; i < parameters.size(); i++) {
                     if (parameters.get(i).getImpl().equals(element)) {
                         reference = templateBinding.getImpl().getTemplateActuals().get(i);
@@ -530,8 +548,12 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
                         reference = makeBoundReference(element, null, templateBinding);
                     }
                 } else if (!elementTemplateBinding.getImpl().equals(templateBinding)) {
+                    List<ElementReference> actuals = 
+                            this.makeBoundReferences(elementTemplateBinding.getImpl().getTemplateActuals());
+                    ElementReference template = elementTemplateBinding.getImpl().getTemplate();
                     reference = makeBoundReference(element.getImpl().getReferent(), null, 
-                            this.makeBoundReference(elementTemplateBinding).getImpl().getTemplateBinding());
+                            BoundClassifierImpl.makeBoundClassifier(template, actuals).
+                                getImpl().getReferent());
                 }
             }
         }

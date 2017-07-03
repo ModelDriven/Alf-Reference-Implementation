@@ -81,8 +81,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 returnParameterMapping = ((ElementReferenceMapping)returnParameterMapping).getMapping();
             }
             if (!(returnParameterMapping instanceof FormalParameterMapping)) {
-                this.throwError("Error mapping return parameter: " + 
-                        returnParameterMapping.getErrorMessage());
+                this.throwError("Error mapping return parameter", returnParameterMapping);
             } else  {
                 operation.addOwnedParameter(((FormalParameterMapping)
                         returnParameterMapping).getParameter());
@@ -92,8 +91,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
         NamespaceDefinition namespace = definition.getNamespace();
         FumlMapping mapping = this.fumlMap(namespace);
         if (!(mapping instanceof ClassDefinitionMapping)) {
-            this.throwError("Error mapping class for operation: " + 
-                    mapping.getErrorMessage());
+            this.throwError("Error mapping class for operation", mapping);
         } else {
             // NOTE: The following ensures that the class property is set for an
             // operation, even if it has not been added as a member to its class
@@ -137,8 +135,8 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 }
                 if (!(mapping instanceof OperationDefinitionMapping)) {
                     this.throwError("Error mapping redefined operation " + 
-                            redefinedOperationReference.getImpl().getQualifiedName() + ": " +
-                            mapping.getErrorMessage());
+                            redefinedOperationReference.getImpl().getQualifiedName().getImpl().getPathName(),
+                            mapping);
                 } else {
                     redefinedOperation =
                             ((OperationDefinitionMapping)mapping).getOperation();
@@ -208,8 +206,7 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                     // Add call to local initialization operation.
                     FumlMapping mapping = this.fumlMap(definition.getNamespace());
                     if (!(mapping instanceof ClassDefinitionMapping)) {
-                        this.throwError("Error mapping class: " + 
-                                mapping.getErrorMessage());
+                        this.throwError("Error mapping class", mapping);
                     } else {
                         ClassDefinitionMapping classMapping = 
                                 (ClassDefinitionMapping)mapping;

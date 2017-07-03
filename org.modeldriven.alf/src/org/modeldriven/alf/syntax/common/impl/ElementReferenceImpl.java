@@ -52,7 +52,7 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     
     private static Map<ParameterableElement, ElementReference> templateBindings = 
             new HashMap<ParameterableElement, ElementReference>();
-
+    
 	protected ElementReference self;
 
 	public ElementReferenceImpl(ElementReference self) {
@@ -152,9 +152,7 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     public abstract ElementReference getParameteredElement();
     public abstract ElementReference getTemplate();
     public abstract Collection<ElementReference> getConstrainingClassifiers();
-    public ElementReference getTemplateBinding() {
-        return null;
-    }
+    public abstract ElementReference getTemplateBinding();
     
     public abstract ElementReference getType();
     public abstract ElementReference getAssociation();
@@ -386,8 +384,14 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     }
     
     public ElementReference bind(List<ElementReference> actuals) {
-         return BoundClassifierImpl.makeBoundClassifier(
-                 this.getSelf(), actuals).getImpl().getReferent();
+        ElementReference reference = 
+                BoundClassifierImpl.getExistingBoundElement(this.getSelf(), actuals);
+        if (reference == null) {
+            reference = (BoundElementReference)
+                    BoundClassifierImpl.makeBoundClassifier(
+                            this.getSelf(), actuals).getImpl().getReferent();
+        }
+        return reference;
     }
     
     public static void clearTemplateBindings() {        
@@ -482,16 +486,22 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         ElementReference reference = makeElementReference(element, namespace);
         if (element instanceof TemplateableElement && 
                 !((TemplateableElement)element).getTemplateBinding().isEmpty()) {
-            ElementReference templateReferent = 
-                    reference.getImpl().getTemplate();
+            ElementReference templateReferent = reference.getImpl().getTemplate();
             reference = templateReferent.getImpl().bind(reference.getImpl().getTemplateActuals());
-            // TODO: Clean up.
-//            reference = QualifiedNameImpl.getBoundElement(
-//                    templateReferent, 
-//                    templateReferent.getImpl().getTemplateParameters(), 
-//                    reference.getImpl().getTemplateActuals());
         }
         return reference;
     }
+    
+    /**
+     * Get the expanded effective bound element corresponding to this element, if it
+     * is a bound element.
+     */
+    public abstract ElementReference getEffectiveBoundElement();
+    
+    /**
+     * Get the owned member of an effectively bound namespace that corresponds to the
+     * given bound element reference.
+     */
+    public abstract ElementReference getEffectiveBoundElement(BoundElementReference Element);
 
 } // ElementReferenceImpl

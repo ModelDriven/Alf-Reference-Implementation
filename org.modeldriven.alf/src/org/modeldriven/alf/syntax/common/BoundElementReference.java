@@ -61,7 +61,7 @@ public class BoundElementReference extends ElementReference {
     public void setTemplateBinding(ElementReference templateBinding) {
         this.getImpl().setTemplateBinding(templateBinding);
     }
-
+    
     public void _deriveAll() {
         super._deriveAll();
     }

@@ -632,14 +632,15 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     public ElementReference getTemplateBinding() {
-        return ElementReferenceImpl.makeElementReference(this.getUMLTemplateBinding());
+        return this.isTemplateBinding()? this.getSelf(): null;
+//        return ElementReferenceImpl.makeElementReference(this.getUMLTemplateBinding());
     }
     
     public TemplateBinding getUMLTemplateBinding() {
-        return getTemplateBinding(this.getSelf().getElement());
+        return getUMLTemplateBinding(this.getSelf().getElement());
     }
     
-    public static TemplateBinding getTemplateBinding(Element element) {
+    public static TemplateBinding getUMLTemplateBinding(Element element) {
         TemplateBinding templateBinding = null;
         if (element instanceof TemplateableElement) {
             List<TemplateBinding> templateBindings = 
@@ -844,7 +845,34 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public Class<?> getUMLMetaclass() {
         return ElementFactory.interfaceForName(
                 this.getSelf().getElement().getClass().getSimpleName());
-     }
+    }
+    
+    @Override
+    public ElementReference getEffectiveBoundElement() {
+        // TODO: Fix this.
+//        if (this.isTemplateBinding()) {
+//            NamedElement element = (NamedElement)this.getSelf().getElement();
+//            for (Dependency dependency: 
+//                element.getSupplierDependency()) {
+//                if (dependency instanceof Realization) {
+//                    return ElementReferenceImpl.makeElementReference(dependency.getClient());
+//                }
+//            }
+//        }
+        return null;
+    }
+
+    @Override
+    public ElementReference getEffectiveBoundElement(BoundElementReference boundElement) {
+        // TODO: Fix this.
+        ElementReference referent = boundElement.getReferent();
+        for (ElementReference member: this.getOwnedMembers()) {
+            if (referent.getImpl().getName().equals(member.getImpl().getName())) {
+                return member;
+            }
+        }
+        return null;
+    }
 
     @Override
     public boolean equals(Object object) {

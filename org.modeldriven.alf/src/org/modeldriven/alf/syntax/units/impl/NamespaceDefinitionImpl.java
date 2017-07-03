@@ -636,9 +636,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
                         templateParameters, templateArguments);
             }
             
-            for (Member ownedMember: self.getOwnedMember()) {
-                ownedMember.getImpl().fixUpAfterBinding();
-            }
+//            for (Member ownedMember: self.getOwnedMember()) {
+//                ownedMember.getImpl().fixUpAfterBinding();
+//            }
         }
     }
     
