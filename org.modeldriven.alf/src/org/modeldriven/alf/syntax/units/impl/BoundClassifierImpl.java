@@ -166,7 +166,7 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     @Override
     public boolean isCompletelyBound() {
         for (ElementReference actual: this.getSelf().getActual()) {
-            if (!actual.getImpl().isCompletelyBound()) {
+            if (actual != null && !actual.getImpl().isCompletelyBound()) {
                 return false;
             }
         }

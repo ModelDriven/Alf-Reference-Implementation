@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -102,9 +101,7 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
                 argumentName.getImpl().setCurrentScope(currentScope);
                 ElementReference argumentReferent =
                     argumentName.getImpl().getClassifierReferent();
-                if (argumentReferent != null) {
-                    argumentReferents.add(argumentReferent);
-                }
+                argumentReferents.add(argumentReferent);
             }
         }
         return argumentReferents;

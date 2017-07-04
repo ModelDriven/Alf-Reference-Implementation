@@ -17,7 +17,6 @@ import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
-import org.modeldriven.alf.syntax.units.impl.BoundClassifierImpl;
 import org.modeldriven.alf.syntax.units.impl.BoundNamespaceImpl;
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
 import org.modeldriven.alf.uml.Element;
@@ -550,10 +549,8 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
                 } else if (!elementTemplateBinding.getImpl().equals(templateBinding)) {
                     List<ElementReference> actuals = 
                             this.makeBoundReferences(elementTemplateBinding.getImpl().getTemplateActuals());
-                    ElementReference template = elementTemplateBinding.getImpl().getTemplate();
                     reference = makeBoundReference(element.getImpl().getReferent(), null, 
-                            BoundClassifierImpl.makeBoundClassifier(template, actuals).
-                                getImpl().getReferent());
+                            elementTemplateBinding.getImpl().getTemplate().getImpl().bind(actuals));
                 }
             }
         }

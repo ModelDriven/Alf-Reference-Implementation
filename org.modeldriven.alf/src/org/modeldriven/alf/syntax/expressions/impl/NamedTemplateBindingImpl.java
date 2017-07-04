@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -105,9 +104,7 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
                         argumentName.getImpl().setCurrentScope(currentScope);
                         ElementReference argumentReferent = 
                             argumentName.getImpl().getClassifierReferent();
-                        if (argumentReferent != null) {
-                            argumentReferents.add(argumentReferent);
-                        }
+                        argumentReferents.add(argumentReferent);
                     }
                     break;
                 }

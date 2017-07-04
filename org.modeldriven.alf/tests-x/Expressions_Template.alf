@@ -16,6 +16,10 @@ class Expressions_Template specializes Test {
       return x.i;
     }
     
+	public activity R<T> (in list: List<T>): Boolean {
+	  return true;
+	}
+
     public class B {
       public i: Integer;
       @Create public B(in i: Integer) { this.i = i; }
@@ -56,13 +60,19 @@ class Expressions_Template specializes Test {
       
       public test(
         out i: Integer, out j: Integer, out h: H<B>,
+        out r: Boolean[0..1],
         out s: Set<Integer>, out list: List<Integer>) {
         
         b = new B(1);
         
         i = A<B>(b);
         j = C<B>.E(b).i;
-        h = new H<B>(b, this);      
+        h = new H<B>(b, this);
+        
+        // Tests that parameter is still typed by a bound reference,
+        // not the effective bound element, and R actually executes.
+	    let l: List<Integer> = new List<Integer>();
+	    r = R<Integer>(l);
   
         s = new Set<Integer>(null);
         s.add(1);
@@ -72,12 +82,14 @@ class Expressions_Template specializes Test {
       
     } do {
       accept (Start);
-      this.test(i, j, h, s, list);
+      this.test(i, j, h, r, s, list);
       accept (Continue);
       
       AssertEqual("i", i, 1);
       AssertEqual("j", j, 1);
       AssertEqual("h.b.i", h.b.i, 1);
+      
+      AssertTrue("r", r);
       
       AssertList("s", s.toSequence(), 1);
       AssertList("list", list.toSequence(), Integer[]{1,2,3});

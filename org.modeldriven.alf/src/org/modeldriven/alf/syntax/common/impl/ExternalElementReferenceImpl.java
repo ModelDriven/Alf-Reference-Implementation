@@ -108,7 +108,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public boolean isNamespace() {
-        return this.getSelf().getElement() instanceof Namespace;
+        Element element = this.getSelf().getElement();
+        return element instanceof Namespace || 
+               element instanceof Operation;
     }
 
     @Override
@@ -415,7 +417,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public List<ElementReference> getOwnedMembers() {
         List<ElementReference> features = new ArrayList<ElementReference>();
-        if (this.isNamespace()) {
+        if (this.isOperation()) {
+            for (NamedElement member: ((Operation)this.getSelf().getElement()).getOwnedParameter()) {
+                features.add(ElementReferenceImpl.makeElementReference(member, null));
+           }
+        } else if (this.isNamespace()) {
             for (NamedElement member: ((Namespace)this.getSelf().getElement()).getOwnedMember()) {
                  features.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
             }
@@ -426,7 +432,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public List<ElementReference> getMembers() {
         List<ElementReference> features = new ArrayList<ElementReference>();
-        if (this.isNamespace()) {
+        if (this.isOperation()) {
+            features = this.getOwnedMembers();
+        } else if (this.isNamespace()) {
             for (NamedElement member: ((Namespace)this.getSelf().getElement()).getMember()) {
                features.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
             }
@@ -768,7 +776,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (!(element instanceof NamedElement)) {
             return null;
         } else if (this.namespace != null) {
-            return this.namespace.getImpl().getReferent();            
+            return this.namespace.getImpl().getReferent();
+        } else if (element instanceof Parameter && 
+                ((Parameter) element).getOperation() != null) {            
+            return ElementReferenceImpl.makeElementReference(
+                    ((Parameter)element).getOperation());
         } else {
             return ElementReferenceImpl.makeElementReference(
                     ((NamedElement)element).getNamespace());

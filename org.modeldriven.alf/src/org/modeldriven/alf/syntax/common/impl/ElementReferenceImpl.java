@@ -384,14 +384,8 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     }
     
     public ElementReference bind(List<ElementReference> actuals) {
-        ElementReference reference = 
-                BoundClassifierImpl.getExistingBoundElement(this.getSelf(), actuals);
-        if (reference == null) {
-            reference = (BoundElementReference)
-                    BoundClassifierImpl.makeBoundClassifier(
-                            this.getSelf(), actuals).getImpl().getReferent();
-        }
-        return reference;
+        return BoundClassifierImpl.makeBoundClassifier(
+                this.getSelf(), actuals).getImpl().getReferent();
     }
     
     public static void clearTemplateBindings() {        
