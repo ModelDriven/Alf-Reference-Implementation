@@ -302,9 +302,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public boolean isTemplateBinding() {
-        Element element = this.getSelf().getElement();
-        return element instanceof TemplateableElement && 
-                !((TemplateableElement)element).getTemplateBinding().isEmpty();
+        return this.getUMLTemplateBinding() != null;
     }
     
     @Override
@@ -640,39 +638,39 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     public ElementReference getTemplateBinding() {
-        return this.isTemplateBinding()? this.getSelf(): null;
-//        return ElementReferenceImpl.makeElementReference(this.getUMLTemplateBinding());
+        return ElementReferenceImpl.makeElementReference(
+                getUMLBoundElement(this.getSelf().getElement()));
     }
+    
     
     public TemplateBinding getUMLTemplateBinding() {
         return getUMLTemplateBinding(this.getSelf().getElement());
     }
     
     public static TemplateBinding getUMLTemplateBinding(Element element) {
-        TemplateBinding templateBinding = null;
-        if (element instanceof TemplateableElement) {
-            List<TemplateBinding> templateBindings = 
-                    ((TemplateableElement)element).getTemplateBinding();
-            if (!templateBindings.isEmpty()) {
-                templateBinding = templateBindings.get(0);
-            } else if (element instanceof NamedElement) {
-                for (Dependency dependency: 
-                    ((NamedElement)element).getClientDependency()) {
-                    if (dependency instanceof Realization) {
-                        NamedElement supplier = dependency.getSupplier();
-                        if (supplier instanceof TemplateableElement) {
-                            templateBindings = ((TemplateableElement)supplier).
-                                    getTemplateBinding();
-                            if (!templateBindings.isEmpty()) {
-                                templateBinding = templateBindings.get(0);
-                                break;
-                            }
-                        }
+        TemplateableElement boundElement = getUMLBoundElement(element);
+        return boundElement == null? null: boundElement.getTemplateBinding().get(0);
+    }
+    
+    public static TemplateableElement getUMLBoundElement(Element element) {
+        if (element instanceof TemplateableElement && 
+                !((TemplateableElement)element).getTemplateBinding().isEmpty()) {
+            return (TemplateableElement)element;
+        } else if (element instanceof NamedElement) {
+            for (Dependency dependency: 
+                ((NamedElement)element).getClientDependency()) {
+                if (dependency instanceof Realization) {
+                    NamedElement supplier = dependency.getSupplier();
+                    if (supplier instanceof TemplateableElement&& 
+                            !((TemplateableElement)supplier).getTemplateBinding().isEmpty()) {
+                        return (TemplateableElement)supplier;
                     }
                 }
             }
+            return null;
+        } else {
+            return null;
         }
-        return templateBinding;       
     }
     
     @Override
@@ -876,10 +874,14 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public ElementReference getEffectiveBoundElement(BoundElementReference boundElement) {
-        // TODO: Fix this.
-        ElementReference referent = boundElement.getReferent();
-        for (ElementReference member: this.getOwnedMembers()) {
-            if (referent.getImpl().getName().equals(member.getImpl().getName())) {
+        // All members must be searched, no just owned members, because, if the
+        // namespace of an external element reference is an external namespace,
+        // the element may be a member not an owned member.
+        for (ElementReference member: this.getMembers()) {
+            if (boundElement.getImpl().getName().equals(member.getImpl().getName()) 
+//                  TODO: Make this work.
+//            		&& boundElement.getImpl().isSameKindAs(member) 
+            ) {
                 return member;
             }
         }

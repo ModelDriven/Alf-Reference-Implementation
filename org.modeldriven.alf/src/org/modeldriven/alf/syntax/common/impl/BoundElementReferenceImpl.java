@@ -60,7 +60,10 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
     public ElementReference getNamespace() {
         if (this.namespace == null) {
             this.namespace = this.getSelf().getReferent().getImpl().getNamespace();
-            if (!this.isTemplateBinding()) {
+            if (this.namespace != null && !this.isTemplateBinding()) {
+                if (this.namespace.getImpl().isTemplateBinding()) {
+                    this.namespace = this.namespace.getImpl().getTemplate();
+                }
                 this.namespace = makeBoundReference(this.namespace, null, this.getTemplateBinding());
             }
         }
@@ -82,12 +85,16 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public SyntaxElement getAlf() {
-        return ImportedMemberImpl.makeImportedMember(this.getReferent(), this.isImported());
+        ElementReference boundElement = this.getEffectiveBoundElement();
+        return boundElement == null? 
+                ImportedMemberImpl.makeImportedMember(this.getSelf(), this.isImported()):
+                boundElement.getImpl().getAlf();
     }
 
     @Override
     public Element getUml() {
-        return null;
+        ElementReference boundElement = this.getEffectiveBoundElement();
+        return boundElement == null? null: boundElement.getImpl().getUml();
     }
     
     @Override
@@ -409,12 +416,14 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
     public ElementReference getType() {
         ElementReference type = this.getSelf().getReferent().getImpl().getType();
         ElementReference templateBinding = this.getSelf().getTemplateBinding();
-        if (this.isConstructor() && 
+        if ((this.isConstructor() || 
+             this.isParameter() && "return".equals(this.getDirection()) && 
+                this.getNamespace().getImpl().isConstructor()) && 
                 templateBinding.getImpl().getTemplate().getImpl().equals(type)) {
             // This handles the special case of a constructor of a template class
             // that has that class directly as its return type, rather than a
             // template binding for it.
-            type.getImpl().bind(templateBinding.getImpl().getTemplateActuals());
+            type = type.getImpl().bind(templateBinding.getImpl().getTemplateActuals());
         } else {
             type = this.makeBoundReference(type);
         }
@@ -514,7 +523,10 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
         if (self.getImpl().isTemplateBinding()) {
             return self.getTemplateBinding().getImpl().getEffectiveBoundElement();
         } else {
-            ElementReference namespace = self.getNamespace().getImpl().getEffectiveBoundElement();
+            ElementReference namespace = self.getNamespace();
+            if (namespace != null) {
+                namespace = namespace.getImpl().getEffectiveBoundElement();
+            }
             return namespace == null? null: namespace.getImpl().getEffectiveBoundElement(self);
         }
     }

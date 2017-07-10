@@ -29,9 +29,9 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     
     private ElementReference template = null;
     private List<ElementReference> actual = new ArrayList<ElementReference>();
+    private ElementReference effectiveBoundElement = null;
     
     private ElementReference referent = null; // DERIVED
-    private ElementReference effectiveBoundElement = null; // DERIVED
 
     public BoundClassifierImpl(BoundClassifier self) {
         super(self);
@@ -62,6 +62,14 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
         this.actual.add(actual);
     }
     
+    public ElementReference getEffectiveBoundElement() {
+        return this.effectiveBoundElement;
+    }
+    
+    public void setEffectiveBoundElement(ElementReference effectiveBoundElement) {
+        this.effectiveBoundElement = effectiveBoundElement;
+    }
+    
     @Override
     public ElementReference getReferent() {
         if (this.referent == null) {
@@ -74,30 +82,10 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
         this.referent = referent;
     }
     
-    public ElementReference getEffectiveBoundElement() {
-        if (this.effectiveBoundElement == null) {
-            this.setEffectiveBoundElement(this.deriveEffectiveBoundElement());
-        }
-        return this.effectiveBoundElement;
-    }
-    
-    public void setEffectiveBoundElement(ElementReference effectiveBoundElement) {
-        this.effectiveBoundElement = effectiveBoundElement;
-    }
-    
     protected ElementReference deriveReferent() {
         ElementReference template = this.getSelf().getTemplate();        
         return BoundElementReferenceImpl.makeBoundReference(
                 template, template.getImpl().getNamespace(), super.getReferent());
-    }
-    
-    public ElementReference deriveEffectiveBoundElement() {
-        BoundClassifier self = this.getSelf();
-        ElementReference template = self.getTemplate();
-        return getEffectiveBoundElement(
-                template, 
-                template.getImpl().getTemplateParameters(), 
-                self.getActual());
     }
     
     @Override
@@ -227,7 +215,8 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
             NamespaceDefinition instantiationNamespace = 
                     namespaceReference.getImpl().asNamespace();
             
-            ElementReference reference = getExistingBoundElement(templateReferent, templateArguments, namespaceReference);
+            ElementReference reference = getExistingBoundElement(
+                    templateReferent, templateArguments, namespaceReference);
             
             if (reference != null) {
                 return reference;
@@ -269,7 +258,12 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     public static void makeBoundElements() {
         ElementReferenceImpl.clearTemplateBindings();
         for (int i = 0; i < boundClassifiers.size(); i++) {
-            boundClassifiers.get(i).getEffectiveBoundElement();
+            BoundClassifier boundClassifier = boundClassifiers.get(i);
+            ElementReference template = boundClassifier.getTemplate();
+            boundClassifier.setEffectiveBoundElement(getEffectiveBoundElement(
+                    template, 
+                    template.getImpl().getTemplateParameters(), 
+                    boundClassifier.getActual()));
         }
     }
     
