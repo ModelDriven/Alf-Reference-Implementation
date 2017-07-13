@@ -444,11 +444,6 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     }
     
     public static ElementReference makeElementReference(Element element) {
-        return makeElementReference(element, null);
-    }
-    
-    public static ElementReference makeElementReference(
-            Element element, NamespaceDefinition namespace) {
         ElementReference reference = null;
         
         if (element != null) {
@@ -458,7 +453,6 @@ public abstract class ElementReferenceImpl implements AssignableElement {
                 ExternalElementReference externalReference = 
                         new ExternalElementReference();
                 externalReference.setElement(element);
-                externalReference.getImpl().setNamespace(namespace);
                 reference = externalReference;
             } else if (reference == any) {
                 reference = null;
@@ -468,16 +462,11 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         return reference;
     }
     
-    public static ElementReference makeBoundReference(Element element) {
-        return makeBoundReference(element, null);
-    }
-
     /**
      * For an element with template bindings, return a bound element reference.
      */
-    public static ElementReference makeBoundReference(
-            Element element, NamespaceDefinition namespace) {
-        ElementReference reference = makeElementReference(element, namespace);
+    public static ElementReference makeBoundReference(Element element) {
+        ElementReference reference = makeElementReference(element);
         if (element instanceof TemplateableElement && 
                 !((TemplateableElement)element).getTemplateBinding().isEmpty()) {
             ElementReference templateReferent = reference.getImpl().getTemplate();
@@ -497,5 +486,14 @@ public abstract class ElementReferenceImpl implements AssignableElement {
      * given bound element reference.
      */
     public abstract ElementReference getEffectiveBoundElement(BoundElementReference Element);
+    
+    public static ElementReference effectiveElementFor(ElementReference reference) {
+        if (reference == null) {
+            return null;
+        } else {
+            ElementReference boundElement = reference.getImpl().getEffectiveBoundElement();
+            return boundElement == null? reference: boundElement;
+        }
+    }
 
-} // ElementReferenceImpl
+}

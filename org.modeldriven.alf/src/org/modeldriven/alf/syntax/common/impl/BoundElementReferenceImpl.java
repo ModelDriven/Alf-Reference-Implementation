@@ -62,9 +62,10 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
             this.namespace = this.getSelf().getReferent().getImpl().getNamespace();
             if (this.namespace != null && !this.isTemplateBinding()) {
                 if (this.namespace.getImpl().isTemplateBinding()) {
-                    this.namespace = this.namespace.getImpl().getTemplate();
+                    this.namespace = this.makeBoundReference(this.namespace);
+                } else {
+                    this.namespace = makeBoundReference(this.namespace, null, this.getTemplateBinding());
                 }
-                this.namespace = makeBoundReference(this.namespace, null, this.getTemplateBinding());
             }
         }
         return this.namespace;

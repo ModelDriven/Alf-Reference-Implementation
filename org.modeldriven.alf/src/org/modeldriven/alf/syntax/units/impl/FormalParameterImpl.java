@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -133,7 +132,7 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
             return false;
         } else {
             for (int i=0; i<formalParameters1.size(); i++) {
-                if (!FormalParameterImpl.match(formalParameters1.get(i), formalParameters2.get(i))) {
+                if (!match(formalParameters1.get(i), formalParameters2.get(i))) {
                     return false;
                 }
             }
@@ -171,10 +170,12 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
             return false;
         } else {
             String name1 = parameter1.getImpl().getName();
-            ElementReference type1 = parameter1.getImpl().getType();
+            ElementReference type1 = 
+                    ElementReferenceImpl.effectiveElementFor(parameter1.getImpl().getType());
             
             String name2 = parameter2.getImpl().getName();
-            ElementReference type2 = parameter2.getImpl().getType();
+            ElementReference type2 = 
+                    ElementReferenceImpl.effectiveElementFor(parameter2.getImpl().getType());
             
             return (name1 == null && name2 == null ||
                         name1 != null && name1.equals(name2)) &&
@@ -182,7 +183,7 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
                         type1 != null && type1.getImpl().equals(type2));
         }
     }
-
+    
     @Override
     protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 

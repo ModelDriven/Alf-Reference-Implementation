@@ -243,6 +243,7 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
                 RootNamespace.getRootScope().makeBoundElementName(template, actuals));
         classifier.setTemplate(template);
         classifier.setActual(actuals);
+        classifier.setEffectiveBoundElement(getExistingBoundElement(template, actuals));
         addBoundClassifier(classifier);
         return classifier;
     }

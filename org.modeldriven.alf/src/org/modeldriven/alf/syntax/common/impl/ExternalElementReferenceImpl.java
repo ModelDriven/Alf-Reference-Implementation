@@ -68,7 +68,6 @@ import org.modeldriven.alf.uml.TypedElement;
 public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     private Element element = null;
-    private NamespaceDefinition namespace = null;
 
 	public ExternalElementReferenceImpl(ExternalElementReference self) {
 		super(self);
@@ -92,10 +91,6 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         this.element = element;
     }
     
-    public void setNamespace(NamespaceDefinition namespace) {
-        this.namespace = namespace;
-    }
-
     @Override
     public SyntaxElement getAlf() {
         return null;
@@ -339,7 +334,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         }
         return !(element instanceof Namespace)? null: 
             ExternalNamespace.makeExternalNamespace(
-                    (Namespace)element, this.namespace);
+                    (Namespace)element, null);
     }
     
     @Override
@@ -417,11 +412,11 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         List<ElementReference> features = new ArrayList<ElementReference>();
         if (this.isOperation()) {
             for (NamedElement member: ((Operation)this.getSelf().getElement()).getOwnedParameter()) {
-                features.add(ElementReferenceImpl.makeElementReference(member, null));
+                features.add(ElementReferenceImpl.makeElementReference(member));
            }
         } else if (this.isNamespace()) {
             for (NamedElement member: ((Namespace)this.getSelf().getElement()).getOwnedMember()) {
-                 features.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
+                 features.add(ElementReferenceImpl.makeElementReference(member));
             }
         }
         return features;
@@ -434,7 +429,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             features = this.getOwnedMembers();
         } else if (this.isNamespace()) {
             for (NamedElement member: ((Namespace)this.getSelf().getElement()).getMember()) {
-               features.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
+               features.add(ElementReferenceImpl.makeElementReference(member));
             }
         }
         return features;
@@ -461,7 +456,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (this.isClassifier()) {
             for (NamedElement member: ((Classifier)this.getSelf().getElement()).getMember()) {
                 if (member instanceof Property && !((Property) member).isStereotypeBaseProperty()) {
-                    attributes.add(ElementReferenceImpl.makeElementReference(member, this.asNamespace()));
+                    attributes.add(ElementReferenceImpl.makeElementReference(member));
                 }
             }
         }
@@ -473,7 +468,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         List<ElementReference> attributes = new ArrayList<ElementReference>();
         if (this.isAssociation()) {
             for (Property attribute: ((Association)this.getSelf().getElement()).getMemberEnd()) {
-                attributes.add(ElementReferenceImpl.makeElementReference(attribute, this.asNamespace()));
+                attributes.add(ElementReferenceImpl.makeElementReference(attribute));
             }
         }
         return attributes;
@@ -537,8 +532,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         List<ElementReference> methods = new ArrayList<ElementReference>();
         if (this.isOperation()) {
             for (Behavior method: ((Operation)this.getSelf().getElement()).getMethod()) {
-                methods.add(ElementReferenceImpl.makeElementReference(
-                        method, this.namespace));
+                methods.add(ElementReferenceImpl.makeElementReference(method));
             }
         }
         return methods;
@@ -550,8 +544,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             return this.getSelf();
         } else if (this.isBehavior()) {
             return ElementReferenceImpl.makeElementReference(
-                    ((Behavior)this.getSelf().getElement()).getSpecification(), 
-                    this.namespace);
+                    ((Behavior)this.getSelf().getElement()).getSpecification());
         } else {
             return null;
         }
@@ -569,8 +562,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                 for (TemplateParameter parameter: signature.getParameter()) {
                     if (!isBound(parameter)) {
                         templateParameters.add(
-                                ElementReferenceImpl.makeElementReference(
-                                        parameter, this.asNamespace()));
+                                ElementReferenceImpl.makeElementReference(parameter));
                     }
                 }
             }
@@ -773,8 +765,6 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         Element element = this.getSelf().getElement();
         if (!(element instanceof NamedElement)) {
             return null;
-        } else if (this.namespace != null) {
-            return this.namespace.getImpl().getReferent();
         } else if (element instanceof Parameter && 
                 ((Parameter) element).getOperation() != null) {            
             return ElementReferenceImpl.makeElementReference(
@@ -874,14 +864,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public ElementReference getEffectiveBoundElement(BoundElementReference boundElement) {
-        // All members must be searched, no just owned members, because, if the
-        // namespace of an external element reference is an external namespace,
-        // the element may be a member not an owned member.
-        for (ElementReference member: this.getMembers()) {
-            if (boundElement.getImpl().getName().equals(member.getImpl().getName()) 
-//                  TODO: Make this work.
-//            		&& boundElement.getImpl().isSameKindAs(member) 
-            ) {
+        for (ElementReference member: this.getOwnedMembers()) {
+            if (boundElement.getImpl().getName().equals(member.getImpl().getName()) && 
+                    boundElement.getImpl().isSameKindAs(member)) {
                 return member;
             }
         }

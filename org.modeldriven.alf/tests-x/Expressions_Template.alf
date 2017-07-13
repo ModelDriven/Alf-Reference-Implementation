@@ -47,6 +47,18 @@ class Expressions_Template specializes Test {
         this.t.Continue();
     }
     
+    public class D<T> {
+    	public flag: Boolean[0..1];
+    	
+    	public a(in i: Integer, in x: T) {
+    		this.flag = false;
+    	}
+    	
+    	public a(in s: String, in x: T) {
+    		this.flag = true;
+    	}
+    }
+    
     public active class TestRunner {
     	
       private outer : Test;
@@ -61,7 +73,8 @@ class Expressions_Template specializes Test {
       public test(
         out i: Integer, out j: Integer, out h: H<B>,
         out r: Boolean[0..1],
-        out s: Set<Integer>, out list: List<Integer>) {
+        out s: Set<Integer>, out list: List<Integer>,
+        out flag: Boolean[0..1]) {
         
         b = new B(1);
         
@@ -78,11 +91,15 @@ class Expressions_Template specializes Test {
         s.add(1);
         
         list = List<Integer>{1, 2, 3};
+        
+        d = new D<Boolean>();
+        d.a("test", true);
+        flag = d.flag;
       }
       
     } do {
       accept (Start);
-      this.test(i, j, h, r, s, list);
+      this.test(i, j, h, r, s, list, flag);
       accept (Continue);
       
       AssertEqual("i", i, 1);
@@ -93,6 +110,8 @@ class Expressions_Template specializes Test {
       
       AssertList("s", s.toSequence(), 1);
       AssertList("list", list.toSequence(), Integer[]{1,2,3});
+      
+      AssertTrue("flag", flag);
       
       this.outer.done();
     }

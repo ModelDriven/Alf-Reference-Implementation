@@ -146,9 +146,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
     @Override
     public NamespaceDefinition getNamespace() {
         NamespaceDefinition namespaceDefinition = super.getNamespace();
-        if (namespaceDefinition != null) {
-            return namespaceDefinition;
-        } else {
+        if (namespaceDefinition == null) {
             Namespace umlNamespace = this.getSelf().getUmlNamespace();
             Namespace namespace = umlNamespace.getNamespace();
             if (umlNamespace instanceof ParameterableElement) {
@@ -159,9 +157,12 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                             templateParameter.getSignature().getTemplate();
                 }
             }
-            return namespace == null? RootNamespace.getRootScope():
+            namespaceDefinition = namespace == null? 
+                RootNamespace.getRootScope():
                 ExternalNamespace.makeExternalNamespace(namespace, null);
+            this.setNamespace(namespaceDefinition);
         }
+        return namespaceDefinition;
     }
     
     @Override
@@ -198,13 +199,13 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
     @Override
     public ElementReference getReferent() {
          return ElementReferenceImpl.makeElementReference(
-                 this.getSelf().getUmlNamespace(), super.getNamespace());
+                 this.getSelf().getUmlNamespace());
     }
     
     @Override
     public ElementReference getBoundReferent() {
          return ElementReferenceImpl.makeBoundReference(
-                 this.getSelf().getUmlNamespace(), super.getNamespace());
+                 this.getSelf().getUmlNamespace());
     }
     
     @Override

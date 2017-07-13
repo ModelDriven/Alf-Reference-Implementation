@@ -40,8 +40,7 @@ public class ImportedMemberImpl extends MemberImpl {
 	public ElementReference getBoundReferent() {
 	    Element element = this.referent.getImpl().getUml();
 	    return element == null? this.referent: 
-	        ElementReferenceImpl.makeBoundReference(element, 
-	                this.referent.getImpl().getNamespace().getImpl().asNamespace());
+	        ElementReferenceImpl.makeBoundReference(element);
 	}
 
     public void setReferent(ElementReference referent) {
@@ -223,7 +222,7 @@ public class ImportedMemberImpl extends MemberImpl {
     public static ImportedMember makeImportedMember(
             String name, Element element, NamespaceDefinition namespace) {
         ImportedMember importedMember = makeImportedMember(
-                ElementReferenceImpl.makeElementReference(element, namespace), false);
+                ElementReferenceImpl.makeElementReference(element), false);
         importedMember.getImpl().setExactName(name == null? "": name);
         importedMember.setNamespace(namespace);
         return importedMember;
