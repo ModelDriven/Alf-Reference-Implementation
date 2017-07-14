@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -7,17 +7,16 @@
  * contact Model Driven Solutions.
  *******************************************************************************/
 
-
 package org.modeldriven.alf.eclipse.papyrus.library.libraryclass;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.ImplementationObject;
-
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.Execution;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.Execution;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.ParameterValue;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.ParameterDirectionKind;
@@ -50,8 +49,8 @@ public class OperationExecution extends Execution {
     }
 
     @Override
-    public Value new_() {
-        return (Value) (new OperationExecution());
+    public IValue new_() {
+        return new OperationExecution();
     }
 
     @Override
@@ -63,7 +62,7 @@ public class OperationExecution extends Execution {
     	for (Parameter parameter: this.getBehavior().getOwnedParameters()){
     		if (parameter.getDirection() == ParameterDirectionKind.OUT_LITERAL ||
     				parameter.getDirection() == ParameterDirectionKind.RETURN_LITERAL) {
-    			this.setParameterValue(parameter, new ArrayList<Value>());
+    			this.setParameterValue(parameter, new ArrayList<IValue>());
     		}
     	}
     	
@@ -86,32 +85,32 @@ public class OperationExecution extends Execution {
         return null;
     }
 
-    public ParameterValue getParameterValue(
+    public IParameterValue getParameterValue(
             String parameterName) {
         return this.getParameterValue(this.getParameter(parameterName));
     }
     
-    public void setParameterValue(Parameter parameter, List<Value> values) {
+    public void setParameterValue(Parameter parameter, List<IValue> values) {
     	if (parameter != null) {
-	        ParameterValue parameterValue = new ParameterValue();
-	        parameterValue.parameter = parameter;
-	        parameterValue.values = values;
+	        IParameterValue parameterValue = new ParameterValue();
+	        parameterValue.setParameter(parameter);
+	        parameterValue.setValues(values);
 	
 	        this.setParameterValue(parameterValue);
     	}
     }
 
-    public void setParameterValue(String parameterName, List<Value> values) {
+    public void setParameterValue(String parameterName, List<IValue> values) {
         this.setParameterValue(this.getParameter(parameterName), values);
     }
 
-    public void setParameterValue(String parameterName, Value value) {
-        List<Value> valueList = new ArrayList<Value>();
+    public void setParameterValue(String parameterName, IValue value) {
+        List<IValue> valueList = new ArrayList<IValue>();
         valueList.add(value);
         this.setParameterValue(parameterName, valueList);
     }
     
-    public void setReturnParameterValue(List<Value> values) {
+    public void setReturnParameterValue(List<IValue> values) {
         Behavior method = this.getBehavior();
 
         for (Parameter parameter: method.getOwnedParameters()) {
@@ -122,8 +121,8 @@ public class OperationExecution extends Execution {
         }
     }
     
-    public void setReturnParameterValue(Value value) {
-        List<Value> valueList = new ArrayList<Value>();
+    public void setReturnParameterValue(IValue value) {
+        List<IValue> valueList = new ArrayList<IValue>();
         valueList.add(value);
         this.setReturnParameterValue(valueList);
     }

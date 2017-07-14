@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,64 +12,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modeldriven.alf.uml.Class_;
-
-import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL3.ExecutionFactoryL3;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IObject_;
+import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.IExecutionFactory;
+import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.IExecutor;
+import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.ILocus;
 
 public class Locus implements org.modeldriven.alf.fuml.execution.Locus {
     
-    private org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Locus base = null;
+    private ILocus base = null;
     
     public Locus() {
-        this.base = new org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Locus();
-        this.base.setExecutor(new org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Executor());
-        this.base.setFactory(new org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL3.ExecutionFactoryL3());
+        this.base = new org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.Locus();
+        this.base.setExecutor(new org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.Executor());
+        this.base.setFactory(new ExecutionFactoryL3());
     }
     
-    public Locus(org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Locus base) {
+    public Locus(ILocus base) {
         this.base = base;
     }
     
-    public org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Locus getBase() {
+    public ILocus getBase() {
     	return this.base;
     }
     
     @Override
     public List<Object_> getExtent(Class_ class_) {
     	List<Object_> list = new ArrayList<Object_>();
-    	for (org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.ExtensionalValue object: 
+    	for (org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IExtensionalValue object: 
     		this.getBase().getExtent(((org.modeldriven.alf.eclipse.uml.Class_)class_).getBase())) {
-    		list.add(new Object_((org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Object_)object));
+    		list.add(new Object_((org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.Object_)object));
     	}
     	return list;
     }
 
     @Override
     public ExecutionFactory getFactory() {
-        return this.base.factory == null? null: new ExecutionFactory(base.factory);
+        return this.base.getFactory() == null? null: new ExecutionFactory(
+        		(org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.ExecutionFactory)this.base.getFactory());
     }
 
     @Override
     public Executor getExecutor() {
-        return this.base.executor == null? null: new Executor(base.executor);
+        return this.base.getExecutor() == null? null: new Executor(this.base.getExecutor());
     }
 
     @Override
     public Object_ instantiate(Class_ type) {
-        org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Object_ object_ = 
-                type == null? null: 
+        IObject_ object_ = type == null? null: 
                 this.base.instantiate(((org.modeldriven.alf.eclipse.uml.Class_)type).getBase());
         return object_ == null? null: new Object_(object_);
     }
 
-    public void setExecutor(org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Executor executor) {
+    public void setExecutor(IExecutor executor) {
         this.base.setExecutor(executor);
     }
 
-    public void setFactory(ExecutionFactoryL3 factory) {
+    public void setFactory(IExecutionFactory factory) {
         this.base.setFactory(factory);
     }
 
-    public void add(org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Object_ object) {
+    public void add(IObject_ object) {
         if (object != null) {
             this.base.add(object);
         }

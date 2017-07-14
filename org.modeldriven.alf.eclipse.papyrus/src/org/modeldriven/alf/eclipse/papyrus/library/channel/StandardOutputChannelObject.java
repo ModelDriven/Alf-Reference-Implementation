@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,8 +11,7 @@ package org.modeldriven.alf.eclipse.papyrus.library.channel;
 
 import org.modeldriven.alf.eclipse.papyrus.library.channel.TextOutputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
-
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
 
 public class StandardOutputChannelObject extends TextOutputChannelObject {
 
@@ -44,7 +43,7 @@ public class StandardOutputChannelObject extends TextOutputChannelObject {
 	}
 
 	@Override
-	public void write(Value value, Status errorStatus) {
+	public void write(IValue value, Status errorStatus) {
 		this.writeString(value.toString(), errorStatus);
 	}
 
@@ -67,8 +66,8 @@ public class StandardOutputChannelObject extends TextOutputChannelObject {
 	}
 
 	@Override
-	public Value new_() {
-		return (Value)new StandardOutputChannelObject();
+	public IValue new_() {
+		return new StandardOutputChannelObject();
 	}
 
 } // StandardOutputChannelObject

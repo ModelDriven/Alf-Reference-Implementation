@@ -1,13 +1,23 @@
+/*******************************************************************************
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ * contact Model Driven Solutions.
+ *******************************************************************************/
+
 package org.modeldriven.alf.eclipse.papyrus.library.integerfunctions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IntegerValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RealValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.RealValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IIntegerValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IRealValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
@@ -15,19 +25,19 @@ import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
 public class Divide extends OpaqueBehaviorExecution {
 
 	@Override
-	public void doBody(List<ParameterValue> inputParameters, List<ParameterValue> outputParameters) {
+	public void doBody(List<IParameterValue> inputParameters, List<IParameterValue> outputParameters) {
 		try {
-			int x = ((IntegerValue)inputParameters.get(0).values.get(0)).value;
-			int y = ((IntegerValue)inputParameters.get(1).values.get(0)).value;
+			int x = ((IIntegerValue)inputParameters.get(0).getValues().get(0)).getValue();
+			int y = ((IIntegerValue)inputParameters.get(1).getValues().get(0)).getValue();
 			if (y == 0) {
 	    		LibraryFunctions.addEmptyValueListToOutputList(outputParameters);
 			} else {
-				RealValue result = new RealValue();
-				result.value = ((float)x)/((float)y);
-				result.type = (PrimitiveType) this.locus.factory.getBuiltInType("Real");
-				List<Value> outputs = new ArrayList<Value>();
+				IRealValue result = new RealValue();
+				result.setValue(((double)x)/((double)y));
+				result.setType((PrimitiveType) this.locus.getFactory().getBuiltInType("Real"));
+				List<IValue> outputs = new ArrayList<IValue>();
 				outputs.add(result);
-				outputParameters.get(0).values = outputs;
+				outputParameters.get(0).setValues(outputs);
 			}
 		} catch (Exception e) {
     		Debug.println("[doBody] An error occured during the execution of Integer divide: " + e.getMessage());
@@ -37,7 +47,7 @@ public class Divide extends OpaqueBehaviorExecution {
 	}
 
 	@Override
-	public Value new_() {
+	public IValue new_() {
 		return new Divide();
 	}
 

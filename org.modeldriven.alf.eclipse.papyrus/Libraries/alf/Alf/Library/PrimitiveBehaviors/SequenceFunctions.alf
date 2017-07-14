@@ -1,6 +1,8 @@
 namespace Alf::Library::PrimitiveBehaviors;
 
 private import FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::*;
+private import FoundationalModelLibrary::BasicInputOutput::*;
+
 
 package SequenceFunctions {
 
@@ -9,6 +11,13 @@ package SequenceFunctions {
   }
   
   public activity Includes(in seq: any[*] sequence, in element: any): Boolean { 
+  /*
+  	for (x in seq) {
+  		StandardOutputChannel.allInstances()[1].write(x); WriteLine("");
+  	}
+  	WriteLine("");
+  	StandardOutputChannel.allInstances()[1].write(element); WriteLine("");
+  	*/
   	return seq->exists x (x == element);
   }
   

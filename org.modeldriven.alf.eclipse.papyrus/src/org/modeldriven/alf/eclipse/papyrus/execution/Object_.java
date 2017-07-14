@@ -11,18 +11,18 @@ package org.modeldriven.alf.eclipse.papyrus.execution;
 import java.util.ArrayList;
 
 import org.modeldriven.alf.uml.Class_;
-
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IObject_;
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
 
 public class Object_ implements org.modeldriven.alf.fuml.execution.Object_ {
     
-    private org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Object_ base = null;
+    private IObject_ base = null;
     
-    public Object_(org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Object_ base) {
+    public Object_(IObject_ base) {
         this.base = base;
     }
     
-    public org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Object_ getBase() {
+    public IObject_ getBase() {
         return this.base;
     }
 
@@ -30,7 +30,7 @@ public class Object_ implements org.modeldriven.alf.fuml.execution.Object_ {
     public void startBehavior(Class_ classifier) {
         this.base.startBehavior(
                 ((org.modeldriven.alf.eclipse.uml.Class_)classifier).getBase(), 
-                new ArrayList<ParameterValue>());
+                new ArrayList<IParameterValue>());
     }
     
     public String toString() {

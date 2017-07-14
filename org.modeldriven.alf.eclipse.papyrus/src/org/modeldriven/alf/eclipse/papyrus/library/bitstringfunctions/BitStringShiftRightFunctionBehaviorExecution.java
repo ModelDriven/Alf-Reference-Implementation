@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,7 +11,7 @@ package org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions;
 
 import java.util.List;
 
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
 
 public class BitStringShiftRightFunctionBehaviorExecution extends
@@ -29,7 +29,7 @@ public class BitStringShiftRightFunctionBehaviorExecution extends
     }   
 
     @Override
-    public Value new_() {
+    public IValue new_() {
         return new BitStringShiftRightFunctionBehaviorExecution();
     }
 

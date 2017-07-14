@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -16,17 +16,17 @@ import org.modeldriven.alf.uml.PrimitiveType;
 
 public class ExecutionFactory implements org.modeldriven.alf.fuml.execution.ExecutionFactory {
     
-    private org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.ExecutionFactory base = null;
+    private org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.ExecutionFactory base = null;
     
     public ExecutionFactory() {
-        this(new org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL3.ExecutionFactoryL3());
+        this(new org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL3.ExecutionFactoryL3());
     }
 
-    public ExecutionFactory(org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.ExecutionFactory factory) {
+    public ExecutionFactory(org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.ExecutionFactory factory) {
         this.base = factory;
     }
     
-    public org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.ExecutionFactory getBase() {
+    public org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.ExecutionFactory getBase() {
         return this.base;
     }
 

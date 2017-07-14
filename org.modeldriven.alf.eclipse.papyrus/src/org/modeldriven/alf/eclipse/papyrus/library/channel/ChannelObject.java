@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -9,12 +9,14 @@
 
 package org.modeldriven.alf.eclipse.papyrus.library.channel;
 
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IBooleanValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IStringValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.BooleanValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.StringValue;
+import org.eclipse.uml2.uml.PrimitiveType;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.ImplementationObject;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.OperationExecution;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.BooleanValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.StringValue;
-import org.eclipse.uml2.uml.PrimitiveType;
 
 public abstract class ChannelObject extends ImplementationObject {
 	
@@ -47,9 +49,9 @@ public abstract class ChannelObject extends ImplementationObject {
         Status status = new Status(this.locus, "ChannelObject");
 
         if (name.equals("getName")) {
-            StringValue nameValue = new StringValue();
-            nameValue.value = this.getName();
-            nameValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
+            IStringValue nameValue = new StringValue();
+            nameValue.setValue(this.getName());
+            nameValue.setType((PrimitiveType) this.locus.getFactory().getBuiltInType("String"));
             execution.setReturnParameterValue(nameValue);
         } else if (name.equals("open")) {
             this.open(status);
@@ -58,9 +60,9 @@ public abstract class ChannelObject extends ImplementationObject {
             this.close(status);
             this.updateStatus(execution, status);
         } else if (name.equals("isOpen")) {
-            BooleanValue isOpenValue = new BooleanValue();
-            isOpenValue.value = this.isOpen();
-            isOpenValue.type = (PrimitiveType) this.locus.factory.getBuiltInType("Boolean");
+            IBooleanValue isOpenValue = new BooleanValue();
+            isOpenValue.setValue(this.isOpen());
+            isOpenValue.setType((PrimitiveType) this.locus.getFactory().getBuiltInType("Boolean"));
             execution.setReturnParameterValue(isOpenValue);
         } else if (name.equals("getStatus")) {
         	Status result = this.getStatus();        	

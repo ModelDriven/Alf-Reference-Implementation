@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,12 +12,11 @@ package org.modeldriven.alf.eclipse.papyrus.library.channel;
 import org.modeldriven.alf.eclipse.papyrus.library.channel.OutputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
 import org.modeldriven.alf.eclipse.papyrus.library.libraryclass.OperationExecution;
-
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.BooleanValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IntegerValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.StringValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.UnlimitedNaturalValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.BooleanValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.IntegerValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.StringValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.UnlimitedNaturalValue;
 
 public abstract class TextOutputChannelObject extends OutputChannelObject {
 
@@ -50,7 +49,7 @@ public abstract class TextOutputChannelObject extends OutputChannelObject {
         String name = execution.getOperationName();
         // Debug.println("[execute] operation = " + name);
 
-        ParameterValue parameterValue = execution.getParameterValue("value");
+        IParameterValue parameterValue = execution.getParameterValue("value");
         // if ((parameterValue != null) && (parameterValue.values.size() > 0)) {
         // Debug.println("[execute] argument = " +
         // parameterValue.values.getValue(0));
@@ -62,19 +61,19 @@ public abstract class TextOutputChannelObject extends OutputChannelObject {
             this.writeNewLine(status);            
             this.updateStatus(execution, status);
         } else if (name.equals("writeString")) {
-            this.writeString(((StringValue) (parameterValue.values.get(0))).value, status);
+            this.writeString(((StringValue) (parameterValue.getValues().get(0))).value, status);
             this.updateStatus(execution, status);
         } else if (name.equals("writeLine")) {
-            this.writeLine(((StringValue) (parameterValue.values.get(0))).value, status);
+            this.writeLine(((StringValue) (parameterValue.getValues().get(0))).value, status);
             this.updateStatus(execution, status);
         } else if (name.equals("writeInteger")) {
-            this.writeInteger(((IntegerValue) (parameterValue.values.get(0))).value, status);
+            this.writeInteger(((IntegerValue) (parameterValue.getValues().get(0))).value, status);
             this.updateStatus(execution, status);
         } else if (name.equals("writeBoolean")) {
-            this.writeBoolean(((BooleanValue) (parameterValue.values.get(0))).value, status);
+            this.writeBoolean(((BooleanValue) (parameterValue.getValues().get(0))).value, status);
             this.updateStatus(execution, status);
         } else if (name.equals("writeUnlimitedNatural")) {
-            this.writeUnlimitedNatural(((UnlimitedNaturalValue) (parameterValue.values
+            this.writeUnlimitedNatural(((UnlimitedNaturalValue) (parameterValue.getValues()
                             .get(0))).value, status);
             this.updateStatus(execution, status);
         } else {

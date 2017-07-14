@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -10,24 +10,24 @@ package org.modeldriven.alf.eclipse.papyrus.execution;
 
 import java.util.ArrayList;
 
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.IExecutor;
 import org.modeldriven.alf.fuml.execution.Object_;
 import org.modeldriven.alf.uml.Behavior;
 
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
-
 public class Executor implements org.modeldriven.alf.fuml.execution.Executor {
     
-    private org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Executor base = null;
+    private IExecutor base = null;
     
     public Executor() {
-        this(new org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Executor());
+        this(new org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.Executor());
     }
     
-    public Executor(org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Executor base) {
+    public Executor(IExecutor base) {
         this.base = base;
     }
     
-    public org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Executor getBase() {
+    public IExecutor getBase() {
         return this.base;
     }
 
@@ -37,7 +37,7 @@ public class Executor implements org.modeldriven.alf.fuml.execution.Executor {
                 ((org.modeldriven.alf.eclipse.uml.Behavior)behavior).getBase(), 
                 context == null? null:
                     ((org.modeldriven.alf.eclipse.papyrus.execution.Object_)context).getBase(),
-                new ArrayList<ParameterValue>());
+                new ArrayList<IParameterValue>());
     }
 
 }

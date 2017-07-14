@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -14,8 +14,9 @@ import java.io.InputStreamReader;
 
 import org.modeldriven.alf.eclipse.papyrus.library.channel.TextInputChannelObject;
 import org.modeldriven.alf.eclipse.papyrus.library.common.Status;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.StringValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IStringValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.StringValue;
 import org.eclipse.uml2.uml.PrimitiveType;
 
 public class StandardInputChannelObject extends TextInputChannelObject {
@@ -67,25 +68,25 @@ public class StandardInputChannelObject extends TextInputChannelObject {
 	}
 
 	@Override
-	public Value read(Status errorStatus) {
-		StringValue v = null;
+	public IValue read(Status errorStatus) {
+		IStringValue v = null;
 		String s = this.readCharacter(errorStatus);
 		if (s != null) {
 			v = new StringValue();
-			v.value = s;
-			v.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
+			v.setValue(s);
+			v.setType((PrimitiveType) this.locus.getFactory().getBuiltInType("String"));
 		}
 		return v;
 	}
 
 	@Override
-	public Value peek(Status errorStatus) {
-		StringValue v = null;
+	public IValue peek(Status errorStatus) {
+		IStringValue v = null;
 		String s = this.peekCharacter(errorStatus);
 		if (s != null) {
 			v = new StringValue();
-			v.value = s;
-			v.type = (PrimitiveType) this.locus.factory.getBuiltInType("String");
+			v.setValue(s);
+			v.setType((PrimitiveType) this.locus.getFactory().getBuiltInType("String"));
 		}
 		return v;
 	}
@@ -288,8 +289,8 @@ public class StandardInputChannelObject extends TextInputChannelObject {
 	}
 
 	@Override
-	public Value new_() {
-		return (Value)new StandardInputChannelObject();
+	public IValue new_() {
+		return new StandardInputChannelObject();
 	}
 
 }

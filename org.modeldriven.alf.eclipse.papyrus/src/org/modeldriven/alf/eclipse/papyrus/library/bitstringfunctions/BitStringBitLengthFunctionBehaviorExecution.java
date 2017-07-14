@@ -12,10 +12,11 @@ package org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions;
 import java.util.List;
 
 import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IntegerValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IIntegerValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.IntegerValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
 import org.eclipse.uml2.uml.PrimitiveType;
 
@@ -24,20 +25,20 @@ public class BitStringBitLengthFunctionBehaviorExecution extends
 
     @Override
     public void doBody(
-            List<ParameterValue> inputParameters,
-            List<ParameterValue> outputParameters) {
+            List<IParameterValue> inputParameters,
+            List<IParameterValue> outputParameters) {
 
-    	IntegerValue result = new IntegerValue();
-    	result.value = Integer.SIZE;
-    	result.type = (PrimitiveType) this.locus.factory.getBuiltInType("Integer");
+    	IIntegerValue result = new IntegerValue();
+    	result.setValue(Integer.SIZE);
+    	result.setType((PrimitiveType) this.locus.getFactory().getBuiltInType("Integer"));
 
-        Debug.println("[doBody] BitString BitLength result = " + result.value);
+        Debug.println("[doBody] BitString BitLength result = " + result.getValue());
 
 		LibraryFunctions.addValueToOutputList(result, outputParameters);
     }
     
     @Override
-    public Value new_() {
+    public IValue new_() {
         return new BitStringBitLengthFunctionBehaviorExecution();
     }   
 

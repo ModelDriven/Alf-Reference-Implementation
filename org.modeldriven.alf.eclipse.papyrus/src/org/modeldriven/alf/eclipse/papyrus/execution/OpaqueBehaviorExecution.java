@@ -13,13 +13,13 @@ import org.modeldriven.alf.uml.OpaqueBehavior;
 public class OpaqueBehaviorExecution implements
         org.modeldriven.alf.fuml.execution.OpaqueBehaviorExecution {
     
-    protected org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution base = null;
+    protected org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution base = null;
     
-    public OpaqueBehaviorExecution(org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution base) {
+    public OpaqueBehaviorExecution(org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution base) {
         this.base = base;
     }
     
-    public org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution getBase() {
+    public org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution getBase() {
         return this.base;
     }
 

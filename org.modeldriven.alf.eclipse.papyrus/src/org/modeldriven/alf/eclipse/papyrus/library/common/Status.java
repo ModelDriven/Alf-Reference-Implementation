@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,12 +11,13 @@ package org.modeldriven.alf.eclipse.papyrus.library.common;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.DataValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IntegerValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.PrimitiveValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.StringValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
-import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.Locus;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IDataValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IPrimitiveValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.ILocus;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.DataValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.IntegerValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.StringValue;
 import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Property;
@@ -45,19 +46,19 @@ public class Status {
 		statusType = type;
 	}
 	
-	public Status(Locus locus, String context, int code, String description) {
+	public Status(ILocus locus, String context, int code, String description) {
 		this.setPrimitiveTypes(locus);
 		this.setStatus(context, code, description);
 	}
 	
-	public Status(Locus locus, String context) {
+	public Status(ILocus locus, String context) {
 		this.setPrimitiveTypes(locus);
 		this.setStatus(context, 0, "Normal");
 	}
 	
-	private void setPrimitiveTypes(Locus locus) {
-		this.stringType = (PrimitiveType) locus.factory.getBuiltInType("String");
-		this.integerType = (PrimitiveType) locus.factory.getBuiltInType("Integer");
+	private void setPrimitiveTypes(ILocus locus) {
+		this.stringType = (PrimitiveType) locus.getFactory().getBuiltInType("String");
+		this.integerType = (PrimitiveType) locus.getFactory().getBuiltInType("Integer");
 	}
 	
 	public boolean isNormal() {
@@ -70,26 +71,26 @@ public class Status {
 		this.description = description;
 	}
 	
-	public Value getValue() {
-		DataValue value = new DataValue();
+	public IValue getValue() {
+		IDataValue value = new DataValue();
 		DataType statusType = getStatusType();
-		value.type = statusType;
+		value.setType(statusType);
 		for (Property attribute: statusType.getOwnedAttributes()) {
-			PrimitiveValue attributeValue = null;
+			IPrimitiveValue attributeValue = null;
 			if (attribute.getName().equals("context")) {
 				attributeValue = new StringValue();
-				attributeValue.type = this.stringType;
+				attributeValue.setType(this.stringType);
 				((StringValue)attributeValue).value = this.context;
 			} else if (attribute.getName().equals("code")) {
 				attributeValue = new IntegerValue();
-				attributeValue.type = this.integerType;
+				attributeValue.setType(this.integerType);
 				((IntegerValue)attributeValue).value = this.code;
 			} else if (attribute.getName().equals("description")) {
 				attributeValue = new StringValue();
-				attributeValue.type = this.stringType;
+				attributeValue.setType(this.stringType);
 				((StringValue)attributeValue).value = this.description;
 			}
-			List<Value> values = new ArrayList<Value>();
+			List<IValue> values = new ArrayList<IValue>();
 			values.add(attributeValue);
 			value.setFeatureValue(attribute, values, 0);
 		}

@@ -13,15 +13,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.papyrus.moka.fuml.FUMLExecutionEngine;
-import org.eclipse.papyrus.moka.fuml.Semantics.Actions.IntermediateActions.DefaultCreateObjectActionStrategy;
-import org.eclipse.papyrus.moka.fuml.Semantics.Actions.IntermediateActions.DefaultGetAssociationStrategy;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RedefinitionBasedDispatchStrategy;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
-import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.FirstChoiceStrategy;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Actions.IntermediateActions.DefaultCreateObjectActionStrategy;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Actions.IntermediateActions.DefaultGetAssociationStrategy;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.RedefinitionBasedDispatchStrategy;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.Communications.FIFOGetNextEventStrategy;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.FirstChoiceStrategy;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.eclipse.uml2.uml.util.UMLUtil;
 import org.modeldriven.alf.eclipse.papyrus.library.channel.StandardInputChannelObject;
@@ -72,7 +70,7 @@ public class Fuml {
     
     private void createLocus() {
         this.locus = new org.modeldriven.alf.eclipse.papyrus.execution.Locus();
-        org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.ExecutionFactory factory = locus.getFactory().getBase(); 
+        org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.ExecutionFactory factory = locus.getFactory().getBase(); 
         factory.setStrategy(new RedefinitionBasedDispatchStrategy());
         factory.setStrategy(new FIFOGetNextEventStrategy());
         factory.setStrategy(new FirstChoiceStrategy());       
@@ -95,8 +93,7 @@ public class Fuml {
     	}
     }
     
-    @SuppressWarnings("restriction")
-	private void addPrimitiveBehaviorPrototypes() {
+    private void addPrimitiveBehaviorPrototypes() {
     	this.createPrimitiveBehaviorPrototype(
     			"FoundationalModelLibrary::PrimitiveBehaviors::BooleanFunctions::Or", 
     			org.eclipse.papyrus.moka.fuml.standardlibrary.library.boolean_.Or.class);
@@ -321,7 +318,7 @@ public class Fuml {
     
     private void createPrimitiveBehaviorPrototype(
     		String behaviorName, 
-    		Class<? extends org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution> prototypeClass) {
+    		Class<? extends org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution> prototypeClass) {
 		try {
 			Classifier behavior = this.getClassifier(behaviorName);
 			if (behavior instanceof OpaqueBehavior) {
@@ -593,11 +590,11 @@ public class Fuml {
    public Fuml() {
 	   this.setUmlLibraryDirectory("Libraries");
 	   
-	   try {
-		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
-	   } catch (CoreException e) {
-		   e.printStackTrace();
-	   }
+//	   try {
+//		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
+//	   } catch (CoreException e) {
+//		   e.printStackTrace();
+//	   }
    }
 
    public Fuml(String[] args) {

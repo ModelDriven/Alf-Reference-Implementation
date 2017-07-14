@@ -11,8 +11,8 @@ package org.modeldriven.alf.eclipse.papyrus.execution;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
 
 public class UnimplementedBehaviorExecution extends OpaqueBehaviorExecution {
@@ -23,19 +23,19 @@ public class UnimplementedBehaviorExecution extends OpaqueBehaviorExecution {
     }
 
     private class BaseUnimplementedBehaviorExecution 
-    	extends org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution {
+    	extends org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution {
     
     	@Override
-    	public void doBody(List<ParameterValue> inputParameters,
-    			List<ParameterValue> outputParameters) {
+    	public void doBody(List<IParameterValue> inputParameters,
+    			List<IParameterValue> outputParameters) {
     		Debug.println("[error] Primitive behavior" + 
     				(this.types.size() == 0? "": " " + this.types.get(0).getName()) + 
     				" not implemented.");
-    		outputParameters.get(0).values = new ArrayList<Value>();
+    		outputParameters.get(0).setValues(new ArrayList<IValue>());
     	}
 
     	@Override
-    	public Value new_() {
+    	public IValue new_() {
     		return new BaseUnimplementedBehaviorExecution();
     	}
     }

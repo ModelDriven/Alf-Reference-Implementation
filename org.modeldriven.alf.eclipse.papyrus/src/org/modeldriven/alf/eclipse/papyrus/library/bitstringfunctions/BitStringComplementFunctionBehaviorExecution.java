@@ -11,7 +11,7 @@ package org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions;
 
 import java.util.List;
 
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
 
 public class BitStringComplementFunctionBehaviorExecution extends
@@ -25,7 +25,7 @@ public class BitStringComplementFunctionBehaviorExecution extends
     }   
 
     @Override
-    public Value new_() {
+    public IValue new_() {
         return new BitStringComplementFunctionBehaviorExecution();
     }
 

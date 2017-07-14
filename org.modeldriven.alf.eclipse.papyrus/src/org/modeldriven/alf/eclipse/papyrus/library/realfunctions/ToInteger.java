@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2016, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,11 +12,12 @@ package org.modeldriven.alf.eclipse.papyrus.library.realfunctions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IntegerValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.RealValue;
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.Value;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IIntegerValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IRealValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.IntegerValue;
+import org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution;
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
@@ -24,15 +25,15 @@ import org.modeldriven.alf.eclipse.papyrus.library.LibraryFunctions;
 public class ToInteger extends OpaqueBehaviorExecution {
 
 	@Override
-	public void doBody(List<ParameterValue> inputParameters, List<ParameterValue> outputParameters) {
+	public void doBody(List<IParameterValue> inputParameters, List<IParameterValue> outputParameters) {
 		try {
-			Double x = ((RealValue) inputParameters.get(0).values.get(0)).value;
-			IntegerValue result = new IntegerValue();
-			result.value = (int) (x >= 0? Math.floor(x): -Math.floor(-x));
-			result.type = (PrimitiveType) this.locus.factory.getBuiltInType("Integer");
-			List<Value> outputs = new ArrayList<Value>();
+			Double x = ((IRealValue) inputParameters.get(0).getValues().get(0)).getValue();
+			IIntegerValue result = new IntegerValue();
+			result.setValue((int) (x >= 0? Math.floor(x): -Math.floor(-x)));
+			result.setType((PrimitiveType) this.locus.getFactory().getBuiltInType("Integer"));
+			List<IValue> outputs = new ArrayList<IValue>();
 			outputs.add(result);
-			outputParameters.get(0).values = outputs;
+			outputParameters.get(0).setValues(outputs);
 		} catch (Exception e) {
     		Debug.println("[doBody] An error occured during the execution of ToInteger: " + e.getMessage());
     		LibraryFunctions.addEmptyValueListToOutputList(outputParameters);
@@ -41,7 +42,7 @@ public class ToInteger extends OpaqueBehaviorExecution {
 	}
 
 	@Override
-	public Value new_() {
+	public IValue new_() {
 		return new ToInteger();
 	}
 }
