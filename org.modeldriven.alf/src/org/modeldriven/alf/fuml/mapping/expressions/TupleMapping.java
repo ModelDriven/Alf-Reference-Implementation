@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -274,10 +274,13 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                     }
                     this.lhsGraph.addAll(lhsMapping.getGraph());
                                         
-                    // Skip return pin. Return parameter never has an output
-                    // argument.
                     ActivityNode outputPin = action.getOutput().get(i);
-                    if (outputPin.equals(returnPin)) {
+
+                    // Unless this is the mapping of an in-place collection function invocation,
+                    // skip a return pin. The return value is not normally given through a tuple
+                    // argument.
+                    if (outputPin.equals(returnPin) && 
+                            !invocation.getBoundReferent().getImpl().isCollectionFunction()) {
                         outputPin = action.getOutput().get(++i);
                     }
                     

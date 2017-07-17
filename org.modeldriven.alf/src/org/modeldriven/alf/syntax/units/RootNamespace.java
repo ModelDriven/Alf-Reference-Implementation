@@ -114,6 +114,7 @@ public class RootNamespace extends ModelNamespace {
     private Map<String, ElementReference> collectionFunctionMap = 
             new HashMap<String, ElementReference>();
     
+    private ElementReference collectionFunctionsPackage = null;
     private ElementReference collectionClassesPackage = null;
     
     private QualifiedName listFunctions = null;
@@ -295,6 +296,14 @@ public class RootNamespace extends ModelNamespace {
         return this.getCollectionFunction("notEmpty");
     }
 
+    public ElementReference getCollectionFunctionsPackage() {
+        if (collectionFunctionsPackage == null) {
+            collectionFunctionsPackage = getCollectionFunctions().getImpl().
+                getNamespaceReferent();
+        }
+        return collectionFunctionsPackage;
+    }
+    
     public ElementReference getCollectionClassesPackage() {
         if (collectionClassesPackage == null) {
             collectionClassesPackage = getCollectionClasses().getImpl().

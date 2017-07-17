@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -619,9 +619,9 @@ public class ActivityGraph {
     }
     
     public ValueSpecificationAction addValueSpecificationAction(
-            ValueSpecification value, String literalString) {
+            ValueSpecification value, String description) {
         ValueSpecificationAction valueAction = this.create(ValueSpecificationAction.class);
-        valueAction.setName("Value(" + literalString + ")");
+        valueAction.setName("Value(" + description + ")");
         valueAction.setValue(value);
         valueAction.setResult(createOutputPin(
                 valueAction.getName() + ".result", value.getType(), 1, 1));

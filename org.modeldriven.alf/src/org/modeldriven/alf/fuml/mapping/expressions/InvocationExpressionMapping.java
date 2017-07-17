@@ -259,28 +259,32 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
             action = this.graph.addDestroyObjectAction(null);
         } else {
             ElementReference referent = expression.getBoundReferent();
-            Element element = referent.getImpl().getUml();
-            if (element == null) {
-                FumlMapping mapping = this.fumlMap(referent);
-                if (mapping instanceof ElementReferenceMapping) {
-                    mapping = ((ElementReferenceMapping) mapping).getMapping();
-                }          
-                if (mapping instanceof OperationDefinitionMapping) {
-                    element = 
-                        ((OperationDefinitionMapping) mapping).getOperation();
-                } else if (mapping instanceof ReceptionDefinitionMapping) {
-                    element = ((ReceptionDefinitionMapping) mapping).getReception();
-                } else if (mapping instanceof SignalReceptionDefinitionMapping) {
-                    element = ((SignalReceptionDefinitionMapping) mapping).getReception();                    
-                } else if (mapping instanceof ActivityDefinitionMapping) {
-                    element = 
-                        ((ActivityDefinitionMapping) mapping).getBehavior();
-                } else if (mapping instanceof PropertyDefinitionMapping) {
-                    element = 
-                        ((PropertyDefinitionMapping) mapping).getProperty();
-                    
-                } else {
-                    this.throwError("Unknown referent mapping", mapping);
+            Element element;
+            if (referent.getImpl().isCollectionFunction()) {
+                element = this.getSequenceFunctionFor(referent);
+            } else {
+                element = referent.getImpl().getUml();
+                if (element == null) {
+                    FumlMapping mapping = this.fumlMap(referent);
+                    if (mapping instanceof ElementReferenceMapping) {
+                        mapping = ((ElementReferenceMapping) mapping).getMapping();
+                    }          
+                    if (mapping instanceof OperationDefinitionMapping) {
+                        element = 
+                            ((OperationDefinitionMapping) mapping).getOperation();
+                    } else if (mapping instanceof ReceptionDefinitionMapping) {
+                        element = ((ReceptionDefinitionMapping) mapping).getReception();
+                    } else if (mapping instanceof SignalReceptionDefinitionMapping) {
+                        element = ((SignalReceptionDefinitionMapping) mapping).getReception();                    
+                    } else if (mapping instanceof ActivityDefinitionMapping) {
+                        element = 
+                            ((ActivityDefinitionMapping) mapping).getBehavior();
+                    } else if (mapping instanceof PropertyDefinitionMapping) {
+                        element = 
+                            ((PropertyDefinitionMapping) mapping).getProperty();                    
+                    } else {
+                        this.throwError("Unknown referent mapping", mapping);
+                    }
                 }
             }
             if (element instanceof Operation) {
@@ -298,11 +302,39 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                 action = this.graph.addReadLinkAction((Property)element);
                 this.resultSource = action.getOutput().get(0);
                 
+            } else if (element instanceof LiteralNull) {
+                action = this.graph.addNullValueSpecificationAction();
+                this.resultSource = ((ValueSpecificationAction)action).getResult();
+                
             } else {
                 this.throwError("Unknown referent: " + element);
             }
         }
         return action;
+    }
+    
+    protected Element getSequenceFunctionFor(ElementReference referent) {
+        String name = referent.getImpl().getTemplate().getImpl().getName();
+        if ("clear".equals(name)) {
+            return this.create(LiteralNull.class);
+        } else {
+            String sequenceFunctionName =
+                    "add".equals(name)? "Including":
+                    "addAll".equals(name)? "Union":
+                    "addAt".equals(name)? "IncludeAt":
+                    "addAllAt".equals(name)? "IncludeAllAt":
+                    "remove".equals(name)? "Excluding":
+                    "removeAll".equals(name)? "Difference":
+                    "removeOne".equals(name)? "ExcludingOne":
+                    "removeAt".equals(name)? "ExcludeAt":
+                    "replace".equals(name)? "Replacing":
+                    "replaceOne".equals(name)? "ReplacingOne":
+                    "replaceAt".equals(name)? "ReplacingAt":
+                    name.substring(0,1).toUpperCase() + name.substring(1, name.length());
+            return this.fumlMap(
+                    RootNamespace.getRootScope().getSequenceFunction(sequenceFunctionName)).
+                    getElement();
+        }
     }
 
     public Action mapFeature(Action action) throws MappingError {
