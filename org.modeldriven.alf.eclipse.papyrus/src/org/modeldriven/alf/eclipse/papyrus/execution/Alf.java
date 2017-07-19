@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -110,16 +110,6 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
                     " as " + object.getClass().getName());
         }
     }
-   
-   @Override
-   protected void configure() {
-	   super.configure();
-//	   try {
-//		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
-//	   } catch (CoreException e) {
-//		   e.printStackTrace();
-//	   }
-   }
    
    public static void main(String[] args) {
        new Alf().run(args);

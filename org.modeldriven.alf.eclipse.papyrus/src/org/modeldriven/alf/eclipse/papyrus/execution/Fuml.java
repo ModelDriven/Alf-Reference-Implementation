@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -589,12 +589,6 @@ public class Fuml {
 
    public Fuml() {
 	   this.setUmlLibraryDirectory("Libraries");
-	   
-//	   try {
-//		   FUMLExecutionEngine.eInstance = new DummyFUMLExecutionEngine();
-//	   } catch (CoreException e) {
-//		   e.printStackTrace();
-//	   }
    }
 
    public Fuml(String[] args) {
