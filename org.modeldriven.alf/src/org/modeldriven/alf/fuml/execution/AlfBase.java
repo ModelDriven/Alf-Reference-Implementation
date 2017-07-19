@@ -77,7 +77,6 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
 
     public UnitDefinition parse(String unitName, boolean isFileName) {
         BoundClassifierImpl.clearBoundClassifiers();
-        StereotypeApplication.clearStereotypeApplications();
         
         UnitDefinition unit = null;
         
@@ -100,6 +99,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         if (definition.getImpl().isTemplate()) { 
             this.println(definition.getName() + " is a template.");
         } else {
+            StereotypeApplication.clearStereotypeApplications();
             BoundClassifierImpl.makeBoundElements();
             mapping = FumlMapping.getMapping(definition);
             try {

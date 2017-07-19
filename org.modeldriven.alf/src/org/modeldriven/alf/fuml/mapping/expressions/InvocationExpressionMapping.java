@@ -258,11 +258,12 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         if (expression.getIsImplicit()) {
             action = this.graph.addDestroyObjectAction(null);
         } else {
-            ElementReference referent = expression.getBoundReferent();
+            ElementReference referent = expression.getReferent();
             Element element;
             if (referent.getImpl().isCollectionFunction()) {
                 element = this.getSequenceFunctionFor(referent);
             } else {
+                referent = expression.getBoundReferent();
                 element = referent.getImpl().getUml();
                 if (element == null) {
                     FumlMapping mapping = this.fumlMap(referent);
@@ -314,7 +315,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
     }
     
     protected Element getSequenceFunctionFor(ElementReference referent) {
-        String name = referent.getImpl().getTemplate().getImpl().getName();
+        String name = referent.getImpl().getName();
         if ("clear".equals(name)) {
             return this.create(LiteralNull.class);
         } else {

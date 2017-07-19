@@ -266,13 +266,7 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     public boolean isCollectionFunction() {
         ElementReference collectionFunctions = 
             RootNamespace.getRootScope().getCollectionFunctionsPackage();
-        if (collectionFunctions == null) {
-            return false;
-        } else {
-            ElementReference template = this.getTemplate();
-            return template != null && 
-                    collectionFunctions.getImpl().equals(template.getImpl().getNamespace());
-        }
+        return collectionFunctions != null && collectionFunctions.getImpl().equals(this.getNamespace());
     }
 
     public boolean isCollectionClass() {

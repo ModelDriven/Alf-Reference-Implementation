@@ -280,7 +280,7 @@ public abstract class TupleMapping extends SyntaxElementMapping {
                     // skip a return pin. The return value is not normally given through a tuple
                     // argument.
                     if (outputPin.equals(returnPin) && 
-                            !invocation.getBoundReferent().getImpl().isCollectionFunction()) {
+                            !invocation.getReferent().getImpl().isCollectionFunction()) {
                         outputPin = action.getOutput().get(++i);
                     }
                     
