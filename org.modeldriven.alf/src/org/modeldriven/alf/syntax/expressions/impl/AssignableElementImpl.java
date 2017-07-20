@@ -79,7 +79,7 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
             // Collection conversion
             sourceType != null && sourceType.getImpl().isCollectionClass() && 
             sourceUpper == 1 && (targetUpper == -1 || targetUpper > 1) &&
-            isConformant(targetType, sourceType.getImpl().getCollectionArgument());
+            isConformant(targetType, sourceType.getImpl().getCollectionSequenceType());
     }
     
     public static boolean isConformant(ElementReference targetType, ElementReference sourceType) {

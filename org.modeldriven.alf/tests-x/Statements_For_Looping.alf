@@ -10,7 +10,7 @@ class Statements_For_Looping specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 
-		this.test(readings, sum, outgoingEdges, SnEven, SnOdd, testReturn, empty);
+		this.test(readings, sum, outgoingEdges, SnEven, SnOdd, testReturn, empty, n);
 		
 		AssertList("readings", readings, Integer[]{1,2});
 		AssertEqual("sum", sum, 55);
@@ -19,6 +19,7 @@ class Statements_For_Looping specializes Test {
 		AssertList("SnOdd", SnOdd, Integer[]{30,60,90});
 		AssertTrue("testReturn", testReturn);
 		AssertEqual("empty", empty, null);
+		AssertEqual("n", n, 6);
 	
 	  	this.done();
 	}
@@ -60,7 +61,8 @@ class Statements_For_Looping specializes Test {
     	out readings: Integer[*], out sum1: Integer,
     	out outgoingEdges: ActivityEdgeInstance[*],
     	out SnEven: Integer[*], out SnOdd: Integer[*],
-    	out testReturn: Boolean, out empty: Integer[0..1]) {
+    	out testReturn: Boolean, out empty: Integer[0..1],
+    	out n : Integer) {
     
       // Setup
   	  noiseLimit = 0;
@@ -116,6 +118,11 @@ class Statements_For_Looping specializes Test {
   	    dummy = 0;
   	  }
   	  empty = dummy;
+  	  
+  	  n = 0;
+  	  for (i in new Set<Integer>(tokens)) {
+  	    n += i;
+  	  }
   	  
     }
 }

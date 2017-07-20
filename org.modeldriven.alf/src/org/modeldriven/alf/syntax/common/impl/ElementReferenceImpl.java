@@ -270,39 +270,63 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     }
 
     public boolean isCollectionClass() {
-        ElementReference collectionClasses = 
-            RootNamespace.getRootScope().getCollectionClassesPackage();
-        if (collectionClasses == null) {
+        if (!this.isClass()) {
             return false;
         } else {
-            ElementReference template = this.getTemplate();
-            return template != null && 
-                collectionClasses.getImpl().equals(template.getImpl().getNamespace());
+            ElementReference constructorType = this.getCollectionConstructorType();
+            ElementReference sequenceType = this.getCollectionSequenceType();
+            return constructorType != null && constructorType.getImpl().equals(sequenceType);
         }
     }
 
     public boolean isNaturalCollection() {
-        ElementReference collectionArgument = this.getCollectionArgument();
+        ElementReference collectionArgument = this.getCollectionSequenceType();
         return collectionArgument != null && 
                     collectionArgument.getImpl().isNatural();
     }
     
     public boolean isIntegerCollection() {
-        ElementReference collectionArgument = this.getCollectionArgument();
+        ElementReference collectionArgument = this.getCollectionSequenceType();
         return collectionArgument != null && 
                     collectionArgument.getImpl().isInteger();
     }
     
     public boolean isRealCollection() {
-        ElementReference collectionArgument = this.getCollectionArgument();
+        ElementReference collectionArgument = this.getCollectionSequenceType();
         return collectionArgument != null && 
                     collectionArgument.getImpl().isReal();
     }
     
-    public ElementReference getCollectionArgument() {
+    public ElementReference getCollectionSequenceType() {
         ElementReference toSequenceOperation = this.getToSequenceOperation();
         return toSequenceOperation == null? null: 
             toSequenceOperation.getImpl().getType();
+    }
+    
+    public ElementReference getCollectionConstructorType() {
+        String name = this.getName();
+        for (ElementReference ownedMember: this.getOwnedMembers()) {
+            String memberName = ownedMember.getImpl().getName();
+            if (memberName != null && memberName.equals(name) && 
+                    ownedMember.getImpl().isConstructor()) {
+                ElementReference inputParameter = null; 
+                for (ElementReference parameter: ownedMember.getImpl().getParameters()) {
+                    String direction = parameter.getImpl().getDirection();
+                    if ("in".equals(direction) && inputParameter == null && 
+                            parameter.getImpl().getLower() == 0 && 
+                            parameter.getImpl().getUpper() == -1) {
+                        inputParameter = parameter;
+                    } else if (!"return".equals(direction)) {
+                        inputParameter = null;
+                        break;
+                    }
+                }
+                if (inputParameter != null) {
+                    return inputParameter.getImpl().getType();
+                }
+            }
+        }
+        return null;
     }
     
     public ElementReference getToSequenceOperation() {

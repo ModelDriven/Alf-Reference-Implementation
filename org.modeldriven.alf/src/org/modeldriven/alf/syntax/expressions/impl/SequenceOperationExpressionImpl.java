@@ -141,7 +141,7 @@ public class SequenceOperationExpressionImpl
 	        ElementReference primaryType = expression == null? 
 	                                           null: expression.getType();
 	        if (self.getIsCollectionConversion()) {
-	            primaryType = primaryType.getImpl().getCollectionArgument();
+	            primaryType = primaryType.getImpl().getCollectionSequenceType();
 	        }
 	        ElementReference parameterType = this.getFirstParameterType();
 	        return parameterType != null && 

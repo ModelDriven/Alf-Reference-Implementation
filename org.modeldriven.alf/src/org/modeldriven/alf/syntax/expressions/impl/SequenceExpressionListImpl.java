@@ -124,7 +124,7 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
     public ElementReference getType(SequenceConstructionExpression owner) {
         ElementReference type = owner.getType();
         if (!owner.getHasMultiplicity() && type != null) {
-            type = type.getImpl().getCollectionArgument();
+            type = type.getImpl().getCollectionSequenceType();
         }
         return type;
     }

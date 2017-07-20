@@ -111,7 +111,7 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	    } else if (collectionTypeName != null) {
 	        ElementReference collectionType = 
 	            collectionTypeName.getImpl().getNonTemplateClassifierReferent();
-	        return collectionType == null? null: collectionType.getImpl().getCollectionArgument();
+	        return collectionType == null? null: collectionType.getImpl().getCollectionSequenceType();
 	    } else {
 	        return null;
 	    }
@@ -252,7 +252,7 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	    ElementReference type = self.getType();
 	    QualifiedName typeName = self.getTypeName();
 	    if (type != null) {
-	        argument.setType(type.getImpl().getCollectionArgument());
+	        argument.setType(type.getImpl().getCollectionSequenceType());
 	        if (typeName == null) {
 	            typeName = type.getImpl().getQualifiedName();
 	            // NOTE: Root scope is used here because the typeName

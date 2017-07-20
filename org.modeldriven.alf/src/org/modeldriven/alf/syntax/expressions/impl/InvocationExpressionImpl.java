@@ -769,7 +769,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         if ((paremeterUpper == -1 || paremeterUpper > 1) && 
                 expressionUpper == 1 &&
                 type != null && type.getImpl().isCollectionClass()) {
-            return type.getImpl().getCollectionArgument();
+            return type.getImpl().getCollectionSequenceType();
         } else {
             return type;
         }

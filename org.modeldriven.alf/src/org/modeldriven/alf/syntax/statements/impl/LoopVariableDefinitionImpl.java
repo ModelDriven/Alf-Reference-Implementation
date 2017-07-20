@@ -268,7 +268,7 @@ public class LoopVariableDefinitionImpl extends
 	    if (variable != null) {
 	        ElementReference type = this.getType();
 	        if (self.getIsCollectionConversion()) {
-	            type = type.getImpl().getCollectionArgument();
+	            type = type.getImpl().getCollectionSequenceType();
 	        }
 	        int lower = self.getIsFirst()? 1: 0;
             assignmentsAfter = new HashMap<String, AssignedSource>(assignmentsAfter);
