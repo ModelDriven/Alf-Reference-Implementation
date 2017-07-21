@@ -430,6 +430,10 @@ public abstract class ElementReferenceImpl implements AssignableElement {
                 templateArgument == null? any: templateArgument);
     }
     
+    public static Set<ParameterableElement> getTemplateBindingParameters() {
+        return templateBindings.keySet();
+    }
+    
     public static void replaceTemplateBindingsIn(Element context) {
         Set<TemplateSignature> templateSignatures = 
                 new HashSet<TemplateSignature>();
