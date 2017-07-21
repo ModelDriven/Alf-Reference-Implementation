@@ -36,13 +36,6 @@ public class ImportedMemberImpl extends MemberImpl {
         return this.referent;
     }
 	
-	@Override
-	public ElementReference getBoundReferent() {
-	    Element element = this.referent.getImpl().getUml();
-	    return element == null? this.referent: 
-	        ElementReferenceImpl.makeBoundReference(element);
-	}
-
     public void setReferent(ElementReference referent) {
         this.referent = referent;
     }

@@ -318,7 +318,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         	            // Resolve as a local name
         	            referents.add(source);
         	        } else if (currentScope != null) {
-        	            this.addReferentsTo(referents, currentScope.getImpl().
+        	            addReferentsTo(referents, currentScope.getImpl().
         	                    resolve(self.getUnqualifiedName().getName(), 
         	                            classifierOnly));
         	        }
@@ -329,7 +329,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         	            NamespaceDefinition namespace = 
         	                    namespaceReference.getImpl().asNamespace();
         	            if (namespace != null) {
-        	                this.addReferentsTo(referents, 
+        	                addReferentsTo(referents, 
                                 namespace.getImpl().resolveVisible(
                                         self.getUnqualifiedName().getName(),
                                         this.getIsVisibleOnly()? currentScope: null, 
@@ -740,11 +740,11 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
         return this.getProfileReferent() != null;
     }
     
-    private void addReferentsTo(List<ElementReference> referents, 
+    private static void addReferentsTo(List<ElementReference> referents, 
             Collection<Member> members) {
         for (Member member: members) {
             if (!(member instanceof MissingMember)) {
-                referents.add(member.getImpl().getBoundReferent());
+                referents.add(member.getImpl().getReferent());
             }
         }
     }

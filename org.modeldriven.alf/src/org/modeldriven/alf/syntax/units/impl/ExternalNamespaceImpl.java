@@ -203,12 +203,6 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
-    public ElementReference getBoundReferent() {
-         return ElementReferenceImpl.makeBoundReference(
-                 this.getSelf().getUmlNamespace());
-    }
-    
-    @Override
     protected boolean allowPackageOnly() {
         return !(this.getSelf().getUmlNamespace() instanceof Package);
     }
