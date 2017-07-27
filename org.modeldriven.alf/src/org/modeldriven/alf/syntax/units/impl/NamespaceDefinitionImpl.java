@@ -489,10 +489,9 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     public Member getStub() {
         UnitDefinition unit = this.getSelf().getUnit();
         if (unit != null) {
-            ElementReference namespace = unit.getNamespace();
+            NamespaceDefinition namespace = this.getOuterScope();
             if (namespace != null) {
-                return namespace.getImpl().asNamespace().
-                        getImpl().getStubFor(unit);
+                return namespace.getImpl().getStubFor(unit);
             }
         }
         return null;

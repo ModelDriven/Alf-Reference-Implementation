@@ -170,14 +170,6 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
         return this.getNamespace().getImpl().getQualifiedName();
     }
 
-    /*
-    @Override
-    public ElementReference getNamespaceReference() {
-        return ElementReferenceImpl.makeElementReference(
-                this.getSelf().getUmlNamespace().getNamespace());
-    }
-    */
-    
     @Override
     public UnitDefinition getUnit() {
         UnitDefinition unit = super.getUnit();
@@ -261,7 +253,12 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                 ((TemplateableElement)namespace).isTemplate());
     }
     
-   @Override
+    @Override
+    public ElementReference getContext() {
+        return this.getReferent().getImpl().getContext();
+    }
+    
+    @Override
     public Member bind(String name,
             NamespaceDefinition namespace,
             boolean isOwnedMember,

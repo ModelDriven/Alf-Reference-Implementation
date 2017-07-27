@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License
  * (GPL) version 3 that accompanies this distribution and is available at     
@@ -26,7 +26,7 @@ public class OpaqueExpression extends ValueSpecification implements
 	
 	@Override
 	public org.eclipse.uml2.uml.OpaqueExpression getBase() {
-		return (org.eclipse.uml2.uml.OpaqueExpression)this.getBase();
+		return (org.eclipse.uml2.uml.OpaqueExpression)this.base;
 	}
 
 	@Override

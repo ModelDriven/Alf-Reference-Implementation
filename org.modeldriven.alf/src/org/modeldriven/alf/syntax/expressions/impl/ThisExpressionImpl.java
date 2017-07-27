@@ -36,20 +36,8 @@ public class ThisExpressionImpl extends ExpressionImpl {
 	 **/
 	@Override
 	protected ElementReference deriveType() {
-	    ElementReference currentScope = this.currentScope == null? null: 
-	                                    this.currentScope.getImpl().getReferent();
-	    if (currentScope == null) {
-	        return null;
-	    } else if (currentScope.getImpl().isOperation() || currentScope.getImpl().isMethod()) {
-	        return currentScope.getImpl().getNamespace();
-	    } else if (currentScope.getImpl().isBehavior()) {
-	        ElementReference context = currentScope.getImpl().getContext();
-	        return context != null? context: currentScope;
-	    } else if (currentScope.getImpl().isClass()) {
-	        return currentScope;
-	    } else {
-	        return null;
-	    }
+	    return this.currentScope == null? null: 
+	        this.currentScope.getImpl().getContext();
 	}
 	
 	/**

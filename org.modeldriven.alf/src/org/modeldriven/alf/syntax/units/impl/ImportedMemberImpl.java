@@ -50,23 +50,6 @@ public class ImportedMemberImpl extends MemberImpl {
     }
     
     @Override
-    public Boolean getIsStub() {
-        if (super.getIsStub()) {
-            return true;
-        } else if (this.isImported()) {
-            return false;
-        } else {
-            // Consider an external operation, activity or property (default
-            // value) to be a stub, since they can be specified using Alf 
-            // subunits.
-            ElementReference referent = this.getReferent();
-            return referent.getImpl().isOperation() || 
-                    referent.getImpl().isActivity() ||
-                    referent.getImpl().isProperty();
-        }
-    }
-    
-    @Override
     public UnitDefinition getSubunit() {
         return null;
     }
@@ -128,57 +111,13 @@ public class ImportedMemberImpl extends MemberImpl {
 	 * return the result of checking their distinguishability according to the
 	 * rules of the UML superstructure.
 	 **/
-	// TODO: Clean up.
-//	public Boolean isSameKindAs(Member member) {
-//	    ImportedMember self = this.getSelf();
-//	    if (member == null) {
-//	        return false;
-//	    } else if (!(member instanceof ImportedMember)) {
-//	        return member.isSameKindAs(self);
-//	    } else {
-//	        ElementReference referent = self.getReferent();
-//	        ElementReference otherReferent = ((ImportedMember)member).getReferent();
-//	        if (referent == null || otherReferent == null) {
-//	            return false;
-//	        } else {
-//    	        SyntaxElement element = referent.getImpl().getAlf();
-//    	        SyntaxElement otherElement = otherReferent.getImpl().getAlf();
-//    	        if (element != null) {
-//    	            return element instanceof Member && ((Member)element).isSameKindAs(member);
-//    	        } else if (otherElement != null) {
-//    	            return otherElement instanceof Member && ((Member)otherElement).isSameKindAs(self);
-//    	        } else {
-//    	            Element umlElement = referent.getImpl().getUml();
-//    	            Element otherUmlElement = otherReferent.getImpl().getUml();
-//    	            if (!(umlElement instanceof NamedElement && 
-//    	                    otherUmlElement instanceof NamedElement)) {
-//    	                return false;
-//    	            } else {
-//    	                NamedElement namedElement = (NamedElement)umlElement;
-//    	                Namespace namespace = namedElement.getNamespace();
-//    	                return namespace != null && 
-//    	                        !namedElement.isDistinguishableFrom(
-//    	                                (NamedElement)otherUmlElement, namespace);
-//    	            }
-//    	        }
-//	        }
-//	    }
-//	}
+	public Boolean isSameKindAs(Member member) {
+	    return super.isSameKindAs(member);
+	}
 	
-	/**
-	 * Allow an external operation, owned behavior (activity) or property to 
-	 * serve as the "stub" for an activity definition. The names are assumed to
-	 * already match. (Note: The case of a property covers the use of an 
-	 * activity definition to define the default value of an external property.)
-	 */
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-	    ElementReference referent = this.getReferent();
-	    return !this.isImported() && 
-	            unit.getDefinition() instanceof ActivityDefinition &&
-	            (referent.getImpl().isOperation() || 
-	                    referent.getImpl().isOwnedBehavior() ||
-	                    referent.getImpl().isProperty());
+	    return false;
 	}
 
     @Override
@@ -189,6 +128,11 @@ public class ImportedMemberImpl extends MemberImpl {
     @Override
     public boolean isStereotype() {
         return this.getReferent().getImpl().isStereotype();
+    }
+    
+    @Override
+    public ElementReference getContext() {
+        return this.getReferent().getImpl().getContext();
     }
     
     public static ImportedMember makeImportedMember(Member member) {

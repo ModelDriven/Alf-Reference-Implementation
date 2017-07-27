@@ -198,10 +198,23 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
     }
     
     public boolean isClassifierBehavior() {
-        ElementReference namespace =  this.getNamespaceReference();
+        Member stub = this.getStub();
+        return isClassifierBehavior(stub != null? stub: this.getSelf());
+    }
+    
+    private static boolean isClassifierBehavior(Member member) {
+        ElementReference namespace = member.getImpl().getNamespaceReference();
         return namespace != null && 
-            this.getReferent().getImpl().
-                equals(namespace.getImpl().getClassifierBehavior());
+                member.getImpl().getReferent().getImpl().
+                    equals(namespace.getImpl().getClassifierBehavior());
+    }
+    
+    @Override
+    public ElementReference getContext() {
+        Member stub = this.getStub();
+        return stub != null? stub.getImpl().getContext():
+            isClassifierBehavior(this.getSelf())? this.getNamespaceReference(): 
+            this.getReferent();
     }
     
     public String getPrimitiveBehaviorPrototypeName() {

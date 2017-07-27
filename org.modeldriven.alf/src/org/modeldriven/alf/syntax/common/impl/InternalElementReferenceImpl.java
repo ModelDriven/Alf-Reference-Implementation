@@ -130,25 +130,6 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public boolean isMethod() {
-        if (!this.isActivity())
-            return false;
-        else {
-            Member stub = ((NamespaceDefinition)this.getSelf().getElement()).
-                    getImpl().getStub();
-            ElementReference referent = stub == null? null: 
-                stub.getImpl().getReferent();
-            return referent != null && 
-                    (referent.getImpl().isOperation() || 
-                        referent.getImpl().isOwnedBehavior() ||
-                        // Note: The case of a property covers the use of an
-                        // activity definition to define the default value of
-                        // an external property.
-                        referent.getImpl().isProperty());
-        }
-     }
-    
-    @Override
     public boolean isEnumeration() {
         return this.getSelf().getElement() instanceof EnumerationDefinition;
     }
@@ -591,7 +572,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         if (!(element instanceof Member)) {
             return null;
         } else {
-            return ((Member)element).getImpl().getNamespaceReference();
+            NamespaceDefinition outerScope = ((Member)element).getImpl().getOuterScope();
+            return outerScope == null? null: outerScope.getImpl().getReferent();
         }
     }
 
@@ -633,23 +615,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public ElementReference getContext() {
         SyntaxElement element = this.getSelf().getElement();
-        if (!(element instanceof ActivityDefinition)) {
-            return null;
-        } else {
-            ElementReference namespace = 
-                   ((ActivityDefinition)element).getImpl().getNamespaceReference();
-            if (namespace == null) {
-                return null;
-            } else if (namespace.getImpl().isBehavior()) {
-                // Note: This can never happen for a namespace that is an internal 
-                // element reference.
-                return namespace.getImpl().getContext();
-            } else if (this.equals(namespace.getImpl().getClassifierBehavior())) {
-                return namespace;
-            } else {
-                return null;
-            }
-        }
+        return !(element instanceof Member)? null:
+            ((Member)element).getImpl().getContext();
     }
     
     @Override

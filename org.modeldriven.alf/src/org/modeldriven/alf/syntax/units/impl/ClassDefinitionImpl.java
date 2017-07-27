@@ -179,6 +179,11 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
     public List<Member> getOnlyOwnedMembers() {
         return super.getOwnedMember();
     }
+    
+    @Override
+    public ElementReference getContext() {
+        return this.getReferent();
+    }
 
     public boolean needsDefaultConstructor() {
         if (this.needsDefaultConstructor) {

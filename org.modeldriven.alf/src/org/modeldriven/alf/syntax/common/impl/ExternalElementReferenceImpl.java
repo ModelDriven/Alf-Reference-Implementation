@@ -23,6 +23,7 @@ import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
+import org.modeldriven.alf.uml.Action;
 import org.modeldriven.alf.uml.Activity;
 import org.modeldriven.alf.uml.Association;
 import org.modeldriven.alf.uml.Behavior;
@@ -40,6 +41,7 @@ import org.modeldriven.alf.uml.Feature;
 import org.modeldriven.alf.uml.MultiplicityElement;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
+import org.modeldriven.alf.uml.OpaqueExpression;
 import org.modeldriven.alf.uml.Operation;
 import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageableElement;
@@ -170,12 +172,6 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         return this.getSelf().getElement() instanceof Activity;
     }
     
-    @Override
-    public boolean isMethod() {
-        return this.isBehavior() &&
-                ((Behavior)this.getSelf().getElement()).getSpecification() != null;
-    }
-
     @Override
     public boolean isEnumeration() {
         return this.getSelf().getElement() instanceof Enumeration;
@@ -823,13 +819,30 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public ElementReference getContext() {
-        if (!this.isBehavior()) {
-            return null;
-        } else {
-            ExternalElementReference self = this.getSelf();
-            BehavioredClassifier context = ((Behavior)self.getElement()).getContext();
+        ExternalElementReference self = this.getSelf();
+        Element element = self.getElement(); 
+        
+        if (element instanceof Behavior) {
+            BehavioredClassifier context = ((Behavior)element).getContext();
             return context == null? self: ElementReferenceImpl.makeElementReference(context);
+            
+        } else if (element instanceof Action) {
+            return ElementReferenceImpl.makeElementReference(((Action)element).getContext());
+            
+        // Handle opaque expressions used as default values and guards. 
+        } else if (element instanceof OpaqueExpression) {
+            return ElementReferenceImpl.makeElementReference(getContextOf(element.getOwner()));
+            
+        } else {
+            return null;
         }
+    }
+    
+    private static Element getContextOf(Element element) {
+        return element == null? null:
+            element instanceof Behavior? ((Behavior)element).getContext():
+            element instanceof Classifier? element:
+            getContextOf(element.getOwner());
     }
     
     @Override

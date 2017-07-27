@@ -159,11 +159,6 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
     }
 
     @Override
-    public boolean isMethod() {
-        return this.getSelf().getReferent().getImpl().isMethod();
-     }
-    
-    @Override
     public boolean isEnumeration() {
         return this.getSelf().getReferent().getImpl().isEnumeration();
     }

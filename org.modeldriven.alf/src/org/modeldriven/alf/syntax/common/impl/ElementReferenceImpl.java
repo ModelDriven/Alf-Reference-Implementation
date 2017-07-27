@@ -98,7 +98,6 @@ public abstract class ElementReferenceImpl implements AssignableElement {
 	public abstract boolean isDataType();
 	public abstract boolean isBehavior();
 	public abstract boolean isActivity();
-	public abstract boolean isMethod(); 
     public abstract boolean isEnumeration();
     public abstract boolean isPrimitive();
     public abstract boolean isSignal();

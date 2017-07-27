@@ -175,6 +175,11 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
         }
     }
     
+    @Override
+    public ElementReference getContext() {
+        return this.getReferent().getImpl().getContext();
+    }
+    
     public static ElementReference getExistingBoundElement(
             ElementReference templateReferent,
             List<ElementReference> templateArguments) {

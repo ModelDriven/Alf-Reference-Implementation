@@ -549,6 +549,11 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
+    public ElementReference getContext() {
+        return this.getNamespaceReference();
+    }
+    
+    @Override
     protected void bindTo(SyntaxElement base,
             List<ElementReference> templateParameters, 
             List<ElementReference> templateArguments) {

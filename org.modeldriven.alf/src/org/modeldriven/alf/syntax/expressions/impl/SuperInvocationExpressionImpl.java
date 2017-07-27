@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,7 +10,6 @@
 package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.*;
-import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ExpressionStatement;
@@ -31,7 +29,7 @@ public class SuperInvocationExpressionImpl
 
 	private QualifiedName target = null;
 	
-	private ElementReferenceImpl context = null;
+	private ElementReference context = null;
 	private Block enclosingBlock = null;
 
 	public SuperInvocationExpressionImpl(SuperInvocationExpression self) {
@@ -57,7 +55,7 @@ public class SuperInvocationExpressionImpl
 	 **/
 	@Override
 	protected ElementReference deriveReferent() {
-	    ElementReferenceImpl context = this.getContext();
+	    ElementReference context = this.getContext();
 	    if (context == null) {
 	        return null;
 	    } else {
@@ -65,7 +63,7 @@ public class SuperInvocationExpressionImpl
 	        QualifiedName target = this.getSelf().getTarget();
 	        String name = null;
 	        if (target == null) {
-                superclasses = context.parents();
+                superclasses = context.getImpl().parents();
                 if (superclasses.size() != 1) {
                     return null;
                 }
@@ -81,7 +79,7 @@ public class SuperInvocationExpressionImpl
 	            QualifiedName qualification = target.getQualification();
 	            name = target.getUnqualifiedName().getName();
 	            if (qualification == null) {
-	                superclasses = context.parents();
+	                superclasses = context.getImpl().parents();
 	            } else {
 	                ElementReference superclass = 
 	                    qualification.getImpl().getClassifierReferent();
@@ -148,9 +146,9 @@ public class SuperInvocationExpressionImpl
 	        return true;
 	    } else {
 	        ElementReference superclass = qualification.getImpl().getClassifierReferent();
-	        ElementReferenceImpl context = this.getContext();
+	        ElementReference context = this.getContext();
 	        return superclass != null && context != null &&
-	                    superclass.getImpl().isContainedIn(context.parents());
+	                    superclass.getImpl().isContainedIn(context.getImpl().parents());
         }
 	}
 
@@ -161,10 +159,10 @@ public class SuperInvocationExpressionImpl
 	public boolean superInvocationExpressionImplicitTarget() {
 	    SuperInvocationExpression self = this.getSelf();
 	    ElementReference referent = self.getBoundReferent();
-        ElementReferenceImpl context = this.getContext();
+        ElementReference context = this.getContext();
 		return self.getTarget() != null || 
 		            referent != null && referent.getImpl().isConstructor() &&
-		            context != null && context.parents().size() == 1;
+		            context != null && context.getImpl().parents().size() == 1;
 	}
 
 	/**
@@ -254,21 +252,10 @@ public class SuperInvocationExpressionImpl
 	    // this.currentScope = currentScope;
 	}
 	
-	private ElementReferenceImpl getContext() {
+	private ElementReference getContext() {
         NamespaceDefinition currentScope = this.getCurrentScope();
 	    if (this.context == null && currentScope != null) {
-	        this.context = currentScope.getImpl().getReferent().getImpl();
-            if (!this.context.isClassifier() || this.context.isMethod()) {
-                NamespaceDefinition outerScope = currentScope.getImpl().getOuterScope();
-                if (outerScope == null) {
-                    this.context = null;
-                } else {
-                    this.context = outerScope.getImpl().getReferent().getImpl();
-                    if (!context.isClassifier()) {
-                        this.context = null;
-                    }
-                }
-            }
+	        this.context = currentScope.getImpl().getContext();
 	    }
 	    return this.context;
 	}

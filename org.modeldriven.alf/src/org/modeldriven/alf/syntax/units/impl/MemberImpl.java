@@ -504,6 +504,10 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         return namespace == null? null: namespace.getImpl().getReferent();
     }
     
+    public ElementReference getContext() {
+        return null;
+    }
+    
     public static void removeDuplicates(List<Member> members) {
         for (int i = 0; i < members.size(); i++) {
             Member importedMember = members.get(i);
