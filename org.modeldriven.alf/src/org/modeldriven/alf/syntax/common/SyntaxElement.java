@@ -44,9 +44,13 @@ public abstract class SyntaxElement extends ParsedElement {
     public static void addExternalReference(
             Collection<ExternalElementReference> externalReferences, 
             ElementReference reference) {
-        if (reference instanceof ExternalElementReference &&
-                !reference.getImpl().isContainedIn(externalReferences)) {
-            externalReferences.add((ExternalElementReference)reference);
+        if (reference != null) {
+            reference = reference.getImpl().getReferent();
+            if (reference instanceof ExternalElementReference &&
+                    !reference.getImpl().isContainedIn(externalReferences)) {
+                externalReferences.add((ExternalElementReference)reference);
+            }
+            addExternalReferences(externalReferences, reference.getImpl().getTemplateActuals());
         }
     }
     
