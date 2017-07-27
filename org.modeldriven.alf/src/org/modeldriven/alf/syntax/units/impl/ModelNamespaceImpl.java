@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
+import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -82,13 +83,13 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
         return null;
     }
     
-    public String makeBoundElementNameFor(
+    public String makeBoundElementName(
             ElementReference templateReferent, List<ElementReference> templateArguments) {
-        return this.makeBoundElementNameFor(
+        return this.makeBoundElementName(
                 templateReferent.getImpl().getName(), templateArguments);
     }
 
-    protected String makeBoundElementNameFor(
+    protected String makeBoundElementName(
             String templateName,
             List<ElementReference> templateArguments) {
         StringBuilder name = new StringBuilder("$$");
@@ -104,9 +105,53 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
         return name.toString();
     }
     
-    public ElementReference getInstantiationNamespaceFor(
+    public ElementReference getInstantiationNamespace(
             ElementReference templateReferent) {
         return templateReferent.getImpl().getNamespace();
+    }
+
+    public ElementReference getExistingBoundElement(
+            ElementReference templateReferent,
+            List<ElementReference> templateArguments) {
+        ElementReference namespaceReference = this.getInstantiationNamespace(templateReferent);
+        if (namespaceReference != null) {
+            String name = this.makeBoundElementName(templateReferent, templateArguments);
+            for (ElementReference member: namespaceReference.getImpl().getOwnedMembers()) {
+                if (name.equals(member.getImpl().getName())) {
+                    return member;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public ElementReference getEffectiveBoundElement(
+            ElementReference templateReferent,
+            List<ElementReference> templateParameters,
+            List<ElementReference> templateArguments) {
+        ElementReference namespaceReference = this.getInstantiationNamespace(templateReferent);        
+        if (namespaceReference == null) {
+            return null;
+        } else {           
+            String name = this.makeBoundElementName(templateReferent, templateArguments);
+            for (ElementReference member: namespaceReference.getImpl().getOwnedMembers()) {
+                if (name.equals(member.getImpl().getName())) {
+                    return member;
+                }
+            }
+            
+            NamespaceDefinition instantiationNamespace = 
+                    namespaceReference.getImpl().asNamespace();
+            Member boundElement = templateReferent.getImpl().asNamespace().getImpl().
+                    bind(name, instantiationNamespace, true,
+                            templateParameters, templateArguments);
+            if (boundElement == null) {
+                return null;
+            } else {
+                boundElement.deriveAll();
+                return boundElement.getImpl().getReferent();
+            }
+        }
     }
 
 }

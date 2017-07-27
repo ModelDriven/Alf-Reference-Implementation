@@ -194,10 +194,10 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     }
 
     @Override
-    public String makeBoundElementNameFor(
+    public String makeBoundElementName(
             ElementReference templateReferent, 
             List<ElementReference> templateArguments) {
-    	return super.makeBoundElementNameFor(
+    	return super.makeBoundElementName(
     			templateReferent instanceof InternalElementReference? 
     					templateReferent.getImpl().getName(): 
     				    templateReferent.getImpl().getQualifiedName().
@@ -205,10 +205,10 @@ public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamesp
     }
     
     @Override
-    public ElementReference getInstantiationNamespaceFor(
+    public ElementReference getInstantiationNamespace(
             ElementReference templateReferent) {
         return templateReferent instanceof InternalElementReference? 
-        		super.getInstantiationNamespaceFor(templateReferent): 
+        		super.getInstantiationNamespace(templateReferent): 
         		this.getModelNamespace().getImpl().getReferent();
     }
 

@@ -80,13 +80,28 @@ public class ModelNamespace extends PackageDefinition {
     public String makeBoundElementName(
             ElementReference templateReferent, 
             List<ElementReference> templateArguments) {
-        return this.getImpl().makeBoundElementNameFor(
+        return this.getImpl().makeBoundElementName(
                 templateReferent, templateArguments);
     }
     
     public ElementReference getInstantiationNamespace(
             ElementReference templateReferent) {
-        return this.getImpl().getInstantiationNamespaceFor(templateReferent);
+        return this.getImpl().getInstantiationNamespace(templateReferent);
     }
     
+    public ElementReference getExistingBoundElement(
+            ElementReference templateReferent,
+            List<ElementReference> templateArguments) {
+        return this.getImpl().getExistingBoundElement(
+                templateReferent, templateArguments);
+    }
+    
+    public ElementReference getEffectiveBoundElement(
+            ElementReference templateReferent,
+            List<ElementReference> templateParameters,
+            List<ElementReference> templateArguments) {
+        return this.getImpl().getEffectiveBoundElement(
+                templateReferent, templateParameters, templateArguments);
+    }
+
 }

@@ -492,10 +492,10 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            ElementReference templateReference = 
                    getNewReference(instantiation, template, templateParameters, templateArguments);
            if (templateReference == null) {
-               newReference = BoundClassifierImpl.getEffectiveBoundElement(
+               newReference = RootNamespace.getRootScope().getEffectiveBoundElement(
                        ElementReferenceImpl.makeElementReference(template), formals, actuals);
            } else {
-               newReference = BoundClassifierImpl.getEffectiveBoundElement(
+               newReference = RootNamespace.getRootScope().getEffectiveBoundElement(
                        templateReference, formals, actuals);
            }
        }

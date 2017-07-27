@@ -180,54 +180,6 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
         return this.getReferent().getImpl().getContext();
     }
     
-    public static ElementReference getExistingBoundElement(
-            ElementReference templateReferent,
-            List<ElementReference> templateArguments) {
-        ElementReference namespaceReference = 
-                RootNamespace.getRootScope().getInstantiationNamespace(templateReferent);
-        if (namespaceReference != null) {
-            String name = RootNamespace.getRootScope().makeBoundElementName(
-                    templateReferent, templateArguments);
-            for (ElementReference member: namespaceReference.getImpl().getOwnedMembers()) {
-                if (name.equals(member.getImpl().getName())) {
-                    return member;
-                }
-            }
-        }
-        return null;
-    }
-    
-    public static ElementReference getEffectiveBoundElement(
-            ElementReference templateReferent,
-            List<ElementReference> templateParameters,
-            List<ElementReference> templateArguments) {
-        ElementReference namespaceReference = 
-                RootNamespace.getRootScope().getInstantiationNamespace(templateReferent);        
-        if (namespaceReference == null) {
-            return null;
-        } else {           
-            String name = RootNamespace.getRootScope().makeBoundElementName(
-                    templateReferent, templateArguments);
-            for (ElementReference member: namespaceReference.getImpl().getOwnedMembers()) {
-                if (name.equals(member.getImpl().getName())) {
-                    return member;
-                }
-            }
-            
-            NamespaceDefinition instantiationNamespace = 
-                    namespaceReference.getImpl().asNamespace();
-            Member boundElement = templateReferent.getImpl().asNamespace().getImpl().
-                    bind(name, instantiationNamespace, true,
-                            templateParameters, templateArguments);
-            if (boundElement == null) {
-                return null;
-            } else {
-                boundElement.deriveAll();
-                return boundElement.getImpl().getReferent();
-            }
-        }
-    }
-
     public static BoundClassifier makeBoundClassifier(
             ElementReference template, List<ElementReference> actuals) {
         BoundClassifier classifier = new BoundClassifier();
@@ -236,7 +188,8 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
         classifier.setTemplate(template);
         classifier.setActual(actuals);
         if (!template.getImpl().isCollectionFunction()) {
-            ElementReference existingElement = getExistingBoundElement(template, actuals);
+            ElementReference existingElement = 
+                    RootNamespace.getRootScope().getExistingBoundElement(template, actuals);
             if (existingElement != null) {
                 classifier.setEffectiveBoundElement(existingElement);
             } else {
@@ -263,10 +216,11 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
         for (int i = 0; i < boundClassifiers.size(); i++) {
             BoundClassifier boundClassifier = boundClassifiers.get(i);
             ElementReference template = boundClassifier.getTemplate();
-            boundClassifier.setEffectiveBoundElement(getEffectiveBoundElement(
-                    template, 
-                    template.getImpl().getTemplateParameters(), 
-                    boundClassifier.getActual()));
+            boundClassifier.setEffectiveBoundElement(
+                    RootNamespace.getRootScope().getEffectiveBoundElement(
+                        template, 
+                        template.getImpl().getTemplateParameters(), 
+                        boundClassifier.getActual()));
         }
     }
     
