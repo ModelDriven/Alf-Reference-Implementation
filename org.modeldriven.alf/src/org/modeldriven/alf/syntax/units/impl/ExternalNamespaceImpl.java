@@ -200,23 +200,6 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
-    protected Boolean matchNameForStub(Member stub, NamespaceDefinition definition) {
-        String stubName = stub.getName();
-        String subunitName = definition.getName();
-        ElementReference referent = stub.getImpl().getReferent();
-        return  stubName != null && subunitName != null &&
-                (referent.getImpl().isOperation()? 
-                    (subunitName.equals(stubName) || 
-                     subunitName.startsWith(stubName + "$method$")):
-                 referent.getImpl().isOwnedBehavior()? 
-                    (subunitName.equals(stubName) || 
-                     subunitName.startsWith(stubName + "$behavior$")):
-                 referent.getImpl().isProperty()?
-                     subunitName.startsWith(stubName + "$defaultValue$"):
-                 super.matchNameForStub(stub, definition));
-    }
-    
-    @Override
     public List<Member> resolveInScope(String name, boolean classifierOnly) {
         ExternalNamespace self = this.getSelf();
         List<NamedElement> elements = 
