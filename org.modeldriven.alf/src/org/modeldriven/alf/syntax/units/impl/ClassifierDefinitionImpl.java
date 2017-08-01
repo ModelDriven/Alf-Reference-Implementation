@@ -454,26 +454,4 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
         }
     }
     
-    @Override
-    protected void fixUpAfterBinding() {
-        // NOTE: The following fixes up the inherited members in case this
-        // class definition was bound before the proper inheritance
-        // filtering was performed on the base.
-        
-        ClassifierDefinition self = this.getSelf();
-        Collection<Member> ownedMembers = self.getOwnedMember();
-        Collection<Member> members = new ArrayList<Member>(self.getMember());
-        List<Member> inheritedMembers = new ArrayList<Member>();
-        for (Member member: self.getMember()) {
-            if (!ownedMembers.contains(member) &&
-                    !member.getImpl().isImported()) {
-                inheritedMembers.add(member);
-                members.remove(member);
-            }
-        }
-        members.addAll(this.inherit(inheritedMembers));
-        self.setMember(members);
-        
-    }
-
 } // ClassifierDefinitionImpl

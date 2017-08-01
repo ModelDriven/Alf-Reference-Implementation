@@ -583,7 +583,4 @@ public abstract class MemberImpl extends DocumentedElementImpl {
         }
     }
     
-    protected void fixUpAfterBinding() {        
-    }
-
 } // MemberImpl
