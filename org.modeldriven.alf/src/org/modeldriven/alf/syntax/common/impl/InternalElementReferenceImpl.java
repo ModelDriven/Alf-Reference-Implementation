@@ -79,7 +79,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isProfile() {
         SyntaxElement element = this.getSelf().getElement();
-        return element != null && element instanceof Member &&
+        return element instanceof Member &&
                 ((Member)element).getImpl().isProfile();
     }
 
@@ -148,7 +148,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isStereotype() {
         SyntaxElement element = this.getSelf().getElement();
-        return element != null && element instanceof Member &&
+        return element instanceof Member &&
                 ((Member)element).getImpl().isStereotype();
     }
 
@@ -160,14 +160,14 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
    @Override
     public boolean isPackageableElement() {
         SyntaxElement element = this.getSelf().getElement();
-        return element != null && element instanceof Member &&
+        return element instanceof Member &&
                 !((Member)element).getIsFeature();
     }
     
     @Override
     public boolean isFeature() {
         SyntaxElement element = this.getSelf().getElement();
-        return element != null && element instanceof Member && 
+        return element instanceof Member && 
                 ((Member)element).getIsFeature();
     }
     
@@ -265,11 +265,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public NamespaceDefinition asNamespace() {
-        if (this.isNamespace()) {
-            return (NamespaceDefinition)this.getSelf().getElement();
-        } else {
-            return null;
-        }
+        return !this.isNamespace()? null: 
+            (NamespaceDefinition)this.getSelf().getElement();
     }
 
     @Override
@@ -302,21 +299,16 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public Collection<ElementReference> parents() {
-        if (this.isClassifier()) {
-            return ((ClassifierDefinition)this.getSelf().getElement()).getSpecializationReferent();
-        } else {
-            return new HashSet<ElementReference>();
-        }
+        return !this.isClassifier()? new HashSet<ElementReference>():
+            ((ClassifierDefinition)this.getSelf().getElement()).getSpecializationReferent();
     }
 
     @Override
     public Collection<ElementReference> allParents() {
         if (this.allParents == null) {
-            if (!this.isClassifier()) {
-                this.allParents = new HashSet<ElementReference>();
-            } else {
-                this.allParents = this.allParents(new HashSet<ElementReference>());
-            }
+            this.allParents = !this.isClassifier()?
+                    new HashSet<ElementReference>():
+                    this.allParents(new HashSet<ElementReference>());
         }
         return this.allParents;
     }
@@ -339,18 +331,18 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public String getName() {
-        SyntaxElement element = this.getSelf().getElement();
-        return element instanceof Member? ((Member)element).getName(): null;
+        if (this.isAny()) {
+            return "any";
+        } else {
+            SyntaxElement element = this.getSelf().getElement();
+            return element instanceof Member? ((Member)element).getName(): null;
+        }
     }
     
     @Override
     public String getVisibility() {
         SyntaxElement element = this.getSelf().getElement();
-        if (!(element instanceof Member)) {
-            return null;
-        } else {
-            return ((Member)element).getVisibility();
-        }
+        return !(element instanceof Member)? null: ((Member)element).getVisibility();
     }
 
     @Override
@@ -409,20 +401,16 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public List<ElementReference> getParameters() {
-        if (this.isBehavior() || this.isOperation()) {
-            return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getParameters();
-        } else {
-            return new ArrayList<ElementReference>();
-        }
+        return this.isBehavior() || this.isOperation()?
+                ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getParameters():
+                new ArrayList<ElementReference>();
     }
     
     @Override
     public ElementReference getReturnParameter() {
-        if (this.isBehavior() || this.isOperation()) {
-            return ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getReturnParameter();
-        } else {
-            return null;
-        }
+        return this.isBehavior() || this.isOperation()?
+                ((NamespaceDefinition)this.getSelf().getElement()).getImpl().getReturnParameter():
+                null;
     }
     
     @Override
@@ -497,18 +485,16 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public ElementReference getType() {
-        if (this.isProperty() || this.isParameter()) {
-            return ((TypedElementDefinition)this.getSelf().getElement()).getType();
-        } else if (this.isOperation()) {
-            return ((OperationDefinition)this.getSelf().getElement()).getImpl().getType();
-        } else if (this.isBehavior()) {
-            return ((ActivityDefinition)this.getSelf().getElement()).getImpl().getType();
-        } else if (this.isEnumerationLiteral()) {
-            return ((EnumerationLiteralName)this.getSelf().getElement()).
-                            getNamespace().getImpl().getReferent();
-        } else {
-            return null;
-        }
+        return this.isProperty() || this.isParameter()? 
+                    ((TypedElementDefinition)this.getSelf().getElement()).getType():
+               this.isOperation()?
+                    ((OperationDefinition)this.getSelf().getElement()).getImpl().getType():
+               this.isBehavior()?
+                    ((ActivityDefinition)this.getSelf().getElement()).getImpl().getType():
+               this.isEnumerationLiteral()?
+                    ((EnumerationLiteralName)this.getSelf().getElement()).
+                        getNamespace().getImpl().getReferent():
+               null;
     }
 
     @Override
@@ -519,38 +505,24 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     public Integer getLower() {
-        int lower = 0;
         SyntaxElementImpl element = this.getSelf().getElement().getImpl();
-        if (element instanceof AssignableElement) {
-            lower = ((AssignableElement)element).getLower();
-        } else if (this.isOperation()) {
-            lower = ((OperationDefinitionImpl)element).getLower();
-        } else if (this.isBehavior()) {
-            lower = ((ActivityDefinitionImpl)element).getLower();
-        }
-        return lower;
+        return element instanceof AssignableElement? ((AssignableElement)element).getLower():
+               this.isOperation()? ((OperationDefinitionImpl)element).getLower():
+               this.isBehavior()? ((ActivityDefinitionImpl)element).getLower():
+               0;
     }
 
     public Integer getUpper() {
-        int upper = 0;
         SyntaxElementImpl element = this.getSelf().getElement().getImpl();
-        if (element instanceof AssignableElement) {
-            upper = ((AssignableElement)element).getUpper();
-        } else if (this.isOperation()) {
-            upper = ((OperationDefinitionImpl)element).getUpper();
-        } else if (this.isBehavior()) {
-            upper = ((ActivityDefinitionImpl)element).getUpper();
-        }
-        return upper;
+        return element instanceof AssignableElement? ((AssignableElement)element).getUpper():
+            this.isOperation()? ((OperationDefinitionImpl)element).getUpper():
+            this.isBehavior()? ((ActivityDefinitionImpl)element).getUpper():
+            0;
     }
 
     @Override
     public String getDirection() {
-        if (!this.isParameter()) {
-            return null;
-        } else {
-            return ((FormalParameter)this.getElement()).getDirection();
-        }
+        return !this.isParameter()? null: ((FormalParameter)this.getElement()).getDirection();
     }
     
     @Override
@@ -559,8 +531,7 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
             return null;
         } else {
             ActivityDefinition classifierBehavior = 
-                ((ActiveClassDefinition)this.getSelf().getElement()).
-                    getClassifierBehavior();
+                ((ActiveClassDefinition)this.getSelf().getElement()).getClassifierBehavior();
             return classifierBehavior == null? null: 
                         classifierBehavior.getImpl().getReferent();
         }
@@ -657,29 +628,33 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     public boolean equals(Object object) {
         if (object == null) {
             return false;
+        } else if (object == this || object == this.getSelf()) {
+            return true;
         } else {
-            SyntaxElement element = null;
-            if (object instanceof ElementReference) {
-                element = ((ElementReference)object).getImpl().getAlf();
-            } else if (object instanceof ElementReferenceImpl) {
-                element = ((ElementReferenceImpl)object).getAlf();
-            } else if (object instanceof SyntaxElement) {
-                element = (SyntaxElement)object;
-            }
-            return element != null && this.getSelf().getElement().equals(element);
+            SyntaxElement element = 
+                    object instanceof ElementReference? 
+                            ((ElementReference)object).getImpl().getAlf():
+                    object instanceof ElementReferenceImpl? 
+                            ((ElementReferenceImpl)object).getAlf():
+                    object instanceof SyntaxElement? 
+                            (SyntaxElement)object:
+                    null;
+            return element != null && element.equals(this.getSelf().getElement());
         }
     }
 
     @Override
     public boolean conformsTo(ElementReference type) {
-        return this.isClassifier() && (type == null ||
+        return this.isClassifier() && type != null &&
+               (type.getImpl().isAny() ||
                 this.equals(type) || 
                 type.getImpl().isContainedIn(this.allParents()));
     }
 
     @Override
     public int hashCode() {
-        return this.getSelf().getElement().hashCode();
+        SyntaxElement element = this.getSelf().getElement();
+        return element == null? this.hashCode(): element.hashCode();
     }
 
 } // InternalElementReferenceImpl

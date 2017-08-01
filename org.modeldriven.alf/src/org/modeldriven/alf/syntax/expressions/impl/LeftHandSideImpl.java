@@ -253,9 +253,9 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	    if (index == null) {
 	        return true;
 	    } else {
-	        ElementReference indexType = index == null? null: index.getType();
-	        return index.getUpper() <= 1 && indexType != null && 
-	               indexType.getImpl().isInteger();
+	        ElementReference indexType = index.getType();
+	        return indexType == null || 
+	                (indexType.getImpl().isInteger() && index.getUpper() <= 1);
 	    }
 	}
 	

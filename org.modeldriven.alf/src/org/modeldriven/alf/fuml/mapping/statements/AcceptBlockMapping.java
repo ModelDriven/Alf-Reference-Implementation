@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -118,7 +117,7 @@ public class AcceptBlockMapping extends SyntaxElementMapping {
                         if (!(ActivityGraph.isContainedIn(source, this.blockNode))) {
                             ElementReference type = assignment.getType();
                             Classifier classifier = null;
-                            if (type != null) {
+                            if (type != null && !type.getImpl().isAny()) {
                                 classifier = (Classifier)type.getImpl().getUml();
                                 if (classifier == null) {
                                     mapping = this.fumlMap(assignment.getType());

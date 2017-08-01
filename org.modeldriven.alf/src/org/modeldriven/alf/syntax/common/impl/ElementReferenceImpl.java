@@ -48,8 +48,8 @@ import org.modeldriven.alf.uml.TemplateableElement;
 public abstract class ElementReferenceImpl implements AssignableElement {
     
     // Used as a non-null value to represent the "any" type.
-    private static final ElementReference any = new InternalElementReference();
-    
+    public static final ElementReference any = new InternalElementReference();
+
     private static Map<ParameterableElement, ElementReference> templateBindings = 
             new HashMap<ParameterableElement, ElementReference>();
     
@@ -379,6 +379,10 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         return this.isInteger() || 
                this.isReal();
     }
+    
+    public boolean isAny() {
+        return this.getSelf() == any;
+    }
 
     public abstract boolean conformsTo(ElementReference type);
     
@@ -426,7 +430,7 @@ public abstract class ElementReferenceImpl implements AssignableElement {
             ElementReference templateArgument) {
         templateBindings.put(
                 templateParameter.getParameteredElement(), 
-                templateArgument == null? any: templateArgument);
+                templateArgument);
     }
     
     public static Set<ParameterableElement> getTemplateBindingParameters() {
@@ -450,15 +454,14 @@ public abstract class ElementReferenceImpl implements AssignableElement {
             templateParameter.setOwnedParameteredElement(null);
             
             Element newElement = null;
-            if (reference != any) {
+            if (!reference.getImpl().isAny()) {
                 FumlMapping mapping = ((ElementReferenceMapping)
                         FumlMapping.getMapping(reference)).getMapping();
                 if (mapping != null) {
                     newElement = mapping.getElement();
                 }
                 if (newElement instanceof TemplateParameter) {
-                    newElement = ((TemplateParameter)newElement).
-                            getParameteredElement();
+                    newElement = ((TemplateParameter)newElement).getParameteredElement();
                 }
             }
             newElements.add(newElement);
@@ -487,8 +490,6 @@ public abstract class ElementReferenceImpl implements AssignableElement {
                         new ExternalElementReference();
                 externalReference.setElement(element);
                 reference = externalReference;
-            } else if (reference == any) {
-                reference = null;
             }
         }
         
@@ -506,6 +507,13 @@ public abstract class ElementReferenceImpl implements AssignableElement {
             reference = templateReferent.getImpl().bind(reference.getImpl().getTemplateActuals());
         }
         return reference;
+    }
+    
+    /**
+     * For a reference to a type, return the "any" reference for the "null" type (i.e, "untyped").
+     */
+    public static ElementReference makeTypeReference(Element element) {
+        return element == null? any: makeBoundReference(element);
     }
     
     /**

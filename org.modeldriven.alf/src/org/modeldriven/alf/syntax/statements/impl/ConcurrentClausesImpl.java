@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -119,14 +119,16 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
 	public boolean concurrentClausesConditionAssignments() {
 	    Set<AssignedSource> previousAssignments = new HashSet<AssignedSource>();
 	    for (NonFinalClause clause: this.getSelf().getClause()) {
-	        Expression condition = clause.getCondition();
-	        Collection<AssignedSource> assignmentsAfter = condition.getImpl().getNewAssignments();
-	        Set<AssignedSource> intersection = new HashSet<AssignedSource>(previousAssignments);
-	        intersection.retainAll(assignmentsAfter);
-	        if (!intersection.isEmpty()) {
-	            return false;
+	        if (clause != null) {
+    	        Expression condition = clause.getCondition();
+    	        Collection<AssignedSource> assignmentsAfter = condition.getImpl().getNewAssignments();
+    	        Set<AssignedSource> intersection = new HashSet<AssignedSource>(previousAssignments);
+    	        intersection.retainAll(assignmentsAfter);
+    	        if (!intersection.isEmpty()) {
+    	            return false;
+    	        }
+    	        previousAssignments.addAll(assignmentsAfter);
 	        }
-	        previousAssignments.addAll(assignmentsAfter);
 	    }
 		return true;
 	}
@@ -140,10 +142,11 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
 	    Map<String, AssignedSource> assignments = 
 	            new HashMap<String, AssignedSource>(this.getAssignmentBeforeMap());
 	    for (NonFinalClause clause: self.getClause()) {
-	        Expression condition = clause.getCondition();
-	        if (condition != null) {
-	            assignments = condition.getImpl().
-	                    adjustAssignments(assignments, false);
+	        if (clause != null) {
+    	        Expression condition = clause.getCondition();
+    	        if (condition != null) {
+    	            assignments = condition.getImpl().adjustAssignments(assignments, false);
+    	        }
 	        }
 	    }
 	    return assignments;
@@ -165,9 +168,11 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
         ConcurrentClauses self = this.getSelf();
         Collection<Block> blocks = new ArrayList<Block>();
         for (NonFinalClause clause: self.getClause()) {
-            Block body = clause.getBody();
-            if (body != null) {
-                blocks.add(body);
+            if (clause != null) {
+                Block body = clause.getBody();
+                if (body != null) {
+                    blocks.add(body);
+                }
             }
         }
         return blocks;
@@ -181,8 +186,10 @@ public class ConcurrentClausesImpl extends SyntaxElementImpl {
         if (base instanceof ConcurrentClauses) {
             ConcurrentClauses self = this.getSelf();
             for (NonFinalClause clause: ((ConcurrentClauses)base).getClause()) {
-                self.addClause((NonFinalClause)clause.getImpl().
-                        bind(templateParameters, templateArguments));
+                if (clause != null) {
+                    self.addClause((NonFinalClause)clause.getImpl().
+                            bind(templateParameters, templateArguments));
+                }
             }
         }
     }

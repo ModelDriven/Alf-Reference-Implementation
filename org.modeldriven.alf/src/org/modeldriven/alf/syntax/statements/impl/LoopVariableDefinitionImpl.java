@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -217,7 +216,7 @@ public class LoopVariableDefinitionImpl extends
 	        return expression == null? null: expression.getType();
 	    } else {
 	        QualifiedName typeName = this.getTypeName();
-	        return typeName == null? null: 
+	        return typeName == null? any: 
 	            typeName.getImpl().getNonTemplateClassifierReferent();
 	    }
 	}
@@ -325,10 +324,10 @@ public class LoopVariableDefinitionImpl extends
 	    } else {
 	        ElementReference type1 = expression1.getType();
 	        ElementReference type2 = expression2.getType();
-	        if (type1 == null || !type1.getImpl().isInteger() || 
-	                expression1.getUpper() != 1 ||
-	                type2 == null || !type2.getImpl().isInteger() ||
-	                expression2.getUpper() != 1) {
+	        if (type1 == null || type2 == null) {
+	            return true;
+	        } else if (!type1.getImpl().isInteger() || expression1.getUpper() != 1 ||
+	                !type2.getImpl().isInteger() || expression2.getUpper() != 1) {
 	            return false;
 	        } else {
 	            this.getAssignmentBeforeMap(); // Force computation of assignments
@@ -346,7 +345,7 @@ public class LoopVariableDefinitionImpl extends
 	 **/
 	public boolean loopVariableDefinitionTypeName() {
 	    LoopVariableDefinition self = this.getSelf();
-		return self.getTypeName() == null || self.getType() != null;
+		return self.getType() != null;
 	}
 
 	/**
@@ -356,10 +355,11 @@ public class LoopVariableDefinitionImpl extends
 	 **/
 	public boolean loopVariableDefinitionDeclaredType() {
 	    LoopVariableDefinition self = this.getSelf();
+	    ElementReference type = self.getType();
 	    Expression expression = self.getExpression1();
-		return self.getTypeIsInferred() || expression == null || 
-		            expression.getType() != null &&
-		            expression.getType().getImpl().conformsTo(self.getType());
+	    ElementReference expressionType = expression == null? null: expression.getType();
+		return self.getTypeIsInferred() || type == null || expressionType == null ||
+		            expressionType.getImpl().conformsTo(type);
 	}
 
 	/**

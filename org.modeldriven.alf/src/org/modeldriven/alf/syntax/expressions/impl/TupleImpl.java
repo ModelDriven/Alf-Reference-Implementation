@@ -374,7 +374,7 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                                 AssignedSource assignment = AssignedSourceImpl.
                                         makeAssignment(assignmentBefore);
                                 assignment.setSource(self.getInvocation());
-                                assignment.setSubtype(
+                                assignment.getImpl().setProperSubtype(
                                         output.getImpl().hasConversions(parameter)? null: 
                                             parameter.getImpl().getType());
                                 assignmentsAfter.put(assignedName, assignment);

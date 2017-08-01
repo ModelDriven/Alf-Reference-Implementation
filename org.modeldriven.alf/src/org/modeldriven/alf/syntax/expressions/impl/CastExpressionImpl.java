@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -58,7 +58,7 @@ public class CastExpressionImpl extends ExpressionImpl {
 	protected ElementReference deriveType() {
 	    CastExpression self = this.getSelf();
 	    QualifiedName typeName = self.getTypeName();
-	    return typeName == null? null: typeName.getImpl().getNonTemplateClassifierReferent();
+	    return typeName == null? any: typeName.getImpl().getNonTemplateClassifierReferent();
 	}
 	
     /**
@@ -148,7 +148,7 @@ public class CastExpressionImpl extends ExpressionImpl {
 	    Expression operand = self.getOperand();
 	    ElementReference operandType = operand == null? null: operand.getType();
 	    ElementReference type = self.getType();
-	    return type == null || operandType != null &&
+	    return type == null || operandType == null ||
 	           (operandType.getImpl().isInteger() &&
 	                (type.getImpl().isBitString() || type.getImpl().isReal()) ||
 	            (operandType.getImpl().isBitString() || operandType.getImpl().isReal()) &&

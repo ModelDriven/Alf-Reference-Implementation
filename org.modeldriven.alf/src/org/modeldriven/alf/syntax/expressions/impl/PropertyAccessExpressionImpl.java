@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -152,7 +151,11 @@ public class PropertyAccessExpressionImpl extends ExpressionImpl {
 	 * single structural feature.
 	 **/
 	public boolean propertyAccessExpressionFeatureResolution() {
-		return this.getSelf().getFeature() != null;
+        PropertyAccessExpression self = this.getSelf();
+        FeatureReference feature = self.getFeatureReference();
+        Expression target = feature == null? null: feature.getExpression();
+        ElementReference targetType = target == null? null: target.getType();
+		return targetType == null || self.getFeature() != null;
 	}
 
 	/**

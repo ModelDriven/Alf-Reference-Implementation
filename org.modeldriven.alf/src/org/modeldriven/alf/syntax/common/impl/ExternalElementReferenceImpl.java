@@ -405,30 +405,30 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public List<ElementReference> getOwnedMembers() {
-        List<ElementReference> features = new ArrayList<ElementReference>();
+        List<ElementReference> ownedMembers = new ArrayList<ElementReference>();
         if (this.isOperation()) {
             for (NamedElement member: ((Operation)this.getSelf().getElement()).getOwnedParameter()) {
-                features.add(ElementReferenceImpl.makeElementReference(member));
+                ownedMembers.add(ElementReferenceImpl.makeElementReference(member));
            }
         } else if (this.isNamespace()) {
             for (NamedElement member: ((Namespace)this.getSelf().getElement()).getOwnedMember()) {
-                 features.add(ElementReferenceImpl.makeElementReference(member));
+                 ownedMembers.add(ElementReferenceImpl.makeElementReference(member));
             }
         }
-        return features;
+        return ownedMembers;
     }
 
     @Override
     public List<ElementReference> getMembers() {
-        List<ElementReference> features = new ArrayList<ElementReference>();
+        List<ElementReference> members = new ArrayList<ElementReference>();
         if (this.isOperation()) {
-            features = this.getOwnedMembers();
+            members = this.getOwnedMembers();
         } else if (this.isNamespace()) {
             for (NamedElement member: ((Namespace)this.getSelf().getElement()).getMember()) {
-               features.add(ElementReferenceImpl.makeElementReference(member));
+               members.add(ElementReferenceImpl.makeElementReference(member));
             }
         }
-        return features;
+        return members;
     }
 
     @Override
@@ -679,10 +679,10 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public ElementReference getType() {
         if (this.isProperty() || this.isParameter()) {
-            return ElementReferenceImpl.makeBoundReference(
+            return ElementReferenceImpl.makeTypeReference(
                     ((TypedElement)this.getSelf().getElement()).getType());
         } else if (this.isOperation()) {
-            return ElementReferenceImpl.makeBoundReference(
+            return ElementReferenceImpl.makeTypeReference(
                     ((Operation)this.getSelf().getElement()).getType());
         } else if (this.isBehavior()) {
             ElementReference parameter = this.getReturnParameter();
@@ -905,17 +905,16 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean conformsTo(ElementReference type) {
-        if (!this.isClassifier()) {
+        if (!this.isClassifier() || type == null) {
             return false;
-        } else if (type == null) {
+        } else if (type.getImpl().isAny()) {
             return true;
         } else if (!type.getImpl().isClassifier() || 
                 !(type instanceof ExternalElementReference)) {
             return false;
         } else {
             return ((Classifier)this.getSelf().getElement()).
-                conformsTo((Classifier)((ExternalElementReference)type).
-                        getElement());
+                conformsTo((Classifier)type.getImpl().getUml());
         }
     }
     

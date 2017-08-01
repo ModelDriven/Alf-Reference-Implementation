@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -86,8 +85,8 @@ public class ForAllOrExistsOrOneExpressionImpl
 	    ForAllOrExistsOrOneExpression self = this.getSelf();
 	    Expression argument = self.getArgument();
 	    ElementReference type = argument == null? null: argument.getType();
-		return argument != null && argument.getUpper() == 1 &&
-		            type != null && type.getImpl().isBoolean();
+		return type == null || type.getImpl().isBoolean() &&
+		        argument.getUpper() == 1;
 	}
 
 } // ForAllOrExistsOrOneExpressionImpl

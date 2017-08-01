@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -124,28 +123,24 @@ public class ReturnStatementMapping extends StatementMapping {
                     } else {
                         ActivityNode source = ((SyntaxElementMapping)sourceMapping).
                                 getAssignedValueSource(name);
-                        Classifier type = null;
-                        ElementReference typeReference = assignment.getType();
-                        if (typeReference != null) {
-                            type = (Classifier)typeReference.getImpl().getUml();
-                            if (type == null) {
+                        Classifier classifier = null;
+                        ElementReference type = assignment.getType();
+                        if (type != null && !type.getImpl().isAny()) {
+                            classifier = (Classifier)type.getImpl().getUml();
+                            if (classifier == null) {
                                 FumlMapping mapping = this.fumlMap(assignment.getType());
                                 if (mapping instanceof ElementReferenceMapping) {
-                                    mapping = ((ElementReferenceMapping)mapping).
-                                            getMapping();
+                                    mapping = ((ElementReferenceMapping)mapping).getMapping();
                                 }
                                 if (!(mapping instanceof ClassifierDefinitionMapping)) {
-                                    this.throwError("Error mapping type of parameter " + name, 
-                                            mapping);
+                                    this.throwError("Error mapping type of parameter " + name, mapping);
                                 } else {
-                                    type = 
-                                            ((ClassifierDefinitionMapping)mapping).
-                                            getClassifierOnly();
+                                    classifier = ((ClassifierDefinitionMapping)mapping).getClassifierOnly();
                                 }
                             }
                         }
                         this.mapOutput(
-                                source, type, 
+                                source, classifier, 
                                 assignment.getLower(), assignment.getUpper(), 
                                 parameter, activity, operation);
                     }

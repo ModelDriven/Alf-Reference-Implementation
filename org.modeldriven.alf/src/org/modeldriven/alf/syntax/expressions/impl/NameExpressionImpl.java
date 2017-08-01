@@ -382,7 +382,7 @@ public class NameExpressionImpl extends ExpressionImpl {
                     assignmentMap.get(name.getUnqualifiedName().getName());
             if (assignment != null) {
                 assignment = AssignedSourceImpl.makeAssignment(assignment);
-                assignment.setSubtype(subtype);
+                assignment.getImpl().setProperSubtype(subtype);
                 assignmentMap.put(assignment.getName(), assignment);
             }
         }

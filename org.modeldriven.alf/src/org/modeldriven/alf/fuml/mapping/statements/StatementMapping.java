@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -97,7 +97,7 @@ public abstract class StatementMapping extends DocumentedElementMapping {
                 assignments.add(assignment);
                 
                 Classifier classifier = null;
-                if (type != null) {
+                if (type != null && !type.getImpl().isAny()) {
                     classifier = (Classifier)type.getImpl().getUml();
                     if (classifier == null) {
                         FumlMapping mapping = this.fumlMap(type);

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -89,6 +88,8 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
                 elements.getImpl().setCollectionTypeName(typeName);
             }
         }
+        // Ensure recomputation of type.
+        this.setType(null);
 	}
 
 	public QualifiedName getCollectionTypeName() {
@@ -113,7 +114,7 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	            collectionTypeName.getImpl().getNonTemplateClassifierReferent();
 	        return collectionType == null? null: collectionType.getImpl().getCollectionSequenceType();
 	    } else {
-	        return null;
+	        return any;
 	    }
 	}
 	
@@ -178,9 +179,8 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 	public boolean sequenceConstructionExpressionType() {
 	    SequenceConstructionExpression self = this.getSelf();
 	    ElementReference type = self.getType();
-		return self.getHasMultiplicity()? 
-		            self.getTypeName() == null || type != null:
-		            type != null && type.getImpl().isCollectionClass();
+		return type != null && 
+		        (self.getHasMultiplicity() || type.getImpl().isCollectionClass());
 	}
 	
     /**
@@ -251,7 +251,7 @@ public class SequenceConstructionExpressionImpl extends ExpressionImpl {
 
 	    ElementReference type = self.getType();
 	    QualifiedName typeName = self.getTypeName();
-	    if (type != null) {
+	    if (type != null && !type.getImpl().isAny()) {
 	        argument.setType(type.getImpl().getCollectionSequenceType());
 	        if (typeName == null) {
 	            typeName = type.getImpl().getQualifiedName();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -142,12 +142,12 @@ public class SequenceExpressionListImpl extends SequenceElementsImpl {
         ElementReference type = this.getType(owner);
         for (Expression element: this.getSelf().getElement()) {
             ElementReference elementType = element.getType();
-            if (element.getUpper() > 1 || elementType == null && type != null ||
-                    elementType != null && 
+            if (type != null && elementType != null && 
+                (element.getUpper() > 1 || 
                     !elementType.getImpl().conformsTo(type) &&
                     !(elementType.getImpl().isInteger() && 
                             (type.getImpl().isBitString() ||
-                             type.getImpl().isReal()))) {
+                             type.getImpl().isReal())))) {
                 return false;
             }
         }

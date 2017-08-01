@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -173,7 +172,7 @@ public class ClassifyStatementImpl extends
 	public boolean classifyStatementExpression() {
 	    Expression expression = this.getSelf().getExpression();
 	    ElementReference type = expression == null? null: expression.getType();
-		return type != null && type.getImpl().isClass() &&
+		return type == null || type.getImpl().isClass() &&
 		            expression.getUpper() == 1;
 	}
 
@@ -236,7 +235,7 @@ public class ClassifyStatementImpl extends
 	            }
 	        }
 
-	        //Check that no common ancestors are subclasses of the target type.
+	        // Check that no common ancestors are subclasses of the target type.
 	        for (ElementReference referent: commonAncestors) {
 	            if (targetType.getImpl().isContainedIn(referent.getImpl().allParents())) {
 	                return false;

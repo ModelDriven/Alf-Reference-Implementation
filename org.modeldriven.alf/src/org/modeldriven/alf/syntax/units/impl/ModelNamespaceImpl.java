@@ -96,7 +96,7 @@ public class ModelNamespaceImpl extends PackageDefinitionImpl {
         name.append(templateName);
         name.append("__");
         for (ElementReference argument: templateArguments) {
-            String argumentName = argument == null? "any":
+            String argumentName = argument == null || argument.getImpl().isAny() ? "any":
                 argument.getImpl().asNamespace().getImpl().getQualifiedName().getPathName();
             name.append(argumentName.replace("::", "$"));
             name.append("_");

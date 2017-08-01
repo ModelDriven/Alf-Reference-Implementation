@@ -22,6 +22,8 @@ import org.modeldriven.alf.syntax.common.*;
 
 public abstract class SyntaxElementImpl {
 
+    public static final ElementReference any = ElementReferenceImpl.any;
+    
 	protected SyntaxElement self;
 	
 	public SyntaxElementImpl(SyntaxElement self) {

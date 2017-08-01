@@ -160,7 +160,8 @@ public class ClassificationExpressionImpl extends UnaryExpressionImpl {
 	 **/
 	public boolean classificationExpressionOperand() {
 	    Expression operand = this.getSelf().getOperand();
-		return operand != null && operand.getLower() == 1 && operand.getUpper() == 1;
+		return operand != null && (operand.getType() == null || 
+		        operand.getLower() == 1 && operand.getUpper() == 1);
 	}
 	
 	/*

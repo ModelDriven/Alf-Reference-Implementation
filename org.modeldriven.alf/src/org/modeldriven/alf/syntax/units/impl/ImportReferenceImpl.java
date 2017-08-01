@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -139,8 +138,7 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
         } else {
             this.setIsExcluded(true);
             referentName.getImpl().setCurrentScope(RootNamespace.getRootScope());
-            Collection<ElementReference> referents = 
-                    referentName.getImpl().getReferent();
+            Collection<ElementReference> referents = referentName.getImpl().getReferent();
             this.setIsExcluded(false);
             return referents;
         }

@@ -765,8 +765,8 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
             Expression expression) {
         ElementReference type = expression.getType();
         int expressionUpper = expression.getUpper();
-        int paremeterUpper = parameter.getImpl().getUpper();
-        if ((paremeterUpper == -1 || paremeterUpper > 1) && 
+        int parameterUpper = parameter.getImpl().getUpper();
+        if ((parameterUpper == -1 || parameterUpper > 1) && 
                 expressionUpper == 1 &&
                 type != null && type.getImpl().isCollectionClass()) {
             return type.getImpl().getCollectionSequenceType();

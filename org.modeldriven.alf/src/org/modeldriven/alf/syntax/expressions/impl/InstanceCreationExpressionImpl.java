@@ -293,7 +293,7 @@ public class InstanceCreationExpressionImpl
 	public boolean instanceCreationExpressionConstructorlessLegality() {
 	    InstanceCreationExpression self = this.getSelf();
 	    Tuple tuple = self.getTuple();
-		return !self.getIsConstructorless() || 
+		return this.getSelf().getReferent() == null || !self.getIsConstructorless() ||
 		            tuple != null && tuple.getImpl().isEmpty() &&
 		            this.referentHasNoConstructors();
 	}
@@ -332,11 +332,9 @@ public class InstanceCreationExpressionImpl
      **/
     @Override
     public List<ElementReference> parametersFor(ElementReference referent) {
-        if (this.isConstructorless(referent)) {
-            return new ArrayList<ElementReference>();
-        } else {
-            return super.parametersFor(referent);
-        }
+        return this.isConstructorless(referent)? 
+                new ArrayList<ElementReference>():
+                super.parametersFor(referent);
     }
     
     protected boolean isConstructorless(ElementReference referent) {

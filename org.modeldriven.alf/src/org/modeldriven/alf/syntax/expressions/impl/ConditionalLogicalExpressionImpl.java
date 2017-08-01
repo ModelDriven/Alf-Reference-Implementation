@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -78,8 +78,8 @@ public class ConditionalLogicalExpressionImpl extends BinaryExpressionImpl {
         Expression operand2 = self.getOperand2();
         ElementReference type1 = operand1 == null? null: operand1.getType();
         ElementReference type2 = operand1 == null? null: operand2.getType();
-        return type1 != null && type1.getImpl().isBoolean() &&
-               type2 != null && type2.getImpl().isBoolean();
+        return type1 == null || type2 == null || 
+               type1.getImpl().isBoolean() && type2.getImpl().isBoolean();
 	}
 	
 	/*

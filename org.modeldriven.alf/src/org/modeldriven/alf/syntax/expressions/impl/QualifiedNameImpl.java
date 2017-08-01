@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials

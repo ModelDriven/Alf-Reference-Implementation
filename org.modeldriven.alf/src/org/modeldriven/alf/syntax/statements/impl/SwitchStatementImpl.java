@@ -52,9 +52,11 @@ public class SwitchStatementImpl extends StatementImpl {
 		this.nonDefaultClause = nonDefaultClause;
 		if (nonDefaultClause != null) {
             for (SwitchClause clause: nonDefaultClause) {
-                Block block = clause.getBlock();
-                if (block != null) {
-                    block.getImpl().setEnclosingStatement(this.getSelf());
+                if (clause != null) {
+                    Block block = clause.getBlock();
+                    if (block != null) {
+                        block.getImpl().setEnclosingStatement(this.getSelf());
+                    }
                 }
             }
 		}
@@ -157,8 +159,10 @@ public class SwitchStatementImpl extends StatementImpl {
         }
         Collection<Block> blocks = new ArrayList<Block>();
         for (SwitchClause clause: self.getNonDefaultClause()) {
-            clause.getImpl().setAssignmentBefore(assignmentsBeforeClauses);
-            blocks.add(clause.getImpl().getBlock());
+            if (clause != null) {
+                clause.getImpl().setAssignmentBefore(assignmentsBeforeClauses);
+                blocks.add(clause.getImpl().getBlock());
+            }
         }
         Block defaultClause = self.getDefaultClause();
         if (defaultClause != null || !self.getIsAssured()) {
@@ -215,15 +219,19 @@ public class SwitchStatementImpl extends StatementImpl {
 	    this.getAssignmentAfterMap(); // Force computation of assignments.
 	    Collection<AssignedSource> previousAssignments = new HashSet<AssignedSource>();
 	    for (SwitchClause clause: self.getNonDefaultClause()) {
-	        for (Expression expression: clause.getCase()) {
-	            Collection<AssignedSource> newAssignments = 
-	                expression.getImpl().getNewAssignments();
-	            for (AssignedSource newAssignment: newAssignments) {
-	                if (newAssignment.getImpl().isAssignedIn(previousAssignments)) {
-	                    return false;
-	                }
-	                previousAssignments.addAll(newAssignments);
-	            }
+	        if (clause != null) {
+    	        for (Expression expression: clause.getCase()) {
+    	            if (expression != null) {
+        	            Collection<AssignedSource> newAssignments = 
+        	                expression.getImpl().getNewAssignments();
+        	            for (AssignedSource newAssignment: newAssignments) {
+        	                if (newAssignment.getImpl().isAssignedIn(previousAssignments)) {
+        	                    return false;
+        	                }
+        	                previousAssignments.addAll(newAssignments);
+        	            }
+    	            }
+    	        }
 	        }
 	    }
 		return true;
@@ -264,7 +272,7 @@ public class SwitchStatementImpl extends StatementImpl {
 	public boolean switchStatementExpression() {
         SwitchStatement self = this.getSelf();
         Expression expression = self.getExpression();
-        return expression != null && expression.getUpper() <= 1;
+        return expression == null || expression.getUpper() <= 1;
 	}
 
 	public boolean switchStatementEnclosedStatements() {
@@ -295,9 +303,11 @@ public class SwitchStatementImpl extends StatementImpl {
     public Boolean hasReturnValue() {
         SwitchStatement self = this.getSelf();
         for (SwitchClause clause: self.getNonDefaultClause()) {
-                Block block = clause.getBlock();
-                if (block != null && !block.hasReturnValue()) {
-                    return false;
+                if (clause != null) {
+                    Block block = clause.getBlock();
+                    if (block != null && !block.hasReturnValue()) {
+                        return false;
+                    }
                 }
         }
         Block defaultClause = self.getDefaultClause();
@@ -313,13 +323,17 @@ public class SwitchStatementImpl extends StatementImpl {
             expression.getImpl().setCurrentScope(currentScope);
         }
         for (SwitchClause clause: self.getNonDefaultClause()) {
-            for (Expression case_: clause.getCase()) {
-                case_.getImpl().setCurrentScope(currentScope);
-            }
-            
-            Block block = clause.getBlock();
-            if (block != null) {
-                block.getImpl().setCurrentScope(currentScope);
+            if (clause != null) {
+                for (Expression case_: clause.getCase()) {
+                    if (case_ != null) {
+                        case_.getImpl().setCurrentScope(currentScope);
+                    }
+                }
+                
+                Block block = clause.getBlock();
+                if (block != null) {
+                    block.getImpl().setCurrentScope(currentScope);
+                }
             }
         }
         Block defaultClause = self.getDefaultClause();

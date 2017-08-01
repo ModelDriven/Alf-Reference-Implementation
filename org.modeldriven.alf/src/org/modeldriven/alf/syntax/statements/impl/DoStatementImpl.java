@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -169,7 +168,7 @@ public class DoStatementImpl extends StatementImpl {
 	public boolean doStatementCondition() {
 	    Expression condition = this.getSelf().getCondition();
 	    ElementReference type = condition == null? null: condition.getType();
-		return type != null && type.getImpl().isBoolean() &&
+		return type == null || type.getImpl().isBoolean() &&
 		       condition.getLower() == 1 && condition.getUpper() == 1;
 	}
 

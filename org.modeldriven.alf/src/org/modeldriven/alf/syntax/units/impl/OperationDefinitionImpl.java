@@ -400,30 +400,6 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         return returnParameter == null? 0: returnParameter.getImpl().getUpper();
     }
     
-    /*
-    @Override
-    public List<FormalParameter> getFormalParameters() {
-        List<FormalParameter> parameters = super.getFormalParameters();
-        if (this.getSelf().getIsConstructor() && !this.hasReturnParameter()) {
-            FormalParameter returnParameter = new FormalParameter();
-            returnParameter.setType(this.getNamespaceReference());
-            returnParameter.setDirection("return");
-            parameters.add(returnParameter);
-        }
-        return parameters;
-    }
-    
-    private boolean hasReturnParameter() {
-        List<FormalParameter> parameters = super.getFormalParameters();        
-        for (FormalParameter parameter: parameters) {
-            if (parameter.getDirection().equals("return")) {
-                return true;
-            }
-        }
-        return false;
-    }
-    */
-    
     /**
      * For a constructor, return an implicit return parameter if none is given
      * explicitly.

@@ -135,13 +135,12 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
         FeatureLeftHandSide self = this.getSelf();
         FeatureReference feature = self.getFeature();
         Expression expression = feature == null? null: feature.getExpression();
-        ElementReference type = expression == null? null: expression.getType();
-		return expression != null && expression.getUpper() == 1 &&
+        ElementReference targetType = expression == null? null: expression.getType();
+		return targetType == null || expression.getUpper() == 1 &&
 		            // Note: This constraint ensures that there will be an
 		            // assigned name for an assignment to an attribute of a
 		            // data type.
-		            (type == null || !type.getImpl().isDataType() ||
-		                    this.isDataValueUpdate());
+		            (!targetType.getImpl().isDataType() || this.isDataValueUpdate());
 	}
 
 	/**
@@ -159,7 +158,11 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
      * is a structural feature.
      **/
     public boolean featureLeftHandSideReferentConstraint() {
-        return this.getSelf().getReferent() != null;
+        FeatureLeftHandSide self = this.getSelf();
+        FeatureReference feature = self.getFeature();
+        Expression target = feature == null? null: feature.getExpression();
+        ElementReference targetType = target == null? null: target.getType();
+        return targetType == null || self.getReferent() != null;
     }
 
     /**

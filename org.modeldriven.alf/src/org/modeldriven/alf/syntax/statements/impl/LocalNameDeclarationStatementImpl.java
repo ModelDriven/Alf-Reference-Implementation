@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.statements.impl;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.AssignedSourceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
+import org.modeldriven.alf.syntax.expressions.impl.AssignableElementImpl;
 import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 
@@ -25,7 +26,7 @@ import java.util.Map;
  * value.
  **/
 
-public class LocalNameDeclarationStatementImpl extends StatementImpl {
+public class LocalNameDeclarationStatementImpl extends StatementImpl implements AssignableElement {
 
 	private String name = "";
 	private Expression expression = null;
@@ -114,13 +115,8 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
      * single classifier referent of the type name. Otherwise it is empty.
      **/
 	protected ElementReference deriveType() {
-	    LocalNameDeclarationStatement self = this.getSelf();
-	    QualifiedName typeName = self.getTypeName();
-	    if (typeName != null) {
-	        return typeName.getImpl().getNonTemplateClassifierReferent();
-	    } else {
-	        return null;
-	    }
+	    QualifiedName typeName = this.getSelf().getTypeName();
+	    return typeName == null? any: typeName.getImpl().getNonTemplateClassifierReferent();
 	}
 	
     /**
@@ -150,11 +146,9 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	    }
 	    String name = self.getName();
 	    if (name != null) {
-	        int lower = expression == null || expression.getLower() == 0? 0: 1;
-	        int upper = !self.getHasMultiplicity()? 1: -1;
 	        assignmentsAfter.put(name, 
 	                AssignedSourceImpl.makeAssignment(
-	                        name, self, self.getType(), lower, upper));
+	                        name, self, self.getType(), this.getLower(), this.getUpper()));
 	    }
 	    return assignmentsAfter;
 	}
@@ -189,12 +183,8 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	public boolean localNameDeclarationStatementType() {
 	    LocalNameDeclarationStatement self = this.getSelf();
 	    Expression expression = self.getExpression();
-	    if (expression == null) {
-	        return false;
-	    } else {
-	        return self.getTypeName() == null || 
-	            new AssignableLocalNameImpl(this).isAssignableFrom(expression);
-	    }
+        return expression == null || self.getTypeName() == null || 
+                AssignableElementImpl.isAssignable(this, expression.getImpl());
 	}
 
 	/**
@@ -207,7 +197,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	    this.getAssignmentAfterMap();
 	    String name = self.getName();
 	    Expression expression = self.getExpression();
-		return name != null && expression != null &&
+		return name == null || expression == null ||
 		            this.getAssignmentBefore(name) == null &&
 		            expression.getImpl().getAssignmentAfter(name) == null;
 	}
@@ -256,6 +246,15 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl {
 	/*
 	 * Helper Methods
 	 */
+    
+    public Integer getLower() {
+        Expression expression = this.getSelf().getExpression();
+        return expression == null || expression.getLower() == 0? 0: 1;
+    }
+    
+    public Integer getUpper() {
+        return this.getSelf().getHasMultiplicity()? -1: 1;
+    }
 	
 	/**
 	 * Return the assignment expression equivalent to this local name

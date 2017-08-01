@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -164,22 +163,21 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	public boolean sequenceReductionExpressionBehaviorParameters() {
 	    SequenceReductionExpression self = this.getSelf();
 	    ElementReference referent = self.getReferent();
-	    if (referent == null) {
-	        return false;
+        ElementReference type = self.getType();
+	    if (referent == null || type == null) {
+	        return true;
 	    } else {
 	        List<ElementReference> parameters = referent.getImpl().getParameters();
             ElementReference returnParameter = referent.getImpl().getReturnParameter();
 	        if (parameters.size() != 3 || returnParameter == null) {
 	            return false;
 	        } else {
-	            ElementReference type = self.getType();
 	            for (ElementReference parameter: parameters) {
 	                ElementReference parameterType = parameter.getImpl().getType();
-	                if (!((parameter.getImpl().equals(returnParameter) ||
+	                if (parameterType != null &&
+	                    !((parameter.getImpl().equals(returnParameter) ||
 	                            "in".equals(parameter.getImpl().getDirection())) &&
-	                       (type == null && parameterType == null ||
-	                           parameterType != null && 
-	                           parameterType.getImpl().equals(type)) &&
+	                       parameterType.getImpl().equals(type) &&
 	                       parameter.getImpl().getLower() == 1 && 
 	                       parameter.getImpl().getUpper() == 1)) {
 	                    return false;

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -83,10 +82,12 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
 	    Collection<Expression> cases = self.getCase();
 	    Map<String, AssignedSource> assignmentsBefore = this.assignmentsBeforeMap();
 	    for (Expression expression: cases) {
-	        for (AssignedSource assignmentAfter: expression.getAssignmentAfter()) {
-    	        if (!assignmentsBefore.containsKey(assignmentAfter.getName()) &&
-    	                !assignmentAfter.getImpl().isOutParameter()) {
-    	            return false;
+	        if (expression != null) {
+    	        for (AssignedSource assignmentAfter: expression.getAssignmentAfter()) {
+        	        if (!assignmentsBefore.containsKey(assignmentAfter.getName()) &&
+        	                !assignmentAfter.getImpl().isOutParameter()) {
+        	            return false;
+        	        }
     	        }
 	        }
 	    }
@@ -99,7 +100,7 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
      **/
     public boolean switchClauseCases() {
         for (Expression expression: this.getSelf().getCase()) {
-            if (expression.getUpper() > 1) {
+            if (expression == null || expression.getUpper() > 1) {
                 return false;
             }
         }
@@ -120,8 +121,8 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
     
 	public Map<String, AssignedSource> assignmentsBeforeMap() {
 	    Object[] cases = this.getSelf().getCase().toArray();
-	    return cases.length == 0? new HashMap<String, AssignedSource>():
-	                              ((Expression)cases[0]).getImpl().getAssignmentBeforeMap();
+	    return cases.length == 0 || cases[0] == null? new HashMap<String, AssignedSource>():
+	        ((Expression)cases[0]).getImpl().getAssignmentBeforeMap();
 	} // assignmentsBefore
 
 	/**
@@ -146,9 +147,11 @@ public class SwitchClauseImpl extends SyntaxElementImpl {
 	    Map<String, AssignedSource> assignmentsAfterCases = 
 	        new HashMap<String, AssignedSource>(assignmentBefore);
 	    for (Expression expression: cases) {
-	        expression.getImpl().setAssignmentBefore(assignmentBefore);
-	        for (AssignedSource assignment: expression.getImpl().getNewAssignments()) {
-	            assignmentsAfterCases.put(assignment.getName(), assignment);
+	        if (expression != null) {
+    	        expression.getImpl().setAssignmentBefore(assignmentBefore);
+    	        for (AssignedSource assignment: expression.getImpl().getNewAssignments()) {
+    	            assignmentsAfterCases.put(assignment.getName(), assignment);
+    	        }
 	        }
 	    }
 	    if (block != null) {

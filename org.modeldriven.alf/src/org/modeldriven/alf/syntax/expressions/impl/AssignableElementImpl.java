@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -69,7 +69,7 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
         int sourceUpper = source.getUpper();
         int targetUpper = target.getUpper();
         
-        return
+        return 
             // Null conversion
             isNull(source) ||
             
@@ -77,18 +77,19 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
             isConformant(targetType, sourceType) ||
             
             // Collection conversion
-            sourceType != null && sourceType.getImpl().isCollectionClass() && 
+            sourceType.getImpl().isCollectionClass() && 
             sourceUpper == 1 && (targetUpper == -1 || targetUpper > 1) &&
             isConformant(targetType, sourceType.getImpl().getCollectionSequenceType());
     }
     
     public static boolean isConformant(ElementReference targetType, ElementReference sourceType) {
-        return
+        return sourceType == null || targetType == null ||
+                
             // Untyped target is conformant with anything.
-            targetType == null ||
+            targetType.getImpl().isAny() ||
             
             // Untyped source is only assignable to untyped target.
-            sourceType != null && (
+            !sourceType.getImpl().isAny() && (
             
             // Basic type conformance
             sourceType.getImpl().conformsTo(targetType) ||
@@ -105,13 +106,17 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
     }
     
     public static boolean isMultiplicityConformant(AssignableElement target, AssignableElement source, boolean isNullable) {
-        int targetLower = target.getLower();
-        int sourceLower = source.getLower();
-        int targetUpper = target.getUpper();
-        int sourceUpper = source.getUpper();
-        return (isNullable || targetLower == 0 || sourceLower > 0) &&
-               (targetUpper == -1 || targetUpper > 1 || 
-                sourceUpper != -1 && sourceUpper <= targetUpper);
+        if (target.getType() == null || source.getType() == null) {
+            return true;
+        } else {
+            int targetLower = target.getLower();
+            int sourceLower = source.getLower();
+            int targetUpper = target.getUpper();
+            int sourceUpper = source.getUpper();
+            return (isNullable || targetLower == 0 || sourceLower > 0) &&
+                   (targetUpper == -1 || targetUpper > 1 || 
+                    sourceUpper != -1 && sourceUpper <= targetUpper);
+        }
     }
     
     /**
@@ -119,8 +124,9 @@ public abstract class AssignableElementImpl extends SyntaxElementImpl
      * value, e.g., untyped and with multiplicity 0..0.
      */
     public static boolean isNull(AssignableElement element) {
+        ElementReference type = element.getType();
         return element.getLower() == 0 && element.getUpper() == 0 && 
-               element.getType() == null ;
+               type != null && type.getImpl().isAny();
     }
 
 }

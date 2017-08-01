@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -169,6 +169,10 @@ public class AssignedSourceImpl {
         this.isOutParameter = isOutParameter;
     }
     
+    public void setProperSubtype(ElementReference subtype) {
+        this.setSubtype(subtype == null || subtype.getImpl().isAny()? null: subtype);
+    }
+    
     public static AssignedSource makeAssignment
         (String name, SyntaxElement source, 
          ElementReference type, int lower, int upper) {
@@ -202,7 +206,7 @@ public class AssignedSourceImpl {
        assignment.setName(name);
        assignment.setSource(source);
        assignment.setType(type);
-       assignment.setSubtype(subtype);
+       assignment.getImpl().setProperSubtype(subtype);
        assignment.setLower(lower);
        assignment.setUpper(upper);
        assignment.getImpl().setIsOutParameter(isOutParameter);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -91,8 +91,9 @@ public class BooleanUnaryExpressionImpl extends UnaryExpressionImpl {
             return false;
         } else {
             ElementReference operandType = operand.getType();
-            return operand.getUpper() == 1 && operandType != null &&
-                        operandType.getImpl().isBoolean();
+            return operandType == null || 
+                    (operand.getUpper() == 1 &&
+                        operandType.getImpl().isBoolean());
         }
 	}
 
@@ -112,8 +113,7 @@ public class BooleanUnaryExpressionImpl extends UnaryExpressionImpl {
         String operator = self.getOperator();
         Expression operand = self.getOperand();
         if ("!".equals(operator) && operand != null) {
-            assignmentsMap = operand.getImpl().adjustAssignments(
-                    assignmentsMap, !condition);
+            assignmentsMap = operand.getImpl().adjustAssignments(assignmentsMap, !condition);
         }
         return assignmentsMap;
     }

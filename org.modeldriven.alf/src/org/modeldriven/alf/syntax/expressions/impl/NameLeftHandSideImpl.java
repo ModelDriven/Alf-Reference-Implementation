@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -197,9 +196,10 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
             // data type.
 	        FeatureReference feature = this.getFeature();
 	        Expression expression = feature == null? null: feature.getExpression();
-	        return expression != null &&
-                    (!expression.getType().getImpl().isDataType() ||
-                            this.isDataValueUpdate());
+	        ElementReference expressionType = expression == null? null: expression.getType();
+	        return expressionType == null ||
+                    !expressionType.getImpl().isDataType() ||
+                    this.isDataValueUpdate();
 	    } else {
 	        SyntaxElement source = referent.getImpl().getAlf();
             return !(source instanceof LoopVariableDefinition ||
@@ -228,7 +228,11 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
      **/
     public boolean nameLeftHandSideTargetResolution() {
         NameLeftHandSide self = this.getSelf();
+        FeatureReference feature = this.getFeature();
+        Expression target = feature == null? null: feature.getExpression();
+        ElementReference targetType = target == null? null: target.getType();
         return self.getTarget().getQualification() == null ||
+                feature != null && targetType == null ||
                 self.getReferent() != null;
     }
 
@@ -264,7 +268,8 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
     public boolean nameLeftHandSideFeatureExpression() {
         FeatureReference feature = this.getFeature();
         Expression expression = feature == null? null: feature.getExpression();
-        return expression == null || expression.getUpper() == 1;
+        ElementReference targetType = expression == null? null: expression.getType();
+        return targetType == null || expression.getUpper() == 1;
     }
 
 	/*

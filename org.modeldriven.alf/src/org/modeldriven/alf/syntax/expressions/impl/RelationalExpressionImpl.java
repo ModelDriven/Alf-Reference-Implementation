@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -190,7 +190,7 @@ public class RelationalExpressionImpl extends BinaryExpressionImpl {
         Expression operand2 = self.getOperand2();
         ElementReference type1 = operand1 == null? null: operand1.getType();
         ElementReference type2 = operand2 == null? null: operand2.getType();
-		return type1 != null && type2 != null &&
+		return type1 == null || type2 == null ||
 		       // Note: The condition below checks for type conformance, not 
 		       // equality. Therefore, the case of a Natural value is covered, 
 		       // since it is both an Integer and UnlimitedNatural value.

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -177,12 +176,12 @@ public class WhileStatementImpl extends StatementImpl {
 
 	/**
      * The condition expression of a while statement must have a type that
-     * conforms to type Boolean and a multiplicity upper bound of 1.
+     * conforms to type Boolean and multiplicity [1..1].
 	 **/
 	public boolean whileStatementCondition() {
         Expression condition = this.getSelf().getCondition();
         ElementReference type = condition == null? null: condition.getType();
-        return type != null && type.getImpl().isBoolean() &&
+        return type == null || type.getImpl().isBoolean() &&
                condition.getLower() == 1 && condition.getUpper() == 1;
 	}
 

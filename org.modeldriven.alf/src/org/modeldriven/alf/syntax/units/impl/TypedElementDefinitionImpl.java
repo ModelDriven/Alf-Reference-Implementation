@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -48,17 +47,6 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl
         SyntaxElement.addExternalReference(references, this.getSelf().getType());
     }
     
-	/*
-	@Override
-	public void deriveAll() {
-        QualifiedName typeName = this.getSelf().getTypeName();
-        if (typeName != null) {
-            typeName.getImpl().setCurrentScope(this.getOuterScope());
-        }
-        super.deriveAll();
-	}
-	*/
-
 	public String getLowerBound() {
 		return this.lowerBound;
 	}
@@ -139,13 +127,14 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl
 	protected ElementReference deriveType() {
 	    QualifiedName typeName = this.getSelf().getTypeName();
 	    if (typeName == null) {
-	        return null;
+	        return any;
 	    } else {
 	        typeName.getImpl().setCurrentScope(this.getOuterScope());
 	        // Note: getClassifierOnlyReferent is used here to avoid
 	        // infinite recursion when doing type resolution during
-	        // distinguishibilty checking.
-	        return typeName.getImpl().getClassifierOnlyReferent();
+	        // distinguishibility checking.
+	        ElementReference type = typeName.getImpl().getClassifierOnlyReferent();
+	        return type == null || type.getImpl().isTemplate()? null: type;
 	    }
 	}
 
@@ -207,8 +196,7 @@ public abstract class TypedElementDefinitionImpl extends MemberImpl
 	 * referent. This referent may not be a template.
 	 **/
 	public boolean typedElementDefinitionTypeName() {
-	    TypedElementDefinition self = this.getSelf();
-		return self.getTypeName() == null || self.getType() != null;
+		return this.getSelf().getType() != null;
 	}
 	
 	/*

@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -108,7 +107,7 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
     	            for (ElementReference referent: this.currentScope.getImpl().
                             resolveAssociationEnd(targetType, name)) {
     	                // NOTE: Even though fUML does not allow associations that don't
-    	                // own their ends, this allows for ths possibility that a model
+    	                // own their ends, this allows for the possibility that a model
     	                // might have a non-association owned end that is being used
     	                // as a property of the owning classifier.
     	                if (!referent.getImpl().isContainedIn(referents)) {
@@ -142,7 +141,8 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 	    FeatureReference self = this.getSelf();
 	    Expression target = self.getExpression();
 	    ElementReference targetType = target == null? null: target.getType();
-		return targetType != null && 
+		return targetType == null ||
+		            !targetType.getImpl().isAny() &&
 		            !targetType.getImpl().isPrimitive() && 
 		            !targetType.getImpl().isEnumeration();
 	}

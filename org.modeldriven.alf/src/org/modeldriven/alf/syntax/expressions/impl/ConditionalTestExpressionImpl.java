@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -85,8 +85,8 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
 	    } else if (operand3.getImpl().isNull()) {
 	        return operand2.getType();
 	    } else {
-	    return ClassifierDefinitionImpl.commonAncestor
-	                        (operand2.getType(), operand3.getType());
+    	    return ClassifierDefinitionImpl.commonAncestor
+    	                        (operand2.getType(), operand3.getType());
 	    }
 	}
 	
@@ -154,7 +154,7 @@ public class ConditionalTestExpressionImpl extends ExpressionImpl {
         ConditionalTestExpression self = this.getSelf();
         Expression operand1 = self.getOperand1();
         ElementReference type = operand1 == null? null: operand1.getType();
-		return type != null && type.getImpl().isBoolean() &&
+		return type == null || type.getImpl().isBoolean() &&
 		            operand1.getLower() == 1 && operand1.getUpper() == 1;
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -242,7 +242,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	                return AssignedSourceImpl.makeAssignment
 	                        (referent.getImpl().getName(), self, 
 	                         referent.getImpl().getType(), 
-	                         this.hasConversions()? null: rhs.getImpl().getType(),
+	                         this.hasConversions() ? null: rhs.getImpl().getType(),
 	                         lower, referent.getImpl().getUpper(), true);
 	            } else {
 	                return null;
@@ -256,8 +256,8 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
                         assignment.setUpper(-1);
                     } else {
                         assignment.setLower(lower);
-                        assignment.setSubtype(
-                                this.hasConversions()? null: rhs.getImpl().getType());
+                        assignment.getImpl().setProperSubtype(
+                                this.hasConversions() ? null: rhs.getImpl().getType());
         	        }
                 }
     	        return assignment;
@@ -280,11 +280,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 	        } else {
 	            this.getAssignmentAfterMap(); // Force computation of assignments.
 	            Object[] referents = feature.getReferent().toArray();
-	            if (referents.length == 0) {
-	                return null;
-	            } else {
-	                return (ElementReference)referents[0];
-	            }
+	            return referents.length == 0? null: (ElementReference)referents[0];
 	        }
 	    }
 	}
@@ -607,7 +603,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
     	    } else {
     	        ElementReference lhsType = lhs.getImpl().getType();
     	        ElementReference rhsType = rhs.getType();
-    	        return lhsType != null && rhsType != null &&
+    	        return lhsType == null || rhsType == null ||
     	               (this.isArithmeticOperator() && 
     	                       (lhsType.getImpl().isInteger() &&
     	                        rhsType.getImpl().isInteger() ||
@@ -642,7 +638,8 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
             LeftHandSide lhs = self.getLeftHandSide();
             Expression rhs = self.getRightHandSide();
             return lhs != null && rhs != null && 
-                        lhs.getImpl().getUpper() == 1 && rhs.getUpper() == 1;
+                    (lhs.getImpl().getType() == null || rhs.getType() == null ||
+                        lhs.getImpl().getUpper() == 1 && rhs.getUpper() == 1);
         }
 	}
 
@@ -759,7 +756,7 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
             AssignedSource assignment = assignmentMap.get(name);
             if (assignment != null) {
                 assignment = AssignedSourceImpl.makeAssignment(assignment);
-                assignment.setSubtype(subtype);
+                assignment.getImpl().setProperSubtype(subtype);
                 assignmentMap.put(assignment.getName(), assignment);
             }
         }

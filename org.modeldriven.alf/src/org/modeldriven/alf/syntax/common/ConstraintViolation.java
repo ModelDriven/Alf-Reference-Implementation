@@ -88,7 +88,7 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
     }
     
     public String getConstraintName() {
-        return this.constraintName;
+        return this.constraintName == null? "": this.constraintName;
     }
     
     public String getErrorMessage() {
@@ -135,8 +135,7 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
             String otherConstraintName = violation.getConstraintName();
             ParsedElement violatingElement = this.getViolatingElement();
             ParsedElement otherViolatingElement = violation.getViolatingElement();
-            return (constraintName == null && otherConstraintName == null ||
-                    constraintName != null && constraintName.equals(otherConstraintName)) &&
+            return constraintName.equals(otherConstraintName) &&
                    violatingElement == otherViolatingElement;
         }
     }
@@ -148,22 +147,33 @@ public class ConstraintViolation implements Comparable<ConstraintViolation> {
 
     @Override
     public int compareTo(ConstraintViolation other) {
+        String constraintName = this.getConstraintName();
         ParsedElement element = this.getViolatingElement();
         String fileName = element.getFileName();
-        int line = element.getBeginLine();
-        int column = element.getBeginColumn();
+        int beginLine = element.getBeginLine();
+        int endLine = element.getEndLine();
+        int beginColumn = element.getBeginColumn();
+        int endColumn = element.getEndColumn();
         
+        String otherConstraintName = other.getConstraintName();
         element = other.getViolatingElement();
         String otherFileName = element.getFileName();
-        int otherLine = element.getBeginLine();
-        int otherColumn = element.getBeginColumn();
+        int otherBeginLine = element.getBeginLine();
+        int otherEndLine = element.getEndLine();
+        int otherbeginColumn = element.getBeginColumn();
+        int otherEndColumn = element.getEndColumn();
         
         int compare = fileName.compareTo(otherFileName);
         return compare != 0? compare:
-               line < otherLine? -1:
-               line > otherLine? 1:
-               column < otherColumn? -1:
-               column > otherColumn? 1: 0;
+               beginLine < otherBeginLine? -1:
+               beginLine > otherBeginLine? 1:
+               beginColumn < otherbeginColumn? -1:
+               beginColumn > otherbeginColumn? 1:
+               endLine < otherEndLine? -1:
+               endLine > otherEndLine? 1:
+               endColumn < otherEndColumn? -1:
+               endColumn > otherEndColumn? 1: 
+               constraintName.compareTo(otherConstraintName);
     }
 
 }

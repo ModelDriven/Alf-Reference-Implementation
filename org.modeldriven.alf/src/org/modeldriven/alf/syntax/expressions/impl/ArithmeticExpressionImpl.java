@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -217,11 +217,11 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
 	    Expression operand2 = self.getOperand2();
 	    String operator = self.getOperator();
 		if (operand1 == null || operand2 == null) {
-		    return false;
+		    return true;
 		} else {
 		    ElementReference type1 = operand1.getType();
 		    ElementReference type2 = operand2.getType();
-		    return operator == null || type1 != null && type2 != null && (
+		    return operator == null || type1 == null || type2 == null ||
 		           !operator.equals("%") &&
 		           type1.getImpl().isIntegerOrReal()  &&
 		           type2.getImpl().isIntegerOrReal() ||
@@ -230,7 +230,7 @@ public class ArithmeticExpressionImpl extends BinaryExpressionImpl {
                    type2.getImpl().isString() ||
                    operator.equals("%") &&
                    type1.getImpl().isInteger() &&
-                   type2.getImpl().isInteger());
+                   type2.getImpl().isInteger();
 		}
 	}
 	

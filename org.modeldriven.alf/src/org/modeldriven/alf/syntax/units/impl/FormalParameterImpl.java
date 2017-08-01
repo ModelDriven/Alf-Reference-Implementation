@@ -157,8 +157,7 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
                     parameter1.getImpl().getUpper().equals(parameter2.getImpl().getUpper()) &&
                     parameter1.getImpl().isOrdered() == parameter2.getImpl().isOrdered() &&
                     parameter1.getImpl().isUnique() == parameter2.getImpl().isUnique() &&
-                    (type1 != null && type1.getImpl().equals(type2) ||
-                            type1 == null && type2 == null);
+                    type1 != null && type1.getImpl().equals(type2);
 	    }
 	}
 
@@ -179,8 +178,7 @@ public class FormalParameterImpl extends TypedElementDefinitionImpl {
             
             return (name1 == null && name2 == null ||
                         name1 != null && name1.equals(name2)) &&
-                   (type1 == null && type2 == null ||
-                        type1 != null && type1.getImpl().equals(type2));
+                   type1 != null && type1.getImpl().equals(type2);
         }
     }
     

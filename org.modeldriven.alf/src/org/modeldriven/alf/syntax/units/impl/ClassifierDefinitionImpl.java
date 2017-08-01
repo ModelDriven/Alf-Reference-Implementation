@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -383,8 +382,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             boolean isFirst = true;
             Set<ElementReference> commonAncestors = new HashSet<ElementReference>();
             for (ElementReference classifier: classifiers) {
-                if (classifier == null) {
-                    return null;
+                if (classifier == null || classifier.getImpl().isAny()) {
+                    return classifier;
                 }
                 Collection<ElementReference> ancestors = classifier.getImpl().allParents();
                 ancestors.add(classifier);
@@ -400,7 +399,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
                     }
                 }
                 if (commonAncestors.isEmpty()) {
-                    return null;
+                    return any;
                 }
             }
             
@@ -416,8 +415,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             
             classifiers = commonAncestors;
         }
-        if (classifiers.size() == 0) {
-            return null;
+        if (classifiers.isEmpty()) {
+            return any;
         } else {
             return (ElementReference)classifiers.toArray()[0];
         }

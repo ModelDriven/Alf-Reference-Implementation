@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -96,7 +95,7 @@ public class ShiftExpressionImpl extends BinaryExpressionImpl {
         ElementReference type1 = operand1.getType();
         Expression operand2 = self.getOperand2();
         ElementReference type2 = operand2.getType();
-		return type1 != null && 
+		return type1 == null || type2 == null || 
 		            (type1.getImpl().isBitString() || 
 		                    type1.getImpl().isInteger()) &&
 		            type2.getImpl().isInteger();
