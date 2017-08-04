@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.uml.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +33,8 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	private UnitDefinition unit = null;
     protected Collection<Member> member = null; // DERIVED
     protected Map<String, Collection<Member>> memberMap = null;
+    
+    protected Element umlElement = null;
 
 	public NamespaceDefinitionImpl(NamespaceDefinition self) {
 		super(self);
@@ -177,6 +180,15 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
 	/*
 	 *  Helper methods
 	 */
+	
+	public void setUml(Element umlElement) {
+	    this.umlElement = umlElement;
+	}
+	
+	@Override
+	public Element getUml() {
+	    return this.umlElement;
+	}
 	
 	public Collection<Member> getMember(Collection<ElementReference> excluded) {
 	    if (this.member != null) {
@@ -332,7 +344,10 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         } else {
             ElementReference namespace = member.getImpl().getNamespace();
             if (namespace == null) {
-                namespace = member.getImpl().getContext();
+                ElementReference context = member.getImpl().getContext();
+                if (!member.getImpl().equals(context)) {
+                    namespace = context;
+                }
             }
             return namespace != null && 
                     (namespace.getImpl().equals(this.getReferent()) || 

@@ -63,7 +63,8 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public Element getUml() {
-        return null;
+        SyntaxElement element = this.getSelf().getElement();
+        return element == null? null: element.getImpl().getUml();
     }
     
     @Override

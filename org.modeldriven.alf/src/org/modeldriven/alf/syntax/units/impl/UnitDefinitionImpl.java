@@ -14,6 +14,7 @@ import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.common.impl.DocumentedElementImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
+import org.modeldriven.alf.uml.Element;
 import org.modeldriven.alf.uml.Profile;
 
 import java.util.ArrayList;
@@ -221,6 +222,19 @@ public class UnitDefinitionImpl extends DocumentedElementImpl {
     /*
      * Helper Methods
      */
+	
+	public void setUml(Element umlElement) {
+	    NamespaceDefinition definition = this.getSelf().getDefinition();
+	    if (definition != null) {
+	        definition.getImpl().setUml(umlElement);
+	    }
+	}
+	
+	@Override
+	public Element getUml() {
+        NamespaceDefinition definition = this.getSelf().getDefinition();
+        return definition == null? null: definition.getImpl().getUml();
+	}
 
     public List<Member> getImportedMembers(Collection<ElementReference> excluded) {
         UnitDefinition self = this.getSelf();

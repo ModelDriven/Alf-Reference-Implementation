@@ -21,6 +21,7 @@ import org.modeldriven.alf.syntax.units.BoundClassifier;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
+import org.modeldriven.alf.uml.Element;
 
 public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     
@@ -137,6 +138,12 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     @Override
     public List<ElementReference> getTemplateActuals() {
         return this.getSelf().getActual();
+    }
+    
+    @Override
+    public Element getUml() {
+        ElementReference boundElement = this.getEffectiveBoundElement();
+        return boundElement == null? super.getUml(): boundElement.getImpl().getUml();
     }
 
     @Override

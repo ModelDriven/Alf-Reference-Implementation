@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.syntax.common.*;
+import org.modeldriven.alf.uml.Element;
 
 /**
  * A syntax element synthesized in an abstract syntax tree, along with any
@@ -43,6 +44,10 @@ public abstract class SyntaxElementImpl {
     
     public void setBase(SyntaxElement base) {
         this.base = base;
+    }
+    
+    public Element getUml() {
+        return null;
     }
     
     // The implementation mapping used for this syntax element.
