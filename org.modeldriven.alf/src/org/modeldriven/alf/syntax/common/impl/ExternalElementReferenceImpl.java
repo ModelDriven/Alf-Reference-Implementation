@@ -861,12 +861,20 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     }
     
     @Override
+    public List<ElementReference> resolveInScope(String name, boolean classifierOnly) {
+        List<ElementReference> members = new ArrayList<ElementReference>();
+        for (Member member: this.asNamespace().getImpl().resolveInScope(name, classifierOnly)) {
+            members.add(member.getImpl().getReferent());
+        }
+        return members;
+    }
+    
+    @Override
     public ElementReference getEffectiveBoundElement() {
         // TODO: Fix this.
 //        if (this.isTemplateBinding()) {
 //            NamedElement element = (NamedElement)this.getSelf().getElement();
-//            for (Dependency dependency: 
-//                element.getSupplierDependency()) {
+//            for (Dependency dependency: element.getSupplierDependency()) {
 //                if (dependency instanceof Realization) {
 //                    return ElementReferenceImpl.makeElementReference(dependency.getClient());
 //                }

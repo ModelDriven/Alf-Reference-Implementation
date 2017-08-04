@@ -167,6 +167,8 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     public abstract Collection<Class<?>> getStereotypeMetaclasses();
     public abstract Class<?> getUMLMetaclass();
     
+    public abstract List<ElementReference> resolveInScope(String name, boolean classifierOnly);
+    
     public List<ElementReference> getEffectiveParameters() {
         if (this.isBehavior() || this.isOperation()) {
             return this.getParameters();

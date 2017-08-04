@@ -87,6 +87,15 @@ public class BoundNamespaceImpl extends NamespaceDefinitionImpl {
     }
     
     @Override
+    public List<Member> resolveInScope(String name, boolean classifierOnly) {
+        List<Member> members = new ArrayList<Member>();
+        for (ElementReference member: this.getReferent().getImpl().resolveInScope(name, classifierOnly)) {
+            members.add(ImportedMemberImpl.makeImportedMember(member, member.getImpl().isImported()));
+        }
+        return members;
+    }
+    
+    @Override
     public boolean isCompletelyBound() {
         return true;
     }

@@ -91,8 +91,7 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     @Override
     public List<Member> getOwnedMember() {
         List<Member> ownedMembers = new ArrayList<Member>();
-        for (ElementReference member: 
-            this.getSelf().getReferent().getImpl().getOwnedMembers()) {
+        for (ElementReference member: this.getSelf().getReferent().getImpl().getOwnedMembers()) {
             if (!member.getImpl().isClassifierTemplateParameter()) {
                 ownedMembers.add(ImportedMemberImpl.makeImportedMember(member, false));
             }
@@ -111,8 +110,7 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     @Override 
     protected Collection<Member> deriveMember() {
         Collection<Member> members = new ArrayList<Member>();
-        for (ElementReference member: 
-            this.getSelf().getReferent().getImpl().getMembers()) {
+        for (ElementReference member: this.getSelf().getReferent().getImpl().getMembers()) {
             if (!member.getImpl().isClassifierTemplateParameter()) {
                 members.add(ImportedMemberImpl.makeImportedMember(
                         member, member.getImpl().isImported()));
@@ -144,6 +142,15 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     @Override
     public Boolean isSameKindAs(Member member) {
         return false;
+    }
+    
+    @Override
+    public List<Member> resolveInScope(String name, boolean classifierOnly) {
+        List<Member> members = new ArrayList<Member>();
+        for (ElementReference member: this.getReferent().getImpl().resolveInScope(name, classifierOnly)) {
+            members.add(ImportedMemberImpl.makeImportedMember(member, member.getImpl().isImported()));
+        }
+        return members;
     }
     
     /**

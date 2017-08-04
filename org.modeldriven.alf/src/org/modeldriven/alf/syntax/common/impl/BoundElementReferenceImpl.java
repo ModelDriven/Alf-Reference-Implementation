@@ -478,7 +478,12 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public Class<?> getUMLMetaclass() {
         return this.getSelf().getReferent().getImpl().getUMLMetaclass();
-     }
+    }
+    
+    @Override
+    public List<ElementReference> resolveInScope(String name, boolean classifierOnly) {
+        return this.makeBoundReferences(this.getReferent().getImpl().resolveInScope(name, classifierOnly));
+    }
     
     @Override
     public ElementReference getEffectiveBoundElement(BoundElementReference boundElement) {

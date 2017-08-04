@@ -604,6 +604,15 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
      }
     
     @Override
+    public List<ElementReference> resolveInScope(String name, boolean classifierOnly) {
+        List<ElementReference> members = new ArrayList<ElementReference>();
+        for (Member member: ((NamespaceDefinition)this.getElement()).getImpl().resolveInScope(name, classifierOnly)) {
+            members.add(member.getImpl().getReferent());
+        }
+        return members;
+    }
+    
+    @Override
     public ElementReference getEffectiveBoundElement() {
         return !this.isTemplateBinding()? null: 
             ((BoundClassifier)this.getSelf().getElement()).getEffectiveBoundElement();
