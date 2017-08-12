@@ -94,7 +94,7 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
 	    NameBinding nameBinding = self.getNameBinding();
 	    ElementReference targetType = target == null? null: target.getType();
 	    Collection<ElementReference> referents = new ArrayList<ElementReference>();
-	    if (targetType != null && nameBinding != null) {
+	    if (targetType != null && !targetType.getImpl().isAny() && nameBinding != null) {
 	        String name = nameBinding.getName();
 	        if (name != null) {
 	            for (Member member: targetType.getImpl().asNamespace().
