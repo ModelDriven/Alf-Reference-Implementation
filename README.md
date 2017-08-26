@@ -4,11 +4,13 @@ _Copyright &copy; 2011-2017 Data Access Technologies, Inc. (Model Driven Solutio
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
 Syntax for a UML Action Language</em> Request for Proposals. The Alf specification 
 document can be found at http://www.omg.org/spec/ALF. (See also http://solitaire.omg.org/issues/task-force/ALF11
-for the list of open issues currently being addressed by the Alf 1.1 Revision Task Force.)
+for the list of issues addressed by the Alf 1.1 Revision Task Force.)
 
-The current base release, [v1.0.0a](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.0.0a),
-is based on the Alf 1.0.1 specification.  It compiles Alf source text to the executable 
-Foundational UML (fUML) subset of UML. The compilation can target either of two fUML execution engine implementations:
+This README file describes the current base release, [v1.0.0a](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.0.0a). For updates relevant to later releases, please refer to the README file distributed with those releases.
+
+Base release [v1.0.0a](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.0.0a) conforms to the 
+Alf 1.0.1 specification.  It compiles Alf source text to the executable Foundational UML (fUML) subset of UML. The compilation 
+can target either of two fUML execution engine implementations:
 
 * The fUML Reference Implementation execution engine (see http://fuml.modeldriven.org), [v1.2.0](https://github.com/ModelDriven/fUML-Reference-Implementation/releases/tag/v1.2.0)
 (this version conforms to fUML 1.2.1).
