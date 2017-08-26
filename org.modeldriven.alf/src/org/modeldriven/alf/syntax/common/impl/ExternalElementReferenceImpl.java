@@ -41,7 +41,6 @@ import org.modeldriven.alf.uml.Feature;
 import org.modeldriven.alf.uml.MultiplicityElement;
 import org.modeldriven.alf.uml.NamedElement;
 import org.modeldriven.alf.uml.Namespace;
-import org.modeldriven.alf.uml.OpaqueExpression;
 import org.modeldriven.alf.uml.Operation;
 import org.modeldriven.alf.uml.Package;
 import org.modeldriven.alf.uml.PackageableElement;
@@ -829,12 +828,10 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         } else if (element instanceof Action) {
             return ElementReferenceImpl.makeElementReference(((Action)element).getContext());
             
-        // Handle opaque expressions used as default values and guards. 
-        } else if (element instanceof OpaqueExpression) {
+        // For any other kind of element, find nearest Classifier or Behavior context. 
+        } else {
             return ElementReferenceImpl.makeElementReference(getContextOf(element.getOwner()));
             
-        } else {
-            return null;
         }
     }
     
