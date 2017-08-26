@@ -4,16 +4,15 @@ _Copyright &copy; 2011-2017 Data Access Technologies, Inc. (Model Driven Solutio
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
 Syntax for a UML Action Language</em> Request for Proposals. The Alf specification 
 document can be found at http://www.omg.org/spec/ALF. (See also http://solitaire.omg.org/issues/task-force/ALF11
-for the list of open issues currently being addressed by the Alf 1.1 Revision Task Force.)
+for the list of issues addressed by the Alf 1.1 Revision Task Force.)
 
-This implementation is based on the Alf 1.0.1 specification, as updated by proposed issue resolutions for Alf 1.1.  
-It compiles Alf source text to the executable Foundational UML (fUML) subset of UML. The compilation can target either 
+This implementation is based on the Alf 1.1 beta specification. It compiles Alf source text to the executable Foundational UML (fUML) subset of UML. The compilation can target either 
 of two fUML execution engine implementations:
 
 * The fUML Reference Implementation execution engine (see http://fuml.modeldriven.org), [v1.2.3](https://github.com/ModelDriven/fUML-Reference-Implementation/releases/tag/v1.2.3)
-(this version conforms to fUML 1.2.1, as updated by proposed resolutions for fUML 1.3).
+(this version conforms to fUML 1.3 beta).
 * The fUML execution engine from the Moka framework for model execution in the Eclipse Papyrus tool
-(see http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution), v1.1.0 or later.
+(see http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution), v2.0.0 or later.
 
 The implementation handles the full Alf syntax at the Extended compliance level, as given in Annex C Consolidated 
 LL Grammar of the Alf Specification.
@@ -43,7 +42,7 @@ If you move it, set the environment variable `ALF_LIB` to its path.
 
 ## Projects
 
-The implementation source is organized into four [Eclipse](http://www.eclipse.org) projects. Eclipse 4.5 or later is required.
+The implementation source is organized into four [Eclipse](http://www.eclipse.org) projects. Eclipse 4.6 or later is required.
 
 * `org.modeldriven.alf` - This is the base project, including the
 Alf parser, static semantic checking and generic mapping to fUML.
@@ -59,13 +58,12 @@ fUML Reference Implementation project directly but, rather, uses an exported
 	
 * `org.modeldriven.alf.eclipse` - This project extends the base
 project to specialize the mapping to target the [Eclipse UML2](https://projects.eclipse.org/projects/modeling.mdt.uml2)
-metamodel implementation (v5.0.1 or later; v4.x is also usable, but its use with the reference implementation is deprecated). 
-It depends on Eclipse plugins and must be built in an Eclipse environment.
+metamodel implementation (v5.2.0 or later). It depends on Eclipse plugins and must be built in an Eclipse environment.
 	
 * `org.modeldriven.alf.eclipse.papyrus` - This project extends the 
 `org.modeldriven.alf.eclipse` project to allow compiled Alf text to be executed
 using the fUML execution engine from the [Moka framework] (http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution)
-for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (v1.1.0 or later).
+for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (v2.0.0 or later).
 It depends on Eclipse plugins and must be built in an Eclipse environment.
 
 ## Further Information
