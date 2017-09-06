@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,11 +8,10 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.papyrus.execution;
 
-import java.util.ArrayList;
-
 import org.modeldriven.alf.uml.Class_;
 import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IObject_;
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
+import org.eclipse.papyrus.moka.fuml.control.queue.ExecutionController;
+import org.eclipse.papyrus.moka.fuml.control.queue.ExecutionLoop;
 
 public class Object_ implements org.modeldriven.alf.fuml.execution.Object_ {
     
@@ -28,9 +27,11 @@ public class Object_ implements org.modeldriven.alf.fuml.execution.Object_ {
 
     @Override
     public void startBehavior(Class_ classifier) {
-        this.base.startBehavior(
-                ((org.modeldriven.alf.eclipse.uml.Class_)classifier).getBase(), 
-                new ArrayList<IParameterValue>());
+		RootExecution rootExecution = new RootExecution(
+				((org.modeldriven.alf.eclipse.uml.Class_)classifier).getBase(), 
+				this.getBase().getLocus(), this.getBase());
+		ExecutionController.getInstance().setExecutionLoop(new ExecutionLoop());
+		ExecutionController.getInstance().start(rootExecution);
     }
     
     public String toString() {

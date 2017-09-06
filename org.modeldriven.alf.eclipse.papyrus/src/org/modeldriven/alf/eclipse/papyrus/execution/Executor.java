@@ -8,10 +8,9 @@
  *******************************************************************************/
 package org.modeldriven.alf.eclipse.papyrus.execution;
 
-import java.util.ArrayList;
-
-import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IParameterValue;
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.IExecutor;
+import org.eclipse.papyrus.moka.fuml.control.queue.ExecutionController;
+import org.eclipse.papyrus.moka.fuml.control.queue.ExecutionLoop;
 import org.modeldriven.alf.fuml.execution.Object_;
 import org.modeldriven.alf.uml.Behavior;
 
@@ -33,11 +32,13 @@ public class Executor implements org.modeldriven.alf.fuml.execution.Executor {
 
     @Override
     public void execute(Behavior behavior, Object_ context) {
-        this.base.execute(
-                ((org.modeldriven.alf.eclipse.uml.Behavior)behavior).getBase(), 
-                context == null? null:
-                    ((org.modeldriven.alf.eclipse.papyrus.execution.Object_)context).getBase(),
-                new ArrayList<IParameterValue>());
+		RootExecution rootExecution = new RootExecution(
+				((org.modeldriven.alf.eclipse.uml.Behavior)behavior).getBase(), 
+				this.getBase().getLocus(),
+				context == null? null: 
+					((org.modeldriven.alf.eclipse.papyrus.execution.Object_)context).getBase());
+		ExecutionController.getInstance().setExecutionLoop(new ExecutionLoop());
+		ExecutionController.getInstance().start(rootExecution);
     }
 
 }

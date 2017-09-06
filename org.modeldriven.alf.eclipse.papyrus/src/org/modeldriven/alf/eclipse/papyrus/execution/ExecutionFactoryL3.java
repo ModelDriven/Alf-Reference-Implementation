@@ -10,19 +10,15 @@
 package org.modeldriven.alf.eclipse.papyrus.execution;
 
 import org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.ISemanticVisitor;
-import org.eclipse.uml2.uml.ActivityFinalNode;
+import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.ReclassifyObjectAction;
 
 public class ExecutionFactoryL3 extends org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL3.ExecutionFactoryL3 {
 
 	@Override
 	public ISemanticVisitor instantiateVisitor(Element element) {
-		// This is a fix for Moka v2.0.0 bugs.
-		if (element instanceof ActivityFinalNode) {
-			return new ActivityFinalNodeActivation();
-		} else if (element instanceof ReclassifyObjectAction) {
-			return new ReclassifyObjectActionActivation();
+		if (element instanceof Activity) {
+			return new ActivityExecution();
 		} else {
 			return super.instantiateVisitor(element);
 		}
