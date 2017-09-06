@@ -196,7 +196,7 @@ public abstract class Alf extends AlfBase {
                             }
                         }
                     } else {
-                        println("Unit is not executable.");
+                        this.println("Unit is not executable.");
                     }
                 }
             } catch (MappingError e) {
