@@ -60,8 +60,12 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
     
     @Override
     protected OpaqueBehaviorExecution getOpaqueBehaviorExecution(Object object) {
-        return new org.modeldriven.alf.fuml.impl.execution.OpaqueBehaviorExecution(
-                (fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution)object);
+    	fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution execution =
+    			object instanceof org.modeldriven.alf.fuml.library.OpaqueBehaviorExecution?
+    					new org.modeldriven.alf.fuml.impl.library.OpaqueBehaviorExecution(
+    							(org.modeldriven.alf.fuml.library.OpaqueBehaviorExecution)object):
+    						(fUML.Semantics.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution)object;
+        return new org.modeldriven.alf.fuml.impl.execution.OpaqueBehaviorExecution(execution);
     }
     
     @Override
@@ -69,7 +73,7 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
         QualifiedName definitionName = definition.getImpl().getQualifiedName();
         String rootName = definitionName.getNameBinding().get(0).getName();
         return "org.modeldriven." + 
-            (rootName.equals("FoundationalModelLibrary")? "fuml": "alf.fuml.impl") +
+            (rootName.equals("FoundationalModelLibrary")? "fuml": "alf.fuml") +
             ".library." + 
             definition.getNamespace().getName().toLowerCase() + "." + prototypeName;
     }

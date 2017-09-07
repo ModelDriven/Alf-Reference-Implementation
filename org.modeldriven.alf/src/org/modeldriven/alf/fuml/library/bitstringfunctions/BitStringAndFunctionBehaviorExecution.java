@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -7,26 +7,26 @@
  * contact Model Driven Solutions.
  *******************************************************************************/
 
-package org.modeldriven.alf.eclipse.papyrus.library.bitstringfunctions;
+package org.modeldriven.alf.fuml.library.bitstringfunctions;
 
 import java.util.List;
 
-import org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel.IValue;
-import org.eclipse.papyrus.moka.fuml.debug.Debug;
+import org.modeldriven.alf.fuml.library.Debug;
+import org.modeldriven.alf.fuml.library.OpaqueBehaviorExecution;
 
-public class BitStringXorFunctionBehaviorExecution extends
+public class BitStringAndFunctionBehaviorExecution extends
         BitStringFunctionBehaviorExecution {
 
     @Override
-    public int doBitStringFunction(List<Integer> arguments) {
-        int result = arguments.get(0) ^ arguments.get(1);
-        Debug.println("[doBitStringFunction] Xor result = " + result);
+    public int doBitStringFunction(List<Integer> arguments, Debug debug) {
+        int result = arguments.get(0) & arguments.get(1);
+        debug.println("[doBitStringFunction] And result = " + result);
         return result;
     }   
 
     @Override
-    public IValue new_() {
-        return new BitStringXorFunctionBehaviorExecution();
+    public OpaqueBehaviorExecution new_() {
+        return new BitStringAndFunctionBehaviorExecution();
     }
 
 }

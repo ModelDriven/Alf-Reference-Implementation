@@ -22,6 +22,7 @@ import org.modeldriven.alf.uml.Class_;
 import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.DataType;
 import org.modeldriven.alf.uml.ElementFactory;
+import org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors.IOpaqueBehaviorExecution;
 import org.eclipse.papyrus.moka.fuml.Semantics.impl.Actions.IntermediateActions.DefaultCreateObjectActionStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.impl.Actions.IntermediateActions.DefaultGetAssociationStrategy;
 import org.eclipse.papyrus.moka.fuml.Semantics.impl.Classes.Kernel.RedefinitionBasedDispatchStrategy;
@@ -30,88 +31,92 @@ import org.eclipse.papyrus.moka.fuml.Semantics.impl.Loci.LociL1.FirstChoiceStrat
 import org.eclipse.papyrus.moka.fuml.debug.Debug;
 
 public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
-    
+
 	@Override
-    public void setDebugLevel(String level) {
+	public void setDebugLevel(String level) {
 		super.setDebugLevel(level);
-        Logger logger = Logger.getLogger(Debug.class);
-        logger.setLevel(this.debugLevel);
-    }
-    
-    @Override
-    protected Locus createLocus() {
-        Locus locus = new Locus();
-        org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.IExecutionFactory factory = locus.getFactory().getBase(); 
-        factory.setStrategy(new RedefinitionBasedDispatchStrategy());
-        factory.setStrategy(new FIFOGetNextEventStrategy());
-        factory.setStrategy(new FirstChoiceStrategy());       
+		Logger logger = Logger.getLogger(Debug.class);
+		logger.setLevel(this.debugLevel);
+	}
+
+	@Override
+	protected Locus createLocus() {
+		Locus locus = new Locus();
+		org.eclipse.papyrus.moka.fuml.Semantics.Loci.LociL1.IExecutionFactory factory = locus.getFactory().getBase(); 
+		factory.setStrategy(new RedefinitionBasedDispatchStrategy());
+		factory.setStrategy(new FIFOGetNextEventStrategy());
+		factory.setStrategy(new FirstChoiceStrategy());       
 		factory.setStrategy(new DefaultCreateObjectActionStrategy());
 		factory.setStrategy(new DefaultGetAssociationStrategy());
-        
-        return locus;
-    }
-    
-    @Override
-    protected ElementFactory createElementFactory() {
-        return org.modeldriven.alf.eclipse.uml.Element.FACTORY;
-    }
-    
-    @Override
-    protected OpaqueBehaviorExecution getUnimplementedBehaviorExecution() {
-    	return new UnimplementedBehaviorExecution();
-    }
-    
-    @Override
-    protected OpaqueBehaviorExecution getOpaqueBehaviorExecution(Object object) {
-        return new org.modeldriven.alf.eclipse.papyrus.execution.OpaqueBehaviorExecution(
-                (org.eclipse.papyrus.moka.fuml.Semantics.impl.CommonBehaviors.BasicBehaviors.OpaqueBehaviorExecution)object);
-    }
-    
-    @Override 
-    protected String getPrototypeClassName(Member definition, String prototypeName) {
-    	return prototypeName;
-    }
-    
-    @Override
-    protected void createSystemServices() {
-        QualifiedName standardOutputChannel = 
-            RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
-                addName("StandardOutputChannel");
-        this.createSystemService
-            (standardOutputChannel, new StandardOutputChannelObject());
-        
-        QualifiedName standardInputChannel = 
-            RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
-                addName("StandardInputChannel");
-        this.createSystemService
-            (standardInputChannel, new StandardInputChannelObject());
-        
-        QualifiedName status = 
-            RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
-                addName("Status");
-        Classifier statusType = getClassifier(status);
-        if (statusType instanceof DataType) {
-            Status.setStatusType(((org.modeldriven.alf.eclipse.uml.DataType)statusType).getBase());
-        } else {
-            System.out.println("Cannot find Status datatype.");
-        }
-    }
-    
-    private void createSystemService (
-            QualifiedName name,
-            ImplementationObject object) {
-        Classifier type = getClassifier(name);
-        if (type instanceof Class_) {
-            org.eclipse.uml2.uml.Class class_ = 
-                    ((org.modeldriven.alf.eclipse.uml.Class_)type).getBase();
-            object.types.add(class_);
-            ((Locus)this.getLocus()).add(object);
-            printVerbose("Instantiated " + name.getPathName() + 
-                    " as " + object.getClass().getName());
-        }
-    }
-   
-   public static void main(String[] args) {
-       new Alf().run(args);
-   }
+
+		return locus;
+	}
+
+	@Override
+	protected ElementFactory createElementFactory() {
+		return org.modeldriven.alf.eclipse.uml.Element.FACTORY;
+	}
+
+	@Override
+	protected OpaqueBehaviorExecution getUnimplementedBehaviorExecution() {
+		return new UnimplementedBehaviorExecution();
+	}
+
+	@Override
+	protected OpaqueBehaviorExecution getOpaqueBehaviorExecution(Object object) {
+		IOpaqueBehaviorExecution execution =
+				object instanceof org.modeldriven.alf.fuml.library.OpaqueBehaviorExecution?
+						new org.modeldriven.alf.eclipse.papyrus.library.OpaqueBehaviorExecution(
+								(org.modeldriven.alf.fuml.library.OpaqueBehaviorExecution)object):
+						(IOpaqueBehaviorExecution)object;
+		return new org.modeldriven.alf.eclipse.papyrus.execution.OpaqueBehaviorExecution(execution);
+	}
+
+	@Override 
+	protected String getPrototypeClassName(Member definition, String prototypeName) {
+		return prototypeName;
+	}
+
+	@Override
+	protected void createSystemServices() {
+		QualifiedName standardOutputChannel = 
+				RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
+				addName("StandardOutputChannel");
+		this.createSystemService
+		(standardOutputChannel, new StandardOutputChannelObject());
+
+		QualifiedName standardInputChannel = 
+				RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
+				addName("StandardInputChannel");
+		this.createSystemService
+		(standardInputChannel, new StandardInputChannelObject());
+
+		QualifiedName status = 
+				RootNamespace.getRootScope().getBasicInputOutput().getImpl().copy().
+				addName("Status");
+		Classifier statusType = getClassifier(status);
+		if (statusType instanceof DataType) {
+			Status.setStatusType(((org.modeldriven.alf.eclipse.uml.DataType)statusType).getBase());
+		} else {
+			System.out.println("Cannot find Status datatype.");
+		}
+	}
+
+	private void createSystemService (
+			QualifiedName name,
+			ImplementationObject object) {
+		Classifier type = getClassifier(name);
+		if (type instanceof Class_) {
+			org.eclipse.uml2.uml.Class class_ = 
+					((org.modeldriven.alf.eclipse.uml.Class_)type).getBase();
+			object.types.add(class_);
+			((Locus)this.getLocus()).add(object);
+			printVerbose("Instantiated " + name.getPathName() + 
+					" as " + object.getClass().getName());
+		}
+	}
+
+	public static void main(String[] args) {
+		new Alf().run(args);
+	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2012 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -7,30 +7,30 @@
  * contact Model Driven Solutions.
  *******************************************************************************/
 
-package org.modeldriven.alf.fuml.impl.library.bitstringfunctions;
+package org.modeldriven.alf.fuml.library.bitstringfunctions;
 
-import UMLPrimitiveTypes.intList;
+import java.util.List;
 
-import fUML.Debug;
-import fUML.Semantics.Classes.Kernel.Value;
+import org.modeldriven.alf.fuml.library.Debug;
+import org.modeldriven.alf.fuml.library.OpaqueBehaviorExecution;
 
-public class BitStringShiftRightFunctionBehaviorExecution extends
+public class BitStringUnsignedShiftRightFunctionBehaviorExecution extends
         BitStringFunctionBehaviorExecution {
 
     @Override
-    public int doBitStringFunction(intList arguments) {
+    public int doBitStringFunction(List<Integer> arguments, Debug debug) {
         int n = arguments.get(1);
         int result = arguments.get(0);
         if (n > 0) {
-            result = result >> n;
+            result = result >>> n;
         }
-        Debug.println("[doBitStringFunction] Shift right result = " + result);
+        debug.println("[doBitStringFunction] Unsigned shift right result = " + result);
         return result;
-    }   
+    }
 
     @Override
-    public Value new_() {
-        return new BitStringShiftRightFunctionBehaviorExecution();
+    public OpaqueBehaviorExecution new_() {
+        return new BitStringUnsignedShiftRightFunctionBehaviorExecution();
     }
 
 }
