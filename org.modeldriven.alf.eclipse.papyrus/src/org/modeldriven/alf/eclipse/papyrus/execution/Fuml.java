@@ -314,6 +314,10 @@ public class Fuml {
 		this.createAlfLibraryBehaviorPrototype(
 				"Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToNatural", 
 				org.modeldriven.alf.fuml.library.integerfunctions.IntegerToNaturalFunctionBehaviorExecution.class);
+
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToReal", 
+				org.modeldriven.alf.fuml.library.integerfunctions.IntegerToRealFunctionBehaviorExecution.class);
 	}
 
 	private void createAlfLibraryBehaviorPrototype(

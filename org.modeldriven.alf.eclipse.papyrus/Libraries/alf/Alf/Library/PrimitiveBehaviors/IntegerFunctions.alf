@@ -20,11 +20,12 @@ private import FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::'
 
 package IntegerFunctions {
 
-  @primitive(implementation=>"org.modeldriven.alf.fuml.library.IntegerToNaturalFunctionBehaviorExecution")
+  @primitive(IntegerToNaturalFunctionBehaviorExecution)
   public activity ToNatural(in x: String): Integer[0..1] {}
   
+  @primitive(IntegerToRealFunctionBehaviorExecution)
   public activity ToReal(in x: Integer): Real {
-  	return Divide(x, 1)??0.0;
+//  	return Divide(x, 1)??0.0;
   }
   
 }
