@@ -25,7 +25,7 @@ public abstract class BitStringFunctionBehaviorExecution implements
         List<Integer> integerArguments = new ArrayList<Integer>();
 
         for (ParameterValue input: inputs) {
-            integerArguments.add((Integer)input.getValues().get(0));
+            integerArguments.add((Integer)input.getObjects().get(0));
         }
 
         int value = this.doBitStringFunction(integerArguments, debug);        

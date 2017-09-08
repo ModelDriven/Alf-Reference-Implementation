@@ -7,7 +7,7 @@
  * contact Model Driven Solutions.
  *******************************************************************************/
 
-package org.modeldriven.alf.fuml.library.bitstringfunctions;
+package org.modeldriven.alf.fuml.library.sequencefunctions;
 
 import java.util.List;
 
@@ -15,24 +15,24 @@ import org.modeldriven.alf.fuml.library.Debug;
 import org.modeldriven.alf.fuml.library.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.library.ParameterValue;
 
-public class BitStringToOctalStringFunctionBehaviorExecution implements
-        OpaqueBehaviorExecution {
+public class SequenceIndexOfFunctionBehaviorExecution implements OpaqueBehaviorExecution {
 
     @Override
     public void doBody(List<ParameterValue> inputs, List<ParameterValue> outputs, Debug debug) {
-
-        int value = (int)inputs.get(0).getObjects().get(0);
-		debug.println("[doBody] argument = " + value);
-    	
-		String result = Integer.toOctalString(value);
-        debug.println("[doBody] BitString ToOctalString result = " + result);
-
-		outputs.get(0).addStringValue(result);
+        final List<? extends Object> seq = inputs.get(0).getValues();
+        final Object element = inputs.get(1).getValues().get(0);
+        debug.println("[doBody] element = " + element);
+        
+        int result = seq.indexOf(element) + 1;
+        if (result > 0) {
+            debug.println("[doBody] IndexOf result = " + result);        
+            outputs.get(0).addIntegerValue(result);
+        }
     }
-    
+
     @Override
     public OpaqueBehaviorExecution new_() {
-        return new BitStringToOctalStringFunctionBehaviorExecution();
-    }   
+        return new SequenceIndexOfFunctionBehaviorExecution();
+    }
 
 }

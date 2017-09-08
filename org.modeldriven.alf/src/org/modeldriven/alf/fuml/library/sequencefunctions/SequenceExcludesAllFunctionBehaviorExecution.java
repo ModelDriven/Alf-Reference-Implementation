@@ -7,7 +7,7 @@
  * contact Model Driven Solutions.
  *******************************************************************************/
 
-package org.modeldriven.alf.fuml.library.bitstringfunctions;
+package org.modeldriven.alf.fuml.library.sequencefunctions;
 
 import java.util.List;
 
@@ -15,24 +15,28 @@ import org.modeldriven.alf.fuml.library.Debug;
 import org.modeldriven.alf.fuml.library.OpaqueBehaviorExecution;
 import org.modeldriven.alf.fuml.library.ParameterValue;
 
-public class BitStringToOctalStringFunctionBehaviorExecution implements
-        OpaqueBehaviorExecution {
+public class SequenceExcludesAllFunctionBehaviorExecution implements OpaqueBehaviorExecution {
 
     @Override
     public void doBody(List<ParameterValue> inputs, List<ParameterValue> outputs, Debug debug) {
-
-        int value = (int)inputs.get(0).getObjects().get(0);
-		debug.println("[doBody] argument = " + value);
-    	
-		String result = Integer.toOctalString(value);
-        debug.println("[doBody] BitString ToOctalString result = " + result);
-
-		outputs.get(0).addStringValue(result);
+        final List<? extends Object> seq1 = inputs.get(0).getValues();
+        final List<? extends Object> seq2 = inputs.get(1).getValues();
+         
+        boolean result = true;
+        for (Object element: seq2) {
+            result = !seq1.contains(element);
+            if (!result) {
+                break;
+            }           
+        }
+        debug.println("[doBody] ExcludesAll result = " + result);
+        
+        outputs.get(0).addBooleanValue(result);
     }
-    
+
     @Override
     public OpaqueBehaviorExecution new_() {
-        return new BitStringToOctalStringFunctionBehaviorExecution();
-    }   
+        return new SequenceExcludesAllFunctionBehaviorExecution();
+    }
 
 }

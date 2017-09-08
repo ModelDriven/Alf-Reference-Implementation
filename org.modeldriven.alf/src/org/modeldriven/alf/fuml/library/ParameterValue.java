@@ -12,9 +12,10 @@ package org.modeldriven.alf.fuml.library;
 import java.util.List;
 
 public interface ParameterValue {
-    public List<Object> getValues();    
-    public void addValue(Object value);
+    public List<? extends Value> getValues();
+    public void addValue(Value value);
     
+    public List<Object> getObjects();    
     public void addBooleanValue(boolean value);
     public void addIntegerValue(int value);
     public void addRealValue(double value);
@@ -23,8 +24,8 @@ public interface ParameterValue {
     public void addBitStringValue(int value);
     public void addNaturalValue(int value);
     
-    public default void addValues(List<Object> values) {
-        for (Object value: values) {
+    public default void addValues(List<? extends Value> list) {
+        for (Value value: list) {
             this.addValue(value);
         }
     }

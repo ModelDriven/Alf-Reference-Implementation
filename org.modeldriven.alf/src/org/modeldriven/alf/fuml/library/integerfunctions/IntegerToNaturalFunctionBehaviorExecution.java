@@ -20,7 +20,7 @@ public class IntegerToNaturalFunctionBehaviorExecution implements OpaqueBehavior
     @Override
     public void doBody(List<ParameterValue> inputs, List<ParameterValue> outputs, Debug debug) {
 
-        String value = (String)inputs.get(0).getValues().get(0);
+        String value = (String)inputs.get(0).getObjects().get(0);
 		debug.println("[doBody] argument = " + value);
 
 		int result;

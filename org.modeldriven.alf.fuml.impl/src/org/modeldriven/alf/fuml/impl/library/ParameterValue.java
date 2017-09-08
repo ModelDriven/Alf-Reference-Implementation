@@ -18,7 +18,6 @@ import fUML.Semantics.Classes.Kernel.IntegerValue;
 import fUML.Semantics.Classes.Kernel.RealValue;
 import fUML.Semantics.Classes.Kernel.StringValue;
 import fUML.Semantics.Classes.Kernel.UnlimitedNaturalValue;
-import fUML.Semantics.Classes.Kernel.Value;
 
 public class ParameterValue implements org.modeldriven.alf.fuml.library.ParameterValue {
 	
@@ -33,15 +32,25 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 	}
 
 	@Override
-	public List<Object> getValues() {
-		List<Object> values = new ArrayList<Object>();
+	public List<? extends org.modeldriven.alf.fuml.library.Value> getValues() {
+		List<org.modeldriven.alf.fuml.library.Value> values = 
+				new ArrayList<org.modeldriven.alf.fuml.library.Value>();
 		for (fUML.Semantics.Classes.Kernel.Value value: this.base.values) {
-			values.add(valueOf(value));
+			values.add(new Value(value));
 		}
 		return values;
 	}
 
-	private static Object valueOf(fUML.Semantics.Classes.Kernel.Value value) {
+	@Override
+	public List<Object> getObjects() {
+		List<Object> values = new ArrayList<Object>();
+		for (fUML.Semantics.Classes.Kernel.Value value: this.base.values) {
+			values.add(objectFor(value));
+		}
+		return values;
+	}
+
+	private static Object objectFor(fUML.Semantics.Classes.Kernel.Value value) {
 		return value instanceof IntegerValue? ((IntegerValue)value).value:
 			   value instanceof RealValue? ((RealValue)value).value:
 			   value instanceof BooleanValue? ((BooleanValue)value).value:
@@ -51,8 +60,12 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 	}
 
 	@Override
-	public void addValue(Object value) {
-		this.base.values.add((Value)value);
+	public void addValue(org.modeldriven.alf.fuml.library.Value value) {
+		this.addBaseValue(((Value)value).getBase());
+	}
+	
+	private void addBaseValue(fUML.Semantics.Classes.Kernel.Value value) {
+		this.base.values.add(value);
 	}
 	
 	@Override
@@ -60,7 +73,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		BooleanValue booleanValue = new BooleanValue();
 		booleanValue.value = value;
 		booleanValue.type = this.locus.factory.getBuiltInType("Boolean");
-		this.addValue(booleanValue);
+		this.addBaseValue(booleanValue);
 	}
 
 	@Override
@@ -68,7 +81,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IntegerValue integerValue = new IntegerValue();
 		integerValue.value = value;
 		integerValue.type = this.locus.factory.getBuiltInType("Integer");
-		this.addValue(integerValue);
+		this.addBaseValue(integerValue);
 	}
 
 	@Override
@@ -76,7 +89,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		RealValue realValue = new RealValue();
 		realValue.value = (float)value;
 		realValue.type = this.locus.factory.getBuiltInType("Real");
-		this.addValue(realValue);
+		this.addBaseValue(realValue);
 	}
 
 	@Override
@@ -84,7 +97,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		StringValue stringValue = new StringValue();
 		stringValue.value = value;
 		stringValue.type = this.locus.factory.getBuiltInType("String");
-		this.addValue(stringValue);
+		this.addBaseValue(stringValue);
 	}
 
 	@Override
@@ -93,7 +106,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		integerValue.value = new UnlimitedNatural();
 		integerValue.value.naturalValue = value;
 		integerValue.type = this.locus.factory.getBuiltInType("UnlimitedNatural");
-		this.addValue(integerValue);
+		this.addBaseValue(integerValue);
 	}
 
 	@Override
@@ -101,7 +114,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IntegerValue integerValue = new IntegerValue();
 		integerValue.value = value;
 		integerValue.type = this.locus.factory.getBuiltInType("BitString");
-		this.addValue(integerValue);
+		this.addBaseValue(integerValue);
 	}
 
 	@Override
@@ -109,7 +122,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IntegerValue integerValue = new IntegerValue();
 		integerValue.value = value;
 		integerValue.type = this.locus.factory.getBuiltInType("Natural");
-		this.addValue(integerValue);
+		this.addBaseValue(integerValue);
 	}
 	
 }

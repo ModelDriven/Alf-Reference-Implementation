@@ -74,7 +74,9 @@ public class Alf extends org.modeldriven.alf.fuml.execution.Alf {
 
 	@Override 
 	protected String getPrototypeClassName(Member definition, String prototypeName) {
-		return prototypeName;
+		return prototypeName.contains(".")? prototypeName:
+			"org.modeldriven.alf.fuml.library." + 
+				definition.getNamespace().getName().toLowerCase() + "." + prototypeName;
 	}
 
 	@Override

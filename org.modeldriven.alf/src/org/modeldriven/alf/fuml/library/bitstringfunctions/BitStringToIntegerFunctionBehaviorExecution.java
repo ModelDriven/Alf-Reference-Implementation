@@ -21,7 +21,7 @@ public class BitStringToIntegerFunctionBehaviorExecution implements
     @Override
     public void doBody(List<ParameterValue> inputs, List<ParameterValue> outputs, Debug debug) {
 
-        int value = (int)inputs.get(0).getValues().get(0);
+        int value = (int)inputs.get(0).getObjects().get(0);
 		debug.println("[doBody] argument = " + value);
 		debug.println("[doBody] BitString ToInteger result = " + value);
 

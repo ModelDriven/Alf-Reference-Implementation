@@ -21,8 +21,8 @@ public class BitStringIsSetFunctionBehaviorExecution implements
     @Override
     public void doBody(List<ParameterValue> inputs, List<ParameterValue> outputs, Debug debug) {
 
-        int b = (int)inputs.get(0).getValues().get(0);
-        int n = (int)inputs.get(1).getValues().get(0);        
+        int b = (int)inputs.get(0).getObjects().get(0);
+        int n = (int)inputs.get(1).getObjects().get(0);        
         debug.println("[doBody] argument = " + b);
         debug.println("[doBody] argument = " + n);
     	

@@ -21,7 +21,7 @@ public class BitStringToHexStringFunctionBehaviorExecution implements
     @Override
     public void doBody(List<ParameterValue> inputs, List<ParameterValue> outputs, Debug debug) {
 
-        Integer value = (Integer)inputs.get(0).getValues().get(0);
+        Integer value = (Integer)inputs.get(0).getObjects().get(0);
 		debug.println("[doBody] argument = " + value);
     	
 		String result = Integer.toHexString(value);

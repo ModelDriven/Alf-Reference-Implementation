@@ -36,9 +36,19 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		this.base = base;
 		this.locus = locus;
 	}
+	
+	@Override
+	public List<? extends org.modeldriven.alf.fuml.library.Value> getValues() {
+		List<org.modeldriven.alf.fuml.library.Value> values = 
+				new ArrayList<org.modeldriven.alf.fuml.library.Value>();
+		for (IValue value: this.base.getValues()) {
+			values.add(new Value(value));
+		}
+		return values;
+	}
 
 	@Override
-	public List<Object> getValues() {
+	public List<Object> getObjects() {
 		List<Object> values = new ArrayList<Object>();
 		for (IValue value: this.base.getValues()) {
 			values.add(valueOf(value));
@@ -56,16 +66,20 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 	}
 
 	@Override
-	public void addValue(Object value) {
-		this.base.getValues().add((IValue)value);
+	public void addValue(org.modeldriven.alf.fuml.library.Value value) {
+		this.addBaseValue(((Value)value).getBase());
 	}
 	
+	private void addBaseValue(IValue value) {
+		this.base.getValues().add(value);
+	}
+		
 	@Override
 	public void addBooleanValue(boolean value) {
 		IBooleanValue booleanValue = new BooleanValue();
 		booleanValue.setValue(value);
 		booleanValue.setType((PrimitiveType)this.locus.getFactory().getBuiltInType("Boolean"));
-		this.addValue(booleanValue);
+		this.addBaseValue(booleanValue);
 	}
 
 	@Override
@@ -73,7 +87,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IIntegerValue integerValue = new IntegerValue();
 		integerValue.setValue(value);
 		integerValue.setType((PrimitiveType)this.locus.getFactory().getBuiltInType("Integer"));
-		this.addValue(integerValue);
+		this.addBaseValue(integerValue);
 	}
 
 	@Override
@@ -81,7 +95,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IRealValue realValue = new RealValue();
 		realValue.setValue(value);
 		realValue.setType((PrimitiveType)this.locus.getFactory().getBuiltInType("Real"));
-		this.addValue(realValue);
+		this.addBaseValue(realValue);
 	}
 
 	@Override
@@ -89,7 +103,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IStringValue stringValue = new StringValue();
 		stringValue.setValue(value);
 		stringValue.setType((PrimitiveType)this.locus.getFactory().getBuiltInType("String"));
-		this.addValue(stringValue);
+		this.addBaseValue(stringValue);
 	}
 
 	@Override
@@ -97,7 +111,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IUnlimitedNaturalValue integerValue = new UnlimitedNaturalValue();
 		integerValue.setValue(value);
 		integerValue.setType((PrimitiveType)this.locus.getFactory().getBuiltInType("UnlimitedNatural"));
-		this.addValue(integerValue);
+		this.addBaseValue(integerValue);
 	}
 
 	@Override
@@ -105,7 +119,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IIntegerValue integerValue = new IntegerValue();
 		integerValue.setValue(value);
 		integerValue.setType((PrimitiveType)this.locus.getFactory().getBuiltInType("BitString"));
-		this.addValue(integerValue);
+		this.addBaseValue(integerValue);
 	}
 
 	@Override
@@ -113,7 +127,7 @@ public class ParameterValue implements org.modeldriven.alf.fuml.library.Paramete
 		IIntegerValue integerValue = new IntegerValue();
 		integerValue.setValue(value);
 		integerValue.setType((PrimitiveType)this.locus.getFactory().getBuiltInType("Natural"));
-		this.addValue(integerValue);
+		this.addBaseValue(integerValue);
 	}
 	
 }
