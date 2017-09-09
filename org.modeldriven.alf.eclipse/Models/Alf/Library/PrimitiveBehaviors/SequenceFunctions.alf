@@ -4,39 +4,49 @@ private import FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::*;
 
 package SequenceFunctions {
 
+  @primitive(SequenceSizeFunctionBehaviorExecution)
   public activity Size(in seq: any[*] sequence): Integer { 
-  	return ListSize(seq);
+//  	return ListSize(seq);
   }
-  
+
+  @primitive(SequenceIncludesFunctionBehaviorExecution)  
   public activity Includes(in seq: any[*] sequence, in element: any): Boolean { 
-  	return seq->exists x (x == element);
+//  	return seq->exists x (x == element);
   }
   
+  @primitive(SequenceExcludesFunctionBehaviorExecution)  
   public activity Excludes(in seq: any[*] sequence, in element: any): Boolean { 
-  	return seq->forAll x (x != element);
+//  	return seq->forAll x (x != element);
   }
   
+  @primitive(SequenceCountFunctionBehaviorExecution)  
   public activity Count(in seq: any[*] sequence, in element: any): Integer { 
-  	return Size(seq->select x (x == element));
+//  	return Size(seq->select x (x == element));
   }
   
+  @primitive(SequenceIsEmptyFunctionBehaviorExecution)  
   public activity IsEmpty(in seq: any[*] sequence): Boolean { 
-  	return Size(seq) == 0;
+//  	return Size(seq) == 0;
   }
 
+  @primitive(SequenceNotEmptyFunctionBehaviorExecution)  
   public activity NotEmpty(in seq: any[*] sequence): Boolean { 
-  	return Size(seq) > 0;
+//  	return Size(seq) > 0;
   }
 
+  @primitive(SequenceIncludesAllFunctionBehaviorExecution)  
   public activity IncludesAll(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { 
-  	return seq2->forAll x (Includes(seq1, x));
+//  	return seq2->forAll x (Includes(seq1, x));
   }
   
+  @primitive(SequenceExcludesAllFunctionBehaviorExecution)  
   public activity ExcludesAll(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { 
-  	return seq2->forAll x (Excludes(seq1, x));
+//  	return seq2->forAll x (Excludes(seq1, x));
   }
   
+  @primitive(SequenceEqualsFunctionBehaviorExecution)  
   public activity Equals(in seq1: any[*] sequence, in seq2: any[*] sequence): Boolean { 
+/*
   	if (Size(seq1) != Size(seq2)) {
   	  return false;
   	} else {
@@ -47,103 +57,137 @@ package SequenceFunctions {
   	  }
   	  return true;
   	}
+*/
   }
   
+  @primitive(SequenceAtFunctionBehaviorExecution)  
   public activity At(in seq: any[*] sequence, in index: Integer): any[0..1] { 
-  	return ListGet(seq, index);
+//  	return ListGet(seq, index);
   }
   
+  @primitive(SequenceIndexOfFunctionBehaviorExecution)  
   public activity IndexOf(in seq: any[*] sequence, in element: any): Integer[0..1] { 
+/*
   	for (i in 1..Size(seq)) {
   	  if (At(seq, i) == element) {
   	    return i;
   	  }
   	}
   	return null;
+*/
   }
   
+  @primitive(SequenceFirstFunctionBehaviorExecution)  
   public activity First(in seq: any[*] sequence): any[0..1] { 
-    return At(seq, 1);
+//    return At(seq, 1);
   }
   
+  @primitive(SequenceLastFunctionBehaviorExecution)  
   public activity Last(in seq: any[*] sequence): any[0..1] { 
-    return At(seq, Size(seq));
+//    return At(seq, Size(seq));
   }
   
+  @primitive(SequenceUnionFunctionBehaviorExecution)  
   public activity Union(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { 
-    return ListConcat(seq1, seq2);
+//    return ListConcat(seq1, seq2);
   }
   
+  @primitive(SequenceIntersectionFunctionBehaviorExecution)  
   public activity Intersection(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { 
-    return seq1->reject x (Excludes(seq2, x));
+//    return seq1->reject x (Excludes(seq2, x));
   }
   
+  @primitive(SequenceDifferenceFunctionBehaviorExecution)  
   public activity Difference(in seq1: any[*] sequence, in seq2: any[*] sequence): any[*] sequence { 
-    return seq1->reject x (Includes(seq2, x));
+//    return seq1->reject x (Includes(seq2, x));
   }
   
+  @primitive(SequenceIncludingFunctionBehaviorExecution)  
   public activity Including(in seq: any[*] sequence, in element: any[0..1]): any[*] sequence { 
-    return ListConcat(seq, element);
+//    return ListConcat(seq, element);
   }
   
+  @primitive(SequenceIncludeAtFunctionBehaviorExecution)  
   public activity IncludeAt(in seq: any[*] sequence, in index: Integer, in element: any[0..1]): any[*] sequence { 
+/*
     return index < 1 || index > Size(seq)+1? seq:
       Union(Including(Subsequence(seq, 1, index-1), element),
             Subsequence(seq, index, Size(seq)));
+*/
   }
   
+  @primitive(SequenceInsertAtFunctionBehaviorExecution)  
   public activity InsertAt(in seq: any[*] sequence, in index: Integer, in element: any[0..1]): any[*] sequence { 
-  	return IncludeAt(seq, index, element);
+//  	return IncludeAt(seq, index, element);
   }
   
+  @primitive(SequenceIncludeAllAtFunctionBehaviorExecution)  
   public activity IncludeAllAt(in seq1: any[*] sequence, in index: Integer, in seq2: any[*] sequence): any[*] sequence { 
+/*
     return index < 1 || index > Size(seq1)+1? seq1:
       Union(Union(Subsequence(seq1, 1, index-1), seq2),
             Subsequence(seq1, index, Size(seq1)));
+*/
   }
   
+  @primitive(SequenceExcludingFunctionBehaviorExecution)  
   public activity Excluding(in seq: any[*] sequence, in element: any): any[*] sequence { 
-    return seq->reject x (x == element);
+//    return seq->reject x (x == element);
   }
   
+  @primitive(SequenceExcludingOneFunctionBehaviorExecution)  
   public activity ExcludingOne(in seq: any[*] sequence, in element: any): any[*] sequence { 
-    i = IndexOf(seq, element);
-    return i == null? seq: ExcludeAt(seq, i);
+//    i = IndexOf(seq, element);
+//    return i == null? seq: ExcludeAt(seq, i);
   }
   
+  @primitive(SequenceExcludeAtFunctionBehaviorExecution)  
   public activity ExcludeAt(in seq: any[*] sequence, in index: Integer): any[*] sequence { 
+/*
     return index < 1 || index > Size(seq)? seq:
       Union(Subsequence(seq, 1, index-1),
             Subsequence(seq, index+1, Size(seq)));
+*/
   }
   
+  @primitive(SequenceReplacingFunctionBehaviorExecution)  
   public activity Replacing(in seq: any[*] sequence, in element: any, in newElement: any[0..1]): any[*] sequence { 
-    return seq->collect x (x == element? newElement: element);
+//    return seq->collect x (x == element? newElement: element);
   }
   
+  @primitive(SequenceReplacingOneFunctionBehaviorExecution)  
   public activity ReplacingOne(in seq: any[*] sequence, in element: any, in newElement: any[0..1]): any[*] sequence { 
-    i = IndexOf(seq, element);
-    return i == null? seq: ReplacingAt(seq, i, newElement);
+//    i = IndexOf(seq, element);
+//    return i == null? seq: ReplacingAt(seq, i, newElement);
   }
   
+  @primitive(SequenceReplacingAtFunctionBehaviorExecution)  
   public activity ReplacingAt(in seq: any[*] sequence, in index: Integer, in element: any[0..1]): any[*] sequence {
+/*
     return index < 1 || index > Size(seq)? seq:
 	  Union(Including(Subsequence(seq, 1, index-1), element),
             Subsequence(seq, index+1, Size(seq)));
+*/
   }
   
+  @primitive(SequenceSubsequenceFunctionBehaviorExecution)  
   public activity Subsequence(in seq: any[*] sequence, in lower: Integer, in upper: Integer): any[*] sequence {
+/*
     n = Size(seq);
     return Integer[]{lower < 1? 1: lower .. upper > n? n: upper}->
       collect i (At(seq, i));
+*/
   }
   
-  public activity ToOrderedSet(in seq: any[*] sequence): any[*] ordered { 
+  @primitive(SequenceToOrderedSetFunctionBehaviorExecution)  
+  public activity ToOrderedSet(in seq: any[*] sequence): any[*] ordered {
+/*
     s = null;
     for (x in seq) {
       s = Includes(s, x)? s: Including(s, x);
     }
     return s;
+*/
   }
 
 }

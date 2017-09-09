@@ -23,8 +23,9 @@ package IntegerFunctions {
   @primitive(IntegerToNaturalFunctionBehaviorExecution)
   public activity ToNatural(in x: String): Integer[0..1] {}
   
+  @primitive(IntegerToRealFunctionBehaviorExecution)
   public activity ToReal(in x: Integer): Real {
-  	return Divide(x, 1)??;
+//  	return Divide(x, 1)??0.0;
   }
   
 }

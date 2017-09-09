@@ -314,10 +314,94 @@ public class Fuml {
 		this.createAlfLibraryBehaviorPrototype(
 				"Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToNatural", 
 				org.modeldriven.alf.fuml.library.integerfunctions.IntegerToNaturalFunctionBehaviorExecution.class);
-
 		this.createAlfLibraryBehaviorPrototype(
 				"Alf::Library::PrimitiveBehaviors::IntegerFunctions::ToReal", 
 				org.modeldriven.alf.fuml.library.integerfunctions.IntegerToRealFunctionBehaviorExecution.class);
+		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Size", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceSizeFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Includes", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceIncludesFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Excludes", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceExcludesFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Count", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceCountFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::IsEmpty", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceIsEmptyFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::NotEmpty", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceNotEmptyFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::IncludesAll", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceIncludesAllFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::ExcludesAll", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceExcludesAllFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Equals", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceEqualsFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::At", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceAtFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::IndexOf", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceIndexOfFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::First", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceFirstFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Last", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceLastFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Union", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceUnionFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Intersection", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceIntersectionFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Difference", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceDifferenceFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Including", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceIncludingFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::IncludeAt", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceIncludeAtFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::InsertAt", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceInsertAtFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::IncludeAllAt", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceIncludeAllAtFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Excluding", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceExcludingFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::ExcludingOne", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceExcludingOneFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::ExcludeAt", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceExcludeAtFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Replacing", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceReplacingFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::ReplacingOne", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceReplacingOneFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::ReplacingAt", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceReplacingAtFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::Subsequence", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceSubsequenceFunctionBehaviorExecution.class);		
+		this.createAlfLibraryBehaviorPrototype(
+				"Alf::Library::PrimitiveBehaviors::SequenceFunctions::ToOrderedSet", 
+				org.modeldriven.alf.fuml.library.sequencefunctions.SequenceToOrderedSetFunctionBehaviorExecution.class);		
 	}
 
 	private void createAlfLibraryBehaviorPrototype(
