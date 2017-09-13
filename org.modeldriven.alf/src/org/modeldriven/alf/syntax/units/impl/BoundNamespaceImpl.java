@@ -70,6 +70,11 @@ public class BoundNamespaceImpl extends NamespaceDefinitionImpl {
         }
         return members;        
     }
+    
+    @Override
+    public String getName() {
+        return this.getSelf().getReferent().getImpl().getName();
+    }
 
     @Override
     public NamespaceDefinition getNamespace() {
