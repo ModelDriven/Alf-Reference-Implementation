@@ -1,7 +1,5 @@
 namespace Alf::Library::PrimitiveBehaviors;
 
-private import FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::*;
-
 package SequenceFunctions {
 
   @primitive(SequenceSizeFunctionBehaviorExecution)
