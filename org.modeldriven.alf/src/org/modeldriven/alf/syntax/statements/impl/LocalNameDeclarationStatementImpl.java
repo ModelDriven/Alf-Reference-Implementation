@@ -271,6 +271,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
         NameLeftHandSide lhs = new NameLeftHandSide();
         lhs.setTarget(target);
         lhs.setType(self.getType());
+        lhs.getImpl().setAssignmentBefore(this.getAssignmentAfterMap());
         
         AssignmentExpression assignmentExpression = new AssignmentExpression();
         assignmentExpression.setOperator("=");
@@ -278,7 +279,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
         assignmentExpression.setRightHandSide(expression);
         
         assignmentExpression.getImpl().setAssignmentBefore(
-                this.getAssignmentBeforeMap());
+                this.getAssignmentAfterMap());
         assignmentExpression.deriveAll();
         
         return assignmentExpression;

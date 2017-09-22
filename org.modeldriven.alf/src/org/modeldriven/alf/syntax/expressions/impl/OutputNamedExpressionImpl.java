@@ -134,11 +134,11 @@ public class OutputNamedExpressionImpl extends NamedExpressionImpl {
         NamedExpression self = this.getSelf();
         Expression expression = self.getExpression();
         ElementReference rhsType = parameter.getImpl().getType();
-        ElementReference lhsType = self.getExpression().getType(); 
+        ElementReference lhsType = expression.getType(); 
         int rhsUpper = expression.getUpper();
-        return rhsType != null && lhsType != null && 
-            rhsType.getImpl().isCollectionClass() && rhsUpper == 1 &&
-            !lhsType.getImpl().isCollectionClass();
+        return rhsType != null && lhsType != null && rhsUpper == 1 &&
+                AssignableElementImpl.isCollectionConformant(
+                        lhsType, expression.getImpl().getUpper(), rhsType, parameter.getImpl().getUpper());
     }
     
     // Derives isBitStringConversion for this named expression as an output for

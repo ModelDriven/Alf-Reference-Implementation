@@ -110,6 +110,10 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
      * A property definition requires collection conversion if its initializer
      * has a collection class as its type and the property definition does not.
      **/
+	/*
+	 * Actually, the check should be that the result after collection conversion would
+	 * be conformant with the property definition.
+	 */
 	protected Boolean deriveIsCollectionConversion() {
 	    PropertyDefinition self = this.getSelf();
 	    Expression initializer = self.getInitializer();
@@ -120,7 +124,8 @@ public class PropertyDefinitionImpl extends TypedElementDefinitionImpl {
 	        ElementReference selfType = self.getType();
 	        return initializerType != null && selfType != null &&
 	                initializerType.getImpl().isCollectionClass() &&
-	                !self.getType().getImpl().isCollectionClass();
+	                        AssignableElementImpl.isCollectionConformant(
+	                                selfType, self.getUpper(), initializerType, initializer.getUpper());
 	    }
 	}
 

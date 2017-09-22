@@ -369,9 +369,9 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
 		} else {
 		    ElementReference lhsType = lhs.getImpl().getType();
 		    ElementReference rhsType = rhs.getType();
-		    return rhsType != null && lhsType != null && 
-		           rhsType.getImpl().isCollectionClass() && rhs.getUpper() == 1 &&
-		           !lhsType.getImpl().isCollectionClass();
+		    return rhsType != null && lhsType != null &&
+		            AssignableElementImpl.isCollectionConformant(
+		                    lhsType, lhs.getUpper(), rhsType, rhs.getUpper());
 		}
 	}
 

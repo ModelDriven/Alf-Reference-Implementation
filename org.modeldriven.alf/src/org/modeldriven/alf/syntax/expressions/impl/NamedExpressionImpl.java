@@ -194,11 +194,10 @@ public class NamedExpressionImpl extends SyntaxElementImpl {
         NamedExpression self = this.getSelf();
         Expression expression = self.getExpression();
         ElementReference lhsType = parameter.getImpl().getType();
-        ElementReference rhsType = self.getExpression().getType(); 
-        int rhsUpper = expression.getUpper();
-        return rhsType != null && lhsType != null && 
-            rhsType.getImpl().isCollectionClass() && rhsUpper == 1 &&
-            !lhsType.getImpl().isCollectionClass();
+        ElementReference rhsType = expression.getType(); 
+        return rhsType != null && lhsType != null &&
+            AssignableElementImpl.isCollectionConformant(
+                    lhsType, parameter.getImpl().getUpper(), rhsType, expression.getUpper());
     }
     
     // Derives isBitStringConversion for this named expression as an input for
