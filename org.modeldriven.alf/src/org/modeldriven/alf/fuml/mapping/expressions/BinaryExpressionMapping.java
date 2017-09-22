@@ -22,6 +22,7 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 
 import org.modeldriven.alf.uml.Action;
 import org.modeldriven.alf.uml.CallBehaviorAction;
+import org.modeldriven.alf.uml.OutputPin;
 import org.modeldriven.alf.uml.StructuredActivityNode;
 import org.modeldriven.alf.uml.ActivityNode;
 
@@ -110,6 +111,15 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
                     this.graph, callAction, callAction.getResult().get(0));
             this.resultSource = ((StructuredActivityNode)this.action).
                     getStructuredNodeOutput().get(0);
+            
+            if (operand1Result instanceof OutputPin) {
+                this.graph.addControlFlow((ActivityNode)operand1Result.getOwner(), this.action);
+            }
+ 
+            if (operand2Result instanceof OutputPin) {
+                this.graph.addControlFlow((ActivityNode)operand2Result.getOwner(), this.action);
+            }
+            
         }
     }
     

@@ -116,24 +116,26 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
             resultPin = addAction.getResult().get(0);
         }
         
-        return wrapAction(action.getName(), graph, subgraph.getModelElements(), resultPin);
+        return wrapAction(action, graph, subgraph.getModelElements(), resultPin);
     }
     
     public static StructuredActivityNode wrapAction(
             ActivityGraph graph, Action action, OutputPin resultPin) {
         graph.remove(action);
-        return wrapAction(action.getName(), graph, Collections.singletonList(action), resultPin);
+        return wrapAction(action, graph, Collections.singletonList(action), resultPin);
     }
     
     public static StructuredActivityNode wrapAction(
-            String name, ActivityGraph graph, Collection<Element> elements, OutputPin resultPin) {
-        return wrapAction(name, graph, elements, resultPin, resultPin.getType(), 0, resultPin.getUpper());
+            Action action, ActivityGraph graph, Collection<Element> elements, OutputPin resultPin) {
+        return wrapAction(action, graph, elements, resultPin, resultPin.getType(), 0, resultPin.getUpper());
     }
+    
     public static StructuredActivityNode wrapAction(
-            String name, ActivityGraph graph, Collection<Element> elements, 
+            Action action, ActivityGraph graph, Collection<Element> elements, 
             ActivityNode result, Type type, int lower, int upper) {
         StructuredActivityNode node = graph.addStructuredActivityNode(
-                "Node(" + name + ")", elements);
+                "Node(" + action.getName() + ")", elements);
+        
         OutputPin output = graph.createOutputPin(
                 "Output(" + result.getName() + ")", 
                 type, lower, upper);

@@ -22,6 +22,7 @@ import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.InstanceCreationExpression;
 
 import org.modeldriven.alf.uml.Action;
+import org.modeldriven.alf.uml.ActivityEdge;
 import org.modeldriven.alf.uml.CallOperationAction;
 import org.modeldriven.alf.uml.InputPin;
 import org.modeldriven.alf.uml.OutputPin;
@@ -40,6 +41,7 @@ import org.modeldriven.alf.uml.Property;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class InstanceCreationExpressionMapping extends
@@ -324,14 +326,28 @@ public class InstanceCreationExpressionMapping extends
         // call needs to be wrapped at this point to ensure that the (forked) result of the object
         // create action does not flow before the constructor call has completed.
         if (!(this.resultSource instanceof OutputPin)) {
-            this.graph.remove(this.action);
+            this.graph.remove(action);
             this.graph.remove(this.resultSource);
             Collection<Element> elements = new ArrayList<Element>();
             elements.add(action);
             elements.add(this.resultSource);
             
-            action = wrapAction(action.getName(), this.graph, elements, this.resultSource, null, 1, 1);
-            this.resultSource = ((StructuredActivityNode)action).getStructuredNodeOutput().get(0);
+            // Note: This will always be the create object action.
+            ActivityNode source = (ActivityNode)this.resultSource.getIncoming().get(0).getSource().getOwner();
+            
+            List<ActivityEdge> incoming = action.getIncoming();
+            
+            StructuredActivityNode node = wrapAction(action, this.graph, elements, this.resultSource, null, 1, 1);
+            this.resultSource = node.getStructuredNodeOutput().get(0);
+            
+            this.graph.addControlFlow(source, node);
+            for (Object object: incoming.toArray()) {
+                ActivityEdge edge = (ActivityEdge)object;
+                action.removeIncoming(edge);
+                edge.setTarget(node);
+            }
+            
+            action = node;            
         }
         return action;
     }
