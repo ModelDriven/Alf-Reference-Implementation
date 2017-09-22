@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -84,7 +84,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                 makeDistinguishableName(definition, name + 
                         "$initializationFlag"));
         this.initializationFlag.setType(getBooleanType());
-        this.initializationFlag.setLower(1);
+        this.initializationFlag.setLower(0);
         this.initializationFlag.setUpper(1);
         this.initializationFlag.setVisibility("protected");
         class_.addOwnedAttribute(this.initializationFlag);
