@@ -41,14 +41,17 @@ public class ParseException extends Exception {
                        )
   {
     super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
-    currentToken = currentTokenVal;
+    this.setCurrentToken(currentTokenVal);;
     expectedTokenSequences = expectedTokenSequencesVal;
     tokenImage = tokenImageVal;
-    
-    beginLine = currentToken.next.beginLine;
-    beginColumn = currentToken.next.beginColumn;
-    endLine = currentToken.next.endLine;
-    endColumn = currentToken.next.endColumn;
+  }
+  
+  private void setCurrentToken(Token currentTokenVal) {
+      currentToken = currentTokenVal;
+      beginLine = currentToken.next.beginLine;
+      beginColumn = currentToken.next.beginColumn;
+      endLine = currentToken.next.endLine;
+      endColumn = currentToken.next.endColumn;
   }
 
   /**
@@ -66,8 +69,9 @@ public class ParseException extends Exception {
   }
 
   /** Constructor with message. */
-  public ParseException(String message) {
+  public ParseException(Token currentToken, String message) {
     super(message);
+    this.setCurrentToken(currentToken);
   }
 
 

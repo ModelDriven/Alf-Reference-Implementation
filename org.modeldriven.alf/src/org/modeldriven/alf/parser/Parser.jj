@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -69,6 +69,10 @@ public class Parser {
   private String errorMessage(String message) {
     return "[" + this.getLine() + ":" + this.getColumn() + "] " +
            message;
+  }
+
+  private ParseException generateParseException(Token token, String message) {
+    return new ParseException(token, errorMessage(message));
   } 
   
 }
@@ -1195,7 +1199,7 @@ Expression SequenceOperationOrReductionOrExpansion(Expression p):
       } else if (op.image.equals("isUnique")) { 
       	see = new IsUniqueExpression(ee);
       } else {
-        throw new ParseException(errorMessage("\""+ op.image + "\" is not a legal expansion operation."));
+        throw generateParseException(token, "\""+ op.image + "\" is not a legal expansion operation.");
       }
     }
     n = Name() <LPAREN> e = Expression() <RPAREN>
@@ -1227,8 +1231,11 @@ Expression PostfixOperation(Expression p):
   Expression i = null;
   LeftHandSide lhs;
   String op;
+  Token t;
 }
 {
+  { t = token; }
+  
   op = AffixOperator()
 
   { 
@@ -1245,7 +1252,7 @@ Expression PostfixOperation(Expression p):
       lhs = new FeatureLeftHandSide(p);
       ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      throw new ParseException(errorMessage("Not a legal operand for increment or decrement."));
+      throw generateParseException(t, "Not a legal operand for increment or decrement.");
     }
     lhs.setIndex(i);
     
@@ -1264,9 +1271,11 @@ Expression PrefixExpression():
   Expression i = null;
   LeftHandSide lhs;
   IncrementOrDecrementExpression e = new IncrementOrDecrementExpression(this);
+  Token t;
 }
 {
-  op = AffixOperator() p = PrimaryExpression()
+  op = AffixOperator() { t = token; }
+  p = PrimaryExpression()
   
   { 
     if (p instanceof SequenceAccessExpression) {
@@ -1282,7 +1291,7 @@ Expression PrefixExpression():
       lhs = new FeatureLeftHandSide(p);
       ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      throw new ParseException(errorMessage("Not a legal operand for increment or decrement."));
+      throw generateParseException(t, "Not a legal operand for increment or decrement.");
     }
     lhs.setIndex(i);
     
@@ -1975,8 +1984,11 @@ Expression AssignmentExpressionCompletion(Expression p):
   LeftHandSide lhs = null;
   String op;
   Expression e2;
+  Token t;
 }
 {
+  { t = token; }
+  
   op = AssignmentOperator()
   
   { 
@@ -1993,7 +2005,7 @@ Expression AssignmentExpressionCompletion(Expression p):
       lhs = new FeatureLeftHandSide(p);
       ((FeatureLeftHandSide)lhs).setFeature(((PropertyAccessExpression)p).getFeatureReference());
     } else {
-      throw new ParseException(errorMessage("Not a legal left-hand side."));
+      throw generateParseException(t, "Not a legal left-hand side.");
     }
     lhs.setIndex(i);
   }
@@ -2167,8 +2179,8 @@ InLineStatement InLineStatement():
   <SLASH_STAR_AT> t = <IDENTIFIER> 
   
   { if (!t.image.equals("inline")) { 
-  	  throw new ParseException(errorMessage("Encountered \"" + t.image 
-  	    + "\". Expected \"inline\".")); 
+  	  throw generateParseException(t, "Encountered \"" + t.image 
+  	    + "\". Expected \"inline\"."); 
   	}
   }
   
