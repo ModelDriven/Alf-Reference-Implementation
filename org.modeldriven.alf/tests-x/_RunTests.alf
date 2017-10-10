@@ -1,3 +1,5 @@
-activity _RunTests() {
-	new _TestRunner().Continue();
+active class _RunTests specializes Test::Tester {
+} do {
+	new _TestRunner(this).Continue();
+	accept (Continue);
 }

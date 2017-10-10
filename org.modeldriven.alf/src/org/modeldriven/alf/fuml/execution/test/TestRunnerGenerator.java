@@ -25,7 +25,11 @@ public class TestRunnerGenerator {
     private ArrayList<String> text = new ArrayList<String>();
     
     public TestRunnerGenerator() {
-        this.text.add("active class " + UNIT_NAME + " specializes Test::Tester {");
+        this.text.add("active class " + UNIT_NAME + " specializes Test, Test::Tester {");
+        this.text.add("    @Create");
+        this.text.add("    public _TestRunner(in tester: Tester) {");
+        this.text.add("        super.Test(tester);");
+        this.text.add("    }");
         this.text.add("} do {");
         this.text.add("    accept(Continue);");
     }
@@ -38,7 +42,7 @@ public class TestRunnerGenerator {
     
     public ArrayList<String> getText() {
         ArrayList<String> text = new ArrayList<String>(this.text);
-        text.add("    WriteLine(\"All done!\");");
+        text.add("    this.done(\"All done!\");");
         text.add("}");
         return text;
     }

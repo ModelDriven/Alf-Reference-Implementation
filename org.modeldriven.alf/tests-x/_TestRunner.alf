@@ -1,4 +1,8 @@
-active class _TestRunner specializes Test::Tester {
+active class _TestRunner specializes Test, Test::Tester {
+    @Create
+    public _TestRunner(in tester: Tester) {
+        super.Test(tester);
+    }
 } do {
     accept(Continue);
     WriteLine("Expressions_Assignment...");
@@ -94,5 +98,5 @@ active class _TestRunner specializes Test::Tester {
     WriteLine("Units_Map...");
     new Units_Map::run(this);
     accept(Continue);
-    WriteLine("All done!");
+    this.done("All done!");
 }

@@ -9,8 +9,12 @@ abstract class Test {
 		this.tester = tester;
 	}
 	
-	public done() {
-		WriteLine("Done.");
+	public done(in message: String) {
+		WriteLine(message);
 		this.tester.Continue();
+	}
+	
+	public done() {
+		this.done("Done.");
 	}
 }
