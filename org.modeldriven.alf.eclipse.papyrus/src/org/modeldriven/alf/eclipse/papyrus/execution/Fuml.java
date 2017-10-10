@@ -133,7 +133,7 @@ public class Fuml {
 				org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Times.class);
 		this.createPrimitiveBehaviorPrototype(
 				"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::/", 
-				org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.Divide.class);
+				org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Div_.class);
 		this.createPrimitiveBehaviorPrototype(
 				"FoundationalModelLibrary::PrimitiveBehaviors::IntegerFunctions::Div", 
 				org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Div.class);
@@ -188,13 +188,13 @@ public class Fuml {
 				org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Times.class);
 		this.createPrimitiveBehaviorPrototype(
 				"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::/", 
-				org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Divide.class);
+				org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Div.class);
 		this.createPrimitiveBehaviorPrototype(
 				"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Floor", 
-				org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Floor.class);
+				org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Floor.class);
 		this.createPrimitiveBehaviorPrototype(
 				"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Round", 
-				org.modeldriven.alf.eclipse.papyrus.library.realfunctions.Round.class);
+				org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Round.class);
 		this.createPrimitiveBehaviorPrototype(
 				"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::Max", 
 				org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.Max.class);
@@ -221,7 +221,7 @@ public class Fuml {
 				org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.ToReal.class);
 		this.createPrimitiveBehaviorPrototype(
 				"FoundationalModelLibrary::PrimitiveBehaviors::RealFunctions::ToInteger", 
-				org.modeldriven.alf.eclipse.papyrus.library.realfunctions.ToInteger.class);
+				org.eclipse.papyrus.moka.fuml.standardlibrary.library.real.ToInteger.class);
 
 		this.createPrimitiveBehaviorPrototype(
 				"FoundationalModelLibrary::PrimitiveBehaviors::ListFunctions::ListSize", 

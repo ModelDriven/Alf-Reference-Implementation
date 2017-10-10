@@ -35,132 +35,131 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.syntax.units.impl.ImportedMemberImpl;
 import org.modeldriven.alf.uml.Namespace;
 
-public class RootNamespaceImpl extends 
-	org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl {
-    
+public class RootNamespaceImpl extends org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl {
+
 	private org.eclipse.uml2.uml.Element contextElement;
 	private Model model;
 	private ElementReference modelReference;
-    private ResourceSet resourceSet;
-    
-    public RootNamespaceImpl() {
-        super(RootNamespace.getRootScope());
-        RootNamespace.setRootImpl(this);        
-    }
-    
-    public void setContext(org.eclipse.uml2.uml.Element contextElement) {
-    	this.contextElement = contextElement;
-    	this.model = this.contextElement.getModel();
-    	this.modelReference = ElementReferenceImpl.makeElementReference(
-    			Element.wrap(this.model));
-    	
-    	Resource resource = contextElement.eResource();
-        this.resourceSet = resource == null? null: resource.getResourceSet();
-    }
-    
-    @Override
-    public NamespaceDefinition getModelNamespace(UnitDefinition unit) {
-        NamespaceDefinition definition = unit.getDefinition();
-        NamespaceDefinition modelScope = definition.getNamespace();
-        if (modelScope == null) {
-            // NOTE: The model scope for a unit must include the unit itself,
-            // so that it can refer to itself recursively.
-            ModelNamespace modelNamespace = new ModelNamespace();
-            ModelNamespaceImpl modelNamespaceImpl = 
-            		new ModelNamespaceImpl(modelNamespace);
-            modelNamespaceImpl.setContext(this.contextElement);
-            modelNamespace.setImpl(modelNamespaceImpl);
-            modelNamespace.getMember(); // To ensure computation of derived attributes.
-            modelNamespace.addOwnedMember(definition);
-            modelNamespace.addMember(definition);
-            definition.setNamespace(modelNamespace);
-            
-            modelScope = modelNamespace;
-        }
-        return modelScope;
-    }
-    
-    @Override
-    public Collection<Member> resolve(String name, boolean classifierOnly) {
-    	Collection<Member> members = new ArrayList<Member>();
-    	for (NamedElement element: this.findNamedElements(name, classifierOnly)) {
-    		members.add(ImportedMemberImpl.makeImportedMember(
-    				element.getName(), 
-    				org.modeldriven.alf.eclipse.uml.Element.wrap(element), null));
-    	}
-    	return members;
-    }
-    
-    public Collection<NamedElement> findNamedElements(String name, boolean classifierOnly) {
-    	return this.resourceSet == null? new ArrayList<NamedElement>(): 
-    		UMLUtil.findNamedElements(this.resourceSet, name, false,
-    			classifierOnly? UMLPackage.Literals.CLASSIFIER: 
-    			UMLPackage.Literals.NAMED_ELEMENT);
-    }
+	private ResourceSet resourceSet;
 
-    @Override
-    public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-    	UnitDefinition unit = new MissingUnit(qualifiedName);
-    	String pathName = qualifiedName.getPathName();
-    	if (this.resourceSet != null) {
-	    	Collection<org.eclipse.uml2.uml.NamedElement> elements = 
-	    			UMLUtil.findNamedElements(this.resourceSet, pathName);
-	    	if (elements.size() == 1) {
-	    		org.eclipse.uml2.uml.NamedElement element = 
-	    				(org.eclipse.uml2.uml.NamedElement)elements.toArray()[0];
-	    		if (element instanceof org.eclipse.uml2.uml.Namespace) {
-	    			NamespaceDefinition namespace = 
-	    					ExternalNamespace.makeExternalNamespace(
-	    							(Namespace)Element.wrap(
-	    									(org.eclipse.uml2.uml.Namespace)element),
-	    									this.getSelf());
-	    			unit = new UnitDefinition();
-	    			unit.setIsModelLibrary(true);
-	    			unit.setDefinition(namespace);
-	    			namespace.setUnit(unit);
-	    		}
-	    	}
-    	}
+	public RootNamespaceImpl() {
+		super(RootNamespace.getRootScope());
+		RootNamespace.setRootImpl(this);        
+	}
 
-    	if (unit instanceof MissingUnit) {
-    		System.err.println("Unit not found: " + pathName);
-    	}
+	public void setContext(org.eclipse.uml2.uml.Element contextElement) {
+		this.contextElement = contextElement;
+		this.model = this.contextElement.getModel();
+		this.modelReference = ElementReferenceImpl.makeElementReference(
+				Element.wrap(this.model));
 
-    	return unit;
-    }
+		Resource resource = contextElement.eResource();
+		this.resourceSet = resource == null? null: resource.getResourceSet();
+	}
 
-    @Override
-    public String makeBoundElementName(
-            ElementReference templateReferent, 
-            List<ElementReference> templateArguments) {
-    	return super.makeBoundElementName(
-    			templateReferent instanceof InternalElementReference? 
-    					templateReferent.getImpl().getName(): 
-    				    templateReferent.getImpl().getQualifiedName().
-    				    	getPathName().replace("::", "$"), templateArguments);
-    }
-    
-    @Override
-    public ElementReference getInstantiationNamespace(
-            ElementReference templateReferent) {
-        return templateReferent instanceof InternalElementReference? 
-        		super.getInstantiationNamespace(templateReferent): 
-        		this.modelReference;
-    }
-    
-    public void replaceTemplateBindings() {
-    	ElementReferenceImpl.replaceTemplateBindingsIn(
-    			this.modelReference.getImpl().getUml());
-    }
-    
-    public void addToModel(NamedElement element) {
-    	if (element instanceof PackageableElement) {
-    		this.model.getPackagedElements().add((PackageableElement)element);
-    	}
-    }
-    
-    public Collection<NamedElement> findInModel(String name) {
-    	return this.findNamedElements(this.model.getName() + "::" + name, false);
-    }
+	@Override
+	public NamespaceDefinition getModelNamespace(UnitDefinition unit) {
+		NamespaceDefinition definition = unit.getDefinition();
+		NamespaceDefinition modelScope = definition.getNamespace();
+		if (modelScope == null) {
+			// NOTE: The model scope for a unit must include the unit itself,
+			// so that it can refer to itself recursively.
+			ModelNamespace modelNamespace = new ModelNamespace();
+			ModelNamespaceImpl modelNamespaceImpl = 
+					new ModelNamespaceImpl(modelNamespace);
+			modelNamespaceImpl.setContext(this.contextElement);
+			modelNamespace.setImpl(modelNamespaceImpl);
+			modelNamespace.getMember(); // To ensure computation of derived attributes.
+			modelNamespace.addOwnedMember(definition);
+			modelNamespace.addMember(definition);
+			definition.setNamespace(modelNamespace);
+
+			modelScope = modelNamespace;
+		}
+		return modelScope;
+	}
+
+	@Override
+	public Collection<Member> resolve(String name, boolean classifierOnly) {
+		Collection<Member> members = new ArrayList<Member>();
+		for (NamedElement element: this.findNamedElements(name, classifierOnly)) {
+			members.add(ImportedMemberImpl.makeImportedMember(
+					element.getName(), 
+					org.modeldriven.alf.eclipse.uml.Element.wrap(element), null));
+		}
+		return members;
+	}
+
+	public Collection<NamedElement> findNamedElements(String name, boolean classifierOnly) {
+		return this.resourceSet == null? new ArrayList<NamedElement>(): 
+			UMLUtil.findNamedElements(this.resourceSet, name, false,
+					classifierOnly? UMLPackage.Literals.CLASSIFIER: 
+						UMLPackage.Literals.NAMED_ELEMENT);
+	}
+
+	@Override
+	public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+		UnitDefinition unit = new MissingUnit(qualifiedName);
+		String pathName = qualifiedName.getPathName();
+		if (this.resourceSet != null) {
+			Collection<org.eclipse.uml2.uml.NamedElement> elements = 
+					UMLUtil.findNamedElements(this.resourceSet, pathName);
+			if (elements.size() == 1) {
+				org.eclipse.uml2.uml.NamedElement element = 
+						(org.eclipse.uml2.uml.NamedElement)elements.toArray()[0];
+				if (element instanceof org.eclipse.uml2.uml.Namespace) {
+					NamespaceDefinition namespace = 
+							ExternalNamespace.makeExternalNamespace(
+									(Namespace)Element.wrap(
+											(org.eclipse.uml2.uml.Namespace)element),
+									this.getSelf());
+					unit = new UnitDefinition();
+					unit.setIsModelLibrary(true);
+					unit.setDefinition(namespace);
+					namespace.setUnit(unit);
+				}
+			}
+		}
+
+		if (unit instanceof MissingUnit) {
+			System.err.println("Unit not found: " + pathName);
+		}
+
+		return unit;
+	}
+
+	@Override
+	public String makeBoundElementName(
+			ElementReference templateReferent, 
+			List<ElementReference> templateArguments) {
+		return super.makeBoundElementName(
+				templateReferent instanceof InternalElementReference? 
+						templateReferent.getImpl().getName(): 
+							templateReferent.getImpl().getQualifiedName().
+							getPathName().replace("::", "$"), templateArguments);
+	}
+
+	@Override
+	public ElementReference getInstantiationNamespace(
+			ElementReference templateReferent) {
+		return templateReferent instanceof InternalElementReference? 
+				super.getInstantiationNamespace(templateReferent): 
+					this.modelReference;
+	}
+
+	public void replaceTemplateBindings() {
+		ElementReferenceImpl.replaceTemplateBindingsIn(
+				this.modelReference.getImpl().getUml());
+	}
+
+	public void addToModel(NamedElement element) {
+		if (element instanceof PackageableElement) {
+			this.model.getPackagedElements().add((PackageableElement)element);
+		}
+	}
+
+	public Collection<NamedElement> findInModel(String name) {
+		return this.findNamedElements(this.model.getName() + "::" + name, false);
+	}
 
 }

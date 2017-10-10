@@ -20,7 +20,7 @@ package IntegerFunctions {
   @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Div")
   public activity Div(in x: Integer, in y: Integer): Integer[0..1] { }
 
-  @primitive(implementation=>"org.modeldriven.alf.eclipse.papyrus.library.integerfunctions.Divide")
+  @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Div_")
   public activity '/'(in x: Integer, in y: Integer): Real[0..1] { }
 
   @primitive(implementation=>"org.eclipse.papyrus.moka.fuml.standardlibrary.library.integer.Mod")
