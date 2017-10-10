@@ -22,43 +22,41 @@ import fUML.Syntax.Classes.Kernel.Element;
 import fUML.Syntax.Classes.Kernel.NamedElement;
 import fUML.Syntax.Classes.Kernel.Namespace;
 
-public class ModelNamespaceImpl extends 
-	org.modeldriven.alf.fuml.units.ModelNamespaceImpl {
+public class ModelNamespaceImpl extends org.modeldriven.alf.fuml.units.ModelNamespaceImpl {
 
 	private Namespace contextNamespace = null;
-    
-    public ModelNamespaceImpl(ModelNamespace self) {
-        super(self);
-    }
-    
-    public void setContext(Element contextElement) {
-        this.contextNamespace = !(contextElement instanceof NamedElement)? null:
-        	((NamedElement)contextElement).namespace;
-        if (this.contextNamespace != null) {
-        	this.setExactName(contextNamespace.name);
-        }
-    }
-    
-    @Override
-    public Collection<Member> resolve(String name, boolean classifierOnly) {
-    	Collection<Member> members = new ArrayList<Member>();
-    	if (this.contextNamespace != null) {
-    		// TODO: Handle resolution in enclosing namespaces.
-	    	for (NamedElement element: this.contextNamespace.member) {
-	    		if (!classifierOnly || element instanceof Classifier) {
-		    		members.add(ImportedMemberImpl.makeImportedMember(
-		    				element.name, 
-		    				org.modeldriven.alf.fuml.impl.uml.Element.wrap(element), null));
-	    		}
-	    	}
-    	}
-    	return members;
-    }
-    
-    @Override
-    public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-        return new MissingUnit(qualifiedName);
-    }
 
+	public ModelNamespaceImpl(ModelNamespace self) {
+		super(self);
+	}
+
+	public void setContext(Element contextElement) {
+		this.contextNamespace = !(contextElement instanceof NamedElement)? null:
+			((NamedElement)contextElement).namespace;
+		if (this.contextNamespace != null) {
+			this.setExactName(contextNamespace.name);
+		}
+	}
+
+	@Override
+	public Collection<Member> resolve(String name, boolean classifierOnly) {
+		Collection<Member> members = new ArrayList<Member>();
+		if (this.contextNamespace != null) {
+			// TODO: Handle resolution in enclosing namespaces.
+			for (NamedElement element: this.contextNamespace.member) {
+				if (!classifierOnly || element instanceof Classifier) {
+					members.add(ImportedMemberImpl.makeImportedMember(
+							element.name, 
+							org.modeldriven.alf.fuml.impl.uml.Element.wrap(element), null));
+				}
+			}
+		}
+		return members;
+	}
+
+	@Override
+	public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+		return new MissingUnit(qualifiedName);
+	}
 
 }

@@ -22,53 +22,53 @@ import org.modeldriven.fuml.repository.Repository;
 public class RootNamespaceImpl extends org.modeldriven.alf.fuml.units.RootNamespaceImpl {
 
 	private fUML.Syntax.Classes.Kernel.Element contextElement;
-    
+
 	public RootNamespaceImpl() {
 		super(RootNamespace.getRootScope());
 	}
 
-    public void setContext(fUML.Syntax.Classes.Kernel.Element contextElement) {
-    	this.contextElement = contextElement;
-    	
-        ModelNamespace modelNamespace = new ModelNamespace();
-        ModelNamespaceImpl modelNamespaceImpl = 
-        		new ModelNamespaceImpl(modelNamespace);
-        modelNamespaceImpl.setContext(this.contextElement);
-        modelNamespace.setImpl(modelNamespaceImpl);
-        this.setModelNamespace(modelNamespace);
-    }
-    
-    @Override
-    public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
-    	fUML.Syntax.Classes.Kernel.Element element = 
-    			findElementInRepository(qualifiedName);
-    	if (!(element instanceof fUML.Syntax.Classes.Kernel.Namespace)) {
-    		return super.resolveModelUnit(qualifiedName);
-    	} else {
+	public void setContext(fUML.Syntax.Classes.Kernel.Element contextElement) {
+		this.contextElement = contextElement;
+
+		ModelNamespace modelNamespace = new ModelNamespace();
+		ModelNamespaceImpl modelNamespaceImpl = 
+				new ModelNamespaceImpl(modelNamespace);
+		modelNamespaceImpl.setContext(this.contextElement);
+		modelNamespace.setImpl(modelNamespaceImpl);
+		this.setModelNamespace(modelNamespace);
+	}
+
+	@Override
+	public UnitDefinition resolveModelUnit(QualifiedName qualifiedName) {
+		fUML.Syntax.Classes.Kernel.Element element = 
+				findElementInRepository(qualifiedName);
+		if (!(element instanceof fUML.Syntax.Classes.Kernel.Namespace)) {
+			return super.resolveModelUnit(qualifiedName);
+		} else {
 			NamespaceDefinition namespace = 
 					ExternalNamespace.makeExternalNamespace(
 							(Namespace)Element.wrap(
 									(fUML.Syntax.Classes.Kernel.Namespace)element),
-									this.getSelf());
+							this.getSelf());
 			UnitDefinition unit = new UnitDefinition();
 			unit.setIsModelLibrary(true);
 			unit.setDefinition(namespace);
 			namespace.setUnit(unit);
 			return unit;
-    	}
-    }
+		}
+	}
 
 	protected fUML.Syntax.Classes.Kernel.Element findElementInRepository(
 			QualifiedName qualifiedName) {
 		String pathName = qualifiedName.getPathName().replace("::", ".");
-    	org.modeldriven.fuml.repository.Element repositoryElement = 
-    			Repository.INSTANCE.findElementByQualifiedName(pathName);
-    	return repositoryElement == null? null: repositoryElement.getDelegate();
+		org.modeldriven.fuml.repository.Element repositoryElement = 
+				Repository.INSTANCE.findElementByQualifiedName(pathName);
+		return repositoryElement == null? null: repositoryElement.getDelegate();
 	}
-    
-    @Override
-    public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
-    	return this.resolveModelUnit(qualifiedName);
-    }
+
+	@Override
+	public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
+		return this.resolveModelUnit(qualifiedName);
+	}
 
 }
