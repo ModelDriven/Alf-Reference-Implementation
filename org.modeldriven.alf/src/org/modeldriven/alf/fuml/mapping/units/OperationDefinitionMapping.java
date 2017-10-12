@@ -18,6 +18,7 @@ import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -105,7 +106,9 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
                 Activity activity = this.create(Activity.class);
                 // Give the method activity a name to aid in execution tracing.
                 activity.setName(makeDistinguishableName(
-                        namespace, operation.getName() + "$method"));
+                        ExternalNamespace.makeExternalNamespace(operation.getClass_(), null), 
+                        operation.getName() + "$method"));
+                activity.setVisibility("private");
                 operation.getClass_().addOwnedBehavior(activity);
                 operation.addMethod(activity);
                 

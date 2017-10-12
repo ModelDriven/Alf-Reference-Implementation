@@ -239,6 +239,7 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
         // Add method to initialization operation.
         Activity initializationMethod = this.create(Activity.class);
         initializationMethod.setName(this.initializationOperation.getName());
+        initializationMethod.setVisibility("private");
         this.otherElements.addAll(ActivityDefinitionMapping.addElements(
                 initializationMethod, graph.getModelElements(), null, this));
         this.initializationOperation.addMethod(initializationMethod);
