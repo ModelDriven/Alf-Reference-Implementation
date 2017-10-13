@@ -1,4 +1,7 @@
 private import Super;
 class ConstructorInSubunit specializes Super {
-    @Create constructor();
+	@Create ConstructorInSubunit() { }
+	@Create constructor1();
+    @Create constructor2();
+    @Create constructor3();
 }

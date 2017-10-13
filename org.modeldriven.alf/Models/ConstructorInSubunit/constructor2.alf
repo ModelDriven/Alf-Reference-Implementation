@@ -1,0 +1,5 @@
+namespace ConstructorInSubunit;
+
+activity constructor2() {
+	this.constructor1();
+}

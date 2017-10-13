@@ -1,0 +1,5 @@
+namespace ConstructorInSubunit;
+
+activity constructor3() {
+	this();
+}
