@@ -40,6 +40,14 @@ public class Parser implements ParserConstants {
     return this.token.beginColumn;
   }
 
+  public int getTabSize() {
+    return this.jj_input_stream.getTabSize();
+  }
+
+  public void setTabSize(int tabSize) {
+    this.jj_input_stream.setTabSize(tabSize);
+  }
+
   private String errorMessage(String message) {
     return "[" + this.getLine() + ":" + this.getColumn() + "] " +
            message;
@@ -5878,30 +5886,6 @@ d.setEnd(this);
     finally { jj_save(44, xla); }
   }
 
-  private boolean jj_3R_146()
- {
-    if (jj_scan_token(NEW)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_228()
- {
-    if (jj_3R_57()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_132()
- {
-    if (jj_scan_token(ABSTRACT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_101()
- {
-    if (jj_3R_46()) return true;
-    return false;
-  }
-
   private boolean jj_3R_204()
  {
     if (jj_scan_token(THIS)) return true;
@@ -7905,6 +7889,30 @@ d.setEnd(this);
   private boolean jj_3R_71()
  {
     if (jj_3R_107()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_146()
+ {
+    if (jj_scan_token(NEW)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_228()
+ {
+    if (jj_3R_57()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_132()
+ {
+    if (jj_scan_token(ABSTRACT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_101()
+ {
+    if (jj_3R_46()) return true;
     return false;
   }
 

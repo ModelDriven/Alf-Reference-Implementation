@@ -65,6 +65,14 @@ public class Parser {
   public int getColumn() {
     return this.token.beginColumn;
   }
+
+  public int getTabSize() {
+    return this.jj_input_stream.getTabSize();
+  }
+
+  public void setTabSize(int tabSize) {
+    this.jj_input_stream.setTabSize(tabSize);
+  }
   
   private String errorMessage(String message) {
     return "[" + this.getLine() + ":" + this.getColumn() + "] " +
