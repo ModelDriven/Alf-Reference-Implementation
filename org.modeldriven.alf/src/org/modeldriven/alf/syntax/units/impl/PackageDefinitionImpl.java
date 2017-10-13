@@ -143,7 +143,7 @@ public class PackageDefinitionImpl extends NamespaceDefinitionImpl {
 	 **/
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return unit.getDefinition() instanceof PackageDefinition;
+		return unit.getDefinition().getImpl().getReferent().getImpl().isPackage();
 	}
 
 	/**

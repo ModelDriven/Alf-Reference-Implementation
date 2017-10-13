@@ -61,7 +61,7 @@ public class EnumerationDefinitionImpl extends ClassifierDefinitionImpl {
 	 **/
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return unit.getDefinition() instanceof EnumerationDefinition &&
+		return unit.getDefinition().getImpl().getReferent().getImpl().isEnumeration() &&
 		        super.matchForStub(unit);
 	}
 

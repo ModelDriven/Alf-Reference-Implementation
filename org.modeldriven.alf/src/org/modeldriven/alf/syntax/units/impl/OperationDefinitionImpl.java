@@ -136,13 +136,13 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	    ArrayList<ElementReference> redefinedOperations = new ArrayList<ElementReference>();
 	    QualifiedNameList redefinitions = self.getRedefinition();
 	    if (redefinitions != null) {
-    	    for (QualifiedName redefinitionName: redefinitions.getName()) {
-    	        redefinitionName.getImpl().setCurrentScope(this.getOuterScope());
-    	        ElementReference referent = redefinitionName.getImpl().getOperationReferent();
-    	        if (referent != null) {
-    	            redefinedOperations.add(referent);
-    	        }
-    	    }
+	        for (QualifiedName redefinitionName: redefinitions.getName()) {
+	            redefinitionName.getImpl().setCurrentScope(this.getOuterScope());
+	            ElementReference referent = redefinitionName.getImpl().getOperationReferent();
+	            if (referent != null) {
+	                redefinedOperations.add(referent);
+	            }
+	        }
 	    }
 		return redefinedOperations;
 	}
@@ -365,11 +365,11 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
 	 **/
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-        NamespaceDefinition definition = unit.getDefinition();
-        return definition instanceof ActivityDefinition && 
-            !((ActivityDefinition)definition).getImpl().isTemplate() &&
-            FormalParameterImpl.equal(this.getParameters(), 
-                    ((ActivityDefinition)definition).getImpl().getParameters());
+        ElementReference definition = unit.getDefinition().getImpl().getReferent();
+        return definition.getImpl().isActivity() && 
+            !definition.getImpl().isTemplate() &&
+            FormalParameterImpl.equal(
+                    this.getParameters(), definition.getImpl().getParameters());
 	}
 
 	/**

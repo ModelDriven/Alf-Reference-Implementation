@@ -64,7 +64,7 @@ public class DataTypeDefinitionImpl extends
 	 **/
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return unit.getDefinition() instanceof DataTypeDefinition &&
+		return unit.getDefinition().getImpl().getReferent().getImpl().isDataType() &&
 		        super.matchForStub(unit);
 	}
 

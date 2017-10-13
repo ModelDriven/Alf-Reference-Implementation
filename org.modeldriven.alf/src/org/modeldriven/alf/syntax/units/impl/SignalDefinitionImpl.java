@@ -55,7 +55,7 @@ public class SignalDefinitionImpl extends ClassifierDefinitionImpl {
 	 **/
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return unit.getDefinition() instanceof SignalDefinition &&
+		return unit.getDefinition().getImpl().getReferent().getImpl().isSignal() &&
 		        super.matchForStub(unit);
 	} // matchForStub
 

@@ -125,7 +125,7 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 	 **/
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return unit.getDefinition() instanceof ClassDefinition &&
+		return unit.getDefinition().getImpl().getReferent().getImpl().isClass() &&
 		    super.matchForStub(unit);
 	}
 
@@ -187,7 +187,10 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 
     public boolean needsDefaultConstructor() {
         if (this.needsDefaultConstructor) {
-            for (Member ownedMember: super.getOwnedMember()) {
+            List<Member> ownedMembers = super.getOwnedMember();
+            int n = ownedMembers.size();
+            for (int i = 0; i < n; i++) {
+                Member ownedMember = ownedMembers.get(i);
                 if (ownedMember instanceof OperationDefinition &&
                         ((OperationDefinition)ownedMember).getIsConstructor()) {
                     this.needsDefaultConstructor = false;
@@ -232,7 +235,10 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
 
     public boolean needsDefaultDestructor() {
         if (this.needsDefaultDestructor) {
-            for (Member ownedMember: super.getOwnedMember()) {
+            List<Member> ownedMembers = super.getOwnedMember();
+            int n = ownedMembers.size();
+            for (int i = 0; i < n; i++) {
+                Member ownedMember = ownedMembers.get(i);
                 if (ownedMember instanceof OperationDefinition &&
                         ((OperationDefinition)ownedMember).getIsDestructor()) {
                     this.needsDefaultDestructor = false;

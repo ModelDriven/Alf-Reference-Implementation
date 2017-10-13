@@ -71,7 +71,7 @@ public class ActiveClassDefinitionImpl extends ClassDefinitionImpl {
 	 **/
 	@Override
 	public Boolean matchForStub(UnitDefinition unit) {
-		return unit.getDefinition() instanceof ActiveClassDefinition &&
+		return unit.getDefinition().getImpl().getReferent().getImpl().isActiveClass() &&
 		    super.matchForStub(unit);
 	} // matchForStub
 

@@ -162,11 +162,11 @@ public class ActivityDefinitionImpl extends ClassifierDefinitionImpl {
 	 * reference.
 	 **/
 	public Boolean matchForStub(UnitDefinition unit) {
-	    NamespaceDefinition definition = unit.getDefinition();
-		return definition instanceof ActivityDefinition && 
+	    ElementReference definition = unit.getDefinition().getImpl().getReferent();
+		return definition.getImpl().isActivity() && 
 		    super.matchForStub(unit) &&
-		    FormalParameterImpl.equal(this.getParameters(), 
-		            ((ActivityDefinition)definition).getImpl().getParameters());
+		    FormalParameterImpl.equal(
+		            this.getParameters(), definition.getImpl().getParameters());
 	} // matchForStub
 
     /**

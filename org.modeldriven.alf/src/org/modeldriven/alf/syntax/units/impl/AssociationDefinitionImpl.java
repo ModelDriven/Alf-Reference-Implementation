@@ -55,7 +55,7 @@ public class AssociationDefinitionImpl extends ClassifierDefinitionImpl {
 	 * an association definition.
 	 **/
 	public Boolean matchForStub(UnitDefinition unit) {
-		return unit.getDefinition() instanceof AssociationDefinition &&
+		return unit.getDefinition().getImpl().getReferent().getImpl().isAssociation() &&
 		    super.matchForStub(unit);
 	}
 
