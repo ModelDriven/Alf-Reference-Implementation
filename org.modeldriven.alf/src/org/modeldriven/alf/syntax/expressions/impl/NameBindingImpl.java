@@ -40,7 +40,11 @@ public class NameBindingImpl extends SyntaxElementImpl {
 	public String toString(boolean includesDerived) {
 	    NameBinding self = this.getSelf();
 	    TemplateBinding b = self.getBinding();
-	    return self.getName() + (b == null? "": b.getImpl());
+	    String name = self.getName();
+	    if (!name.matches("\\w+")) {
+	        name = "'" + name.replace("\\", "\\\\").replace("'", "\\'") + "'";
+	    }
+	    return name + (b == null? "": b.getImpl());
 	}
 	
     public TemplateBinding getBinding() {

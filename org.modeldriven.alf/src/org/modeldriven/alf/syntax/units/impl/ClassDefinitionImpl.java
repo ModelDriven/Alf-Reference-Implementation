@@ -29,7 +29,10 @@ import java.util.List;
 public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
     
     private boolean needsDefaultConstructor = true;
+    private OperationDefinition defaultConstructor = null;
+    
     private boolean needsDefaultDestructor = true;
+    private OperationDefinition defaultDestructor = null;
 
 	public ClassDefinitionImpl(ClassDefinition self) {
 		super(self);
@@ -201,11 +204,31 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
         return this.needsDefaultConstructor;
     }
     
-    /**
-     * Get the default constructor or an equivalent explicit constructor (with
-     * the same name as the class and no arguments).
-     */
+    private OperationDefinition createDefaultConstructor() {
+        ClassDefinition self = this.getSelf();
+        
+        this.defaultConstructor = new OperationDefinition(self);
+        this.defaultConstructor.setName(self.getName());
+        this.defaultConstructor.setNamespace(self);
+        this.defaultConstructor.setVisibility("public");
+        this.defaultConstructor.setBody(new Block());
+        
+        StereotypeAnnotation annotation = new StereotypeAnnotation(self);
+        annotation.setStereotypeName(new QualifiedName().getImpl().addName("Create"));
+        this.defaultConstructor.addAnnotation(annotation);
+        
+        return this.defaultConstructor;
+    }
+    
     public OperationDefinition getDefaultConstructor() {
+        return this.defaultConstructor;
+    }
+
+    /**
+     * Get the constructor (if any) with the same name as the class definition and no parameters.
+     * (This may be the default constructor or a similar explicit constructor.)
+     */
+    public OperationDefinition getConstructor() {
         OperationDefinition constructor = null;
         for (Member member: this.resolveInScope(this.getSelf().getName(), false)) {
             if (member instanceof OperationDefinition && 
@@ -215,22 +238,6 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
             }
         }
         return constructor;
-    }
-
-    private OperationDefinition createDefaultConstructor() {
-        ClassDefinition self = this.getSelf();
-        
-        OperationDefinition operation = new OperationDefinition(self);
-        operation.setName(self.getName());
-        operation.setNamespace(self);
-        operation.setVisibility("public");
-        operation.setBody(new Block());
-        
-        StereotypeAnnotation annotation = new StereotypeAnnotation(self);
-        annotation.setStereotypeName(new QualifiedName().getImpl().addName("Create"));
-        operation.addAnnotation(annotation);
-        
-        return operation;
     }
 
     public boolean needsDefaultDestructor() {
@@ -252,17 +259,21 @@ public class ClassDefinitionImpl extends ClassifierDefinitionImpl {
     private OperationDefinition createDefaultDestructor() {
         ClassDefinition self = this.getSelf();
         
-        OperationDefinition operation = new OperationDefinition(self);
-        operation.setName("destroy");
-        operation.setNamespace(self);
-        operation.setVisibility("public");
-        operation.setBody(new Block());
+        this.defaultDestructor = new OperationDefinition(self);
+        this.defaultDestructor.setName("destroy");
+        this.defaultDestructor.setNamespace(self);
+        this.defaultDestructor.setVisibility("public");
+        this.defaultDestructor.setBody(new Block());
         
         StereotypeAnnotation annotation = new StereotypeAnnotation(self);
         annotation.setStereotypeName(new QualifiedName().getImpl().addName("Destroy"));
-        operation.addAnnotation(annotation);
+        this.defaultDestructor.addAnnotation(annotation);
         
-        return operation;
+        return this.defaultDestructor;
+    }
+    
+    public OperationDefinition getDefaultDestructor() {
+        return this.defaultDestructor;
     }
     
     public Collection<Class<?>> getStereotypeMetaclasses() {

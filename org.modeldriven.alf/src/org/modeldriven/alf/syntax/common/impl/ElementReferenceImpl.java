@@ -456,7 +456,7 @@ public abstract class ElementReferenceImpl implements AssignableElement {
             templateParameter.setOwnedParameteredElement(null);
             
             Element newElement = null;
-            if (!reference.getImpl().isAny()) {
+            if (reference != null && !reference.getImpl().isAny()) {
                 FumlMapping mapping = ((ElementReferenceMapping)
                         FumlMapping.getMapping(reference)).getMapping();
                 if (mapping != null) {

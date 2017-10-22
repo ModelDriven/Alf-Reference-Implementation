@@ -507,7 +507,12 @@ public class BoundElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public boolean conformsTo(ElementReference type) {
-        if (type == null || this.equals(type)) {
+        ElementReference thisEffectiveType = this.getEffectiveBoundElement();
+        if (thisEffectiveType != null && thisEffectiveType.getImpl().conformsTo(type)) {
+            return true;
+        } else if (type == null) {
+            return false;
+        } else if (type.getImpl().isAny() || this.equals(type)) {
             return true;
         } else {
             for (ElementReference parent: this.parents()) {

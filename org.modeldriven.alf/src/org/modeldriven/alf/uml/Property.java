@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -37,6 +37,10 @@ public interface Property extends StructuralFeature {
 	public Class_ getClass_();
 
 	public Property getOpposite();
+    
+    public ValueSpecification getDefaultValue();
+    
+    public void setDefaultValue(ValueSpecification defaultValue);
 	
 	public boolean isStereotypeBaseProperty();
 }

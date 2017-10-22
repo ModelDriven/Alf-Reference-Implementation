@@ -357,24 +357,18 @@ public abstract class MemberImpl extends DocumentedElementImpl {
 	    return this.getOuterScope().getImpl().resolveUnit(qualifiedName);
 	}
 
-    public boolean hasNoVisibility() {
-        String visibility = this.getSelf().getVisibility();
-        return visibility == null || visibility.length() == 0;
-    }
-
     public boolean isPublic() {
-        String visibility = this.getSelf().getVisibility();
-        return visibility != null && visibility.equals("public");
+        return "public".equals(this.getSelf().getVisibility());
     }
     
     public boolean isPackageOnly() {
         // Default visibility for packaged members is package only.
-        return this.hasNoVisibility();
+        String visibility = this.getSelf().getVisibility();
+        return visibility == null || visibility.isEmpty() || "package".equals(visibility);
     }
 
     public boolean isPrivate() {
-        String visibility = this.getSelf().getVisibility();
-        return visibility != null && visibility.equals("private");
+        return "private".equals(this.getSelf().getVisibility());
     }
     
     public Collection<StereotypeAnnotation> getAllAnnotations() {

@@ -72,10 +72,15 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
 
     @Override
     public Classifier mapClassifier() {
-        ClassDefinition definition = this.getClassDefinition();
         Class_ class_ = this.create(Class_.class);
-        class_.setName(definition.getName());
+        class_.setName(this.getClassDefinition().getName());
+        this.addInitializationFlag(class_);
         
+        return class_;
+    }
+    
+    protected void addInitializationFlag(Class_ class_) {
+        ClassDefinition definition = this.getClassDefinition();
         String name = this.getDefinitionBaseName();
         
         // Create initialization flag.
@@ -95,15 +100,16 @@ public class ClassDefinitionMapping extends ClassifierDefinitionMapping {
                 makeDistinguishableName(definition, name + 
                         "$initialization"));
         this.initializationOperation.setVisibility("protected");
-        class_.addOwnedOperation(this.initializationOperation);
-        
-        return class_;
+        class_.addOwnedOperation(this.initializationOperation);        
     }
     
     @Override
     public void mapTo(Classifier classifier) throws MappingError {
         super.mapTo(classifier);
-        Class_ class_ = (Class_)classifier;
+        this.addInitializationOperation((Class_)classifier);
+    }
+    
+    protected void addInitializationOperation(Class_ class_) throws MappingError {
         
         // Add method for initialization operation.
         ActivityGraph graph = this.createActivityGraph();

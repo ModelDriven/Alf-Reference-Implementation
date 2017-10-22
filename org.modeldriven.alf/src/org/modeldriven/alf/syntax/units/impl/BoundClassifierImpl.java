@@ -25,7 +25,7 @@ import org.modeldriven.alf.uml.Element;
 
 public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     
-    private static final List<BoundClassifier> boundClassifiers = 
+    private final static List<BoundClassifier> boundClassifiers = 
             new ArrayList<BoundClassifier>();
     
     private ElementReference template = null;
@@ -33,7 +33,7 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
     private ElementReference effectiveBoundElement = null;
     
     private ElementReference referent = null; // DERIVED
-
+    
     public BoundClassifierImpl(BoundClassifier self) {
         super(self);
     }
@@ -215,6 +215,15 @@ public class BoundClassifierImpl extends ClassifierDefinitionImpl {
 
     public static void clearBoundClassifiers() {
         boundClassifiers.clear();
+    }
+    
+    public static void saveBoundClassifiers(List<BoundClassifier> boundClassifierList) {
+        boundClassifierList.addAll(boundClassifiers);
+    }
+    
+    public static void restoreBoundClassifiers(List<BoundClassifier> savedBoundClassifierList) {
+        clearBoundClassifiers();
+        boundClassifiers.addAll(savedBoundClassifierList);
     }
     
     public static void addBoundClassifier(BoundClassifier boundClassifier) {

@@ -39,7 +39,8 @@ public abstract class TemplateBindingImpl extends SyntaxElementImpl {
 	
 	public abstract List<ElementReference> getArgumentReferents(
 	        List<ElementReference> templateParameters, 
-	        NamespaceDefinition currentScope);
+	        NamespaceDefinition currentScope,
+	        boolean isVisibleOnly);
 
     public abstract void setCurrentScope(NamespaceDefinition currentScope);
 

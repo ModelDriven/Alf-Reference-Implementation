@@ -11,6 +11,8 @@ package org.modeldriven.alf.syntax.expressions;
 
 import java.util.Collection;
 
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.parser.Token;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl;
 
@@ -20,6 +22,13 @@ import org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl;
 
 public abstract class LiteralExpression extends Expression {
 
+    protected void init(Parser parser) {
+        Token token = parser.getToken(0);
+        this.setParserInfo(parser.getFileName(), 
+                token.beginLine, token.beginColumn,
+                token.endLine, token.endColumn);        
+    }
+    
 	@Override
     public LiteralExpressionImpl getImpl() {
 		return (LiteralExpressionImpl) this.impl;

@@ -166,8 +166,8 @@ public class InstanceCreationExpressionMapping extends
                     if (parent.getImpl().isClass() &&
                         parent.getImpl().getClassifierBehavior() != null &&
                         !excludedParents.contains(parent.getImpl())) {
-                        class_ = (Class_)parent.getImpl().getUml();
-                        if (class_ == null) {
+                        Class_ superclass = (Class_)parent.getImpl().getUml();
+                        if (superclass == null) {
                             FumlMapping mapping = this.fumlMap(parent);
                             if (mapping instanceof ElementReferenceMapping) {
                                 mapping = ((ElementReferenceMapping) mapping).
@@ -176,11 +176,11 @@ public class InstanceCreationExpressionMapping extends
                             if (!(mapping instanceof ClassDefinitionMapping)) {
                                 this.throwError("Error mapping parent class", mapping);
                             }
-                            class_ = (Class_)((ClassDefinitionMapping)mapping).
+                            superclass = (Class_)((ClassDefinitionMapping)mapping).
                                     getClassifierOnly();
                         }
                         startAction = this.graph.addStartObjectBehaviorAction(
-                                class_);         
+                                superclass);         
                         this.graph.addObjectFlow(fork, startAction.getObject());
                     }
                 }
@@ -300,7 +300,7 @@ public class InstanceCreationExpressionMapping extends
             // NOTE: Instance creation expressions for classes defined in
             // Alf notation should never be constructorless.
             
-            ElementReference referent = instanceCreationExpression.getReferent();
+            ElementReference referent = instanceCreationExpression.getBoundReferent();
             Class_ class_ = (Class_)referent.getImpl().getUml();
             if (class_ == null) {
                 FumlMapping mapping = this.fumlMap(referent);

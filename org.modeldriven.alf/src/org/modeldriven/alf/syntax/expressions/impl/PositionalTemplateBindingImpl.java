@@ -72,7 +72,7 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
 
     @Override
 	public String toString(boolean includeDerived) {
-        StringBuilder s = new StringBuilder("<");
+        StringBuilder s = new StringBuilder("< ");
 	    PositionalTemplateBinding self = this.getSelf();
 	    String separator = "";
 	    for (QualifiedName q: self.getArgumentName()) {
@@ -81,7 +81,7 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
 	            q.getPathName());
 	        separator = ",";
 	    }
-	    s.append(">");
+	    s.append(" >");
 	    return s.toString();
 	}
 
@@ -92,13 +92,15 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
     @Override
     public List<ElementReference> getArgumentReferents(
             List<ElementReference> templateParameters,
-            NamespaceDefinition currentScope) {
+            NamespaceDefinition currentScope,
+            boolean isVisibleOnly) {
         List<ElementReference> argumentReferents = new ArrayList<ElementReference>();
         for (QualifiedName argumentName: this.getSelf().getArgumentName()) {
             if (argumentName == null || argumentName.getNameBinding().isEmpty()) {
                 argumentReferents.add(null);
             } else {
                 argumentName.getImpl().setCurrentScope(currentScope);
+                argumentName.getImpl().setIsVisibleOnly(isVisibleOnly);
                 ElementReference argumentReferent =
                     argumentName.getImpl().getClassifierReferent();
                 argumentReferents.add(argumentReferent);

@@ -56,7 +56,7 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
 
     @Override
     public String toString(boolean includeDerived) {
-        StringBuilder s = new StringBuilder("<");
+        StringBuilder s = new StringBuilder("< ");
         NamedTemplateBinding self = this.getSelf();
         String separator = "";
         for (TemplateParameterSubstitution p: self.getSubstitution()) {
@@ -68,7 +68,7 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
                     "any": argumentName.getPathName());
             separator = ",";
         }
-        s.append(">");
+        s.append(" >");
         return s.toString();
     }
     
@@ -87,7 +87,8 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
     @Override
     public List<ElementReference> getArgumentReferents(
             List<ElementReference> templateParameters,
-            NamespaceDefinition currentScope) {
+            NamespaceDefinition currentScope,
+            boolean isVisibleOnly) {
         Collection<TemplateParameterSubstitution> substitutions = 
             this.getSelf().getSubstitution();
         List<ElementReference> argumentReferents = new ArrayList<ElementReference>();
@@ -102,6 +103,7 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
                         argumentReferents.add(null);
                     } else {
                         argumentName.getImpl().setCurrentScope(currentScope);
+                        argumentName.getImpl().setIsVisibleOnly(isVisibleOnly);
                         ElementReference argumentReferent = 
                             argumentName.getImpl().getClassifierReferent();
                         argumentReferents.add(argumentReferent);

@@ -168,7 +168,7 @@ public abstract class Alf extends AlfBase {
                             ClassDefinition classDefinition = 
                                     (ClassDefinition)definition;
                             OperationDefinition constructorDefinition = 
-                                    classDefinition.getImpl().getDefaultConstructor();
+                                    classDefinition.getImpl().getConstructor();
                             if (constructorDefinition == null) {
                                 this.println("Class does not have a default constructor.");
                             } else {

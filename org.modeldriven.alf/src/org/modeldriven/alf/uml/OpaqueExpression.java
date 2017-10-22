@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013,2017 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License
  * (GPL) version 3 that accompanies this distribution and is available at     
@@ -12,8 +12,16 @@ import java.util.List;
 
 public interface OpaqueExpression extends ValueSpecification {
     
-    public List<String> getLanguage();
-    
     public List<String> getBody();
+
+    public void addBody(String body);
+
+    public List<String> getLanguage();
+
+    public void addLanguage(String language);
+    
+    public Behavior getBehavior();
+    
+    public void setBehavior(Behavior behavior);
 
 }

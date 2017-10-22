@@ -524,6 +524,18 @@ public class OperationDefinitionImpl extends NamespaceDefinitionImpl {
         }
     }
     
+    public boolean isDefaultConstructor() {
+        OperationDefinition self = this.getSelf();
+        ClassDefinition owner = (ClassDefinition)self.getNamespace();
+        return self == owner.getImpl().getDefaultConstructor();
+    }
+    
+    public boolean isDefaultDestructor() {
+        OperationDefinition self = this.getSelf();
+        ClassDefinition owner = (ClassDefinition)self.getNamespace();
+        return self == owner.getImpl().getDefaultDestructor();
+    }
+    
     @Override
     public ElementReference getContext() {
         return this.getNamespaceReference();

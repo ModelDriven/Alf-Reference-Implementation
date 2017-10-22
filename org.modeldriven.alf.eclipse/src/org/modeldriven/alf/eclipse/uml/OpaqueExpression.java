@@ -38,6 +38,10 @@ public class OpaqueExpression extends ValueSpecification implements
 		return list;
 	}
 
+	public void addLanguage(String language) {
+		this.getBase().getLanguages().add(language);
+	}
+
 	@Override
 	public List<String> getBody() {
 		List<String> list = new ArrayList<String>();
@@ -45,6 +49,20 @@ public class OpaqueExpression extends ValueSpecification implements
 			list.add(language);
 		}
 		return list;
+	}
+
+	public void addBody(String body) {
+		this.getBase().getBodies().add(body);
+	}
+
+	@Override
+	public org.modeldriven.alf.uml.Behavior getBehavior() {
+		return (org.modeldriven.alf.uml.Behavior) wrap(this.getBase().getBehavior());
+	}
+
+	@Override
+	public void setBehavior(org.modeldriven.alf.uml.Behavior behavior) {
+		this.getBase().setBehavior(behavior == null? null: ((Behavior)behavior).getBase());
 	}
 
 }

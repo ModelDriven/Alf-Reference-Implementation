@@ -477,7 +477,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
                 // Note: getArgumentReferents only returns classifier referents
 	            List<ElementReference> templateArguments = 
 	                templateBinding.getImpl().getArgumentReferents
-	                    (templateParameters, this.getCurrentScope());
+	                    (templateParameters, this.getCurrentScope(), this.getIsVisibleOnly());
 	            
 	            if (templateArguments == null || 
 	                    templateArguments.size() != templateParameters.size()) {
@@ -814,7 +814,7 @@ public class QualifiedNameImpl extends SyntaxElementImpl {
                 templateReferent.getImpl().getTemplateParameters();
             List<ElementReference> templateArguments = 
                 self.getUnqualifiedName().getBinding().getImpl().getArgumentReferents
-                    (templateParameters, this.getCurrentScope());
+                    (templateParameters, this.getCurrentScope(), this.getIsVisibleOnly());
             return templateReferent.getImpl().bind(templateArguments);
         }
     }

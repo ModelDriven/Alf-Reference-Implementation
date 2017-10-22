@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.impl.uml;
 
-
 public class Property extends StructuralFeature implements
 		org.modeldriven.alf.uml.Property {
 	public Property() {
@@ -80,6 +79,15 @@ public class Property extends StructuralFeature implements
 
 	public org.modeldriven.alf.uml.Property getOpposite() {
 		return (Property)wrap(this.getBase().opposite);
+	}
+
+	@Override
+	public org.modeldriven.alf.uml.ValueSpecification getDefaultValue() {
+		return null;
+	}
+
+	@Override
+	public void setDefaultValue(org.modeldriven.alf.uml.ValueSpecification defaultValue) {
 	}
 
 	@Override
