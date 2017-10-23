@@ -11,7 +11,7 @@ class Expressions_Operator specializes Test {
 		super(tester);
 
 	    this.test(i, j, bs, h, a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, e9,
-	      f, f1, f2, x, y, z, r, k1, k2, k3, k4, u, v);
+	      f, f1, f2, x, y, z, r, k1, k2, k3, k4, u, v, s);
 	      
 	    AssertEqual("i", i, -1);
 	    AssertEqual("j", j, 2);
@@ -51,6 +51,7 @@ class Expressions_Operator specializes Test {
 	    
 	    AssertEqual("u", u, null);
 	    AssertFalse("v", v);
+	    AssertEqual("s", s, "v false");
 	
 	    this.done();
 	}
@@ -82,7 +83,7 @@ class Expressions_Operator specializes Test {
      out f: Boolean, out f1: Boolean, out f2: Boolean,
      out x: any, out y: any[*] sequence, out z: Integer[], out r: Integer,
      out k1: Integer[0..1], out k2: Integer[0..1], out k3: Integer[0..1], out k4: Integer[0..1],
-     out u: any[0..1], out v: Boolean) {
+     out u: any[0..1], out v: Boolean, out s: String) {
     
     employee = new Employee();
     monitor = new Monitor();
@@ -160,6 +161,7 @@ class Expressions_Operator specializes Test {
     
     u = true? Nothing(): 2;
     v = (w = null) == 0 && w[1] == 1;
+    s = "v " + (!v? "false": "true");
     
     r = $monitor.getActiveSensor().getReading();    
   }

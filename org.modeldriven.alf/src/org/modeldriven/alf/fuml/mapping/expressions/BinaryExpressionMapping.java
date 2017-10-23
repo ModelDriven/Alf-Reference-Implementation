@@ -99,27 +99,33 @@ public abstract class BinaryExpressionMapping extends ExpressionMapping {
         if (operatorFunction == null) {
             this.resultSource = operand1Result;
         } else {
+            if (!(operand1Result instanceof OutputPin)) {
+                StructuredActivityNode node = 
+                        this.graph.createPassthruNode(operand1Result.getName(), null, 1, 1);
+                this.graph.add(node);
+                this.graph.addObjectFlow(operand1Result, node.getStructuredNodeInput().get(0));
+                operand1Result = node.getStructuredNodeOutput().get(0);
+            }
+ 
+            if (!(operand2Result instanceof OutputPin)) {
+                StructuredActivityNode node = 
+                        this.graph.createPassthruNode(operand2Result.getName(), null, 1, 1);
+                this.graph.add(node);
+                this.graph.addObjectFlow(operand2Result, node.getStructuredNodeInput().get(0));
+                operand2Result = node.getStructuredNodeOutput().get(0);
+            }
+            
             CallBehaviorAction callAction = 
                 this.graph.addCallBehaviorAction(getBehavior(operatorFunction));
-            this.graph.addObjectFlow(
-                    operand1Result, 
-                    callAction.getArgument().get(0));
-            this.graph.addObjectFlow(
-                    operand2Result, 
-                    callAction.getArgument().get(1));
+            this.graph.addObjectFlow(operand1Result, callAction.getArgument().get(0));
+            this.graph.addObjectFlow(operand2Result, callAction.getArgument().get(1));
             this.action = InvocationExpressionMapping.wrapAction(
                     this.graph, callAction, callAction.getResult().get(0));
             this.resultSource = ((StructuredActivityNode)this.action).
                     getStructuredNodeOutput().get(0);
             
-            if (operand1Result instanceof OutputPin) {
-                this.graph.addControlFlow((ActivityNode)operand1Result.getOwner(), this.action);
-            }
- 
-            if (operand2Result instanceof OutputPin) {
-                this.graph.addControlFlow((ActivityNode)operand2Result.getOwner(), this.action);
-            }
-            
+            this.graph.addControlFlow((ActivityNode)operand1Result.getOwner(), this.action);
+            this.graph.addControlFlow((ActivityNode)operand2Result.getOwner(), this.action);
         }
     }
     
