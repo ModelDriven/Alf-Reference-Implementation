@@ -6,13 +6,14 @@ Syntax for a UML Action Language</em> Request for Proposals. The Alf specificati
 document can be found at http://www.omg.org/spec/ALF. (See also http://solitaire.omg.org/issues/task-force/ALF11
 for the list of issues addressed by the Alf 1.1 Revision Task Force.)
 
-This implementation is based on the Alf 1.1 beta specification. It compiles Alf source text to the executable Foundational UML (fUML) subset of UML. The compilation can target either 
-of two fUML execution engine implementations:
+This implementation is based on the Alf 1.1 specification. It compiles Alf source text to the executable Foundational UML (fUML) subset of UML. 
+The compilation can target either of two fUML execution engine implementations:
 
-* The fUML Reference Implementation execution engine (see http://fuml.modeldriven.org), [v1.2.3](https://github.com/ModelDriven/fUML-Reference-Implementation/releases/tag/v1.2.3)
-(this version conforms to fUML 1.3 beta).
+* The fUML Reference Implementation execution engine (see http://fuml.modeldriven.org), 
+[v1.3.0](https://github.com/ModelDriven/fUML-Reference-Implementation/releases/tag/v1.3.0)
+(this version conforms to fUML 1.3).
 * The fUML execution engine from the Moka framework for model execution in the Eclipse Papyrus tool
-(see http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution), v2.0.0 or later.
+(see http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution), v3.1.0 or later.
 
 The implementation handles the full Alf syntax at the Extended compliance level, as given in Annex C Consolidated 
 LL Grammar of the Alf Specification.
@@ -60,11 +61,12 @@ fUML Reference Implementation project directly but, rather, uses an exported
 project to specialize the mapping to target the [Eclipse UML2](https://projects.eclipse.org/projects/modeling.mdt.uml2)
 metamodel implementation (v5.2.0 or later). It depends on Eclipse plugins and must be built in an Eclipse environment.
 	
-* `org.modeldriven.alf.eclipse.papyrus` - This project extends the 
+* `org.modeldriven.alf.eclipse.moka` - This project extends the 
 `org.modeldriven.alf.eclipse` project to allow compiled Alf text to be executed
 using the fUML execution engine from the [Moka framework] (http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution)
-for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (v2.0.0 or later).
-It depends on Eclipse plugins and must be built in an Eclipse environment.
+for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (v3.1.0 or later).
+It depends on Eclipse plugins and must be built in an Eclipse environment. (Note: This project was called
+`org.modeldriven.alf.eclipse.papyrus` in previous versions of the reference implementation.)
 
 ## Further Information
 
