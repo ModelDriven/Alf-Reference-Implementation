@@ -378,9 +378,18 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
     public List<ElementReference> getAttributes() {
         List<ElementReference> attributes = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
-            for (Member member: ((ClassifierDefinition)this.getSelf().getElement()).getMember()) {
+            ClassifierDefinition definition = (ClassifierDefinition)this.getSelf().getElement();
+            for (Member member: definition.getOwnedMember()) {
                 if (member instanceof PropertyDefinition) {
                     attributes.add(member.getImpl().getReferent());
+                }
+            }
+            Collection<ElementReference> members = this.getMembers();
+            for (ElementReference parent: this.allParents()) {
+                for (ElementReference attribute: parent.getImpl().getAttributes()) {
+                    if (attribute.getImpl().isContainedIn(members)) {
+                        attributes.add(attribute);
+                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.syntax.common.*;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
 import org.modeldriven.alf.syntax.units.ImportedMember;
@@ -449,10 +450,9 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public List<ElementReference> getAttributes() {
         List<ElementReference> attributes = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
-            for (NamedElement member: ((Classifier)this.getSelf().getElement()).getMember()) {
-                if (member instanceof Property && !((Property) member).isStereotypeBaseProperty()) {
-                    attributes.add(ElementReferenceImpl.makeElementReference(member));
-                }
+            for (Property attribute: 
+                ActivityGraph.getAllAttributes((Classifier)this.getSelf().getElement())) {
+                attributes.add(ElementReferenceImpl.makeElementReference(attribute));
             }
         }
         return attributes;

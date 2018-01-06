@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -588,8 +588,7 @@ public class ActivityGraph {
         sendAction.setSignal(signal);
         sendAction.setTarget(createInputPin(
                 sendAction.getName() + ".target", null, 1, 1));
-        // TODO: Use getAllAttributes(signal), once this is supportable by fUML.
-        addPinsFromProperties(sendAction, signal.getAttribute());
+        addPinsFromProperties(sendAction, getAllAttributes(signal));
         this.add(sendAction);
         return sendAction;
     }
@@ -1056,8 +1055,12 @@ public class ActivityGraph {
      * operation defined in UML 2.5.
      */
     public static List<Property> getAllAttributes(Classifier classifier) {
-        List<Property> allAttributes = 
-                new ArrayList<Property>(classifier.getAttribute());
+        List<Property> allAttributes = new ArrayList<Property>();
+        for (Property attribute: classifier.getAttribute()) {
+            if (!attribute.isStereotypeBaseProperty()) {
+                allAttributes.add(attribute);
+            }
+        }
         Collection<NamedElement> members = classifier.getMember();
         for (Classifier parent: classifier.allParents()) {
             for (Property attribute: getAllAttributes(parent)) {
