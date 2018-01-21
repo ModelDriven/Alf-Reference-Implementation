@@ -47,6 +47,9 @@ public class SuperInvocationExpressionImpl
 
 	public void setTarget(QualifiedName target) {
 		this.target = target;
+		if (target != null) {
+		    target.getImpl().setIsVisibleOnly(false);
+		}
 	}
 	
 	/**
@@ -86,8 +89,8 @@ public class SuperInvocationExpressionImpl
 	                if (superclass == null) {
 	                    return null;
 	                } else {
-    	                superclasses = new ArrayList<ElementReference>();
-    	                superclasses.add(superclass);
+        	                superclasses = new ArrayList<ElementReference>();
+        	                superclasses.add(superclass);
 	                }
 	            }
 	        }
@@ -96,7 +99,8 @@ public class SuperInvocationExpressionImpl
 	        for (ElementReference superclass: superclasses) {
 	            for (ElementReference member: superclass.getImpl().getMembers()) {
 	                if (member.getImpl().isOperation() && 
-	                        member.getImpl().getName().equals(name)) {
+	                        member.getImpl().getName().equals(name) &&
+	                        !"private".equals(member.getImpl().getVisibility())) {
 	                    operations.add(member);
 	                }
 	            }

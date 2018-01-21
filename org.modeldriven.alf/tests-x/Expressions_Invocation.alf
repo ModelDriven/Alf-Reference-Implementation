@@ -61,8 +61,8 @@ class Expressions_Invocation specializes Test {
       public name: String = "";
       
       public run() { }
-      public initialize(in value: Integer) { this.value = value; }
-      public setName(in name: String) { this.name = name; }
+      protected initialize(in value: Integer) { this.value = value; }
+      protected setName(in name: String) { this.name = name; }
     }
     
     class Super1 specializes Super {
