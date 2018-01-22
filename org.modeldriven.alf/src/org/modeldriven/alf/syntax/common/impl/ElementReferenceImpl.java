@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -386,7 +386,28 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         return this.getSelf() == any;
     }
 
-    public abstract boolean conformsTo(ElementReference type);
+    public boolean conformsTo(ElementReference type) {
+        if (!this.isClassifier() || type == null) {
+            return false;
+        } else if (type.getImpl().isAny()) {
+            return true;
+        } else if (!type.getImpl().isClassifier()) {
+            return false;
+        } else {
+            ElementReference thisType = effectiveElementFor(this.getSelf());
+            ElementReference otherType = effectiveElementFor(type);
+            if (thisType.getImpl().equals(otherType)) {
+                return true;
+            } else {
+                for (ElementReference parent: thisType.getImpl().parents()) {
+                    if (parent.getImpl().conformsTo(otherType)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+    }
     
     public boolean isContainedIn(Collection<? extends ElementReference> references) {
         for (ElementReference reference: references) {

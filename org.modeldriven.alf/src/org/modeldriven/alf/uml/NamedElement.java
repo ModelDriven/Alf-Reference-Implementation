@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,8 +8,8 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
+import java.util.Collections;
 import java.util.List;
-
 
 public interface NamedElement extends Element {
 	public String getName();
@@ -27,5 +27,11 @@ public interface NamedElement extends Element {
 	
 	public List<Dependency> getClientDependency();
 
+	// This is a non-navigable association end in the UML metamodel.
+    public default List<Dependency> getSupplierDependency() {
+        return Collections.emptyList();
+    }
+
     public boolean isDistinguishableFrom(NamedElement otherElement, Namespace namespace);
+
 }

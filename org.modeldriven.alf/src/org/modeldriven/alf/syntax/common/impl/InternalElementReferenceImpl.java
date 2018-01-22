@@ -662,14 +662,14 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
         }
     }
 
-    @Override
-    public boolean conformsTo(ElementReference type) {
-        return this.isClassifier() && type != null &&
-               (type.getImpl().isAny() ||
-                this.equals(type) || 
-                type.getImpl().isContainedIn(this.allParents()));
-    }
-
+//    @Override
+//    public boolean conformsTo(ElementReference type) {
+//        return this.isClassifier() && type != null &&
+//               (type.getImpl().isAny() ||
+//                this.equals(type) || 
+//                type.getImpl().isContainedIn(this.allParents()));
+//    }
+//
     @Override
     public int hashCode() {
         SyntaxElement element = this.getSelf().getElement();

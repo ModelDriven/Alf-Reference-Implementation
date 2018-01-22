@@ -868,15 +868,14 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     
     @Override
     public ElementReference getEffectiveBoundElement() {
-        // TODO: Fix this.
-//        if (this.isTemplateBinding()) {
-//            NamedElement element = (NamedElement)this.getSelf().getElement();
-//            for (Dependency dependency: element.getSupplierDependency()) {
-//                if (dependency instanceof Realization) {
-//                    return ElementReferenceImpl.makeElementReference(dependency.getClient());
-//                }
-//            }
-//        }
+        if (this.isTemplateBinding()) {
+            NamedElement element = (NamedElement)this.getSelf().getElement();
+            for (Dependency dependency: element.getSupplierDependency()) {
+                if (dependency instanceof Realization) {
+                    return ElementReferenceImpl.makeElementReference(dependency.getClient());
+                }
+            }
+        }
         return null;
     }
 
@@ -908,21 +907,6 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         }
     }
 
-    @Override
-    public boolean conformsTo(ElementReference type) {
-        if (!this.isClassifier() || type == null) {
-            return false;
-        } else if (type.getImpl().isAny()) {
-            return true;
-        } else if (!type.getImpl().isClassifier() || 
-                !(type instanceof ExternalElementReference)) {
-            return false;
-        } else {
-            return ((Classifier)this.getSelf().getElement()).
-                conformsTo((Classifier)type.getImpl().getUml());
-        }
-    }
-    
     @Override
     public int hashCode() {
         return this.getSelf().getElement().hashCode();
