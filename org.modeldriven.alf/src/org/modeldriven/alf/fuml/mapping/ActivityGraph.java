@@ -225,13 +225,13 @@ public class ActivityGraph {
         writeAction.setIsReplaceAll(isReplaceAll);
         this.add(writeAction);
         
-        Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
+        Type objectType = getObjectType(property);
         writeAction.setObject(createInputPin(
-                writeAction.getName() + ".object", featuringClassifier, 1, 1));
+                writeAction.getName() + ".object", objectType, 1, 1));
         writeAction.setValue(createInputPin(
                 writeAction.getName() + ".value", property.getType(), 1, 1));
         writeAction.setResult(createOutputPin(
-                writeAction.getName() + ".result", featuringClassifier, 1, 1));
+                writeAction.getName() + ".result", objectType, 1, 1));
         
         if (property.getIsOrdered() && !isReplaceAll) {
             writeAction.setInsertAt(this.createInputPin(
@@ -280,12 +280,12 @@ public class ActivityGraph {
         clearAction.setStructuralFeature(property);
         this.add(clearAction);
 
-        Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
+        Type objectType = getObjectType(property);
         clearAction.setObject(createInputPin(
-                clearAction.getName() + ".object", featuringClassifier, 1, 1));
+                clearAction.getName() + ".object", objectType, 1, 1));
         clearAction.getObject().setIsOrdered(false);
         clearAction.setResult(createOutputPin(
-                clearAction.getName() + ".result", featuringClassifier, 1, 1));
+                clearAction.getName() + ".result", objectType, 1, 1));
         return clearAction;
     }
     
@@ -562,11 +562,11 @@ public class ActivityGraph {
         removeAction.setIsRemoveDuplicates(isRemoveDuplicates);
         this.add(removeAction);
         
-        Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
+        Type objectType = getObjectType(property);
         removeAction.setObject(createInputPin(
-                removeAction.getName() + ".object", featuringClassifier, 1, 1));
+                removeAction.getName() + ".object", objectType, 1, 1));
         removeAction.setResult(createOutputPin(
-                removeAction.getName() + ".result", featuringClassifier, 1, 1));
+                removeAction.getName() + ".result", objectType, 1, 1));
         
         if (!property.getIsOrdered() || 
                 property.getIsUnique() || 
@@ -892,6 +892,13 @@ public class ActivityGraph {
     }
     
     // Static Helper Methods
+    
+    public static Type getObjectType(Property property) {
+        Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
+        return featuringClassifier instanceof Association? 
+                property.getOpposite().getType():
+                featuringClassifier;
+    }
     
     public static void setPin(Pin pin, String name, Type type, int lower, int upper) {
         pin.setName(name);
