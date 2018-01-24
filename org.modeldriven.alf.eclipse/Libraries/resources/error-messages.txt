@@ -572,7 +572,7 @@ Right-hand side multiplicity upper bound must not be greater than 1.
 If a local name declaration statement does not have multiplicity, then the multiplicity of upper bound of the assigned expression must not be greater than 1.
  
 localNameDeclarationStatementLocalName
-Local name already assigned.
+Name is already assigned or a parameter.
 The local name in a local name declaration statement must be unassigned before the statement and before the expression in the statement. It must remain unassigned after the expression.
 
 localNameDeclarationStatementType

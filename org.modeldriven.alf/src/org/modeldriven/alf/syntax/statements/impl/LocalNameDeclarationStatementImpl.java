@@ -184,6 +184,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
 	    LocalNameDeclarationStatement self = this.getSelf();
 	    Expression expression = self.getExpression();
         return expression == null || self.getTypeName() == null || 
+                self.getType() != null &&
                 AssignableElementImpl.isAssignable(this, expression.getImpl());
 	}
 
@@ -192,6 +193,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
 	 * before the statement and before the expression in the statement. It must
 	 * remain unassigned after the expression.
 	 **/
+	// And it must not be a parameter, even if an unassigned out parameter.
 	public boolean localNameDeclarationStatementLocalName() {
 	    LocalNameDeclarationStatement self = this.getSelf();
 	    this.getAssignmentAfterMap();
@@ -199,7 +201,8 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
 	    Expression expression = self.getExpression();
 		return name == null || expression == null ||
 		            this.getAssignmentBefore(name) == null &&
-		            expression.getImpl().getAssignmentAfter(name) == null;
+		            expression.getImpl().getAssignmentAfter(name) == null &&
+		            this.getParameter() == null;
 	}
 
 	/**
@@ -256,6 +259,15 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
         return this.getSelf().getHasMultiplicity()? -1: 1;
     }
 	
+    public ElementReference getParameter() {
+        LocalNameDeclarationStatement self = this.getSelf();
+        QualifiedName qualifiedName = 
+                new QualifiedName().getImpl().addName(self.getName());
+        qualifiedName.getImpl().setCurrentScope(
+                self.getTypeName().getImpl().getCurrentScope());
+        return qualifiedName.getImpl().getParameterReferent();
+    }
+
 	/**
 	 * Return the assignment expression equivalent to this local name
 	 * declaration statement.
