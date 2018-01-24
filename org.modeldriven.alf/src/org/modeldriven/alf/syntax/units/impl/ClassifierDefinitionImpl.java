@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -385,15 +385,17 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
                 if (classifier == null || classifier.getImpl().isAny()) {
                     return classifier;
                 }
+                // Note: allParents may be cached, so it should not be mutated.
                 Collection<ElementReference> ancestors = classifier.getImpl().allParents();
-                ancestors.add(classifier);
                 if (isFirst) {
+                    commonAncestors.add(classifier);
                     commonAncestors.addAll(ancestors);
                     isFirst = false;
                 } else {
-                    for (Object commonAncestor: commonAncestors.toArray()) {
-                        if (!(((ElementReference)commonAncestor).getImpl().
-                                isContainedIn(ancestors))) {
+                    for (Object object: commonAncestors.toArray()) {
+                        ElementReference commonAncestor = (ElementReference)object;
+                        if (!commonAncestor.getImpl().equals(classifier) && 
+                                !commonAncestor.getImpl().isContainedIn(ancestors)) {
                             commonAncestors.remove(commonAncestor);
                         }
                     }
@@ -406,7 +408,8 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             // Remove any common ancestors that are parents of other common
             // ancestors.
             for (Object ancestor: commonAncestors.toArray()) {
-                Collection<ElementReference> parents = ((ElementReference)ancestor).getImpl().parents();
+                Collection<ElementReference> parents = 
+                        ((ElementReference)ancestor).getImpl().parents();
                 for (ElementReference parent: parents) {
                     commonAncestors.remove(parent);
                 }
