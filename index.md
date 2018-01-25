@@ -1,6 +1,6 @@
 ### Current Release
 Base release: [Version 1.1.0](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.1.0), conforming to [Alf 1.1](http://www.omg.org/spec/ALF/1.1)<br>
-Latest release: [Version 1.1.0a](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.1.0a)
+Latest release: [Version 1.1.0](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.1.0)
 
 ### What is Alf?
 
