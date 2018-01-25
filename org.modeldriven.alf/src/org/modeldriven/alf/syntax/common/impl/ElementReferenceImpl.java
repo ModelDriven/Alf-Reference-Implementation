@@ -175,8 +175,11 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         } else {
             List<ElementReference> parameters = new ArrayList<ElementReference>();
             if (this.isReception()){
-                for (ElementReference property: this.getSignal().getImpl().getAttributes()) {
-                    parameters.add(parameterFromProperty(property).getImpl().getReferent());
+                ElementReference signal = this.getSignal();
+                if (signal != null) {
+                    for (ElementReference property: signal.getImpl().getAttributes()) {
+                        parameters.add(parameterFromProperty(property).getImpl().getReferent());
+                    }
                 }
             } else if (this.isDataType() || this.isSignal()){
                 for (ElementReference property: this.getAttributes()) {
