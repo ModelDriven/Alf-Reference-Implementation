@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -59,45 +59,60 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
 
     public Action mapAction(boolean mayWrapAction) throws MappingError {
         Action action = this.mapTarget();
-        
+
         InvocationExpression expression = this.getInvocationExpression();
-        
+
         Tuple tuple = expression.getTuple();
         FumlMapping mapping = this.fumlMap(tuple);
-        if (mapping instanceof TupleMapping) {
+        if (!(mapping instanceof TupleMapping)) {
+            this.throwError("Error mapping tuple:" + tuple);
+        } else {
             TupleMapping tupleMapping = (TupleMapping)mapping;
             tupleMapping.setIsIndexFrom0(this.isIndexFrom0());
             tupleMapping.mapTo(action);
             this.graph.addAll(tupleMapping.getTupleGraph());
             this.lhsGraph = tupleMapping.getLhsGraph();
             this.assignedValueSourceMap = tupleMapping.getAssignedValueSourceMap();
-        } else {
-            this.throwError("Error mapping tuple:" + tuple);
-        }
 
-        action = this.mapFeature(action);
-        
-        // NOTE: mayWrapAction is only set to false for the mapping of the
-        // equivalent invocation expression of a sequence access expression.
-        if (mayWrapAction && 
-           (action instanceof CallBehaviorAction || 
-            action instanceof CallOperationAction) && 
-           !((CallAction)action).getArgument().isEmpty() &&
-           this.resultSource instanceof OutputPin) {
-            action = this.adjustAction(
-                    this.graph, action, (OutputPin)this.resultSource);
-            this.resultSource = ((StructuredActivityNode)action).
-                    getStructuredNodeOutput().get(0);
-            
+            action = this.mapFeature(action);
+
+            // NOTE: mayWrapAction is only set to false for the mapping of the
+            // equivalent invocation expression of a sequence access expression.
+            if (mayWrapAction && 
+                    (action instanceof CallBehaviorAction || 
+                            action instanceof CallOperationAction) && 
+                    !((CallAction)action).getArgument().isEmpty() &&
+                    this.resultSource instanceof OutputPin) {
+                StructuredActivityNode node = this.adjustAction(
+                        this.graph, action, (OutputPin)this.resultSource);
+                this.resultSource = node.getStructuredNodeOutput().get(0);
+                
+                ActivityNode tupleNode = (ActivityNode)tupleMapping.getElement();
+                if (tupleNode != null) {
+                    this.graph.addControlFlow(tupleNode, node);
+                    if (action instanceof CallOperationAction) {                       
+                        InputPin targetPin = ((CallOperationAction)action).getTarget();
+                        InputPin inputPin = graph.createInputPin(
+                                    "Input(" + targetPin.getName() + ")", 
+                                    targetPin.getType(), 1, 1);
+                        ActivityEdge incomingEdge = targetPin.getIncoming().remove(0);
+                        incomingEdge.setTarget(inputPin);
+                        node.addStructuredNodeInput(inputPin);
+                        node.addEdge(this.graph.createObjectFlow(inputPin, targetPin));
+                    }
+                }
+                
+                action = node;
+            }
+
+            // NOTE: Adding left-hand side elements here prevents them from being
+            // wrapped in the expansion region mapped from a sequence feature
+            // invocation.
+            this.graph.addAll(this.lhsGraph);
         }
-        
-        // NOTE: Adding left-hand side elements here prevents them from being
-        // wrapped in the expansion region mapped from a sequence feature
-        // invocation.
-        this.graph.addAll(this.lhsGraph);
         
         return action;
-    }
+   }
     
     private StructuredActivityNode adjustAction(
             ActivityGraph graph, Action action, OutputPin resultPin) throws MappingError {
