@@ -376,26 +376,28 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
 	    return inheritableMembers;
 	}
 
-    public static ElementReference commonAncestor(Collection<ElementReference> classifiers) {
+    private static ElementReference commonAncestorImpl(Collection<ElementReferenceImpl> classifiers) {
         while (classifiers.size() > 1) {
             // Construct the set of all common ancestors of the given classifiers.
             boolean isFirst = true;
-            Set<ElementReference> commonAncestors = new HashSet<ElementReference>();
-            for (ElementReference classifier: classifiers) {
-                if (classifier == null || classifier.getImpl().isAny()) {
-                    return classifier;
+            Set<ElementReferenceImpl> commonAncestors = new HashSet<ElementReferenceImpl>();
+            for (ElementReferenceImpl classifier: classifiers) {
+                if (classifier.isAny()) {
+                    return classifier.getSelf();
                 }
                 // Note: allParents may be cached, so it should not be mutated.
-                Collection<ElementReference> ancestors = classifier.getImpl().allParents();
+                Collection<ElementReference> ancestors = classifier.allParents();
                 if (isFirst) {
                     commonAncestors.add(classifier);
-                    commonAncestors.addAll(ancestors);
+                    for (ElementReference ancestor: ancestors) {
+                    commonAncestors.add(ancestor.getImpl());
+                    }
                     isFirst = false;
                 } else {
                     for (Object object: commonAncestors.toArray()) {
-                        ElementReference commonAncestor = (ElementReference)object;
-                        if (!commonAncestor.getImpl().equals(classifier) && 
-                                !commonAncestor.getImpl().isContainedIn(ancestors)) {
+                        ElementReferenceImpl commonAncestor = (ElementReferenceImpl)object;
+                        if (!commonAncestor.equals(classifier) && 
+                                !commonAncestor.isContainedIn(ancestors)) {
                             commonAncestors.remove(commonAncestor);
                         }
                     }
@@ -409,28 +411,43 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             // ancestors.
             for (Object ancestor: commonAncestors.toArray()) {
                 Collection<ElementReference> parents = 
-                        ((ElementReference)ancestor).getImpl().parents();
+                        ((ElementReferenceImpl)ancestor).parents();
                 for (ElementReference parent: parents) {
-                    commonAncestors.remove(parent);
+                    commonAncestors.remove(parent.getImpl());
                 }
 
             }
             
             classifiers = commonAncestors;
         }
-        if (classifiers.isEmpty()) {
-            return any;
-        } else {
-            return (ElementReference)classifiers.toArray()[0];
+        for (ElementReferenceImpl classifier: classifiers) {
+            return classifier.getSelf();
         }
+        return any;
+    }
+    
+    public static ElementReference commonAncestor(Collection<ElementReference> classifiers) {
+        HashSet<ElementReferenceImpl> classifierSet = new HashSet<ElementReferenceImpl>();
+        for (ElementReference classifier: classifiers) {
+            if (classifier == null) {
+                return null;
+            } else {
+                classifierSet.add(classifier.getImpl());
+            }
+        }
+        return commonAncestorImpl(classifierSet);
     }
     
     public static ElementReference commonAncestor(ElementReference... classifiers) {
-        HashSet<ElementReference> classifierSet = new HashSet<ElementReference>();
+        HashSet<ElementReferenceImpl> classifierSet = new HashSet<ElementReferenceImpl>();
         for (ElementReference classifier: classifiers) {
-            classifierSet.add(classifier);
+            if (classifier == null) {
+                return null;
+            } else {
+                classifierSet.add(classifier.getImpl());
+            }
         }
-        return commonAncestor(classifierSet);
+        return commonAncestorImpl(classifierSet);
     }
     
     @Override

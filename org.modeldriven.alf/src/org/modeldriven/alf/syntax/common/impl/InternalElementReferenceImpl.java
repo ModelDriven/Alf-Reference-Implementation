@@ -664,8 +664,9 @@ public class InternalElementReferenceImpl extends ElementReferenceImpl {
 
     @Override
     public int hashCode() {
-        SyntaxElement element = this.getSelf().getElement();
-        return element == null? this.hashCode(): element.hashCode();
+        InternalElementReference self = this.getSelf();
+        SyntaxElement element = self.getElement();
+        return element == null? self.hashCode(): element.hashCode();
     }
 
 } // InternalElementReferenceImpl
