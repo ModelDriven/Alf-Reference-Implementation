@@ -50,6 +50,9 @@ public abstract class ExpressionMapping extends SyntaxElementMapping {
         if (this.type == null) {
             ElementReference reference = this.getExpression().getType();
             if (reference != null) {
+                if (reference.getImpl().isClassifierTemplateParameter()) {
+                    reference = reference.getImpl().getParameteredElement();
+                }
                 this.type = (Classifier)reference.getImpl().getUml();
                 if (this.type == null) {
                     FumlMapping mapping = this.fumlMap(reference);

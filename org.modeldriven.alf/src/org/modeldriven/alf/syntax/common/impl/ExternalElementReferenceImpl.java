@@ -129,11 +129,19 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
                // be a Classifier.
                element instanceof ClassifierTemplateParameter;
     }
+    
+    protected Classifier asClassifier() {
+        Element element = this.getSelf().getElement();
+        if (element instanceof ClassifierTemplateParameter) {
+            element = ((ClassifierTemplateParameter)element).getParameteredElement();
+        }
+        return (Classifier)element;
+    }
 
     @Override
     public boolean isAbstractClassifier() {
         return this.isClassifier() &&
-                ((Classifier)this.getSelf().getElement()).getIsAbstract();
+                this.asClassifier().getIsAbstract();
     }
 
     @Override
@@ -288,7 +296,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public boolean isParameteredElement() {
         return this.isClassifier() && 
-                ((Classifier)this.getSelf().getElement()).getTemplateParameter() != null;
+                this.asClassifier().getTemplateParameter() != null;
     }
     
     @Override
@@ -360,7 +368,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public Collection<ElementReference> parents() {
         if (this.isClassifier()) {
-            return setOf(((Classifier)this.getSelf().getElement()).parents());
+            return setOf(this.asClassifier().parents());
         } else {
             return new HashSet<ElementReference>();
         }
@@ -369,7 +377,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     @Override
     public Collection<ElementReference> allParents() {
         if (this.isClassifier()) {
-            return setOf(((Classifier)this.getSelf().getElement()).allParents());
+            return setOf(this.asClassifier().allParents());
         } else {
             return new HashSet<ElementReference>();
         }
@@ -451,7 +459,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         List<ElementReference> attributes = new ArrayList<ElementReference>();
         if (this.isClassifier()) {
             for (Property attribute: 
-                ActivityGraph.getAllAttributes((Classifier)this.getSelf().getElement())) {
+                ActivityGraph.getAllAttributes(this.asClassifier())) {
                 attributes.add(ElementReferenceImpl.makeElementReference(attribute));
             }
         }
@@ -473,7 +481,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
     public List<Member> getInheritableMembers() {
         List<Member> inheritableMembers = new ArrayList<Member>();
         if (this.isClassifier()) {
-            Classifier classifier = (Classifier)this.getSelf().getElement();
+            Classifier classifier = this.asClassifier();
             for (NamedElement element: classifier.inheritableMembers()) {
                 List<String> names = classifier.getNamesOfMember(element);
                 if (names.isEmpty()) {

@@ -512,10 +512,11 @@ public abstract class ElementReferenceImpl implements AssignableElement {
             reference = templateBindings.get(element);
             
             if (reference == null) {
-                ExternalElementReference externalReference = 
-                        new ExternalElementReference();
+                ExternalElementReference externalReference = new ExternalElementReference();
                 externalReference.setElement(element);
                 reference = externalReference;
+            } else if (reference.getImpl().isClassifierTemplateParameter()) {
+                return reference.getImpl().getParameteredElement();
             }
         }
         
@@ -557,6 +558,8 @@ public abstract class ElementReferenceImpl implements AssignableElement {
     public static ElementReference effectiveElementFor(ElementReference reference) {
         if (reference == null) {
             return null;
+        } else if (reference.getImpl().isClassifierTemplateParameter()) {
+            return reference.getImpl().getParameteredElement();
         } else {
             ElementReference boundElement = reference.getImpl().getEffectiveBoundElement();
             return boundElement == null? reference: boundElement;
