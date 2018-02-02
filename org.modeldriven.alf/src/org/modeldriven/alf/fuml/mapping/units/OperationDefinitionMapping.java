@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -19,10 +19,11 @@ import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
+import org.modeldriven.alf.syntax.units.ImportReference;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.OperationDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
-
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.*;
 
 import java.util.ArrayList;
@@ -255,6 +256,22 @@ public class OperationDefinitionMapping extends NamespaceDefinitionMapping {
             }
 
             this.otherElements = ActivityDefinitionMapping.addElements(activity, elements, body, this);
+            
+            // If the operation definition has a subunit, then map any import references for
+            // the subunit to imports on the operation method.
+            UnitDefinition subunit = definition.getSubunit();
+            if (subunit != null) {
+                for (ImportReference importReference: subunit.getImport()) {
+                    FumlMapping mapping = this.fumlMap(importReference);
+                    for (Element element: mapping.getModelElements()) {
+                        if (element instanceof ElementImport) {
+                            activity.addElementImport((ElementImport)element);
+                        } else if (element instanceof PackageImport) {                        
+                            activity.addPackageImport((PackageImport)element);
+                        }                        
+                    }
+                }
+            }
         }
         
         return this.otherElements;
